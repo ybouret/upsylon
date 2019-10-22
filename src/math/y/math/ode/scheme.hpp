@@ -1,5 +1,5 @@
-
 //! \file
+
 #ifndef Y_MATH_ODE_SCHEME_INCLUDED
 #define Y_MATH_ODE_SCHEME_INCLUDED 1
 
@@ -12,13 +12,26 @@ namespace upsylon {
 
         namespace ODE {
 
+            //==================================================================
+            //
+            //
             //! parametric equations
+            //
+            //
+            //==================================================================
             template <typename T>
             class Scheme : public counted_object
             {
             public:
-                typedef Adjust::Variables Variables;
+                typedef Adjust::Variables Variables; //!< alias
 
+                //==============================================================
+                //
+                // interface
+                //
+                //==============================================================
+
+                //! cleaunp
                 inline virtual ~Scheme() throw() {}
 
                 //! get the problem state size
@@ -49,11 +62,12 @@ namespace upsylon {
                                 const accessible<T> &aorg,
                                 const Variables     &vars) const = 0;
                 
-                //! callback to control trial
+                //! callback to control trial, default is none
                 inline virtual typename Field<T>::Callback * callback() { return 0; }
 
             protected:
-                inline explicit Scheme() throw() {}
+                //! setup
+                inline explicit Scheme() throw() : counted_object() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scheme);

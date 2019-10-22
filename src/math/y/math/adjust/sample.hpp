@@ -15,34 +15,40 @@ namespace upsylon {
 
         namespace Adjust {
 
+
+            //==================================================================
+            //
+            //
+            //! a single sample
+            //
+            //
+            //==================================================================
             template <typename T>
             class Sample : public SampleType<T>, public counted_object
             {
             public:
-                typedef arc_ptr<Sample>            Pointer;
-                typedef vector<Sample::Pointer>    Handles;
-                typedef typename Type<T>::Sequence Sequence;
-                typedef typename Type<T>::Series   Series;
-                typedef typename Type<T>::Array    Array;
-                typedef typename Type<T>::Matrix   Matrix;
+                //==============================================================
+                //
+                // types and definitions
+                //
+                //==============================================================
+                typedef arc_ptr<Sample>            Pointer;  //!< alias for Samples
+                typedef vector<Sample::Pointer>    Handles;  //!< alias for Samples
+                typedef typename Type<T>::Sequence Sequence; //!< alias
+                typedef typename Type<T>::Series   Series;   //!< alias
+                typedef typename Type<T>::Array    Array;    //!< alias
+                typedef typename Type<T>::Matrix   Matrix;   //!< alias
 
-                inline explicit Sample(const Series &userAbscissa,
-                                       const Series &userOrdinate,
-                                       Series       &userAdjusted) throw() :
-                abscissa(userAbscissa),
-                ordinate(userOrdinate),
-                adjusted(userAdjusted),
-                indices(),
-                deltaSq(),
-                dFda()
-                {}
-
+                //==============================================================
+                //
+                // virtual interface
+                //
+                //==============================================================
+                //! cleanup
                 inline virtual ~Sample() throw() {}
 
-                const Series   abscissa;
-                const Series   ordinate;
-                mutable Series adjusted;
 
+                //! common series size
                 inline virtual size_t count() const throw()
                 {
                     assert(abscissa->size()==ordinate->size());
@@ -50,6 +56,7 @@ namespace upsylon {
                     return abscissa->size();
                 }
 
+                //! adjust memory and compute indices
                 inline virtual void ready()
                 {
                     // memory
@@ -59,8 +66,6 @@ namespace upsylon {
 
                     // indexing
                     indexing::make(indices,comparison::increasing<T>,*abscissa);
-                    //std::cerr << "abscissa = " << abscissa << std::endl;
-                    //std::cerr << "indices  = " << indices  << std::endl;
                 }
 
                 //! compute D2 using indexed access
@@ -102,12 +107,13 @@ namespace upsylon {
                     }
                 }
 
-
+                //! in-place square value
                 static inline void to_square( T &value ) throw()
                 {
                     value *= value;
                 }
 
+                //! SampleType interface
                 virtual T  computeAndUpdate(Matrix          &alpha,
                                             Array           &beta,
                                             Sequential<T>   &F,
@@ -202,11 +208,29 @@ namespace upsylon {
                 }
 
 
+                //! activate all matching variables
                 inline virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const
                 {
                     this->variables.activate(target,source);
                  }
 
+                //==============================================================
+                //
+                // non-virtual interface
+                //
+                //==============================================================
+
+                //! setup with Series
+                inline explicit Sample(const Series &userAbscissa,
+                                       const Series &userOrdinate,
+                                       Series       &userAdjusted) throw() :
+                abscissa(userAbscissa),
+                ordinate(userOrdinate),
+                adjusted(userAdjusted),
+                indices(),
+                deltaSq(),
+                dFda()
+                {}
 
                 //! output helper
                 inline void save( ios::ostream &fp, const bool indexed = false ) const
@@ -228,6 +252,16 @@ namespace upsylon {
                         }
                     }
                 }
+
+
+                //==============================================================
+                //
+                // members
+                //
+                //==============================================================
+                const Series   abscissa; //!< abscissa series
+                const Series   ordinate; //!< ordinate series
+                mutable Series adjusted; //!< adjusted series
 
             private:
                 Indices           indices;

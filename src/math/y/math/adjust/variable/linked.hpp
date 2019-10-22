@@ -11,18 +11,21 @@ namespace upsylon {
 
         namespace Adjust {
 
+            //! variable linked to another variable, for shared variables
             class LinkedVariable : public Variable
             {
             public:
-                const Variable::Pointer link;
 
-                explicit LinkedVariable(const string &n, const Variable::Pointer &l);
-                explicit LinkedVariable(const char   *n, const Variable::Pointer &l);
+                explicit LinkedVariable(const string &n, const Variable::Pointer &l); //!< setup
+                explicit LinkedVariable(const char   *n, const Variable::Pointer &l); //!< setup
+                LinkedVariable(const LinkedVariable &other); //!< copy
 
-                virtual ~LinkedVariable() throw();
-                LinkedVariable(const LinkedVariable &other);
+                virtual ~LinkedVariable() throw(); //!< cleanup
+                virtual size_t index() const throw(); //!< link->index()
 
-                virtual size_t index() const throw();
+
+                const Variable::Pointer link; //!< shared link
+
 
             private:
                 Y_DISABLE_ASSIGN(LinkedVariable);

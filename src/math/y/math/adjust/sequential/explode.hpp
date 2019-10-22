@@ -13,40 +13,69 @@ namespace upsylon {
 
         namespace Adjust {
 
-            //! ExplicitODE
+            //! constructor for ExplODE
+#define Y_EXPLODE_CTOR(SOLVER) \
+Sequential<T>(),\
+solver(SOLVER),\
+scheme(sharedScheme),\
+diffEq( this, & ExplODE<T>::compute ),\
+fields( scheme->dimensions(), 0 ),\
+p_aorg(0),\
+p_vars(0),\
+__ctrl(0)
+
+            //==================================================================
+            //
+            //
+            //! Explicit ODE, sequential integration
+            //
+            //
+            //==================================================================
             template <typename T>
             class ExplODE : public Sequential<T>
             {
             public:
-                typedef typename Type<T>::Vector      Vector;
-                typedef typename Type<T>::Array       Array;
-                typedef typename Type<T>::Parameters  Parameters;
+                //==============================================================
+                //
+                // types and definitions
+                //
+                //==============================================================
+                typedef typename Type<T>::Vector      Vector;        //!< alias for internal data
+                typedef typename Type<T>::Array       Array;         //!< alias
+                typedef typename Type<T>::Parameters  Parameters;    //!< alias
+                typedef ODE::ExplicitSolver<T>        SolverType;    //!< alias
+                typedef arc_ptr<SolverType>           SolverPointer; //!< alias
+                typedef ODE::ExplicitScheme<T>        SchemeType;    //!< alias
+                typedef typename SchemeType::Pointer  SchemePointer; //!< alia
 
-                typedef ODE::ExplicitSolver<T>        SolverType;
-                typedef arc_ptr<SolverType>           SolverPointer;
 
-                typedef ODE::ExplicitScheme<T>        SchemeType;
-                typedef typename SchemeType::Pointer  SchemePointer;
+                //==============================================================
+                //
+                //  members
+                //
+                //==================================================================
 
+                //! cleanup
                 inline virtual ~ExplODE() throw()
                 {
                     
                 }
 
+                //! setup, preparing solver
                 inline explicit ExplODE(const SolverPointer &sharedSolver,
                                         const SchemePointer &sharedScheme) throw() :
-                solver(sharedSolver),
-                scheme(sharedScheme),
-                diffEq( this, & ExplODE<T>::compute ),
-                fields( scheme->dimensions(), 0 ),
-                p_aorg(0),
-                p_vars(0),
-                __ctrl(0)
+                Y_EXPLODE_CTOR(sharedSolver)
                 {
                     setup();
                 }
 
 
+                //! setup with a private solver
+                inline explicit ExplODE(const SchemePointer &sharedScheme) throw() :
+                Y_EXPLODE_CTOR(ODE::DriverCK<T>::New())
+                {
+                    setup();
+                }
 
 
             private:
@@ -59,6 +88,7 @@ namespace upsylon {
                 const Variables                 *p_vars;
                 T                                __ctrl;
 
+                //! finalize object
                 void setup()
                 {
                     solver->start( scheme->dimensions() );

@@ -14,46 +14,77 @@ namespace upsylon {
     namespace math {
 
         namespace Adjust {
-            
-            //! variable interface
+
+            //==================================================================
+            //
+            //
+            //! named variable interface
+            //
+            //
+            //==================================================================
             class Variable : public counted_object
             {
             public:
-                typedef intr_ptr<string,Variable>               Pointer;
-                typedef key_hasher<string,hashing::fnv>         KeyHasher;
-                typedef memory::pooled                          Allocator;
-                typedef set<string,Pointer,KeyHasher,Allocator> Set;
+                //==============================================================
+                //
+                // types and definitions
+                //
+                //==============================================================
+                typedef intr_ptr<string,Variable>               Pointer;   //!< alias
+                typedef key_hasher<string,hashing::fnv>         KeyHasher; //!< alias
+                typedef memory::pooled                          Allocator; //!< alias
+                typedef set<string,Pointer,KeyHasher,Allocator> Set;       //!< alias
 
 
-                const string name;
+                //==============================================================
+                //
+                // virtual interface
+                //
+                //==============================================================
+                virtual size_t index() const throw() = 0; //!< index for parameters
+                virtual       ~Variable()    throw();     //!< cleanup
 
-                virtual size_t index() const throw() = 0;
-                virtual       ~Variable()    throw();
-
+                //==============================================================
+                //
+                // non virtual interface
+                //
+                //==============================================================
+                //! get item from source with bound checking
                 template <typename T>
                 T & get( addressable<T> &source ) const
                 {
                     return source[ query(source) ];
                 }
 
+                //! get item from const source with bound checking
                 template <typename T>
                 const T & get( const accessible<T> &source ) const
                 {
                     return source[ query(source) ];
                 }
 
+
+                Variable(const Variable &);                                           //!< copy
+                const string & key()                     const throw();               //!< key for set
+                size_t         query(const collection &) const;                       //!< check index
+
+                //! output
+                friend std::ostream & operator<<( std::ostream &, const Variable &);
+
+                //! activate matching flag
                 void activate( addressable<bool> &target, const accessible<bool> &source) const;
 
-
-                Variable(const Variable &);
-                const string & key() const throw();
-                size_t         query(const collection &) const;
-                friend std::ostream & operator<<( std::ostream &, const Variable &);
+                //==============================================================
+                //
+                // members
+                //
+                //==============================================================
+                const string name; //!< unique variable name
 
 
             protected:
-                explicit Variable(const string &);
-                explicit Variable(const char   *);
+                explicit Variable(const string &); //!< setup
+                explicit Variable(const char   *); //!< setup
 
             private:
                 Y_DISABLE_ASSIGN(Variable);

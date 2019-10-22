@@ -110,7 +110,7 @@ namespace {
 
         Y_ASSERT(LS.fit(sample, explode, aorg, used, aerr));
         vars.display(std::cerr, aorg, aerr);
-        
+
         {
             ios::ocstream fp("adjode.dat");
             sample.save(fp);
@@ -135,9 +135,6 @@ namespace {
 
 Y_UTEST(adjust_ode)
 {
-
-
-    Type<double>::Vector aorg(2,0);
 
 
     doAdjust<float>();

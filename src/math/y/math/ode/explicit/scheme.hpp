@@ -11,20 +11,20 @@ namespace upsylon {
 
         namespace ODE {
 
+            //==================================================================
+            //
+            //
             //! a problem to be solved with an explicit solver
-            template <typename T>
-            class ExplicitScheme : public Scheme<T>
+            //
+            //
+            //==================================================================
+            template <typename T> class ExplicitScheme : public Scheme<T>
             {
             public:
-                typedef arc_ptr< ExplicitScheme<T> > Pointer;
-                
-                //! destructor
-                inline virtual ~ExplicitScheme() throw() {}
-
+                typedef arc_ptr< ExplicitScheme<T> > Pointer;             //!< alias
+                inline virtual ~ExplicitScheme() throw() {}               //!< destructor
             protected:
-                //! constructor
-                inline explicit ExplicitScheme() throw() : Scheme<T>() {}
-
+                inline explicit ExplicitScheme() throw() : Scheme<T>() {} //!<constructor
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ExplicitScheme);
             };

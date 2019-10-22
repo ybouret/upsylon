@@ -122,6 +122,7 @@ namespace upsylon {
             release_();
         }
 
+        //! copy by key reconstruction
         inline explicit btree( const btree &other ) : dlist(), dpool(), root(0), pool()
         {
             try

@@ -155,28 +155,28 @@ namespace upsylon
             return table.chain.fetch(idx)->addr->data;
         }
         
-        //!
+        //! head value
         inline type & head() throw()
         {
             assert(this->size()>0);
             return table.chain.head->addr->data;
         }
         
-        //!
+        //! const head value
         inline const_type & head() const throw()
         {
             assert(this->size()>0);
             return table.chain.head->addr->data;
         }
         
-        //!
+        //! tail value
         inline type & tail() throw()
         {
             assert(this->size()>0);
             return table.chain.tail->addr->data;
         }
         
-        //!
+        //! const tail value
         inline const type & tail() const throw()
         {
             assert(this->size()>0);

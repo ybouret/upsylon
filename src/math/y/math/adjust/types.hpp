@@ -15,18 +15,33 @@ namespace upsylon {
 
         namespace Adjust {
 
+
+
+            //==================================================================
+            //
+            //
+            //! default types definitions
+            //
+            //
+            //==================================================================
+            typedef vector<size_t>         Indices;    //!< global vector of indeices
+            typedef accessible<bool>       Flags;      //!< interface to untouched flags
+            typedef memory::pooled         Allocator;  //!< memory for variable sized container
+            typedef vector<bool,Allocator> bVector;    //!< a vector or boolean
+
             //! C++ fit function prototype
 #define Y_ADJUST_FUNCTION_PROTO  TL3(T,const Parameters&,const Variables&)
 
             //! C++ validate prototype
 #define Y_ADJUST_VALIDATE_PROTO  TL4(Array&,const Flags &,const Variables &,const size_t)
 
-
-            typedef vector<size_t>         Indices;
-            typedef accessible<bool>       Flags;
-            typedef memory::pooled         Allocator;
-            typedef vector<bool,Allocator> bVector;
-
+            //==================================================================
+            //
+            //
+            //! template types definitions
+            //
+            //
+            //==================================================================
             template <typename T>
             struct Type
             {
@@ -39,7 +54,7 @@ namespace upsylon {
                 typedef functor<T,Y_ADJUST_FUNCTION_PROTO>    Function;   //!< fit function  prototype
                 typedef functor<bool,Y_ADJUST_VALIDATE_PROTO> Validate;   //!< do something with variables, return false to modify
                 
-                
+                //! reconstruct a symetric matrix
                 static inline void Regularize(Matrix &alpha) throw()
                 {
                     assert(alpha.is_square);

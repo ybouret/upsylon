@@ -24,8 +24,7 @@ namespace upsylon {
             template <typename T> class Sequential
             {
             public:
-                typedef typename Type<T>::Array       Array;
-                typedef typename Type<T>::Parameters  Parameters;
+                typedef typename Type<T>::Parameters  Parameters; //!< alias
 
                 const T current; //!< currently called position
 

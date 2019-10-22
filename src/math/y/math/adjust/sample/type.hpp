@@ -14,21 +14,40 @@ namespace upsylon {
 
         namespace Adjust {
 
+            //==================================================================
+            //
+            //
             //! interface for adjustable sample
+            //
+            //
+            //==================================================================
             template <typename T>
             class SampleType : public SampleInfo
             {
             public:
-                typedef typename Type<T>::Array    Array;
-                typedef typename Type<T>::Matrix   Matrix;
-                typedef typename Type<T>::Function Function;
-                
-                inline virtual ~SampleType() throw() {}
+                //==============================================================
+                //
+                // types and definitions
+                //
+                //==============================================================
+                typedef typename Type<T>::Array    Array;    //!< alias
+                typedef typename Type<T>::Matrix   Matrix;   //!< alias
+                typedef typename Type<T>::Function Function; //!< alias
 
+
+                //==============================================================
+                //
+                // virtual interface
+                //
+                //==============================================================
+
+                //! cleanup
+                inline virtual ~SampleType() throw() {}
 
                 //! compute with a sequential function
                 virtual T compute(Sequential<T> &F, const Array &aorg) const = 0;
-                
+
+                //! full computation with a sequential function
                 virtual T  computeAndUpdate(Matrix          &alpha,
                                             Array           &beta,
                                             Sequential<T>   &F,
@@ -36,16 +55,13 @@ namespace upsylon {
                                             const Flags     &used,
                                             Gradient<T>     &grad) const = 0;
 
-
+                //! flags activation
                 virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const = 0;
 
 
-                inline T compute_( Function &F, const Array &aorg ) const
-                {
-                    SequentialFunction<T> call(F);
-                    return compute(call,aorg);
-                }
-                
+
+
+                //! initialize matrix/vector from used statius
                 inline void initialize(Matrix      &alpha,
                                        Array       &beta,
                                        const Flags &used ) const throw()
@@ -74,15 +90,29 @@ namespace upsylon {
                     }
                 }
 
-
+                //==============================================================
+                //
                 // non virtual interface
-                
-                inline T computeD2( Sequential<T>   &F,
+                //
+                //==============================================================
+
+                //! wrapper to use a C++ function
+                inline T compute_( Function &F, const Array &aorg ) const
+                {
+                    SequentialFunction<T> call(F);
+                    return compute(call,aorg);
+                }
+
+                //! compute D2 overloaded
+                inline T computeD2(Sequential<T>   &F,
                                    const Array     &aorg) const
                 {
                     return compute(F,aorg);
                 }
-                
+
+
+
+                //! compute D2 overloaded
                 inline T computeD2(Matrix          &alpha,
                                    Array           &beta,
                                    Sequential<T>   &F,
@@ -100,6 +130,7 @@ namespace upsylon {
 
 
             protected:
+                //! setup
                 inline explicit SampleType() throw() : SampleInfo() {}
 
             private:

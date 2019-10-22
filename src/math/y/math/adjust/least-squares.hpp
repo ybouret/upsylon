@@ -22,27 +22,28 @@ namespace upsylon {
             //==================================================================
             template <typename T> struct Algo
             {
-                typedef typename Type<T>::Matrix   Matrix;
-                typedef typename Type<T>::Array    Array;
-                
+                typedef typename Type<T>::Matrix   Matrix; //!< alias
+                typedef typename Type<T>::Array    Array;  //!< alias
+
+                //! 10^MinPower => 0
                 static inline unit_t MinPower() throw()
                 {
                     return -unit_t(numeric<T>::dig)-1;
                 }
-                
+
+                //! 10^MaxPower+1 => failure
                 static inline unit_t MaxPower() throw()
                 {
                     return unit_t(numeric<T>::max_10_exp);
                 }
 
+                //! a starting value
                 static inline unit_t Initial() throw()
                 {
                     return -4;
                 }
                 
-                
-                
-                
+                //! correct curvature computation
                 static inline
                 bool ComputeCurvature(Matrix       &curv,
                                       const T       lambda,
@@ -73,7 +74,8 @@ namespace upsylon {
                     }
                     return LU::build(curv);
                 }
-                
+
+                //! compute full step from descent direction and curvature
                 static inline
                 void ComputeStep(Array                &step,
                                  const Matrix         &curv,
@@ -86,7 +88,7 @@ namespace upsylon {
                 
             };
 
-
+            //! condition println
 #define Y_LS_PRINTLN(OUTPUT) do{ if(verbose) { std::cerr << OUTPUT << std::endl; } } while(false)
 
             //==================================================================
@@ -100,11 +102,13 @@ namespace upsylon {
             class LeastSquares : public Gradient<T>
             {
             public:
-                typedef typename Type<T>::Array    Array;
-                typedef typename Type<T>::Matrix   Matrix;
-                typedef typename Type<T>::Vector   Vector;
-                typedef Oxide::Field1D<T>          Field;
-                
+                typedef typename Type<T>::Array    Array;  //!< alias
+                typedef typename Type<T>::Matrix   Matrix; //!< alias
+                typedef typename Type<T>::Vector   Vector; //!< alias
+                typedef Oxide::Field1D<T>          Field;  //!< alias
+
+
+                //! setup
                 inline explicit LeastSquares(const bool verb=false) :
                 verbose(verb),
                 lambdas("lambda",Algo<T>::MinPower(),Algo<T>::MaxPower()),
@@ -121,15 +125,17 @@ namespace upsylon {
                 {
                     setup();
                 }
-                
+
+                //! cleanup
                 inline virtual ~LeastSquares() throw() {}
                 
-                bool         verbose;
-                const Field  lambdas;
-                const unit_t pmin;
-                const unit_t pmax;
+                bool         verbose; //!< activate verbosity
+                const Field  lambdas; //!< precomputed lambdas
+                const unit_t pmin;    //!< min power value
+                const unit_t pmax;    //!< max power value
                 
-                
+
+                //! full fit algorithm and error computation
                 bool fit(SampleType<T> &sample,
                          Sequential<T> &F,
                          Array         &aorg,
@@ -141,14 +147,14 @@ namespace upsylon {
 
                     //__________________________________________________________
                     //
-                    Y_LS_PRINTLN( "[LS] initializing..." );
+                    Y_LS_PRINTLN( "[LS] initializing" );
                     //__________________________________________________________
                     sample.ready();
                     atom::ld(aerr,-1);
                     const size_t n = aorg.size();
                     if(n<=0)
                     {
-                        Y_LS_PRINTLN("[LS] no parameters");
+                        Y_LS_PRINTLN("[LS] <no parameters>");
                         return true;
                     }
 
@@ -192,7 +198,7 @@ namespace upsylon {
                     {
                         if(!increaseLambda())
                         {
-                            Y_LS_PRINTLN( "[LS] singular point" );
+                            Y_LS_PRINTLN( "[LS] <SINGULAR GRADIENT>" );
                             return false;
                         }
                     }
@@ -242,7 +248,7 @@ namespace upsylon {
                         //______________________________________________________
                         if( !increaseLambda() )
                         {
-                            Y_LS_PRINTLN( "[LS] cannot move..." );
+                            Y_LS_PRINTLN( "[LS] <SINGULAR Level-1>" );
                             return false;
                         }
                         goto CURVATURE;
@@ -257,7 +263,7 @@ namespace upsylon {
                     //__________________________________________________________
                     if(!LU::build(alpha))
                     {
-                        Y_LS_PRINTLN( "[LS] singular extremum" );
+                        Y_LS_PRINTLN( "[LS] <SINGULAR Level-2>" );
                         return false;
                     }
                     LU::inverse(alpha,curv);
@@ -273,12 +279,12 @@ namespace upsylon {
                     Y_LS_PRINTLN( "      dof = " << dof );
                     if(dof<0)
                     {
-                        Y_LS_PRINTLN( "[LS] meaningless result" );
+                        Y_LS_PRINTLN( "[LS] <MEANINGLESS>" );
                         return false;
                     }
                     else if(0==dof)
                     {
-                        Y_LS_PRINTLN( "[LS] is interpolation" );
+                        Y_LS_PRINTLN( "[LS] <interpolation>" );
                         atom::ld(aerr,0);
                         return true;
                     }
@@ -373,7 +379,7 @@ namespace upsylon {
                     Y_LS_PRINTLN( "[LS] increasing lambda" );
                     if(p>=pmax)
                     {
-                        Y_LS_PRINTLN( "   |_<overflow>" );
+                        Y_LS_PRINTLN( "   |_<OVERFLOW>" );
                         return false;
                     }
                     else

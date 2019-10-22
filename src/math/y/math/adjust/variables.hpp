@@ -15,32 +15,41 @@ namespace upsylon {
 
         namespace Adjust {
 
+
+            //==================================================================
+            //
+            //
+            //! named variables interface
+            //
+            //
+            //==================================================================
             class Variables : public Variable::Set
             {
             public:
-                typedef vector<string,memory::pooled> Strings;
+                typedef vector<string,memory::pooled> Strings; //!< alias for I/O
                 
-                explicit Variables() throw();
-                virtual ~Variables() throw();
-                Variables(const Variables &);
-                Variables & operator=( const Variables &other );
+                explicit Variables() throw();                    //!< setup
+                virtual ~Variables() throw();                    //!< cleanup
+                Variables(const Variables &);                    //!< copy
+                Variables & operator=( const Variables &other ); //!< assign
 
-                const Variable & operator[](const string &name) const;
-                const Variable & operator[](const char   *name) const;
+                const Variable & operator[](const string &name) const; //!< get by name
+                const Variable & operator[](const char   *name) const; //!< get by name
 
-                Variables & decl(const string &name,size_t index=0);
-                Variables & decl(const char   *name,size_t index=0);
+                Variables & decl(const string &name,size_t index=0);   //!< declare Global, must be unique
+                Variables & decl(const char   *name,size_t index=0);   //!< declare Global, must be unique
 
-                Variables & operator<<( const string &name );
-                Variables & operator<<( const char   *name );
+                Variables & operator<<( const string &name ); //!< decl(name,0)
+                Variables & operator<<( const char   *name ); //!< decl(name,0)
 
-                Variables & operator()(const Variable &v, const string &name);
-                Variables & operator()(const Variable &v, const char   *name);
-                Variables & operator()(const Variable &v);
+                Variables & operator()(const Variable &v, const string &name); //!< declare Linked
+                Variables & operator()(const Variable &v, const char   *name); //!< declare Linked
+                Variables & operator()(const Variable &v);                     //!< Linked with same name
 
 
-                size_t MaxLength() const throw();
+                size_t MaxLength() const throw(); //!< max( name.size() )
 
+                //! generalized access operator
                 template <typename T>
                 inline T & operator()( addressable<T> &source, const string &id ) const
                 {
@@ -48,6 +57,7 @@ namespace upsylon {
                     return self[id].get(source);
                 }
 
+                //! generalized access operator, const
                 template <typename T>
                 inline const T & operator()( const accessible<T> &source, const string &id ) const
                 {
@@ -55,7 +65,8 @@ namespace upsylon {
                     return self[id].get(source);
                 }
 
-                template <typename T>
+                //! display '[pfx]name  = data'
+                template <typename T> inline
                 void display( std::ostream &os, const accessible<T> &source, const char *pfx=NULL) const
                 {
                     const Variables &self = *this;
@@ -71,7 +82,8 @@ namespace upsylon {
                     }
                 }
 
-                template <typename T>
+                //! display '[pfx]name = aorg +/- aerr'
+                template <typename T> inline
                 void display( std::ostream &os, const accessible<T> &aorg, const accessible<T> &aerr, const char *pfx=NULL) const
                 {
                     const Variables &self = *this;
@@ -102,17 +114,15 @@ namespace upsylon {
 
 
                 size_t sweep() const throw(); //!< maximun index
-
+                //! activate all matching targets
                 void   activate( addressable<bool> &target, const accessible<bool> &source ) const;
 
+                //! just to debug
                 void   chkdbg() const;
 
             private:
-                //! order by increasing index
-                void update();
-
+                void   update();
                 string toString( const double value ) const;
-
                 template <typename T> inline
                 size_t fillStrings( Strings &strings, const accessible<T> &values ) const
                 {

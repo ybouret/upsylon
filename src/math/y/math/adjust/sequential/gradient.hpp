@@ -12,23 +12,34 @@ namespace upsylon {
 
         namespace Adjust {
 
+            //==================================================================
+            //
+            //
+            //! Gradient w.r.t parameters
+            //
+            //
+            //==================================================================
             template <typename T>
             class Gradient : public derivative<T>
             {
             public:
                 T h; //!< scaling
 
-                typedef typename Type<T>::Array      Array;
-                typedef typename Type<T>::Parameters Parameters;
+                typedef typename Type<T>::Array      Array;      //!< alias
+                typedef typename Type<T>::Parameters Parameters; //!< alias
 
+                //! setup with default scaling
                 inline explicit Gradient() : derivative<T>(), h(1e-4)
                 {
                 }
 
+                //! cleanup
                 inline virtual ~Gradient() throw()
                 {
+                    h=0;
                 }
 
+                //! take the gradient for the declared used variables
                 inline void operator()(Array           &dFda,
                                        Sequential<T>   &F,
                                        T                x,
@@ -39,17 +50,25 @@ namespace upsylon {
                     assert(used.size()==aorg.size());
                     assert(dFda.size()==aorg.size());
 
+                    //----------------------------------------------------------
                     // initialize
+                    //----------------------------------------------------------
                     for(size_t j=dFda.size();j>0;--j)
                     {
                         dFda[j] = 0;
                     }
 
+                    //----------------------------------------------------------
                     // prepare wrapper
+                    //----------------------------------------------------------
                     Wrapper              call = { 0, &F, x, &aorg, &vars  };
                     size_t              &indx = call.i;
                     size_t               nvar = vars.size();
                     const accessible<T> &a    = aorg;
+                    
+                    //----------------------------------------------------------
+                    // lover over variables
+                    //----------------------------------------------------------
                     for( Variables::const_iterator v = vars.begin();nvar>0;--nvar,++v)
                     {
                         indx = (*v)->index();
