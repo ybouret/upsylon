@@ -8,6 +8,7 @@
 #include "y/sort/index.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/math/stat/metrics.hpp"
 
 namespace upsylon {
 
@@ -214,6 +215,9 @@ namespace upsylon {
                     this->variables.activate(target,source);
                  }
 
+
+
+
                 //==============================================================
                 //
                 // non-virtual interface
@@ -251,6 +255,21 @@ namespace upsylon {
                             save_triplet(fp,i);
                         }
                     }
+                }
+
+
+                T computeCorrelation( correlation<T> &corr ) const
+                {
+                    const size_t np = count();
+                    corr.free();
+                    corr.ensure(np);
+                    
+                    for(size_t i=this->count();i>0;--i)
+                    {
+                        corr.add( ordinate[i], adjusted[i] );
+                    }
+
+                    return corr.compute();
                 }
 
 

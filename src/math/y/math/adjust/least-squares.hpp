@@ -6,6 +6,7 @@
 #include "y/math/adjust/sample/type.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/oxide/field1d.hpp"
+#include "y/ios/ocstream.hpp"
 
 namespace upsylon {
     
@@ -229,6 +230,17 @@ namespace upsylon {
                         //
                         Y_LS_PRINTLN( "[LS] accept" );
                         //______________________________________________________
+
+                        if(false&&cycle>0)
+                        {
+                            ios::ocstream fp("d2.dat");
+                            for(T u=0;u<=1.1;u+=0.01)
+                            {
+                                fp("%.15g %.15g\n", u, D2(u));
+                            }
+                            exit(0);
+                        }
+
                         const bool  converged = ( fabs_of(D2org-D2try) <= numeric<T>::sqrt_ftol * D2org);
                         decreaseLambda();
                         atom::set(aorg,atry);

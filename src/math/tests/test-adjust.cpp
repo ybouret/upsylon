@@ -211,7 +211,10 @@ Y_UTEST(adjust)
         ios::ocstream fp("s1.dat");
         S1.save(fp);
     }
+    correlation<double> corr;
+    std::cerr << "S1.corr=" << S1.computeCorrelation(corr) << std::endl;
     std::cerr << std::endl;
+
 
 
     Y_ASSERT(LS.fit(S2, SF, aorg, used, aerr));
@@ -220,6 +223,7 @@ Y_UTEST(adjust)
         ios::ocstream fp("s2.dat");
         S2.save(fp);
     }
+    std::cerr << "S2.corr=" << S2.computeCorrelation(corr) << std::endl;
     std::cerr << std::endl;
 
 
@@ -233,7 +237,9 @@ Y_UTEST(adjust)
         S2.save(fp);
     }
     std::cerr << std::endl;
-
+    std::cerr << "S1.corr=" << S1.computeCorrelation(corr) << std::endl;
+    std::cerr << "S2.corr=" << S2.computeCorrelation(corr) << std::endl;
+    std::cerr << std::endl;
 
 }
 Y_UTEST_DONE()

@@ -58,8 +58,13 @@ namespace upsylon {
                 //! flags activation
                 virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const = 0;
 
+              
 
-
+                //==============================================================
+                //
+                // non virtual interface
+                //
+                //==============================================================
 
                 //! initialize matrix/vector from used statius
                 inline void initialize(Matrix      &alpha,
@@ -70,11 +75,11 @@ namespace upsylon {
                     assert( beta.size() == alpha.rows );
                     assert( used.size() == beta.size() );
                     assert( variables.sweep() <= used.size() );
-                    
+
                     // assuming no one is used
                     atom::ld(beta,0);
                     alpha.Id();
-                    
+
                     // cleanup used variables
                     size_t                    nv = variables.size();
                     Variables::const_iterator it = variables.begin();
@@ -89,13 +94,6 @@ namespace upsylon {
                         ++it;
                     }
                 }
-
-                //==============================================================
-                //
-                // non virtual interface
-                //
-                //==============================================================
-
                 //! wrapper to use a C++ function
                 inline T compute_( Function &F, const Array &aorg ) const
                 {
