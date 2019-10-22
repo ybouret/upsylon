@@ -284,12 +284,14 @@ namespace upsylon {
                     else
                     {
                         assert(dof>0);
+                        const T real_count = T( sample.count() );
+                        const T sig2err    = T(1)/sqrt_of(real_count);
                         for(size_t i=n;i>0;--i)
                         {
                             if(used[i])
                             {
-                                const T stddev = sqrt_of( (D2org * curv[i][i]) / dof );
-                                aerr[i] = stddev;
+                                const T sig = sqrt_of( (D2org * curv[i][i]) / dof );
+                                aerr[i] = sig*sig2err;
                             }
                             else
                             {
