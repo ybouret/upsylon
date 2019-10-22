@@ -12,9 +12,15 @@ namespace upsylon {
     namespace math {
         
         namespace Adjust {
-            
-            template <typename T>
-            struct Algo
+
+            //==================================================================
+            //
+            //
+            //! utilities for LeastSquares
+            //
+            //
+            //==================================================================
+            template <typename T> struct Algo
             {
                 typedef typename Type<T>::Matrix   Matrix;
                 typedef typename Type<T>::Array    Array;
@@ -24,9 +30,14 @@ namespace upsylon {
                     return -unit_t(numeric<T>::dig)-1;
                 }
                 
-                static inline int MaxPower() throw()
+                static inline unit_t MaxPower() throw()
                 {
                     return unit_t(numeric<T>::max_10_exp);
+                }
+
+                static inline unit_t Initial() throw()
+                {
+                    return -4;
                 }
                 
                 
@@ -76,7 +87,15 @@ namespace upsylon {
                 
                 
             };
-            
+
+
+            //==================================================================
+            //
+            //
+            //! LeastSquares
+            //
+            //
+            //==================================================================
             template <typename T>
             class LeastSquares : public Gradient<T>
             {
@@ -84,7 +103,6 @@ namespace upsylon {
                 typedef typename Type<T>::Array    Array;
                 typedef typename Type<T>::Matrix   Matrix;
                 typedef typename Type<T>::Vector   Vector;
-                
                 typedef Oxide::Field1D<T>          Field;
                 
                 inline explicit LeastSquares(const bool verb=false) :
@@ -106,7 +124,7 @@ namespace upsylon {
                 const unit_t pmax;
                 
                 
-                bool fit( SampleType<T>       &sample,
+                bool fit(SampleType<T>       &sample,
                          Sequential<T>        &F,
                          Array                &aorg,
                          const Flags          &used )
@@ -128,7 +146,7 @@ namespace upsylon {
                     
                     CallD2 D2 = { &aorg, &step, &atry, &sample, &F };
                     
-                    setLambda(0);
+                    setLambda( Algo<T>::Initial() );
                     
                     // initialize
                     T D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
@@ -153,6 +171,7 @@ namespace upsylon {
                     
                     // possible step modification
                     
+
                     // try full step
                     T D2try = D2(1);
                     aorg.display(std::cerr << "aorg=")  << std::endl;
@@ -217,7 +236,7 @@ namespace upsylon {
                 
                 inline void setLambda( const unit_t p0 ) throw()
                 {
-                    aliasing::_(lambda) = lambdas[ (aliasing::_(p)=clamp(pmin,p0,pmax) ) ];
+                    lambda = lambdas[ (p=clamp(pmin,p0,pmax) ) ];
                 }
                 
                 inline void decreaseLambda() throw()
