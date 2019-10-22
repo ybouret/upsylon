@@ -59,8 +59,8 @@ namespace upsylon {
 
                     // indexing
                     indexing::make(indices,comparison::increasing<T>,*abscissa);
-                    std::cerr << "abscissa = " << abscissa << std::endl;
-                    std::cerr << "indices  = " << indices  << std::endl;
+                    //std::cerr << "abscissa = " << abscissa << std::endl;
+                    //std::cerr << "indices  = " << indices  << std::endl;
                 }
 
                 //! compute D2 using indexed access

@@ -202,30 +202,38 @@ Y_UTEST(adjust)
 
     
     LeastSquares<double> LS(true);
-    
-    Y_ASSERT(LS.fit(S2, SF, aorg, used, aerr));
 
-    {
-        ios::ocstream fp("s2.dat");
-        S2.save(fp);
-    }
-
+    LS.verbose = false;
 
     Y_ASSERT(LS.fit(S1, SF, aorg, used, aerr));
-
+    S1.variables.display(std::cerr, aorg, aerr, "S1.");
     {
         ios::ocstream fp("s1.dat");
         S1.save(fp);
     }
+    std::cerr << std::endl;
+
+
+    Y_ASSERT(LS.fit(S2, SF, aorg, used, aerr));
+    S2.variables.display(std::cerr, aorg, aerr, "S2.");
+    {
+        ios::ocstream fp("s2.dat");
+        S2.save(fp);
+    }
+    std::cerr << std::endl;
+
+
 
     Y_ASSERT(LS.fit(S,SF,aorg,used,aerr));
+    S.variables.display(std::cerr, aorg, aerr, "S.");
     {
         ios::ocstream fp("s.dat");
         S1.save(fp);
         fp <<'\n';
         S2.save(fp);
     }
-    
+    std::cerr << std::endl;
+
 
 }
 Y_UTEST_DONE()

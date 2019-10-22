@@ -6,6 +6,8 @@
 
 #include "y/math/adjust/variable.hpp"
 #include "y/string/display.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon {
 
@@ -16,6 +18,8 @@ namespace upsylon {
             class Variables : public Variable::Set
             {
             public:
+                typedef vector<string,memory::pooled> Strings;
+                
                 explicit Variables() throw();
                 virtual ~Variables() throw();
                 Variables(const Variables &);
@@ -67,6 +71,36 @@ namespace upsylon {
                     }
                 }
 
+                template <typename T>
+                void display( std::ostream &os, const accessible<T> &aorg, const accessible<T> &aerr, const char *pfx=NULL) const
+                {
+                    const Variables &self = *this;
+                    const size_t     nvar = self.size();
+                    Strings          sorg(nvar,as_capacity);
+                    const size_t     zorg = fillStrings(sorg,aorg);
+
+                    Strings          serr(nvar,as_capacity);
+                    const size_t     zerr = fillStrings(serr,aerr);
+
+                    const size_t        nmax = MaxLength();
+                    size_t              ivar = 1;
+                    for( const_iterator it = begin(); it != end(); ++it, ++ivar)
+                    {
+                        const Variable &v    = **it;
+                        const string   &name = v.name;
+                        if(pfx)
+                        {
+                            os << pfx;
+                        }
+                        string_display::align(os,name,nmax) << " = ";
+                        string_display::align(os,sorg[ivar],zorg) << " \\pm ";
+                        string_display::align(os,serr[ivar],zerr);
+                        os << std::endl;
+                    }
+                }
+
+
+
                 size_t sweep() const throw(); //!< maximun index
 
                 void   activate( addressable<bool> &target, const accessible<bool> &source ) const;
@@ -76,6 +110,22 @@ namespace upsylon {
             private:
                 //! order by increasing index
                 void update();
+
+                string toString( const double value ) const;
+
+                template <typename T> inline
+                size_t fillStrings( Strings &strings, const accessible<T> &values ) const
+                {
+                    size_t ans = 0;
+                    for( const_iterator it = begin(); it != end(); ++it )
+                    {
+                        const Variable &v = **it;
+                        const string    s = toString( double( (*this)(values,v.name) ) );
+                        strings.push_back_(s);
+                        ans = max_of(ans,s.size());
+                    }
+                    return ans;
+                }
 
 
             };

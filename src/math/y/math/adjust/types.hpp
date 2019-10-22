@@ -5,7 +5,6 @@
 #define Y_MATH_ADJUST_TYPES_INCLUDED 1
 
 #include "y/math/types.hpp"
-#include "y/sequence/vector.hpp"
 #include "y/ptr/arr.hpp"
 #include "y/container/matrix.hpp"
 #include "y/math/adjust/variables.hpp"

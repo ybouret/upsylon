@@ -182,7 +182,12 @@ namespace upsylon {
                     return 0;
                 }
             }
-            
+
+            string Variables:: toString( const double value ) const
+            {
+                return vformat("%.15g",value);
+            }
+
         }
     }
 }
