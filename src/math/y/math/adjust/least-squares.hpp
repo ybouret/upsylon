@@ -71,8 +71,6 @@ namespace upsylon {
                             curv_i[j] = alpha[i][j];
                         }
                     }
-                    std::cerr << "alpha  =" << alpha << std::endl;
-                    std::cerr << "alpha_l=" << curv << std::endl;
                     return LU::build(curv);
                 }
                 
@@ -88,6 +86,8 @@ namespace upsylon {
                 
             };
 
+
+#define Y_LS_PRINTLN(OUTPUT) do{ if(verbose) { std::cerr << OUTPUT << std::endl; } } while(false)
 
             //==================================================================
             //
@@ -130,57 +130,106 @@ namespace upsylon {
                          const Flags          &used )
                 {
                     assert( used.size() == aorg.size() );
-                    
+
+                    //__________________________________________________________
+                    //
+                    Y_LS_PRINTLN( "[LS] preparing sample" );
+                    //__________________________________________________________
                     sample.ready();
                     const size_t n = aorg.size();
                     if(n<=0)
                     {
+                        Y_LS_PRINTLN("[LS] no parameters");
                         return true;
                     }
-                    
+
+                    //__________________________________________________________
+                    //
+                    Y_LS_PRINTLN( "[LS] initialzing with #parameters=" << n);
+                    //__________________________________________________________
                     alpha.make(n,n);
                     beta.adjust(n,0);
                     curv.make(n,n);
                     step.adjust(n,0);
                     atry.adjust(n,0);
-                    
-                    CallD2 D2 = { &aorg, &step, &atry, &sample, &F };
-                    
                     setLambda( Algo<T>::Initial() );
-                    
-                    // initialize
-                    T D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
-                    std::cerr << "D2org=" << D2org<< std::endl;
-                    
-                    std::cerr << "alpha=" << alpha << std::endl;
-                    std::cerr << "beta =" << beta  << std::endl;
+
+                    CallD2 D2    = { &aorg, &step, &atry, &sample, &F };
+                    T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+                    size_t cycle = 0;
+
+
+                CYCLE:
+                    ++cycle;
+                    //__________________________________________________________
+                    //
+                    Y_LS_PRINTLN( "[LS] cycle  = " << cycle );
+                    Y_LS_PRINTLN( "     aorg   = " << aorg );
+                    Y_LS_PRINTLN( "     D2org  = " << D2org );
+                    Y_LS_PRINTLN( "     alpha  = " << alpha );
+                    Y_LS_PRINTLN( "     beta   = " << beta  );
+                    //__________________________________________________________
+
+                CURVATURE:
                     // compute curvature at current point
-                    while( !Algo<T>::ComputeCurvature(curv,lambda,alpha))
+                    while( !Algo<T>::ComputeCurvature(curv,lambda,alpha) )
                     {
                         if(!increaseLambda())
                         {
+                            Y_LS_PRINTLN( "[LS] singular point" );
                             return false;
                         }
                     }
-                    std::cerr << "lambda=" << lambda << std::endl;
-                    
+
                     // compute current 'optimal' step
                     Algo<T>::ComputeStep(step, curv, beta);
-                    std::cerr << "step=" << step << std::endl;
-                    
+                    //__________________________________________________________
+                    //
+                    Y_LS_PRINTLN( "     lambda = " << lambda );
+                    Y_LS_PRINTLN( "     step   = " << step   );
+                    //__________________________________________________________
+
                     
                     // possible step modification
-                    
+
 
                     // try full step
                     T D2try = D2(1);
-                    aorg.display(std::cerr << "aorg=")  << std::endl;
-                    std::cerr << "atry=" << atry << std::endl;
+                    Y_LS_PRINTLN( "     atry   = " << atry   );
+                    Y_LS_PRINTLN( "     D2try  = " << D2try  );
+                    
 
-                    
-                    std::cerr << "D2try=" << D2try << std::endl;
-                    
-                    
+                    if( D2try < D2org )
+                    {
+                        //______________________________________________________
+                        //
+                        Y_LS_PRINTLN( "[LS] accept" );
+                        //______________________________________________________
+                        decreaseLambda();
+                        atom::set(aorg,atry);
+                        D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+                        if(cycle>6)
+                        {
+                            std::cerr << "exiting..." << std::endl;
+                            return true;
+                        }
+                        goto CYCLE;
+                    }
+                    else
+                    {
+                        //______________________________________________________
+                        //
+                        Y_LS_PRINTLN( "[LS] backtracking" );
+                        //______________________________________________________
+                        if( !increaseLambda() )
+                        {
+                            Y_LS_PRINTLN( "[LS] cannot move..." );
+                            return false;
+                        }
+                        goto CURVATURE;
+
+                    }
+
                     return true;
                     
                 }
@@ -242,17 +291,22 @@ namespace upsylon {
                 inline void decreaseLambda() throw()
                 {
                     lambda = lambdas[ (p=max_of(p-1,pmin) ) ];
+                    Y_LS_PRINTLN( "[LS] decreasing lambda" );
+                    Y_LS_PRINTLN( "   |_lambda=" << lambda );
                 }
                 
                 inline bool increaseLambda() throw()
                 {
+                    Y_LS_PRINTLN( "[LS] increasing lambda" );
                     if(p>=pmax)
                     {
+                        Y_LS_PRINTLN( "   |_<overflow>" );
                         return false;
                     }
                     else
                     {
                         lambda = lambdas[ ++p ];
+                        Y_LS_PRINTLN( "   |_lambda=" << lambda );
                         return true;
                     }
                 }

@@ -100,6 +100,11 @@ namespace upsylon {
                 }
 
 
+                static inline void to_square( T &value ) throw()
+                {
+                    value *= value;
+                }
+
                 virtual T  computeAndUpdate(Matrix          &alpha,
                                             Array           &beta,
                                             Sequential<T>   &F,
@@ -117,14 +122,13 @@ namespace upsylon {
                         assert(aorg.size()==alpha.rows);
                         assert(aorg.size()==alpha.cols);
 
-                        dFda.adjust(aorg.size(),0);
 
-
-
-                        const accessible<type> &X = *abscissa;
-                        const accessible<type> &Y = *ordinate;
-                        addressable<type>      &Z = *adjusted;
-                        addressable<type>     &dY = deltaSq;
+                        const size_t            nvar = aorg.size();
+                        const accessible<type> &X    = *abscissa;
+                        const accessible<type> &Y    = *ordinate;
+                        addressable<type>      &Z    = *adjusted;
+                        addressable<type>      &dY   = deltaSq;
+                        dFda.adjust(nvar,0);
 
                         //------------------------------------------------------
                         // first pass compute fit/store delta Y
@@ -150,7 +154,6 @@ namespace upsylon {
                         //------------------------------------------------------
                         // second pass : costly gradient
                         //------------------------------------------------------
-                        const size_t nvar = aorg.size();
                         for(size_t ii=n;ii>0;--ii)
                         {
                             const size_t i   = indices[ii];
@@ -179,7 +182,7 @@ namespace upsylon {
                         //------------------------------------------------------
                         for(size_t j=n;j>0;--j)
                         {
-                            dY[j] *= dY[j];
+                            to_square(dY[j]);
                         }
                         return sorted_sum(dY)/2;
                     }

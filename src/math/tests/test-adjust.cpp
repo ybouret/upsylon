@@ -200,7 +200,7 @@ Y_UTEST(adjust)
     std::cerr << "D02=" << D02 << "/" << D0 << std::endl;
 
     
-    LeastSquares<double> LS;
+    LeastSquares<double> LS(true);
     
     LS.fit(S2, SF, aorg, used);
     

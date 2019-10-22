@@ -54,12 +54,6 @@ namespace upsylon
         //
         //======================================================================
 
-        //! output octave/julia style
-        inline friend std::ostream & operator<<( std::ostream &os, const array &arr )
-        {
-            return arr.display(os);
-        }
-
         //! content
         inline type * operator*() throw() { return (size_>0) ? &item_[1] : 0; }
 

@@ -31,6 +31,10 @@ namespace upsylon {
             return os;
         }
 
+        friend inline std::ostream & operator<<( std::ostream &os, const accessible<T> &arr)
+        {
+            return arr.display(os);
+        }
 
     protected:
         inline explicit accessible() throw() {}                 //!< setup
