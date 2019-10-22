@@ -116,7 +116,8 @@ namespace upsylon {
                 beta(),
                 curv(),
                 step(),
-                atry()
+                atry(),
+                used()
                 {
                     setup();
                 }
