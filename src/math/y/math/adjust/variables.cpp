@@ -21,6 +21,7 @@ namespace upsylon {
             }
             
             Variables:: Variables( const Variables &other ) :
+            collection(),
             Variable::Set(other)
             {
             }

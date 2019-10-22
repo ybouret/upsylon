@@ -19,13 +19,12 @@ namespace upsylon {
             class Sample : public SampleType<T>, public counted_object
             {
             public:
-                Y_DECL_ARGS(T,type);
-                typedef arc_ptr<Sample>               Pointer;
-                typedef vector<Sample::Pointer>       Handles;
-                typedef typename Type<type>::Sequence Sequence;
-                typedef typename Type<type>::Series   Series;
-                typedef typename Type<type>::Array    Array;
-                typedef typename Type<type>::Matrix   Matrix;
+                typedef arc_ptr<Sample>            Pointer;
+                typedef vector<Sample::Pointer>    Handles;
+                typedef typename Type<T>::Sequence Sequence;
+                typedef typename Type<T>::Series   Series;
+                typedef typename Type<T>::Array    Array;
+                typedef typename Type<T>::Matrix   Matrix;
 
                 inline explicit Sample(const Series &userAbscissa,
                                        const Series &userOrdinate,
@@ -34,7 +33,8 @@ namespace upsylon {
                 ordinate(userOrdinate),
                 adjusted(userAdjusted),
                 indices(),
-                deltaSq()
+                deltaSq(),
+                dFda()
                 {}
 
                 inline virtual ~Sample() throw() {}
@@ -58,7 +58,7 @@ namespace upsylon {
                     deltaSq.adjust(n,0);
 
                     // indexing
-                    indexing::make(indices,comparison::increasing<type>,*abscissa);
+                    indexing::make(indices,comparison::increasing<T>,*abscissa);
                     std::cerr << "abscissa = " << abscissa << std::endl;
                     std::cerr << "indices  = " << indices  << std::endl;
                 }
@@ -72,15 +72,15 @@ namespace upsylon {
                     const size_t n = count();
                     if(n>0)
                     {
-                        const accessible<type> &X = *abscissa;
-                        const accessible<type> &Y = *ordinate;
-                        addressable<type>      &Z = *adjusted;
+                        const accessible<T> &X = *abscissa;
+                        const accessible<T> &Y = *ordinate;
+                        addressable<T>      &Z = *adjusted;
                         //------------------------------------------------------
                         // initialize
                         //------------------------------------------------------
                         {
                             const size_t i1 = indices[1];
-                            const_type   F1 = ( Z[i1] = F.initialize(X[i1],aorg,this->variables) );
+                            const T      F1 = ( Z[i1] = F.initialize(X[i1],aorg,this->variables) );
                             deltaSq[1]      = square_of( Y[i1] - F1 );
                         }
 
@@ -89,9 +89,9 @@ namespace upsylon {
                         //------------------------------------------------------
                         for(size_t i=2;i<=n;++i)
                         {
-                            const size_t  j = indices[i];
-                            const type   Fj = ( Z[j] = F.compute_to(X[j],aorg,this->variables) );
-                            deltaSq[i]      = square_of(Y[j]-Fj);
+                            const size_t  j  = indices[i];
+                            const T       Fj = ( Z[j] = F.compute_to(X[j],aorg,this->variables) );
+                            deltaSq[i]       = square_of(Y[j]-Fj);
                         }
 
                         return sorted_sum(deltaSq)/2;
@@ -126,11 +126,11 @@ namespace upsylon {
                         assert(aorg.size()==alpha.cols);
 
 
-                        const size_t            nvar = aorg.size();
-                        const accessible<type> &X    = *abscissa;
-                        const accessible<type> &Y    = *ordinate;
-                        addressable<type>      &Z    = *adjusted;
-                        addressable<type>      &dY   = deltaSq;
+                        const size_t        nvar = aorg.size();
+                        const accessible<T> &X    = *abscissa;
+                        const accessible<T> &Y    = *ordinate;
+                        addressable<T>      &Z    = *adjusted;
+                        addressable<T>      &dY   = deltaSq;
                         dFda.adjust(nvar,0);
 
                         //------------------------------------------------------
@@ -140,8 +140,8 @@ namespace upsylon {
                         // initialize
                         {
                             const size_t i1 = indices[1];
-                            const_type   x1 = X[i1];
-                            const_type   F1 = ( Z[i1] = F.initialize(x1,aorg,this->variables) );
+                            const T      x1 = X[i1];
+                            const T      F1 = ( Z[i1] = F.initialize(x1,aorg,this->variables) );
                             dY[i1]          = Y[i1]-F1;
                         }
 
@@ -149,9 +149,9 @@ namespace upsylon {
                         for(size_t ii=2;ii<=n;++ii)
                         {
                             const size_t i   = indices[ii];
-                            const_type   X_i = X[i];
-                            const_type   F_i = ( Z[i] = F.compute_to(X_i,aorg,this->variables) );
-                            dY[i]             = Y[i] - F_i;
+                            const T      X_i = X[i];
+                            const T      F_i = ( Z[i] = F.compute_to(X_i,aorg,this->variables) );
+                            dY[i]            = Y[i] - F_i;
                         }
 
                         //------------------------------------------------------
@@ -160,15 +160,15 @@ namespace upsylon {
                         for(size_t ii=n;ii>0;--ii)
                         {
                             const size_t i   = indices[ii];
-                            const_type   X_i = X[i];
+                            const T      X_i = X[i];
                             grad(dFda,F,X_i,aorg,this->variables,used);
-                            const_type   dY_i = dY[i];
+                            const T     dY_i = dY[i];
                             for(size_t j=nvar;j>0;--j)
                             {
                                 if(used[j])
                                 {
                                     // update beta[j]
-                                    const_type dFda_j = dFda[j];
+                                    const T dFda_j = dFda[j];
                                     beta[j] += dY_i * dFda_j;
 
                                     // update alpha[j][k<=j]
@@ -187,7 +187,7 @@ namespace upsylon {
 
 
                         //------------------------------------------------------
-                        // third pass: build squares for delta
+                        // third pass: build squares for delta and return D2
                         //------------------------------------------------------
                         for(size_t j=n;j>0;--j)
                         {
@@ -224,9 +224,9 @@ namespace upsylon {
                 }
 
             private:
-                Indices                      indices;
-                mutable vector<mutable_type> deltaSq;
-                mutable vector<mutable_type> dFda;
+                Indices           indices;
+                mutable vector<T> deltaSq;
+                mutable vector<T> dFda;
 
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);
                 inline void save_triplet( ios::ostream & fp, const size_t i) const

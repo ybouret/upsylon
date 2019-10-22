@@ -25,7 +25,8 @@ namespace upsylon
         //! constructor setup
 #define Y_MLOOP_CTOR(COUNT,DIM) \
 counting(COUNT),               \
-dimensions(DIM),             \
+accessible<T>(),              \
+dimensions(DIM),            \
 curr(0),                  \
 head(0),                \
 tail(0),              \
@@ -57,7 +58,7 @@ data(0)
             }
 
             //! hard copy
-            inline mloop( const mloop &other ) :
+            inline mloop( const mloop &other ) : collection(),
             Y_MLOOP_CTOR(other,other.dimensions)
             {
                 setup_memory();

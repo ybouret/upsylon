@@ -24,8 +24,7 @@ namespace upsylon {
                 {
                 }
 
-                inline explicit Samples() throw() :
-                SampleType<T>(), Handles(), deltaSq()
+                inline explicit Samples() throw() : SampleType<T>(), Handles(), deltaSq(), weights(), _alpha(), _beta()
                 {
                 }
 

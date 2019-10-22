@@ -61,15 +61,16 @@ namespace upsylon
     public:
         Y_DECL_ARGS(KEY,key_type);                       //!< alias
         Y_DECL_ARGS(T,type);                             //!< alias
+        typedef associative<KEY,T>           base_type;  //!< alias
         typedef typename btree<T>::data_node dnode_type; //!< alias
 
         //! setup
-        inline explicit btable() throw() : btree<T>(), key_maker()
+        inline explicit btable() throw() : btree<T>(), base_type(), key_maker()
         {
         }
 
         //! setup with some capacity
-        inline explicit btable( const size_t n, const as_capacity_t &_ ) : btree<T>(n,_), key_maker()
+        inline explicit btable( const size_t n, const as_capacity_t &_ ) : btree<T>(n,_), base_type(), key_maker()
         {
         }
 
@@ -79,7 +80,7 @@ namespace upsylon
         }
 
         //! copy
-        inline btable( const btable &other ) : btree<T>(other), key_maker() {}
+        inline btable( const btable &other ) : collection(), btree<T>(other), base_type(), key_maker() {}
 
         //! assign by copy/swap
         inline btable & operator=( const btable &other )

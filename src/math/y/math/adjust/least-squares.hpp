@@ -111,7 +111,12 @@ namespace upsylon {
                 pmin(lambdas.lower),
                 pmax(lambdas.upper),
                 p(0),
-                lambda(0)
+                lambda(0),
+                alpha(),
+                beta(),
+                curv(),
+                step(),
+                atry()
                 {
                     setup();
                 }
@@ -124,16 +129,16 @@ namespace upsylon {
                 const unit_t pmax;
                 
                 
-                bool fit(SampleType<T>       &sample,
-                         Sequential<T>        &F,
-                         Array                &aorg,
-                         const Flags          &used)
+                bool fit(SampleType<T> &sample,
+                         Sequential<T> &F,
+                         Array         &aorg,
+                         const Flags   &used)
                 {
                     assert( used.size() == aorg.size() );
 
                     //__________________________________________________________
                     //
-                    Y_LS_PRINTLN( "[LS] preparing sample" );
+                    Y_LS_PRINTLN( "[LS] initializing..." );
                     //__________________________________________________________
                     sample.ready();
                     const size_t n = aorg.size();
@@ -145,7 +150,7 @@ namespace upsylon {
 
                     //__________________________________________________________
                     //
-                    Y_LS_PRINTLN( "[LS] initialzing with #parameters=" << n);
+                    Y_LS_PRINTLN( "[LS] starting with #parameters=" << n);
                     //__________________________________________________________
                     alpha.make(n,n);
                     beta.adjust(n,0);
