@@ -16,10 +16,9 @@ namespace upsylon {
             class Gradient : public derivative<T>
             {
             public:
-                Y_DECL_ARGS(T,type);
-                type h; //!< scaling
+                T h; //!< scaling
 
-                typedef typename Type<type>::Array Array;
+                typedef typename Type<T>::Array Array;
 
                 inline explicit Gradient() : derivative<T>(), h(1e-4)
                 {
@@ -31,13 +30,14 @@ namespace upsylon {
 
                 inline void operator()(Array           &dFda,
                                        Sequential<T>   &F,
-                                       param_type       x,
+                                       T                x,
                                        const Array      &aorg,
                                        const Variables &vars,
                                        const Flags     &used)
                 {
                     assert(used.size()==aorg.size());
                     assert(dFda.size()==aorg.size());
+
                     // initialize
                     for(size_t j=dFda.size();j>0;--j)
                     {
@@ -45,18 +45,16 @@ namespace upsylon {
                     }
 
                     // prepare wrapper
-                    Wrapper      call = { 0, &F, x, &aorg, &vars  };
-                    size_t      &i    = call.i;
-
-                    // loop on variables
-                    size_t      nvar  = vars.size();
-                    for( Variables::const_iterator v = vars.begin();
-                        nvar>0;--nvar,++v)
+                    Wrapper              call = { 0, &F, x, &aorg, &vars  };
+                    size_t              &indx = call.i;
+                    size_t               nvar = vars.size();
+                    const accessible<T> &a    = aorg;
+                    for( Variables::const_iterator v = vars.begin();nvar>0;--nvar,++v)
                     {
-                        i = (*v)->index();
-                        if(used[i])
+                        indx = (*v)->index();
+                        if(used[indx])
                         {
-                            dFda[i] = this->diff(call, x, h);
+                            dFda[indx] = this->diff(call, a[indx], h);
                         }
                     }
                 }
@@ -66,13 +64,13 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Gradient);
                 struct Wrapper
                 {
-                    size_t           i;
-                    Sequential<T>   *F_p;
-                    type             x;
-                    const Array     *aorg_p;
-                    const Variables *vars_p;
+                    size_t                 i;
+                    Sequential<T>         *F_p;
+                    T                      x;
+                    const addressable<T>   *aorg_p;
+                    const Variables       *vars_p;
 
-                    inline type operator()( const_type a )
+                    inline T operator()( const T a )
                     {
                         assert(i>0);
                         assert(F_p);
@@ -81,11 +79,11 @@ namespace upsylon {
                         
                         Sequential<T>        &F    = *F_p;
                         const addressable<T> &aorg = *aorg_p;
-                        mutable_type         &ai   = aliasing::_(aorg)[i];
-                        const_type            a0   = ai;
+                        T                    &ai   = aliasing::_(aorg)[i];
+                        const T               a0   = ai;
                         try {
                             ai = a;
-                            const_type f = F.initialize(x,aorg,*vars_p);
+                            const T f = F.initialize(x,aorg,*vars_p);
                             ai = a0;
                             return f;
                         }

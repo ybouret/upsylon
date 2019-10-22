@@ -127,7 +127,7 @@ namespace upsylon {
                 bool fit(SampleType<T>       &sample,
                          Sequential<T>        &F,
                          Array                &aorg,
-                         const Flags          &used )
+                         const Flags          &used)
                 {
                     assert( used.size() == aorg.size() );
 
@@ -167,11 +167,12 @@ namespace upsylon {
                     Y_LS_PRINTLN( "     aorg   = " << aorg );
                     Y_LS_PRINTLN( "     D2org  = " << D2org );
                     Y_LS_PRINTLN( "     alpha  = " << alpha );
-                    Y_LS_PRINTLN( "     beta   = " << beta  );
                     //__________________________________________________________
 
                 CURVATURE:
-                    // compute curvature at current point
+                    //__________________________________________________________
+                    //
+                    Y_LS_PRINTLN( "     beta   = " << beta  );
                     while( !Algo<T>::ComputeCurvature(curv,lambda,alpha) )
                     {
                         if(!increaseLambda())
@@ -180,11 +181,11 @@ namespace upsylon {
                             return false;
                         }
                     }
+                    //__________________________________________________________
 
-                    // compute current 'optimal' step
-                    Algo<T>::ComputeStep(step, curv, beta);
                     //__________________________________________________________
                     //
+                    Algo<T>::ComputeStep(step, curv, beta);
                     Y_LS_PRINTLN( "     lambda = " << lambda );
                     Y_LS_PRINTLN( "     step   = " << step   );
                     //__________________________________________________________
@@ -192,12 +193,14 @@ namespace upsylon {
                     
                     // possible step modification
 
-
+                    //__________________________________________________________
+                    //
                     // try full step
                     T D2try = D2(1);
                     Y_LS_PRINTLN( "     atry   = " << atry   );
                     Y_LS_PRINTLN( "     D2try  = " << D2try  );
-                    
+                    //__________________________________________________________
+
 
                     if( D2try < D2org )
                     {
@@ -205,21 +208,22 @@ namespace upsylon {
                         //
                         Y_LS_PRINTLN( "[LS] accept" );
                         //______________________________________________________
+                        const bool  converged = ( fabs_of(D2org-D2try) <= numeric<T>::sqrt_ftol * D2org);
                         decreaseLambda();
                         atom::set(aorg,atry);
                         D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
-                        if(cycle>6)
+                        if(converged)
                         {
-                            std::cerr << "exiting..." << std::endl;
-                            return true;
+                            goto CONVERGED;
                         }
+
                         goto CYCLE;
                     }
                     else
                     {
                         //______________________________________________________
                         //
-                        Y_LS_PRINTLN( "[LS] backtracking" );
+                        Y_LS_PRINTLN( "[LS] reject" );
                         //______________________________________________________
                         if( !increaseLambda() )
                         {
@@ -229,6 +233,12 @@ namespace upsylon {
                         goto CURVATURE;
 
                     }
+
+                CONVERGED:
+                    //__________________________________________________________
+                    //
+                    Y_LS_PRINTLN( "[LS] converged" );
+                    //__________________________________________________________
 
                     return true;
                     
@@ -292,7 +302,6 @@ namespace upsylon {
                 {
                     lambda = lambdas[ (p=max_of(p-1,pmin) ) ];
                     Y_LS_PRINTLN( "[LS] decreasing lambda" );
-                    Y_LS_PRINTLN( "   |_lambda=" << lambda );
                 }
                 
                 inline bool increaseLambda() throw()
@@ -306,7 +315,6 @@ namespace upsylon {
                     else
                     {
                         lambda = lambdas[ ++p ];
-                        Y_LS_PRINTLN( "   |_lambda=" << lambda );
                         return true;
                     }
                 }

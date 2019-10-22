@@ -203,8 +203,26 @@ Y_UTEST(adjust)
     LeastSquares<double> LS(true);
     
     LS.fit(S2, SF, aorg, used);
-    
-   
+
+    {
+        ios::ocstream fp("s2.dat");
+        S2.save(fp);
+    }
+
+    LS.fit(S1, SF, aorg, used);
+
+    {
+        ios::ocstream fp("s1.dat");
+        S1.save(fp);
+    }
+
+    LS.fit(S,SF,aorg,used);
+    {
+        ios::ocstream fp("s.dat");
+        S1.save(fp);
+        fp <<'\n';
+        S2.save(fp);
+    }
     
 
 }

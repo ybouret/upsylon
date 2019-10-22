@@ -75,20 +75,23 @@ namespace upsylon {
                         const accessible<type> &X = *abscissa;
                         const accessible<type> &Y = *ordinate;
                         addressable<type>      &Z = *adjusted;
-
+                        //------------------------------------------------------
                         // initialize
+                        //------------------------------------------------------
                         {
                             const size_t i1 = indices[1];
                             const_type   F1 = ( Z[i1] = F.initialize(X[i1],aorg,this->variables) );
-                            deltaSq[1]      = square_of( F1-Y[i1] );
+                            deltaSq[1]      = square_of( Y[i1] - F1 );
                         }
 
+                        //------------------------------------------------------
                         // subsequent
+                        //------------------------------------------------------
                         for(size_t i=2;i<=n;++i)
                         {
                             const size_t  j = indices[i];
                             const type   Fj = ( Z[j] = F.compute_to(X[j],aorg,this->variables) );
-                            deltaSq[i]      = square_of(Fj-Y[j]);
+                            deltaSq[i]      = square_of(Y[j]-Fj);
                         }
 
                         return sorted_sum(deltaSq)/2;
@@ -139,16 +142,16 @@ namespace upsylon {
                             const size_t i1 = indices[1];
                             const_type   x1 = X[i1];
                             const_type   F1 = ( Z[i1] = F.initialize(x1,aorg,this->variables) );
-                            dY[1]           = Y[i1]-F1;
+                            dY[i1]          = Y[i1]-F1;
                         }
 
                         // subsequent
-                        for(size_t i=2;i<=n;++i)
+                        for(size_t ii=2;ii<=n;++ii)
                         {
-                            const size_t j  = indices[i];
-                            const_type   xj = X[j];
-                            const_type   Fj = ( Z[j] = F.compute_to(xj,aorg,this->variables) );
-                            dY[i]           = Y[j] - Fj;
+                            const size_t i   = indices[ii];
+                            const_type   X_i = X[i];
+                            const_type   F_i = ( Z[i] = F.compute_to(X_i,aorg,this->variables) );
+                            dY[i]             = Y[i] - F_i;
                         }
 
                         //------------------------------------------------------
@@ -162,15 +165,21 @@ namespace upsylon {
                             const_type   dY_i = dY[i];
                             for(size_t j=nvar;j>0;--j)
                             {
-                                // update beta[j]
-                                const_type dFda_j = dFda[j];
-                                beta[j] += dY_i * dFda_j;
-
-                                // update alpha[j][k<=j]
-                                Array &alpha_j = alpha[j];
-                                for(size_t k=j;k>0;--k)
+                                if(used[j])
                                 {
-                                    alpha_j[k] += dFda_j * dFda[k];
+                                    // update beta[j]
+                                    const_type dFda_j = dFda[j];
+                                    beta[j] += dY_i * dFda_j;
+
+                                    // update alpha[j][k<=j]
+                                    Array &alpha_j = alpha[j];
+                                    for(size_t k=j;k>0;--k)
+                                    {
+                                        if(used[k])
+                                        {
+                                            alpha_j[k] += dFda_j * dFda[k];
+                                        }
+                                    }
                                 }
                             }
 
