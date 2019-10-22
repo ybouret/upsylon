@@ -25,13 +25,14 @@ namespace upsylon {
             //! C validate arguments
 #define Y_ADJUST_CVALIDATE_ARGS      Array&,const array<bool>&,const Variables &,const size_t
 
-            typedef vector<size_t>   Indices;
-            typedef accessible<bool> Flags;
-            
+            typedef vector<size_t>         Indices;
+            typedef accessible<bool>       Flags;
+            typedef memory::pooled         Allocator;
+            typedef vector<bool,Allocator> bVector;
+
             template <typename T>
             struct Type
             {
-                typedef memory::pooled                        Allocator;
                 typedef sequence<T>                           Sequence;   //!< alias
                 typedef arr_ptr<Sequence,arc_ptr>             Series;     //!< alias for shared data
                 typedef addressable<T>                        Array;      //!< alias for interface

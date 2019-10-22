@@ -132,15 +132,18 @@ namespace upsylon {
                 bool fit(SampleType<T> &sample,
                          Sequential<T> &F,
                          Array         &aorg,
-                         const Flags   &used)
+                         const Flags   &flags,
+                         Array         &aerr)
                 {
-                    assert( used.size() == aorg.size() );
+                    assert( flags.size() == aorg.size() );
+                    assert( flags.size() == aerr.size() );
 
                     //__________________________________________________________
                     //
                     Y_LS_PRINTLN( "[LS] initializing..." );
                     //__________________________________________________________
                     sample.ready();
+                    atom::ld(aerr,-1);
                     const size_t n = aorg.size();
                     if(n<=0)
                     {
@@ -157,8 +160,14 @@ namespace upsylon {
                     curv.make(n,n);
                     step.adjust(n,0);
                     atry.adjust(n,0);
-                    setLambda( Algo<T>::Initial() );
+                    used.adjust(n,0);
+                    atom::ld(used,false);
+                    sample.activate(used,flags);
+                    Y_LS_PRINTLN( "     flags  = " << flags );
+                    Y_LS_PRINTLN( "     used   = " << used  );
 
+
+                    setLambda( Algo<T>::Initial() );
                     CallD2 D2    = { &aorg, &step, &atry, &sample, &F };
                     T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
                     size_t cycle = 0;
@@ -242,11 +251,57 @@ namespace upsylon {
                 CONVERGED:
                     //__________________________________________________________
                     //
-                    Y_LS_PRINTLN( "[LS] converged" );
+                    Y_LS_PRINTLN( "[LS] converged@D2=" << D2org );
+                    Y_LS_PRINTLN( "     aorg = " << aorg );
                     //__________________________________________________________
+                    if(!LU::build(alpha))
+                    {
+                        Y_LS_PRINTLN( "[LS] singular extremum" );
+                        return false;
+                    }
+                    LU::inverse(alpha,curv);
 
-                    return true;
-                    
+                    //__________________________________________________________
+                    //
+                    unit_t dof = sample.count();
+                    //__________________________________________________________
+                    for(size_t i=n;i>0;--i)
+                    {
+                        if(used[i]) --dof;
+                    }
+                    Y_LS_PRINTLN( "      dof = " << dof );
+                    if(dof<0)
+                    {
+                        Y_LS_PRINTLN( "[LS] meaningless result" );
+                        return false;
+                    }
+                    else if(0==dof)
+                    {
+                        Y_LS_PRINTLN( "[LS] is interpolation" );
+                        atom::ld(aerr,0);
+                        return true;
+                    }
+                    else
+                    {
+                        assert(dof>0);
+                        for(size_t i=n;i>0;--i)
+                        {
+                            if(used[i])
+                            {
+                                const T stddev = sqrt_of( (D2org * curv[i][i]) / dof );
+                                aerr[i] = stddev;
+                            }
+                            else
+                            {
+                                aerr[i] = 0;
+                            }
+                        }
+                        Y_LS_PRINTLN( "     aerr = " << aerr );
+                        return true;
+                    }
+
+
+
                 }
                 
                 
@@ -256,12 +311,13 @@ namespace upsylon {
                 unit_t p;
                 T      lambda;
                 
-                Matrix alpha;
-                Vector beta;
-                Matrix curv;
-                Vector step;
-                Vector atry;
-                
+                Matrix   alpha;
+                Vector   beta;
+                Matrix   curv;
+                Vector   step;
+                Vector   atry;
+                bVector  used;
+
                 struct CallD2
                 {
                     const accessible<T> * _aorg;

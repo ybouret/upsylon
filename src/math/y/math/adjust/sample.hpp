@@ -64,8 +64,8 @@ namespace upsylon {
                 }
 
                 //! compute D2 using indexed access
-                virtual T  compute(Sequential<T>   &F,
-                                   const Array     &aorg) const
+                inline virtual T  compute(Sequential<T>   &F,
+                                          const Array     &aorg) const
                 {
                     assert(indices.size() == count() );
                     assert(deltaSq.size() == count() );
@@ -200,7 +200,13 @@ namespace upsylon {
                         return 0;
                     }
                 }
-                
+
+
+                inline virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const
+                {
+                    this->variables.activate(target,source);
+                 }
+
 
                 //! output helper
                 inline void save( ios::ostream &fp, const bool indexed = false ) const
@@ -233,7 +239,7 @@ namespace upsylon {
                 {
                     fp("%.15g %.15g %.15f\n", double(abscissa[i]),double(ordinate[i]),double(adjusted[i]));
                 }
-            
+
                 
             };
 

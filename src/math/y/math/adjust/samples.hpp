@@ -103,6 +103,16 @@ namespace upsylon {
                     return sorted_sum(deltaSq);
                 }
 
+                virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const
+                {
+                    const Handles &self = *this;
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        self[i]->activate(target,source);
+                    }
+                }
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);
                 mutable vector<T> deltaSq;

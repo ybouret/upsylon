@@ -160,6 +160,7 @@ Y_UTEST(adjust)
     vector<bool>     used( aorg.size(), true );
     Gradient<double> grad;
     vector<double>   dFda( aorg.size(), -1 );
+    vector<double>   aerr( aorg.size(),  0 );
 
     SequentialFunction<double> SF( F );
 
@@ -202,21 +203,23 @@ Y_UTEST(adjust)
     
     LeastSquares<double> LS(true);
     
-    LS.fit(S2, SF, aorg, used);
+    LS.fit(S2, SF, aorg, used, aerr);
 
     {
         ios::ocstream fp("s2.dat");
         S2.save(fp);
     }
 
-    LS.fit(S1, SF, aorg, used);
+    return 0;
+
+    LS.fit(S1, SF, aorg, used, aerr);
 
     {
         ios::ocstream fp("s1.dat");
         S1.save(fp);
     }
 
-    LS.fit(S,SF,aorg,used);
+    LS.fit(S,SF,aorg,used,aerr);
     {
         ios::ocstream fp("s.dat");
         S1.save(fp);

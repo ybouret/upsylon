@@ -14,6 +14,7 @@ namespace upsylon {
     namespace math {
 
         namespace Adjust {
+            
             //! variable interface
             class Variable : public counted_object
             {
@@ -41,6 +42,7 @@ namespace upsylon {
                     return source[ query(source) ];
                 }
 
+                void activate( addressable<bool> &target, const accessible<bool> &source) const;
 
 
                 Variable(const Variable &);

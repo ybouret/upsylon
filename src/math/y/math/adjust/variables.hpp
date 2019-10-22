@@ -67,8 +67,10 @@ namespace upsylon {
                     }
                 }
 
-                size_t sweep() const throw();
-                
+                size_t sweep() const throw(); //!< maximun index
+
+                void   activate( addressable<bool> &target, const accessible<bool> &source ) const;
+
                 void   chkdbg() const;
 
             private:

@@ -35,7 +35,11 @@ namespace upsylon {
                                             const Array     &aorg,
                                             const Flags     &used,
                                             Gradient<T>     &grad) const = 0;
-                
+
+
+                virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const = 0;
+
+
                 inline T compute_( Function &F, const Array &aorg ) const
                 {
                     SequentialFunction<T> call(F);
@@ -69,7 +73,8 @@ namespace upsylon {
                         ++it;
                     }
                 }
-                
+
+
                 // non virtual interface
                 
                 inline T computeD2( Sequential<T>   &F,

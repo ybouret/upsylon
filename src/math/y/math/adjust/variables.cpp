@@ -125,7 +125,16 @@ namespace upsylon {
                 }
                 return ans;
             }
-            
+
+            void Variables:: activate( addressable<bool> &target, const accessible<bool> &source ) const
+            {
+                for( const_iterator it=begin(); it != end(); ++it)
+                {
+                    (**it).activate(target,source);
+                }
+            }
+
+
             static inline
             int __compare_indices(const Variable::Pointer &lhs,
                                   const Variable::Pointer &rhs)

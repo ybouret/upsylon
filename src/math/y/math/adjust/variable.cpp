@@ -39,6 +39,21 @@ namespace upsylon {
                 return os;
             }
 
+            void Variable:: activate(addressable<bool>      &target,
+                                     const accessible<bool> &source) const
+            {
+                const size_t idx = index();
+                if(idx<=0||idx>target.size()||idx>source.size())
+                {
+                    throw libc::exception(EDOM,"check used variable '%s'@%u", *name, unsigned(idx));
+                }
+                target[idx] = source[idx];
+            }
+
+
+
+            
+
         }
     }
 
