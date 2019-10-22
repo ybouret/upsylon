@@ -24,14 +24,15 @@ namespace upsylon {
             template <typename T> class Sequential
             {
             public:
-                typedef typename Type<T>::Array      Array;
+                typedef typename Type<T>::Array       Array;
+                typedef typename Type<T>::Parameters  Parameters;
 
                 const T current; //!< currently called position
 
                 inline virtual ~Sequential() throw() { aliasing::_(current)=0; } //!< cleanup
 
                 //! make a first call
-                inline T initialize(const T x, const Array &aorg, const Variables &vars)
+                inline T initialize(const T x, const Parameters &aorg, const Variables &vars)
                 {
                     const  T  ans = on_initialize(x,aorg,vars);
                     aliasing::_(current) = x;
@@ -39,7 +40,7 @@ namespace upsylon {
                 }
 
                 //! update value from previous call
-                inline T compute_to(const T x, const Array &aorg, const Variables &vars)
+                inline T compute_to(const T x, const Parameters &aorg, const Variables &vars)
                 {
                     const T  ans = on_compute_to(x,aorg,vars);
                     aliasing::_(current) = x;
@@ -55,8 +56,8 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sequential);
-                virtual T on_initialize(const T, const Array &,const Variables &) = 0;
-                virtual T on_compute_to(const T, const Array &,const Variables &) = 0;
+                virtual T on_initialize(const T, const Parameters &,const Variables &) = 0;
+                virtual T on_compute_to(const T, const Parameters &,const Variables &) = 0;
             };
 
 

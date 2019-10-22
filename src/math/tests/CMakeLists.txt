@@ -75,8 +75,9 @@ ADD_TEST(stat        test-m stat)
 SOURCE_GROUP(io FILES test-data-set.cpp)
 ADD_TEST(io:ds   test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
-SOURCE_GROUP(adjust FILES test-adjust.cpp)
-ADD_TEST(adjust test-m adjust)
+SOURCE_GROUP(adjust FILES test-adjust.cpp test-adjust-ode.cpp)
+ADD_TEST(adjust:main test-m adjust)
+ADD_TEST(adjust:ode  test-m adjust_ode)
 
 
 

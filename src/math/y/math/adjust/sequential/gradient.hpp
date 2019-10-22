@@ -18,7 +18,8 @@ namespace upsylon {
             public:
                 T h; //!< scaling
 
-                typedef typename Type<T>::Array Array;
+                typedef typename Type<T>::Array      Array;
+                typedef typename Type<T>::Parameters Parameters;
 
                 inline explicit Gradient() : derivative<T>(), h(1e-4)
                 {
@@ -31,9 +32,9 @@ namespace upsylon {
                 inline void operator()(Array           &dFda,
                                        Sequential<T>   &F,
                                        T                x,
-                                       const Array      &aorg,
-                                       const Variables &vars,
-                                       const Flags     &used)
+                                       const Parameters &aorg,
+                                       const Variables  &vars,
+                                       const Flags      &used)
                 {
                     assert(used.size()==aorg.size());
                     assert(dFda.size()==aorg.size());
@@ -67,7 +68,7 @@ namespace upsylon {
                     size_t                 i;
                     Sequential<T>         *F_p;
                     T                      x;
-                    const addressable<T>   *aorg_p;
+                    const Parameters      *aorg_p;
                     const Variables       *vars_p;
 
                     inline T operator()( const T a )
@@ -78,8 +79,8 @@ namespace upsylon {
                         assert(vars_p);
                         
                         Sequential<T>        &F    = *F_p;
-                        const addressable<T> &aorg = *aorg_p;
-                        T                    &ai   = aliasing::_(aorg)[i];
+                        const Parameters     &aorg = *aorg_p;
+                        T                    &ai   = aliasing::_(aorg[i]);
                         const T               a0   = ai;
                         try {
                             ai = a;

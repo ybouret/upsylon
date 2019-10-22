@@ -44,7 +44,7 @@ namespace {
     {
 
         double compute(const double               t,
-                       const addressable<double> &aorg,
+                       const accessible<double>  &aorg,
                        const Variables           &vars )
         {
             const double t0    = vars(aorg,"t0");
