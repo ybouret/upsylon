@@ -37,12 +37,34 @@ namespace {
 
     }
 
+
+    template <typename T> static inline
+    void doGram(concurrent::for_each &loop)
+    {
+        typedef matrix<T>                Matrix;
+        //typedef Oxide::Field2D<T>        Field;
+        std::cerr << "Testing Gram" << std::endl;
+
+        for(size_t nr=1;nr<=16;nr<<=1)
+        {
+            Matrix M(nr,nr);
+            for(size_t nc=1;nc<=64;nc<<=1)
+            {
+                Matrix V(nr,nc);
+                support::fill2D(V);
+                atom::Gram(M,V);
+                //std::cerr << "G=" << M << std::endl;
+            }
+        }
+
+    }
+
     template <typename T> static inline
     void doTest(concurrent::for_each &loop)
     {
-        static const size_t nn[] = { 1,2,4,8,16,256 };
+        static const size_t nn[] = { 1,2,4,8,16,64 };
 
-
+        std::cerr << "Testing MMUL" << std::endl;
         typedef matrix<T>                Matrix;
         typedef Oxide::Field2D<T>        Field;
 
@@ -80,15 +102,37 @@ namespace {
             }
         }
 
+        doGram<T>(loop);
+
+    }
+
+
+    static inline
+    void symIndices()
+    {
+        size_t offset = 0;
+        for(size_t nr=1;nr<=10;++nr)
+        {
+            std::cerr << "offset=" << offset << "/" << (nr*(nr-1))/2 << std::endl;
+            offset += nr;
+        }
     }
 
 }
+
 
 Y_UTEST(atom3)
 {
     concurrent::simd loop;
 
+    if(true)
+    {
+        symIndices();
+        return 0;
+    }
+
     doTest<float>(loop);
+    doTest<double>(loop);
 
 }
 Y_UTEST_DONE()

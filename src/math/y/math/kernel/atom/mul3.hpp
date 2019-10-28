@@ -160,3 +160,20 @@ void mmul_ltrn(MATRIX &M, const LHS &lhs, const RHS &rhs, concurrent::for_each &
 #undef Y_MK_ATOM_MMUL_LTRN
 
 #undef Y_MK_ATOM3_PAR
+
+//! Gram matrix of vectors V[1...nr]
+template <typename TARGET, typename SOURCE> static inline
+void Gram(TARGET &G, const SOURCE &V)
+{
+    assert(G.rows==V.rows);
+    assert(G.cols==V.rows);
+    const size_t nr = V.rows;
+    for(size_t i=nr;i>0;--i)
+    {
+        for(size_t j=i;j>0;--j)
+        {
+            G[i][j] = G[j][i] = dot(V[i],V[j]);
+        }
+    }
+
+}

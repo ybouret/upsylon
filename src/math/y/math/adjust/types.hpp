@@ -26,7 +26,7 @@ namespace upsylon {
             //==================================================================
             typedef vector<size_t>         Indices;    //!< global vector of indeices
             typedef accessible<bool>       Flags;      //!< interface to untouched flags
-            typedef memory::pooled         Allocator;  //!< memory for variable sized container
+            typedef memory::pooled         Allocator;  //!< memory for Variables-sized container
             typedef vector<bool,Allocator> bVector;    //!< a vector or boolean
 
             //! C++ fit function prototype

@@ -22,10 +22,10 @@ namespace upsylon {
 
                 inline explicit SequentialFunction( Function &F ) throw() : host(F) {} //!< setup
                 inline virtual ~SequentialFunction() throw() {}                        //!< cleanup
-                Function &host; //!< reference to external function
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SequentialFunction);
+                Function &host; //!< reference to external function
                 inline virtual T onStart(const T x, const Parameters &aorg, const Variables &vars) { return host(x,aorg,vars); }
                 inline virtual T onReach(const T x, const Parameters &aorg, const Variables &vars) { return host(x,aorg,vars); }
             };
