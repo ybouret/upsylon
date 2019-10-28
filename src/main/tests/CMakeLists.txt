@@ -24,7 +24,7 @@ ADD_LIBRARY(module MODULE module.cpp)
 
 ENABLE_TESTING()
 SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp
-test-hr-ints.cpp test-ints-display.cpp)
+test-hr-ints.cpp test-ints-display.cpp test-cast.cpp)
 ADD_TEST(os:platform     test-main platform)
 ADD_TEST(os:types        test-main types)
 ADD_TEST(os:sys          test-main sys)
@@ -186,8 +186,9 @@ ADD_TEST(codec:asf    test-main asf)
 ADD_TEST(codec:bwt    test-main bwt)
 ADD_TEST(codec:b64id  test-main b64id)
 
-SOURCE_GROUP(data FILES test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-btree.cpp
-test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp)
+SOURCE_GROUP(data FILES
+test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-btree.cpp
+test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp)
 ADD_TEST(data:associative test-main associative)
 ADD_TEST(data:set         test-main set)
 ADD_TEST(data:map         test-main map)

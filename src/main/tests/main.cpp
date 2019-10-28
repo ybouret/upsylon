@@ -185,6 +185,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(oxide_vtk);
     Y_UTEST(oxide_par);
     Y_UTEST(oxide_grids);
+
+    Y_UTEST(magic);
 }
 Y_UTEST_EXEC()
 

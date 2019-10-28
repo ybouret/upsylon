@@ -107,15 +107,80 @@ namespace {
     }
 
 
+    //! integer square root
+    template <typename T> inline
+    T __isqrt(const T n) throw()
+    {
+        if(n<=1)
+        {
+            return n;
+        }
+        else
+        {
+            T x0 = n;
+            T x1 = (n>>1);
+            while(true)
+            {
+                x0 = x1;
+                x1 = ((x0+n/x0)>>1);
+                if(x1>=x0)
+                {
+                    return x0;
+                }
+            }
+        }
+
+    }
+
+
+
+    static inline size_t getOffset(const size_t i)
+    {
+        assert(i>0);
+        return (i*(i-1))>>1;
+    }
+
     static inline
     void symIndices()
     {
-        size_t offset = 0;
-        for(size_t nr=1;nr<=10;++nr)
+        const size_t n = 10;
+        for(size_t i=1;i<=n;++i)
         {
-            std::cerr << "offset=" << offset << "/" << (nr*(nr-1))/2 << std::endl;
-            offset += nr;
+            std::cerr << "i=" << i << std::endl;
+            std::cerr << " |_k=";
+            const size_t lo = getOffset(i);
+            const size_t up = getOffset(i+1);
+            for(size_t k=lo;k<up;++k)
+            {
+                std::cerr << ' ' << k;
+            } std::cerr << std::endl;
+
+            const size_t lo2 = i*(i-1);
+            const size_t up2 = i*(i+1);
+            std::cerr << " |_lo2  = " << lo2 << std::endl;
+            std::cerr << " |_up2  = " << up2 << std::endl;
+            std::cerr << "  |_2k  =";
+            size_t count = 0;
+            for(size_t k2=lo2;k2<up2;++k2)
+            {
+                if( 0 == (k2&0x01) )
+                {
+                    std::cerr << ' ' << (k2>>1);
+                    ++count;
+                }
+            }
+            std::cerr << ' ';  Y_CHECK(count==i);
+            std::cerr << "  |_sqrt=";
+            for(size_t k2=lo2;k2<up2;++k2)
+            {
+                if( 0 == (k2&0x01) )
+                {
+                    std::cerr << ' ' << __isqrt(k2);
+                }
+            } std::cerr << std::endl;
         }
+
+
     }
 
 }

@@ -50,7 +50,7 @@ Y_UTEST(scrabble)
             size_t count = 0;
             for(size_t i=1;i<=total;++i)
             {
-                string_display::align(std::cerr, db[i], n);
+                string_display::align(std::cerr <<'<', db[i], n) << '>';
                 if(++count>=8) { count = 0; std::cerr << std::endl;} else { std::cerr << ' '; }
             }
             std::cerr << std::endl;
