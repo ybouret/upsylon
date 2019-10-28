@@ -104,7 +104,7 @@ __ctrl(0)
                 }
 
                 //! initialize protocol
-                inline virtual T on_initialize(const T x1, const Parameters &aorg, const Variables &vars)
+                inline virtual T onStart(const T x1, const Parameters &aorg, const Variables &vars)
                 {
                     // link
                     p_aorg = &aorg;
@@ -122,7 +122,7 @@ __ctrl(0)
                 }
 
                 //! update protocol
-                inline virtual T on_compute_to(const T x1, const Parameters &aorg, const Variables &vars)
+                inline virtual T onReach(const T x1, const Parameters &aorg, const Variables &vars)
                 {
                     // link
                     p_aorg = &aorg;

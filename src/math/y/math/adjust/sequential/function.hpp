@@ -26,8 +26,8 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SequentialFunction);
-                inline virtual T on_initialize(const T x, const Parameters &aorg, const Variables &vars) { return host(x,aorg,vars); }
-                inline virtual T on_compute_to(const T x, const Parameters &aorg, const Variables &vars) { return host(x,aorg,vars); }
+                inline virtual T onStart(const T x, const Parameters &aorg, const Variables &vars) { return host(x,aorg,vars); }
+                inline virtual T onReach(const T x, const Parameters &aorg, const Variables &vars) { return host(x,aorg,vars); }
             };
             
         }

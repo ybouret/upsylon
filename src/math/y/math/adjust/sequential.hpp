@@ -31,17 +31,17 @@ namespace upsylon {
                 inline virtual ~Sequential() throw() { aliasing::_(current)=0; } //!< cleanup
 
                 //! make a first call
-                inline T initialize(const T x, const Parameters &aorg, const Variables &vars)
+                inline T start(const T x, const Parameters &aorg, const Variables &vars)
                 {
-                    const  T  ans = on_initialize(x,aorg,vars);
+                    const  T  ans = onStart(x,aorg,vars);
                     aliasing::_(current) = x;
                     return ans;
                 }
 
                 //! update value from previous call
-                inline T compute_to(const T x, const Parameters &aorg, const Variables &vars)
+                inline T reach(const T x, const Parameters &aorg, const Variables &vars)
                 {
-                    const T  ans = on_compute_to(x,aorg,vars);
+                    const T  ans = onReach(x,aorg,vars);
                     aliasing::_(current) = x;
                     return ans;
                 }
@@ -55,8 +55,8 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Sequential);
-                virtual T on_initialize(const T, const Parameters &,const Variables &) = 0;
-                virtual T on_compute_to(const T, const Parameters &,const Variables &) = 0;
+                virtual T onStart(const T, const Parameters &,const Variables &) = 0;
+                virtual T onReach(const T, const Parameters &,const Variables &) = 0;
             };
 
 

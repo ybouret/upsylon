@@ -86,7 +86,7 @@ namespace upsylon {
                         //------------------------------------------------------
                         {
                             const size_t i1 = indices[1];
-                            const T      F1 = ( Z[i1] = F.initialize(X[i1],aorg,this->variables) );
+                            const T      F1 = ( Z[i1] = F.start(X[i1],aorg,this->variables) );
                             deltaSq[1]      = square_of( Y[i1] - F1 );
                         }
 
@@ -96,7 +96,7 @@ namespace upsylon {
                         for(size_t i=2;i<=n;++i)
                         {
                             const size_t  j  = indices[i];
-                            const T       Fj = ( Z[j] = F.compute_to(X[j],aorg,this->variables) );
+                            const T       Fj = ( Z[j] = F.reach(X[j],aorg,this->variables) );
                             deltaSq[i]       = square_of(Y[j]-Fj);
                         }
 
@@ -148,7 +148,7 @@ namespace upsylon {
                         {
                             const size_t i1 = indices[1];
                             const T      x1 = X[i1];
-                            const T      F1 = ( Z[i1] = F.initialize(x1,aorg,this->variables) );
+                            const T      F1 = ( Z[i1] = F.start(x1,aorg,this->variables) );
                             dY[i1]          = Y[i1]-F1;
                         }
 
@@ -157,7 +157,7 @@ namespace upsylon {
                         {
                             const size_t i   = indices[ii];
                             const T      X_i = X[i];
-                            const T      F_i = ( Z[i] = F.compute_to(X_i,aorg,this->variables) );
+                            const T      F_i = ( Z[i] = F.reach(X_i,aorg,this->variables) );
                             dY[i]            = Y[i] - F_i;
                         }
 

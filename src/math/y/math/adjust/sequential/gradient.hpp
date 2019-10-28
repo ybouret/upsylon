@@ -103,7 +103,7 @@ namespace upsylon {
                         const T               a0   = ai;
                         try {
                             ai = a;
-                            const T f = F.initialize(x,aorg,*vars_p);
+                            const T f = F.start(x,aorg,*vars_p);
                             ai = a0;
                             return f;
                         }

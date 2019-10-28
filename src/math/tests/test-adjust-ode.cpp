@@ -121,10 +121,10 @@ namespace {
             T x = 0;
             const T dx = 0.02;
 
-            fp("%g %g\n",x,explode.initialize(x,aorg,vars));
+            fp("%g %g\n",x,explode.start(x,aorg,vars));
             for(x+=dx;x<=X->back();x+=dx)
             {
-                fp("%g %g\n",x,explode.compute_to(x,aorg,vars));
+                fp("%g %g\n",x,explode.reach(x,aorg,vars));
             }
 
         }
