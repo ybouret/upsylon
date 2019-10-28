@@ -103,9 +103,12 @@ namespace upsylon {
             class LeastSquares : public Gradient<T>
             {
             public:
-                typedef typename Type<T>::Array    Array;  //!< alias
-                typedef typename Type<T>::Matrix   Matrix; //!< alias
-                typedef typename Type<T>::Vector   Vector; //!< alias
+                typedef typename Type<T>::Array    Array;    //!< alias
+                typedef typename Type<T>::Matrix   Matrix;   //!< alias
+                typedef typename Type<T>::Vector   Vector;   //!< alias
+                typedef typename Type<T>::Function Function; //!< alias
+                typedef typename Type<T>::Validate Validate; //!< alias
+
                 typedef Oxide::Field1D<T>          Field;  //!< alias
 
 
@@ -141,7 +144,9 @@ namespace upsylon {
                          Sequential<T> &F,
                          Array         &aorg,
                          const Flags   &flags,
-                         Array         &aerr)
+                         Array         &aerr,
+                         Validate      *validate = 0
+                         )
                 {
                     static const T D2_FTOL = numeric<T>::sqrt_ftol;
                     assert( flags.size() == aorg.size() );
@@ -215,8 +220,22 @@ namespace upsylon {
                     Y_LS_PRINTLN( "     step   = " << step   );
                     //__________________________________________________________
 
-                    
+
+                    //__________________________________________________________
+                    //
                     // possible step modification
+                    if(validate)
+                    {
+                        atom::add(atry,aorg,step);
+                        if( ! (*validate)(atry,used,sample.variables,cycle) )
+                        {
+                            // recomputing step
+                            atom::sub(step,atry,aorg);
+                        }
+                    }
+                    // else step is unchanged
+                    //__________________________________________________________
+
 
                     //__________________________________________________________
                     //

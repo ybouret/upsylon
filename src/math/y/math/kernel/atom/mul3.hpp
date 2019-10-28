@@ -177,3 +177,20 @@ void Gram(TARGET &G, const SOURCE &V)
     }
 
 }
+
+//! Gram matrix of vectors V[1...nr]
+template <typename TARGET, typename SOURCE> static inline
+void Gram(TARGET &G, const SOURCE &V, concurrent::for_each &)
+{
+    assert(G.rows==V.rows);
+    assert(G.cols==V.rows);
+    const size_t nr = V.rows;
+    for(size_t i=nr;i>0;--i)
+    {
+        for(size_t j=i;j>0;--j)
+        {
+            G[i][j] = G[j][i] = dot(V[i],V[j]);
+        }
+    }
+
+}

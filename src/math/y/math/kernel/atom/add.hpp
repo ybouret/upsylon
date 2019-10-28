@@ -5,7 +5,7 @@
 
 //! sequential target += source
 template <typename TARGET, typename SOURCE> static inline
-void add( TARGET &target, const SOURCE &source )
+void add( TARGET &target, SOURCE &source )
 {
     assert( target.size() <= source.size() );
     for(size_t i=target.size();i>0;--i)
@@ -19,7 +19,7 @@ void add( TARGET &target, const SOURCE &source )
 
 //! parallel target += source
 template <typename TARGET, typename SOURCE> static inline
-void add( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
+void add( TARGET &target, SOURCE &source,  concurrent::for_each &loop )
 {
     assert( target.size() <= source.size() );
 
@@ -42,7 +42,7 @@ void add( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
 
 //! sequential target = lhs + rhs
 template <typename TARGET, typename LHS, typename RHS> static inline
-void add( TARGET &target, const LHS &lhs, const RHS &rhs )
+void add( TARGET &target,  LHS &lhs,  RHS &rhs )
 {
     assert( target.size() <= lhs.size() );
     assert( target.size() <= rhs.size() );
@@ -55,7 +55,7 @@ void add( TARGET &target, const LHS &lhs, const RHS &rhs )
 
 //! parallel target = lhs + rhs
 template <typename TARGET, typename LHS, typename RHS> static inline
-void add( TARGET &target, const LHS &lhs, const RHS &rhs, concurrent::for_each &loop )
+void add( TARGET &target,  LHS &lhs,  RHS &rhs, concurrent::for_each &loop )
 {
     assert( target.size() <= lhs.size() );
     assert( target.size() <= rhs.size() );

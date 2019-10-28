@@ -6,7 +6,7 @@
 
 //! sequential target -= source
 template <typename TARGET, typename SOURCE> static inline
-void sub( TARGET &target, const SOURCE &source )
+void sub( TARGET &target, SOURCE &source )
 {
     assert( target.size() <= source.size() );
     for(size_t i=target.size();i>0;--i)
@@ -18,7 +18,7 @@ void sub( TARGET &target, const SOURCE &source )
 
 //! parallel target -= source
 template <typename TARGET, typename SOURCE> static inline
-void sub( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
+void sub( TARGET &target, SOURCE &source,  concurrent::for_each &loop )
 {
     assert( target.size() <= source.size() );
 
@@ -43,7 +43,7 @@ target[offset] = Y_MK_ATOM_CAST(TARGET,LHS,lhs[offset]) - Y_MK_ATOM_CAST(TARGET,
 
 //! sequential target = lhs-rhs
 template <typename TARGET, typename LHS, typename RHS> static inline
-void sub( TARGET &target, const LHS &lhs, const RHS &rhs )
+void sub( TARGET &target, LHS &lhs, RHS &rhs )
 {
     assert( target.size() <= lhs.size() );
     assert( target.size() <= rhs.size() );
@@ -56,7 +56,7 @@ void sub( TARGET &target, const LHS &lhs, const RHS &rhs )
 
 //! parallel target = lhs-rhs
 template <typename TARGET, typename LHS, typename RHS> static inline
-void sub( TARGET &target, const LHS &lhs, const RHS &rhs, concurrent::for_each &loop )
+void sub( TARGET &target, LHS &lhs, RHS &rhs, concurrent::for_each &loop )
 {
     assert( target.size() <= lhs.size() );
     assert( target.size() <= rhs.size() );
@@ -82,7 +82,7 @@ void sub( TARGET &target, const LHS &lhs, const RHS &rhs, concurrent::for_each &
 
 //! sequential target = source-target
 template <typename TARGET, typename SOURCE> static inline
-void subp( TARGET &target, const SOURCE &source )
+void subp( TARGET &target, SOURCE &source )
 {
     assert( target.size() <= source.size() );
     for(size_t i=target.size();i>0;--i)
@@ -94,7 +94,7 @@ void subp( TARGET &target, const SOURCE &source )
 
 //! parallel target = source-target
 template <typename TARGET, typename SOURCE> static inline
-void subp( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
+void subp( TARGET &target, SOURCE &source,  concurrent::for_each &loop )
 {
     assert( target.size() <= source.size() );
     

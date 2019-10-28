@@ -54,6 +54,8 @@ namespace {
                 support::fill2D(V);
                 atom::Gram(M,V);
                 //std::cerr << "G=" << M << std::endl;
+
+                atom::Gram(M,V,loop);
             }
         }
 
