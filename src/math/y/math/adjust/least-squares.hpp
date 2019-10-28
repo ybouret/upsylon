@@ -109,7 +109,7 @@ namespace upsylon {
                 typedef typename Type<T>::Function       Function; //!< alias
                 typedef          Oxide::Field1D<T>       Field;    //!< alias
 
-                typedef typename SampleType<T>::Validate Validate; //!< alias
+                typedef typename SampleType<T>::Modify   Modify;   //!< alias
                 typedef typename SampleType<T>::Context  Context;  //!< alias
 
 
@@ -126,7 +126,8 @@ namespace upsylon {
                 curv(),
                 step(),
                 atry(),
-                used()
+                used(),
+                nope( this, & LeastSquares<T>::doNothing )
                 {
                     setup();
                 }
@@ -146,11 +147,11 @@ namespace upsylon {
                                 Array         &aorg,
                                 const Flags   &flags,
                                 Array         &aerr,
-                                Validate      *validate = 0
+                                Modify        *modify = 0
                                 )
                 {
                     SequentialFunction<T> SF(F);
-                    return fit(sample,SF,aorg,flags,aerr,validate);
+                    return fit(sample,SF,aorg,flags,aerr,modify);
                 }
 
 
@@ -160,7 +161,7 @@ namespace upsylon {
                                 Array         &aorg,
                                 const Flags   &flags,
                                 Array         &aerr,
-                                Validate      *validate = 0 )
+                                Modify       *modify = 0 )
                 {
                     static const T D2_FTOL = numeric<T>::sqrt_ftol;
                     assert( flags.size() == aorg.size() );
@@ -200,17 +201,19 @@ namespace upsylon {
                     //
                     // create the call function
                     //__________________________________________________________
-                    CallD2 D2    = { &aorg, &step, &atry, &sample, &F };
-                    T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+                    //CallD2 D2    = { &aorg, &step, &atry, &sample, &F };
 
                     //__________________________________________________________
                     //
                     // create the context
                     //__________________________________________________________
-                    Context context(sample,aorg,used);
+                    Context context(sample,aorg,used,atry,step);
                     size_t  cycle = aliasing::_(context.cycle);
-                    Y_LS_PRINTLN( "    #data   = " << context.data.size()  );
+                    Modify &check = (0!=modify) ? *modify : nope;
+                    Y_LS_PRINTLN( "    #data   = " << context.size()  );
 
+                    // starting point...
+                    T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
 
                 CYCLE:
                     ++cycle;
@@ -240,33 +243,44 @@ namespace upsylon {
 
                     //__________________________________________________________
                     //
+                    // compute step and trial position
+                    //
                     Algo<T>::ComputeStep(step, curv, beta);
+                    atom::add(atry,aorg,step);
                     Y_LS_PRINTLN( "     lambda = " << lambda );
-                    Y_LS_PRINTLN( "     step   = " << step   );
+                    Y_LS_PRINTLN( "     step0  = " << step   );
+                    Y_LS_PRINTLN( "     atry0  = " << atry   );
                     //__________________________________________________________
+
 
 
                     //__________________________________________________________
                     //
-                    // possible step modification
-                    if(validate)
+                    // user control
+                    switch( check(context) )
                     {
-                        atom::add(atry,aorg,step);
-                        //if( ! (*validate)(ctx) )
-                        //{
-                        // recomputing step
-                        //atom::sub(step,atry,aorg);
-                        //}
+                        case LeftUntouched: Y_LS_PRINTLN( "[LS] LeftUntouched" );
+                            break;
+
+                        case ModifiedState: Y_LS_PRINTLN( "[LS] ModifiedState" );
+                            atom::sub(step,atry,aorg);
+                            Y_LS_PRINTLN( "     atry   = " << atry   );
+                            Y_LS_PRINTLN( "     step   = " << step   );
+                            break;
+
+                        case ModifiedShift: Y_LS_PRINTLN( "[LS] ModifiedShift" );
+                            atom::add(atry,aorg,step);
+                            Y_LS_PRINTLN( "     atry   = " << atry   );
+                            Y_LS_PRINTLN( "     step   = " << step   );
+                            break;
                     }
-                    // else step is unchanged
                     //__________________________________________________________
 
 
                     //__________________________________________________________
                     //
                     // try full step
-                    T D2try = D2(1);
-                    Y_LS_PRINTLN( "     atry   = " << atry   );
+                    const T D2try = sample.computeD2(F,atry);
                     Y_LS_PRINTLN( "     D2try  = " << D2try  );
                     //__________________________________________________________
 
@@ -278,14 +292,18 @@ namespace upsylon {
                         Y_LS_PRINTLN( "[LS] accept" );
                         //______________________________________________________
                         const bool  converged = ( fabs_of(D2org-D2try) <= D2_FTOL * D2org);
-                        decreaseLambda();
-                        atom::set(aorg,atry);
-                        D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+                        decreaseLambda();               // better quality
+                        atom::set(aorg,atry);           // move
+                        D2org = sample.computeD2(alpha, // new/final point
+                                                 beta,
+                                                 F,
+                                                 aorg,
+                                                 used,
+                                                 *this);
                         if(converged)
                         {
                             goto CONVERGED;
                         }
-
                         goto CYCLE;
                     }
                     else
@@ -374,7 +392,12 @@ namespace upsylon {
                 Vector   step;
                 Vector   atry;
                 bVector  used;
+                Modify   nope;
 
+                inline ModifyStatus doNothing( Context & ) const
+                {
+                     return LeftUntouched;
+                }
 
 
 

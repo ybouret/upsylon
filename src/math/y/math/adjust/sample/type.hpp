@@ -17,8 +17,14 @@ namespace upsylon {
             template <typename> class Sample;       //!< forward declaration
             template <typename> class LeastSquares; //!< forward declaration
 
+            enum ModifyStatus
+            {
+                LeftUntouched,
+                ModifiedState,
+                ModifiedShift
+            };
 
-#define Y_MATH_ADJUST_VALIDATE TL1(const Context &)
+#define Y_MATH_ADJUST_MODIFY TL1(Context &)
 
             //==================================================================
             //
@@ -44,37 +50,48 @@ namespace upsylon {
                 typedef accessible<Address>          Addresses;    //!< alias
 
                 //! context to validate/modify fit
-                class Context
+                class Context : public accessible< Sample<T> >
                 {
                 public:
-                    inline ~Context() throw() {}
+                    inline virtual ~Context() throw() {}
 
-                    inline Context(const SampleType<T> & _self,
-                                   const Parameters    & _aorg,
-                                   const Flags         & _used) :
-                    _data(),
-                    data(_data),
-                    aorg( _aorg ),
-                    used( _used ),
-                    cycle(0)
+
+                    inline virtual size_t size() const throw() { return _data.size(); }
+                    inline const Sample<T> & operator[]( const size_t indx ) const
+                    {
+                        return *_data[indx];
+                    }
+
+
+
+                    inline explicit Context(const SampleType<T> & _self,
+                                            const Parameters    & _aorg,
+                                            const Flags         & _used,
+                                            Array               & _atry,
+                                            Array               & _step) :
+                    flags( _used ),
+                    start( _aorg ),
+                    state( _atry ),
+                    shift( _step ),
+                    cycle(0),
+                    _data()
                     {
                         _self.collect(_data);
                     }
-                    
-                private:
-                    vector<Address,Allocator> _data;
-                public:
-                    const Addresses  &data;
-                    const Parameters &aorg;
-                    const Flags      &used;
-                    const size_t      cycle;
 
+                    const Flags      &flags;
+                    const Parameters &start;
+                    Array            &state;
+                    Array            &shift;
+                    const size_t      cycle;
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Context);
+                    vector<Address,Allocator> _data;
+
                 };
 
-                typedef functor<bool,Y_MATH_ADJUST_VALIDATE> Validate;
+                typedef functor<ModifyStatus,Y_MATH_ADJUST_MODIFY> Modify;
 
 
 
@@ -168,7 +185,7 @@ namespace upsylon {
                     return D2;
                 }
                 
-              
+
 
 
             protected:
