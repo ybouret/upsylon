@@ -203,7 +203,7 @@ Y_UTEST(adjust)
     
     LeastSquares<double> LS(true);
 
-    LS.verbose = false;
+    //LS.verbose = false;
 
     Y_ASSERT(LS.fit(S1, SF, aorg, used, aerr));
     S1.variables.display(std::cerr, aorg, aerr, "S1.");

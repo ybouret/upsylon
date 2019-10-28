@@ -32,8 +32,8 @@ namespace upsylon {
             //! C++ fit function arguments
 #define Y_ADJUST_FUNCTION_ARGS TL3(T,const Parameters&,const Variables&)
 
-            //! C++ validate prototype
-#define Y_ADJUST_VALIDATE_ARGS  TL4(Array&,const Flags &,const Variables &,const size_t)
+            ////! C++ validate prototype
+//#define Y_ADJUST_VALIDATE_ARGS  TL4(Array&,const Flags &,const Variables &,const size_t)
 
             //==================================================================
             //
@@ -52,7 +52,7 @@ namespace upsylon {
                 typedef matrix<T>                             Matrix;     //!< matrix
                 typedef vector<T,Allocator>                   Vector;     //!< for variables...
                 typedef functor<T,Y_ADJUST_FUNCTION_ARGS>     Function;   //!< fit function  prototype
-                typedef functor<bool,Y_ADJUST_VALIDATE_ARGS>  Validate;   //!< do something with variables, return false to modify
+                //typedef functor<bool,Y_ADJUST_VALIDATE_ARGS>  Validate;   //!< do something with variables, return false to modify
                 
                 //! reconstruct a symetric matrix
                 static inline void Regularize(Matrix &alpha) throw()

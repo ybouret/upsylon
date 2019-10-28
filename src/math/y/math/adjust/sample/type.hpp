@@ -14,6 +14,12 @@ namespace upsylon {
 
         namespace Adjust {
 
+            template <typename> class Sample;       //!< forward declaration
+            template <typename> class LeastSquares; //!< forward declaration
+
+
+#define Y_MATH_ADJUST_VALIDATE TL1(const Context &)
+
             //==================================================================
             //
             //
@@ -30,9 +36,46 @@ namespace upsylon {
                 // types and definitions
                 //
                 //==============================================================
-                typedef typename Type<T>::Array    Array;    //!< alias
-                typedef typename Type<T>::Matrix   Matrix;   //!< alias
-                typedef typename Type<T>::Function Function; //!< alias
+                typedef typename Type<T>::Array      Array;        //!< alias
+                typedef typename Type<T>::Matrix     Matrix;       //!< alias
+                typedef typename Type<T>::Function   Function;     //!< alias
+                typedef typename Type<T>::Parameters Parameters;   //< alias
+                typedef Sample<T>                   *Address;      //!< alias
+                typedef accessible<Address>          Addresses;    //!< alias
+
+                //! context to validate/modify fit
+                class Context
+                {
+                public:
+                    inline ~Context() throw() {}
+
+                    inline Context(const SampleType<T> & _self,
+                                   const Parameters    & _aorg,
+                                   const Flags         & _used) :
+                    _data(),
+                    data(_data),
+                    aorg( _aorg ),
+                    used( _used ),
+                    cycle(0)
+                    {
+                        _self.collect(_data);
+                    }
+                    
+                private:
+                    vector<Address,Allocator> _data;
+                public:
+                    const Addresses  &data;
+                    const Parameters &aorg;
+                    const Flags      &used;
+                    const size_t      cycle;
+
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Context);
+                };
+
+                typedef functor<bool,Y_MATH_ADJUST_VALIDATE> Validate;
+
 
 
                 //==============================================================
@@ -58,7 +101,8 @@ namespace upsylon {
                 //! flags activation
                 virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const = 0;
 
-              
+
+
 
                 //==============================================================
                 //
@@ -133,6 +177,10 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SampleType);
+                friend class LeastSquares<T>;
+
+                //! multiple samples collection
+                virtual void collect( sequence<Address> & ) const = 0;
             };
 
         }

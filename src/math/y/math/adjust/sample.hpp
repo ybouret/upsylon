@@ -17,6 +17,8 @@ namespace upsylon {
         namespace Adjust {
 
 
+            template <typename T> class Samples; //!< forward declaration
+
             //==================================================================
             //
             //
@@ -47,6 +49,7 @@ namespace upsylon {
                 //==============================================================
                 //! cleanup
                 inline virtual ~Sample() throw() {}
+
 
 
                 //! common series size
@@ -134,10 +137,10 @@ namespace upsylon {
 
 
                         const size_t        nvar = aorg.size();
-                        const accessible<T> &X    = *abscissa;
-                        const accessible<T> &Y    = *ordinate;
-                        addressable<T>      &Z    = *adjusted;
-                        addressable<T>      &dY   = deltaSq;
+                        const accessible<T> &X   = *abscissa;
+                        const accessible<T> &Y   = *ordinate;
+                        addressable<T>      &Z   = *adjusted;
+                        addressable<T>      &dY  = deltaSq;
                         dFda.adjust(nvar,0);
 
                         //------------------------------------------------------
@@ -291,6 +294,14 @@ namespace upsylon {
                 inline void save_triplet( ios::ostream & fp, const size_t i) const
                 {
                     fp("%.15g %.15g %.15f\n", double(abscissa[i]),double(ordinate[i]),double(adjusted[i]));
+                }
+
+                friend class Samples<T>;
+
+                virtual void collect(sequence<typename SampleType<T>::Address> &seq  ) const
+                {
+                    const Sample *self = this;
+                    seq.push_back( (Sample *)self  );
                 }
 
                 

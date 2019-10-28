@@ -103,13 +103,14 @@ namespace upsylon {
             class LeastSquares : public Gradient<T>
             {
             public:
-                typedef typename Type<T>::Array    Array;    //!< alias
-                typedef typename Type<T>::Matrix   Matrix;   //!< alias
-                typedef typename Type<T>::Vector   Vector;   //!< alias
-                typedef typename Type<T>::Function Function; //!< alias
-                typedef typename Type<T>::Validate Validate; //!< alias
+                typedef typename Type<T>::Array          Array;    //!< alias
+                typedef typename Type<T>::Matrix         Matrix;   //!< alias
+                typedef typename Type<T>::Vector         Vector;   //!< alias
+                typedef typename Type<T>::Function       Function; //!< alias
+                typedef          Oxide::Field1D<T>       Field;    //!< alias
 
-                typedef Oxide::Field1D<T>          Field;  //!< alias
+                typedef typename SampleType<T>::Validate Validate; //!< alias
+                typedef typename SampleType<T>::Context  Context;  //!< alias
 
 
                 //! setup
@@ -139,14 +140,27 @@ namespace upsylon {
                 const unit_t pmax;    //!< max power value
                 
 
+                //! fit wrapper
+                inline bool fit(SampleType<T> &sample,
+                                Function      &F,
+                                Array         &aorg,
+                                const Flags   &flags,
+                                Array         &aerr,
+                                Validate      *validate = 0
+                                )
+                {
+                    SequentialFunction<T> SF(F);
+                    return fit(sample,SF,aorg,flags,aerr,validate);
+                }
+
+
                 //! full fit algorithm and error computation
-                bool fit(SampleType<T> &sample,
-                         Sequential<T> &F,
-                         Array         &aorg,
-                         const Flags   &flags,
-                         Array         &aerr,
-                         Validate      *validate = 0
-                         )
+                inline bool fit(SampleType<T> &sample,
+                                Sequential<T> &F,
+                                Array         &aorg,
+                                const Flags   &flags,
+                                Array         &aerr,
+                                Validate      *validate = 0 )
                 {
                     static const T D2_FTOL = numeric<T>::sqrt_ftol;
                     assert( flags.size() == aorg.size() );
@@ -177,14 +191,25 @@ namespace upsylon {
                     used.adjust(n,0);
                     atom::ld(used,false);
                     sample.activate(used,flags);
+                    setLambda( Algo<T>::Initial() );
+
                     Y_LS_PRINTLN( "     flags  = " << flags );
                     Y_LS_PRINTLN( "     used   = " << used  );
 
-
-                    setLambda( Algo<T>::Initial() );
+                    //__________________________________________________________
+                    //
+                    // create the call function
+                    //__________________________________________________________
                     CallD2 D2    = { &aorg, &step, &atry, &sample, &F };
                     T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
-                    size_t cycle = 0;
+
+                    //__________________________________________________________
+                    //
+                    // create the context
+                    //__________________________________________________________
+                    Context context(sample,aorg,used);
+                    size_t  cycle = aliasing::_(context.cycle);
+                    Y_LS_PRINTLN( "    #data   = " << context.data.size()  );
 
 
                 CYCLE:
@@ -227,11 +252,11 @@ namespace upsylon {
                     if(validate)
                     {
                         atom::add(atry,aorg,step);
-                        if( ! (*validate)(atry,used,sample.variables,cycle) )
-                        {
-                            // recomputing step
-                            atom::sub(step,atry,aorg);
-                        }
+                        //if( ! (*validate)(ctx) )
+                        //{
+                        // recomputing step
+                        //atom::sub(step,atry,aorg);
+                        //}
                     }
                     // else step is unchanged
                     //__________________________________________________________

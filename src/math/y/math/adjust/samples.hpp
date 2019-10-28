@@ -45,6 +45,7 @@ namespace upsylon {
                 }
 
 
+
                 //! sum of all counts
                 inline virtual size_t count() const throw()
                 {
@@ -163,7 +164,17 @@ namespace upsylon {
                 vector<T>         weights;
                 mutable matrix<T> _alpha;
                 mutable vector<T> _beta;
-                
+
+                //! collect individual samples
+                virtual void collect( sequence< typename SampleType<T>::Address > &seq  ) const
+                {
+                    const Handles &self = *this;
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        self[i]->collect( seq );
+                    }
+                }
+
             };
 
         }
