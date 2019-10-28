@@ -105,7 +105,7 @@ Y_UTEST(adjust)
     Sample<double> &S1 = S(t1,x1,f1);
     Sample<double> &S2 = S(t2,x2,f2);
 
-     Y_CHECK(S.count()==S1.count() + S2.count() );
+    Y_CHECK(S.count()==S1.count() + S2.count() );
     
     
     Variables &vars = S.variables;
@@ -181,7 +181,7 @@ Y_UTEST(adjust)
     const double D12 = S1.computeD2(alpha, beta, SF, aorg, used, grad);
     std::cerr << "beta1="  << beta  << std::endl;
     std::cerr << "alpha1=" << alpha << std::endl;
-   
+
 
 
     std::cerr << "S2: " << std::endl;

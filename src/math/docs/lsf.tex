@@ -16,44 +16,45 @@
 
 
 \begin{document}
-\title{Least Square Fit}
+\title{Least Squares}
 \maketitle
 	
 \section{Notations}
-Let us assume that we have a set of points $(x_i,y_i)$ and we want to fit
-with $F(x,\vec{a})$ by minimising
+
+\subsection{Standard Problem}
+Let us assume that we have a set of points $\lbrace x_i, y_i \rbrace_{i\in[1;N]}$ that we want to adjust by
+the objective function $F(x,\vec{a})$, by minimising the \textbf{sum of squares}:
 \begin{equation}
-	D^2 = \sum_i\left[ y_i - F\left(x_i,\vec{a}\right)\right]^2.
+	D^2(\vec{a}) = \frac{1}{2} \sum_{i=1}^{N}  \left[ y_i - \underbrace{F(x_i,\vec{a})}_{F_i} \right] ^2 
 \end{equation}
-The descent direction is
+The \textbf{descent direction} is:
 \begin{equation}
-	\vec{\beta} = -\dfrac{1}{2}\partial_{\vec{a}} D^2,
-	 \;\; \beta_j = \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial F_i}{\partial a_j}\right).
+	\vec{\beta} = -\mygrad D^2 = -\partial_{\vec{a}} D^2
 \end{equation}
-The extension of $\vec\beta$ yields
+with:
 \begin{equation}
-	\vec{\beta}\left(\vec{a}+\vec{h}\right) = \vec{\beta} + \left(\dfrac{\partial \beta_j}{\partial a_k}\right) \cdot \vec{h}
+	\beta_j = \sum_{i=1}^{N} \left[y_i - F_i\right] \left(\dfrac{\partial F_i}{\partial a_j}\right)
 \end{equation}
-with
+Since an extremum of $D^2$ is found when $\vec{\beta}=\vec{0}$, we want to look for null values of the
+descent direction. We expand:
 \begin{equation}
-	\left(\dfrac{\partial \beta_j}{\partial a_k}\right) = 
-	\left(
-	 \sum_i \left[y_i - F\left(x_i,\vec{a}\right)\right] \left(\dfrac{\partial^2 F_i}{\partial a_j\partial a_k}\right)
-	 \right) - \sum_i \left(\dfrac{\partial F_i}{\partial a_j}\right)\left(\dfrac{\partial F_i}{\partial a_k}\right)
+	\vec{\beta}\left(\vec{a}+\delta\vec{a}\right) = \vec{\beta}\left(\vec{a}\right) + \partial_{\vec{a}}\vec{\beta} \cdot \delta\vec{a}
 \end{equation}
-We define the matrix $\mymat{\alpha}$ such that
+and
 \begin{equation}
-		\alpha_{jk} = \sum_i \left(\dfrac{\partial F_i}{\partial a_j}\right)\left(\dfrac{\partial F_i}{\partial a_k}\right)
+	\dfrac{\partial \beta_j}{\partial a_k} =  \left[\sum_{i=1}^{N} \left[y_i - F_i\right] \left(\dfrac{\partial^2 F_i}{\partial a_j\partial a_k}\right) \right] - 
+	\underbrace{\left[ \sum_{i=1}^N \left(\dfrac{\partial F_i}{\partial a_j}\right) \left(\dfrac{\partial F_i}{\partial a_k}\right)\right]}_{\alpha_{ij}}
 \end{equation}
-and the modified curvature matrix $\mymat{C}_\lambda$ with increases the diagonal part of $\mymat{\alpha}$ by $1+\lambda$.
+We approximate the Hessian matrix by $\mymat{\alpha}_{\lambda}$ defined by the multiplication of the diagonal terms of $\mymat{\alpha}$ by $1+\lambda$.
+Hence, we get the \textbf{full quadratic step}:
+
+\begin{equation}
+	\delta\vec{a}_\lambda = \mymat{\alpha}_\lambda^{-1} \vec{\beta}
+\end{equation}
+
 
 \section{Algorithm}
 
-We start from $\vec{a}_n$.
-\begin{enumerate}
-	\item Compute $\vec{\beta}_n$ and $\mymat{\alpha}_n$
-	\item Find $\lambda$ such that $\mymat{C}_{\lambda,n}$ is invertible
-\end{enumerate}
 
 \end{document}
 

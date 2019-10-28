@@ -80,7 +80,7 @@ namespace upsylon {
                 static inline
                 void ComputeStep(Array                &step,
                                  const Matrix         &curv,
-                                 const accessible<T>  &beta) throw()
+                                 const accessible<T>  &beta ) throw()
                 {
                     atom::set(step,beta);
                     LU::solve(curv,step);
@@ -89,7 +89,7 @@ namespace upsylon {
                 
             };
 
-            //! condition println
+            //! conditional println
 #define Y_LS_PRINTLN(OUTPUT) do{ if(verbose) { std::cerr << OUTPUT << std::endl; } } while(false)
 
             //==================================================================
@@ -192,10 +192,12 @@ namespace upsylon {
                     Y_LS_PRINTLN( "     alpha  = " << alpha );
                     //__________________________________________________________
 
+
+
                 CURVATURE:
                     //__________________________________________________________
                     //
-                    Y_LS_PRINTLN( "     beta   = " << beta  );
+                    Y_LS_PRINTLN( "     beta   = " << beta );
                     while( !Algo<T>::ComputeCurvature(curv,lambda,alpha) )
                     {
                         if(!increaseLambda())
@@ -329,6 +331,9 @@ namespace upsylon {
                 Vector   atry;
                 bVector  used;
 
+
+
+
                 struct CallD2
                 {
                     const accessible<T> * _aorg;
@@ -353,7 +358,7 @@ namespace upsylon {
                     lam[ pmin ] = 0;
                     {
                         static const T tenth(0.1);
-                        lam[ -1 ]        = tenth;
+                        lam[ -1 ] = tenth;
                         for(unit_t i=-2;i>pmin;--i) lam[i] = lam[i+1] * tenth;
                     }
                     lam[  0 ]            = 1;

@@ -106,7 +106,7 @@ namespace upsylon {
                         }
                         string_display::align(os,name,nmax) << " = ";
                         string_display::align(os,sorg[ivar],zorg) << " \\pm ";
-                        string_display::align(os,serr[ivar],zerr);
+                        string_display::align(os,serr[ivar],zerr) << " | ";
                         os << std::endl;
                     }
                 }
