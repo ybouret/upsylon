@@ -143,6 +143,7 @@ namespace upsylon {
                          const Flags   &flags,
                          Array         &aerr)
                 {
+                    static const T D2_FTOL = numeric<T>::sqrt_ftol;
                     assert( flags.size() == aorg.size() );
                     assert( flags.size() == aerr.size() );
 
@@ -230,18 +231,7 @@ namespace upsylon {
                         //
                         Y_LS_PRINTLN( "[LS] accept" );
                         //______________________________________________________
-
-                        if(false&&cycle>0)
-                        {
-                            ios::ocstream fp("d2.dat");
-                            for(T u=0;u<=1.1;u+=0.01)
-                            {
-                                fp("%.15g %.15g\n", u, D2(u));
-                            }
-                            exit(0);
-                        }
-
-                        const bool  converged = ( fabs_of(D2org-D2try) <= numeric<T>::sqrt_ftol * D2org);
+                        const bool  converged = ( fabs_of(D2org-D2try) <= D2_FTOL * D2org);
                         decreaseLambda();
                         atom::set(aorg,atry);
                         D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
