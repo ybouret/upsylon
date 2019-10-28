@@ -26,7 +26,7 @@ namespace upsylon {
             {
                 //! direct copy
                 template <typename LHS,typename RHS> static inline
-                void copy1D( LHS &lhs, const RHS &rhs )
+                void copy1D( LHS &lhs, RHS &rhs )
                 {
                     assert(lhs.size()<=rhs.size());
                     for(size_t i=lhs.size();i>0;--i)
@@ -37,7 +37,7 @@ namespace upsylon {
 
                 //! direct copy
                 template <typename LHS,typename RHS> static inline
-                void copy2D( LHS &lhs, const RHS &rhs )
+                void copy2D( LHS &lhs, RHS &rhs )
                 {
                     assert(lhs.rows<=rhs.rows);
                     assert(lhs.cols<=rhs.cols);
@@ -102,6 +102,7 @@ namespace upsylon {
                     }
                     return sorted_sum(deltaSquared);
                 }
+
 
 
             };

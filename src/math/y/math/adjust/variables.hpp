@@ -8,6 +8,7 @@
 #include "y/string/display.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/math/kernel/errors.hpp"
 
 namespace upsylon {
 
@@ -94,6 +95,8 @@ namespace upsylon {
                     Strings          serr(nvar,as_capacity);
                     const size_t     zerr = fillStrings(serr,aerr);
 
+                    Strings          sper(nvar,as_capacity);
+
                     const size_t        nmax = MaxLength();
                     size_t              ivar = 1;
                     for( const_iterator it = begin(); it != end(); ++it, ++ivar)
@@ -106,7 +109,10 @@ namespace upsylon {
                         }
                         string_display::align(os,name,nmax) << " = ";
                         string_display::align(os,sorg[ivar],zorg) << " \\pm ";
-                        string_display::align(os,serr[ivar],zerr) << " | ";
+                        string_display::align(os,serr[ivar],zerr);
+                        const T p = errors::percent(aerr[ivar], aorg[ivar]);
+                        const string per = vformat("%6.2lf",double(p));
+                        os << ' ' << '(' << per << '%' << ')';
                         os << std::endl;
                     }
                 }

@@ -321,7 +321,7 @@ namespace upsylon {
                             if(used[i])
                             {
                                 const T sig = sqrt_of( (D2org * curv[i][i]) / dof );
-                                aerr[i] = sig*sig2err;
+                                aerr[i]     = sig*sig2err;
                             }
                             else
                             {
