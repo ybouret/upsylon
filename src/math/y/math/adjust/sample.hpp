@@ -39,7 +39,6 @@ namespace upsylon {
                 typedef vector<Sample::Pointer>    Handles;  //!< alias for Samples
                 typedef typename Type<T>::Sequence Sequence; //!< alias
                 typedef typename Type<T>::Series   Series;   //!< alias
-                typedef typename Type<T>::Array    Array;    //!< alias
                 typedef typename Type<T>::Matrix   Matrix;   //!< alias
 
                 //==============================================================
@@ -73,8 +72,8 @@ namespace upsylon {
                 }
 
                 //! compute D2 using indexed access
-                inline virtual T  compute(Sequential<T>   &F,
-                                          const Array     &aorg) const
+                inline virtual T  compute(Sequential<T>       &F,
+                                          const accessible<T> &aorg) const
                 {
                     assert(indices.size() == count() );
                     assert(deltaSq.size() == count() );
@@ -118,12 +117,12 @@ namespace upsylon {
                 }
 
                 //! SampleType interface
-                virtual T  computeAndUpdate(Matrix          &alpha,
-                                            Array           &beta,
-                                            Sequential<T>   &F,
-                                            const Array     &aorg,
-                                            const Flags     &used,
-                                            Gradient<T>     &grad) const
+                virtual T  computeAndUpdate(Matrix                 &alpha,
+                                            addressable<T>         &beta,
+                                            Sequential<T>          &F,
+                                            const accessible<T>    &aorg,
+                                            const accessible<bool> &used,
+                                            Gradient<T>            &grad) const
                 {
                     assert(indices.size() == count() );
                     assert(deltaSq.size() == count() );
@@ -182,7 +181,7 @@ namespace upsylon {
                                     beta[j] += dY_i * dFda_j;
 
                                     // update alpha[j][k<=j]
-                                    Array &alpha_j = alpha[j];
+                                    addressable<T>  &alpha_j = alpha[j];
                                     for(size_t k=j;k>0;--k)
                                     {
                                         if(used[k])

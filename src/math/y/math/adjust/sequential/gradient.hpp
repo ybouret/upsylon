@@ -24,10 +24,7 @@ namespace upsylon {
             {
             public:
                 T h; //!< scaling
-
-                typedef typename Type<T>::Array      Array;      //!< alias
-                typedef typename Type<T>::Parameters Parameters; //!< alias
-
+                
                 //! setup with default scaling
                 inline explicit Gradient() : derivative<T>(), h(1e-4)
                 {
@@ -40,12 +37,12 @@ namespace upsylon {
                 }
 
                 //! take the gradient for the declared used variables
-                inline void operator()(Array           &dFda,
-                                       Sequential<T>   &F,
-                                       T                x,
-                                       const Parameters &aorg,
-                                       const Variables  &vars,
-                                       const Flags      &used)
+                inline void operator()(addressable<T>         &dFda,
+                                       Sequential<T>          &F,
+                                       T                       x,
+                                       const accessible<T>    &aorg,
+                                       const Variables        &vars,
+                                       const accessible<bool> &used)
                 {
                     assert(used.size()==aorg.size());
                     assert(dFda.size()==aorg.size());
@@ -87,7 +84,7 @@ namespace upsylon {
                     size_t                 i;
                     Sequential<T>         *F_p;
                     T                      x;
-                    const Parameters      *aorg_p;
+                    const accessible<T>   *aorg_p;
                     const Variables       *vars_p;
 
                     inline T operator()( const T a )
@@ -98,7 +95,7 @@ namespace upsylon {
                         assert(vars_p);
                         
                         Sequential<T>        &F    = *F_p;
-                        const Parameters     &aorg = *aorg_p;
+                        const accessible<T>  &aorg = *aorg_p;
                         T                    &ai   = aliasing::_(aorg[i]);
                         const T               a0   = ai;
                         try {

@@ -32,10 +32,8 @@ namespace upsylon {
                 // types and definitions
                 //
                 //==============================================================
-                typedef typename Type<T>::Array      Array;        //!< alias
                 typedef typename Type<T>::Matrix     Matrix;       //!< alias
                 typedef typename Type<T>::Function   Function;     //!< alias
-                typedef typename Type<T>::Parameters Parameters;   //!< alias
 
                 //==============================================================
                 //
@@ -47,14 +45,14 @@ namespace upsylon {
                 inline virtual ~SampleType() throw() {}
 
                 //! compute with a sequential function
-                virtual T compute(Sequential<T> &F, const Array &aorg) const = 0;
+                virtual T compute(Sequential<T> &F, const accessible<T> &aorg) const = 0;
 
                 //! full computation with a sequential function
                 virtual T  computeAndUpdate(Matrix          &alpha,
-                                            Array           &beta,
+                                            addressable<T>  &beta,
                                             Sequential<T>   &F,
-                                            const Array     &aorg,
-                                            const Flags     &used,
+                                            const accessible<T>    &aorg,
+                                            const accessible<bool> &used,
                                             Gradient<T>     &grad) const = 0;
 
                 //! flags activation
@@ -72,9 +70,9 @@ namespace upsylon {
                 //==============================================================
 
                 //! initialize matrix/vector from used statius
-                inline void initialize(Matrix      &alpha,
-                                       Array       &beta,
-                                       const Flags &used ) const throw()
+                inline void initialize(Matrix                 &alpha,
+                                       addressable<T>         &beta,
+                                       const accessible<bool> &used ) const throw()
                 {
                     assert( alpha.rows  == alpha.cols  );
                     assert( beta.size() == alpha.rows );
@@ -100,15 +98,15 @@ namespace upsylon {
                     }
                 }
                 //! wrapper to use a C++ function
-                inline T compute_( Function &F, const Array &aorg ) const
+                inline T compute_( Function &F, const accessible<T>  &aorg ) const
                 {
                     SequentialFunction<T> call(F);
                     return compute(call,aorg);
                 }
 
                 //! compute D2 overloaded
-                inline T computeD2(Sequential<T>   &F,
-                                   const Array     &aorg) const
+                inline T computeD2(Sequential<T>       &F,
+                                   const accessible<T> &aorg) const
                 {
                     return compute(F,aorg);
                 }
@@ -116,11 +114,11 @@ namespace upsylon {
 
 
                 //! compute D2 overloaded
-                inline T computeD2(Matrix          &alpha,
-                                   Array           &beta,
-                                   Sequential<T>   &F,
-                                   const Array     &aorg,
-                                   const Flags     &used,
+                inline T computeD2(Matrix                  &alpha,
+                                   addressable<T>          &beta,
+                                   Sequential<T>           &F,
+                                   const accessible<T>     &aorg,
+                                   const accessible<bool>  &used,
                                    Gradient<T>     &grad) const
                 {
                     initialize(alpha,beta,used);

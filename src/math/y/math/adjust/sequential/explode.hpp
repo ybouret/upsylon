@@ -41,8 +41,6 @@ __ctrl(0)
                 //
                 //==============================================================
                 typedef typename Type<T>::Vector      Vector;        //!< alias for internal data
-                typedef typename Type<T>::Array       Array;         //!< alias
-                typedef typename Type<T>::Parameters  Parameters;    //!< alias
                 typedef ODE::ExplicitSolver<T>        SolverType;    //!< alias
                 typedef arc_ptr<SolverType>           SolverPointer; //!< alias
                 typedef ODE::ExplicitScheme<T>        SchemeType;    //!< alias
@@ -84,7 +82,7 @@ __ctrl(0)
                 SchemePointer                    scheme;
                 typename ODE::Field<T>::Equation diffEq;
                 Vector                           fields;
-                const Parameters                *p_aorg;
+                const accessible<T>             *p_aorg;
                 const Variables                 *p_vars;
                 T                                __ctrl;
 
@@ -104,7 +102,7 @@ __ctrl(0)
                 }
 
                 //! initialize protocol
-                inline virtual T onStart(const T x1, const Parameters &aorg, const Variables &vars)
+                inline virtual T onStart(const T x1, const accessible<T> &aorg, const Variables &vars)
                 {
                     // link
                     p_aorg = &aorg;
@@ -122,7 +120,7 @@ __ctrl(0)
                 }
 
                 //! update protocol
-                inline virtual T onReach(const T x1, const Parameters &aorg, const Variables &vars)
+                inline virtual T onReach(const T x1, const accessible<T> &aorg, const Variables &vars)
                 {
                     // link
                     p_aorg = &aorg;

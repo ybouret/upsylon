@@ -40,7 +40,7 @@ namespace upsylon {
                 //! setup
                 inline explicit Context(const SampleType<T> & _self,
                                         const accessible<T> & _aorg,
-                                        const Flags         & _used,
+                                        const accessible<bool>         & _used,
                                         addressable<T>      & _atry,
                                         addressable<T>      & _step) :
                 flags( _used ),
@@ -53,7 +53,7 @@ namespace upsylon {
                     _self.collect(_data);
                 }
 
-                const Flags         &flags; //!< currently used flags
+                const accessible<bool> &flags; //!< currently used flags
                 const accessible<T> &start; //!< starting position
                 addressable<T>      &state; //!< current  position
                 addressable<T>      &shift; //!< current  step

@@ -29,7 +29,6 @@ namespace upsylon {
             template <typename T> struct Algo
             {
                 typedef typename Type<T>::Matrix   Matrix; //!< alias
-                typedef typename Type<T>::Array    Array;  //!< alias
 
                 //! 10^MinPower => 0
                 static inline unit_t MinPower() throw()
@@ -83,7 +82,7 @@ namespace upsylon {
 
                 //! compute full step from descent direction and curvature
                 static inline
-                void ComputeStep(Array                &step,
+                void ComputeStep(addressable<T>       &step,
                                  const Matrix         &curv,
                                  const accessible<T>  &beta ) throw()
                 {
@@ -108,7 +107,6 @@ namespace upsylon {
             class LeastSquares : public Gradient<T>
             {
             public:
-                typedef typename Type<T>::Array          Array;    //!< alias
                 typedef typename Type<T>::Matrix         Matrix;   //!< alias
                 typedef typename Type<T>::Vector         Vector;   //!< alias
                 typedef typename Type<T>::Function       Function; //!< alias
@@ -147,12 +145,12 @@ namespace upsylon {
                 
 
                 //! fit wrapper
-                inline bool fit(SampleType<T> &sample,
-                                Function      &F,
-                                Array         &aorg,
-                                const Flags   &flags,
-                                Array         &aerr,
-                                Modify        *modify = 0
+                inline bool fit(SampleType<T>            &sample,
+                                Function                 &F,
+                                addressable<T>           &aorg,
+                                const accessible<bool>   &flags,
+                                addressable<T>          &aerr,
+                                Modify                   *modify = 0
                                 )
                 {
                     SequentialFunction<T> SF(F);
@@ -161,12 +159,12 @@ namespace upsylon {
 
 
                 //! full fit algorithm and error computation
-                inline bool fit(SampleType<T> &sample,
-                                Sequential<T> &F,
-                                Array         &aorg,
-                                const Flags   &flags,
-                                Array         &aerr,
-                                Modify       *modify = 0 )
+                inline bool fit(SampleType<T>            &sample,
+                                Sequential<T>            &F,
+                                addressable<T>           &aorg,
+                                const accessible<bool>   &flags,
+                                addressable<T>           &aerr,
+                                Modify                   *modify = 0 )
                 {
                     static const T D_FTOL = numeric<T>::sqrt_ftol;
                     static const T A_FTOL = numeric<T>::ftol;

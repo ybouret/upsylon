@@ -29,7 +29,6 @@ namespace upsylon {
                 //==============================================================
                 typedef typename Sample<T>::Handles Handles; //!< alias
                 typedef typename Type<T>::Series    Series;  //!< alias
-                typedef typename Type<T>::Array     Array;   //!< alias
                 typedef typename Type<T>::Matrix    Matrix;  //!< alias
 
 
@@ -82,7 +81,7 @@ namespace upsylon {
                 }
 
                 //! return a weighted D2
-                virtual T compute(Sequential<T> &F, const Array &aorg) const
+                virtual T compute(Sequential<T> &F, const accessible<T> &aorg) const
                 {
                     assert( deltaSq.size() == this->size() );
 
@@ -95,12 +94,12 @@ namespace upsylon {
                 }
 
                 //! return weighted alpha, beta and D2
-                virtual T  computeAndUpdate(Matrix          &alpha,
-                                            Array           &beta,
-                                            Sequential<T>   &F,
-                                            const Array     &aorg,
-                                            const Flags     &used,
-                                            Gradient<T>     &grad) const
+                virtual T  computeAndUpdate(Matrix                 &alpha,
+                                            addressable<T>         &beta,
+                                            Sequential<T>          &F,
+                                            const accessible<T>    &aorg,
+                                            const accessible<bool> &used,
+                                            Gradient<T>            &grad) const
                 {
                     const Handles &self = *this;
                     const size_t   n    = used.size();
