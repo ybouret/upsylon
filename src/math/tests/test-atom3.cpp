@@ -41,22 +41,30 @@ namespace {
     template <typename T> static inline
     void doGram(concurrent::for_each &loop)
     {
+        rt_clock clk;
+
         typedef matrix<T>                Matrix;
-        //typedef Oxide::Field2D<T>        Field;
         std::cerr << "Testing Gram" << std::endl;
 
         for(size_t nr=1;nr<=16;nr<<=1)
         {
-            Matrix M(nr,nr);
-            for(size_t nc=1;nc<=64;nc<<=1)
+            Matrix Mseq(nr,nr);
+            Matrix Mpar(nr,nr);
+            std::cerr << '[' <<  std::setw(3) << nr << ']' << ':';
+            for(size_t nc=1;nc<=256;nc<<=1)
             {
-                Matrix V(nr,nc);
+                Matrix   V(nr,nc);
                 support::fill2D(V);
-                atom::Gram(M,V);
-                //std::cerr << "G=" << M << std::endl;
+                support::fill2D(Mseq);
+                support::fill2D(Mpar);
 
-                atom::Gram(M,V,loop);
-            }
+                Y_SUPPORT_TICKS(fullTicks,atom::Gram(Mseq,V));
+                Y_SUPPORT_TICKS(loopTicks,atom::Gram(Mpar,V,loop));
+
+                Y_ASSERT(atom::tool::deltaSquared2D(Mseq,Mpar)<=0);
+                std::cerr << clk.speedup(fullTicks,loopTicks) << '/';
+
+            } std::cerr << std::endl;
         }
 
     }
@@ -109,49 +117,6 @@ namespace {
     }
 
 
-    //! integer square root
-    template <typename T> inline
-    T __isqrt(const T n) throw()
-    {
-        if(n<=1)
-        {
-            return n;
-        }
-        else
-        {
-            T x0 = n;
-            T x1 = (n>>1);
-            while(true)
-            {
-                x0 = x1;
-                x1 = ((x0+n/x0)>>1);
-                if(x1>=x0)
-                {
-                    return x0;
-                }
-            }
-        }
-
-    }
-
-    static inline
-    void symIndices()
-    {
-        const size_t n = 100;
-
-        const size_t kmax = (n*(n+1))>>1;
-        for(size_t k=1;k<=kmax;++k)
-        {
-            const size_t s_arg = ((k-1)<<3)+1;
-            const size_t i = (__isqrt(s_arg)+1)>>1;
-            const size_t i_off = ( i*(i-1) )>>1;
-            const size_t j     = k-i_off;
-            // std::cerr << "k=" << k << " => i=" << i << ", j=" << j << std::endl;
-            Y_ASSERT( j+(i*(i-1))/2 == k );
-        }
-
-
-    }
 
 }
 
@@ -160,11 +125,6 @@ Y_UTEST(atom3)
 {
     concurrent::simd loop;
 
-    if(true)
-    {
-        symIndices();
-        return 0;
-    }
 
     doTest<float>(loop);
     doTest<double>(loop);

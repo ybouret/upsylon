@@ -180,17 +180,38 @@ void Gram(TARGET &G, const SOURCE &V)
 
 //! Gram matrix of vectors V[1...nr]
 template <typename TARGET, typename SOURCE> static inline
-void Gram(TARGET &G, const SOURCE &V, concurrent::for_each &)
+void Gram(TARGET &G, const SOURCE &V, concurrent::for_each &loop)
 {
     assert(G.rows==V.rows);
     assert(G.cols==V.rows);
     const size_t nr = V.rows;
-    for(size_t i=nr;i>0;--i)
+    
+    struct ops
     {
-        for(size_t j=i;j>0;--j)
+        TARGET       *G_;
+        const SOURCE *V_;
+        size_t        kmax;
+
+        static inline void call(void *args, parallel &ctx, lockable &)
         {
-            G[i][j] = G[j][i] = dot(V[i],V[j]);
+            ops          &self = *static_cast<ops*>(args);
+            TARGET       &G    = *self.G_;
+            const SOURCE &V    = *self.V_;
+            size_t length = self.kmax;
+            size_t k      = 1;
+            ctx.split(length,k);
+            size_t i=0,j=0;
+            while(length-- > 0 )
+            {
+                symm_indx(i,j,k);
+                G[i][j] = G[j][i] = dot(V[i],V[j]);
+                ++k;
+            }
+
         }
-    }
+    };
+
+    ops _ = { &G, &V, ( nr*(nr+1) ) >> 1 };
+    loop.run( ops::call, &_ );
 
 }

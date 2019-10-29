@@ -7,6 +7,7 @@
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/sorted-sum.hpp"
+#include "y/counting/symm-indx.hpp"
 
 namespace upsylon {
     
