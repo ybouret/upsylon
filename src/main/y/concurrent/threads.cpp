@@ -29,7 +29,6 @@ namespace upsylon
         }
 
         threads:: threads(const bool v) :
-       // __topology( layout::create() ),
         topology( layout::create() ),
         access(),
         engines( topology->cores   ),

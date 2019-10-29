@@ -134,52 +134,20 @@ namespace {
 
     }
 
-
-
-    static inline size_t getOffset(const size_t i)
-    {
-        assert(i>0);
-        return (i*(i-1))>>1;
-    }
-
     static inline
     void symIndices()
     {
-        const size_t n = 10;
-        for(size_t i=1;i<=n;++i)
-        {
-            std::cerr << "i=" << i << std::endl;
-            std::cerr << " |_k=";
-            const size_t lo = getOffset(i);
-            const size_t up = getOffset(i+1);
-            for(size_t k=lo;k<up;++k)
-            {
-                std::cerr << ' ' << k;
-            } std::cerr << std::endl;
+        const size_t n = 100;
 
-            const size_t lo2 = i*(i-1);
-            const size_t up2 = i*(i+1);
-            std::cerr << " |_lo2  = " << lo2 << std::endl;
-            std::cerr << " |_up2  = " << up2 << std::endl;
-            std::cerr << "  |_2k  =";
-            size_t count = 0;
-            for(size_t k2=lo2;k2<up2;++k2)
-            {
-                if( 0 == (k2&0x01) )
-                {
-                    std::cerr << ' ' << (k2>>1);
-                    ++count;
-                }
-            }
-            std::cerr << ' ';  Y_CHECK(count==i);
-            std::cerr << "  |_sqrt=";
-            for(size_t k2=lo2;k2<up2;++k2)
-            {
-                if( 0 == (k2&0x01) )
-                {
-                    std::cerr << ' ' << __isqrt(k2);
-                }
-            } std::cerr << std::endl;
+        const size_t kmax = (n*(n+1))>>1;
+        for(size_t k=1;k<=kmax;++k)
+        {
+            const size_t s_arg = ((k-1)<<3)+1;
+            const size_t i = (__isqrt(s_arg)+1)>>1;
+            const size_t i_off = ( i*(i-1) )>>1;
+            const size_t j     = k-i_off;
+            // std::cerr << "k=" << k << " => i=" << i << ", j=" << j << std::endl;
+            Y_ASSERT( j+(i*(i-1))/2 == k );
         }
 
 
