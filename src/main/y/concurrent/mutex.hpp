@@ -75,6 +75,7 @@ namespace upsylon
         //! probing mutex until valid condition is reached
 #define Y_MUTEX_PROBE(M,VALID_CONDITION) do {     \
 if( !(M).try_lock()   ) continue;                 \
+Y_LOCK(M);                                        \
 if( (VALID_CONDITION) ) { (M).unlock(); break; }  \
 (M).unlock();                                     \
 } while(true)
