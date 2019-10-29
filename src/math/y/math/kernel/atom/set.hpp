@@ -5,7 +5,7 @@
 
 //! sequential target=source
 template <typename TARGET, typename SOURCE> static inline
-void set( TARGET &target, const SOURCE &source )
+void set( TARGET &target, SOURCE &source )
 {
     assert( target.size() <= source.size() );
     for(size_t i=target.size();i>0;--i)
@@ -18,16 +18,16 @@ void set( TARGET &target, const SOURCE &source )
 
 //! parallel target=source
 template <typename TARGET, typename SOURCE> static inline
-void set( TARGET &target, const SOURCE &source,  concurrent::for_each &loop )
+void set( TARGET &target, SOURCE &source,  concurrent::for_each &loop )
 {
     assert( target.size() <= source.size() );
     
     Y_MK_ATOM_OPS_API()
-    TARGET       *target_;
-    const SOURCE *source_;
+    TARGET *target_;
+    SOURCE *source_;
     Y_MK_ATOM_OPS_GET(self);
-    TARGET       &target = *self.target_;
-    const SOURCE &source = *self.source_;
+    TARGET &target = *self.target_;
+    SOURCE &source = *self.source_;
     Y_MK_ATOM_OPS_USE(target.size(),SET)
     &target, &source
     Y_MK_ATOM_OPS_RUN(loop);

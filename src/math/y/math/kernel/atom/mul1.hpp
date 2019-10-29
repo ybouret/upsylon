@@ -96,7 +96,7 @@ void mul_( TARGET &target, typename TARGET::param_type value, const SOURCE &sour
 
 //! sequential target += value * source
 template <typename TARGET, typename SOURCE> static inline
-void muladd( TARGET &target, typename TARGET::param_type value, const SOURCE &source )
+void muladd( TARGET &target, typename TARGET::param_type value, SOURCE &source )
 {
     mul_(target,value,source, mulop::__add_v1<typename TARGET::mutable_type,typename SOURCE::mutable_type>);
 }
@@ -172,9 +172,9 @@ target[i] = Y_MK_ATOM_CAST(TARGET,LHS,lhs[i]) + value * Y_MK_ATOM_CAST(TARGET,RH
 //! sequental target = lhs + value * rhs
 template<typename TARGET,typename LHS,typename RHS> static inline
 void setprobe(TARGET                     &target,
-              const    LHS               &lhs,
+              LHS                        &lhs,
               typename TARGET::param_type value,
-              const    RHS               &rhs)
+              RHS                        &rhs)
 {
     assert( target.size() <= lhs.size() );
     assert( target.size() <= rhs.size() );

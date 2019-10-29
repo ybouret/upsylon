@@ -168,7 +168,8 @@ namespace upsylon {
                                 Array         &aerr,
                                 Modify       *modify = 0 )
                 {
-                    static const T D2_FTOL = numeric<T>::sqrt_ftol;
+                    static const T D_FTOL = numeric<T>::sqrt_ftol;
+                    static const T A_FTOL = numeric<T>::ftol;
                     assert( flags.size() == aorg.size() );
                     assert( flags.size() == aerr.size() );
 
@@ -219,6 +220,7 @@ namespace upsylon {
 
                     // starting point...
                     T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+                    size_t nbad  = 0;
 
                 CYCLE:
                     ++cycle;
@@ -230,7 +232,6 @@ namespace upsylon {
 
 
 
-                //CURVATURE:
                     //__________________________________________________________
                     //
                     Y_LS_PRINTLN( "     used   = " << used  );
@@ -281,82 +282,164 @@ namespace upsylon {
                             Y_LS_PRINTLN( "     step   = " << step   );
                             break;
                     }
+                    //
                     //__________________________________________________________
+
 
 
                     //__________________________________________________________
                     //
-                    // try full step
-                    T D2try = sample.computeD2(F,atry);
-                    Y_LS_PRINTLN( "     D2try  = " << D2try  );
+                    //
+                    // at this point, aorg, atry and step are computed
+                    //
                     //__________________________________________________________
+                    triplet<T> u  = { 0,     numeric<T>::inv_gold, 1 };
+                    triplet<T> f  = { D2org, D2(u.b),             -1 };
+                    bool       ok = true;
 
-
-                    if( D2try <= D2org )
+                    if(f.b>f.a)
                     {
-                        //______________________________________________________
+                        //------------------------------------------------------
                         //
-                        Y_LS_PRINTLN( "[LS] accept" );
-                        //______________________________________________________
-                        const bool  converged = ( fabs_of(D2org-D2try) <= D2_FTOL * D2org);
-                        decreaseLambda();               // better quality
-                        atom::set(aorg,atry);           // move
-                        D2org = sample.computeD2(alpha, // new/final point
-                                                 beta,
-                                                 F,
-                                                 aorg,
-                                                 used,
-                                                 *this);
-                        if(converged)
+                        // D2(u.b)>D2(u.a)
+                        // first trial is invalid, won't go further
+                        //
+                        //------------------------------------------------------
+                        Y_LS_PRINTLN( "[LS] Backtrack Level-1" );
+                        ok  = false;
+                        f.c = f.b;
+                        u.c = u.b;
+                        bracket::inside(D2,u,f);
+                        (void)minimize::run(D2,u,f);
+                        if( f.b > f.a )
                         {
-                            goto CONVERGED;
+                            Y_LS_PRINTLN("[LS] <BAD FUNCTION>");
+                            return false;
                         }
-                        goto CYCLE;
+                        assert(f.b<=f.a);
                     }
                     else
                     {
-
-                        //______________________________________________________
+                        //------------------------------------------------------
                         //
-                        // D2try>D2org
+                        // D2(u.b) <= D2(u.a), take next step
                         //
-                        Y_LS_PRINTLN( "[LS] backtracking..." );
-                        //
-                        //______________________________________________________
-
-                        triplet<T> u = {0,-1,1};
-                        triplet<T> f = {D2org,-1,D2try};
-                        bracket::inside(D2, u, f);
-                        std::cerr << "u=" << u << std::endl;
-                        std::cerr << "f=" << f << std::endl;
-
-                        // evaluate and set atry
-                        D2try = D2( minimize::run(D2,u,f) );
-                        if(D2try>=D2org)
+                        //------------------------------------------------------
+                        f.c = D2(u.c);
+                        if(f.c>f.a)
                         {
-                            // numerical minimum
-                            Y_LS_PRINTLN( "[LS] achieved");
-
+                            //--------------------------------------------------
+                            //
+                            // D2(u.c=1)>D2(u.a=0) : invalid full step
+                            // but minimum is already bracketed!
+                            //
+                            //--------------------------------------------------
+                            ok = false;
+                            Y_LS_PRINTLN( "[LS] Backtrack Level-2" );
+                            (void)minimize::run(D2,u,f);
+                            assert(f.b<=f.a);
                         }
+                        else
+                        {
+                            //--------------------------------------------------
+                            //
+                            // D2(u.c=1)<=D2(u.a=0), accept full step
+                            //
+                            //--------------------------------------------------
+                            if(f.b<=f.c)
+                            {
+                                // Damping!
+                                (void)minimize::run(D2,u,f);
+                                assert(f.b<=f.a);
+                            }
+                            else
+                            {
+                                u.b = u.c;
+                                f.b = f.c;
+                                assert(f.b<=f.a);
+                            }
+                        }
+                    }
 
-                        // ok, better value, but on spurious point
-                        atom::set(aorg,atry);           // move
-                        D2org = sample.computeD2(alpha, // new/final point
-                                                 beta,
-                                                 F,
-                                                 aorg,
-                                                 used,
-                                                 *this);
+                    //__________________________________________________________
+                    //
+                    //
+                    // u.b is the optimized step fraction
+                    //
+                    //__________________________________________________________
+
+                    //----------------------------------------------------------
+                    // compute the new position
+                    //----------------------------------------------------------
+                    atom::setprobe(atry,aorg,u.b,step);
+
+                    //----------------------------------------------------------
+                    // check variable convergence
+                    //----------------------------------------------------------
+                    bool converged_variables = true;
+                    for(size_t i=n;i>0;--i)
+                    {
+                        if(!used[i]) continue;
+                        const T a_old = aorg[i];
+                        const T a_new = atry[i];
+                        const T da    = fabs_of( a_new-a_old );
+                        if( da > A_FTOL * max_of( fabs_of(a_new), fabs_of(a_old) ) )
+                        {
+                            converged_variables = false;
+                            break;
+                        }
+                    }
+
+                    //----------------------------------------------------------
+                    // update aorg/D2org
+                    //----------------------------------------------------------
+                    atom::set(aorg,atry);
+                    const T D2old = D2org;
+                    D2org = sample.computeD2(alpha,
+                                             beta,
+                                             F,
+                                             aorg,
+                                             used,
+                                             *this);
+
+                    Y_LS_PRINTLN("[LS] D2: " << D2old << " -> " << D2org << " (opt@" << u.b << ")" );
+                    Y_LS_PRINTLN("[LS] converged variables = <" << converged_variables << ">");
+                    if(ok)
+                    {
+                        //------------------------------------------------------
+                        // check D2 convergence
+                        //------------------------------------------------------
+                        const bool converged_squares = (fabs_of(D2org-D2old) <= D_FTOL * D2old);
+                        Y_LS_PRINTLN("[LS] converged squares   = <" << converged_squares   << ">");
+                        if( converged_variables || converged_squares  )
+                        {
+                            goto CONVERGED;
+                        }
+                        decreaseLambda();
+                        nbad = 0;
+                    }
+                    else
+                    {
+                        //------------------------------------------------------
+                        // check variable convergence
+                        //------------------------------------------------------
+                        ++nbad;
+                        if( (nbad>0) && converged_variables )
+                        {
+                            Y_LS_PRINTLN("[LS] spurious convergence");
+                            goto CONVERGED;
+                        }
 
                         if( !increaseLambda() )
                         {
-                            Y_LS_PRINTLN( "[LS] <SINGULAR Level-1>" );
+                            Y_LS_PRINTLN("[LS] <OVERFLOW>");
                             return false;
                         }
-
-                        goto CYCLE;
-
                     }
+                    goto CYCLE;
+
+
+
 
                 CONVERGED:
                     //__________________________________________________________
@@ -479,6 +562,8 @@ namespace upsylon {
                     }
                 }
 
+
+
                 struct ProbeD2
                 {
                     const SampleType<T> *sample;
@@ -495,7 +580,8 @@ namespace upsylon {
                     }
 
                 };
-                
+
+
             };
             
         }

@@ -24,6 +24,7 @@ namespace upsylon
         template <> const real_t numeric<real_t>::tiny         = REAL(pow)( REAL(10.0), REAL_MIN_10_EXP);
         template <> const real_t numeric<real_t>::huge         = REAL(pow)( REAL(10.0), REAL_MAX_10_EXP);
         template <> const real_t numeric<real_t>::gold         = REAL(0.5) * ( REAL(sqrt)( REAL(5.0) ) + REAL(1.0) );
+        template <> const real_t numeric<real_t>::inv_gold     = REAL(0.5) * ( REAL(sqrt)( REAL(5.0) ) - REAL(1.0) );
 
 
         real_t atan2_of( real_t y, real_t x )

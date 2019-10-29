@@ -23,7 +23,9 @@ SHOW(T,max_10_exp); \
 SHOW(T,ftol);       \
 SHOW(T,sqrt_ftol);  \
 SHOW(T,tiny);       \
-SHOW(T,huge)
+SHOW(T,huge);       \
+SHOW(T,gold);\
+SHOW(T,inv_gold)
 
 
         void show:: info()

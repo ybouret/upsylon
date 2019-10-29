@@ -171,7 +171,7 @@ Y_UTEST(adjust_ode)
 
 
     doAdjust<float>();
-    //doAdjust<double>();
+    doAdjust<double>();
 
 
 
