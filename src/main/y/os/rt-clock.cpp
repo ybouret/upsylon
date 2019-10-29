@@ -19,6 +19,7 @@
 
 #include <cmath>
 #include "y/type/utils.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {

@@ -10,6 +10,7 @@
 #include "y/exception.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/associative/map.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {

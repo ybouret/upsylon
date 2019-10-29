@@ -9,6 +9,7 @@
 
 #include "y/math/opt/minimize.hpp"
 #include "y/math/opt/bracket.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {

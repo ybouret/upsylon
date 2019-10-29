@@ -4,6 +4,7 @@
 
 #include "y/math/types.hpp"
 #include "y/type/bswap.hpp"
+#include "y/core/isqrt.hpp"
 
 namespace upsylon
 {

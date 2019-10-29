@@ -3,6 +3,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/string/convert.hpp"
 #include "y/os/progress.hpp"
+#include "y/core/ipower.hpp"
 #include "y/type/utils.hpp"
 
 #include <cmath>

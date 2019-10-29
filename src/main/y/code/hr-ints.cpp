@@ -1,6 +1,7 @@
 
 #include "y/code/hr-ints.hpp"
 #include "y/type/utils.hpp"
+#include "y/core/ipower.hpp"
 #include <iostream>
 
 namespace upsylon {

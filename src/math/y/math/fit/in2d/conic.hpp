@@ -3,6 +3,7 @@
 #define Y_FIT_CONIC_INCLUDED 1
 
 #include "y/math/fit/in2d/shape.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {

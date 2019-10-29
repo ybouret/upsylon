@@ -26,6 +26,7 @@ namespace upsylon
 }
 
 #include "y/type/utils.hpp"
+#include "y/core/ipower.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/unique.hpp"
 #include <cmath>

@@ -1,7 +1,8 @@
 #include "y/string/convert.hpp"
 #include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
-#include "y/type/utils.hpp"
+//#include "y/type/utils.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {
