@@ -149,7 +149,7 @@ namespace {
                 vars.display(std::cerr, aorg, aerr);
                 std::cerr << std::endl;
 
-                std::cerr << "thirds pass" << std::endl;
+                std::cerr << "third pass" << std::endl;
                 atom::ld(used,true);
 
                 vars.display(std::cerr,used,"\t (*) use ");

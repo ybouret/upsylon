@@ -281,6 +281,9 @@ namespace upsylon {
                             Y_LS_PRINTLN( "     atry   = " << atry   );
                             Y_LS_PRINTLN( "     step   = " << step   );
                             break;
+
+                        case EmergencyExit: Y_LS_PRINTLN( "[LS] EmergencyExit" );
+                            return false;
                     }
                     //
                     //__________________________________________________________

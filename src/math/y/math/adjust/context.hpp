@@ -16,7 +16,8 @@ namespace upsylon {
             {
                 LeftUntouched,
                 ModifiedState,
-                ModifiedShift
+                ModifiedShift,
+                EmergencyExit
             };
 
             //! context to modify a current fit or use as callback
@@ -58,6 +59,7 @@ namespace upsylon {
                 addressable<T>      &shift; //!< current  step
                 const size_t         cycle; //!< internal cycle index
 
+                //! function to modify in progress
                 typedef functor<ModifyStatus,TL1(Context&)> Modify;
 
             private:
