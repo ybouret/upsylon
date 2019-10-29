@@ -170,6 +170,7 @@ namespace upsylon {
                 {
                     static const T D_FTOL = numeric<T>::sqrt_ftol;
                     static const T A_FTOL = numeric<T>::ftol;
+
                     assert( flags.size() == aorg.size() );
                     assert( flags.size() == aerr.size() );
 
@@ -294,6 +295,7 @@ namespace upsylon {
                     //
                     //
                     // at this point, aorg, atry and step are computed
+                    // now pinpoint a local minimum
                     //
                     //__________________________________________________________
                     triplet<T> u  = { 0,     numeric<T>::inv_gold, 1 };
@@ -305,7 +307,7 @@ namespace upsylon {
                         //------------------------------------------------------
                         //
                         // D2(u.b)>D2(u.a)
-                        // first trial is invalid, won't go further
+                        // first trial is invalid, won't go further !
                         //
                         //------------------------------------------------------
                         Y_LS_PRINTLN( "[LS] Backtrack Level-1" );
@@ -325,7 +327,7 @@ namespace upsylon {
                     {
                         //------------------------------------------------------
                         //
-                        // D2(u.b) <= D2(u.a), take next step
+                        // D2(u.b) <= D2(u.a), take next step at u.c
                         //
                         //------------------------------------------------------
                         f.c = D2(u.c);
@@ -351,12 +353,13 @@ namespace upsylon {
                             //--------------------------------------------------
                             if(f.b<=f.c)
                             {
-                                // Damping!
+                                // Damping! we met a lower point
                                 (void)minimize::run(D2,u,f);
                                 assert(f.b<=f.a);
                             }
                             else
                             {
+                                // regular full step
                                 u.b = u.c;
                                 f.b = f.c;
                                 assert(f.b<=f.a);
@@ -398,14 +401,9 @@ namespace upsylon {
                     //----------------------------------------------------------
                     atom::set(aorg,atry);
                     const T D2old = D2org;
-                    D2org = sample.computeD2(alpha,
-                                             beta,
-                                             F,
-                                             aorg,
-                                             used,
-                                             *this);
+                    D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
 
-                    Y_LS_PRINTLN("[LS] D2: " << D2old << " -> " << D2org << " (opt@" << u.b << ")" );
+                    Y_LS_PRINTLN("[LS] D2: " << D2old << " -> " << D2org );
                     Y_LS_PRINTLN("[LS] converged variables = <" << converged_variables << ">");
                     if(ok)
                     {
@@ -447,8 +445,9 @@ namespace upsylon {
                 CONVERGED:
                     //__________________________________________________________
                     //
-                    Y_LS_PRINTLN( "[LS] converged@D2=" << D2org );
-                    Y_LS_PRINTLN( "     aorg = " << aorg );
+                    Y_LS_PRINTLN( "[LS] -- Converged --" );
+                    Y_LS_PRINTLN( "     D2   = " << D2org );
+                    Y_LS_PRINTLN( "     aorg = " << aorg  );
                     //__________________________________________________________
                     if(!LU::build(alpha))
                     {
