@@ -21,7 +21,7 @@ namespace upsylon
 
     //! careful sum of SIGNED types to minimize underflow
     template <typename T>
-    inline T sorted_sum_abs( addressable<T> &arr )
+    inline T sorted_sum_by_abs( addressable<T> &arr )
     {
         T ans(0);
         hsort(arr,comparison::decreasing_abs<T>);

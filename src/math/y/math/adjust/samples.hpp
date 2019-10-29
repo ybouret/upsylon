@@ -136,6 +136,17 @@ namespace upsylon {
                     }
                 }
 
+                //! make local sum
+                virtual void addToSumOfSquares( T &total, T &residual ) const throw()
+                {
+                    const Handles &self = *this;
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        self[i]->addToSumOfSquares(total,residual);
+                    }
+                }
+
+
                 //==============================================================
                 //
                 // non virtual interfaces
@@ -166,7 +177,7 @@ namespace upsylon {
                 mutable vector<T> _beta;
 
                 //! collect individual samples
-                virtual void collect( sequence< typename SampleType<T>::Address > &seq  ) const
+                virtual void collect( sequence<void*> &seq  ) const
                 {
                     const Handles &self = *this;
                     for(size_t i=self.size();i>0;--i)

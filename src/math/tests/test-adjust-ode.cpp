@@ -29,11 +29,12 @@ namespace {
         inline virtual T delta() const throw() { return 0.01; }
 
         virtual void   setup(addressable<T>       &Y,
-                             const accessible<T>  &,
-                             const Variables      &) const
+                             const accessible<T>  &aorg,
+                             const Variables      &vars) const
         {
             Y_ASSERT( dimensions() == Y.size() );
-            Y[1] = 1;
+            //std::cerr << "-- setup" << std::endl;
+            Y[1] =  vars(aorg,"y0");
             Y[2] = 0;
         }
 
@@ -98,7 +99,7 @@ namespace {
         LeastSquares<T> LS(true);
 
         Variables &vars = sample.variables;
-        vars << "mu" << "omega";
+        vars << "mu" << "omega" << "y0";
 
         vector<T>    aorg( vars.sweep(),  0 );
         vector<bool> used( aorg.size(), true);
@@ -106,25 +107,57 @@ namespace {
 
         vars(aorg,"mu")    = 0.5;
         vars(aorg,"omega") = 2.5;
+        vars(aorg,"y0")    = 1;
+        vars(used,"y0")   = false;
 
-
-        Y_ASSERT(LS.fit(sample, explode, aorg, used, aerr));
-        vars.display(std::cerr, aorg, aerr);
-
+        if(LS.fit(sample, explode, aorg, used, aerr))
         {
-            ios::ocstream fp("adjode.dat");
-            sample.save(fp);
-        }
+            vars.display(std::cerr, aorg, aerr);
 
-        {
-            ios::ocstream fp("adjfcn.dat");
-            T x = 0;
-            const T dx = 0.02;
-
-            fp("%g %g\n",x,explode.start(x,aorg,vars));
-            for(x+=dx;x<=X->back();x+=dx)
             {
-                fp("%g %g\n",x,explode.reach(x,aorg,vars));
+                ios::ocstream fp("adjode.dat");
+                sample.save(fp);
+            }
+
+            {
+                ios::ocstream fp("adjfcn.dat");
+                T x = 0;
+                const T dx = 0.02;
+
+                fp("%g %g\n",x,explode.start(x,aorg,vars));
+                for(x+=dx;x<=X->back();x+=dx)
+                {
+                    fp("%g %g\n",x,explode.reach(x,aorg,vars));
+                }
+
+            }
+            vars.display(std::cerr,used,"\t (*) use ");
+            correlation<T> corr;
+            std::cerr << "corr=" << sample.computeCorrelation(corr) << std::endl;
+            std::cerr << "R2  =" << sample.computeR2() << std::endl;
+            std::cerr << std::endl;
+
+            std::cerr << "second pass" << std::endl;
+            LS.verbose = true;
+            atom::ld(used,false);
+            vars(used,"y0")   = true;
+
+            vars.display(std::cerr,used,"\t (*) use ");
+
+            if(LS.fit(sample, explode, aorg, used, aerr))
+            {
+                vars.display(std::cerr, aorg, aerr);
+                std::cerr << std::endl;
+
+                std::cerr << "thirds pass" << std::endl;
+                atom::ld(used,true);
+
+                vars.display(std::cerr,used,"\t (*) use ");
+
+                if(LS.fit(sample, explode, aorg, used, aerr))
+                {
+                    vars.display(std::cerr, aorg, aerr);
+                }
             }
 
         }
@@ -138,7 +171,7 @@ Y_UTEST(adjust_ode)
 
 
     doAdjust<float>();
-    doAdjust<double>();
+    //doAdjust<double>();
 
 
 

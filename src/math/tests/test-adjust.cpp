@@ -203,7 +203,7 @@ Y_UTEST(adjust)
     
     LeastSquares<double> LS(true);
 
-    //LS.verbose = false;
+    LS.verbose = false;
 
     Y_ASSERT(LS.fit(S1, SF, aorg, used, aerr));
     S1.variables.display(std::cerr, aorg, aerr, "S1.");
@@ -213,6 +213,7 @@ Y_UTEST(adjust)
     }
     correlation<double> corr;
     std::cerr << "S1.corr=" << S1.computeCorrelation(corr) << std::endl;
+    std::cerr << "S1.R2  =" << S1.computeR2() << std::endl;
     std::cerr << std::endl;
 
 
@@ -224,6 +225,7 @@ Y_UTEST(adjust)
         S2.save(fp);
     }
     std::cerr << "S2.corr=" << S2.computeCorrelation(corr) << std::endl;
+    std::cerr << "S2.R2  =" << S2.computeR2() << std::endl;
     std::cerr << std::endl;
 
 
@@ -239,7 +241,11 @@ Y_UTEST(adjust)
     std::cerr << std::endl;
     std::cerr << "S1.corr=" << S1.computeCorrelation(corr) << std::endl;
     std::cerr << "S2.corr=" << S2.computeCorrelation(corr) << std::endl;
-    std::cerr << std::endl;
+    std::cerr << "S1.R2  =" << S1.computeR2() << std::endl;
+    std::cerr << "S2.R2  =" << S2.computeR2() << std::endl;
+    std::cerr << "S.R2   =" << S.computeR2()  << std::endl;
+
+
 
 }
 Y_UTEST_DONE()

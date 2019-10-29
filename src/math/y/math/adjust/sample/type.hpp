@@ -14,18 +14,8 @@ namespace upsylon {
 
         namespace Adjust {
 
-            template <typename> class Sample;       //!< forward declaration
-            template <typename> class LeastSquares; //!< forward declaration
-
-            enum ModifyStatus
-            {
-                LeftUntouched,
-                ModifiedState,
-                ModifiedShift
-            };
-
-#define Y_MATH_ADJUST_MODIFY TL1(Context &)
-
+            template <typename T> class Context; //!< forward declaration
+            
             //==================================================================
             //
             //
@@ -45,55 +35,7 @@ namespace upsylon {
                 typedef typename Type<T>::Array      Array;        //!< alias
                 typedef typename Type<T>::Matrix     Matrix;       //!< alias
                 typedef typename Type<T>::Function   Function;     //!< alias
-                typedef typename Type<T>::Parameters Parameters;   //< alias
-                typedef Sample<T>                   *Address;      //!< alias
-                typedef accessible<Address>          Addresses;    //!< alias
-
-                //! context to validate/modify fit
-                class Context : public accessible< Sample<T> >
-                {
-                public:
-                    inline virtual ~Context() throw() {}
-
-
-                    inline virtual size_t size() const throw() { return _data.size(); }
-                    inline const Sample<T> & operator[]( const size_t indx ) const
-                    {
-                        return *_data[indx];
-                    }
-
-
-
-                    inline explicit Context(const SampleType<T> & _self,
-                                            const Parameters    & _aorg,
-                                            const Flags         & _used,
-                                            Array               & _atry,
-                                            Array               & _step) :
-                    flags( _used ),
-                    start( _aorg ),
-                    state( _atry ),
-                    shift( _step ),
-                    cycle(0),
-                    _data()
-                    {
-                        _self.collect(_data);
-                    }
-
-                    const Flags      &flags;
-                    const Parameters &start;
-                    Array            &state;
-                    Array            &shift;
-                    const size_t      cycle;
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Context);
-                    vector<Address,Allocator> _data;
-
-                };
-
-                typedef functor<ModifyStatus,Y_MATH_ADJUST_MODIFY> Modify;
-
-
+                typedef typename Type<T>::Parameters Parameters;   //!< alias
 
                 //==============================================================
                 //
@@ -118,6 +60,8 @@ namespace upsylon {
                 //! flags activation
                 virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const = 0;
 
+                //! computing quantities for goodness of fit
+                virtual void addToSumOfSquares( T &total, T &residual ) const throw() = 0;
 
 
 
@@ -184,8 +128,14 @@ namespace upsylon {
                     Type<T>::Regularize(alpha);
                     return D2;
                 }
-                
 
+                //! compute coefficient of determination R2, after a computeD2
+                inline T computeR2() const throw()
+                {
+                    T SStot = 0, SSres = 0;
+                    addToSumOfSquares(SStot, SSres);
+                    return T(1) - SSres/SStot;
+                }
 
 
             protected:
@@ -194,10 +144,10 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SampleType);
-                friend class LeastSquares<T>;
+                friend class Context<T>;
 
                 //! multiple samples collection
-                virtual void collect( sequence<Address> & ) const = 0;
+                virtual void collect( sequence<void*> & ) const = 0;
             };
 
         }

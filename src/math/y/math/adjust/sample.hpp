@@ -260,14 +260,14 @@ namespace upsylon {
                     }
                 }
 
-
+                //! local correlation
                 T computeCorrelation( correlation<T> &corr ) const
                 {
                     const size_t np = count();
                     corr.free();
                     corr.ensure(np);
                     
-                    for(size_t i=this->count();i>0;--i)
+                    for(size_t i=np;i>0;--i)
                     {
                         corr.add( ordinate[i], adjusted[i] );
                     }
@@ -275,6 +275,32 @@ namespace upsylon {
                     return corr.compute();
                 }
 
+
+                virtual void addToSumOfSquares( T &total, T &residual ) const throw()
+                {
+                    const size_t np = count();
+                    if(np>0)
+                    {
+                        addressable<T> &temp = deltaSq;
+
+                        for(size_t i=np;i>0;--i)
+                        {
+                            temp[i] = square_of( ordinate[i] - adjusted[i]  );
+                        }
+                        residual += sorted_sum(temp);
+
+                        for(size_t i=np;i>0;--i)
+                        {
+                            temp[i]= ordinate[i];
+                        }
+                        const T ave = sorted_sum_by_abs(temp)/np;
+                        for(size_t i=np;i>0;--i)
+                        {
+                            temp[i] = square_of(ordinate[i]-ave);
+                        }
+                        total += sorted_sum(temp);
+                    }
+                }
 
                 //==============================================================
                 //
@@ -298,7 +324,7 @@ namespace upsylon {
 
                 friend class Samples<T>;
 
-                virtual void collect(sequence<typename SampleType<T>::Address> &seq  ) const
+                virtual void collect(sequence<void*> &seq) const
                 {
                     const Sample *self = this;
                     seq.push_back( (Sample *)self  );

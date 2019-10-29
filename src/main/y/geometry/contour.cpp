@@ -10,14 +10,14 @@ namespace upsylon {
         {
             double a[4] = { v1, v2, v3, v4 };
             lightweight_array<double> arr(a,sizeof(a)/sizeof(a[0]));
-            return sorted_sum_abs(arr) * 0.25;
+            return sorted_sum_by_abs(arr) * 0.25;
         }
 
         double Contour:: Average(const double *d) throw()
         {
             double a[8] = { d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7]  };
             lightweight_array<double> arr(a,sizeof(a)/sizeof(a[0]));
-            return sorted_sum_abs(arr) * 0.125;
+            return sorted_sum_by_abs(arr) * 0.125;
         }
 
 

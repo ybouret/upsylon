@@ -3,16 +3,21 @@
 #ifndef Y_ADJUST_LEAST_SQUARES_INCLUDED
 #define Y_ADJUST_LEAST_SQUARES_INCLUDED 1
 
-#include "y/math/adjust/sample/type.hpp"
+#include "y/math/adjust/context.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/oxide/field1d.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/math/opt/bracket.hpp"
+#include "y/math/opt/minimize.hpp"
 
 namespace upsylon {
     
     namespace math {
         
         namespace Adjust {
+
+          
+
 
             //==================================================================
             //
@@ -109,8 +114,8 @@ namespace upsylon {
                 typedef typename Type<T>::Function       Function; //!< alias
                 typedef          Oxide::Field1D<T>       Field;    //!< alias
 
-                typedef typename SampleType<T>::Modify   Modify;   //!< alias
-                typedef typename SampleType<T>::Context  Context;  //!< alias
+                typedef typename Context<T>::Modify      Modify;   //!< alias
+
 
 
                 //! setup
@@ -201,15 +206,15 @@ namespace upsylon {
                     //
                     // create the call function
                     //__________________________________________________________
-                    //CallD2 D2    = { &aorg, &step, &atry, &sample, &F };
+                    ProbeD2 D2 = { &sample, &F, &atry, &aorg, &step};
 
                     //__________________________________________________________
                     //
                     // create the context
                     //__________________________________________________________
-                    Context context(sample,aorg,used,atry,step);
-                    size_t  cycle = aliasing::_(context.cycle);
-                    Modify &check = (0!=modify) ? *modify : nope;
+                    Context<T> context(sample,aorg,used,atry,step);
+                    size_t     cycle = aliasing::_(context.cycle);
+                    Modify    &check = (0!=modify) ? *modify : nope;
                     Y_LS_PRINTLN( "    #data   = " << context.size()  );
 
                     // starting point...
@@ -220,16 +225,18 @@ namespace upsylon {
                     //__________________________________________________________
                     //
                     Y_LS_PRINTLN( "[LS] cycle  = " << cycle );
+
+                    //__________________________________________________________
+
+
+
+                //CURVATURE:
+                    //__________________________________________________________
+                    //
+                    Y_LS_PRINTLN( "     used   = " << used  );
                     Y_LS_PRINTLN( "     aorg   = " << aorg );
                     Y_LS_PRINTLN( "     D2org  = " << D2org );
                     Y_LS_PRINTLN( "     alpha  = " << alpha );
-                    //__________________________________________________________
-
-
-
-                CURVATURE:
-                    //__________________________________________________________
-                    //
                     Y_LS_PRINTLN( "     beta   = " << beta );
                     while( !Algo<T>::ComputeCurvature(curv,lambda,alpha) )
                     {
@@ -280,12 +287,12 @@ namespace upsylon {
                     //__________________________________________________________
                     //
                     // try full step
-                    const T D2try = sample.computeD2(F,atry);
+                    T D2try = sample.computeD2(F,atry);
                     Y_LS_PRINTLN( "     D2try  = " << D2try  );
                     //__________________________________________________________
 
 
-                    if( D2try < D2org )
+                    if( D2try <= D2org )
                     {
                         //______________________________________________________
                         //
@@ -308,16 +315,46 @@ namespace upsylon {
                     }
                     else
                     {
+
                         //______________________________________________________
                         //
-                        Y_LS_PRINTLN( "[LS] reject" );
+                        // D2try>D2org
+                        //
+                        Y_LS_PRINTLN( "[LS] backtracking..." );
+                        //
                         //______________________________________________________
+
+                        triplet<T> u = {0,-1,1};
+                        triplet<T> f = {D2org,-1,D2try};
+                        bracket::inside(D2, u, f);
+                        std::cerr << "u=" << u << std::endl;
+                        std::cerr << "f=" << f << std::endl;
+
+                        // evaluate and set atry
+                        D2try = D2( minimize::run(D2,u,f) );
+                        if(D2try>=D2org)
+                        {
+                            // numerical minimum
+                            Y_LS_PRINTLN( "[LS] achieved");
+
+                        }
+
+                        // ok, better value, but on spurious point
+                        atom::set(aorg,atry);           // move
+                        D2org = sample.computeD2(alpha, // new/final point
+                                                 beta,
+                                                 F,
+                                                 aorg,
+                                                 used,
+                                                 *this);
+
                         if( !increaseLambda() )
                         {
                             Y_LS_PRINTLN( "[LS] <SINGULAR Level-1>" );
                             return false;
                         }
-                        goto CURVATURE;
+
+                        goto CYCLE;
 
                     }
 
@@ -383,9 +420,8 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
-                unit_t p;
-                T      lambda;
-                
+                unit_t   p;
+                T        lambda;
                 Matrix   alpha;
                 Vector   beta;
                 Matrix   curv;
@@ -394,30 +430,10 @@ namespace upsylon {
                 bVector  used;
                 Modify   nope;
 
-                inline ModifyStatus doNothing( Context & ) const
+                inline ModifyStatus doNothing( Context<T> & ) const
                 {
                      return LeftUntouched;
                 }
-
-
-
-                struct CallD2
-                {
-                    const accessible<T> * _aorg;
-                    const accessible<T> * _step;
-                    addressable<T>      * _atry;
-                    const SampleType<T> * _sample;
-                    Sequential<T>         * _F;
-                    
-                    inline T operator()( const T u )
-                    {
-                        atom::setprobe(* _atry, * _aorg, u, *_step);
-                        return _sample->computeD2( *_F, * _atry);
-                    }
-                    
-                    
-                };
-                
                 
                 inline void setup() throw()
                 {
@@ -462,6 +478,23 @@ namespace upsylon {
                         return true;
                     }
                 }
+
+                struct ProbeD2
+                {
+                    const SampleType<T> *sample;
+                    Sequential<T>       *F_;
+                    addressable<T>      *atry_;
+                    const accessible<T> *aorg_;
+                    const accessible<T> *step_;
+
+                    inline T operator()(const T u)
+                    {
+                        assert(sample); assert(F_); assert(atry_); assert(aorg_); assert(step_);
+                        atom::setprobe(*atry_, *aorg_, u, *step_);
+                        return sample->computeD2(*F_, *atry_);
+                    }
+
+                };
                 
             };
             
