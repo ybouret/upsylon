@@ -7,30 +7,48 @@
 
 namespace upsylon {
 
-    //! integer square root
-    template <typename T> inline
-    T isqrt(const T n) throw()
+
+    struct isqrt
     {
-        if(n<=1)
+        //! integer square root
+        template <typename T> static inline
+        T _(const T n) throw()
         {
-            return n;
-        }
-        else
-        {
-            T x0 = n;
-            T x1 = (n>>1);
-            while(true)
+            if(n<=1)
             {
-                x0 = x1;
-                x1 = ((x0+n/x0)>>1);
-                if(x1>=x0)
+                return n;
+            }
+            else
+            {
+                T x0 = n;
+                T x1 = (n>>1);
+                while(true)
                 {
-                    return x0;
+                    x0 = x1;
+                    x1 = ((x0+n/x0)>>1);
+                    if(x1>=x0)
+                    {
+                        return x0;
+                    }
                 }
             }
         }
 
-    }
+        template <typename T> static inline
+        T of(const T n) throw()
+        {
+            static const T nmax(sizeof(table));
+            return (n<nmax) ? table[n] : _(n);
+        }
+
+        static const uint8_t table[65536];
+
+    };
+
+
+
+
+
 
 }
 

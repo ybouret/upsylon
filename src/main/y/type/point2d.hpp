@@ -87,7 +87,7 @@ namespace upsylon
             point2d s;
             if(n>0)
             {
-                s.x = isqrt<mutable_type>(n); assert(s.x>0);
+                s.x = isqrt::of<mutable_type>(n); assert(s.x>0);
                 s.y = n/s.x;
                 while(s.x*s.y!=n)
                 {
