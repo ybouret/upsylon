@@ -30,6 +30,7 @@ namespace upsylon {
                 typedef typename Sample<T>::Handles Handles; //!< alias
                 typedef typename Type<T>::Series    Series;  //!< alias
                 typedef typename Type<T>::Matrix    Matrix;  //!< alias
+                typedef typename Type<T>::Vector    Vector;  //!< alias
 
 
                 //==============================================================
@@ -126,7 +127,8 @@ namespace upsylon {
                 }
 
                 //! activate all matching flags of all samples
-                virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const
+                virtual void activate(addressable<bool>      &target,
+                                      const accessible<bool> &source ) const
                 {
                     const Handles &self = *this;
                     for(size_t i=self.size();i>0;--i)
@@ -135,7 +137,7 @@ namespace upsylon {
                     }
                 }
 
-                //! make local sum
+                //! add local sum of squares
                 virtual void addToSumOfSquares( T &total, T &residual ) const throw()
                 {
                     const Handles &self = *this;
@@ -170,10 +172,10 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Samples);
-                mutable vector<T> deltaSq;
-                vector<T>         weights;
-                mutable matrix<T> _alpha;
-                mutable vector<T> _beta;
+                mutable vector<T> deltaSq; //!< data-sizd
+                Vector            weights; //!< a few samples
+                mutable Matrix    _alpha;
+                mutable Vector    _beta;
 
                 //! collect individual samples
                 virtual void collect( sequence<void*> &seq  ) const

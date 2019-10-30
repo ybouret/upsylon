@@ -62,8 +62,7 @@ namespace upsylon {
                 //! computing quantities for goodness of fit
                 virtual void addToSumOfSquares(T &total,
                                                T &residual) const throw() = 0;
-
-
+                
 
                 //==============================================================
                 //

@@ -40,6 +40,7 @@ namespace upsylon {
                 typedef typename Type<T>::Sequence Sequence; //!< alias
                 typedef typename Type<T>::Series   Series;   //!< alias
                 typedef typename Type<T>::Matrix   Matrix;   //!< alias
+                typedef typename Type<T>::Vector   Vector;   //!< alias
 
                 //==============================================================
                 //
@@ -110,11 +111,6 @@ namespace upsylon {
                     }
                 }
 
-                //! in-place square value
-                static inline void to_square( T &value ) throw()
-                {
-                    value *= value;
-                }
 
                 //! SampleType interface
                 virtual T  computeAndUpdate(Matrix                 &alpha,
@@ -212,12 +208,38 @@ namespace upsylon {
 
 
                 //! activate all matching variables
-                inline virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const
+                inline virtual void activate(addressable<bool>      &target,
+                                             const accessible<bool> &source ) const
                 {
                     this->variables.activate(target,source);
                  }
 
+                //! cumulative sum of squares
+                virtual void addToSumOfSquares( T &total, T &residual ) const throw()
+                {
+                    const size_t np = count();
+                    if(np>0)
+                    {
+                        addressable<T> &temp = deltaSq;
 
+                        for(size_t i=np;i>0;--i)
+                        {
+                            temp[i] = square_of( ordinate[i] - adjusted[i]  );
+                        }
+                        residual += sorted_sum(temp);
+
+                        for(size_t i=np;i>0;--i)
+                        {
+                            temp[i]= ordinate[i];
+                        }
+                        const T ave = sorted_sum_by_abs(temp)/np;
+                        for(size_t i=np;i>0;--i)
+                        {
+                            temp[i] = square_of(ordinate[i]-ave);
+                        }
+                        total += sorted_sum(temp);
+                    }
+                }
 
 
                 //==============================================================
@@ -275,31 +297,7 @@ namespace upsylon {
                 }
 
 
-                virtual void addToSumOfSquares( T &total, T &residual ) const throw()
-                {
-                    const size_t np = count();
-                    if(np>0)
-                    {
-                        addressable<T> &temp = deltaSq;
 
-                        for(size_t i=np;i>0;--i)
-                        {
-                            temp[i] = square_of( ordinate[i] - adjusted[i]  );
-                        }
-                        residual += sorted_sum(temp);
-
-                        for(size_t i=np;i>0;--i)
-                        {
-                            temp[i]= ordinate[i];
-                        }
-                        const T ave = sorted_sum_by_abs(temp)/np;
-                        for(size_t i=np;i>0;--i)
-                        {
-                            temp[i] = square_of(ordinate[i]-ave);
-                        }
-                        total += sorted_sum(temp);
-                    }
-                }
 
                 //==============================================================
                 //
@@ -312,8 +310,8 @@ namespace upsylon {
 
             private:
                 Indices           indices;
-                mutable vector<T> deltaSq;
-                mutable vector<T> dFda;
+                mutable vector<T> deltaSq; //!< data-sized
+                mutable Vector    dFda;    //!< vars-sized
 
                 Y_DISABLE_COPY_AND_ASSIGN(Sample);
                 inline void save_triplet( ios::ostream & fp, const size_t i) const
@@ -327,6 +325,12 @@ namespace upsylon {
                 {
                     const Sample *self = this;
                     seq.push_back( (Sample *)self  );
+                }
+
+                //! in-place square value
+                static inline void to_square( T &value ) throw()
+                {
+                    value *= value;
                 }
 
                 

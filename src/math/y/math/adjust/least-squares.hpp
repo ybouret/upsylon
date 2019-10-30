@@ -157,6 +157,15 @@ namespace upsylon {
                     return fit(sample,SF,aorg,flags,aerr,modify);
                 }
 
+                const accessible<T> & descent(SampleType<T>            &sample,
+                                              Sequential<T>            &F,
+                                              addressable<T>           &aorg,
+                                              const accessible<bool>   &flags)
+                {
+
+                    return beta;
+                }
+
 
                 //! full fit algorithm and error computation
                 inline bool fit(SampleType<T>            &sample,
