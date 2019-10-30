@@ -130,7 +130,11 @@ SET(adjust_sequential_srcs ${adjust_sequential_decl} ${adjust_sequential_code})
 SOURCE_GROUP( adjust/sequential FILES ${adjust_sequential_srcs} )
 INSTALL( FILES ${adjust_sequential_decl} DESTINATION include/y/math/adjust/sequential )
 
-
+FILE(GLOB adjust_share_decl y/math/adjust/share/*.hpp)
+FILE(GLOB adjust_share_code y/math/adjust/share/*.cpp)
+SET(adjust_share_srcs ${adjust_share_decl} ${adjust_share_code})
+SOURCE_GROUP( adjust/share FILES ${adjust_share_srcs} )
+INSTALL( FILES ${adjust_share_decl} DESTINATION include/y/math/adjust/share )
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
@@ -143,7 +147,7 @@ ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
-${adjust_srcs} ${adjust_sample_srcs} ${adjust_variable_srcs} ${adjust_sequential_srcs} 
+${adjust_srcs} ${adjust_sample_srcs} ${adjust_variable_srcs} ${adjust_sequential_srcs} ${adjust_share_srcs} 
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 
