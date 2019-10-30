@@ -106,7 +106,7 @@ SET(euclidean_arc_srcs ${euclidean_arc_decl} ${euclidean_arc_code})
 SOURCE_GROUP( euclidean/arc FILES ${euclidean_arc_srcs} )
 INSTALL( FILES ${euclidean_arc_decl} DESTINATION include/y/math/euclidean/arc )
 
-FILE(GLOB adjust_decl y/math/adjust/*.hpp)
+FILE(GLOB adjust_decl y/math/adjust/*.h??)
 FILE(GLOB adjust_code y/math/adjust/*.cpp)
 SET(adjust_srcs ${adjust_decl} ${adjust_code})
 SOURCE_GROUP( adjust FILES ${adjust_srcs} )
