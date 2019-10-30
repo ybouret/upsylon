@@ -6,8 +6,6 @@
 
 #include "y/math/adjust/variable.hpp"
 #include "y/string/display.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
 #include "y/math/kernel/errors.hpp"
 
 namespace upsylon {

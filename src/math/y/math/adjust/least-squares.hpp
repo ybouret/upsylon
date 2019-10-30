@@ -169,6 +169,15 @@ namespace upsylon {
                     return beta;
                 }
 
+                //! return the current descent direction
+                const accessible<T> & descent(SampleType<T>            &sample,
+                                              Function                 &F,
+                                              addressable<T>           &aorg,
+                                              const accessible<bool>   &flags)
+                {
+                    SequentialFunction<T> SF(F);
+                    return descent(sample,SF,aorg,flags);
+                }
 
                
                 
