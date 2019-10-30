@@ -48,7 +48,7 @@ namespace upsylon {
                 typedef vector<T,Allocator>                   Vector;     //!< for variables...
                 typedef functor<T,Y_ADJUST_FUNCTION_ARGS>     Function;   //!< fit function  prototype
                 
-                //! reconstruct a symetric matrix
+                //! reconstruct a symmetric matrix
                 static inline void Regularize(Matrix &alpha) throw()
                 {
                     assert(alpha.is_square);

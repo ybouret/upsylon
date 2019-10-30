@@ -139,9 +139,9 @@ Y_UTEST(adjust)
 
     S.ready();
 
-    const double D1 = S1.compute_(F,aorg);
-    const double D2 = S2.compute_(F,aorg);
-    const double D0 = S.compute_(F,aorg);
+    const double D1 = S1.computeD2(F,aorg);
+    const double D2 = S2.computeD2(F,aorg);
+    const double D0 = S.computeD2(F,aorg);
 
     std::cerr << "D0=" << D0 << std::endl;
     std::cerr << "D1=" << D1 << std::endl;

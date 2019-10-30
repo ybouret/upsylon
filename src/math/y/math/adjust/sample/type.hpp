@@ -44,22 +44,24 @@ namespace upsylon {
                 //! cleanup
                 inline virtual ~SampleType() throw() {}
 
-                //! compute with a sequential function
+                //! compute least squares with a sequential function
                 virtual T compute(Sequential<T> &F, const accessible<T> &aorg) const = 0;
 
                 //! full computation with a sequential function
-                virtual T  computeAndUpdate(Matrix          &alpha,
-                                            addressable<T>  &beta,
-                                            Sequential<T>   &F,
+                virtual T  computeAndUpdate(Matrix                 &alpha,
+                                            addressable<T>         &beta,
+                                            Sequential<T>          &F,
                                             const accessible<T>    &aorg,
                                             const accessible<bool> &used,
-                                            Gradient<T>     &grad) const = 0;
+                                            Gradient<T>            &grad) const = 0;
 
                 //! flags activation
-                virtual void activate( addressable<bool> &target, const accessible<bool> &source ) const = 0;
+                virtual void activate(addressable<bool>      &target,
+                                      const accessible<bool> &source) const = 0;
 
                 //! computing quantities for goodness of fit
-                virtual void addToSumOfSquares( T &total, T &residual ) const throw() = 0;
+                virtual void addToSumOfSquares(T &total,
+                                               T &residual) const throw() = 0;
 
 
 
@@ -97,8 +99,9 @@ namespace upsylon {
                         ++it;
                     }
                 }
+
                 //! wrapper to use a C++ function
-                inline T compute_( Function &F, const accessible<T>  &aorg ) const
+                inline T computeD2( Function &F, const accessible<T>  &aorg ) const
                 {
                     SequentialFunction<T> call(F);
                     return compute(call,aorg);
@@ -119,7 +122,7 @@ namespace upsylon {
                                    Sequential<T>           &F,
                                    const accessible<T>     &aorg,
                                    const accessible<bool>  &used,
-                                   Gradient<T>     &grad) const
+                                   Gradient<T>             &grad) const
                 {
                     initialize(alpha,beta,used);
                     const T D2 = computeAndUpdate(alpha,beta,F,aorg,used,grad);
