@@ -37,11 +37,37 @@ namespace {
         P.appendTo(vars);
 
         sample.ready();
+
+
+        vector<T> aorg( vars.sweep(), 0   );
+        bVector   used( aorg.size(),  false );
+        vector<T> aerr( aorg.size(),  0 );
+
+        LeastSquares<T>            ls;
+        typename Type<T>::Function F( &P, & Polynomial<T>::compute );
+
+        for(size_t i=1;i<=used.size();++i)
         {
-            const string  fn = "adj_poly_" + tid + ".dat";
-            ios::ocstream fp(fn);
-            sample.save(fp,true);
+            std::cerr << std::endl;
+            atom::ld(aorg,0);
+            used[i] = true;
+            std::cerr << "used=" << used << std::endl;
+
+            Y_CHECK(P.initialize(sample, aorg, used, vars));
+            vars.display(std::cerr,aorg);
+            Y_CHECK( ls.fit(sample, F, aorg, used, aerr) );
+            vars.display(std::cerr,aorg,aerr);
+            {
+                const string  fn = "adj_poly_" + tid + Common::Suffix(i-1) + ".dat";
+                ios::ocstream fp(fn);
+                sample.save(fp,true);
+            }
+            std::cerr << "\tR2=" << sample.computeR2() << std::endl;
         }
+
+
+
+
 
     }
 }
