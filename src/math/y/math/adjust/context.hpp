@@ -38,11 +38,11 @@ namespace upsylon {
                 }
 
                 //! setup
-                inline explicit Context(const SampleType<T> & _self,
-                                        const accessible<T> & _aorg,
-                                        const accessible<bool>         & _used,
-                                        addressable<T>      & _atry,
-                                        addressable<T>      & _step) :
+                inline explicit Context(const SampleType<T>    & _self,
+                                        const accessible<T>    & _aorg,
+                                        const accessible<bool> & _used,
+                                        addressable<T>         & _atry,
+                                        addressable<T>         & _step) :
                 flags( _used ),
                 start( _aorg ),
                 state( _atry ),
@@ -54,10 +54,10 @@ namespace upsylon {
                 }
 
                 const accessible<bool> &flags; //!< currently used flags
-                const accessible<T> &start; //!< starting position
-                addressable<T>      &state; //!< current  position
-                addressable<T>      &shift; //!< current  step
-                const size_t         cycle; //!< internal cycle index
+                const accessible<T>    &start; //!< starting position
+                addressable<T>         &state; //!< current  position
+                addressable<T>         &shift; //!< current  step
+                const size_t            cycle; //!< internal cycle index
 
                 //! function to modify in progress
                 typedef functor<ModifyStatus,TL1(Context&)> Modify;

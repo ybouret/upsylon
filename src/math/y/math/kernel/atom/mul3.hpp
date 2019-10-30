@@ -194,11 +194,11 @@ void Gram(TARGET &G, const SOURCE &V, concurrent::for_each &loop)
 
         static inline void call(void *args, parallel &ctx, lockable &)
         {
-            ops          &self = *static_cast<ops*>(args);
-            TARGET       &G    = *self.G_;
-            const SOURCE &V    = *self.V_;
-            size_t length = self.kmax;
-            size_t k      = 1;
+            ops          &self  = *static_cast<ops*>(args);
+            TARGET       &G     = *self.G_;
+            const SOURCE &V     = *self.V_;
+            size_t       length = self.kmax;
+            size_t       k      = 1;
             ctx.split(length,k);
             size_t i=0,j=0;
             while(length-- > 0 )

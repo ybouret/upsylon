@@ -266,7 +266,7 @@ namespace upsylon {
                     // user control
                     switch( check(context) )
                     {
-                        case LeftUntouched: Y_LS_PRINTLN( "[LS] LeftUntouched" );
+                        case LeftUntouched: //Y_LS_PRINTLN( "[LS] LeftUntouched" );
                             break;
 
                         case ModifiedState: Y_LS_PRINTLN( "[LS] ModifiedState" );
@@ -446,6 +446,7 @@ namespace upsylon {
                     Y_LS_PRINTLN( "[LS] -- Converged --" );
                     Y_LS_PRINTLN( "     D2   = " << D2org );
                     Y_LS_PRINTLN( "     aorg = " << aorg  );
+                    Y_LS_PRINTLN( "     used = " << used  );
                     //__________________________________________________________
                     if(!LU::build(alpha))
                     {
@@ -457,6 +458,7 @@ namespace upsylon {
                     //__________________________________________________________
                     //
                     unit_t dof = sample.count();
+                    Y_LS_PRINTLN( "    count = " << dof );
                     //__________________________________________________________
                     for(size_t i=n;i>0;--i)
                     {
@@ -477,7 +479,7 @@ namespace upsylon {
                     else
                     {
                         assert(dof>0);
-                        const T real_count = T( sample.count() );
+                        const T real_count = T(dof);
                         const T sig2err    = T(1)/sqrt_of(real_count);
                         for(size_t i=n;i>0;--i)
                         {

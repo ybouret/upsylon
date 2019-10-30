@@ -114,27 +114,9 @@ namespace {
         {
             vars.display(std::cerr, aorg, aerr);
 
-            {
-                ios::ocstream fp("adjode.dat");
-                sample.save(fp);
-            }
 
-            {
-                ios::ocstream fp("adjfcn.dat");
-                T x = 0;
-                const T dx = 0.02;
-
-                fp("%g %g\n",x,explode.start(x,aorg,vars));
-                for(x+=dx;x<=X->back();x+=dx)
-                {
-                    fp("%g %g\n",x,explode.reach(x,aorg,vars));
-                }
-
-            }
             vars.display(std::cerr,used,"\t (*) use ");
-            correlation<T> corr;
-            std::cerr << "corr=" << sample.computeCorrelation(corr) << std::endl;
-            std::cerr << "R2  =" << sample.computeR2() << std::endl;
+
             std::cerr << std::endl;
 
             std::cerr << "second pass" << std::endl;
@@ -157,6 +139,28 @@ namespace {
                 if(LS.fit(sample, explode, aorg, used, aerr))
                 {
                     vars.display(std::cerr, aorg, aerr);
+                    correlation<T> corr;
+                    std::cerr << "corr=" << sample.computeCorrelation(corr) << std::endl;
+                    std::cerr << "R2  =" << sample.computeR2() << std::endl;
+
+                    {
+                        ios::ocstream fp("adjode.dat");
+                        sample.save(fp);
+                    }
+
+                    {
+                        ios::ocstream fp("adjfcn.dat");
+                        T x = 0;
+                        const T dx = 0.02;
+
+                        fp("%g %g\n",x,explode.start(x,aorg,vars));
+                        for(x+=dx;x<=X->back();x+=dx)
+                        {
+                            fp("%g %g\n",x,explode.reach(x,aorg,vars));
+                        }
+
+                    }
+
                 }
             }
 
