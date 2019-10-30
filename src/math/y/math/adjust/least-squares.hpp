@@ -143,7 +143,7 @@ namespace upsylon {
                 const unit_t pmin;    //!< min power value
                 const unit_t pmax;    //!< max power value
                 
-#include "y/math/adjust/least-squares-fit.hxx"
+#include "least-squares-fit.hxx"
 
                 //! fit wrapper
                 inline bool fit(SampleType<T>            &sample,

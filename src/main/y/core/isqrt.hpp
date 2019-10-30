@@ -7,10 +7,10 @@
 
 namespace upsylon {
 
-
+    //! integer square root
     struct isqrt
     {
-        //! integer square root
+        //! integer square root, raw method
         template <typename T> static inline
         T _(const T n) throw()
         {
@@ -34,6 +34,7 @@ namespace upsylon {
             }
         }
 
+        //! use internal table then raw method
         template <typename T> static inline
         T of(const T n) throw()
         {
@@ -41,6 +42,7 @@ namespace upsylon {
             return (n<nmax) ? table[n] : _(n);
         }
 
+        //! 64k precomputed square roots
         static const uint8_t table[65536];
 
     };
