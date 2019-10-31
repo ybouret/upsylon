@@ -261,16 +261,23 @@ namespace upsylon {
                 struct ProbeD2
                 {
                     const SampleType<T> *sample;
-                    Sequential<T>       *F_;
-                    addressable<T>      *atry_;
-                    const accessible<T> *aorg_;
-                    const accessible<T> *step_;
+                    Sequential<T>       *F;
+                    addressable<T>      *atry;
+                    const accessible<T> *aorg;
+                    const accessible<T> *step;
 
+                    
                     inline T operator()(const T u)
                     {
-                        assert(sample); assert(F_); assert(atry_); assert(aorg_); assert(step_);
-                        atom::setprobe(*atry_, *aorg_, u, *step_);
-                        return sample->computeD2(*F_, *atry_);
+                        assert(sample);
+                        assert(F);
+                        assert(atry);
+                        assert(aorg);
+                        assert(step);
+
+
+                        atom::setprobe(*atry, *aorg, u, *step);
+                        return sample->computeD2(*F, *atry);
                     }
 
                 };
