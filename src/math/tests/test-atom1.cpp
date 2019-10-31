@@ -338,7 +338,10 @@ test(c,b,a,loop)
                 support::fill1D(lhs);
                 support::fill1D(rhs);
                 atom::ortho(target,lhs,rhs);
-                std::cerr << "#=" << atom::dot(target,rhs) << '/';
+                std::cerr << "#=" << atom::dot(target,rhs);
+                atom::ortho_safe(target, lhs, rhs, seq);
+                std::cerr << '~' << atom::dot(target,rhs);
+                std::cerr << '/';
             }
 
 
@@ -419,15 +422,11 @@ Y_UTEST(atom1)
         }
     }
     
-    Level1::Test<float>(loop);
-    Level1::Test<double>(loop);
+
     Level1::Test<short>(loop);
     Level1::Test<mpz>(loop);
-
-
-
-    
-
+    Level1::Test<float>(loop);
+    Level1::Test<double>(loop);
 
 
 }
