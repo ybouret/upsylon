@@ -1,5 +1,7 @@
-
+//______________________________________________________________________________
+//
 //! full fit algorithm and error computation
+//______________________________________________________________________________
 inline bool fit(SampleType<T>            &sample,
                 Sequential<T>            &F,
                 addressable<T>           &aorg,
@@ -12,75 +14,72 @@ inline bool fit(SampleType<T>            &sample,
 
     assert( flags.size() == aorg.size() );
     assert( flags.size() == aerr.size() );
-
-    //__________________________________________________________
-    //
-    Y_LS_PRINTLN( "[LS] initializing" );
-    //__________________________________________________________
-    sample.ready();
-    atom::ld(aerr,-1);
     const size_t n = aorg.size();
-    if(n<=0)
-    {
-        Y_LS_PRINTLN("[LS] <no parameters>");
-        return true;
-    }
 
-    //__________________________________________________________
+    //__________________________________________________________________________
     //
-    Y_LS_PRINTLN( "[LS] starting with #parameters=" << n);
-    //__________________________________________________________
-    allocateFor(sample,flags);
-    setLambda( Algo<T>::Initial() );
-
+    Y_LS_PRINTLN( "[LS] initializing, #parameters=" << n );
+    //__________________________________________________________________________
+    sample.ready();                             // prepare the sample
+    atom::ld(aerr,-1);                          // invalidate errors
+    if(n<=0)                                    //
+    {                                           //
+        Y_LS_PRINTLN("[LS] <no parameters>");   //
+        return true;                            //
+    }                                           //
+    allocateFor(sample,flags);                  // allocate memory and setup used
+    setLambda( Algo<T>::Initial() );            // assign
     Y_LS_PRINTLN( "     flags  = " << flags );
     Y_LS_PRINTLN( "     used   = " << used  );
 
-    //__________________________________________________________
+    //__________________________________________________________________________
     //
     // create the call function
-    //__________________________________________________________
+    //__________________________________________________________________________
     ProbeD2 D2 = { &sample, &F, &atry, &aorg, &step};
 
-    //__________________________________________________________
+    //__________________________________________________________________________
     //
     // create the context
-    //__________________________________________________________
+    //__________________________________________________________________________
     Context<T> context(sample,aorg,used,atry,step);
     size_t     cycle = aliasing::_(context.cycle);
     Modify    &check = (0!=modify) ? *modify : nope;
     Y_LS_PRINTLN( "    #data   = " << context.size()  );
 
+
+    //__________________________________________________________________________
+    //
     // starting point...
+    //__________________________________________________________________________
     T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
     size_t nbad  = 0;
 
 CYCLE:
     ++cycle;
-    //__________________________________________________________
+    //__________________________________________________________________________
     //
     Y_LS_PRINTLN( "[LS] cycle  = " << cycle );
-
-    //__________________________________________________________
-
-
-
-    //__________________________________________________________
-    //
+    //__________________________________________________________________________
     Y_LS_PRINTLN( "     used   = " << used  );
     Y_LS_PRINTLN( "     aorg   = " << aorg );
     Y_LS_PRINTLN( "     D2org  = " << D2org );
     Y_LS_PRINTLN( "     alpha  = " << alpha );
     Y_LS_PRINTLN( "     beta   = " << beta );
+
+    //__________________________________________________________________________
+    //
+    // Curvature computation with lambda adjustment
+    //
     while( !Algo<T>::ComputeCurvature(curv,lambda,alpha) )
     {
         if(!increaseLambda())
         {
-            Y_LS_PRINTLN( "[LS] <SINGULAR GRADIENT>" );
+            Y_LS_PRINTLN( "[LS] <SINGULAR CURVATUR>" );
             return false;
         }
     }
-    //__________________________________________________________
+    //__________________________________________________________________________
 
     //__________________________________________________________
     //
