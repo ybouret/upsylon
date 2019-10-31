@@ -6,15 +6,7 @@ namespace upsylon {
 
         namespace Adjust {
 
-
-            Frame:: ~Frame() throw()
-            {
-            }
-
-            Frame:: Frame( const accessible<bool> &used_) throw() :
-            used(used_)
-            {
-            }
+            
             
         }
 

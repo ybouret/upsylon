@@ -3,7 +3,6 @@
 #ifndef Y_ADJUST_LEAST_SQUARES_INCLUDED
 #define Y_ADJUST_LEAST_SQUARES_INCLUDED 1
 
-#include "y/math/adjust/context.hpp"
 #include "y/math/adjust/frame.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/oxide/field1d.hpp"
@@ -112,10 +111,8 @@ namespace upsylon {
                 typedef typename Type<T>::Vector         Vector;   //!< alias
                 typedef typename Type<T>::Function       Function; //!< alias
                 typedef          Oxide::Field1D<T>       Field;    //!< alias
-
-                typedef typename Context<T>::Modify      Modify;   //!< alias
-                typedef   FrameOf<T>              Zob;
-
+                typedef typename Context<T>::Control     Control;  //!< alias
+                
 
                 //! setup
                 inline explicit LeastSquares(const bool verb=false) :
@@ -131,7 +128,7 @@ namespace upsylon {
                 step(),
                 atry(),
                 used(),
-                nope( this, & LeastSquares<T>::doNothing )
+                nope( this, & LeastSquares<T>::accept )
                 {
                     initialize();
                 }
@@ -146,13 +143,13 @@ namespace upsylon {
                 
 #include "least-squares-fit.hxx"
 
-                //! fit wrapper
+                 //! fit wrapper
                 inline bool fit(SampleType<T>            &sample,
                                 Function                 &F,
                                 addressable<T>           &aorg,
                                 const accessible<bool>   &flags,
                                 addressable<T>          &aerr,
-                                Modify                   *modify = 0
+                                Control                  *modify = 0
                                 )
                 {
                     SequentialFunction<T> SF(F);
@@ -194,7 +191,12 @@ namespace upsylon {
                 Vector   step;
                 Vector   atry;
                 bVector  used;
-                Modify   nope;
+                Control  nope;
+
+                ContextStatus accept( Context<T> &, const size_t ) const throw()
+                {
+                    return ContextSuccess;
+                }
 
                 // prepare all internal memory
                 inline void allocateFor(const SampleType<T>    &sample,
@@ -209,13 +211,6 @@ namespace upsylon {
                     used.adjust(n,0);
                     atom::ld(used,false);
                     sample.activate(used,flags);
-                }
-
-
-                // default modify
-                inline ModifyStatus doNothing( Context<T> & ) const
-                {
-                     return LeftUntouched;
                 }
 
                 // initialize

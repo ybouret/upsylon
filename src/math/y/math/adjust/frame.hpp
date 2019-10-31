@@ -12,50 +12,40 @@ namespace upsylon {
 
         namespace Adjust {
 
-            class Frame
+            enum ContextStatus
             {
-            public:
-                enum Status
-                {
-                    Success, //!< go on
-                    Changed, //!< value has changed
-                    Failure  //!< emergency exit
-                };
-                virtual ~Frame() throw();
-
-                const accessible<bool>  &used;
-
-            protected:
-                explicit Frame(const accessible<bool> &used_) throw();
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Frame);
+                ContextSuccess,
+                ContextChanged,
+                ContextFailure
             };
 
 
+
             template <typename T>
-            class FrameOf : public Frame
+            class Context
             {
             public:
-                SampleType<T> &sample;
+                const SampleType<T>     &sample;
+                const accessible<bool>  &used;
+                addressable<T>          &value;
 
-                inline virtual ~FrameOf() throw() {}
+                inline   ~Context() throw() {}
 
-                inline explicit FrameOf(const accessible<bool> &used_,
-                                        const SampleType<T>    &sample_,
-                                        addressable<T>         &value_) throw() :
-                Frame(  used_   ),
+                inline   Context(const SampleType<T>    &sample_,
+                                 const accessible<bool> &used_,
+                                 addressable<T>         &value_) throw() :
                 sample( sample_ ),
+                used(   used_   ),
                 value(  value_  )
                 {
                 }
 
-                addressable<T> &value;
 
-                typedef functor<Frame::Status,TL2(FrameOf<T>&,size_t)> Process;
+                typedef functor<ContextStatus,TL2(Context<T>&,size_t)> Control;
+                
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(FrameOf);
+                Y_DISABLE_COPY_AND_ASSIGN(Context);
             };
 
 

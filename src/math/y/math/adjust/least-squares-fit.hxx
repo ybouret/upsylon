@@ -7,7 +7,7 @@ inline bool fit(SampleType<T>            &sample,
                 addressable<T>           &aorg,
                 const accessible<bool>   &flags,
                 addressable<T>           &aerr,
-                Modify                   *modify = 0 )
+                Control                   *modify = 0 )
 {
     static const T D_FTOL = numeric<T>::sqrt_ftol;
     static const T A_FTOL = numeric<T>::ftol;
@@ -45,10 +45,7 @@ inline bool fit(SampleType<T>            &sample,
     //
     // create the context
     //__________________________________________________________________________
-    Context<T> context(sample,aorg,used,atry,step);
     size_t     cycle = 0;
-    Modify    &check = (0!=modify) ? *modify : nope;
-    Y_LS_PRINTLN( "    #data   = " << context.size()  );
 
 
     //__________________________________________________________________________
@@ -102,26 +99,7 @@ CYCLE:
     //__________________________________________________________
     //
     // user control
-    switch( check(context) )
-    {
-        case LeftUntouched: //Y_LS_PRINTLN( "[LS] LeftUntouched" );
-            break;
-
-        case ModifiedState: Y_LS_PRINTLN( "[LS] ModifiedState" );
-            atom::sub(step,atry,aorg);
-            Y_LS_PRINTLN( "     atry   = " << atry   );
-            Y_LS_PRINTLN( "     step   = " << step   );
-            break;
-
-        case ModifiedShift: Y_LS_PRINTLN( "[LS] ModifiedShift" );
-            atom::add(atry,aorg,step);
-            Y_LS_PRINTLN( "     atry   = " << atry   );
-            Y_LS_PRINTLN( "     step   = " << step   );
-            break;
-
-        case EmergencyExit: Y_LS_PRINTLN( "[LS] EmergencyExit" );
-            return false;
-    }
+    
     //
     //__________________________________________________________
 
