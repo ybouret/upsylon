@@ -18,7 +18,10 @@ inline bool fit(SampleType<T>            &sample,
 
     //__________________________________________________________________________
     //
+    // Administrativia
+    //
     Y_LS_PRINTLN( "[LS] initializing, #parameters=" << n );
+    //
     //__________________________________________________________________________
     sample.ready();                             // prepare the sample
     atom::ld(aerr,-1);                          // invalidate errors
@@ -50,7 +53,9 @@ inline bool fit(SampleType<T>            &sample,
 
     //__________________________________________________________________________
     //
-    // starting point...
+    //
+    // Effective Algorithm
+    //
     //__________________________________________________________________________
     T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
     size_t nbad  = 0;
@@ -62,10 +67,10 @@ CYCLE:
     Y_LS_PRINTLN( "[LS] cycle  = " << cycle );
     //__________________________________________________________________________
     Y_LS_PRINTLN( "     used   = " << used  );
-    Y_LS_PRINTLN( "     aorg   = " << aorg );
+    Y_LS_PRINTLN( "     aorg   = " << aorg  );
     Y_LS_PRINTLN( "     D2org  = " << D2org );
     Y_LS_PRINTLN( "     alpha  = " << alpha );
-    Y_LS_PRINTLN( "     beta   = " << beta );
+    Y_LS_PRINTLN( "     beta   = " << beta  );
 
     //__________________________________________________________________________
     //
@@ -75,7 +80,7 @@ CYCLE:
     {
         if(!increaseLambda())
         {
-            Y_LS_PRINTLN( "[LS] <SINGULAR CURVATUR>" );
+            Y_LS_PRINTLN( "[LS] <SINGULAR CURVATURE>" );
             return false;
         }
     }
