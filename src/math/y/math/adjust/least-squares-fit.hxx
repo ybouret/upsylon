@@ -90,7 +90,7 @@ CYCLE:
     }
     //__________________________________________________________________________
 
-    //__________________________________________________________
+    //__________________________________________________________________________
     //
     // compute step and trial position
     //
@@ -99,14 +99,15 @@ CYCLE:
     Y_LS_PRINTLN( "     lambda = " << lambda );
     Y_LS_PRINTLN( "     step0  = " << step   );
     Y_LS_PRINTLN( "     atry0  = " << atry   );
-    //__________________________________________________________
+    //__________________________________________________________________________
 
 
 
-    //__________________________________________________________
+    //__________________________________________________________________________
     //
-    // step control
+    // step/atry consistency
     //
+STEP_CONTROL:
     switch( stepControl(stepContext,cycle) )
     {
         case ContextSuccess: break;
@@ -115,34 +116,34 @@ CYCLE:
             atom::add(atry,aorg,step);
             break;
     }
+
+
+    switch( atryControl(atryContext,cycle) )
+    {
+        case ContextSuccess: break;
+        case ContextFailure: Y_LS_PRINTLN( "[LS] <ATRY #" << cycle << " CONTROL EXIT>" ); return false;
+        case ContextChanged: Y_LS_PRINTLN( "[LS] changed atry #" << cycle );
+            atom::sub(step,atry,aorg);
+            goto STEP_CONTROL;
+    }
     //
-    //__________________________________________________________
+    //__________________________________________________________________________
 
 
-
-    //__________________________________________________________
+    //__________________________________________________________________________
     //
     //
     // at this point, aorg, atry and step are computed
-    // now pinpoint a local minimum along step
+    // now pinpoint a local minimum along step,
+    // and we assume all values in [aorg,atry] are ok
     //
-    //__________________________________________________________
+    //__________________________________________________________________________
     triplet<T> u  = { 0,     numeric<T>::inv_gold, 1 };
-    triplet<T> f  = { D2org, -1,                  -1 };
+    triplet<T> f  = { D2org, D2(u.b),             -1 };
+    bool       ok = true;
 
-    //__________________________________________________________
-    //
-    // check intermediary point
-    //__________________________________________________________
-    atom::setprobe(atry, aorg, u.b, step);
-    if( ContextFailure == atryControl(atryContext,cycle) )
-    {
-        Y_LS_PRINTLN( "[LS] <TRIAL #" << cycle << " CONTROL EXIT>" );
-        return false;
-    }
-    f.b = sample.computeD2(F,atry);
-    bool ok = true;
 
+    
     if(f.b>f.a)
     {
         //------------------------------------------------------
