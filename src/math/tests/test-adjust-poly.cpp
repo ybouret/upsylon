@@ -1,8 +1,8 @@
 #include "y/math/adjust/share/polynomial.hpp"
-#include "y/utest/run.hpp"
 #include "y/math/adjust/least-squares.hpp"
 #include <typeinfo>
 #include "y/ios/ocstream.hpp"
+#include "y/utest/run.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -64,10 +64,6 @@ namespace {
             }
             std::cerr << "\tR2=" << sample.computeR2() << std::endl;
         }
-
-
-
-
 
     }
 }
