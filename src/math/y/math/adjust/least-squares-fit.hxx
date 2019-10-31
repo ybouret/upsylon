@@ -110,9 +110,9 @@ CYCLE:
 STEP_CONTROL:
     switch( stepControl(stepContext,cycle) )
     {
-        case ContextSuccess: break;
-        case ContextFailure: Y_LS_PRINTLN( "[LS] <STEP #" << cycle << " CONTROL EXIT>" ); return false;
-        case ContextChanged: Y_LS_PRINTLN( "[LS] changed step #" << cycle );
+        case LeftUntouched: break;
+        case EmergencyExit: Y_LS_PRINTLN( "[LS] <STEP #" << cycle << " CONTROL EXIT>" ); return false;
+        case ModifiedValue: Y_LS_PRINTLN( "[LS] changed step #" << cycle );
             atom::add(atry,aorg,step);
             break;
     }
@@ -120,9 +120,9 @@ STEP_CONTROL:
 
     switch( atryControl(atryContext,cycle) )
     {
-        case ContextSuccess: break;
-        case ContextFailure: Y_LS_PRINTLN( "[LS] <ATRY #" << cycle << " CONTROL EXIT>" ); return false;
-        case ContextChanged: Y_LS_PRINTLN( "[LS] changed atry #" << cycle );
+        case LeftUntouched: break;
+        case EmergencyExit: Y_LS_PRINTLN( "[LS] <ATRY #" << cycle << " CONTROL EXIT>" ); return false;
+        case ModifiedValue: Y_LS_PRINTLN( "[LS] changed atry #" << cycle );
             atom::sub(step,atry,aorg);
             goto STEP_CONTROL;
     }

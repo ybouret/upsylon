@@ -193,9 +193,9 @@ namespace upsylon {
                 bVector  used;
                 Control  nope;
 
-                ContextStatus accept( Context<T> &, const size_t ) const throw()
+                ControlResult accept( Context<T> &, const size_t ) const throw()
                 {
-                    return ContextSuccess;
+                    return LeftUntouched;
                 }
 
                 // prepare all internal memory

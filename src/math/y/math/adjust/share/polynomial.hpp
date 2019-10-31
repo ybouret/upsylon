@@ -14,13 +14,15 @@ namespace upsylon {
 
         namespace Adjust {
 
+            //! setup a polynomial fit function
             template <typename T>
             class Polynomial : public Common
             {
             public:
-                typedef typename Type<T>::Matrix Matrix;
-                typedef typename Type<T>::Vector Vector;
+                typedef typename Type<T>::Matrix Matrix; //!< alias
+                typedef typename Type<T>::Vector Vector; //!< alias
 
+                //! setup with n=degree+1 coefficients
                 inline explicit Polynomial(const size_t degree, const char *pfx) :
                 Common( degree+1  )
                 {
@@ -34,12 +36,13 @@ namespace upsylon {
                     assert(1+degree==names.size());
                 }
 
+                //! cleanup
                 inline virtual ~Polynomial() throw()
                 {
                 }
 
 
-
+                //! return evaluation of polynomial
                 inline T compute(const T              x,
                                  const accessible<T> &aorg,
                                  const Variables     &vars) const
@@ -56,7 +59,7 @@ namespace upsylon {
                     return ans;
                 }
 
-
+                //! initialize using linear least squares
                 inline bool initialize(Sample<T>              &sample,
                                        addressable<T>         &aorg,
                                        const accessible<bool> &used,

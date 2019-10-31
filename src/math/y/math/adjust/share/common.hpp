@@ -12,19 +12,18 @@ namespace upsylon {
 
         namespace Adjust {
 
+            //! common part of generic fit functions
             class Common
             {
             public:
-                const Variable::Names names;
+                const Variable::Names names; //!< default names
 
-                virtual ~Common() throw();
-
-                void appendTo( Variables &vars ) const;
-
-                static string Suffix(const size_t value);
+                virtual      ~Common() throw();                  //!< cleanup
+                void          appendTo( Variables &vars ) const; //!< append global variables
+                static string Suffix(const size_t value);        //!< format a suffix string
 
             protected:
-                explicit Common(const size_t);
+                explicit      Common(const size_t);              //!< setup with memory reservation
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Common);

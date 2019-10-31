@@ -11,13 +11,14 @@ namespace upsylon {
 
     namespace math {
 
-
         namespace Adjust {
-            
+
+            //! set of Gaussian function
             template <typename T>
             class Gauss : public Common
             {
             public:
+                //! setup 'num' gaussians
                 inline explicit Gauss( const size_t num, const char *pfx ) :
                 Common( 3*num )
                 {
@@ -34,9 +35,11 @@ namespace upsylon {
 
                 }
 
+                //! cleanup
                 inline virtual ~Gauss() throw() {}
 
 
+                //! compute the sum of gaussians
                 inline T compute(const T              x,
                                  const accessible<T> &aorg,
                                  const Variables     &vars) const

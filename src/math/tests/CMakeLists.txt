@@ -79,7 +79,7 @@ SOURCE_GROUP(adjust FILES test-adjust.cpp test-adjust-ode.cpp test-adjust-poly.c
 ADD_TEST(adjust:main test-m adjust)
 ADD_TEST(adjust:ode  test-m adjust_ode)
 ADD_TEST(adjust:poly test-m adjust_poly)
-ADD_TEST(adjust:gauss test-m adjust-gauss)
+ADD_TEST(adjust:gauss test-m adjust_gauss)
 
 
 
