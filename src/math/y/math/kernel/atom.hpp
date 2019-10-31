@@ -126,7 +126,8 @@ namespace upsylon {
 #include "atom/sub.hpp"
 #include "atom/mul1.hpp"
 #include "atom/dot.hpp"
-            
+#include "atom/ortho.hpp"
+
             //==================================================================
             //
             //

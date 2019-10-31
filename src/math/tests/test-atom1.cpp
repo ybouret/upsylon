@@ -332,6 +332,15 @@ test(c,b,a,loop)
                 std::cerr << '-' << clk.speedup(fullTicks,loopTicks) << '/';
             }
 
+            if(typeid(typename TARGET::mutable_type) == typeid(float)  ||
+               typeid(typename TARGET::mutable_type) == typeid(double) )
+            {
+                support::fill1D(lhs);
+                support::fill1D(rhs);
+                atom::ortho(target,lhs,rhs);
+                std::cerr << "#=" << atom::dot(target,rhs) << '/';
+            }
+
 
         }
 
