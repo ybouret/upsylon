@@ -14,7 +14,6 @@ namespace upsylon {
 
         namespace Adjust {
 
-            template <typename T> class Context; //!< forward declaration
             
             //==================================================================
             //
@@ -144,10 +143,7 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SampleType);
-                friend class Context<T>;
 
-                //! multiple samples collection
-                virtual void collect( sequence<void*> & ) const = 0;
             };
 
         }

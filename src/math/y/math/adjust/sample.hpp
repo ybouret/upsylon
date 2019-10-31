@@ -321,11 +321,7 @@ namespace upsylon {
 
                 friend class Samples<T>;
 
-                virtual void collect(sequence<void*> &seq) const
-                {
-                    const Sample *self = this;
-                    seq.push_back( (Sample *)self  );
-                }
+              
 
                 //! in-place square value
                 static inline void to_square( T &value ) throw()

@@ -46,7 +46,7 @@ inline bool fit(SampleType<T>            &sample,
     // create the context
     //__________________________________________________________________________
     Context<T> context(sample,aorg,used,atry,step);
-    size_t     cycle = aliasing::_(context.cycle);
+    size_t     cycle = 0;
     Modify    &check = (0!=modify) ? *modify : nope;
     Y_LS_PRINTLN( "    #data   = " << context.size()  );
 

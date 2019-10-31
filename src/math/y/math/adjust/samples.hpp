@@ -176,16 +176,7 @@ namespace upsylon {
                 Vector            weights; //!< a few samples
                 mutable Matrix    _alpha;
                 mutable Vector    _beta;
-
-                //! collect individual samples
-                virtual void collect( sequence<void*> &seq  ) const
-                {
-                    const Handles &self = *this;
-                    for(size_t i=self.size();i>0;--i)
-                    {
-                        self[i]->collect( seq );
-                    }
-                }
+                
 
             };
 

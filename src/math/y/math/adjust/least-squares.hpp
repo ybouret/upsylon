@@ -4,6 +4,7 @@
 #define Y_ADJUST_LEAST_SQUARES_INCLUDED 1
 
 #include "y/math/adjust/context.hpp"
+#include "y/math/adjust/frame.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/oxide/field1d.hpp"
 #include "y/ios/ocstream.hpp"

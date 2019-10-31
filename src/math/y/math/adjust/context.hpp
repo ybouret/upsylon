@@ -50,7 +50,7 @@ namespace upsylon {
                 cycle(0),
                 _data()
                 {
-                    _self.collect(_data);
+                    //_self.collect(_data);
                 }
 
                 const accessible<bool> &flags; //!< currently used flags
