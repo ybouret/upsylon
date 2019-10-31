@@ -114,7 +114,7 @@ namespace upsylon {
                 typedef          Oxide::Field1D<T>       Field;    //!< alias
 
                 typedef typename Context<T>::Modify      Modify;   //!< alias
-
+                typedef   FrameOf<T>              Zob;
 
 
                 //! setup
