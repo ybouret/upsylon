@@ -7,7 +7,7 @@ inline bool fit(SampleType<T>            &sample,
                 addressable<T>           &aorg,
                 const accessible<bool>   &flags,
                 addressable<T>           &aerr,
-                Control                   *modify = 0 )
+                Controls                 *ctrl = 0 )
 {
     static const T D_FTOL = numeric<T>::sqrt_ftol;
     static const T A_FTOL = numeric<T>::ftol;
@@ -43,10 +43,14 @@ inline bool fit(SampleType<T>            &sample,
 
     //__________________________________________________________________________
     //
-    // create the context
+    // create the contexts
     //__________________________________________________________________________
     size_t     cycle = 0;
+    Context<T> stepContext(sample,used,step);
+    Control   &stepControl = ( (0!=ctrl) && (0!=ctrl->step) ) ? *(ctrl->step) : nope;
 
+    Context<T> atryContext(sample,used,atry);
+    Control   &atryControl = ( (0!=ctrl) && (0!=ctrl->atry) ) ? *(ctrl->atry) : nope;
 
     //__________________________________________________________________________
     //
@@ -90,8 +94,7 @@ CYCLE:
     Algo<T>::ComputeStep(step, curv, beta);
     atom::add(atry,aorg,step);
     Y_LS_PRINTLN( "     lambda = " << lambda );
-    Y_LS_PRINTLN( "     step0  = " << step   );
-    Y_LS_PRINTLN( "     atry0  = " << atry   );
+    Y_LS_PRINTLN( "     step   = " << step   );
     //__________________________________________________________
 
 
@@ -100,6 +103,7 @@ CYCLE:
     //
     // user control
     
+
     //
     //__________________________________________________________
 

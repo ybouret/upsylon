@@ -3,7 +3,7 @@
 #ifndef Y_ADJUST_LEAST_SQUARES_INCLUDED
 #define Y_ADJUST_LEAST_SQUARES_INCLUDED 1
 
-#include "y/math/adjust/frame.hpp"
+#include "y/math/adjust/context.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/oxide/field1d.hpp"
 #include "y/ios/ocstream.hpp"
@@ -112,7 +112,7 @@ namespace upsylon {
                 typedef typename Type<T>::Function       Function; //!< alias
                 typedef          Oxide::Field1D<T>       Field;    //!< alias
                 typedef typename Context<T>::Control     Control;  //!< alias
-                
+                typedef typename Context<T>::Controls    Controls;  //!< alias
 
                 //! setup
                 inline explicit LeastSquares(const bool verb=false) :
@@ -149,11 +149,11 @@ namespace upsylon {
                                 addressable<T>           &aorg,
                                 const accessible<bool>   &flags,
                                 addressable<T>          &aerr,
-                                Control                  *modify = 0
+                                Controls                *ctrl = 0
                                 )
                 {
                     SequentialFunction<T> SF(F);
-                    return fit(sample,SF,aorg,flags,aerr,modify);
+                    return fit(sample,SF,aorg,flags,aerr,ctrl);
                 }
 
                 //! return the current descent direction

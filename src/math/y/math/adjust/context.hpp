@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_FRAME_INCLUDED
-#define Y_MATH_ADJUST_FRAME_INCLUDED 1
+#ifndef Y_MATH_ADJUST_CONTEXT_INCLUDED
+#define Y_MATH_ADJUST_CONTEXT_INCLUDED 1
 
 #include "y/math/adjust/sample.hpp"
 
@@ -43,6 +43,12 @@ namespace upsylon {
 
                 typedef functor<ContextStatus,TL2(Context<T>&,size_t)> Control;
                 
+                struct Controls
+                {
+                    Control *step;
+                    Control *atry;
+                };
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Context);
