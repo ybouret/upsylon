@@ -194,7 +194,7 @@ namespace upsylon {
             //! nested declarations
 #define Y_EUCLIDEAN_NODE_TYPES()               \
 Y_EUCLIDEAN_POINT_TYPES();                     \
-typedef Node<T,VTX>                NodeType;   \
+typedef Euclidean::Node<T,VTX>     NodeType;   \
 typedef typename NodeType::Pointer SharedNode; \
 typedef typename NodeType::Basis   Basis
 

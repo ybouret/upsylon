@@ -78,7 +78,7 @@ namespace upsylon {
             //! nested types forwarding
 #define Y_EUCLIDEAN_POINT_TYPES()                         \
 Y_DECL_ARGS(T,type);                                      \
-typedef             Point<T,VTX>            PointType;    \
+typedef Euclidean::Point<T,VTX>             PointType;    \
 typedef typename    PointType::vertex       vertex;       \
 typedef typename    PointType::const_vertex const_vertex; \
 typedef typename    PointType::Pointer      SharedPoint;  \

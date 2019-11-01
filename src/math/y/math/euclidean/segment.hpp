@@ -77,7 +77,7 @@ namespace upsylon {
             //! forward nested types
 #define Y_EUCLIDEAN_SEGMENT_TYPES() \
 Y_EUCLIDEAN_NODE_TYPES(); \
-typedef Segment<T,VTX> SegmentType;\
+typedef Euclidean::Segment<T,VTX> SegmentType;\
 typedef typename SegmentType::Pointer SharedSegment
 
         }

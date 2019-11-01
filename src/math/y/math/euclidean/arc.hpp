@@ -249,7 +249,7 @@ namespace upsylon {
             //! forward nested types
 #define Y_EUCLIDEAN_ARC_TYPES()                \
 Y_EUCLIDEAN_SEGMENT_TYPES();                   \
-typedef Arc<T,VTX> ArcType;                    \
+typedef Euclidean::Arc<T,VTX> ArcType;         \
 typedef typename   ArcType::Nodes    Nodes;    \
 typedef typename   ArcType::Segments Segments
 
