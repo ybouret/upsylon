@@ -124,7 +124,7 @@ namespace {
         static inline
         void make(const char *TID, const char *PID, const size_t nn)
         {
-            std::cerr << PID << "<" << TID << ">" << std::endl;
+            std::cerr << PID << "<" << TID << "> in " << Dimensions << "D" << std::endl;
 
             const size_t np = (nn>0) ? nn : 10 + alea.leq(30);
             std::cerr << "With " << np << " points" << std::endl;
