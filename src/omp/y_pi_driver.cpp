@@ -1,7 +1,8 @@
 #include "y/program.hpp"
 #include "y/string/convert.hpp"
 #include "y/os/hw.hpp"
- #include "y/ios/ocstream.hpp"
+#include "y/ios/ocstream.hpp"
+#include <cstdlib>
 
 using namespace upsylon;
 
