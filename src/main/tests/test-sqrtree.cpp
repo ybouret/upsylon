@@ -6,29 +6,32 @@
 using namespace upsylon;
 
 namespace {
-    //! integer square root, raw method
+
     template <typename T> static inline
     T __isqrt(const T n) throw()
     {
         if(n<=1)
         {
-            std::cerr << ' ' << n << std::endl;
+            std::cerr << n << ':' << n  << std::endl;
             return n;
         }
         else
         {
             T x0 = n;
             T x1 = (n>>1);
-            std::cerr << ' ' << x0;
+            std::cerr <<  x0;
             while(true)
             {
                 x0 = x1;
                 x1 = ((x0+n/x0)>>1);
-                std::cerr << ' ' << x0;
                 if(x1>=x0)
                 {
-                    std::cerr << std::endl;
+                    std::cerr << ':' << x0  << std::endl;
                     return x0;
+                }
+                else
+                {
+                    std::cerr << '(' << x0 << ',' << x1 << ')';
                 }
             }
         }
