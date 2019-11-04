@@ -48,6 +48,29 @@ namespace upsylon {
                     self << name;
                 }
             }
+            
+            Variables & Variables:: set_all( addressable<bool> &used, const bool flag)
+            {
+                for( iterator i=begin();i!=end();++i)
+                {
+                    const Variable &v    = **i;
+                    const string   &name = v.name;
+                    (*this)(used,name)   = flag;
+                }
+                return *this;
+            }
+            
+            Variables & Variables:: set_only( addressable<bool> &used, const string &names, const bool flag )
+            {
+                tokenizer<char> tkn( names );
+                while( tkn.next_with(':') )
+                {
+                    const string name = tkn.to_string();
+                    (*this)(used,name) = flag;
+                }
+                return *this;
+            }
+
 
             
             Variables & Variables:: operator=( const Variables &other )

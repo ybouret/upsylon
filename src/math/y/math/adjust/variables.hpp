@@ -128,6 +128,25 @@ namespace upsylon {
                 //! just to debug
                 void   chkdbg() const;
 
+                //! setting all on/off
+                Variables & set_all( addressable<bool> &used, const bool flag);
+                
+                //! setting only named variables on/off
+                Variables & set_only( addressable<bool> &used, const string &names, const bool flag );
+                
+                
+                //! turning all named variables to on, other are left untouched
+                Variables & on( addressable<bool> &used, const string &names)
+                {
+                   return set_only(used,names,true);
+                }
+                
+                //! turning all variables to off, then all named to on
+                Variables & only_on( addressable<bool> &used, const string &names)
+                {
+                   return  set_all(used,false).on(used,names);
+                }
+                
             private:
                 void   update();
                 string toString( const double value ) const;
