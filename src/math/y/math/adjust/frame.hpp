@@ -23,6 +23,11 @@ namespace upsylon {
 
 
             //! transient sample+used+value to monitor
+            /**
+             Frames are internally created by the LeastSquares algorithm
+             to allow user's interaction with the computed step and the
+             proposed full-step trial parameters
+             */
             template <typename T>
             class Frame
             {
