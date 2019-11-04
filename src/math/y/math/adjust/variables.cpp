@@ -5,7 +5,7 @@
 
 #include "y/exception.hpp"
 #include "y/type/aliasing.hpp"
-
+#include "y/string/tokenizer.hpp"
 namespace upsylon {
     
     namespace math {
@@ -25,7 +25,30 @@ namespace upsylon {
             Variable::Set(other)
             {
             }
-            
+
+
+            Variables:: Variables(const string &names)
+            {
+                buildFrom(names);
+            }
+
+            Variables:: Variables(const char *names )
+            {
+                const string _(names);
+                buildFrom(_);
+            }
+
+            void Variables:: buildFrom(const string &names)
+            {
+                Variables &self = *this;
+                tokenizer<char> tkn( names );
+                while( tkn.next_with(':') )
+                {
+                    const string name = tkn.to_string();
+                    self << name;
+                }
+            }
+
             
             Variables & Variables:: operator=( const Variables &other )
             {

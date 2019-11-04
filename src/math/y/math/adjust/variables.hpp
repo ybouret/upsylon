@@ -32,6 +32,9 @@ namespace upsylon {
                 Variables(const Variables &);                    //!< copy
                 Variables & operator=( const Variables &other ); //!< assign
 
+                Variables( const string &names);
+                Variables( const char   *names);
+
                 const Variable & operator[](const string &name) const; //!< get by name
                 const Variable & operator[](const char   *name) const; //!< get by name
 
@@ -141,6 +144,7 @@ namespace upsylon {
                     return ans;
                 }
 
+                void buildFrom( const string &names );
 
             };
         }
