@@ -103,12 +103,23 @@ namespace upsylon {
             class LeastSquares : public Gradient<T>
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // types and definitions
+                //
+                //--------------------------------------------------------------
                 typedef typename Type<T>::Matrix         Matrix;   //!< alias
                 typedef typename Type<T>::Vector         Vector;   //!< alias
                 typedef typename Type<T>::Function       Function; //!< alias
                 typedef          Oxide::Field1D<T>       Field;    //!< alias
                 typedef typename Context<T>::Control     Control;  //!< alias
-                typedef typename Context<T>::Controls    Controls;  //!< alias
+                typedef typename Context<T>::Controls    Controls; //!< alias
+
+                //--------------------------------------------------------------
+                //
+                // C++ ctor/dtor
+                //
+                //--------------------------------------------------------------
 
                 //! setup
                 inline explicit LeastSquares(const bool verb=false) :
@@ -131,11 +142,13 @@ namespace upsylon {
 
                 //! cleanup
                 inline virtual ~LeastSquares() throw() {}
-                
-                bool         verbose; //!< activate verbosity
-                const Field  lambdas; //!< precomputed lambdas
-                const unit_t pmin;    //!< min power value
-                const unit_t pmax;    //!< max power value
+
+
+                //--------------------------------------------------------------
+                //
+                // fit functions
+                //
+                //--------------------------------------------------------------
                 
 #include "least-squares-fit.hxx"
 
@@ -173,7 +186,11 @@ namespace upsylon {
                     return descent(sample,SF,aorg,flags);
                 }
 
-               
+
+                bool         verbose; //!< activate verbosity
+                const Field  lambdas; //!< precomputed lambdas
+                const unit_t pmin;    //!< min power value
+                const unit_t pmax;    //!< max power value
                 
                 
                 
