@@ -58,11 +58,11 @@ inline bool fit(SampleType<T>            &sample,
     //__________________________________________________________________________
     //
     //
-    // Effective Algorithm
+    // Effective Algorithm Starts now!
     //
     //__________________________________________________________________________
     T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
-    size_t nbad  = 0;
+    size_t nbad  = 0; // number of successive bad steps
 
 CYCLE:
     ++cycle;
@@ -134,8 +134,9 @@ STEP_CONTROL:
     //
     //
     // at this point, aorg, atry and step are computed
-    // now pinpoint a local minimum along step,
+    // now pinpoint a local minimum along step
     // and we assume all values in [aorg,atry] are ok
+    // a first trial is taken to probe the local topology
     //
     //__________________________________________________________________________
     triplet<T> u  = { 0,     numeric<T>::inv_gold, 1 };
@@ -154,10 +155,11 @@ STEP_CONTROL:
         //------------------------------------------------------
         Y_LS_PRINTLN( "[LS] Backtrack Level-1" );
         ok  = false;
-        f.c = f.b;
-        u.c = u.b;
-        bracket::inside(D2,u,f);
-        (void)minimize::run(D2,u,f);
+
+        f.c = f.b;                   // initialize an inside bracketing: f.c <- f.b
+        u.c = u.b;                   // initialize an inside bracketing: u.c <- u.c
+        bracket::inside(D2,u,f);     // bracket/min
+        (void)minimize::run(D2,u,f); // minimize
         if( f.b > f.a )
         {
             Y_LS_PRINTLN("[LS] <BAD FUNCTION>");
@@ -239,7 +241,7 @@ STEP_CONTROL:
     }
 
     //----------------------------------------------------------
-    // update aorg/D2org
+    // update aorg/D2org and update gradient/curvature
     //----------------------------------------------------------
     atom::set(aorg,atry);
     const T D2old = D2org;
