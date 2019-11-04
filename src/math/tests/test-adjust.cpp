@@ -4,6 +4,7 @@
 #include "y/memory/pooled.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/lightweight-vector.hpp"
+#include "y/math/adjust/sample/load.hpp"
 
 #include "support.hpp"
 

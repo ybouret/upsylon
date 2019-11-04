@@ -62,6 +62,12 @@ namespace upsylon {
                 virtual void addToSumOfSquares(T &total,
                                                T &residual) const throw() = 0;
                 
+                //! upper abscissa, after a ready()!
+                virtual T upper() const throw() = 0;
+                
+                
+                //! upper abscissa, after a ready()!
+                virtual T lower() const throw() = 0;
 
                 //==============================================================
                 //

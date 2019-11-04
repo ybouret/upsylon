@@ -147,7 +147,31 @@ namespace upsylon {
                     }
                 }
 
-
+                //! get overall upper
+                virtual T upper() const throw()
+                {
+                    T              ans  = 0;
+                    const Handles &self = *this;
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        ans = max_of(ans,self[i]->upper());
+                    }
+                    return ans;
+                }
+                
+                //! get oveall lower
+                virtual T lower() const throw()
+                {
+                    T              ans  = 0;
+                    const Handles &self = *this;
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        ans = min_of(ans,self[i]->lower());
+                    }
+                    return ans;
+                }
+                
+                
                 //==============================================================
                 //
                 // non virtual interfaces

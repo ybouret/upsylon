@@ -50,8 +50,6 @@ namespace upsylon {
                 //! cleanup
                 inline virtual ~Sample() throw() {}
 
-
-
                 //! common series size
                 inline virtual size_t count() const throw()
                 {
@@ -238,6 +236,34 @@ namespace upsylon {
                             temp[i] = square_of(ordinate[i]-ave);
                         }
                         total += sorted_sum(temp);
+                    }
+                }
+                
+                //! indexed upper abscissa
+                virtual T upper() const throw()
+                {
+                    const size_t n = this->count();
+                    if( n > 0 )
+                    {
+                        return abscissa[indices[n]];
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
+                //! indexed lower abscissa
+                virtual T lower() const throw()
+                {
+                    const size_t n = this->count();
+                    if( n > 0 )
+                    {
+                        return abscissa[indices[1]];
+                    }
+                    else
+                    {
+                        return 0;
                     }
                 }
 
