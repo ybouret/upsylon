@@ -6,7 +6,6 @@
 #include "y/math/adjust/context.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/oxide/field1d.hpp"
-#include "y/ios/ocstream.hpp"
 #include "y/math/opt/bracket.hpp"
 #include "y/math/opt/minimize.hpp"
 
@@ -15,9 +14,6 @@ namespace upsylon {
     namespace math {
         
         namespace Adjust {
-
-          
-
 
             //==================================================================
             //
@@ -48,7 +44,7 @@ namespace upsylon {
                     return -4;
                 }
                 
-                //! correct curvature computation
+                //! corrected curvature computation
                 static inline
                 bool ComputeCurvature(Matrix       &curv,
                                       const T       lambda,

@@ -1,6 +1,8 @@
 
 #include "y/math/adjust/share/gaussian.hpp"
 #include "y/math/adjust/least-squares.hpp"
+#include "y/ios/ocstream.hpp"
+
 #include "y/utest/run.hpp"
 #include <typeinfo>
 
