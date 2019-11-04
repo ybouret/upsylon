@@ -71,7 +71,7 @@ namespace upsylon {
                         self[i]->ready();
                         const size_t w = self[i]->count();
                         total_w   += w;
-                        weights[i] = w;
+                        weights[i] = T(w);
                     }
 
                     for(size_t i=ns;i>0;--i)

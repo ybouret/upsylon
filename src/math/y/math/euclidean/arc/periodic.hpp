@@ -62,7 +62,7 @@ namespace upsylon {
                             u-=i;
                             while(i<1)   i+=num;
                             while(i>num) i-=num;
-                            const NodeType &node = *(this->nodes[clamp<size_t>(1,i,num)]);
+                            const NodeType &node = *(this->nodes[clamp<size_t>(1,size_t(i),num)]);
                             return (node.*(this->onCompute))(u,p,dp,d2p);
                         } break;
                     }

@@ -65,7 +65,7 @@ namespace upsylon {
                     {
                         assert(addr);
                         assert(fmt.is_valid());
-                        const unsigned long i = *static_cast<const T *>(addr);
+                        const unsigned long i = (unsigned long)(*static_cast<const T *>(addr));
                         fp( **fmt, i );
                     }
 

@@ -76,7 +76,7 @@ namespace upsylon {
                                 }
                                 else
                                 {
-                                    const size_t    indx = clamp<size_t>(1,floor_of(u),num-1);
+                                    const size_t    indx = clamp<size_t>(1,size_t(floor_of(u)),num-1);
                                     const NodeType &node = *nds[indx];
                                     return (node.*(this->onCompute))(u-indx,p,dp,d2p);
                                 }

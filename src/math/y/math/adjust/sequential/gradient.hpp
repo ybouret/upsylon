@@ -26,7 +26,7 @@ namespace upsylon {
                 T h; //!< scaling
                 
                 //! setup with default scaling
-                inline explicit Gradient() : derivative<T>(), h(1e-4)
+                inline explicit Gradient() : derivative<T>(), h( T(1e-4) )
                 {
                 }
 

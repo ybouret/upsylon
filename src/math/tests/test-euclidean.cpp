@@ -102,7 +102,7 @@ namespace {
                 case Arc2: fn += "_i2"; break;
             }
             ios::ocstream fp( fn + ".dat" );
-            for(type i=1;i<=nmax;i+=0.02)
+            for(type i=1;i<=nmax;i+=const_type(0.02))
             {
                 vertex p;
                 arc.compute(i, &p, 0, 0);
@@ -129,7 +129,7 @@ namespace {
             const size_t np = (nn>0) ? nn : 10 + alea.leq(30);
             std::cerr << "With " << np << " points" << std::endl;
 
-            const_type noise(0.1);
+            const_type noise = const_type(0.1);
             Points     points(np,as_capacity);
 
             StandardArc<T,VTX> sa;

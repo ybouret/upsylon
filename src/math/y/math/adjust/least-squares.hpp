@@ -219,13 +219,13 @@ namespace upsylon {
                     Field &lam = aliasing::_(lambdas);
                     lam[ pmin ] = 0;
                     {
-                        static const T tenth(0.1);
+                        static const T tenth = T(0.1);
                         lam[ -1 ] = tenth;
                         for(unit_t i=-2;i>pmin;--i) lam[i] = lam[i+1] * tenth;
                     }
                     lam[  0 ]            = 1;
                     {
-                        static const T ten(10);
+                        static const T ten = T(10);
                         lam[  1 ]            = ten;
                         for(unit_t i=2;i<=pmax;++i) lam[i] = lam[i-1] * ten;
                     }

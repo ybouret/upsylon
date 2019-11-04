@@ -26,7 +26,7 @@ namespace {
 
         inline virtual T start() const throw() { return 0; }
 
-        inline virtual T delta() const throw() { return 0.01; }
+        inline virtual T delta() const throw() { return T(0.01); }
 
         virtual void   setup(addressable<T>       &Y,
                              const accessible<T>  &aorg,
@@ -80,7 +80,7 @@ namespace {
         {
             curr += alea.to<T>();
             X[i]  = curr;
-            Y[i]  = exp_of( -T(0.3) * X[i] ) * cos_of( 2.7 * X[i] );
+            Y[i]  = exp_of( -T(0.3) * X[i] ) * cos_of( T(2.7) * X[i] );
         }
 
 
@@ -151,7 +151,7 @@ namespace {
                     {
                         ios::ocstream fp("adjfcn.dat");
                         T x = 0;
-                        const T dx = 0.02;
+                        const T dx = T(0.02);
 
                         fp("%g %g\n",x,explode.start(x,aorg,vars));
                         for(x+=dx;x<=X->back();x+=dx)

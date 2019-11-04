@@ -8,10 +8,11 @@
 #include "y/type/self-destruct.hpp"
 #include <cstring>
 
-namespace upsylon
-    {
+namespace upsylon {
 
-
+#if defined(_MSC_VER)
+#pragma warning ( disable : 4250 )
+#endif
         //! vector of memory movable objects...
         template <typename T, typename ALLOCATOR = memory::global >
         class vector :  public array<T>, public sequence<T>
@@ -382,6 +383,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
                 this->item_ = 0;
             }
         };
+
 
         //! wrapper for template class
         template <typename ALLOCATOR = memory::global >

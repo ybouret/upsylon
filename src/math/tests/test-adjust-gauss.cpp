@@ -33,13 +33,13 @@ namespace {
         bVector   used( aorg.size(),  true );
         vector<T> aerr( aorg.size(),  0 );
 
-        vars(aorg,"A1")   = 1.2;
-        vars(aorg,"mu1")  = 2.3;
-        vars(aorg,"sig1") = 0.7;
+        vars(aorg,"A1")   = T(1.2);
+        vars(aorg,"mu1")  = T(2.3);
+        vars(aorg,"sig1") = T(0.7);
 
-        vars(aorg,"A2")   = 2.7;
-        vars(aorg,"mu2")  = 5.2;
-        vars(aorg,"sig2") = 0.55;
+        vars(aorg,"A2")   = T(2.7);
+        vars(aorg,"mu2")  = T(5.2);
+        vars(aorg,"sig2") = T(0.55);
 
 
         for(size_t i=1;i<=n;++i)

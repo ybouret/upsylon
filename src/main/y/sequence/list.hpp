@@ -59,7 +59,7 @@ namespace upsylon {
         }
 
         //! constructor with n objects having default constructor
-        inline explicit list(const size_t n) throw() : nodes(), cache()
+        inline explicit list(const size_t n)  : nodes(), cache()
         {
             try {
                 while( nodes.size < n )
