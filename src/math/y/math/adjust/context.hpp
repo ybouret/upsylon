@@ -12,6 +12,7 @@ namespace upsylon {
 
         namespace Adjust {
 
+
             //! result of a context control function
             enum ControlResult
             {
