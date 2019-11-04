@@ -3,7 +3,7 @@
 #ifndef Y_ADJUST_LEAST_SQUARES_INCLUDED
 #define Y_ADJUST_LEAST_SQUARES_INCLUDED 1
 
-#include "y/math/adjust/context.hpp"
+#include "y/math/adjust/frame.hpp"
 #include "y/math/kernel/lu.hpp"
 #include "y/oxide/field1d.hpp"
 #include "y/math/opt/bracket.hpp"
@@ -112,8 +112,8 @@ namespace upsylon {
                 typedef typename Type<T>::Vector         Vector;   //!< alias
                 typedef typename Type<T>::Function       Function; //!< alias
                 typedef          Oxide::Field1D<T>       Field;    //!< alias
-                typedef typename Context<T>::Control     Control;  //!< alias
-                typedef typename Context<T>::Controls    Controls; //!< alias
+                typedef typename Frame<T>::Control       Control;  //!< alias
+                typedef typename Frame<T>::Controls      Controls; //!< alias
 
                 //--------------------------------------------------------------
                 //
@@ -206,7 +206,7 @@ namespace upsylon {
                 bVector  used;
                 Control  nope;
 
-                ControlResult accept( Context<T> &, const size_t ) const throw()
+                ControlResult accept( Frame<T> &, const size_t ) const throw()
                 {
                     return LeftUntouched;
                 }

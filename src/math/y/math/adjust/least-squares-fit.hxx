@@ -38,13 +38,13 @@ inline bool fit(SampleType<T>            &sample,
 
     //__________________________________________________________________________
     //
-    // create the contexts
+    // create the frames
     //__________________________________________________________________________
-    size_t     cycle = 0;
-    Context<T> stepContext(sample,used,step);
-    Control   &stepControl = ( (0!=ctrl) && (0!=ctrl->step) ) ? *(ctrl->step) : nope;
+    size_t    cycle = 0;
+    Frame<T>  stepFrame(sample,used,step);
+    Control  &stepControl = ( (0!=ctrl) && (0!=ctrl->step) ) ? *(ctrl->step) : nope;
 
-    Context<T> atryContext(sample,used,atry);
+    Frame<T>   atryFrame(sample,used,atry);
     Control   &atryControl = ( (0!=ctrl) && (0!=ctrl->atry) ) ? *(ctrl->atry) : nope;
 
 
@@ -108,7 +108,7 @@ CYCLE:
     // step/atry consistency
     //
 STEP_CONTROL:
-    switch( stepControl(stepContext,cycle) )
+    switch( stepControl(stepFrame,cycle) )
     {
         case LeftUntouched: break;
         case EmergencyExit: Y_LS_PRINTLN( "[LS] <STEP #" << cycle << " CONTROL EXIT>" ); return false;
@@ -118,7 +118,7 @@ STEP_CONTROL:
     }
 
 
-    switch( atryControl(atryContext,cycle) )
+    switch( atryControl(atryFrame,cycle) )
     {
         case LeftUntouched: break;
         case EmergencyExit: Y_LS_PRINTLN( "[LS] <ATRY #" << cycle << " CONTROL EXIT>" ); return false;

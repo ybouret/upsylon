@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_CONTEXT_INCLUDED
-#define Y_MATH_ADJUST_CONTEXT_INCLUDED 1
+#ifndef Y_MATH_ADJUST_FRAME_INCLUDED
+#define Y_MATH_ADJUST_FRAME_INCLUDED 1
 
 #include "y/math/adjust/sample.hpp"
 
@@ -13,30 +13,30 @@ namespace upsylon {
         namespace Adjust {
 
 
-            //! result of a context control function
+            //! result of a frame control function
             enum ControlResult
             {
                 LeftUntouched, //!< nothing was done
                 ModifiedValue, //!< value has changed
                 EmergencyExit  //!< OK, I'm out!
-             };
+            };
 
 
             //! transient sample+used+value to monitor
             template <typename T>
-            class Context
+            class Frame
             {
             public:
                 const SampleType<T>     &sample; //!< user's sample
                 const accessible<bool>  &used;   //!< currently used flags
                 addressable<T>          &value;  //!< value to monitor
 
-                inline   ~Context() throw() {}  //!< cleanup
+                inline   ~Frame() throw() {}  //!< cleanup
 
                 //! setup
-                inline   Context(const SampleType<T>    &sample_,
-                                 const accessible<bool> &used_,
-                                 addressable<T>         &value_) throw() :
+                inline   Frame(const SampleType<T>    &sample_,
+                               const accessible<bool> &used_,
+                               addressable<T>         &value_) throw() :
                 sample( sample_ ),
                 used(   used_   ),
                 value(  value_  )
@@ -44,9 +44,9 @@ namespace upsylon {
                 }
 
                 //! control functor type
-                typedef functor<ControlResult,TL2(Context<T>&,size_t)> Control;
+                typedef functor<ControlResult,TL2(Frame<T>&,size_t)> Control;
 
-                //! pair of control function
+                //! pair of control functions, to carry information
                 class Controls
                 {
                 public:
@@ -66,7 +66,7 @@ namespace upsylon {
 
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Context);
+                Y_DISABLE_COPY_AND_ASSIGN(Frame);
             };
 
 
