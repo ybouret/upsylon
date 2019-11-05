@@ -71,6 +71,54 @@ namespace upsylon {
                     return self[id].get(source);
                 }
 
+                //! look up
+                template <typename T>
+                inline T *lookFor( addressable<T> &aorg, const string &name )
+                {
+                    Variable::Pointer *ppV = search(name);
+                    if(ppV)
+                    {
+                        return & (**ppV).get(aorg);
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                }
+
+                //! look up, wrapper
+                template <typename T>
+                inline T *lookFor( addressable<T> &aorg, const char *name )
+                {
+                    const string _(name);
+                    return looFor(aorg,_);
+                }
+
+                //! look up
+                template <typename T>
+                inline const T *lookFor( const accessible<T> &aorg, const string &name ) const
+                {
+                    const Variable::Pointer *ppV = search(name);
+                    if(ppV)
+                    {
+                        return & (**ppV).get(aorg);
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                }
+
+                //! look up, wrapper
+                template <typename T>
+                inline const T *lookFor( const accessible<T> &aorg, const char *name )
+                {
+                    const string _(name);
+                    return looFor(aorg,_);
+                }
+
+
+
                 //! display '[pfx]name  = data'
                 template <typename T> inline
                 void display( std::ostream &os, const accessible<T> &source, const char *pfx=NULL) const
