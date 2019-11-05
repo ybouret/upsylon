@@ -129,6 +129,9 @@ Y_UTEST(adjust)
     vars(aorg,"slope1") = INI_S1;
     vars(aorg,"slope2") = INI_S2;
 
+
+
+
     std::cerr << "vars:" << std::endl;
     vars.display(std::cerr, aorg);
 
@@ -250,6 +253,15 @@ Y_UTEST(adjust)
         ios::ocstream fp( ios::cstderr );
         S.writeLog(fp, aorg, used, aerr);
     }
+
+    Y_CHECK( vars1.lookFor(aorg,"t0")    );
+    Y_CHECK( vars1.lookFor(aorg,"slope") );
+    Y_CHECK( vars2.lookFor(aorg,"t0")    );
+    Y_CHECK( vars2.lookFor(aorg,"slope") );
+    Y_CHECK( vars.lookFor(aorg,"t0") );
+    Y_CHECK( vars.lookFor(aorg,"slope1") );
+    Y_CHECK( vars.lookFor(aorg,"slope2") );
+
 }
 Y_UTEST_DONE()
 

@@ -91,7 +91,7 @@ namespace upsylon {
                 inline T *lookFor( addressable<T> &aorg, const char *name )
                 {
                     const string _(name);
-                    return looFor(aorg,_);
+                    return lookFor(aorg,_);
                 }
 
                 //! look up
