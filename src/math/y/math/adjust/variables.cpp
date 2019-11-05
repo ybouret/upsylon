@@ -65,28 +65,33 @@ namespace upsylon {
 
             const Variables & Variables:: set_flags( addressable<bool> &used, const bool flag) const
             {
+                //std::cerr << "set_flags(" << flag << ")" << std::endl;
                 return ld(used,flag);
             }
             
             const Variables & Variables:: set_flags( addressable<bool> &used, const string &names, const bool flag ) const
             {
+                //std::cerr << "set_flags(" << flag << "@" << names << ")" << std::endl;
                 return ld(used,names,flag);
             }
 
 
             const Variables & Variables:: set_flags( addressable<bool> &used, const char *names, const bool flag ) const
             {
-                return ld(used,names,flag);
+                const string _(names);
+                return set_flags(used,_,flag);
             }
 
 
             const Variables & Variables:: off(addressable<bool> &used) const
             {
+                //std::cerr << "off()" << std::endl;
                 return set_flags(used,false);
             }
 
             const Variables & Variables:: off(addressable<bool> &used,const string &names) const
             {
+               // std::cerr << "off(" << names << ")" << std::endl;
                 return set_flags(used,names,false);
             }
 
@@ -100,6 +105,7 @@ namespace upsylon {
 
             const Variables & Variables:: only_off(addressable<bool> &used,const string &names) const
             {
+                //std::cerr << "only_off(" << names << ")" << std::endl;
                 return on(used).off(used,names);
             }
 
@@ -111,11 +117,13 @@ namespace upsylon {
 
             const Variables & Variables:: on(addressable<bool> &used) const
             {
+                //std::cerr << "on()" << std::endl;
                 return set_flags(used,true);
             }
 
             const Variables & Variables:: on(addressable<bool> &used,const string &names) const
             {
+                //std::cerr << "on(" << names << ")" << std::endl;
                 return set_flags(used,names,true);
             }
 
@@ -129,13 +137,14 @@ namespace upsylon {
 
             const Variables & Variables:: only_on(addressable<bool> &used,const string &names) const
             {
+                //std::cerr << "only_on(" << names << ")" << std::endl;
                 return off(used).on(used,names);
             }
 
             const Variables & Variables:: only_on(addressable<bool> &used,const char *names) const
             {
-                const string _(names);
-                return only_off(used,_);
+                const  string _(names);
+                return only_on(used,_);
             }
 
             ////////////////////////////////////////////////////////////////////

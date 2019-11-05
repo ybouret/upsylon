@@ -140,6 +140,7 @@ namespace upsylon {
                     {
                         self(param,(**i).name) = value;
                     }
+                    //std::cerr << "ld(" << value << ")=>" << param << std::endl;
                     return self;
                 }
 
