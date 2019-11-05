@@ -223,10 +223,7 @@ namespace upsylon {
                         os << std::endl;
                     }
                 }
-                
-            private:
-                void   update();
-                string toString( const double value ) const;
+
                 template <typename T> inline
                 size_t fillStrings( Strings &strings, const accessible<T> &values ) const
                 {
@@ -240,6 +237,11 @@ namespace upsylon {
                     }
                     return ans;
                 }
+
+            private:
+                void   update();
+                string toString( const double value ) const;
+
 
                 void buildFrom( const string &names );
                 void outputStatus(std::ostream &os, const bool flag) const;

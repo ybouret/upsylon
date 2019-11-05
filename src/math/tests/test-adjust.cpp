@@ -246,8 +246,10 @@ Y_UTEST(adjust)
     std::cerr << "S2.R2  =" << S2.computeR2() << std::endl;
     std::cerr << "S.R2   =" << S.computeR2()  << std::endl;
 
-
-
+    {
+        ios::ocstream fp( ios::cstderr );
+        S.writeLog(fp, aorg, used, aerr);
+    }
 }
 Y_UTEST_DONE()
 

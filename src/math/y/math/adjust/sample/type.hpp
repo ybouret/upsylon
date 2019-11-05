@@ -7,6 +7,7 @@
 #include "y/math/adjust/sequential/function.hpp"
 #include "y/math/adjust/sequential/gradient.hpp"
 #include "y/math/kernel/atom.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon {
 
@@ -139,7 +140,87 @@ namespace upsylon {
                 {
                     T SStot = 0, SSres = 0;
                     addToSumOfSquares(SStot, SSres);
-                    return T(1) - SSres/SStot;
+                    return T(1) - SSres/(SStot+numeric<T>::tiny);
+                }
+
+                void writeLog(ios::ostream           &fp,
+                              const accessible<T>    &aorg,
+                              const accessible<bool> &used,
+                              const accessible<T>    &aerr,
+                              const char              comment = '%' ) const
+                {
+                    static const size_t nsep = 72;
+                    const Variables    &vars   = variables;
+                    const size_t        nvar   = vars.size();
+                    const size_t        nmax   = vars.maxNameLength();
+                    const size_t        ndat   = this->count();
+                    size_t              active = 0;
+                    size_t              fixed  = 0;
+
+                    fp.repeat(nsep,comment) << '\n';
+                    fp("%c #data      = %u\n", comment, unsigned(ndat));
+                    fp("%c #variables = %u\n", comment, unsigned(ndat));
+
+                    Variables::Strings astr(nvar,as_capacity);
+                    const size_t       apad = vars.fillStrings(astr,aorg);
+                    Variables::Strings estr(nvar,as_capacity);
+                    const size_t       epad = vars.fillStrings(estr,aerr);
+
+                    for( Variables::const_iterator it=vars.begin();it!=vars.end();++it)
+                    {
+                        if( vars(used,(**it).name) )
+                        {
+                            ++active;
+                        }
+                        else
+                        {
+                            ++fixed;
+                        }
+                    }
+                    fp("%c #fixed     = %u\n", comment, unsigned(fixed)  );
+                    fp("%c #active    = %u\n", comment, unsigned(active) );
+                    if(active>ndat) throw exception("too many variables for data");
+                    const size_t ndof = ndat - active;
+                    fp("%c #d.o.f     = %u\n", comment, unsigned(ndof) );
+
+                    if(fixed>0)
+                    {
+                        fp("%c parameters\n",comment);
+                        size_t ivar=1;
+                        for( Variables::const_iterator it=vars.begin();it!=vars.end();++it,++ivar)
+                        {
+                            const string &name = (**it).name;
+                            if( !vars(used,name) )
+                            {
+                                fp.align(name,nmax) << Variables::Equal << astr[ivar];
+                            }
+                        }
+                    }
+
+                    if(active>0)
+                    {
+                        fp("%c parameters\n",comment);
+                        size_t ivar=1;
+                        for( Variables::const_iterator it=vars.begin();it!=vars.end();++it,++ivar)
+                        {
+                            const string &name = (**it).name;
+                            if( vars(used,name) )
+                            {
+                                fp.align(name,nmax)       <<   Variables::Equal;
+                                fp.align(astr[ivar],apad) <<   Variables::PM;
+                                fp.align(estr[ivar],epad) << " \\\\";
+                                const T p = errors::percent(aerr[ivar], aorg[ivar]);
+                                const string per = vformat("%6.2lf",double(p));
+                                fp << " (" << per << "%)";
+                                fp << '\n';
+                            }
+                        }
+                    }
+
+                    fp("%c extraneous information\n",comment);
+                    fp("R2 = %.15g\n", double(this->computeR2() ) );
+                    fp.repeat(nsep,comment) << '\n';
+
                 }
 
 
