@@ -5,12 +5,14 @@
 
 #include "y/exception.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/string/tokenizer.hpp"
+
 namespace upsylon {
     
     namespace math {
         
         namespace Adjust  {
+
+            const char Variables::Separator = ':';
             
             Variables:: ~Variables() throw()
             {
@@ -42,35 +44,92 @@ namespace upsylon {
             {
                 Variables &self = *this;
                 tokenizer<char> tkn( names );
-                while( tkn.next_with(':') )
+                while( tkn.next_with(Separator) )
                 {
                     const string name = tkn.to_string();
                     self << name;
                 }
             }
-            
-            Variables & Variables:: set_all( addressable<bool> &used, const bool flag)
+
+            ////////////////////////////////////////////////////////////////////
+            // flags
+
+            const Variables & Variables:: set_flags( addressable<bool> &used, const bool flag) const
             {
-                for( iterator i=begin();i!=end();++i)
-                {
-                    const Variable &v    = **i;
-                    const string   &name = v.name;
-                    (*this)(used,name)   = flag;
-                }
-                return *this;
+                return ld(used,flag);
             }
             
-            Variables & Variables:: set_only( addressable<bool> &used, const string &names, const bool flag )
+            const Variables & Variables:: set_flags( addressable<bool> &used, const string &names, const bool flag ) const
             {
-                tokenizer<char> tkn( names );
-                while( tkn.next_with(':') )
-                {
-                    const string name = tkn.to_string();
-                    (*this)(used,name) = flag;
-                }
-                return *this;
+                return ld(used,names,flag);
             }
 
+
+            const Variables & Variables:: set_flags( addressable<bool> &used, const char *names, const bool flag ) const
+            {
+                return ld(used,names,flag);
+            }
+
+
+            const Variables & Variables:: off(addressable<bool> &used) const
+            {
+                return set_flags(used,false);
+            }
+
+            const Variables & Variables:: off(addressable<bool> &used,const string &names) const
+            {
+                return set_flags(used,names,false);
+            }
+
+            const Variables & Variables:: off(addressable<bool> &used,const char *names) const
+            {
+                const string _(names);
+                return off(used,_);
+            }
+
+
+
+            const Variables & Variables:: only_off(addressable<bool> &used,const string &names) const
+            {
+                return on(used).off(used,names);
+            }
+
+            const Variables & Variables:: only_off(addressable<bool> &used,const char *names) const
+            {
+                const string _(names);
+                return only_off(used,_);
+            }
+
+            const Variables & Variables:: on(addressable<bool> &used) const
+            {
+                return set_flags(used,true);
+            }
+
+            const Variables & Variables:: on(addressable<bool> &used,const string &names) const
+            {
+                return set_flags(used,names,true);
+            }
+
+            const Variables & Variables:: on(addressable<bool> &used,const char *names) const
+            {
+                const string _(names);
+                return on(used,_);
+            }
+
+
+
+            const Variables & Variables:: only_on(addressable<bool> &used,const string &names) const
+            {
+                return off(used).on(used,names);
+            }
+
+            const Variables & Variables:: only_on(addressable<bool> &used,const char *names) const
+            {
+                const string _(names);
+                return only_off(used,_);
+            }
+
+            ////////////////////////////////////////////////////////////////////
 
             
             Variables & Variables:: operator=( const Variables &other )

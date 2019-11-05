@@ -7,6 +7,7 @@
 #include "y/math/adjust/variable.hpp"
 #include "y/string/display.hpp"
 #include "y/math/kernel/errors.hpp"
+#include "y/string/tokenizer.hpp"
 
 namespace upsylon {
 
@@ -25,7 +26,9 @@ namespace upsylon {
             class Variables : public Variable::Set
             {
             public:
-                typedef vector<string,memory::pooled> Strings; //!< alias for I/O
+                typedef vector<string,memory::pooled> Strings;   //!< alias for I/O
+                static  const  char                   Separator; //!< for multiple variables names
+
                 
                 explicit Variables() throw();                    //!< setup
                 virtual ~Variables() throw();                    //!< cleanup
@@ -128,24 +131,66 @@ namespace upsylon {
                 //! just to debug
                 void   chkdbg() const;
 
-                //! setting all on/off
-                Variables & set_all( addressable<bool> &used, const bool flag);
-                
-                //! setting only named variables on/off
-                Variables & set_only( addressable<bool> &used, const string &names, const bool flag );
-                
-                
-                //! turning all named variables to on, other are left untouched
-                Variables & on( addressable<bool> &used, const string &names)
+
+                //! load all variables
+                template <typename T>
+                const Variables &ld(addressable<T>                         &param,
+                                    typename type_traits<T>::parameter_type value) const
                 {
-                   return set_only(used,names,true);
+                    const Variables    &self = *this;
+                    for(const_iterator i=self.begin();i!=end();++i)
+                    {
+                        self(param,(**i).name) = value;
+                    }
+                    return self;
+                }
+
+                //! load only on named variables
+                template <typename T>
+                const Variables &ld(addressable<T>                         &param,
+                                    const string                           &names,
+                                    typename type_traits<T>::parameter_type value) const
+                {
+                    const Variables    &self = *this;
+                    tokenizer<char>     tkn(names);
+                    while( tkn.next_with( Separator ) )
+                    {
+                        const string id = tkn.to_string();
+                        self(param,id)  = value;
+                    }
+                    return self;
+                }
+
+                //! load only on named variables, wrapper
+                template <typename T>
+                const Variables &ld(addressable<T>                         &param,
+                                    const char                             *names,
+                                    typename type_traits<T>::parameter_type value) const
+                {
+                    const string _(names); return ld(param,_,value);
                 }
                 
-                //! turning all variables to off, then all named to on
-                Variables & only_on( addressable<bool> &used, const string &names)
-                {
-                   return  set_all(used,false).on(used,names);
-                }
+                const Variables &set_flags(addressable<bool> &used, const bool flag) const;
+                const Variables &set_flags(addressable<bool> &used, const string &names, const bool flag) const;
+                const Variables &set_flags(addressable<bool> &used, const char   *names, const bool flag) const;
+
+                const Variables &off(addressable<bool> &used) const;
+
+                const Variables &off(addressable<bool> &used, const string &names) const;
+                const Variables &off(addressable<bool> &used, const char   *names) const;
+
+                const Variables &only_off(addressable<bool> &used, const string &names) const;
+                const Variables &only_off(addressable<bool> &used, const char   *names) const;
+
+                const Variables &on(addressable<bool> &used) const;
+
+                const Variables &on(addressable<bool> &used,const string &names) const;
+                const Variables &on(addressable<bool> &used,const char   *names) const;
+
+                const Variables &only_on(addressable<bool> &used,const string &names) const;
+                const Variables &only_on(addressable<bool> &used,const char   *names) const;
+
+
                 
             private:
                 void   update();
