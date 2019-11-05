@@ -267,6 +267,11 @@ namespace upsylon {
                     }
                 }
 
+                virtual void extraneous( ios::ostream &fp, const char ) const
+                {
+                    correlation<T> corr;
+                    fp("corr    = %.15g\n", computeCorrelation(corr) );
+                }
 
                 //==============================================================
                 //

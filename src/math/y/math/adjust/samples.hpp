@@ -170,7 +170,19 @@ namespace upsylon {
                     }
                     return ans;
                 }
-                
+
+                virtual void extraneous( ios::ostream &fp, const char comment ) const
+                {
+                    correlation<T>   corr;
+                    const Handles   &self = *this;
+                    const unsigned   ns   = unsigned(self.size());
+                    fp("%c #samples = %u\n", comment, ns );
+                    for(unsigned i=1;i<=ns;++i)
+                    {
+                        const Sample<T> &sample = *self[i];
+                        fp("corr%-2u  = %.15g\n", i, sample.computeCorrelation(corr) );
+                    }
+                }
                 
                 //==============================================================
                 //

@@ -224,6 +224,7 @@ namespace upsylon {
                     }
                 }
 
+                //! convert real values intro string, return max length of strings
                 template <typename T> inline
                 size_t fillStrings( Strings &strings, const accessible<T> &values ) const
                 {

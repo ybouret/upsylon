@@ -70,6 +70,9 @@ namespace upsylon {
                 //! upper abscissa, after a ready()!
                 virtual T lower() const throw() = 0;
 
+                //! extraneous info
+                virtual void extraneous( ios::ostream &fp, const char comment ) const = 0;
+
                 //==============================================================
                 //
                 // non virtual interface
@@ -143,6 +146,7 @@ namespace upsylon {
                     return T(1) - SSres/(SStot+numeric<T>::tiny);
                 }
 
+                //! write useful fit information
                 void writeLog(ios::ostream           &fp,
                               const accessible<T>    &aorg,
                               const accessible<bool> &used,
@@ -218,7 +222,8 @@ namespace upsylon {
                     }
 
                     fp("%c extraneous information\n",comment);
-                    fp("R2 = %.15g\n", double(this->computeR2() ) );
+                    this->extraneous(fp,comment);
+                    fp("R2      = %.15g\n", double(this->computeR2() ) );
                     fp.repeat(nsep,comment) << '\n';
 
                 }
