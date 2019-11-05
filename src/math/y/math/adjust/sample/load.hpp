@@ -2,7 +2,7 @@
 //! \file
 
 #ifndef Y_MATH_ADJUST_SAMPLE_LOAD_INCLUDED
-#define Y_MATH_ADJUST_SAMPLE_TYPE_INCLUDED 1
+#define Y_MATH_ADJUST_SAMPLE_LOAD_INCLUDED 1
 
 #include "y/math/adjust/sample.hpp"
 #include "y/math/io/data-set.hpp"
@@ -13,8 +13,10 @@ namespace upsylon {
         
         namespace Adjust {
 
+            //! fast loading and setup of samples
             struct Load
             {
+                //! load from a stream
                 template <typename T> static inline
                 size_t From(ios::istream &fp,
                             Sample<T>    &sample,
@@ -38,7 +40,8 @@ namespace upsylon {
                     
                     return sample.count();
                 }
-                
+
+                //! load from a file
                 template <typename T> static inline
                 size_t From(const string &dataFile,
                             Sample<T>    &sample,
@@ -50,7 +53,8 @@ namespace upsylon {
                     ios::icstream fp(dataFile);
                     return From(fp,sample,abscissa_index,ordinate_index,skip,nmax);
                 }
-                
+
+                //! load from a file, wrapper
                 template <typename T> static inline
                 size_t From(const char   *dataFile,
                             Sample<T>    &sample,

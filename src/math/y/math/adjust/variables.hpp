@@ -28,15 +28,16 @@ namespace upsylon {
             public:
                 typedef vector<string,memory::pooled> Strings;   //!< alias for I/O
                 static  const  char                   Separator; //!< for multiple variables names
+                static  const  char                   Equal[];   //!< " = ";
+                static  const  char                   PM[];      //!< " \\pm ";
 
-                
                 explicit Variables() throw();                    //!< setup
                 virtual ~Variables() throw();                    //!< cleanup
                 Variables(const Variables &);                    //!< copy
                 Variables & operator=( const Variables &other ); //!< assign
 
-                Variables( const string &names);
-                Variables( const char   *names);
+                Variables( const string &names); //!< create global variables from colon-separated names
+                Variables( const char   *names); //!< create global variables from colon-separated names
 
                 const Variable & operator[](const string &name) const; //!< get by name
                 const Variable & operator[](const char   *name) const; //!< get by name
@@ -52,7 +53,7 @@ namespace upsylon {
                 Variables & operator()(const Variable &v);                     //!< Linked with same name
 
 
-                size_t MaxLength() const throw(); //!< max( name.size() )
+                size_t maxNameLength() const throw(); //!< max( name.size() )
 
                 //! generalized access operator
                 template <typename T>
@@ -75,7 +76,7 @@ namespace upsylon {
                 void display( std::ostream &os, const accessible<T> &source, const char *pfx=NULL) const
                 {
                     const Variables &self = *this;
-                    const size_t     nmax = MaxLength();
+                    const size_t     nmax = maxNameLength();
                     for( const_iterator it = begin(); it != end(); ++it )
                     {
                         const string &name = (**it).name;
@@ -83,7 +84,7 @@ namespace upsylon {
                         {
                             os << pfx;
                         }
-                        string_display::align(os,name,nmax) << " = " << self(source,name) << std::endl;
+                        string_display::align(os,name,nmax) << Equal << self(source,name) << std::endl;
                     }
                 }
 
@@ -91,28 +92,25 @@ namespace upsylon {
                 template <typename T> inline
                 void display( std::ostream &os, const accessible<T> &aorg, const accessible<T> &aerr, const char *pfx=NULL) const
                 {
-                    const Variables &self = *this;
-                    const size_t     nvar = self.size();
-                    Strings          sorg(nvar,as_capacity);
-                    const size_t     zorg = fillStrings(sorg,aorg);
-
-                    Strings          serr(nvar,as_capacity);
-                    const size_t     zerr = fillStrings(serr,aerr);
-
-                    Strings          sper(nvar,as_capacity);
-
-                    const size_t        nmax = MaxLength();
-                    size_t              ivar = 1;
-                    for( const_iterator it = begin(); it != end(); ++it, ++ivar)
+                    const Variables   &self = *this;
+                    const size_t       nvar = self.size();
+                    Strings            sorg(nvar,as_capacity);
+                    const size_t       zorg = fillStrings(sorg,aorg);
+                    Strings            serr(nvar,as_capacity);
+                    const size_t       zerr = fillStrings(serr,aerr);
+                    Strings            sper(nvar,as_capacity);
+                    const size_t       nmax = maxNameLength();
+                    size_t             ivar = 1;
+                    for(const_iterator iter = begin(); iter != end(); ++iter, ++ivar)
                     {
-                        const Variable &v    = **it;
+                        const Variable &v    = **iter;
                         const string   &name = v.name;
                         if(pfx)
                         {
                             os << pfx;
                         }
-                        string_display::align(os,name,nmax) << " = ";
-                        string_display::align(os,sorg[ivar],zorg) << " \\pm ";
+                        string_display::align(os,name,nmax)       << Equal;
+                        string_display::align(os,sorg[ivar],zorg) << PM;
                         string_display::align(os,serr[ivar],zerr);
                         const T p = errors::percent(aerr[ivar], aorg[ivar]);
                         const string per = vformat("%6.2lf",double(p));
@@ -169,28 +167,61 @@ namespace upsylon {
                 {
                     const string _(names); return ld(param,_,value);
                 }
-                
+
+                //! set all used flags
                 const Variables &set_flags(addressable<bool> &used, const bool flag) const;
+                //! set list of variables to flag
                 const Variables &set_flags(addressable<bool> &used, const string &names, const bool flag) const;
+                //! set list of variables to flag, wrapper
                 const Variables &set_flags(addressable<bool> &used, const char   *names, const bool flag) const;
 
+                //! set all used to OFF
                 const Variables &off(addressable<bool> &used) const;
-
+                //! set list of used to OFF
                 const Variables &off(addressable<bool> &used, const string &names) const;
+                //! set list of used to OFF, wrapper
                 const Variables &off(addressable<bool> &used, const char   *names) const;
 
+                //! set all used to ON, then turn OFF list of named variables
                 const Variables &only_off(addressable<bool> &used, const string &names) const;
+                //! set all used to ON, then turn OFF list of named variables, wrapper
                 const Variables &only_off(addressable<bool> &used, const char   *names) const;
 
+                //! set all variables to ON
                 const Variables &on(addressable<bool> &used) const;
-
+                //! set list of named variables to ON
                 const Variables &on(addressable<bool> &used,const string &names) const;
+                //! set list of named variables to ON, wrapper
                 const Variables &on(addressable<bool> &used,const char   *names) const;
-
+                //! set all used to OFF, then turn ON named variables
                 const Variables &only_on(addressable<bool> &used,const string &names) const;
+                //! set all used to OFF, then turn ON named variables, wrapper
                 const Variables &only_on(addressable<bool> &used,const char   *names) const;
 
-
+                //! display value/status for earch variable
+                template <typename T>
+                void displayStatus( std::ostream &os, const accessible<T> &aorg, const accessible<bool> &used, const char *pfx ) const
+                {
+                    const Variables &self = *this;
+                    const size_t     nvar = self.size();
+                    Strings          sorg(nvar,as_capacity);
+                    const size_t     zorg = fillStrings(sorg,aorg);
+                    const size_t     nmax = maxNameLength();
+                    size_t           ivar = 1;
+                    for( const_iterator it = begin(); it != end(); ++it,++ivar )
+                    {
+                        const Variable &v    = **it;
+                        const string   &name = v.name;
+                        if(pfx)
+                        {
+                            os << pfx;
+                        }
+                        string_display::align(os,name,nmax) << Equal;
+                        string_display::align(os,sorg[ivar],zorg);
+                        outputStatus(os,self(used,name));
+                        os << std::endl;
+                    }
+                }
                 
             private:
                 void   update();
@@ -210,6 +241,7 @@ namespace upsylon {
                 }
 
                 void buildFrom( const string &names );
+                void outputStatus(std::ostream &os, const bool flag) const;
 
             };
         }

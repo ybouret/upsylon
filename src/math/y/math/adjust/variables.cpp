@@ -13,7 +13,9 @@ namespace upsylon {
         namespace Adjust  {
 
             const char Variables::Separator = ':';
-            
+            const char Variables::Equal[]   = " = ";
+            const char Variables::PM[]      = " \\pm ";
+
             Variables:: ~Variables() throw()
             {
             }
@@ -50,6 +52,13 @@ namespace upsylon {
                     self << name;
                 }
             }
+
+
+            void Variables:: outputStatus(std::ostream &os, const bool flag) const
+            {
+                os << " : [ " << ( flag ? "USED " : "FIXED") << " ]";
+            }
+
 
             ////////////////////////////////////////////////////////////////////
             // flags
@@ -220,7 +229,7 @@ namespace upsylon {
             }
             
             
-            size_t Variables:: MaxLength() const throw()
+            size_t Variables:: maxNameLength() const throw()
             {
                 size_t ans = 0;
                 for( const_iterator it=begin(); it != end(); ++it)
