@@ -71,11 +71,11 @@ namespace upsylon {
                     return self[id].get(source);
                 }
 
-                //! look up
+                //! look for a value
                 template <typename T>
-                inline T *lookFor( addressable<T> &aorg, const string &name )
+                inline T *lookFor( addressable<T> &aorg, const string &name ) const
                 {
-                    Variable::Pointer *ppV = search(name);
+                    const Variable::Pointer *ppV = search(name);
                     if(ppV)
                     {
                         return & (**ppV).get(aorg);
@@ -86,15 +86,15 @@ namespace upsylon {
                     }
                 }
 
-                //! look up, wrapper
+                //! look for a value, wrapper
                 template <typename T>
-                inline T *lookFor( addressable<T> &aorg, const char *name )
+                inline T *lookFor( addressable<T> &aorg, const char *name ) const
                 {
                     const string _(name);
                     return lookFor(aorg,_);
                 }
 
-                //! look up
+                //! look for a const value
                 template <typename T>
                 inline const T *lookFor( const accessible<T> &aorg, const string &name ) const
                 {
@@ -109,12 +109,12 @@ namespace upsylon {
                     }
                 }
 
-                //! look up, wrapper
+                //! look for a const value, wrapper
                 template <typename T>
-                inline const T *lookFor( const accessible<T> &aorg, const char *name )
+                inline const T *lookFor( const accessible<T> &aorg, const char *name ) const
                 {
                     const string _(name);
-                    return looFor(aorg,_);
+                    return lookFor(aorg,_);
                 }
 
 
