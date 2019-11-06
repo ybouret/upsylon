@@ -327,7 +327,15 @@ namespace upsylon {
                     return corr.compute();
                 }
 
-
+                //! create with new empty sequences
+                template <typename SEQUENCE> static inline
+                Sample *CreateWith()
+                {
+                    const Series _X = new SEQUENCE();
+                    const Series _Y = new SEQUENCE();
+                    Series       _Z = new SEQUENCE();
+                    return new Sample(_X,_Y,_Z);
+                }
 
 
                 //==============================================================
