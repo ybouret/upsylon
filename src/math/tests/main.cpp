@@ -31,19 +31,9 @@ Y_UTEST_INIT(64)
     Y_UTEST(functions);
     Y_UTEST(intg);
 
-    Y_UTEST(minfit);
-    Y_UTEST(fit_circle);
-    Y_UTEST(fit_conic);
     Y_UTEST(bracket);
     Y_UTEST(min);
-    Y_UTEST(lsf);
-    Y_UTEST(lsf2);
-    Y_UTEST(lsf3);
-    Y_UTEST(lsf_ode);
-    Y_UTEST(fit_gauss);
-    Y_UTEST(fit_poly);
-    Y_UTEST(ls_rescale);
-
+    
 
     Y_UTEST(linear);
     Y_UTEST(spline);
@@ -51,14 +41,10 @@ Y_UTEST_INIT(64)
     Y_UTEST(smooth);
     Y_UTEST(bspl);
     Y_UTEST(stat);
-   
-    //Y_UTEST(arc);
-    //Y_UTEST(curve);
-    //Y_UTEST(points);
+
 
     Y_UTEST(euclidean);
-    //Y_UTEST(c2arc);
-    
+
     Y_UTEST(adjust);
     Y_UTEST(adjust2);
     Y_UTEST(adjust_ode);

@@ -49,19 +49,6 @@ ADD_TEST(fcn:intg    test-m intg)
 ADD_TEST(fcn:func    test-m functions)
 ADD_TEST(fcn:zfind   test-m zfind)
 
-SOURCE_GROUP(fit FILES test-fit-gauss.cpp test-fit-poly.cpp test-ls-rescale.cpp
-test-lsf.cpp test-lsf2.cpp test-lsf3.cpp test-lsf-ode.cpp
-test-shapes2d.cpp)
-ADD_TEST(fit:lsf      test-m lsf)
-ADD_TEST(fit:lsf2     test-m lsf2)
-ADD_TEST(fit:lsf3     test-m lsf3 ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
-ADD_TEST(fit:ode      test-m lsf_ode)
-ADD_TEST(fit:gauss    test-m fit_gauss)
-ADD_TEST(fit:poly     test-m fit_poly)
-ADD_TEST(fit:rescale  test-m ls_rescale)
-ADD_TEST(fit:circle   test-m fit_circle)
-ADD_TEST(fit:conic    test-m fit_conic)
-
 SOURCE_GROUP(sig FILES test-bspl.cpp test-extend.cpp test-linear.cpp test-smooth.cpp test-spline.cpp)
 ADD_TEST(sig:linear      test-m linear)
 ADD_TEST(sig:spline      test-m spline)
@@ -81,8 +68,6 @@ ADD_TEST(adjust2      test-m adjust2 ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 ADD_TEST(adjust:ode   test-m adjust_ode)
 ADD_TEST(adjust:poly  test-m adjust_poly)
 ADD_TEST(adjust:gauss test-m adjust_gauss)
-
-
 
 
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp)

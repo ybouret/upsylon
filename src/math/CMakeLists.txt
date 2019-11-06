@@ -58,24 +58,6 @@ SET(ode_impl_srcs ${ode_impl_decl} ${ode_impl_code})
 SOURCE_GROUP( ode/implicit FILES ${ode_impl_srcs} )
 INSTALL( FILES ${ode_impl_decl} DESTINATION include/y/math/ode/implicit )
 
-FILE(GLOB fit_decl y/math/fit/*.hpp)
-FILE(GLOB fit_code y/math/fit/*.cpp)
-SET(fit_srcs ${fit_decl} ${fit_code})
-SOURCE_GROUP( fit FILES ${fit_srcs} )
-INSTALL( FILES ${fit_decl} DESTINATION include/y/math/fit )
-
-FILE(GLOB fit_in2d_decl y/math/fit/in2d/*.hpp)
-FILE(GLOB fit_in2d_code y/math/fit/in2d/*.cpp)
-SET(fit_in2d_srcs ${fit_in2d_decl} ${fit_in2d_code})
-SOURCE_GROUP( fit/in2d FILES ${fit_in2d_srcs} )
-INSTALL( FILES ${fit_in2d_decl} DESTINATION include/y/math/fit/in2d )
-
-FILE(GLOB fit_sample_decl y/math/fit/sample/*.hpp)
-FILE(GLOB fit_sample_code y/math/fit/sample/*.cpp)
-SET(fit_sample_srcs ${fit_sample_decl} ${fit_sample_code})
-SOURCE_GROUP( fit/sample FILES ${fit_sample_srcs} )
-INSTALL( FILES ${fit_sample_decl} DESTINATION include/y/math/fit/sample )
-
 FILE(GLOB opt_decl y/math/opt/*.hpp)
 FILE(GLOB opt_copt y/math/opt/*.cpp)
 SET(opt_srcs ${opt_decl} ${opt_copt})
@@ -142,7 +124,6 @@ ${kernel_srcs} ${kernel_atom_srcs}
 ${io_srcs}
 ${fcn_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
-${fit_srcs} ${fit_in2d_srcs} ${fit_sample_srcs}
 ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
