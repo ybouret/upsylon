@@ -88,35 +88,35 @@ SET(euclidean_arc_srcs ${euclidean_arc_decl} ${euclidean_arc_code})
 SOURCE_GROUP( euclidean/arc FILES ${euclidean_arc_srcs} )
 INSTALL( FILES ${euclidean_arc_decl} DESTINATION include/y/math/euclidean/arc )
 
-FILE(GLOB adjust_decl y/math/adjust/*.h??)
-FILE(GLOB adjust_code y/math/adjust/*.cpp)
-SET(adjust_srcs ${adjust_decl} ${adjust_code})
-SOURCE_GROUP( adjust FILES ${adjust_srcs} )
-INSTALL( FILES ${adjust_decl} DESTINATION include/y/math/adjust )
+FILE(GLOB fit_decl y/math/fit/*.h??)
+FILE(GLOB fit_code y/math/fit/*.cpp)
+SET(fit_srcs ${fit_decl} ${fit_code})
+SOURCE_GROUP( fit FILES ${fit_srcs} )
+INSTALL( FILES ${fit_decl} DESTINATION include/y/math/fit )
 
-FILE(GLOB adjust_sample_decl y/math/adjust/sample/*.hpp)
-FILE(GLOB adjust_sample_code y/math/adjust/sample/*.cpp)
-SET(adjust_sample_srcs ${adjust_sample_decl} ${adjust_sample_code})
-SOURCE_GROUP( adjust/sample FILES ${adjust_sample_srcs} )
-INSTALL( FILES ${adjust_sample_decl} DESTINATION include/y/math/adjust/sample )
+FILE(GLOB fit_sample_decl y/math/fit/sample/*.hpp)
+FILE(GLOB fit_sample_code y/math/fit/sample/*.cpp)
+SET(fit_sample_srcs ${fit_sample_decl} ${fit_sample_code})
+SOURCE_GROUP( fit/sample FILES ${fit_sample_srcs} )
+INSTALL( FILES ${fit_sample_decl} DESTINATION include/y/math/fit/sample )
 
-FILE(GLOB adjust_variable_decl y/math/adjust/variable/*.hpp)
-FILE(GLOB adjust_variable_code y/math/adjust/variable/*.cpp)
-SET(adjust_variable_srcs ${adjust_variable_decl} ${adjust_variable_code})
-SOURCE_GROUP( adjust/variable FILES ${adjust_variable_srcs} )
-INSTALL( FILES ${adjust_variable_decl} DESTINATION include/y/math/adjust/variable )
+FILE(GLOB fit_variable_decl y/math/fit/variable/*.hpp)
+FILE(GLOB fit_variable_code y/math/fit/variable/*.cpp)
+SET(fit_variable_srcs ${fit_variable_decl} ${fit_variable_code})
+SOURCE_GROUP( fit/variable FILES ${fit_variable_srcs} )
+INSTALL( FILES ${fit_variable_decl} DESTINATION include/y/math/fit/variable )
 
-FILE(GLOB adjust_sequential_decl y/math/adjust/sequential/*.hpp)
-FILE(GLOB adjust_sequential_code y/math/adjust/sequential/*.cpp)
-SET(adjust_sequential_srcs ${adjust_sequential_decl} ${adjust_sequential_code})
-SOURCE_GROUP( adjust/sequential FILES ${adjust_sequential_srcs} )
-INSTALL( FILES ${adjust_sequential_decl} DESTINATION include/y/math/adjust/sequential )
+FILE(GLOB fit_sequential_decl y/math/fit/sequential/*.hpp)
+FILE(GLOB fit_sequential_code y/math/fit/sequential/*.cpp)
+SET(fit_sequential_srcs ${fit_sequential_decl} ${fit_sequential_code})
+SOURCE_GROUP( fit/sequential FILES ${fit_sequential_srcs} )
+INSTALL( FILES ${fit_sequential_decl} DESTINATION include/y/math/fit/sequential )
 
-FILE(GLOB adjust_share_decl y/math/adjust/share/*.hpp)
-FILE(GLOB adjust_share_code y/math/adjust/share/*.cpp)
-SET(adjust_share_srcs ${adjust_share_decl} ${adjust_share_code})
-SOURCE_GROUP( adjust/share FILES ${adjust_share_srcs} )
-INSTALL( FILES ${adjust_share_decl} DESTINATION include/y/math/adjust/share )
+FILE(GLOB fit_share_decl y/math/fit/share/*.hpp)
+FILE(GLOB fit_share_code y/math/fit/share/*.cpp)
+SET(fit_share_srcs ${fit_share_decl} ${fit_share_code})
+SOURCE_GROUP( fit/share FILES ${fit_share_srcs} )
+INSTALL( FILES ${fit_share_decl} DESTINATION include/y/math/fit/share )
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
@@ -128,7 +128,7 @@ ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
-${adjust_srcs} ${adjust_sample_srcs} ${adjust_variable_srcs} ${adjust_sequential_srcs} ${adjust_share_srcs} 
+${fit_srcs} ${fit_sample_srcs} ${fit_variable_srcs} ${fit_sequential_srcs} ${fit_share_srcs} 
 )
 INSTALL( TARGETS y-m ARCHIVE DESTINATION lib )
 

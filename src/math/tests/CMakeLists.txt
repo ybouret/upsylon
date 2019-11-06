@@ -62,12 +62,12 @@ ADD_TEST(stat        test-m stat)
 SOURCE_GROUP(io FILES test-data-set.cpp)
 ADD_TEST(io:ds   test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
-SOURCE_GROUP(adjust FILES test-adjust.cpp test-adjust-ode.cpp test-adjust-poly.cpp test-adjust-gauss.cpp)
-ADD_TEST(adjust       test-m adjust)
-ADD_TEST(adjust2      test-m adjust2 ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
-ADD_TEST(adjust:ode   test-m adjust_ode)
-ADD_TEST(adjust:poly  test-m adjust_poly)
-ADD_TEST(adjust:gauss test-m adjust_gauss)
+SOURCE_GROUP(fit FILES test-fit.cpp test-fit-ode.cpp test-fit-poly.cpp test-fit-gauss.cpp)
+ADD_TEST(fit       test-m fit)
+ADD_TEST(fit2      test-m fit2 ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
+ADD_TEST(fit:ode   test-m fit_ode)
+ADD_TEST(fit:poly  test-m fit_poly)
+ADD_TEST(fit:gauss test-m fit_gauss)
 
 
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp)

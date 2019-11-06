@@ -4,7 +4,7 @@
 #define Y_MATH_ODE_SCHEME_INCLUDED 1
 
 #include "y/math/ode/types.hpp"
-#include "y/math/adjust/variables.hpp"
+#include "y/math/fit/variables.hpp"
 
 namespace upsylon {
 
@@ -23,7 +23,7 @@ namespace upsylon {
             class Scheme : public counted_object
             {
             public:
-                typedef Adjust::Variables Variables; //!< alias
+                typedef Fit::Variables Variables; //!< alias
 
                 //==============================================================
                 //
