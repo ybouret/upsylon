@@ -51,6 +51,9 @@ namespace upsylon {
                 //! control functor type
                 typedef functor<ControlResult,TL2(Frame<T>&,size_t)> Control;
 
+                //! C-Style control proc
+                typedef ControlResult (*ControlProc)(Frame<T>&,size_t);
+
                 //! pair of control functions, to carry information
                 class Controls
                 {
