@@ -84,7 +84,7 @@ namespace {
 
 
 
-Y_UTEST(adjust_gauss)
+Y_UTEST(fit_gauss)
 {
     doGauss<float>();
 }

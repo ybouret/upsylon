@@ -79,7 +79,7 @@ namespace {
 #include "y/ios/ocstream.hpp"
 #include "y/math/kernel/atom.hpp"
 
-Y_UTEST(adjust)
+Y_UTEST(fit)
 {
     LeastSquares<float>  fLS(true); showLS(fLS);
     LeastSquares<double> dLS(true); showLS(dLS);
@@ -278,7 +278,7 @@ namespace {
     };
 
 }
-Y_UTEST(adjust2)
+Y_UTEST(fit2)
 {
     Sample<double>::Pointer sample = Sample<double>::CreateWith< vector<double> >();
     if(argc>1)

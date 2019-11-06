@@ -45,11 +45,11 @@ Y_UTEST_INIT(64)
 
     Y_UTEST(euclidean);
 
-    Y_UTEST(adjust);
-    Y_UTEST(adjust2);
-    Y_UTEST(adjust_ode);
-    Y_UTEST(adjust_poly);
-    Y_UTEST(adjust_gauss);
+    Y_UTEST(fit);
+    Y_UTEST(fit2);
+    Y_UTEST(fit_ode);
+    Y_UTEST(fit_poly);
+    Y_UTEST(fit_gauss);
 
 }
 Y_UTEST_EXEC()

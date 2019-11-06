@@ -69,7 +69,7 @@ namespace {
 }
 
 
-Y_UTEST(adjust_poly)
+Y_UTEST(fit_poly)
 {
 
     doPoly<float>();

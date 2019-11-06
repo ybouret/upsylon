@@ -170,7 +170,7 @@ namespace {
 }
 
 
-Y_UTEST(adjust_ode)
+Y_UTEST(fit_ode)
 {
 
 
