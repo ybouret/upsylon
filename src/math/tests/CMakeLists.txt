@@ -76,9 +76,10 @@ SOURCE_GROUP(io FILES test-data-set.cpp)
 ADD_TEST(io:ds   test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
 SOURCE_GROUP(adjust FILES test-adjust.cpp test-adjust-ode.cpp test-adjust-poly.cpp test-adjust-gauss.cpp)
-ADD_TEST(adjust:main test-m adjust)
-ADD_TEST(adjust:ode  test-m adjust_ode)
-ADD_TEST(adjust:poly test-m adjust_poly)
+ADD_TEST(adjust       test-m adjust)
+ADD_TEST(adjust2      test-m adjust2 ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
+ADD_TEST(adjust:ode   test-m adjust_ode)
+ADD_TEST(adjust:poly  test-m adjust_poly)
 ADD_TEST(adjust:gauss test-m adjust_gauss)
 
 

@@ -265,3 +265,39 @@ Y_UTEST(adjust)
 }
 Y_UTEST_DONE()
 
+
+namespace {
+
+    struct simple
+    {
+        inline double compute( double x, const accessible<double> &aorg, const Variables &vars )
+        {
+            return vars(aorg,"a") * x + vars(aorg,"b");
+        }
+    };
+
+}
+Y_UTEST(adjust2)
+{
+    Sample<double>::Pointer sample = Sample<double>::CreateWith< vector<double> >();
+    if(argc>1)
+    {
+        const size_t np = Load::From(argv[1], *sample, 1, 2);
+        std::cerr << "Loaded " << np << std::endl;
+
+        sample->variables << "a" << "b";
+        vector<double> aorg( sample->variables.sweep(), 0 );
+        vector<double> aerr( aorg.size(), 0 );
+        bVector        used( aorg.size(), true );
+
+        LeastSquares<double> ls(true);
+        simple line;
+        Type<double>::Function F( &line, &simple::compute );
+
+        Y_CHECK(ls.fit(*sample, F, aorg, used, aerr));
+        
+
+
+    }
+}
+Y_UTEST_DONE()

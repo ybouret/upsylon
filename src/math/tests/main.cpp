@@ -60,6 +60,7 @@ Y_UTEST_INIT(64)
     //Y_UTEST(c2arc);
     
     Y_UTEST(adjust);
+    Y_UTEST(adjust2);
     Y_UTEST(adjust_ode);
     Y_UTEST(adjust_poly);
     Y_UTEST(adjust_gauss);

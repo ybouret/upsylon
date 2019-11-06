@@ -7,6 +7,7 @@
 #include "y/math/adjust/sample.hpp"
 #include "y/math/io/data-set.hpp"
 #include "y/ios/icstream.hpp"
+
 namespace upsylon {
     
     namespace math {
@@ -25,17 +26,19 @@ namespace upsylon {
                             const size_t skip=0,
                             const size_t nmax=0)
                 {
-                    data_set<T> ds;
                     sequence<T> &x = *aliasing::_(sample.abscissa);
                     sequence<T> &y = *aliasing::_(sample.ordinate);
                     sequence<T> &z = *sample.adjusted;
                     x.free();
                     y.free();
                     z.free();
-                    
-                    ds.use(abscissa_index,x);
-                    ds.use(ordinate_index,y);
-                    ds.load(fp,skip,nmax);
+
+                    {
+                        data_set<T> ds;
+                        ds.use(abscissa_index,x);
+                        ds.use(ordinate_index,y);
+                        ds.load(fp,skip,nmax);
+                    }
                     z.adjust(x.size(),0);
                     
                     return sample.count();
