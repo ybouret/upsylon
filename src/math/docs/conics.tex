@@ -1,0 +1,55 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+\usepackage{dejavu}
+
+\newcommand{\mymat}[1]{\boldsymbol{#1}}
+%\newcommand{\mytrn}[1]{{#1}^{\mathsf{T}}}
+\newcommand{\mytrn}[1]{~^{\mathsf{t}}\!{#1}}
+\newcommand{\myvec}[1]{\overrightarrow{#1}}
+\newcommand{\mygrad}{\vec{\nabla}}
+\newcommand{\myhess}{\mathcal{H}}
+
+
+\begin{document}
+\title{Fitting to conics}
+\maketitle
+\section{Settings}
+
+We have a set of $N$ points $\vec{M}_i = (x_i,y_i)$ in the plane.
+A generic conic equation is given by:
+\begin{equation}
+	a x^2 + b y^2 + c xy + d x + e y + f = \vec{A}\cdot\vec{Z} = 0
+\end{equation}
+with
+\begin{equation}
+	\vec{A} = \begin{bmatrix}
+		a\\
+		b\\
+		c\\
+		d\\
+		e\\
+		f\\
+	\end{bmatrix}, \;\;
+	\vec{Z} = \begin{bmatrix}
+	x^2\\
+	y^2\\
+	xy\\
+	x\\
+	y\\
+	1\\
+	\end{bmatrix}
+\end{equation}
+
+To fit a conic equation to a set of points, we have to minimise:
+\begin{equation}
+	F(\vec{A}) = \sum_{i=1}^N \left( \vec{A}\cdot\vec{Z}_i\right)^2 =
+	 \mytrn{\vec{A}} \underbrace{\left(\sum_{i=1}^N \vec{Z}_i\mytrn{\vec{Z}}_i\right)}_{\mymat{S}} \vec{A}
+\end{equation}
+
+\end{document}
