@@ -51,5 +51,55 @@ To fit a conic equation to a set of points, we have to minimise:
 	F(\vec{A}) = \sum_{i=1}^N \left( \vec{A}\cdot\vec{Z}_i\right)^2 =
 	 \mytrn{\vec{A}} \underbrace{\left(\sum_{i=1}^N \vec{Z}_i\mytrn{\vec{Z}}_i\right)}_{\mymat{S}} \vec{A}
 \end{equation}
+We have
+\begin{equation}
+	\mygrad_{\vec{A}} F = 2 \mymat{S}\vec{A}
+\end{equation}
+
+\section{Linear Constraints}
+\subsection{Generic Case}
+We assume that the degrees of freedom are reduced by $N_c$ linearly independent constraints  so that
+\begin{equation}
+	\mymat{P} \vec{A} = \vec{L},\;\;\mymat{P}\in\mathcal{M}_{N_c,6}, \;\; \vec{L} \in \mathbb{R}^{N_c}
+\end{equation}
+Accordingly, there exist $\vec{U}\in\mathbb{R}^N_c$, $\vec{V}\in\mathbb{R}^{6-N_c}$, and $\mymat{Q}\in\mymat{P}^{\perp}$
+\begin{equation}
+	\vec{A} = \mytrn{\mymat{P}} \vec{U} + \mytrn{\mymat{Q}} \vec{V} = \vec{A}^\star  + \mytrn{\mymat{Q}} \vec{V} 
+\end{equation}
+with
+\begin{equation}
+	\vec{A}^\star = \mytrn{\mymat{P}} \left(\mymat{P} \mytrn{\mymat{P}} \right) ^{-1} \vec{L}
+\end{equation}
+and now:
+\begin{equation}
+	\frac{1}{2} \mygrad_{\vec{V}} F = \mymat{Q}\mymat{S} \vec{A}^\star +  \mymat{Q}\mymat{S}\mytrn{\mymat{Q}} \vec{V}
+\end{equation}
+so that
+\begin{equation}
+	\vec{V} = - \left(\mymat{Q}\mymat{S}\mytrn{\mymat{Q}}\right)^{-1} \mymat{Q}\mymat{S} \vec{A}^\star 
+\end{equation}
+then
+\begin{equation}
+	\vec{A} = \left[\mymat{I}_6 -  \mytrn{\mymat{Q}}\left(\mymat{Q}\mymat{S}\mytrn{\mymat{Q}}\right)^{-1} \mymat{Q}\mymat{S} \right] \vec{A}^\star
+	= \left[\mymat{I}_6 -  \mytrn{\mymat{Q}}\left(\mymat{Q}\mymat{S}\mytrn{\mymat{Q}}\right)^{-1} \mymat{Q}\mymat{S} \right] \mytrn{\mymat{P}} \left(\mymat{P} \mytrn{\mymat{P}} \right) ^{-1} \vec{L}
+\end{equation}
+\subsection{Circle}
+We want $a=1$, $b=1$ and $c=0$, so that we have
+\begin{equation}
+	\mymat{P} = 
+	\begin{bmatrix}
+	1 & 0 & 0 & 0 & 0 & 0\\
+	0 & 1 & 0 & 0 & 0 & 0\\
+	0 & 0 & 1 & 0 & 0 & 0\\
+	\end{bmatrix},
+	\;\;
+	\vec{L} = 
+	\begin{bmatrix}
+	1\\
+	1\\
+	0\\
+	\end{bmatrix}
+\end{equation}
+
 
 \end{document}

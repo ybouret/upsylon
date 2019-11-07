@@ -124,6 +124,7 @@ STEP_CONTROL:
         case EmergencyExit: Y_LS_PRINTLN( "[LS] <ATRY #" << cycle << " CONTROL EXIT>" ); return false;
         case ModifiedValue: Y_LS_PRINTLN( "[LS] changed atry #" << cycle );
             atom::sub(step,atry,aorg);
+            Y_LS_PRINTLN( "     atry1  = " << atry   );
             goto STEP_CONTROL;
     }
     //
