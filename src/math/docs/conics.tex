@@ -51,10 +51,25 @@ To fit a conic equation to a set of points, we have to minimise:
 	F(\vec{A}) = \sum_{i=1}^N \left( \vec{A}\cdot\vec{Z}_i\right)^2 =
 	 \mytrn{\vec{A}} \underbrace{\left(\sum_{i=1}^N \vec{Z}_i\mytrn{\vec{Z}}_i\right)}_{\mymat{S}} \vec{A}
 \end{equation}
-We have
+
+For a univocal conic, we must also have a constraint matrix $\mymat{C}$ sur that
 \begin{equation}
-	\mygrad_{\vec{A}} F = 2 \mymat{S}\vec{A}
+	\mytrn{\vec{A}}\mymat{C}\vec{A} = 1 
 \end{equation}
+So that we need to minimise the Lagrangian:
+\begin{equation}
+	\mathcal{L}(\vec{A},\lambda) = F(\vec{A}) - \lambda \left( \mytrn{\vec{A}}\mymat{C}\vec{A} - 1\right) 
+\end{equation}
+	
+\begin{equation}
+\begin{array}{rcl}
+	\vec{0} = \partial \mathcal{L} & \Leftrightarrow & \vec{0} = \mymat{S}\vec{A} - \lambda \mymat{C}\vec{A}\\
+	 & \Leftrightarrow & \mymat{S}^{-1}\mymat{C} \vec{A} = \dfrac{1}{\lambda} \vec{A}\\
+\end{array}
+\end{equation}
+
+
+\end{document}
 
 \section{Linear Constraints}
 \subsection{Generic Case}
