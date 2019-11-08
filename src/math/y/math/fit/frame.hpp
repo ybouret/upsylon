@@ -33,6 +33,7 @@ namespace upsylon {
             {
             public:
                 const SampleType<T>     &sample; //!< user's sample
+                const accessible<T>     &aorg;   //!< current position
                 const accessible<bool>  &used;   //!< currently used flags
                 addressable<T>          &value;  //!< value to monitor
 
@@ -40,9 +41,11 @@ namespace upsylon {
 
                 //! setup
                 inline   Frame(const SampleType<T>    &sample_,
+                               const accessible<T>    &aorg_,
                                const accessible<bool> &used_,
                                addressable<T>         &value_) throw() :
                 sample( sample_ ),
+                aorg(   aorg_   ),
                 used(   used_   ),
                 value(  value_  )
                 {

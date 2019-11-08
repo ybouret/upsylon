@@ -41,10 +41,10 @@ inline bool fit(SampleType<T>            &sample,
     // create the frames
     //__________________________________________________________________________
     size_t    cycle = 0;
-    Frame<T>  stepFrame(sample,used,step);
+    Frame<T>  stepFrame(sample,aorg,used,step);
     Control  &stepControl = ( (0!=ctrl) && (0!=ctrl->step) ) ? *(ctrl->step) : nope;
 
-    Frame<T>   atryFrame(sample,used,atry);
+    Frame<T>   atryFrame(sample,aorg,used,atry);
     Control   &atryControl = ( (0!=ctrl) && (0!=ctrl->atry) ) ? *(ctrl->atry) : nope;
 
 

@@ -9,6 +9,7 @@ void ortho(TARGET &target, LHS &lhs, RHS &rhs )
     assert( target.size() == lhs.size() );
     assert( target.size() == rhs.size() );
     const    size_t               n = target.size();
+    // first pass: accumulate numerator and denominator
     typename TARGET::mutable_type num=0,den=0;
     for(size_t i=n;i>0;--i)
     {
@@ -17,6 +18,8 @@ void ortho(TARGET &target, LHS &lhs, RHS &rhs )
         num += l*r;
         den += r*r;
     }
+
+    // second pass: removing component
     if(den>0)
     {
         for(size_t i=n;i>0;--i)
@@ -31,7 +34,7 @@ void ortho(TARGET &target, LHS &lhs, RHS &rhs )
 }
 
 //! make target orthogonal to rhs
-template <typename TARGET,typename LHS, typename RHS> static inline
+template <typename TARGET,typename RHS> static inline
 void ortho(TARGET &target, RHS &rhs )
 {
     ortho(target,target,rhs);

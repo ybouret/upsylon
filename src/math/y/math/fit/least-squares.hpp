@@ -168,7 +168,7 @@ namespace upsylon {
                 //! return the current descent direction
                 const accessible<T> & descent(SampleType<T>            &sample,
                                               Sequential<T>            &F,
-                                              addressable<T>           &aorg,
+                                              const accessible<T>      &aorg,
                                               const accessible<bool>   &flags)
                 {
                     allocateFor(sample,flags);
@@ -179,7 +179,7 @@ namespace upsylon {
                 //! return the current descent direction
                 const accessible<T> & descent(SampleType<T>            &sample,
                                               Function                 &F,
-                                              addressable<T>           &aorg,
+                                              const accessible<T>      &aorg,
                                               const accessible<bool>   &flags)
                 {
                     SequentialFunction<T> SF(F);
