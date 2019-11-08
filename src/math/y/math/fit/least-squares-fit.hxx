@@ -76,25 +76,12 @@ CYCLE:
     Y_LS_PRINTLN( "     alpha  = " << alpha );
     Y_LS_PRINTLN( "     beta   = " << beta  );
 
-    //__________________________________________________________________________
-    //
-    // Curvature computation with lambda adjustment
-    //
-    while( !Algo<T>::ComputeCurvature(curv,lambda,alpha) )
-    {
-        if(!increaseLambda())
-        {
-            Y_LS_PRINTLN( "[LS] <SINGULAR CURVATURE>" );
-            return false;
-        }
-    }
-    //__________________________________________________________________________
 
-    //__________________________________________________________________________
-    //
-    // compute step and trial position
-    //
-    Algo<T>::ComputeStep(step, curv, beta);
+    if(!buildStep())
+    {
+        return false;
+    }
+    
     atom::add(atry,aorg,step);
     Y_LS_PRINTLN( "     lambda = " << lambda );
     Y_LS_PRINTLN( "     step0  = " << step   );

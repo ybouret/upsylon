@@ -176,6 +176,19 @@ namespace upsylon {
                     return beta;
                 }
 
+                //! return the current step
+                const accessible<T> & toto(SampleType<T>            &sample,
+                                           Sequential<T>            &F,
+                                           const accessible<T>      &aorg,
+                                           const accessible<bool>   &flags)
+                {
+                    allocateFor(sample,flags);
+                    (void)sample.computeD2(alpha, beta, F, aorg, used, *this);
+                    return beta;
+                }
+                
+
+
                 //! return the current descent direction
                 const accessible<T> & descent(SampleType<T>            &sample,
                                               Function                 &F,
@@ -242,7 +255,7 @@ namespace upsylon {
                         lam[  1 ]            = ten;
                         for(unit_t i=2;i<=pmax;++i) lam[i] = lam[i-1] * ten;
                     }
-                    setLambda(0);
+                    setLambda( Algo<T>::Initial() );
                 }
                 
                 inline void setLambda( const unit_t p0 ) throw()
@@ -269,6 +282,30 @@ namespace upsylon {
                         lambda = lambdas[ ++p ];
                         return true;
                     }
+                }
+
+                //! build step from current alpha, lambda, beta
+                inline bool buildStep()
+                {
+                    //__________________________________________________________
+                    //
+                    // find a regular matrix
+                    //__________________________________________________________
+                    while( !Algo<T>::ComputeCurvature(curv,lambda,alpha) )
+                    {
+                        if(!increaseLambda())
+                        {
+                            Y_LS_PRINTLN( "[LS] <SINGULAR CURVATURE>" );
+                            return false;
+                        }
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // and compute step
+                    //__________________________________________________________
+                    Algo<T>::ComputeStep(step, curv, beta);
+                    return true;
                 }
 
                 struct ProbeD2
