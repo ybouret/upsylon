@@ -176,17 +176,6 @@ namespace upsylon {
                     return beta;
                 }
 
-                //! return the current step
-                const accessible<T> & toto(SampleType<T>            &sample,
-                                           Sequential<T>            &F,
-                                           const accessible<T>      &aorg,
-                                           const accessible<bool>   &flags)
-                {
-                    allocateFor(sample,flags);
-                    (void)sample.computeD2(alpha, beta, F, aorg, used, *this);
-                    return beta;
-                }
-                
 
 
                 //! return the current descent direction
@@ -198,6 +187,21 @@ namespace upsylon {
                     SequentialFunction<T> SF(F);
                     return descent(sample,SF,aorg,flags);
                 }
+
+                //! return the current step
+                const accessible<T> & stride(SampleType<T>            &sample,
+                                             Sequential<T>            &F,
+                                             const accessible<T>      &aorg,
+                                             const accessible<bool>   &flags)
+                {
+                    allocateFor(sample,flags);
+                    (void)sample.computeD2(alpha, beta, F, aorg, used, *this);
+                    setLambda(pmin);
+                    if(!buildStep()) throw exception("[LS] singular stride");
+                    return step;
+                }
+
+
 
 
                 bool         verbose; //!< activate verbosity
