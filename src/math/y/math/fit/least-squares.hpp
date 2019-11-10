@@ -201,6 +201,16 @@ namespace upsylon {
                     return step;
                 }
 
+                //! return the current step
+                const accessible<T> & stride(SampleType<T>            &sample,
+                                             Function                 &F,
+                                             const accessible<T>      &aorg,
+                                             const accessible<bool>   &flags)
+                {
+                    SequentialFunction<T> SF(F);
+                    return stride(sample,SF,aorg,flags);
+                }
+
 
 
 
