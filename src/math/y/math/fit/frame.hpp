@@ -22,7 +22,7 @@ namespace upsylon {
             };
 
 
-            //! transient sample+used+value to monitor
+            //! transient sample+aorg+used+value to monitor
             /**
              Frames are internally created by the LeastSquares algorithm
              to allow user's interaction with the computed step and the
