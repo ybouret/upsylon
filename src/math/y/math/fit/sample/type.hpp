@@ -196,14 +196,14 @@ namespace upsylon {
                             const string &name = (**it).name;
                             if( !vars(used,name) )
                             {
-                                fp.align(name,nmax) << Variables::Equal << astr[ivar];
+                                fp.align(name,nmax) << Variables::Equal << astr[ivar] << '\n';
                             }
                         }
                     }
 
                     if(active>0)
                     {
-                        fp("%c parameters\n",comment);
+                        fp("%c variables\n",comment);
                         size_t ivar=1;
                         for( Variables::const_iterator it=vars.begin();it!=vars.end();++it,++ivar)
                         {
