@@ -39,17 +39,17 @@ and we see that
 \end{equation}
 
 \section{Direct Computation}
-We assume that
+We assume that we have two supplementary spaces with basis $\mymat{P}$ and $\mymat{Q}$ such that:
 \begin{equation}
 	\vec{A} = \underbrace{\mytrn{\mymat{P}} \vec{U}}_{\text{parameters}} + \underbrace{\mytrn{\mymat{Q}} \vec{V}}_{\text{variables}}
 \end{equation}
 so that
 \begin{equation}
- \vec{0} = \mygrad F^2 \Leftrightarrow \mymat{S}\left(\mytrn{\mymat{P}} \vec{U} + \mytrn{\mymat{Q}} \vec{V}\right) = \vec{0}
+ \vec{0} = \mygrad_{\vec{U}} F^2 \Leftrightarrow \mymat{Q}\mymat{S}\left(\mytrn{\mymat{P}} \vec{U} + \mytrn{\mymat{Q}} \vec{V}\right) = \vec{0}
 \end{equation}
 and
 \begin{equation}
-	toto
+	\vec{V}^\star = -\left(\mymat{Q}\mymat{S}  \mytrn{\mymat{Q}}\right)^{-1} \left(\mymat{Q}\mymat{S} \mytrn{\mymat{P}} \vec{U}\right)
 \end{equation}
 
 \end{document}
