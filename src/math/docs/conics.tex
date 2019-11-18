@@ -31,8 +31,23 @@ such that:
 To fit the required variables among the parameters, we have to minimize:
 \begin{equation}
  F^2 = \sum_{i=1}^N \left(\vec{A}\cdot\vec{Z}_i\right)^2
-  = \mytrn{\vec{A}} \underbrace{\left(\sum_{i=1}^N\mytrn{\vec{Z}_i}\vec{Z}_i\right)}_{S} \vec{A}
+  = \mytrn{\vec{A}} \underbrace{\left(\sum_{i=1}^N\mytrn{\vec{Z}_i}\vec{Z}_i\right)}_{\mymat{S}} \vec{A}
 \end{equation}
+and we see that
+\begin{equation}
+	\mygrad F^2 = 2 \mymat{S} \vec{A}
+\end{equation}
+
+\section{Direct Computation}
+We assume that
+\begin{equation}
+	\vec{A} = \underbrace{\mytrn{\mymat{P}} \vec{U}}_{\text{parameters}} + \underbrace{\mytrn{\mymat{Q}} \vec{V}}_{\text{variables}}
+\end{equation}
+so that
+\begin{equation}
+ \vec{0} = \mygrad F^2 \Leftrightarrow \mymat{S}\left(\mytrn{\mymat{P}} \vec{U} + \mytrn{\mymat{Q}} \vec{V}\right) = \vec{0}
+\end{equation}
+
 
 \end{document}
 
