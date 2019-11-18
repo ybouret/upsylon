@@ -22,7 +22,17 @@
 \section{Settings}
 
 We have a set of $N$ points $\vec{M}_i$ in a $\mathbb{R}^d$.
-From the coordinates of those points, we for a set of vectors $\vec{Z}_i$
+From the coordinates of those points, we form a set of vectors $\vec{Z}_i$,
+so that a shape equation $\mathcal{S}$ may be written with the help of a set of parameters $\vec{A}$
+such that:
+\begin{equation}
+\vec{M}_i\in\mathcal{S} \Leftrightarrow \vec{A}\cdot\vec{Z}_i = 0
+\end{equation}
+To fit the required variables among the parameters, we have to minimize:
+\begin{equation}
+ F^2 = \sum_{i=1}^N \left(\vec{A}\cdot\vec{Z}_i\right)^2
+  = \mytrn{\vec{A}} \underbrace{\left(\sum_{i=1}^N\mytrn{\vec{Z}_i}\vec{Z}_i\right)}_{S} \vec{A}
+\end{equation}
 
 \end{document}
 
