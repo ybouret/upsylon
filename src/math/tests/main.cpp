@@ -18,6 +18,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(tridiag);
     Y_UTEST(cyclic);
     Y_UTEST(sparse);
+    Y_UTEST(atom0);
     Y_UTEST(atom1);
     Y_UTEST(atom2);
     Y_UTEST(atom3);

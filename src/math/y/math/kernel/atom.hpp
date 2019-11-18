@@ -104,6 +104,50 @@ namespace upsylon {
                     return sorted_sum(deltaSquared);
                 }
 
+                //! limitation
+                template <typename T> static inline
+                T __cut( const T &x, const T &y )
+                {
+                    if(x>0)
+                    {
+                        if(y>0)
+                        {
+                            return min_of(x,y);
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+                    else if( x < 0 )
+                    {
+                        if(y<0)
+                        {
+                            return max_of(x,y);
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+                    else
+                    {
+                        return 0; //!< x approx 0
+                    }
+                }
+
+                template <typename LHS, typename RHS> static inline
+                void cut( LHS &lhs, RHS &rhs )
+                {
+                    assert(lhs.size()<=rhs.size());
+                    for(size_t i=lhs.size();i>0;--i)
+                    {
+                        typename LHS::mutable_type &x = lhs[i];
+                        typename LHS::const_type    y = Y_MK_ATOM_CAST(LHS,RHS,rhs[i]);
+                        x = __cut(x,y);
+                    }
+                }
+
 
 
             };
