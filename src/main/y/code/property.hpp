@@ -16,7 +16,7 @@ namespace upsylon
         virtual ~ppty() throw(); //! destructor
         explicit ppty(const char *id, const bool rw); //!< setup
 
-        bool is_writable() const throw(); //!< return internal fal
+        bool is_writable() const throw(); //!< return internal flag
         void check_writable() const;      //!< throw exception if not writable
         
     protected:

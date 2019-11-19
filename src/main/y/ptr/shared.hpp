@@ -21,7 +21,8 @@ namespace upsylon
             try
             {
                 *( nref = object::acquire1<size_t>() ) = 1;
-            } catch(...) { delete this->pointee; throw; }
+            } catch(...)
+            { delete this->pointee; this->zero(); throw; }
         }
 
         //! withhold reference
