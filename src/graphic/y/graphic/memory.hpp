@@ -9,7 +9,7 @@ namespace upsylon {
 
     namespace Graphic {
 
-        class Memory : public Object
+        class Memory 
         {
         public:
             enum Kind
