@@ -832,6 +832,7 @@ WARN_LOGFILE           =
 INPUT                  = src/main/y \
                          src/math/y \
                          src/lang/y \
+                         src/graphic/y \
                          src/ink/y \
                          src/chem/y \
                          src/mpi/y \
