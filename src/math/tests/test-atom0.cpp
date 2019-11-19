@@ -29,7 +29,7 @@ namespace {
         vector<T> Y;
         vector<T> Z;
         std::cerr << "With " << typeid(T).name() << std::endl;
-        for(size_t i=0;i<16;++i)
+        for(size_t i=0;i<64;++i)
         {
             const T x = generate<T>();
             const T y = generate<T>();
