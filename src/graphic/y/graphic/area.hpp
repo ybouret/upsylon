@@ -14,7 +14,8 @@ namespace upsylon {
         public:
             virtual ~Area() throw();
             explicit Area(const size_t W, const size_t H);
-
+            Area(const Area &) throw();
+            
             const size_t w;
             const size_t h;
             const size_t items;
