@@ -16,6 +16,9 @@ namespace upsylon {
         {
         public:
 
+            explicit Bitmap(const Metrics &mtx,
+                            const Memory  &mem);
+
             virtual ~Bitmap() throw();
             explicit Bitmap(const size_t W,
                             const size_t H,
@@ -28,7 +31,7 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
-            
+            void setup();
         };
 
     }

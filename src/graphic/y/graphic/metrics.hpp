@@ -24,9 +24,9 @@ namespace upsylon {
                              const size_t D,
                              const size_t S);
 
-            const size_t depth;
-            const size_t scanline;
-            const size_t stride;
+            const size_t depth;    //!< bytes per pixel
+            const size_t scanline; //!< w * depth
+            const size_t stride;   //!< stride>=scanline
 
 
 

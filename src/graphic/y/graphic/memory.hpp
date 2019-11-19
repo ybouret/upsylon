@@ -25,10 +25,9 @@ namespace upsylon {
             };
 
             virtual ~Memory() throw();
-            explicit Memory(const size_t required,
-                            const Mode   access=RW);
-            explicit Memory(void       *buffer, const size_t length);
-            explicit Memory(const void *buffer, const size_t length);
+            explicit Memory(const size_t required, const Mode   = RW  );
+            explicit Memory(void        *buffer,   const size_t length);
+            explicit Memory(const void  *buffer,   const size_t length);
 
             Memory(const Memory &other ) throw();
             Memory(const Memory &other, const size_t shift );
