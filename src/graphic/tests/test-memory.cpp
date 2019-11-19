@@ -27,6 +27,15 @@ Y_UTEST(memory)
         Memory mm4(m4); mm4.displayMemoryInfo();
     }
 
+    {
+        Memory mm1(m1,10); mm1.displayMemoryInfo();
+        Memory mm2(m2,10); mm2.displayMemoryInfo();
+        Memory mm3(m3,10); mm3.displayMemoryInfo();
+        Memory mm4(m4,10); mm4.displayMemoryInfo();
+    }
+
+
+
 }
 Y_UTEST_DONE()
 

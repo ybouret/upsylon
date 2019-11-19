@@ -31,6 +31,9 @@ namespace upsylon {
             explicit Memory(const void *buffer, const size_t length);
 
             Memory(const Memory &other ) throw();
+            Memory(const Memory &other, const size_t shift );
+
+
 
             const Kind   kind;
             const Mode   mode;
@@ -42,9 +45,11 @@ namespace upsylon {
             size_t       size;
             void        *data;
             Y_DISABLE_ASSIGN(Memory);
+            void checkStaticData();
 
         protected:
-            void *addr;
+            void        *entry;
+            const size_t count;
         };
 
     }

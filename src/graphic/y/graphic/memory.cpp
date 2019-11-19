@@ -2,6 +2,7 @@
 #include "y/graphic/memory.hpp"
 #include "y/memory/global.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -46,12 +47,14 @@ namespace upsylon {
         nref( create_shared() ),
         size( required ),
         data(0),
-        addr(0)
+        entry(0),
+        count(0)
         {
             try
             {
-                data  = memory::global::instance().acquire(size);
-                addr  = data;
+                data   = memory::global::instance().acquire(size);
+                entry  = data;
+                aliasing::_(count) = size;
             }
             catch(...)
             {
@@ -61,6 +64,17 @@ namespace upsylon {
             }
         }
 
+        void Memory:: checkStaticData()  
+        {
+            if(size>0&&0==data)
+            {
+                --(*nref);
+                delete_shared(nref);
+                throw exception("Graphic::Memory(NULL,%u)", unsigned(size));
+            }
+        }
+
+
 
         Memory:: Memory(void *buffer, const size_t length) :
         kind(Static),
@@ -68,9 +82,10 @@ namespace upsylon {
         nref( create_shared() ),
         size(length),
         data(buffer),
-        addr(data)
+        entry(data),
+        count(size)
         {
-
+            checkStaticData();
         }
 
         Memory:: Memory(const void *buffer, const size_t length) :
@@ -79,9 +94,10 @@ namespace upsylon {
         nref( create_shared() ),
         size(length),
         data( (void*)buffer ),
-        addr(data)
+        entry(data),
+        count(size)
         {
-
+            checkStaticData();
         }
 
 
@@ -91,7 +107,8 @@ namespace upsylon {
         nref(other.nref),
         size(other.size),
         data(other.data),
-        addr(other.addr)
+        entry(other.entry),
+        count(other.count)
         {
             assert(nref);
             ++(*nref);
@@ -110,7 +127,22 @@ namespace upsylon {
                 case RO: std::cerr << "RO"; break;
                 case RW: std::cerr << "RW"; break;
             }
-            std::cerr << "@ [" << (void*)data << "]\t+" << size << " : #ref=" << *nref << std::endl;
+            std::cerr << "@ [" << (void*)data << "]\t+" << size << " \t: #ref=" << *nref << " : count=" << count << std::endl;
+        }
+
+        Memory:: Memory(const Memory &other, const size_t shift ) :
+        kind(other.kind),
+        mode(other.mode),
+        nref(other.nref),
+        size(other.size),
+        data(other.data),
+        entry(other.entry),
+        count(other.count)
+        {
+            if(shift>count) throw exception("Graphic::Memory(shift>count)");
+            entry               = aliasing::anonymous(entry,shift);
+            aliasing::_(count) -= shift;
+            ++(*nref);
         }
 
 
