@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/mpl/rational.hpp"
 #include "y/sequence/list.hpp"
+#include <typeinfo>
 
 using namespace upsylon;
 using namespace math;
