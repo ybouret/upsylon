@@ -22,6 +22,7 @@ namespace upsylon {
             const size_t scanline;
             const size_t stride;
 
+
         protected:
             struct Row
             {
@@ -35,6 +36,9 @@ namespace upsylon {
             size_t  __rlen;
             Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
             void setup();
+
+        public:
+            const Row *row(const size_t j) const throw();
 
         };
 

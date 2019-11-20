@@ -38,14 +38,12 @@ namespace upsylon {
 
         private:
             Y_DISABLE_ASSIGN(Memory);
-            
+            void    release() throw();
             size_t *nref;
+
+        protected:
             void   *entry;
             size_t  count;
-            void    release() throw();
-
-
-
 
         };
 
