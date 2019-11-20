@@ -43,6 +43,7 @@ namespace upsylon {
             const void *get(const unit_t i, const unit_t j) const throw();
 
             void clear() throw();
+            
 
         protected:
             AnonymousRow    *rows;
