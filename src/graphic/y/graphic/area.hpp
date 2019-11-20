@@ -19,12 +19,15 @@ namespace upsylon {
             Area(const Area &) throw();
             
             const unit_t w;       //!< internally signed
+            const unit_t wm;      //!< w-1
             const unit_t h;       //!< internally signed
+            const unit_t hm;      //!< h-1
             const size_t items;   //!< w*h
 
             bool contains(const unit_t i, const unit_t j) const throw();
             bool contains(const Rectangle &) const throw();
-            
+            void displayArea() const;
+
         private:
             Y_DISABLE_ASSIGN(Area);
         };

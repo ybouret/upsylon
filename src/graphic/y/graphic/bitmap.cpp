@@ -59,13 +59,19 @@ namespace upsylon {
                 aliasing::_(r.ww) = ww;
                 p += stride;
             }
+#if 0
+            std::cerr << "w      = " << w      << std::endl;
+            std::cerr << "h      = " << h      << std::endl;
+            std::cerr << "depth  = " << depth  << std::endl;
+            std::cerr << "stride = " << stride << std::endl;
+#endif
         }
 
         const AnonymousRow * Bitmap:: row(const unit_t j) const throw()
         {
             if(j<0)
             {
-                return row(-j);
+                 return row(-j);
             }
             else if(j>=h)
             {
@@ -131,7 +137,7 @@ namespace upsylon {
                 throw exception("%sdoes not contain rectangle",fn);
             }
 
-            const void *origin = get(rect.xmin,rect.ymin);
+            const void *origin = bmp.get(rect.xmin,rect.ymin);
             setup( (void*)origin );
         }
 

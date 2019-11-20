@@ -12,7 +12,9 @@ namespace upsylon {
 
         Area:: Area( const size_t W, const size_t H) :
         w(W),
+        wm(w-1),
         h(H),
+        hm(h-1),
         items(w*h)
         {
             static const char fn[] = "Graphic::Area: ";
@@ -27,11 +29,17 @@ namespace upsylon {
 
         Area:: Area(const Area &a) throw() :
         Object(),
-        w(a.w),
-        h(a.h),
+        w(a.w), wm(a.wm),
+        h(a.h), hm(a.hm),
         items(a.items)
         {
         }
+
+        void Area:: displayArea() const
+        {
+            std::cerr << "[" << w << "x" << h << "]" << std::endl;
+        }
+
 
         bool Area:: contains(const unit_t i, const unit_t j) const throw()
         {

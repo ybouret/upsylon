@@ -23,6 +23,8 @@ namespace upsylon {
             const unit_t xmax;
             const unit_t ymax;
 
+            void displayRectangle() const;
+
         private:
             Y_DISABLE_ASSIGN(Rectangle);
         };

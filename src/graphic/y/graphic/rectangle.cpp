@@ -13,7 +13,8 @@ namespace upsylon {
 
         static inline unit_t chkdif( unit_t &lo, unit_t &hi) throw()
         {
-            if(lo>hi) cswap(lo,hi);
+            if(hi<lo) cswap(lo,hi);
+            assert(lo<=hi);
             return hi-lo;
         }
 
@@ -25,6 +26,9 @@ namespace upsylon {
         xmax(x1),
         ymax(y1)
         {
+            assert(x0<=x1); assert(xmin<=xmax);
+            assert(y0<=y1); assert(ymin<=ymax);
+
         }
 
         Rectangle:: Rectangle(const Rectangle &other) throw() :
@@ -41,6 +45,12 @@ namespace upsylon {
         {
             return contains(rect.xmin,rect.ymin) && contains(rect.xmax,rect.ymax);
         }
+
+        void Rectangle:: displayRectangle() const
+        {
+            std::cerr << "[" << xmin << "," << ymin << "]->[" << xmax << "," << ymax << "]" << std::endl;
+        }
+
 
     }
 
