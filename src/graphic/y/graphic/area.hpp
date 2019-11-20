@@ -16,10 +16,13 @@ namespace upsylon {
             explicit Area(const size_t W, const size_t H);
             Area(const Area &) throw();
             
-            const size_t w;
-            const size_t h;
-            const size_t items;
-            
+            const unit_t w;       //!< internally signed
+            const unit_t h;       //!< internally signed
+            const size_t items;   //!< w*h
+
+            bool has(const unit_t i, const unit_t j) const throw();
+            bool has(const Point &p) const throw();
+
         private:
             Y_DISABLE_ASSIGN(Area);
         };

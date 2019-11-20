@@ -12,34 +12,48 @@ namespace upsylon {
     namespace Graphic {
 
 
+        class AnonymousRow
+        {
+        public:
+            void        *p;
+            const unit_t w;
+            const unit_t ww;
+            unit_t       indexOf(const unit_t i) const throw();
+
+        private:
+            AnonymousRow(); ~AnonymousRow() throw();
+            Y_DISABLE_COPY_AND_ASSIGN(AnonymousRow);
+        };
+
         class Bitmap : public Memory, public Area
         {
         public:
             explicit Bitmap( Metrics &metrics );
             virtual ~Bitmap() throw();
 
+            Bitmap( const Bitmap &bmp ); //!< share memory, create rows
+
+
+            const unit_t hh;
             const size_t depth;
             const size_t scanline;
             const size_t stride;
 
+            const void *get(const unit_t i, const unit_t j) const throw();
+
+
 
         protected:
-            struct Row
-            {
-                void  *p;
-                size_t w;
-            };
-            Row    *rows;
+            AnonymousRow    *rows;
 
         private:
+            Y_DISABLE_ASSIGN(Bitmap);
             size_t  __rnum;
             size_t  __rlen;
-            Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
             void setup();
 
         public:
-            const Row *row(const size_t j) const throw();
-
+            const AnonymousRow *row(const unit_t j) const throw();
         };
 
     }
