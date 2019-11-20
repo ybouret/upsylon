@@ -16,8 +16,8 @@ Y_UTEST(bitmap)
     for(size_t iter=0;iter<1024;++iter)
     {
         bzset(mtx);
-        mtx.width  = 1 + alea.leq(100);
-        mtx.height = 1 + alea.leq(100);
+        mtx.width  = 1 + alea.leq(1000);
+        mtx.height = 1 + alea.leq(1000);
         mtx.depth  = 1 << ( alea.leq(3));
         mtx.stride = mtx.width * mtx.depth;
         mtx.count  = mtx.stride * mtx.height;
@@ -41,7 +41,7 @@ Y_UTEST(bitmap)
                 const Bitmap sub( bmp, rect );
                 views.push_back(sub);
             }
-            views.back().clear();
+            views.back().clear(loop);
         }
 
         bmp.clear(loop);
