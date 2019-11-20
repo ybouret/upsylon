@@ -16,6 +16,7 @@ namespace upsylon {
 
             explicit Rectangle( unit_t x0, unit_t y0, unit_t x1, unit_t y1 ) throw();
             virtual ~Rectangle() throw();
+            Rectangle(const Rectangle &other) throw();
 
             const unit_t xmin;
             const unit_t ymin;

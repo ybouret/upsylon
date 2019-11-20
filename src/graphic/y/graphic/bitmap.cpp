@@ -30,7 +30,7 @@ namespace upsylon {
         __rlen(0)
         {
             if(stride<scanline) throw exception("%sstride<scanline",fn);
-            setup();
+            setup(entry);
         }
 
         Bitmap:: ~Bitmap() throw()
@@ -38,7 +38,7 @@ namespace upsylon {
             memory::global::location().release_as(rows,__rnum,__rlen);
         }
 
-        void Bitmap:: setup()
+        void Bitmap:: setup(void *origin)
         {
             // allocate rows
             assert(0==rows);
@@ -49,7 +49,7 @@ namespace upsylon {
 
             // link
             const unit_t ww = w+w-2;
-            char  *p = (char *) entry;
+            char        *p  = (char *) origin;
             for(unit_t j=0;j<h;++j)
             {
                 AnonymousRow &r  = rows[j];
@@ -111,9 +111,28 @@ namespace upsylon {
         __rnum(0),
         __rlen(0)
         {
-            setup();
+            setup(entry);
         }
 
+
+        Bitmap:: Bitmap( const Bitmap &bmp, const Rectangle &rect) :
+        Memory(bmp), Area(rect),
+        hh(h+h-2),
+        depth(bmp.depth),
+        scanline(w*depth),
+        stride(bmp.stride),
+        rows(0),
+        __rnum(0),
+        __rlen(0)
+        {
+            if( ! bmp.contains(rect) )
+            {
+                throw exception("%sdoes not contain rectangle",fn);
+            }
+
+            const void *origin = get(rect.xmin,rect.ymin);
+            setup( (void*)origin );
+        }
         
     }
 }

@@ -32,7 +32,7 @@ namespace upsylon {
         {
         }
 
-        bool Area:: has(const unit_t i, const unit_t j) const throw()
+        bool Area:: contains(const unit_t i, const unit_t j) const throw()
         {
             return (i>=0) && (j>=0) && (i<w) && (j<h);
         }

@@ -27,6 +27,20 @@ namespace upsylon {
         {
         }
 
+        Rectangle:: Rectangle(const Rectangle &other) throw() :
+        Area(other),
+        xmin(other.xmin),
+        ymin(other.ymin),
+        xmax(other.xmax),
+        ymax(other.ymax)
+        {
+
+        }
+
+        bool Area:: contains(const Rectangle &rect) const throw()
+        {
+            return contains(rect.xmin,rect.ymin) && contains(rect.xmax,rect.ymax);
+        }
 
     }
 

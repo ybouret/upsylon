@@ -8,7 +8,9 @@
 namespace upsylon {
 
     namespace Graphic {
-        
+
+        class Rectangle;
+
         class Area : public Object
         {
         public:
@@ -20,9 +22,9 @@ namespace upsylon {
             const unit_t h;       //!< internally signed
             const size_t items;   //!< w*h
 
-            bool has(const unit_t i, const unit_t j) const throw();
-            bool has(const Point &p) const throw();
-
+            bool contains(const unit_t i, const unit_t j) const throw();
+            bool contains(const Rectangle &) const throw();
+            
         private:
             Y_DISABLE_ASSIGN(Area);
         };

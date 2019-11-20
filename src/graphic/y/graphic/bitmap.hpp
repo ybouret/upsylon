@@ -5,7 +5,7 @@
 
 #include "y/graphic/metrics.hpp"
 #include "y/graphic/memory.hpp"
-
+#include "y/graphic/rectangle.hpp"
 
 namespace upsylon {
 
@@ -31,7 +31,8 @@ namespace upsylon {
             explicit Bitmap( Metrics &metrics );
             virtual ~Bitmap() throw();
 
-            Bitmap( const Bitmap &bmp ); //!< share memory, create rows
+            Bitmap( const Bitmap &bmp );                       //!< share memory, create rows
+            Bitmap( const Bitmap &bmp, const Rectangle &rect); //!< share memory, create rows
 
 
             const unit_t hh;
@@ -41,7 +42,7 @@ namespace upsylon {
 
             const void *get(const unit_t i, const unit_t j) const throw();
 
-
+            void clear() throw();
 
         protected:
             AnonymousRow    *rows;
@@ -50,7 +51,7 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Bitmap);
             size_t  __rnum;
             size_t  __rlen;
-            void setup();
+            void setup(void *origin);
 
         public:
             const AnonymousRow *row(const unit_t j) const throw();
