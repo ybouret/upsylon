@@ -151,6 +151,34 @@ namespace upsylon {
             }
         }
 
+        void Bitmap:: clear( concurrent::for_each &loop ) throw()
+        {
+            struct ops
+            {
+                Bitmap *bmp_;
+                static inline
+                void run( void *args, parallel &ctx, lockable &)
+                {
+                    assert(args);
+                    ops         &self   = *(ops *)args;
+                    Bitmap      &bmp    = *self.bmp_;
+                    const size_t  n     = bmp.scanline;
+                    AnonymousRow *r     = bmp.rows;
+                    unit_t       length = bmp.h;
+                    unit_t       offset = 0;
+                    ctx.split(length,offset);
+                    while(length-- >0 )
+                    {
+                        memset(r[offset++].p,0,n);
+                    }
+                }
+            };
+
+            ops self = { this };
+            loop.run( ops::run, &self );
+        }
+
+
 
     }
 }

@@ -6,6 +6,7 @@
 #include "y/graphic/metrics.hpp"
 #include "y/graphic/memory.hpp"
 #include "y/graphic/rectangle.hpp"
+#include "y/concurrent/scheme/for-each.hpp"
 
 namespace upsylon {
 
@@ -43,7 +44,8 @@ namespace upsylon {
             const void *get(const unit_t i, const unit_t j) const throw();
 
             void clear() throw();
-            
+            void clear(concurrent::for_each &) throw();
+
 
         protected:
             AnonymousRow    *rows;

@@ -3,12 +3,15 @@
 #include "y/utest/run.hpp"
 #include "y/type/bzset.hpp"
 #include "y/sequence/list.hpp"
+#include "y/concurrent/scheme/simd.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
 
 Y_UTEST(bitmap)
 {
+    concurrent::simd loop;
+
     Metrics mtx;
     for(size_t iter=0;iter<1024;++iter)
     {
@@ -40,6 +43,8 @@ Y_UTEST(bitmap)
             }
             views.back().clear();
         }
+
+        bmp.clear(loop);
     }
 
     
