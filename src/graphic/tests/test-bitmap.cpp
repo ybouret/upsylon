@@ -37,8 +37,9 @@ Y_UTEST(bitmap)
             views.push_back(sub);
         }
         views.back().clear();
-
     }
+
+    
 
 
 }
