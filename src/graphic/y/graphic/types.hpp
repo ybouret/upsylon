@@ -11,8 +11,8 @@ namespace upsylon {
 
     namespace Graphic {
 
-        typedef counted_object  Object;
-        typedef point2d<unit_t> Point;
+        typedef counted_object  Object; //!< base type for dynamic object
+        typedef point2d<unit_t> Point;  //!< logical point
     }
 }
 

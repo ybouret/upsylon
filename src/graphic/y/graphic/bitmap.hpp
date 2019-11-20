@@ -12,26 +12,30 @@ namespace upsylon {
     namespace Graphic {
 
 
-        class Bitmap : public Metrics, public Memory
+        class Bitmap : public Memory, public Area
         {
         public:
-
-            explicit Bitmap(const Metrics &mtx,
-                            const Memory  &mem);
-
+            explicit Bitmap( Metrics &metrics );
             virtual ~Bitmap() throw();
-            explicit Bitmap(const size_t W,
-                            const size_t H,
-                            const size_t D,
-                            const Memory::Mode = RW);
 
-            
+            const size_t depth;
+            const size_t scanline;
+            const size_t stride;
 
-
+        protected:
+            struct Row
+            {
+                void  *p;
+                size_t w;
+            };
+            Row    *rows;
 
         private:
+            size_t  __rnum;
+            size_t  __rlen;
             Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
             void setup();
+
         };
 
     }

@@ -3,13 +3,15 @@
 #ifndef Y_GRAPHIC_MEMORY_INCLUDED
 #define Y_GRAPHIC_MEMORY_INCLUDED 1
 
-#include "y/graphic/types.hpp"
+#include "y/graphic/metrics.hpp"
 
 namespace upsylon {
 
     namespace Graphic {
 
-        class Memory 
+
+        //! shared pointer for the memory part of a Metrics
+        class Memory
         {
         public:
             enum Kind
@@ -20,35 +22,31 @@ namespace upsylon {
 
             enum Mode
             {
-                RW,
-                RO
+                ReadWrite,
+                ReadOnly
             };
 
+
+            explicit Memory( Metrics & );
             virtual ~Memory() throw();
-            explicit Memory(const size_t required, const Mode   = RW  );
-            explicit Memory(void        *buffer,   const size_t length);
-            explicit Memory(const void  *buffer,   const size_t length);
+            Memory(const Memory &) throw();
 
-            Memory(const Memory &other ) throw();
-            Memory(const Memory &other, const size_t shift );
+            const Kind kind;
+            const Mode mode;
 
-
-
-            const Kind   kind;
-            const Mode   mode;
-
-            void displayMemoryInfo() const;
+            void displayMemory() const;
 
         private:
-            size_t      *nref;
-            size_t       size;
-            void        *data;
             Y_DISABLE_ASSIGN(Memory);
-            void checkStaticData();
+            
+            size_t *nref;
+            void   *entry;
+            size_t  count;
+            void    release() throw();
 
-        protected:
-            void        *entry;
-            const size_t count;
+
+
+
         };
 
     }

@@ -11,27 +11,28 @@ namespace upsylon {
 
     namespace Graphic {
 
-        class Metrics : public Area
+
+        //! 
+        struct Metrics
         {
-        public:
-            virtual ~Metrics() throw();
-            explicit Metrics(const size_t W,
-                             const size_t H,
-                             const size_t D);
+            static const unsigned GlobalMemory = 0x01;
+            static const unsigned StaticMemory = 0x02;
+            static const unsigned MemoryMask   = GlobalMemory|StaticMemory;
+            static const unsigned ReadWrite    = 0x04;
+            static const unsigned ReadOnly     = 0x08;
+            static const unsigned AccessMask   = ReadWrite|ReadOnly;
+            
+            static void *Acquire( size_t & );
+            static void  Release( void * &, size_t & ) throw();
 
-            explicit Metrics(const size_t W,
-                             const size_t H,
-                             const size_t D,
-                             const size_t S);
-
-            const size_t depth;    //!< bytes per pixel
-            const size_t scanline; //!< w * depth
-            const size_t stride;   //!< stride>=scanline
-
-
-
-        private:
-            Y_DISABLE_ASSIGN(Metrics);
+            const void *entry;
+            size_t      count;
+            unsigned    flags;
+            size_t      width;
+            size_t      height;
+            size_t      depth;
+            size_t      stride;
+            
         };
 
     }

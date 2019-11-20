@@ -8,6 +8,7 @@ TARGET_LINK_Y(test-graphic graphic)
 ENABLE_TESTING()
 ADD_TEST(Area   test-graphic area)
 ADD_TEST(Memory test-graphic memory)
+ADD_TEST(Bitmap test-graphic bitmap)
 
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
