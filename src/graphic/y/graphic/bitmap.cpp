@@ -2,6 +2,7 @@
 #include "y/graphic/bitmap.hpp"
 #include "y/exception.hpp"
 #include "y/type/aliasing.hpp"
+#include <cstring>
 
 namespace upsylon {
 
@@ -133,6 +134,17 @@ namespace upsylon {
             const void *origin = get(rect.xmin,rect.ymin);
             setup( (void*)origin );
         }
-        
+
+
+        void Bitmap:: clear() throw()
+        {
+            const size_t n = scanline;
+            for(unit_t j=0;j<h;++j)
+            {
+                memset( rows[j].p, 0, n );
+            }
+        }
+
+
     }
 }

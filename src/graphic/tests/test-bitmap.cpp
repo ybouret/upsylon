@@ -20,5 +20,7 @@ Y_UTEST(bitmap)
 
     Bitmap bmp( mtx );
 
+    bmp.clear();
+
 }
 Y_UTEST_DONE()
