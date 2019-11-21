@@ -16,22 +16,38 @@ namespace upsylon {
         typedef point2d<unit_t>          Point;     //!< logical point
         typedef core::zero_flux_index<0> ZeroFlux;  //!< for indexing
 
-        void *MemoryAcquire( size_t &n );
-        void  MemoryRelease( void * &p, size_t &n ) throw();
-
-        template <typename T>
-        T *MemoryAcquireAs( size_t &required )
+        struct Memory
         {
-            required *= sizeof(T);
-            return static_cast<T*>( MemoryAcquire(required) );
-        }
+            enum Kind
+            {
+                Global,
+                Static
+            };
 
-        template <typename T>
-        void MemoryReleaseAs( T * &p, size_t &allocated ) throw()
-        {
-            void * &address = *(void **)&p;
-            MemoryRelease(address,allocated);
-        }
+            enum Mode
+            {
+                ReadWrite,
+                ReadOnly
+            };
+
+            static void *Acquire( size_t &n );
+            static void  Release( void * &p, size_t &n ) throw();
+
+            template <typename T> static inline
+            T *AcquireAs( size_t &required )
+            {
+                required *= sizeof(T);
+                return static_cast<T*>( Acquire(required) );
+            }
+
+            template <typename T> static inline
+            void ReleaseAs( T * &p, size_t &allocated ) throw()
+            {
+                void * &address = *(void **)&p;
+                Release(address,allocated);
+            }
+        };
+        
 
 
     }

@@ -9,10 +9,10 @@ Y_UTEST(types)
 {
 
     size_t  num = 5;
-    std::cerr << "required objects=" << num << std::endl;
-    double *arr = MemoryAcquireAs<double>(num);
-    std::cerr << "allocated bytes=" << num << std::endl;
-    MemoryReleaseAs(arr,num);
+    std::cerr << "required objects = " << num << std::endl;
+    double *arr = Memory::AcquireAs<double>(num);
+    std::cerr << "allocated bytes  = " << num << std::endl;
+    Memory::ReleaseAs(arr,num);
     Y_CHECK(0==num);
     Y_CHECK(0==arr);
 
