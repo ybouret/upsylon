@@ -21,6 +21,7 @@ Y_UTEST(zfi)
 
         const unit_t i1 = I1(i);
         std::cerr << " : " << i1;
+        
 
         fp("%ld %ld %ld\n", long(i), long( i0 ), long(i1) );
         std::cerr << std::endl;
