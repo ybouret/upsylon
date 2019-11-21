@@ -32,7 +32,7 @@ FILE(GLOB_RECURSE tmp .Rhistory)
 SET(to_remove ${to_remove} ${tmp})
 
 
-MESSAGE( STATUS "collection old backup files" )
+MESSAGE( STATUS "collecting old backup files" )
 FILE(GLOB_RECURSE tmp "src/*~")
 SET(to_remove ${to_remove} ${tmp})
 
