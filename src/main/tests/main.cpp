@@ -189,6 +189,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(oxide_grids);
 
     Y_UTEST(magic);
+    Y_UTEST(zfi);
 }
 Y_UTEST_EXEC()
 
