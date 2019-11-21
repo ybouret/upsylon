@@ -21,36 +21,31 @@ namespace upsylon {
         Rectangle:: Rectangle(  unit_t x0,   unit_t y0,
                                 unit_t x1,   unit_t y1) throw() :
         Area(1+chkdif(x0,x1),1+chkdif(y0,y1)),
-        xmin(x0),
-        ymin(y0),
-        xmax(x1),
-        ymax(y1)
+        lower(x0,y0),
+        upper(x1,y1)
         {
-            assert(x0<=x1); assert(xmin<=xmax);
-            assert(y0<=y1); assert(ymin<=ymax);
-
+            assert(x0<=x1);
+            assert(y0<=y1);
         }
 
         Rectangle:: Rectangle(const Rectangle &other) throw() :
         Area(other),
-        xmin(other.xmin),
-        ymin(other.ymin),
-        xmax(other.xmax),
-        ymax(other.ymax)
+        lower(other.lower),
+        upper(other.upper)
         {
 
         }
-
-        bool Area:: contains(const Rectangle &rect) const throw()
-        {
-            return contains(rect.xmin,rect.ymin) && contains(rect.xmax,rect.ymax);
-        }
+        
 
         void Rectangle:: displayRectangle() const
         {
-            std::cerr << "[" << xmin << "," << ymin << "]->[" << xmax << "," << ymax << "]" << std::endl;
+            std::cerr << lower << "->" << upper << std::endl;
         }
 
+        bool Area:: contains(const Rectangle &r) const throw()
+        {
+            return contains(r.lower) && contains(r.upper);
+        }
 
     }
 
