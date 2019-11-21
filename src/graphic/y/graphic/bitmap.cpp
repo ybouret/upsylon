@@ -8,6 +8,8 @@ namespace upsylon {
 
         Bitmap:: ~Bitmap() throw()
         {
+            assert(rows);
+            Memory::ReleaseAs(rows,rlen);
             switch(kind)
             {
                 case Memory::Static: break;
@@ -68,9 +70,13 @@ namespace upsylon {
         stride( checkStride(dataStride, scanline) ),
         kind( memoryKind ),
         mode( memoryMode ),
+        zfw(w),
+        zfh(h),
         entry((void*)data),
         bytes(size),
-        nref(0)
+        nref(0),
+        rows(0),
+        rlen(0)
         {
             switch(kind)
             {
@@ -79,6 +85,43 @@ namespace upsylon {
                     *( nref = object::acquire1<size_t>() ) = 1;
                     break;
             }
+            try
+            {
+                setupRows();
+            }
+            catch(...)
+            {
+                if(nref) object::release1(nref);
+                throw;
+            }
+        }
+
+        AnonymousRow:: AnonymousRow(void              *address,
+                                    const Bitmap      &parent) throw() :
+        addr(address),
+        bitmap(parent)
+        {
+        }
+
+        const void * AnonymousRow:: pixel(const unit_t i) const throw()
+        {
+            assert(addr);
+            return static_cast<const char *>(addr) + bitmap.depth * bitmap.zfw(i);
+        }
+
+        
+        void Bitmap:: setupRows()
+        {
+
+            rlen = h;
+            rows = Memory::AcquireAs<AnonymousRow>(rlen);
+            AnonymousRow *r = rows;
+            char         *p = (char *)entry;
+            for(unit_t j=0;j<h;++j,p+=stride,++r)
+            {
+                new (r) AnonymousRow(p,*this);
+            }
+
         }
 
 
@@ -100,6 +143,34 @@ namespace upsylon {
                 throw;
             }
         }
+
+
+        const AnonymousRow *Bitmap:: row(const unit_t j) const throw()
+        {
+            return rows + zfh(j);
+        }
+
+        const void * Bitmap:: get(const unit_t i, const unit_t j) const throw()
+        {
+            return row(j)->pixel(i);
+        }
+
+        const void * Bitmap:: get(const Point &p) const throw()
+        {
+            return get(p.x,p.y);
+        }
+
+#if 0
+
+        Bitmap:: Bitmap(const Bitmap    &bitmap,
+                        const Rectangle &rectangle) :
+        Area(rectangle),
+        depth(bitmap.depth)
+        {
+        }
+
+#endif
+        
 
     }
 

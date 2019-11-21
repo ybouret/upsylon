@@ -52,7 +52,7 @@ namespace upsylon {
 
 
         private:
-            Y_DISABLE_ASSIGN(zero_flux_index);
+            Y_DISABLE_COPY_AND_ASSIGN(zero_flux_index);
         };
     }
 }
