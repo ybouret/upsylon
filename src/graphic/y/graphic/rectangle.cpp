@@ -28,6 +28,18 @@ namespace upsylon {
             assert(y0<=y1);
         }
 
+        Rectangle:: Rectangle(Point p0, Point p1) throw() :
+        Area(1+chkdif(p0.x,p1.x),1+chkdif(p0.y,p1.y)),
+        lower(p0),
+        upper(p1)
+        {
+            assert(p0.x<=p1.x);
+            assert(p0.y<=p1.y);
+        }
+
+
+
+
         Rectangle:: Rectangle(const Rectangle &other) throw() :
         Area(other),
         lower(other.lower),

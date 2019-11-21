@@ -28,12 +28,6 @@ namespace upsylon {
         static const char fn[] = "Graphic::Bitmap: ";
 
 
-        const Area & checkArea( const Area &area )
-        {
-            if(area.items<=0) throw exception("%sempty area",fn);
-            return area;
-        }
-
         static size_t checkDepth( const size_t bytesPerPixel )
         {
 
@@ -57,14 +51,14 @@ namespace upsylon {
             }
         }
 
-        Bitmap:: Bitmap(const Area        &area,
+        Bitmap:: Bitmap(const Rectangle   &rect,
                         const void        *data,
                         const size_t       size,
                         const size_t       bytesPerPixel,
                         const size_t       dataStride,
                         const Memory::Kind memoryKind,
                         const Memory::Mode memoryMode) :
-        Area(  checkArea(area) ),
+        Rectangle(  rect ),
         depth( checkDepth(bytesPerPixel) ),
         scanline( w * depth ),
         stride( checkStride(dataStride, scanline) ),
@@ -78,6 +72,9 @@ namespace upsylon {
         rows(0),
         rlen(0)
         {
+            // check enough memory
+            if( stride*h > bytes ) throw exception("%snot enough data!!!",fn);
+
             switch(kind)
             {
                 case Memory::Static: break;
@@ -87,7 +84,7 @@ namespace upsylon {
             }
             try
             {
-                setupRows();
+                setupRows(entry);
             }
             catch(...)
             {
@@ -110,13 +107,13 @@ namespace upsylon {
         }
 
         
-        void Bitmap:: setupRows()
+        void Bitmap:: setupRows(void *origin)
         {
-
+            assert(origin);
             rlen = h;
             rows = Memory::AcquireAs<AnonymousRow>(rlen);
             AnonymousRow *r = rows;
-            char         *p = (char *)entry;
+            char         *p = (char *)origin;
             for(unit_t j=0;j<h;++j,p+=stride,++r)
             {
                 new (r) AnonymousRow(p,*this);
@@ -131,11 +128,11 @@ namespace upsylon {
         {
             if(W<=0||H<=0|BPP<=0) throw exception("%sinvalid %ux%u,depth=%u",fn, unsigned(W), unsigned(H), unsigned(BPP) );
 
-            const Area area(W,H);
-            size_t size = area.items*BPP;
+            const Rectangle rect(0,0,W-1,H-1);
+            size_t size = rect.items*BPP;
             void  *data = Memory::Acquire(size);
             try {
-                return new Bitmap(area,data,size,BPP,0,Memory::Global,Memory::ReadWrite);
+                return new Bitmap(rect,data,size,BPP,0,Memory::Global,Memory::ReadWrite);
             }
             catch(...)
             {
@@ -161,16 +158,34 @@ namespace upsylon {
         }
 
 #if 0
-
         Bitmap:: Bitmap(const Bitmap    &bitmap,
                         const Rectangle &rectangle) :
-        Area(rectangle),
-        depth(bitmap.depth)
+        Rectangle(rectangle),
+        depth(bitmap.depth),
+        scanline(w*depth),
+        stride(bitmap.stride),
+        kind(bitmap.kind),
+        mode(bitmap.mode),
+        zfw(w),
+        zfh(h),
+        entry(bitmap.entry),
+        bytes(bitmap.bytes),
+        nref(bitmap.nref),
+        rows(0),
+        rlen(0)
         {
-        }
 
+            if( ! bitmap.contains(rectangle) ) throw exception("%sinvalid sub-bitmap",fn);
+
+            setupRows( (void*) ( bitmap.get(rectangle.lower) ) );
+
+            if(nref)
+            {
+                ++(*nref);
+            }
+        }
 #endif
-        
+
 
     }
 

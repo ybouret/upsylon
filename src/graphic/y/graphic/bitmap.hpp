@@ -26,7 +26,7 @@ namespace upsylon {
         };
 
         //! smart pointer for bytes
-        class Bitmap : public Area
+        class Bitmap : public Rectangle
         {
         public:
             virtual ~Bitmap() throw();
@@ -42,7 +42,10 @@ namespace upsylon {
             static Bitmap *Create(const size_t W,
                                   const size_t H,
                                   const size_t BPP);
-            
+
+            static Bitmap *Shared(const Bitmap &bitmap, const Rectangle &rectangle);
+
+
 
             const AnonymousRow *row(const unit_t j) const throw();
             const void         *get(const unit_t i, const unit_t j) const throw();
@@ -54,14 +57,14 @@ namespace upsylon {
         private:
             void   *entry; //!< address of first pixel
             size_t  bytes; //!< number of accessible bytes
-            size_t *nref;
+            size_t *nref;  //!< shared refs
 
             AnonymousRow *rows;
             size_t        rlen;
 
             Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
 
-            explicit Bitmap(const Area        &area,
+            explicit Bitmap(const Rectangle   &rectangle,
                             const void        *data,
                             const size_t       size,
                             const size_t       bytesPerPixel,
@@ -69,7 +72,7 @@ namespace upsylon {
                             const Memory::Kind memoryKind,
                             const Memory::Mode memoryMode);
 
-            void setupRows();
+            void setupRows(void *origin);
 
             explicit Bitmap(const Bitmap    &bitmap,
                             const Rectangle &rectangle);

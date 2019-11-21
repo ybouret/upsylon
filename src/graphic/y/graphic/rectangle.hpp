@@ -19,6 +19,8 @@ namespace upsylon {
                                unit_t y0,
                                unit_t x1,
                                unit_t y1 ) throw();
+            explicit Rectangle( Point lo, Point hi) throw();
+            
             virtual ~Rectangle() throw();
             Rectangle(const Rectangle &other) throw();
             
