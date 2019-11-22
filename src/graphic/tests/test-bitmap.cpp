@@ -1,7 +1,6 @@
 
-#include "y/graphic/bitmap.hpp"
+#include "y/graphic/surface.hpp"
 #include "y/utest/run.hpp"
-#include "y/ptr/auto.hpp"
 #include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
@@ -15,6 +14,7 @@ namespace {
 
     static inline void fill( Bitmap &bmp )
     {
+        std::cerr << "BytesPerPixel=" << bmp.depth << std::endl;
         bmp.displayArea();
         hashing::sha1 H;
 
@@ -48,10 +48,10 @@ namespace {
 Y_UTEST(bitmap)
 {
 
-    auto_ptr<Bitmap> bmp1 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 1);
-    auto_ptr<Bitmap> bmp2 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 2);
-    auto_ptr<Bitmap> bmp3 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 3);
-    auto_ptr<Bitmap> bmp4 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 4);
+    Surface  bmp1 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 1);
+    Surface  bmp2 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 2);
+    Surface  bmp3 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 3);
+    Surface  bmp4 = Bitmap::Create(ALEA_COORD,ALEA_COORD, 4);
 
     fill( *bmp1 );
     fill( *bmp2 );

@@ -4,6 +4,7 @@
 #define Y_GRAPHIC_BITMAP_INCLUDED 1
 
 #include "y/graphic/rectangle.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon {
 
@@ -29,6 +30,8 @@ namespace upsylon {
         class Bitmap : public Rectangle
         {
         public:
+            typedef arc_ptr<Bitmap> Pointer;
+            
             virtual ~Bitmap() throw();
 
             const size_t       depth;     //!< bytes per pixel
@@ -39,24 +42,24 @@ namespace upsylon {
             const ZeroFlux     zfw;       //!< zero flux for width
             const ZeroFlux     zfh;       //!< zero flux for height
             
-            static Bitmap *Create(const size_t W,
-                                  const size_t H,
-                                  const size_t BPP);
-
+            static Bitmap *Create(const size_t W, const size_t H, const size_t BPP);
             static Bitmap *Shared(const Bitmap &bitmap, const Rectangle &rectangle);
 
 
+            const AnonymousRow *row(const unit_t j) const throw(); //! zero flux
+            const void         *get(const unit_t i, const unit_t j) const throw(); //! zero flux
+            const void         *get(const Point &p) const throw(); //! zero flux
 
-            const AnonymousRow *row(const unit_t j) const throw();
-            const void         *get(const unit_t i, const unit_t j) const throw();
-            const void         *get(const Point &p) const throw();
+            const AnonymousRow *row__(const unit_t j) const throw(); //!< j in 0..h-1
 
 
 
 
         private:
             void   *entry; //!< address of first pixel
-            size_t  bytes; //!< number of accessible bytes
+        public:
+            const size_t  bytes; //!< number of accessible bytes
+        private:
             size_t *nref;  //!< shared refs
 
             AnonymousRow *rows;

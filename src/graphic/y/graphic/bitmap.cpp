@@ -1,6 +1,7 @@
 
 #include "y/graphic/bitmap.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -19,7 +20,7 @@ namespace upsylon {
                     if( -- (*nref) <= 0 )
                     {
                         object::release1(nref);
-                        Memory::Release(entry,bytes);
+                        Memory::Release(entry,aliasing::_(bytes));
                     }
                     break;
             }
@@ -157,10 +158,9 @@ namespace upsylon {
             return get(p.x,p.y);
         }
 
-#if 0
         Bitmap:: Bitmap(const Bitmap    &bitmap,
                         const Rectangle &rectangle) :
-        Rectangle(rectangle),
+        Rectangle(0,0,rectangle.w-1,rectangle.h-1),
         depth(bitmap.depth),
         scanline(w*depth),
         stride(bitmap.stride),
@@ -184,7 +184,11 @@ namespace upsylon {
                 ++(*nref);
             }
         }
-#endif
+
+        Bitmap * Bitmap:: Shared(const Bitmap &bitmap, const Rectangle &rectangle)
+        {
+            return new Bitmap(bitmap,rectangle);
+        }
 
 
     }

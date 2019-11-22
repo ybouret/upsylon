@@ -1,6 +1,7 @@
 
-#include "y/graphic/types.hpp"
+#include "y/graphic/bitmap.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
@@ -16,6 +17,11 @@ Y_UTEST(types)
     Y_CHECK(0==num);
     Y_CHECK(0==arr);
 
+    const char pfx[] = "\t";
+    Y_UTEST_SIZEOF_WITH( pfx, Area);
+    Y_UTEST_SIZEOF_WITH( pfx, Rectangle);
+    Y_UTEST_SIZEOF_WITH( pfx, Bitmap);
+    Y_UTEST_SIZEOF_WITH( pfx, AnonymousRow);
 
 }
 Y_UTEST_DONE()
