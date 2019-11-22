@@ -126,6 +126,7 @@ namespace upsylon {
             for(unit_t j=0;j<h;++j,p+=stride,++r)
             {
                 new (r) AnonymousRow(p,*this);
+                assert(r->addr!=NULL);
             }
 
         }

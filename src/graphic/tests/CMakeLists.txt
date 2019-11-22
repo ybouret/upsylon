@@ -9,6 +9,7 @@ ENABLE_TESTING()
 ADD_TEST(Types  test-graphic types)
 ADD_TEST(Area   test-graphic area)
 ADD_TEST(Bitmap test-graphic bitmap)
+ADD_TEST(Pixmap test-graphic pixmap)
 
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

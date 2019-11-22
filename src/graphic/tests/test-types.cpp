@@ -1,5 +1,5 @@
 
-#include "y/graphic/bitmap.hpp"
+#include "y/graphic/pixmap.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -22,6 +22,9 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF_WITH( pfx, Rectangle);
     Y_UTEST_SIZEOF_WITH( pfx, Bitmap);
     Y_UTEST_SIZEOF_WITH( pfx, AnonymousRow);
+    Y_UTEST_SIZEOF_WITH( pfx, Row<uint8_t>);
+    Y_UTEST_SIZEOF_WITH( pfx, Row<uint16_t>);
+    Y_UTEST_SIZEOF_WITH( pfx, Row<uint32_t>);
 
 }
 Y_UTEST_DONE()
