@@ -58,6 +58,10 @@ Y_UTEST(bitmap)
     fill( *bmp3 );
     fill( *bmp4 );
 
+    //list<Surface> surfaces;
+
+
+
 
 }
 Y_UTEST_DONE()

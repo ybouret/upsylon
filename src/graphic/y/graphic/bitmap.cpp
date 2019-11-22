@@ -127,7 +127,7 @@ namespace upsylon {
                                  const size_t H,
                                  const size_t BPP)
         {
-            if(W<=0||H<=0|BPP<=0) throw exception("%sinvalid %ux%u,depth=%u",fn, unsigned(W), unsigned(H), unsigned(BPP) );
+            if( (W<=0) || (H<=0) || (BPP<=0) ) throw exception("%sinvalid %ux%u,depth=%u",fn, unsigned(W), unsigned(H), unsigned(BPP) );
 
             const Rectangle rect(0,0,W-1,H-1);
             size_t size = rect.items*BPP;
@@ -146,6 +146,13 @@ namespace upsylon {
         const AnonymousRow *Bitmap:: row(const unit_t j) const throw()
         {
             return rows + zfh(j);
+        }
+
+        const AnonymousRow * Bitmap:: row__(const unit_t j) const throw()
+        {
+            assert(j>=0);
+            assert(j<h);
+            return rows+h;
         }
 
         const void * Bitmap:: get(const unit_t i, const unit_t j) const throw()
