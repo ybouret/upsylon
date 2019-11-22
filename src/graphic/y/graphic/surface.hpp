@@ -15,10 +15,8 @@ namespace upsylon {
         public:
             Surface( Bitmap *bmp ) throw();
             virtual ~Surface() throw();
-
             Surface( const Surface &surface ) throw();
             
-
         private:
             Y_DISABLE_ASSIGN(Surface);
         };

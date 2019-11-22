@@ -5,6 +5,7 @@
 
 #include "y/graphic/rectangle.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/hashing/function.hpp"
 
 namespace upsylon {
 
@@ -43,7 +44,13 @@ namespace upsylon {
             const ZeroFlux     zfh;       //!< zero flux for height
             
             static Bitmap *Create(const size_t W, const size_t H, const size_t BPP);
-            static Bitmap *Shared(const Bitmap &bitmap, const Rectangle &rectangle);
+
+            static Bitmap *Share(const Bitmap &bitmap, const Rectangle &rectangle);
+            static Bitmap *Share(const Bitmap &bitamp);
+
+            static Bitmap *Clone(const Bitmap &bitmap, const Rectangle &rectangle);
+            static Bitmap *Clone(const Bitmap &bitmap);
+
 
 
             const AnonymousRow *row(const unit_t j) const throw(); //! zero flux
@@ -53,7 +60,7 @@ namespace upsylon {
             const AnonymousRow *row__(const unit_t j) const throw(); //!< j in 0..h-1
 
 
-
+            void run( hashing::function & ) const throw();
 
         private:
             void   *entry; //!< address of first pixel

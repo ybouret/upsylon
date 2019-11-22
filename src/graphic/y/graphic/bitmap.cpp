@@ -37,6 +37,14 @@ namespace upsylon {
         }
 
 
+        void Bitmap:: run( hashing::function &H ) const throw()
+        {
+            for(unit_t j=0;j<h;++j)
+            {
+                H.run(rows[j].addr, scanline);
+            }
+        }
+
         static size_t checkStride( size_t stride, const size_t scanline )
         {
             if(scanline<=0) throw exception("%sscanline<=0",fn);
@@ -142,6 +150,29 @@ namespace upsylon {
             }
         }
 
+        Bitmap  * Bitmap:: Clone(const Bitmap &bitmap, const Rectangle &rectangle)
+        {
+            if( ! bitmap.contains(rectangle) ) throw exception("%sinvalid sub-bitmap to clone",fn);
+            const size_t BPP = bitmap.depth;
+            Bitmap      *bmp = Create(rectangle.w,rectangle.h,BPP);
+
+            const size_t n     = bmp->scanline;
+            const size_t shift = rectangle.lower.x*BPP;
+            const unit_t H     = bmp->h;
+            for(unit_t j=0,k=rectangle.lower.y;j<H;++j,++k)
+            {
+                void        *target = bmp->rows[j].addr;
+                const void  *source = static_cast<const char *>(bitmap.rows[k].addr) + shift;
+                memcpy(target,source,n);
+            }
+
+            return bmp;
+        }
+
+        Bitmap  * Bitmap:: Clone(const Bitmap &bitmap )
+        {
+            return Clone(bitmap,bitmap);
+        }
 
         const AnonymousRow *Bitmap:: row(const unit_t j) const throw()
         {
@@ -182,7 +213,7 @@ namespace upsylon {
         rlen(0)
         {
 
-            if( ! bitmap.contains(rectangle) ) throw exception("%sinvalid sub-bitmap",fn);
+            if( ! bitmap.contains(rectangle) ) throw exception("%sinvalid sub-bitmap to share",fn);
 
             setupRows( (void*) ( bitmap.get(rectangle.lower) ) );
 
@@ -192,9 +223,14 @@ namespace upsylon {
             }
         }
 
-        Bitmap * Bitmap:: Shared(const Bitmap &bitmap, const Rectangle &rectangle)
+        Bitmap * Bitmap:: Share(const Bitmap &bitmap, const Rectangle &rectangle)
         {
             return new Bitmap(bitmap,rectangle);
+        }
+
+        Bitmap * Bitmap:: Share(const Bitmap &bitmap)
+        {
+            return new Bitmap(bitmap,bitmap);
         }
 
 
