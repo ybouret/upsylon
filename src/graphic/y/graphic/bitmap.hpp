@@ -20,7 +20,8 @@ namespace upsylon {
                                   const Bitmap      &parent) throw();
             void              *addr;
             const Bitmap      &bitmap;
-            const void        *pixel(const unit_t i) const throw();
+            const void        *getZeroFlux(const unit_t i) const throw();
+            const void        *getStandard(const unit_t i) const throw();
 
         private:
             ~AnonymousRow() throw();
@@ -52,12 +53,13 @@ namespace upsylon {
             static Bitmap *Clone(const Bitmap &bitmap);
 
 
+            const AnonymousRow *getStandard(const unit_t j) const throw(); //!< j in 0..h-1
+            const AnonymousRow *getZeroFlux(const unit_t j) const throw(); //! zero flux
+            const void         *standardPixel(const unit_t i, const unit_t j) const throw(); //! standard
+            const void         *standardPixel(const Point &p) const throw(); //! standard
+            const void         *zeroFluxPixel(const unit_t i, const unit_t j) const throw(); //! zeroFlux
+            const void         *zeroFluxPixel(const Point &p) const throw(); //! zero flux
 
-            const AnonymousRow *row(const unit_t j) const throw(); //! zero flux
-            const void         *get(const unit_t i, const unit_t j) const throw(); //! zero flux
-            const void         *get(const Point &p) const throw(); //! zero flux
-
-            const AnonymousRow *row__(const unit_t j) const throw(); //!< j in 0..h-1
 
 
             void run( hashing::function & ) const throw();

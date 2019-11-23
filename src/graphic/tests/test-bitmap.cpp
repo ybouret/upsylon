@@ -24,7 +24,7 @@ namespace {
         {
             for(unit_t i=0;i<bmp.w;++i)
             {
-                uint8_t      *p = (uint8_t *) bmp.get(i,j);
+                uint8_t      *p = (uint8_t *) bmp.standardPixel(i,j);
                 for(size_t k=0;k<bmp.depth;++k)
                 {
                     const uint8_t b = alea.full<uint8_t>();
@@ -41,7 +41,7 @@ namespace {
         {
             for(unit_t i=0;i<bmp.w;++i)
             {
-                const uint8_t *p = (uint8_t *) bmp.get(i,j);
+                const uint8_t *p = (uint8_t *) bmp.standardPixel(i,j);
                 for(size_t k=0;k<bmp.depth;++k)
                 {
                     H( &p[k], 1 );

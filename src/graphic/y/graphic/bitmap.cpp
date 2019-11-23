@@ -84,6 +84,7 @@ namespace upsylon {
             // check enough memory
             if( stride*h > bytes ) throw exception("%snot enough data!!!",fn);
 
+            // check model
             switch(kind)
             {
                 case Memory::Static: break;
@@ -91,6 +92,8 @@ namespace upsylon {
                     *( nref = object::acquire1<size_t>() ) = 1;
                     break;
             }
+
+            // create rows
             try
             {
                 setupRows(entry);
@@ -109,12 +112,19 @@ namespace upsylon {
         {
         }
 
-        const void * AnonymousRow:: pixel(const unit_t i) const throw()
+        const void * AnonymousRow:: getZeroFlux(const unit_t i) const throw()
         {
             assert(addr);
             return static_cast<const char *>(addr) + bitmap.depth * bitmap.zfw(i);
         }
 
+        const void * AnonymousRow:: getStandard(const unit_t i) const throw()
+        {
+            assert(addr);
+            assert(i>=0);
+            assert(i<bitmap.w);
+            return static_cast<const char *>(addr) + bitmap.depth * i;
+        }
         
         void Bitmap:: setupRows(void *origin)
         {
@@ -126,8 +136,8 @@ namespace upsylon {
             for(unit_t j=0;j<h;++j,p+=stride,++r)
             {
                 new (r) AnonymousRow(p,*this);
-                assert(r->addr!=NULL);
             }
+
 
         }
 
@@ -175,27 +185,38 @@ namespace upsylon {
             return Clone(bitmap,bitmap);
         }
 
-        const AnonymousRow *Bitmap:: row(const unit_t j) const throw()
+        const AnonymousRow *Bitmap:: getZeroFlux(const unit_t j) const throw()
         {
             return rows + zfh(j);
         }
 
-        const AnonymousRow * Bitmap:: row__(const unit_t j) const throw()
+        const AnonymousRow * Bitmap:: getStandard(const unit_t j) const throw()
         {
             assert(j>=0);
             assert(j<h);
-            return rows+h;
+            return rows+j;
         }
 
-        const void * Bitmap:: get(const unit_t i, const unit_t j) const throw()
+        const void * Bitmap:: zeroFluxPixel(const unit_t i, const unit_t j) const throw()
         {
-            return row(j)->pixel(i);
+            return getZeroFlux(j)->getZeroFlux(i);
         }
 
-        const void * Bitmap:: get(const Point &p) const throw()
+        const void * Bitmap:: zeroFluxPixel(const Point &p) const throw()
         {
-            return get(p.x,p.y);
+            return zeroFluxPixel(p.x,p.y);
         }
+
+        const void * Bitmap:: standardPixel(const unit_t i, const unit_t j) const throw()
+        {
+            return getStandard(j)->getStandard(i);
+        }
+
+        const void * Bitmap:: standardPixel(const Point &p) const throw()
+        {
+            return standardPixel(p.x, p.y);
+        }
+
 
         Bitmap:: Bitmap(const Bitmap    &bitmap,
                         const Rectangle &rectangle) :
@@ -216,7 +237,7 @@ namespace upsylon {
 
             if( ! bitmap.contains(rectangle) ) throw exception("%sinvalid sub-bitmap to share",fn);
 
-            setupRows( (void*) ( bitmap.get(rectangle.lower) ) );
+            setupRows( (void*) ( bitmap.standardPixel(rectangle.lower) ) );
 
             if(nref)
             {

@@ -53,11 +53,14 @@ namespace upsylon {
 
             inline const Row<T> & operator[](const unit_t j) const throw()
             {
-                const  Bitmap       &self = **this;
-                const  AnonymousRow *arow =self.row__(j);
-                assert(NULL!=arow);
-                assert(NULL!=arow->addr);
-                return *(const Row<T> *)arow;
+                const  Bitmap           &self = **this;
+                return *(const Row<T> *)(self.getStandard(j));
+            }
+
+            inline const Row<T> & operator()(const unit_t j) const throw()
+            {
+                const  Bitmap &self = **this;
+                return *(const Row<T> *)(self.getZeroFlux(j));
             }
 
         private:
