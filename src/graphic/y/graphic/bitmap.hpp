@@ -64,6 +64,8 @@ namespace upsylon {
 
             void run( hashing::function & ) const throw();
 
+            void checkWritable() const;
+
         private:
             void   *entry; //!< address of first pixel
         public:

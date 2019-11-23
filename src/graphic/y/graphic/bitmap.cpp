@@ -141,6 +141,17 @@ namespace upsylon {
 
         }
 
+        void Bitmap:: checkWritable() const
+        {
+            switch(mode)
+            {
+                case Memory::ReadWrite: break;
+                case Memory::ReadOnly: throw exception("%sis Read-Only!",fn);
+                    break;
+            }
+        }
+
+
 
         Bitmap * Bitmap:: Create(const size_t W,
                                  const size_t H,
