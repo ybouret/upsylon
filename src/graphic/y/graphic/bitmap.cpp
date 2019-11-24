@@ -196,12 +196,12 @@ namespace upsylon {
             return Clone(bitmap,bitmap);
         }
 
-        const AnonymousRow *Bitmap:: getZeroFlux(const unit_t j) const throw()
+        const AnonymousRow *Bitmap:: zfxRow(const unit_t j) const throw()
         {
             return rows + zfh(j);
         }
 
-        const AnonymousRow * Bitmap:: getStandard(const unit_t j) const throw()
+        const AnonymousRow * Bitmap:: stdRow(const unit_t j) const throw()
         {
             assert(j>=0);
             assert(j<h);
@@ -210,7 +210,7 @@ namespace upsylon {
 
         const void * Bitmap:: zeroFluxPixel(const unit_t i, const unit_t j) const throw()
         {
-            return getZeroFlux(j)->getZeroFlux(i);
+            return zfxRow(j)->getZeroFlux(i);
         }
 
         const void * Bitmap:: zeroFluxPixel(const Point &p) const throw()
@@ -220,7 +220,7 @@ namespace upsylon {
 
         const void * Bitmap:: standardPixel(const unit_t i, const unit_t j) const throw()
         {
-            return getStandard(j)->getStandard(i);
+            return stdRow(j)->getStandard(i);
         }
 
         const void * Bitmap:: standardPixel(const Point &p) const throw()

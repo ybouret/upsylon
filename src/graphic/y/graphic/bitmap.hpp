@@ -53,8 +53,8 @@ namespace upsylon {
             static Bitmap *Clone(const Bitmap &bitmap);
 
 
-            const AnonymousRow *getStandard(const unit_t j) const throw(); //!< j in 0..h-1
-            const AnonymousRow *getZeroFlux(const unit_t j) const throw(); //! zero flux
+            const AnonymousRow *stdRow(const unit_t j) const throw(); //!< j in 0..h-1
+            const AnonymousRow *zfxRow(const unit_t j) const throw(); //! zero flux
             const void         *standardPixel(const unit_t i, const unit_t j) const throw(); //! standard
             const void         *standardPixel(const Point &p) const throw(); //! standard
             const void         *zeroFluxPixel(const unit_t i, const unit_t j) const throw(); //! zeroFlux

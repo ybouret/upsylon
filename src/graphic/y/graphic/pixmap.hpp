@@ -31,6 +31,28 @@ namespace upsylon {
                 return addr[i];
             }
 
+            inline type & operator[](const unit_t i) throw()
+            {
+                assert(addr);
+                assert(i>=0);
+                assert(i<bitmap.w);
+                assert(bitmap.mode==Memory::ReadWrite);
+                return addr[i];
+            }
+
+            inline const_type & operator()(const unit_t i) const throw()
+            {
+                assert( addr );
+                return addr[ bitmap.zfw(i) ];
+            }
+
+            inline type & operator()(const unit_t i) throw()
+            {
+                assert( addr );
+                assert(bitmap.mode==Memory::ReadWrite);
+                return addr[ bitmap.zfw(i) ];
+            }
+
         private:
             Row(); ~Row() throw();
             Y_DISABLE_COPY_AND_ASSIGN(Row);
@@ -54,14 +76,30 @@ namespace upsylon {
             inline const Row<T> & operator[](const unit_t j) const throw()
             {
                 const  Bitmap           &self = **this;
-                return *(const Row<T> *)(self.getStandard(j));
+                return *(const Row<T> *)(self.stdRow(j));
             }
+
+            inline Row<T> & operator[](const unit_t j) throw()
+            {
+                const Bitmap &self = **this;
+                assert( self.mode == Memory::ReadWrite );
+                return *(Row<T> *)(self.stdRow(j));
+            }
+
 
             inline const Row<T> & operator()(const unit_t j) const throw()
             {
                 const  Bitmap &self = **this;
-                return *(const Row<T> *)(self.getZeroFlux(j));
+                return *(const Row<T> *)(self.zfxRow(j));
             }
+
+            inline  Row<T> & operator()(const unit_t j) throw()
+            {
+                const  Bitmap &self = **this;
+                assert( self.mode == Memory::ReadWrite );
+                return *(Row<T> *)(self.zfxRow(j));
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pixmap);
