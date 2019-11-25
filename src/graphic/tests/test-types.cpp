@@ -1,7 +1,9 @@
 
 #include "y/graphic/pixmap.hpp"
+#include "y/graphic/convert.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include <iomanip>
 
 using namespace upsylon;
 using namespace Graphic;
@@ -25,6 +27,21 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF_WITH( pfx, Row<uint8_t>);
     Y_UTEST_SIZEOF_WITH( pfx, Row<uint16_t>);
     Y_UTEST_SIZEOF_WITH( pfx, Row<uint32_t>);
+
+    std::cerr << "Checking Conversion..." << std::endl;
+    for(size_t i=0;i<256;++i)
+    {
+        Y_ASSERT( Convert::Float2Byte( Convert::UnitFloat[i] ) == i );
+    }
+
+    if(false)
+    {
+        for(size_t i=0;i<256;++i)
+        {
+            std::cout << "_F(" << std::setw(3) << i << "),";
+            if(0==((i+1)%16)) std::cout << std::endl;
+        }
+    }
 
 }
 Y_UTEST_DONE()
