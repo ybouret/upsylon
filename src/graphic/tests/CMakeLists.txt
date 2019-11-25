@@ -6,10 +6,11 @@ ADD_EXECUTABLE(test-graphic main.cpp ${srcs} ../../main/tests/support.hpp)
 TARGET_LINK_Y(test-graphic graphic)
 
 ENABLE_TESTING()
-ADD_TEST(Types  test-graphic types)
-ADD_TEST(Area   test-graphic area)
-ADD_TEST(Bitmap test-graphic bitmap)
-ADD_TEST(Pixmap test-graphic pixmap)
+ADD_TEST(Types    test-graphic types)
+ADD_TEST(Area     test-graphic area)
+ADD_TEST(Bitmap   test-graphic bitmap)
+ADD_TEST(Pixmap   test-graphic pixmap)
+ADD_TEST(Parallel test-graphic parallel)
 
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

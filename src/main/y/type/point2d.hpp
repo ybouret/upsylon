@@ -98,6 +98,12 @@ namespace upsylon
             return s;
         }
 
+        //! product of coordinates
+        inline type prod() const throw()
+        {
+            return x*y;
+        }
+
         //! equality
         inline friend bool operator==( const point2d &lhs, const point2d &rhs )
         {
