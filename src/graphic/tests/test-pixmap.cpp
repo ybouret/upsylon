@@ -1,5 +1,6 @@
 
-#include "y/graphic/pixmap.hpp"
+#include "y/graphic/pixmaps.hpp"
+#include "y/graphic/stack.hpp"
 #include "y/utest/run.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/sequence/list.hpp"
@@ -38,15 +39,20 @@ namespace    {
 
 Y_UTEST(pixmap)
 {
-    Pixmap<uint8_t>  pxm1(ALEA_COORD,ALEA_COORD);
+    Pixmap1          pxm1(ALEA_COORD,ALEA_COORD);
     Pixmap<uint16_t> pxm2(ALEA_COORD,ALEA_COORD);
     Pixmap<uint32_t> pxm4(ALEA_COORD,ALEA_COORD);
     Pixmap<uint64_t> pxm8(ALEA_COORD,ALEA_COORD);
+    Pixmap3          rgb(ALEA_COORD,ALEA_COORD);
+    Pixmap4          rgba(ALEA_COORD,ALEA_COORD);
+
 
     doPxm(pxm1);
     doPxm(pxm2);
     doPxm(pxm4);
     doPxm(pxm8);
+    doPxm(rgb);
+    doPxm(rgba);
 
 }
 Y_UTEST_DONE()

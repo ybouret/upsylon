@@ -58,6 +58,14 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Row);
         };
 
+        namespace Kernel {
+            struct Pixmap
+            {
+                static inline Bitmap *CheckBitmap( Bitmap *bmp, const size_t depth );
+            };
+        }
+
+
         template <typename T>
         class Pixmap : public Surface
         {
@@ -67,6 +75,12 @@ namespace upsylon {
             inline explicit Pixmap(const size_t W, const size_t H) :
             Surface( Bitmap::Create(W,H,sizeof(T)) )
             {
+            }
+
+            inline explicit Pixmap( Bitmap *bmp ) :
+            Surface( Kernel::Pixmap::CheckBitmap(bmp,sizeof(T)) )
+            {
+
             }
 
             inline virtual ~Pixmap() throw()
