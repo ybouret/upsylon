@@ -112,13 +112,13 @@ namespace upsylon {
         {
         }
 
-        const void * AnonymousRow:: getZeroFlux(const unit_t i) const throw()
+        const void * AnonymousRow:: zfx(const unit_t i) const throw()
         {
             assert(addr);
             return static_cast<const char *>(addr) + bitmap.depth * bitmap.zfw(i);
         }
 
-        const void * AnonymousRow:: getStandard(const unit_t i) const throw()
+        const void * AnonymousRow:: std(const unit_t i) const throw()
         {
             assert(addr);
             assert(i>=0);
@@ -208,24 +208,24 @@ namespace upsylon {
             return rows+j;
         }
 
-        const void * Bitmap:: zeroFluxPixel(const unit_t i, const unit_t j) const throw()
+        const void * Bitmap:: zfxGet(const unit_t i, const unit_t j) const throw()
         {
-            return zfxRow(j)->getZeroFlux(i);
+            return zfxRow(j)->zfx(i);
         }
 
-        const void * Bitmap:: zeroFluxPixel(const Point &p) const throw()
+        const void * Bitmap:: zfxGet(const Point &p) const throw()
         {
-            return zeroFluxPixel(p.x,p.y);
+            return zfxGet(p.x,p.y);
         }
 
-        const void * Bitmap:: standardPixel(const unit_t i, const unit_t j) const throw()
+        const void * Bitmap:: stdGet(const unit_t i, const unit_t j) const throw()
         {
-            return stdRow(j)->getStandard(i);
+            return stdRow(j)->std(i);
         }
 
-        const void * Bitmap:: standardPixel(const Point &p) const throw()
+        const void * Bitmap:: stdGet(const Point &p) const throw()
         {
-            return standardPixel(p.x, p.y);
+            return stdGet(p.x, p.y);
         }
 
 
@@ -248,7 +248,7 @@ namespace upsylon {
 
             if( ! bitmap.contains(rectangle) ) throw exception("%sinvalid sub-bitmap to share",fn);
 
-            setupRows( (void*) ( bitmap.standardPixel(rectangle.lower) ) );
+            setupRows( (void*) ( bitmap.stdGet(rectangle.lower) ) );
 
             if(nref)
             {

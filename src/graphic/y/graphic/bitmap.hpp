@@ -20,8 +20,8 @@ namespace upsylon {
                                   const Bitmap      &parent) throw();
             void              *addr;
             const Bitmap      &bitmap;
-            const void        *getZeroFlux(const unit_t i) const throw();
-            const void        *getStandard(const unit_t i) const throw();
+            const void        *zfx(const unit_t i) const throw();
+            const void        *std(const unit_t i) const throw();
 
         private:
             ~AnonymousRow() throw();
@@ -55,10 +55,10 @@ namespace upsylon {
 
             const AnonymousRow *stdRow(const unit_t j) const throw(); //!< j in 0..h-1
             const AnonymousRow *zfxRow(const unit_t j) const throw(); //! zero flux
-            const void         *standardPixel(const unit_t i, const unit_t j) const throw(); //! standard
-            const void         *standardPixel(const Point &p) const throw(); //! standard
-            const void         *zeroFluxPixel(const unit_t i, const unit_t j) const throw(); //! zeroFlux
-            const void         *zeroFluxPixel(const Point &p) const throw(); //! zero flux
+            const void         *stdGet(const unit_t i, const unit_t j) const throw(); //! standard
+            const void         *stdGet(const Point &p) const throw(); //! standard
+            const void         *zfxGet(const unit_t i, const unit_t j) const throw(); //! zeroFlux
+            const void         *zfxGet(const Point &p) const throw(); //! zero flux
 
 
 
