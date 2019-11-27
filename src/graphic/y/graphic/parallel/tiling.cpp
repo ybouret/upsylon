@@ -100,14 +100,23 @@ namespace upsylon {
                     unit_t i = 0;
                     parops::split_any(w, i, cores.x,rx);
                     std::cerr << "\t[" << w << "x" << h << "]->" << h*w << "@=(" << i << "," << j << ")" << std::endl;
+
+                    const Point lower(i,j);
+                    Point upper(i+w,j+h);
+                    upper.dec();
+                    const Tile::Pointer tile = new Tile( lower, upper );
                 }
                 
             }
 
             std::cerr << "#Passive Tiles: " << CPUs-ncpus << std::endl;
-            for(size_t n=ncpus;n<CPUs;++n)
             {
-
+                const Point lo( 0, 0);
+                const Point up(-1,-1);
+                for(size_t n=ncpus;n<CPUs;++n)
+                {
+                    const Tile::Pointer tile = new Tile(lo,up);
+                }
             }
             std::cerr << std::endl;
 

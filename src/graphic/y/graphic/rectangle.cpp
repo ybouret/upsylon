@@ -49,10 +49,12 @@ namespace upsylon {
         }
         
 
-        void Rectangle:: displayRectangle() const
+        std::ostream & operator<<( std::ostream &os, const Rectangle &r )
         {
-            std::cerr << lower << "->" << upper << std::endl;
+            std::cerr << "[" << r.lower << "->" << r.upper << "=" << (Area&)r << "]";
+            return os;
         }
+
 
         bool Area:: contains(const Rectangle &r) const throw()
         {

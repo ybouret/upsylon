@@ -16,7 +16,7 @@ namespace {
     static inline void fill( Bitmap &bmp )
     {
         std::cerr << "BytesPerPixel=" << bmp.depth << std::endl;
-        bmp.displayArea();
+        std::cerr << (Area&)bmp << std::endl;
         hashing::sha1 H;
 
         H.set();

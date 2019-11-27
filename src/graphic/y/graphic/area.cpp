@@ -33,9 +33,10 @@ namespace upsylon {
         {
         }
 
-        void Area:: displayArea() const
+        std::ostream & operator<<( std::ostream &os, const Area &area )
         {
-            std::cerr << "[" << w << "x" << h << "]" << std::endl;
+            os << "[" << area.w << "x" << area.h << "]";
+            return os;
         }
 
 

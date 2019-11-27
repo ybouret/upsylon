@@ -27,7 +27,7 @@ namespace upsylon {
             const Point lower;
             const Point upper;
 
-            void displayRectangle() const;
+            friend std::ostream & operator<<( std::ostream &, const Rectangle & );
 
         private:
             Y_DISABLE_ASSIGN(Rectangle);

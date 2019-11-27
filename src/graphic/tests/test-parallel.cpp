@@ -18,12 +18,11 @@ Y_UTEST(parallel)
     
     for(size_t W=1;W<=8;++W)
     {
+
         for(size_t H=1;H<=8;++H)
         {
             const Area  area(W,H);
-            //const Cores cores = Tiling::ComputeCoresFor(area, CPUs);
-            area.displayArea();
-            //std::cerr << "\tcores=" << cores << std::endl;
+            std::cerr << "Area: " << area << std::endl;
             Tiling::ComputeTiles(area, CPUs);
         }
     }

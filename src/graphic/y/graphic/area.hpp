@@ -26,8 +26,8 @@ namespace upsylon {
             bool contains(const Point &p ) const throw();
             bool contains(const Rectangle &r) const throw();
 
-            void displayArea() const;
-
+            friend std::ostream & operator<<( std::ostream &, const Area & );
+            
         private:
             Y_DISABLE_ASSIGN(Area);
         };

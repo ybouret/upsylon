@@ -18,7 +18,8 @@ namespace    {
     static inline void doPxm( Pixmap<T> &pxm )
     {
         std::cerr << "Pixmap<" << typeid(T).name() << ">: depth=" << pxm->depth << std::endl;
-        pxm->displayArea();
+        std::cerr << (Area&)(*pxm)<< std::endl;
+
         const Pixmap<T> &cxm = pxm;
         for(unit_t j=0;j<pxm->h;++j)
         {
