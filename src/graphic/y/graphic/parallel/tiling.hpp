@@ -3,7 +3,7 @@
 #ifndef Y_GRAPHICS_PARALLEL_TILING_INCLUDED
 #define Y_GRAPHICS_PARALLEL_TILING_INCLUDED 1
 
-#include "y/graphic/parallel/tile.hpp"
+#include "y/graphic/area.hpp"
 
 namespace upsylon {
 

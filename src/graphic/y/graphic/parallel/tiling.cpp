@@ -85,7 +85,6 @@ namespace upsylon {
             const Cores  cores = ComputeCoresFor(area,CPUs);
             const size_t ncpus = cores.prod();
 
-            std::cerr << "Area: " << area.w << "x" << area.h << std::endl;
             std::cerr << "CPUs: " << CPUs << std::endl;
             std::cerr << "#Active Tiles: " << ncpus << std::endl;
             for(size_t ry=0;ry<cores.y;++ry)
@@ -99,12 +98,13 @@ namespace upsylon {
                     unit_t w = area.w;
                     unit_t i = 0;
                     parops::split_any(w, i, cores.x,rx);
-                    std::cerr << "\t[" << w << "x" << h << "]->" << h*w << "@=(" << i << "," << j << ")" << std::endl;
+                    //std::cerr << "\t[" << w << "x" << h << "]->" << h*w << "@=(" << i << "," << j << ")" << std::endl;
 
                     const Point lower(i,j);
                     Point upper(i+w,j+h);
                     upper.dec();
-                    const Tile::Pointer tile = new Tile( lower, upper );
+                    //const Tile::Pointer tile = new Tile( lower, upper );
+                    //std::cerr << "tile: " << tile << std::endl;
                 }
                 
             }
@@ -115,7 +115,8 @@ namespace upsylon {
                 const Point up(-1,-1);
                 for(size_t n=ncpus;n<CPUs;++n)
                 {
-                    const Tile::Pointer tile = new Tile(lo,up);
+                    //const Tile::Pointer tile = new Tile(lo,up);
+                    //std::cerr << "tile: " << tile << std::endl;
                 }
             }
             std::cerr << std::endl;
