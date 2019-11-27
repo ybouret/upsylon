@@ -20,7 +20,6 @@ namespace upsylon {
             const Cores  cores = Tiling::ComputeCoresFor(area,count);
             const size_t ncpus = cores.prod();
 
-            std::cerr << "#Active Tiles: " << ncpus << std::endl;
             for(size_t ry=0;ry<cores.y;++ry)
             {
                 unit_t h = area.h;
@@ -41,16 +40,14 @@ namespace upsylon {
 
             }
 
-            std::cerr << "#Passive Tiles: " << count-ncpus << std::endl;
             {
                 const Point lo( 0, 0);
                 const Point up(-1,-1);
                 for(size_t n=ncpus;n<count;++n)
                 {
-                    this->build<const Point&,const Point&>(0,0);
+                    this->build<const Point&,const Point&>(lo,up);
                 }
             }
-            std::cerr << std::endl;
         }
     }
 }

@@ -1,8 +1,9 @@
 
 
 #include "y/utest/run.hpp"
-#include "y/graphic/parallel/tiling.hpp"
+#include "y/graphic/parallel/tiles.hpp"
 #include "y/string/convert.hpp"
+#include "y/concurrent/scheme/simd.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
@@ -10,12 +11,10 @@ using namespace Graphic;
 Y_UTEST(parallel)
 {
 
-    size_t CPUs = 4;
-    if(argc>1)
-    {
-        CPUs = string_convert::to<size_t>( argv[1], "CPUs" );
-    }
-    
+    concurrent::simd           par;
+    concurrent::sequential_for seq;
+
+
     for(size_t W=1;W<=8;++W)
     {
 
@@ -23,7 +22,11 @@ Y_UTEST(parallel)
         {
             const Area  area(W,H);
             std::cerr << "Area: " << area << std::endl;
-            Tiling::ComputeTiles(area, CPUs);
+            Tiles parTiles(area,par);
+            Tiles seqTiles(area,seq);
+            std::cerr << parTiles << std::endl;
+
+            //Tiling::ComputeTiles(area, CPUs);
         }
     }
 

@@ -6,12 +6,13 @@
 #include "y/type/args.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/memory/global.hpp"
+#include <iostream>
 
 namespace upsylon {
 
     //! C-style slots of [0..size()-1] C++ objects
     template <typename T, typename ALLOCATOR=memory::global>
-    class slots : public virtual dynamic
+    class slots : public dynamic
     {
     public:
         Y_DECL_ARGS(T,type); //!< type aliases
@@ -38,10 +39,10 @@ namespace upsylon {
         inline virtual size_t size()     const throw() { return size_; }
 
         //! access
-        inline type       & operator[](size_t indx) throw()       { assert(indx<size_); assert(addr); return addr[indx]; }
+        inline   type       & operator[](size_t indx) throw()       { assert(indx<size_); assert(addr); return addr[indx]; }
 
         //! access, CONST
-        inline const_type & operator[](size_t indx) const throw() { assert(indx<size_); assert(addr); return addr[indx]; }
+        inline   const_type & operator[](size_t indx) const throw() { assert(indx<size_); assert(addr); return addr[indx]; }
 
         //! push a new object using copy ctor
         inline void push( param_type args )
@@ -98,6 +99,17 @@ namespace upsylon {
             assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX,argY); ++size_;
         }
 
+        inline friend std::ostream & operator<<( std::ostream &os, const slots &s )
+        {
+            os << '<';
+            for(size_t i=0;i<s.size_;++i)
+            {
+                if(i>0) os << ':';
+                os << s.addr[i];
+            }
+            os << '>';
+            return os;
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(slots);
