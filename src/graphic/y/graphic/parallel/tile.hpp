@@ -11,16 +11,21 @@ namespace upsylon {
     namespace Graphic {
 
 
-        //! subdivision for operation on bitmaps/pixmaps
+        //! subdivision for operation on bitmaps/pixmaps, may be empty
         class Tile : public Area
         {
         public:
 
-            const Point lower;
-            const Point upper;
+            const Point lower; //!< lower index
+            const Point upper; //!< upper index
+
+            //! setup with possible zero Area
             explicit  Tile(const Point &lo, const Point &up);
+
+            //! cleanup
             virtual  ~Tile() throw();
-            
+
+            //! display
             friend std::ostream & operator<<( std::ostream &, const Tile &);
 
 

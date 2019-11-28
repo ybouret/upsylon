@@ -99,6 +99,7 @@ namespace upsylon {
             assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX,argY); ++size_;
         }
 
+        //! display
         inline friend std::ostream & operator<<( std::ostream &os, const slots &s )
         {
             os << '<';

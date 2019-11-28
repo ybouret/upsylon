@@ -11,11 +11,17 @@ namespace upsylon {
         {
         }
 
+        void Tiles:: randomize(randomized::bits &ran) throw()
+        {
+            Tiles_ &self = *this;
+            ran.shuffle(&self[0],count);
+        }
+
         Tiles:: Tiles(const Area           &area,
                       concurrent::for_each &loop ) :
-        Tiles_( loop.engine().num_threads() )
+        Tiles_( loop.number() )
         {
-            assert( count == loop.engine().num_threads() );
+            assert( count == loop.number() );
 
             const Cores  cores = Tiling::ComputeCoresFor(area,count);
             const size_t ncpus = cores.prod();

@@ -12,11 +12,11 @@ namespace upsylon {
 
     namespace Graphic {
 
-        typedef Pixmap<uint8_t> Pixmap1;
-        typedef Pixmap<float>   PixmapF;
-        typedef Pixmap<double>  PixmapD;
-        typedef Pixmap<RGB>     Pixmap3;
-        typedef Pixmap<RGBA>    Pixmap4;
+        typedef Pixmap<uint8_t> Pixmap1; //!< alias
+        typedef Pixmap<float>   PixmapF; //!< alias
+        typedef Pixmap<double>  PixmapD; //!< alias
+        typedef Pixmap<RGB>     Pixmap3; //!< alias
+        typedef Pixmap<RGBA>    Pixmap4; //!< alias
 
 
     }

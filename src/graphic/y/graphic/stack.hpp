@@ -11,15 +11,20 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! a stack of pixmaps
         template <typename T>
         class Stack : public slots< Pixmap<T> >
         {
         public:
-            typedef slots< Pixmap<T> > Slots;
+
+            typedef slots< Pixmap<T> > Slots; //!< alias
+
+            //! setup
             inline explicit Stack(const size_t n) : Slots(n)
             {
             }
 
+            //! cleanup
             inline virtual ~Stack() throw()
             {
             }

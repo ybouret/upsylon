@@ -23,7 +23,10 @@ namespace upsylon
 
             //! the underlying threads
             virtual executor & engine() throw();
-            
+
+            //!  the underlying threads, const
+            virtual const executor & engine() const throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
             static  void call( void *, parallel &, lockable &) throw(); //! kernel for threads

@@ -13,9 +13,9 @@ namespace upsylon {
         class Surface : public Bitmap::Pointer
         {
         public:
-            Surface( Bitmap *bmp ) throw();
-            virtual ~Surface() throw();
-            Surface( const Surface &surface ) throw();
+            Surface( Bitmap *bmp ) throw();            //!< take care of a new bitmap
+            virtual ~Surface() throw();                //!< clean up
+            Surface( const Surface &surface ) throw(); //!< shared copy
             
         private:
             Y_DISABLE_ASSIGN(Surface);

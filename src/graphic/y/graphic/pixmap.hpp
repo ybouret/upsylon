@@ -15,14 +15,13 @@ namespace upsylon {
         class Row
         {
         public:
-            Y_DECL_ARGS(T,type);
-
+            Y_DECL_ARGS(T,type);      //!< aliases
         private:
-            type              *addr;
-
+            type              *addr;  //!< typed address
         public:
-            const Bitmap      &bitmap;
+            const Bitmap      &bitmap; //!< source bitmap
 
+            //! inline const access
             inline const_type & operator[]( const unit_t i ) const throw()
             {
                 assert(addr);
@@ -31,6 +30,7 @@ namespace upsylon {
                 return addr[i];
             }
 
+            //! inline access
             inline type & operator[](const unit_t i) throw()
             {
                 assert(addr);
@@ -40,12 +40,14 @@ namespace upsylon {
                 return addr[i];
             }
 
+            //! inline zero flux const access
             inline const_type & operator()(const unit_t i) const throw()
             {
                 assert( addr );
                 return addr[ bitmap.zfw(i) ];
             }
 
+            //! inline zero flux access
             inline type & operator()(const unit_t i) throw()
             {
                 assert( addr );
@@ -59,40 +61,49 @@ namespace upsylon {
         };
 
         namespace Kernel {
+            //! tools for Pixmaps
             struct Pixmap
             {
+                //! check compatible depths
                 static inline Bitmap *CheckBitmap( Bitmap *bmp, const size_t depth );
             };
         }
 
 
+        //! a bitmap of type
         template <typename T>
         class Pixmap : public Surface
         {
         public:
-            Y_DECL_ARGS(T,type);
-
+            Y_DECL_ARGS(T,type);                           //!< aliases
+            static const size_t BytesPerPixel = sizeof(T); //!< alias
+            
+            //! create a new pixmap
             inline explicit Pixmap(const size_t W, const size_t H) :
             Surface( Bitmap::Create(W,H,sizeof(T)) )
             {
             }
 
+            //! create a pixmap from a new bitmap
             inline explicit Pixmap( Bitmap *bmp ) :
             Surface( Kernel::Pixmap::CheckBitmap(bmp,sizeof(T)) )
             {
 
             }
 
+            //! cleanup
             inline virtual ~Pixmap() throw()
             {
             }
 
+            //! const row access
             inline const Row<T> & operator[](const unit_t j) const throw()
             {
                 const  Bitmap           &self = **this;
                 return *(const Row<T> *)(self.stdRow(j));
             }
 
+            //! row access
             inline Row<T> & operator[](const unit_t j) throw()
             {
                 const Bitmap &self = **this;
@@ -100,13 +111,14 @@ namespace upsylon {
                 return *(Row<T> *)(self.stdRow(j));
             }
 
-
+            //! const zero flux row
             inline const Row<T> & operator()(const unit_t j) const throw()
             {
                 const  Bitmap &self = **this;
                 return *(const Row<T> *)(self.zfxRow(j));
             }
 
+            //! zero flux row
             inline  Row<T> & operator()(const unit_t j) throw()
             {
                 const  Bitmap &self = **this;

@@ -79,51 +79,7 @@ namespace upsylon {
             return probes.front();
         }
 
-
-        void  Tiling:: ComputeTiles( const Area &area, const size_t CPUs )
-        {
-            const Cores  cores = ComputeCoresFor(area,CPUs);
-            const size_t ncpus = cores.prod();
-
-            std::cerr << "CPUs: " << CPUs << std::endl;
-            std::cerr << "#Active Tiles: " << ncpus << std::endl;
-            for(size_t ry=0;ry<cores.y;++ry)
-            {
-                unit_t h = area.h;
-                unit_t j = 0;
-                parops::split_any(h, j, cores.y, ry);
-
-                for(size_t rx=0;rx<cores.x;++rx)
-                {
-                    unit_t w = area.w;
-                    unit_t i = 0;
-                    parops::split_any(w, i, cores.x,rx);
-                    //std::cerr << "\t[" << w << "x" << h << "]->" << h*w << "@=(" << i << "," << j << ")" << std::endl;
-
-                    const Point lower(i,j);
-                    Point upper(i+w,j+h);
-                    upper.dec();
-                    //const Tile::Pointer tile = new Tile( lower, upper );
-                    //std::cerr << "tile: " << tile << std::endl;
-                }
-                
-            }
-
-            std::cerr << "#Passive Tiles: " << CPUs-ncpus << std::endl;
-            {
-                const Point lo( 0, 0);
-                const Point up(-1,-1);
-                for(size_t n=ncpus;n<CPUs;++n)
-                {
-                    //const Tile::Pointer tile = new Tile(lo,up);
-                    //std::cerr << "tile: " << tile << std::endl;
-                }
-            }
-            std::cerr << std::endl;
-
-
-        }
-
+        
 
     }
 }

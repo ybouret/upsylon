@@ -10,20 +10,14 @@ namespace upsylon {
     namespace Graphic {
 
 
+        typedef point2d<size_t> Cores; //!< alias
 
-        typedef point2d<size_t> Cores;
-
-        class Tiling
+        //! Tiling functions
+        struct Tiling
         {
-        public:
-
-            // compute cores to tile area
+            //! get the optimal 2D cores to tile an area
             static Cores ComputeCoresFor( const Area &area, const size_t CPUs);
-            static void  ComputeTiles( const Area &area, const size_t CPUs );
 
-
-        private:
-            
         };
 
     }

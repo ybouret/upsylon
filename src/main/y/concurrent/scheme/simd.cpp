@@ -36,6 +36,11 @@ namespace upsylon
             return workers;
         }
 
+        const executor & simd:: engine() const throw()
+        {
+            return workers;
+        }
+
 
         simd:: ~simd() throw()
         {

@@ -9,15 +9,17 @@ namespace upsylon {
 
     namespace core {
 
+        //! compute indices to get a null gradient on borders
         template <const unit_t OFFSET>
         class zero_flux_index
         {
         public:
-            const unit_t range;
-            const unit_t idmin;
-            const unit_t idmax;
-            const unit_t delta;
+            const unit_t range; //!< number of items
+            const unit_t idmin; //!< OFFSET
+            const unit_t idmax; //!< OFFSET+range-1
+            const unit_t delta; //!< to compute upper indices
 
+            //! setup
             inline explicit zero_flux_index(const unit_t n) throw() :
             range(n),
             idmin(OFFSET),
@@ -28,11 +30,13 @@ namespace upsylon {
             }
 
 
+            //! cleanup
             inline virtual ~zero_flux_index() throw()
             {
 
             }
 
+            //! recursive index call
             inline unit_t operator()(const unit_t i) const
             {
                 const zero_flux_index &self = *this;
