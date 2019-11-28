@@ -11,8 +11,8 @@ using namespace Graphic;
 Y_UTEST(parallel)
 {
 
-    concurrent::simd           par;
-    concurrent::sequential_for seq;
+    Device par = new concurrent::simd();
+    Device seq = new concurrent::sequential_for();
 
 
     for(size_t W=1;W<=8;++W)
@@ -24,9 +24,7 @@ Y_UTEST(parallel)
             std::cerr << "Area: " << area << std::endl;
             Tiles parTiles(area,par);
             Tiles seqTiles(area,seq);
-            std::cerr << parTiles << std::endl;
-
-            //Tiling::ComputeTiles(area, CPUs);
+            std::cerr <<  parTiles << std::endl;
         }
     }
 

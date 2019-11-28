@@ -1,8 +1,8 @@
 //! \file
 
 
-#ifndef Y_GRAPHIC_COLOR_RGB_INCLUDED
-#define Y_GRAPHIC_COLOR_RGB_INCLUDED 1
+#ifndef Y_GRAPHIC_COLOR_YUV_INCLUDED
+#define Y_GRAPHIC_COLOR_YUV_INCLUDED 1
 
 #include "y/os/platform.hpp"
 

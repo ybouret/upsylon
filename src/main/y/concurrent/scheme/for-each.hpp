@@ -4,6 +4,7 @@
 
 #include "y/concurrent/executor.hpp"
 #include "y/ptr/counted.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -19,7 +20,7 @@ namespace upsylon
         class for_each : public counted_object
         {
         public:
-            
+
             //! destructor
             virtual ~for_each() throw();
 
@@ -43,6 +44,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(for_each);
         };
+
+        typedef arc_ptr<for_each> shared_for_each;
 
 
         //! sequential implementation for for_each interface

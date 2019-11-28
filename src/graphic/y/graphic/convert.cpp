@@ -28,6 +28,14 @@ namespace upsylon {
             _F(240),_F(241),_F(242),_F(243),_F(244),_F(245),_F(246),_F(247),_F(248),_F(249),_F(250),_F(251),_F(252),_F(253),_F(254),_F(255)
         };
 
+        YUV Convert:: RGB2YUV(const float r, const float g, const float b) throw()
+        {
+            return YUV( 0.299f * r + 0.587f * g + 0.114f * b,
+                       -0.147f * r - 0.289f * g + 0.436f * b,
+                       0.615f  * r - 0.515f * g - 0.100f * b);
+        }
+
+
     }
 
 }

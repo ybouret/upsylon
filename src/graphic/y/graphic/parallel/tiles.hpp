@@ -14,23 +14,29 @@ namespace upsylon {
     namespace Graphic {
 
         //! base class for Tiles
-        typedef slots<Tile> Tiles_;
+        typedef slots<Tile>                 Tiles_;
+        typedef concurrent::shared_for_each Device;
 
         //! Tiles to partition an area for parallel tasks
         class Tiles : public Tiles_
         {
         public:
+            const Area   area; //!< original area
+
             //! setup for a given area and and a level of parallelism
-            explicit Tiles( const Area &area, concurrent::for_each &loop );
+            explicit Tiles(const Area          &full,
+                           const Device        &loop );
 
             //! cleanup
             virtual ~Tiles() throw();
 
             //! randomize to change CPU addressing
             void randomize( randomized::bits &ran ) throw();
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
+            Device device;
         };
 
     }
