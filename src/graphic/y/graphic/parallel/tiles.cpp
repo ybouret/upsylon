@@ -17,6 +17,13 @@ namespace upsylon {
             ran.shuffle(&self[0],count);
         }
 
+
+        void Tiles:: run( concurrent::kernel proc, void *args )
+        {
+            device->run(proc,args);
+        }
+
+
         Tiles:: Tiles(const Area           &full,
                       const Device         &loop ) :
         Tiles_( loop->number() ),

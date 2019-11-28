@@ -68,8 +68,10 @@ namespace upsylon {
             const void         *zfxGet(const Point &p) const throw();                 //!< zero flux
 
             void run( hashing::function & ) const throw(); //!< run a hashing function on all data
-            void checkWritable() const;                    //!< check writable
-            
+            void checkWritable(const char *context) const;                    //!< check writable
+
+            void clear(); //!< sequential clear
+
         private:
             void   *entry;       //!< address of first pixel
         public:

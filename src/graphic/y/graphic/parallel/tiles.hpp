@@ -32,7 +32,8 @@ namespace upsylon {
 
             //! randomize to change CPU addressing
             void randomize( randomized::bits &ran ) throw();
-            
+
+            void run( concurrent::kernel , void * );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);

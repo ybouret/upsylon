@@ -77,7 +77,8 @@ namespace upsylon {
         public:
             Y_DECL_ARGS(T,type);                           //!< aliases
             static const size_t BytesPerPixel = sizeof(T); //!< alias
-            
+            typedef Row<T> RowType;
+
             //! create a new pixmap
             inline explicit Pixmap(const size_t W, const size_t H) :
             Surface( Bitmap::Create(W,H,sizeof(T)) )
@@ -90,6 +91,7 @@ namespace upsylon {
             {
 
             }
+
 
             //! cleanup
             inline virtual ~Pixmap() throw()
