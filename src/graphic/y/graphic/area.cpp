@@ -51,6 +51,21 @@ namespace upsylon {
             return contains(p.x,p.y);
         }
 
+        bool Area:: sameAreaThan( const Area &area ) const throw()
+        {
+            if( (w == area.w) && (h == area.h) )
+            {
+                assert(items==area.items);
+                return true;
+            }
+            else
+            {
+                assert(items!=area.items);
+                return false;
+            }
+        }
+
+
     }
 }
 

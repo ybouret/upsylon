@@ -61,6 +61,20 @@ namespace upsylon {
             return contains(r.lower) && contains(r.upper);
         }
 
+        bool  Rectangle:: sameRectangleThan( const Rectangle &rect ) const throw()
+        {
+            if( (lower==rect.lower) && (upper==rect.upper) )
+            {
+                assert( sameAreaThan(rect) );
+                return true;
+            }
+            else
+            {
+                // may have the same area
+                return false;
+            }
+        }
+
     }
 
 }

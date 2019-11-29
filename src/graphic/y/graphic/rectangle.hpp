@@ -35,6 +35,8 @@ namespace upsylon {
             //! display
             friend std::ostream & operator<<( std::ostream &, const Rectangle & );
 
+            bool  sameRectangleThan( const Rectangle &rect ) const throw();
+
         private:
             Y_DISABLE_ASSIGN(Rectangle);
         };

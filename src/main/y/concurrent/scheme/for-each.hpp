@@ -20,6 +20,7 @@ namespace upsylon
         class for_each : public counted_object
         {
         public:
+            typedef arc_ptr<for_each> pointer;
 
             //! destructor
             virtual ~for_each() throw();
@@ -45,7 +46,6 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(for_each);
         };
 
-        typedef arc_ptr<for_each> shared_for_each;
 
 
         //! sequential implementation for for_each interface

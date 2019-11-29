@@ -17,37 +17,31 @@ namespace upsylon {
             template <typename PIXMAP>
             struct Copy
             {
+
+
                 const Tiles_ *tiles;
                 const PIXMAP *source;
                 PIXMAP       *target;
 
-                static inline void Run(void *args, parallel &ctx, lockable &l) throw()
+
+                static inline void Run(void *args, parallel &ctx, lockable &) throw()
                 {
                     assert(args);
 
-
                     Copy         &self   = *static_cast<Copy *>(args); assert(self.tiles); assert(self.source); assert(self.target);
-                    const Tile   &tile   = (*self.tiles)[ctx.rank];
+                    //const Tile   &tile   = (*self.tiles)[ctx.rank];
                     const PIXMAP &source = (*self.source);
                     PIXMAP       &target = (*self.target);
-                    const Point   lower  = tile.lower;
-                    const Point   upper  = tile.upper;
-                    if(false) {
-                        Y_LOCK(l);
-                        std::cerr << "in rank=" << ctx.rank << ": " << lower << "->" << upper << " : " << tile.items << "/" << source->items << std::endl;
-                    }
-                    size_t n = 0;
-                    for(unit_t j=upper.y;j>=lower.y;--j)
+                    unit_t        length = source->h;
+                    unit_t        offset = 0;
+
+                    ctx.split(length,offset);
+                    const unit_t  bytes = source->scanline;
+                    while(length-- > 0 )
                     {
-                        typename PIXMAP::RowType       &target_j = target[j];
-                        const typename PIXMAP::RowType &source_j = source[j];
-                        for(unit_t i=upper.x;i>=lower.x;--i)
-                        {
-                            target_j[i] = source_j[i];
-                            ++n;
-                        }
+                        memcpy( target->stdRow(offset)->addr, source->stdRow(offset)->addr, bytes );
+                        ++offset;
                     }
-                    assert(n==tile.items);
                 }
             };
 
@@ -58,8 +52,9 @@ namespace upsylon {
                                const PIXMAP &source,
                                Tiles        &tiles)
         {
+            assert( target.sameSurfaceThan(source) );
             Kernel::Copy<PIXMAP> Ops = { &tiles, &source, &target };
-            tiles.run( Kernel::Copy<PIXMAP>::Run, &Ops );
+            tiles.loop().run( Kernel::Copy<PIXMAP>::Run, &Ops );
         }
 
     }

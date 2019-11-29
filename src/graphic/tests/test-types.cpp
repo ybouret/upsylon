@@ -1,5 +1,5 @@
 
-#include "y/graphic/pixmap.hpp"
+#include "y/graphic/pixmaps.hpp"
 #include "y/graphic/convert.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -23,6 +23,12 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF_WITH( pfx, Area);
     Y_UTEST_SIZEOF_WITH( pfx, Rectangle);
     Y_UTEST_SIZEOF_WITH( pfx, Bitmap);
+    Y_UTEST_SIZEOF_WITH( pfx, Surface);
+    Y_UTEST_SIZEOF_WITH( pfx, Pixmap1);
+    Y_UTEST_SIZEOF_WITH( pfx, PixmapF);
+    Y_UTEST_SIZEOF_WITH( pfx, PixmapD);
+    Y_UTEST_SIZEOF_WITH( pfx, Pixmap3);
+    Y_UTEST_SIZEOF_WITH( pfx, Pixmap4);
     Y_UTEST_SIZEOF_WITH( pfx, AnonymousRow);
     Y_UTEST_SIZEOF_WITH( pfx, Row<uint8_t>);
     Y_UTEST_SIZEOF_WITH( pfx, Row<uint16_t>);

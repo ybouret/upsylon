@@ -19,6 +19,10 @@ namespace upsylon {
         {
         }
 
+        bool Surface:: sameSurfaceThan( const Surface &surf ) const throw()
+        {
+            return (*this)->sameRectangleThan( *surf );
+        }
 
     }
 

@@ -18,17 +18,18 @@ namespace upsylon {
         }
 
 
-        void Tiles:: run( concurrent::kernel proc, void *args )
+        ForEach_ & Tiles:: loop() throw()
         {
-            device->run(proc,args);
+            return *device;
         }
 
 
-        Tiles:: Tiles(const Area           &full,
-                      const Device         &loop ) :
-        Tiles_( loop->number() ),
+
+        Tiles:: Tiles(const Area    &full,
+                      const ForEach &devs ) :
+        Tiles_( devs->number() ),
         area(full),
-        device(loop)
+        device(devs)
         {
             assert( count == device->number() );
 

@@ -28,8 +28,8 @@ namespace {
     }
 
     template <typename T>
-    void doOps(const Device &par,
-               const Device &seq  )
+    void doOps(const ForEach &par,
+               const ForEach &seq  )
     {
         hashing::sha1 H;
         const double tmx = 2;
@@ -76,8 +76,8 @@ namespace {
 Y_UTEST(parallel)
 {
 
-    Device par = new concurrent::simd();
-    Device seq = new concurrent::sequential_for();
+    ForEach par = new concurrent::simd();
+    ForEach seq = new concurrent::sequential_for();
 
 
     for(size_t W=1;W<=8;++W)

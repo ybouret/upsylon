@@ -37,7 +37,9 @@ namespace upsylon {
 
             //! display
             friend std::ostream & operator<<( std::ostream &, const Area & );
-            
+
+            bool sameAreaThan( const Area &area ) const throw();
+
         private:
             Y_DISABLE_ASSIGN(Area);
         };
