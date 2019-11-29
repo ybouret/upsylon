@@ -49,6 +49,41 @@ Y_UTEST(types)
         }
     }
 
+    std::cerr.flush();
+    std::cout.flush();
+    if(false)
+    {
+        for(size_t i=0;i<=3*255;++i)
+        {
+            unsigned g = i/3;
+            if(i>0&&g<=0) g=1;
+            fprintf(stdout," 0x%02x,",g);
+            if(0==((i+1)%16))
+            {
+                fprintf(stdout, "\n" );
+            }
+        }
+    }
+
+    for(size_t r=0;r<256;++r)
+    {
+        for(size_t g=0;g<256;++g)
+        {
+            for(size_t b=0;b<256;++b)
+            {
+                const uint8_t gs = Convert::GreyScale(r,g,b);
+                if(r<=0&&g<=0&&b<=0)
+                {
+                    Y_ASSERT(gs<=0);
+                }
+                else
+                {
+                    Y_ASSERT(gs>0);
+                }
+            }
+        }
+    }
+
 }
 Y_UTEST_DONE()
 
