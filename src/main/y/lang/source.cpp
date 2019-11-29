@@ -94,6 +94,7 @@ namespace upsylon
                 }
             }
             assert(iobuf.size>0);
+            //std::cerr << "Still got char " << iobuf.head->code << std::endl;
             //C = iobuf.head->code;
             return true;
         }

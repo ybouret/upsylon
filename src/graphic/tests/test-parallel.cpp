@@ -106,7 +106,8 @@ Y_UTEST(parallel)
     doConv<float,uint8_t>(par,seq);
     doConv<RGB,uint8_t>(par,seq);
     doConv<RGBA,uint8_t>(par,seq);
-
+    doConv<uint8_t,RGB>(par,seq);
+    doConv<uint8_t,RGBA>(par,seq);
 
 
 }
