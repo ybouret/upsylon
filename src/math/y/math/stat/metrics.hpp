@@ -15,67 +15,84 @@ namespace upsylon
     namespace math
     {
 
-        //! low level average computation
-        template <typename T, typename ITERATOR>
-        T __average_of( ITERATOR it, const size_t n, T *pSdev)
-        {
-            if(pSdev)
-            {
-                *pSdev=0;
-            }
+        namespace kernel {
 
-            if(n>0)
+            //! compute with destruction of data
+            template <typename T>
+            T average( addressable<T> &data, T *sdev)
             {
-                vector<T> tmp(n);
-                for(size_t i=1;i<=n;++i,++it)
+                const size_t n    = data.size();
+                if(sdev)    *sdev = 0;
+                if(n>0)
                 {
-                    tmp[i] = *it;
-                }
-                hsort(tmp,comparison::decreasing_abs<T>);
-                T ave = 0;
-                for(size_t i=n;i>0;--i)
-                {
-                    ave += tmp[i];
-                }
-                ave /= n;
-                if(pSdev)
-                {
-                    if(n>1)
+                    hsort(data,comparison::decreasing_abs<T>);
+                    T ave = 0;
+                    for(size_t i=n;i>0;--i)
+                    {
+                        ave += data[i];
+                    }
+                    ave /= n;
+                    if(sdev&&n>1)
                     {
                         for(size_t i=n;i>0;--i)
                         {
-                            tmp[i] = square_of(tmp[i]-ave);
+                            data[i] = square_of( data[i] - ave );
                         }
-                        hsort(tmp,comparison::decreasing<T>);
+                        hsort(data,comparison::decreasing<T>);
                         T sig = 0;
                         for(size_t i=n;i>0;--i)
                         {
-                            sig += tmp[i];
+                            sig += data[i];
                         }
-                        sig    = sqrt_of(sig)/(n-1);
-                        *pSdev = sig;
+                        *sdev = sqrt_of(sig)/(n-1);
                     }
+                    return ave;
                 }
-                return ave;
+                else
+                {
+                    return 0;
+                }
             }
-            else
+
+            //! compute for a range
+            //! low level average computation
+            template <typename T, typename ITERATOR>
+            T average( ITERATOR it, size_t n, T *sdev)
             {
-                return 0;
+
+                vector<T> tmp(n,as_capacity);
+                while( n-- > 0 )
+                {
+                    tmp.push_back_( *it );
+                    ++it;
+                }
+                return kernel::average(tmp,sdev);
             }
         }
 
+
+
+
+
         //! average for sequence with iterator
         template <typename SEQ> inline
-        typename SEQ::type average_of( const SEQ &seq, typename SEQ::type *pSig=0)
+        typename SEQ::type average_for( const SEQ &seq, typename SEQ::type *sdev=0)
         {
-            return __average_of(seq.begin(), seq.size(), pSig);
+            return kernel::average(seq.begin(), seq.size(), sdev);
         }
 
         //! average for array
         template <typename T> inline
-        T average_of( const array<T> &arr, T *pSig=0)
+        T average_of( const accessible<T> &arr, T *sdev=0)
         {
-            return __average_of( arr(), arr.size(), pSig);
+            size_t    n = arr.size();
+            vector<T> tmp(n,as_capacity);
+            while(n>0)
+            {
+                tmp.push_back_(arr[n]);
+                --n;
+            }
+            return kernel::average(tmp,sdev);
         }
 
 
