@@ -93,6 +93,18 @@ namespace upsylon {
             }
 
 
+            inline void copy( const Pixmap &pxm ) throw()
+            {
+                assert( sameSurfaceThan(pxm) );
+                const Bitmap &self = **this;
+                const unit_t bytes = self.scanline;
+                unit_t       j     = self.h;
+                for(--j;j>=0;--j)
+                {
+                    memcpy( self.stdRow(j)->addr, pxm->stdRow(j)->addr, bytes );
+                }
+            }
+
             //! cleanup
             inline virtual ~Pixmap() throw()
             {

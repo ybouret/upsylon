@@ -1,9 +1,10 @@
 
 
 #include "y/utest/run.hpp"
-#include "y/graphic/parallel/copy.hpp"
 #include "y/string/convert.hpp"
 #include "y/concurrent/scheme/simd.hpp"
+#include "y/graphic/parallel/tiles.hpp"
+#include "y/graphic/pixmaps.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/utest/timings.hpp"
 
@@ -32,43 +33,19 @@ namespace {
                const ForEach &seq  )
     {
         hashing::sha1 H;
-        const double tmx = 2;
 
-        Pixmap<T> source( ALEA_COORD, ALEA_COORD );
-        Tiles     parTiles(*source,par);
-        Tiles     seqTiles(*source,seq);
-        std::cerr << *source << std::endl;
-        std::cerr <<  "par=" << parTiles << std::endl;
-        std::cerr <<  "seq=" << seqTiles << std::endl;
+        Pixmap<T> source(ALEA_COORD,ALEA_COORD);
 
         fill(source);
-        H.set();
-        source->run(H);
-        const digest horg = H.md();
-        std::cerr << "horg=" << horg << std::endl;
-        Pixmap<T> target( source->w, source->h );
+        const digest hOrg = source->md(H);
+        std::cerr << "hOrg=" << hOrg << std::endl;
 
+        Pixmap<T> target(source->w,source->h);
 
-        
-        target->clear();
-        double seqSpeed = 0;
-        Y_TIMINGS(seqSpeed,tmx,PixmapCopy(target, source, seqTiles));
-        H.set();
-        target->run(H);
-        const digest hseq = H.md();
-        std::cerr << "hseq=" << hseq << std::endl;
-
-        std::cerr << "seqSpeed=" << seqSpeed << std::endl;
-
-        target->clear();
-        double parSpeed = 0;
-        Y_TIMINGS(parSpeed,tmx,PixmapCopy(target, source, parTiles));
-        H.set();
-        target->run(H);
-        const digest hpar = H.md();
-        std::cerr << "hpar=" << hpar << std::endl;
-        std::cerr << "parSpeed=" << parSpeed << std::endl;
-        
+        target.copy(source);
+        const digest hCpy = target->md(H);
+        std::cerr << "hCpy=" << hCpy << std::endl;
+        Y_CHECK(hOrg==hCpy);
     }
 
 }

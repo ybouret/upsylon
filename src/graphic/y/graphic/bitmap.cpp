@@ -45,6 +45,13 @@ namespace upsylon {
             }
         }
 
+        digest Bitmap::md( hashing::function &hfn ) const
+        {
+            hfn.set();
+            run(hfn);
+            return hfn.md();
+        }
+
         static size_t checkStride( size_t stride, const size_t scanline )
         {
             if(scanline<=0) throw exception("%sscanline<=0",fn);
