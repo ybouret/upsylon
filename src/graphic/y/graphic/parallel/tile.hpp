@@ -10,6 +10,7 @@ namespace upsylon {
 
     namespace Graphic {
 
+        class Tiles; // forward declaration
 
         //! subdivision for operation on bitmaps/pixmaps, may be empty
         class Tile : public Area
@@ -29,9 +30,22 @@ namespace upsylon {
             friend std::ostream & operator<<( std::ostream &, const Tile &);
 
 
+
+            //! alias internal data
+            template <typename T> inline
+            T &as() throw()
+            {
+                assert(size>=sizeof(T));
+                return *static_cast<T*>(data);
+            }
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);
+            void        *data; //!< extra shared memory
+            const size_t size; //!< available size
 
+            friend class Tiles;
         };
 
 

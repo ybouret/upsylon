@@ -1,6 +1,7 @@
 
 #include "y/graphic/parallel/tiles.hpp"
 #include "y/graphic/parallel/tiling.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -9,6 +10,7 @@ namespace upsylon {
 
         Tiles:: ~Tiles() throw()
         {
+            localRelease();
         }
 
         void Tiles:: randomize(randomized::bits &ran) throw()
@@ -29,7 +31,8 @@ namespace upsylon {
                       const ForEach &devs ) :
         Tiles_( devs->number() ),
         area(full),
-        device(devs)
+        device(devs),
+        dataBlock(0)
         {
             assert( count == device->number() );
 
@@ -65,5 +68,69 @@ namespace upsylon {
                 }
             }
         }
+
+
+        void Tiles:: localRelease() throw()
+        {
+            Tiles_ &self = *this;
+            dataBlock    = NULL;
+
+            for(size_t i=0;i<count;++i)
+            {
+                self[i].data = 0;
+                aliasing::_( self[i].size )  =0;
+            }
+        }
+
+        void Tiles:: localAcquire(const size_t BytesPerTile)
+        {
+            if(BytesPerTile<=0)
+            {
+                return;
+            }
+            else
+            {
+                const size_t bytes = count * BytesPerTile;
+                if( dataBlock.is_empty() || dataBlock->bytes<bytes )
+                {
+                    localRelease();
+                    dataBlock = new Kernel::DataBlock(count,BytesPerTile);
+                }
+                assert(dataBlock->bytes>=bytes);
+                Tiles_  &self = *this;
+                uint8_t *p    = static_cast<uint8_t*>(dataBlock->entry);
+                for(size_t i=0;i<count;++i,p+=BytesPerTile)
+                {
+                    self[i].data                = static_cast<void *>(p);
+                    aliasing::_( self[i].size ) = BytesPerTile;
+                }
+            }
+        }
+
     }
 }
+
+#include "y/code/round.hpp"
+
+namespace upsylon {
+
+    namespace Graphic {
+
+        namespace Kernel {
+
+            DataBlock:: ~DataBlock() throw()
+            {
+                memory::global::location().release(entry,bytes);
+            }
+
+            DataBlock:: DataBlock(const size_t numTiles, const size_t BytesPerTile) :
+            bytes( Y_ROUND4(BytesPerTile) * numTiles ),
+            entry( memory::global::instance().acquire(bytes) )
+            {
+            }
+
+        }
+
+    }
+}
+

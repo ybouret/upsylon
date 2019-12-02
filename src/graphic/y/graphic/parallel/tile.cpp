@@ -31,7 +31,9 @@ namespace upsylon {
         Tile:: Tile( const Point &lo, const Point &up ) :
         Area( checkW(lo,up), checkH(lo,up) ),
         lower(lo),
-        upper(up)
+        upper(up),
+        data(0),
+        size(0)
         {
         }
 

@@ -95,6 +95,13 @@ namespace upsylon {
                        0.615f  * r - 0.515f * g - 0.100f * b);
         }
 
+
+        template <>
+        float Convert::Get<float,float>( const float &f ) throw()
+        {
+            return f;
+        }
+
         template <>
         uint8_t Convert::Get<uint8_t,float>( const float &f ) throw()
         {

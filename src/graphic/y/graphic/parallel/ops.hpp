@@ -4,7 +4,6 @@
 #define Y_GRAPHICS_PARALLEL_OPS_INCLUDED 1
 
 #include "y/graphic/parallel/tiles.hpp"
-//#include "y/graphic/convert.hpp"
 #include "y/graphic/pixmap.hpp"
 
 

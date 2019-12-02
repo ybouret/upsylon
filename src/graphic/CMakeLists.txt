@@ -22,10 +22,17 @@ SET(parallel_srcs ${parallel_decl} ${parallel_code})
 SOURCE_GROUP( graphic/parallel FILES ${parallel_srcs} )
 INSTALL( FILES ${parallel_decl} DESTINATION include/y/graphic/parallel )
 
+FILE(GLOB ops_decl y/graphic/ops/*.hpp)
+FILE(GLOB ops_code y/graphic/ops/*.cpp)
+SET(ops_srcs ${ops_decl} ${ops_code})
+SOURCE_GROUP( graphic/ops FILES ${ops_srcs} )
+INSTALL( FILES ${ops_decl} DESTINATION include/y/graphic/ops )
+
 ADD_LIBRARY(y-graphic STATIC 
 ${main_srcs} 
 ${color_srcs}
 ${parallel_srcs}
+${ops_srcs}
 )
 INSTALL( TARGETS y-graphic ARCHIVE DESTINATION lib )
 
