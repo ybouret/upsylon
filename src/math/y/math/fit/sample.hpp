@@ -8,7 +8,7 @@
 #include "y/sort/index.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ostream.hpp"
-#include "y/math/stat/metrics.hpp"
+#include "y/math/stat/correlation.hpp"
 
 namespace upsylon {
 

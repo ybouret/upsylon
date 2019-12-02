@@ -41,7 +41,10 @@ Y_UTEST_INIT(64)
     Y_UTEST(extend);
     Y_UTEST(smooth);
     Y_UTEST(bspl);
-    Y_UTEST(stat);
+
+    Y_UTEST(average);
+    Y_UTEST(median);
+    Y_UTEST(correlation);
 
 
     Y_UTEST(euclidean);
