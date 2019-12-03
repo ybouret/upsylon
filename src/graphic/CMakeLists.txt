@@ -2,7 +2,7 @@ PROJECT(y-graphic CXX)
 
 MESSAGE( STATUS "<Graphic>" )
 
-INCLUDE_DIRECTORIES(. ../main)
+INCLUDE_DIRECTORIES(. ../main ../ext/y/png)
 
 FILE(GLOB main_decl y/graphic/*.hpp)
 FILE(GLOB main_code y/graphic/*.cpp)
