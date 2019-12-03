@@ -28,11 +28,19 @@ SET(ops_srcs ${ops_decl} ${ops_code})
 SOURCE_GROUP( graphic/ops FILES ${ops_srcs} )
 INSTALL( FILES ${ops_decl} DESTINATION include/y/graphic/ops )
 
+
+FILE(GLOB image_decl y/graphic/image/*.hpp)
+FILE(GLOB image_code y/graphic/image/*.cpp)
+SET(image_srcs ${image_decl} ${image_code})
+SOURCE_GROUP( graphic/image FILES ${image_srcs} )
+INSTALL( FILES ${image_decl} DESTINATION include/y/graphic/image )
+
 ADD_LIBRARY(y-graphic STATIC 
 ${main_srcs} 
 ${color_srcs}
 ${parallel_srcs}
 ${ops_srcs}
+${image_srcs}
 )
 INSTALL( TARGETS y-graphic ARCHIVE DESTINATION lib )
 
