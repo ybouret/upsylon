@@ -12,24 +12,27 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! Images and Formats management
         class Image
         {
         public:
 
+            //! base class for Format
             class Format : public Object
             {
             public:
-                const string name;
+                const string name; //!< name for database of formats
 
-                virtual ~Format() throw();
+                virtual ~Format() throw(); //!< cleanup
 
+                //! load a new bitmap
                 virtual Bitmap *load(const string &filename,
                                      const size_t  depth,
                                      RGBA2Data    &proc,
                                      void         *args) const = 0;
 
             protected:
-                explicit Format(const char *id);
+                explicit Format(const char *id); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Format);

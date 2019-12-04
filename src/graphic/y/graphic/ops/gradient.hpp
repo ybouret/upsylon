@@ -9,15 +9,21 @@ namespace upsylon {
 
     namespace  Graphic {
 
+        //! fast gradient computation
         class Gradient : public Pixmap<float>
         {
         public:
+            //! type dependant local field computation
             template <typename T>
             static float ToFloat(const T &) throw();
 
+            //! setup
             explicit Gradient(const size_t W, const size_t H);
+
+            //! cleanup
             virtual ~Gradient() throw();
 
+            //! compute by Tile
             template <typename SOURCE, typename PROC>
             inline void Compute(const SOURCE &source,
                                 PROC         &proc,

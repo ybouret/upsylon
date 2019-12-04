@@ -17,6 +17,7 @@ namespace upsylon {
             virtual ~Surface() throw();                //!< clean up
             Surface( const Surface &surface ) throw(); //!< shared copy
 
+            //! test areas compatibility
             bool sameSurfaceThan( const Surface &surf ) const throw();
 
         private:

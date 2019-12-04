@@ -20,7 +20,7 @@ namespace upsylon
         class for_each : public counted_object
         {
         public:
-            typedef arc_ptr<for_each> pointer;
+            typedef arc_ptr<for_each> pointer; //!< shared loop
 
             //! destructor
             virtual ~for_each() throw();

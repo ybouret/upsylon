@@ -38,6 +38,7 @@ namespace upsylon {
             //! display
             friend std::ostream & operator<<( std::ostream &, const Area & );
 
+            //! taste equality or areas
             bool sameAreaThan( const Area &area ) const throw();
 
         private:

@@ -14,19 +14,21 @@ namespace upsylon {
 
     namespace Graphic {
 
-        typedef slots<Tile>                   Tiles_;  //!< base class for Tiles
-        typedef concurrent::for_each          ForEach_;
-        typedef concurrent::for_each::pointer ForEach;
+        typedef slots<Tile>                   Tiles_;   //!< base class for Tiles
+        typedef concurrent::for_each          ForEach_; //!< alias
+        typedef concurrent::for_each::pointer ForEach;  //!< alias for shared loop
 
         namespace Kernel {
 
+            //! linear block to dispacth extra memory per Tile
             class DataBlock : public Object
             {
             public:
+                //! create bytes>=numTiles*BytesPerTile
                 explicit DataBlock( const size_t numTiles, const size_t BytesPerTile );
                 virtual ~DataBlock() throw();
-                size_t  bytes;
-                void   *entry;
+                size_t  bytes; //!< total bytes
+                void   *entry; //!< first byte address
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DataBlock);
@@ -53,8 +55,8 @@ namespace upsylon {
             //! get internal loop
             ForEach_ & loop() throw();
 
-            void localAcquire(const size_t BytesPerTile);
-            void localRelease() throw();
+            void localAcquire(const size_t BytesPerTile); //!< acquire and dispatch extra memory
+            void localRelease() throw();                  //!< release extra memory
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);

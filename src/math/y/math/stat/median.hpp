@@ -48,6 +48,7 @@ namespace upsylon {
                 }
             }
 
+            //! median on a range
             template <typename T, typename ITERATOR> inline
             T median( ITERATOR it, const size_t n, T *adev )
             {

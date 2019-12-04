@@ -13,18 +13,20 @@ namespace upsylon {
 
         namespace Kernel {
 
+            //! default parallel operator on tiles
             template <
             typename TARGET,
             typename SOURCE,
             typename PROC>
             struct Ops {
 
-                const Tiles_ *tiles;
-                TARGET       *target;
-                const SOURCE *source;
-                PROC         *proc;
-                int           status;
+                const Tiles_ *tiles;  //!< original tiles
+                TARGET       *target; //!< target something
+                const SOURCE *source; //!< source something
+                PROC         *proc;   //!< pixel wise op
+                int           status; //!< record error
 
+                //! perform PROC on each pixel of a Tile
                 static inline void Run( void *args, parallel &ctx, lockable &access ) throw()
                 {
                     Ops          &self   = *static_cast<Ops *>(args);
@@ -58,8 +60,10 @@ namespace upsylon {
 
         }
 
+        //! parallel ops wrapper
         struct Ops
         {
+            //! prepare data and call the loop
             template <typename TARGET,
             typename SOURCE,
             typename PROC> static inline

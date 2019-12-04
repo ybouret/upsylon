@@ -104,7 +104,7 @@ namespace upsylon {
                     return sorted_sum(deltaSquared);
                 }
 
-                //! limitation
+                //! limitation of x by y
                 template <typename T> static inline
                 T __cut( const T &x, const T &y )
                 {
@@ -136,6 +136,7 @@ namespace upsylon {
                     }
                 }
 
+                //! propagate limitation of lhs by rhs
                 template <typename LHS, typename RHS> static inline
                 void cut( LHS &lhs, RHS &rhs )
                 {

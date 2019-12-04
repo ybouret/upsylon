@@ -7,28 +7,32 @@
 namespace upsylon {
 
     namespace Graphic {
-        
+
+        //! base class for RGBA to something conversion
         class RGBA2Data
         {
         public:
-            virtual ~RGBA2Data() throw();
+            virtual ~RGBA2Data() throw(); //!< cleanup
 
+            //! write data at a valid memory
             virtual void operator()( void *data, const RGBA &C ) throw() = 0;
 
         protected:
-            explicit RGBA2Data() throw();
+            explicit RGBA2Data() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RGBA2Data);
         };
 
+        //! default wrapper
         template <typename T>
         class RGBAto : public RGBA2Data
         {
         public:
-            inline virtual ~RGBAto() throw() {}
-            inline explicit RGBAto() throw() : RGBA2Data() {}
+            inline virtual ~RGBAto() throw() {}                //!< cleanup
+            inline explicit RGBAto() throw() : RGBA2Data() {}  //!< setup
 
+            //! use default encoded conversion
             inline virtual void operator()( void *data, const RGBA &C ) throw()
             {
                 assert(data);

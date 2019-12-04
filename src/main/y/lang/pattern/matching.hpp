@@ -24,7 +24,7 @@ namespace upsylon
             bool         partly(const string &s);                    //!< the string must partly   match the pattern
             size_t       find( sequence<Token> &, const string &s ); //!< free and find all consecutive, non overlapping occurences
             const Token *first_in(const string &s);                  //!< first in string, NULL if none
-            const arc_ptr<const Pattern> motif;
+            const arc_ptr<const Pattern> motif;                      //!< the compile pattern
         private:
             Y_DISABLE_ASSIGN(Matching);
         };

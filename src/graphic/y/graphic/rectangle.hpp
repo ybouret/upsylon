@@ -35,6 +35,7 @@ namespace upsylon {
             //! display
             friend std::ostream & operator<<( std::ostream &, const Rectangle & );
 
+            //! taste equality of lower and upper
             bool  sameRectangleThan( const Rectangle &rect ) const throw();
 
         private:

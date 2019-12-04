@@ -77,7 +77,7 @@ namespace upsylon {
         public:
             Y_DECL_ARGS(T,type);                           //!< aliases
             static const size_t BytesPerPixel = sizeof(T); //!< alias
-            typedef Row<T> RowType;
+            typedef Row<T> RowType;                        //!< alias
 
             //! create a new pixmap
             inline explicit Pixmap(const size_t W, const size_t H) :
@@ -92,7 +92,7 @@ namespace upsylon {
 
             }
 
-
+            //! direct copy
             inline void copy( const Pixmap &pxm ) throw()
             {
                 assert( sameSurfaceThan(pxm) );
