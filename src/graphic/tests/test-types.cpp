@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include <iomanip>
+#include <cstdio>
 
 using namespace upsylon;
 using namespace Graphic;
