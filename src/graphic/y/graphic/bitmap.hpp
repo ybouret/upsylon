@@ -66,6 +66,7 @@ namespace upsylon {
             const void         *stdGet(const Point &p) const throw();                 //!< standard
             const void         *zfxGet(const unit_t i, const unit_t j) const throw(); //!< zeroFlux
             const void         *zfxGet(const Point &p) const throw();                 //!< zero flux
+            const void         *getLine(const unit_t j) const throw();                //!< row[j].addr
 
             void run( hashing::function & ) const throw(); //!< run a hashing function on all data
             void checkWritable(const char *context) const; //!< check writable

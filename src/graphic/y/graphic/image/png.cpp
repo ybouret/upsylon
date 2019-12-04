@@ -11,7 +11,7 @@ namespace upsylon {
 
     namespace Graphic {
 
-        PNG_Format:: PNG_Format() : Image::Format("PNG")
+        PNG_Format:: PNG_Format() : ImageFormat("PNG")
         {
 
         }
@@ -206,7 +206,7 @@ namespace upsylon {
             for(unit_t j=0;j<height;++j)
             {
                 const png_byte *q = mem.rows[j];
-                uint8_t        *p = static_cast<uint8_t*>(bmp->stdRow(--y)->addr);
+                uint8_t        *p = (uint8_t *)(bmp->getLine(--y));
                 for(unit_t i=0;i<width;++i,q += num_channels , p += depth )
                 {
                     switch(num_channels)

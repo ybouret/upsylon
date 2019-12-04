@@ -223,6 +223,13 @@ namespace upsylon {
             return rows+j;
         }
 
+        const void *Bitmap:: getLine(const unit_t j) const throw()
+        {
+            assert(j>=0);
+            assert(j<h);
+            return rows[j].addr;
+        }
+
         const void * Bitmap:: zfxGet(const unit_t i, const unit_t j) const throw()
         {
             return zfxRow(j)->zfx(i);
