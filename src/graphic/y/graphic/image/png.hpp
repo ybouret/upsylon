@@ -16,6 +16,10 @@ namespace upsylon {
             explicit PNG_Format();         //!< "PNG"
             virtual ~PNG_Format() throw(); //!< cleanup
 
+            virtual Bitmap *load(const string &filename,
+                                 const size_t  depth,
+                                 RGBA2Data    &proc,
+                                 void         *args) const;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PNG_Format);
         };
