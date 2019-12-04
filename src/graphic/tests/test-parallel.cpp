@@ -10,6 +10,7 @@
 #include "y/hashing/sha1.hpp"
 #include "y/utest/timings.hpp"
 
+#include <typeinfo>
 
 using namespace upsylon;
 using namespace Graphic;
