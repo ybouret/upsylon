@@ -129,6 +129,15 @@ namespace upsylon {
 
 
 
+        template<>
+        RGBA Convert::Get<RGBA,uint8_t>(const uint8_t &u) throw()
+        {
+            return RGBA(u,u,u);
+        }
+
+
+        // RGBA->something
+
         template <>
         uint8_t Convert::Get<uint8_t,RGBA>(const RGBA &C) throw()
         {
@@ -136,10 +145,16 @@ namespace upsylon {
         }
 
 
-        template<>
-        RGBA Convert::Get<RGBA,uint8_t>(const uint8_t &u) throw()
+        template <>
+        RGB Convert::Get<RGB,RGBA>(const RGBA &C) throw()
         {
-            return RGBA(u,u,u);
+            return C;
+        }
+
+        template <>
+        float Convert::Get<float,RGBA>(const RGBA &C) throw()
+        {
+            return UnitFloat[ GreyScale(C) ];
         }
 
     }

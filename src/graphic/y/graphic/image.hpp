@@ -5,6 +5,7 @@
 #define Y_GRAPHIC_IMAGE_INCLUDED 1
 
 #include "y/graphic/bitmap.hpp"
+#include "y/graphic/color/rgba2data.hpp"
 #include "y/string.hpp"
 
 namespace upsylon {
@@ -22,7 +23,10 @@ namespace upsylon {
 
                 virtual ~Format() throw();
 
-
+                virtual Bitmap *load(const string &filename,
+                                     const size_t  depth,
+                                     RGBA2Data    &proc,
+                                     void         *args) const = 0;
 
             protected:
                 explicit Format(const char *id);
