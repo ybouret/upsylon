@@ -10,7 +10,7 @@ namespace upsylon {
     namespace Graphic {
 
         //! using libpng
-        class PNG_Format : public ImageFormat
+        class PNG_Format : public Image::Format
         {
         public:
             explicit PNG_Format();         //!< "PNG"

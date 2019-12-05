@@ -6,11 +6,11 @@ namespace upsylon {
     namespace Graphic {
 
 
-        ImageFormat:: ~ImageFormat() throw()
+        Image::Format:: ~Format() throw()
         {
         }
 
-        ImageFormat:: ImageFormat(const char *id) :
+        Image:: Format:: Format(const char *id) :
         name(id)
         {
         }

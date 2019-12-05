@@ -13,7 +13,7 @@ namespace upsylon {
             Bitmap * Pixmap:: CheckBitmap(Bitmap *bmp, const size_t depth)
             {
                 assert(bmp);
-                assert(1==bmp->refcount());
+                assert(0==bmp->refcount());
                 
                 const size_t bmp_depth = bmp->depth;
                 if(depth!=bmp_depth)

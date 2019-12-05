@@ -12,7 +12,7 @@ namespace upsylon {
 
     namespace Graphic {
 
-        PNG_Format:: PNG_Format() : ImageFormat("PNG")
+        PNG_Format:: PNG_Format() : Image::Format("PNG")
         {
 
         }
