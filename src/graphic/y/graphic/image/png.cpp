@@ -260,7 +260,6 @@ namespace upsylon {
             //
             // parse options
             //__________________________________________________________________
-
             const bool   use_alpha    = Image::Options::Flag(options, "alpha");
             const unit_t num_channels = use_alpha ? 4 : 3;
             const size_t zlevel       = Image::Options::Get<size_t>(options,6);

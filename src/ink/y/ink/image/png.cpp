@@ -281,7 +281,6 @@ namespace upsylon
             }
             const unit_t num_channels = use_alpha ? 4 : 3;
             
-            
             //__________________________________________________________________
             //
             // prepare PNG

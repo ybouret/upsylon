@@ -98,7 +98,7 @@ namespace upsylon {
 
 
 
-        Image:: Options:: Options(const Options &other) : OptionDB(other)
+        Image:: Options:: Options(const Options &other) : collection(), OptionDB(other)
         {
         }
         

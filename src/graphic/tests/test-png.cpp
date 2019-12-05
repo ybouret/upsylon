@@ -31,7 +31,6 @@ Y_UTEST(png)
             const string  output = vformat("img%u-3.png",i);
             GetRGBA<RGB> get3;
             PNG.save(output, *pxm3, get3, &options);
-            
         }
 
     }
