@@ -74,10 +74,10 @@ namespace upsylon {
         }
 
 
-        Bitmap *PNG_Format:: load(const string &filename,
-                                  const size_t  depth,
-                                  RGBA2Data    &proc,
-                                  const string  *) const
+        Bitmap *PNG_Format:: load(const string          &filename,
+                                  const size_t           depth,
+                                  RGBA2Data             &proc,
+                                  const Image::Options  *) const
         {
             static const char fn[] = "png::load";
             Y_GIANT_LOCK();
@@ -243,10 +243,10 @@ namespace upsylon {
         }
 
 
-        void PNG_Format:: save(const string        &filename,
-                               const Bitmap        &bmp,
-                               Data2RGBA           &proc,
-                               const string        *) const
+        void PNG_Format:: save(const string         &filename,
+                               const Bitmap         &bmp,
+                               Data2RGBA            &proc,
+                               const Image::Options *options) const
         {
             static const char fn[] = "png::save";
 
@@ -261,20 +261,10 @@ namespace upsylon {
             // parse options
             //__________________________________________________________________
 
-            bool use_alpha = false;
-
-            /*
-             const string opt((const char*)options);
-            if( options )
-            {
-                if(opt=="alpha")
-                {
-                    use_alpha = true;
-                }
-            }*/
-
+            const bool   use_alpha    = Image::Options::Flag(options, "alpha");
             const unit_t num_channels = use_alpha ? 4 : 3;
-
+            const size_t zlevel       = Image::Options::Get<size_t>(options,6);
+            if(zlevel>=10) throw exception("%sinvalid z=%u",fn, unsigned(zlevel));
 
             //__________________________________________________________________
             //
@@ -325,7 +315,7 @@ namespace upsylon {
 
             png_write_info(png_ptr, info_ptr);
 
-            png_set_compression_level(png_ptr, 6);
+            png_set_compression_level(png_ptr, zlevel);
 
 
             PNG_Mem mem;

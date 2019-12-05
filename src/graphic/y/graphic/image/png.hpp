@@ -19,12 +19,12 @@ namespace upsylon {
             virtual Bitmap *load(const string &filename,
                                  const size_t  depth,
                                  RGBA2Data    &proc,
-                                 const string *params) const;
+                                 const Image::Options *params) const;
 
             virtual void    save(const string &filename,
                                  const Bitmap &bmp,
                                  Data2RGBA    &proc,
-                                 const string *params ) const;
+                                 const Image::Options *params ) const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PNG_Format);

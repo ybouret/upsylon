@@ -169,6 +169,9 @@ namespace upsylon {
             return RGBA(u,u,u);
         }
 
+        template <>
+        RGBA Convert::Get<RGBA,RGB>(const RGB &C) throw() { return C; }
+
 
     }
 
