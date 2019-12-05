@@ -65,7 +65,7 @@ namespace upsylon {
             struct Pixmap
             {
                 //! check compatible depths
-                static inline Bitmap *CheckBitmap( Bitmap *bmp, const size_t depth );
+                static   Bitmap *CheckBitmap( Bitmap *bmp, const size_t depth );
             };
         }
 
@@ -146,7 +146,7 @@ namespace upsylon {
         };
 
     }
-    
+
 }
 
 #endif

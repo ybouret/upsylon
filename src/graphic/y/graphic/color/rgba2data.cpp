@@ -12,6 +12,12 @@ namespace upsylon {
         RGBA2Data:: RGBA2Data() throw()
         {
         }
+
+        void RGBA2Data:: operator()( void *data, const RGBA &C ) throw()
+        {
+            assert(data);
+            put(data,C);
+        }
         
     }
 

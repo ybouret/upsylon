@@ -1,6 +1,7 @@
 
 #include "y/graphic/image/png.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/auto.hpp"
 
@@ -76,7 +77,7 @@ namespace upsylon {
         Bitmap *PNG_Format:: load(const string &filename,
                                   const size_t  depth,
                                   RGBA2Data    &proc,
-                                  void         *) const
+                                  const string  *) const
         {
             static const char fn[] = "png::load";
             Y_GIANT_LOCK();
@@ -239,6 +240,155 @@ namespace upsylon {
             //__________________________________________________________________
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
             return bmp.yield();
+        }
+
+
+        void PNG_Format:: save(const string        &filename,
+                               const Bitmap        &bmp,
+                               Data2RGBA           &proc,
+                               const string        *) const
+        {
+            static const char fn[] = "png::save";
+
+            //__________________________________________________________________
+            //
+            // open file
+            //__________________________________________________________________
+            ios::ocstream fp(filename,false);
+
+            //__________________________________________________________________
+            //
+            // parse options
+            //__________________________________________________________________
+
+            bool use_alpha = false;
+
+            /*
+             const string opt((const char*)options);
+            if( options )
+            {
+                if(opt=="alpha")
+                {
+                    use_alpha = true;
+                }
+            }*/
+
+            const unit_t num_channels = use_alpha ? 4 : 3;
+
+
+            //__________________________________________________________________
+            //
+            // prepare PNG
+            //__________________________________________________________________
+            png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+
+            if (!png_ptr)
+            {
+                throw exception("%s(can't init PNG)",fn);
+            }
+
+            png_infop   info_ptr = png_create_info_struct(png_ptr);
+            if (!info_ptr)
+            {
+                png_destroy_write_struct(&png_ptr,NULL);
+                throw exception("%s(can't init PNG info)",fn);
+            }
+
+            if (setjmp(png_jmpbuf(png_ptr)))
+            {
+                png_destroy_write_struct(&png_ptr,&info_ptr);
+                throw exception("%s(init_io error)",fn);
+            }
+
+            png_init_io(png_ptr,*fp);
+
+            //__________________________________________________________________
+            //
+            // write header
+            //__________________________________________________________________
+            if (setjmp(png_jmpbuf(png_ptr)))
+            {
+                png_destroy_write_struct(&png_ptr,&info_ptr);
+                throw exception("%s(header error)",fn);
+            }
+
+            const unit_t width  = bmp.w;
+            const unit_t height = bmp.h;
+            png_set_IHDR(png_ptr, info_ptr,
+                         width,
+                         height,
+                         8,
+                         use_alpha ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB,
+                         PNG_INTERLACE_NONE,
+                         PNG_COMPRESSION_TYPE_BASE,
+                         PNG_FILTER_TYPE_BASE);
+
+            png_write_info(png_ptr, info_ptr);
+
+            png_set_compression_level(png_ptr, 6);
+
+
+            PNG_Mem mem;
+            try
+            {
+                mem.allocate(width, height, num_channels);
+            }
+            catch(...)
+            {
+                png_destroy_write_struct(&png_ptr,&info_ptr);
+                throw;
+            }
+            //__________________________________________________________________
+            //
+            // write bytes
+            //__________________________________________________________________
+            if (setjmp(png_jmpbuf(png_ptr)))
+            {
+                png_destroy_write_struct(&png_ptr,&info_ptr);
+                throw exception("%s(write_image error)", fn);
+            }
+
+            unit_t       y     = height;
+            const unit_t depth = bmp.depth;
+
+            for(unit_t j=0;j<height;++j)
+            {
+                const uint8_t *p = (const uint8_t *)(bmp.getLine(--y));
+                png_byte      *q = mem.rows[j];
+                for(unit_t i=0;i<width;++i, p+=depth, q += num_channels)
+                {
+                    const RGBA C = proc(p);
+                    q[0] = C.r;
+                    q[1] = C.g;
+                    q[2] = C.b;
+                    if(use_alpha)
+                    {
+                        q[3] = C.a;
+                    }
+                }
+            }
+
+            png_write_image(png_ptr, mem.rows);
+
+
+            //__________________________________________________________________
+            //
+            // end write
+            //__________________________________________________________________
+            if (setjmp(png_jmpbuf(png_ptr)))
+            {
+                png_destroy_write_struct(&png_ptr,&info_ptr);
+                throw exception("%s(write_end error)",fn);
+            }
+
+            png_write_end(png_ptr, NULL);
+
+            //__________________________________________________________________
+            //
+            // normal return
+            //__________________________________________________________________
+            png_destroy_write_struct(&png_ptr,&info_ptr);
+
         }
 
     }

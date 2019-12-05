@@ -6,6 +6,7 @@
 
 #include "y/graphic/bitmap.hpp"
 #include "y/graphic/color/rgba2data.hpp"
+#include "y/graphic/color/data2rgba.hpp"
 #include "y/string.hpp"
 
 namespace upsylon {
@@ -23,8 +24,14 @@ namespace upsylon {
             virtual Bitmap *load(const string &filename,
                                  const size_t  depth,
                                  RGBA2Data    &proc,
-                                 void         *args) const = 0;
+                                 const string *params) const = 0;
 
+            //! save a bitmap
+            virtual void    save(const string &filename,
+                                 const Bitmap &bmp,
+                                 Data2RGBA    &proc,
+                                 const string *params) const = 0;
+            
         protected:
             explicit ImageFormat(const char *id); //!< setup
 
