@@ -70,39 +70,6 @@ namespace upsylon {
             FormatFor(filename).save(filename,bmp,proc,params);
         }
 
-#if 0
-        Bitmap * Image:: load3(const string  &filename,
-                                 const Options *params) const
-        {
-            PutRGBA<RGB> proc;
-            return load(filename,3,proc,params);
-        }
-
-        Bitmap * Image:: load4(const string  &filename,
-                               const Options *params) const
-        {
-            PutRGBA<RGBA> proc;
-            return load(filename,4,proc,params);
-        }
-
-        Bitmap * Image:: load1(const string  &filename,
-                               const Options *params) const
-        {
-            PutRGBA<uint8_t> proc;
-            return load(filename,1,proc,params);
-        }
-
-
-        Bitmap * Image:: loadf(const string  &filename,
-                               const Options *params) const
-        {
-            PutRGBA<float> proc;
-            return load(filename,sizeof(float),proc,params);
-        }
-#endif
-
-
-
     }
 }
 
@@ -113,7 +80,7 @@ namespace upsylon {
 
     namespace Graphic {
 
-        Image:: Image() : formats(4,as_capacity)
+        Image:: Image() : formats(4,as_capacity), db(8,as_capacity)
         {
             use( new PNG_Format()  );
             use( new JPEG_Format() );
