@@ -1,4 +1,4 @@
-#include "y/ink/image/tiff++.hpp"
+#include "y/graphic/image/tiff++.hpp"
 #include "y/exceptions.hpp"
 #include "tiffio.h"
 

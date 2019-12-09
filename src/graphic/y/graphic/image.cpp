@@ -75,6 +75,7 @@ namespace upsylon {
 
 #include "y/graphic/image/png.hpp"
 #include "y/graphic/image/jpeg.hpp"
+#include "y/graphic/image/tiff.hpp"
 
 namespace upsylon {
 
@@ -84,6 +85,7 @@ namespace upsylon {
         {
             use( new PNG_Format()  );
             use( new JPEG_Format() );
+            use( new TIFF_Format() );
         }
     }
 }

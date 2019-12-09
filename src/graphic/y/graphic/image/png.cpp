@@ -5,7 +5,7 @@
 #include "y/exception.hpp"
 #include "y/ptr/auto.hpp"
 
-#include "png.h"
+#include "y/png/png.h"
 
 
 namespace upsylon {

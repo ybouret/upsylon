@@ -3,8 +3,9 @@ PROJECT(y-graphic CXX)
 MESSAGE( STATUS "<Graphic>" )
 
 INCLUDE_DIRECTORIES(. ../main
-../ext/y/png
-../ext/y/jpeg)
+../ext
+../ext/y/tiff/libtiff
+${CMAKE_CURRENT_BINARY_DIR}/../ext/y/tiff/libtiff)
 
 FILE(GLOB main_decl y/graphic/*.hpp)
 FILE(GLOB main_code y/graphic/*.cpp)

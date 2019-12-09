@@ -2,7 +2,7 @@
 #include "y/graphic/image/jpeg.hpp"
 
 extern "C" {
-#include "jpeglib.h"
+#include "y/jpeg/jpeglib.h"
 }
 
 #include <cstring>
