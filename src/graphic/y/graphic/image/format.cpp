@@ -13,7 +13,7 @@ namespace upsylon {
         name(id),
         extensions(2,as_capacity)
         {
-            std::cerr << "[" << name << "]" << std::endl;
+            //std::cerr << "[" << name << "]" << std::endl;
             if(ext)
             {
                 while(*ext)
@@ -22,7 +22,7 @@ namespace upsylon {
                     extensions.insert(str);
                 }
             }
-            std::cerr << "extensions: " << extensions << std::endl;
+            //std::cerr << "extensions: " << extensions << std::endl;
         }
 
         const string & Image::Format:: key() const throw()
