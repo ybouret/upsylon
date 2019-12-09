@@ -71,6 +71,12 @@ namespace upsylon {
                     }
                 }
 
+                template <typename T> static inline
+                T Get(const Options *options, const char *name, const T defaultValue=0)
+                {
+                    const string _(name);
+                    return Get<T>(options,_,defaultValue);
+                }
 
             private:
                 Y_DISABLE_ASSIGN(Options);
