@@ -13,7 +13,7 @@ namespace upsylon {
         {
         }
         
-        RGBA Data2RGBA:: operator()( const void *addr ) throw()
+        rgba Data2RGBA:: operator()( const void *addr ) throw()
         {
             assert(addr);
             return get(addr);

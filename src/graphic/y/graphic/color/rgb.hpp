@@ -11,11 +11,11 @@ namespace upsylon {
 
         namespace Kernel {
 
-            template <typename T> class RGBA; //!< forward declaration
+            template <typename T> class rgba; //!< forward declaration
 
             //! RGB type
             template <typename T>
-            class RGB
+            class rgb
             {
             public:
                 T r; //!< read
@@ -23,13 +23,13 @@ namespace upsylon {
                 T b; //!< blue
 
                 //! setup
-                inline  RGB( T R=0, T G=0, T B=0) throw() : r(R), g(G), b(B) {}
+                inline  rgb( T R=0, T G=0, T B=0) throw() : r(R), g(G), b(B) {}
                 //! cleanup
-                inline ~RGB() throw() {}
+                inline ~rgb() throw() {}
                 //! copy
-                inline  RGB(const RGB &_) throw() : r(_.r), g(_.g), b(_.b) {}
+                inline  rgb(const rgb &_) throw() : r(_.r), g(_.g), b(_.b) {}
                 //! assign
-                inline  RGB & operator=(const RGB &_) throw()
+                inline  rgb & operator=(const rgb &_) throw()
                 {
                     r=_.r;
                     g=_.g;
@@ -37,14 +37,14 @@ namespace upsylon {
                     return *this;
                 }
                 //! assign RGB part of RGBA
-                RGB( const RGBA<T> &) throw();
+                rgb( const rgba<T> &) throw();
                 
 
             };
 
             //! RGBA
             template <typename T>
-            class RGBA
+            class rgba
             {
             public:
                 static const T Opaque; //!< type dependent opaque value
@@ -54,13 +54,13 @@ namespace upsylon {
                 T a; //!< alpha
 
                 //! setup
-                inline  RGBA( T R=0, T G=0, T B=0, T A=Opaque) throw() : r(R), g(G), b(B), a(A) {}
+                inline  rgba( T R=0, T G=0, T B=0, T A=Opaque) throw() : r(R), g(G), b(B), a(A) {}
                 //! cleanup
-                inline ~RGBA() throw() {}
+                inline ~rgba() throw() {}
                 //! copy
-                inline  RGBA(const RGBA &_) throw() : r(_.r), g(_.g), b(_.b), a(_.a) {}
+                inline  rgba(const rgba &_) throw() : r(_.r), g(_.g), b(_.b), a(_.a) {}
                 //! assign
-                inline  RGBA & operator=(const RGBA &_) throw()
+                inline  rgba & operator=(const rgba &_) throw()
                 {
                     r=_.r;
                     g=_.g;
@@ -70,19 +70,19 @@ namespace upsylon {
                 }
 
                 //! opaque RGB
-                inline RGBA( const RGB<T> &C ) throw() : r(C.r), g(C.g), b(C.b), a(Opaque) {}
+                inline rgba( const rgb<T> &C ) throw() : r(C.r), g(C.g), b(C.b), a(Opaque) {}
 
 
             };
 
             //! RGBA->RGB implementation
             template <typename T>
-            inline RGB<T>::RGB( const RGBA<T> &C ) throw() : r(C.r), g(C.g), b(C.b) {}
+            inline rgb<T>::rgb( const rgba<T> &C ) throw() : r(C.r), g(C.g), b(C.b) {}
 
         }
 
-        typedef Kernel::RGB<uint8_t>  RGB;   //!< alias
-        typedef Kernel::RGBA<uint8_t> RGBA;  //!< alias
+        typedef Kernel::rgb<uint8_t>  rgb;   //!< alias
+        typedef Kernel::rgba<uint8_t> rgba;  //!< alias
 
     }
 }

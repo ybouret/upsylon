@@ -16,21 +16,21 @@ Y_UTEST(jpeg)
     for(int i=1;i<argc;++i)
     {
         const string  filename = argv[i];
-        PutRGBA<RGBA> put4;
-        PutRGBA<RGB>  put3;
-        Pixmap<RGBA>  pxm4( JPEG.load(filename, 4, put4, NULL) );
-        Pixmap<RGB>   pxm3( JPEG.load(filename, 3, put3, NULL) );
+        PutRGBA<rgba> put4;
+        PutRGBA<rgb>  put3;
+        Pixmap<rgba>  pxm4( JPEG.load(filename, 4, put4, NULL) );
+        Pixmap<rgb>   pxm3( JPEG.load(filename, 3, put3, NULL) );
 
         {
             const string  output = vformat("img%u-4.jpg",i);
-            GetRGBA<RGBA> get4;
+            GetRGBA<rgba> get4;
             JPEG.save(output, *pxm4, get4, &options);
 
         }
 
         {
             const string  output = vformat("img%u-3.jpg",i);
-            GetRGBA<RGB> get3;
+            GetRGBA<rgb> get3;
             JPEG.save(output, *pxm3, get3, &options);
         }
 

@@ -16,8 +16,8 @@ Y_UTEST(image)
     {
         const string         filename = argv[i];
 
-        Pixmap<RGBA>    pxm4( IMG.loadAs<RGBA>(filename) );
-        Pixmap<RGB>     pxm3( IMG.loadAs<RGB>(filename) );
+        Pixmap<rgba>    pxm4( IMG.loadAs<rgba>(filename) );
+        Pixmap<rgb>     pxm3( IMG.loadAs<rgb>(filename) );
         Pixmap<uint8_t> pxm1( IMG.loadAs<uint8_t>(filename) );
         Pixmap<float>   pxmf( IMG.loadAs<float>(filename) );
 

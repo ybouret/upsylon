@@ -116,15 +116,15 @@ namespace upsylon {
 
 
         template <>
-        uint8_t Convert::Get<uint8_t,RGB>(const RGB &C) throw()
+        uint8_t Convert::Get<uint8_t,rgb>(const rgb &C) throw()
         {
             return GreyScale(C);
         }
 
         template<>
-        RGB Convert::Get<RGB,uint8_t>(const uint8_t &u) throw()
+        rgb Convert::Get<rgb,uint8_t>(const uint8_t &u) throw()
         {
-            return RGB(u,u,u);
+            return rgb(u,u,u);
         }
 
 
@@ -134,43 +134,43 @@ namespace upsylon {
         // RGBA->something
 
         template <>
-        uint8_t Convert::Get<uint8_t,RGBA>(const RGBA &C) throw()
+        uint8_t Convert::Get<uint8_t,rgba>(const rgba &C) throw()
         {
             return GreyScale(C);
         }
 
 
         template <>
-        RGB Convert::Get<RGB,RGBA>(const RGBA &C) throw()
+        rgb Convert::Get<rgb,rgba>(const rgba &C) throw()
         {
             return C;
         }
 
         template <>
-        float Convert::Get<float,RGBA>(const RGBA &C) throw()
+        float Convert::Get<float,rgba>(const rgba &C) throw()
         {
             return UnitFloat[ GreyScale(C) ];
         }
 
         template <>
-        RGBA Convert::Get<RGBA,RGBA>(const RGBA &C) throw() { return C; }
+        rgba Convert::Get<rgba,rgba>(const rgba &C) throw() { return C; }
 
         // something->RGBA
         template<>
-        RGBA Convert::Get<RGBA,uint8_t>(const uint8_t &u) throw()
+        rgba Convert::Get<rgba,uint8_t>(const uint8_t &u) throw()
         {
-            return RGBA(u,u,u);
+            return rgba(u,u,u);
         }
 
         template <>
-        RGBA Convert:: Get<RGBA,float>(const float &f) throw()
+        rgba Convert:: Get<rgba,float>(const float &f) throw()
         {
             const uint8_t u = Float2Byte(f);
-            return RGBA(u,u,u);
+            return rgba(u,u,u);
         }
 
         template <>
-        RGBA Convert::Get<RGBA,RGB>(const RGB &C) throw() { return C; }
+        rgba Convert::Get<rgba,rgb>(const rgb &C) throw() { return C; }
 
 
     }

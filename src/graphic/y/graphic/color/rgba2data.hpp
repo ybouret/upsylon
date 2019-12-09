@@ -16,14 +16,14 @@ namespace upsylon {
             virtual ~RGBA2Data() throw(); //!< cleanup
 
             //! write data at a valid memory
-            void operator()( void *data, const RGBA &C ) throw();
+            void operator()( void *data, const rgba &C ) throw();
 
         protected:
             explicit RGBA2Data() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RGBA2Data);
-            virtual void put( void *data, const RGBA &C) throw() = 0;
+            virtual void put( void *data, const rgba &C) throw() = 0;
         };
 
         //! default wrapper
@@ -37,10 +37,10 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PutRGBA);
             //! use default encoded conversion
-            inline virtual void put( void *data, const RGBA &C ) throw()
+            inline virtual void put( void *data, const rgba &C ) throw()
             {
                 assert(data);
-                *static_cast<T*>(data) = Convert::Get<T,RGBA>(C);
+                *static_cast<T*>(data) = Convert::Get<T,rgba>(C);
             }
         };
 

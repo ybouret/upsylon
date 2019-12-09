@@ -101,15 +101,15 @@ Y_UTEST(parallel)
 
     doCpy<uint8_t>();
     doCpy<float>();
-    doCpy<RGB>();
-    doCpy<RGBA>();
+    doCpy<rgb>();
+    doCpy<rgba>();
     
     doConv<uint8_t,float>(par,seq);
     doConv<float,uint8_t>(par,seq);
-    doConv<RGB,uint8_t>(par,seq);
-    doConv<RGBA,uint8_t>(par,seq);
-    doConv<uint8_t,RGB>(par,seq);
-    doConv<uint8_t,RGBA>(par,seq);
+    doConv<rgb,uint8_t>(par,seq);
+    doConv<rgba,uint8_t>(par,seq);
+    doConv<uint8_t,rgb>(par,seq);
+    doConv<uint8_t,rgba>(par,seq);
 
 
 }

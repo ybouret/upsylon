@@ -166,7 +166,7 @@ namespace upsylon {
                     {
                         const unit_t   i3 = 3*i;
                         const JSAMPLE *b  = &buffer[i3];
-                        const RGBA    C(b[0],b[1],b[2],0xff);
+                        const rgba     C(b[0],b[1],b[2],0xff);
                         proc(p,C);
                         p += depth;
                     }
@@ -289,7 +289,7 @@ namespace upsylon {
                     for(unit_t i=0;i<width;++i)
                     {
                         JSAMPLE       *b  = &buffer[3*i];
-                        const RGBA     C  = proc(p);
+                        const rgba     C  = proc(p);
                         b[0] = C.r;
                         b[1] = C.g;
                         b[2] = C.b;

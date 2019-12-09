@@ -15,14 +15,14 @@ namespace upsylon {
         public:
             virtual ~Data2RGBA() throw();
 
-            RGBA operator()( const void *addr ) throw();
+            rgba operator()( const void *addr ) throw();
 
         protected:
             explicit Data2RGBA() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Data2RGBA);
-            virtual RGBA get(const void *addr) throw() = 0;
+            virtual rgba get(const void *addr) throw() = 0;
         };
 
 
@@ -36,9 +36,9 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GetRGBA);
 
-            virtual RGBA get(const void *addr) throw()
+            virtual rgba get(const void *addr) throw()
             {
-                return Convert::Get<RGBA,T>( *static_cast<const T*>(addr) );
+                return Convert::Get<rgba,T>( *static_cast<const T*>(addr) );
             }
         };
 
@@ -52,10 +52,10 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GetChannel);
 
-            virtual RGBA get(const void *addr) throw()
+            virtual rgba get(const void *addr) throw()
             {
-                static const RGBA mask( (0==CHANNEL) ? 0xff : 0 );
-                RGBA C = Convert::Get<RGBA,T>( *static_cast<const T*>(addr) );
+                static const rgba mask( (0==CHANNEL) ? 0xff : 0 );
+                rgba C = Convert::Get<rgba,T>( *static_cast<const T*>(addr) );
                 C.r &= mask.r;
                 C.g &= mask.g;
                 C.b &= mask.b;

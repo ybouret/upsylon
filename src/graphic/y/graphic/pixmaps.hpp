@@ -15,8 +15,8 @@ namespace upsylon {
         typedef Pixmap<uint8_t> Pixmap1;   //!< alias
         typedef Pixmap<float>   PixmapF;   //!< alias
         typedef Pixmap<double>  PixmapD;   //!< alias
-        typedef Pixmap<RGB>     Pixmap3;   //!< alias
-        typedef Pixmap<RGBA>    Pixmap4;   //!< alias
+        typedef Pixmap<rgb>     Pixmap3;   //!< alias
+        typedef Pixmap<rgba>    Pixmap4;   //!< alias
         typedef Pixmap<YUV>     PixmapYUV; //!< alias
 
     }

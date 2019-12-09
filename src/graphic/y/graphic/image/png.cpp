@@ -219,17 +219,17 @@ namespace upsylon {
                     switch(num_channels)
                     {
                         case 1: {
-                            const RGBA C(q[0],q[0],q[0],0xff);
+                            const rgba C(q[0],q[0],q[0],0xff);
                             proc(p,C);
                         } break;
 
                         case 3: {
-                            const RGBA C( q[0], q[1], q[2], 0xff);
+                            const rgba C( q[0], q[1], q[2], 0xff);
                             proc(p,C);
                         } break;
 
                         case 4: {
-                            const RGBA C( q[0], q[1], q[2], q[3]);
+                            const rgba C( q[0], q[1], q[2], q[3]);
                             proc(p,C);
                         } break;
 
@@ -352,7 +352,7 @@ namespace upsylon {
                 png_byte      *q = mem.rows[j];
                 for(unit_t i=0;i<width;++i, p+=depth, q += num_channels)
                 {
-                    const RGBA C = proc(p);
+                    const rgba C = proc(p);
                     q[0] = C.r;
                     q[1] = C.g;
                     q[2] = C.b;

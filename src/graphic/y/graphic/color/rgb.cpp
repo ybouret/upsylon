@@ -7,9 +7,9 @@ namespace upsylon {
 
         namespace Kernel {
 
-            template <> const uint8_t RGBA<uint8_t>::Opaque = 0xff;
-            template <> const float   RGBA<float>  ::Opaque = 1.0f;
-            template <> const double  RGBA<double> ::Opaque = 1.0;
+            template <> const uint8_t rgba<uint8_t>::Opaque = 0xff;
+            template <> const float   rgba<float>  ::Opaque = 1.0f;
+            template <> const double  rgba<double> ::Opaque = 1.0;
             
         }
 

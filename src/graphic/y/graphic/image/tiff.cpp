@@ -58,7 +58,7 @@ namespace upsylon
                 for(int i=0;i<w;++i)
                 {
                     const uint32_t P = *(q++);
-                    const RGBA     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
+                    const rgba     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
                     proc( (void*)(B->stdGet(i,j)),C);
                 }
             }
@@ -94,7 +94,7 @@ namespace upsylon
                 uint32_t *q = &p[j*w];
                 for(unit_t i=0;i<w;++i)
                 {
-                    const RGBA C = proc(bmp.stdGet(i,j));
+                    const rgba C = proc(bmp.stdGet(i,j));
                     uint32_t  &Q = *(q++);
                     Q  = C.a; Q <<= 8;
                     Q |= C.b; Q <<= 8;

@@ -7,7 +7,7 @@
 
 namespace upsylon
 {
-    namespace Graphic
+    namespace Ink
     {
         //! low level TIFF functions
         class _TIFF
