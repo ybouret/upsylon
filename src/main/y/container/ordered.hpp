@@ -157,7 +157,7 @@ namespace upsylon
         inline explicit ordered_unique() throw() : ORDERED() {}                                  //!< setup
         inline explicit ordered_unique(const size_t n, const as_capacity_t &_) : ORDERED(n,_) {} //!< setup with memory
         inline virtual ~ordered_unique() throw() {}                                              //!< cleanup
-        inline ordered_unique( const ordered_unique &other) : dynamic(), ORDERED(other) {}                  //!< copy
+        inline ordered_unique( const ordered_unique &other) : dynamic(), ORDERED(other) {}       //!< copy
 
         //! try to insert object
         inline bool insert( param_type args )

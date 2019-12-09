@@ -21,7 +21,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
     //! a vector of sorted objects
     template <typename T,
     typename COMPARATOR = increasing_comparator<T>,
-    typename ALLOCATOR = memory::global>
+    typename ALLOCATOR  = memory::global>
     class sorted_vector : public ordered<T>
     {
     public:
@@ -155,7 +155,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             {
                 os << ' ' << v.addr[i];
             }
-            return os << ']' << '\'';
+            return os << ' ' << ']' << '\'';
         }
 
         //! no throw swap

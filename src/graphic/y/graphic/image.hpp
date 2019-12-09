@@ -9,7 +9,10 @@
 #include "y/graphic/color/data2rgba.hpp"
 #include "y/string/convert.hpp"
 #include "y/associative/map.hpp"
+#include "y/associative/set.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/ptr/intr.hpp"
+#include "y/ordered/sorted-vector.hpp"
 
 namespace upsylon {
 
@@ -17,11 +20,15 @@ namespace upsylon {
 
 
         //! Images and Formats management
-        class Image
+        class Image : public singleton<Image>
         {
         public:
-
-            typedef map<string,string,key_hasher<string,hashing::fnv>,memory::pooled> OptionDB;
+            typedef key_hasher<string,hashing::fnv>                 KeyHasher;
+            typedef memory::pooled                                   Allocator;
+            typedef map<string,string,KeyHasher,Allocator>           OptionDB;
+            typedef increasing_comparator<string>                    StringComparator;
+            typedef sorted_vector<string,StringComparator,Allocator> SortedStrings;
+            typedef ordered_single<SortedStrings>                    OrderedStrings;
 
             class Options : public OptionDB
             {
@@ -90,6 +97,9 @@ namespace upsylon {
             public:
                 const string name; //!< name for database of formats
 
+                typedef intr_ptr<string,Format>                 Pointer;
+                typedef set<string,Pointer,KeyHasher,Allocator> Set;
+
                 virtual ~Format() throw(); //!< cleanup
 
                 //! load a new bitmap
@@ -104,13 +114,47 @@ namespace upsylon {
                                      Data2RGBA     &proc,
                                      const Options *params) const = 0;
 
+                const string &key() const throw();
+
+
             protected:
-                explicit Format(const char *id); //!< setup
+                explicit Format(const char *id, const char **ext); //!< setup
+                OrderedStrings extensions;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Format);
+                friend class Image;
             };
 
+
+            static const at_exit::longevity life_time = 0;
+
+            void use( Format *format );
+
+            const Format & FormatFor(const string &filename) const;
+
+            Bitmap *load(const string  &filename,
+                         const size_t  depth,
+                         RGBA2Data     &proc,
+                         const Options *params) const;
+
+            void    save(const string  &filename,
+                         const Bitmap  &bmp,
+                         Data2RGBA     &proc,
+                         const Options *params) const;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Image);
+            explicit Image();
+            virtual ~Image() throw();
+            typedef arc_ptr<Format> Fmt;
+            typedef map<string,Fmt,KeyHasher,Allocator> FmtDB;
+
+            Format::Set formats;
+            FmtDB       db;
+
+            friend class singleton<Image>;
+            void compile();
 
         };
 

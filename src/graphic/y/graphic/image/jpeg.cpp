@@ -22,7 +22,13 @@ namespace upsylon {
         {}
 
 
-        JPEG_Format:: JPEG_Format() : Image::Format("JPEG")
+
+        static const char *jpeg_extensions[] =
+        {
+            "jpg", "jpeg", NULL
+        };
+
+        JPEG_Format:: JPEG_Format() : Image::Format("JPEG",jpeg_extensions)
         {
         }
 

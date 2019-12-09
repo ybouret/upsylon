@@ -12,7 +12,13 @@ namespace upsylon {
 
     namespace Graphic {
 
-        PNG_Format:: PNG_Format() : Image::Format("PNG")
+        static const char *png_extensions[] =
+        {
+            "png",
+            NULL
+        };
+
+        PNG_Format:: PNG_Format() : Image::Format("PNG",png_extensions)
         {
 
         }

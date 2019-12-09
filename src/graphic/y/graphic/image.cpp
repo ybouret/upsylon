@@ -1,155 +1,88 @@
 
 #include "y/graphic/image.hpp"
-
-namespace upsylon {
-
-    namespace Graphic {
-
-
-        Image::Format:: ~Format() throw()
-        {
-        }
-
-        Image:: Format:: Format(const char *id) :
-        name(id)
-        {
-        }
-        
-        
-
-    }
-
-}
-
-#include "y/string/tokenizer.hpp"
-#include "y/sequence/vector.hpp"
 #include "y/exception.hpp"
+#include "y/fs/vfs.hpp"
 
 namespace upsylon {
 
     namespace Graphic {
 
 
-        Image:: Options:: ~Options() throw()
+        Image:: ~Image() throw()
         {
-        }
-
-        Image:: Options:: Options() throw()  : OptionDB()
-        {
+            
         }
 
 
-        Image::Options:: Options(const char *txt) : OptionDB()
+        void Image:: use( Format *format )
         {
-            (void) parse(txt);
-        }
-
-
-        Image::Options:: Options(const string &str) : OptionDB()
-        {
-            (void) parse(str);
-        }
-
-
-        Image::Options & Image::Options:: parse(const string &str)
-        {
-            static const char fn[] = "Image::Options::parse: ";
-            vector<string,memory::pooled> option(2,as_capacity);
-            tokenizer<char>               tkn(str);
-            while( tkn.next_with(':') )
+            static const char fn[] = "Graphic::Image::use: ";
+            if(!format) throw exception("%s NULL format)",fn);
+            const Format::Pointer fmt( format );
+            if(!formats.insert(fmt))
             {
-                const string opt = tkn.to_string();
-                option.free();
-                tokenizer<char>::split_with(option,opt,'=');
-                if(2 != option.size()) throw exception("%s: invalud option '%s'", fn, *opt);
-                string key   = option.front(); key.clean_with(" \t");
-                string value = option.back();  value.clean_with(" \t");
-
-                string *pValue = this->search(key);
-                if(pValue)
-                {
-                    *pValue = value;
-                }
-                else
-                {
-                    if( !this->insert(key,value) ) throw exception("%s: unexpected failure to insert <%s=%s>", fn, *key, *value);
-                }
-
+                throw exception("%s multiple format name '%s'", fn, *(fmt->name));
             }
-
-            return *this;
-        }
-
-        Image::Options & Image::Options:: parse(const char *txt)
-        {
-            const string _(txt);
-            return parse(_);
-        }
-
-        Image::Options & Image::Options:: operator<<( const string &str )
-        {
-            return parse(str);
-        }
-
-        Image::Options & Image::Options:: operator<<( const char *txt )
-        {
-            return parse(txt);
+            compile();
         }
 
 
-
-        Image:: Options:: Options(const Options &other) : collection(), OptionDB(other)
+        void Image:: compile()
         {
-        }
-        
-
-        bool Image:: Options:: flag( const string &name ) const
-        {
-            const string *pValue = this->search(name);
-            if( !pValue )
+            db.free();
+            for( Format::Set::iterator i=formats.begin();i!=formats.end();++i)
             {
-                return false;
-            }
-            else
-            {
-                string value = *pValue;
-                string_convert::to_lower(value);
-                if( value == "false" || value == "0" || value == "off" )
+                const Fmt fmt = &(**i);
+                for( OrderedStrings::iterator j=fmt->extensions.begin(); j!=fmt->extensions.end();++j)
                 {
-                    return false;
-                }
-                else if( value == "true" || value == "1" || value == "on" )
-                {
-                    return true;
-                }
-                else
-                {
-                    throw exception("Image::Options::flag(invalid <%s=%s>)",*name,*value);
+                    const string &ext = *j;
+                    if( !db.insert(ext, fmt) )
+                    {
+                        throw exception("Image::Format: %s has multiple extension '%s'", *(fmt->name), *ext);
+                    }
                 }
             }
         }
 
-        bool Image::Options:: Flag(const Options *options, const string &name)
+        const Image::Format & Image::FormatFor(const string &filename) const
         {
-            if(options)
-            {
-                return options->flag(name);
-            }
-            else
-            {
-                return false;
-            }
+            const string ext = vfs::get_extension(filename);
+            const Fmt   *fmt = db.search(ext);
+            if(!fmt) throw exception("Image:: no Format for extension <%s>", *ext);
+            return **fmt;
         }
 
-        bool Image::Options:: Flag(const Options *options, const char *name)
+        Bitmap * Image:: load(const string  &filename,
+                              const size_t  depth,
+                              RGBA2Data     &proc,
+                              const Options *params) const
         {
-            const string _(name); return Flag(options,_);
+            return FormatFor(filename).load(filename, depth, proc, params);
         }
 
-
- 
-
+        void  Image::  save(const string  &filename,
+                            const Bitmap  &bmp,
+                            Data2RGBA     &proc,
+                            const Options *params) const
+        {
+            FormatFor(filename).save(filename,bmp,proc,params);
+        }
 
     }
-
 }
+
+#include "y/graphic/image/png.hpp"
+#include "y/graphic/image/jpeg.hpp"
+
+namespace upsylon {
+
+    namespace Graphic {
+
+        Image:: Image() : formats(4,as_capacity)
+        {
+            use( new PNG_Format()  );
+            use( new JPEG_Format() );
+        }
+    }
+}
+

@@ -26,7 +26,7 @@ namespace upsylon {
                                  const Bitmap         &bmp,
                                  Data2RGBA            &proc,
                                  const Image::Options *params ) const;
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(JPEG_Format);
         };
