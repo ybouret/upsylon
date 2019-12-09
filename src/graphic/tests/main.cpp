@@ -10,7 +10,9 @@ Y_UTEST_INIT(32)
     Y_UTEST(gradient);
     Y_UTEST(png);
     Y_UTEST(jpeg);
+    Y_UTEST(tiff);
     Y_UTEST(image);
+    Y_UTEST(ramp);
 }
 Y_UTEST_EXEC()
 

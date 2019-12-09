@@ -47,6 +47,9 @@ ${image_srcs}
 )
 INSTALL( TARGETS y-graphic ARCHIVE DESTINATION lib )
 
+ADD_EXECUTABLE(y_color_ramp y_color_ramp.cpp)
+TARGET_LINK_Y(y_color_ramp)
+
 ADD_SUBDIRECTORY(tests)
 SET(UTESTS "${UTESTS} utest-graphic" PARENT_SCOPE)
 

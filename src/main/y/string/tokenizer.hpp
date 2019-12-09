@@ -138,6 +138,18 @@ namespace upsylon
         static inline
         size_t split_with(sequence< core::string<T> > &words,
                           const core::string<T>       &input,
+                          const T                     *buffer)
+        {
+            const str2sep is_sep = { buffer, length_of(buffer) };
+            tokenizer tkn(input);
+            return tkn.split_all(words,is_sep);
+        }
+
+
+        //! automatic splitting of a line
+        static inline
+        size_t split_with(sequence< core::string<T> > &words,
+                          const core::string<T>       &input,
                           const T                      sep)
         {
             return split_with(words,input,&sep,1);

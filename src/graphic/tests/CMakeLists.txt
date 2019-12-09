@@ -14,7 +14,9 @@ ADD_TEST(Parallel test-graphic parallel)
 ADD_TEST(Gradient test-graphic gradient)
 ADD_TEST(PNG      test-graphic png)
 ADD_TEST(JPEG     test-graphic jpeg)
+ADD_TEST(TIFF     test-graphic tiff)
 ADD_TEST(Image    test-graphic image)
+ADD_TEST(Ramp     test-graphic ramp)
 
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
