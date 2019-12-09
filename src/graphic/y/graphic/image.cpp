@@ -35,7 +35,8 @@ namespace upsylon {
                 const Fmt fmt = &(**i);
                 for( OrderedStrings::iterator j=fmt->extensions.begin(); j!=fmt->extensions.end();++j)
                 {
-                    const string &ext = *j;
+                    string ext = *j;
+                    string_convert::to_lower(ext);
                     if( !db.insert(ext, fmt) )
                     {
                         throw exception("Image::Format: %s has multiple extension '%s'", *(fmt->name), *ext);
@@ -46,7 +47,8 @@ namespace upsylon {
 
         const Image::Format & Image::FormatFor(const string &filename) const
         {
-            const string ext = vfs::get_extension(filename);
+            string       ext = vfs::get_extension(filename);
+            string_convert::to_lower(ext);
             const Fmt   *fmt = db.search(ext);
             if(!fmt) throw exception("Image:: no Format for extension <%s>", *ext);
             return **fmt;
@@ -67,6 +69,39 @@ namespace upsylon {
         {
             FormatFor(filename).save(filename,bmp,proc,params);
         }
+
+#if 0
+        Bitmap * Image:: load3(const string  &filename,
+                                 const Options *params) const
+        {
+            PutRGBA<RGB> proc;
+            return load(filename,3,proc,params);
+        }
+
+        Bitmap * Image:: load4(const string  &filename,
+                               const Options *params) const
+        {
+            PutRGBA<RGBA> proc;
+            return load(filename,4,proc,params);
+        }
+
+        Bitmap * Image:: load1(const string  &filename,
+                               const Options *params) const
+        {
+            PutRGBA<uint8_t> proc;
+            return load(filename,1,proc,params);
+        }
+
+
+        Bitmap * Image:: loadf(const string  &filename,
+                               const Options *params) const
+        {
+            PutRGBA<float> proc;
+            return load(filename,sizeof(float),proc,params);
+        }
+#endif
+
+
 
     }
 }

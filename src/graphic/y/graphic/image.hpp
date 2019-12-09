@@ -143,6 +143,13 @@ namespace upsylon {
                          Data2RGBA     &proc,
                          const Options *params) const;
 
+            template <typename T>
+            Bitmap *loadAs(const string &filename, const Options *params=NULL) const
+            {
+                PutRGBA<T> proc;
+                return load(filename,sizeof(T),proc,params);
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Image);
             explicit Image();
