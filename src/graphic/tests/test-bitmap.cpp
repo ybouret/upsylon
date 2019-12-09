@@ -63,9 +63,9 @@ namespace {
 
     }
 
-    static inline Rectangle makeRect(const Area &area)
+    static inline Graphic::Rectangle makeRect(const Area &area)
     {
-        return Rectangle(alea.range<unit_t>(0,area.w-1),
+        return Graphic::Rectangle(alea.range<unit_t>(0,area.w-1),
                          alea.range<unit_t>(0,area.h-1),
                          alea.range<unit_t>(0,area.w-1),
                          alea.range<unit_t>(0,area.h-1));
