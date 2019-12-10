@@ -9,7 +9,7 @@ namespace upsylon {
 
     namespace Graphic {
 
-        class Rectangle; //!< forward declaration
+        class Box; //!< forward declaration
 
         //! basic area desing
         class Area : public Object
@@ -33,7 +33,7 @@ namespace upsylon {
             bool contains(const Point &p ) const throw();
 
             //! check inclusion
-            bool contains(const Rectangle &r) const throw();
+            bool contains(const Box &r) const throw();
 
             //! display
             friend std::ostream & operator<<( std::ostream &, const Area & );

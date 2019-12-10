@@ -22,7 +22,7 @@ Y_UTEST(types)
 
     const char pfx[] = "\t";
     Y_UTEST_SIZEOF_WITH( pfx, Area);
-    Y_UTEST_SIZEOF_WITH( pfx, Rectangle);
+    Y_UTEST_SIZEOF_WITH( pfx, Box);
     Y_UTEST_SIZEOF_WITH( pfx, Bitmap);
     Y_UTEST_SIZEOF_WITH( pfx, Surface);
     Y_UTEST_SIZEOF_WITH( pfx, Pixmap1);

@@ -3,7 +3,7 @@
 #ifndef Y_GRAPHIC_BITMAP_INCLUDED
 #define Y_GRAPHIC_BITMAP_INCLUDED 1
 
-#include "y/graphic/rectangle.hpp"
+#include "y/graphic/box.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/hashing/function.hpp"
 
@@ -31,7 +31,7 @@ namespace upsylon {
         };
 
         //! smart pointer for bytes
-        class Bitmap : public Rectangle
+        class Bitmap : public Box
         {
         public:
             typedef arc_ptr<Bitmap> Pointer; //!< alias
@@ -49,13 +49,13 @@ namespace upsylon {
             static Bitmap *Create(const size_t W, const size_t H, const size_t BPP);
 
             //! share a portion of a bitmap
-            static Bitmap *Share(const Bitmap &bitmap, const Rectangle &rectangle);
+            static Bitmap *Share(const Bitmap &bitmap, const Box &box);
 
             //! share full bitmap
             static Bitmap *Share(const Bitmap &bitamp);
 
             //! clone a portion of a bitmap
-            static Bitmap *Clone(const Bitmap &bitmap, const Rectangle &rectangle);
+            static Bitmap *Clone(const Bitmap &bitmap, const Box &box);
             //! clone a full bitmap
             static Bitmap *Clone(const Bitmap &bitmap);
 
@@ -87,7 +87,7 @@ namespace upsylon {
 
             Y_DISABLE_COPY_AND_ASSIGN(Bitmap);
 
-            explicit Bitmap(const Rectangle   &rectangle,
+            explicit Bitmap(const Box         &rectangle,
                             const void        *data,
                             const size_t       size,
                             const size_t       bytesPerPixel,
@@ -98,7 +98,7 @@ namespace upsylon {
             void setupRows(void *origin);
 
             explicit Bitmap(const Bitmap    &bitmap,
-                            const Rectangle &rectangle);
+                            const Box       &rectangle);
 
         };
 

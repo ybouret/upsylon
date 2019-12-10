@@ -63,12 +63,12 @@ namespace {
 
     }
 
-    static inline Graphic::Rectangle makeRect(const Area &area)
+    static inline Graphic::Box makeRect(const Area &area)
     {
-        return Graphic::Rectangle(alea.range<unit_t>(0,area.w-1),
-                         alea.range<unit_t>(0,area.h-1),
-                         alea.range<unit_t>(0,area.w-1),
-                         alea.range<unit_t>(0,area.h-1));
+        return Graphic::Box(alea.range<unit_t>(0,area.w-1),
+                            alea.range<unit_t>(0,area.h-1),
+                            alea.range<unit_t>(0,area.w-1),
+                            alea.range<unit_t>(0,area.h-1));
     }
 
     static inline void doGrow(sequence<Surface> &surfaces,
@@ -79,7 +79,7 @@ namespace {
         S->run(H);
         const digest org = H.md();
         {
-            const Rectangle rect = makeRect( *S );
+            const Box       rect = makeRect( *S );
             Surface         sub  = Bitmap::Share(*S,rect);
             surfaces.push_back(sub);
         }
@@ -95,7 +95,7 @@ namespace {
 
 
         {
-            const Rectangle rect = makeRect( *S );
+            const Box       rect = makeRect( *S );
             Surface         sub  = Bitmap::Clone(*S,rect);
             surfaces.push_back(sub);
         }

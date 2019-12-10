@@ -1,13 +1,13 @@
 
 
-#include "y/graphic/rectangle.hpp"
+#include "y/graphic/box.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
 
     namespace Graphic {
 
-        Rectangle:: ~Rectangle() throw()
+        Box:: ~Box() throw()
         {
         }
 
@@ -18,8 +18,8 @@ namespace upsylon {
             return hi-lo;
         }
 
-        Rectangle:: Rectangle(  unit_t x0,   unit_t y0,
-                                unit_t x1,   unit_t y1) throw() :
+        Box:: Box(  unit_t x0,   unit_t y0,
+                  unit_t x1,   unit_t y1) throw() :
         Area(1+chkdif(x0,x1),1+chkdif(y0,y1)),
         lower(x0,y0),
         upper(x1,y1)
@@ -28,7 +28,7 @@ namespace upsylon {
             assert(y0<=y1);
         }
 
-        Rectangle:: Rectangle(Point p0, Point p1) throw() :
+        Box:: Box(Point p0, Point p1) throw() :
         Area(1+chkdif(p0.x,p1.x),1+chkdif(p0.y,p1.y)),
         lower(p0),
         upper(p1)
@@ -40,7 +40,7 @@ namespace upsylon {
 
 
 
-        Rectangle:: Rectangle(const Rectangle &other) throw() :
+        Box:: Box(const Box &other) throw() :
         Area(other),
         lower(other.lower),
         upper(other.upper)
@@ -49,19 +49,19 @@ namespace upsylon {
         }
         
 
-        std::ostream & operator<<( std::ostream &os, const Rectangle &r )
+        std::ostream & operator<<( std::ostream &os, const Box &r )
         {
             std::cerr << "[" << r.lower << "->" << r.upper << "=" << (Area&)r << "]";
             return os;
         }
 
 
-        bool Area:: contains(const Rectangle &r) const throw()
+        bool Area:: contains(const Box &r) const throw()
         {
             return contains(r.lower) && contains(r.upper);
         }
 
-        bool  Rectangle:: sameRectangleThan( const Rectangle &rect ) const throw()
+        bool  Box:: sameBoxThan( const Box &rect ) const throw()
         {
             if( (lower==rect.lower) && (upper==rect.upper) )
             {

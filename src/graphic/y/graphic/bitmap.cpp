@@ -67,14 +67,14 @@ namespace upsylon {
             }
         }
 
-        Bitmap:: Bitmap(const Rectangle   &rect,
+        Bitmap:: Bitmap(const Box         &rect,
                         const void        *data,
                         const size_t       size,
                         const size_t       bytesPerPixel,
                         const size_t       dataStride,
                         const Memory::Kind memoryKind,
                         const Memory::Mode memoryMode) :
-        Rectangle(  rect ),
+        Box(  rect ),
         depth( checkDepth(bytesPerPixel) ),
         scanline( w * depth ),
         stride( checkStride(dataStride, scanline) ),
@@ -174,9 +174,9 @@ namespace upsylon {
         {
             if( (W<=0) || (H<=0) || (BPP<=0) ) throw exception("%sinvalid %ux%u,depth=%u",fn, unsigned(W), unsigned(H), unsigned(BPP) );
 
-            const Rectangle rect(0,0,W-1,H-1);
-            size_t size = rect.items*BPP;
-            void  *data = Memory::Acquire(size);
+            const Box rect(0,0,W-1,H-1);
+            size_t    size = rect.items*BPP;
+            void     *data = Memory::Acquire(size);
             try {
                 return new Bitmap(rect,data,size,BPP,0,Memory::Global,Memory::ReadWrite);
             }
@@ -187,7 +187,7 @@ namespace upsylon {
             }
         }
 
-        Bitmap  * Bitmap:: Clone(const Bitmap &bitmap, const Rectangle &rectangle)
+        Bitmap  * Bitmap:: Clone(const Bitmap &bitmap, const Box &rectangle)
         {
             if( ! bitmap.contains(rectangle) ) throw exception("%sinvalid sub-bitmap to clone",fn);
             const size_t BPP = bitmap.depth;
@@ -252,8 +252,8 @@ namespace upsylon {
 
 
         Bitmap:: Bitmap(const Bitmap    &bitmap,
-                        const Rectangle &rectangle) :
-        Rectangle(0,0,rectangle.w-1,rectangle.h-1),
+                        const Box       &rectangle) :
+        Box(0,0,rectangle.w-1,rectangle.h-1),
         depth(bitmap.depth),
         scanline(w*depth),
         stride(bitmap.stride),
@@ -278,7 +278,7 @@ namespace upsylon {
             }
         }
 
-        Bitmap * Bitmap:: Share(const Bitmap &bitmap, const Rectangle &rectangle)
+        Bitmap * Bitmap:: Share(const Bitmap &bitmap, const Box &rectangle)
         {
             return new Bitmap(bitmap,rectangle);
         }
