@@ -7,6 +7,16 @@
 
 namespace upsylon {
 
+    namespace Lang {
+
+        namespace Stream {
+
+            typedef arc_ptr<const Pattern> Motif;
+
+        }
+
+    }
+
 }
 
 #endif
