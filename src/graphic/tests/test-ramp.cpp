@@ -14,7 +14,8 @@ Y_UTEST(ramp)
     Pixmap4 pxm4(200,100);
 
 
-    //IMG.save("ramp.png", *pxm4, <#Data2RGBA &proc#>, NULL);
+    IMG.saveAs("ramp.png", pxm4, NULL);
+
 
 }
 Y_UTEST_DONE()

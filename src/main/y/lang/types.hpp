@@ -16,7 +16,7 @@ namespace upsylon
         {
         public:
             explicit Object() throw(); //!< constructor
-            virtual ~Object() throw(); //!< desctructor
+            virtual ~Object() throw(); //!< destructor
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Object);

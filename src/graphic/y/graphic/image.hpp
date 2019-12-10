@@ -4,7 +4,7 @@
 #ifndef Y_GRAPHIC_IMAGE_INCLUDED
 #define Y_GRAPHIC_IMAGE_INCLUDED 1
 
-#include "y/graphic/bitmap.hpp"
+#include "y/graphic/pixmap.hpp"
 #include "y/graphic/color/rgba2data.hpp"
 #include "y/graphic/color/data2rgba.hpp"
 #include "y/string/convert.hpp"
@@ -143,12 +143,22 @@ namespace upsylon {
                          Data2RGBA     &proc,
                          const Options *params) const;
 
-            template <typename T>
+            template <typename T> inline
             Bitmap *loadAs(const string &filename, const Options *params=NULL) const
             {
                 PutRGBA<T> proc;
                 return load(filename,sizeof(T),proc,params);
             }
+
+            template <typename T> inline
+            void saveAs(const string    &filename,
+                        const Pixmap<T> &pxm,
+                        const Options   *params) const
+            {
+                GetRGBA<T> proc;
+                save(filename,*pxm,proc,params);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Image);
