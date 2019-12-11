@@ -46,7 +46,9 @@ namespace upsylon {
 
                 //! run module through codes
                 void run( ios::ostream &target, Module *module );
-                
+
+                //! run a string
+                string operator()( const string & );
 
 
             private:

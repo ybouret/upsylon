@@ -4,6 +4,7 @@
 #include "y/lang/pattern/compiler.hpp"
 #include "y/exception.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/ios/osstream.hpp"
 
 namespace upsylon {
 
@@ -96,6 +97,17 @@ namespace upsylon {
 
                 }
 
+            }
+
+
+            string Processor:: operator()( const string &input )
+            {
+                string        result;
+                {
+                    ios::osstream target(result);
+                    run( target, Module::OpenData("user's string", input) );
+                }
+                return result;
             }
 
 

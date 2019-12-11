@@ -291,4 +291,33 @@ namespace upsylon
 
 }
 
+#include "y/lang/stream/processor.hpp"
+
+namespace upsylon {
+
+    namespace {
+
+        struct helper
+        {
+            bool us2uc( Lang::Token &token )
+            {
+                assert(2==token.size);
+                delete token.pop_front();
+                token.tail->code = toupper(token.tail->code);
+                return true;
+            }
+        };
+    }
+
+    string vfs:: c_to_cpp_name(const string &name)
+    {
+        const string            src = '_' + name;
+        Lang::Stream::Processor proc;
+        helper                  help;
+        proc.on("_[:alpha:]", help, & helper::us2uc );
+        return proc(src);
+    }
+
+}
+
 

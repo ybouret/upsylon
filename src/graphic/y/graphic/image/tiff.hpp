@@ -33,29 +33,7 @@ namespace upsylon
 
             //! count TIFF directories in one file
             size_t countDirectories(const string &filename) const;
-
-
-#if 0
-            virtual Bitmap  *load(const string          &filename,
-                                  unit_t                 depth,
-                                  rgba2data             &proc,
-                                  const void            *options) const;
             
-            virtual void     save(const string        &filename,
-                                  const Bitmap        &bmp,
-                                  data2rgba           &proc,
-                                  const void          *options) const;
-
-            //! number of stored images in a file
-
-            //! load a bitmap with 0<=indx<count_directories
-            Bitmap *load_bitmap(const string          &filename,
-                                unit_t                 depth,
-                                rgba2data             &proc,
-                                const size_t           indx) const;
-#endif
-
-
         private:
             mutable I_TIFF::Raster raster;
             Y_DISABLE_COPY_AND_ASSIGN(TIFF_Format);

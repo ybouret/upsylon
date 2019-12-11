@@ -133,6 +133,8 @@ Y_PROGRAM_START()
 
 		std::cerr << "className=" << className << std::endl;
 
+        exit(0);
+        
 		{
 			ios::ocstream header(headerName);
 			header << "//! \\file\n";
