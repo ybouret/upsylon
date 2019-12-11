@@ -13,8 +13,22 @@ namespace {
         inline  ToDo() throw() {}
         inline ~ToDo() throw() {}
 
-        bool Check( Token &token, Source &source )
+        bool Check( Token &token  )
         {
+            assert(token.size>0);
+            const CharInfo info = *token.head;
+            token.push_front( new Char('<',info) );
+            token.push_back( new Char('>',info) );
+            return true;
+        }
+
+        bool UpperCase( Token &token )
+        {
+            assert(2==token.size);
+            assert('_' == token.head->code);
+            delete token.pop_front();
+            assert(1==token.size);
+            token.tail->code = toupper(token.tail->code);
             return true;
         }
 
@@ -31,9 +45,8 @@ Y_UTEST(sed)
     Stream::Processor sed;
 
     {
-        Stream::Instruction I( &todo, & ToDo::Check );
-        sed.on("[:digit:]", I );
-        sed.on("_[:alpha:]", I);
+        sed.on("[:digit:]",  todo, &ToDo::Check);
+        sed.on("_[:alpha:]", todo, &ToDo::UpperCase);
     }
 
     if(argc>1)

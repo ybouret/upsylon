@@ -3,6 +3,7 @@
 #include "y/lang/stream/processor.hpp"
 #include "y/lang/pattern/compiler.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -43,13 +44,16 @@ namespace upsylon {
                         token.release();
                         if(code.motif->match(token,source))
                         {
-                            target << '<';
-                            while(token.size)
+                            // modify token
+                            aliasing::_(code.instr)(token);
+
+                            // output token
+                            while( token.size )
                             {
                                 target.write(token.head->code);
                                 delete token.pop_front();
                             }
-                            target << '>';
+
                             match = true;
                             break;
                         }

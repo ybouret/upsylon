@@ -13,8 +13,8 @@ namespace upsylon {
 
         namespace Stream {
 
-            typedef arc_ptr<const Pattern>                   Motif;
-            typedef functor<bool,TL2(Token &,Source&)> Instruction;
+            typedef arc_ptr<const Pattern>      Motif;
+            typedef functor<bool,TL1(Token &)>  Instruction;
 
             class Code_ : public CountedObject
             {
@@ -41,6 +41,15 @@ namespace upsylon {
                 virtual ~Processor() throw();
 
                 void on( const string &rx, const Instruction &I );
+
+                template <typename HOST, typename METHOD_POINTER>
+                void on( const string &rx, HOST &host, METHOD_POINTER method )
+                {
+                    const Instruction instr( &host, method );
+                    on(rx,instr);
+                }
+
+
 
                 void run( ios::ostream &target, Module *module );
 
