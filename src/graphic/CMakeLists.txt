@@ -19,6 +19,12 @@ SET(color_srcs ${color_decl} ${color_code})
 SOURCE_GROUP( graphic/color FILES ${color_srcs} )
 INSTALL( FILES ${color_decl} DESTINATION include/y/graphic/color )
 
+FILE(GLOB color_ramp_decl y/graphic/color/ramp/*.hpp)
+FILE(GLOB color_ramp_code y/graphic/color/ramp/*.cpp)
+SET(color_ramp_srcs ${color_ramp_decl} ${color_ramp_code})
+SOURCE_GROUP( graphic/color/ramp FILES ${color_ramp_srcs} )
+INSTALL( FILES ${color_ramp_decl} DESTINATION include/y/graphic/color/ramp )
+
 FILE(GLOB parallel_decl y/graphic/parallel/*.hpp)
 FILE(GLOB parallel_code y/graphic/parallel/*.cpp)
 SET(parallel_srcs ${parallel_decl} ${parallel_code})
@@ -40,7 +46,7 @@ INSTALL( FILES ${image_decl} DESTINATION include/y/graphic/image )
 
 ADD_LIBRARY(y-graphic STATIC 
 ${main_srcs} 
-${color_srcs}
+${color_srcs} ${color_ramp_srcs}
 ${parallel_srcs}
 ${ops_srcs}
 ${image_srcs}

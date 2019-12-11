@@ -16,7 +16,7 @@ namespace upsylon {
             virtual ~Ramp() throw(); //!< cleanup
 
             //! get the matching color
-            rgb compute(const float v, const float vmin=0.0f, const float vmax=1.0f);
+            rgb operator()(const float v, const float vmin=0.0f, const float vmax=1.0f);
 
         protected:
             explicit Ramp() throw(); //!< setup

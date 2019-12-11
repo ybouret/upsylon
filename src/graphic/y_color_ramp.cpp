@@ -131,10 +131,14 @@ Y_PROGRAM_START()
 		string className = vfs::class_name_for(rootName);
 		string guardName = vfs::cpp_label_from(rootName) + "_INCLUDED";
 
-		std::cerr << "className=" << className << std::endl;
 
-        exit(0);
-        
+        className = vfs::snake_to_camel(className);
+        guardName = vfs::snake_to_camel(guardName);
+
+        std::cerr << "className =[" << className << "]" << std::endl;
+        std::cerr << "guardName =[" << guardName << "]" << std::endl;
+
+
 		{
 			ios::ocstream header(headerName);
 			header << "//! \\file\n";

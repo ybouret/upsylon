@@ -14,7 +14,7 @@ namespace upsylon {
 
         }
 
-        rgb Ramp:: compute(const float v, const float vmin, const float vmax)
+        rgb Ramp:: operator()(const float v, const float vmin, const float vmax)
         {
             const rgb *tab = _256colors();
             if(v<=vmin)

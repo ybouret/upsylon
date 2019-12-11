@@ -239,7 +239,7 @@ namespace upsylon {
         static string  base_name_from(const string &name);  //!< make an acceptable file name
         static string  cpp_label_from(const string &name);  //!< C Pre Processor label
         static string  class_name_for(const string &name);  //!< acceptable class name
-        static string  c_to_cpp_name(const string &name);   //!< some_name to SomeName
+        static string  snake_to_camel(const string &name);  //!< some_name to SomeName
 
     protected:
         explicit vfs() throw();

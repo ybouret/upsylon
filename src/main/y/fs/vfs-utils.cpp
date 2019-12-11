@@ -251,7 +251,7 @@ namespace upsylon
 
         const size_t n = name.size();
         string       ans(n+1,as_capacity,false);
-        ans += '_';
+        ans << '_' << '_';
         for(size_t i=0;i<n;++i)
         {
             char C = name[i];
@@ -291,6 +291,7 @@ namespace upsylon
 
 }
 
+#if 0
 #include "y/lang/stream/processor.hpp"
 
 namespace upsylon {
@@ -309,15 +310,65 @@ namespace upsylon {
         };
     }
 
-    string vfs:: c_to_cpp_name(const string &name)
+    string vfs:: snake_to_camel(const string &name)
     {
         const string            src = '_' + name;
         Lang::Stream::Processor proc;
         helper                  help;
-        proc.on("_[:alpha:]", help, & helper::us2uc );
+        proc.on("_[:lower:]", help, & helper::us2uc );
         return proc(src);
     }
 
 }
+#endif
 
+#include "y/lang/pattern/compiler.hpp"
+#include "y/exception.hpp"
+#include <cctype>
+
+namespace upsylon {
+
+    string vfs:: snake_to_camel(const string &name)
+    {
+        const size_t nameSize = name.size();
+        if(nameSize<=0)
+        {
+            return name;
+        }
+        else
+        {
+            string       result;
+            size_t       i      = 0;
+            if('_' != name[0] )
+            {
+                result << char( toupper(name[0]) );
+                i=1;
+            }
+
+            Lang::Source            source( Lang::Module::OpenData(name, &name[i], nameSize-i) );
+            Lang::Token             token;
+            auto_ptr<Lang::Pattern> motif = Lang::RegExp("_[:lower:]");
+            while( source.active() )
+            {
+                if( motif->match(token,source) )
+                {
+                    assert(2==token.size);
+                    assert('_'==token.head->code);
+                    result << char( toupper( token.tail->code ) );
+                    token.release();
+                }
+                else
+                {
+                    char C=0;
+                    if(!source.query(C)) throw exception("vfs::snake_to_camel unexpected failure!!!");
+                    result << C;
+                }
+            }
+
+
+            return result;
+        }
+    }
+
+}
 
