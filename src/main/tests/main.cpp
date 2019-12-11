@@ -162,6 +162,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(scanner);
     Y_UTEST(lex);
     Y_UTEST(token_convert);
+    Y_UTEST(sed);
 
     Y_UTEST(contour2d);
     Y_UTEST(contour3d);

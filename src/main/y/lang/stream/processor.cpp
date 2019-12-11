@@ -27,6 +27,52 @@ namespace upsylon {
             }
 
 
+            void Processor:: run( ios::ostream &target, Module *module )
+            {
+                Source source(module);
+
+                const size_t numCodes = codes.size();
+                Token        token;
+                while( source.active() )
+                {
+                    // try code
+                    bool match = false;
+                    for(size_t i=1;i<=numCodes;++i)
+                    {
+                        Code_ &code = *codes[i];
+                        token.release();
+                        if(code.motif->match(token,source))
+                        {
+                            target << '<';
+                            while(token.size)
+                            {
+                                target.write(token.head->code);
+                                delete token.pop_front();
+                            }
+                            target << '>';
+                            match = true;
+                            break;
+                        }
+                    }
+
+
+                    if(!match)
+                    {
+                        // no code
+                        char C = 0;
+                        if(!source.query(C))
+                        {
+                            throw exception("unexpected query failure");
+                        }
+                        target.write(C);
+                    }
+
+
+                }
+
+            }
+
+
         }
 
     }

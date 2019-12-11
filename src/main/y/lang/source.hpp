@@ -26,7 +26,7 @@ namespace upsylon
             size_t      loaded() const throw();        //!< iobuf.size
             void        forward(size_t n) throw();     //!< n<=loaded
             bool        active();                      //!< try to ensure one next char in iobuf
-            const Char *peek();                        //!< copy of first char in iobuf
+            const Char *peek();                        //!< address of first char in iobuf
             const Module * operator*() const throw();  //!< access the module address
 
             virtual bool query( char &C ); //!< ios::istream interface

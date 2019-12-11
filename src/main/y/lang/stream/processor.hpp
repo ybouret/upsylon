@@ -14,19 +14,20 @@ namespace upsylon {
         namespace Stream {
 
             typedef arc_ptr<const Pattern>                   Motif;
-            typedef functor<void,TL2(const Token &,Source&)> Instruction;
+            typedef functor<bool,TL2(Token &,Source&)> Instruction;
 
             class Code_ : public CountedObject
             {
             public:
                 explicit Code_(const Motif       &M,
-                               const Instruction &I);
+                               const Instruction &I) : motif(M), instr(I) {}
 
-                virtual ~Code_() throw();
+                virtual ~Code_() throw() {}
 
-            private:
+
                 const Motif       motif;
                 const Instruction instr;
+            private:
                 Y_DISABLE_COPY_AND_ASSIGN(Code_);
             };
 
@@ -41,7 +42,7 @@ namespace upsylon {
 
                 void on( const string &rx, const Instruction &I );
 
-                void operator()( ios::ostream &dst, ios::istream &src );
+                void run( ios::ostream &target, Module *module );
 
             private:
                 vector<Code> codes;
