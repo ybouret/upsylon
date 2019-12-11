@@ -11,6 +11,24 @@ namespace upsylon {
 
         namespace Stream {
 
+
+            Processor::Code:: ~Code() throw()
+            {
+            }
+
+            Processor::Code:: Code( const Code &_ ) throw() :
+            motif(_.motif),
+            instr(_.instr)
+            {
+            }
+
+            Processor:: Code:: Code( const Motif &M, const Instr &I) throw() :
+            motif(M),
+            instr(I)
+            {
+            }
+
+
             Processor:: Processor() : codes()
             {
             }
@@ -19,11 +37,15 @@ namespace upsylon {
             {
             }
 
-            void Processor::on(const string &rx, const Instruction &I)
+            void Processor::on(const string &rx, Editor *ed)
             {
+                static const char fn[] = "Stream::Processor: ";
+                if(!ed) throw exception("%sNULL editor for \"%s\"",fn,*rx);
+                const Instr instr = ed;
                 const Motif motif = RegExp(rx);
-                if(motif->weak()) throw exception("weak pattern \"%s\" in Stream::Processor", *rx );
-                const Code  code  = new Code_(motif,I);
+                if(motif->weak()) throw exception("%sweak pattern \"%s\"",fn,*rx );
+                
+                const Code code(motif,instr);
                 codes << code;
             }
 
@@ -40,12 +62,12 @@ namespace upsylon {
                     bool match = false;
                     for(size_t i=1;i<=numCodes;++i)
                     {
-                        Code_ &code = *codes[i];
+                        const Code &code = codes[i];
                         token.release();
                         if(code.motif->match(token,source))
                         {
                             // modify token
-                            aliasing::_(code.instr)(token);
+                            aliasing::_(*code.instr)(token);
 
                             // output token
                             while( token.size )

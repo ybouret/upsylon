@@ -6,6 +6,7 @@
 #include "y/lang/pattern.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/functor.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon {
 
@@ -13,49 +14,58 @@ namespace upsylon {
 
         namespace Stream {
 
-            typedef arc_ptr<const Pattern>      Motif;
-            typedef functor<bool,TL1(Token &)>  Instruction;
+            typedef functor<bool,TL1(Token &)>  Editor; //!< interface
 
-            class Code_ : public CountedObject
-            {
-            public:
-                explicit Code_(const Motif       &M,
-                               const Instruction &I) : motif(M), instr(I) {}
-
-                virtual ~Code_() throw() {}
-
-
-                const Motif       motif;
-                const Instruction instr;
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Code_);
-            };
-
-            typedef arc_ptr<Code_> Code;
-
-
+            //! apply editors
             class Processor
             {
             public:
-                explicit Processor();
-                virtual ~Processor() throw();
+                typedef arc_ptr<const Pattern>  Motif; //!< alias
+                typedef arc_ptr<Editor>         Instr; //!< alias
 
-                void on( const string &rx, const Instruction &I );
+                explicit Processor();          //!< setup
+                virtual ~Processor() throw();  //!< cleanup
 
-                template <typename HOST, typename METHOD_POINTER>
+                void on(const string &rx, Editor *ed); //!< compile a code
+
+                //! create and editor for a given regexp
+                template <typename HOST, typename METHOD_POINTER> inline
                 void on( const string &rx, HOST &host, METHOD_POINTER method )
                 {
-                    const Instruction instr( &host, method );
-                    on(rx,instr);
+                    Editor *ed = new Editor( &host, method);
+                    on(rx,ed);
                 }
 
+                //! create an editor for a given regexp
+                template <typename HOST, typename METHOD_POINTER> inline
+                void on( const char *rx, HOST &host, METHOD_POINTER method )
+                {
+                    const string _(rx);
+                    on(_,host,method);
+                }
 
-
+                //! run module through codes
                 void run( ios::ostream &target, Module *module );
+                
+
 
             private:
-                vector<Code> codes;
+                class Code
+                {
+                public:
+                    Code(const Motif &M,
+                         const Instr &I ) throw();
+                    ~Code() throw();
+                    Code(const Code &) throw();
 
+                    const Motif motif;
+                    const Instr instr;
+
+                private:
+                    Y_DISABLE_ASSIGN(Code);
+                };
+
+                vector<Code,memory::pooled> codes;
                 Y_DISABLE_COPY_AND_ASSIGN(Processor);
             };
 

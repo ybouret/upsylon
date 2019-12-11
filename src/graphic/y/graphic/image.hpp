@@ -23,31 +23,32 @@ namespace upsylon {
         class Image : public singleton<Image>
         {
         public:
-            typedef key_hasher<string,hashing::fnv>                 KeyHasher;
-            typedef memory::pooled                                   Allocator;
-            typedef map<string,string,KeyHasher,Allocator>           OptionDB;
-            typedef increasing_comparator<string>                    StringComparator;
-            typedef sorted_vector<string,StringComparator,Allocator> SortedStrings;
-            typedef ordered_single<SortedStrings>                    OrderedStrings;
+            typedef key_hasher<string,hashing::fnv>                  KeyHasher;         //!< alias
+            typedef memory::pooled                                   Allocator;         //!< alias
+            typedef map<string,string,KeyHasher,Allocator>           OptionDB;          //!< alias
+            typedef increasing_comparator<string>                    StringComparator;  //!< alias
+            typedef sorted_vector<string,StringComparator,Allocator> SortedStrings;     //!< alias
+            typedef ordered_single<SortedStrings>                    OrderedStrings;    //!< alias
 
+            //! options for format
             class Options : public OptionDB
             {
             public:
-                Options() throw();
-                Options(const char   *);
-                Options(const string &);
+                Options() throw();          //!< setup
+                Options(const char   *);    //!< setup and parse input
+                Options(const string &);    //!< setup and parse input
+                virtual ~Options() throw(); //!< cleanup
+                Options(const Options &);   //!< copy
 
-                virtual ~Options() throw();
-                Options(const Options &);
+                Options & parse( const string & ); //!< parse input
+                Options & parse( const char   * ); //!< parse input
 
-                Options & parse( const string & );
-                Options & parse( const char   * );
+                Options & operator<<( const string & ); //!< helper
+                Options & operator<<( const char   * ); //!< helper
 
-                Options & operator<<( const string & );
-                Options & operator<<( const char   * );
+                bool flag( const string &name ) const;  //!< name must be a declared flag
 
-                bool flag( const string &name ) const;
-
+                //! query and convert, default value otherwise
                 template <typename T>
                 inline T get( const string &name, const T defaultValue=0) const
                 {
@@ -62,9 +63,13 @@ namespace upsylon {
                     }
                 }
 
+                //! test optional options for a flag
                 static bool Flag(const Options *options, const string &name);
+                //! test optional options for a flaf
                 static bool Flag(const Options *options, const char   *name);
 
+
+                //! test optional options, return defaultValue otherwise
                 template <typename T> static inline
                 T Get(const Options *options, const string &name, const T defaultValue=0)
                 {
@@ -78,6 +83,7 @@ namespace upsylon {
                     }
                 }
 
+                //! Get wrapper
                 template <typename T> static inline
                 T Get(const Options *options, const char *name, const T defaultValue=0)
                 {
@@ -90,15 +96,14 @@ namespace upsylon {
             };
 
             
-
-
+            //! interface for an image format
             class Format : public Object
             {
             public:
                 const string name; //!< name for database of formats
 
-                typedef intr_ptr<string,Format>                 Pointer;
-                typedef set<string,Pointer,KeyHasher,Allocator> Set;
+                typedef intr_ptr<string,Format>                 Pointer; //!< alias for db
+                typedef set<string,Pointer,KeyHasher,Allocator> Set;     //!< alias
 
                 virtual ~Format() throw(); //!< cleanup
 
@@ -114,12 +119,12 @@ namespace upsylon {
                                      Data2RGBA     &proc,
                                      const Options *params) const = 0;
 
-                const string &key() const throw();
+                const string &key() const throw(); //!< key for set
 
 
             protected:
                 explicit Format(const char *id, const char **ext); //!< setup
-                OrderedStrings extensions;
+                OrderedStrings extensions; //!< recognized extensions
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Format);
@@ -127,22 +132,26 @@ namespace upsylon {
             };
 
 
-            static const at_exit::longevity life_time = 0;
+            static const at_exit::longevity life_time = 0; //!< longevity
 
-            void use( Format *format );
+            void use( Format *format ); //!< declare format to use
 
+            //! get format according to file extension
             const Format & FormatFor(const string &filename) const;
 
+            //! get format an load
             Bitmap *load(const string  &filename,
                          const size_t  depth,
                          RGBA2Data     &proc,
                          const Options *params) const;
 
+            //! get format and save
             void    save(const string  &filename,
                          const Bitmap  &bmp,
                          Data2RGBA     &proc,
                          const Options *params) const;
 
+            //! default loading
             template <typename T> inline
             Bitmap *loadAs(const string &filename, const Options *params=NULL) const
             {
@@ -150,6 +159,7 @@ namespace upsylon {
                 return load(filename,sizeof(T),proc,params);
             }
 
+            //! default saving
             template <typename T> inline
             void saveAs(const string    &filename,
                         const Pixmap<T> &pxm,

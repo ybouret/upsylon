@@ -9,15 +9,17 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! color ramp interface
         class Ramp  
         {
         public:
-            virtual ~Ramp() throw();
+            virtual ~Ramp() throw(); //!< cleanup
 
+            //! get the matching color
             rgb compute(const float v, const float vmin=0.0f, const float vmax=1.0f);
 
         protected:
-            explicit Ramp() throw();
+            explicit Ramp() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Ramp);

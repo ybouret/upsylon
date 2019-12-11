@@ -31,6 +31,7 @@ namespace upsylon
                                  Data2RGBA            &proc,
                                  const Image::Options *params) const;
 
+            //! count TIFF directories in one file
             size_t countDirectories(const string &filename) const;
 
 

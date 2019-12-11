@@ -10,15 +10,16 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! Data->RGBA interface
         class Data2RGBA : public Object
         {
         public:
-            virtual ~Data2RGBA() throw();
+            virtual ~Data2RGBA() throw(); //!< cleanup
 
-            rgba operator()( const void *addr ) throw();
+            rgba operator()( const void *addr ) throw(); //!< data at address, compute rgba
 
         protected:
-            explicit Data2RGBA() throw();
+            explicit Data2RGBA() throw(); //!< setyp
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Data2RGBA);
@@ -26,12 +27,13 @@ namespace upsylon {
         };
 
 
+        //! generic Get RHNS
         template <typename T>
         class GetRGBA : public Data2RGBA
         {
         public:
-            inline explicit GetRGBA() throw() {}
-            inline virtual ~GetRGBA() throw() {}
+            inline explicit GetRGBA() throw() {} //!< setup
+            inline virtual ~GetRGBA() throw() {} //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GetRGBA);
@@ -42,12 +44,13 @@ namespace upsylon {
             }
         };
 
+        //! extract some channels
         template <typename T,const size_t CHANNEL>
         class GetChannel : public Data2RGBA
         {
         public:
-            inline explicit GetChannel() throw() {}
-            inline virtual ~GetChannel() throw() {}
+            inline explicit GetChannel() throw() {} //!< setup
+            inline virtual ~GetChannel() throw() {} //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(GetChannel);
