@@ -101,6 +101,18 @@ namespace upsylon {
         {
             return f;
         }
+        
+        template <>
+        float Convert::Get<float,rgb>(const rgb &C) throw()
+        {
+            return UnitFloat[ GreyScale(C) ];
+        }
+        
+        template <>
+        float Convert::Get<float,rgba>(const rgba &C) throw()
+        {
+            return UnitFloat[ GreyScale(C) ];
+        }
 
         template <>
         uint8_t Convert::Get<uint8_t,float>( const float &f ) throw()
@@ -146,11 +158,7 @@ namespace upsylon {
             return C;
         }
 
-        template <>
-        float Convert::Get<float,rgba>(const rgba &C) throw()
-        {
-            return UnitFloat[ GreyScale(C) ];
-        }
+        
 
         template <>
         rgba Convert::Get<rgba,rgba>(const rgba &C) throw() { return C; }
@@ -172,7 +180,8 @@ namespace upsylon {
         template <>
         rgba Convert::Get<rgba,rgb>(const rgb &C) throw() { return C; }
 
-
+       
+        
     }
 
 }

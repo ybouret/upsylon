@@ -66,16 +66,15 @@ namespace {
     template <typename T>
     void doImg2Ramp(const string &fileName,
                     const char   *rampName,
+                    const char   *typeName,
                     const Ramp::Pointer &ramp  )
     {
         string saveName = vfs::get_base_name(fileName);
         vfs::change_extension(saveName,"png");
-        saveName = rampName + saveName;
+        saveName = rampName + (typeName + saveName);
         std::cerr << "saveName=" << saveName << std::endl;
-        Image &IMG = Image::instance();
-        
-        Pixmap<T> pxm( IMG.loadAs<T>(fileName) );
-        
+        Image       &IMG = Image::instance();
+        Pixmap<T>    pxm( IMG.loadAs<T>(fileName) );
         ColorRamp<T> proc(ramp);
         IMG.save(saveName, *pxm, proc, NULL);
         
@@ -84,7 +83,11 @@ namespace {
 
 #define RAMP(ID) do { const Ramp::Pointer ramp = new ID();\
 const char id[] = #ID "-";\
-doImg2Ramp<float>(fileName,id,ramp); }\
+doImg2Ramp<float>  (fileName,id,"float-",ramp); \
+doImg2Ramp<uint8_t>(fileName,id,"byte-",ramp); \
+doImg2Ramp<rgb>(fileName,id,"rgb-",ramp); \
+doImg2Ramp<rgba>(fileName,id,"rgba-",ramp); \
+}\
 while(false)
 
 Y_UTEST(img2ramp)
