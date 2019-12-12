@@ -52,10 +52,55 @@ Y_UTEST(ramp)
     RAMP(HotToCold2);
     RAMP(Orange);
     RAMP(YellowToBlue);
-
 }
 Y_UTEST_DONE()
 
 
+#undef RAMP
+
+#include "y/graphic/image.hpp"
+#include "y/fs/vfs.hpp"
+
+namespace {
+    
+    template <typename T>
+    void doImg2Ramp(const string &fileName,
+                    const char   *rampName,
+                    const Ramp::Pointer &ramp  )
+    {
+        string saveName = vfs::get_base_name(fileName);
+        vfs::change_extension(saveName,"png");
+        saveName = rampName + saveName;
+        std::cerr << "saveName=" << saveName << std::endl;
+        Image &IMG = Image::instance();
+        
+        Pixmap<T> pxm( IMG.loadAs<T>(fileName) );
+        
+        ColorRamp<T> proc(ramp);
+        IMG.save(saveName, *pxm, proc, NULL);
+        
+    }
+}
+
+#define RAMP(ID) do { const Ramp::Pointer ramp = new ID();\
+const char id[] = #ID "-";\
+doImg2Ramp<float>(fileName,id,ramp); }\
+while(false)
+
+Y_UTEST(img2ramp)
+{
+    if(argc>1)
+    {
+        const string fileName = argv[1];
+        RAMP(Greyscale);
+        RAMP(DoubleHot);
+        RAMP(HotToCold);
+        RAMP(HotToCold2);
+        RAMP(Orange);
+        RAMP(YellowToBlue);
+        
+    }
+}
+Y_UTEST_DONE()
 
 
