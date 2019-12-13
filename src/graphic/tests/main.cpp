@@ -16,6 +16,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(ramp);
     Y_UTEST(img2ramp);
     Y_UTEST(imgrad);
+    Y_UTEST(filter);
 }
 Y_UTEST_EXEC()
 

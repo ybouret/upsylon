@@ -3,7 +3,7 @@
 #define Y_SEQUENCE_SLOTS_INCLUDED 1
 
 #include "y/dynamic.hpp"
-#include "y/type/args.hpp"
+ #include "y/type/args.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/memory/global.hpp"
 #include <iostream>
@@ -12,7 +12,7 @@ namespace upsylon {
 
     //! C-style slots of [0..size()-1] C++ objects
     template <typename T, typename ALLOCATOR=memory::global>
-    class slots : public dynamic
+    class slots :   public dynamic
     {
     public:
         Y_DECL_ARGS(T,type); //!< type aliases
@@ -30,6 +30,27 @@ namespace upsylon {
         inline virtual ~slots() throw()
         {
             release();
+        }
+
+        inline slots( const slots &other) :
+        dynamic(),
+        size_(0),
+        count(other.count),
+        bytes(count*sizeof(T)),
+        addr( static_cast<mutable_type *>(ALLOCATOR::instance().acquire(bytes)) )
+        {
+            try
+            {
+                for(size_t i=0;i<other.size();++i)
+                {
+                    this->build<const_type&>( other[i] );
+                }
+            }
+            catch(...)
+            {
+                release();
+                throw;
+            }
         }
 
         //! dynamic interface: initial and constant count
@@ -113,7 +134,7 @@ namespace upsylon {
         }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(slots);
+        Y_DISABLE_ASSIGN(slots);
         size_t        size_;
     public:
         const size_t  count; //!< constant capacity
