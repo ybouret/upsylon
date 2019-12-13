@@ -41,12 +41,14 @@ namespace {
 
             Gradient G( pxm->w, pxm->h );
 
+            Ops::Run(parTiles, G.field, pxm, Convert::Get<float,T> );
+
             double seqSpeed = 0;
-            Y_TIMINGS(seqSpeed,1,G.Compute(pxm, Convert::Get<float,T> , seqTiles));
+            Y_TIMINGS(seqSpeed,1,G.compute(seqTiles));
             std::cerr << "seqSpeed=" << seqSpeed << std::endl;
 
             double parSpeed = 0;
-            Y_TIMINGS(parSpeed,1,G.Compute(pxm, Convert::Get<float,T> , parTiles));
+            Y_TIMINGS(parSpeed,1,G.compute(parTiles));
             std::cerr << "parSpeed=" << parSpeed << std::endl;
 
         }

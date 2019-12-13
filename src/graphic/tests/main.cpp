@@ -6,6 +6,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(area);
     Y_UTEST(bitmap);
     Y_UTEST(pixmap);
+    Y_UTEST(stack);
     Y_UTEST(parallel);
     Y_UTEST(gradient);
     Y_UTEST(png);

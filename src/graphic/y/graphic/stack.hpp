@@ -13,15 +13,22 @@ namespace upsylon {
 
         //! a stack of pixmaps
         template <typename T>
-        class Stack : public slots< Pixmap<T> >
+        class Stack : public Area, public slots< Pixmap<T> >
         {
         public:
-
             typedef slots< Pixmap<T> > Slots; //!< alias
 
             //! setup
-            inline explicit Stack(const size_t n) : Slots(n)
+            inline explicit Stack(const size_t n,
+                                  const size_t W,
+                                  const size_t H) :
+            Area(W,H),
+            Slots(n)
             {
+                for(size_t i=0;i<n;++i)
+                {
+                    this->template build<size_t,size_t>(w,h);
+                }
             }
 
             //! cleanup
@@ -29,9 +36,6 @@ namespace upsylon {
             {
             }
             
-
-
-
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Stack);
