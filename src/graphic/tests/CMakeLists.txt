@@ -19,6 +19,7 @@ ADD_TEST(TIFF     test-graphic tiff)
 ADD_TEST(Image    test-graphic image)
 ADD_TEST(Ramp     test-graphic ramp)
 ADD_TEST(Img2Ramp test-graphic img2ramp)
+ADD_TEST(ImGrad   test-graphoc imgrad)
 
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

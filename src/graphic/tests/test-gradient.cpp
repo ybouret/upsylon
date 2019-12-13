@@ -29,7 +29,8 @@ namespace {
     void doGrad(const ForEach &par,
                 const ForEach &seq)
     {
-        for(size_t iter=0;iter<1;++iter)
+        std::cerr << std::endl << "Testing Gradient" << std::endl;
+        for(size_t iter=0;iter<4;++iter)
         {
             Pixmap<T> pxm( ALEA_COORD, ALEA_COORD );
 
@@ -50,7 +51,6 @@ namespace {
             double parSpeed = 0;
             Y_TIMINGS(parSpeed,1,G.compute(parTiles));
             std::cerr << "parSpeed=" << parSpeed << std::endl;
-
         }
 
     }
@@ -62,8 +62,8 @@ Y_UTEST(gradient)
     ForEach par = new concurrent::simd();
     ForEach seq = new concurrent::sequential_for();
     doGrad<uint8_t>(par,seq);
-
-    
+    doGrad<rgb>(par,seq);
 }
 Y_UTEST_DONE()
+
 
