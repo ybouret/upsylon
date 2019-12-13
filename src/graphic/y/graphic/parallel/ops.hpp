@@ -67,13 +67,14 @@ namespace upsylon {
             template <typename TARGET,
             typename SOURCE,
             typename PROC> static inline
-            void Run(Tiles        &tiles,
+            int Run(Tiles        &tiles,
                      TARGET       &target,
                      const SOURCE &source,
                      PROC         &proc )
             {
                 Kernel::Ops<TARGET,SOURCE,PROC> Task = { &tiles, &target, &source, &proc, 0 };
                 tiles.loop().run(Task.Run,&Task);
+                return Task.status;
             }
 
         };
