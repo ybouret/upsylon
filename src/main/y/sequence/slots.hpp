@@ -33,6 +33,7 @@ namespace upsylon {
         }
 
         inline slots( const slots &other) :
+        collection(),
         dynamic(),
         size_(0),
         count(other.count),
