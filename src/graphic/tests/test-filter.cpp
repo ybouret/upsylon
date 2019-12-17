@@ -5,6 +5,11 @@
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/graphic/color/ramp/greyscale.hpp"
 
+
+#include "y/graphic/ops/prewitt.hpp"
+#include "y/graphic/ops/sobel.hpp"
+#include "y/graphic/ops/scharr.hpp"
+
 using namespace upsylon;
 using namespace Graphic;
 
@@ -24,18 +29,31 @@ namespace  {
     }
 }
 
+#define DO_IMPL(STRUCT) \
+STRUCT::X3 STRUCT##X3;\
+STRUCT::Y3 STRUCT##Y3;\
+STRUCT::X5 STRUCT##X5;\
+STRUCT::Y5 STRUCT##Y5
+
 Y_UTEST(filter)
 {
     const Ramp::Pointer    ramp = new Greyscale();
-    ColorRamp<float> proc(ramp);
+    ColorRamp<float>       proc(ramp);
 
-    Filter<float>   F1("f1",Point(-1,-1),Point(1,1));
+    Filter<uint16_t>   F1("f1",Point(-1,-1),Point(1,1));
     fillField(F1);
     F1.compile();
 
-    Filter<uint8_t> F2("f2",Point(-1,-1),Point(1,1));
+
+    Filter<float> F2("f2",Point(-1,-1),Point(1,1));
     fillField(F2);
     F2.compile();
+
+    DO_IMPL(Prewitt);
+    DO_IMPL(Sobel);
+    DO_IMPL(Scharr);
+
+
 
     Image &IMG = Image::instance();
     if(argc>1)

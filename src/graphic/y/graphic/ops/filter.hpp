@@ -7,7 +7,7 @@
 #include "y/oxide/field2d.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/graphic/parallel/tiles.hpp"
-
+#include "y/ptr/intr.hpp"
 namespace upsylon {
 
     namespace Graphic {
@@ -17,6 +17,8 @@ namespace upsylon {
             class Filter : public Object
             {
             public:
+                typedef intr_ptr<string,const Filter> Pointer;
+
                 class Weight
                 {
                 public:
@@ -33,9 +35,11 @@ namespace upsylon {
                 };
                 typedef slots<Weight> Weights;
 
+                
+
                 virtual ~Filter() throw();
                 Filter(const Filter &F);
-
+                virtual const string & key() const throw() = 0;
 
                 template <typename T,
                 typename U>
@@ -114,6 +118,7 @@ namespace upsylon {
                 template <typename T> inline
                 void compile_( const Oxide::Field2D<T> &field )
                 {
+                    std::cerr << "Compiling " << key() << std::endl;
                     assert( weights.size() <= 0 );
                     assert(field.items==weights.count);
                     for(unit_t y=field.lower.y;y<=field.upper.y;++y)
@@ -156,7 +161,6 @@ namespace upsylon {
             Oxide::Field2D<T>(id,lo,hi),
             Kernel::Filter(this->items)
             {
-
             }
 
             virtual ~Filter() throw()
@@ -168,9 +172,24 @@ namespace upsylon {
                 compile_<T>(*this);
             }
 
+            virtual const string & key() const throw() { return this->name; }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Filter);
         };
+
+#define Y_GRAPHIC_FILTER_DECL(NAME) \
+class NAME : public FilterType {\
+public: explicit NAME(); virtual ~NAME() throw();\
+private: Y_DISABLE_COPY_AND_ASSIGN(NAME); }
+
+#define Y_GRAPHIC_FILTER_IMPL(STRUCT,NAME,LO,HI) \
+STRUCT:: NAME:: ~NAME() throw() {}\
+STRUCT:: NAME:: NAME() : FilterType( #STRUCT "::" #NAME, LO, HI ) {\
+FilterType &self = *this; (void)self;
+
+#define Y_GRAPHIC_FILTER_DONE() compile(); }
+
 
     }
 }
