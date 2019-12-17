@@ -41,9 +41,9 @@ namespace {
 #define DO_APPLY(F) applyFilter(F,target,source,tiles,proc)
 #define DO_IMPL(STRUCT) \
 STRUCT::X3 STRUCT##X3; DO_APPLY(STRUCT##X3); \
-STRUCT::Y3 STRUCT##Y3; DO_APPLY(STRUCT##Y3);\
-STRUCT::X5 STRUCT##X5; \
-STRUCT::Y5 STRUCT##Y5
+STRUCT::Y3 STRUCT##Y3; DO_APPLY(STRUCT##Y3); \
+STRUCT::X5 STRUCT##X5; DO_APPLY(STRUCT##X5); \
+STRUCT::Y5 STRUCT##Y5; DO_APPLY(STRUCT##Y5); \
 
 Y_UTEST(filter)
 {
@@ -53,7 +53,7 @@ Y_UTEST(filter)
 
     if(argc>1)
     {
-        Image &IMG = Image::instance();
+        Image          &IMG = Image::instance();
         const string    filename = argv[1];
         Pixmap<float>   source( IMG.loadAs<float>(filename) );
         ForEach         par = new concurrent::simd();
