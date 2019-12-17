@@ -25,6 +25,8 @@ namespace upsylon {
                            const unit_t dx,
                            const unit_t dy) throw();
                     ~Weight() throw();
+                    Weight(const Weight &) throw();
+
                 private:
                     Y_DISABLE_ASSIGN(Weight);
                 };
@@ -32,6 +34,35 @@ namespace upsylon {
 
                 virtual ~Filter() throw();
                 Filter(const Filter &F);
+
+
+                template <typename T,
+                typename U>
+                inline void apply(Graphic::Pixmap<T>       &target,
+                                  const Graphic::Pixmap<U> &source,
+                                  const Point               lower,
+                                  const Point               upper)
+                {
+                    const size_t num = weights.size();
+
+                    for(unit_t y=upper.y;y>=lower.y;--y)
+                    {
+                        typename Graphic::Pixmap<T>::RowType &tgt = target[y];
+
+                        for(unit_t x=upper.x;x>=lower.x;--x)
+                        {
+                            float       sum = 0;
+                            const Point org(x,y);
+                            for(size_t i=0;i<num;++i)
+                            {
+                                const Weight &W     = weights[i];
+                                const Point   probe = org + W.point;
+                                sum += W.value * source(probe);
+                            }
+                            tgt[x] = sum;
+                        }
+                    }
+                }
 
 
 

@@ -26,6 +26,14 @@ namespace upsylon {
             }
 
 
+            Filter:: Weight:: Weight(const Weight &other) throw() :
+            value( other.value ),
+            point( other.point )
+            {
+
+            }
+
+
             Filter:: ~Filter() throw()
             {
             }

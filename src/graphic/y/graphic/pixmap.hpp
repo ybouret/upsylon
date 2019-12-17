@@ -140,6 +140,31 @@ namespace upsylon {
                 return *(Row<T> *)(self.zfxRow(j));
             }
 
+            inline type & operator[](const Point &P) throw()
+            {
+                const Bitmap &self = **this;
+                assert( self.mode == Memory::ReadWrite );
+                return *(type *)(self.stdGet(P));
+            }
+
+            inline const_type & operator[](const Point &P) const throw()
+            {
+                const Bitmap &self = **this;
+                return *(const_type *)(self.stdGet(P));
+            }
+
+            inline type & operator()(const Point &P) throw()
+            {
+                const Bitmap &self = **this;
+                assert( self.mode == Memory::ReadWrite );
+                return *(type *)(self.zfxGet(P));
+            }
+
+            inline const_type & operator()(const Point &P) const throw()
+            {
+                const Bitmap &self = **this;
+                return *(type *)(self.zfxGet(P));
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pixmap);
