@@ -34,16 +34,17 @@ namespace upsylon {
                 Filter(const Filter &F);
 
 
+
             protected:
                 explicit Filter(const size_t);
-                void     update() throw();
+                void     update();
+                void     normalize() throw();
 
                 template <typename T> inline
-                void compile( const Oxide::Field2D<T> &field )
+                void compile_( const Oxide::Field2D<T> &field )
                 {
                     assert( weights.size() <= 0 );
                     assert(field.items==weights.count);
-
                     for(unit_t y=field.lower.y;y<=field.upper.y;++y)
                     {
                         for(unit_t x=field.lower.x;x<=field.upper.x;++x)
@@ -56,10 +57,19 @@ namespace upsylon {
                         }
                     }
                     update();
+                    for(size_t i=0;i<weights.size();++i)
+                    {
+                        std::cerr << weights[i].point << "=>" << weights[i].value << std::endl;
+                    }
+                    std::cerr << "\tsumOfWeights=" << sumOfWeights << std::endl;
+                    std::cerr << "\tfactor      =" << factor       << std::endl;
+
                 }
 
             private:
-                Weights weights;
+                Weights      weights;
+                const float  sumOfWeights;
+                const float  factor;
                 Y_DISABLE_ASSIGN(Filter);
             };
 
@@ -80,6 +90,11 @@ namespace upsylon {
 
             virtual ~Filter() throw()
             {
+            }
+
+            inline void compile()
+            {
+                compile_<T>(*this);
             }
 
         private:
