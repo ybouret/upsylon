@@ -12,7 +12,7 @@ namespace upsylon {
 
         struct Scharr
         {
-            typedef Filter<uint8_t> FilterType;
+            typedef Filter<int8_t> FilterType;
 
             Y_GRAPHIC_FILTER_DECL(X3);
             Y_GRAPHIC_FILTER_DECL(Y3);
