@@ -79,6 +79,15 @@ namespace upsylon {
                 }
             }
 
+            void Filter:: normalize() throw()
+            {
+                const size_t num = weights.size();
+                if(num>0)
+                {
+                }
+            }
+
+
         }
 
     }

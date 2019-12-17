@@ -39,6 +39,31 @@ namespace upsylon {
                 return *static_cast<T*>(data);
             }
 
+            //! alias internal data
+            template <typename T> inline
+            const T &as() const throw()
+            {
+                assert(size>=sizeof(T));
+                return *static_cast<T*>(data);
+            }
+
+            //! alias internal data
+            template <typename T> inline
+            T &as( const size_t indx )   throw()
+            {
+                assert(size>=(1+indx)*sizeof(T));
+                return *(static_cast<T*>(data)+indx);
+            }
+
+
+            //! alias internal data
+            template <typename T> inline
+            const T &as( const size_t indx ) const throw()
+            {
+                assert(size>=(1+indx)*sizeof(T));
+                return *(static_cast<T*>(data)+indx);
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);

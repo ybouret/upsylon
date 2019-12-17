@@ -58,6 +58,50 @@ namespace upsylon {
             void localAcquire(const size_t BytesPerTile); //!< acquire and dispatch extra memory
             void localRelease() throw();                  //!< release extra memory
 
+            template <typename T>
+            T globalMax() const throw()
+            {
+                const Tiles_ &self = *this;
+                const size_t  num  = self.size();
+                T             vmax = self[0].as<T>();
+                for(size_t i=1;i<num;++i)
+                {
+                    const T tmp = self[i].as<T>();
+                    if(tmp>vmax)
+                    {
+                        vmax = tmp;
+                    }
+                }
+                return vmax;
+            }
+
+            template <typename T>
+            void globalMinMax( T &vmin, T &vmax ) const throw()
+            {
+                const Tiles_ &self = *this;
+                const size_t  num  = self.size();
+                vmin = self[0].as<T>(0);
+                vmax = self[0].as<T>(1);
+                for(size_t i=1;i<num;++i)
+                {
+                    {
+                        const T tmp = self[i].as<T>(0);
+                        if(tmp<vmin)
+                        {
+                            vmin = tmp;
+                        }
+                    }
+                    {
+                        const T tmp = self[i].as<T>(1);
+                        if(tmp>vmax)
+                        {
+                            vmax = tmp;
+                        }
+                    }
+                }
+            }
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
             ForEach                     device;

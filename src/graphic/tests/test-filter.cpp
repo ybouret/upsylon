@@ -1,6 +1,9 @@
 #include "y/graphic/ops/filter.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
+#include "y/graphic/image.hpp"
+#include "y/concurrent/scheme/simd.hpp"
+#include "y/graphic/color/ramp/greyscale.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
@@ -23,9 +26,41 @@ namespace  {
 
 Y_UTEST(filter)
 {
-    Filter<float> F("f1",Point(-1,-1),Point(1,1));
-    fillField(F);
-    F.compile();
+    const Ramp::Pointer    ramp = new Greyscale();
+    ColorRamp<float> proc(ramp);
+
+    Filter<float>   F1("f1",Point(-1,-1),Point(1,1));
+    fillField(F1);
+    F1.compile();
+
+    Filter<uint8_t> F2("f2",Point(-1,-1),Point(1,1));
+    fillField(F2);
+    F2.compile();
+
+    Image &IMG = Image::instance();
+    if(argc>1)
+    {
+        const string    filename = argv[1];
+        Pixmap<float>   pxm( IMG.loadAs<float>(filename) );
+        ForEach         par = new concurrent::simd();
+        Tiles           tiles(*pxm,par);
+        Pixmap<float>   tgt( pxm->w, pxm->h );
+        F1.run(tgt,pxm,tiles);
+        float vmin=0,vmax=0;
+        tiles.globalMinMax(vmin, vmax);
+        proc.setRange(vmin, vmax);
+        std::cerr << "vmin=" << vmin << ", vmax=" << vmax << std::endl;
+        IMG.saveAs("original.png", pxm, NULL);
+        IMG.save("filter1.png", *tgt, proc, NULL);
+
+        F2.run(tgt,pxm,tiles);
+        tiles.globalMinMax(vmin, vmax);
+        proc.setRange(vmin, vmax);
+        std::cerr << "vmin=" << vmin << ", vmax=" << vmax << std::endl;
+        IMG.save("filter2.png", *tgt, proc, NULL);
+
+    }
+
 }
 Y_UTEST_DONE()
 

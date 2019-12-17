@@ -6,6 +6,7 @@
 #include "y/graphic/pixmap.hpp"
 #include "y/oxide/field2d.hpp"
 #include "y/sequence/slots.hpp"
+#include "y/graphic/parallel/tiles.hpp"
 
 namespace upsylon {
 
@@ -38,13 +39,15 @@ namespace upsylon {
 
                 template <typename T,
                 typename U>
-                inline void apply(Graphic::Pixmap<T>       &target,
-                                  const Graphic::Pixmap<U> &source,
-                                  const Point               lower,
-                                  const Point               upper)
+                inline void applyRaw(Graphic::Pixmap<T>       &target,
+                                     const Graphic::Pixmap<U> &source,
+                                     const Point               lower,
+                                     const Point               upper,
+                                     float                    &globalVmin,
+                                     float                    &globalVmax) const
                 {
-                    const size_t num = weights.size();
-
+                    const size_t num   = weights.size();
+                    float vmin  =0, vmax=0;
                     for(unit_t y=upper.y;y>=lower.y;--y)
                     {
                         typename Graphic::Pixmap<T>::RowType &tgt = target[y];
@@ -57,19 +60,56 @@ namespace upsylon {
                             {
                                 const Weight &W     = weights[i];
                                 const Point   probe = org + W.point;
-                                sum += W.value * source(probe);
+                                sum += W.value * static_cast<float>(source(probe));
                             }
-                            tgt[x] = sum;
+                            tgt[x] = static_cast<T>(sum);
+                            if(sum<vmin)
+                            {
+                                vmin = sum;
+                            }
+                            else if(sum>vmax)
+                            {
+                                vmax = sum;
+                            }
                         }
                     }
+                    globalVmin = vmin;
+                    globalVmax = vmax;
                 }
 
+                template <typename T, typename U>
+                void run(Graphic::Pixmap<T>       &target,
+                         const Graphic::Pixmap<U> &source,
+                         Tiles                    &tiles)
+                {
+                    tiles.localAcquire(2*sizeof(float));
+                    struct Task
+                    {
+                        const Filter             *filter;
+                        Graphic::Pixmap<T>       *target;
+                        const Graphic::Pixmap<U> *source;
+                        Tiles                    *tiles;
 
+                        static void  Run( void *args, parallel &ctx, lockable &) throw()
+                        {
+                            Task  &task = *(Task*)args;
+                            Tile  &tile = (*task.tiles)[ctx.rank];
+                            float &vmin = tile.as<float>(0);
+                            float &vmax = tile.as<float>(1);
+                            task.filter->template applyRaw<T,U>( *task.target, *task.source, tile.lower, tile.upper, vmin, vmax);
+                        }
+
+                    };
+                    Task task = { this, &target, &source, &tiles };
+                    tiles.loop().run( Task::Run, &task);
+                }
+
+                void     normalize() throw();
 
             protected:
                 explicit Filter(const size_t);
                 void     update();
-                void     normalize() throw();
+
 
                 template <typename T> inline
                 void compile_( const Oxide::Field2D<T> &field )
