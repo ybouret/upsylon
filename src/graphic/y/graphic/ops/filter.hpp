@@ -24,7 +24,7 @@ namespace upsylon {
                     Weight(const float  v,
                            const unit_t dx,
                            const unit_t dy) throw();
-                    ~ Weight() throw();
+                    ~Weight() throw();
                 private:
                     Y_DISABLE_ASSIGN(Weight);
                 };
