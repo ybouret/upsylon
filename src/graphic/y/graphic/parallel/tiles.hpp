@@ -57,6 +57,7 @@ namespace upsylon {
 
             void localAcquire(const size_t BytesPerTile); //!< acquire and dispatch extra memory
             void localRelease() throw();                  //!< release extra memory
+            void localCleanUp() throw();                  //!< memory to zero
 
             template <typename T>
             T globalMax() const throw()

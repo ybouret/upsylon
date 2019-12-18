@@ -18,29 +18,51 @@ namespace upsylon {
         }
 
 
-        void Edges:: keepLocalMaxima( const Tile &tile ) throw()
+        void Edges:: keepLocalMaxima( Tile &tile ) throw()
         {
+            assert( tile.localMemory() >= 256*sizeof(size_t) );
             const Point up = tile.upper;
             const Point lo = tile.lower;
-            for(unit_t y=up.y;y>=lo.y;--y)
+            if(gmax>0.0f)
             {
-                for(unit_t x=up.x;x>=lo.x;--x)
+                size_t *H = & tile.as<size_t>(0);
+                const float g2l = 255.0f/gmax;
+                for(unit_t y=up.y;y>=lo.y;--y)
                 {
-                    const Point  org(x,y);
-                    const Vertex v = G[y][x];
-                    const Point  delta( unit_t( floorf(v.x+0.5f) ), unit_t( floorf(v.y+0.5f) ) );
-                    const Point  prev = org-delta;
-                    const Point  next = org+delta;
-                    const float  g0   = g[y][x];
-                    const float  gm   = g(prev);
-                    const float  gp   = g(next);
-                    if(gm<=g0 && gp<=g0 )
+                    const Pixmap<Vertex>::RowType &Gy = G[y];
+                    const Pixmap<float>::RowType  &gy = g[y];
+                    Pixmap<uint8_t>::RowType      &Ly = L[y];
+                    for(unit_t x=up.x;x>=lo.x;--x)
                     {
-                        L[y][x] = 1;
+                        const Point  org(x,y);
+                        const Vertex v = Gy[x];
+                        const Point  delta( unit_t( floorf(v.x+0.5f) ), unit_t( floorf(v.y+0.5f) ) );
+                        const Point  prev = org-delta;
+                        const Point  next = org+delta;
+                        const float  g0   = gy[x];
+                        const float  gm   = g(prev);
+                        const float  gp   = g(next);
+                        if(gm<=g0 && gp<=g0 )
+                        {
+                            const uint8_t u = uint8_t( floorf( g0*g2l + 0.5f) );
+                            Ly[x] = u;
+                            ++H[u];
+                        }
+                        else
+                        {
+                            Ly[x] = 0;
+                        }
                     }
-                    else
+                }
+            }
+            else
+            {
+                for(unit_t y=up.y;y>=lo.y;--y)
+                {
+                    Pixmap<uint8_t>::RowType &Ly = L[y];
+                    for(unit_t x=up.x;x>=lo.x;--x)
                     {
-                        L[y][x] = 0;
+                        Ly[x] = 0;
                     }
                 }
             }
@@ -48,6 +70,8 @@ namespace upsylon {
 
         void Edges:: keepLocalMaxima( Tiles      &tiles )
         {
+            tiles.localAcquire( 256*sizeof(size_t) );
+            tiles.localCleanUp();
             struct Task
             {
                 Edges *self;

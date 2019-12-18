@@ -64,6 +64,8 @@ namespace upsylon {
                 return *(static_cast<T*>(data)+indx);
             }
 
+            size_t localMemory() const throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);

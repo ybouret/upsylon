@@ -33,7 +33,7 @@ namespace {
         Pixmap<Vertex> &G = edges.G;
 
 
-        float gmax = 0.0f;
+        float &gmax = edges.gmax;
         grads->run(g, G, source, tiles, gmax);
 
         Image &IMG = Image::instance();
@@ -44,10 +44,9 @@ namespace {
             IMG.save(saveName, *g, proc, 0);
         }
 
-        const Tile tile(source->lower,source->upper);
-        edges.keepLocalMaxima(tile);
+        edges.keepLocalMaxima(tiles);
         {
-            proc.setRange(0, gmax);
+            proc.setRange(0, 255);
             const string saveName = "lmax-" + grads->X->key() + "-" + grads->Y->key() + ".png";
             IMG.save(saveName, *edges.L, proc1, 0);
         }

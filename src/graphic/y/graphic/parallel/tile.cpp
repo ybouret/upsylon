@@ -43,6 +43,11 @@ namespace upsylon {
             return os;
         }
 
+        size_t Tile:: localMemory() const throw()
+        {
+            return size;
+        }
+
     }
 
 }

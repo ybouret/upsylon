@@ -82,6 +82,14 @@ namespace upsylon {
             }
         }
 
+        void Tiles:: localCleanUp() throw()
+        {
+            if(dataBlock.is_valid())
+            {
+                memset(dataBlock->entry,0,dataBlock->bytes);
+            }
+        }
+
         void Tiles:: localAcquire(const size_t BytesPerTile)
         {
             if(BytesPerTile<=0)

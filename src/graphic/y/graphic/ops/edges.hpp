@@ -20,8 +20,8 @@ namespace upsylon {
             Pixmap<Vertex>  G; //!< normalised gradient
             Pixmap<uint8_t> L; //!< local maxima
 
-            void keepLocalMaxima( const Tile &tile ) throw();
-            void keepLocalMaxima( Tiles      &tiles );
+            void keepLocalMaxima( Tile  &tile  ) throw();
+            void keepLocalMaxima( Tiles &tiles );
           
 
         private:
