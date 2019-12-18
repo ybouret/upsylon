@@ -1,6 +1,6 @@
 
 
-#include "y/graphic/ops/sobel.hpp"
+#include "y/graphic/ops/filter/sobel.hpp"
 
 namespace upsylon {
 

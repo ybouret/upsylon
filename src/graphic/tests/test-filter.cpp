@@ -6,9 +6,9 @@
 #include "y/graphic/color/ramp/hot_to_cold.hpp"
 
 
-#include "y/graphic/ops/prewitt.hpp"
-#include "y/graphic/ops/sobel.hpp"
-#include "y/graphic/ops/scharr.hpp"
+#include "y/graphic/ops/filter/prewitt.hpp"
+#include "y/graphic/ops/filter/sobel.hpp"
+#include "y/graphic/ops/filter/scharr.hpp"
 
 using namespace upsylon;
 using namespace Graphic;

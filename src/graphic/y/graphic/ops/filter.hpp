@@ -137,14 +137,14 @@ namespace upsylon {
                     {
                         std::cerr << weights[i].point << "=>" << weights[i].value << std::endl;
                     }
-                    std::cerr << "\tsumOfWeights=" << sumOfWeights << std::endl;
-                    std::cerr << "\tfactor      =" << factor       << std::endl;
+                    std::cerr << "\tweight =" << weight << std::endl;
+                    std::cerr << "\tfactor =" << factor << std::endl;
 
                 }
 
             private:
                 Weights      weights;
-                const float  sumOfWeights;
+                const float  weight;
                 const float  factor;
                 Y_DISABLE_ASSIGN(Filter);
             };

@@ -37,6 +37,12 @@ SET(ops_srcs ${ops_decl} ${ops_code})
 SOURCE_GROUP( graphic/ops FILES ${ops_srcs} )
 INSTALL( FILES ${ops_decl} DESTINATION include/y/graphic/ops )
 
+FILE(GLOB ops_filter_decl y/graphic/ops/filter/*.hpp)
+FILE(GLOB ops_filter_code y/graphic/ops/filter/*.cpp)
+SET(ops_filter_srcs ${ops_filter_decl} ${ops_filter_code})
+SOURCE_GROUP( graphic/ops/filter FILES ${ops_filter_srcs} )
+INSTALL( FILES ${ops_filter_decl} DESTINATION include/y/graphic/ops/filter )
+
 
 FILE(GLOB image_decl y/graphic/image/*.hpp)
 FILE(GLOB image_code y/graphic/image/*.cpp)
@@ -48,8 +54,8 @@ ADD_LIBRARY(y-graphic STATIC
 ${main_srcs} 
 ${color_srcs} ${color_ramp_srcs}
 ${parallel_srcs}
-${ops_srcs}
-${image_srcs}
+${ops_srcs} ${ops_filter_srcs}
+${image_srcs} 
 )
 INSTALL( TARGETS y-graphic ARCHIVE DESTINATION lib )
 

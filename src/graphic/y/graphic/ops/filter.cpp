@@ -38,12 +38,12 @@ namespace upsylon {
             {
             }
 
-            Filter:: Filter( const size_t n) : Object(), weights(n), sumOfWeights(0.0f), factor(0)
+            Filter:: Filter( const size_t n) : Object(), weights(n), weight(0.0f), factor(0)
             {
             }
 
             Filter:: Filter( const Filter &F ) :
-            Object(), weights(F.weights), sumOfWeights(F.sumOfWeights), factor(F.factor)
+            Object(), weights(F.weights), weight(F.weight), factor(F.factor)
             {
             }
             
@@ -56,9 +56,9 @@ namespace upsylon {
 
             void Filter:: update()
             {
-                aliasing::_(factor)       = 1.0f;
-                aliasing::_(sumOfWeights) = 0.0f;
-                const size_t              num = weights.size();
+                aliasing::_(factor) = 1.0f;
+                aliasing::_(weight) = 0.0f;
+                const size_t    num = weights.size();
                 if(num>0)
                 {
                     lightweight_array<Weight> arr(&weights[0],num);
@@ -67,14 +67,14 @@ namespace upsylon {
                         vector<float,memory::pooled> W(num,as_capacity);
                         for(size_t i=1;i<=num;++i)
                         {
-                            W.push_back_(arr[i].value);
+                            W.push_back_( square_of(arr[i].value) );
                         }
-                        aliasing::_(sumOfWeights) = sorted_sum_by_abs(W);
+                        aliasing::_(weight) = sqrtf( sorted_sum(W) );
                     }
 
-                    if(fabsf(sumOfWeights)>0)
+                    if(fabsf(weight)>0)
                     {
-                        aliasing::_(factor) = 1.0f/sumOfWeights;
+                        aliasing::_(factor) = 1.0f/weight;
                     }
                 }
             }

@@ -1,4 +1,4 @@
-#include "y/graphic/ops/scharr.hpp"
+#include "y/graphic/ops/filter/scharr.hpp"
 
 namespace upsylon {
 

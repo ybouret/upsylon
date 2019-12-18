@@ -1,5 +1,5 @@
 
-#include "y/graphic/ops/prewitt.hpp"
+#include "y/graphic/ops/filter/prewitt.hpp"
 
 namespace upsylon {
 
