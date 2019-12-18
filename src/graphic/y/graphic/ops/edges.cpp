@@ -17,7 +17,7 @@ namespace upsylon {
         }
 
 
-        void Edges:: keepLocalMaxima( const Tile &tile )
+        void Edges:: keepLocalMaxima( const Tile &tile ) throw()
         {
             const Point up = tile.upper;
             const Point lo = tile.lower;
@@ -43,6 +43,25 @@ namespace upsylon {
                     }
                 }
             }
+        }
+
+        void Edges:: keepLocalMaxima( Tiles      &tiles )
+        {
+            struct Task
+            {
+                Edges *self;
+                Tiles *tiles;
+
+                static void Run( void *args, parallel &ctx, lockable &) throw()
+                {
+                    Task &task = *static_cast<Task *>(args);
+                    task.self->keepLocalMaxima( (*task.tiles)[ctx.rank] );
+                }
+
+            };
+
+            Task task = { this, &tiles };
+            tiles.loop().run( Task::Run, &task);
         }
 
     }
