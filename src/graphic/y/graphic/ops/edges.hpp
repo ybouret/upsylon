@@ -13,23 +13,15 @@ namespace upsylon {
         {
         public:
             virtual ~Edges() throw();
+            explicit Edges( const size_t W, const size_t H);
 
             Pixmap<float>  g; //!< evaluated gradient
             Pixmap<Vertex> G; //!< normalised gradient
             Pixmap<float>  L; //!< local maxima
 
-            void keepLocalMaxima( const Tile &tile )
-            {
-                const Point up = tile.upper;
-                const Point lo = tile.lower;
-                for(unit_t y=up.y;y>=lo.y;--y)
-                {
-                    for(unit_t x=up.x;x>=lo.x;--x)
-                    {
-                        
-                    }
-                }
-            }
+            void keepLocalMaxima( const Tile &tile );
+            
+          
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);
