@@ -3,7 +3,7 @@
 #ifndef Y_GRAPHIC_SOBEL_INCLUDED
 #define Y_GRAPHIC_SOBEL_INCLUDED 1
 
-#include "y/graphic/ops/filter.hpp"
+#include "y/graphic/ops/filter/gradients.hpp"
 
 namespace upsylon {
 

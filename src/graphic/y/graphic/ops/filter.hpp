@@ -11,7 +11,7 @@
 namespace upsylon {
 
     namespace Graphic {
-
+        
         namespace Kernel {
 
             class Filter : public Object
