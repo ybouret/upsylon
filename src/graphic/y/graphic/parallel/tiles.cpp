@@ -2,6 +2,7 @@
 #include "y/graphic/parallel/tiles.hpp"
 #include "y/graphic/parallel/tiling.hpp"
 #include "y/type/aliasing.hpp"
+#include <cstring>
 
 namespace upsylon {
 
