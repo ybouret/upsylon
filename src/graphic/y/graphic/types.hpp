@@ -15,7 +15,8 @@ namespace upsylon {
         typedef counted_object           Object;    //!< base type for dynamic object
         typedef point2d<unit_t>          Point;     //!< logical point
         typedef core::zero_flux_index<0> ZeroFlux;  //!< for indexing
-
+        typedef point2d<float>           Vertex;    //!< for floating point vertices
+        
         //! memory description
         struct Memory
         {

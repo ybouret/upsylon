@@ -21,6 +21,7 @@ ADD_TEST(Ramp     test-graphic ramp)
 ADD_TEST(Img2Ramp test-graphic img2ramp)
 ADD_TEST(ImGrad   test-graphic imgrad)
 ADD_TEST(Filter   test-graphic filter)
+ADD_TEST(Grads    test-graphic grads)
 
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

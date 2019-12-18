@@ -41,6 +41,11 @@ namespace upsylon {
         self[-1][-2] = -1; self[-1][-1] = -1; self[-1][0] = -2; self[-1][1] = -1; self[-1][2] = -1;
         self[-2][-2] = -2; self[-2][-1] = -2; self[-2][0] = -1; self[-2][1] = -2; self[-2][2] = -2;
         Y_GRAPHIC_FILTER_DONE()
+
+
+        Y_GRAPHICS_GRADIENTS_IMPL(Prewitt,3)
+        Y_GRAPHICS_GRADIENTS_IMPL(Prewitt,5)
+
     }
 
 }

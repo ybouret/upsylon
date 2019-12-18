@@ -19,6 +19,8 @@ namespace upsylon {
             Y_GRAPHIC_FILTER_DECL(X5);
             Y_GRAPHIC_FILTER_DECL(Y5);
 
+            Y_GRAPHICS_GRADIENTS_DECL(3);
+            Y_GRAPHICS_GRADIENTS_DECL(5);
         };
 
     }

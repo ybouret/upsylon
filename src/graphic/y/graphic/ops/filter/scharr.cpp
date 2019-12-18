@@ -40,6 +40,9 @@ namespace upsylon {
         self[-2][-2] = -1; self[-2][-1] = -2; self[-2][0] = -3; self[-2][1] = -2; self[-2][2] = -1;
         Y_GRAPHIC_FILTER_DONE()
 
+        Y_GRAPHICS_GRADIENTS_IMPL(Scharr,3)
+        Y_GRAPHICS_GRADIENTS_IMPL(Scharr,5)
+        
     }
 
 }

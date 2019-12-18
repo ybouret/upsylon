@@ -1,4 +1,4 @@
-#include "y/graphic/ops/filter/gradient.hpp"
+#include "y/graphic/ops/filter/gradients.hpp"
 
 namespace upsylon {
 
@@ -22,5 +22,6 @@ namespace upsylon {
         {
         }
 
+        
     }
 }

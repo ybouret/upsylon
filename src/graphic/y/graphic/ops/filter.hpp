@@ -11,7 +11,9 @@
 namespace upsylon {
 
     namespace Graphic {
-        
+
+        class Gradients;
+
         namespace Kernel {
 
             class Filter : public Object
@@ -41,8 +43,7 @@ namespace upsylon {
                 Filter(const Filter &F);
                 virtual const string & key() const throw() = 0;
 
-                template <typename T,
-                typename U>
+                template <typename T,typename U>
                 inline void applyRaw(Graphic::Pixmap<T>       &target,
                                      const Graphic::Pixmap<U> &source,
                                      const Point               lower,
@@ -80,6 +81,7 @@ namespace upsylon {
                     globalVmin = vmin;
                     globalVmax = vmax;
                 }
+                
 
                 template <typename T, typename U>
                 void run(Graphic::Pixmap<T>       &target,
@@ -146,6 +148,7 @@ namespace upsylon {
                 Weights      weights;
                 const float  weight;
                 const float  factor;
+                friend class Graphic::Gradients;
                 Y_DISABLE_ASSIGN(Filter);
             };
 
