@@ -10,6 +10,7 @@ namespace upsylon {
         }
 
         Edges:: Edges( const size_t W, const size_t H) :
+        gmax(0),
         g(W,H),
         G(W,H),
         L(W,H)
@@ -35,7 +36,7 @@ namespace upsylon {
                     const float  gp   = g(next);
                     if(gm<=g0 && gp<=g0 )
                     {
-                        L[y][x] = g0;
+                        L[y][x] = 1;
                     }
                     else
                     {

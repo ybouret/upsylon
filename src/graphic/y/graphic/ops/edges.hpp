@@ -15,9 +15,10 @@ namespace upsylon {
             virtual ~Edges() throw();
             explicit Edges( const size_t W, const size_t H);
 
-            Pixmap<float>  g; //!< evaluated gradient
-            Pixmap<Vertex> G; //!< normalised gradient
-            Pixmap<float>  L; //!< local maxima
+            float           gmax;
+            Pixmap<float>   g; //!< evaluated gradient
+            Pixmap<Vertex>  G; //!< normalised gradient
+            Pixmap<uint8_t> L; //!< local maxima
 
             void keepLocalMaxima( const Tile &tile ) throw();
             void keepLocalMaxima( Tiles      &tiles );

@@ -23,6 +23,7 @@ namespace {
     {
         const Ramp::Pointer    ramp = new HotToCold();
         ColorRamp<float>       proc(ramp);
+        ColorRamp<uint8_t>     proc1(ramp);
 
         Tiles tiles( *source, par );
 
@@ -48,7 +49,7 @@ namespace {
         {
             proc.setRange(0, gmax);
             const string saveName = "lmax-" + grads->X->key() + "-" + grads->Y->key() + ".png";
-            IMG.save(saveName, *edges.L, proc, 0);
+            IMG.save(saveName, *edges.L, proc1, 0);
         }
 
     }
