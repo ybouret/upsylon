@@ -104,7 +104,7 @@ namespace upsylon {
                      Tiles           &tiles,
                      float           &gmax) const
             {
-                tiles.localAcquire(sizeof(float));
+                tiles.localAcquireFor<float>();
 
                 struct Task {
                     const Gradients *self;

@@ -13,7 +13,8 @@ namespace upsylon {
         gmax(0),
         g(W,H),
         G(W,H),
-        L(W,H)
+        L(W,H),
+        hist()
         {
         }
 
@@ -25,7 +26,7 @@ namespace upsylon {
             const Point lo = tile.lower;
             if(gmax>0.0f)
             {
-                size_t *H = & tile.as<size_t>(0);
+                size_t     *H   = & tile.as<size_t>(0);
                 const float g2l = 255.0f/gmax;
                 for(unit_t y=up.y;y>=lo.y;--y)
                 {
@@ -46,6 +47,7 @@ namespace upsylon {
                         {
                             const uint8_t u = uint8_t( floorf( g0*g2l + 0.5f) );
                             Ly[x] = u;
+                            //std::cerr << "\t" << int(u) << std::endl;
                             ++H[u];
                         }
                         else
@@ -87,6 +89,14 @@ namespace upsylon {
 
             Task task = { this, &tiles };
             tiles.loop().run( Task::Run, &task);
+
+            hist.set_( & tiles[0].as<size_t>(0) );
+            const size_t nt = tiles.size();
+            for(size_t i=1;i<nt;++i)
+            {
+                hist.add_(& tiles[i].as<size_t>(0) );
+            }
+
         }
 
     }

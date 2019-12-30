@@ -21,7 +21,7 @@ namespace upsylon {
             //! cleanup
             virtual ~Gradient() throw();
 
-            //! compute
+            //! compute gradient of field
             void compute( Tiles &tiles, bool doNormalize=true);
 
 

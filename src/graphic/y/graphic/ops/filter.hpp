@@ -120,7 +120,7 @@ namespace upsylon {
                 template <typename T> inline
                 void compile_( const Oxide::Field2D<T> &field )
                 {
-                    std::cerr << "Compiling " << key() << std::endl;
+                    //std::cerr << "Compiling " << key() << "...";
                     assert( weights.size() <= 0 );
                     assert(field.items==weights.count);
                     for(unit_t y=field.lower.y;y<=field.upper.y;++y)
@@ -135,12 +135,13 @@ namespace upsylon {
                         }
                     }
                     update();
+#if 0
                     for(size_t i=0;i<weights.size();++i)
                     {
                         std::cerr << weights[i].point << "=>" << weights[i].value << std::endl;
                     }
-                    std::cerr << "\tweight =" << weight << std::endl;
-                    std::cerr << "\tfactor =" << factor << std::endl;
+                    std::cerr << "weight =" << weight << " : factor =" << factor << std::endl;
+#endif
 
                 }
 

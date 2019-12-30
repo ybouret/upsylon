@@ -2,6 +2,7 @@
 #include "y/graphic/ops/edges.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "support.hpp"
 #include "y/graphic/image.hpp"
 #include "y/concurrent/scheme/simd.hpp"
@@ -11,6 +12,8 @@
 #include "y/graphic/ops/filter/prewitt.hpp"
 #include "y/graphic/ops/filter/sobel.hpp"
 #include "y/graphic/ops/filter/scharr.hpp"
+
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
@@ -46,11 +49,21 @@ namespace {
 
         edges.keepLocalMaxima(tiles);
         {
-            proc.setRange(0, 255);
+            proc1.setRange(0, 1);
             const string saveName = "lmax-" + grads->X->key() + "-" + grads->Y->key() + ".png";
             IMG.save(saveName, *edges.L, proc1, 0);
         }
 
+        {
+            const string saveName = "hist-" + grads->X->key() + "-" + grads->Y->key() + ".dat";
+            ios::ocstream fp(saveName);
+            for(size_t i=0;i<Histogram::BINS;++i)
+            {
+                fp("%u %u\n", unsigned(i), unsigned(edges.hist[i]) );
+            }
+        }
+
+        std::cerr << "Ostu1D=" << int(edges.hist.Otsu1D()) << std::endl;
     }
 
 }
@@ -78,7 +91,7 @@ Y_UTEST(grads)
 
     }
 
-    
+    Y_UTEST_SIZEOF(Histogram);
 
 
 }

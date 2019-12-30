@@ -59,6 +59,19 @@ namespace upsylon {
             void localRelease() throw();                  //!< release extra memory
             void localCleanUp() throw();                  //!< memory to zero
 
+            template <typename T> inline
+            void localAcquireFor()
+            {
+                localAcquire(sizeof(T));
+            }
+            
+            template <typename T> inline
+            void localAcquireFor(size_t n)
+            {
+                localAcquire(n*sizeof(T));
+            }
+
+
             template <typename T>
             T globalMax() const throw()
             {
