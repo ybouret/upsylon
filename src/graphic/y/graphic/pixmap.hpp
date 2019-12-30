@@ -140,6 +140,7 @@ namespace upsylon {
                 return *(Row<T> *)(self.zfxRow(j));
             }
 
+            //! standard access
             inline type & operator[](const Point &P) throw()
             {
                 const Bitmap &self = **this;
@@ -147,12 +148,14 @@ namespace upsylon {
                 return *(type *)(self.stdGet(P));
             }
 
+            //! standard access
             inline const_type & operator[](const Point &P) const throw()
             {
                 const Bitmap &self = **this;
                 return *(const_type *)(self.stdGet(P));
             }
 
+            //! zero flux access
             inline type & operator()(const Point &P) throw()
             {
                 const Bitmap &self = **this;
@@ -160,6 +163,7 @@ namespace upsylon {
                 return *(type *)(self.zfxGet(P));
             }
 
+            //! zero flux access
             inline const_type & operator()(const Point &P) const throw()
             {
                 const Bitmap &self = **this;

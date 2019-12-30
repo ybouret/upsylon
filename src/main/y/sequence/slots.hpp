@@ -32,6 +32,7 @@ namespace upsylon {
             release();
         }
 
+        //! copy
         inline slots( const slots &other) :
         collection(),
         dynamic(),

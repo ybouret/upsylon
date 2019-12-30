@@ -13,7 +13,7 @@ namespace upsylon {
         class Gradient : public Pixmap<float>
         {
         public:
-            Pixmap<float> field;
+            Pixmap<float> field; //!< field of values
 
             //! setup
             explicit Gradient(const size_t W, const size_t H);

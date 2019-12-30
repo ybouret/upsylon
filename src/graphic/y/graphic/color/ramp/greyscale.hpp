@@ -6,6 +6,7 @@
 
 namespace upsylon { namespace Graphic {
 
+//! Greyscale color ramp
 class Greyscale : public Ramp {
  public: explicit Greyscale() throw();
          virtual ~Greyscale() throw();

@@ -6,6 +6,7 @@
 
 namespace upsylon { namespace Graphic {
 
+//! DoubleHot color ramp
 class DoubleHot : public Ramp {
  public: explicit DoubleHot() throw();
          virtual ~DoubleHot() throw();

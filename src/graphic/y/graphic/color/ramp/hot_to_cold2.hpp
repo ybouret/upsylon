@@ -6,6 +6,7 @@
 
 namespace upsylon { namespace Graphic {
 
+//! HotToCold2 color ramp
 class HotToCold2 : public Ramp {
  public: explicit HotToCold2() throw();
          virtual ~HotToCold2() throw();

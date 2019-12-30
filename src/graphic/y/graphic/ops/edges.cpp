@@ -14,7 +14,9 @@ namespace upsylon {
         g(W,H),
         G(W,H),
         L(W,H),
-        hist()
+        hist(),
+        hardThreshold(0),
+        softThreshold(0)
         {
         }
 

@@ -33,15 +33,18 @@ namespace upsylon {
         class ColorRamp_ : public Data2RGBA
         {
         public:
-            Ramp::Pointer ramp;
-            const float   vmin;
-            const float   vmax;
+            Ramp::Pointer ramp; //!< shared ramp
+            const float   vmin; //!< minimum value
+            const float   vmax; //!< maximum value
             
-            virtual ~ColorRamp_() throw();
+            virtual ~ColorRamp_() throw(); //!< cleanup
+
+            //! setup
             explicit ColorRamp_(const Ramp::Pointer &_ramp,
                                 const float          _vmin,
                                 const float          _vmax) throw();
-            
+
+            //! update range
             void setRange(const float _vmin, const float _vmax) throw();
             
         private:
@@ -61,7 +64,7 @@ namespace upsylon {
             {
             }
 
-            //! c;eanup
+            //! cleanup
             inline virtual ~ColorRamp() throw() {}
             
             

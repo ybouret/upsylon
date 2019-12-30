@@ -64,7 +64,7 @@ namespace upsylon {
                 return *(static_cast<T*>(data)+indx);
             }
 
-            size_t localMemory() const throw();
+            size_t localMemory() const throw(); //!< get allocated bytes
 
 
         private:

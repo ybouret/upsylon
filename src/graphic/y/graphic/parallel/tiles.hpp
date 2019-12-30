@@ -59,12 +59,14 @@ namespace upsylon {
             void localRelease() throw();                  //!< release extra memory
             void localCleanUp() throw();                  //!< memory to zero
 
+            //! local acquire memory for one type for each tile
             template <typename T> inline
             void localAcquireFor()
             {
                 localAcquire(sizeof(T));
             }
-            
+
+            //! local acquire memory of n types for each tile
             template <typename T> inline
             void localAcquireFor(size_t n)
             {
@@ -72,6 +74,7 @@ namespace upsylon {
             }
 
 
+            //! assume a local max is stored in local memory
             template <typename T>
             T globalMax() const throw()
             {
@@ -89,6 +92,7 @@ namespace upsylon {
                 return vmax;
             }
 
+            //! assume a pair of min/max is stored in local memory
             template <typename T>
             void globalMinMax( T &vmin, T &vmax ) const throw()
             {

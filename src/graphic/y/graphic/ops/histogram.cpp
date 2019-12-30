@@ -1,5 +1,5 @@
 #include "y/graphic/ops/histogram.hpp"
-
+#include <cstring>
 
 namespace upsylon
 {
