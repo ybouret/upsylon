@@ -18,27 +18,25 @@ namespace upsylon {
         typedef core::pool_of_cpp<PNode>       PPool;
         typedef core::list_of_cpp<PNode>       PList;
 
+        //! a blob is a list of points with a unique label
         class Blob : public Object, public PList, public core::inode<Blob>
         {
         public:
-            typedef core::list_of_cpp<Blob> List;
+            typedef core::list_of_cpp<Blob> List; //!< alias
 
-            explicit Blob( const size_t blobLabel ) throw() : label(blobLabel) {}
-            virtual ~Blob() throw() {}
+            explicit Blob( const size_t blobLabel ) throw(); //!< setup
+            virtual ~Blob() throw();                         //!< cleanup
 
             const size_t label;
-
-
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blob);
         };
 
 
+        //! manage Blobs building algorithm
         class Blobs : public Pixmap<size_t>, public Blob::List
         {
         public:
-            static const Point delta[8];
 
             enum Connectivity
             {
@@ -46,17 +44,19 @@ namespace upsylon {
                 Connect8
             };
 
-            explicit Blobs( const size_t W, const size_t  H) :
-            Pixmap<size_t>(W,H),
-            Blob::List()
-            {
-            }
+            explicit Blobs( const size_t W, const size_t  H); //!< setup
+            virtual ~Blobs() throw();                         //!< cleanup
 
-            virtual ~Blobs() throw() {}
-
+            //! build by exploring
             template <typename T>
-            void build(const Pixmap<T> &S, const Connectivity conn)
+            void build(const Pixmap<T>   &S,
+                       const Connectivity conn)
             {
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
                 Blob::List     &L = *this;
                 Pixmap<size_t> &B = *this;
 
@@ -71,46 +71,85 @@ namespace upsylon {
                     case Connect8: D=8; break;
                 }
 
-                size_t label = 0;
+                //--------------------------------------------------------------
+                //
+                // prepare current state
+                //
+                //--------------------------------------------------------------
+                size_t label = 0; // mark blob
+                PPool  stack;     // use to explore
                 for(unit_t y=0;y<h;++y)
                 {
                     Pixmap<size_t>::RowType           &b = B[y];
                     const typename Pixmap<T>::RowType &s = S[y];
                     for(unit_t x=0;x<w;++x)
                     {
-                        if(Pixel::IsZero(s[x]) || (b[x]>0) )
+                        if( (b[x]>0) || Pixel::IsZero(s[x]) )
                         {
-                            continue; // no pixel or already marked
+                            //__________________________________________________
+                            //
+                            // discontinuity or visited
+                            //__________________________________________________
+                            continue;
                         }
                         else
                         {
-                            // initialize blob
-                            ++label;
-                            Blob *blob = L.push_back( new Blob(label) );
-
-                            // initialize stack
-                            PPool stack;
+                            //__________________________________________________
+                            //
+                            // start a new blob!
+                            //__________________________________________________
+                            Blob *blob = L.push_back( new Blob(++label) );
                             stack.store( new PNode( Point(x,y) ) );
 
-                            // probe from scan
-                            while( stack.size > 0 )
+                            //__________________________________________________
+                            //
+                            // grow blob
+                            //__________________________________________________
+                            while( stack.size )
                             {
-                                const Point p = **(stack.top);
-                                assert( B(p) <= 0 || label==B(p) );
-                                assert( !Pixel::IsZero(S(p)) );
-                                blob->push_back( stack.query() );
-                                B(p) = label;
-                                for(size_t d=0;d<D;++d)
+                                const Point init = **(stack.top);
+                                size_t     &mark = B[init];
+                                if( mark <= 0 )
                                 {
-                                    const Point probe = p + delta[d];
-                                    if(   B->contains(probe)
-                                       && (B(probe)<=0)
-                                       && !Pixel::IsZero(S(probe)) )
+                                    //__________________________________________
+                                    //
+                                    // not visited
+                                    //__________________________________________
+                                    if( Pixel::IsZero(S[init]) )
                                     {
-                                        stack.store( new PNode(probe) );
+                                        // discontinuity
+                                        stack.pop();
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        // keep and explore
+                                        blob->push_back( stack.query() );
+                                        mark = label;
+                                        for(size_t d=0;d<D;++d)
+                                        {
+                                            const Point probe = init + delta[d];
+                                            if( B->contains(probe)
+                                               && (B[probe]<=0)
+                                               && !Pixel::IsZero( S[probe] ) )
+                                            {
+                                                stack.store( new PNode(probe) );
+                                            }
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    //__________________________________________
+                                    //
+                                    // visited
+                                    //__________________________________________
+                                    assert( label == mark );
+                                    stack.pop();
+                                    continue;
+                                }
                             }
+
                         }
                     }
                 }
@@ -119,6 +158,7 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blobs);
+            static const Point delta[8];
         };
 
     }

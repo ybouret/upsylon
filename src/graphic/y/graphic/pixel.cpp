@@ -109,4 +109,36 @@ namespace upsylon {
 
 }
 
+namespace upsylon {
+
+    namespace Graphic {
+
+        template < >
+        uint8_t Pixel:: Median9<uint8_t>( uint8_t arr[] ) throw()
+        {
+            return Median9__(arr);
+        }
+
+        template < >
+        float Pixel:: Median9<float>( float arr[] ) throw()
+        {
+            return Median9__(arr);
+        }
+
+        template <>
+        rgb Pixel:: Median9( rgb arr[] ) throw()
+        {
+            return Median9_<rgb,uint8_t,3>( arr );
+        }
+
+        template <>
+        rgba Pixel:: Median9( rgba arr[] ) throw()
+        {
+            return Median9_<rgba,uint8_t,4>( arr );
+        }
+
+
+
+    }
+}
 
