@@ -63,7 +63,13 @@ namespace {
             }
         }
 
-        std::cerr << "Ostu1D=" << int(edges.hist.Otsu1D()) << std::endl;
+        edges.applyThresholds(tiles);
+        {
+            proc1.setRange(0, 1);
+            const string saveName = "dual-" + grads->X->key() + "-" + grads->Y->key() + ".png";
+            IMG.save(saveName, *edges.L, proc1, 0);
+        }
+
     }
 
 }

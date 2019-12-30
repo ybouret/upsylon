@@ -43,6 +43,12 @@ SET(ops_filter_srcs ${ops_filter_decl} ${ops_filter_code})
 SOURCE_GROUP( graphic/ops/filter FILES ${ops_filter_srcs} )
 INSTALL( FILES ${ops_filter_decl} DESTINATION include/y/graphic/ops/filter )
 
+FILE(GLOB ops_edges_decl y/graphic/ops/edges/*.hpp)
+FILE(GLOB ops_edges_code y/graphic/ops/edges/*.cpp)
+SET(ops_edges_srcs ${ops_edges_decl} ${ops_edges_code})
+SOURCE_GROUP( graphic/ops/edges FILES ${ops_edges_srcs} )
+INSTALL( FILES ${ops_edges_decl} DESTINATION include/y/graphic/ops/edges )
+
 
 FILE(GLOB image_decl y/graphic/image/*.hpp)
 FILE(GLOB image_code y/graphic/image/*.cpp)
@@ -54,7 +60,7 @@ ADD_LIBRARY(y-graphic STATIC
 ${main_srcs} 
 ${color_srcs} ${color_ramp_srcs}
 ${parallel_srcs}
-${ops_srcs} ${ops_filter_srcs}
+${ops_srcs} ${ops_filter_srcs} ${ops_edges_srcs}
 ${image_srcs} 
 )
 INSTALL( TARGETS y-graphic ARCHIVE DESTINATION lib )
