@@ -6,6 +6,19 @@ namespace upsylon {
 
     namespace Graphic {
 
+        const Point Pixel::delta[8] =
+        {
+            Point(-1,0),
+            Point(1,0),
+            Point(0,-1),
+            Point(0,1),
+
+            Point(1,1),
+            Point(1,-1),
+            Point(-1,-1),
+            Point(-1,1)
+
+        };
 
         template <>
         void Pixel:: Zero<uint8_t>( uint8_t &x ) throw()
@@ -142,3 +155,132 @@ namespace upsylon {
     }
 }
 
+namespace upsylon {
+
+    namespace Graphic {
+
+        float Pixel:: Average9__( float   arr[] ) throw()
+        {
+            nwsrt::on9(arr);
+            float sum = arr[0];
+            sum += arr[1];
+            sum += arr[2];
+            sum += arr[3];
+            sum += arr[4];
+            sum += arr[5];
+            sum += arr[6];
+            sum += arr[7];
+            sum += arr[8];
+            return sum/9.0f;
+        }
+
+        uint8_t Pixel:: Average9__( uint8_t arr[] ) throw()
+        {
+            unsigned sum = arr[0];
+            sum += arr[1];
+            sum += arr[2];
+            sum += arr[3];
+            sum += arr[4];
+            sum += arr[5];
+            sum += arr[6];
+            sum += arr[7];
+            sum += arr[8];
+            return uint8_t(sum/9);
+        }
+
+        template < >
+        float Pixel::Average9<float>( float arr[] ) throw()
+        {
+            return Average9__(arr);
+        }
+
+        template < >
+        uint8_t Pixel::Average9<uint8_t>( uint8_t arr[] ) throw()
+        {
+            return Average9__(arr);
+        }
+
+        template <>
+        rgb Pixel:: Average9( rgb arr[] ) throw()
+        {
+            return Average9_<rgb,uint8_t,3>( arr );
+        }
+
+        template <>
+        rgba Pixel:: Average9( rgba arr[] ) throw()
+        {
+            return Average9_<rgba,uint8_t,4>( arr );
+        }
+
+
+    }
+
+}
+
+#include "y/graphic/convert.hpp"
+
+namespace upsylon {
+
+    namespace Graphic {
+
+        template <>
+        float Pixel:: MinOf<float>( const float &lhs, const float &rhs ) throw()
+        {
+            return (lhs<rhs) ? lhs : rhs;
+        }
+
+        template <>
+        uint8_t Pixel:: MinOf<uint8_t>( const uint8_t &lhs, const uint8_t &rhs ) throw()
+        {
+            return (lhs<rhs) ? lhs : rhs;
+        }
+
+        template <>
+        rgb Pixel:: MinOf<rgb>( const rgb &lhs, const rgb &rhs ) throw()
+        {
+            return (Convert::GreyScale(lhs)<Convert::GreyScale(rhs)) ? lhs : rhs;
+        }
+
+        template <>
+        rgba Pixel:: MinOf<rgba>( const rgba &lhs, const rgba &rhs ) throw()
+        {
+            return (Convert::GreyScale(lhs)<Convert::GreyScale(rhs)) ? lhs : rhs;
+        }
+
+
+    }
+
+}
+
+namespace upsylon {
+
+    namespace Graphic {
+
+        template <>
+        float Pixel:: MaxOf<float>( const float &lhs, const float &rhs ) throw()
+        {
+            return (lhs<rhs) ? rhs : lhs;
+        }
+
+        template <>
+        uint8_t Pixel:: MaxOf<uint8_t>( const uint8_t &lhs, const uint8_t &rhs ) throw()
+        {
+            return (lhs<rhs) ? rhs : lhs;
+        }
+
+        template <>
+        rgb Pixel:: MaxOf<rgb>( const rgb &lhs, const rgb &rhs ) throw()
+        {
+            return (Convert::GreyScale(lhs)<Convert::GreyScale(rhs)) ? rhs : lhs;
+        }
+
+        template <>
+        rgba Pixel:: MaxOf<rgba>( const rgba &lhs, const rgba &rhs ) throw()
+        {
+            return (Convert::GreyScale(lhs)<Convert::GreyScale(rhs)) ? rhs : lhs;
+        }
+
+
+    }
+
+}

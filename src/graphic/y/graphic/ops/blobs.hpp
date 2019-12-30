@@ -128,7 +128,7 @@ namespace upsylon {
                                         mark = label;
                                         for(size_t d=0;d<D;++d)
                                         {
-                                            const Point probe = init + delta[d];
+                                            const Point probe = init + Pixel::delta[d];
                                             if( B->contains(probe)
                                                && (B[probe]<=0)
                                                && !Pixel::IsZero( S[probe] ) )
@@ -158,7 +158,6 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blobs);
-            static const Point delta[8];
         };
 
     }

@@ -38,8 +38,8 @@ namespace upsylon {
                 }
                 //! assign RGB part of RGBA
                 rgb( const rgba<T> &) throw();
-                
 
+                
             };
 
             //! RGBA

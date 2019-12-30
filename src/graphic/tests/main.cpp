@@ -19,6 +19,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(filter);
     Y_UTEST(grads);
     Y_UTEST(blobs);
+    Y_UTEST(3x3);
 }
 Y_UTEST_EXEC()
 
