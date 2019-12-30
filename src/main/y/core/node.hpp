@@ -32,6 +32,13 @@ namespace upsylon
             //! copy, if T has a copy constructor
             inline node_of(const node_of &other) : next(0), prev(0), data(other.data) {}
 
+            //! access
+            inline type & operator*() throw() { return data; }
+
+            //! const acces
+            inline const_type & operator*() const throw() { return data; }
+
+
         private:
             Y_DISABLE_ASSIGN(node_of);
         };

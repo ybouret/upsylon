@@ -64,7 +64,6 @@ namespace upsylon {
             template <typename TARGET,typename SOURCE> static
             TARGET Get( const SOURCE & ) throw();
 
-
         };
 
     }

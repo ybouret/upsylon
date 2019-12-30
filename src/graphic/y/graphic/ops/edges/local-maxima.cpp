@@ -76,13 +76,17 @@ namespace upsylon {
             Task task = { this, &tiles };
             tiles.loop().run( Task::Run, &task);
 
+            hist.epilog(tiles);
+
+#if 0
             hist.set_( & tiles[0].as<size_t>(0) );
             const size_t nt = tiles.size();
             for(size_t i=1;i<nt;++i)
             {
                 hist.add_(& tiles[i].as<size_t>(0) );
             }
-
+#endif
+            
         }
 
     }

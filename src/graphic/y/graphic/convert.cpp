@@ -140,7 +140,11 @@ namespace upsylon {
         }
 
 
-
+        template <>
+        float Convert::Get<float,size_t>(const size_t &s ) throw()
+        {
+            return float(s);
+        }
 
 
         // RGBA->something
