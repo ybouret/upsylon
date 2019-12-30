@@ -14,9 +14,9 @@ namespace upsylon {
         class Ramp  : public Object
         {
         public:
-            typedef arc_ptr<Ramp> Pointer;
-            
-            virtual ~Ramp() throw(); //!< cleanup
+            typedef arc_ptr<Ramp> Pointer; //!< alias
+
+            virtual ~Ramp() throw();       //!< cleanup
             
             //! get the matching color
             rgb operator()(const float v, const float vmin=0.0f, const float vmax=1.0f);
@@ -28,7 +28,8 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Ramp);
             virtual const rgb *_256colors() const throw() = 0;
         };
-        
+
+        //! base class to wrap ramp + Data2RGBA
         class ColorRamp_ : public Data2RGBA
         {
         public:
@@ -46,18 +47,21 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ColorRamp_);
         };
-        
+
+        //! use default conversion to make a typed color ramp
         template <typename T>
         class ColorRamp : public ColorRamp_
         {
         public:
+            //! setup
             inline explicit ColorRamp(const Ramp::Pointer &_ramp,
                                       const float          _vmin=0,
                                       const float          _vmax=1) throw() :
             ColorRamp_(_ramp,_vmin,_vmax)
             {
             }
-            
+
+            //! c;eanup
             inline virtual ~ColorRamp() throw() {}
             
             

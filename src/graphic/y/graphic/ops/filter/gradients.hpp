@@ -9,21 +9,27 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! compute gradients with two filters
         class Gradients : public Object
         {
         public:
-            typedef Kernel::Filter::Weight  Weight;
-            typedef Kernel::Filter::Weights Weights;
+            typedef Kernel::Filter::Weight  Weight;  //!< alias
+            typedef Kernel::Filter::Weights Weights; //!< alias
+            typedef arc_ptr<Gradients>      Pointer; //!< alias
 
-            typedef arc_ptr<Gradients>     Pointer;
-            const Kernel::Filter::Pointer X;
-            const Kernel::Filter::Pointer Y;
+            const Kernel::Filter::Pointer X; //!< gradient in X direction
+            const Kernel::Filter::Pointer Y; //!< gradient in Y direction
 
+            //! setup
             explicit Gradients(const Kernel::Filter::Pointer &GX,
                                const Kernel::Filter::Pointer &GY) throw();
+            //! cleanup
             virtual ~Gradients() throw();
+
+            //! copy
             Gradients(const Gradients &) throw();
 
+            //! compute gradient and direction in a region, set global max
             template <typename T>
             inline void apply(Pixmap<float>   &g,
                               Pixmap<Vertex>  &G,
@@ -97,6 +103,7 @@ namespace upsylon {
                 gmax = gm;
             }
 
+            //! compute in parallel
             template <typename T>
             void run(Pixmap<float>   &g,
                      Pixmap<Vertex>  &G,
@@ -133,8 +140,10 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Gradients);
         };
 
+        //! helper to declare gradients
 #define Y_GRAPHICS_GRADIENTS_DECL(ID) static Gradients * Gradients##ID()
 
+        //! helper to implement gradients
 #define Y_GRAPHICS_GRADIENTS_IMPL(CLASS,ID)     \
 Gradients * CLASS :: Gradients##ID() {          \
 const Kernel::Filter::Pointer GX = new X##ID(); \

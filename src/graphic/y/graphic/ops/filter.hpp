@@ -12,37 +12,42 @@ namespace upsylon {
 
     namespace Graphic {
 
-        class Gradients;
+        class Gradients; //!< forward declaration
 
         namespace Kernel {
 
+            //! base class got filters
             class Filter : public Object
             {
             public:
-                typedef intr_ptr<string,const Filter> Pointer;
 
+                typedef intr_ptr<string,const Filter> Pointer; //!< alias
+
+                //!weight value at a given point
                 class Weight
                 {
                 public:
-                    const float  value;
-                    const Point  point;
+                    const float  value; //!< value
+                    const Point  point; //!< offset
                     Weight(const float  v,
                            const unit_t dx,
-                           const unit_t dy) throw();
-                    ~Weight() throw();
-                    Weight(const Weight &) throw();
+                           const unit_t dy) throw(); //!< setup
+                    ~Weight() throw();               //!< cleanup
+                    Weight(const Weight &) throw();  //!< copy
 
                 private:
                     Y_DISABLE_ASSIGN(Weight);
                 };
-                typedef slots<Weight> Weights;
 
-                
+                typedef slots<Weight> Weights; //!< set of weights
 
-                virtual ~Filter() throw();
-                Filter(const Filter &F);
-                virtual const string & key() const throw() = 0;
 
+                virtual ~Filter() throw(); //!< cleanup
+                Filter(const Filter &F);   //!< copy
+
+                virtual const string & key() const throw() = 0; //!< key for pointer/set
+
+                //! apply the filter on a region, while updating min/max
                 template <typename T,typename U>
                 inline void applyRaw(Graphic::Pixmap<T>       &target,
                                      const Graphic::Pixmap<U> &source,
@@ -82,7 +87,7 @@ namespace upsylon {
                     globalVmax = vmax;
                 }
                 
-
+                //! run filter in parallel, 
                 template <typename T, typename U>
                 void run(Graphic::Pixmap<T>       &target,
                          const Graphic::Pixmap<U> &source,
@@ -110,17 +115,17 @@ namespace upsylon {
                     tiles.loop().run( Task::Run, &task);
                 }
 
+                //! normalize filter values
                 void     normalize() throw();
 
             protected:
-                explicit Filter(const size_t);
-                void     update();
+                explicit Filter(const size_t); //!< setup with a given number of values
+                void     update();             //!< update weights
 
-
+                //! compile a field of values into a filter
                 template <typename T> inline
                 void compile_( const Oxide::Field2D<T> &field )
                 {
-                    //std::cerr << "Compiling " << key() << "...";
                     assert( weights.size() <= 0 );
                     assert(field.items==weights.count);
                     for(unit_t y=field.lower.y;y<=field.upper.y;++y)
@@ -135,14 +140,6 @@ namespace upsylon {
                         }
                     }
                     update();
-#if 0
-                    for(size_t i=0;i<weights.size();++i)
-                    {
-                        std::cerr << weights[i].point << "=>" << weights[i].value << std::endl;
-                    }
-                    std::cerr << "weight =" << weight << " : factor =" << factor << std::endl;
-#endif
-
                 }
 
             private:
@@ -155,10 +152,12 @@ namespace upsylon {
 
         }
 
+        //! a generic filter based on a field of values
         template <typename T>
         class Filter :  public Oxide::Field2D<T>, public Kernel::Filter
         {
         public:
+            //! setup
             explicit Filter(const char            *id,
                             const Oxide::Coord2D   lo,
                             const Oxide::Coord2D   hi) :
@@ -167,10 +166,12 @@ namespace upsylon {
             {
             }
 
+            //! cleanup
             virtual ~Filter() throw()
             {
             }
 
+            //! compile field => filter
             inline void compile()
             {
                 compile_<T>(*this);
@@ -182,16 +183,19 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Filter);
         };
 
+        //! declare a filter
 #define Y_GRAPHIC_FILTER_DECL(NAME) \
 class NAME : public FilterType {\
 public: explicit NAME(); virtual ~NAME() throw();\
 private: Y_DISABLE_COPY_AND_ASSIGN(NAME); }
 
+        //! start implementing a filter
 #define Y_GRAPHIC_FILTER_IMPL(STRUCT,NAME,LO,HI) \
 STRUCT:: NAME:: ~NAME() throw() {}\
 STRUCT:: NAME:: NAME() : FilterType( #STRUCT "::" #NAME, LO, HI ) {\
 FilterType &self = *this; (void)self;
 
+        //! finish inplementing a filter
 #define Y_GRAPHIC_FILTER_DONE() compile(); }
 
 

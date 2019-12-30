@@ -147,6 +147,7 @@ Y_PROGRAM_START()
 			header << "#include \"y/graphic/color/ramp.hpp\"\n\n";
 			header << "namespace upsylon { namespace Graphic {\n\n";
 
+            header << "//! " << className << " color ramp\n";
 			header << "class " << className << " : public Ramp {\n";
 			header << " public: explicit " << className << "() throw();\n";
 			header << "         virtual ~" << className << "() throw();\n";
