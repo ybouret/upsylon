@@ -11,7 +11,7 @@ namespace upsylon {
     namespace Graphic {
 
         //! Edges detection algorithms
-        class Edges
+        class Edges : public Pixmap<size_t>
         {
         public:
             static const uint8_t HARD = 255; //!< hard edge value

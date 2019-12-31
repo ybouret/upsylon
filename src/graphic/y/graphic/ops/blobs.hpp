@@ -155,7 +155,23 @@ namespace upsylon {
                 }
             }
 
+            //! sort by decreasing size and rewrite indices
+            void rewrite();
 
+            //! keep above a minimial size
+            void keepAbove( const size_t minSize ) throw();
+
+            //! build, rewrite, and remove below minSize
+            template <typename T>
+            void build(const Pixmap<T>   &data,
+                       const Connectivity conn,
+                       const size_t       minSize)
+            {
+                build<T>(data,conn);
+                rewrite();
+                keepAbove(minSize);
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blobs);
         };

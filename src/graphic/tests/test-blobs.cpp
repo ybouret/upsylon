@@ -45,10 +45,11 @@ Y_UTEST(blobs)
                 const string saveName = "fgf.png";
                 IMG.saveAs(saveName, tgt, 0);
             }
+
             {
-                blobs.build(tgt, Blobs::Connect4);
+                blobs.build(tgt, Blobs::Connect4,1);
+                blobs.rewrite();
                 std::cerr << "#blobs_fg_conn4=" << blobs.size << std::endl;
-                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "fgf-blobs4.png";
                     IMG.save(saveName, *blobs, proc, 0);
@@ -56,9 +57,8 @@ Y_UTEST(blobs)
             }
 
             {
-                blobs.build(tgt, Blobs::Connect8);
+                blobs.build(tgt, Blobs::Connect8,1);
                 std::cerr << "#blobs_fg_conn8=" << blobs.size << std::endl;
-                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "fgf-blobs8.png";
                     IMG.save(saveName, *blobs, proc, 0);
@@ -75,9 +75,8 @@ Y_UTEST(blobs)
             }
 
             {
-                blobs.build(tgt, Blobs::Connect4);
+                blobs.build(tgt, Blobs::Connect4,1);
                 std::cerr << "#blobs_bg_conn4=" << blobs.size << std::endl;
-                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "bgf-blobs4.png";
                     IMG.save(saveName, *blobs, proc, 0);
@@ -86,9 +85,8 @@ Y_UTEST(blobs)
 
 
             {
-                blobs.build(tgt, Blobs::Connect8);
+                blobs.build(tgt, Blobs::Connect8,1);
                 std::cerr << "#blobs_bg_conn8=" << blobs.size << std::endl;
-                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "bgf-blobs8.png";
                     IMG.save(saveName, *blobs, proc, 0);
