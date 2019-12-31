@@ -28,7 +28,7 @@ namespace upsylon {
                     }
                     else
                     {
-                        l = 0;
+                        l = NONE;
                     }
                 }
 

@@ -6,18 +6,14 @@
 
 #include "y/graphic/pixmaps.hpp"
 #include "y/graphic/pixel.hpp"
-#include "y/core/node.hpp"
-#include "y/core/list.hpp"
-#include "y/core/pool.hpp"
+#include "y/graphic/linked.hpp"
+
 
 namespace upsylon {
 
     namespace Graphic {
 
-        typedef core::node_of<const Point>     PNode;
-        typedef core::pool_of_cpp<PNode>       PPool;
-        typedef core::list_of_cpp<PNode>       PList;
-
+        
         //! a blob is a list of points with a unique label
         class Blob : public Object, public PList, public core::inode<Blob>
         {
@@ -27,7 +23,8 @@ namespace upsylon {
             explicit Blob( const size_t blobLabel ) throw(); //!< setup
             virtual ~Blob() throw();                         //!< cleanup
 
-            const size_t label;
+            const size_t label; //!< label or index of this blob
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blob);
         };
@@ -38,17 +35,18 @@ namespace upsylon {
         {
         public:
 
+            //! how to explore current point
             enum Connectivity
             {
-                Connect4,
-                Connect8
+                Connect4, //!< first four neighbors
+                Connect8  //!< eight four neighbors
             };
 
             explicit Blobs( const size_t W, const size_t  H); //!< setup
             virtual ~Blobs() throw();                         //!< cleanup
 
             //! build by exploring
-            template <typename T>
+            template <typename T> inline
             void build(const Pixmap<T>   &S,
                        const Connectivity conn)
             {
@@ -162,7 +160,7 @@ namespace upsylon {
             void keepAbove( const size_t minSize ) throw();
 
             //! build, rewrite, and remove below minSize
-            template <typename T>
+            template <typename T> inline
             void build(const Pixmap<T>   &data,
                        const Connectivity conn,
                        const size_t       minSize)
@@ -171,6 +169,32 @@ namespace upsylon {
                 rewrite();
                 keepAbove(minSize);
             }
+
+            //! transfer blob location
+            template <typename T> inline
+            void transfer(Pixmap<T>       &target,
+                          const Pixmap<T> &source,
+                          const Blob      *blob) const throw()
+            {
+                assert(blob);
+                for(const PNode *node = blob->head; node; node=node->next )
+                {
+                    const Point p = **node;
+                    target[p] = source[p];
+                }
+            }
+
+            //! transfer all blobs
+            template <typename T> inline
+            void transfer(Pixmap<T>       &target,
+                          const Pixmap<T> &source)
+            {
+                for(const Blob *blob = this->head; blob; blob=blob->next )
+                {
+                    transfer(target,source,blob);
+                }
+            }
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blobs);

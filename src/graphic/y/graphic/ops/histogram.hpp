@@ -11,10 +11,11 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! which part to keep for thresholding
         enum KeepMode
         {
-            KeepForeground,
-            KeepBackground
+            KeepForeground, //!< shall keep foreground
+            KeepBackground  //!< shall keep background
         };
 
         //! histogram of bytes
@@ -55,9 +56,11 @@ namespace upsylon {
             //! sum local bins
             void epilog(Tiles &tiles) throw();
 
-            template <typename T,
-            typename PROC>
-            void build( const Pixmap<T> &source, PROC &proc, Tiles &tiles )
+            //! build histogram in parallel
+            template <typename T, typename PROC>
+            inline void build(const Pixmap<T> &source,
+                              PROC            &proc,
+                              Tiles           &tiles )
             {
                 // prepare memory
                 prolog(tiles);
@@ -74,7 +77,7 @@ namespace upsylon {
                     {
                         Task      &task = *static_cast<Task *>(args);
                         Tile      &tile = (*task.tiles_)[ctx.rank];
-                        Histogram::Build<T,PROC>( *task.source_,  *task.proc_, tile );
+                        Histogram::Build<T,PROC>(*task.source_,*task.proc_,tile);
                     }
 
 
@@ -87,13 +90,14 @@ namespace upsylon {
                 epilog(tiles);
             }
 
+            //! keep into target the valid part of source
             template <typename T, typename PROC>
-            void keep(Pixmap<T>       &target,
-                      const Pixmap<T> &source,
-                      const uint8_t    t,
-                      PROC            &proc,
-                      const KeepMode   keep,
-                      Tiles           &tiles )
+            inline void keep(Pixmap<T>       &target,
+                             const Pixmap<T> &source,
+                             const uint8_t    t,
+                             PROC            &proc,
+                             const KeepMode   keep,
+                             Tiles           &tiles )
             {
                 struct Task
                 {
@@ -109,7 +113,11 @@ namespace upsylon {
                     {
                         Task      &task = *static_cast<Task *>(args);
                         Tile      &tile = (*task.tiles_)[ctx.rank];
-                        Histogram::Keep<T,PROC>( *task.target_, *task.source_, task.t_, *task.proc_, task.keep_, tile);
+                        switch(task.keep_)
+                        {
+                            case KeepForeground: Histogram::KeepFG(*task.target_, *task.source_, task.t_, *task.proc_, tile); break;
+                            case KeepBackground: Histogram::KeepBG(*task.target_, *task.source_, task.t_, *task.proc_, tile); break;
+                        }
                     }
                 };
 
@@ -123,6 +131,7 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Histogram);
             size_t bin[BINS];
+
             template <typename T, typename PROC> static inline
             void Build( const Pixmap<T> &source, PROC &proc, Tile &tile ) throw()
             {
@@ -130,7 +139,7 @@ namespace upsylon {
                 size_t     *H  = & tile.as<size_t>(0);
                 const Point up = tile.upper;
                 const Point lo = tile.lower;
-                 for(unit_t y=up.y;y>=lo.y;--y)
+                for(unit_t y=up.y;y>=lo.y;--y)
                 {
                     const typename Pixmap<T>::RowType &src = source[y];
                     for(unit_t x=up.x;x>=lo.x;--x)
@@ -140,13 +149,14 @@ namespace upsylon {
                 }
             }
 
-            template <typename T, typename PROC> static inline
-            void Keep(Pixmap<T>       &target,
-                      const Pixmap<T> &source,
-                      const uint8_t    t,
-                      PROC            &proc,
-                      const KeepMode   keep,
-                      const Tile      &tile ) throw()
+
+            template <typename T, typename PROC>
+            static inline
+            void KeepFG(Pixmap<T>       &target,
+                        const Pixmap<T> &source,
+                        const uint8_t    t,
+                        PROC            &proc,
+                        const Tile      &tile )
             {
                 const Point up = tile.upper;
                 const Point lo = tile.lower;
@@ -158,34 +168,48 @@ namespace upsylon {
                     {
                         const T      &data  = src[x];
                         const uint8_t value = uint8_t( proc(data) );
-                        switch(keep)
+                        if(value>=t)
                         {
-                            case KeepForeground:
-                                if(value>=t)
-                                {
-                                    tgt[x] = data;
-                                }
-                                else
-                                {
-                                    Pixel::Zero( tgt[x] );
-                                }
-                                break;
-
-                            case KeepBackground:
-                                if(value<=t)
-                                {
-                                    tgt[x] = Pixel::Invert( data );
-                                }
-                                else
-                                {
-                                    Pixel::Zero( tgt[x] );
-                                }
-                                break;
+                            tgt[x] = data;
+                        }
+                        else
+                        {
+                            Pixel::Zero( tgt[x] );
                         }
                     }
                 }
             }
 
+            template <typename T, typename PROC> static inline
+            void KeepBG(Pixmap<T>       &target,
+                        const Pixmap<T> &source,
+                        const uint8_t    t,
+                        PROC            &proc,
+                        const Tile      &tile )
+            {
+                const Point up = tile.upper;
+                const Point lo = tile.lower;
+                for(unit_t y=up.y;y>=lo.y;--y)
+                {
+                    typename Pixmap<T>::RowType       &tgt = target[y];
+                    const typename Pixmap<T>::RowType &src = source[y];
+                    for(unit_t x=up.x;x>=lo.x;--x)
+                    {
+                        const T      &data  = src[x];
+                        const uint8_t value = uint8_t( proc(data) );
+                        if(value<=t)
+                        {
+                            tgt[x] = Pixel::Invert( data );
+                        }
+                        else
+                        {
+                            Pixel::Zero( tgt[x] );
+                        }
+                    }
+                }
+            }
+
+            
         };
 
     }

@@ -5,6 +5,17 @@ namespace upsylon {
 
     namespace Graphic {
 
+        Edge:: Edge(const size_t edgeLabel) throw() :
+        label(edgeLabel),
+        hard(false)
+        {
+        }
+
+        Edge:: ~Edge() throw()
+        {
+        }
+
+        
         Edges:: ~Edges() throw()
         {
         }

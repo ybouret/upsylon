@@ -11,21 +11,23 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! Pixel operations
         struct Pixel
         {
-            static const Point delta[8];
+            static const Point delta[8]; //!< 4+4 delta directions
 
 
-            template <typename T>
-            static void Zero( T & ) throw();
+            //! set to zero
+            template <typename T> static void Zero( T & ) throw();
 
-            template <typename T>
-            static bool IsZero( const T & ) throw();
+            //! test against zero
+            template <typename T> static bool IsZero( const T & ) throw();
 
 
-            template <typename T>
-            static T Invert( const T & ) throw();
+            //! invert color
+            template <typename T> static T Invert( const T & ) throw();
 
+            //! median value of local array
             template <typename T> static inline
             T Median9__(  T arr[] ) throw()
             {
@@ -33,8 +35,8 @@ namespace upsylon {
                 return arr[4];
             }
 
-            template <typename TYPE, typename T, size_t N>
-            static inline
+            //! median by channels
+            template <typename TYPE, typename T, size_t N> static inline
             TYPE Median9_( const TYPE arr[] )
             {
                 TYPE ans;
@@ -58,15 +60,18 @@ namespace upsylon {
                 return ans;
             }
 
-
+            //! generic median
             template <typename T> static
             T Median9( T arr[] ) throw();
 
+            //! average of float
             static float   Average9__( float   arr[] ) throw();
+
+            //! average of bytes
             static uint8_t Average9__( uint8_t arr[] ) throw();
 
-            template <typename TYPE, typename T, size_t N>
-            static inline
+            //! average by channels
+            template <typename TYPE, typename T, size_t N> static inline
             TYPE Average9_( const TYPE arr[] )
             {
                 TYPE ans;
@@ -90,13 +95,13 @@ namespace upsylon {
                 return ans;
             }
 
+            //! generic average
+            template <typename T> static T Average9( T arr[] ) throw();
 
-            template <typename T> static
-            T Average9( T arr[] ) throw();
-            
-            template <typename T> static
-            T MinOf( const T &lhs, const T &rhs ) throw();
+            //! generic minimal value
+            template <typename T> static T MinOf( const T &lhs, const T &rhs ) throw();
 
+            //! minimal value of a local array
             template <typename T> static
             T MinOf9(const T arr[]) throw()
             {
@@ -108,9 +113,10 @@ namespace upsylon {
                 return ans;
             }
 
-            template <typename T> static
-            T MaxOf( const T &lhs, const T &rhs ) throw();
+            //! generic maximal value
+            template <typename T> static T MaxOf( const T &lhs, const T &rhs ) throw();
 
+            //! maximal value of an array
             template <typename T> static
             T MaxOf9(const T arr[]) throw()
             {

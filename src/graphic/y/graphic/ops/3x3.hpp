@@ -11,14 +11,17 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! 3x3 local filters
         struct Apply3x3
         {
 
+            //! collect zerof flux points
 #define Y_GRAPHIC3x3_COLLECT(I) do { const Point probe = org + Pixel::delta[I]; arr[I+1] = source(probe); } while(false)
 
+            //! apply a procedure on a tile
             template <typename T,
             typename PROC> static inline
-            void On( Pixmap<T>      &target,
+            void On(Pixmap<T>       &target,
                     const Pixmap<T> &source,
                     PROC            &proc,
                     const Tile      &tile )
@@ -49,7 +52,7 @@ namespace upsylon {
                 }
             }
 
-
+            //! parallel application
             template <typename T,typename PROC> static inline
             void On(Pixmap<T>       &target,
                     const Pixmap<T> &source,
@@ -75,30 +78,35 @@ namespace upsylon {
                 tiles.loop().run( Task::Run, &task);
             }
 
+            //! replace value by its median
             template <typename T> static inline
             void Median( Pixmap<T> &target, const Pixmap<T> &source, Tiles &tiles )
             {
                 Apply3x3::On(target,source, Pixel::Median9<T>, tiles);
             }
 
+            //! replace value by its average
             template <typename T> static inline
             void Average( Pixmap<T> &target, const Pixmap<T> &source, Tiles &tiles )
             {
                 Apply3x3::On(target,source, Pixel::Average9<T>, tiles);
             }
 
+            //! replace value by the its minimum
             template <typename T> static inline
             void Erode( Pixmap<T> &target, const Pixmap<T> &source, Tiles &tiles )
             {
                 Apply3x3::On(target,source, Pixel::MinOf9<T>, tiles);
             }
 
+            //! replace value by its maxium
             template <typename T> static inline
             void Dilate( Pixmap<T> &target, const Pixmap<T> &source, Tiles &tiles )
             {
                 Apply3x3::On(target,source, Pixel::MaxOf9<T>, tiles);
             }
 
+            //! erode and dilate
             template <typename T> static inline
             void Open(Pixmap<T> &target, const Pixmap<T> &source, Tiles &tiles, Pixmap<T> &tmp )
             {
@@ -106,6 +114,7 @@ namespace upsylon {
                 Dilate(target,tmp,tiles);
             }
 
+            //! dilate then erode
             template <typename T> static inline
             void Close(Pixmap<T> &target, const Pixmap<T> &source, Tiles &tiles, Pixmap<T> &tmp )
             {
