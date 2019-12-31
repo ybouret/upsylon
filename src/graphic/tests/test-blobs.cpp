@@ -8,14 +8,17 @@
 #include "y/graphic/image.hpp"
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/graphic/color/ramp/hot_to_cold2.hpp"
+#include "y/graphic/color/named.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
 
 Y_UTEST(blobs)
 {
-    const Ramp::Pointer    ramp = new HotToCold2();
-    ColorRamp<size_t>      proc(ramp);
+    //const Ramp::Pointer    ramp = new HotToCold2();
+    //ColorRamp<size_t>      proc(ramp);
+
+    IndexToRGBA proc(Y_RED_INDEX,3);
 
     if(argc>1)
     {
@@ -45,7 +48,7 @@ Y_UTEST(blobs)
             {
                 blobs.build(tgt, Blobs::Connect4);
                 std::cerr << "#blobs_fg_conn4=" << blobs.size << std::endl;
-                proc.setRange(0, blobs.size);
+                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "fgf-blobs4.png";
                     IMG.save(saveName, *blobs, proc, 0);
@@ -55,7 +58,7 @@ Y_UTEST(blobs)
             {
                 blobs.build(tgt, Blobs::Connect8);
                 std::cerr << "#blobs_fg_conn8=" << blobs.size << std::endl;
-                proc.setRange(0, blobs.size);
+                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "fgf-blobs8.png";
                     IMG.save(saveName, *blobs, proc, 0);
@@ -74,7 +77,7 @@ Y_UTEST(blobs)
             {
                 blobs.build(tgt, Blobs::Connect4);
                 std::cerr << "#blobs_bg_conn4=" << blobs.size << std::endl;
-                proc.setRange(0, blobs.size);
+                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "bgf-blobs4.png";
                     IMG.save(saveName, *blobs, proc, 0);
@@ -85,7 +88,7 @@ Y_UTEST(blobs)
             {
                 blobs.build(tgt, Blobs::Connect8);
                 std::cerr << "#blobs_bg_conn8=" << blobs.size << std::endl;
-                proc.setRange(0, blobs.size);
+                //proc.setRange(0, blobs.size);
                 {
                     const string saveName = "bgf-blobs8.png";
                     IMG.save(saveName, *blobs, proc, 0);
@@ -97,7 +100,7 @@ Y_UTEST(blobs)
         }
 
         return 0;
-
+        
         {
             Pixmap<rgb> tgt( pxm->w, pxm->h );
             H.build(pxm3, Convert::Get<uint8_t,rgb>, tiles);

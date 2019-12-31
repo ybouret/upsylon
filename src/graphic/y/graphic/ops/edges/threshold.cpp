@@ -7,8 +7,8 @@ namespace upsylon {
 
         void Edges:: applyThresholds( Tile &tile ) throw()
         {
-            const Point up = tile.upper;
-            const Point lo = tile.lower;
+            const Point   up   = tile.upper;
+            const Point   lo   = tile.lower;
             const uint8_t hard = hardThreshold;
             const uint8_t soft = softThreshold;
             for(unit_t y=up.y;y>=lo.y;--y)
@@ -43,7 +43,7 @@ namespace upsylon {
 
             std::cerr << "Threshold: " << int(hardThreshold) << ":" << int(softThreshold) << std::endl;
 
-            // tun in parallel
+            // run in parallel
             struct Task
             {
                 Edges *self;

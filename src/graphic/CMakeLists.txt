@@ -13,7 +13,7 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( graphic FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/graphic )
 
-FILE(GLOB color_decl y/graphic/color/*.hpp)
+FILE(GLOB color_decl y/graphic/color/*.h*)
 FILE(GLOB color_code y/graphic/color/*.cpp)
 SET(color_srcs ${color_decl} ${color_code})
 SOURCE_GROUP( graphic/color FILES ${color_srcs} )
@@ -67,6 +67,9 @@ INSTALL( TARGETS y-graphic ARCHIVE DESTINATION lib )
 
 ADD_EXECUTABLE(y_color_ramp y_color_ramp.cpp)
 TARGET_LINK_Y(y_color_ramp)
+
+ADD_EXECUTABLE(y_named_colors y_named_colors.cpp)
+TARGET_LINK_Y(y_named_colors)
 
 ADD_SUBDIRECTORY(tests)
 SET(UTESTS "${UTESTS} utest-graphic" PARENT_SCOPE)

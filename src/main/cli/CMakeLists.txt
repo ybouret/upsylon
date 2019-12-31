@@ -18,7 +18,7 @@ ENDIF()
 CLI(y_uniq)
 CLI(y_bin2dat)
 CLI(y_hexdump)
-CLI(y_sed)
+#CLI(y_sed)
 
 IF(NOT MSVC)
 # generate rsa keys with msys-openssl
@@ -28,7 +28,7 @@ ENDIF()
 IF(Y_DARWIN)
 #CLI(y_port_missing)
 CLI(y_port_required)
-CLI(y_macho)
+#CLI(y_macho)
 #CLI(get-kde-wallpapers)
 ENDIF()
 
