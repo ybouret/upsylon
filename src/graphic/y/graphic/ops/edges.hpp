@@ -26,13 +26,23 @@ namespace upsylon {
         };
 
         //! Edges detection algorithms
-        class Edges : public Pixmap<size_t>, public Edge::List
+        class Edges : public Indices, public Edge::List
         {
         public:
             static const uint8_t HARD = 255; //!< hard edge value
             static const uint8_t SOFT = 128; //!< soft edge value
             static const uint8_t NONE =   0; //!< no edge
 
+            struct LocalMaxima
+            {
+                Point *points;
+                size_t count;
+            };
+
+            static const size_t  LocalHistogramBytes = Histogram::BINS * sizeof(size_t);
+            static const size_t  LocalMaximaBytes    = sizeof(LocalMaxima);
+            static const size_t  LocalBytesPerTile   = LocalHistogramBytes + LocalMaximaBytes;
+            
             virtual ~Edges() throw();                        //!< cleanup
             explicit Edges( const size_t W, const size_t H); //!< setup
 
@@ -40,13 +50,17 @@ namespace upsylon {
             Pixmap<float>   g;             //!< evaluated gradient
             Pixmap<Vertex>  G;             //!< normalised gradient
             Pixmap<uint8_t> L;             //!< local maxima indicator
+            Pixmap<Point>   P;             //!< memory for edges building
             Histogram       hist;          //!< local maxima histogram
             uint8_t         hardThreshold; //!< hard threshold from histogram
             uint8_t         softThreshold; //!< soft threshold from histogram
 
 
-            void keepLocalMaxima( Tiles &tiles ); //!< gradient+direction    => localMaxima+histogram
-            void applyThresholds( Tiles &tiles ); //!< histogram+localMaxima => update localMaxima to hard/soft
+            size_t keepLocalMaxima( Tiles &tiles ); //!< gradient+direction    => localMaxima+histogram
+            void   applyThresholds( Tiles &tiles ); //!< histogram+localMaxima => update localMaxima to hard/soft
+
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);

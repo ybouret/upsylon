@@ -17,7 +17,7 @@ namespace upsylon {
       
 
         Blobs:: Blobs( const size_t W, const size_t  H) :
-        Pixmap<size_t>(W,H),
+        Indices(W,H),
         Blob::List()
         {
         }
@@ -46,8 +46,8 @@ namespace upsylon {
 
         void Blobs:: keepAbove( const size_t minSize ) throw()
         {
-            Pixmap<size_t> &field = *this;
-            Blob::List     &blobs = *this;
+            Indices    &field = *this;
+            Blob::List &blobs = *this;
             while(blobs.tail && blobs.tail->size<=minSize )
             {
                 for( const PNode *node = blobs.tail->head; node; node=node->next )

@@ -47,7 +47,8 @@ namespace {
             IMG.save(saveName, *g, proc, 0);
         }
 
-        edges.keepLocalMaxima(tiles);
+        const size_t np = edges.keepLocalMaxima(tiles);
+        std::cerr << "\t#localMax=" << np << std::endl;
         {
             proc1.setRange(0, 1);
             const string saveName = "lmax-" + grads->X->key() + "-" + grads->Y->key() + ".png";

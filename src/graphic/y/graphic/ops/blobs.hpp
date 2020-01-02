@@ -31,7 +31,7 @@ namespace upsylon {
 
 
         //! manage Blobs building algorithm
-        class Blobs : public Pixmap<size_t>, public Blob::List
+        class Blobs : public Indices, public Blob::List
         {
         public:
 
@@ -55,8 +55,8 @@ namespace upsylon {
                 // initialize
                 //
                 //--------------------------------------------------------------
-                Blob::List     &L = *this;
-                Pixmap<size_t> &B = *this;
+                Blob::List  &L = *this;
+                Indices     &B = *this;
 
                 L.release();
                 B->clear();
@@ -78,7 +78,7 @@ namespace upsylon {
                 PPool  stack;     // use to explore
                 for(unit_t y=0;y<h;++y)
                 {
-                    Pixmap<size_t>::RowType           &b = B[y];
+                    Indices::RowType                  &b = B[y];
                     const typename Pixmap<T>::RowType &s = S[y];
                     for(unit_t x=0;x<w;++x)
                     {
