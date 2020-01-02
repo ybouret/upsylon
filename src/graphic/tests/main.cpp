@@ -20,6 +20,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(grads);
     Y_UTEST(blobs);
     Y_UTEST(3x3);
+    Y_UTEST(blur);
 }
 Y_UTEST_EXEC()
 
