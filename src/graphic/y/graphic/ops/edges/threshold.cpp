@@ -9,11 +9,11 @@ namespace upsylon {
         {
             assert( tile.localMemory() >= LocalMaximaBytes );
 
-            const Point   up   = tile.upper;
-            const Point   lo   = tile.lower;
-            const uint8_t hard = hardThreshold;
-            const uint8_t soft = softThreshold;
-            LocalMaxima   &lm = tile.as<LocalMaxima>();
+            const Point   up     = tile.upper;
+            const Point   lo     = tile.lower;
+            const uint8_t strong = strongThreshold;
+            const uint8_t feeble = feebleThreshold;
+            LocalMaxima   &lm    = tile.as<LocalMaxima>();
             lm.count  = 0;
             lm.points = &P[lo];
             for(unit_t y=up.y;y>=lo.y;--y)
@@ -23,19 +23,19 @@ namespace upsylon {
                 {
                     uint8_t       &l = Ly[x];
                     const uint8_t  u = l;
-                    if( u>=hard )
+                    if( u>=strong )
                     {
-                        l = HARD;
+                        l = STRONG;
                         goto MARK;
                     }
-                    else if( u>=soft )
+                    else if( u>=feeble )
                     {
-                        l = SOFT;
+                        l = FEEBLE;
                         goto MARK;
                     }
                     else
                     {
-                        l = NONE;
+                        l = NoEDGE;
                         continue;
                     }
 
@@ -53,10 +53,9 @@ namespace upsylon {
             tiles.localAcquire( LocalMaximaBytes );
 
             // compute thresholds
-            hardThreshold = hist.Otsu1D();
-            softThreshold = hardThreshold>>1;
+            feebleThreshold = (strongThreshold = hist.Otsu1D()) >> 1;
 
-            std::cerr << "Threshold: " << int(hardThreshold) << ":" << int(softThreshold) << std::endl;
+            std::cerr << "Threshold: " << int(strongThreshold) << ":" << int(feebleThreshold) << std::endl;
 
             // run in parallel
             struct Task
@@ -87,13 +86,15 @@ namespace upsylon {
                 length += np;
             }
 
+#if 0
             Indices     &self = *this;      self->clear();
             const Point *source = &P[0][0];
             for(size_t i=0;i<length;++i)
             {
                 self[source[i]] = L[source[i]];
             }
-
+#endif
+            
             return length;
         }
 

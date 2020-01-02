@@ -28,7 +28,7 @@ namespace {
         const Ramp::Pointer    ramp = new HotToCold();
         ColorRamp<float>       proc(ramp);
         ColorRamp<uint8_t>     proc1(ramp);
-        IndexToRGBA            iProc(Y_RED_INDEX,5);
+        IndexToRGBA            iProc(Y_GREEN_INDEX,1);
 
         Tiles tiles( *source, par );
 
@@ -73,11 +73,19 @@ namespace {
             IMG.save(saveName, *edges.L, proc1, 0);
         }
 
+#if 0
         {
             const string saveName = "indx-" + grads->X->key() + "-" + grads->Y->key() + ".png";
             IMG.save(saveName, *edges, iProc, 0);
         }
+#endif
 
+        edges.build(np);
+        std::cerr << " #edges: " << edges.size << std::endl;
+        {
+            const string saveName = "edge-" + grads->X->key() + "-" + grads->Y->key() + ".png";
+            IMG.save(saveName, *edges, iProc, 0);
+        }
     }
 
 }

@@ -14,9 +14,15 @@ namespace upsylon {
         class Edge : public Object, public PList, public core::inode<Edge>
         {
         public:
+            enum Flag
+            {
+                Strong,
+                Feeble
+            };
+
             typedef core::list_of_cpp<Edge> List;
             const size_t label;
-            const bool   hard;
+            const Flag   flag;
 
             explicit Edge(const size_t edgeLabel) throw();
             virtual ~Edge() throw();
@@ -29,9 +35,9 @@ namespace upsylon {
         class Edges : public Indices, public Edge::List
         {
         public:
-            static const uint8_t HARD = 255; //!< hard edge value
-            static const uint8_t SOFT = 128; //!< soft edge value
-            static const uint8_t NONE =   0; //!< no edge
+            static const uint8_t STRONG = 255; //!< hard edge value
+            static const uint8_t FEEBLE = 128; //!< soft edge value
+            static const uint8_t NoEDGE =   0; //!< no edge
 
             struct LocalMaxima
             {
@@ -45,14 +51,14 @@ namespace upsylon {
             virtual ~Edges() throw();                        //!< cleanup
             explicit Edges( const size_t W, const size_t H); //!< setup
 
-            float           gmax;          //!< global max gradient
-            Pixmap<float>   g;             //!< evaluated gradient
-            Pixmap<Vertex>  G;             //!< normalised gradient
-            Pixmap<uint8_t> L;             //!< local maxima indicator
-            Pixmap<Point>   P;             //!< memory for edges building
-            Histogram       hist;          //!< local maxima histogram
-            uint8_t         hardThreshold; //!< hard threshold from histogram
-            uint8_t         softThreshold; //!< soft threshold from histogram
+            float           gmax;            //!< global max gradient
+            Pixmap<float>   g;               //!< evaluated gradient
+            Pixmap<Vertex>  G;               //!< normalised gradient
+            Pixmap<uint8_t> L;               //!< local maxima indicator
+            Pixmap<Point>   P;               //!< memory for edges building
+            Histogram       hist;            //!< local maxima histogram
+            uint8_t         strongThreshold; //!< strong threshold from histogram
+            uint8_t         feebleThreshold; //!< feeble threshold from histogram
 
             //! take gradient and direction to keep local maxima, and make an histogram of strength
             void   keepLocalMaxima( Tiles &tiles );
@@ -64,13 +70,14 @@ namespace upsylon {
             size_t applyThresholds( Tiles &tiles );
 
             //! build and merge edges
-            void build( const size_t np );
+            void build(size_t np);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);
-            void keepLocalMaxima( Tile  &tile  ) throw();
-            void applyThresholds( Tile &tile   ) throw();
-
+            void keepLocalMaxima( Tile &tile  ) throw();
+            void applyThresholds( Tile &tile  ) throw();
+            
         };
 
     }

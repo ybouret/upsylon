@@ -7,7 +7,7 @@ namespace upsylon {
 
         Edge:: Edge(const size_t edgeLabel) throw() :
         label(edgeLabel),
-        hard(false)
+        flag(Feeble)
         {
         }
 
@@ -28,8 +28,8 @@ namespace upsylon {
         L(W,H),
         P(W,H),
         hist(),
-        hardThreshold(0),
-        softThreshold(0)
+        strongThreshold(0),
+        feebleThreshold(0)
         {
         }
 
