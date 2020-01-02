@@ -6,26 +6,14 @@ namespace upsylon {
     namespace Graphic {
 
 
-        static inline
-        Edges::LocalMaxima & getLocalMaxima( const Tile &tile ) throw()
-        {
-            assert( tile.localMemory() >= Edges:: LocalBytesPerTile );
-            const size_t     *H   = & tile.as<size_t>(0);
-            return *(Edges::LocalMaxima *) &H[ Histogram::BINS ];
-        }
-
         void Edges:: keepLocalMaxima( Tile &tile ) throw()
         {
-            assert( tile.localMemory() >=  LocalBytesPerTile );
+            assert( tile.localMemory() >=  LocalHistogramBytes );
             const Point up = tile.upper;
             const Point lo = tile.lower;
             if(gmax>0.0f)
             {
                 size_t     *H   = & tile.as<size_t>(0);
-                LocalMaxima &lm = *(Edges::LocalMaxima *) &H[ Histogram::BINS ];
-                assert(0==lm.count);
-                assert(0==lm.points);
-                lm.points       = & P[lo];
                 const float g2l = 255.0f/gmax;
                 for(unit_t y=up.y;y>=lo.y;--y)
                 {
@@ -47,7 +35,6 @@ namespace upsylon {
                             const uint8_t u = max_of<uint8_t>( uint8_t( floorf( g0*g2l + 0.5f) ), 1);
                             Ly[x] = u;
                             ++H[u];
-                            lm.points[ lm.count++ ] = Point(x,y);
                         }
                         else
                         {
@@ -69,9 +56,9 @@ namespace upsylon {
             }
         }
 
-        size_t Edges:: keepLocalMaxima( Tiles      &tiles )
+        void Edges:: keepLocalMaxima( Tiles      &tiles )
         {
-            tiles.localAcquire( LocalBytesPerTile );
+            tiles.localAcquire( LocalHistogramBytes );
             tiles.localCleanUp();
             struct Task
             {
@@ -89,19 +76,7 @@ namespace upsylon {
             Task task = { this, &tiles };
             tiles.loop().run( Task::Run, &task);
             hist.epilog(tiles);
-
-            const size_t nt     = tiles.size();
-            size_t       length = getLocalMaxima(tiles[0]).count;
-            Point       *target = &P[0][0] + length;
-            for(size_t i=1;i<nt;++i)
-            {
-                const LocalMaxima &lm = getLocalMaxima(tiles[i]);
-                const size_t       np = lm.count;
-                memmove(target,lm.points,np*sizeof(Point));
-                target += np;
-                length += np;
-            }
-            return length;
+            
         }
 
     }

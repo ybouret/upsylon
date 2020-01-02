@@ -41,8 +41,7 @@ namespace upsylon {
 
             static const size_t  LocalHistogramBytes = Histogram::BINS * sizeof(size_t);
             static const size_t  LocalMaximaBytes    = sizeof(LocalMaxima);
-            static const size_t  LocalBytesPerTile   = LocalHistogramBytes + LocalMaximaBytes;
-            
+
             virtual ~Edges() throw();                        //!< cleanup
             explicit Edges( const size_t W, const size_t H); //!< setup
 
@@ -55,12 +54,17 @@ namespace upsylon {
             uint8_t         hardThreshold; //!< hard threshold from histogram
             uint8_t         softThreshold; //!< soft threshold from histogram
 
+            //! take gradient and direction to keep local maxima, and make an histogram of strength
+            void   keepLocalMaxima( Tiles &tiles );
 
-            size_t keepLocalMaxima( Tiles &tiles ); //!< gradient+direction    => localMaxima+histogram
-            void   applyThresholds( Tiles &tiles ); //!< histogram+localMaxima => update localMaxima to hard/soft
+            //! compute the Hard/Soft thresholds and binarize local maxima
+            /**
+             keep track of non-zero edges points, compacted in P
+             */
+            size_t applyThresholds( Tiles &tiles );
 
-
-
+            //! build and merge edges
+            void build( const size_t np );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);

@@ -12,6 +12,7 @@
 #include "y/graphic/ops/filter/prewitt.hpp"
 #include "y/graphic/ops/filter/sobel.hpp"
 #include "y/graphic/ops/filter/scharr.hpp"
+#include "y/graphic/color/named.hpp"
 
 #include "y/ios/ocstream.hpp"
 
@@ -27,6 +28,7 @@ namespace {
         const Ramp::Pointer    ramp = new HotToCold();
         ColorRamp<float>       proc(ramp);
         ColorRamp<uint8_t>     proc1(ramp);
+        IndexToRGBA            iProc(Y_RED_INDEX,5);
 
         Tiles tiles( *source, par );
 
@@ -47,8 +49,7 @@ namespace {
             IMG.save(saveName, *g, proc, 0);
         }
 
-        const size_t np = edges.keepLocalMaxima(tiles);
-        std::cerr << "\t#localMax=" << np << std::endl;
+        edges.keepLocalMaxima(tiles);
         {
             proc1.setRange(0, 1);
             const string saveName = "lmax-" + grads->X->key() + "-" + grads->Y->key() + ".png";
@@ -64,11 +65,17 @@ namespace {
             }
         }
 
-        edges.applyThresholds(tiles);
+        const size_t np = edges.applyThresholds(tiles);
+        std::cerr << " #edges=" << np << " / " << source->items << std::endl;
         {
             proc1.setRange(0, 1);
             const string saveName = "dual-" + grads->X->key() + "-" + grads->Y->key() + ".png";
             IMG.save(saveName, *edges.L, proc1, 0);
+        }
+
+        {
+            const string saveName = "indx-" + grads->X->key() + "-" + grads->Y->key() + ".png";
+            IMG.save(saveName, *edges, iProc, 0);
         }
 
     }
