@@ -11,21 +11,23 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! an edge is a list of points
         class Edge : public Object, public PList, public core::inode<Edge>
         {
         public:
+            //! Edge force
             enum Flag
             {
-                Strong,
-                Feeble
+                Strong, //!< a strong edge
+                Feeble  //!< a feeble edge
             };
 
-            typedef core::list_of_cpp<Edge> List;
-            const size_t label;
-            const Flag   flag;
+            typedef core::list_of_cpp<Edge> List; //!< alias
+            const size_t label; //!< edge label
+            const Flag   flag;  //!< edge flag, removed if remains feeble
 
-            explicit Edge(const size_t edgeLabel) throw();
-            virtual ~Edge() throw();
+            explicit Edge(const size_t edgeLabel) throw(); //!< setup as feeble
+            virtual ~Edge() throw();                       //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edge);
@@ -39,14 +41,15 @@ namespace upsylon {
             static const uint8_t FEEBLE = 128; //!< soft edge value
             static const uint8_t NoEDGE =   0; //!< no edge
 
+            //! pointer to local points
             struct LocalMaxima
             {
-                Point *points;
-                size_t count;
+                Point *points; //!< points from P
+                size_t count;  //!< local count
             };
 
-            static const size_t  LocalHistogramBytes = Histogram::BINS * sizeof(size_t);
-            static const size_t  LocalMaximaBytes    = sizeof(LocalMaxima);
+            static const size_t  LocalHistogramBytes = Histogram::BINS * sizeof(size_t); //!< alias
+            static const size_t  LocalMaximaBytes    = sizeof(LocalMaxima);              //!< alias
 
             virtual ~Edges() throw();                        //!< cleanup
             explicit Edges( const size_t W, const size_t H); //!< setup
@@ -69,7 +72,7 @@ namespace upsylon {
              */
             size_t applyThresholds( Tiles &tiles );
 
-            //! build and merge edges
+            //! build edges from recorded Strong/Feeble points, delete feeble edges
             void build(size_t np);
 
 

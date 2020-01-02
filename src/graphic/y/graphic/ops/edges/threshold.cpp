@@ -81,20 +81,11 @@ namespace upsylon {
             {
                 const LocalMaxima &lm = tiles[i].as<LocalMaxima>();
                 const size_t       np = lm.count;
-                memmove(target,lm.points,np*sizeof(Point));
+                memmove( (void*)target, (const void *)lm.points,np*sizeof(Point));
                 target += np;
                 length += np;
             }
 
-#if 0
-            Indices     &self = *this;      self->clear();
-            const Point *source = &P[0][0];
-            for(size_t i=0;i<length;++i)
-            {
-                self[source[i]] = L[source[i]];
-            }
-#endif
-            
             return length;
         }
 
