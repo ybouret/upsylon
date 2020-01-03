@@ -4,7 +4,6 @@
 #ifndef Y_GRAPHIC_OPS_BLOBS_INCLUDED
 #define Y_GRAPHIC_OPS_BLOBS_INCLUDED 1
 
-#include "y/graphic/pixmaps.hpp"
 #include "y/graphic/pixel.hpp"
 #include "y/graphic/linked.hpp"
 
@@ -170,19 +169,6 @@ namespace upsylon {
                 keepAbove(minSize);
             }
 
-            //! transfer blob location
-            template <typename T> inline
-            void transfer(Pixmap<T>       &target,
-                          const Pixmap<T> &source,
-                          const Blob      *blob) const throw()
-            {
-                assert(blob);
-                for(const PNode *node = blob->head; node; node=node->next )
-                {
-                    const Point p = **node;
-                    target[p] = source[p];
-                }
-            }
 
             //! transfer all blobs
             template <typename T> inline
@@ -191,7 +177,7 @@ namespace upsylon {
             {
                 for(const Blob *blob = this->head; blob; blob=blob->next )
                 {
-                    transfer(target,source,blob);
+                    Linked::Transfer(target,source,blob);
                 }
             }
 

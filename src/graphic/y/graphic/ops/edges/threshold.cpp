@@ -48,16 +48,27 @@ namespace upsylon {
 
         size_t Edges:: applyThresholds( Tiles &tiles )
         {
-
+            //------------------------------------------------------------------
+            //
             // local memory
+            //
+            //------------------------------------------------------------------
             tiles.localAcquire( LocalMaximaBytes );
 
+            //------------------------------------------------------------------
+            //
             // compute thresholds
+            //
+            //------------------------------------------------------------------
             feebleThreshold = (strongThreshold = hist.Otsu1D()) >> 1;
 
             std::cerr << "Threshold: " << int(strongThreshold) << ":" << int(feebleThreshold) << std::endl;
 
+            //------------------------------------------------------------------
+            //
             // run in parallel
+            //
+            //------------------------------------------------------------------
             struct Task
             {
                 Edges *self;
@@ -74,7 +85,11 @@ namespace upsylon {
             Task task = { this, &tiles };
             tiles.loop().run( Task::Run, &task);
 
-            assert(0==tiles[0].linearOffset);
+            //------------------------------------------------------------------
+            //
+            // compactification of points
+            //
+            //------------------------------------------------------------------
             const size_t nt     = tiles.size();
             size_t       length = tiles[0].as<LocalMaxima>().count;
             Point       *target = &P[0][0] + length;

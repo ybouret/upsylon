@@ -28,17 +28,19 @@ namespace upsylon {
                         const Point  prev = org-delta;
                         const Point  next = org+delta;
                         const float  g0   = gy[x];
-                        const float  gm   = g(prev);
-                        const float  gp   = g(next);
-                        if(gm<=g0 && gp<=g0 )
+                        uint8_t     &l    = Ly[x];
+                        l = 0;
+                        if(g0>0.0f)
                         {
-                            const uint8_t u = max_of<uint8_t>( uint8_t( floorf( g0*g2l + 0.5f) ), 1);
-                            Ly[x] = u;
-                            ++H[u];
-                        }
-                        else
-                        {
-                            Ly[x] = 0;
+                            const float  gm   = g(prev);
+                            const float  gp   = g(next);
+                            if( (gm<g0) && (gp<g0) )
+                            {
+                                const uint8_t u = uint8_t( floorf( g0*g2l + 0.5f) );
+                                Ly[x] = u;
+                                ++H[u];
+                                std::cerr << "local: " << g0 << "/" << gmax << "@" << x << "," << y << std::endl;
+                            }
                         }
                     }
                 }

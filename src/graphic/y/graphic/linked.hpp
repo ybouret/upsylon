@@ -16,6 +16,21 @@ namespace upsylon {
         typedef core::pool_of_cpp<PNode>       PPool;   //!< Point Pool
         typedef core::list_of_cpp<PNode>       PList;   //!< Point List
         typedef Pixmap<size_t>                 Indices; //!< pixmap of indices
+
+        struct Linked
+        {
+            template <typename T>
+            static inline
+            void Transfer( Pixmap<T> &target, const Pixmap<T> &source, const PList &L )
+            {
+                for(const PNode *node=L.head;node;node=node->next)
+                {
+                    const Point p = **node;
+                    target[p] = source[p];
+                }
+            }
+        };
+
     }
 
 }

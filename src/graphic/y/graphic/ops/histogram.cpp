@@ -69,7 +69,7 @@ namespace upsylon
         {
             const size_t total = count();
             float sum = 0;
-            for (int t=0 ; t<256 ; t++) sum += t * bin[t];
+            for (size_t t=0 ; t<256 ; ++t) sum += t * bin[t];
 
             float sumB = 0;
             int   wB = 0;
@@ -78,7 +78,7 @@ namespace upsylon
             float varMax    = 0;
             int   threshold = 0;
 
-            for (int t=0 ; t<256 ; t++) {
+            for (size_t t=0 ; t<256 ; ++t) {
                 wB += bin[t];               // Weight Background
                 if (wB == 0) continue;
 
@@ -91,10 +91,11 @@ namespace upsylon
                 float mF = (sum - sumB) / wF;    // Mean Foreground
 
                 // Calculate Between Class Variance
-                float varBetween = (float)wB * (float)wF * (mB - mF) * (mB - mF);
+                const float varBetween = float(wB) * float(wF) * (mB - mF) * (mB - mF);
 
                 // Check if new maximum found
-                if (varBetween > varMax) {
+                if (varBetween > varMax)
+                {
                     varMax = varBetween;
                     threshold = t;
                 }

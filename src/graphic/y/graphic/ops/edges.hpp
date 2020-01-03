@@ -73,14 +73,18 @@ namespace upsylon {
                 if(blur)
                 {
                     Pixmap<float> &temp = g;
-                    Ops::Run(tiles, temp, source, Convert::Get<float,T> );
+                    Ops::Convert(tiles, temp, source);
                     blur->apply(data,temp,tiles);
                 }
                 else
                 {
-                    Ops::Run(tiles, data, source, Convert::Get<float,T> );
+                    Ops::Convert(tiles,data,source);
                 }
             }
+
+            //! compute g and G from data
+            void   computeGradients(const Gradients::Pointer &gradients,
+                                    Tiles                    &tiles);
 
             //! take gradient and direction to keep local maxima, and make an histogram of strength
             void   keepLocalMaxima( Tiles &tiles );
@@ -100,8 +104,18 @@ namespace upsylon {
                              const Gradients::Pointer &gradients,
                              Tiles                    &tiles)
             {
-                load(source,blur);
+                load(source,blur,tiles);
                 processData(gradients,tiles);
+            }
+
+            template <typename T>
+            inline void transfer(Pixmap<T>       &target,
+                                 const Pixmap<T> &source) const
+            {
+                for( const Edge *edge=head;edge;edge=edge->next)
+                {
+                    Linked::Transfer(target, source, *edge);
+                }
             }
 
 

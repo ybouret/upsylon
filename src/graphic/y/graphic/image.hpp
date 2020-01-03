@@ -5,13 +5,11 @@
 #define Y_GRAPHIC_IMAGE_INCLUDED 1
 
 #include "y/graphic/pixmap.hpp"
+#include "y/graphic/image/pixtags.hpp"
 #include "y/graphic/color/rgba2data.hpp"
 #include "y/graphic/color/data2rgba.hpp"
 #include "y/string/convert.hpp"
 #include "y/associative/map.hpp"
-#include "y/associative/set.hpp"
-#include "y/memory/pooled.hpp"
-#include "y/ptr/intr.hpp"
 #include "y/ordered/sorted-vector.hpp"
 
 namespace upsylon {
@@ -168,6 +166,7 @@ namespace upsylon {
                 save(filename,*pxm,proc,params);
             }
 
+            PixTags tags;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Image);

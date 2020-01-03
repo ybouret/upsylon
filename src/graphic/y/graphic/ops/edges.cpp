@@ -34,19 +34,20 @@ namespace upsylon {
         {
         }
 
+
+        void   Edges:: computeGradients(const Gradients::Pointer &gradients,
+                                        Tiles                    &tiles)
+        {
+            gradients->run(g, G, data, tiles, gmax);
+        }
+
         void Edges:: processData(const Gradients::Pointer &gradients,
                                  Tiles                    &tiles)
         {
-            // once loaded into data: compute gradients
-            gradients->run(g, G, data, tiles, gmax);
 
-            // keep local maxima
+            computeGradients(gradients,tiles);
             keepLocalMaxima(tiles);
-
-            // apply threshold
             const size_t np = applyThresholds(tiles);
-
-            // build edges
             build(np);
         }
 
