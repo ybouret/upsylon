@@ -5,7 +5,7 @@
 
 #include "y/graphic/parallel/tiles.hpp"
 #include "y/graphic/pixmap.hpp"
-
+#include "y/graphic/convert.hpp"
 
 namespace upsylon {
 
@@ -83,7 +83,7 @@ namespace upsylon {
             typename SOURCE> static inline
             int Convert(Tiles &tiles, TARGET &target, const SOURCE &source )
             {
-
+                return Run(tiles,target,source, Convert::Get< typename TARGET::type, typename SOURCE::type> );
             }
         };
 

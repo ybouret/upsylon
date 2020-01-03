@@ -17,6 +17,21 @@
 using namespace upsylon;
 using namespace Graphic;
 
+namespace {
+
+    template <typename T>
+    static inline
+    void doEdges(Edges                    &edges,
+                 const Pixmap<T>          &pxm,
+                 Tiles                    &tiles,
+                 const Blur               *blur,
+                 const Gradients::Pointer &gradients)
+    {
+        edges.find(pxm, blur, gradients, tiles);
+    }
+
+}
+
 Y_UTEST(edges)
 {
     Image                 &IMG = Image::instance();
@@ -24,11 +39,15 @@ Y_UTEST(edges)
 
     if(argc>1)
     {
-        float radius = 2.0f;
+        auto_ptr<Blur> blur = 0;
+        float          radius = 2.0f;
         if(argc>2)
         {
             radius = string_convert::to<float>( argv[2], "radius" );
         }
+
+        if(radius>0) blur = new Blur(radius);
+
         const string        filename = argv[1];
         Pixmap<rgba>        pxm4( IMG.loadAs<rgba>(filename) );
         Tiles               tiles( *pxm4, par);
@@ -38,7 +57,15 @@ Y_UTEST(edges)
         Pixmap<float>       pxmF(w,h);
         Pixmap<uint8_t>     pxm1(w,h);
 
-        Ops::Run(tiles, pxm3, pxm4, Convert::Get<rgb,rgba>);
+        Ops::Convert(tiles, pxm3, pxm4);
+        Ops::Convert(tiles, pxmF, pxm4);
+        Ops::Convert(tiles, pxm1, pxm4);
+
+        Edges edges(w,h);
+
+        const Gradients::Pointer gradients = Scharr::Gradients5();
+
+        doEdges( edges, pxm1, tiles, blur.content(), gradients);
 
     }
     

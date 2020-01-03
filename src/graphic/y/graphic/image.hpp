@@ -18,7 +18,6 @@ namespace upsylon {
 
     namespace Graphic {
 
-
         //! Images and Formats management
         class Image : public singleton<Image>
         {

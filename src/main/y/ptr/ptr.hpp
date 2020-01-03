@@ -83,7 +83,13 @@ namespace upsylon
             assert(rhs.pointee);
             return (*lhs) < (*rhs);
         }
-        
+
+        //! get current content
+        inline type       *content() throw()       { return pointee; }
+
+        //! get current CONST content
+        inline const_type *content() const throw() { return pointee; }
+
         
     protected:
         pointee_type pointee; //!< internal pointer
