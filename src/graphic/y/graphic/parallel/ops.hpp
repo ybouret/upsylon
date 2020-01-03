@@ -64,19 +64,27 @@ namespace upsylon {
         struct Ops
         {
             //! prepare data and call the loop
-            template <typename TARGET,
+            template <
+            typename TARGET,
             typename SOURCE,
             typename PROC> static inline
             int Run(Tiles        &tiles,
-                     TARGET       &target,
-                     const SOURCE &source,
-                     PROC         &proc )
+                    TARGET       &target,
+                    const SOURCE &source,
+                    PROC         &proc )
             {
                 Kernel::Ops<TARGET,SOURCE,PROC> Task = { &tiles, &target, &source, &proc, 0 };
                 tiles.loop().run(Task.Run,&Task);
                 return Task.status;
             }
 
+            template <
+            typename TARGET,
+            typename SOURCE> static inline
+            int Convert(Tiles &tiles, TARGET &target, const SOURCE &source )
+            {
+
+            }
         };
 
 

@@ -28,6 +28,7 @@ ADD_TEST(Grads    test-graphic grads    ${IMG})
 ADD_TEST(Blobs    test-graphic blobs    ${IMG})
 ADD_TEST(3x3      test-graphic 3x3      ${IMG})
 ADD_TEST(Blur     test-graphic blur     ${IMG})
+ADD_TEST(Edges    test-graphic edges    ${IMG})
 
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

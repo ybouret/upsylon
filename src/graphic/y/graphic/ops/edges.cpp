@@ -23,6 +23,7 @@ namespace upsylon {
         Edges:: Edges( const size_t W, const size_t H) :
         Pixmap<size_t>(W,H),
         gmax(0),
+        data(W,H),
         g(W,H),
         G(W,H),
         L(W,H),
@@ -33,7 +34,11 @@ namespace upsylon {
         {
         }
 
-
+        void Edges:: processData(const Gradients::Pointer &gradients,
+                                 Tiles                    &tiles)
+        {
+            gradients->run(g, G, data, tiles, gmax);
+        }
 
     }
 }

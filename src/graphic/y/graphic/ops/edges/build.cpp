@@ -15,6 +15,12 @@ namespace upsylon {
 
         void Edges:: build(size_t np)
         {
+            //------------------------------------------------------------------
+            //
+            // initialize
+            //
+            //------------------------------------------------------------------
+
             Indices               &target = *this; target->clear();
             Edge::List            &edges  = *this; edges.release();
             const Pixmap<uint8_t> &source = L;
@@ -25,20 +31,28 @@ namespace upsylon {
             size_t       label  = 0;
             PPool        stack;
 
+            //------------------------------------------------------------------
+            //
+            // loop on registered points
+            //
+            //------------------------------------------------------------------
             while( np-- > 0 )
             {
                 const Point center = *(points++);
                 assert(source[center]==STRONG || source[center]==FEEBLE);
-                size_t &indx = target[center];
-                if(indx<=0)
+                if(target[center]<=0)
                 {
+                    //----------------------------------------------------------
                     // start a new edge!
+                    //----------------------------------------------------------
                     ++label;
                     Edge *edge = edges.push_back( new Edge(label) );
 
+                    //----------------------------------------------------------
                     // explore
+                    //----------------------------------------------------------
                     stack.store( new PNode( center ) );
-                    while( stack.size )
+                    while( stack.size>0 )
                     {
                         const Point current = **stack.top; assert( source[current]==STRONG || source[current]==FEEBLE );
                         size_t     &visited = target[current];
@@ -67,6 +81,7 @@ namespace upsylon {
                                    && (source[probe] >  0)    // marked as localMaxima
                                    )
                                 {
+                                    // shall be included
                                     stack.store( new PNode(probe) );
                                 }
                             }
@@ -82,13 +97,21 @@ namespace upsylon {
                         }
                     }
                     assert(stack.size<=0);
+
                     if( Edge::Feeble == edge->flag )
                     {
+                        for(const PNode *node = edge->head; node; node=node->next)
+                        {
+                            target[ **node ] = 0;
+                        }
                         delete edges.pop_back();
                     }
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    // already got an edge
+                    //----------------------------------------------------------
                     continue;
                 }
             }

@@ -39,7 +39,7 @@ namespace upsylon {
 
             const Cores  cores = Tiling::ComputeCoresFor(area,count);
             const size_t ncpus = cores.prod();
-
+            size_t       linearOffset = 0;
             for(size_t ry=0;ry<cores.y;++ry)
             {
                 unit_t height = area.h;
@@ -56,9 +56,12 @@ namespace upsylon {
                     Point upper(i+width,j+height);
                     upper.dec();
                     this->build<const Point&,const Point&>(lower,upper);
+                    Tile &tile = this->back();
+                    aliasing::_( tile.linearOffset ) = linearOffset;
+                    linearOffset += tile.items;
                 }
-
             }
+            assert( full.items == linearOffset );
 
             {
                 const Point lo( 0, 0);

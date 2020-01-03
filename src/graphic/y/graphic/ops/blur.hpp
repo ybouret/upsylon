@@ -5,49 +5,55 @@
 #define Y_GRAPHIC_BLUR_INCLUDED 1
 
 #include "y/graphic/pixmap.hpp"
-#include "y/graphic/parallel/tiles.hpp"
 #include "y/graphic/convert.hpp"
+#include "y/graphic/parallel/tiles.hpp"
 
 namespace upsylon {
 
     namespace Graphic  {
 
+        //! base class for Blur_
         class Blur_
         {
         public:
+            //! compute size for a given parameter
             static size_t getSizeFor( const float sigma ) throw();
 
-            virtual ~Blur_() throw();
+            virtual ~Blur_() throw(); //!< cleanup
 
-            const float  sigma;
-            const float  sig2;
-            const float  scale;
-            const size_t delta;
-            const unit_t upperRange;
-            const unit_t lowerRange;
+            const float  sigma;      //!< blur parameter
+            const float  sig2;       //!< sigma*sigma
+            const float  scale;      //!< 1.0f/(2*sigma2)
+            const size_t delta;      //!< size
+            const unit_t upperRange; //!< delta-1
+            const unit_t lowerRange; //!< -upperRange
 
         protected:
+            //! compute all parameters
             explicit Blur_( const float sig );
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Blur_);
         };
 
+        //! holding blur components
         typedef Pixmap<float> BlurMap;
 
+        //! apply blur to a pixmap
         class Blur : public Blur_, public BlurMap
         {
         public:
-            explicit Blur(const float sig);
-            virtual ~Blur() throw();
 
+            explicit Blur(const float sig); //!< setup
+            virtual ~Blur() throw();        //!< cleanup
 
+            //! apply blur in parallel
             template <typename TYPE,
             typename           T,
             const size_t       DIM>
-            inline void apply(Pixmap<TYPE>        &target,
-                              const Pixmap<TYPE>  &source,
-                              Tiles               &tiles)
+            inline void apply_(Pixmap<TYPE>        &target,
+                               const Pixmap<TYPE>  &source,
+                               Tiles               &tiles) const
             {
                 struct Task
                 {
@@ -69,6 +75,8 @@ namespace upsylon {
                 tiles.loop().run( Task::Run, &task );
             }
 
+            template <typename T>
+            void apply( Pixmap<T> &, const Pixmap<T> &, Tiles &) const;
 
 
         private:
@@ -94,9 +102,8 @@ namespace upsylon {
                         memset(sum,0,sizeof(sum));
                         for(unit_t dy=dhi;dy>=dlo;--dy)
                         {
-                            const unit_t            yy = y + dy;
-                            const BlurMap::RowType &By  = (*this)[ abs_of(dy) ];
-                            const typename Pixmap<TYPE>::RowType &Sy = source(yy);
+                            const BlurMap::RowType               &By  = (*this)[ abs_of(dy) ];
+                            const typename Pixmap<TYPE>::RowType &Sy = source(y+dy);
                             for(unit_t dx=dhi;dx>=dlo;--dx)
                             {
                                 const TYPE  &src    = Sy(x+dx);
@@ -109,8 +116,7 @@ namespace upsylon {
                             }
                         }
 
-                        TYPE &tgt = target_y[x];
-                        T    *t   = (T *)&tgt;
+                        T    *t   = (T *)&target_y[x];;
                         for(size_t dim=0;dim<DIM;++dim)
                         {
                             t[dim] = Convert::Get<T,float>( sum[dim] );

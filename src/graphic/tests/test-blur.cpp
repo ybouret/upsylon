@@ -37,19 +37,41 @@ Y_UTEST(blur)
 
     if(argc>1)
     {
+        float radius = 2.0f;
+        if(argc>2)
+        {
+            radius = string_convert::to<float>( argv[2], "radius" );
+        }
         const string        filename = argv[1];
+        const Pixmap1       pxm1( IMG.loadAs<uint8_t>(filename) );
         const Pixmap4       pxm4( IMG.loadAs<rgba>(filename) );
         const PixmapF       pxmf( IMG.loadAs<float>(filename) );
-
         Tiles tiles( *pxmf, par );
-        Blur  blur( 2.2f );
+
+        Blur  blur( radius );
 
         {
             PixmapF tgt(pxmf->w,pxmf->h);
-            blur.apply<float,float,1>(tgt,pxmf,tiles);
+            blur.apply(tgt,pxmf,tiles);
             IMG.saveAs("origf.png",pxmf,NULL);
             IMG.saveAs("blurf.png",tgt, NULL);
         }
+
+        {
+            Pixmap1 tgt(pxm1->w,pxm1->h);
+            blur.apply(tgt,pxm1,tiles);
+            IMG.saveAs("orig1.png",pxm1,NULL);
+            IMG.saveAs("blur1.png",tgt, NULL);
+        }
+
+
+        {
+            Pixmap4 tgt(pxm4->w,pxm4->h);
+            blur.apply(tgt,pxm4,tiles);
+            IMG.saveAs("orig4.png",pxm4,NULL);
+            IMG.saveAs("blur4.png",tgt, NULL);
+        }
+
 
 
     }

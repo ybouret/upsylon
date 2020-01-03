@@ -17,9 +17,10 @@ namespace upsylon {
         {
         public:
 
-            const Point lower; //!< lower index
-            const Point upper; //!< upper index
-
+            const Point  lower;        //!< lower index
+            const Point  upper;        //!< upper index
+            const size_t linearOffset; //!< how many items so far
+            
             //! setup with possible zero Area
             explicit  Tile(const Point &lo, const Point &up);
 

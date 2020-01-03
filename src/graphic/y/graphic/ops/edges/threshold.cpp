@@ -9,13 +9,13 @@ namespace upsylon {
         {
             assert( tile.localMemory() >= LocalMaximaBytes );
 
-            const Point   up     = tile.upper;
-            const Point   lo     = tile.lower;
-            const uint8_t strong = strongThreshold;
-            const uint8_t feeble = feebleThreshold;
-            LocalMaxima   &lm    = tile.as<LocalMaxima>();
+            const Point    up     = tile.upper;
+            const Point    lo     = tile.lower;
+            const uint8_t  strong = strongThreshold;
+            const uint8_t  feeble = feebleThreshold;
+            LocalMaxima   &lm     = tile.as<LocalMaxima>();
             lm.count  = 0;
-            lm.points = &P[lo];
+            lm.points = &P[0][0] + tile.linearOffset;
             for(unit_t y=up.y;y>=lo.y;--y)
             {
                 Pixmap<uint8_t>::RowType      &Ly = L[y];
@@ -74,6 +74,7 @@ namespace upsylon {
             Task task = { this, &tiles };
             tiles.loop().run( Task::Run, &task);
 
+            assert(0==tiles[0].linearOffset);
             const size_t nt     = tiles.size();
             size_t       length = tiles[0].as<LocalMaxima>().count;
             Point       *target = &P[0][0] + length;

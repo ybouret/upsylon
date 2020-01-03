@@ -89,3 +89,47 @@ namespace upsylon {
 
 }
 
+namespace upsylon {
+
+    namespace Graphic  {
+
+        template <>
+        void Blur:: apply<float>(Pixmap<float>       &target,
+                                 const Pixmap<float> &source,
+                                 Tiles               &tiles) const
+        {
+            apply_<float,float,1>(target,source,tiles);
+        }
+
+        template <>
+        void Blur:: apply<uint8_t>(Pixmap<uint8_t>       &target,
+                                   const Pixmap<uint8_t> &source,
+                                   Tiles               &tiles) const
+        {
+            apply_<uint8_t,uint8_t,1>(target,source,tiles);
+        }
+
+
+        template <>
+        void Blur:: apply<rgb>(Pixmap<rgb>       &target,
+                               const Pixmap<rgb> &source,
+                               Tiles             &tiles) const
+        {
+            apply_<rgb,uint8_t,3>(target,source,tiles);
+        }
+
+        template <>
+        void Blur:: apply<rgba>(Pixmap<rgba>       &target,
+                                const Pixmap<rgba> &source,
+                                Tiles             &tiles) const
+        {
+            apply_<rgba,uint8_t,3>(target,source,tiles);
+        }
+
+        
+
+    }
+
+}
+
+

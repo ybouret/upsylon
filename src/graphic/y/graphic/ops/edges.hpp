@@ -4,8 +4,10 @@
 #define Y_GRAPHIC_OPS_EDGES_INCLUDED 1
 
 #include "y/graphic/ops/filter/gradients.hpp"
+#include "y/graphic/ops/blur.hpp"
 #include "y/graphic/ops/histogram.hpp"
 #include "y/graphic/linked.hpp"
+#include "y/graphic/parallel/ops.hpp"
 
 namespace upsylon {
 
@@ -55,6 +57,7 @@ namespace upsylon {
             explicit Edges( const size_t W, const size_t H); //!< setup
 
             float           gmax;            //!< global max gradient
+            Pixmap<float>   data;            //!< some intensity data
             Pixmap<float>   g;               //!< evaluated gradient
             Pixmap<Vertex>  G;               //!< normalised gradient
             Pixmap<uint8_t> L;               //!< local maxima indicator
@@ -62,6 +65,22 @@ namespace upsylon {
             Histogram       hist;            //!< local maxima histogram
             uint8_t         strongThreshold; //!< strong threshold from histogram
             uint8_t         feebleThreshold; //!< feeble threshold from histogram
+
+            //! load data from source
+            template <typename T>
+            inline void load( const Pixmap<T> &source, const Blur *blur, Tiles &tiles)
+            {
+                if(blur)
+                {
+                    Pixmap<float> &temp = g;
+                    Ops::Run(tiles, temp, source, Convert::Get<float,T> );
+                    blur->apply(data,temp,tiles);
+                }
+                else
+                {
+                    Ops::Run(tiles, data, source, Convert::Get<float,T> );
+                }
+            }
 
             //! take gradient and direction to keep local maxima, and make an histogram of strength
             void   keepLocalMaxima( Tiles &tiles );
@@ -75,12 +94,24 @@ namespace upsylon {
             //! build edges from recorded Strong/Feeble points, delete feeble edges
             void build(size_t np);
 
+            template <typename T>
+            inline void find(const Pixmap<T>          &source,
+                             const Blur               *blur,
+                             const Gradients::Pointer &gradients,
+                             Tiles                    &tiles)
+            {
+                load(source,blur);
+                processData(gradients,tiles);
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Edges);
             void keepLocalMaxima( Tile &tile  ) throw();
             void applyThresholds( Tile &tile  ) throw();
-            
+            void processData(const Gradients::Pointer &gradients,
+                             Tiles                    &tiles);
         };
 
     }

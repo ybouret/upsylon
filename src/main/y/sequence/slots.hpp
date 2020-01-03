@@ -22,7 +22,8 @@ namespace upsylon {
         size_(0),
         count(n),
         bytes(n*sizeof(T)),
-        addr( static_cast<mutable_type *>(ALLOCATOR::instance().acquire(bytes)) )
+        addr( static_cast<mutable_type *>(ALLOCATOR::instance().acquire(bytes)) ),
+        shft(addr-1)
         {
         }
 
@@ -39,7 +40,8 @@ namespace upsylon {
         size_(0),
         count(other.count),
         bytes(count*sizeof(T)),
-        addr( static_cast<mutable_type *>(ALLOCATOR::instance().acquire(bytes)) )
+        addr( static_cast<mutable_type *>(ALLOCATOR::instance().acquire(bytes)) ),
+        shft(addr-1)
         {
             try
             {
@@ -73,6 +75,13 @@ namespace upsylon {
             assert(this->has_space()); new (addr+size_) T(args); ++size_;
 
         }
+
+        inline type       & back() throw()       { assert(size_>0); return shft[size_]; }
+        inline const_type & back() const throw() { assert(size_>0); return shft[size_]; }
+
+        inline type       & front() throw()       { assert(size_>0); return addr[0]; }
+        inline const_type & front() const throw() { assert(size_>0); return addr[0]; }
+
 
         //! build emtpy object
         inline void build(void) { assert(this->has_space()); new (addr+size_) T(); ++size_; }
@@ -143,6 +152,7 @@ namespace upsylon {
     private:
         size_t        bytes;
         mutable_type *addr;
+        mutable_type *shft;
         inline void release() throw()
         {
             while(size_>0)
@@ -151,6 +161,8 @@ namespace upsylon {
             }
             void *entry = addr;
             ALLOCATOR::location().release(entry,bytes);
+            addr = 0;
+            shft = 0;
         }
     };
 }

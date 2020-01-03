@@ -32,6 +32,7 @@ namespace upsylon {
         Area( checkW(lo,up), checkH(lo,up) ),
         lower(lo),
         upper(up),
+        linearOffset(0),
         data(0),
         size(0)
         {
