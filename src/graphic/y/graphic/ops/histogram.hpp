@@ -47,8 +47,7 @@ namespace upsylon {
             //! Otsu 1D thresholding
             uint8_t Otsu1D() const throw();
 
-            //! total count
-            size_t count() const throw();
+            
 
             //! reserve and clean memory
             void prolog( Tiles &tiles );
