@@ -75,6 +75,7 @@ namespace upsylon {
                 tiles.loop().run( Task::Run, &task );
             }
 
+            //! dispatch blur calls
             template <typename T>
             void apply( Pixmap<T> &, const Pixmap<T> &, Tiles &) const;
 

@@ -31,11 +31,11 @@ namespace upsylon
 
                 //! destructor
                 inline virtual ~Samples() throw() {}
+
                 //! initialize
                 inline explicit Samples(const size_t nvar_max=0,const size_t size_max=0) : SampleType<T>(nvar_max), SelfType(size_max,as_capacity) {}
 
-
-
+                //! gather D2 weigthed values
                 virtual T computeD2(typename Type<T>::Sequential &F,
                                     const Array                  &aorg)
                 {

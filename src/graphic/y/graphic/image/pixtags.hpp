@@ -15,32 +15,34 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! tag for a type of pixel (float,rgb,....)
         class PixTag_ : public Object
         {
         public:
-            typedef hashing::type_info_hasher<> Hasher;
-            virtual ~PixTag_() throw();
+            typedef hashing::type_info_hasher<> Hasher; //!< special hasher
 
-            explicit PixTag_( const std::type_info &tid_, const char *tag_);
 
-            const std::type_info &tid;
-            const string          tag;
+            const std::type_info &tid; //!< global type id
+            const string          tag; //!< short tag
 
-            const std::type_info & key() const throw();
-
+            const std::type_info & key() const throw(); //!< for pointer
+            virtual ~PixTag_() throw(); //!< cleanup
+            explicit PixTag_(const std::type_info &, const char *); //!< setup
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixTag_);
         };
 
-        typedef intr_ptr<std::type_info,PixTag_>           PixTag;
-        typedef set<std::type_info,PixTag,PixTag_::Hasher> PixTags_;
+        typedef intr_ptr<std::type_info,PixTag_>           PixTag;   //!< alias
+        typedef set<std::type_info,PixTag,PixTag_::Hasher> PixTags_; //!< alias
 
+        //! datbase of pixtags
         class PixTags : public PixTags_
         {
         public:
-            virtual ~PixTags() throw();
-            explicit PixTags();
+            virtual ~PixTags() throw(); //!< cleanup
+            explicit PixTags();         //!< acquire memory
 
+            //! create and insert a new type
             template <typename T> inline
             void create( const char *tag )
             {
@@ -48,6 +50,7 @@ namespace upsylon {
                 create(p);
             }
 
+            //! query tag for a type
             template <typename T> inline
             const string &of() const
             {

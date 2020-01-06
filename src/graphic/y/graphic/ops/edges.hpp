@@ -98,6 +98,7 @@ namespace upsylon {
             //! build edges from recorded Strong/Feeble points, delete feeble edges
             void build(size_t np);
 
+            //! integrated procedure
             template <typename T>
             inline void find(const Pixmap<T>          &source,
                              const Blur               *blur,
@@ -108,6 +109,7 @@ namespace upsylon {
                 processData(gradients,tiles);
             }
 
+            //! transfert only edges components
             template <typename T>
             inline void transfer(Pixmap<T>       &target,
                                  const Pixmap<T> &source) const

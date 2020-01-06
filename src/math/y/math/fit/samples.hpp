@@ -171,6 +171,7 @@ namespace upsylon {
                     return ans;
                 }
 
+                //! add extraneous information to output
                 virtual void extraneous( ios::ostream &fp, const char comment ) const
                 {
                     correlation<T>   corr;

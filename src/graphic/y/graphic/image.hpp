@@ -166,7 +166,6 @@ namespace upsylon {
                 save(filename,*pxm,proc,params);
             }
 
-            PixTags tags;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Image);
@@ -181,6 +180,8 @@ namespace upsylon {
             friend class singleton<Image>;
             void compile();
 
+        public:
+            PixTags tags; //!< pixel tags for I/O
         };
 
 

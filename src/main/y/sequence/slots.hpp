@@ -76,10 +76,16 @@ namespace upsylon {
 
         }
 
+        //! last value
         inline type       & back() throw()       { assert(size_>0); return shft[size_]; }
+
+        //! const last value
         inline const_type & back() const throw() { assert(size_>0); return shft[size_]; }
 
+        //! first value
         inline type       & front() throw()       { assert(size_>0); return addr[0]; }
+
+        //! const first value
         inline const_type & front() const throw() { assert(size_>0); return addr[0]; }
 
 

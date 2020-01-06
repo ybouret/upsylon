@@ -81,7 +81,7 @@ namespace upsylon {
 
     namespace Graphic {
 
-        Image:: Image() : formats(4,as_capacity), db(8,as_capacity)
+        Image:: Image() : formats(4,as_capacity), db(8,as_capacity), tags()
         {
             use( new PNG_Format()  );
             use( new JPEG_Format() );

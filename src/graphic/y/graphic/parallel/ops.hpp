@@ -78,6 +78,7 @@ namespace upsylon {
                 return Task.status;
             }
 
+            //! call Run with built-in conversion
             template <
             typename TARGET,
             typename SOURCE> static inline

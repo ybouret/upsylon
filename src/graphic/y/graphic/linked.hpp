@@ -17,8 +17,10 @@ namespace upsylon {
         typedef core::list_of_cpp<PNode>       PList;   //!< Point List
         typedef Pixmap<size_t>                 Indices; //!< pixmap of indices
 
+        //! operations on linked structures
         struct Linked
         {
+            //! transfert a set of coordinates
             template <typename T>
             static inline
             void Transfer( Pixmap<T> &target, const Pixmap<T> &source, const PList &L )
