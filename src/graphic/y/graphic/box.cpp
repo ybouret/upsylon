@@ -9,6 +9,8 @@ namespace upsylon {
 
         Box:: ~Box() throw()
         {
+            zforce(lower);
+            zforce(upper);
         }
 
         static inline unit_t chkdif( unit_t &lo, unit_t &hi) throw()

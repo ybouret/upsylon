@@ -3,7 +3,7 @@
 #ifndef Y_ZERO_FLUX_INDEX_INCLUDED
 #define Y_ZERO_FLUX_INDEX_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/type/bzset.hpp"
 
 namespace upsylon {
 
@@ -33,7 +33,10 @@ namespace upsylon {
             //! cleanup
             inline virtual ~zero_flux_index() throw()
             {
-
+                zforce(range);
+                zforce(idmin);
+                zforce(idmax);
+                zforce(delta);
             }
 
             //! recursive index call

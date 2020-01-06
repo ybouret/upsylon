@@ -18,6 +18,9 @@ namespace upsylon {
         
         Edges:: ~Edges() throw()
         {
+            zforce(gmax);
+            zforce(strongThreshold);
+            zforce(feebleThreshold);
         }
 
         Edges:: Edges( const size_t W, const size_t H) :

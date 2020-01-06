@@ -9,8 +9,10 @@ namespace upsylon {
     namespace Graphic {
 
         Blob:: Blob( const size_t blobLabel ) throw() : label(blobLabel) {}
+        
         Blob:: ~Blob() throw()
         {
+            zforce(label);
         }
         
 

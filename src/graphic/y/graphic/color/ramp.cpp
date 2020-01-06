@@ -44,6 +44,8 @@ namespace upsylon {
         {
             ColorRamp_:: ~ColorRamp_() throw()
             {
+                zforce(vmin);
+                zforce(vmax);
             }
             
             ColorRamp_:: ColorRamp_(const Ramp::Pointer &_ramp,

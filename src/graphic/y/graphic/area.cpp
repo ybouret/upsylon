@@ -10,7 +10,9 @@ namespace upsylon {
 
         Area:: ~Area() throw()
         {
-
+            zforce(w);
+            zforce(h);
+            zforce(items);
         }
 
         Area:: Area( const size_t W, const size_t H) :

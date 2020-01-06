@@ -27,6 +27,12 @@ namespace upsylon {
 
         Blur_:: ~Blur_() throw()
         {
+            zforce(sigma);
+            zforce(sig2);
+            zforce(scale);
+            zforce(delta);
+            zforce(upperRange);
+            zforce(lowerRange);
         }
 
 
