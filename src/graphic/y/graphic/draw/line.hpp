@@ -13,6 +13,7 @@ namespace  upsylon {
 
         namespace Draw {
 
+            //! draw an unsage Horizontal Line
             template <typename T, typename PUTPIXEL> inline
             void __HLine(Pixmap<T>   &pxm,
                          const unit_t x0,
@@ -27,6 +28,7 @@ namespace  upsylon {
                 }
             }
 
+            //! apply putpixel on a clipped horizontal line
             template <typename T, typename PUTPIXEL> inline
             void _HLine(Pixmap<T>   &pxm,
                         unit_t       x0,
@@ -43,6 +45,8 @@ namespace  upsylon {
                 }
             }
 
+
+            //! set solid color on horizontal line
             template <typename T>
             void HLine(Pixmap<T>   &pxm,
                        unit_t       x0,
@@ -54,6 +58,7 @@ namespace  upsylon {
                 _HLine(pxm, x0, y0, x1,cb);
             }
 
+            //! set transparent color on horizontal line
             template <typename T>
             void HLine(Pixmap<T>   &pxm,
                        unit_t       x0,
@@ -71,6 +76,7 @@ namespace  upsylon {
 
         namespace Draw {
 
+            //! unsafe vertical line
             template <typename T, typename PUTPIXEL> inline
             void __VLine(Pixmap<T>   &pxm,
                          const unit_t x0,
@@ -84,6 +90,7 @@ namespace  upsylon {
                 }
             }
 
+            //! apply putpixel on a clipped vertical line
             template <typename T, typename PUTPIXEL> inline
             void _VLine(Pixmap<T>   &pxm,
                         unit_t       x0,
@@ -100,6 +107,7 @@ namespace  upsylon {
                 }
             }
 
+            //! apply a solid color on a vertical line
             template <typename T>
             void VLine(Pixmap<T>   &pxm,
                        unit_t       x0,
@@ -111,7 +119,7 @@ namespace  upsylon {
                 _VLine(pxm, x0, y0, y1,cb);
             }
 
-
+            //! apply a transparent color on a vertical line
             template <typename T>
             void VLine(Pixmap<T>   &pxm,
                        unit_t       x0,
@@ -131,13 +139,13 @@ namespace  upsylon {
 
 
             //! draw a line on an image
-            template <typename T, typename PROC>
+            template <typename T, typename PUTPIXEL>
             inline void __Line(Pixmap<T>    &img,
                                unit_t        x0,
                                unit_t        y0,
                                unit_t        x1,
                                unit_t        y1,
-                               PROC         &proc)
+                               PUTPIXEL     &putPixel)
             {
                 unit_t dx =  abs_of(x1-x0), sx = (x0<x1) ? 1 : -1;
                 unit_t dy = -abs_of(y1-y0), sy = (y0<y1) ? 1 : -1;
@@ -146,8 +154,7 @@ namespace  upsylon {
                 assert(img->contains(x1,y1));
                 for (;;){
                     /* loop */
-                    //const Point p(x0,y0);
-                    proc(img[y0][x0]);
+                    putPixel(img[y0][x0]);
                     e2 = 2*err;
                     if (e2 >= dy) {                                         /* e_xy+e_x > 0 */
                         if (x0 == x1) break;
@@ -197,7 +204,7 @@ namespace  upsylon {
                              unit_t        x1,
                              unit_t        y1,
                              typename Pixmap<T>::param_type color,
-                             const uint8_t alpha)
+                             const uint8_t                  alpha)
             {
                 PutPixel::Blend<T> proc(color,alpha);
                 _Line(img,x0,y0,x1,y1,proc);

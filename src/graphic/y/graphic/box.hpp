@@ -44,6 +44,7 @@ namespace upsylon {
 
     }
 
+    //! declare local helpers
 #define Y_GRAPHIC_BOX_LIMITS(A)     \
 const unit_t xmin = (A).lower.x; \
 const unit_t xmax = (A).upper.x; \

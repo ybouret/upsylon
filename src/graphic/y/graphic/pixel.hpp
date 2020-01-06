@@ -128,10 +128,12 @@ namespace upsylon {
                 return ans;
             }
 
+            //! generic one channel blend
             template <typename T> static
             T Blend(const T &fg, const unsigned wf,
                     const T &bg, const unsigned wb ) throw();
 
+            //! generic multiple channels blend
             template <typename TYPE, typename T, const size_t DIM> static inline
             TYPE BlendType( const TYPE &FG, const TYPE &BG, const uint8_t alpha) throw()
             {
@@ -148,6 +150,8 @@ namespace upsylon {
                 return ans;
             }
 
+
+            //! generic color blending
             template <typename T> static
             T Blend( const T &fg, const T &bg, const uint8_t alpha ) throw();
 

@@ -11,16 +11,23 @@ namespace  upsylon {
 
         namespace Draw {
 
+            //! put pixel wrappers
             struct PutPixel
             {
+                //! will copy content
                 template <typename T>
                 class Copy
                 {
                 public:
-                    const T color;
-                    inline  Copy( const T &value ) : color(value) {}
-                    inline ~Copy() throw() {}
+                    const T color; //!< the new foreground color
 
+                    //! setup
+                    inline  Copy( const T &value ) : color(value) {}
+
+                    //!cleanup
+                    inline ~Copy() throw() {} //!< cleanup
+
+                    //! call: set target to color
                     inline void operator()( T &target ) const
                     {
                         target = color;
@@ -30,16 +37,21 @@ namespace  upsylon {
                     Y_DISABLE_COPY_AND_ASSIGN(Copy);
                 };
 
+                //! will blend color with background
                 template <typename T>
                 class Blend
                 {
                 public:
-                    const T       color;
-                    const uint8_t alpha;
+                    const T       color; //!< the foreground color
+                    const uint8_t alpha; //!< the alpha value
 
+                    //! setup
                     inline  Blend( const T &value, const uint8_t a ) : color(value), alpha(a) {}
+
+                    //! cleanup
                     inline ~Blend() throw() {}
 
+                    //! call: blend color with background target
                     inline void operator()( T &target ) const
                     {
                         target = Pixel::Blend<T>( color, target, alpha );
