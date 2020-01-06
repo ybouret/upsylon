@@ -60,9 +60,56 @@ namespace upsylon
 
             uint8_t Histogram:: Otsu1D() const throw()
             {
-                
-                return 128;
+
+                size_t  total = 0;
+                size_t  sum   = 0;
+                for(unsigned t=0 ; t<256 ; t++)
+                {
+                    const size_t n = bin[t];
+                    sum   += t * n;
+                    total += n;
+                }
+
+                size_t  sumB = 0;
+                size_t  wB   = 0;
+
+                double   varMax    = 0;
+                unsigned threshold = 0;
+
+                for (unsigned t=0 ; t<256 ; t++) {
+                    const size_t n = bin[t];
+                    wB += n;// Weight Background
+
+                    if (wB == 0)
+                    {
+                        threshold = t;
+                        continue;
+                    }
+
+                    const size_t wF = total - wB;                 // Weight Foreground
+                    if (wF == 0)
+                    {
+                        break;
+                    }
+
+                    sumB += (float) (t * n);
+
+                    const double mB = double(sumB) / wB;          // Mean Background
+                    const double mF = double(sum - sumB) / wF;    // Mean Foreground
+
+                    // Calculate Between Class Variance
+                    const double varBetween = double(wB) * double(wF) * square_of(mB - mF);
+
+                    // Check if new maximum found
+                    if (varBetween >= varMax)
+                    {
+                        varMax    = varBetween;
+                        threshold = t;
+                    }
+                }
+                return threshold;
             }
+
 
 
             void Histogram:: prolog( Tiles &tiles )

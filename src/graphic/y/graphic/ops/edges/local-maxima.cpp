@@ -39,7 +39,7 @@ namespace upsylon {
                                 const uint8_t u = uint8_t( floorf( g0*g2l + 0.5f) );
                                 Ly[x] = u;
                                 ++H[u];
-                                std::cerr << "local: " << g0 << "/" << gmax << "@" << x << "," << y << std::endl;
+                                //std::cerr << "local: " << g0 << "/" << gmax << "@" << x << "," << y << std::endl;
                             }
                         }
                     }
