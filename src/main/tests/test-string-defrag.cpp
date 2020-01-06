@@ -58,7 +58,7 @@ namespace
 
             const string & key() const throw() { return name; }
 
-            kDummy(const string &id ) : name(id)
+            kDummy(const string &id ) : counted_object(), name(id)
             {
             }
 
@@ -66,7 +66,7 @@ namespace
             {
             }
 
-            kDummy(const kDummy &_) : name(_.name) {}
+            kDummy(const kDummy &_) : counted_object(), name(_.name) {}
 
             Y_DISABLE_ASSIGN(kDummy);
 
