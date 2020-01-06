@@ -22,6 +22,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(3x3);
     Y_UTEST(blur);
     Y_UTEST(edges);
+    Y_UTEST(channels);
     Y_UTEST(draw);
 }
 Y_UTEST_EXEC()

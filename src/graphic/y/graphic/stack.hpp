@@ -19,9 +19,9 @@ namespace upsylon {
             typedef slots< Pixmap<T> > Slots; //!< alias
 
             //! setup
-            inline explicit Stack(const size_t n,
-                                  const size_t W,
-                                  const size_t H) :
+            inline explicit Stack(const size_t W,
+                                  const size_t H,
+                                  const size_t n) :
             Area(W,H),
             Slots(n)
             {

@@ -16,9 +16,7 @@ namespace upsylon {
             Surface( Bitmap *bmp ) throw();            //!< take care of a new bitmap
             virtual ~Surface() throw();                //!< clean up
             Surface( const Surface &surface ) throw(); //!< shared copy
-
-            //! test areas compatibility
-            bool sameSurfaceThan( const Surface &surf ) const throw();
+            bool sameSurfaceThan(const Surface &) const throw(); //!< test areas compatibility
 
         private:
             Y_DISABLE_ASSIGN(Surface);

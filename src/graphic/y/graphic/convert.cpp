@@ -97,6 +97,20 @@ namespace upsylon {
 
 
         template <>
+        YUV Convert:: Get<YUV,rgb>( const rgb &C ) throw()
+        {
+            return RGB2YUV( UnitFloat[C.r], UnitFloat[C.g], UnitFloat[C.b] );
+        }
+
+        template <>
+        YUV Convert:: Get<YUV,rgba>( const rgba &C ) throw()
+        {
+            return RGB2YUV( UnitFloat[C.r], UnitFloat[C.g], UnitFloat[C.b] );
+        }
+
+
+
+        template <>
         float Convert::Get<float,float>( const float &f ) throw()
         {
             return f;
@@ -124,6 +138,12 @@ namespace upsylon {
         float Convert::Get<float,uint8_t>( const uint8_t &u) throw()
         {
             return UnitFloat[u];
+        }
+
+        template <>
+        uint8_t Convert::Get<uint8_t,uint8_t>(const uint8_t &u ) throw()
+        {
+            return u;
         }
 
 

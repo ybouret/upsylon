@@ -86,6 +86,20 @@ namespace upsylon {
             {
                 return Run(tiles,target,source, Convert::Get< typename TARGET::type, typename SOURCE::type> );
             }
+
+            //! identity
+            template <typename T> static inline
+            const T & Id(const T&arg) throw() { return arg; }
+
+            //! call Run with identity
+            template <
+            typename TARGET,
+            typename SOURCE> static inline
+            int Copy(Tiles &tiles, TARGET &target, const SOURCE &source )
+            {
+                return Run(tiles,target,source, Id<typename TARGET::type> );
+            }
+
         };
 
 

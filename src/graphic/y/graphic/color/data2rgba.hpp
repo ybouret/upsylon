@@ -44,7 +44,8 @@ namespace upsylon {
             }
         };
 
-        //! extract some channels
+
+         //! extract some channels
         template <typename T,const size_t CHANNEL>
         class GetChannel : public Data2RGBA
         {
@@ -57,14 +58,47 @@ namespace upsylon {
 
             virtual rgba get(const void *addr) throw()
             {
-                static const rgba mask( (0==CHANNEL) ? 0xff : 0 );
-                rgba C = Convert::Get<rgba,T>( *static_cast<const T*>(addr) );
-                C.r &= mask.r;
-                C.g &= mask.g;
-                C.b &= mask.b;
-                return C;
+                assert(CHANNEL<4);
+                const uint8_t byte = Convert::Get<uint8_t,T>( *static_cast<const T*>(addr) );
+                rgba ans;
+                ans[CHANNEL] = byte;
+                return ans;
             }
         };
+
+        template <typename T>
+        class GetRed : public GetChannel<T,0>
+        {
+        public:
+            inline explicit GetRed() throw() : GetChannel<T,0>() {}
+            inline virtual ~GetRed() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(GetRed);
+        };
+
+        template <typename T>
+        class GetGreen : public GetChannel<T,1>
+        {
+        public:
+            inline explicit GetGreen() throw() : GetChannel<T,1>() {}
+            inline virtual ~GetGreen() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(GetGreen);
+        };
+
+        template <typename T>
+        class GetBlue : public GetChannel<T,2>
+        {
+        public:
+            inline explicit GetBlue() throw() : GetChannel<T,2>() {}
+            inline virtual ~GetBlue() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(GetBlue);
+        };
+
 
     }
 

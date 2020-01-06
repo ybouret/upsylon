@@ -37,6 +37,22 @@ namespace upsylon {
         v( toV(V) )
         {
         }
+
+        YUV:: YUV( const YUV &other ) throw() :
+        y( toY(other.y) ),
+        u( toU(other.u) ),
+        v( toV(other.v) )
+        {
+        }
+
+        YUV & YUV:: operator=(const YUV &other) throw()
+        {
+            y = toY(other.y);
+            u = toU(other.u);
+            v = toV(other.v);
+            return *this;
+        }
+
     }
 
 }

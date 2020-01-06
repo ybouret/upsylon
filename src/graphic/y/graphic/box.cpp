@@ -20,7 +20,7 @@ namespace upsylon {
             return hi-lo;
         }
 
-        Box:: Box(  unit_t x0,   unit_t y0,
+        Box:: Box(unit_t x0,   unit_t y0,
                   unit_t x1,   unit_t y1) throw() :
         Area(1+chkdif(x0,x1),1+chkdif(y0,y1)),
         lower(x0,y0),

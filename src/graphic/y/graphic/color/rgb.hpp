@@ -39,6 +39,17 @@ namespace upsylon {
                 //! assign RGB part of RGBA
                 rgb( const rgba<T> &) throw();
 
+                inline T & operator[](const size_t i) throw()
+                {
+                    assert(i<3);
+                    return *((&r)+i);
+                }
+
+                inline const T & operator[]( const size_t i) const throw()
+                {
+                    assert(i<3);
+                    return *((&r)+i);
+                }
                 
             };
 
@@ -72,6 +83,17 @@ namespace upsylon {
                 //! opaque RGB
                 inline rgba( const rgb<T> &C ) throw() : r(C.r), g(C.g), b(C.b), a(Opaque) {}
 
+                inline T & operator[](const size_t i) throw()
+                {
+                    assert(i<4);
+                    return *((&r)+i);
+                }
+
+                inline const T & operator[]( const size_t i) const throw()
+                {
+                    assert(i<4);
+                    return *((&r)+i);
+                }
 
             };
 
