@@ -56,20 +56,29 @@ SET(image_srcs ${image_decl} ${image_code})
 SOURCE_GROUP( graphic/image FILES ${image_srcs} )
 INSTALL( FILES ${image_decl} DESTINATION include/y/graphic/image )
 
+FILE(GLOB draw_decl y/graphic/draw/*.hpp)
+FILE(GLOB draw_code y/graphic/draw/*.cpp)
+SET(draw_srcs ${draw_decl} ${draw_code})
+SOURCE_GROUP( graphic/draw FILES ${draw_srcs} )
+INSTALL( FILES ${draw_decl} DESTINATION include/y/graphic/draw )
+
 ADD_LIBRARY(y-graphic STATIC 
 ${main_srcs} 
 ${color_srcs} ${color_ramp_srcs}
 ${parallel_srcs}
 ${ops_srcs} ${ops_filter_srcs} ${ops_edges_srcs}
 ${image_srcs} 
+${draw_srcs}
 )
 INSTALL( TARGETS y-graphic ARCHIVE DESTINATION lib )
 
+IF(FALSE)
 ADD_EXECUTABLE(y_color_ramp y_color_ramp.cpp)
 TARGET_LINK_Y(y_color_ramp)
 
 ADD_EXECUTABLE(y_named_colors y_named_colors.cpp)
 TARGET_LINK_Y(y_named_colors)
+ENDIF()
 
 ADD_SUBDIRECTORY(tests)
 SET(UTESTS "${UTESTS} utest-graphic" PARENT_SCOPE)
