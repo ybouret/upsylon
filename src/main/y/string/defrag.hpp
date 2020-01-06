@@ -5,6 +5,7 @@
 #include "y/string.hpp"
 #include "y/core/addr-list.hpp"
 #include "y/core/pool.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -33,7 +34,7 @@ namespace upsylon
         size_t cycle_on( ITERATOR it, size_t n )
         {
             free();
-            while(n-->0) record( *(it++) );
+            while(n-- > 0) record( *(it++) );
             return cycle();
         }
 
@@ -44,6 +45,24 @@ namespace upsylon
             return cycle_on( seq.begin(), seq.size() );
         }
 
+        //! free(), record all keys, cycle()
+        template <typename KEY_ITERATOR>
+        size_t cycle_on_keys( KEY_ITERATOR it, size_t n )
+        {
+            free();
+            while( n-- > 0 ) {
+                record( aliasing::_( it->key() ) );
+                ++it;
+            }
+            return cycle();
+        }
+
+        //! free(), record all keys, cycle()
+        template <typename DB>
+        size_t cycle_on_keys( DB &db )
+        {
+            return cycle_on_keys( db.begin(), db.size() );
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(string_defrag);

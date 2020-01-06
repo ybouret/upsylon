@@ -13,6 +13,7 @@ namespace upsylon {
 
         Edge:: ~Edge() throw()
         {
+            zforce(label);
         }
 
         
