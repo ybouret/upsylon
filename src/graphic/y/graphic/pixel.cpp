@@ -284,3 +284,56 @@ namespace upsylon {
     }
 
 }
+
+namespace upsylon {
+
+    namespace Graphic {
+
+        template <>
+        uint8_t Pixel:: Blend<uint8_t>(const uint8_t &fg,
+                                       const unsigned wf,
+                                       const uint8_t &bg,
+                                       const unsigned wb ) throw()
+        {
+            const unsigned F = fg;
+            const unsigned B = bg;
+            return uint8_t( (F*wf+B*wb)/255 );
+        }
+
+        template <>
+        float Pixel:: Blend<float>(const float   &fg,
+                                   const unsigned wf,
+                                   const float   &bg,
+                                   const unsigned wb ) throw()
+        {
+            return (fg*wf+bg*wb)/255.0f;
+        }
+
+
+        template <>
+        uint8_t Pixel:: Blend<uint8_t>( const uint8_t &fg, const uint8_t &bg, const uint8_t alpha ) throw()
+        {
+            return BlendType<uint8_t, uint8_t, 1>(fg, bg, alpha);
+        }
+
+        template <>
+        rgb Pixel:: Blend<rgb>( const rgb &fg, const rgb &bg, const uint8_t alpha ) throw()
+        {
+            return BlendType<rgb, uint8_t,3>(fg, bg, alpha);
+        }
+
+        template <>
+        rgba Pixel:: Blend<rgba>( const rgba &fg, const rgba &bg, const uint8_t alpha ) throw()
+        {
+            return BlendType<rgba, uint8_t,3>(fg, bg, alpha);
+        }
+
+        template <>
+        float Pixel:: Blend<float>( const float &fg, const float &bg, const uint8_t alpha ) throw()
+        {
+            return BlendType<float,float, 1>(fg, bg, alpha);
+        }
+
+    }
+}
+

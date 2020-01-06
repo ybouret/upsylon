@@ -102,7 +102,7 @@ namespace upsylon {
             template <typename T> static T MinOf( const T &lhs, const T &rhs ) throw();
 
             //! minimal value of a local array
-            template <typename T> static
+            template <typename T> static inline
             T MinOf9(const T arr[]) throw()
             {
                 T ans = arr[0];
@@ -117,7 +117,7 @@ namespace upsylon {
             template <typename T> static T MaxOf( const T &lhs, const T &rhs ) throw();
 
             //! maximal value of an array
-            template <typename T> static
+            template <typename T> static inline
             T MaxOf9(const T arr[]) throw()
             {
                 T ans = arr[0];
@@ -127,6 +127,30 @@ namespace upsylon {
                 }
                 return ans;
             }
+
+            template <typename T> static
+            T Blend(const T &fg, const unsigned wf,
+                    const T &bg, const unsigned wb ) throw();
+
+            template <typename TYPE, typename T, const size_t DIM> static inline
+            TYPE BlendType( const TYPE &FG, const TYPE &BG, const uint8_t alpha) throw()
+            {
+                const unsigned wf = alpha;
+                const unsigned wb = 255-alpha;
+                const T       *fg = (const T *) &FG;
+                const T       *bg = (const T *) &BG;
+                TYPE           ans;
+                T             *tgt = (T *)&ans;
+                for(size_t dim=0;dim<DIM;++dim)
+                {
+                    tgt[dim] = Blend<T>(fg[dim],wf,bg[dim],wb);
+                }
+                return ans;
+            }
+
+            template <typename T> static
+            T Blend( const T &fg, const T &bg, const uint8_t alpha ) throw();
+
 
 
         };
