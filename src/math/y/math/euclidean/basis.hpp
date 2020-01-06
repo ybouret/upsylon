@@ -40,7 +40,7 @@ namespace upsylon {
 
                 inline      __Basis() throw() : t(), n(), curvature(0) {}                   //!< setup
                 inline     ~__Basis() throw() { zero(); }                                   //!< cleanup
-                inline void  zero()    throw() { bzset_(t); bzset_(n); bzset_(curvature); } //!< clear
+                inline void  zero()    throw() { zforce(t); zforce(n); zforce(curvature); } //!< clear
 
             
             private:
@@ -70,7 +70,7 @@ namespace upsylon {
 
                 inline      __Basis() throw() : t(), n(), b(), curvature(0) {}                         //!< setup
                 inline     ~__Basis() throw() { zero(); }                                              //!< cleanup
-                inline void zero()    throw() { bzset_(t); bzset_(n); bzset_(b); bzset_(curvature); }  //!< clear
+                inline void zero()    throw() { zforce(t); zforce(n); zforce(b); zforce(curvature); }  //!< clear
 
                 //! assuming tangent is set
                 inline void finalize( const_vertex &N ) throw()

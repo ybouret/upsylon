@@ -78,8 +78,8 @@ namespace upsylon {
             //------------------------------------------------------------------
             inline virtual ~StructuredGrid() throw()
             {
-                bzset_(origin);
-                bzset_(spacing);
+                zforce(origin);
+                zforce(spacing);
             }
 
             //==================================================================

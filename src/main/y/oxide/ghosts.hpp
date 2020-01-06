@@ -139,9 +139,9 @@ namespace upsylon
             //! cleanup
             inline virtual ~Ghosts() throw()
             {
-                bzset_(host);
-                bzset_(local);
-                bzset_(async);
+                zforce(host);
+                zforce(local);
+                zforce(async);
             }
             
             //==================================================================

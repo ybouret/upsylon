@@ -76,10 +76,10 @@ namespace upsylon
             //! cleanup
             inline virtual ~Layout() throw()
             {
-                bzset_(lower);
-                bzset_(upper);
-                bzset_(width);
-                bzset_(pitch);
+                zforce(lower);
+                zforce(upper);
+                zforce(width);
+                zforce(pitch);
             }
 
             //! setup by two coordinates

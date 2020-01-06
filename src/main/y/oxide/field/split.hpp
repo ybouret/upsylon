@@ -129,8 +129,8 @@ namespace upsylon
             //! cleanup
             inline virtual ~Split() throw()
             {
-                bzset_(optimal);
-                bzset_(favored);
+                zforce(optimal);
+                zforce(favored);
             }
 
         private:

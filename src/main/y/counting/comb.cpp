@@ -44,8 +44,8 @@ namespace upsylon {
     combination:: ~combination() throw()
     {
         release_(comb,wlen);
-        bzset_(n);
-        bzset_(k);
+        zforce(n);
+        zforce(k);
     }
 
     void combination:: start_() throw()

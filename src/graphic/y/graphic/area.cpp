@@ -2,12 +2,15 @@
 #include "y/graphic/area.hpp"
 #include "y/exception.hpp"
 
+#include "y/type/bzset.hpp"
+
 namespace upsylon {
 
     namespace Graphic {
 
         Area:: ~Area() throw()
         {
+
         }
 
         Area:: Area( const size_t W, const size_t H) :

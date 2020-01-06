@@ -83,13 +83,13 @@ namespace upsylon {
                 //! reset all local data
                 inline void reset() throw()
                 {
-                    bzset_(V);
-                    bzset_(A);
-                    bzset_(dP);
-                    bzset_(dV);
-                    bzset_(dA);
-                    bzset_(Q);
-                    bzset_(W);
+                    zforce(V);
+                    zforce(A);
+                    zforce(dP);
+                    zforce(dV);
+                    zforce(dA);
+                    zforce(Q);
+                    zforce(W);
                     aliasing::_(basis).zero();
                 }
 

@@ -9,8 +9,8 @@ namespace upsylon
 
     counting:: ~counting() throw()
     {
-        bzset_(index);
-        bzset_(count);
+        zforce(index);
+        zforce(count);
     }
 
     counting:: counting( const counting &other) throw() :
