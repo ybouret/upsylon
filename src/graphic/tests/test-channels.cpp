@@ -1,6 +1,8 @@
 
 
 #include "y/graphic/ops/split.hpp"
+#include "y/graphic/ops/merge.hpp"
+
 #include "y/graphic/stack.hpp"
 #include "y/graphic/parallel/ops.hpp"
 
@@ -10,10 +12,27 @@
 #include "y/graphic/color/ramp/hot_to_cold2.hpp"
 
 #include "y/sequence/vector.hpp"
+#include "y/randomized/marsaglia.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
 
+namespace {
+
+    typedef randomized::Kiss32 Rand;
+
+    static inline uint8_t uHalf( const uint8_t u ) throw()
+    {
+        return u >> 1;
+    }
+
+    static inline float  fMove( const float f, parallel &ctx ) throw()
+    {
+        randomized::bits &ran = ctx.get<Rand>();
+        return f * (1.0f - 0.2f * ran.to<float>() );
+    }
+
+}
 Y_UTEST(channels)
 {
     Image   &IMG = Image::instance();
@@ -35,7 +54,7 @@ Y_UTEST(channels)
         Tiles tiles( *pxm4, par );
         IMG.saveAs("origin.png", pxm4, 0);
 
-        Pixmap<rgb>  pxm3(w,h);
+        Pixmap<rgb>     pxm3(w,h);
         Ops::Convert(tiles,pxm3,pxm4);
         Stack<uint8_t> uStack(w,h,4);
         vector<size_t> channels;
@@ -57,6 +76,15 @@ Y_UTEST(channels)
         IMG.save("green3.png", *uStack[1], toGreen, 0 );
         IMG.save("blue3.png",  *uStack[2], toBlue,  0 );
 
+        Ops::Run(tiles, uStack[2], uStack[2], uHalf);
+
+        {
+            Pixmap<rgba> img4(w,h);
+            Merge::Run(img4, & uStack.front(), channels, tiles);
+            IMG.saveAs("half-blue.png", img4, 0);
+        }
+
+
         Pixmap<YUV> yuv(w,h);
         Ops::Convert(tiles, yuv, pxm3);
 
@@ -71,6 +99,22 @@ Y_UTEST(channels)
 
         proc.setRange( YUV::Vmin, YUV::Vmax);
         IMG.save("v.png", *fStack[2], proc, 0);
+
+        for(size_t i=0;i<par->number();++i)
+        {
+            parallel &ctx = par->engine()[i];
+            ctx.build<Rand>().reset(i);
+        }
+
+        Ops::Run2(tiles, fStack[0], fStack[0], fMove );
+        {
+            Pixmap<YUV> imgYUV(w,h);
+            Merge::Run(imgYUV, & fStack.front(), channels, tiles);
+            Pixmap<rgba> img4(w,h);
+            Ops::Convert(tiles,img4,imgYUV);
+            IMG.saveAs("noise-y.png", img4, 0);
+
+        }
 
     }
 

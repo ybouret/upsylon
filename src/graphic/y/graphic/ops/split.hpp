@@ -10,11 +10,11 @@ namespace upsylon {
 
     namespace Graphic {
 
-
+        //! split components
         struct Split
         {
 
-
+            //! split in parallel, number of targets = channels.size()
             template <typename TYPE,typename T> static inline
             void Run(Pixmap<T>                *targets,
                      const Pixmap<TYPE>       &source,

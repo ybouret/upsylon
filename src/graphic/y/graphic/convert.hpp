@@ -59,6 +59,20 @@ namespace upsylon {
                 return RGB2YUV(C.r,C.g,C.b);
             }
 
+            static float YUV2R( const YUV & ) throw(); //!< YUV->red,   float
+            static float YUV2G( const YUV & ) throw(); //!< YUV->green, float
+            static float YUV2B( const YUV & ) throw(); //!< YUV->blue,  float
+
+            //! YUV->rgb
+            static inline rgb YUV2RGB( const YUV &_ ) throw()
+            {
+                return rgb(Float2Byte( YUV2R(_) ),
+                           Float2Byte( YUV2G(_) ),
+                           Float2Byte( YUV2B(_) ) );
+            }
+
+
+
 
             //! internal conversions
             template <typename TARGET,typename SOURCE> static

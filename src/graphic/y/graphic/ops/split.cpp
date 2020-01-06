@@ -15,7 +15,7 @@ namespace upsylon {
                 const size_t j = channels[i];
                 if(j>=dims)
                 {
-                    throw exception("Split: invalid channels");
+                    throw exception("Graphic::Split: invalid channel[%u]=%u not in [0..%u-1]", unsigned(i), unsigned(j), unsigned(dims));
                 }
             }
         }

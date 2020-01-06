@@ -95,19 +95,46 @@ namespace upsylon {
                        0.615f  * r - 0.515f * g - 0.100f * b);
         }
 
+        float Convert:: YUV2R( const YUV &_ ) throw()
+        {
+            return clamp<float>(0.0f, _.y + 1.140f * _.v,1.0f);
+        }
+
+        float Convert:: YUV2G( const YUV &_ ) throw()
+        {
+            return clamp<float>(0.0f, _.y - 0.394f * _.u - 0.581f * _.v,1.0f);
+        }
+
+        float Convert:: YUV2B( const YUV &_ ) throw()
+        {
+            return clamp<float>(0.0f, _.y + 2.028f * _.u,1.0f);
+        }
+
 
         template <>
         YUV Convert:: Get<YUV,rgb>( const rgb &C ) throw()
         {
-            return RGB2YUV( UnitFloat[C.r], UnitFloat[C.g], UnitFloat[C.b] );
+            return RGB2YUV( C );
         }
 
         template <>
         YUV Convert:: Get<YUV,rgba>( const rgba &C ) throw()
         {
-            return RGB2YUV( UnitFloat[C.r], UnitFloat[C.g], UnitFloat[C.b] );
+            return RGB2YUV( C );
         }
 
+
+        template <>
+        rgb Convert:: Get<rgb,YUV>(const YUV &_) throw()
+        {
+            return YUV2RGB(_);
+        }
+
+        template <>
+        rgba Convert:: Get<rgba,YUV>(const YUV &_) throw()
+        {
+            return YUV2RGB(_);
+        }
 
 
         template <>

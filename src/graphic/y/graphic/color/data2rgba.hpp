@@ -45,7 +45,7 @@ namespace upsylon {
         };
 
 
-         //! extract some channels
+         //! extract a channel, using Convert::Get
         template <typename T,const size_t CHANNEL>
         class GetChannel : public Data2RGBA
         {
@@ -66,6 +66,7 @@ namespace upsylon {
             }
         };
 
+        //! convert scalar to a red value
         template <typename T>
         class GetRed : public GetChannel<T,0>
         {
@@ -77,6 +78,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(GetRed);
         };
 
+        //! convert scalar to a green value
         template <typename T>
         class GetGreen : public GetChannel<T,1>
         {
@@ -88,6 +90,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(GetGreen);
         };
 
+        //! convert scalar to a blue value
         template <typename T>
         class GetBlue : public GetChannel<T,2>
         {
