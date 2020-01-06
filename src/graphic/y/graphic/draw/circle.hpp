@@ -89,8 +89,8 @@ namespace upsylon {
         }
 
 
-#if 0
         namespace Draw {
+
             //! clipping horizontal segement
             template <typename T, typename PROC>
             inline void __HSeg(Pixmap<T>    &img,
@@ -100,12 +100,12 @@ namespace upsylon {
                                PROC         &proc) throw()
             {
                 assert(xlo<=xhi);
-                coord p(xlo,y);
+                Point p(xlo,y);
                 for(;p.x<=xhi;++p.x)
                 {
-                    if(img.has(p))
+                    if(img->contains(p))
                     {
-                        proc(img,p);
+                        proc(img[p]);
                     }
                 }
             }
@@ -121,10 +121,9 @@ namespace upsylon {
                 if(r<=0)
                 {
                     assert(0==r);
-                    const coord q(xm,ym);
-                    if(img.has(q))
+                     if(img->contains(xm,ym))
                     {
-                        proc(img,q);
+                        proc(img[ym][xm]);
                     }
                 }
                 else
@@ -161,7 +160,7 @@ namespace upsylon {
                              const unit_t  xm,
                              const unit_t  ym,
                              unit_t        r,
-                             const T       color)
+                             typename Pixmap<T>::param_type color)
             {
                 PutPixel::Copy<T> proc(color);
                 _Disk(img,xm,ym,r,proc);
@@ -174,7 +173,7 @@ namespace upsylon {
                              const unit_t  xm,
                              const unit_t  ym,
                              unit_t        r,
-                             const T       color,
+                             typename Pixmap<T>::param_type color,
                              const uint8_t alpha)
             {
                 PutPixel::Blend<T> proc(color,alpha);
@@ -183,8 +182,7 @@ namespace upsylon {
 
 
         }
-#endif
-
+ 
     }
 
 }

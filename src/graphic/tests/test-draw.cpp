@@ -121,6 +121,35 @@ Y_UTEST(draw)
     }
 
 
+    for(size_t iter=0; iter<16; ++iter )
+    {
+        const unit_t x0  = alea.range<unit_t>(xlo,xhi);
+        const unit_t y0  = alea.range<unit_t>(ylo,yhi);
+        const unit_t r   = alea.leq(100);
+        const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
+        const rgba   C   = NamedColors::GetRGBA(idx);
+        const float  f   = Convert::Get<float,rgba>(C);
+
+        Draw::Disk(img4, x0, y0, r, C);
+        Draw::Disk(imgf, x0, y0, r, f);
+
+    }
+
+    for(size_t iter=0; iter<32; ++iter )
+    {
+        const unit_t x0  = alea.range<unit_t>(xlo,xhi);
+        const unit_t y0  = alea.range<unit_t>(ylo,yhi);
+        const unit_t r   = alea.leq(100);
+        const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
+        const rgba   C   = NamedColors::GetRGBA(idx);
+        const float  f   = Convert::Get<float,rgba>(C);
+        const uint8_t alpha = alea.leq(255);
+
+        Draw::Disk(img4, x0, y0, r, C,alpha);
+        Draw::Disk(imgf, x0, y0, r, f,alpha);
+
+    }
+
 
 
     IMG.saveAs( "draw4.png", img4, 0 );
