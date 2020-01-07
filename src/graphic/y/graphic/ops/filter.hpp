@@ -192,7 +192,7 @@ private: Y_DISABLE_COPY_AND_ASSIGN(NAME); }
         //! start implementing a filter
 #define Y_GRAPHIC_FILTER_IMPL(STRUCT,NAME,LO,HI) \
 STRUCT:: NAME:: ~NAME() throw() {}\
-STRUCT:: NAME:: NAME() : FilterType( #STRUCT "::" #NAME, LO, HI ) {\
+STRUCT:: NAME:: NAME() : FilterType( #STRUCT "-" #NAME, LO, HI ) {\
 FilterType &self = *this; (void)self;
 
         //! finish inplementing a filter
