@@ -11,7 +11,6 @@ namespace upsylon {
 
         Tiles:: ~Tiles() throw()
         {
-            localRelease();
         }
 
         void Tiles:: randomize(randomized::bits &ran) throw()
@@ -32,8 +31,7 @@ namespace upsylon {
                       const ForEach &devs ) :
         Tiles_( devs->number() ),
         area(full),
-        device(devs),
-        dataBlock(0)
+        device(devs)
         {
             assert( count == device->number() );
 
@@ -74,75 +72,20 @@ namespace upsylon {
         }
 
 
-        void Tiles:: localRelease() throw()
+
+
+        void Tiles:: cacheAcquire(const size_t BytesPerTile)
         {
             Tiles_ &self = *this;
-            dataBlock    = NULL;
-
             for(size_t i=0;i<count;++i)
             {
-                self[i].data = 0;
-                aliasing::_( self[i].size )  =0;
+                self[i].acquire(BytesPerTile);
+                assert( self[i].is_zeroed() );
             }
         }
-
-        void Tiles:: localCleanUp() throw()
-        {
-            if(dataBlock.is_valid())
-            {
-                memset(dataBlock->entry,0,dataBlock->bytes);
-            }
-        }
-
-        void Tiles:: localAcquire(const size_t BytesPerTile)
-        {
-            if(BytesPerTile<=0)
-            {
-                return;
-            }
-            else
-            {
-                const size_t bytes = count * BytesPerTile;
-                if( dataBlock.is_empty() || dataBlock->bytes<bytes )
-                {
-                    localRelease();
-                    dataBlock = new Kernel::DataBlock(count,BytesPerTile);
-                }
-                assert(dataBlock->bytes>=bytes);
-                Tiles_  &self = *this;
-                uint8_t *p    = static_cast<uint8_t*>(dataBlock->entry);
-                for(size_t i=0;i<count;++i,p+=BytesPerTile)
-                {
-                    self[i].data                = static_cast<void *>(p);
-                    aliasing::_( self[i].size ) = BytesPerTile;
-                }
-            }
-        }
+        
 
     }
 }
 
-#include "y/code/round.hpp"
-
-namespace upsylon {
-
-    namespace Graphic {
-
-        namespace Kernel {
-
-            DataBlock:: ~DataBlock() throw()
-            {
-                memory::global::location().release(entry,bytes);
-            }
-
-            DataBlock:: DataBlock(const size_t numTiles, const size_t BytesPerTile) :
-            bytes( Y_ROUND4(BytesPerTile) * numTiles ),
-            entry( memory::global::instance().acquire(bytes) )
-            {
-            }
-
-        }
-
-    }
-}
 

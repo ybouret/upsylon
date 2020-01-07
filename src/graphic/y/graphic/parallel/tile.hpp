@@ -5,6 +5,8 @@
 #define Y_GRAPHICS_PARALLEL_TILE_INCLUDED 1
 
 #include "y/graphic/area.hpp"
+#include "y/memory/xslot.hpp"
+#include "y/memory/pooled.hpp"
 
 namespace upsylon {
 
@@ -12,8 +14,10 @@ namespace upsylon {
 
         class Tiles; // forward declaration
 
+        typedef memory::xslot<memory::pooled> TileCache;
+
         //! subdivision for operation on bitmaps/pixmaps, may be empty
-        class Tile : public Area
+        class Tile : public Area, public TileCache
         {
         public:
 
@@ -31,7 +35,7 @@ namespace upsylon {
             friend std::ostream & operator<<( std::ostream &, const Tile &);
 
 
-
+#if 0
             //! alias internal data
             template <typename T> inline
             T &as() throw()
@@ -66,12 +70,12 @@ namespace upsylon {
             }
 
             size_t localMemory() const throw(); //!< get allocated bytes
-
+#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);
-            void        *data; //!< extra shared memory
-            const size_t size; //!< available size
+            //void        *data; //!< extra shared memory
+            //const size_t size; //!< available size
 
             friend class Tiles;
         };

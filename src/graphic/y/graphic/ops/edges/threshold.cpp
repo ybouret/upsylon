@@ -7,13 +7,13 @@ namespace upsylon {
 
         void Edges:: applyThresholds( Tile &tile ) throw()
         {
-            assert( tile.localMemory() >= LocalMaximaBytes );
+            assert( tile.size >= LocalMaximaBytes );
 
             const Point    up     = tile.upper;
             const Point    lo     = tile.lower;
             const uint8_t  strong = strongThreshold;
             const uint8_t  feeble = feebleThreshold;
-            LocalMaxima   &lm     = tile.as<LocalMaxima>();
+            LocalMaxima   &lm     = tile.get<LocalMaxima>();
             lm.count  = 0;
             lm.points = &P[0][0] + tile.linearOffset;
             for(unit_t y=up.y;y>=lo.y;--y)
@@ -53,7 +53,7 @@ namespace upsylon {
             // local memory
             //
             //------------------------------------------------------------------
-            tiles.localAcquire( LocalMaximaBytes );
+            tiles.cacheAcquire( LocalMaximaBytes );
 
             //------------------------------------------------------------------
             //
@@ -91,11 +91,11 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             const size_t nt     = tiles.size();
-            size_t       length = tiles[0].as<LocalMaxima>().count;
+            size_t       length = tiles[0].get<LocalMaxima>().count;
             Point       *target = &P[0][0] + length;
             for(size_t i=1;i<nt;++i)
             {
-                const LocalMaxima &lm = tiles[i].as<LocalMaxima>();
+                const LocalMaxima &lm = tiles[i].get<LocalMaxima>();
                 const size_t       np = lm.count;
                 memmove( (void*)target, (const void *)lm.points,np*sizeof(Point));
                 target += np;

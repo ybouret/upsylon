@@ -114,19 +114,17 @@ namespace upsylon
 
             void Histogram:: prolog( Tiles &tiles )
             {
-                tiles.localAcquireFor<size_t>(BINS);
-                tiles.localCleanUp();
-
+                tiles.cacheAcquireFor<size_t>(BINS);
             }
 
             void Histogram:: epilog(Tiles &tiles) throw()
             {
 
-                set_( & tiles[0].as<size_t>(0) );
+                set_( & tiles[0].get<size_t>(0) );
                 const size_t nt = tiles.size();
                 for(size_t i=1;i<nt;++i)
                 {
-                    add_(& tiles[i].as<size_t>(0) );
+                    add_(& tiles[i].get<size_t>(0) );
                 }
 
             }

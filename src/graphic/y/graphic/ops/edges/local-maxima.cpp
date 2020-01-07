@@ -8,12 +8,12 @@ namespace upsylon {
 
         void Edges:: keepLocalMaxima( Tile &tile ) throw()
         {
-            assert( tile.localMemory() >=  LocalHistogramBytes );
+            assert( tile.size >=  LocalHistogramBytes );
             const Point up = tile.upper;
             const Point lo = tile.lower;
             if(gmax>0.0f)
             {
-                size_t     *H   = & tile.as<size_t>(0);
+                size_t     *H   = & tile.get<size_t>(0);
                 const float g2l = 255.0f/gmax;
                 for(unit_t y=up.y;y>=lo.y;--y)
                 {
@@ -60,8 +60,8 @@ namespace upsylon {
 
         void Edges:: keepLocalMaxima( Tiles      &tiles )
         {
-            tiles.localAcquire( LocalHistogramBytes );
-            tiles.localCleanUp();
+            tiles.cacheAcquire( LocalHistogramBytes );
+
             struct Task
             {
                 Edges *self;

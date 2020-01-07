@@ -57,7 +57,7 @@ namespace {
                 const ForEach &seq)
     {
         std::cerr << "doConv<" << typeid(T).name() << "," << typeid(U).name() << ">" << std::endl;
-        const double tmx = 1;
+        const double tmx = 0.5;
 
         Pixmap<T> source(ALEA_COORD,ALEA_COORD);
         Pixmap<U> target(source->w,source->h);

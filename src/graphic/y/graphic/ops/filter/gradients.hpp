@@ -111,7 +111,7 @@ namespace upsylon {
                      Tiles           &tiles,
                      float           &gmax) const
             {
-                tiles.localAcquireFor<float>();
+                tiles.cacheAcquireFor<float>();
 
                 struct Task {
                     const Gradients *self;
@@ -125,7 +125,8 @@ namespace upsylon {
                     {
                         Task &task = *static_cast<Task *>(args);
                         Tile &tile = (*task.tiles)[ctx.rank];
-                        task.self->apply( *task.g, *task.G, *task.source, tile.as<float>(), tile.lower, tile.upper );
+                        assert(tile.size>=sizeof(float));
+                        task.self->apply( *task.g, *task.G, *task.source, tile.get<float>(), tile.lower, tile.upper );
                     }
 
                 };

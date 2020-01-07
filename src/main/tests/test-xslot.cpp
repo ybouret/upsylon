@@ -11,6 +11,8 @@ namespace  {
     static inline void display_xs( const xslot_type &xs )
     {
         std::cerr << "size=" << xs.size << std::endl;
+        Y_ASSERT(xs.is_zeroed());
+        Y_ASSERT(!xs.is_cplusplus());
     }
 
     class dummy
@@ -50,21 +52,21 @@ Y_UTEST(xslot)
 
     std::cerr << "init pooled:" << std::endl;
     xslot<pooled> xpooled0;      display_xs(xpooled0);
-    xslot<pooled> xpooled1(10);  display_xs(xpooled1);
+    xslot<pooled> xpooled1(10);  display_xs(xpooled1); Y_ASSERT(xpooled1.size>=10);
 
     std::cerr << "acquire global:" << std::endl;
-    xdefault0.acquire(21); display_xs( xdefault0 );
-    xdefault1.acquire(6);  display_xs( xdefault1 );
+    xdefault0.acquire(21); display_xs( xdefault0 ); Y_ASSERT(xdefault0.size>=21);
+    xdefault1.acquire(6);  display_xs( xdefault1 ); Y_ASSERT(xdefault1.size>=6);
 
     std::cerr << "acquire pooled: " << std::endl;
-    xpooled0.acquire(21);  display_xs( xpooled0  );
-    xpooled1.acquire(43);  display_xs( xpooled1  );
+    xpooled0.acquire(21);  display_xs( xpooled0  ); Y_ASSERT( xpooled0.size >= 21);
+    xpooled1.acquire(43);  display_xs( xpooled1  ); Y_ASSERT( xpooled1.size >= 43);
 
     std::cerr << "build string..." << std::endl;
-    xdefault0.build<string>();
-    xdefault1.build<string>();
-    xpooled0.build<string>();
-    xpooled1.build<string>();
+    xdefault0.build<string>(); Y_ASSERT(xdefault0.has_bytes_for<string>());
+    xdefault1.build<string>(); Y_ASSERT(xdefault1.has_bytes_for<string>());
+    xpooled0.build<string>();  Y_ASSERT(xpooled0.has_bytes_for<string>());
+    xpooled1.build<string>();  Y_ASSERT(xpooled1.has_bytes_for<string>());
 
 
     std::cerr << "build dummy..." << std::endl;

@@ -134,8 +134,8 @@ namespace upsylon {
             template <typename T, typename PROC> static inline
             void Build( const Pixmap<T> &source, PROC &proc, Tile &tile ) throw()
             {
-                assert( tile.localMemory() >= BINS*sizeof(T) );
-                size_t     *H  = & tile.as<size_t>(0);
+                assert( tile.size >= BINS*sizeof(T) );
+                size_t     *H  = & tile.get<size_t>(0);
                 const Point up = tile.upper;
                 const Point lo = tile.lower;
                 for(unit_t y=up.y;y>=lo.y;--y)

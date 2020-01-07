@@ -32,12 +32,21 @@ namespace upsylon
             void     free() throw();                   //!< kill/clear data
             bool     is_cplusplus() const throw();     //!< if kill!=NULL
             void     swap_with(xslot_type &) throw();  //!< no-throw swap
+            bool     is_zeroed() const throw();        //!< check zeroed memory
 
             //__________________________________________________________________
             //
             // public members
             //__________________________________________________________________
             const size_t    size; //!< available bytes
+
+            //! memory capacity helper
+            template <typename T> inline
+            bool has_bytes_for() const throw() { return size >= sizeof(T); }
+
+            //! memory capacity helper
+            template <typename T> inline
+            bool has_bytes_for(const size_t n) const throw() { return size >= n*sizeof(T); }
 
         protected:
             //__________________________________________________________________
@@ -143,8 +152,10 @@ namespace upsylon
                 }
             }
 
-            //! kill content but keep memory if enough bytes
+            //! kill content but keep memory if enough bytes for one object
             template <typename T> inline void acquire_for() { acquire( sizeof(T) ); }
+
+            //! kill content but keep memory if enough bytes for n object(s)
             template <typename T> inline void acquire_for(const size_t n) { acquire( n*sizeof(T) ); }
 
             //! get POD

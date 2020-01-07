@@ -18,7 +18,7 @@ namespace upsylon {
         
         void Gradient:: compute( Tiles &tiles, bool doNormalize)
         {
-            tiles.localAcquire( sizeof(float) );
+            tiles.cacheAcquireFor<float>();
 
             struct Task
             {
@@ -36,7 +36,7 @@ namespace upsylon {
                     const Point           lower  = tile.lower;
                     const Point           upper  = tile.upper;
 
-                    float &gmax = tile.as<float>();
+                    float &gmax = tile.get<float>();
                     gmax = 0;
                     for(unit_t y=upper.y,ym1=y-1,yp1=y+1;y>=lower.y;--y,--ym1,--yp1)
                     {
@@ -89,12 +89,12 @@ namespace upsylon {
         {
             // reduce gmax
             const size_t nt   = tiles.count;
-            float        gmax = tiles[0].as<float>();
+            float        gmax = tiles[0].get<float>();
 
             // scan other tiles
             for(size_t i=1;i<nt;++i)
             {
-                const float  tmp  = tiles[i].as<float>();
+                const float  tmp  = tiles[i].get<float>();
                 if(tmp>gmax) gmax = tmp;
             }
 

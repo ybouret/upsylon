@@ -10,7 +10,6 @@ namespace upsylon
 
         void executor:: acquire_all(const size_t n)
         {
-            //std::cerr << "alloc/clear space for " << n <<  " bytes" << std::endl;
             executor    &self = *this;
             const size_t nthr = num_threads();
             for(size_t i=0;i<nthr;++i)

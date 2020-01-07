@@ -24,6 +24,16 @@ namespace upsylon
             }
         }
 
+        bool xslot_type:: is_zeroed() const throw()
+        {
+            const uint8_t *p = static_cast<const uint8_t *>(data);
+            for(size_t i=0;i<size;++i)
+            {
+                if( p[i] > 0 ) return false;
+            }
+            return true;
+        }
+
         xslot_type:: xslot_type() throw() :
         size(0),
         data(0),

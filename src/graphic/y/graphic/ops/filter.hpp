@@ -93,7 +93,7 @@ namespace upsylon {
                          const Graphic::Pixmap<U> &source,
                          Tiles                    &tiles)
                 {
-                    tiles.localAcquire(2*sizeof(float));
+                    tiles.cacheAcquireFor<float>(2);
                     struct Task
                     {
                         const Filter             *filter;
@@ -105,8 +105,8 @@ namespace upsylon {
                         {
                             Task  &task = *(Task*)args;
                             Tile  &tile = (*task.tiles)[ctx.rank];
-                            float &vmin = tile.as<float>(0);
-                            float &vmax = tile.as<float>(1);
+                            float &vmin = tile.get<float>(0);
+                            float &vmax = tile.get<float>(1);
                             task.filter->template applyRaw<T,U>( *task.target, *task.source, tile.lower, tile.upper, vmin, vmax);
                         }
 

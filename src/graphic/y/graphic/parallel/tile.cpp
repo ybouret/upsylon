@@ -35,11 +35,10 @@ namespace upsylon {
 
         Tile:: Tile( const Point &lo, const Point &up ) :
         Area( checkW(lo,up), checkH(lo,up) ),
+        TileCache(),
         lower(lo),
         upper(up),
-        linearOffset(0),
-        data(0),
-        size(0)
+        linearOffset(0)
         {
         }
 
@@ -48,11 +47,7 @@ namespace upsylon {
             std::cerr << "[ [" << tile.w << "x" << tile.h << "]=" << tile.items << "@" << tile.lower << "->" << tile.upper << "]";
             return os;
         }
-
-        size_t Tile:: localMemory() const throw()
-        {
-            return size;
-        }
+        
 
     }
 
