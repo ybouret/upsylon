@@ -2,7 +2,7 @@
 #ifndef Y_TIFFPP_INCLUDED
 #define Y_TIFFPP_INCLUDED 1
 
-#include "y/graphic/image.hpp"
+#include "y/string.hpp"
 #include "y/memory/buffers.hpp"
 
 namespace upsylon
@@ -37,9 +37,7 @@ namespace upsylon
                     assert(size>=n);
                 }
 
-                void compileBitmap(const Bitmap &bmp,
-                                   Data2RGBA    &proc);
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Raster);
             };
@@ -74,7 +72,10 @@ namespace upsylon
 
             //! read a raster
             void ReadRBGAImage(Raster &raster);
-            
+
+            //! directly count the number of directories
+            static size_t CountDirectoriesOf( const string &filename );
+
         private:            
             Y_DISABLE_COPY_AND_ASSIGN(I_TIFF);
         };
@@ -86,7 +87,6 @@ namespace upsylon
             static const size_t samples_per_pixel = 4; //!< used RGBA by default
             virtual ~O_TIFF() throw();                 //!< destructor
             explicit O_TIFF(const string         &filename,
-                            const Image::Options *options,
                             const bool            append);   //!< open the file to write
 
 
@@ -110,8 +110,6 @@ namespace upsylon
                                 const int     w,
                                 const int     h,
                                 const int     iDrectory);
-
-            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(O_TIFF);

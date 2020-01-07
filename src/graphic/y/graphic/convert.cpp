@@ -231,7 +231,19 @@ namespace upsylon {
         template <>
         rgba Convert::Get<rgba,rgb>(const rgb &C) throw() { return C; }
 
-       
+
+        template <>
+        float Convert:: FloatTo<float>( const float f ) throw()
+        {
+            return f;
+        }
+
+        template <>
+        uint8_t Convert:: FloatTo<uint8_t>( const float f ) throw()
+        {
+            return uint8_t( floor( f+0.5f) );
+        }
+
         
     }
 

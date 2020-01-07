@@ -28,33 +28,39 @@ Y_UTEST(stack)
 
     for(size_t i=0;i<n;++i)
     {
-        const unit_t x = alea.range<unit_t>(0,w);
-        const unit_t y = alea.range<unit_t>(0,h);
-        const unit_t r = alea.leq(100);
-        const size_t idx   = 1+alea.lt( Y_NAMED_COLORS );
-        const rgb    C     = NamedColors::GetRGBA(idx);
-        const float  f     = Convert::Get<float,rgb>(C);
-        const unit_t alpha = alea.range<uint8_t>(10,255);
+        for(size_t iter=0;iter<2;++iter)
+        {
+            const unit_t x     = alea.range<unit_t>(0,w);
+            const unit_t y     = alea.range<unit_t>(0,h);
+            const unit_t r     = alea.leq(100);
+            const size_t idx   = 1+alea.lt( Y_NAMED_COLORS );
+            const rgb    C     = NamedColors::GetRGBA(idx);
+            const float  f     = Convert::Get<float,rgb>(C);
+            const unit_t alpha = alea.range<uint8_t>(10,255);
 
-        Draw::Disk( rgbs[i], x, y, r, C, alpha);
-        Draw::Disk( pxms[i], x, y, r, f, alpha);
+            Draw::Disk( rgbs[i], x, y, r, C, alpha);
+            Draw::Disk( pxms[i], x, y, r, f, alpha);
+        }
 
     }
 
-    pxms.saveTIFF("pxms.tif", 0, n, NULL);
-    rgbs.saveTIFF("rgbs.tif", 0, n, NULL);
+    pxms.saveTIFF("pxms.tif", 0, n);
+    Y_CHECK( I_TIFF::CountDirectoriesOf("pxms.tif") == n );
+
+    rgbs.saveTIFF("rgbs.tif", 0, n);
+    Y_CHECK( I_TIFF::CountDirectoriesOf("rgbs.tif") == n );
 
 
     {
         Pixmap<float> tgt(w,h);
         pxms.average(tgt);
-        IMG.saveAs("averagef.png", tgt, 0);
+        IMG.saveAs("averagef.tif", tgt, 0);
     }
 
     {
         Pixmap<rgb> tgt(w,h);
         rgbs.average(tgt);
-        IMG.saveAs("average3.png", tgt, 0);
+        IMG.saveAs("average3.tif", tgt, 0);
     }
 
 

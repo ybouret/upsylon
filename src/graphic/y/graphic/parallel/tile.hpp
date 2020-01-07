@@ -12,9 +12,8 @@ namespace upsylon {
 
     namespace Graphic {
 
-        class Tiles; // forward declaration
-
-        typedef memory::xslot<memory::pooled> TileCache;
+        class   Tiles; //!< forward declaration
+        typedef memory::xslot<memory::pooled> TileCache; //!< alias
 
         //! subdivision for operation on bitmaps/pixmaps, may be empty
         class Tile : public Area, public TileCache

@@ -68,13 +68,6 @@ namespace upsylon
             
             
         }
-
-        size_t TIFF_Format:: countDirectories(const string &filename) const
-        {
-            I_TIFF tiff(filename);
-            return tiff.CountDirectories();
-        }
-
         
 
         void TIFF_Format:: save(const string         &filename,
@@ -83,19 +76,44 @@ namespace upsylon
                                 const Image::Options *options) const
         {
             // open file
-            O_TIFF tiff(filename,options,false);
+            O_TIFF tiff(filename,false);
 
 
             // compile data
-            raster.compileBitmap(bmp, proc);
+            Compile(raster,bmp, proc);
             
             // call library
             tiff.WriteRGBAImage(raster, bmp.w, bmp.h, 0);
 
+            (void) options;
 
         }
 
-        
+        void TIFF_Format:: Compile(_TIFF::Raster &raster, const Bitmap &bmp, Data2RGBA &proc)
+        {
+            const unit_t w = bmp.w;
+            const unit_t h = bmp.h;
+            raster.startup(w*h);
+            uint32_t *p = *raster;
+            for(unit_t j=0;j<h;++j)
+            {
+                uint32_t *q = &p[j*w];
+                for(unit_t i=0;i<w;++i)
+                {
+                    const rgba C = proc(bmp.stdGet(i,j));
+                    uint32_t  &Q = *(q++);
+                    Q  = C.a; Q <<= 8;
+                    Q |= C.b; Q <<= 8;
+                    Q |= C.g; Q <<= 8;
+                    Q |= C.r;
+                    assert( TIFFGetR(Q) == C.r );
+                    assert( TIFFGetG(Q) == C.g );
+                    assert( TIFFGetB(Q) == C.b );
+                    assert( TIFFGetA(Q) == C.a );
+                }
+            }
+        }
+
         
     }
 }

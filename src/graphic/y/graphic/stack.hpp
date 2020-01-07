@@ -4,13 +4,14 @@
 #ifndef Y_GRAPHIC_STACK_INCLUDED
 #define Y_GRAPHIC_STACK_INCLUDED 1
 
-#include "y/graphic/image/tiff++.hpp"
+#include "y/graphic/image/tiff.hpp"
 #include "y/sequence/slots.hpp"
 
 namespace upsylon {
 
     namespace Graphic {
 
+        //! check valid file name
         void CheckTIFF( const string &fileName );
 
         //! a stack of pixmaps
@@ -18,6 +19,7 @@ namespace upsylon {
         class Stack : public Area, public slots< Pixmap<T> >
         {
         public:
+            typedef arc_ptr<Stack>     Pointer; //!< alias
             typedef slots< Pixmap<T> > Slots; //!< alias
 
             //! setup
@@ -71,7 +73,7 @@ namespace upsylon {
                             U *q   = (U *)&tgt;
                             for(size_t dim=0;dim<DIMS;++dim)
                             {
-                                q[dim] = U( sum[dim] / count );
+                                q[dim] = Convert::FloatTo<U>( sum[dim] / count );
                             }
                         }
 
@@ -91,8 +93,7 @@ namespace upsylon {
             //! save to TIFF
             inline void saveTIFF(const string         &fileName,
                                  const size_t          ini,
-                                 const size_t          end,
-                                 const Image::Options *options)
+                                 const size_t          end)
             {
                 CheckTIFF(fileName);
                 const Slots  &self = *this;
@@ -101,8 +102,8 @@ namespace upsylon {
                 bool          append = false;
                 for(size_t i=ini;i<end;++i)
                 {
-                    O_TIFF        tiff(fileName,options,append);
-                    raster.compileBitmap(*self[i], proc);
+                    O_TIFF        tiff(fileName,append);
+                    TIFF_Format::Compile(raster,*self[i], proc);
                     tiff.WriteRGBAImage(raster, w, h,i);
                     append = true;
                  }

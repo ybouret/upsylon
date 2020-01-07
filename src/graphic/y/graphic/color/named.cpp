@@ -32,12 +32,19 @@ namespace upsylon {
 
         rgb   NamedColors:: GetRGB( const size_t index ) throw()
         {
-            return List[ index % Y_NAMED_COLORS ].code;
+            if(index<=0)
+            {
+                return List[0].code;
+            }
+            else
+            {
+                return List[ 1 + ( index % (Y_NAMED_COLORS-1) ) ].code;
+            }
         }
 
         rgba   NamedColors:: GetRGBA( const size_t index ) throw()
         {
-            return List[ index % Y_NAMED_COLORS ].code;
+            return GetRGB(index);
         }
 
         IndexToRGBA:: IndexToRGBA(const size_t callIndex,
@@ -65,6 +72,11 @@ namespace upsylon {
             }
         }
 
+        template <>
+        rgba Convert::Get<rgba,size_t>(const size_t &index) throw()
+        {
+            return NamedColors::GetRGBA(index);
+        }
 
     }
 }

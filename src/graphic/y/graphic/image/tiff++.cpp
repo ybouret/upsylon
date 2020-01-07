@@ -80,6 +80,12 @@ namespace upsylon
             return count;
         }
 
+        size_t I_TIFF:: CountDirectoriesOf( const string &filename )
+        {
+            I_TIFF tiff(filename);
+            return tiff.CountDirectories();
+        }
+
         void I_TIFF:: ReadRBGAImage(Raster &raster)
         {
             const int    w   = GetWidth();
@@ -92,6 +98,7 @@ namespace upsylon
             }
         }
 
+        
 
     }
 }
@@ -110,7 +117,6 @@ namespace upsylon
         }
 
         O_TIFF:: O_TIFF(const string         &filename,
-                        const Image::Options *options,
                         const bool            append) :
         _TIFF()
         {
@@ -133,7 +139,6 @@ namespace upsylon
             TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
 
 
-            (void) options;
         }
 
 #define O_TIFF_DEFINE(NAME) { #NAME, COMPRESSION_##NAME }
@@ -222,33 +227,14 @@ namespace upsylon
         }
 
         
-
+#if 0
         void _TIFF::Raster:: compileBitmap(const Bitmap &bmp,
                                            Data2RGBA    &proc)
         {
-            const unit_t w = bmp.w;
-            const unit_t h = bmp.h;
-            startup(w*h);
-            uint32_t *p = **this;
-            for(unit_t j=0;j<h;++j)
-            {
-                uint32_t *q = &p[j*w];
-                for(unit_t i=0;i<w;++i)
-                {
-                    const rgba C = proc(bmp.stdGet(i,j));
-                    uint32_t  &Q = *(q++);
-                    Q  = C.a; Q <<= 8;
-                    Q |= C.b; Q <<= 8;
-                    Q |= C.g; Q <<= 8;
-                    Q |= C.r;
-                    assert( TIFFGetR(Q) == C.r );
-                    assert( TIFFGetG(Q) == C.g );
-                    assert( TIFFGetB(Q) == C.b );
-                    assert( TIFFGetA(Q) == C.a );
-                }
-            }
+           
 
         }
+#endif
 
     }
     

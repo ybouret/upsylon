@@ -15,6 +15,7 @@ namespace upsylon {
         //! pixel conversion routines
         struct Convert
         {
+
             //! assuming 0<=f<=1, return the corresponding closest byte
             static inline uint8_t Float2Byte( const float f ) throw()
             {
@@ -78,6 +79,11 @@ namespace upsylon {
             template <typename TARGET,typename SOURCE> static
             TARGET Get( const SOURCE & ) throw();
 
+
+
+            //! for stack operations
+            template <typename T> static
+            T FloatTo( const float ) throw();
         };
 
     }

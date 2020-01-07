@@ -29,7 +29,7 @@ namespace upsylon {
         struct NamedColors
         {
             static const NamedColor List[Y_NAMED_COLORS];       //!< built-in colors
-            static rgb   GetRGB(  const size_t index ) throw(); //!< RGB by index, safe
+            static rgb   GetRGB(  const size_t index ) throw(); //!< RGB  by index, safe
             static rgba  GetRGBA( const size_t index ) throw(); //!< RGBA by index, safe
         };
 

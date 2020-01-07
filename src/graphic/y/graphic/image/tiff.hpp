@@ -30,14 +30,16 @@ namespace upsylon
                                  const Bitmap         &bmp,
                                  Data2RGBA            &proc,
                                  const Image::Options *params) const;
-
-            //! count TIFF directories in one file
-            size_t countDirectories(const string &filename) const;
             
+
+            //! compile a bitmap to a RGBA raster
+            static void Compile(_TIFF::Raster        &raster,
+                                const Bitmap         &bmp,
+                                Data2RGBA            &proc);
             
 
         private:
-            mutable I_TIFF::Raster raster;
+            mutable _TIFF::Raster raster;
             Y_DISABLE_COPY_AND_ASSIGN(TIFF_Format);
         };
 
