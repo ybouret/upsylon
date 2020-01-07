@@ -71,7 +71,7 @@ namespace upsylon {
                             U *q   = (U *)&tgt;
                             for(size_t dim=0;dim<DIMS;++dim)
                             {
-                                q[dim] = Convert::Get<U,float>( sum[dim] / count );
+                                q[dim] = U( sum[dim] / count );
                             }
                         }
 
@@ -102,7 +102,7 @@ namespace upsylon {
                 for(size_t i=ini;i<end;++i)
                 {
                     O_TIFF        tiff(fileName,options,append);
-                    O_TIFF::Data2Raster(raster, *self[i], proc);
+                    raster.compileBitmap(*self[i], proc);
                     tiff.WriteRGBAImage(raster, w, h,i);
                     append = true;
                  }

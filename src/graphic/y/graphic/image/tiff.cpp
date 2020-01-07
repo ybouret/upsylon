@@ -87,10 +87,10 @@ namespace upsylon
 
 
             // compile data
-            O_TIFF:: Data2Raster(raster, bmp, proc);
-
+            raster.compileBitmap(bmp, proc);
+            
             // call library
-            tiff.WriteRGBAImage(raster, bmp.w, bmp.h);
+            tiff.WriteRGBAImage(raster, bmp.w, bmp.h, 0);
 
 
         }

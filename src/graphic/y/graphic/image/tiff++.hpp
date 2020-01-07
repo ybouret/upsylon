@@ -27,7 +27,7 @@ namespace upsylon
                 //! destructor
                 inline virtual ~Raster() throw() {}
                 //! ensure enough dwords
-                inline void startup( const size_t n)
+                inline void startup(const size_t n)
                 {
                     if( n > size )
                     {
@@ -36,6 +36,10 @@ namespace upsylon
                     }
                     assert(size>=n);
                 }
+
+                void compileBitmap(const Bitmap &bmp,
+                                   Data2RGBA    &proc);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Raster);
             };
@@ -80,7 +84,7 @@ namespace upsylon
         {
         public:
             static const size_t samples_per_pixel = 4; //!< used RGBA by default
-            virtual ~O_TIFF() throw();                 //!< desctructor
+            virtual ~O_TIFF() throw();                 //!< destructor
             explicit O_TIFF(const string         &filename,
                             const Image::Options *options,
                             const bool            append);   //!< open the file to write
@@ -101,18 +105,12 @@ namespace upsylon
             static const CompressionType NamedCompression[];
 
 
-
             //! write an RGBA raster
             void WriteRGBAImage(const Raster &raster,
                                 const int     w,
                                 const int     h,
-                                const int     iDrectory=0);
+                                const int     iDrectory);
 
-
-            
-            static void Data2Raster(Raster       &raster,
-                                    const Bitmap &bmp,
-                                    Data2RGBA    &proc);
             
 
         private:

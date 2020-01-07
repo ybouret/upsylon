@@ -42,7 +42,8 @@ Y_UTEST(stack)
     }
 
     pxms.saveTIFF("pxms.tif", 0, n, NULL);
-    
+    rgbs.saveTIFF("rgbs.tif", 0, n, NULL);
+
 
     {
         Pixmap<float> tgt(w,h);

@@ -223,14 +223,13 @@ namespace upsylon
 
         
 
-        void O_TIFF:: Data2Raster(Raster       &raster,
-                                  const Bitmap &bmp,
-                                  Data2RGBA    &proc)
+        void _TIFF::Raster:: compileBitmap(const Bitmap &bmp,
+                                           Data2RGBA    &proc)
         {
             const unit_t w = bmp.w;
             const unit_t h = bmp.h;
-            raster.startup(w*h);
-            uint32_t *p = *raster;
+            startup(w*h);
+            uint32_t *p = **this;
             for(unit_t j=0;j<h;++j)
             {
                 uint32_t *q = &p[j*w];
