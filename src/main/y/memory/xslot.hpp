@@ -4,34 +4,59 @@
 
 #include "y/memory/global.hpp"
 #include "y/type/traits.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
     namespace memory
     {
-        //! base class for xslot
+        //----------------------------------------------------------------------
+        //
+        //! base class for xslot, a smart slot for data
+        //
+        //----------------------------------------------------------------------
         class xslot_type
         {
         public:
+            //__________________________________________________________________
+            //
+            // public types and definitions
+            //__________________________________________________________________
             typedef void (*kill_proc)(void *); //!< alias
 
+            //__________________________________________________________________
+            //
+            // public methods
+            //__________________________________________________________________
             virtual ~xslot_type() throw();             //! destruct
             void     free() throw();                   //!< kill/clear data
             bool     is_cplusplus() const throw();     //!< if kill!=NULL
-            void     swap_with( xslot_type &) throw(); //!< no-throw swap
+            void     swap_with(xslot_type &) throw();  //!< no-throw swap
 
+            //__________________________________________________________________
+            //
+            // public members
+            //__________________________________________________________________
             const size_t    size; //!< available bytes
 
         protected:
+            //__________________________________________________________________
+            //
+            // protected members
+            //__________________________________________________________________
             void           *data; //!< first available byte
             kill_proc       kill; //!< cleaning content
 
+            //__________________________________________________________________
+            //
+            // protected methods
+            //__________________________________________________________________
             explicit xslot_type() throw(); //!< initialize
-            void     would_kill() throw(); //!< check and kill
+            void     would_kill() throw(); //!< check and kill if necessary
 
             //! template function to kill data content
-            template <typename U>
-            static inline void kill_for( void *addr ) throw()
+            template <typename U> static inline
+            void kill_as( void *addr ) throw()
             {
                 static_cast<U*>(addr)->~U();
             }
@@ -43,7 +68,7 @@ namespace upsylon
                 assert(0==kill);
                 assert(data!=0);
                 assert(size>=sizeof(T));
-                kill=kill_for<typename type_traits<T>::mutable_type>;
+                kill = kill_as<typename type_traits<T>::mutable_type>;
             }
 
         private:
@@ -61,9 +86,9 @@ namespace upsylon
             //! initialize with data
             inline explicit xslot(const size_t n) : xslot_type()
             {
-                ALLOCATOR &mgr = ALLOCATOR::instance();
-                (size_t &)size = n;
-                data = mgr.acquire( (size_t&) size );
+                ALLOCATOR &mgr    = ALLOCATOR::instance();
+                aliasing::_(size) = n;
+                data = mgr.acquire( aliasing::_(size) );
             }
 
             //! build without argument
@@ -117,6 +142,10 @@ namespace upsylon
                     free();
                 }
             }
+
+            //! kill content but keep memory if enough bytes
+            template <typename T> inline void acquire_for() { acquire( sizeof(T) ); }
+            template <typename T> inline void acquire_for(const size_t n) { acquire( n*sizeof(T) ); }
 
             //! get POD
             template <typename T> inline T & get() throw()

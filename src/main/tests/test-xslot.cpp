@@ -44,28 +44,36 @@ Y_UTEST(xslot)
     std::cerr << "sizeof(xslot<global>)=" << sizeof(xslot<global>) << std::endl;
     std::cerr << "sizeof(xslot<pooled>)=" << sizeof(xslot<pooled>) << std::endl;
 
+    std::cerr << "init global:" << std::endl;
     xslot<>       xdefault0;     display_xs( xdefault0 );
     xslot<>       xdefault1(10); display_xs( xdefault1 );
+
+    std::cerr << "init pooled:" << std::endl;
     xslot<pooled> xpooled0;      display_xs(xpooled0);
     xslot<pooled> xpooled1(10);  display_xs(xpooled1);
 
+    std::cerr << "acquire global:" << std::endl;
     xdefault0.acquire(21); display_xs( xdefault0 );
     xdefault1.acquire(6);  display_xs( xdefault1 );
+
+    std::cerr << "acquire pooled: " << std::endl;
     xpooled0.acquire(21);  display_xs( xpooled0  );
     xpooled1.acquire(43);  display_xs( xpooled1  );
 
+    std::cerr << "build string..." << std::endl;
     xdefault0.build<string>();
     xdefault1.build<string>();
     xpooled0.build<string>();
     xpooled1.build<string>();
 
 
-
+    std::cerr << "build dummy..." << std::endl;
     xdefault0.build<dummy>();
     xdefault1.build<dummy>();
     xpooled0.build<dummy>();
     xpooled1.build<dummy>();
 
+    std::cerr << "build strings..." << std::endl;
     {
         const string arg = "hello";
         xdefault0.build_from<string>(arg);
@@ -73,6 +81,8 @@ Y_UTEST(xslot)
         xpooled0.build_from<string>(arg);
         xpooled1.build_from<string>(arg);
     }
+
+    std::cerr << "build dummys..." << std::endl;
 
     xdefault0.build<dummy,int>(1);
     xdefault1.build<dummy,char>(2);
