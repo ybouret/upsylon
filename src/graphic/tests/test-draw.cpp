@@ -1,6 +1,7 @@
 #include "y/graphic/image.hpp"
 #include "y/graphic/draw/line.hpp"
 #include "y/graphic/draw/circle.hpp"
+#include "y/graphic/draw/fill.hpp"
 
 #include "y/graphic/color/named.hpp"
 #include "y/utest/run.hpp"
@@ -150,6 +151,37 @@ Y_UTEST(draw)
 
     }
 
+
+    for(size_t iter=0; iter<8; ++iter )
+    {
+        const unit_t x0  = alea.range<unit_t>(xlo,xhi);
+        const unit_t x1  = alea.range<unit_t>(xlo,xhi);
+        const unit_t y0  = alea.range<unit_t>(ylo,yhi);
+        const unit_t y1  = alea.range<unit_t>(ylo,yhi);
+        const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
+        const rgba   C   = NamedColors::GetRGBA(idx);
+        const float  f   = Convert::Get<float,rgba>(C);
+
+        Draw::Fill(img4, x0, y0, x1, y1, C);
+        Draw::Fill(imgf, x0, y0, x1, y1, f);
+
+    }
+
+    for(size_t iter=0; iter<8; ++iter )
+    {
+        const unit_t x0  = alea.range<unit_t>(xlo,xhi);
+        const unit_t x1  = alea.range<unit_t>(xlo,xhi);
+        const unit_t y0  = alea.range<unit_t>(ylo,yhi);
+        const unit_t y1  = alea.range<unit_t>(ylo,yhi);
+        const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
+        const rgba   C   = NamedColors::GetRGBA(idx);
+        const float  f   = Convert::Get<float,rgba>(C);
+        const uint8_t alpha = alea.leq(255);
+
+        Draw::Fill(img4, x0, y0, x1, y1, C, alpha);
+        Draw::Fill(imgf, x0, y0, x1, y1, f, alpha);
+
+    }
 
 
     IMG.saveAs( "draw4.png", img4, 0 );
