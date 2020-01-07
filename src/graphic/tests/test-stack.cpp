@@ -28,7 +28,7 @@ Y_UTEST(stack)
 
     for(size_t i=0;i<n;++i)
     {
-        for(size_t iter=0;iter<2;++iter)
+        for(size_t iter=0;iter<4;++iter)
         {
             const unit_t x     = alea.range<unit_t>(0,w);
             const unit_t y     = alea.range<unit_t>(0,h);
@@ -47,10 +47,21 @@ Y_UTEST(stack)
     pxms.saveTIFF("pxms.tif", 0, n);
     Y_CHECK( I_TIFF::CountDirectoriesOf("pxms.tif") == n );
 
+    {
+        auto_ptr< Stack<float> > s = Stack<float>::LoadTIFF("pxms.tif");
+        Y_CHECK( s->size() == pxms.size() );
+        s->saveTIFF("pxms-reload.tif", 0, n);
+    }
+    
     rgbs.saveTIFF("rgbs.tif", 0, n);
     Y_CHECK( I_TIFF::CountDirectoriesOf("rgbs.tif") == n );
 
-
+    {
+        auto_ptr< Stack<rgb> > s = Stack<rgb>::LoadTIFF("rgbs.tif");
+        Y_CHECK( s->size() == pxms.size() );
+        s->saveTIFF("rgbs-reload.tif", 0, n);
+    }
+    
     {
         Pixmap<float> tgt(w,h);
         pxms.average(tgt);

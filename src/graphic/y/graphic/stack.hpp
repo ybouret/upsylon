@@ -6,6 +6,7 @@
 
 #include "y/graphic/image/tiff.hpp"
 #include "y/sequence/slots.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
@@ -107,6 +108,31 @@ namespace upsylon {
                     tiff.WriteRGBAImage(raster, w, h,i);
                     append = true;
                  }
+            }
+            
+            static Stack *LoadTIFF(const string &filename, const size_t maxDirectories=0)
+            {
+                size_t numDirectories = I_TIFF::CountDirectoriesOf(filename);
+                if(maxDirectories>0)
+                {
+                    numDirectories = min_of(maxDirectories,numDirectories);
+                }
+                I_TIFF tiff(filename);
+                _TIFF::Raster   raster;
+                const unit_t    w    = tiff.GetWidth();
+                const unit_t    h    = tiff.GetHeight();
+                auto_ptr<Stack> s    = new Stack(w,h,numDirectories);
+                Slots          &self = *s;
+                PutRGBA<T>      proc;
+                
+                for(size_t i=0;i<numDirectories;++i)
+                {
+                    tiff.SetDirectory(i);
+                    tiff.ReadRBGAImage(raster);
+                    TIFF_Format::Expand(*self[i],raster,proc);
+                }
+                
+                return s.yield();
             }
 
         private:

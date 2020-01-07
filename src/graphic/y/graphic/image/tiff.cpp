@@ -50,6 +50,7 @@ namespace upsylon
             auto_ptr<Bitmap> B = Bitmap::Create(w, h, depth);
 
 
+#if 0
             // map raster to bitmap
             const uint32_t *p = *raster;
             for(int j=0;j<h;++j)
@@ -62,11 +63,31 @@ namespace upsylon
                     proc( (void*)(B->stdGet(i,j)),C);
                 }
             }
+#endif
+            Expand(*B, raster, proc);
             
             return B.yield();
             
-            
-            
+        }
+        
+        void TIFF_Format:: Expand(Bitmap              &bmp,
+                                  const _TIFF::Raster &raster,
+                                  RGBA2Data           &proc)
+        {
+            const unit_t w = bmp.w;
+            const unit_t h = bmp.h;
+            assert( raster.size >= size_t(w*h) );
+            const uint32_t *p = *raster;
+            for(int j=0;j<h;++j)
+            {
+                const uint32_t *q = &p[j*w];
+                for(int i=0;i<w;++i)
+                {
+                    const uint32_t P = *(q++);
+                    const rgba     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
+                    proc( (void*)(bmp.stdGet(i,j)),C);
+                }
+            }
         }
         
 
