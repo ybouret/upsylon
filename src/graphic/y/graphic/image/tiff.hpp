@@ -37,6 +37,7 @@ namespace upsylon
                                 const Bitmap         &bmp,
                                 Data2RGBA            &proc);
             
+            //! expand a RGBA raster into a Bitmap
             static void Expand(Bitmap              &bmp,
                                const _TIFF::Raster &raster,
                                RGBA2Data           &proc);

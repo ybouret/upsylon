@@ -110,6 +110,7 @@ namespace upsylon {
                  }
             }
             
+            //! reload TIFFs from a file
             static Stack *LoadTIFF(const string &filename, const size_t maxDirectories=0)
             {
                 size_t numDirectories = I_TIFF::CountDirectoriesOf(filename);
@@ -117,22 +118,20 @@ namespace upsylon {
                 {
                     numDirectories = min_of(maxDirectories,numDirectories);
                 }
-                I_TIFF tiff(filename);
-                _TIFF::Raster   raster;
-                const unit_t    w    = tiff.GetWidth();
-                const unit_t    h    = tiff.GetHeight();
-                auto_ptr<Stack> s    = new Stack(w,h,numDirectories);
-                Slots          &self = *s;
-                PutRGBA<T>      proc;
-                
+                I_TIFF            tiff(filename);
+                _TIFF::Raster     data;
+                PutRGBA<T>        proc;
+                auto_ptr<Stack>   sptr = new Stack(tiff.GetWidth(),tiff.GetHeight(),numDirectories);
+                Slots            &self = *sptr;
+
                 for(size_t i=0;i<numDirectories;++i)
                 {
                     tiff.SetDirectory(i);
-                    tiff.ReadRBGAImage(raster);
-                    TIFF_Format::Expand(*self[i],raster,proc);
+                    tiff.ReadRBGAImage(data);
+                    TIFF_Format::Expand(*self[i],data,proc);
                 }
                 
-                return s.yield();
+                return sptr.yield();
             }
 
         private:

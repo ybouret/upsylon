@@ -18,6 +18,7 @@ namespace upsylon
 
             //! internal raster base type
             typedef memory::global_buffer_of<uint32_t> _Raster;
+            
             //! internal memory raster
             class Raster : public _Raster
             {
