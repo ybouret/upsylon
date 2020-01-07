@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_GRAPHIC_DRAW_FILL_INCLUDED
@@ -13,7 +12,7 @@ namespace upsylon {
 
         namespace Draw {
 
-            //! fill an area
+            //! fill an area by putPixel
             template <typename T, typename PUTPIXEL>
             inline void _Fill(Pixmap<T>    &img,
                               unit_t        x0,
@@ -39,12 +38,13 @@ namespace upsylon {
                 }
             }
 
+            //! fill with a solid color
             template <typename T>
             inline void Fill(Pixmap<T>    &img,
-                             unit_t        x0,
-                             unit_t        y0,
-                             unit_t        x1,
-                             unit_t        y1,
+                             const unit_t x0,
+                             const unit_t y0,
+                             const unit_t x1,
+                             const unit_t y1,
                              typename Pixmap<T>::param_type color)
             {
                 PutPixel::Copy<T> proc(color);
@@ -52,13 +52,13 @@ namespace upsylon {
             }
 
 
-            //! a line with a given color/alpha
+            //! fill with a given color/alpha
             template <typename T>
             inline void Fill(Pixmap<T>    &img,
-                             unit_t        x0,
-                             unit_t        y0,
-                             unit_t        x1,
-                             unit_t        y1,
+                             const unit_t x0,
+                             const unit_t y0,
+                             const unit_t x1,
+                             const unit_t y1,
                              typename Pixmap<T>::param_type color,
                              const uint8_t                  alpha)
             {
