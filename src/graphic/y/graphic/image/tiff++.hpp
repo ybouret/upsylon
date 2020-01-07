@@ -2,7 +2,7 @@
 #ifndef Y_TIFFPP_INCLUDED
 #define Y_TIFFPP_INCLUDED 1
 
-#include "y/string.hpp"
+#include "y/graphic/image.hpp"
 #include "y/memory/buffers.hpp"
 
 namespace upsylon
@@ -81,7 +81,11 @@ namespace upsylon
         public:
             static const size_t samples_per_pixel = 4; //!< used RGBA by default
             virtual ~O_TIFF() throw();                 //!< desctructor
-            explicit O_TIFF(const string &filename);   //!< open the file to write
+            explicit O_TIFF(const string         &filename,
+                            const Image::Options *options,
+                            const bool            append);   //!< open the file to write
+
+
 
             //! function that should set compression
             void SetCompression(const char *);
@@ -96,11 +100,24 @@ namespace upsylon
             //! table of registered compressions
             static const CompressionType NamedCompression[];
 
-            //! write and RGBA raster
-            void WriteRGBAImage(const Raster &raster, const int w, const int h);
+
+
+            //! write an RGBA raster
+            void WriteRGBAImage(const Raster &raster,
+                                const int     w,
+                                const int     h,
+                                const int     iDrectory=0);
+
+
             
+            static void Data2Raster(Raster       &raster,
+                                    const Bitmap &bmp,
+                                    Data2RGBA    &proc);
+            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(O_TIFF);
+            
         };
     }
 }

@@ -1,10 +1,19 @@
 
 #include "y/graphic/stack.hpp"
+#include "y/exception.hpp"
+#include "y/fs/vfs.hpp"
 
 namespace upsylon {
 
     namespace Graphic {
 
+        void CheckTIFF( const string &fileName )
+        {
+            if( "TIFF" != Image::instance().FormatFor(fileName).name )
+            {
+                throw exception("Graphic::Stack.save(invalid '%s')", vfs::get_base_name( fileName ) );
+            }
+        }
 
         template <>
         void Stack<float>:: average(Pixmap<float> &target, const size_t ini, const size_t end) const
@@ -34,3 +43,4 @@ namespace upsylon {
 
 }
 
+ 

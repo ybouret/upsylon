@@ -34,6 +34,8 @@ namespace upsylon
             //! count TIFF directories in one file
             size_t countDirectories(const string &filename) const;
             
+            
+
         private:
             mutable I_TIFF::Raster raster;
             Y_DISABLE_COPY_AND_ASSIGN(TIFF_Format);

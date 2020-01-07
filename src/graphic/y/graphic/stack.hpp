@@ -4,13 +4,14 @@
 #ifndef Y_GRAPHIC_STACK_INCLUDED
 #define Y_GRAPHIC_STACK_INCLUDED 1
 
-#include "y/graphic/pixmap.hpp"
+#include "y/graphic/image/tiff++.hpp"
 #include "y/sequence/slots.hpp"
-#include "y/graphic/convert.hpp"
 
 namespace upsylon {
 
     namespace Graphic {
+
+        void CheckTIFF( const string &fileName );
 
         //! a stack of pixmaps
         template <typename T>
@@ -87,6 +88,25 @@ namespace upsylon {
                 average( target, 0, this->size() );
             }
 
+            //! save to TIFF
+            inline void saveTIFF(const string         &fileName,
+                                 const size_t          ini,
+                                 const size_t          end,
+                                 const Image::Options *options)
+            {
+                CheckTIFF(fileName);
+                const Slots  &self = *this;
+                GetRGBA<T>    proc;
+                _TIFF::Raster raster;
+                bool          append = false;
+                for(size_t i=ini;i<end;++i)
+                {
+                    O_TIFF        tiff(fileName,options,append);
+                    O_TIFF::Data2Raster(raster, *self[i], proc);
+                    tiff.WriteRGBAImage(raster, w, h,i);
+                    append = true;
+                 }
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Stack);

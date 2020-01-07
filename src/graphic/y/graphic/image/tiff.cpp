@@ -76,39 +76,23 @@ namespace upsylon
         }
 
         
+
         void TIFF_Format:: save(const string         &filename,
                                 const Bitmap         &bmp,
                                 Data2RGBA            &proc,
-                                const Image::Options *) const
+                                const Image::Options *options) const
         {
             // open file
-            O_TIFF tiff(filename);
+            O_TIFF tiff(filename,options,false);
 
-            // prepare raster
-            const unit_t w = bmp.w;
-            const unit_t h = bmp.h;
-            raster.startup(w*h);
-            uint32_t *p = *raster;
-            for(unit_t j=0;j<h;++j)
-            {
-                uint32_t *q = &p[j*w];
-                for(unit_t i=0;i<w;++i)
-                {
-                    const rgba C = proc(bmp.stdGet(i,j));
-                    uint32_t  &Q = *(q++);
-                    Q  = C.a; Q <<= 8;
-                    Q |= C.b; Q <<= 8;
-                    Q |= C.g; Q <<= 8;
-                    Q |= C.r;
-                    assert( TIFFGetR(Q) == C.r );
-                    assert( TIFFGetG(Q) == C.g );
-                    assert( TIFFGetB(Q) == C.b );
-                    assert( TIFFGetA(Q) == C.a );
-                }
-            }
+
+            // compile data
+            O_TIFF:: Data2Raster(raster, bmp, proc);
 
             // call library
-            tiff.WriteRGBAImage(raster,w,h);
+            tiff.WriteRGBAImage(raster, bmp.w, bmp.h);
+
+
         }
 
         

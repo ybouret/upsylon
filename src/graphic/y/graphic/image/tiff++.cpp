@@ -109,10 +109,12 @@ namespace upsylon
         {
         }
 
-        O_TIFF:: O_TIFF(const string &filename) :
+        O_TIFF:: O_TIFF(const string         &filename,
+                        const Image::Options *options,
+                        const bool            append) :
         _TIFF()
         {
-            handle = TIFFOpen( *filename,"w");
+            handle = TIFFOpen( *filename, append ? "a" : "w");
             if(!handle) throw imported::exception("TIFFOpen","couldn't open '%s'", *filename);
             TIFF *out = (TIFF *)handle;
             //TIFFSetField (out, TIFFTAG_IMAGEWIDTH, width);  // set the width of the image
@@ -130,6 +132,8 @@ namespace upsylon
             //TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_LZW);
             TIFFSetField(out, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
 
+
+            (void) options;
         }
 
 #define O_TIFF_DEFINE(NAME) { #NAME, COMPRESSION_##NAME }
@@ -178,23 +182,28 @@ namespace upsylon
 
         }
 
-        void O_TIFF:: WriteRGBAImage(const Raster &raster, const int w, const int h)
+
+        void O_TIFF:: WriteRGBAImage(const Raster &raster,
+                                     const int     w,
+                                     const int     h,
+                                     const int     iDirectory)
         {
             assert(w*h<=unit_t(raster.size));
             assert(w>0);
             assert(h>0);
             TIFF *out = (TIFF *)handle;
+            TIFFSetDirectory(out, iDirectory);
             TIFFSetField(out, TIFFTAG_IMAGEWIDTH,  w);
             TIFFSetField(out, TIFFTAG_IMAGELENGTH, h);
 
             const size_t usr_scanline = samples_per_pixel * w;
             const size_t out_scanline = TIFFScanlineSize(out);
             const size_t buf_scanline = max_of(usr_scanline,out_scanline);
-            memory::global_buffer_of<unsigned char> tmpbuf(buf_scanline);
-            unsigned char *buf = *tmpbuf;
 
             // We set the strip size of the file to be size of one row of pixels
             TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out,usr_scanline) );
+            memory::global_buffer_of<unsigned char> tmpbuf(buf_scanline);
+            unsigned char *buf = *tmpbuf;
 
             //Now writing image to the file one strip at a time
             const uint32_t *p = *raster;
@@ -209,9 +218,39 @@ namespace upsylon
 
             TIFFCheckpointDirectory(out);
             TIFFWriteDirectory(out);
+            TIFFFlush(out);
         }
+
         
-        
+
+        void O_TIFF:: Data2Raster(Raster       &raster,
+                                  const Bitmap &bmp,
+                                  Data2RGBA    &proc)
+        {
+            const unit_t w = bmp.w;
+            const unit_t h = bmp.h;
+            raster.startup(w*h);
+            uint32_t *p = *raster;
+            for(unit_t j=0;j<h;++j)
+            {
+                uint32_t *q = &p[j*w];
+                for(unit_t i=0;i<w;++i)
+                {
+                    const rgba C = proc(bmp.stdGet(i,j));
+                    uint32_t  &Q = *(q++);
+                    Q  = C.a; Q <<= 8;
+                    Q |= C.b; Q <<= 8;
+                    Q |= C.g; Q <<= 8;
+                    Q |= C.r;
+                    assert( TIFFGetR(Q) == C.r );
+                    assert( TIFFGetG(Q) == C.g );
+                    assert( TIFFGetB(Q) == C.b );
+                    assert( TIFFGetA(Q) == C.a );
+                }
+            }
+
+        }
+
     }
     
 }

@@ -86,7 +86,7 @@ namespace upsylon {
             use( new PNG_Format()  );
             use( new JPEG_Format() );
             use( new TIFF_Format() );
-        }
+         }
     }
 }
 

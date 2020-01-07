@@ -176,7 +176,7 @@ namespace upsylon {
 
             Format::Set formats;
             FmtDB       db;
-
+            
             friend class singleton<Image>;
             void compile();
 
