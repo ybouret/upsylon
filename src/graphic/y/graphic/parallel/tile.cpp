@@ -12,8 +12,6 @@ namespace upsylon {
             zforce(lower);
             zforce(upper);
             zforce(linearOffset);
-            zforce(data);
-            zforce(size);
         }
 
 

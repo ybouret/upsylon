@@ -12,7 +12,6 @@ namespace upsylon {
 
     namespace Graphic {
 
-        class   Tiles; //!< forward declaration
         typedef memory::xslot<memory::pooled> TileCache; //!< alias
 
         //! subdivision for operation on bitmaps/pixmaps, may be empty
@@ -34,49 +33,9 @@ namespace upsylon {
             friend std::ostream & operator<<( std::ostream &, const Tile &);
 
 
-#if 0
-            //! alias internal data
-            template <typename T> inline
-            T &as() throw()
-            {
-                assert(size>=sizeof(T));
-                return *static_cast<T*>(data);
-            }
-
-            //! alias internal data
-            template <typename T> inline
-            const T &as() const throw()
-            {
-                assert(size>=sizeof(T));
-                return *static_cast<T*>(data);
-            }
-
-            //! alias internal data
-            template <typename T> inline
-            T &as( const size_t indx )   throw()
-            {
-                assert(size>=(1+indx)*sizeof(T));
-                return *(static_cast<T*>(data)+indx);
-            }
-
-
-            //! alias internal data
-            template <typename T> inline
-            const T &as( const size_t indx ) const throw()
-            {
-                assert(size>=(1+indx)*sizeof(T));
-                return *(static_cast<T*>(data)+indx);
-            }
-
-            size_t localMemory() const throw(); //!< get allocated bytes
-#endif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tile);
-            //void        *data; //!< extra shared memory
-            //const size_t size; //!< available size
-
-            friend class Tiles;
         };
 
 
