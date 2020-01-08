@@ -190,6 +190,7 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(magic);
     Y_UTEST(zfi);
+    Y_UTEST(closest);
 }
 Y_UTEST_EXEC()
 

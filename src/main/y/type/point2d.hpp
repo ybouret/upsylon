@@ -13,6 +13,7 @@ namespace upsylon
     class point2d
     {
     public:
+        static const size_t DIMS = 2;
         Y_DECL_ARGS(T,type); //!< alias
         type x; //!< x coordinate
         type y; //!< y coordinate
@@ -140,19 +141,19 @@ namespace upsylon
 
 
         //! dimension as size
-        inline size_t size() const throw() { return 2; }
+        inline size_t size() const throw() { return DIMS; }
 
         //! access as a C++ array
         inline type & operator[](size_t index) throw()
         {
-            assert(index>=1); assert(index<=2);
+            assert(index>=1); assert(index<=DIMS);
             return *(((&x)-1) + index);
         }
 
         //! const access as a C++ array
         inline const_type & operator[](size_t index) const throw()
         {
-            assert(index>=1); assert(index<=2);
+            assert(index>=1); assert(index<=DIMS);
             return *(((&x)-1) + index);
         }
 
