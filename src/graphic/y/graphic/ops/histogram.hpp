@@ -6,6 +6,7 @@
 #include "y/graphic/parallel/tiles.hpp"
 #include "y/graphic/pixmaps.hpp"
 #include "y/graphic/pixel.hpp"
+#include "y/container/tuple.hpp"
 
 namespace upsylon {
 
@@ -18,11 +19,16 @@ namespace upsylon {
             KeepBackground  //!< shall keep background
         };
 
+
         //! histogram of bytes
         class Histogram : public Object
         {
         public:
             static const size_t BINS = 256; //!< number of bins
+
+            Y_PAIR_DECL(STANDARD,Metrics,double,average,double,variance);
+            Y_PAIR_END();
+            
 
             explicit Histogram() throw(); //!< setup
             virtual ~Histogram() throw(); //!< cleanup
@@ -47,7 +53,7 @@ namespace upsylon {
             //! Otsu 1D thresholding
             uint8_t Otsu1D() const throw();
 
-            
+            Metrics getMetrics( const uint8_t a, const uint8_t b ) const throw();
 
             //! reserve and clean memory
             void prolog( Tiles &tiles );

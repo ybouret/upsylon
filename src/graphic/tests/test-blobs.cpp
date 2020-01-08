@@ -9,6 +9,7 @@
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/graphic/color/ramp/hot_to_cold2.hpp"
 #include "y/graphic/color/named.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace Graphic;
@@ -39,6 +40,19 @@ Y_UTEST(blobs)
             H.build(pxm, Convert::Get<uint8_t,float>, tiles);
             const uint8_t t = H.Otsu1D();
             std::cerr << "Threshold=" << int(t) << std::endl;
+
+            {
+                ios::ocstream fp("h2d.dat");
+                for(unsigned a=0;a<=255;++a)
+                {
+                    for(unsigned b=0;b<=255;++b)
+                    {
+                        Histogram::Metrics m = H.getMetrics(a,b);
+                        fp("%u %u %g %g\n", a, b, m.variance, m.average );
+                    }
+                    fp << '\n';
+                }
+            }
 
             H.keep(tgt,pxm, t, Convert::Get<uint8_t,float>, KeepForeground, tiles);
             {
