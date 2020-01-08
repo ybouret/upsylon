@@ -43,12 +43,22 @@ namespace upsylon {
 
     namespace Graphic {
 
-        void CheckTIFF( const string &fileName )
+        void Stack_ :: CheckTIFF( const string &fileName )
         {
             if( "TIFF" != Image::instance().FormatFor(fileName).name )
             {
                 throw exception("Graphic::Stack.save(invalid '%s')", vfs::get_base_name( fileName ) );
             }
+        }
+
+        size_t Stack_:: NumDirectories( const string &fileName, const size_t maxDirectories)
+        {
+            size_t numDirectories = I_TIFF::CountDirectoriesOf(fileName);
+            if(maxDirectories>0)
+            {
+                numDirectories = min_of(maxDirectories,numDirectories);
+            }
+            return numDirectories;
         }
 
     }

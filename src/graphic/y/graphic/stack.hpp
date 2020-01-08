@@ -12,8 +12,15 @@ namespace upsylon {
 
     namespace Graphic {
 
-        //! check valid file name
-        void CheckTIFF( const string &fileName );
+        //! common operations for Stack<T>
+        struct Stack_
+        {
+            //! check valid file name
+            static void CheckTIFF( const string &fileName );
+
+            //! count directories
+            static size_t NumDirectories( const string &fileName, const size_t maxDirectories);
+        };
 
         //! a stack of pixmaps
         template <typename T>
@@ -96,7 +103,7 @@ namespace upsylon {
                                  const size_t          ini,
                                  const size_t          end)
             {
-                CheckTIFF(fileName);
+                Stack_::CheckTIFF(fileName);
                 const Slots  &self = *this;
                 GetRGBA<T>    proc;
                 _TIFF::Raster raster;
@@ -111,20 +118,19 @@ namespace upsylon {
             }
             
             //! reload TIFFs from a file
-            static Stack *LoadTIFF(const string &filename, const size_t maxDirectories=0)
+            static Stack *LoadTIFF(const string &fileName, const size_t maxDirectories=0)
             {
-                size_t numDirectories = I_TIFF::CountDirectoriesOf(filename);
-                if(maxDirectories>0)
-                {
-                    numDirectories = min_of(maxDirectories,numDirectories);
-                }
-                I_TIFF            tiff(filename);
+
+                // prepare loading
+                const size_t      nDir = Stack_::NumDirectories(fileName, maxDirectories);
+                I_TIFF            tiff(fileName);
                 _TIFF::Raster     data;
                 PutRGBA<T>        proc;
-                auto_ptr<Stack>   sptr = new Stack(tiff.GetWidth(),tiff.GetHeight(),numDirectories);
+                auto_ptr<Stack>   sptr = new Stack(tiff.GetWidth(),tiff.GetHeight(),nDir);
                 Slots            &self = *sptr;
 
-                for(size_t i=0;i<numDirectories;++i)
+                // put all in place
+                for(size_t i=0;i<nDir;++i)
                 {
                     tiff.SetDirectory(i);
                     tiff.ReadRBGAImage(data);
