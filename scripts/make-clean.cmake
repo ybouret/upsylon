@@ -1,5 +1,5 @@
 FIND_PROGRAM(MAKE make)
-FILE( GLOB_RECURSE Makefiles "makefile")
+FILE( GLOB_RECURSE Makefiles "src/*/makefile")
 
 FOREACH(f IN LISTS Makefiles )
 
