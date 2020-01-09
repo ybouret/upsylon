@@ -15,16 +15,19 @@ namespace upsylon {
         template <typename NODE>
         struct closest
         {
-            typedef typename core::list_of<NODE>      list_type;
-            typedef typename NODE::type               point_type;
-            typedef typename point_type::mutable_type type;
-            typedef typename point_type::const_type   const_type;
+            typedef typename core::list_of<NODE>      list_type;  //!< alias
+            typedef typename NODE::type               point_type; //!< alias
+            typedef typename point_type::mutable_type type;       //!< alias
+            typedef typename point_type::const_type   const_type; //!< alias
 
+            //! store local info
             struct info
             {
-                const NODE *l;
-                const NODE *r;
-                type        d;
+                const NODE *l; //!< from left list
+                const NODE *r; //!< from right list
+                type        d; //!< distance (squared)
+
+                //! update if smaller d factor
                 template <typename PROC>
                 inline void update( const NODE *L, const NODE *R, PROC &D ) throw()
                 {
@@ -38,6 +41,7 @@ namespace upsylon {
                 }
             };
 
+            //! full parallel run
             template <typename PROC>
             static inline void find(info                 &opt,
                                     const list_type      &lhs,

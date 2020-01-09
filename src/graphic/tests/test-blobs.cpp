@@ -43,14 +43,29 @@ Y_UTEST(blobs)
 
             {
                 ios::ocstream fp("h2d.dat");
-                for(unsigned a=0;a<=255;++a)
+                for(unsigned a=0;a<255;++a)
                 {
-                    for(unsigned b=0;b<=255;++b)
+                    for(unsigned b=a;b<255;++b)
                     {
-                        Histogram::Metrics m = H.getMetrics(a,b);
-                        fp("%u %u %g %g\n", a, b, m.variance, m.average );
+                        const unsigned a0 = a;
+                        const unsigned b0 = b;
+                        const unsigned a1 = a;
+                        const unsigned b1 = b+1;
+                        const unsigned a2 = a+1;
+                        const unsigned b2 = b1;
+                        Histogram::Metrics m0 = H.getMetrics(a0,b0);
+                        Histogram::Metrics m1 = H.getMetrics(a1,b1);
+                        Histogram::Metrics m2 = H.getMetrics(a2,b2);
+
+                        fp("%u %u %g %g\n", a0, b0, m0.variance, m0.average );
+                        fp("%u %u %g %g\n", a1, b1, m1.variance, m1.average );
+                        fp << '\n';
+                        fp("%u %u %g %g\n", a2, b2, m2.variance, m2.average );
+                        fp("%u %u %g %g\n", a2, b2, m2.variance, m2.average );
+                        fp << '\n' << '\n';
+
                     }
-                    fp << '\n';
+                    //fp << '\n';
                 }
             }
 

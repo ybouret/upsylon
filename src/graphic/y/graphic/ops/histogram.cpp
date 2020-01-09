@@ -145,7 +145,7 @@ namespace upsylon {
                 const size_t end = b;
                 for(size_t i=ini;i<=end;++i)
                 {
-                    const size_t x = bin[i];
+                    const size_t x  = bin[i];
                     const size_t ix = i*x;
                     num  += x;
                     mu1  += ix;

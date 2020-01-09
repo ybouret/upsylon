@@ -13,8 +13,9 @@ namespace upsylon
     class point2d
     {
     public:
-        static const size_t DIMS = 2;
-        Y_DECL_ARGS(T,type); //!< alias
+        static const size_t DIMS=2; //!< alias
+        Y_DECL_ARGS(T,type);        //!< alias
+        
         type x; //!< x coordinate
         type y; //!< y coordinate
 

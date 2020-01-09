@@ -26,7 +26,10 @@ namespace upsylon {
         public:
             static const size_t BINS = 256; //!< number of bins
 
+            //! declare metrics info
             Y_PAIR_DECL(STANDARD,Metrics,double,average,double,variance);
+
+            //! end of metrics
             Y_PAIR_END();
             
 
@@ -53,6 +56,7 @@ namespace upsylon {
             //! Otsu 1D thresholding
             uint8_t Otsu1D() const throw();
 
+            //! compute metrics from a to b
             Metrics getMetrics( const uint8_t a, const uint8_t b ) const throw();
 
             //! reserve and clean memory
