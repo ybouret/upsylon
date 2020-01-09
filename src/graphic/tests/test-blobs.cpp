@@ -41,6 +41,7 @@ Y_UTEST(blobs)
             const uint8_t t = H.Otsu1D();
             std::cerr << "Threshold=" << int(t) << std::endl;
 
+#if 0
             {
                 ios::ocstream fp("h2d.dat");
                 for(unsigned a=0;a<255;++a)
@@ -53,19 +54,39 @@ Y_UTEST(blobs)
                         const unsigned b1 = b+1;
                         const unsigned a2 = a+1;
                         const unsigned b2 = b1;
-                        Histogram::Metrics m0 = H.getMetrics(a0,b0);
-                        Histogram::Metrics m1 = H.getMetrics(a1,b1);
-                        Histogram::Metrics m2 = H.getMetrics(a2,b2);
 
-                        fp("%u %u %g %g\n", a0, b0, m0.variance, m0.average );
-                        fp("%u %u %g %g\n", a1, b1, m1.variance, m1.average );
+                        const double m0 = H.getMetrics(a0,b0);
+                        const double m1 = H.getMetrics(a1,b1);
+                        const double m2 = H.getMetrics(a2,b2);
+
+                        fp("%u %u %g\n", a0, b0, m0  );
+                        fp("%u %u %g\n", a1, b1, m1  );
                         fp << '\n';
-                        fp("%u %u %g %g\n", a2, b2, m2.variance, m2.average );
-                        fp("%u %u %g %g\n", a2, b2, m2.variance, m2.average );
+                        fp("%u %u %g\n", a2, b2, m2  );
+                        fp("%u %u %g\n", a2, b2, m2  );
                         fp << '\n' << '\n';
-
-                    }
+                     }
                     //fp << '\n';
+                }
+            }
+#endif
+
+            {
+                ios::ocstream fp("otsu.dat");
+                for(unsigned i=0;i<255;++i)
+                {
+                    const double lo = H.getMetrics(0, i);
+                    const double hi = H.getMetrics(i+1,255);
+                    //std::cerr << "i=" << i << " : " << lo << " " << hi << std::endl;
+                    fp("%u %g\n", i, lo+hi );
+                }
+            }
+
+            {
+                ios::ocstream fp("hist.dat");
+                for(unsigned i=0;i<=255;++i)
+                {
+                    fp("%u %g\n", i, double( H[i] ) / pxm->items);
                 }
             }
 

@@ -6,7 +6,6 @@
 #include "y/graphic/parallel/tiles.hpp"
 #include "y/graphic/pixmaps.hpp"
 #include "y/graphic/pixel.hpp"
-#include "y/container/tuple.hpp"
 
 namespace upsylon {
 
@@ -26,12 +25,7 @@ namespace upsylon {
         public:
             static const size_t BINS = 256; //!< number of bins
 
-            //! declare metrics info
-            Y_PAIR_DECL(STANDARD,Metrics,double,average,double,variance);
 
-            //! end of metrics
-            Y_PAIR_END();
-            
 
             explicit Histogram() throw(); //!< setup
             virtual ~Histogram() throw(); //!< cleanup
@@ -57,7 +51,7 @@ namespace upsylon {
             uint8_t Otsu1D() const throw();
 
             //! compute metrics from a to b
-            Metrics getMetrics( const uint8_t a, const uint8_t b ) const throw();
+            double getMetrics( const uint8_t a, const uint8_t b ) const throw();
 
             //! reserve and clean memory
             void prolog( Tiles &tiles );

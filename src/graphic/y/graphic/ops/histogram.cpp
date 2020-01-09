@@ -128,40 +128,77 @@ namespace upsylon {
 
         }
 
-        Histogram::Metrics Histogram:: getMetrics( const uint8_t a, const uint8_t b ) const throw()
+        double Histogram:: getMetrics( const uint8_t a, const uint8_t b ) const throw()
         {
             const size_t ini   = a;
             const size_t end   = b;
+
             if(end<=ini)
             {
-                return Metrics(bin[a],0);
+                return 0;
+            }
+            else
+            {
+                double n  = 0;
+                double m1 = 0;
+                for(size_t i=ini;i<=end;++i)
+                {
+                    const double ni = bin[i];
+                    n  += ni;
+                    m1 += i*ni;
+                }
+                if(n>0)
+                {
+                    const double mu = m1/n;
+                    double       s2 = 0;
+                    for(size_t i=ini;i<=end;++i)
+                    {
+                        const double d = double(i)-mu;
+                        s2 += d*d*bin[i];
+                    }
+                    return (mu*s2)/n;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+#if 0
+            if(end<=ini)
+            {
+                return 0;
             }
             else
             {
                 assert(end>ini);
-                size_t       num = 0;
-                size_t       mu1 = 0;
-                size_t       mu2 = 0;
-                const size_t end = b;
+                size_t  m0 = 0;
+                size_t  m1 = 0;
+                size_t  m2 = 0;
                 for(size_t i=ini;i<=end;++i)
                 {
-                    const size_t x  = bin[i];
-                    const size_t ix = i*x;
-                    num  += x;
-                    mu1  += ix;
-                    mu2  += ix*x;
+                    assert(i<=255);
+                    const size_t v0 = bin[i];
+                    const size_t v1 = i * v0;
+                    m0 += v0;
+                    m1 += v1;
+                    m2 += v1*i;
                 }
-                if(num>0)
+               // std::cerr << "\tm(" << ini << "," << end << ") : " << m0 << "," << m1 << "," << m2 << std::endl;
+                if(m0>0)
                 {
-                    const double average  = double(mu1)/num;
-                    const double variance = double(mu2)/num - average*average;
-                    return Metrics(average,variance);
+                    const double M0 = double(m0);
+                    const double M1 = double(m1);
+                    const double M2 = double(m2);
+
+                    return  (M1*(M0*M2-M1*M1)) / (M0*M0*M0);
                 }
                 else
                 {
-                    return Metrics(0,0);
+                    return 0;
                 }
             }
+#endif
         }
 
 

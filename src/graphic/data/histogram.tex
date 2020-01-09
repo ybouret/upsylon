@@ -1,0 +1,45 @@
+\documentclass[aps]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+\begin{document}
+
+Let $x_1,\ldots,x_n$ be data points dispatched in bins from $a$ to $b$.
+The number of points is:
+\begin{equation}
+	n = \sum_{j=a}^b h_j = m_0
+\end{equation}
+
+The average is:
+\begin{equation}
+	\mu = \dfrac{1}{n} \sum_{i=1}^n x_i = \dfrac{1}{n} \sum_{j=a}^b j h_j = \frac{m_1}{m_0}
+\end{equation}
+
+The variance is:
+\begin{equation}
+	\begin{array}{rcl}
+	\sigma^2 & = & \displaystyle \dfrac{1}{n} \sum_{i=1}^n \left[x_i - \mu \right]^2 \\
+	\\
+	 & = & \displaystyle \dfrac{1}{n}  \sum_{i=1}^n \left[x_i^2 - 2\mu x_i + \mu^2 \right] \\
+	 \\
+	 & = & \displaystyle \dfrac{1}{n} \left[ \left(\sum_{i=1}^n x_i^2 \right) - 2 n \mu^2 + n \mu^2  \right]\\
+	 \\
+	 & = & \displaystyle \dfrac{1}{n} \left[ \left(\sum_{j=a}^b j^2 h_j  \right) - n \mu^2\right]\\
+	 \\
+	 & = & \dfrac{1}{m_0} \left[ m_2 - m_0 \left(\dfrac{m_1}{m_0}\right)^2 \right]\\
+	 \\
+	 & = & \dfrac{1}{m_0^2} \left[ m_0 m_2 - m_1^2 \right]
+	\end{array}
+\end{equation}
+
+The weighted variance is
+\begin{equation}
+	\mu \sigma^2 = \dfrac{m_1}{m_0^3} \left[ m_0 m_2 - m_1^2 \right]
+\end{equation}
+
+\end{document}
