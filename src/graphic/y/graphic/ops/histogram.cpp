@@ -164,41 +164,6 @@ namespace upsylon {
                 }
             }
 
-#if 0
-            if(end<=ini)
-            {
-                return 0;
-            }
-            else
-            {
-                assert(end>ini);
-                size_t  m0 = 0;
-                size_t  m1 = 0;
-                size_t  m2 = 0;
-                for(size_t i=ini;i<=end;++i)
-                {
-                    assert(i<=255);
-                    const size_t v0 = bin[i];
-                    const size_t v1 = i * v0;
-                    m0 += v0;
-                    m1 += v1;
-                    m2 += v1*i;
-                }
-               // std::cerr << "\tm(" << ini << "," << end << ") : " << m0 << "," << m1 << "," << m2 << std::endl;
-                if(m0>0)
-                {
-                    const double M0 = double(m0);
-                    const double M1 = double(m1);
-                    const double M2 = double(m2);
-
-                    return  (M1*(M0*M2-M1*M1)) / (M0*M0*M0);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-#endif
         }
 
 
