@@ -157,8 +157,8 @@ namespace upsylon {
                                 Function                 &F,
                                 addressable<T>           &aorg,
                                 const accessible<bool>   &flags,
-                                addressable<T>          &aerr,
-                                Controls                *ctrl = 0
+                                addressable<T>           &aerr,
+                                Controls                 *ctrl = 0
                                 )
                 {
                     SequentialFunction<T> SF(F);
@@ -212,13 +212,10 @@ namespace upsylon {
                 }
 
 
-
-
                 bool         verbose; //!< activate verbosity
                 const Field  lambdas; //!< precomputed lambdas
                 const unit_t pmin;    //!< min power value
                 const unit_t pmax;    //!< max power value
-                
                 
                 
             private:

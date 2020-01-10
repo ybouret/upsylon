@@ -94,6 +94,7 @@ CYCLE:
     //
     // step/atry consistency
     //
+    //
 STEP_CONTROL:
     switch( stepControl(stepFrame,cycle) )
     {
@@ -114,6 +115,7 @@ STEP_CONTROL:
             Y_LS_PRINTLN( "     atry1  = " << atry   );
             goto STEP_CONTROL;
     }
+    //
     //
     //__________________________________________________________________________
 

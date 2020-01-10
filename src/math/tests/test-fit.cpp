@@ -61,6 +61,20 @@ namespace {
             }
         }
 
+        ControlResult OnStep( Frame<double> &frame, size_t &cycle )
+        {
+            std::cerr << "\t\t## OnStep " << cycle << std::endl;
+            std::cerr << "\t\t##   step=" << frame.value << std::endl;
+            return LeftUntouched;
+        }
+
+        ControlResult OnAtry( Frame<double> &frame, size_t &cycle )
+        {
+            std::cerr << "\t\t## OnAtry " << cycle << std::endl;
+            std::cerr << "\t\t##   atry=" << frame.value << std::endl;
+            return LeftUntouched;
+        }
+
     };
     
     template <typename T>
@@ -119,9 +133,13 @@ Y_UTEST(fit)
 
 
 
-    diffusion              diff;
-    Type<double>::Function F( &diff, & diffusion::compute );
-    vector<double>         aorg(3);
+    diffusion               diff;
+    Type<double>::Function  F( &diff, & diffusion::compute );
+    vector<double>          aorg(3);
+    Frame<double>::Control  stepCtrl( &diff, & diffusion::OnStep);
+    Frame<double>::Control  atryCtrl( &diff, & diffusion::OnAtry);
+    Frame<double>::Controls controls( &stepCtrl, &atryCtrl );
+
 #define INI_T0 -100
 #define INI_S1 0.1
 #define INI_S2 0.2
@@ -210,7 +228,7 @@ Y_UTEST(fit)
 
     //LS.verbose = false;
 
-    Y_ASSERT(LS.fit(S1, SF, aorg, used, aerr));
+    Y_ASSERT(LS.fit(S1, SF, aorg, used, aerr, &controls));
     S1.variables.display(std::cerr, aorg, aerr, "S1.");
     {
         ios::ocstream fp("s1.dat");
@@ -223,7 +241,7 @@ Y_UTEST(fit)
 
 
 
-    Y_ASSERT(LS.fit(S2, SF, aorg, used, aerr));
+    Y_ASSERT(LS.fit(S2, SF, aorg, used, aerr, &controls));
     S2.variables.display(std::cerr, aorg, aerr, "S2.");
     {
         ios::ocstream fp("s2.dat");
@@ -235,7 +253,7 @@ Y_UTEST(fit)
 
 
 
-    Y_ASSERT(LS.fit(S,SF,aorg,used,aerr));
+    Y_ASSERT(LS.fit(S,SF,aorg,used,aerr,&controls));
     S.variables.display(std::cerr, aorg, aerr, "S.");
     {
         ios::ocstream fp("s.dat");
