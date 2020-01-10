@@ -158,11 +158,12 @@ namespace upsylon {
                                 addressable<T>           &aorg,
                                 const accessible<bool>   &flags,
                                 addressable<T>           &aerr,
-                                Controls                 *ctrl = 0
+                                Controls                 *ctrl = 0,
+                                const size_t              nmax = 0
                                 )
                 {
                     SequentialFunction<T> SF(F);
-                    return fit(sample,SF,aorg,flags,aerr,ctrl);
+                    return fit(sample,SF,aorg,flags,aerr,ctrl,nmax);
                 }
 
                 //! return the current descent direction

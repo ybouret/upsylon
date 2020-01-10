@@ -7,14 +7,16 @@ inline bool fit(SampleType<T>            &sample,
                 addressable<T>           &aorg,
                 const accessible<bool>   &flags,
                 addressable<T>           &aerr,
-                Controls                 *ctrl = 0 )
+                Controls                 *ctrl = 0,
+                const size_t              nmax = 0)
 {
     static const T D_FTOL = numeric<T>::sqrt_ftol;
     static const T A_FTOL = numeric<T>::ftol;
 
     assert( flags.size() == aorg.size() );
     assert( flags.size() == aerr.size() );
-    const size_t n = aorg.size();
+    const size_t n          = aorg.size();
+    const bool   checkCycle = (nmax>0);
 
     //__________________________________________________________________________
     //
@@ -66,10 +68,16 @@ inline bool fit(SampleType<T>            &sample,
 
 CYCLE:
     ++cycle;
+
     //__________________________________________________________________________
     //
     Y_LS_PRINTLN( "[LS] cycle  = " << cycle );
     //__________________________________________________________________________
+    if(checkCycle&& (cycle>nmax) )
+    {
+        Y_LS_PRINTLN( "[LS] too many cycles" );
+        return false;
+    }
     Y_LS_PRINTLN( "     used   = " << used  );
     Y_LS_PRINTLN( "     aorg   = " << aorg  );
     Y_LS_PRINTLN( "     D2org  = " << D2org );
