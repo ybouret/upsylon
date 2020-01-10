@@ -63,6 +63,14 @@ namespace upsylon {
                     return self[id].get(source);
                 }
 
+                //! generalized access operator
+                template <typename T>
+                inline T & operator()( addressable<T> &source, const char *id ) const
+                {
+                    const string _(id);
+                    return (*this)(source,_);
+                }
+
                 //! generalized access operator, const
                 template <typename T>
                 inline const T & operator()( const accessible<T> &source, const string &id ) const
@@ -70,6 +78,28 @@ namespace upsylon {
                     const  Variables &self = *this;
                     return self[id].get(source);
                 }
+
+                //! generalized access operator, const
+                template <typename T>
+                inline const T & operator()( const accessible<T> &source, const char *id ) const
+                {
+                    const string _(id);
+                    return (*this)(source,_);
+                }
+
+                //! bool -> int
+                inline int flag( const accessible<bool> &source, const string &id ) const
+                {
+                    return (*this)(source,id) ? 1 : 0;
+                }
+
+                //! bool -> int, wrapper
+                inline int flag( const accessible<bool> &source, const char *id ) const
+                {
+                    const  string _(id);
+                    return flag(source,_);
+                }
+
 
                 //! look for a value
                 template <typename T>
