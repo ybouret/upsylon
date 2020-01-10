@@ -92,7 +92,7 @@ namespace upsylon {
         {
             return YUV( 0.299f * r + 0.587f * g + 0.114f * b,
                        -0.147f * r - 0.289f * g + 0.436f * b,
-                       0.615f  * r - 0.515f * g - 0.100f * b);
+                        0.615f * r - 0.515f * g - 0.100f * b);
         }
 
         float Convert:: YUV2R( const YUV &_ ) throw()
@@ -255,6 +255,10 @@ namespace upsylon {
 
         static inline uint8_t idiff8( const int a, const int b) throw()
         {
+            assert(a>=0);
+            assert(a<=255);
+            assert(b>=0);
+            assert(b<=255);
             return uint8_t( abs_of(a-b) );
         }
 
@@ -271,16 +275,22 @@ namespace upsylon {
             return min_of<float>(1.0f, fabsf(a-b) );
         }
 
-        template <>
-        float Convert:: Diff<rgb>( const rgb &U, const rgb &V ) throw()
+        template <typename COLOR>
+        static inline float cdiff8( const COLOR &U, const COLOR &V ) throw()
         {
             return Convert::UnitFloat[ Convert::GreyScale( idiff8(U.r,V.r), idiff8(U.g,V.b), idiff8(U.b,V.b) ) ];
         }
 
         template <>
+        float Convert:: Diff<rgb>( const rgb &U, const rgb &V ) throw()
+        {
+            return cdiff8(U,V);
+        }
+
+        template <>
         float Convert:: Diff<rgba>( const rgba &U, const rgba &V ) throw()
         {
-            return Convert::UnitFloat[ Convert::GreyScale( idiff8(U.r,V.r), idiff8(U.g,V.b), idiff8(U.b,V.b) ) ];
+            return cdiff8(U,V);
         }
 
     }

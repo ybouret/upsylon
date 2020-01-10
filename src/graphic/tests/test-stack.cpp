@@ -78,15 +78,20 @@ Y_UTEST(stack)
 
 
     {
-        Pixmap<float> tgt(w,h);
+        Pixmap<float> df(w,h);
+        Pixmap<float> d3(w,h);
+
         ForEach       par = new concurrent::simd();
-        Tiles         tiles(*tgt,par);
+        Tiles         tiles(*df,par);
 
-        Ops::Diff(tiles, tgt, pxms[0], pxms[1] );
-        IMG.saveAs("deltaf.png", tgt, 0);
+        Ops::Diff(tiles, df, pxms[0], pxms[1] );
+        IMG.saveAs("deltaf.png", df, 0);
 
-        Ops::Diff(tiles, tgt, rgbs[0], rgbs[1] );
-        IMG.saveAs("delta3.png", tgt, 0);
+        Ops::Diff(tiles, d3, rgbs[0], rgbs[1] );
+        IMG.saveAs("delta3.png", d3, 0);
+
+        Ops::Diff(tiles,df,df,d3);
+        IMG.saveAs("ddelta.png", df, 0);
 
 
     }

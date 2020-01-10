@@ -63,7 +63,7 @@ namespace upsylon {
                     const Tile   &tile    = (*self.tiles)[ctx.rank];
                     TARGET       &target  = (*self.target);
                     const SOURCE &source  = (*self.source);
-                    const SOURCE &source2 = (*self.source);
+                    const SOURCE &source2 = (*self.source2);
                     PROC         &proc    = (*self.proc);
 
                     const Point lower = tile.lower;
