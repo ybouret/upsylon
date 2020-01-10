@@ -6,6 +6,7 @@
 #include "y/core/list.hpp"
 #include "y/core/node.hpp"
 #include "y/concurrent/scheme/for-each.hpp"
+#include <cstring>
 
 namespace upsylon {
 
@@ -100,7 +101,7 @@ namespace upsylon {
                     const bool swp  = (lhs.size<rhs.size);
                     if(swp)    cswap( task.L, task.R );
 
-                    loop.run(task.Run, &task);
+                    loop.run( Task::Run, &task);
                     const size_t n = loop.number();
                     size_t       i = 0;
                     for(i=0;i<n;++i)
