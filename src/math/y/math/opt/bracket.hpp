@@ -156,9 +156,9 @@ namespace upsylon
                         triplet<T> & f )
             {
 
-                static const T   SHRINK = T(0.3819660112501051);
-                static const int GTA    = 1;
-                static const int GTC    = 2;
+                static const T        SHRINK = T(0.3819660112501051);
+                static const unsigned GTA    = 0x01;
+                static const unsigned GTC    = 0x02;
                 //______________________________________________________________
                 //
                 // ordering..
@@ -200,7 +200,7 @@ namespace upsylon
                     assert(x.is_ordered());
                     f.b = func(x.b);
 
-                    int flag = 0;
+                    unsigned    flag = 0x00;
                     if(f.b>f.c) flag |= GTC;
                     if(f.b>f.a) flag |= GTA;
 

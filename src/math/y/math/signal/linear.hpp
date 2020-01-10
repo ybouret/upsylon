@@ -2,7 +2,6 @@
 #ifndef Y_MATH_SIGNAL_LINEAR_INCLUDED
 #define Y_MATH_SIGNAL_LINEAR_INCLUDED 1
 
-#include "y/sequence/array.hpp"
 #include "y/container/sequence.hpp"
 #include "y/math/types.hpp"
 #include "y/type/cswap.hpp"
@@ -17,7 +16,7 @@ namespace upsylon
         {
             //! linear interpolation, assuming sorted X
             template <typename T> static inline
-            T eval( const T x, const array<T> &X, const array<T> &Y ) throw()
+            T eval( const T x, const accessible<T> &X, const accessible<T> &Y ) throw()
             {
                 assert(X.size()>0);
                 assert(X.size()==Y.size());
@@ -61,7 +60,7 @@ namespace upsylon
 
             //! find intercepting values
             template <typename T> static inline
-            void zfind( sequence<T> &xx, const T yy, const array<double> &X, const array<double> &Y)
+            void zfind( sequence<T> &xx, const T yy, const accessible<double> &X, const accessible<double> &Y)
             {
                 assert(X.size()==Y.size());
                 const size_t n = X.size();
