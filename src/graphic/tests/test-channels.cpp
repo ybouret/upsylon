@@ -106,7 +106,7 @@ Y_UTEST(channels)
             ctx.build<Rand>().reset(i);
         }
 
-        Ops::Run2(tiles, fStack[0], fStack[0], fMove );
+        Ops::RunWithContext(tiles, fStack[0], fStack[0], fMove );
         {
             Pixmap<YUV> imgYUV(w,h);
             Merge::Run(imgYUV, & fStack.front(), channels, tiles);

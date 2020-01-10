@@ -249,3 +249,39 @@ namespace upsylon {
 
 }
 
+namespace upsylon {
+
+    namespace Graphic {
+
+        static inline uint8_t idiff8( const int a, const int b) throw()
+        {
+            return uint8_t( abs_of(a-b) );
+        }
+
+        template <>
+        float Convert:: Diff<uint8_t>( const uint8_t &a, const uint8_t &b ) throw()
+        {
+            return Convert::UnitFloat[ idiff8(a,b) ];
+        }
+
+
+        template <>
+        float Convert:: Diff<float>( const float &a, const float &b ) throw()
+        {
+            return min_of<float>(1.0f, fabsf(a-b) );
+        }
+
+        template <>
+        float Convert:: Diff<rgb>( const rgb &U, const rgb &V ) throw()
+        {
+            return Convert::UnitFloat[ Convert::GreyScale( idiff8(U.r,V.r), idiff8(U.g,V.b), idiff8(U.b,V.b) ) ];
+        }
+
+        template <>
+        float Convert:: Diff<rgba>( const rgba &U, const rgba &V ) throw()
+        {
+            return Convert::UnitFloat[ Convert::GreyScale( idiff8(U.r,V.r), idiff8(U.g,V.b), idiff8(U.b,V.b) ) ];
+        }
+
+    }
+}

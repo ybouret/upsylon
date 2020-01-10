@@ -84,6 +84,13 @@ namespace upsylon {
             //! for stack operations
             template <typename T> static
             T FloatTo( const float ) throw();
+
+            
+
+            //! difference of colors to distance, result in 0:1
+            template <typename T> static
+            float Diff( const T &a, const T &b ) throw();
+
         };
 
     }

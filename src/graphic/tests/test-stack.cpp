@@ -2,6 +2,8 @@
 #include "y/graphic/draw/circle.hpp"
 #include "y/graphic/color/named.hpp"
 #include "y/graphic/image.hpp"
+#include "y/graphic/parallel/ops.hpp"
+#include "y/concurrent/scheme/simd.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -75,6 +77,19 @@ Y_UTEST(stack)
     }
 
 
+    {
+        Pixmap<float> tgt(w,h);
+        ForEach       par = new concurrent::simd();
+        Tiles         tiles(*tgt,par);
+
+        Ops::Diff(tiles, tgt, pxms[0], pxms[1] );
+        IMG.saveAs("deltaf.png", tgt, 0);
+
+        Ops::Diff(tiles, tgt, rgbs[0], rgbs[1] );
+        IMG.saveAs("delta3.png", tgt, 0);
+
+
+    }
 
 
 }

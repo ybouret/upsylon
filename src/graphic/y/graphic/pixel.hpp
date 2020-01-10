@@ -16,6 +16,11 @@ namespace upsylon {
         {
             static const Point delta[8]; //!< 4+4 delta directions
 
+            //------------------------------------------------------------------
+            //
+            // simple operations
+            //
+            //------------------------------------------------------------------
 
             //! set to zero
             template <typename T> static void Zero( T & ) throw();
@@ -26,6 +31,12 @@ namespace upsylon {
 
             //! invert color
             template <typename T> static T Invert( const T & ) throw();
+
+            //------------------------------------------------------------------
+            //
+            // medians
+            //
+            //------------------------------------------------------------------
 
             //! median value of local array
             template <typename T> static inline
@@ -64,6 +75,13 @@ namespace upsylon {
             template <typename T> static
             T Median9( T arr[] ) throw();
 
+
+            //------------------------------------------------------------------
+            //
+            // averages
+            //
+            //------------------------------------------------------------------
+
             //! average of float
             static float   Average9__( float   arr[] ) throw();
 
@@ -98,6 +116,12 @@ namespace upsylon {
             //! generic average
             template <typename T> static T Average9( T arr[] ) throw();
 
+            //------------------------------------------------------------------
+            //
+            // minima
+            //
+            //------------------------------------------------------------------
+
             //! generic minimal value
             template <typename T> static T MinOf( const T &lhs, const T &rhs ) throw();
 
@@ -113,6 +137,12 @@ namespace upsylon {
                 return ans;
             }
 
+            //------------------------------------------------------------------
+            //
+            // maxima
+            //
+            //------------------------------------------------------------------
+
             //! generic maximal value
             template <typename T> static T MaxOf( const T &lhs, const T &rhs ) throw();
 
@@ -127,6 +157,13 @@ namespace upsylon {
                 }
                 return ans;
             }
+
+
+            //------------------------------------------------------------------
+            //
+            // blending
+            //
+            //------------------------------------------------------------------
 
             //! generic one channel blend
             template <typename T> static
@@ -154,8 +191,6 @@ namespace upsylon {
             //! generic color blending
             template <typename T> static
             T Blend( const T &fg, const T &bg, const uint8_t alpha ) throw();
-
-
 
         };
     }
