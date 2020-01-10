@@ -75,8 +75,8 @@ CYCLE:
     //__________________________________________________________________________
     if(checkCycle&& (cycle>nmax) )
     {
-        Y_LS_PRINTLN( "[LS] too many cycles" );
-        return false;
+        Y_LS_PRINTLN( "[LS] done " << nmax << " cycles" );
+        return true;
     }
     Y_LS_PRINTLN( "     used   = " << used  );
     Y_LS_PRINTLN( "     aorg   = " << aorg  );
