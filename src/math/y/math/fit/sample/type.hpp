@@ -90,8 +90,8 @@ namespace upsylon {
                     assert( variables.sweep() <= used.size() );
 
                     // assuming no one is used
-                    atom::ld(beta,0);
-                    alpha.Id();
+                    atom::ld(beta,0); // beta=0
+                    alpha.Id();       // alpha=identity
 
                     // cleanup used variables
                     size_t                    nv = variables.size();
