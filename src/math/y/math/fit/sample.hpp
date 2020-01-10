@@ -267,6 +267,65 @@ namespace upsylon {
                     }
                 }
 
+                //! get the maximum value
+                inline T maxValue() const throw()
+                {
+                    const size_t n = this->count;
+                    if(n<=0)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        T ans = ordinate[1];
+                        for(size_t i=n;i>1;--i)
+                        {
+                            ans = max_of(ans,ordinate[i]);
+                        }
+                        return ans;
+                    }
+                }
+
+                //! get the minium value
+                inline T minValue() const throw()
+                {
+                    const size_t n = this->count;
+                    if(n<=0)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        T ans = ordinate[1];
+                        for(size_t i=n;i>1;--i)
+                        {
+                            ans = max_of(ans,ordinate[i]);
+                        }
+                        return ans;
+                    }
+                }
+
+                //! get min and max at once
+                inline void getMinMax( T &vmin, T &vmax ) const throw()
+                {
+                    const size_t n = this->count;
+                    if(n<=0)
+                    {
+                        vmin = vmax = 0;
+                    }
+                    else
+                    {
+                        vmin = vmax = ordinate[1];
+                        for(size_t i=n;i>1;--i)
+                        {
+                            const T tmp = ordinate[i];
+                            vmax = max_of(vmax,tmp);
+                            vmin = min_of(vmin,tmp);
+                        }
+                    }
+                }
+
+                //! display extraneous information
                 virtual void extraneous( ios::ostream &fp, const char ) const
                 {
                     correlation<T> corr;

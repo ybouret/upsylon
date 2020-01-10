@@ -134,7 +134,8 @@ MACRO(FLUID_UIC THE_UI)
 	#create the command
 	ADD_CUSTOM_COMMAND( OUTPUT  ${_UI_SOURCE} ${_UI_HEADER}
 	                    COMMAND ${FLUID} -c -o ${_UI_SOURCE} -h ${_UI_HEADER} ${_UI_FL} 
-						DEPENDS ${_UI_FL} )
+						DEPENDS ${_UI_FL}
+						COMMENT "Generating Code for ${THE_UI}" )
 	
 	#register the output directory	
 	INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
