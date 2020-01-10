@@ -1,10 +1,11 @@
-
+//! \file
 
 #ifndef Y_MATH_ADJUST_SEQUENTIAL_GRADIENT_INCLUDED
 #define Y_MATH_ADJUST_SEQUENTIAL_GRADIENT_INCLUDED 1
 
 #include "y/math/fit/sequential.hpp"
 #include "y/math/fcn/derivatives.hpp"
+#include "y/math/kernel/atom.hpp"
 
 namespace upsylon {
 
@@ -26,9 +27,7 @@ namespace upsylon {
                 T h; //!< scaling parameter, be careful !
                 
                 //! setup with default scaling
-                inline explicit Gradient() : derivative<T>(), h( T(1e-4) )
-                {
-                }
+                inline explicit Gradient() : derivative<T>(), h( T(1e-4) ) { }
 
                 //! cleanup
                 inline virtual ~Gradient() throw() { h=0; }
@@ -47,10 +46,8 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // initialize
                     //----------------------------------------------------------
-                    for(size_t j=dFda.size();j>0;--j)
-                    {
-                        dFda[j] = 0;
-                    }
+                    atom::ld(dFda,0);
+
 
                     //----------------------------------------------------------
                     // prepare wrapper
@@ -58,7 +55,6 @@ namespace upsylon {
                     Wrapper              call = { 0, &F, x, &aorg, &vars  };
                     size_t              &indx = call.i;
                     size_t               nvar = vars.size();
-                    const accessible<T> &a    = aorg;
                     
                     //----------------------------------------------------------
                     // loop over variables
@@ -68,7 +64,7 @@ namespace upsylon {
                         indx = (*v)->index();
                         if(used[indx])
                         {
-                            dFda[indx] = this->diff(call, a[indx], h);
+                            dFda[indx] = this->diff(call, aorg[indx], h);
                         }
                     }
                 }
