@@ -14,14 +14,14 @@ namespace upsylon {
         namespace Fit {
 
             //! constructor for ExplODE
-#define Y_EXPLODE_CTOR(SOLVER) \
-Sequential<T>(),\
-solver(SOLVER),\
-scheme(sharedScheme),\
-diffEq( this, & ExplODE<T>::compute ),\
-fields( scheme->dimensions(), 0 ),\
-p_aorg(0),\
-p_vars(0),\
+#define Y_EXPLODE_CTOR(SOLVER)         \
+Sequential<T>(),                       \
+solver(SOLVER),                        \
+scheme(sharedScheme),                  \
+diffEq( this, & ExplODE<T>::compute ), \
+fields( scheme->dimensions(), 0 ),     \
+p_aorg(0),                             \
+p_vars(0),                             \
 __ctrl(0)
 
             //==================================================================
@@ -44,8 +44,8 @@ __ctrl(0)
                 typedef ODE::ExplicitSolver<T>        SolverType;    //!< alias
                 typedef arc_ptr<SolverType>           SolverPointer; //!< alias
                 typedef ODE::ExplicitScheme<T>        SchemeType;    //!< alias
-                typedef typename SchemeType::Pointer  SchemePointer; //!< alia
-
+                typedef typename SchemeType::Pointer  SchemePointer; //!< alias
+                typedef ODE::DriverCK<T>              DefaultSolver; //!< default solver
 
                 //==============================================================
                 //
@@ -68,9 +68,9 @@ __ctrl(0)
                 }
 
 
-                //! setup with a private solver
+                //! setup with a private default solver
                 inline explicit ExplODE(const SchemePointer &sharedScheme) throw() :
-                Y_EXPLODE_CTOR(ODE::DriverCK<T>::New())
+                Y_EXPLODE_CTOR( DefaultSolver::New() )
                 {
                     setup();
                 }
@@ -108,14 +108,14 @@ __ctrl(0)
                     p_aorg = &aorg;
                     p_vars = &vars;
 
-                    // setup state and step
+                    // setup state and step control
                     scheme->setup(fields,aorg,vars);
                     __ctrl = scheme->delta();
 
-                    // differential step up to x1
+                    // differential step: up to x1
                     (*solver)( diffEq, fields, scheme->start(), x1, __ctrl, scheme->callback() );
 
-                    // done
+                    // done, return the value of interest
                     return scheme->query(x1,fields,aorg,vars);
                 }
 
@@ -130,7 +130,7 @@ __ctrl(0)
                     // differential step
                     (*solver)( diffEq, fields, this->current, x1, __ctrl,  scheme->callback());
 
-                    // done
+                    // done, return the value of interest
                     return scheme->query(x1,fields,aorg,vars);
                 }
             };

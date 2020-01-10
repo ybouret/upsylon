@@ -23,7 +23,7 @@ namespace upsylon {
             class Gradient : public derivative<T>
             {
             public:
-                T h; //!< scaling
+                T h; //!< scaling parameter, be careful !
                 
                 //! setup with default scaling
                 inline explicit Gradient() : derivative<T>(), h( T(1e-4) )
@@ -31,10 +31,7 @@ namespace upsylon {
                 }
 
                 //! cleanup
-                inline virtual ~Gradient() throw()
-                {
-                    h=0;
-                }
+                inline virtual ~Gradient() throw() { h=0; }
 
                 //! take the gradient for the declared used variables
                 inline void operator()(addressable<T>         &dFda,
@@ -64,7 +61,7 @@ namespace upsylon {
                     const accessible<T> &a    = aorg;
                     
                     //----------------------------------------------------------
-                    // lover over variables
+                    // loop over variables
                     //----------------------------------------------------------
                     for( Variables::const_iterator v = vars.begin();nvar>0;--nvar,++v)
                     {
