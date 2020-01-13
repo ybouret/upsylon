@@ -4,6 +4,7 @@
 #define Y_GRAPHIC_DRAW_PUTPIXEL 1
 
 #include "y/graphic/pixel.hpp"
+#include "y/graphic/mask.hpp"
 
 namespace  upsylon {
 
@@ -59,6 +60,18 @@ namespace  upsylon {
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Blend);
+                };
+
+                class ToMask
+                {
+                public:
+                    Mask &mask;
+
+                    inline  ToMask( Mask &target ) throw() : mask(target) {}
+                    inline ~ToMask() throw() {}
+                    
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(ToMask);
                 };
             };
 

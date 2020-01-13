@@ -11,6 +11,8 @@ using namespace Graphic;
 
 Y_UTEST(draw)
 {
+
+
     Image &IMG = Image::instance();
 
     const unit_t w = 200 + alea.leq(200);
@@ -25,6 +27,10 @@ Y_UTEST(draw)
     Pixmap<rgba>  img4(w,h);
     Pixmap<float> imgf(w,h);
 
+    Mask  mask;
+
+    mask.free();
+    
     for(size_t iter=0; iter<32; ++iter )
     {
         const unit_t x0  = alea.range<unit_t>(xlo,xhi);
@@ -40,6 +46,8 @@ Y_UTEST(draw)
 
         Draw::VLine(img4, x0, y0, y1, C);
         Draw::VLine(imgf, x0, y0, y1, f);
+
+
     }
 
     for(size_t iter=0; iter<32; ++iter )
