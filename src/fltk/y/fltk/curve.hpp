@@ -20,17 +20,43 @@ namespace upsylon
         typedef point2d<double>   Point;   //!< alias
         typedef vector<Point>     Points;  //!< alias
 
+
+
+
+
         //! named points+color
         class Curve : public Points
         {
         public:
+            enum Style
+            {
+                WithLines,
+                WithPoints
+            };
+
+            enum PointShape
+            {
+                Circle,
+                Square
+            };
+
+            enum PointStyle
+            {
+                Filled,
+                Border
+            };
+
             explicit Curve(const string &id);
             explicit Curve(const char   *id);
             virtual ~Curve() throw();
             
             const string name;
             Fl_Color     color;
-            
+            Style        style;
+            int          pointSize;
+            PointShape   pointShape;
+            PointStyle   pointStyle;
+
             const string &key() const throw();
             typedef intr_ptr<string,Curve>      Pointer;
             typedef set<string,Curve::Pointer>  Set;

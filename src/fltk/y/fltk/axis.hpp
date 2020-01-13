@@ -21,10 +21,13 @@ namespace upsylon
             void set_max( double );
             void set_range( double amin, double amax );
             
-            void autoscaleY( const Curve &C, const double extra = 0.0 ); 
-            
+            void autoscaleY( const Curve &C, const double extra = 0.0 );
+            void autoscaleX( const Curve &C, const double extra = 0.0 );
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Axis);
+            void autoscale_( const Curve &C,  const size_t indx, const double extra);
+
         };
         
     }

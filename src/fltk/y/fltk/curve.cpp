@@ -7,16 +7,23 @@ namespace upsylon
     {
         
         Curve:: ~Curve() throw() {}
-        
+
+#define Y_FLTK_CURVE_INIT() \
+color(FL_WHITE),            \
+style( WithLines ),         \
+pointSize(0),               \
+pointShape( Circle ),       \
+pointStyle( Filled )
+
         Curve:: Curve( const string &id ) :
         name(id),
-        color(FL_WHITE)
+        Y_FLTK_CURVE_INIT()
         {
         }
         
         Curve:: Curve( const char *id ) :
         name(id),
-        color(FL_WHITE)
+        Y_FLTK_CURVE_INIT()
         {
         }
         

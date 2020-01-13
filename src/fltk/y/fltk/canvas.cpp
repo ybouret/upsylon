@@ -56,22 +56,80 @@ namespace upsylon
             for( Curves::const_iterator i = C.begin(); i != C.end(); ++i )
             {
                 const Curve &crv = **i;
-                if( crv.size() > 0 )
+               // std::cerr << "Drawing [" << crv.name << "]: #" << crv.size() << std::endl;
+                if(crv.size()<=0) continue;
+
+                fl_color( crv.color );
+
+                switch(crv.style)
                 {
-                    fl_color( crv.color );
-                    for( size_t j=2; j <= crv.size(); ++j )
-                    {
-                        const Point &p0 = crv[j-1];
-                        const Point &p1 = crv[j];
-                        
-                        const double x0 = X+(p0.x - Xaxis.vmin) * xscale;
-                        const double y0 = ytop-(p0.y - Yaxis.vmin) * yscale;
-                        
-                        const double x1 = X+(p1.x - Xaxis.vmin) * xscale;
-                        const double y1 = ytop-(p1.y - Yaxis.vmin) * yscale;
-                        fl_line( int(x0), int(y0), int(x1), int(y1) );
-                    }
+                    case Curve::WithLines:
+                        for( size_t j=2; j <= crv.size(); ++j )
+                        {
+                            const Point &p0 = crv[j-1];
+                            const Point &p1 = crv[j];
+
+                            const double x0 = X+(p0.x - Xaxis.vmin) * xscale;
+                            const double y0 = ytop-(p0.y - Yaxis.vmin) * yscale;
+
+                            const double x1 = X+(p1.x - Xaxis.vmin) * xscale;
+                            const double y1 = ytop-(p1.y - Yaxis.vmin) * yscale;
+                            fl_line( int(x0), int(y0), int(x1), int(y1) );
+                        }
+
+                    case Curve::WithPoints:
+                        for(size_t j=1; j<=crv.size(); ++j)
+                        {
+                            const Point  p0 = crv[j];
+                            const double x0 = X+(p0.x - Xaxis.vmin) * xscale;
+                            const double y0 = ytop-(p0.y - Yaxis.vmin) * yscale;
+                            const double r  = crv.pointSize;
+
+                            if(r<=0)
+                            {
+                                fl_point(x0,y0);
+                            }
+                            else
+                            {
+
+                                switch(crv.pointShape)
+                                {
+                                    case Curve::Circle:
+                                        switch( crv.pointStyle )
+                                        {
+                                            case Curve::Border:
+                                                fl_arc(x0, y0, r, r, 0, 360);
+                                                break;
+
+                                            case Curve::Filled:
+                                                fl_pie(x0, y0, r,r, 0, 360);
+                                                break;
+                                        }
+                                        break;
+
+                                    case Curve::Square: {
+                                        const int sz = 2*r+1;
+                                        switch( crv.pointStyle )
+                                        {
+                                            case Curve::Border:
+                                                fl_rect(x0-r,y0-r, sz, sz);
+                                                break;
+
+                                            case Curve::Filled:
+                                                fl_rectf(x0-r,y0-r, sz, sz);
+                                                break;
+                                        }
+                                    } break;
+                                }
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
+
+
             }
             fl_pop_clip();
         }

@@ -31,16 +31,26 @@ namespace upsylon
             (double&)vmax   = amax;
             (double&)length = vmax - vmin;
         }
-        
+
+        void Axis:: autoscaleX( const Curve &C, const double extra )
+        {
+            autoscale_(C,1,extra);
+        }
+
         void Axis:: autoscaleY( const Curve &C, const double extra )
+        {
+            autoscale_(C,2,extra);
+        }
+
+        void Axis:: autoscale_( const Curve &C,  const size_t indx, const double extra)
         {
             if( C.size() > 0 )
             {
-                double cmin = C[1].y;
+                double cmin = C[1][indx];
                 double cmax = cmin;
                 for( size_t i=2; i <= C.size(); ++i )
                 {
-                    const double tmp = C[i].y;
+                    const double tmp = C[i][indx];
                     if( tmp < cmin )
                         cmin = tmp;
                     if( tmp > cmax )
@@ -51,5 +61,8 @@ namespace upsylon
                 set_range( cmin - delta, cmax + delta );
             }
         }
+
+
+        
     }
 }
