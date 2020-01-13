@@ -32,7 +32,8 @@ namespace upsylon {
                         typename Pixmap<T>::RowType &r = img[y];
                         for(unit_t x=x1;x>=x0;--x)
                         {
-                            putPixel(r[x]);
+                            const Point p(x,y);
+                            putPixel(r[x],p);
                         }
                     }
                 }

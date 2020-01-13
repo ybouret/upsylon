@@ -29,7 +29,7 @@ namespace  upsylon {
                     inline ~Copy() throw() {} //!< cleanup
 
                     //! call: set target to color
-                    inline void operator()( T &target ) const
+                    inline void operator()( T &target, const Point & ) const
                     {
                         target = color;
                     }
@@ -53,7 +53,7 @@ namespace  upsylon {
                     inline ~Blend() throw() {}
 
                     //! call: blend color with background target
-                    inline void operator()( T &target ) const
+                    inline void operator()( T &target, const Point & ) const
                     {
                         target = Pixel::Blend<T>( color, target, alpha );
                     }
@@ -62,14 +62,19 @@ namespace  upsylon {
                     Y_DISABLE_COPY_AND_ASSIGN(Blend);
                 };
 
+                template <typename T>
                 class ToMask
                 {
                 public:
                     Mask &mask;
 
-                    inline  ToMask( Mask &target ) throw() : mask(target) {}
+                    inline  ToMask( Mask &msk ) throw() : mask(msk) {}
                     inline ~ToMask() throw() {}
-                    
+                    inline void operator()( T &, const Point &p ) const
+                    {
+                        mask.insert(p);
+                    }
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(ToMask);
                 };

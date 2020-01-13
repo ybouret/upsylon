@@ -24,7 +24,8 @@ namespace upsylon {
                     assert(0==r);
                     if(img->contains(xm,ym))
                     {
-                        proc(img[ym][xm]);
+                        const Point p(xm,ym);
+                        proc(img[p],p);
                     }
                 }
                 else
@@ -43,7 +44,7 @@ namespace upsylon {
                             const Point p = v[i];
                             if(img->contains(p))
                             {
-                                proc(img[p]);
+                                proc(img[p],p);
                             }
                         }
                         r = err;
@@ -105,7 +106,7 @@ namespace upsylon {
                 {
                     if(img->contains(p))
                     {
-                        proc(img[p]);
+                        proc(img[p],p);
                     }
                 }
             }
@@ -123,7 +124,8 @@ namespace upsylon {
                     assert(0==r);
                      if(img->contains(xm,ym))
                     {
-                        proc(img[ym][xm]);
+                        const Point p(xm,ym);
+                        proc(img[p],p);
                     }
                 }
                 else

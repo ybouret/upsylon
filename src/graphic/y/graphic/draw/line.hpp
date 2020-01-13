@@ -24,7 +24,8 @@ namespace  upsylon {
                 typename Pixmap<T>::RowType &row = pxm[y0];
                 for(size_t i=0;i<w;++i)
                 {
-                    putPixel( row[x0+i] );
+                    const Point p(x0+i,y0);
+                    putPixel( row[p.x], p);
                 }
             }
 
@@ -86,7 +87,8 @@ namespace  upsylon {
             {
                 for(size_t j=0;j<h;++j)
                 {
-                    putPixel( pxm[y0+j][x0] );
+                    const Point p(x0,y0+j);
+                    putPixel( pxm[p], p );
                 }
             }
 
@@ -154,7 +156,8 @@ namespace  upsylon {
                 assert(img->contains(x1,y1));
                 for (;;){
                     /* loop */
-                    putPixel(img[y0][x0]);
+                    const Point p(x0,y0);
+                    putPixel(img[p],p);
                     e2 = 2*err;
                     if (e2 >= dy) {                                         /* e_xy+e_x > 0 */
                         if (x0 == x1) break;
@@ -207,6 +210,19 @@ namespace  upsylon {
                              const uint8_t                  alpha)
             {
                 PutPixel::Blend<T> proc(color,alpha);
+                _Line(img,x0,y0,x1,y1,proc);
+            }
+
+            //! a line with a given color/alpha
+            template <typename T>
+            inline void Line(Pixmap<T>    &img,
+                             unit_t        x0,
+                             unit_t        y0,
+                             unit_t        x1,
+                             unit_t        y1,
+                             Mask         &mask)
+            {
+                PutPixel::ToMask<T> proc(mask);
                 _Line(img,x0,y0,x1,y1,proc);
             }
 
