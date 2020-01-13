@@ -73,6 +73,19 @@ namespace  upsylon {
             }
 
 
+            //! gather mask
+            template <typename T>
+            void HLine(Pixmap<T>   &pxm,
+                       unit_t       x0,
+                       unit_t       y0,
+                       unit_t       x1,
+                       Mask        &mask)
+            {
+                PutPixel::ToMask<T> proc(mask);
+                _HLine(pxm,x0,y0,x1,proc);
+            }
+
+
         }
 
         namespace Draw {
@@ -132,6 +145,18 @@ namespace  upsylon {
             {
                 PutPixel::Blend<T> cb(C,alpha);
                 _VLine(pxm, x0, y0, y1,cb);
+            }
+
+            //! gather mask
+            template <typename T>
+            void VLine(Pixmap<T>   &pxm,
+                       unit_t       x0,
+                       unit_t       y0,
+                       unit_t       y1,
+                       Mask        &mask)
+            {
+                PutPixel::ToMask<T> proc(mask);
+                _VLine(pxm,x0,y0,y1,proc);
             }
 
         }

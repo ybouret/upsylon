@@ -86,6 +86,18 @@ namespace upsylon {
                 _Circle(img,xm,ym,r,proc);
             }
 
+            //! gather mask
+            template <typename T>
+            inline void Circle(Pixmap<T>    &img,
+                               const unit_t  xm,
+                               const unit_t  ym,
+                               unit_t        r,
+                               Mask         &mask)
+            {
+                PutPixel::ToMask<T> proc(mask);
+                _Circle(img,xm,ym,r,proc);
+            }
+
             
         }
 
@@ -122,7 +134,7 @@ namespace upsylon {
                 if(r<=0)
                 {
                     assert(0==r);
-                     if(img->contains(xm,ym))
+                    if(img->contains(xm,ym))
                     {
                         const Point p(xm,ym);
                         proc(img[p],p);
@@ -182,9 +194,20 @@ namespace upsylon {
                 _Disk(img,xm,ym,r,proc);
             }
 
+            //! gather mask
+            template <typename T>
+            inline void Disk(Pixmap<T>    &img,
+                             const unit_t  xm,
+                             const unit_t  ym,
+                             unit_t        r,
+                             Mask         &mask)
+            {
+                PutPixel::ToMask<T> proc(mask);
+                _Disk(img,xm,ym,r,proc);
+            }
 
         }
- 
+
     }
 
 }

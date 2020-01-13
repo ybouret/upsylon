@@ -47,6 +47,8 @@ Y_UTEST(draw)
         Draw::VLine(img4, x0, y0, y1, C);
         Draw::VLine(imgf, x0, y0, y1, f);
 
+        Draw::HLine(imgf,x0,y0,x1,mask);
+        Draw::VLine(imgf,x0,y0,y1,mask);
 
     }
 
@@ -80,6 +82,7 @@ Y_UTEST(draw)
 
         Draw::Line(img4, x0, y0, x1, y1, C);
         Draw::Line(imgf, x0, y0, x1, y1, f);
+        Draw::Line(img4, x0, y0, x1, y1, mask);
 
     }
 
@@ -110,7 +113,7 @@ Y_UTEST(draw)
 
         Draw::Circle(img4, x0, y0, r, C);
         Draw::Circle(imgf, x0, y0, r, f);
-
+        Draw::Circle(imgf, x0, y0, r, mask);
     }
 
 
@@ -141,6 +144,7 @@ Y_UTEST(draw)
 
         Draw::Disk(img4, x0, y0, r, C);
         Draw::Disk(imgf, x0, y0, r, f);
+        Draw::Disk(imgf, x0, y0, r, mask);
 
     }
 
@@ -172,6 +176,7 @@ Y_UTEST(draw)
 
         Draw::Fill(img4, x0, y0, x1, y1, C);
         Draw::Fill(imgf, x0, y0, x1, y1, f);
+        Draw::Fill(img4, x0, y0, x1, y1, mask);
 
     }
 
@@ -194,6 +199,17 @@ Y_UTEST(draw)
 
     IMG.saveAs( "draw4.png", img4, 0 );
     IMG.saveAs( "drawf.png", imgf, 0 );
+
+    std::cerr << "#mask=" << mask.size() << std::endl;
+    {
+        Pixmap<uint8_t> tgt(w,h);
+        for(size_t i=mask.size();i>0;--i)
+        {
+            const Point &p = mask[i];
+            tgt[p] = 0xff;
+        }
+        IMG.saveAs("mask.png", tgt, 0);
+    }
 
 
 }

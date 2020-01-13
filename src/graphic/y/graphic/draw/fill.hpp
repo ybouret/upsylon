@@ -66,6 +66,19 @@ namespace upsylon {
                 PutPixel::Blend<T> proc(color,alpha);
                 _Fill(img,x0,y0,x1,y1,proc);
             }
+
+            //! gather mask
+            template <typename T>
+            inline void Fill(Pixmap<T>    &img,
+                             const unit_t x0,
+                             const unit_t y0,
+                             const unit_t x1,
+                             const unit_t y1,
+                             Mask        &mask)
+            {
+                PutPixel::ToMask<T> proc(mask);
+                _Fill(img,x0,y0,x1,y1,proc);
+            }
             
         }
 
