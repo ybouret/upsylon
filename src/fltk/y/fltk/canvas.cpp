@@ -76,6 +76,7 @@ namespace upsylon
                             const double y1 = ytop-(p1.y - Yaxis.vmin) * yscale;
                             fl_line( int(x0), int(y0), int(x1), int(y1) );
                         }
+                        break;
 
                     case Curve::WithPoints:
                         for(size_t j=1; j<=crv.size(); ++j)
