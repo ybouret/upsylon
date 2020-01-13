@@ -1,14 +1,13 @@
 #include "y/fltk/canvas.hpp"
 
-namespace upsylon
-{
-    namespace FLTK
-    {
+namespace upsylon {
+    namespace FLTK {
+
         Canvas:: ~Canvas() throw()
         {
-            
+
         }
-        
+
         Canvas:: Canvas( int X, int Y, int W, int H, const char *l ) :
         Fl_Box(X,Y,W,H,l),
         xaxis(),
@@ -18,23 +17,23 @@ namespace upsylon
         curves2()
         {
         }
-        
-        
+
+
         void Canvas:: draw()
         {
             //------------------------------------------------------------------
             // draw the box
             //------------------------------------------------------------------
             Fl_Box::draw();
-            
+
             //------------------------------------------------------------------
             // draw the curves
             //------------------------------------------------------------------
             __draw( *this, xaxis, yaxis,  curves);
             __draw( *this, xaxis, y2axis, curves2);
         }
-        
-        
+
+
         void Canvas:: __draw( const Fl_Box &box, const Axis &Xaxis, const Axis &Yaxis, const Curves &C )
         {
             //------------------------------------------------------------------
@@ -48,7 +47,7 @@ namespace upsylon
             const double xscale = (W-1)/Xaxis.length;
             const double yscale = (H-1)/Yaxis.length;
             const double ytop   = Y+H-1;
-            
+
             fl_push_clip(X, Y, W, H);
             //------------------------------------------------------------------
             // iterate on curves
@@ -56,7 +55,7 @@ namespace upsylon
             for( Curves::const_iterator i = C.begin(); i != C.end(); ++i )
             {
                 const Curve &crv = **i;
-               // std::cerr << "Drawing [" << crv.name << "]: #" << crv.size() << std::endl;
+                // std::cerr << "Drawing [" << crv.name << "]: #" << crv.size() << std::endl;
                 if(crv.size()<=0) continue;
 
                 fl_color( crv.color );
@@ -92,24 +91,23 @@ namespace upsylon
                             }
                             else
                             {
-
+                                const int sz = 2*r+1;
                                 switch(crv.pointShape)
                                 {
                                     case Curve::Circle:
                                         switch( crv.pointStyle )
                                         {
                                             case Curve::Border:
-                                                fl_arc(x0, y0, r, r, 0, 360);
+                                                fl_arc(x0-r, y0-r, sz, sz, 0, 360);
                                                 break;
 
                                             case Curve::Filled:
-                                                fl_pie(x0, y0, r,r, 0, 360);
+                                                fl_pie(x0-r, y0-r, sz,sz, 0, 360);
                                                 break;
                                         }
                                         break;
 
-                                    case Curve::Square: {
-                                        const int sz = 2*r+1;
+                                    case Curve::Square:
                                         switch( crv.pointStyle )
                                         {
                                             case Curve::Border:
@@ -120,7 +118,7 @@ namespace upsylon
                                                 fl_rectf(x0-r,y0-r, sz, sz);
                                                 break;
                                         }
-                                    } break;
+                                        break;
                                 }
                             }
                         }
@@ -134,7 +132,7 @@ namespace upsylon
             }
             fl_pop_clip();
         }
-        
-        
+
+
     }
 }
