@@ -1,4 +1,5 @@
 #include "y/lua++/state.hpp"
+#include "y/fs/local/fs.hpp"
 #include <cstdlib>
 
 namespace upsylon
@@ -25,10 +26,29 @@ namespace upsylon
             }
         }
 
+
+        static int __y_file_exists( lua_State *L )
+        {
+            assert(L);
+            const string fileName = lua_tostring(L,-1);
+            vfs &fs = local_fs::instance();
+            if( fs.is_reg(fileName) )
+            {
+                lua_pushboolean(L,1);
+            }
+            else
+            {
+                lua_pushboolean(L,0);
+            }
+            return 1;
+        }
+
         State:: State() : L( lua_newstate(__luaAllocator,NULL) )
         {
             //std::cerr << "Opening Libs" << std::endl;
             luaL_openlibs(L);
+            lua_pushcfunction(L, __y_file_exists);
+            lua_setglobal(L, "y_file_exists" );
         }
 
         State:: ~State() throw()

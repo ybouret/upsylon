@@ -22,6 +22,12 @@ Y_UTEST(vm)
 
     Lua::Function<float> g("g",vm);
     std::cerr << "g(0.1,0.1)=" << g(0.1f,0.1f) << std::endl;
+
+    if(argc>1)
+    {
+        const string cmd = vformat("print( y_file_exists(\"%s\") )", argv[1]);
+        vm->doString(cmd);
+    }
 }
 Y_UTEST_DONE()
 
