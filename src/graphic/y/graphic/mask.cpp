@@ -15,6 +15,9 @@ namespace upsylon {
 
         Mask:: Mask() throw() : MaskType() {}
 
+        Mask:: Mask(const size_t n) : MaskType(n,as_capacity) {}
+
+
         Mask:: ~Mask() throw()
         {
         }

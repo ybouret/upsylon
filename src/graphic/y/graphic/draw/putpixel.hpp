@@ -62,21 +62,24 @@ namespace  upsylon {
                     Y_DISABLE_COPY_AND_ASSIGN(Blend);
                 };
 
-                template <typename T>
-                class ToMask
+                //! storing coordinates
+                class Store
                 {
                 public:
-                    Mask &mask;
+                    Mask &mask; //!< destination
 
-                    inline  ToMask( Mask &msk ) throw() : mask(msk) {}
-                    inline ~ToMask() throw() {}
+                    Store( Mask &msk ) throw(); //!< setup
+                    ~Store() throw();           //!< cleanup
+                    
+                    //! insert coordinate into mask
+                    template <typename T>
                     inline void operator()( T &, const Point &p ) const
                     {
                         mask.insert(p);
                     }
 
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(ToMask);
+                    Y_DISABLE_COPY_AND_ASSIGN(Store);
                 };
             };
 

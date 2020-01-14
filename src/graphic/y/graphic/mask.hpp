@@ -10,12 +10,14 @@ namespace upsylon {
 
     namespace Graphic {
 
+        //! lexicographic point comparator
         class PointComparator
         {
         public:
-            PointComparator() throw();
-            ~PointComparator() throw();
+            PointComparator()  throw(); //!< setup
+            ~PointComparator() throw(); //!< cleanup
 
+            //! return lexicographic comparison
             int operator()(const Point &lhs, const Point &rhs) const throw();
            
 
@@ -23,14 +25,16 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(PointComparator);
         };
 
-        typedef sorted_vector<Point,PointComparator,memory::global> SortedMaskType;
-        typedef ordered_single<SortedMaskType>                      MaskType;
+        typedef sorted_vector<Point,PointComparator,memory::global> SortedMaskType; //!< alias
+        typedef ordered_single<SortedMaskType>                      MaskType;       //!< alias
 
+        //! a Mask is a collection of unique points
         class Mask : public MaskType
         {
         public:
-            explicit Mask() throw();
-            virtual ~Mask() throw();
+            explicit Mask() throw();       //!< setup
+            virtual ~Mask() throw();       //!< cleanup
+            explicit Mask(const size_t n); //!< setup with capacity
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mask);

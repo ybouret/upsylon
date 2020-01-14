@@ -81,7 +81,7 @@ namespace  upsylon {
                        unit_t       x1,
                        Mask        &mask)
             {
-                PutPixel::ToMask<T> proc(mask);
+                PutPixel::Store proc(mask);
                 _HLine(pxm,x0,y0,x1,proc);
             }
 
@@ -155,7 +155,7 @@ namespace  upsylon {
                        unit_t       y1,
                        Mask        &mask)
             {
-                PutPixel::ToMask<T> proc(mask);
+                PutPixel::Store proc(mask);
                 _VLine(pxm,x0,y0,y1,proc);
             }
 
@@ -247,7 +247,7 @@ namespace  upsylon {
                              unit_t        y1,
                              Mask         &mask)
             {
-                PutPixel::ToMask<T> proc(mask);
+                PutPixel::Store proc(mask);
                 _Line(img,x0,y0,x1,y1,proc);
             }
 

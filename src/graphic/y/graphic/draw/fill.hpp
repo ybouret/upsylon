@@ -76,7 +76,7 @@ namespace upsylon {
                              const unit_t y1,
                              Mask        &mask)
             {
-                PutPixel::ToMask<T> proc(mask);
+                PutPixel::Store proc(mask);
                 _Fill(img,x0,y0,x1,y1,proc);
             }
             

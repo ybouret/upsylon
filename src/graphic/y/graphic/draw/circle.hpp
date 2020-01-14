@@ -94,7 +94,7 @@ namespace upsylon {
                                unit_t        r,
                                Mask         &mask)
             {
-                PutPixel::ToMask<T> proc(mask);
+                PutPixel::Store proc(mask);
                 _Circle(img,xm,ym,r,proc);
             }
 
@@ -202,7 +202,7 @@ namespace upsylon {
                              unit_t        r,
                              Mask         &mask)
             {
-                PutPixel::ToMask<T> proc(mask);
+                PutPixel::Store proc(mask);
                 _Disk(img,xm,ym,r,proc);
             }
 
