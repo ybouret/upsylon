@@ -172,6 +172,8 @@ namespace upsylon {
 #include "atom/mul1.hpp"
 #include "atom/dot.hpp"
 #include "atom/ortho.hpp"
+#include "atom/mod2.hpp"
+#include "atom/rms.hpp"
 
             //==================================================================
             //
