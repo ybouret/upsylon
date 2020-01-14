@@ -1,10 +1,11 @@
 
 #include "y/chem/equilibria.hpp"
-#include "y/math/kernel/tao.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/math/opt/bracket.hpp"
 #include "y/math/opt/minimize.hpp"
 #include "y/math/utils.hpp"
+#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/tao.hpp"
 
 namespace upsylon
 {
@@ -51,7 +52,7 @@ namespace upsylon
                 inline double operator()( const double alpha )
                 {
                     assert(_cs); assert(_Cini); assert(_Ctry); assert(_dC);
-                    tao::setprobe(* _Ctry, * _Cini, alpha, *_dC);
+                    atom::setprobe(* _Ctry, * _Cini, alpha, *_dC);
                     return _cs->computeExcess(*_Ctry);
                 }
 
@@ -83,7 +84,7 @@ namespace upsylon
                 //______________________________________________________________
                 for(size_t i=N;i>0;--i)
                 {
-                    xi[i] = tao::_dot<double>(Nu[i],beta)/nu2[i];
+                    xi[i] = atom::dot(beta,Nu[i])/nu2[i];
                 }
                 tao::mul(dC,tNu,xi);
                 triplet<double> aa   = {0,0,0};
@@ -119,7 +120,7 @@ namespace upsylon
                 }
 
                 Eini = Etry;
-                tao::_set(Cini,Ctry);
+                atom::set(Cini,Ctry);
             }
 
             //__________________________________________________________________

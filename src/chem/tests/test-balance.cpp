@@ -2,7 +2,6 @@
 #include "y/chem/equilibria.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/tao.hpp"
 
 using namespace upsylon;
 using namespace Chemical;
