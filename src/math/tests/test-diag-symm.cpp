@@ -1,5 +1,5 @@
 #include "y/math/kernel/diag-symm.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/atom.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
@@ -42,8 +42,8 @@ namespace
             matrix<T> av(n,n);
             matrix<T> vT(v,matrix_transpose);
             matrix<T> D(n,n);
-            tao::mmul(av,a,v);
-            tao::mmul(D,vT,av);
+            atom::mmul(av,a,v);
+            atom::mmul(D,vT,av);
             std::cerr << "D=" << D << std::endl;
            
             std::cerr << std::endl;
@@ -54,7 +54,8 @@ namespace
 Y_UTEST(diag_symm)
 {
     do_test<float>();
-    
+    do_test<double>();
+
 }
 Y_UTEST_DONE()
 

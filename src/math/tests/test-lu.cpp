@@ -1,6 +1,6 @@
 #include "support.hpp"
 #include "y/math/kernel/lu.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/atom.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/math/utils.hpp"
@@ -47,8 +47,8 @@ namespace
             vector<T> u = r;
             LU::solve<T>(a,u);
             vector<T> d = r;
-            tao::mul_sub(d,a0,u);
-            std::cerr << "\t|d|^2=" << tao::mod2(d) << std::endl;
+            atom::mul_sub(d,a0,u);
+            std::cerr << "\t|d|^2=" << atom::mod2(d) << std::endl;
         }
     }
 
@@ -79,7 +79,7 @@ namespace
             matrix<T> b(n,n);
             LU::inverse(a,b);
             matrix<T> P(n,n);
-            tao::mmul(P,a0,b);
+            atom::mmul(P,a0,b);
             //__find<T>::truncate(P);
             std::cerr << "P=" << P << std::endl;
 

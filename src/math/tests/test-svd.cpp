@@ -3,7 +3,7 @@
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/math/utils.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/atom.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -60,8 +60,8 @@ namespace
                             b[i]  = support::get<T>();
                         }
                         svd::solve(u,w,v,b,x);
-                        tao::mul(y,a,x);
-                        const T RMS = tao::rms(y,b);
+                        atom::mul(y,a,x);
+                        const T RMS = atom::rms(y,b);
                         std::cerr << '<' << RMS << '>';
                     }
                     
