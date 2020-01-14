@@ -1,7 +1,7 @@
 #include "y/math/kernel/cholesky.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/atom.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
@@ -12,7 +12,7 @@ namespace  {
     template <typename T> static inline
     void do_test()
     {
-     
+
         for(size_t n=1;n<=32;++n)
         {
             matrix<T> A(n,n);
@@ -32,29 +32,28 @@ namespace  {
                         P[i][j] = support::get<T>()-T(0.5);
                     }
                 }
-                tao::mmul_rtrn(A, P, P);
+                atom::mmul_rtrn(A, P, P);
                 A0 = A;
-                if( !cholesky::build(A) )
+                //std::cerr << "P =" << P  << std::endl;
+                //std::cerr << "A0=" << A0 << std::endl;
+
+                if( !cholesky::build(A) ) continue;
+                //std::cerr << "A =" << A  << std::endl;
+
+
+                for(size_t i=1;i<=n;++i)
                 {
-                    std::cerr << "-";
-                    
+                    b[i] = support::get<T>() - T(0.5);
                 }
-                else
-                {
-                    for(size_t i=1;i<=n;++i)
-                    {
-                        b[i] = support::get<T>() - T(0.5);
-                    }
-                    //A*x=b
-                    cholesky::solve(x, A, b);
-                    tao::mul(y, A0, x);
-                    const T RMS = tao::rms(b,y);
-                    std::cerr << '<' << RMS << '>';
-                }
+                //A*x=b
+                cholesky::solve(x, A, b);
+                atom::mul(y, A0, x);
+                //std::cerr << "b=" << b << ":y=" << y << std::endl;
+                const T RMS = atom::rms(b,y);
+                std::cerr << '<' << RMS << '>';
             }
-            std::cerr << std::endl;
         }
-       // std::cerr << std::endl;
+        // std::cerr << std::endl;
     }
 }
 

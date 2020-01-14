@@ -1,7 +1,7 @@
 #include "y/chem/equilibria.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/atom.hpp"
 
 using namespace upsylon;
 using namespace Chemical;
@@ -96,7 +96,7 @@ Y_UTEST(cs)
         {
             const array<double> &grad = cs.Phi[i];
             const array<int>    &nu   = cs.Nu[i];
-            const double delta = math::tao::_dot<double>(grad,nu);
+            const double delta = math::atom::dot(grad,nu);
             Y_ASSERT(delta<=0);
         }
         bool success = true;

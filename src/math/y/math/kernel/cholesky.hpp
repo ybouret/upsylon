@@ -5,15 +5,14 @@
 #include "y/container/matrix.hpp"
 #include "y/math/types.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        
+namespace upsylon {
+
+    namespace math {
+
         //! Cholesky decomposition
         struct cholesky
         {
-            
+
             //! decomposition of positive defined matrix
             /**
              only the upper part of a is required, and
@@ -25,23 +24,23 @@ namespace upsylon
             bool build( matrix<T> &a ) throw()
             {
                 assert(a.rows==a.cols);
-                const T      __zero(0);
-                const size_t n = a.rows;
+                const size_t          n    = a.rows;
                 lightweight_array<T> &diag = a.r_aux1;
-                //lw_array<T>  diag( a.get_aux(0), n);
                 for(size_t i=1;i<=n;++i)
                 {
-                    array<T> &a_i = a[i];
+                    addressable<T> &a_i = a[i];
                     for(size_t j=i;j<=n;++j )
                     {
-                        array<T> &a_j = a[j];
+                        addressable<T> &a_j = a[j];
                         T sum = a_i[j];
                         for( size_t k=i-1;k>0;--k)
+                        {
                             sum -= a_i[k] * a_j[k];
-                        
+                        }
+
                         if( i == j )
                         {
-                            if( sum <= __zero )
+                            if( sum <= 0 )
                                 return false;
                             diag[i] = sqrt_of( sum );
                         }
@@ -51,6 +50,7 @@ namespace upsylon
                         }
                     }
                 }
+
                 for(size_t i=n;i>0;--i)
                 {
                     a[i][i] = diag[i];
@@ -59,9 +59,10 @@ namespace upsylon
                         a[i][j] = 0;
                     }
                 }
+                
                 return true;
             }
-            
+
             //! solve a*x=b, a was decomposed...
             template <typename T> static inline
             void solve( array<T> &x, const matrix<T> &a, const array<T> &b) throw()
@@ -70,7 +71,7 @@ namespace upsylon
                 assert(x.size()>=a.rows);
                 assert(b.size()>=a.rows);
                 const size_t n = a.rows;
-                
+
                 for( size_t i=1; i<=n; ++i )
                 {
                     T sum = b[i];
@@ -78,7 +79,7 @@ namespace upsylon
                         sum -= a[i][k] * x[k];
                     x[i] = sum / a[i][i];
                 }
-                
+
                 for( size_t i=n; i>0; --i )
                 {
                     T sum = x[i];
@@ -86,11 +87,11 @@ namespace upsylon
                         sum -= a[k][i] * x[k];
                     x[i] = sum / a[i][i];
                 }
-                
+
             }
-            
+
         };
-        
+
     }
 }
 

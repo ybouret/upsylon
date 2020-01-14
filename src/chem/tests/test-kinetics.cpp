@@ -1,6 +1,6 @@
 #include "y/chem/kinetics.hpp"
 #include "y/chem/lua/io.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/atom.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -24,10 +24,10 @@ namespace {
         inline void injection( array<double> &dCdt, double t, const array<double> & )
         {
 
-            tao::_ld(dCdt,0);
+            atom::ld(dCdt,0);
             if(t>=0&&t<=120)
             {
-                tao::mulset(dCdt,0.01,C);
+                atom::mulset(dCdt,0.01,C);
             }
         }
 

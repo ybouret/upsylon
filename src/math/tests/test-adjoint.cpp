@@ -1,6 +1,6 @@
 #include "support.hpp"
 #include "y/math/kernel/adjoint.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/atom.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -28,7 +28,7 @@ namespace {
             adjoint(b,a);
             std::cerr << "b=" << b << std::endl;
             matrix<T> p(n,n);
-            tao::mmul(p,a,b);
+            atom::mmul(p,a,b);
             std::cerr << "p=" << p << std::endl;
         }
     }
@@ -50,7 +50,7 @@ Y_UTEST(adjoint)
         iadjoint(A,U);
         std::cerr << "A=" << A << std::endl;
         matrix<int64_t> P(n,n);
-        tao::mmul(P,A,U);
+        atom::mmul(P,A,U);
         std::cerr << "P=" << P << std::endl;
     }
 

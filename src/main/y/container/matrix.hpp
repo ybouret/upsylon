@@ -463,7 +463,7 @@ namespace upsylon
         inline void __clear(size_t count) throw()
         {
             mutable_type *entry = memory::io::cast<mutable_type>(workspace,data_offset);
-            while(count-->0)
+            while(count-- > 0)
             {
                 self_destruct(entry[count]);
             }

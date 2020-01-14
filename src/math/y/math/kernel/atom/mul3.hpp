@@ -81,7 +81,7 @@ void mmul(MATRIX &M, const LHS &lhs, const RHS &rhs, concurrent::for_each &loop 
 
 //! SIMD kernel
 #define Y_MK_ATOM_MMUL_RTRN() do {\
-typename LHS::const_type tmp =dot(lhs[i],rhs[i]); \
+typename LHS::const_type tmp =dot(lhs[i],rhs[j]); \
 M[i][j] = Y_MK_ATOM_CAST(MATRIX,LHS,tmp); } while(false)
 
 
