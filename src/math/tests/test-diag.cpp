@@ -42,7 +42,7 @@ namespace {
                     std::cerr << "\t" << wr[i] << " => " << ev[i] << std::endl;
                     const T         lam = wr[i];
                     const array<T> &v   = ev[i];
-                    tao::mul(y,a0,v);
+                    atom::mul(y,a0,v);
                     T rms = 0;
                     for(size_t i=n;i>0;--i)
                     {

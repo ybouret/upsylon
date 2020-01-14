@@ -76,7 +76,7 @@ CYCLE:
     if(checkCycle&& (cycle>nmax) )
     {
         Y_LS_PRINTLN( "[LS] done " << nmax << " cycles" );
-        return true;
+        goto CONVERGED;
     }
     Y_LS_PRINTLN( "     used   = " << used  );
     Y_LS_PRINTLN( "     aorg   = " << aorg  );
@@ -137,161 +137,164 @@ STEP_CONTROL:
     // a first trial is taken to probe the local topology
     //
     //__________________________________________________________________________
-    triplet<T> u  = { 0,     numeric<T>::inv_gold, 1 };
-    triplet<T> f  = { D2org, D2(u.b),             -1 };
-    bool       ok = true;
-
-
-    
-    if(f.b>f.a)
     {
-        //------------------------------------------------------
-        //
-        // D2(u.b)>D2(u.a)
-        // first trial is invalid, won't go further !
-        //
-        //------------------------------------------------------
-        Y_LS_PRINTLN( "[LS] Backtrack Level-1" );
-        ok  = false;
+        // this is in a block to bypass the nmax condition
+        triplet<T> u  = { 0,     numeric<T>::inv_gold, 1 };
+        triplet<T> f  = { D2org, D2(u.b),             -1 };
+        bool       ok = true;
 
-        f.c = f.b;                   // initialize an inside bracketing: f.c <- f.b
-        u.c = u.b;                   // initialize an inside bracketing: u.c <- u.c
-        bracket::inside(D2,u,f);     // bracket/min
-        (void)minimize::run(D2,u,f); // minimize
-        if( f.b > f.a )
+
+
+        if(f.b>f.a)
         {
-            Y_LS_PRINTLN("[LS] <BAD FUNCTION>");
-            return false;
-        }
-        assert(f.b<=f.a);
-    }
-    else
-    {
-        //------------------------------------------------------
-        //
-        // D2(u.b) <= D2(u.a), take next step at u.c
-        //
-        //------------------------------------------------------
-        f.c = D2(u.c);
-        if(f.c>f.a)
-        {
-            //--------------------------------------------------
+            //------------------------------------------------------------------
             //
-            // D2(u.c=1)>D2(u.a=0) : invalid full step
-            // but minimum is already bracketed!
+            // D2(u.b)>D2(u.a)
+            // first trial is invalid, won't go further !
             //
-            //--------------------------------------------------
-            ok = false;
-            Y_LS_PRINTLN( "[LS] Backtrack Level-2" );
-            (void)minimize::run(D2,u,f);
+            //------------------------------------------------------------------
+            Y_LS_PRINTLN( "[LS] Backtrack Level-1" );
+            ok  = false;
+
+            f.c = f.b;                   // initialize an inside bracketing: f.c <- f.b
+            u.c = u.b;                   // initialize an inside bracketing: u.c <- u.c
+            bracket::inside(D2,u,f);     // bracket/min
+            (void)minimize::run(D2,u,f); // minimize
+            if( f.b > f.a )
+            {
+                Y_LS_PRINTLN("[LS] <BAD FUNCTION>");
+                return false;
+            }
             assert(f.b<=f.a);
         }
         else
         {
-            //--------------------------------------------------
+            //------------------------------------------------------------------
             //
-            // D2(u.c=1)<=D2(u.a=0), accept full step
+            // D2(u.b) <= D2(u.a), take next step at u.c
             //
-            //--------------------------------------------------
-            if(f.b<=f.c)
+            //------------------------------------------------------------------
+            f.c = D2(u.c);
+            if(f.c>f.a)
             {
-                // Damping! we met a lower point
+                //--------------------------------------------------------------
+                //
+                // D2(u.c=1)>D2(u.a=0) : invalid full step
+                // but minimum is already bracketed!
+                //
+                //--------------------------------------------------------------
+                ok = false;
+                Y_LS_PRINTLN( "[LS] Backtrack Level-2" );
                 (void)minimize::run(D2,u,f);
                 assert(f.b<=f.a);
             }
             else
             {
-                // regular full step
-                u.b = u.c;
-                f.b = f.c;
-                assert(f.b<=f.a);
+                //--------------------------------------------------------------
+                //
+                // D2(u.c=1)<=D2(u.a=0), accept full step
+                //
+                //--------------------------------------------------------------
+                if(f.b<=f.c)
+                {
+                    // Damping! we met a lower point
+                    (void)minimize::run(D2,u,f);
+                    assert(f.b<=f.a);
+                }
+                else
+                {
+                    // regular full step
+                    u.b = u.c;
+                    f.b = f.c;
+                    assert(f.b<=f.a);
+                }
             }
         }
-    }
 
-    //__________________________________________________________
-    //
-    //
-    // u.b is the optimized step fraction
-    //
-    //__________________________________________________________
+        //----------------------------------------------------------------------
+        //
+        //
+        // u.b is the optimized step fraction
+        //
+        //----------------------------------------------------------------------
 
-    //----------------------------------------------------------
-    // compute the new position
-    //----------------------------------------------------------
-    atom::setprobe(atry,aorg,u.b,step);
+        //----------------------------------------------------------------------
+        // compute the new position
+        //----------------------------------------------------------------------
+        atom::setprobe(atry,aorg,u.b,step);
 
-    //----------------------------------------------------------
-    // check variable convergence
-    //----------------------------------------------------------
-    bool converged_variables = true;
-    for(size_t i=n;i>0;--i)
-    {
-        if(!used[i]) continue;
-        const T a_old = aorg[i];
-        const T a_new = atry[i];
-        const T da    = fabs_of( a_new-a_old );
-        if( da > A_FTOL * max_of( fabs_of(a_new), fabs_of(a_old) ) )
-        {
-            converged_variables = false;
-            break;
-        }
-    }
-
-    //----------------------------------------------------------
-    // update aorg/D2org and update gradient/curvature
-    //----------------------------------------------------------
-    atom::set(aorg,atry);
-    const T D2old = D2org;
-    D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
-
-    Y_LS_PRINTLN("[LS] D2: " << D2old << " -> " << D2org );
-    Y_LS_PRINTLN("[LS] converged variables = <" << converged_variables << ">");
-    if(ok)
-    {
-        //------------------------------------------------------
-        // check D2 convergence
-        //------------------------------------------------------
-        const bool converged_squares = (fabs_of(D2org-D2old) <= D_FTOL * D2old);
-        Y_LS_PRINTLN("[LS] converged squares   = <" << converged_squares   << ">");
-        if( converged_variables || converged_squares  )
-        {
-            goto CONVERGED;
-        }
-        decreaseLambda();
-        nbad = 0;
-    }
-    else
-    {
-        //------------------------------------------------------
+        //----------------------------------------------------------------------
         // check variable convergence
-        //------------------------------------------------------
-        ++nbad;
-        if( (nbad>0) && converged_variables )
+        //----------------------------------------------------------------------
+        bool converged_variables = true;
+        for(size_t i=n;i>0;--i)
         {
-            Y_LS_PRINTLN("[LS] spurious convergence");
-            goto CONVERGED;
+            if(!used[i]) continue;
+            const T a_old = aorg[i];
+            const T a_new = atry[i];
+            const T da    = fabs_of( a_new-a_old );
+            if( da > A_FTOL * max_of( fabs_of(a_new), fabs_of(a_old) ) )
+            {
+                converged_variables = false;
+                break;
+            }
         }
 
-        if( !increaseLambda() )
+        //----------------------------------------------------------------------
+        // update aorg/D2org and update gradient/curvature
+        //----------------------------------------------------------------------
+        atom::set(aorg,atry);
+        const T D2old = D2org;
+        D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+
+        Y_LS_PRINTLN("[LS] D2: " << D2old << " -> " << D2org );
+        Y_LS_PRINTLN("[LS] converged variables = <" << converged_variables << ">");
+        if(ok)
         {
-            Y_LS_PRINTLN("[LS] <OVERFLOW>");
-            return false;
+            //------------------------------------------------------------------
+            // check D2 convergence
+            //------------------------------------------------------------------
+            const bool converged_squares = (fabs_of(D2org-D2old) <= D_FTOL * D2old);
+            Y_LS_PRINTLN("[LS] converged squares   = <" << converged_squares   << ">");
+            if( converged_variables || converged_squares  )
+            {
+                goto CONVERGED;
+            }
+            decreaseLambda();
+            nbad = 0;
         }
+        else
+        {
+            //------------------------------------------------------------------
+            // check variable convergence
+            //------------------------------------------------------------------
+            ++nbad;
+            if( (nbad>0) && converged_variables )
+            {
+                Y_LS_PRINTLN("[LS] spurious convergence");
+                goto CONVERGED;
+            }
+
+            if( !increaseLambda() )
+            {
+                Y_LS_PRINTLN("[LS] <OVERFLOW>");
+                return false;
+            }
+        }
+        goto CYCLE;
+
+
     }
-    goto CYCLE;
-
-
-
 
 CONVERGED:
-    //__________________________________________________________
+    //--------------------------------------------------------------------------
     //
-    Y_LS_PRINTLN( "[LS] -- Converged --" );
+    Y_LS_PRINTLN( "[LS] -- Converged/Done --" );
     Y_LS_PRINTLN( "     D2   = " << D2org );
     Y_LS_PRINTLN( "     aorg = " << aorg  );
     Y_LS_PRINTLN( "     used = " << used  );
-    //__________________________________________________________
+    //
+    //--------------------------------------------------------------------------
     if(!LU::build(alpha))
     {
         Y_LS_PRINTLN( "[LS] <SINGULAR Level-2>" );
@@ -299,11 +302,11 @@ CONVERGED:
     }
     LU::inverse(alpha,curv);
 
-    //__________________________________________________________
+    //--------------------------------------------------------------------------
     //
     unit_t dof = sample.count();
     Y_LS_PRINTLN( "    count = " << dof );
-    //__________________________________________________________
+    //--------------------------------------------------------------------------
     for(size_t i=n;i>0;--i)
     {
         if(used[i]) --dof;
