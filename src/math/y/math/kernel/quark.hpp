@@ -29,11 +29,41 @@ Task task = {
         //! optimized argument conversion
 #define Y_QUARK_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::type,typename SOURCE::type>::_(VALUE))
 
+        //! binary methods
+#define Y_QUARK_IMPL2(METHOD) \
+template <typename TARGET, typename LHS, typename RHS> static inline \
+void METHOD( TARGET &tgt, LHS &lhs, RHS &rhs ) {                      \
+assert(tgt.size()<=lhs.size());                                        \
+assert(tgt.size()<=rhs.size());                                         \
+Y_QUARK_LOOP(tgt.size(),METHOD,1);                                       \
+}                                                                         \
+template <typename TARGET, typename LHS, typename RHS> static inline       \
+void METHOD( TARGET &tgt, LHS &lhs, RHS &rhs, concurrent::for_each &loop ) {\
+assert(tgt.size()<=lhs.size());                                            \
+assert(tgt.size()<=rhs.size());                                           \
+Y_QUARK_TASK_DECL()                                                      \
+TARGET *tgt;                                                            \
+LHS    *lhs;                                                           \
+RHS    *rhs;                                                          \
+Y_QUARK_TASK_IMPL()                                                  \
+TARGET &tgt   = *task.tgt;                                          \
+LHS    &lhs   = *task.lhs;                                         \
+RHS    &rhs   = *task.rhs;                                        \
+size_t offset = 1;                                               \
+size_t length = tgt.size();                                     \
+ctx.split(length,offset);                                      \
+Y_QUARK_LOOP(length,METHOD,offset);                           \
+Y_QUARK_TASK_DATA()                                          \
+&tgt, &lhs, &rhs                                            \
+Y_QUARK_TASK_EXEC(loop);                                   \
+}
+
         struct quark {
 
 #include "quark/ld.hpp"
 #include "quark/set.hpp"
-            
+#include "quark/add.hpp"
+#include "quark/sub.hpp"
         };
 
     }

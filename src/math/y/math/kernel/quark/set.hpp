@@ -33,40 +33,38 @@ void set( TARGET &a, SOURCE &b, concurrent::for_each &loop)
 }
 #undef Y_QUARK_SET
 
-#define Y_QUARK_VEC(I) tgt[I] = Y_QUARK_CAST(TARGET,RHS,rhs[I]) - Y_QUARK_CAST(TARGET,LHS,lhs[I])
+#define Y_QUARK_MULSET(I) a[I] = x * Y_QUARK_CAST(TARGET,SOURCE,b[I])
 
-//! SEQUENTIAL: tgt=rhs-lhs
-template <typename TARGET, typename LHS, typename RHS> static inline
-void vec( TARGET &tgt, LHS &lhs, RHS &rhs )
+//! SEQUENTIAL: a=x*b
+template <typename TARGET, typename SOURCE> static inline
+void mul_set( TARGET &a, typename TARGET::param_type x, SOURCE &b )
 {
-    assert(tgt.size()<=lhs.size());
-    assert(tgt.size()<=rhs.size());
-    Y_QUARK_LOOP(tgt.size(),VEC,1);
+    assert(a.size()<=b.size());
+    Y_QUARK_LOOP(a.size(),MULSET,1);
 }
 
 
-//! PARALLEL: tgt=rhs-lhs
-template <typename TARGET, typename LHS, typename RHS> static inline
-void vec( TARGET &tgt, LHS &lhs, RHS &rhs, concurrent::for_each &loop )
+//! PARALLEL: a=x*b
+template <typename TARGET, typename SOURCE> static inline
+void mul_set( TARGET &a, typename TARGET::param_type x, SOURCE &b, concurrent::for_each &loop)
 {
-    assert(tgt.size()<=lhs.size());
-    assert(tgt.size()<=rhs.size());
+    assert(a.size()<=b.size());
 
     Y_QUARK_TASK_DECL()
-    TARGET *tgt;
-    LHS    *lhs;
-    RHS    *rhs;
+    TARGET *a;
+    SOURCE *b;
+    typename TARGET::const_type *x;
     Y_QUARK_TASK_IMPL()
-    TARGET &tgt   = *task.a;
-    LHS    &lhs   = *task.lhs;
-    RHS    &rhs   = *task.rhs;
+    TARGET &a     = *task.a;
+    SOURCE &b     = *task.b;
+    typename TARGET::const_type x = *task.x;
     size_t offset = 1;
-    size_t length = tgt.size();
+    size_t length = a.size();
     ctx.split(length,offset);
-    Y_QUARK_LOOP(length,VEC,offset);
+    Y_QUARK_LOOP(length,MULSET,offset);
     Y_QUARK_TASK_DATA()
-    &tgt, &lhs, &rhs
+    &a, &b, &x
     Y_QUARK_TASK_EXEC(loop);
-}
 
-#undef Y_QUARK_VEC
+}
+#undef Y_QUARK_MULSET
