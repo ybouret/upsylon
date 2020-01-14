@@ -77,8 +77,9 @@ ADD_TEST(fit:gauss test-m fit_gauss)
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-m euclidean)
 
-SOURCE_GROUP( quark FILES test-quark1.cpp)
-ADD_TEST(quark1 test-m quark1)
+SOURCE_GROUP( quark FILES test-quark1-ld.cpp test-quark1-set.cpp)
+ADD_TEST(quark:ld  test-m quark1_ld)
+ADD_TEST(quark:set test-m quark1_set)
 
 
 ADD_CUSTOM_TARGET(utest-m

@@ -18,14 +18,15 @@ void ld( ARRAY &arr, typename ARRAY::param_type value, concurrent::for_each &loo
     ARRAY                      *arr;
     typename ARRAY::const_type *value;
     Y_QUARK_TASK_IMPL()
-    ARRAY                      &arr   = *task.arr;
-    typename ARRAY::const_type &value = *task.value;
-    size_t length = arr.size();
-    size_t offset = 1;
+    ARRAY                      &arr    = *task.arr;
+    typename ARRAY::const_type &value  = *task.value;
+    size_t                      length = arr.size();
+    size_t                      offset = 1;
     ctx.split(length,offset);
     Y_LOOP_FUNC(length,Y_QUARK_LD,offset);
     Y_QUARK_TASK_DATA()
-    &arr,
-    &value
+    &arr, &value
     Y_QUARK_TASK_EXEC(loop);
 }
+
+#undef Y_QUARK_LD

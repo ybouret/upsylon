@@ -18,8 +18,8 @@ namespace upsylon {
 #define Y_QUARK_TASK_DECL() struct Task {
 
 #define Y_QUARK_TASK_IMPL() \
-static inline void run( void *args, parallel &ctx, lockable & ) {\
-assert(args); Task &task = *static_cast<Task *>(args);\
+static inline void run( void *args, parallel &ctx, lockable &access ) {\
+assert(args); Task &task = *static_cast<Task *>(args); (void)access;
 
 #define Y_QUARK_TASK_DATA() } };\
 Task task = {
@@ -32,7 +32,8 @@ Task task = {
         struct quark {
 
 #include "quark/ld.hpp"
-
+#include "quark/set.hpp"
+            
         };
 
     }

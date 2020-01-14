@@ -56,7 +56,9 @@ Y_UTEST_INIT(64)
     Y_UTEST(fit_poly);
     Y_UTEST(fit_gauss);
 
-    Y_UTEST(quark1);
+    Y_UTEST(quark1_ld);
+    Y_UTEST(quark1_set);
+
 }
 Y_UTEST_EXEC()
 

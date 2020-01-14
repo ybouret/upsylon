@@ -69,6 +69,17 @@ namespace upsylon {
             } catch(...) { __release(); throw; }
         }
 
+        //! constructor with n objects having copy constructor
+        inline explicit list(const size_t n, param_type value)  : nodes(), cache()
+        {
+            try {
+                while( nodes.size < n )
+                {
+                    nodes.push_back( query(value) );
+                }
+            } catch(...) { __release(); throw; }
+        }
+
         //! copy constructor
         list( const list &other ) : nodes(), cache()
         {

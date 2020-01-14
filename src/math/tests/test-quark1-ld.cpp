@@ -16,7 +16,8 @@ namespace {
     template <typename ARRAY>
     static inline void reset1D( ARRAY &arr )
     {
-        for(size_t i=arr.size();i>0;--i) arr[i] = 0;
+        typename ARRAY::const_type z(0);
+        for(size_t i=arr.size();i>0;--i) arr[i] = z;
     }
 
     template <typename ARRAY>
@@ -25,12 +26,12 @@ namespace {
         std::cerr << "\tCheck " << typeid(ARRAY).name() << std::endl;
         for(size_t i=arr.size();i>0;--i)
         {
-            Y_ASSERT(0==memcmp(&arr[i], &value, sizeof( typename ARRAY::const_type  ) ));
+            Y_ASSERT( __mod2( arr[i] - value ) <= 0 );
         }
     }
 
     template <typename T>
-    void doLD( concurrent::simd &par )
+    void doLD( concurrent::simd *par )
     {
         concurrent::sequential_for seq;
         std::cerr << "<LD " << typeid(T).name() << ">" << std::endl;
@@ -55,10 +56,11 @@ namespace {
         }
 
         const T tmp = support::get<T>();
-#define _QUARK_LD(S)                              \
+#define _QUARK_LD(S)                         do { \
 reset1D(S); quark::ld(S,tmp);     check1D(S,tmp); \
 reset1D(S); quark::ld(S,tmp,seq); check1D(S,tmp); \
-reset1D(S); quark::ld(S,tmp,par); check1D(S,tmp);
+if(par) { reset1D(S); quark::ld(S,tmp,*par); check1D(S,tmp); } \
+} while(false)
 
         _QUARK_LD(vg);
         _QUARK_LD(vp);
@@ -74,14 +76,18 @@ reset1D(S); quark::ld(S,tmp,par); check1D(S,tmp);
 }
 
 
-Y_UTEST(quark1)
+Y_UTEST(quark1_ld)
 {
     concurrent::simd           loop;
 
-    doLD< float >(loop);
-    doLD< double >(loop);
-    doLD< complex<float> >(loop);
-    doLD< complex<double> >(loop);
+    doLD< float >(&loop);
+    doLD< double >(&loop);
+    doLD< complex<float> >(&loop);
+    doLD< complex<double> >(&loop);
+
+    doLD<mpn>(NULL);
+    doLD<mpz>(NULL);
+    doLD<mpq>(NULL);
 
 }
 Y_UTEST_DONE()
