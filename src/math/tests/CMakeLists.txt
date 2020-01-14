@@ -77,6 +77,10 @@ ADD_TEST(fit:gauss test-m fit_gauss)
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-m euclidean)
 
+SOURCE_GROUP( quark FILES test-quark1.cpp)
+ADD_TEST(quark1 test-m quark1)
+
+
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-m)
