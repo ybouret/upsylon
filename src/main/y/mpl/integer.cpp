@@ -52,6 +52,8 @@ namespace upsylon
 
 }
 
+#include "y/type/aliasing.hpp"
+
 namespace upsylon
 {
     namespace mpl
@@ -104,8 +106,8 @@ namespace upsylon
 
         void  integer:: xch( integer &other ) throw()
         {
-            cswap(s,other.s);
-            ((natural &)n).xch((natural &)(other.n));
+            _cswap(s,other.s);
+            aliasing::_(n).xch( aliasing::_(other.n) );
         }
 
         //! assign

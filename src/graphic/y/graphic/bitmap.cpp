@@ -24,9 +24,9 @@ namespace upsylon {
                     }
                     break;
             }
-            zforce(depth);
-            zforce(scanline);
-            zforce(stride);
+            _bzset(depth);
+            _bzset(scanline);
+            _bzset(stride);
         }
 
         static const char fn[] = "Graphic::Bitmap: ";

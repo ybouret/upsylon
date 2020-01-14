@@ -13,15 +13,15 @@ namespace upsylon {
 
         Edge:: ~Edge() throw()
         {
-            zforce(label);
+            _bzset(label);
         }
 
         
         Edges:: ~Edges() throw()
         {
-            zforce(gmax);
-            zforce(strongThreshold);
-            zforce(feebleThreshold);
+            _bzset(gmax);
+            _bzset(strongThreshold);
+            _bzset(feebleThreshold);
         }
 
         Edges:: Edges( const size_t W, const size_t H) :

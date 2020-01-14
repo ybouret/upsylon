@@ -727,7 +727,7 @@ RT3[ ( Y0 >> 24 ) & 0xFF ];    \
         {
             assert(depth);
             const string _ = vformat("AES%s-%s",depth, action_text(mode) );
-            cswap(_,name);
+            _cswap(_,name);
         }
 
         size_t aes:: size() const throw()

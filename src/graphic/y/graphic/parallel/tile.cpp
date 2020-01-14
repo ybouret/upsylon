@@ -9,9 +9,9 @@ namespace upsylon {
 
         Tile:: ~Tile() throw()
         {
-            zforce(lower);
-            zforce(upper);
-            zforce(linearOffset);
+            _bzset(lower);
+            _bzset(upper);
+            _bzset(linearOffset);
         }
 
 

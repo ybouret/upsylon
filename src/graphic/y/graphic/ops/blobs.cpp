@@ -12,7 +12,7 @@ namespace upsylon {
         
         Blob:: ~Blob() throw()
         {
-            zforce(label);
+            _bzset(label);
         }
         
 

@@ -55,7 +55,7 @@ namespace upsylon {
                 inline explicit Point() throw() : position(), uuid( *this ) {}
 
                 //! cleanup
-                inline virtual ~Point() throw() { zforce(position); }
+                inline virtual ~Point() throw() { _bzset(position); }
 
                 //! setup from vertex
                 inline explicit Point(const_vertex p) throw() : position(p), uuid( *this ) {}

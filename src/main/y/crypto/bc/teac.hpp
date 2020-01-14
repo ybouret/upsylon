@@ -53,7 +53,7 @@ namespace upsylon {
 			kr32_( (const uint32_t *)k128_.ro())
 			{
                 const string _ = vformat("TEA%u-%s", 8*unsigned(size_),action_text(MODE));
-                cswap(_,name);
+                _cswap(_,name);
 			}
 
             //! crypt blocks of 'size' bytes

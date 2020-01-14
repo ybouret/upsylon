@@ -16,7 +16,7 @@ namespace upsylon
 
     //! C-style forced swap, DANGEROUS
     template <typename T>
-    inline void cswap( const T &a, const T &b )
+    inline void _cswap( const T &a, const T &b )
     {
         const T tmp(a);
         (T&)a=b;

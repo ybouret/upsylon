@@ -69,7 +69,7 @@ namespace upsylon
 
         void xslot_type:: swap_with(xslot_type &other) throw()
         {
-            cswap(size,other.size);
+            _cswap(size,other.size);
             cswap(data,other.data);
             cswap(kill,other.kill);
         }

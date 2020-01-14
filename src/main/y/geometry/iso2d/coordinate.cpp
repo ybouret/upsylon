@@ -16,9 +16,9 @@ namespace upsylon {
 
             Coordinate:: ~Coordinate() throw()
             {
-                zforce(i);
-                zforce(j);
-                zforce(q);
+                _bzset(i);
+                _bzset(j);
+                _bzset(q);
             }
 
             Coordinate:: Coordinate( const Coordinate &_ ) throw() :

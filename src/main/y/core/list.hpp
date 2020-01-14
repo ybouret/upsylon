@@ -3,6 +3,7 @@
 #define Y_CORE_LIST_INCLUDED 1
 
 #include "y/type/cswap.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -39,9 +40,9 @@ assert((node)->prev==NULL)
             //! no-throw swap with another list
             inline void swap_with( list_of &other ) throw()
             {
-                cswap( head, other.head );
-                cswap( tail, other.tail );
-                cswap( size, other.size );
+                cswap(  head, other.head );
+                cswap(  tail, other.tail );
+                _cswap( size, other.size );
             }
 
             //! initialize with first node
@@ -61,7 +62,7 @@ head = tail = node; (size_t&)size = 1
                     node->prev = tail;
                     tail->next = node;
                     tail       = node;
-                    ++(size_t&)size;
+                    ++aliasing::_(size);
                 }
                 return node;
             }

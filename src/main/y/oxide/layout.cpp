@@ -14,8 +14,8 @@ namespace upsylon
 
         LayoutInfo:: ~LayoutInfo() throw()
         {
-            zforce(dimension);
-            zforce(items);
+            _bzset(dimension);
+            _bzset(items);
         }
 
         LayoutInfo:: LayoutInfo( const LayoutInfo &other ) throw() :

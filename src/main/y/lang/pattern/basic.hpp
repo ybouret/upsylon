@@ -85,7 +85,7 @@ namespace upsylon
             inline explicit Range(const uint8_t lo, const uint8_t up) throw() : Match1(UUID), lower(lo), upper(up)
             {
                 Y_LANG_PATTERN_IS(Range);
-                if(upper<lower) cswap(lower,upper);
+                if(upper<lower) _cswap(lower,upper);
             }
 
             inline virtual ~Range() throw() {}                                       //!< destructor

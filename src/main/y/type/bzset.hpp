@@ -88,7 +88,7 @@ namespace upsylon
 
     //! force zero memory
     template <typename T>
-    inline void zforce( const T &args ) throw()
+    inline void _bzset( const T &args ) throw()
     {
         core::bzset<sizeof(T)>( (void *)&((T&)args) );
     }

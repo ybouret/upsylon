@@ -29,7 +29,7 @@ namespace upsylon
             mask_(0)
             {
                 const string _ = vformat("GRAY%u-%s",8*unsigned(sizeof(unit_type)), action_text(MODE) );
-                cswap(_,name);
+                _cswap(_,name);
                 //-- truncated key, padded with 0
                 uint8_t *m = (uint8_t *)(void *)&mask_;
                 for( size_t i=0; i < BYTES; ++i )

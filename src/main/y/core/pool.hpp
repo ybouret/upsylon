@@ -69,8 +69,8 @@ assert((node)->next==NULL)
             //! no-throw swap
             inline void swap_with( pool_of<NODE> &other ) throw()
             {
-                cswap(size,other.size);
-                cswap(top, other.top);
+                _cswap(size,other.size);
+                _cswap(top, other.top);
             }
 
             //! reverse order

@@ -121,7 +121,7 @@ namespace upsylon
                     // Second pass: find the first minimal cost
                     //__________________________________________________________
                     const size_t min_indx = __Split::Find(costs);
-                    (COORD &)favored = mappings[min_indx];
+                    aliasing::_(favored)  = mappings[min_indx];
                 }
 
             }
@@ -129,8 +129,8 @@ namespace upsylon
             //! cleanup
             inline virtual ~Split() throw()
             {
-                zforce(optimal);
-                zforce(favored);
+                _bzset(optimal);
+                _bzset(favored);
             }
 
         private:

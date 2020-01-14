@@ -14,7 +14,7 @@ namespace upsylon {
 
             Surface_:: ~Surface_() throw()
             {
-                zforce(index);
+                _bzset(index);
             }
 
             Surface_:: Surface_(const size_t k) throw() :

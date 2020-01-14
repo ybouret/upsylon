@@ -27,9 +27,9 @@ namespace upsylon
 
         void CharInfo:: swapWith( CharInfo &other ) throw()
         {
-            cswap(origin,other.origin);
-            cswap(line,other.line);
-            cswap(column,other.column);
+            _cswap(origin,other.origin);
+            _cswap(line,other.line);
+            _cswap(column,other.column);
         }
 
         CharInfo & CharInfo:: operator=( const CharInfo &other ) throw()

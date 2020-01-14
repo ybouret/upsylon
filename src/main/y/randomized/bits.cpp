@@ -8,15 +8,15 @@ namespace upsylon
     {
         bits:: ~bits() throw()
         {
-            zforce(span);
-            zforce(span);
-            zforce(half);
-            zforce(denD);
-            zforce(denF);
-            zforce(symD);
-            zforce(symF);
-            zforce(midD);
-            zforce(midF);
+            _bzset(span);
+            _bzset(span);
+            _bzset(half);
+            _bzset(denD);
+            _bzset(denF);
+            _bzset(symD);
+            _bzset(symF);
+            _bzset(midD);
+            _bzset(midF);
 
         }
 

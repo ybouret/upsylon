@@ -33,10 +33,10 @@ namespace upsylon {
             //! cleanup
             inline virtual ~zero_flux_index() throw()
             {
-                zforce(range);
-                zforce(idmin);
-                zforce(idmax);
-                zforce(delta);
+                _bzset(range);
+                _bzset(idmin);
+                _bzset(idmax);
+                _bzset(delta);
             }
 
             //! recursive index call

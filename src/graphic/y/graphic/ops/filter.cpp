@@ -14,8 +14,8 @@ namespace upsylon {
 
             Filter:: Weight:: ~Weight() throw()
             {
-                zforce(value);
-                zforce(point);
+                _bzset(value);
+                _bzset(point);
             }
 
             Filter:: Weight:: Weight(const float f,
@@ -37,8 +37,8 @@ namespace upsylon {
 
             Filter:: ~Filter() throw()
             {
-                zforce(weight);
-                zforce(factor);
+                _bzset(weight);
+                _bzset(factor);
             }
 
             Filter:: Filter( const size_t n) : Object(), weights(n), weight(0.0f), factor(0)

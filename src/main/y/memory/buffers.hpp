@@ -48,7 +48,7 @@ namespace upsylon
             //! swap
             inline void swap_with( buffer_of &other ) throw()
             {
-                cswap(size,other.size);
+                _cswap(size,other.size);
                 cswap(items,other.items);
                 cswap(bytes,other.bytes);
                 cswap(data,other.data);

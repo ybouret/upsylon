@@ -19,18 +19,18 @@ namespace upsylon
     matrix_data:: ~matrix_data() throw()
     {
         __kill();
-        zforce(rows);
-        zforce(cols);
-        zforce(items);
-        zforce(is_square);
-        zforce(largest);
-        zforce(total_items);
-        zforce(data_offset);
-        zforce(data_length);
-        zforce(rows_offset);
-        zforce(rows_length);
-        zforce(indx_offset);
-        zforce(indx_length);
+        _bzset(rows);
+        _bzset(cols);
+        _bzset(items);
+        _bzset(is_square);
+        _bzset(largest);
+        _bzset(total_items);
+        _bzset(data_offset);
+        _bzset(data_length);
+        _bzset(rows_offset);
+        _bzset(rows_length);
+        _bzset(indx_offset);
+        _bzset(indx_length);
     }
 
 
@@ -73,7 +73,8 @@ namespace upsylon
         new ( &c_indices ) lightweight_array<size_t>(ipos,cols);
     }
 
-#define _XCH(FIELD) cswap(FIELD,other.FIELD)
+#define _XCH(FIELD) _cswap(FIELD,other.FIELD)
+    
     void matrix_data:: exchange( matrix_data &other ) throw()
     {
         // exchange fields

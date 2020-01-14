@@ -21,7 +21,7 @@ namespace upsylon {
 
             Level_:: ~Level_() throw()
             {
-                zforce(index);
+                _bzset(index);
             }
 
             const size_t & Level_:: key() const throw()

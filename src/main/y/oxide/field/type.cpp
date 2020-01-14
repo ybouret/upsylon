@@ -7,8 +7,8 @@ namespace upsylon
                 Field:: ~Field() throw()
                 {
                     assert(0==ownedObjects);
-                    zforce(linearExtent);
-                    zforce(sizeOfObject);
+                    _bzset(linearExtent);
+                    _bzset(sizeOfObject);
                     releasePrivate();
                 }
 

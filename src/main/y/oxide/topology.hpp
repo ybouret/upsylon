@@ -61,9 +61,9 @@ namespace upsylon
                 //! cleanup
                 inline virtual ~Node() throw()
                 {
-                    zforce(sizes);
-                    zforce(rank);
-                    zforce(ranks);
+                    _bzset(sizes);
+                    _bzset(rank);
+                    _bzset(ranks);
                 }
 
             private:
@@ -135,11 +135,11 @@ namespace upsylon
                 //! cleanup
                 inline virtual ~Hub() throw()
                 {
-                    zforce(head);
-                    zforce(tail);
-                    zforce(seq);
-                    zforce(par);
-                    zforce(bulk);
+                    _bzset(head);
+                    _bzset(tail);
+                    _bzset(seq);
+                    _bzset(par);
+                    _bzset(bulk);
                 }
 
             private:

@@ -50,7 +50,7 @@ namespace upsylon
     permutation:: ~permutation() throw()
     {
         release_(perm,wlen);
-        zforce(n);
+        _bzset(n);
     }
 
     size_t permutation:: size() const throw() { return n; }
