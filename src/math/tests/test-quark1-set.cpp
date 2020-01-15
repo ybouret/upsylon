@@ -77,6 +77,56 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
 
     }
 
+
+    template <typename T, typename U> static inline
+    void checkCast( const accessible<T> &t, const accessible<U> &u )
+    {
+        assert(t.size()==u.size());
+        for(size_t i=t.size();i>0;--i)
+        {
+            const T tt = t[i];
+            const T uu = auto_cast<T,U>::_(u[i]);
+            Y_ASSERT( __mod2(tt-uu) <= 0 );
+        }
+    }
+
+    template <typename T, typename U> static inline
+    void checkCast( const accessible<T> &t, const T &x, const accessible<U> &u )
+    {
+        assert(t.size()==u.size());
+        for(size_t i=t.size();i>0;--i)
+        {
+            const T tt = t[i];
+            const T uu =  x * auto_cast<T,U>::_(u[i]);
+            Y_ASSERT( __mod2(tt-uu) <= 0 );
+        }
+    }
+
+
+    template <typename T, typename U>
+    static inline void doSET2(concurrent::simd *loop)
+    {
+        std::cerr << "<SET/MULSET " << typeid(T).name() << " <-- " << typeid(U).name() << ">" << std::endl;
+        const U zu = 0;
+        const T zt = 0;
+        const size_t n = 10 + alea.leq(1000);
+        vector<T> t(n,zt);
+        vector<U> u(n,zu);
+        load(u); quark::set(t,u); checkCast(t,u);
+        const T x = support::get<T>();
+        load(u); quark::mul_set(t,x,u); checkCast(t,x,u);
+        if(loop)
+        {
+            load(u); quark::set(t,u,*loop);       checkCast(t,u);
+            load(u); quark::mul_set(t,x,u,*loop); checkCast(t,x,u);
+        }
+        std::cerr << "<SET/MULSET/>" << std::endl;
+    }
+
+
+
+
+
 }
 
 Y_UTEST(quark1_set)
@@ -91,6 +141,13 @@ Y_UTEST(quark1_set)
     doSET< mpn >(NULL);
     doSET< mpz >(NULL);
     doSET< mpq >(NULL);
+
+    doSET2<float,int>( &loop );
+    doSET2<double,short>( &loop );
+    doSET2<mpn,unsigned>( NULL );
+    doSET2<mpz,int>( NULL );
+    doSET2<mpq,int>( NULL );
+
 
 }
 Y_UTEST_DONE()
