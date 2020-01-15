@@ -13,17 +13,18 @@ namespace upsylon {
 
     namespace math {
 
-#include "quark/def.hpp"
+#include "quark/v1/def.hpp"
 
 
+        //! Quick Universal Algebraic Reusable Kernel
         struct quark {
 
-#include "quark/ld.hpp"
-#include "quark/set.hpp"
-#include "quark/add.hpp"
-#include "quark/sub.hpp"
-#include "quark/dot.hpp"
-#include "quark/mod2.hpp"
+#include "quark/v1/ld.hpp"
+#include "quark/v1/set.hpp"
+#include "quark/v1/add.hpp"
+#include "quark/v1/sub.hpp"
+#include "quark/v1/dot.hpp"
+#include "quark/v1/mod2.hpp"
             
         };
 

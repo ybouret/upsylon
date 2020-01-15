@@ -28,11 +28,11 @@ SET(kernel_atom_srcs ${kernel_atom_decl} ${kernel_atom_code})
 SOURCE_GROUP( kernel/atom FILES ${kernel_atom_srcs} )
 INSTALL( FILES ${kernel_atom_decl} DESTINATION include/y/math/kernel/atom )
 
-FILE(GLOB kernel_quark_decl y/math/kernel/quark/*.hpp)
-FILE(GLOB kernel_quark_code y/math/kernel/quark/*.cpp)
-SET(kernel_quark_srcs ${kernel_quark_decl} ${kernel_quark_code})
-SOURCE_GROUP( kernel/quark FILES ${kernel_quark_srcs} )
-INSTALL( FILES ${kernel_quark_decl} DESTINATION include/y/math/kernel/quark )
+FILE(GLOB kernel_quark_v1_decl y/math/kernel/quark/v1/*.hpp)
+FILE(GLOB kernel_quark_v1_code y/math/kernel/quark/v1/*.cpp)
+SET(kernel_quark_v1_srcs ${kernel_quark_v1_decl} ${kernel_quark_v1_code})
+SOURCE_GROUP( kernel/quark/v1 FILES ${kernel_quark_v1_srcs} )
+INSTALL( FILES ${kernel_quark_v1_decl} DESTINATION include/y/math/kernel/quark/v1 )
 
 
 FILE(GLOB io_decl y/math/io/*.hpp)
@@ -127,7 +127,7 @@ INSTALL( FILES ${fit_share_decl} DESTINATION include/y/math/fit/share )
 
 ADD_LIBRARY(y-m STATIC
 ${main_srcs}
-${kernel_srcs} ${kernel_atom_srcs} ${kernel_quark_srcs}
+${kernel_srcs} ${kernel_atom_srcs} ${kernel_quark_v1_srcs}
 ${io_srcs}
 ${fcn_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
