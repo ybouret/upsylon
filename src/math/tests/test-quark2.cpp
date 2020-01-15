@@ -89,6 +89,39 @@ namespace {
 
     }
 
+    template <typename T> static inline
+    void checkExact()
+    {
+        std::cerr << "checkExact<" << typeid(T).name() << ">" << std::endl;
+        const T zt = 0;
+        for(size_t rows=1;rows<=32;++rows)
+        {
+            std::cerr << ".";
+            vector<T> lhs(rows,zt);
+            vector<T> tmp(rows,zt);
+            vector<T> cpy(rows,zt);
+            for(size_t cols=1;cols<=32;++cols)
+            {
+                vector<T> rhs(cols,zt);
+                matrix<T> M(rows,cols);
+                support::fill1D(rhs);
+                support::fill2D(M);
+
+                quark::mmul(lhs,M,rhs);
+                quark::set(cpy,lhs);
+                quark::mmul_sub(lhs,M,rhs);
+
+                quark::ld(tmp,zt);
+                check1D(tmp,lhs);
+                quark::mmul_add(lhs,M,rhs);
+                check1D(cpy,lhs);
+            }
+
+        }
+        std::cerr << std::endl;
+    }
+
+
 }
 
 Y_UTEST(quark2)
@@ -96,6 +129,9 @@ Y_UTEST(quark2)
     concurrent::simd loop;
     doMMUL<float,float,float>( &loop );
     doMMUL<float,unit_t,short>( &loop );
-    
+
+
+    checkExact<mpz>();
+
 }
 Y_UTEST_DONE()
