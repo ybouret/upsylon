@@ -27,8 +27,8 @@ namespace upsylon {
 #include "quark/v1/mod2.hpp"
 
 #include "quark/v2/def.hpp"
-#include "quark/v2/mmul.hpp"
-
+#include "quark/v2/mul.hpp"
+#include "quark/v2/mul-trn.hpp"
 
         };
 

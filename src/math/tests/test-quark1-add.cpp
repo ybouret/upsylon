@@ -77,8 +77,8 @@ __FILL(); __MPV2(NAME); \
             vector<U> u(n,zu);
             vector<V> v(n,zv);
 
-            __PROC(add); __MPROC(mul_add);
-            __PROC(sub); __MPROC(mul_sub);
+            __PROC(add); __MPROC(muladd);
+            __PROC(sub); __MPROC(mulsub);
             __PROC(subp);
 
         }
