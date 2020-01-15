@@ -19,9 +19,9 @@ struct dot
     mutable_type of( LHS &lhs, RHS &rhs, concurrent::for_each &loop )
     {
         assert(lhs.size()<=rhs.size());
-
+        
         concurrent::executor &par = loop.engine();
-       par.acquire_for<mutable_type>();
+        par.acquire_for<mutable_type>();
 
         Y_QUARK_TASK_DECL()
         LHS *lhs;
@@ -40,3 +40,6 @@ struct dot
     }
 
 };
+
+
+#undef Y_QUARK_dot

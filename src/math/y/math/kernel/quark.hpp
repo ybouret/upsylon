@@ -23,7 +23,8 @@ namespace upsylon {
 #include "quark/add.hpp"
 #include "quark/sub.hpp"
 #include "quark/dot.hpp"
-
+#include "quark/mod2.hpp"
+            
         };
 
     }

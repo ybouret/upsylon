@@ -1,4 +1,4 @@
-
+#include "y/mpl/rational.hpp"
 #include "y/math/kernel/quark.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
@@ -16,7 +16,7 @@ namespace {
     template <typename T, typename U, typename V>
     void doDOT( concurrent::for_each *loop )
     {
-        std::cerr << "<DOT " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
+        std::cerr << "<DOT/MOD " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
 
         const U zu = 0;
         const V zv = 0;
@@ -26,23 +26,61 @@ namespace {
             vector<U> u(n,zu);
             vector<V> v(n,zv);
 
-            support::fill1D(u);
-            support::fill1D(v);
-            const T seq = quark::dot<T>::of(u,v);
             {
-                const T seqb = quark::dot<T>::of(v,u);
-                std::cerr << "\t" << seq << "," << seqb << std::endl;
-                Y_ASSERT( __mod2(seq-seqb) <= 0 );
+                support::fill1D(u);
+                support::fill1D(v);
+                const T seq = quark::dot<T>::of(u,v);
+                {
+                    const T seqb = quark::dot<T>::of(v,u);
+                    std::cerr << "\tdot   : " << seq << "," << seqb;
+                    Y_ASSERT( __mod2(seq-seqb) <= 0 );
+                }
+                if(loop)
+                {
+                    const T par = quark::dot<T>::of(u,v,*loop);
+                    std::cerr << "," << par << std::endl;
+                }
+                else
+                {
+                    std::cerr << std::endl;
+                }
             }
-            if(loop)
+
             {
-                const T par = quark::dot<T>::of(u,v,*loop);
-                std::cerr << "\t" << par << std::endl;
+                support::fill1D(u);
+                const T seq = quark::mod2<T>::of(u);
+                std::cerr << "\tmodv1 : " << seq;
+                if(loop)
+                {
+                    const T par = quark::mod2<T>::of(u,*loop);
+                    std::cerr << "," << par << std::endl;
+                }
+                else
+                {
+                    std::cerr << std::endl;
+                }
             }
+
+            {
+                support::fill1D(u);
+                support::fill1D(v);
+                const T seq = quark::mod2<T>::of(u,v);
+                std::cerr << "\tmodv2 : " << seq;
+                if(loop)
+                {
+                    const T par = quark::mod2<T>::of(u,v,*loop);
+                    std::cerr << "," << par << std::endl;
+                }
+                else
+                {
+                    std::cerr << std::endl;
+                }
+            }
+
 
 
         }
-        std::cerr << "<DOT/>" << std::endl;
+        std::cerr << "<DOT/MOD/>" << std::endl;
 
     }
 
@@ -52,7 +90,8 @@ Y_UTEST(quark1_dot)
 {
     concurrent::simd loop;
     doDOT<float,float,float>( &loop );
-    doDOT<double,int,short>( &loop );
+    doDOT<double,unit_t,unit_t>( &loop );
+    doDOT<mpz,mpz,mpz>( NULL );
 }
 Y_UTEST_DONE()
 
