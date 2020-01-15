@@ -1,11 +1,15 @@
+//! \file
 
+//! dot operation with cast
 #define Y_QUARK_dot(I) ans += Y_QUARK_TO(T,LHS,lhs[I]) * Y_QUARK_TO(T,RHS,rhs[I])
 
+//! dot products
 template <typename T>
 struct dot
 {
-    Y_DECL_ARGS(T,type);
+    Y_DECL_ARGS(T,type); //!< aliases
 
+    //! SEQUENTIAL: lhs.rhs
     template <typename LHS, typename RHS> static inline
     mutable_type of( LHS &lhs, RHS &rhs )
     {
@@ -15,6 +19,7 @@ struct dot
         return ans;
     }
 
+    //! parallel: lhs.rhs
     template <typename LHS, typename RHS> static inline
     mutable_type of( LHS &lhs, RHS &rhs, concurrent::for_each &loop )
     {

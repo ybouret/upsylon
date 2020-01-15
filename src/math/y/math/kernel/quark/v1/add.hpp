@@ -1,3 +1,4 @@
+//! \file
 
 //! tgt=lhs+rhs
 #define Y_QUARK_add(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) + Y_QUARK_CAST(TARGET,RHS,rhs[I])
@@ -18,6 +19,7 @@ void add( TARGET &target, SOURCE &source, concurrent::for_each &loop )
     add(target,target,source,loop);
 }
 
+//! mul add operation with casts
 #define Y_QUARK_mul_add(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) + x * Y_QUARK_CAST(TARGET,RHS,rhs[I])
 Y_QUARK_IMPL3(mul_add)
 #undef Y_QUARK_mul_add

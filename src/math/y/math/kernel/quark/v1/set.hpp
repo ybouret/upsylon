@@ -1,4 +1,6 @@
+//! \file
 
+//! set item with cast
 #define Y_QUARK_SET(I) a[I] = Y_QUARK_CAST(TARGET,SOURCE,b[I])
 
 //! SEQUENTIAL: a=b
@@ -30,6 +32,7 @@ void set( TARGET &a, SOURCE &b, concurrent::for_each &loop)
 }
 #undef Y_QUARK_SET
 
+//! mulitply and set item with cast
 #define Y_QUARK_MULSET(I) a[I] = x * Y_QUARK_CAST(TARGET,SOURCE,b[I])
 
 //! SEQUENTIAL: a=x*b

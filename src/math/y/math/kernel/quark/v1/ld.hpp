@@ -1,3 +1,4 @@
+//! \file
 
 //! LD proc
 #define Y_QUARK_LD(I) arr[I] = value

@@ -1,13 +1,19 @@
+//! \file
 
+//! mod2 addition
 #define Y_QUARK_mod2(I)      ans += __mod2( lhs[I] )
+
+//! mod2 of delta addition
 #define Y_QUARK_mod2delta(I) ans += __mod2( lhs[I] - Y_QUARK_CAST(LHS,RHS,rhs[I]) )
 
+//! taking mod2 of arrays
 template <typename T>
 struct mod2
 {
-    Y_DECL_ARGS(T,type);
-    typedef typename real_for<mutable_type>::type real_type;
+    Y_DECL_ARGS(T,type);                                     //!< aliases
+    typedef typename real_for<mutable_type>::type real_type; //!< alias
 
+    //! SEQUENTIAL: |lhs|^2
     template <typename LHS> static inline
     real_type of( LHS &lhs  )
     {
@@ -16,6 +22,7 @@ struct mod2
         return ans;
     }
 
+    //! PARALLEL: |lhs|^2
     template <typename LHS> static inline
     real_type of( LHS &lhs , concurrent::for_each &loop )
     {
@@ -37,7 +44,7 @@ struct mod2
         return par.sum<mutable_type>();
     }
 
-
+    //! SEQUENTIAL: |lhs-rhs|^2
     template <typename LHS, typename RHS> static inline
     real_type of( LHS &lhs, RHS &rhs )
     {
@@ -47,7 +54,7 @@ struct mod2
         return ans;
     }
 
-
+    //! PARALLEL: |lhs-rhs|^2
     template <typename LHS, typename RHS> static inline
     mutable_type of( LHS &lhs, RHS &rhs, concurrent::for_each &loop )
     {

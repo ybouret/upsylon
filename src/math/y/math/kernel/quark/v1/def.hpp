@@ -1,6 +1,12 @@
+//! \file
 
+//! LOOP wrapper
 #define Y_QUARK_LOOP(N,FUNC,OFFSET) Y_LOOP_FUNC(N,Y_QUARK_##FUNC,OFFSET)
+
+//! SEQUENTIAL LOOP wrapper
 #define Y_QUARK_LOOP_SEQ(N,FUNC)    Y_QUARK_LOOP(N,FUNC,1)
+
+//! PARALLEL LOOP wrapper
 #define Y_QUARK_LOOP_PAR(N,FUNC)    \
 size_t length = (N);                \
 size_t offset = 1;                  \
@@ -8,15 +14,19 @@ ctx.split(length,offset);           \
 Y_QUARK_LOOP(length,FUNC,offset)
 
 
+//! Task declaration
 #define Y_QUARK_TASK_DECL() struct Task {
 
+//! Task implementation
 #define Y_QUARK_TASK_IMPL() \
 static inline void run( void *args, parallel &ctx, lockable &access ) {\
 assert(args); Task &task = *static_cast<Task *>(args); (void)access;
 
+//! Task Data
 #define Y_QUARK_TASK_DATA() } };\
 Task task = {
 
+//! Execute Task
 #define Y_QUARK_TASK_EXEC(LOOP) }; LOOP.run( task.run, &task )
 
 
