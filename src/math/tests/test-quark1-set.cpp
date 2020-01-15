@@ -16,11 +16,7 @@ namespace {
     template <typename ARRAY>
     void load( ARRAY &arr  )
     {
-        for(size_t i=1;i<=arr.size();++i)
-        {
-            typename ARRAY::const_type tmp = support::get< typename ARRAY::type >();
-            arr[i] = tmp;
-        }
+        support::fill1D(arr);
     }
 
     template <typename LHS, typename RHS>

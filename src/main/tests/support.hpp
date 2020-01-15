@@ -34,6 +34,16 @@ namespace {
             }
         }
 
+        template <typename ARRAY>
+        static inline void reset1D( ARRAY &arr )
+        {
+            typename ARRAY::const_type z = 0;
+            for(size_t i=arr.size();i>0;--i)
+            {
+                arr[i] = z;
+            }
+        }
+
 
         template <typename ARRAY>
         static inline void fill2D( ARRAY &arr )
