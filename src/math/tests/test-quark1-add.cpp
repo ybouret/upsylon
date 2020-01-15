@@ -42,24 +42,43 @@ __FILL(); __OPV1(NAME); \
 __FILL(); __OPV2(NAME); \
 } while(false)
 
+#define __MPV1(NAME) do {\
+const T x = support::get<T>();\
+support::reset1D(t); quark::NAME(t,u,x,v);\
+if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb); }\
+} while(false)
+
+#define __MPV2(NAME) do {\
+const T x = support::get<T>();\
+support::reset1D(t); quark::NAME(t,x,u);\
+if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop); check1D(t,tb); }\
+} while(false)
+
+
+#define __MPROC(NAME) do {\
+__FILL(); __MPV1(NAME); \
+__FILL(); __MPV2(NAME); \
+} while(false)
+
     template <typename T,
     typename U,
     typename V>
     void doOPS(concurrent::for_each *loop)
     {
+        std::cerr << "<OPS " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
         const T zt = 0;
         const U zu = 0;
         const V zv = 0;
         for(size_t iter=0;iter<8;++iter)
         {
-            const size_t n = 10 + alea.leq(1000);
+            const size_t n = 1000 + alea.leq(1000);
             vector<T> t(n,zt);
             vector<T> tb(n,zt);
             vector<U> u(n,zu);
             vector<V> v(n,zv);
 
-            __PROC(add);
-            __PROC(sub);
+            __PROC(add); __MPROC(mul_add);
+            __PROC(sub); __MPROC(mul_sub);
             __PROC(subp);
 
         }

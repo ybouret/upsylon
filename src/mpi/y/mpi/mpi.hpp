@@ -4,7 +4,6 @@
 #define Y_MPI_INCLUDED 1
 
 #include "y/exception.hpp"
-#include "y/type/spec.hpp"
 #include "y/associative/set.hpp"
 #include "y/associative/map.hpp"
 #include "y/ios/upack.hpp"

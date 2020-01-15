@@ -35,3 +35,21 @@ void subp( TARGET &target, SOURCE &source, concurrent::for_each &loop )
 {
     subp( target, target, source, loop);
 }
+
+
+#define Y_QUARK_mul_sub(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) - x * Y_QUARK_CAST(TARGET,RHS,rhs[I])
+Y_QUARK_IMPL3(mul_sub)
+#undef Y_QUARK_mul_sub
+
+template <typename TARGET, typename SOURCE> static inline
+void mul_sub( TARGET &target, typename TARGET::param_type x, SOURCE &source )
+{
+    mul_sub(target,target,x,source);
+}
+
+template <typename TARGET, typename SOURCE> static inline
+void mul_sub( TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop )
+{
+    mul_sub(target,target,x,source,loop);
+}
+
