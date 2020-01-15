@@ -19,6 +19,10 @@ Task task = {
 
 #define Y_QUARK_TASK_EXEC(LOOP) }; LOOP.run( task.run, &task )
 
+
+//! optimized argument conversion
+#define Y_QUARK_TO(TYPE,SOURCE,VALUE) (auto_cast<TYPE,typename SOURCE::type>::_(VALUE))
+
 //! optimized argument conversion
 #define Y_QUARK_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::type,typename SOURCE::type>::_(VALUE))
 

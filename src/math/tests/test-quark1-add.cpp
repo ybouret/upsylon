@@ -69,7 +69,7 @@ __FILL(); __MPV2(NAME); \
         const T zt = 0;
         const U zu = 0;
         const V zv = 0;
-        for(size_t iter=0;iter<8;++iter)
+        for(size_t iter=0;iter<16;++iter)
         {
             const size_t n = 1000 + alea.leq(1000);
             vector<T> t(n,zt);
@@ -82,7 +82,7 @@ __FILL(); __MPV2(NAME); \
             __PROC(subp);
 
         }
-
+        std::cerr << "<OPS/>" << std::endl;
 
     }
 
