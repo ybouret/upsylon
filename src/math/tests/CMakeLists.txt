@@ -82,11 +82,13 @@ test-quark1-ld.cpp
 test-quark1-set.cpp
 test-quark1-add.cpp
 test-quark1-dot.cpp
+test-quark2.cpp
 )
 ADD_TEST(quark:ld  test-m quark1_ld)
 ADD_TEST(quark:set test-m quark1_set)
 ADD_TEST(quark:add test-m quark1_add)
 ADD_TEST(quark:dot test-m quark1_dot)
+ADD_TEST(quark2    test-m quark2)
 
 ADD_CUSTOM_TARGET(utest-m
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

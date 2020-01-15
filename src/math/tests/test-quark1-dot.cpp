@@ -13,6 +13,7 @@ using namespace math;
 
 namespace {
 
+   
     template <typename T, typename U, typename V>
     void doDOT( concurrent::for_each *loop )
     {
