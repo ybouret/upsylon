@@ -42,15 +42,46 @@ namespace {
 
                 for(size_t iter=0;iter<4;++iter)
                 {
-                    support::fill1D(rhs);
-                    support::fill2D(M);
-
-                    quark::mmul(lhs, M, rhs);
-                    if(loop)
                     {
-                        quark::mmul(tmp,M,rhs,*loop);
-                        check1D(lhs,tmp);
+                        support::fill1D(rhs);
+                        support::fill2D(M);
+
+                        quark::mmul(lhs, M, rhs);
+                        if(loop)
+                        {
+                            quark::mmul(tmp,M,rhs,*loop);
+                            check1D(lhs,tmp);
+                        }
                     }
+
+                    {
+                        support::fill1D(lhs);
+                        support::fill1D(rhs);
+                        support::fill2D(M);
+
+                        quark::set(tmp,lhs);
+                        quark::mmul_add(lhs,M,rhs);
+                        if(loop)
+                        {
+                            quark::mmul_add(tmp,M,rhs,*loop);
+                            check1D(lhs,tmp);
+                        }
+                    }
+
+                    {
+                        support::fill1D(lhs);
+                        support::fill1D(rhs);
+                        support::fill2D(M);
+
+                        quark::set(tmp,lhs);
+                        quark::mmul_sub(lhs,M,rhs);
+                        if(loop)
+                        {
+                            quark::mmul_sub(tmp,M,rhs,*loop);
+                            check1D(lhs,tmp);
+                        }
+                    }
+
                 }
 
             }
