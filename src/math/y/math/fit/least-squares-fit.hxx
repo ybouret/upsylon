@@ -85,7 +85,7 @@ CYCLE:
     Y_LS_PRINTLN( "     beta   = " << beta  );
 
 
-    if(!buildStep())
+    if(!buildStep(sample.variables))
     {
         return false;
     }
@@ -290,9 +290,11 @@ CONVERGED:
     //--------------------------------------------------------------------------
     //
     Y_LS_PRINTLN( "[LS] -- Converged/Done --" );
+    checkNullSpace(sample.variables);
     Y_LS_PRINTLN( "     D2   = " << D2org );
     Y_LS_PRINTLN( "     aorg = " << aorg  );
     Y_LS_PRINTLN( "     used = " << used  );
+    Y_LS_PRINTLN( "     isOK = " << isOK  );
     //
     //--------------------------------------------------------------------------
     if(!LU::build(alpha))
@@ -309,7 +311,7 @@ CONVERGED:
     //--------------------------------------------------------------------------
     for(size_t i=n;i>0;--i)
     {
-        if(used[i]) --dof;
+        if(isOK[i]) --dof;
     }
     Y_LS_PRINTLN( "      dof = " << dof );
     if(dof<0)
@@ -332,8 +334,12 @@ CONVERGED:
         {
             if(used[i])
             {
-                const T sig = sqrt_of( (D2org * curv[i][i]) / dof );
-                aerr[i]     = sig*sig2err;
+                if(isOK[i])
+                {
+                    const T sig = sqrt_of( (D2org * curv[i][i]) / dof );
+                    aerr[i]     = sig*sig2err;
+                }
+                // else aerr will be -1
             }
             else
             {

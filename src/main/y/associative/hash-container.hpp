@@ -274,7 +274,30 @@ namespace upsylon
                 }
             }
         }
-        
+
+        //! send a query on data, return first match
+        template <typename PROC> inline const_type * query( PROC &proc ) const throw()
+        {
+            for(const meta_node *node=table.chain.head;node;node=node->next)
+            {
+                const_type &data = node->addr->data;
+                if(proc(data)) return &data;
+            }
+            return NULL;
+        }
+
+        //! send a query on data, return first match
+        template <typename PROC, typename ARGS> inline const_type * query( PROC &proc, const ARGS &args) const throw()
+        {
+            for(const meta_node *node=table.chain.head;node;node=node->next)
+            {
+                const_type &data = node->addr->data;
+                if(proc(data,args)) return &data;
+            }
+            return NULL;
+        }
+
+
 
     protected:
         table_type table; //!< handle low level operations

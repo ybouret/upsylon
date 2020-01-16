@@ -311,6 +311,24 @@ namespace upsylon {
                 return vformat("%.15g",value);
             }
 
+            static inline bool byIndex( const Variable::Pointer &v, const size_t index) throw()
+            {
+                return v->index() == index;
+            }
+
+            const Variable * Variables:: searchIndex( const size_t index ) const throw()
+            {
+                const Variable::Pointer *pV = query( byIndex, index );
+                if(pV)
+                {
+                    return & (**pV) ;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
         }
     }
 }

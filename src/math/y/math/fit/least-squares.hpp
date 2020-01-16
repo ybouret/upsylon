@@ -308,33 +308,43 @@ namespace upsylon {
                     }
                 }
 
-                //! build step from current alpha, lambda, beta
-                inline bool buildStep()
+                //! check if some variables are not OK!
+                inline void checkNullSpace(const Variables &vars)
                 {
                     for(size_t i=used.size();i>0;--i)
                     {
-                        bool &flag = isOK[i];
+                        bool &ok = isOK[i];
                         if( !used[i] )
                         {
-                            flag = false;
+                            ok = false;
                         }
                         else
                         {
-                            flag = true;
+                            ok = true;
                             if( fabs_of( beta[i] ) <= 0 )
                             {
-                                std::cerr << "\t\t<NULL GRADIENT @" << i << ">" << std::endl;
-                                if( fabs_of( curv[i][i] ) <= 0 )
+                                if( quark::mmod2<T>::both_of(alpha,i,i) <=0 )
                                 {
-                                    std::cerr << "\t\t<AND NULL CURV>" << std::endl;
-                                }
-                                if( quark::mmod2<T>::both_of(curv,i,i) <=0 )
-                                {
-                                    std::cerr << "\t\t<AND NULL SPACE>" << std::endl;
+                                    const Variable *pV = vars.searchIndex(i);
+                                    if(!pV)
+                                    {
+                                        throw exception("[LS]: internal error: undeclared used variable!");
+                                    }
+                                    Y_LS_PRINTLN( "[LS] <NULL SPACE for [" << pV->name << "] >" );
+                                    ok = false;
+                                    alpha[i][i] = 1;
                                 }
                             }
+
                         }
                     }
+                }
+
+                //! build step from current alpha, lambda, beta
+                inline bool buildStep(const Variables &vars)
+                {
+                    checkNullSpace(vars);
+                    
                     //__________________________________________________________
                     //
                     // find a regular matrix

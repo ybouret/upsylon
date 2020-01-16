@@ -316,6 +316,9 @@ namespace upsylon {
                     return ans;
                 }
 
+                //! get variable by its index
+                const Variable *searchIndex( const size_t index ) const throw();
+
             private:
                 void   update();
                 string toString( const double value ) const;
