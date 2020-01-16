@@ -82,6 +82,7 @@ test-quark1-ld.cpp
 test-quark1-set.cpp
 test-quark1-add.cpp
 test-quark1-dot.cpp
+test-quark1-neg.cpp
 test-quark2.cpp
 test-quark3.cpp
 )
@@ -89,6 +90,7 @@ ADD_TEST(quark:ld  test-m quark1_ld)
 ADD_TEST(quark:set test-m quark1_set)
 ADD_TEST(quark:add test-m quark1_add)
 ADD_TEST(quark:dot test-m quark1_dot)
+ADD_TEST(quark:neg test-m quark1_neg)
 ADD_TEST(quark2    test-m quark2)
 ADD_TEST(quark3    test-m quark3)
 

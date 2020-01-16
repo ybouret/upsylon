@@ -21,6 +21,7 @@ namespace upsylon {
 
 #include "quark/v1/ld.hpp"
 #include "quark/v1/set.hpp"
+#include "quark/v1/neg.hpp"
 #include "quark/v1/add.hpp"
 #include "quark/v1/sub.hpp"
 #include "quark/v1/dot.hpp"
