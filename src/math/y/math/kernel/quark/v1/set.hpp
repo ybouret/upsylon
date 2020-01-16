@@ -65,3 +65,17 @@ void mulset( TARGET &a, typename TARGET::param_type x, SOURCE &b, concurrent::fo
 
 }
 #undef Y_QUARK_MULSET
+
+//! SEQUENTIAL a *= x
+template <typename TARGET > static inline
+void rescale( TARGET &a, typename TARGET::param_type x )
+{
+    mulset(a,x,a);
+}
+
+//! PARALLEL a *= x
+template <typename TARGET > static inline
+void rescale( TARGET &a, typename TARGET::param_type x, concurrent::for_each &loop)
+{
+    mulset(a,x,a,loop);
+}

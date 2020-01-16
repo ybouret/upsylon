@@ -43,7 +43,8 @@ namespace upsylon {
                 {
                     return -4;
                 }
-                
+
+
                 //! corrected curvature computation
                 static inline
                 bool ComputeCurvature(Matrix       &curv,
@@ -127,6 +128,7 @@ namespace upsylon {
                 lambdas("lambda",Algo<T>::MinPower(),Algo<T>::MaxPower()),
                 pmin(lambdas.lower),
                 pmax(lambdas.upper),
+                damp(1),
                 p(0),
                 lambda(0),
                 alpha(),
@@ -217,8 +219,14 @@ namespace upsylon {
                 const Field  lambdas; //!< precomputed lambdas
                 const unit_t pmin;    //!< min power value
                 const unit_t pmax;    //!< max power value
-                
-                
+                const T      damp;    //!< damp factor to slow done search, default=1
+
+                //! set damping factor
+                inline void setDamp( const T dampValue ) throw()
+                {
+                    aliasing::_(damp) = clamp<T>(0,dampValue,1);
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
                 unit_t   p;
@@ -317,6 +325,12 @@ namespace upsylon {
                     // and compute step
                     //__________________________________________________________
                     Algo<T>::ComputeStep(step, curv, beta);
+
+                    //__________________________________________________________
+                    //
+                    // and take caution
+                    //__________________________________________________________
+                    quark::rescale(step,damp);
                     return true;
                 }
 
