@@ -222,7 +222,7 @@ namespace upsylon {
                 const unit_t pmax;    //!< max power value
                 const T      damp;    //!< damp factor to slow done search, default=1
 
-                //! set damping factor
+                //! set damping factor into [0:1]
                 inline void setDamp( const T dampValue ) throw()
                 {
                     aliasing::_(damp) = clamp<T>(0,dampValue,1);
@@ -246,7 +246,11 @@ namespace upsylon {
                     return LeftUntouched;
                 }
 
+
+                //______________________________________________________________
+                //
                 // prepare all internal memory
+                //______________________________________________________________
                 inline void allocateFor(const SampleType<T>    &sample,
                                         const accessible<bool> &flags )
                 {
@@ -263,7 +267,10 @@ namespace upsylon {
                     quark::ld(isOK,false);
                 }
 
-                // initialize
+                //______________________________________________________________
+                //
+                // initialize lambdas
+                //______________________________________________________________
                 inline void initialize() throw()
                 {
                     Field &lam = aliasing::_(lambdas);
@@ -281,18 +288,30 @@ namespace upsylon {
                     }
                     setLambda( Algo<T>::Initial() );
                 }
-                
+
+                //______________________________________________________________
+                //
+                // auto set lambda
+                //______________________________________________________________
                 inline void setLambda( const unit_t p0 ) throw()
                 {
                     lambda = lambdas[ (p=clamp(pmin,p0,pmax) ) ];
                 }
-                
+
+                //______________________________________________________________
+                //
+                // safely decrease lambda
+                //______________________________________________________________
                 inline void decreaseLambda() throw()
                 {
                     lambda = lambdas[ (p=max_of(p-1,pmin) ) ];
                     Y_LS_PRINTLN( "[LS] decreasing lambda" );
                 }
-                
+
+                //______________________________________________________________
+                //
+                // safely increase lambda
+                //______________________________________________________________
                 inline bool increaseLambda() throw()
                 {
                     Y_LS_PRINTLN( "[LS] increasing lambda" );
@@ -308,7 +327,11 @@ namespace upsylon {
                     }
                 }
 
-                //! check if some variables are not OK!
+                //______________________________________________________________
+                //
+                // check if some variables are in a nullspace
+                // and regularize alpha
+                //______________________________________________________________
                 inline void checkNullSpace(const Variables &vars)
                 {
                     for(size_t i=used.size();i>0;--i)
@@ -340,7 +363,10 @@ namespace upsylon {
                     }
                 }
 
-                //! build step from current alpha, lambda, beta
+                //______________________________________________________________
+                //
+                // build step from current alpha, lambda, beta
+                //______________________________________________________________
                 inline bool buildStep(const Variables &vars)
                 {
                     checkNullSpace(vars);
@@ -388,7 +414,6 @@ namespace upsylon {
                         assert(atry);
                         assert(aorg);
                         assert(step);
-
 
                         quark::muladd(*atry, *aorg, u, *step);
                         return sample->computeD2(*F, *atry);
