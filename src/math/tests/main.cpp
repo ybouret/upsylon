@@ -61,6 +61,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(quark1_add);
     Y_UTEST(quark1_dot);
     Y_UTEST(quark2);    
+    Y_UTEST(quark3);
 }
 Y_UTEST_EXEC()
 
