@@ -1,5 +1,5 @@
-
 //! \file
+
 #ifndef Y_MK_QUARK_INCLUDED
 #define Y_MK_QUARK_INCLUDED 1
 

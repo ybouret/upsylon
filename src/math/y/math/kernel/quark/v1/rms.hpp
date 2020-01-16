@@ -1,3 +1,4 @@
+//!\file
 
 //! taking rms of arrays
 template <typename T>

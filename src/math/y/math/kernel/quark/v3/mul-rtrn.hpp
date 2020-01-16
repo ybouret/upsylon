@@ -1,12 +1,13 @@
 
 //! \file
 
+//! check arguments for matrix multiplication with right transposed
 #define Y_QUARK_MMUL_RTRN_CHK() \
 assert(A.rows==B.rows);         \
 assert(A.cols==C.rows);         \
 assert(B.cols==C.cols)
 
-
+//! code to use local sum
 #define Y_QUARK_MMUL_RTRN_SUM(TARGET,OP)                      \
 typename matrix<T>::mutable_type sum = 0;                     \
 for(size_t k=n;k>0;--k)                                       \
@@ -15,7 +16,7 @@ sum += auto_cast<T,U>::_(Br[k]) * auto_cast<T,V>::_(Cc[k]);   \
 }                                                             \
 TARGET OP sum
 
-
+//! implement matrix multiplication for sequential and parallel
 #define Y_QUARK_MMUL_RTRN(METHOD,OP)                               \
 template <typename T,typename U,typename V> static inline         \
 void METHOD(matrix<T> &A, const matrix<U> &B, const matrix<V> &C) \

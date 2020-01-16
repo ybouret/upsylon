@@ -1,5 +1,6 @@
 //! \file
 
+//! check arguments for multiply
 #define Y_QUARK_MUL_CHECK assert(lhs.size()>=M.rows);assert(rhs.size()>=M.cols)
 
 //! mul with cast

@@ -1,3 +1,4 @@
+//! \file
 
 //! V2 METHOD, parallel on rows
 #define Y_QUARK_V2(METHOD,CHECK) \
@@ -22,6 +23,7 @@ Y_QUARK_TASK_DATA()\
 Y_QUARK_TASK_EXEC(loop);\
 }
 
+//! V2 METHOD, parallel on cols for transposed
 #define Y_QUARK_V2_TRN(METHOD,CHECK)                            \
 template <typename T, typename LHS, typename RHS> static inline \
 void METHOD( LHS &lhs, const matrix<T> &M, RHS &rhs )           \

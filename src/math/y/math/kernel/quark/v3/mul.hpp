@@ -1,11 +1,12 @@
 //! \file
 
+//! check arguments for matrix multiplication
 #define Y_QUARK_MMUL_CHK() \
 assert(A.rows==B.rows);    \
 assert(A.cols==C.cols);    \
 assert(B.cols==C.rows)
 
-
+//! default code to used local sum
 #define Y_QUARK_MMUL_SUM(TARGET,OP)                           \
 typename matrix<T>::mutable_type sum = 0;                     \
 for(size_t k=n;k>0;--k)                                       \
@@ -14,6 +15,7 @@ sum += auto_cast<T,U>::_(Br[k]) * auto_cast<T,V>::_(C[k][c]); \
 }                                                             \
 TARGET OP sum
 
+//! implement both sequential and parallel code
 #define Y_QUARK_MMUL(METHOD,OP)                                   \
 template <typename T,typename U,typename V> static inline         \
 void METHOD(matrix<T> &A, const matrix<U> &B, const matrix<V> &C) \
