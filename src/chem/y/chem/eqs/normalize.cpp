@@ -1,6 +1,6 @@
 
 #include "y/chem/equilibria.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/quark.hpp"
 #include "y/math/kernel/lu.hpp"
 
 namespace upsylon
@@ -39,7 +39,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 computeGammaAndPhi(Corg);
-                tao::_mmul_rtrn(W,Phi,Nu);
+                quark::mmul_rtrn(W,Phi,Nu);
                 if( !LU::build(W) )
                 {
                     std::cerr << "second chance" << std::endl;
@@ -50,7 +50,7 @@ namespace upsylon
                     }
 
                     computeGammaAndPhi(Corg);
-                    tao::_mmul_rtrn(W,Phi,Nu);
+                    quark::mmul_rtrn(W,Phi,Nu);
                     if( !LU::build(W) )
                     {
                         std::cerr << "[normalize] singular system" << std::endl;
@@ -63,10 +63,10 @@ namespace upsylon
                 // compute the new position
                 //
                 //--------------------------------------------------------------
-                tao::neg(xi,Gamma);
+                quark::neg(xi,Gamma);
                 LU::solve(W,xi);
-                tao::mul(step,tNu,xi);
-                tao::add(Cnew,Corg,step);
+                quark::mul(step,tNu,xi);
+                quark::add(Cnew,Corg,step);
                 
                 //--------------------------------------------------------------
                 //

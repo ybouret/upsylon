@@ -1,5 +1,5 @@
 #include "y/chem/equilibria.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/quark.hpp"
 #include "y/math/fcn/zfind.hpp"
 
 namespace upsylon
@@ -26,7 +26,7 @@ namespace upsylon
                     assert(pNu);
                     assert(pCtry);
                     array<double> &C = *pCtry;
-                    tao::setprobe(C, *pCini, xi, *pNu );
+                    quark::muladd(C, *pCini, xi, *pNu );
                     return pEq->Gamma(K,C);
                 }
             };
