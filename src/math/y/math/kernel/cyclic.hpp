@@ -64,20 +64,20 @@ namespace upsylon
                 // compute Z
                 for(size_t i=space;i>0;--i)
                 {
-                    array<T>  &Zi = Z[i];
+                    addressable<T> &Zi = Z[i];
                     tridiag<T>::solve(Zi,U[i]);
                 }
 
                 // compute H = inv(1+V'*Z)
                 for(size_t i=space;i>0;--i)
                 {
-                    array<T>       &Hi = H[i];
-                    const array<T> &Vi = V[i];
+                    addressable<T>      &Hi = H[i];
+                    const accessible<T> &Vi = V[i];
                     for(size_t j=space;j>0;--j)
                     {
                         type ans = 0;
                         {
-                            const array<T> &Zj = Z[j];
+                            const accessible<T> &Zj = Z[j];
                             for(size_t k=n;k>0;--k)
                             {
                                 ans += Vi[k] * Zj[k];
@@ -100,7 +100,7 @@ namespace upsylon
                 array<T> &HVx = H.c_aux2;
                 for(size_t i=space;i>0;--i)
                 {
-                    const array<T> &Vi = V[i];
+                    const accessible<T> &Vi = V[i];
                     type ans = 0;
                     for(size_t k=n;k>0;--k)
                     {

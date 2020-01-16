@@ -50,8 +50,8 @@ namespace upsylon
                 const scalar_type one  = 1;
                 for( size_t i=n;i>0;--i)
                 {
-                    const array<T> & a_i = a[i];
-                    scalar_type      piv = 0;
+                    const accessible<T> & a_i = a[i];
+                    scalar_type           piv = 0;
 
                     for( size_t j=n;j>0;--j)
                     {
@@ -76,8 +76,8 @@ namespace upsylon
                 {
                     for(size_t i=1;i<j;++i)
                     {
-                        array<T> &a_i = a[i];
-                        T         sum = a_i[j];
+                        addressable<T> &a_i = a[i];
+                        T               sum = a_i[j];
                         for(size_t k=1;k<i;++k)
                         {
                             sum -= a_i[k]*a[k][j];
@@ -89,8 +89,8 @@ namespace upsylon
                     size_t      imax = j;
                     for( size_t i=j;i<=n;++i)
                     {
-                        array<T> &a_i = a[i];
-                        T         sum = a_i[j];
+                        addressable<T> &a_i = a[i];
+                        T               sum = a_i[j];
                         for(size_t k=1;k<j;++k)
                         {
                             sum -= a_i[k]*a[k][j];
@@ -164,9 +164,9 @@ namespace upsylon
                     const array<size_t> &indx = a.r_indices;
                     for(size_t i=1;i<=n;++i)
                     {
-                        const size_t    ip  = indx[i]; assert(ip>0);assert(ip<=n);
-                        T               sum = b[ip];
-                        const array<T> &a_i = a[i];
+                        const size_t         ip  = indx[i]; assert(ip>0);assert(ip<=n);
+                        T                    sum = b[ip];
+                        const accessible<T> &a_i = a[i];
                         b[ip] = b[i];
                         for(size_t j=1;j<i;++j)
                         {
@@ -183,8 +183,8 @@ namespace upsylon
                 {
                     for(size_t i=n;i>0;--i)
                     {
-                        const array<T>  &a_i = a[i];
-                        T               sum = b[i];
+                        const accessible<T>  &a_i = a[i];
+                        T                     sum = b[i];
                         for(size_t j=i+1;j<=n;++j)
                         {
                             sum -= a_i[j]*b[j];

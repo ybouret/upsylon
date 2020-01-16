@@ -137,6 +137,7 @@ namespace upsylon {
                 step(),
                 atry(),
                 used(),
+                isOK(),
                 nope( this, & LeastSquares<T>::accept )
                 {
                     initialize();
@@ -237,6 +238,7 @@ namespace upsylon {
                 Vector   step;
                 Vector   atry;
                 bVector  used;
+                bVector  isOK;
                 Control  nope;
 
                 ControlResult accept( Frame<T> &, const size_t ) const throw()
@@ -254,9 +256,11 @@ namespace upsylon {
                     curv.make(n,n);
                     step.adjust(n,0);
                     atry.adjust(n,0);
-                    used.adjust(n,0);
+                    used.adjust(n,false);
+                    isOK.adjust(n,false);
                     quark::ld(used,false);
                     sample.activate(used,flags);
+                    quark::ld(isOK,false);
                 }
 
                 // initialize
@@ -307,6 +311,30 @@ namespace upsylon {
                 //! build step from current alpha, lambda, beta
                 inline bool buildStep()
                 {
+                    for(size_t i=used.size();i>0;--i)
+                    {
+                        bool &flag = isOK[i];
+                        if( !used[i] )
+                        {
+                            flag = false;
+                        }
+                        else
+                        {
+                            flag = true;
+                            if( fabs_of( beta[i] ) <= 0 )
+                            {
+                                std::cerr << "\t\t<NULL GRADIENT @" << i << ">" << std::endl;
+                                if( fabs_of( curv[i][i] ) <= 0 )
+                                {
+                                    std::cerr << "\t\t<AND NULL CURV>" << std::endl;
+                                }
+                                if( quark::mmod2<T>::both_of(curv,i,i) <=0 )
+                                {
+                                    std::cerr << "\t\t<AND NULL SPACE>" << std::endl;
+                                }
+                            }
+                        }
+                    }
                     //__________________________________________________________
                     //
                     // find a regular matrix

@@ -30,7 +30,7 @@ namespace upsylon
                 matrix<T> M(nm1,nm1);
                 for(size_t c=n;c>0;--c)
                 {
-                    array<T> &tc = target[c];
+                    addressable<T> &tc = target[c];
                     for(size_t r=n;r>0;--r)
                     {
                         M.minor_of(source,r,c);
@@ -62,7 +62,7 @@ namespace upsylon
                 matrix<double> M(nm1,nm1);
                 for(size_t c=n;c>0;--c)
                 {
-                    array<T> &tc = target[c];
+                    addressable<T> &tc = target[c];
                     for(size_t r=n;r>0;--r)
                     {
                         M.minor_of(source,r,c);

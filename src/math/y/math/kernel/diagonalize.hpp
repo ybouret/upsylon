@@ -455,8 +455,8 @@ namespace upsylon
                             break;
                         }
                         wr[iv] = tau;
-                        array<T> &vec = ev[iv];
-                        const size_t j = J[k]; assert(j>0); assert(j<=n);
+                        addressable<T> &vec = ev[iv];
+                        const size_t    j   = J[k]; assert(j>0); assert(j<=n);
                         assert(fabs_of(W[j])<=0);
                         for(size_t i=n;i>0;--i)
                         {

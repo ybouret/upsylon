@@ -53,8 +53,8 @@ namespace upsylon
             matrix<double> b(n,n);
             for(size_t i=n;i>0;--i)
             {
-                array<double>  &bi = b[i];
-                const array<T> &ai = a[i];
+                addressable<double>  &bi = b[i];
+                const accessible<T>  &ai = a[i];
                 for(size_t j=n;j>0;--j)
                 {
                     bi[j] = double(ai[j]);

@@ -12,11 +12,11 @@ namespace upsylon
         {
             struct __single_solver
             {
-                const Equilibrium   *pEq;
-                double               K;
-                const array<double> *pCini;
-                const array<int>    *pNu;
-                array<double>       *pCtry;
+                const Equilibrium        *pEq;
+                double                    K;
+                const accessible<double> *pCini;
+                const accessible<int>    *pNu;
+                addressable<double>      *pCtry;
                 
                 double operator()(double xi)
                 {
@@ -25,7 +25,7 @@ namespace upsylon
                     assert(pCini);
                     assert(pNu);
                     assert(pCtry);
-                    array<double> &C = *pCtry;
+                    addressable<double> &C = *pCtry;
                     quark::muladd(C, *pCini, xi, *pNu );
                     return pEq->Gamma(K,C);
                 }
@@ -43,8 +43,8 @@ namespace upsylon
                 assert( !(active[i]&&C[i]<0) );
                 Cini[i] = C[i];
             }
-            Equilibrium      &eq = *eqs[iEq];
-            const array<int> &nu =  Nu[iEq];
+            Equilibrium           &eq = *eqs[iEq];
+            const accessible<int> &nu =  Nu[iEq];
             __single_solver   F  = { &eq, K[iEq], &Cini, &nu, &Ctry };
 
             double F0 = F(0);

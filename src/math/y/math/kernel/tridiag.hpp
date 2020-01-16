@@ -116,7 +116,7 @@ namespace upsylon
             array_type &c; //!< c[1]..c[size-1]
 
             //! solve (*this)*u = r
-            inline void solve( array<T> &u, const array<T> &r )
+            inline void solve( addressable<T> &u, const accessible<T> &r )
             {
                 assert(this->size()>0);
                 assert(u.size()==this->size());

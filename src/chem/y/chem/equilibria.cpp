@@ -172,7 +172,7 @@ namespace upsylon
                         Equilibrium::Pointer &p = *i;
                         eqs.push_back_(p);
                         sorted.push_back_(p);
-                        array<int> &nu = Nu[k];
+                        addressable<int> &nu = Nu[k];
                         for( const Equilibrium::Component *c=p->reactants().head;c;c=c->next)
                         {
                             const size_t j = c->sp->indx;

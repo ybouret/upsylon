@@ -292,7 +292,7 @@ namespace upsylon
         }
 
 
-        double Equilibrium:: Gamma( const double K, const array<double> &C ) const throw()
+        double Equilibrium:: Gamma( const double K, const accessible<double> &C ) const throw()
         {
             double r_prod = 1;
             double p_prod = 1;
@@ -311,7 +311,7 @@ namespace upsylon
             return r_prod * K - p_prod;
         }
 
-        double Equilibrium:: GammaAndPhi( array<double> &grad, const double K, const array<double> &C) const throw()
+        double Equilibrium:: GammaAndPhi( addressable<double> &grad, const double K, const accessible<double> &C) const throw()
         {
             double r_prod = 1;
             double p_prod = 1;
@@ -356,7 +356,7 @@ namespace upsylon
             return r_prod * K - p_prod;
         }
 
-        double Equilibrium:: computeMaximumReverse(const array<double> &C) const throw()
+        double Equilibrium:: computeMaximumReverse(const accessible<double> &C) const throw()
         {
             assert(p_list.size>0);
             bool   init  = true;
@@ -380,7 +380,7 @@ namespace upsylon
             return xiRev;
         }
 
-        double Equilibrium:: computeMaximumForward(const array<double> &C) const throw()
+        double Equilibrium:: computeMaximumForward(const accessible<double> &C) const throw()
         {
             assert(r_list.size>0);
             bool   init  = true;

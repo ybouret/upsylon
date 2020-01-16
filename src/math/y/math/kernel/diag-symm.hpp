@@ -44,11 +44,11 @@ namespace upsylon
                 for(size_t ip=1;ip<=n; ++ip)
                 {
                     {
-                        array<T> &v_ip = v[ip];
+                        addressable<T> &v_ip = v[ip];
                         for(size_t iq=1;iq<=n;++iq) v_ip[iq]=T(0);
                         v_ip[ip]=T(1);
                     }
-                    array<T> &a_ip = a[ip];
+                    addressable<T> &a_ip = a[ip];
                     b[ip]=d[ip]=a_ip[ip];
                     z[ip]=T(0);
                 }

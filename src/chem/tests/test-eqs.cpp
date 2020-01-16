@@ -94,9 +94,9 @@ Y_UTEST(cs)
         cs.computeGammaAndPhi(C);
         for(size_t i=1;i<=cs.N;++i)
         {
-            const array<double> &grad = cs.Phi[i];
-            const array<int>    &nu   = cs.Nu[i];
-            const double delta = math::quark::dot<double>::of(grad,nu);
+            const accessible<double> &grad  = cs.Phi[i];
+            const accessible<int>    &nu    = cs.Nu[i];
+            const double              delta = math::quark::dot<double>::of(grad,nu);
             Y_ASSERT(delta<=0);
         }
         bool success = true;

@@ -80,7 +80,7 @@ namespace upsylon
     public:
         Y_DECL_ARGS(T,type);                 //!< alias
         typedef lightweight_array<type> row; //!< internal row type
-
+        
 
         //! default constructor
         inline matrix(const size_t nr, const size_t nc) : Y_MATRIX_CTOR(nr,nc)
@@ -116,10 +116,10 @@ namespace upsylon
             }
         }
         
-        //! row access
+        //! row access, use array for contiguous access
         inline array<type>  & operator[](const size_t r) throw()             { assert(r>0); assert(r<=rows); return row_ptr[r]; }
 
-        //! row access
+        //! row access, use array for contiguous access
         inline const array<type>  & operator[](const size_t r) const throw() { assert(r>0); assert(r<=rows); return row_ptr[r]; }
 
         //! destructor
@@ -134,7 +134,7 @@ namespace upsylon
             os << '[';
             for(size_t r=1;r<=m.rows;++r)
             {
-                const array<T> &R = m[r];
+                const accessible<T> &R = m[r];
                 for(size_t c=1;c<=m.cols;++c)
                 {
                     os << R[c]; if(c<m.cols) os << ' ';
@@ -206,8 +206,8 @@ namespace upsylon
             assert( same_size_than(other) );
             for(size_t i=rows;i>0;--i)
             {
-                array<type>       &target = (*this)[i];
-                const array<U>    &source = other[i];
+                addressable<type>      &target = (*this)[i];
+                const accessible<U>    &source = other[i];
                 for(size_t j=cols;j>0;--j)
                 {
                     target[j] = static_cast<type>(source[j]);
@@ -223,7 +223,7 @@ namespace upsylon
             assert( cols==other.rows );
             for(size_t i=rows;i>0;--i)
             {
-                array<type>       &target = (*this)[i];
+                addressable<type> &target = (*this)[i];
                 for(size_t j=cols;j>0;--j)
                 {
                     target[j] = static_cast<type>(other[j][i]);
@@ -395,9 +395,9 @@ namespace upsylon
         //! swap rows content
         inline void swap_rows(const size_t r1,const size_t r2) throw()
         {
-            matrix<T> &self = *this;
-            array<T>  &R1   = self[r1];
-            array<T>  &R2   = self[r2];
+            matrix<T>       &self = *this;
+            addressable<T>  &R1   = self[r1];
+            addressable<T>  &R2   = self[r2];
             for(size_t i=cols;i>0;--i)
             {
                 bswap(R1[i],R2[i]);
@@ -420,6 +420,9 @@ namespace upsylon
             swap_rows(i,j);
             swap_cols(i,j);
         }
+
+        //! mod2 for one row
+
 
     private:
         row *row_ptr; //! [1..rows]

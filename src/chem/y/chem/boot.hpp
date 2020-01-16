@@ -65,7 +65,7 @@ namespace upsylon
 
                 //! store into a matrix row
                 template <typename T>
-                void fill( array<T> &arr ) const
+                void fill( addressable<T> &arr ) const
                 {
                     for(size_t j=arr.size();j>0;--j) arr[j] = 0;
                     for( Actors::const_iterator i=actors.begin();i!=actors.end();++i)
