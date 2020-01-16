@@ -11,7 +11,7 @@ assert(B.cols==C.cols)
 typename matrix<T>::mutable_type sum = 0;                     \
 for(size_t k=n;k>0;--k)                                       \
 {                                                             \
-sum += auto_cast<T,U>::_(Br[k]) * auto_cast<T,V>::_(Cr[k]);   \
+sum += auto_cast<T,U>::_(Br[k]) * auto_cast<T,V>::_(Cc[k]);   \
 }                                                             \
 TARGET OP sum
 
@@ -26,9 +26,9 @@ for(size_t r=A.rows;r>0;--r)\
 {\
 addressable<T>      &Ar = A[r];\
 const accessible<U> &Br = B[r];\
-const accessible<V> &Cr = C[r];\
 for(size_t c=A.cols;c>0;--c)\
 {\
+const accessible<V> &Cc = C[c];\
 Y_QUARK_MMUL_RTRN_SUM(Ar[c],OP);\
 }\
 }\
@@ -44,7 +44,7 @@ while(length-- > 0 )              \
 {\
 Y_QUARK_MMUL_RC(offset++);\
 const accessible<U> &Br = B[r];\
-const accessible<V> &Cr = C[r];\
+const accessible<V> &Cc = C[c];\
 Y_QUARK_MMUL_RTRN_SUM(A[r][c],OP);\
 }\
 Y_QUARK_MMUL_PAR_LEAVE();\

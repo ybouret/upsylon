@@ -26,7 +26,7 @@ inline bool fit(SampleType<T>            &sample,
     //
     //__________________________________________________________________________
     sample.ready();                             // prepare the sample
-    atom::ld(aerr,-1);                          // invalidate errors
+    quark::ld(aerr,-1);                         // invalidate errors
     if(n<=0)                                    //
     {                                           //
         Y_LS_PRINTLN("[LS] <no parameters>");   //
@@ -90,7 +90,7 @@ CYCLE:
         return false;
     }
     
-    atom::add(atry,aorg,step);
+    quark::add(atry,aorg,step);
     Y_LS_PRINTLN( "     lambda = " << lambda );
     Y_LS_PRINTLN( "     step0  = " << step   );
     Y_LS_PRINTLN( "     atry0  = " << atry   );
@@ -109,7 +109,7 @@ STEP_CONTROL:
         case LeftUntouched: break;
         case EmergencyExit: Y_LS_PRINTLN( "[LS] <STEP #" << cycle << " CONTROL EXIT>" ); return false;
         case ModifiedValue: Y_LS_PRINTLN( "[LS] changed step #" << cycle );
-            atom::add(atry,aorg,step);
+            quark::add(atry,aorg,step);
             break;
     }
 
@@ -119,7 +119,7 @@ STEP_CONTROL:
         case LeftUntouched: break;
         case EmergencyExit: Y_LS_PRINTLN( "[LS] <ATRY #" << cycle << " CONTROL EXIT>" ); return false;
         case ModifiedValue: Y_LS_PRINTLN( "[LS] changed atry #" << cycle );
-            atom::sub(step,atry,aorg);
+            quark::sub(step,atry,aorg);
             Y_LS_PRINTLN( "     atry1  = " << atry   );
             goto STEP_CONTROL;
     }
@@ -221,7 +221,7 @@ STEP_CONTROL:
         //----------------------------------------------------------------------
         // compute the new position
         //----------------------------------------------------------------------
-        atom::setprobe(atry,aorg,u.b,step);
+        quark::muladd(atry,aorg,u.b,step);
 
         //----------------------------------------------------------------------
         // check variable convergence
@@ -243,7 +243,7 @@ STEP_CONTROL:
         //----------------------------------------------------------------------
         // update aorg/D2org and update gradient/curvature
         //----------------------------------------------------------------------
-        atom::set(aorg,atry);
+        quark::set(aorg,atry);
         const T D2old = D2org;
         D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
 
@@ -320,7 +320,7 @@ CONVERGED:
     else if(0==dof)
     {
         Y_LS_PRINTLN( "[LS] <interpolation>" );
-        atom::ld(aerr,0);
+        quark::ld(aerr,0);
         return true;
     }
     else

@@ -1,7 +1,7 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
 #include "y/math/kernel/tao.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 #include "y/math/kernel/adjoint.hpp"
 #include "y/math/utils.hpp"
 #include "y/sort/sorted-sum.hpp"
@@ -76,7 +76,7 @@ namespace upsylon
                 for(size_t j=M;j>0;--j)
                 {
                     //C[j] = tao::dot<double>(aP[j],L)/dP;
-                    C[j] = atom::dot(aP[j],L)/dP;
+                    C[j] = quark::dot<double>::of(aP[j],L)/dP;
 
                 }
 
@@ -92,7 +92,7 @@ namespace upsylon
             {
                 matrix<int> P2(Nc,Nc);
                 //tao::mmul_rtrn(P2,P,P);
-                atom::mmul_rtrn(P2, P, P);
+                quark::mmul_rtrn(P2, P, P);
                 detP2 = ideterminant(P2);
                 if(!detP2)
                 {
@@ -103,7 +103,7 @@ namespace upsylon
                 {
                     matrix<int> tP(P,matrix_transpose);
                     //tao::mmul(U2C,tP,adjP2);
-                    atom::mmul(U2C,tP,adjP2);
+                    quark::mmul(U2C,tP,adjP2);
                 }
             }
 
@@ -128,7 +128,7 @@ namespace upsylon
                 for(size_t i=Nc;i>0;--i)
                 {
                     //U[i] = L[i] - tao::_dot<double>(P[i],C0);
-                    U[i] = L[i] - atom::dot(C0,P[i]);
+                    U[i] = L[i] - quark::dot<double>::of(C0,P[i]);
                 }
 
                 //______________________________________________________________
@@ -138,8 +138,8 @@ namespace upsylon
                 //______________________________________________________________
                 for(size_t j=M;j>0;--j)
                 {
-                    C1[j] = C0[j] + tao::_dot<double>(U2C[j],U)/detP2;
-                    C1[j] = C0[j] + atom::dot(U, U2C[j] )/detP2;
+                    //C1[j] = C0[j] + tao::_dot<double>(U2C[j],U)/detP2;
+                    C1[j] = C0[j] + quark::dot<double>::of(U, U2C[j] )/detP2;
                 }
 
                 //______________________________________________________________
@@ -190,7 +190,7 @@ namespace upsylon
                 }
 
                 R0 = R1;
-                atom::set(C0,C1);
+                quark::set(C0,C1);
             }
 
 

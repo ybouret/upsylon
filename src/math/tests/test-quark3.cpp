@@ -72,9 +72,40 @@ namespace {
                             quark::mmul_sub(AA, B, C, *loop);
                             check(A,AA);
                         }
-
-
                     }
+
+                    {
+                        matrix<U> B(r,k);
+                        matrix<V> C(c,k);
+                        support::fill2D(B);
+                        support::fill2D(C);
+                        quark::mmul_rtrn(A, B, C);
+                        if(loop)
+                        {
+                            quark::mmul_rtrn(AA, B, C, *loop);
+                            check(A,AA);
+                        }
+
+                        support::fill2D(A);
+                        AA = A; check(A,AA);
+                        quark::mmul_add_rtrn(A,B,C);
+                        if( loop )
+                        {
+                            quark::mmul_add_rtrn(AA, B, C, *loop);
+                            check(A,AA);
+                        }
+
+                        support::fill2D(A);
+                        AA = A; check(A,AA);
+                        quark::mmul_sub_rtrn(A,B,C);
+                        if( loop )
+                        {
+                            quark::mmul_sub_rtrn(AA, B, C, *loop);
+                            check(A,AA);
+                        }
+                    }
+
+
 
                 }
                 std::cerr << "]" << std::endl;

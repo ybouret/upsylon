@@ -105,7 +105,7 @@ namespace upsylon {
 
                     if( !LU::build(mu) )
                     {
-                        atom::ld(Z,0);
+                        quark::ld(Z,0);
                         return false;
                     }
                     else

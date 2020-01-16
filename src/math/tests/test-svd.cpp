@@ -3,7 +3,7 @@
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/math/utils.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -60,8 +60,8 @@ namespace
                             b[i]  = support::get<T>();
                         }
                         svd::solve(u,w,v,b,x);
-                        atom::mul(y,a,x);
-                        const T RMS = atom::rms(y,b);
+                        quark::mul(y,a,x);
+                        const T RMS = quark::rms<T>::of(y,b);
                         std::cerr << '<' << RMS << '>';
                     }
                     

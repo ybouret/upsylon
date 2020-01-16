@@ -6,7 +6,6 @@
 #include "y/math/fit/sample/info.hpp"
 #include "y/math/fit/sequential/function.hpp"
 #include "y/math/fit/sequential/gradient.hpp"
-#include "y/math/kernel/atom.hpp"
 #include "y/ios/ostream.hpp"
 
 namespace upsylon {
@@ -90,8 +89,8 @@ namespace upsylon {
                     assert( variables.sweep() <= used.size() );
 
                     // assuming no one is used
-                    atom::ld(beta,0); // beta=0
-                    alpha.Id();       // alpha=identity
+                    quark::ld(beta,0); // beta=0
+                    alpha.Id();        // alpha=identity
 
                     // cleanup used variables
                     size_t                    nv = variables.size();

@@ -4,8 +4,7 @@
 #include "y/math/opt/bracket.hpp"
 #include "y/math/opt/minimize.hpp"
 #include "y/math/utils.hpp"
-#include "y/math/kernel/atom.hpp"
-#include "y/math/kernel/tao.hpp"
+#include "y/math/kernel/quark.hpp"
 
 namespace upsylon
 {
@@ -52,7 +51,7 @@ namespace upsylon
                 inline double operator()( const double alpha )
                 {
                     assert(_cs); assert(_Cini); assert(_Ctry); assert(_dC);
-                    atom::setprobe(* _Ctry, * _Cini, alpha, *_dC);
+                    quark::muladd(* _Ctry, * _Cini, alpha, *_dC);
                     return _cs->computeExcess(*_Ctry);
                 }
 
@@ -84,9 +83,9 @@ namespace upsylon
                 //______________________________________________________________
                 for(size_t i=N;i>0;--i)
                 {
-                    xi[i] = atom::dot(beta,Nu[i])/nu2[i];
+                    xi[i] = quark::dot<double>::of(beta,Nu[i])/nu2[i];
                 }
-                tao::mul(dC,tNu,xi);
+                quark::mul(dC,tNu,xi);
                 triplet<double> aa   = {0,0,0};
                 triplet<double> EE   = {Eini,Eini,Eini};
                 const double    Eend = E(_end);
@@ -120,7 +119,7 @@ namespace upsylon
                 }
 
                 Eini = Etry;
-                atom::set(Cini,Ctry);
+                quark::set(Cini,Ctry);
             }
 
             //__________________________________________________________________

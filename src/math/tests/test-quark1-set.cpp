@@ -110,11 +110,11 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         vector<U> u(n,zu);
         load(u); quark::set(t,u); checkCast(t,u);
         const T x = support::get<T>();
-        load(u); quark::mul_set(t,x,u); checkCast(t,x,u);
+        load(u); quark::mulset(t,x,u); checkCast(t,x,u);
         if(loop)
         {
             load(u); quark::set(t,u,*loop);       checkCast(t,u);
-            load(u); quark::mul_set(t,x,u,*loop); checkCast(t,x,u);
+            load(u); quark::mulset(t,x,u,*loop); checkCast(t,x,u);
         }
         std::cerr << "<SET/MULSET/>" << std::endl;
     }

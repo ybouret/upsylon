@@ -37,7 +37,7 @@ void set( TARGET &a, SOURCE &b, concurrent::for_each &loop)
 
 //! SEQUENTIAL: a=x*b
 template <typename TARGET, typename SOURCE> static inline
-void mul_set( TARGET &a, typename TARGET::param_type x, SOURCE &b )
+void mulset( TARGET &a, typename TARGET::param_type x, SOURCE &b )
 {
     assert(a.size()<=b.size());
     Y_QUARK_LOOP_SEQ(a.size(),MULSET);
@@ -46,7 +46,7 @@ void mul_set( TARGET &a, typename TARGET::param_type x, SOURCE &b )
 
 //! PARALLEL: a=x*b
 template <typename TARGET, typename SOURCE> static inline
-void mul_set( TARGET &a, typename TARGET::param_type x, SOURCE &b, concurrent::for_each &loop)
+void mulset( TARGET &a, typename TARGET::param_type x, SOURCE &b, concurrent::for_each &loop)
 {
     assert(a.size()<=b.size());
 

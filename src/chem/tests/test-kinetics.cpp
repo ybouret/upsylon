@@ -1,6 +1,6 @@
 #include "y/chem/kinetics.hpp"
 #include "y/chem/lua/io.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -24,10 +24,10 @@ namespace {
         inline void injection( array<double> &dCdt, double t, const array<double> & )
         {
 
-            atom::ld(dCdt,0);
+            quark::ld(dCdt,0);
             if(t>=0&&t<=120)
             {
-                atom::mulset(dCdt,0.01,C);
+                quark::mulset(dCdt,0.01,C);
             }
         }
 

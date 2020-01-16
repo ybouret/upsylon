@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -38,8 +38,8 @@ namespace
                 t.solve(u,r);
                 //std::cerr << "u=" << u << std::endl;
                 t.mul(v,u);
-                atom::sub(v,r);
-                const typename real_for<T>::type d2 = atom::mod2(v);
+                quark::sub(v,r);
+                const typename real_for<T>::type d2 = quark::mod2<T>::of(v);
                 std::cerr << "d2=" << d2 << "/";
             }
         }

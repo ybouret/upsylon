@@ -13,8 +13,6 @@ namespace upsylon {
     
     namespace math {
         
-       
-
         //! optimized argument conversion
 #define Y_MK_ATOM_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::type,typename SOURCE::type>::_(VALUE))
         

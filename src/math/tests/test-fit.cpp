@@ -91,7 +91,6 @@ namespace {
 }
 
 #include "y/ios/ocstream.hpp"
-#include "y/math/kernel/atom.hpp"
 
 Y_UTEST(fit)
 {

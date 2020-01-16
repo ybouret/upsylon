@@ -110,7 +110,7 @@ namespace upsylon {
                     for(size_t i=self.size();i>0;--i)
                     {
                         _alpha.ld(0);
-                        atom::ld(_beta,0);
+                        quark::ld(_beta,0);
                         const T  w = weights[i];
                         deltaSq[i] = w * self[i]->computeAndUpdate(_alpha,_beta,F,aorg,used,grad);
                         

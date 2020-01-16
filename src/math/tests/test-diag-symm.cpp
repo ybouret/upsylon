@@ -1,5 +1,5 @@
 #include "y/math/kernel/diag-symm.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
@@ -42,8 +42,8 @@ namespace
             matrix<T> av(n,n);
             matrix<T> vT(v,matrix_transpose);
             matrix<T> D(n,n);
-            atom::mmul(av,a,v);
-            atom::mmul(D,vT,av);
+            quark::mmul(av,a,v);
+            quark::mmul(D,vT,av);
             std::cerr << "D=" << D << std::endl;
            
             std::cerr << std::endl;

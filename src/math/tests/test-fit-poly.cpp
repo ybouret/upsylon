@@ -49,7 +49,7 @@ namespace {
         for(size_t i=1;i<=used.size();++i)
         {
             std::cerr << std::endl;
-            atom::ld(aorg,0);
+            quark::ld(aorg,0);
             used[i] = true;
             std::cerr << "used=" << used << std::endl;
 

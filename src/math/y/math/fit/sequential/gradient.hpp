@@ -5,7 +5,7 @@
 
 #include "y/math/fit/sequential.hpp"
 #include "y/math/fcn/derivatives.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 
 namespace upsylon {
 
@@ -46,7 +46,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // initialize
                     //----------------------------------------------------------
-                    atom::ld(dFda,0);
+                    quark::ld(dFda,0);
 
 
                     //----------------------------------------------------------

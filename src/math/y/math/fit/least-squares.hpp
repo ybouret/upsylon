@@ -82,7 +82,7 @@ namespace upsylon {
                                  const Matrix         &curv,
                                  const accessible<T>  &beta ) throw()
                 {
-                    atom::set(step,beta);
+                    quark::set(step,beta);
                     LU::solve(curv,step);
                 }
                 
@@ -247,7 +247,7 @@ namespace upsylon {
                     step.adjust(n,0);
                     atry.adjust(n,0);
                     used.adjust(n,0);
-                    atom::ld(used,false);
+                    quark::ld(used,false);
                     sample.activate(used,flags);
                 }
 
@@ -338,7 +338,7 @@ namespace upsylon {
                         assert(step);
 
 
-                        atom::setprobe(*atry, *aorg, u, *step);
+                        quark::muladd(*atry, *aorg, u, *step);
                         return sample->computeD2(*F, *atry);
                     }
 

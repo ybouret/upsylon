@@ -5,7 +5,7 @@
 
 #include "y/math/utils.hpp"
 #include "y/math/kernel/svd.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 #include "y/sort/heap.hpp"
 #include "y/sort/index.hpp"
 #include "y/comparison.hpp"
@@ -439,7 +439,7 @@ namespace upsylon
                         //------------------------------------------------------
                         // improve tau
                         //------------------------------------------------------
-                        const T dtau = T(1) / atom::dot(y,z);
+                        const T dtau = T(1) / quark::dot<T>::of(y,z);
                         wr[iv] += dtau;
                     }
                     

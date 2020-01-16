@@ -1,7 +1,7 @@
 #include "y/math/kernel/cholesky.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/atom.hpp"
+#include "y/math/kernel/quark.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
@@ -32,12 +32,15 @@ namespace  {
                         P[i][j] = support::get<T>()-T(0.5);
                     }
                 }
-                atom::mmul_rtrn(A, P, P);
+                quark::mmul_rtrn(A, P, P);
                 A0 = A;
-                //std::cerr << "P =" << P  << std::endl;
-                //std::cerr << "A0=" << A0 << std::endl;
 
-                if( !cholesky::build(A) ) continue;
+
+                if( !cholesky::build(A) )
+                {
+                    std::cerr << "-";
+                    continue;
+                }
                 //std::cerr << "A =" << A  << std::endl;
 
 
@@ -47,9 +50,11 @@ namespace  {
                 }
                 //A*x=b
                 cholesky::solve(x, A, b);
-                atom::mul(y, A0, x);
+                quark::mul(y, A0, x);
+
+                
                 //std::cerr << "b=" << b << ":y=" << y << std::endl;
-                const T RMS = atom::rms(b,y);
+                const T RMS = quark::rms<T>::of(b,y);
                 std::cerr << '<' << RMS << '>';
             }
         }
