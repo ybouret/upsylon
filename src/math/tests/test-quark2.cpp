@@ -27,7 +27,7 @@ namespace {
     template <typename T, typename U, typename V>
     void doMMUL(concurrent::for_each *loop)
     {
-        std::cerr << "<MMUL " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
+        std::cerr << "<MUL " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
 
         const T zt = 0;
         const V zv = 0;
@@ -82,6 +82,20 @@ namespace {
                         }
                     }
 
+                    {
+                        support::fill1D(lhs);
+                        support::fill1D(rhs);
+                        support::fill2D(M);
+
+                        quark::set(tmp,lhs);
+                        quark::mul_subp(lhs,M,rhs);
+                        if(loop)
+                        {
+                            quark::mul_subp(tmp,M,rhs,*loop);
+                            check1D(lhs,tmp);
+                        }
+                    }
+
                 }
 
             }
@@ -124,7 +138,7 @@ namespace {
     template <typename T, typename U, typename V> static inline
     void doMMUL_TRN(concurrent::for_each *loop)
     {
-        std::cerr << "<MMUL_TRN " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
+        std::cerr << "<MUL_TRN " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
 
         const T zt = 0;
         const V zv = 0;
@@ -177,6 +191,20 @@ namespace {
                         if(loop)
                         {
                             quark::mul_sub_trn(tmp,M,rhs,*loop);
+                            check1D(lhs,tmp);
+                        }
+                    }
+
+                    {
+                        support::fill1D(lhs);
+                        support::fill1D(rhs);
+                        support::fill2D(M);
+
+                        quark::set(tmp,lhs);
+                        quark::mul_subp_trn(lhs,M,rhs);
+                        if(loop)
+                        {
+                            quark::mul_subp_trn(tmp,M,rhs,*loop);
                             check1D(lhs,tmp);
                         }
                     }

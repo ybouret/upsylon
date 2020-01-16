@@ -30,8 +30,9 @@ namespace upsylon {
 #include "quark/v2/mul.hpp"
 #include "quark/v2/mul-trn.hpp"
 
-
+#include "quark/v3/def.hpp"
 #include "quark/v3/mul.hpp"
+#include "quark/v3/mul-rtrn.hpp"
 
         };
 
