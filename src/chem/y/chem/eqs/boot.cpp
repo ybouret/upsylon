@@ -1,6 +1,5 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
-#include "y/math/kernel/tao.hpp"
 #include "y/math/kernel/quark.hpp"
 #include "y/math/kernel/adjoint.hpp"
 #include "y/math/utils.hpp"

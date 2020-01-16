@@ -16,12 +16,6 @@ SET(kernel_srcs ${kernel_decl} ${kernel_code})
 SOURCE_GROUP( kernel FILES ${kernel_srcs} )
 INSTALL( FILES ${kernel_decl} DESTINATION include/y/math/kernel )
 
-FILE(GLOB kernel_tao_decl y/math/kernel/tao/*.hxx)
-FILE(GLOB kernel_tao_code y/math/kernel/tao/*.cpp)
-SET(kernel_tao_srcs ${kernel_tao_decl} ${kernel_tao_code})
-SOURCE_GROUP( kernel/tao FILES ${kernel_tao_srcs} )
-INSTALL( FILES ${kernel_tao_decl} DESTINATION include/y/math/kernel/tao )
-
 FILE(GLOB kernel_quark_v1_decl y/math/kernel/quark/v1/*.hpp)
 FILE(GLOB kernel_quark_v1_code y/math/kernel/quark/v1/*.cpp)
 SET(kernel_quark_v1_srcs ${kernel_quark_v1_decl} ${kernel_quark_v1_code})
