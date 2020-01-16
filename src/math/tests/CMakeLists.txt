@@ -19,18 +19,7 @@ ADD_TEST(mk:lu       test-m LU)
 ADD_TEST(mk:svd      test-m svd)
 ADD_TEST(mk:tridiag  test-m tridiag)
 ADD_TEST(mk:cyclic   test-m cyclic)
-#ADD_TEST(mk:tao      test-m tao)
-#ADD_TEST(mk:tao2     test-m tao2)
-#ADD_TEST(mk:tao3     test-m tao3)
 ADD_TEST(mk:sparse   test-m sparse)
-
-SOURCE_GROUP(atom FILES test-atom1.cpp test-atom2.cpp test-atom3.cpp test-atom0.cpp test-atom1b.cpp)
-ADD_TEST(atom:level0 test-m atom0)
-ADD_TEST(atom:level1 test-m atom1)
-ADD_TEST(atom:level1b test-m atom1b)
-ADD_TEST(atom:level2 test-m atom2)
-ADD_TEST(atom:level3 test-m atom3)
-
 
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
