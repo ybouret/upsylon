@@ -129,6 +129,15 @@ namespace {
                 check1D(tmp,lhs);
                 quark::mul_add(lhs,M,rhs);
                 check1D(cpy,lhs);
+
+                support::fill1D(rhs);
+                support::fill2D(M);
+                support::fill1D(lhs);
+                quark::set(tmp,lhs);
+                quark::mul_sub(lhs,M,rhs);
+                quark::mul_subp(tmp,M,rhs);
+                quark::neg(tmp);
+                check1D(lhs,tmp);
             }
 
         }
@@ -208,6 +217,8 @@ namespace {
                             check1D(lhs,tmp);
                         }
                     }
+
+                    
                 }
             }
         }
@@ -242,6 +253,16 @@ namespace {
                 check1D(tmp,lhs);
                 quark::mul_add_trn(lhs,M,rhs);
                 check1D(cpy,lhs);
+
+
+                support::fill1D(rhs);
+                support::fill2D(M);
+                support::fill1D(lhs);
+                quark::set(tmp,lhs);
+                quark::mul_sub_trn(lhs,M,rhs);
+                quark::mul_subp_trn(tmp,M,rhs);
+                quark::neg(tmp);
+                check1D(lhs,tmp);
             }
 
         }
