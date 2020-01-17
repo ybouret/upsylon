@@ -155,9 +155,9 @@ namespace upsylon {
             {
                 T                                           & data = *it;
                 const typename type_traits<T>::mutable_type & temp = data;
-                if( proc(temp) )
+                if( proc(temp,args) )
                 {
-                    seq.push_back(temp,args);
+                    seq.push_back(temp);
                     ++count;
                 }
                 ++it;

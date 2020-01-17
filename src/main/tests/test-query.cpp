@@ -146,7 +146,19 @@ Y_UTEST(query)
             std::cerr << "->" << qres << std::endl;
         }
 
+        size_t qsz = 2;
+        {
+            qres.free();
+            std::cerr << "#ms.query_all=" << container_query::all(qres,ms,querySize,qsz) << std::endl;
+            std::cerr << "->" << qres << std::endl;
+        }
 
+        {
+            qres.free();
+            const list<string> &cls = ls;
+            std::cerr << "#cls.query_all=" << container_query::all(qres,cls,querySize,qsz) << std::endl;
+            std::cerr << "->" << qres << std::endl;
+        }
 
 
         std::cerr << "done..." << std::endl;
