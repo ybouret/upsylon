@@ -26,6 +26,25 @@ namespace {
         }
     }
 
+    template <typename T> static inline
+    void doMOD2(concurrent::for_each *loop, const size_t w=100)
+    {
+        std::cerr << "<MMOD2 " << typeid(T).name() <<  ">" << std::endl;
+        matrix<T> A(1+alea.leq(w),1+alea.leq(w));
+        matrix<T> B(A.rows,A.cols);
+        support::fill2D(A);
+        B.assign(A);
+
+        Y_ASSERT( __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(B) ) <= 0 );
+        Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
+        if( loop )
+        {
+            std::cerr << "approx: " << __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(A,*loop) ) << std::endl;
+            Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B,*loop) ) <= 0 );
+        }
+    }
+
+
     template <typename T,typename U,typename V> static inline
     void doMMUL( concurrent::for_each *loop)
     {
@@ -118,9 +137,14 @@ namespace {
 Y_UTEST(quark3)
 {
     concurrent::simd loop;
+
+    doMOD2<float>(  &loop );
+    doMOD2<double>( &loop );
+    doMOD2<mpz>( NULL );
+    doMOD2<mpq>( NULL, 20 );
+
     doMMUL<float,float,float>( &loop );
     doMMUL<double,int,int>( &loop );
-
     doMMUL<mpz,int,short>( NULL );
 }
 Y_UTEST_DONE()

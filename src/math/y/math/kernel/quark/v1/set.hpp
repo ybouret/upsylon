@@ -5,7 +5,7 @@
 
 //! SEQUENTIAL: a=b
 template <typename TARGET, typename SOURCE> static inline
-void set( TARGET &a, SOURCE &b )
+void set(TARGET &a, SOURCE &b)
 {
     assert(a.size()<=b.size());
     Y_QUARK_LOOP_SEQ(a.size(),SET);
@@ -14,7 +14,7 @@ void set( TARGET &a, SOURCE &b )
 
 //! PARALLEL: a=b
 template <typename TARGET, typename SOURCE> static inline
-void set( TARGET &a, SOURCE &b, concurrent::for_each &loop)
+void set(TARGET &a, SOURCE &b, concurrent::for_each &loop)
 {
     assert(a.size()<=b.size());
 
@@ -37,7 +37,7 @@ void set( TARGET &a, SOURCE &b, concurrent::for_each &loop)
 
 //! SEQUENTIAL: a=x*b
 template <typename TARGET, typename SOURCE> static inline
-void mulset( TARGET &a, typename TARGET::param_type x, SOURCE &b )
+void mulset(TARGET &a, typename TARGET::param_type x, SOURCE &b)
 {
     assert(a.size()<=b.size());
     Y_QUARK_LOOP_SEQ(a.size(),MULSET);
@@ -68,14 +68,14 @@ void mulset( TARGET &a, typename TARGET::param_type x, SOURCE &b, concurrent::fo
 
 //! SEQUENTIAL a *= x
 template <typename TARGET > static inline
-void rescale( TARGET &a, typename TARGET::param_type x )
+void rescale(TARGET &a, typename TARGET::param_type x)
 {
     mulset(a,x,a);
 }
 
 //! PARALLEL a *= x
 template <typename TARGET > static inline
-void rescale( TARGET &a, typename TARGET::param_type x, concurrent::for_each &loop)
+void rescale(TARGET &a, typename TARGET::param_type x, concurrent::for_each &loop)
 {
     mulset(a,x,a,loop);
 }

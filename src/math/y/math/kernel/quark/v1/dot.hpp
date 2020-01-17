@@ -11,7 +11,7 @@ struct dot
 
     //! SEQUENTIAL: lhs.rhs
     template <typename LHS, typename RHS> static inline
-    mutable_type of( LHS &lhs, RHS &rhs )
+    mutable_type of(LHS &lhs, RHS &rhs)
     {
         assert(lhs.size()<=rhs.size());
         mutable_type ans = 0;
@@ -21,7 +21,7 @@ struct dot
 
     //! parallel: lhs.rhs
     template <typename LHS, typename RHS> static inline
-    mutable_type of( LHS &lhs, RHS &rhs, concurrent::for_each &loop )
+    mutable_type of(LHS &lhs, RHS &rhs, concurrent::for_each &loop)
     {
         assert(lhs.size()<=rhs.size());
         

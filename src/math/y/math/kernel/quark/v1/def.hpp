@@ -31,10 +31,10 @@ Task task = {
 
 
 //! optimized argument conversion
-#define Y_QUARK_TO(TYPE,SOURCE,VALUE) (auto_cast<TYPE,typename SOURCE::type>::_(VALUE))
+#define Y_QUARK_TO(TYPE,SOURCE,VALUE) (auto_cast<TYPE,typename SOURCE::mutable_type>::_(VALUE))
 
 //! optimized argument conversion
-#define Y_QUARK_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::type,typename SOURCE::type>::_(VALUE))
+#define Y_QUARK_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::mutable_type,typename SOURCE::mutable_type>::_(VALUE))
 
 //! binary methods
 #define Y_QUARK_IMPL2(METHOD) \

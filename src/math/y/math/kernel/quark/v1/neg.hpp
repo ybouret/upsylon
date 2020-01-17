@@ -3,23 +3,24 @@
 //! neg items with cast
 #define Y_QUARK_NEG(I) a[I] = -Y_QUARK_CAST(TARGET,SOURCE,b[I])
 
-//! SEQUENTIAL: a=b
+//! SEQUENTIAL: a=-b
 template <typename TARGET, typename SOURCE> static inline
-void neg( TARGET &a, SOURCE &b )
+void neg(TARGET &a, SOURCE &b)
 {
     assert(a.size()<=b.size());
     Y_QUARK_LOOP_SEQ(a.size(),NEG);
 }
 
+//! SEQUENTIAL: a=-a
 template <typename TARGET> static inline
-void neg( TARGET &a )
+void neg(TARGET &a)
 {
     neg(a,a);
 }
 
-//! PARALLEL: a=b
+//! PARALLEL: a=-b
 template <typename TARGET, typename SOURCE> static inline
-void neg( TARGET &a, SOURCE &b, concurrent::for_each &loop)
+void neg(TARGET &a, SOURCE &b, concurrent::for_each &loop)
 {
     assert(a.size()<=b.size());
 
@@ -36,8 +37,9 @@ void neg( TARGET &a, SOURCE &b, concurrent::for_each &loop)
 
 }
 
+//! PARALLEL: a=-a
 template <typename TARGET> static inline
-void neg( TARGET &a, concurrent::for_each &loop )
+void neg(TARGET &a, concurrent::for_each &loop)
 {
     neg(a,a,loop);
 }

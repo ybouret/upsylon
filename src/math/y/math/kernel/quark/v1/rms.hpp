@@ -1,6 +1,6 @@
 //!\file
 
-//! taking rms of arrays
+//!   root mean square
 template <typename T>
 struct rms
 {
@@ -9,7 +9,7 @@ struct rms
 
     //! SEQUENTIAL: sqrt(|lhs|^2/lhs.size())
     template <typename LHS> static inline
-    real_type of( LHS &lhs  )
+    real_type of(LHS &lhs)
     {
         const size_t n   = lhs.size();
         if(n>0)
@@ -24,11 +24,26 @@ struct rms
         }
     }
 
-    
+    //! PARALLEL: sqrt(|lhs|^2/lhs.size())
+    template <typename LHS> static inline
+    real_type of(LHS &lhs, concurrent::for_each &loop )
+    {
+        const size_t n   = lhs.size();
+        if(n>0)
+        {
+            real_type tmp = mod2<T>::of(lhs,loop);
+            tmp /= n;
+            return sqrt_of(tmp);
+        }
+        else
+        {
+            return 0;
+        }
+    }
 
     //! SEQUENTIAL: rms(lhs-rhs)
     template <typename LHS, typename RHS> static inline
-    real_type of( LHS &lhs, RHS &rhs  )
+    real_type of(LHS &lhs, RHS &rhs)
     {
         const size_t n   = lhs.size();
         if(n>0)
@@ -43,5 +58,20 @@ struct rms
         }
     }
 
-
+    //! PARALLEL: rms(lhs-rhs)
+    template <typename LHS, typename RHS> static inline
+    real_type of(LHS &lhs, RHS &rhs, concurrent::for_each &loop)
+    {
+        const size_t n   = lhs.size();
+        if(n>0)
+        {
+            real_type tmp = mod2<T>::of(lhs,rhs,loop);
+            tmp /= n;
+            return sqrt_of(tmp);
+        }
+        else
+        {
+            return 0;
+        }
+    }
 };

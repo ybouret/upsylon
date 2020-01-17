@@ -78,9 +78,10 @@ namespace upsylon
     class matrix : public matrix_data
     {
     public:
-        Y_DECL_ARGS(T,type);                 //!< alias
-        typedef lightweight_array<type> row; //!< internal row type
-        
+        Y_DECL_ARGS(T,type);                             //!< alias
+        typedef lightweight_array<type>       row;       //!< internal row type
+        typedef lightweight_array<const_type> const_row; //!< internal row type
+
 
         //! default constructor
         inline matrix(const size_t nr, const size_t nc) : Y_MATRIX_CTOR(nr,nc)
@@ -103,18 +104,34 @@ namespace upsylon
 
 
         //! temporary array of all items
-        inline lightweight_array<type> as_array() throw()
+        inline row as_array() throw()
         {
             if(items>0)
             {
                 matrix &self = *this;
-                return lightweight_array<type>(&self[1][1],items);
+                return row(&self[1][1],items);
             }
             else
             {
                 return row(0,0);
             }
         }
+
+        //! temporary array of all items
+        inline const_row as_array() const throw()
+        {
+            if(items>0)
+            {
+                const matrix &self = *this;
+                return const_row(&self[1][1],items);
+            }
+            else
+            {
+                return const_row(0,0);
+            }
+        }
+
+
         
         //! row access, use array for contiguous access
         inline array<type>  & operator[](const size_t r) throw()             { assert(r>0); assert(r<=rows); return row_ptr[r]; }

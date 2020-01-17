@@ -5,7 +5,7 @@
 
 //! SEQUENTIAL: load the same value
 template <typename ARRAY> static inline
-void ld( ARRAY &arr, typename ARRAY::param_type value)
+void ld(ARRAY &arr, typename ARRAY::param_type value)
 {
     Y_QUARK_LOOP_SEQ(arr.size(),LD);
 }
@@ -13,7 +13,7 @@ void ld( ARRAY &arr, typename ARRAY::param_type value)
 
 //! PARALLEL: load the same value
 template <typename ARRAY> static inline
-void ld( ARRAY &arr, typename ARRAY::param_type value, concurrent::for_each &loop )
+void ld(ARRAY &arr, typename ARRAY::param_type value, concurrent::for_each &loop)
 {
     Y_QUARK_TASK_DECL()
     ARRAY                      *arr;

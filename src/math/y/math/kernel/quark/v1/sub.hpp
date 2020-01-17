@@ -6,16 +6,17 @@
 Y_QUARK_IMPL2(sub)
 #undef Y_QUARK_sub
 
+
 template <typename TARGET,typename SOURCE> static inline
-void sub( TARGET &target, SOURCE &source )
+void sub(TARGET &target, SOURCE &source )
 {
-    sub( target, target, source );
+    sub(target,target,source);
 }
 
 template <typename TARGET,typename SOURCE> static inline
-void sub( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+void sub(TARGET &target, SOURCE &source, concurrent::for_each &loop)
 {
-    sub( target, target, source, loop);
+    sub(target,target,source,loop);
 }
 
 
@@ -26,15 +27,15 @@ Y_QUARK_IMPL2(subp)
 #undef Y_QUARK_subp
 
 template <typename TARGET,typename SOURCE> static inline
-void subp( TARGET &target, SOURCE &source )
+void subp(TARGET &target, SOURCE &source)
 {
-    subp( target, target, source );
+    subp(target,target,source);
 }
 
 template <typename TARGET,typename SOURCE> static inline
-void subp( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+void subp(TARGET &target, SOURCE &source, concurrent::for_each &loop)
 {
-    subp( target, target, source, loop);
+    subp(target,target,source,loop);
 }
 
 
@@ -43,14 +44,14 @@ void subp( TARGET &target, SOURCE &source, concurrent::for_each &loop )
 Y_QUARK_IMPL3(mulsub)
 #undef Y_QUARK_mulsub
 
-template <typename TARGET, typename SOURCE> static inline
-void mulsub( TARGET &target, typename TARGET::param_type x, SOURCE &source )
+template  <typename TARGET, typename SOURCE> static inline
+void mulsub(TARGET &target, typename TARGET::param_type x, SOURCE &source)
 {
     mulsub(target,target,x,source);
 }
 
-template <typename TARGET, typename SOURCE> static inline
-void mulsub( TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop )
+template  <typename TARGET, typename SOURCE> static inline
+void mulsub(TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop)
 {
     mulsub(target,target,x,source,loop);
 }

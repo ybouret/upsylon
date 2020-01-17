@@ -7,14 +7,14 @@ Y_QUARK_IMPL2(add)
 
 //! tgt+=source
 template <typename TARGET,typename SOURCE> static inline
-void add( TARGET &target, SOURCE &source )
+void add(TARGET &target, SOURCE &source)
 {
     add(target,target,source);
 }
 
 //! tgt+=source
 template <typename TARGET,typename SOURCE> static inline
-void add( TARGET &target, SOURCE &source, concurrent::for_each &loop )
+void add(TARGET &target, SOURCE &source, concurrent::for_each &loop)
 {
     add(target,target,source,loop);
 }
@@ -25,13 +25,13 @@ Y_QUARK_IMPL3(muladd)
 #undef Y_QUARK_muladd
 
 template <typename TARGET, typename SOURCE> static inline
-void muladd( TARGET &target, typename TARGET::param_type x, SOURCE &source )
+void muladd(TARGET &target, typename TARGET::param_type x, SOURCE &source)
 {
     muladd(target,target,x,source);
 }
 
 template <typename TARGET, typename SOURCE> static inline
-void muladd( TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop )
+void muladd(TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop)
 {
     muladd(target,target,x,source,loop);
 }

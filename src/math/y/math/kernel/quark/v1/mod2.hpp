@@ -24,7 +24,7 @@ struct mod2
 
     //! PARALLEL: |lhs|^2
     template <typename LHS> static inline
-    real_type of( LHS &lhs , concurrent::for_each &loop )
+    real_type of(LHS &lhs, concurrent::for_each &loop)
     {
         
         concurrent::executor &par = loop.engine();
@@ -46,7 +46,7 @@ struct mod2
 
     //! SEQUENTIAL: |lhs-rhs|^2
     template <typename LHS, typename RHS> static inline
-    real_type of( LHS &lhs, RHS &rhs )
+    real_type of(LHS &lhs, RHS &rhs)
     {
         assert(lhs.size()<=rhs.size());
         real_type ans = 0;
@@ -56,7 +56,7 @@ struct mod2
 
     //! PARALLEL: |lhs-rhs|^2
     template <typename LHS, typename RHS> static inline
-    mutable_type of( LHS &lhs, RHS &rhs, concurrent::for_each &loop )
+    mutable_type of(LHS &lhs, RHS &rhs, concurrent::for_each &loop)
     {
         assert(lhs.size()<=rhs.size());
 
