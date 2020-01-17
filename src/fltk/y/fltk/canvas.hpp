@@ -18,8 +18,10 @@ namespace upsylon
             Axis   xaxis;
             Axis   yaxis;
             Axis   y2axis;
+            Axis   y3axis;
             Curves curves;
             Curves curves2;
+            Curves curves3;
             
             virtual void draw();
             

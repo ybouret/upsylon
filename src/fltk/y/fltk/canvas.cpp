@@ -13,8 +13,10 @@ namespace upsylon {
         xaxis(),
         yaxis(),
         y2axis(),
+        y3axis(),
         curves(),
-        curves2()
+        curves2(),
+        curves3()
         {
         }
 
@@ -31,6 +33,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             __draw( *this, xaxis, yaxis,  curves);
             __draw( *this, xaxis, y2axis, curves2);
+            __draw( *this, xaxis, y3axis, curves3);
         }
 
 
