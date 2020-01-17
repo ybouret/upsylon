@@ -138,14 +138,14 @@ Y_UTEST(quark3)
 {
     concurrent::simd loop;
 
-    doMOD2<float>(  &loop );
+    doMOD2<float> ( &loop );
     doMOD2<double>( &loop );
-    doMOD2<mpz>( NULL );
-    doMOD2<mpq>( NULL, 20 );
+    doMOD2<mpz>   ( NULL  );
+    doMOD2<mpq>   ( NULL, 20 );
 
     doMMUL<float,float,float>( &loop );
-    doMMUL<double,int,int>( &loop );
-    doMMUL<mpz,int,short>( NULL );
+    doMMUL<double,int,int>   ( &loop );
+    doMMUL<mpz,int,short>    ( NULL  );
 }
 Y_UTEST_DONE()
 
