@@ -52,9 +52,23 @@ Y_UTEST(spec)
     TS(int64_t);
 
 
-    TS(int8_t);
     TS(char);
     TS(unsigned char);
+
+    TS(short);
+    TS(unsigned short);
+
+    TS(int);
+    TS(unsigned int);
+
+    TS(long);
+    TS(unsigned long);
+
+    TS(long long);
+    TS(unsigned long long);
+
+    TS(float);
+    TS(double);
 
     TS(string);
     TS(Dummy);
