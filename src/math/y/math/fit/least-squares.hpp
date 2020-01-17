@@ -137,7 +137,7 @@ namespace upsylon {
                 step(),
                 atry(),
                 used(),
-                isOK(),
+                good(),
                 nope( this, & LeastSquares<T>::accept )
                 {
                     initialize();
@@ -155,7 +155,7 @@ namespace upsylon {
                 
 #include "least-squares-fit.hxx"
 
-                 //! fit wrapper
+                //! fit wrapper
                 inline bool fit(SampleType<T>            &sample,
                                 Function                 &F,
                                 addressable<T>           &aorg,
@@ -238,7 +238,7 @@ namespace upsylon {
                 Vector   step;
                 Vector   atry;
                 bVector  used;
-                bVector  isOK;
+                bVector  good;
                 Control  nope;
 
                 ControlResult accept( Frame<T> &, const size_t ) const throw()
@@ -261,10 +261,10 @@ namespace upsylon {
                     step.adjust(n,0);
                     atry.adjust(n,0);
                     used.adjust(n,false);
-                    isOK.adjust(n,false);
+                    good.adjust(n,false);
                     quark::ld(used,false);
                     sample.activate(used,flags);
-                    quark::ld(isOK,false);
+                    quark::set(good,used);
                 }
 
                 //______________________________________________________________
@@ -327,38 +327,41 @@ namespace upsylon {
                     }
                 }
 
+                //! detect a nullspace coordinate
+                inline bool isNullSpace( const size_t i ) const throw()
+                {
+                    return (fabs_of( beta[i] ) <= 0) && ( quark::mmod2<T>::both_of(alpha,i,i) <=0 );
+                }
+                
                 //______________________________________________________________
                 //
                 // check if some variables are in a nullspace
-                // and regularize alpha
+                // after a full step computation: alpha/beta
+                // the matric alpha is regularized and good is set
                 //______________________________________________________________
                 inline void checkNullSpace(const Variables &vars)
                 {
                     for(size_t i=used.size();i>0;--i)
                     {
-                        bool &ok = isOK[i];
+                        bool &status = good[i];
                         if( !used[i] )
                         {
-                            ok = false;
+                            status = false;
                         }
                         else
                         {
-                            ok = true;
-                            if( fabs_of( beta[i] ) <= 0 )
+                            status = true;
+                            if( isNullSpace(i) )
                             {
-                                if( quark::mmod2<T>::both_of(alpha,i,i) <=0 )
+                                const Variable *pV = vars.searchIndex(i);
+                                if(!pV)
                                 {
-                                    const Variable *pV = vars.searchIndex(i);
-                                    if(!pV)
-                                    {
-                                        throw exception("[LS]: internal error: undeclared used variable!");
-                                    }
-                                    Y_LS_PRINTLN( "[LS] <NULL SPACE for [" << pV->name << "] >" );
-                                    ok = false;
-                                    alpha[i][i] = 1;
+                                    throw exception("[LS]: internal error: undeclared used variable!");
                                 }
+                                Y_LS_PRINTLN( "[LS] <NULL SPACE for [" << pV->name << "] >" );
+                                status = false;
+                                alpha[i][i] = 1;
                             }
-
                         }
                     }
                 }
@@ -369,6 +372,10 @@ namespace upsylon {
                 //______________________________________________________________
                 inline bool buildStep(const Variables &vars)
                 {
+                    //__________________________________________________________
+                    //
+                    // check if a variable is in the nullspace
+                    //__________________________________________________________
                     checkNullSpace(vars);
                     
                     //__________________________________________________________

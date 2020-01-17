@@ -329,6 +329,14 @@ namespace upsylon {
                 }
             }
 
+            const Variable & Variables:: at(const size_t index) const
+            {
+                const Variable::Pointer *pV = query( byIndex, index );
+                if(!pV) throw exception("No Fit::Variable@%u", unsigned(index) );
+                return **pV;
+            }
+
+
         }
     }
 }

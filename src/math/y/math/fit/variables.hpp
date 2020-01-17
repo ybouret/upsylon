@@ -57,7 +57,7 @@ namespace upsylon {
 
                 //! generalized access operator
                 template <typename T>
-                inline T & operator()( addressable<T> &source, const string &id ) const
+                inline T & operator()(addressable<T> &source, const string &id) const
                 {
                     const  Variables &self = *this;
                     return self[id].get(source);
@@ -65,7 +65,7 @@ namespace upsylon {
 
                 //! generalized access operator
                 template <typename T>
-                inline T & operator()( addressable<T> &source, const char *id ) const
+                inline T & operator()(addressable<T> &source, const char *id) const
                 {
                     const string _(id);
                     return (*this)(source,_);
@@ -316,8 +316,11 @@ namespace upsylon {
                     return ans;
                 }
 
-                //! get variable by its index
+                //! get variable by its index, NULL if not found
                 const Variable *searchIndex( const size_t index ) const throw();
+
+                //! get variable at a given index
+                const Variable &at(const size_t index) const;
 
             private:
                 void   update();

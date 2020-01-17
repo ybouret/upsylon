@@ -5,6 +5,7 @@
 
 #include "y/associative/hash-table.hpp"
 #include "y/container/associative.hpp"
+#include "y/container/sequence.hpp"
 #include "y/hashing/key-hasher.hpp"
 #include "y/iterate/meta.hpp"
 
@@ -276,7 +277,8 @@ namespace upsylon
         }
 
         //! send a query on data, return first match
-        template <typename PROC> inline const_type * query( PROC &proc ) const throw()
+        template <typename PROC> inline
+        const_type * query( PROC &proc ) const throw()
         {
             for(const meta_node *node=table.chain.head;node;node=node->next)
             {
@@ -287,7 +289,8 @@ namespace upsylon
         }
 
         //! send a query on data, return first match
-        template <typename PROC, typename ARGS> inline const_type * query( PROC &proc, const ARGS &args) const throw()
+        template <typename PROC, typename ARGS>
+        inline const_type * query( PROC &proc, ARGS &args) const throw()
         {
             for(const meta_node *node=table.chain.head;node;node=node->next)
             {
@@ -297,6 +300,39 @@ namespace upsylon
             return NULL;
         }
 
+        //! append matching data to sequence
+        template <typename PROC> inline
+        size_t query(sequence<type> &seq, PROC &proc) const
+        {
+            size_t count = 0;
+            for(const meta_node *node=table.chain.head;node;node=node->next)
+            {
+                const_type &data = node->addr->data;
+                if(proc(data))
+                {
+                    seq.push_back(data);
+                    ++count;
+                }
+            }
+            return count;
+        }
+
+        //! append matching data to sequence
+        template <typename PROC, typename ARGS> inline
+        size_t query(sequence<type> &seq, PROC &proc, ARGS &args) const
+        {
+            size_t count = 0;
+            for(const meta_node *node=table.chain.head;node;node=node->next)
+            {
+                const_type &data = node->addr->data;
+                if(proc(data,args))
+                {
+                    seq.push_back(data);
+                    ++count;
+                }
+            }
+            return count;
+        }
 
 
     protected:

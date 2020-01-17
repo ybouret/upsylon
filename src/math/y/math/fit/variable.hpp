@@ -71,7 +71,7 @@ namespace upsylon {
                 //! output
                 friend std::ostream & operator<<( std::ostream &, const Variable &);
 
-                //! activate matching flag
+                //! copy into target the matching source index
                 void activate( addressable<bool> &target, const accessible<bool> &source) const;
 
                 //==============================================================

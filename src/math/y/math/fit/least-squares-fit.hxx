@@ -294,7 +294,7 @@ CONVERGED:
     Y_LS_PRINTLN( "     D2   = " << D2org );
     Y_LS_PRINTLN( "     aorg = " << aorg  );
     Y_LS_PRINTLN( "     used = " << used  );
-    Y_LS_PRINTLN( "     isOK = " << isOK  );
+    Y_LS_PRINTLN( "     good = " << good  );
     //
     //--------------------------------------------------------------------------
     if(!LU::build(alpha))
@@ -311,7 +311,7 @@ CONVERGED:
     //--------------------------------------------------------------------------
     for(size_t i=n;i>0;--i)
     {
-        if(isOK[i]) --dof;
+        if(good[i]) --dof;
     }
     Y_LS_PRINTLN( "      dof = " << dof );
     if(dof<0)
@@ -334,12 +334,15 @@ CONVERGED:
         {
             if(used[i])
             {
-                if(isOK[i])
+                if(good[i])
                 {
                     const T sig = sqrt_of( (D2org * curv[i][i]) / dof );
                     aerr[i]     = sig*sig2err;
                 }
-                // else aerr will be -1
+                else
+                {
+                    // else aerr will be -1
+                }
             }
             else
             {
