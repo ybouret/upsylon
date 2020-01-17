@@ -53,7 +53,14 @@ namespace upsylon
 		
 		void function:: operator()( const char *buf ) throw()
 		{
-			run( buf, length_of(buf) );
+            //run( buf, length_of(buf) );
+            if( buf )
+            {
+                while(*buf)
+                {
+                    run( buf++, 1);
+                }
+            }
 		}
 
 
