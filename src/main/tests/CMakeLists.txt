@@ -209,6 +209,7 @@ ADD_TEST(data:ordered     test-main ordered)
 ADD_TEST(data:key-address test-main key_address)
 ADD_TEST(data:strings     test-main strings ${HERE}/words.db)
 ADD_TEST(data:addressable test-main addressable)
+ADD_TEST(data:query       test-main query ${HERE}/words.db)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
