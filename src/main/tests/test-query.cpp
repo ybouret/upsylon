@@ -21,6 +21,11 @@ namespace {
         return s.size() == 4;
     }
 
+    static inline bool querySize(const string &s, const size_t n )
+    {
+        return s.size() == n;
+    }
+
 }
 
 Y_UTEST(query)
@@ -69,6 +74,35 @@ Y_UTEST(query)
         }
 
 
+        {
+            size_t  sz = 3;
+            string *pS = container_query::first(vs,querySize,sz);
+            if(pS)
+            {
+                std::cerr << "vs.first.querySize =  " << *pS << std::endl;
+            }
+            pS = container_query::first_reverse(vs,querySize,sz);
+            if(pS)
+            {
+                std::cerr << "vs.rfirst.querySize = " << *pS << std::endl;
+            }
+        }
+
+        {
+            size_t sz = 3;
+            const vector<string> &cvs = vs;
+            const string *pS = container_query::first(cvs,querySize,sz);
+            if(pS)
+            {
+                std::cerr << "cvs.first.querySize =  " << *pS << std::endl;
+            }
+            pS = container_query::first_reverse(cvs,querySize,sz);
+            if(pS)
+            {
+                std::cerr << "cvs.rfirst.querySize = " << *pS << std::endl;
+            }
+        }
+
 
         {
             string *pS = container_query::first(ls,query4);
@@ -90,6 +124,29 @@ Y_UTEST(query)
                 std::cerr << "ms.first.query4 =  " << *pS << std::endl;
             }
         }
+
+        
+        list<string> qres;
+        {
+            qres.free();
+            std::cerr << "#vs.query4=" << container_query::all(qres,vs,query4) << std::endl;
+            std::cerr << "->" << qres << std::endl;
+        }
+
+        {
+            qres.free();
+            std::cerr << "#ls.query4=" << container_query::all(qres,ls,query4) << std::endl;
+            std::cerr << "->" << qres << std::endl;
+        }
+
+
+        {
+            qres.free();
+            std::cerr << "#ms.query4=" << container_query::all(qres,ms,query4) << std::endl;
+            std::cerr << "->" << qres << std::endl;
+        }
+
+
 
 
         std::cerr << "done..." << std::endl;
