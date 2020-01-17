@@ -310,6 +310,17 @@ namespace upsylon {
             {
                 return vformat("%.15g",value);
             }
+        }
+
+    }
+}
+
+#include "y/container/query.hpp"
+namespace upsylon {
+
+    namespace math {
+
+        namespace Fit {
 
             static inline bool byIndex( const Variable::Pointer &v, const size_t index) throw()
             {
@@ -318,7 +329,7 @@ namespace upsylon {
 
             const Variable * Variables:: searchIndex( const size_t index ) const throw()
             {
-                const Variable::Pointer *pV = query( byIndex, index );
+                const Variable::Pointer *pV = container_query::first( *this, byIndex, index);
                 if(pV)
                 {
                     return & (**pV) ;
@@ -331,7 +342,7 @@ namespace upsylon {
 
             const Variable & Variables:: at(const size_t index) const
             {
-                const Variable::Pointer *pV = query( byIndex, index );
+                const Variable::Pointer *pV = container_query::first( *this, byIndex, index);
                 if(!pV) throw exception("No Fit::Variable@%u", unsigned(index) );
                 return **pV;
             }
