@@ -19,6 +19,7 @@ using namespace upsylon;
 Y_UTEST(mpn)
 {
 
+    if(false)
     {
         ios::ocstream fp("miller.dat");
         for(size_t i=1;i<=10000;++i)
