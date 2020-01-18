@@ -19,7 +19,9 @@ namespace upsylon
         const string          name;  //!< human readable name
 
         const std::type_info &key() const throw();                    //!< info
-        explicit              type_spec( const std::type_info &tid ); //!< setup
+        explicit              type_spec(const std::type_info &tid);   //!< setup
+        explicit              type_spec(const std::type_info &tid,
+                                        const string         &known); //!< setup
         virtual              ~type_spec() throw();                    //!< cleanup
 
         //! forward equality operator
