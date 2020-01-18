@@ -32,6 +32,12 @@ namespace {
             return true;
         }
 
+        bool Zap( Token &token ) throw()
+        {
+            token.release();
+            return true;
+        }
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(ToDo);
     };
@@ -47,6 +53,7 @@ Y_UTEST(sed)
     {
         sed.on("[:digit:]",  todo, &ToDo::Check);
         sed.on("_[:alpha:]", todo, &ToDo::UpperCase);
+        sed.on("(class *|struct *)", todo, &ToDo::Zap);
     }
 
     if(argc>1)
