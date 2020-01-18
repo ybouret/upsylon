@@ -59,6 +59,8 @@ namespace upsylon
             return of( typeid( typename type_traits<T>::mutable_type ) );
         }
 
+        static void display( std::ostream &os );
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN( type_spec );
         void setName();

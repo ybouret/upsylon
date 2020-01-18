@@ -1,6 +1,9 @@
 #include "y/type/spec.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/display.hpp"
+#include "y/type/complex.hpp"
+#include "y/container/matrix.hpp"
+#include "y/mpl/rational.hpp"
 
 using namespace upsylon;
 
@@ -13,6 +16,9 @@ std::cerr << std::endl;\
 
 struct Dummy
 {
+    struct Internal
+    {
+    };
 };
 
 Y_UTEST(spec)
@@ -49,6 +55,15 @@ Y_UTEST(spec)
 
     TS(string);
     TS(Dummy);
+    TS(Dummy::Internal);
+
+    TS(complex<float>);
+    TS(complex<double>);
+
+    TS(matrix<float>);
+    TS(matrix<mpz>);
+
+    type_spec::display(std::cerr);
 
 }
 Y_UTEST_DONE()
