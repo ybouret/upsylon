@@ -62,7 +62,7 @@ namespace upsylon
             }
             else
             {
-                assert(!(data&&size>0));
+                assert(!(NULL==data&&size>0));
                 return false;
             }
         }
