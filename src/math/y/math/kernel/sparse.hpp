@@ -17,7 +17,7 @@ namespace upsylon
         {
 
 
-            //! a += b;
+            //! a = b;
             template <typename T, typename U> static inline
             void set( sparse_array<T> &a, const sparse_array<U> &b )
             {
