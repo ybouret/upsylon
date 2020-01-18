@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_MATH_KERNEL_SPARSE_INCLUDED
-#define Y_MATH_KERNEL_SPARSE_INCLUDED 1
+#ifndef Y_MATH_KERNEL_SPARK_INCLUDED
+#define Y_MATH_KERNEL_SPARK_INCLUDED 1
 
 #include "y/sparse/matrix.hpp"
 #include "y/sparse/array.hpp"

@@ -1,4 +1,4 @@
-#include "y/math/kernel/sparse.hpp"
+#include "y/math/kernel/spark.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 
