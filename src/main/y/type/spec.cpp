@@ -17,13 +17,9 @@ namespace upsylon {
     {
         string &id = aliasing::_(name);
         id = name_;
-
     }
 
-    type_spec :: ~type_spec() throw()
-    {
-
-    }
+    type_spec :: ~type_spec() throw() {}
 
 
 
@@ -109,10 +105,19 @@ namespace upsylon {
                 }
             }
 
+            static inline
+            int compare_type_spec_by_name(const type_spec_pointer &lhs,
+                                          const type_spec_pointer &rhs) throw()
+            {
+                return string::compare(lhs->name_, rhs->name_);
+            }
+
             void update_with( const type_spec &ts ) throw()
             {
                 sys_name_max = max_of(ts.name_.size(),sys_name_max);
                 usr_name_max = max_of(ts.name.size(), usr_name_max);
+
+                sort_data(compare_type_spec_by_name);
             }
 
         private:
