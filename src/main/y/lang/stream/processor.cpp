@@ -53,10 +53,13 @@ namespace upsylon {
 
             void Processor:: run( ios::ostream &target, Module *module )
             {
+                // safe guard module
                 Source source(module);
 
+                // prepare some memory
                 const size_t numCodes = codes.size();
                 Token        token;
+                
                 while( source.active() )
                 {
                     // try code
@@ -68,7 +71,7 @@ namespace upsylon {
                         if(code.motif->match(token,source))
                         {
                             // modify token
-                            aliasing::_(*code.instr)(token);
+                           (void)aliasing::_(*code.instr)(token);
 
                             // output token
                             while( token.size )
