@@ -21,20 +21,20 @@ namespace upsylon
         const char         *when() const throw();    //!< exception context
 
         //! format when using printf syntax
-        explicit exception( const char *fmt,...) throw() Y_PRINTF_CHECK(2,3);
+        explicit exception(const char *fmt,...) throw() Y_PRINTF_CHECK(2,3);
         
         //! append to when using printf syntax
-        void     cat( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
+        void     cat(const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
         
         //! reset when using printf syntax
-        void     set( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
+        void     set(const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
         
         //! prepend to when using printf syntax
-        void     hdr( const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
+        void     hdr(const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
 
     protected:
         explicit exception() throw();                   //!< ""
-        void     format( const char *, void *) throw(); //!< common formatting
+        void     format(const char *, void *) throw(); //!< common formatting
         char     when_[ max_length ];                   //!< user's formatted string
 
     private:

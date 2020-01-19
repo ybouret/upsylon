@@ -7,7 +7,7 @@
 namespace upsylon
 {
     extern randomized::bits &alea; //!< internal alea generator
-    void alea_init() throw();  //!< init alea to a hardware bases value
+    void alea_init() throw();      //!< init alea to a hardware bases value
 }
 
 #endif

@@ -10,14 +10,14 @@
 #include "y/string/display.hpp"
 #include "y/mpl/rational.hpp"
 
+#if 1 || defined(_MSC_VER)
+#include "y/lang/stream/processor.hpp"
+#endif
+
 namespace upsylon {
 
 
-    void type_spec:: setName()
-    {
-        string &id = aliasing::_(name);
-        id = name_;
-    }
+   
 
     type_spec :: ~type_spec() throw() {}
 
@@ -66,7 +66,8 @@ namespace upsylon {
             static const at_exit::longevity life_time = longevity_for::memory_pooled - 2;
             size_t sys_name_max;
             size_t usr_name_max;
-
+            Lang::Stream::Processor sed;
+            
             inline const type_spec & decl_( const std::type_info &tid )
             {
                 Y_LOCK(access);
@@ -119,6 +120,12 @@ namespace upsylon {
 
                 sort_data(compare_type_spec_by_name);
             }
+            
+            bool zap( Lang::Token &token ) throw()
+            {
+                token.release();
+                return true;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(type_specs);
@@ -135,8 +142,11 @@ known_(tid,known);                                       \
             type_spec_db(64,as_capacity),
             sys_name_max(0),
             usr_name_max(0)
+            ,sed()
             {
                 Y_LOCK(access);
+                
+                sed.on("(class +|struct +)", *this, &type_specs::zap);
                 Y_TYPE_SPEC(float);
                 Y_TYPE_SPEC(double);
 
@@ -196,6 +206,14 @@ known_(tid,known);                                       \
             string_display::align(os,      ts.name, tss.usr_name_max) << std::endl;
         }
         os << "<type_specs/>" << std::endl;
+    }
+    
+    void type_spec:: setName()
+    {
+        static type_specs &tss = type_specs::instance();
+        Y_LOCK(tss.access);
+        string &id = aliasing::_(name); assert(0==id.size());
+        id = tss.sed.operator()(name_);
     }
 
 }

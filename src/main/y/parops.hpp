@@ -12,7 +12,7 @@ namespace upsylon
     {
         //! get local task from global info
         template <typename T, typename U>  static inline
-        void split_any( T &length, T &offset, const U Size, const U Rank ) throw()
+        void split_any(T &length, T &offset, const U Size, const U Rank) throw()
         {
             assert(Size>0);
             assert(Rank>=0);

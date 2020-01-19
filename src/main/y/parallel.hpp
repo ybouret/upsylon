@@ -31,7 +31,7 @@ namespace upsylon
         
         //! get the work portion according to rank/size
         template <typename T>
-        inline void split( T &length, T &offset ) const throw()
+        inline void split(T &length, T &offset) const throw()
         {
             parops::split_any(length,offset,size,rank);
         }
