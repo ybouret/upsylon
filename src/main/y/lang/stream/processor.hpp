@@ -56,13 +56,15 @@ namespace upsylon {
                 {
                 public:
                     Code(const Motif &M,
-                         const Instr &I ) throw();
+                         const Instr &I) throw();
                     ~Code() throw();
                     Code(const Code &) throw();
 
                     const Motif motif;
                     const Instr instr;
-
+                    
+                    bool runOn( Token & ) const;
+                    
                 private:
                     Y_DISABLE_ASSIGN(Code);
                 };

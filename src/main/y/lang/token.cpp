@@ -61,5 +61,10 @@ namespace upsylon
             }
             fp << '\'';
         }
+        
+        std::ostream & operator<<( std::ostream &os, const Token &t )
+        {
+            return t.write(os);
+        }
     }
 }

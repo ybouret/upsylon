@@ -7,37 +7,42 @@
 #include "y/ios/osstream.hpp"
 
 namespace upsylon {
-
+    
     namespace  Lang {
-
+        
         namespace Stream {
-
-
+            
+            
             Processor::Code:: ~Code() throw()
             {
             }
-
+            
             Processor::Code:: Code( const Code &_ ) throw() :
             motif(_.motif),
             instr(_.instr)
             {
             }
-
+            
             Processor:: Code:: Code( const Motif &M, const Instr &I) throw() :
             motif(M),
             instr(I)
             {
             }
-
-
+            
+            bool Processor:: Code:: runOn( Token &token ) const
+            {
+                return aliasing::_(*instr)(token);
+            }
+            
+            
             Processor:: Processor() : codes()
             {
             }
-
+            
             Processor:: ~Processor() throw()
             {
             }
-
+            
             void Processor::on(const string &rx, Editor *ed)
             {
                 static const char fn[] = "Stream::Processor: ";
@@ -49,43 +54,46 @@ namespace upsylon {
                 const Code code(motif,instr);
                 codes << code;
             }
-
-
+            
+            
             void Processor:: run( ios::ostream &target, Module *module )
             {
                 // safe guard module
                 Source source(module);
-
+                
                 // prepare some memory
                 const size_t numCodes = codes.size();
                 Token        token;
                 
                 while( source.active() )
                 {
+                    assert(0==token.size);
+                    
                     // try code
                     bool match = false;
                     for(size_t i=1;i<=numCodes;++i)
                     {
+                        assert(0==token.size);
                         const Code &code = codes[i];
-                        token.release();
                         if(code.motif->match(token,source))
                         {
                             // modify token
-                           (void)aliasing::_(*code.instr)(token);
-
+                            code.runOn(token);
+                            
                             // output token
                             while( token.size )
                             {
                                 target.write(token.head->code);
                                 delete token.pop_front();
                             }
-
+                            
                             match = true;
+                            assert(0==token.size);
                             break;
                         }
                     }
-
-
+                    
+                    
                     if(!match)
                     {
                         // no code
@@ -96,13 +104,13 @@ namespace upsylon {
                         }
                         target.write(C);
                     }
-
-
+                    
+                    
                 }
-
+                
             }
-
-
+            
+            
             string Processor:: operator()( const string &input )
             {
                 string        result;
@@ -112,10 +120,10 @@ namespace upsylon {
                 }
                 return result;
             }
-
-
+            
+            
         }
-
+        
     }
 }
 

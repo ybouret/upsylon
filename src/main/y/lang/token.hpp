@@ -33,15 +33,19 @@ namespace upsylon
                 return *this;
             }
 
-            //! output
-            inline friend std::ostream & operator<<( std::ostream &os, const Token &t )
+            template <typename OUTPUT> inline
+            OUTPUT & write( OUTPUT &os ) const
             {
-                for(const Char *ch=t.head;ch;ch=ch->next)
+                for(const Char *ch=head;ch;ch=ch->next)
                 {
                     os << char(ch->code);
                 }
                 return os;
             }
+            
+            
+            //! output
+            friend std::ostream & operator<<( std::ostream &os, const Token &t );
 
             //! convert to string with skipped and trimmed possibility
             string to_string(const size_t nskip=0, const size_t ntrim=0) const;
