@@ -4,6 +4,7 @@
 
 
 #include "y/core/linked.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {
@@ -116,7 +117,7 @@ namespace upsylon
             //! delete one NODE
             inline void pop() throw()
             {
-                assert(this->top);
+                assert(this->head);
                 assert(this->size>0);
                 delete this->query();
             }
