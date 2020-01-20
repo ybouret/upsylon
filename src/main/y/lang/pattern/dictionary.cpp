@@ -42,7 +42,7 @@ namespace upsylon
         void Dictionary:: release() throw()
         {
             entries.release();
-            patterns.clear();
+            patterns.release();
         }
 
         Pattern * Dictionary:: create(const string &name) const

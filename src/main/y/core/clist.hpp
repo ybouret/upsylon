@@ -2,8 +2,8 @@
 #ifndef Y_CORE_CLIST_INCLUDED
 #define Y_CORE_CLIST_INCLUDED 1
 
+#include "y/core/linked.hpp"
 #include "y/type/cswap.hpp"
-#include "y/type/aliasing.hpp"
 
 namespace upsylon {
     
@@ -24,25 +24,23 @@ assert((node)->prev==NULL)
         
         //! circular doubly linked list
         template <typename NODE>
-        class clist_of
+        class clist_of : public linked
         {
         public:
-            
             NODE        *base; //!< entry node
-            const size_t size; //!< total number of nodes
-            
+
             //! setup
-            inline explicit clist_of() throw() : base(0), size(0) {}
+            inline explicit clist_of() throw() : linked(), base(0) {}
             
             //!cleanup
             inline virtual ~clist_of() throw()
             {
-                assert(0==size);
-                assert(0==base);
+                assert(NULL==base);
+                assert(is_vacant());
             }
             
             //! hard reset
-            inline void reset() throw() { base=0; aliasing::_(size)=0; }
+            inline void reset() throw() { base=0; force_no_size(); }
             
             //! insert node after base
             inline NODE *push_back( NODE *node ) throw()
@@ -57,7 +55,7 @@ assert((node)->prev==NULL)
                         NODE *next = base->next;
                         base->next = node; node->prev=base;
                         next->prev = node; node->next=next;
-                        ++aliasing::_(size);
+                        increase_size();
                     }  break;
                 }
                 return node;
@@ -76,7 +74,7 @@ assert((node)->prev==NULL)
                         NODE *prev = base->prev;
                         base->prev = node; node->next=base;
                         prev->next = node; node->prev=prev;
-                        ++aliasing::_(size);
+                        increase_size();
                     } break;
                 }
                 return node;
@@ -107,7 +105,7 @@ assert((node)->prev==NULL)
             }
 
             //! turn forward
-            inline clist_of & scroll_forward(  size_t n ) throw()
+            inline clist_of & scroll_forward(size_t n) throw()
             {
                 assert(size>0);
                 n %= size;
@@ -119,7 +117,7 @@ assert((node)->prev==NULL)
             }
 
             //! turn reverse
-            inline clist_of & scroll_reverse(  size_t n ) throw()
+            inline clist_of & scroll_reverse(size_t n) throw()
             {
                 assert(size>0);
                 n %= size;
@@ -137,9 +135,11 @@ assert((node)->prev==NULL)
 
             inline void push_first(NODE *node) throw()
             {
-                base               = node;
-                aliasing::_(size)  = 1;
-                node->next         = node->prev = base;
+                assert(NULL==base);
+                assert(is_vacant());
+                base       = node;
+                node->next = node->prev = base;
+                increase_size();
             }
             
             inline NODE *pop_last() throw()
@@ -175,7 +175,7 @@ assert((node)->prev==NULL)
                         case clist_next: base=next; break;
                         case clist_prev: base=prev; break;
                     }
-                    --aliasing::_(size);
+                    decrease_size();
                     return node;
                 }
             }
@@ -204,7 +204,7 @@ namespace upsylon {
             //! delete content
             inline virtual void release() throw()
             {
-                while(this->size)
+                while(this->has_nodes())
                 {
                     delete this->pop_back();
                 }

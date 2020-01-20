@@ -2,8 +2,8 @@
 #ifndef Y_CORE_LIST_INCLUDED
 #define Y_CORE_LIST_INCLUDED 1
 
+#include "y/core/linked.hpp"
 #include "y/type/cswap.hpp"
-#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -22,44 +22,39 @@ assert((node)->prev==NULL)
          a power of 2 in size
          */
         template <typename NODE>
-        class list_of
+        class list_of : public linked
         {
         public:
             typedef NODE node_type; //!< keep track of NODE
 
             //! constructor
-            inline explicit list_of() throw() : head(NULL), tail(NULL), size(0) {}
+            inline explicit list_of() throw() : linked(), head(NULL), tail(NULL) {}
 
             //! destructor
-            inline virtual ~list_of() throw() { assert(NULL==head); assert(NULL==tail); assert(0==size); }
+            inline virtual ~list_of() throw() { assert(is_vacant()); assert(NULL==head); assert(NULL==tail); }
 
             NODE        *head; //!< head NODE
             NODE        *tail; //!< last NODE
-            const size_t size; //!< number of NODEs
 
-            //! inline helper
-            inline bool is_empty() const throw() { return size<=0; }
-
-            //! inline helper
-            inline bool has_data() const throw() { return size>0;  }
 
             //! no-throw swap with another list
             inline void swap_with(list_of &other) throw()
             {
-                cswap(  head, other.head );
-                cswap(  tail, other.tail );
-                _cswap( size, other.size );
+                _cswap(head,other.head);
+                _cswap(tail,other.tail);
+                _cswap(size,other.size);
             }
 
             //! initialize with first node
 #define Y_CORE_LIST_PUSH_FIRST(node)         \
 assert(!head); assert(!tail); assert(!size); \
-head = tail = node; (size_t&)size = 1
+head = tail = node; increase_size()
+
             //! append a NODE
             inline NODE *push_back( NODE *node ) throw()
             {
                 Y_CORE_CHECK_LIST_NODE(node);
-                if( size <= 0 )
+                if( is_vacant() )
                 {
                     Y_CORE_LIST_PUSH_FIRST(node);
                 }
@@ -68,7 +63,7 @@ head = tail = node; (size_t&)size = 1
                     node->prev = tail;
                     tail->next = node;
                     tail       = node;
-                    ++aliasing::_(size);
+                    increase_size();
                 }
                 return node;
             }
@@ -83,7 +78,7 @@ head = tail = node; (size_t&)size = 1
             inline NODE *push_front( NODE *node ) throw()
             {
                 Y_CORE_CHECK_LIST_NODE(node);
-                if( size <= 0 )
+                if( is_vacant() )
                 {
                     Y_CORE_LIST_PUSH_FIRST(node);
                 }
@@ -93,7 +88,7 @@ head = tail = node; (size_t&)size = 1
                     node->next = head;
                     head->prev = node;
                     head       = node;
-                    ++aliasing::_(size);
+                    increase_size();
                 }
                 return node;
             }
@@ -115,7 +110,7 @@ head = tail = node; (size_t&)size = 1
                     tail = tail->prev;
                     tail->next = NULL;
                     node->prev = NULL;
-                    --aliasing::_(size);
+                    decrease_size();
                     Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
@@ -137,7 +132,7 @@ head = tail = node; (size_t&)size = 1
                     head = head->next;
                     head->prev = NULL;
                     node->next = NULL;
-                    --aliasing::_(size);
+                    decrease_size();
                     Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
@@ -174,7 +169,7 @@ head = tail = node; (size_t&)size = 1
             }
 
             //! hard reset for embedded lists
-            inline void reset() throw() { head = tail = NULL; aliasing::_(size)=0; }
+            inline void reset() throw() { head = tail = NULL; force_no_size(); }
 
 
             //! unlink a node, return its address
@@ -200,7 +195,7 @@ head = tail = node; (size_t&)size = 1
                         prev->next = next;
                         node->next = NULL;
                         node->prev = NULL;
-                        --aliasing::_(size);
+                        decrease_size();
                         Y_CORE_CHECK_LIST_NODE(node);
                         return node;
                     }
@@ -333,7 +328,7 @@ head = tail = node; (size_t&)size = 1
             inline void reverse() throw()
             {
                 list_of tmp;
-                while(size>0) tmp.push_back( pop_back() );
+                while(has_nodes()) tmp.push_back( pop_back() );
                 swap_with(tmp);
             }
             
@@ -366,7 +361,7 @@ head = tail = node; (size_t&)size = 1
                     NODE *next = mine->next;
                     mine->next = yours; yours->prev = mine;
                     next->prev = yours; yours->next = next;
-                    ++aliasing::_(size);
+                    increase_size();
                 }
             }
 
@@ -387,7 +382,7 @@ head = tail = node; (size_t&)size = 1
                     NODE *prev = mine->prev;
                     mine->prev = yours; yours->next = mine;
                     prev->next = yours; yours->prev = prev;
-                    ++aliasing::_(size);
+                    increase_size();
                 }
             }
 
@@ -444,7 +439,7 @@ namespace upsylon
             //! delete content
             inline virtual void release() throw()
             {
-                while(this->size)
+                while(this->has_nodes())
                 {
                     delete this->pop_back();
                 }
@@ -500,7 +495,7 @@ namespace upsylon
     {
         //! a node is a cloneable C++ object
         template <typename NODE>
-        class list_of_cloneable : public list_of<NODE>
+        class list_of_cloneable : public list_of<NODE>, public releasable
         {
         public:
 
@@ -508,16 +503,16 @@ namespace upsylon
             explicit list_of_cloneable() throw() : list_of<NODE>() {}
 
             //! delete content
-            inline void clear() throw()
+            inline virtual void release() throw()
             {
-                while(this->size)
+                while(this->has_nodes())
                 {
                     delete this->pop_back();
                 }
             }
 
             //! clear on destructor
-            virtual ~list_of_cloneable() throw() { clear(); }
+            virtual ~list_of_cloneable() throw() { release(); }
 
             //! valid only if a copy ctor is defined for NODE
             inline list_of_cloneable( const list_of_cloneable &other ) : list_of<NODE> ()
@@ -531,7 +526,7 @@ namespace upsylon
                 }
                 catch(...)
                 {
-                    clear();
+                    release();
                     throw;
                 }
             }

@@ -79,6 +79,13 @@ assert((node)->next==NULL)
                 swap_with(tmp);
             }
 
+            //! store a node, syntactic helper
+            inline pool_of & operator<<( NODE *node ) throw()
+            {
+                (void)store(node);
+                return *this;
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pool_of);
         };

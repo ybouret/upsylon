@@ -16,8 +16,9 @@ Y_UTEST_INIT(256)
     Y_UTEST(chunk);
     Y_UTEST(code);
     Y_UTEST(alloc);
-    Y_UTEST(core);
     Y_UTEST(core_pool);
+    Y_UTEST(core_list);
+    Y_UTEST(core_clist);
     Y_UTEST(isqrt);
     Y_UTEST(arena);
     Y_UTEST(blocks);

@@ -1,4 +1,5 @@
 #include "y/type/spec.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
