@@ -24,9 +24,6 @@ Y_UTEST(spec)
 
     std::cerr << "sizeof(type_spec)=" << sizeof(type_spec) << std::endl;
 
-
-
-#if 1
     TS(uint8_t);
     TS(uint16_t);
     TS(uint32_t);
@@ -67,9 +64,8 @@ Y_UTEST(spec)
     TS(matrix<mpz>);
 
     type_spec::display(std::cerr);
-#endif
 
-    float h = 0.5;
+    const float h = 0.5;
     std::cerr << "type_name_of<float> = " << type_name_of<float>() << std::endl;
     std::cerr << "type_name_of(" << h << ")=" << type_name_of(h) << std::endl;
 }

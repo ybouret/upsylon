@@ -10,9 +10,6 @@
 namespace upsylon
 {
 
-
-
-
     class type_spec : public counted_object
     {
     public:
@@ -27,6 +24,38 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(alias);
         };
+
+#if 0
+        bool is( const string &id ) const throw();
+        bool is( const char   *id ) const throw();
+
+        friend inline bool operator==(const type_spec &lhs, const type_spec &rhs ) throw()
+        {
+            return lhs.info == rhs.info;
+        }
+
+        friend inline bool operator==(const type_spec &lhs, const string &id ) throw()
+        {
+            return lhs.is(id);
+        }
+
+        friend inline bool operator==(const type_spec &lhs, const char *id ) throw()
+        {
+            return lhs.is(id);
+        }
+
+        friend inline bool operator==(const string &id, const type_spec &rhs) throw()
+        {
+            return rhs.is(id);
+        }
+
+        friend inline bool operator==(const char *id, const type_spec &rhs) throw()
+        {
+            return rhs.is(id);
+        }
+#endif
+
+
 
         typedef core::list_of_cpp<alias> aliases;
 
@@ -68,6 +97,8 @@ namespace upsylon
             return of<T>(_);
         }
 
+        
+
         friend std::ostream & operator<<( std::ostream &, const type_spec & );
 
         static void display( std::ostream &);
@@ -78,9 +109,21 @@ namespace upsylon
     };
 
     template <typename T> static inline
+    const type_spec & type_spec_of(void)
+    {
+        return type_spec::of<T>();
+    }
+
+    template <typename T> static inline
+    const type_spec & type_spec_of(T &)
+    {
+        return type_spec_of<T>();
+    }
+
+    template <typename T> static inline
     const string & type_name_of(void)
     {
-        return type_spec::of<T>().name();
+        return type_spec_of<T>().name();
     }
 
     template <typename T> static inline
@@ -88,6 +131,8 @@ namespace upsylon
     {
         return type_name_of<T>();
     }
+
+
 
 
 }

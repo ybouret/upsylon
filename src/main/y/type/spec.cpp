@@ -74,6 +74,47 @@ user()
         return info;
     }
 
+#if 0
+    bool type_spec:: is( const string &id ) const throw()
+    {
+        if( id == uuid )
+        {
+            return true;
+        }
+        else
+        {
+            for(const alias *a=user.head;a;a=a->next)
+            {
+                if( id==a->name )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    bool type_spec:: is( const char *id ) const throw()
+    {
+        if( id == uuid )
+        {
+            return true;
+        }
+        else
+        {
+            for(const alias *a=user.head;a;a=a->next)
+            {
+                if( id==a->name )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+#endif
+
+
 }
 
 #include "y/associative/set.hpp"
@@ -270,6 +311,7 @@ namespace upsylon {
     {
         type_specs::instance().show(os);
     }
+
 
 
 
