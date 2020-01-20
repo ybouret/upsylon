@@ -37,8 +37,14 @@ assert((node)->prev==NULL)
             NODE        *tail; //!< last NODE
             const size_t size; //!< number of NODEs
 
+            //! inline helper
+            inline bool is_empty() const throw() { return size<=0; }
+
+            //! inline helper
+            inline bool has_data() const throw() { return size>0;  }
+
             //! no-throw swap with another list
-            inline void swap_with( list_of &other ) throw()
+            inline void swap_with(list_of &other) throw()
             {
                 cswap(  head, other.head );
                 cswap(  tail, other.tail );
@@ -87,7 +93,7 @@ head = tail = node; (size_t&)size = 1
                     node->next = head;
                     head->prev = node;
                     head       = node;
-                    ++(size_t&)size;
+                    ++aliasing::_(size);
                 }
                 return node;
             }
@@ -109,7 +115,7 @@ head = tail = node; (size_t&)size = 1
                     tail = tail->prev;
                     tail->next = NULL;
                     node->prev = NULL;
-                    --(size_t&)size;
+                    --aliasing::_(size);
                     Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
@@ -131,7 +137,7 @@ head = tail = node; (size_t&)size = 1
                     head = head->next;
                     head->prev = NULL;
                     node->next = NULL;
-                    --(size_t&)size;
+                    --aliasing::_(size);
                     Y_CORE_CHECK_LIST_NODE(node);
                     return node;
                 }
@@ -168,7 +174,7 @@ head = tail = node; (size_t&)size = 1
             }
 
             //! hard reset for embedded lists
-            inline void reset() throw() { head = tail = NULL; (size_t&)size=0; }
+            inline void reset() throw() { head = tail = NULL; aliasing::_(size)=0; }
 
 
             //! unlink a node, return its address
@@ -194,7 +200,7 @@ head = tail = node; (size_t&)size = 1
                         prev->next = next;
                         node->next = NULL;
                         node->prev = NULL;
-                        --(size_t&)size;
+                        --aliasing::_(size);
                         Y_CORE_CHECK_LIST_NODE(node);
                         return node;
                     }
@@ -360,7 +366,7 @@ head = tail = node; (size_t&)size = 1
                     NODE *next = mine->next;
                     mine->next = yours; yours->prev = mine;
                     next->prev = yours; yours->next = next;
-                    ++(size_t&)size;
+                    ++aliasing::_(size);
                 }
             }
 
@@ -381,7 +387,7 @@ head = tail = node; (size_t&)size = 1
                     NODE *prev = mine->prev;
                     mine->prev = yours; yours->next = mine;
                     prev->next = yours; yours->prev = prev;
-                    ++(size_t&)size;
+                    ++aliasing::_(size);
                 }
             }
 

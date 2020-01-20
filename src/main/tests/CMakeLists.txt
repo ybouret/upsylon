@@ -37,7 +37,8 @@ ADD_TEST(os:hr-ints      test-main hr_ints)
 ADD_TEST(os:ints-display test-main ints_display)
 ADD_TEST(os:cast         test-main cast)
 
-SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-zset.cpp test-code.cpp test-bits.cpp test-core.cpp test-progress.cpp
+SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-zset.cpp test-code.cpp test-bits.cpp 
+test-core.cpp test-core-pool.cpp test-progress.cpp
  test-functor.cpp test-tuple.cpp test-traits.cpp test-bswap.cpp test-bmove.cpp test-isqrt.cpp test-zfi.cpp)
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
@@ -47,6 +48,7 @@ ADD_TEST(core:bmove       test-main bmove)
 ADD_TEST(core:code        test-main code)
 ADD_TEST(core:bits        test-main bits)
 ADD_TEST(core:main        test-main core)
+ADD_TEST(core:pool        test-main core_pool)
 ADD_TEST(core:progress    test-main progress)
 ADD_TEST(core:functor     test-main functor)
 ADD_TEST(core:tuple       test-main tuple)

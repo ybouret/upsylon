@@ -3,6 +3,7 @@
 #define Y_CORE_CLIST_INCLUDED 1
 
 #include "y/type/cswap.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
     
@@ -41,7 +42,7 @@ assert((node)->prev==NULL)
             }
             
             //! hard reset
-            inline void reset() throw() { base=0; (size_t&)size=0; }
+            inline void reset() throw() { base=0; aliasing::_(size)=0; }
             
             //! insert node after base
             inline NODE *push_back( NODE *node ) throw()
@@ -56,7 +57,7 @@ assert((node)->prev==NULL)
                         NODE *next = base->next;
                         base->next = node; node->prev=base;
                         next->prev = node; node->next=next;
-                        ++(size_t&)size;
+                        ++aliasing::_(size);
                     }  break;
                 }
                 return node;
@@ -75,7 +76,7 @@ assert((node)->prev==NULL)
                         NODE *prev = base->prev;
                         base->prev = node; node->next=base;
                         prev->next = node; node->prev=prev;
-                        ++(size_t&)size;
+                        ++aliasing::_(size);
                     } break;
                 }
                 return node;
@@ -136,9 +137,9 @@ assert((node)->prev==NULL)
 
             inline void push_first(NODE *node) throw()
             {
-                base          = node;
-                (size_t&)size = 1;
-                node->next    = node->prev = base;
+                base               = node;
+                aliasing::_(size)  = 1;
+                node->next         = node->prev = base;
             }
             
             inline NODE *pop_last() throw()
@@ -174,7 +175,7 @@ assert((node)->prev==NULL)
                         case clist_next: base=next; break;
                         case clist_prev: base=prev; break;
                     }
-                    --(size_t&)size;
+                    --aliasing::_(size);
                     return node;
                 }
             }

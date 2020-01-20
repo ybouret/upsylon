@@ -3,7 +3,7 @@
 #define Y_CORE_POOL_INCLUDED 1
 
 
-#include "y/type/cswap.hpp"
+#include "y/core/linked.hpp"
 
 namespace upsylon
 {
@@ -16,38 +16,36 @@ assert((node)->next==NULL)
         
         //! core pool
         template <typename NODE>
-        class pool_of
+        class pool_of : public linked
         {
         public:
             //! default constructor
-            inline explicit pool_of() throw() : top(NULL), size(0) {}
+            inline explicit pool_of() throw() : linked(), head(NULL) {}
 
             //! destructor: pool must be empty
-            inline virtual ~pool_of() throw() { assert(NULL==top); assert(0==size); }
+            inline virtual ~pool_of() throw() { assert( is_vacant() ); assert(NULL==head); }
 
-            NODE        *top;  //!< top of pool
-            const size_t size; //!< nodes in pool
-
+            NODE        *head;  //!< head of pool
 
             //! push a valid node
             NODE *store( NODE *node ) throw()
             {
                 Y_CORE_CHECK_POOL_NODE(node);
-                node->next = top;
-                top        = node;
-                ++(size_t&)size;
+                node->next = head;
+                head       = node;
+                increase_size();
                 return node;
             }
 
             //! query if size>0
             inline NODE *query() throw()
             {
-                assert(top != NULL);
-                assert(size > 0   );
-                NODE *node = top;
-                top = top->next;
+                assert(NULL!=head);
+                assert(has_nodes());
+                NODE *node = head;
+                head = head->next;
                 node->next = NULL;
-                --(size_t&)size;
+                decrease_size();
                 Y_CORE_CHECK_POOL_NODE(node);
                 return node;
             }
@@ -55,29 +53,28 @@ assert((node)->next==NULL)
             //! linear search
             inline bool owns( const NODE *node ) const throw()
             {
-                for( const NODE *scan = top; scan != NULL; scan = scan->next )
+                for( const NODE *scan = head; scan != NULL; scan = scan->next )
                 {
                     if( scan == node ) return true;
                 }
                 return false;
             }
 
-
             //! hard reset
-            inline void reset() throw() { top = NULL; (size_t&)size = 0; }
+            inline void reset() throw() { force_no_size(); head = NULL; }
 
             //! no-throw swap
             inline void swap_with( pool_of<NODE> &other ) throw()
             {
                 _cswap(size,other.size);
-                _cswap(top, other.top);
+                _cswap(head,other.head);
             }
 
             //! reverse order
             inline void reverse() throw()
             {
                 pool_of<NODE> tmp;
-                while( size ) { tmp.store( query() ); }
+                while( has_nodes() ) { tmp.store( query() ); }
                 swap_with(tmp);
             }
 
@@ -110,7 +107,7 @@ namespace upsylon
             //! proper NODEs deleting
             inline virtual void release() throw()
             {
-                while(this->size>0)
+                while(this->has_nodes())
                 {
                     delete this->query();
                 }

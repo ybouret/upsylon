@@ -33,7 +33,7 @@ namespace upsylon
     {
         dispatcher:: jpool:: jpool() throw()  : jpool_type()
         {
-            assert(!top);
+            assert(!head);
             assert(0==size);
         }
 
@@ -58,7 +58,7 @@ namespace upsylon
         {
             while(size)
             {
-                assert(top);
+                assert(head);
                 jnode *j = checked( query() );
                 object::release1(j);
             }
@@ -66,7 +66,7 @@ namespace upsylon
 
         void dispatcher:: jpool:: gc() throw()
         {
-            for( jnode *j = top; j; j=checked(j)->next)
+            for( jnode *j = head; j; j=checked(j)->next)
                 ;
         }
 
@@ -134,8 +134,8 @@ namespace upsylon
                 assert(pending.tail);
                 assert(pending.tail->valid);
                 storage.store( pending.pop_back()->destruct() );
-                assert(storage.top);
-                assert(!storage.top->valid);
+                assert(storage.head);
+                assert(!storage.head->valid);
             }
         }
 
@@ -145,8 +145,8 @@ namespace upsylon
             while(n-->0)
             {
                 storage.store( object::acquire1<jnode>() );
-                assert(storage.top);
-                assert(!storage.top->valid);
+                assert(storage.head);
+                assert(!storage.head->valid);
             }
         }
 

@@ -1,6 +1,7 @@
+#include "y/core/pool.hpp"
+
 #include "y/core/clist.hpp"
 #include "y/core/list.hpp"
-#include "y/core/pool.hpp"
 #include "y/core/loop.hpp"
 #include "y/utest/run.hpp"
 

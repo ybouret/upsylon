@@ -24,6 +24,12 @@ struct Dummy
 Y_UTEST(spec)
 {
 
+    std::cerr << "sizeof(type_spec)=" << sizeof(type_spec) << std::endl;
+
+    type_spec sp( typeid(float) );
+    std::cerr << "sp.uuid=" << sp.uuid << std::endl;
+
+#if 0
     TS(uint8_t);
     TS(uint16_t);
     TS(uint32_t);
@@ -64,6 +70,7 @@ Y_UTEST(spec)
     TS(matrix<mpz>);
 
     type_spec::display(std::cerr);
+#endif
 
 }
 Y_UTEST_DONE()

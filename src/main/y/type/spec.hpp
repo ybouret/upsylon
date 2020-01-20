@@ -5,67 +5,48 @@
 #include "y/string.hpp"
 #include "y/type/traits.hpp"
 #include <typeinfo>
+#include "y/core/list.hpp"
 
 namespace upsylon
 {
 
-    //! type info wrapper
+
+
+
     class type_spec : public counted_object
     {
     public:
-
-        const std::type_info &info;  //!< system type_info
-        const string          name_; //!< system name
-        const string          name;  //!< human readable name
-
-        const std::type_info &key() const throw();                    //!< info
-        explicit              type_spec(const std::type_info &tid);   //!< setup
-        explicit              type_spec(const std::type_info &tid,
-                                        const string         &known); //!< setup
-        virtual              ~type_spec() throw();                    //!< cleanup
-
-        //! forward equality operator
-        inline friend bool operator==( const type_spec &lhs, const type_spec &rhs ) throw()
+        class alias : public object
         {
-            return lhs.info == rhs.info;
-        }
+        public:
+            explicit alias(const string &);
+            virtual ~alias() throw();
+            alias       *next;
+            alias       *prev;
+            const string name;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(alias);
+        };
 
-        //! forward difference operator
-        inline friend bool operator!=( const type_spec &lhs, const type_spec &rhs ) throw()
-        {
-            return lhs.info != rhs.info;
-        }
+        typedef core::list_of_cpp<alias> aliases;
 
-        //! use the 'before' API
-        inline friend bool operator<(const type_spec &lhs, const type_spec &rhs) throw()
-        {
-            return lhs.info.before(rhs.info);
-        }
+        const std::type_info &info; //!< the unique system type_info
+        const string          uuid; //!< UUID from system=mangled name
+        const aliases         user; //!< user aliases
 
-        //! display
-        friend inline std::ostream & operator<<( std::ostream &os, const type_spec &ts )
-        {
-            os << '<' << *(ts.name) << '>';
-            return os;
-        }
+        explicit type_spec(const std::type_info &tid);
+        explicit type_spec(const std::type_info &id, const string &known);
+        explicit type_spec(const std::type_info &id, const char   *known);
+        virtual ~type_spec() throw();
 
-        //! declare (possibly multiple) type info
-        static const type_spec & of( const std::type_info &tid );
+        void aka(const string &usr);
+        void aka(const char   *usr);
 
-        //! template find type
-        template <typename T> static inline
-        const type_spec & of(void)
-        {
-            return of( typeid( typename type_traits<T>::mutable_type ) );
-        }
-
-        static void display( std::ostream &os );
+        const string & name() const throw(); //!< default name
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN( type_spec );
-        void setName();
+        Y_DISABLE_COPY_AND_ASSIGN(type_spec);
     };
-
 
   
 
