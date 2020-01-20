@@ -7,7 +7,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -27,7 +27,7 @@ namespace {
     template <typename T, typename U, typename V>
     void doMMUL(concurrent::for_each *loop)
     {
-        std::cerr << "<MUL " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
+        std::cerr << "<MUL " << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<V>() << ">" << std::endl;
 
         const T zt = 0;
         const V zv = 0;
@@ -106,7 +106,7 @@ namespace {
     template <typename T> static inline
     void checkExact()
     {
-        std::cerr << "checkExact<" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "checkExact<" << type_name_of<T>() << ">" << std::endl;
         const T zt = 0;
         for(size_t rows=1;rows<=32;++rows)
         {
@@ -147,7 +147,7 @@ namespace {
     template <typename T, typename U, typename V> static inline
     void doMMUL_TRN(concurrent::for_each *loop)
     {
-        std::cerr << "<MUL_TRN " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
+        std::cerr << "<MUL_TRN " << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<V>() << ">" << std::endl;
 
         const T zt = 0;
         const V zv = 0;
@@ -228,7 +228,7 @@ namespace {
     template <typename T> static inline
     void checkExactTRN()
     {
-        std::cerr << "checkExactTRN<" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "checkExactTRN<" << type_name_of<T>() << ">" << std::endl;
         const T zt = 0;
         for(size_t rows=1;rows<=32;++rows)
         {

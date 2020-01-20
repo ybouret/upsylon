@@ -77,8 +77,17 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(type_spec);
     };
 
-  
+    template <typename T> static inline
+    const string & type_name_of(void)
+    {
+        return type_spec::of<T>().name();
+    }
 
+    template <typename T> static inline
+    const string & type_name_of( T & )
+    {
+        return type_name_of<T>();
+    }
 
 
 }

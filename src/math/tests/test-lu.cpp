@@ -4,7 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/math/utils.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -14,7 +14,7 @@ namespace
     template <typename T>
     static inline void do_test(const size_t nmax = 30)
     {
-        std::cerr << "Using LU<sizeof(T)=" << sizeof(T) <<">" << std::endl;
+        std::cerr << "Using LU<" << type_name_of<T>() << ">" << std::endl;
         for(size_t n=1;n<=nmax;++n)
         {
             std::cerr << "\t\t" << n << "x" << n << std::endl;
@@ -57,7 +57,7 @@ namespace
     {
         for(size_t n=1;n<=nmax;++n)
         {
-            std::cerr << "inverse<" << typeid(T).name() << "> " << n << "x" << n << std::endl;
+            std::cerr << "inverse<" << type_name_of<T>() << "> " << n << "x" << n << std::endl;
             matrix<T> a(n,n);
             for(size_t i=n;i>0;--i)
             {

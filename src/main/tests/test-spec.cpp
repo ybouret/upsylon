@@ -69,6 +69,9 @@ Y_UTEST(spec)
     type_spec::display(std::cerr);
 #endif
 
+    float h = 0.5;
+    std::cerr << "type_name_of<float> = " << type_name_of<float>() << std::endl;
+    std::cerr << "type_name_of(" << h << ")=" << type_name_of(h) << std::endl;
 }
 Y_UTEST_DONE()
 

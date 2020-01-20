@@ -1,10 +1,10 @@
 #include "y/mpl/rational.hpp"
 #include "y/math/kernel/tridiag.hpp"
 #include "y/utest/run.hpp"
-#include <typeinfo>
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/math/kernel/quark.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -14,7 +14,7 @@ namespace
     template <typename T>
     void do_test()
     {
-        std::cerr << "tridiag<" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "tridiag<" << type_name_of<T>() << ">" << std::endl;
 		T xtra = 0;
         for(size_t n=1;n<=3;++n)
         {

@@ -7,7 +7,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -29,7 +29,7 @@ namespace {
     template <typename T> static inline
     void doMOD2(concurrent::for_each *loop, const size_t w=100)
     {
-        std::cerr << "<MMOD2 " << typeid(T).name() <<  ">" << std::endl;
+        std::cerr << "<MMOD2 " << type_name_of<T>() <<  ">" << std::endl;
         matrix<T> A(1+alea.leq(w),1+alea.leq(w));
         matrix<T> B(A.rows,A.cols);
         support::fill2D(A);
@@ -48,7 +48,7 @@ namespace {
     template <typename T,typename U,typename V> static inline
     void doMMUL( concurrent::for_each *loop)
     {
-        std::cerr << "<MMUL " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
+        std::cerr << "<MMUL " << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<V>() << ">" << std::endl;
 
         for(size_t r=1;r<=16;r += 1+alea.leq(4))
         {
