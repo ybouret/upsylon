@@ -104,7 +104,7 @@ namespace upsylon {
                             //__________________________________________________
                             while( stack.size )
                             {
-                                const Point init = **(stack.top);
+                                const Point init = **(stack.head);
                                 size_t     &mark = B[init];
                                 if( mark <= 0 )
                                 {

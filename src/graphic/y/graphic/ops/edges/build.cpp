@@ -54,7 +54,7 @@ namespace upsylon {
                     stack.store( new PNode( center ) );
                     while( stack.size>0 )
                     {
-                        const Point current = **stack.top; assert( source[current]==STRONG || source[current]==FEEBLE );
+                        const Point current = **stack.head; assert( source[current]==STRONG || source[current]==FEEBLE );
                         size_t     &visited = target[current];
                         if( visited <= 0 )
                         {
