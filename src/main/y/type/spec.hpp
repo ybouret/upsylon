@@ -39,10 +39,39 @@ namespace upsylon
         explicit type_spec(const std::type_info &id, const char   *known);
         virtual ~type_spec() throw();
 
-        void aka(const string &usr);
-        void aka(const char   *usr);
+        bool aka(const string &usr);
+        bool aka(const char   *usr);
 
-        const string & name() const throw(); //!< default name
+        const string         & name() const throw(); //!< default name
+        const std::type_info & key() const throw();  //!< default key
+
+        static const type_spec & declare(const std::type_info &tid );
+        static const type_spec & aka(const std::type_info &tid, const string &known);
+        static const type_spec & aka(const std::type_info &tid, const char   *known);
+
+        template <typename T> inline
+        static const type_spec & of()
+        {
+            return declare( typeid( typename type_traits<T>::mutable_type ) );
+        }
+
+        template <typename T> inline
+        static const type_spec & of(const string &known)
+        {
+            return aka(typeid( typename type_traits<T>::mutable_type ),known);
+        }
+
+        template <typename T>
+        static const type_spec & of(const char *known)
+        {
+            const string _(known);
+            return of<T>(_);
+        }
+
+        friend std::ostream & operator<<( std::ostream &, const type_spec & );
+
+        static void display( std::ostream &);
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(type_spec);

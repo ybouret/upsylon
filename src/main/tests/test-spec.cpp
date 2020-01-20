@@ -9,9 +9,7 @@ using namespace upsylon;
 
 #define TS(TYPE) do { const type_spec &ts = type_spec::of<TYPE>(); \
 string_display::align(std::cerr,#TYPE,20)    << " => ";\
-string_display::align(std::cerr,ts.name_,32) << " : ";\
-string_display::align(std::cerr,ts.name, 20);\
-std::cerr << std::endl;\
+std::cerr << ts << std::endl;\
 } while(false)
 
 struct Dummy
@@ -26,10 +24,9 @@ Y_UTEST(spec)
 
     std::cerr << "sizeof(type_spec)=" << sizeof(type_spec) << std::endl;
 
-    type_spec sp( typeid(float) );
-    std::cerr << "sp.uuid=" << sp.uuid << std::endl;
 
-#if 0
+
+#if 1
     TS(uint8_t);
     TS(uint16_t);
     TS(uint32_t);
