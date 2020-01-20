@@ -3,7 +3,6 @@
 #define Y_LANG_MODULE_INCLUDED 1
 
 #include "y/lang/char.hpp"
-#include "y/ios/rc/io.hpp"
 
 namespace upsylon
 {
@@ -33,31 +32,23 @@ namespace upsylon
             // opening files
             //__________________________________________________________________
             static Module *OpenSTDIN();                       //!< open stdin
-            static Module *OpenFile(const string &filename ); //!< open a regular file
+            static Module *OpenFile(const string &filename);  //!< open a regular file
             static Module *OpenFile(const char   *filename);  //!< open a regular file
 
             //__________________________________________________________________
             //
             // opening data streams
             //__________________________________________________________________
-            static Module *OpenData( const string &name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
-            static Module *OpenData( const char   *name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
-            static Module *OpenData( const string &name, const memory::ro_buffer &buff);        //!< open a data stream, create a tag 'name'
-            static Module *OpenData( const char   *name, const memory::ro_buffer &buff);        //!< open a data stream, create a tag 'name'
+            static Module *OpenData(const string &name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
+            static Module *OpenData(const char   *name, const void *data, const size_t size);  //!< open a data stream, create a tag 'name'
+            static Module *OpenData(const string &name, const memory::ro_buffer       &buff);  //!< open a data stream, create a tag 'name'
+            static Module *OpenData(const char   *name, const memory::ro_buffer       &buff);  //!< open a data stream, create a tag 'name'
 
-            //__________________________________________________________________
-            //
-            // opening resources
-            //__________________________________________________________________
-            static Module *OpenResource(const ios::rc::loader &resources,
-                                        const string          &identifier); //!< open a resource stream, create a tag 'identifier'
-            
-            static Module *OpenResource(const ios::rc::loader &resources,
-                                        const char            *identifier); //!< open a resource stream, create a tag 'identifier'
+
         private:
             Input          input;
             Y_DISABLE_COPY_AND_ASSIGN(Module);
-            explicit Module( const Tag &org, const Input &inp, const Type t);
+            explicit Module(const Tag &org, const Input &inp, const Type t);
 
         public:
             const Type type; //!< keep track of the opening mode

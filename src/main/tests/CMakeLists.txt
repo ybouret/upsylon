@@ -97,7 +97,7 @@ ADD_TEST(str:defrag      test-main string_defrag)
 
 SOURCE_GROUP(ios FILES test-ostreams.cpp test-istreams.cpp
 test-vfs.cpp test-dll.cpp test-tmpname.cpp test-local-file.cpp
-test-bin2dat.cpp test-rc.cpp
+test-bin2dat.cpp
 test-disk-file.cpp test-disk-std.cpp test-serializer.cpp test-upack.cpp test-memory-streams.cpp
 test-ios-plugin.cpp
 test-cmd.cpp
@@ -110,7 +110,6 @@ ADD_TEST(NAME ios:dll COMMAND test-main dll $<TARGET_FILE:module>)
 ADD_TEST(ios:tmpname     test-main tmpname)
 ADD_TEST(ios:local-file  test-main local_file)
 ADD_TEST(ios:bin2dat     test-main bin2dat)
-ADD_TEST(ios:rc          test-main rc)
 ADD_TEST(ios:disk_file   test-main disk_file)
 ADD_TEST(ios:serializer  test-main serializer)
 ADD_TEST(ios:upack       test-main upack)

@@ -1,6 +1,7 @@
 #include "y/lang/dynamo/loader.hpp"
 #include "y/lang/dynamo/generator.hpp"
 #include "y/lang/dynamo/hash31.hpp"
+#include "y/fs/local/file.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

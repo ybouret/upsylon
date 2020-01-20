@@ -150,7 +150,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(progress);
     Y_UTEST(dll);
     Y_UTEST(timings);
-    Y_UTEST(rc);
     Y_UTEST(sobol);
 
 

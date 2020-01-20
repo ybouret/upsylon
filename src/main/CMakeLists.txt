@@ -124,12 +124,6 @@ SET(ios_srcs ${ios_decl} ${ios_code})
 SOURCE_GROUP( ios FILES ${ios_srcs} )
 INSTALL( FILES ${ios_decl} DESTINATION include/y/ios )
 
-FILE(GLOB ios_rc_decl y/ios/rc/*.hpp)
-FILE(GLOB ios_rc_code y/ios/rc/*.cpp)
-SET(ios_rc_srcs ${ios_rc_decl} ${ios_rc_code})
-SOURCE_GROUP( ios/rc FILES ${ios_rc_srcs} )
-INSTALL( FILES ${ios_rc_decl} DESTINATION include/y/ios/rc )
-
 FILE(GLOB ios_tools_decl y/ios/tools/*.hpp)
 FILE(GLOB ios_tools_code y/ios/tools/*.cpp)
 SET(ios_tools_srcs ${ios_tools_decl} ${ios_tools_code})
@@ -346,7 +340,7 @@ ${ordered_srcs}
 ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
-${ios_srcs} ${ios_rc_srcs} ${ios_tools_srcs}
+${ios_srcs} ${ios_tools_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
@@ -369,17 +363,6 @@ INSTALL( TARGETS y ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(cli)
 
-IF(NOT XCODE)
-ADD_EXECUTABLE(rc-demo rc-demo.cpp)
-TARGET_LINK_Y(rc-demo)
-
-FILE(GLOB_RECURSE SUB_RC ${CMAKE_CURRENT_SOURCE_DIR}/rc/*)
-ADD_CUSTOM_COMMAND( TARGET rc-demo POST_BUILD
-COMMAND y_rc ARGS $<TARGET_FILE:rc-demo> ${CMAKE_CURRENT_SOURCE_DIR}/rc1.txt ${CMAKE_CURRENT_SOURCE_DIR}/rc
-COMMAND rc-demo
-DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rc1.txt ${SUB_RC}
-COMMENT "Adding Resources to rc-demo")
-ENDIF()
 
 ADD_SUBDIRECTORY(tests)
 SET(UTESTS "${UTESTS} utest-main" PARENT_SCOPE)

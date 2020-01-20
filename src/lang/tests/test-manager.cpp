@@ -1,4 +1,5 @@
 #include "y/lang/dynamo/manager.hpp"
+#include "y/fs/local/file.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -87,7 +88,8 @@ Y_UTEST(manager)
             }
             fp << '\n';
         }
-        
+
+#if 0
         {
             ios::rc::writer rc("xrc.bin");
             rc.append_data("xnode",xnodeCode);
@@ -110,7 +112,7 @@ Y_UTEST(manager)
                 Y_CHECK(dnodeCode==reloaded_rc);
             }
         }
-        
+#endif
         
     }
 }

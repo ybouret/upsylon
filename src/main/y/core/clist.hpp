@@ -62,7 +62,7 @@ assert((node)->prev==NULL)
             }
             
             //! insert node before base
-            inline NODE *push_front( NODE *node ) throw()
+            inline NODE *push_front(NODE *node) throw()
             {
                 Y_CORE_CHECK_CLIST_NODE(node);
                 assert(!owns(node));
@@ -81,7 +81,7 @@ assert((node)->prev==NULL)
             }
             
             //! check if node is owned
-            inline bool owns( const NODE *node ) const throw()
+            inline bool owns(const NODE *node) const throw()
             {
                 assert(node!=NULL);
                 const NODE *scan = base;
@@ -155,7 +155,7 @@ assert((node)->prev==NULL)
                 return node;
             }
             
-            inline NODE *pop_base_and_set( const clist_node choice ) throw()
+            inline NODE *pop_base_and_set(const clist_node choice) throw()
             {
                 assert(size>0);
                 if(1==size)
@@ -214,7 +214,7 @@ namespace upsylon {
             virtual ~clist_of_cpp() throw() { release(); }
 
             //! valid only if a copy ctor is defined for NODE
-            inline clist_of_cpp( const clist_of_cpp &other ) : clist_of<NODE>(), releasable()
+            inline clist_of_cpp(const clist_of_cpp &other) : clist_of<NODE>(), releasable()
             {
                 try
                 {
@@ -230,9 +230,6 @@ namespace upsylon {
                     throw;
                 }
             }
-
-
-
 
         private:
             Y_DISABLE_ASSIGN(clist_of_cpp);

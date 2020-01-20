@@ -9,7 +9,6 @@ FUNCTION(CLI TOOL)
 	INSTALL( TARGETS ${TOOL} RUNTIME DESTINATION bin )
 ENDFUNCTION(CLI)
 
-CLI(y_rc)
 
 IF(FALSE)
   CLI(nwsrt)
@@ -18,7 +17,6 @@ ENDIF()
 CLI(y_uniq)
 CLI(y_bin2dat)
 CLI(y_hexdump)
-#CLI(y_sed)
 
 IF(NOT MSVC)
 # generate rsa keys with msys-openssl
@@ -26,9 +24,7 @@ CLI(y_rsa_keys)
 ENDIF()
 
 IF(Y_DARWIN)
-#CLI(y_port_missing)
 CLI(y_port_required)
-#CLI(y_macho)
 #CLI(get-kde-wallpapers)
 ENDIF()
 
