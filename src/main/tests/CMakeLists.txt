@@ -21,6 +21,7 @@ TARGET_LINK_Y(test-main)
 
 ADD_LIBRARY(module MODULE module.cpp)
 
+ADD_DEPENDENCIES(test-main module)
 
 ENABLE_TESTING()
 SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp
