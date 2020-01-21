@@ -19,6 +19,7 @@ struct Dummy
     };
 };
 
+
 Y_UTEST(spec)
 {
 
@@ -68,6 +69,16 @@ Y_UTEST(spec)
     const float h = 0.5;
     std::cerr << "type_name_of<float> = " << type_name_of<float>() << std::endl;
     std::cerr << "type_name_of(" << h << ")=" << type_name_of(h) << std::endl;
+
+#define NAMED(TYPE,ID) do {\
+std::cerr << "type_name_of<" << #TYPE << "> = " << type_name_of<TYPE>() << std::endl;\
+if(#ID==type_spec_of<TYPE>()) std::cerr << "\tis  " << #ID << std::endl; else std::cerr << "\tNOT " << #ID << std::endl;\
+} while(false)
+
+    NAMED(float,f);
+    NAMED(float,float);
+    NAMED(float,double);
+
 }
 Y_UTEST_DONE()
 

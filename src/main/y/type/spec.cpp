@@ -74,46 +74,6 @@ user()
         return info;
     }
 
-#if 0
-    bool type_spec:: is( const string &id ) const throw()
-    {
-        if( id == uuid )
-        {
-            return true;
-        }
-        else
-        {
-            for(const alias *a=user.head;a;a=a->next)
-            {
-                if( id==a->name )
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    bool type_spec:: is( const char *id ) const throw()
-    {
-        if( id == uuid )
-        {
-            return true;
-        }
-        else
-        {
-            for(const alias *a=user.head;a;a=a->next)
-            {
-                if( id==a->name )
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-#endif
-
 
 }
 
@@ -157,13 +117,17 @@ namespace upsylon {
             type_spec_pointer *pp = search(tid);
             if(pp)
             {
+                //--------------------------------------------------------------
                 // already declared
+                //--------------------------------------------------------------
                 assert( tid.name() == (*pp)->uuid );
                 return **pp;
             }
             else
             {
+                //--------------------------------------------------------------
                 // first creation
+                //--------------------------------------------------------------
                 type_spec              *ptr = new type_spec( tid );
                 const type_spec_pointer tsp = ptr;
                 if(!insert(tsp)) throw exception("unexpected insert failure");
@@ -207,7 +171,7 @@ namespace upsylon {
             return ts;
         }
 
-        void show( std::ostream &os ) const
+        inline void show( std::ostream &os ) const
         {
             os << "<type_specs count=\"" << size() << "\">" << std::endl;
             for(const_iterator it=begin();it!=end();++it)
@@ -216,6 +180,19 @@ namespace upsylon {
             }
             os << "<type_specs/>" << std::endl;
         }
+
+        inline bool is( const type_spec &t, const string &name ) const throw()
+        {
+            const type_spec_pointer *pp = dict.search(name);
+            return ( pp && ( t.info == (**pp).info ) );
+        }
+
+        inline bool is( const type_spec &t, const char *name ) const
+        {
+            const string _(name);
+            return is(t,_);
+        }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(type_specs);
@@ -310,6 +287,35 @@ namespace upsylon {
     void type_spec:: display( std::ostream &os)
     {
         type_specs::instance().show(os);
+    }
+
+    bool operator==(const type_spec &lhs, const type_spec &rhs ) throw()
+    {
+        return lhs.info == rhs.info;
+    }
+
+    bool operator==(const type_spec &lhs, const string &rhs)
+    {
+        static const type_specs &tss = type_specs::instance();
+        return tss.is(lhs,rhs);
+    }
+
+    bool operator==(const type_spec &lhs, const char *rhs )
+    {
+        static const type_specs &tss = type_specs::instance();
+        return tss.is(lhs,rhs);
+    }
+
+    bool operator==(const string &lhs, const type_spec &rhs)
+    {
+        static const type_specs &tss = type_specs::instance();
+        return tss.is(rhs,lhs);
+    }
+
+    bool operator==(const char *lhs, const type_spec &rhs)
+    {
+        static const type_specs &tss = type_specs::instance();
+        return tss.is(rhs,lhs);
     }
 
 

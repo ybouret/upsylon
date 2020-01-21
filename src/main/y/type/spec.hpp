@@ -25,35 +25,12 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(alias);
         };
 
-#if 0
-        bool is( const string &id ) const throw();
-        bool is( const char   *id ) const throw();
 
-        friend inline bool operator==(const type_spec &lhs, const type_spec &rhs ) throw()
-        {
-            return lhs.info == rhs.info;
-        }
-
-        friend inline bool operator==(const type_spec &lhs, const string &id ) throw()
-        {
-            return lhs.is(id);
-        }
-
-        friend inline bool operator==(const type_spec &lhs, const char *id ) throw()
-        {
-            return lhs.is(id);
-        }
-
-        friend inline bool operator==(const string &id, const type_spec &rhs) throw()
-        {
-            return rhs.is(id);
-        }
-
-        friend inline bool operator==(const char *id, const type_spec &rhs) throw()
-        {
-            return rhs.is(id);
-        }
-#endif
+        friend bool operator==(const type_spec &lhs, const type_spec &rhs) throw();
+        friend bool operator==(const type_spec &lhs, const string    &rhs);
+        friend bool operator==(const type_spec &lhs, const char      *rhs);
+        friend bool operator==(const string    &lhs, const type_spec &rhs);
+        friend bool operator==(const char      *lhs, const type_spec &rhs);
 
 
 
