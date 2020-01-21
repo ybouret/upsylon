@@ -44,12 +44,19 @@ user()
 
     bool type_spec:: aka( const string &usr )
     {
-        for(const alias *scan=user.head; scan; scan=scan->next)
+        if( usr == uuid )
         {
-            if(usr==scan->name) return true;
+            return true;
         }
-        aliasing::_(user).push_back( new alias(usr) );
-        return false;
+        else
+        {
+            for(const alias *scan=user.head; scan; scan=scan->next)
+            {
+                if(usr==scan->name) return true;
+            }
+            aliasing::_(user).push_back( new alias(usr) );
+            return false;
+        }
     }
 
     bool type_spec:: aka(const char *usr)
