@@ -25,7 +25,7 @@ ADD_DEPENDENCIES(test-main module)
 
 ENABLE_TESTING()
 SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp
-test-hr-ints.cpp test-ints-display.cpp test-cast.cpp)
+test-hr-ints.cpp test-ints-display.cpp test-cast.cpp test-ints-to-real.cpp)
 ADD_TEST(os:platform     test-main platform)
 ADD_TEST(os:types        test-main types)
 ADD_TEST(os:sys          test-main sys)
@@ -37,6 +37,7 @@ ADD_TEST(os:chkbnd       test-main chkbnd)
 ADD_TEST(os:hr-ints      test-main hr_ints)
 ADD_TEST(os:ints-display test-main ints_display)
 ADD_TEST(os:cast         test-main cast)
+ADD_TEST(os:ints-to-real test-main i2r)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-zset.cpp test-code.cpp test-bits.cpp 
 test-core-pool.cpp  test-core-list.cpp test-core-clist.cpp
