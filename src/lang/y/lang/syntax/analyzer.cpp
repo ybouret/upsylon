@@ -60,7 +60,7 @@ namespace upsylon
             {
                 indent(std::cerr) << "[push] <" << id << ">";
                 if(lx.size) {
-                    const string s = lx.to_visible();
+                    const string s = lx.toVisible();
                     std::cerr << '=' << '\'' << s << '\'';
                 }
                 std::cerr << std::endl;

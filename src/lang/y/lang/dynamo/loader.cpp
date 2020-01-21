@@ -38,7 +38,7 @@ namespace upsylon
             if("cid"!=sub->rule.name) throw exception("{%s} invalid <cmd>[1].name='%s'!='cid'!!",**name,*(sub->rule.name));
             const Lexeme &lx = sub->lexeme();
             if(lx.size<=1||'%'!=lx.head->code) throw exception("{%s} invalid command identifier",**name);
-            const string s = sub->lexeme().to_string(1,0);
+            const string s = sub->lexeme().toString(1,0);
             cmdName = s;
             return sub->next;
         }
@@ -53,7 +53,7 @@ namespace upsylon
             const string &theName = theRule.name;
             if(!node.terminal)             throw exception("{%s} getString<%s>(invalid  node <%s>)", **name, description, *theName );
             if(!matching.exactly(theName)) throw exception("{%s} getString<%s>(mismatch node <%s>)", **name, description, *theName );
-            return node.lexeme().to_string(1,1);
+            return node.lexeme().toString(1,1);
         }
         
         string DynamoLoader:: getContent(const XNode &node,
@@ -66,7 +66,7 @@ namespace upsylon
             const string &theName = theRule.name;
             if(!node.terminal) throw exception("{%s} getLabel<%s>(invalid  node <%s>)", **name, description, *theName );
             if(theName!=id)    throw exception("{%s} getLabel<%s>(invalid  node <%s!=%s>)", **name, description, *theName,id );
-            return node.lexeme().to_string();
+            return node.lexeme().toString();
         }
         
         string DynamoLoader:: getRS( const XNode &node ) const

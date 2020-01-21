@@ -59,7 +59,7 @@ namespace upsylon
                                 else
                                 {
                                     // ordinary (rx) operator
-                                    const string s = sub->lexeme().to_string();
+                                    const string s = sub->lexeme().toString();
                                     op = Node::Create(sub->rule,s);
                                 }
                                 assert(op);

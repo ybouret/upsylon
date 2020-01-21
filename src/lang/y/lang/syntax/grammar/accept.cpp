@@ -17,13 +17,13 @@ namespace upsylon
                 static inline
                 void addContentTo(string        &err ,
                                   const Lexeme *lx,
-                                  Grammar &G)
+                                  Grammar      &G)
                 {
                     Syntax::Rule &rule = G.getRuleByName( *(lx->label) );
                     if(rule.uuid==Terminal::UUID && static_cast<const Terminal *>(rule.derived)->ordinary)
                     {
 
-                        const string content = lx->to_print();
+                        const string content = lx->toPrintable();
                         err += '=';
                         err += '\'' + content + '\'';
                     }

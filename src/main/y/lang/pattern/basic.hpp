@@ -92,7 +92,7 @@ namespace upsylon
             inline virtual Pattern *clone() const { return new Range(lower,upper); } //!< clone
             virtual void            __viz( ios::ostream &fp ) const;                 //!< GraphViz
             virtual void            write( ios::ostream &fp ) const;                 //!< output [0xRNGE] [lower] [upper] (+6)
-            virtual bool            univocal() const throw();                         //!< true is lower==upper
+            virtual bool            univocal() const throw();                        //!< true is lower==upper
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);

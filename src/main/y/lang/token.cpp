@@ -5,7 +5,7 @@ namespace upsylon
 {
     namespace Lang
     {
-        string Token::to_string(const size_t nskip, const size_t ntrim) const
+        string Token::toString(const size_t nskip, const size_t ntrim) const
         {
             const size_t ndrop = nskip+ntrim;
             if(ndrop>=size)
@@ -32,7 +32,7 @@ namespace upsylon
             }
         }
 
-        string Token::to_print() const
+        string Token:: toPrintable() const
         {
             string ans(2*size,as_capacity,false);
             for(const Char *ch=head;ch;ch=ch->next)
@@ -42,7 +42,7 @@ namespace upsylon
             return ans;
         }
 
-        string Token::to_visible() const
+        string Token::toVisible() const
         {
             string ans(3*size,as_capacity,false);
             for(const Char *ch=head;ch;ch=ch->next)

@@ -35,7 +35,7 @@ namespace upsylon
         name(id),
         impl( NULL )
         {
-            const string s = lx.to_string(nskip,ntrim);
+            const string s = lx.toString(nskip,ntrim);
             impl = new string(s);
         }
         

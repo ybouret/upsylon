@@ -27,7 +27,8 @@ namespace upsylon
         {
         public:
             explicit CountedObject() throw(); //!< constructor
-            virtual ~CountedObject() throw(); //!< desctructor
+            virtual ~CountedObject() throw(); //!< destructor
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CountedObject);
         };

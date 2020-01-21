@@ -48,13 +48,13 @@ namespace upsylon
             friend std::ostream & operator<<( std::ostream &os, const Token &t );
 
             //! convert to string with skipped and trimmed possibility
-            string to_string(const size_t nskip=0, const size_t ntrim=0) const;
+            string toString(const size_t nskip=0, const size_t ntrim=0) const;
 
             //! convert to printable string
-            string to_print()  const;
+            string toPrintable()  const;
 
             //! convert to visible string
-            string to_visible()  const;
+            string toVisible()  const;
 
             //! write content as GraphViz
             void   viz( ios::ostream &fp ) const;

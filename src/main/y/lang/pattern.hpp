@@ -12,9 +12,6 @@ namespace upsylon
     namespace Lang
     {
 
-        //! macro to mark priv as class
-#define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
-
         //! a pattern to accept from a source
         class Pattern : public CountedObject
         {
@@ -66,6 +63,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pattern);
         };
+
+        //! macro to mark priv as class
+#define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
 
         
     }

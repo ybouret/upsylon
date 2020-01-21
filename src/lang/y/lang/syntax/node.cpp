@@ -443,7 +443,7 @@ namespace upsylon
                 {
                     if(lx->size)
                     {
-                        const string content = lx->to_print();
+                        const string content = lx->toPrintable();
                         l <<'=' << '\'' << content << '\'';
                     }
                 }

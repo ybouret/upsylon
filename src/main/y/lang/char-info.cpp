@@ -16,7 +16,7 @@ namespace upsylon
         {
         }
 
-        CharInfo:: CharInfo( const CharInfo &other ) throw() :
+        CharInfo:: CharInfo(const CharInfo &other) throw() :
         object(),
         Object(),
         origin( other.origin ),
@@ -25,14 +25,14 @@ namespace upsylon
         {
         }
 
-        void CharInfo:: swapWith( CharInfo &other ) throw()
+        void CharInfo:: swapWith(CharInfo &other) throw()
         {
             _cswap(origin,other.origin);
             _cswap(line,other.line);
             _cswap(column,other.column);
         }
 
-        CharInfo & CharInfo:: operator=( const CharInfo &other ) throw()
+        CharInfo & CharInfo:: operator=(const CharInfo &other) throw()
         {
             CharInfo tmp(other);
             swapWith(tmp);
