@@ -33,6 +33,7 @@ namespace upsylon
                 return *this;
             }
 
+            //! generic output of token
             template <typename OUTPUT> inline
             OUTPUT & write( OUTPUT &os ) const
             {
@@ -42,7 +43,6 @@ namespace upsylon
                 }
                 return os;
             }
-            
             
             //! output
             friend std::ostream & operator<<( std::ostream &os, const Token &t );
