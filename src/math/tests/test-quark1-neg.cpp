@@ -6,7 +6,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -32,7 +32,7 @@ namespace {
     static inline
     void doNEG( concurrent::for_each *loop )
     {
-        std::cerr << "<NEG " << typeid(T).name() << ", " << typeid(U).name() << ">" << std::endl;
+        std::cerr << "<NEG " << type_name_of<T>() << "," << type_name_of<U>()<< ">" << std::endl;
 
         const T zt = 0;
         const U zu = 0;
@@ -60,7 +60,7 @@ namespace {
     template <typename T>
     static inline void checkExact()
     {
-        std::cerr << "CheckExactNeg<" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "CheckExactNeg<" << type_name_of<T>()  << ">" << std::endl;
         const T zt = 0;
         for(size_t n=1;n<=1024;n <<= 1)
         {

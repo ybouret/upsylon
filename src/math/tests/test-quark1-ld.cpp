@@ -6,7 +6,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -34,7 +34,7 @@ namespace {
     void doLD( concurrent::simd *par )
     {
         concurrent::sequential_for seq;
-        std::cerr << "<LD " << typeid(T).name() << ">" << std::endl;
+        std::cerr << "<LD " << type_name_of<T>() << ">" << std::endl;
         vector<T>  vg;
         vector<T>  vp;
         list<T>    l;

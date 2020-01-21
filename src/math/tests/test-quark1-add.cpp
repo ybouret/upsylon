@@ -6,7 +6,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -65,7 +65,7 @@ __FILL(); __MPV2(NAME); \
     typename V>
     void doOPS(concurrent::for_each *loop)
     {
-        std::cerr << "<OPS " << typeid(T).name() << "," << typeid(U).name() << "," << typeid(V).name() << ">" << std::endl;
+        std::cerr << "<OPS " << type_name_of<T>() << "," << type_name_of<U>()<< "," << type_name_of<V>() << ">" << std::endl;
         const T zt = 0;
         const U zu = 0;
         const V zv = 0;

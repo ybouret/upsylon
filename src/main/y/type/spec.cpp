@@ -1,7 +1,6 @@
 #include "y/type/spec.hpp"
 #include "y/type/aliasing.hpp"
 
-
 namespace upsylon {
 
     type_spec::alias:: ~alias() throw() {}
@@ -82,8 +81,6 @@ user()
 #include "y/exception.hpp"
 #include "y/string/display.hpp"
 
-#include "y/type/complex.hpp"
-#include "y/mpl/rational.hpp"
 
 namespace upsylon {
 
@@ -203,54 +200,16 @@ namespace upsylon {
 
         inline virtual ~type_specs() throw() {}
 
-#define TS(TYPE) (void) name( typeid(TYPE), #TYPE )
+        void initialize();
+
 
         inline explicit type_specs() :
-        type_spec_db(32,as_capacity),
-        dict(32,as_capacity),
+        type_spec_db(64,as_capacity),
+        dict(64,as_capacity),
         max_uuid(0)
         {
-            TS(uint8_t);
-            TS(uint16_t);
-            TS(uint32_t);
-            TS(uint64_t);
-
-            TS(int8_t);
-            TS(int16_t);
-            TS(int32_t);
-            TS(int64_t);
-
-
-            TS(char);
-            TS(unsigned char);
-
-            TS(short);
-            TS(unsigned short);
-
-            TS(int);
-            TS(unsigned int);
-
-            TS(long);
-            TS(unsigned long);
-
-            TS(long long);
-            TS(unsigned long long);
-
-            TS(float);
-            TS(double);
-
-            TS(string);
-
-            TS(complex<float>);
-            TS(complex<double>);
-
-            TS(mpn);
-            TS(mpz);
-            TS(mpq);
+            initialize();
         }
-
-
-
 
     };
 
@@ -321,5 +280,68 @@ namespace upsylon {
 
 
 
+
+}
+
+#include "y/type/complex.hpp"
+#include "y/mpl/rational.hpp"
+#include "y/type/point3d.hpp"
+
+
+namespace upsylon {
+
+#define TS(TYPE) (void) name( typeid(TYPE), #TYPE )
+
+    void type_specs::initialize()
+    {
+        TS(uint8_t);
+        TS(uint16_t);
+        TS(uint32_t);
+        TS(uint64_t);
+
+        TS(int8_t);
+        TS(int16_t);
+        TS(int32_t);
+        TS(int64_t);
+
+
+        TS(char);
+        TS(unsigned char);
+
+        TS(short);
+        TS(unsigned short);
+
+        TS(int);
+        TS(unsigned int);
+
+        TS(long);
+        TS(unsigned long);
+
+        TS(long long);
+        TS(unsigned long long);
+
+        TS(float);
+        TS(double);
+
+        TS(string);
+
+        TS(complex<float>);
+        TS(complex<double>);
+
+        TS(mpn);
+        TS(mpz);
+        TS(mpq);
+
+        TS(size_t);
+        TS(unit_t);
+
+        TS(point2d<float>);
+        TS(point2d<double>);
+        TS(point2d<unit_t>);
+
+        TS(point3d<float>);
+        TS(point3d<double>);
+        TS(point3d<unit_t>);
+    }
 
 }
