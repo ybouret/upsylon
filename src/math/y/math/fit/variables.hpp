@@ -67,13 +67,12 @@ namespace upsylon {
                 template <typename T>
                 inline T & operator()(addressable<T> &source, const char *id) const
                 {
-                    const string _(id);
-                    return (*this)(source,_);
+                    const string _(id); return (*this)(source,_);
                 }
 
                 //! generalized access operator, const
                 template <typename T>
-                inline const T & operator()( const accessible<T> &source, const string &id ) const
+                inline const T & operator()(const accessible<T> &source, const string &id) const
                 {
                     const  Variables &self = *this;
                     return self[id].get(source);
@@ -81,10 +80,9 @@ namespace upsylon {
 
                 //! generalized access operator, const
                 template <typename T>
-                inline const T & operator()( const accessible<T> &source, const char *id ) const
+                inline const T & operator()(const accessible<T> &source, const char *id) const
                 {
-                    const string _(id);
-                    return (*this)(source,_);
+                    const string _(id); return (*this)(source,_);
                 }
 
                 //! bool -> int
@@ -100,10 +98,9 @@ namespace upsylon {
                     return flag(source,_);
                 }
 
-
                 //! look for a value
                 template <typename T>
-                inline T *lookFor( addressable<T> &aorg, const string &name ) const
+                inline T *lookFor(addressable<T> &aorg, const string &name) const
                 {
                     const Variable::Pointer *ppV = search(name);
                     if(ppV)
@@ -118,7 +115,7 @@ namespace upsylon {
 
                 //! look for a value, wrapper
                 template <typename T>
-                inline T *lookFor( addressable<T> &aorg, const char *name ) const
+                inline T *lookFor(addressable<T> &aorg, const char *name) const
                 {
                     const string _(name);
                     return lookFor(aorg,_);
@@ -126,7 +123,7 @@ namespace upsylon {
 
                 //! look for a const value
                 template <typename T>
-                inline const T *lookFor( const accessible<T> &aorg, const string &name ) const
+                inline const T *lookFor(const accessible<T> &aorg, const string &name) const
                 {
                     const Variable::Pointer *ppV = search(name);
                     if(ppV)
@@ -141,7 +138,7 @@ namespace upsylon {
 
                 //! look for a const value, wrapper
                 template <typename T>
-                inline const T *lookFor( const accessible<T> &aorg, const char *name ) const
+                inline const T *lookFor(const accessible<T> &aorg, const char *name) const
                 {
                     const string _(name);
                     return lookFor(aorg,_);
@@ -151,7 +148,7 @@ namespace upsylon {
 
                 //! display '[pfx]name  = data'
                 template <typename T> inline
-                void display( std::ostream &os, const accessible<T> &source, const char *pfx=NULL) const
+                void display(std::ostream &os, const accessible<T> &source, const char *pfx=NULL) const
                 {
                     const Variables &self = *this;
                     const size_t     nmax = maxNameLength();
