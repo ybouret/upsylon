@@ -94,44 +94,22 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC('<','=','=','>'); //!< ID
-            const size_t          nmin; //!< minimal count
-            const size_t          nmax; //!< maximal count
+            const size_t          nmin;                             //!< minimal count
+            const size_t          nmax;                             //!< maximal count
 
-            //! destructor
-            inline virtual ~Counting() throw() {}
+            virtual         ~Counting() throw();              //!< destructor
+            virtual Pattern *clone() const;                   //!< clone
+            virtual void     __viz(ios::ostream &)     const; //!< GraphViz
+            virtual void     write(ios::ostream &)     const; //!< output
+            virtual bool     match(Token &, Source &)  const; //!< match
+            virtual bool     weak()     const throw();        //! nmin<=0
+            virtual bool     univocal() const throw();        //!< true if nmin==nmax and motif->univocal
 
             //! create with memory management
-            static  Pattern *Create( Pattern *jk, const size_t n, const size_t m);
-
-            //! clone
-            inline virtual Pattern *clone() const { return Create( motif->clone(), nmin, nmax); }
-
-            //! GraphViz
-            virtual void __viz( ios::ostream &fp ) const;
-
-            //! output
-            virtual void write( ios::ostream &fp ) const;
-
-            //! nmin<=0
-            virtual bool weak() const throw()
-            {
-                assert(! motif->weak() );
-                return (nmin<=0);
-            }
-
-            //! match
-            virtual bool match( Token &tkn, Source &src) const;
-
-            //! true if nmin==nmax and motif->univocal
-            virtual bool univocal() const throw();
+            static  Pattern *Create(Pattern *jk, const size_t n, const size_t m);
 
         private:
-            inline explicit Counting( Pattern *jk, const size_t n, const size_t m) throw() : Joker(UUID,jk), nmin(n), nmax(m)
-            {
-                Y_LANG_PATTERN_IS(Counting);
-                assert(nmin<=nmax);
-            }
-
+            explicit Counting(Pattern *jk, const size_t n, const size_t m) throw();
             Y_DISABLE_COPY_AND_ASSIGN(Counting);
         };
 

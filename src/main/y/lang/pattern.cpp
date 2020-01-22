@@ -4,6 +4,7 @@
 #include "y/ios/tools/graphviz.hpp"
 #include "y/ios/osstream.hpp"
 #include "y/codec/base64.hpp"
+#include "y/type/bzset.hpp"
 
 namespace upsylon
 {
@@ -12,6 +13,7 @@ namespace upsylon
 
         Pattern:: ~Pattern() throw()
         {
+            _bzset(uuid);
         }
 
         void Pattern::tag(ios::ostream &os) const

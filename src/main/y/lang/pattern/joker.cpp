@@ -177,67 +177,82 @@ namespace upsylon {
     }
 }
 
-namespace upsylon
-    {
-        namespace Lang
+namespace upsylon {
+
+    namespace Lang {
+
+        Counting:: ~Counting() throw() {}
+
+        Pattern * Counting:: clone() const { return Create( motif->clone(), nmin, nmax); }
+
+        bool Counting:: weak() const throw()
+        {
+            assert(! motif->weak() );
+            return (nmin<=0);
+        }
+
+        Counting:: Counting( Pattern *jk, const size_t n, const size_t m) throw() : Joker(UUID,jk), nmin(n), nmax(m)
+        {
+            Y_LANG_PATTERN_IS(Counting);
+            assert(nmin<=nmax);
+        }
+
+        Pattern *Counting:: Create( Pattern *jk, const size_t n, const size_t m)
+        {
+            Motif guard(jk);
+            if(guard->weak()) throw exception("Lang::Pattern::Counting WEAK pattern");
+            Pattern *p = new Counting(jk,min_of(n,m),max_of(n,m));
+            guard.dismiss();
+            return p;
+        }
+
+        void Counting:: __viz( ios::ostream &fp ) const
+        {
+            fp(" [shape=diamond,style=%s,label=\"[%u:%u]\"];\n", vizStyle(),unsigned(nmin), unsigned(nmax) );
+            vizlink(fp);
+        }
+
+        void Counting:: write(ios::ostream &fp) const
+        {
+            fp.emit_net(UUID);
+            fp.emit_upack(nmin);
+            fp.emit_upack(nmax);
+            motif->write(fp);
+        }
+
+        bool Counting:: match(Token &tkn, Source &src ) const
+        {
+            assert(0==tkn.size);
+            size_t count = 0;
+            while(true)
             {
-
-                Pattern *Counting:: Create( Pattern *jk, const size_t n, const size_t m)
+                Token tmp;
+                if(motif->match(tmp,src))
                 {
-                    Motif guard(jk);
-                    if(guard->weak()) throw exception("Lang::Pattern::Counting WEAK pattern");
-                    Pattern *p = new Counting(jk,min_of(n,m),max_of(n,m));
-                    guard.dismiss();
-                    return p;
+                    ++count;
+                    tkn.merge_back(tmp);
+                    continue;
                 }
-
-                void Counting:: __viz( ios::ostream &fp ) const
-                {
-                    fp(" [shape=diamond,style=%s,label=\"[%u:%u]\"];\n", vizStyle(),unsigned(nmin), unsigned(nmax) );
-                    vizlink(fp);
-                }
-
-                void Counting:: write(ios::ostream &fp) const
-                {
-                    fp.emit_net(UUID);
-                    fp.emit_upack(nmin);
-                    fp.emit_upack(nmax);
-                    motif->write(fp);
-                }
-
-                bool Counting:: match(Token &tkn, Source &src ) const
-                {
-                    assert(0==tkn.size);
-                    size_t count = 0;
-                    while(true)
-                    {
-                        Token tmp;
-                        if(motif->match(tmp,src))
-                        {
-                            ++count;
-                            tkn.merge_back(tmp);
-                            continue;
-                        }
-                        break;
-                    }
-                    if(count>=nmin&&count<=nmax)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        src.unget(tkn);
-                        return false;
-                    }
-                }
-
-                bool Counting:: univocal() const throw()
-                {
-                    return (nmin>0) && (nmin==nmax) && motif->univocal();
-                }
-
+                break;
             }
+            if(count>=nmin&&count<=nmax)
+            {
+                return true;
+            }
+            else
+            {
+                src.unget(tkn);
+                return false;
+            }
+        }
+
+        bool Counting:: univocal() const throw()
+        {
+            return (nmin>0) && (nmin==nmax) && motif->univocal();
+        }
 
     }
+
+}
 
 
