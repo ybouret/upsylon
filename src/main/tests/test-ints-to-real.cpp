@@ -12,7 +12,7 @@ template <>
 inline bool test_i2r<float>( const uint64_t u )
 {
     const float    f = u;
-    const uint64_t n = floorf(f+0.5f);
+    const uint64_t n = f;
     if(u!=n)
     {
         std::cerr << u << "->" << f << "->" << n << std::endl;
@@ -24,8 +24,11 @@ template <>
 inline bool test_i2r<double>( const uint64_t u )
 {
     const double    f = u;
-    const uint64_t  n = floor(f+0.5);
-    //std::cerr << u << "->" << f << "->" << n << std::endl;
+    const uint64_t  n = f;
+    if(u!=n)
+    {
+        std::cerr << u << "->" << f << "->" << n << std::endl;
+    }
     return u==n;
 }
 
@@ -57,8 +60,8 @@ Y_UTEST(i2r)
     const uint64_t uf = find_i2r<float>(0);
     std::cerr << "i2r<float>  = " << uf << ", bits=" <<   bits_for(uf) << std::endl;
     
-    //const uint64_t ud = find_i2r<double>( (uint64_t(1) << 52) - 1000 );
-    //std::cerr << "i2r<double> = " << ud << ", bits=" << bits_for(ud) << std::endl;
+    const uint64_t ud = find_i2r<double>( (uint64_t(1) << 53) - 10000000 );
+    std::cerr << "i2r<double> = " << ud << ", bits=" << bits_for(ud) << std::endl;
 
 
 }
