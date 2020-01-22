@@ -158,6 +158,12 @@ namespace upsylon {
 
     namespace Lang {
 
+        NONE:: ~NONE() throw() {}
+
+        NONE:: NONE() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(NONE); }
+
+        Pattern * NONE:: clone() const { return __clone( new NONE() ); } 
+
         bool NONE:: match(Token &tkn, Source &src ) const
         {
             assert(0==tkn.size);

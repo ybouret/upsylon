@@ -104,13 +104,12 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC(' ','!', '!', ' ' ); //!< [0x !! ]
-
-            inline virtual ~NONE() throw() {}                                           //!< destructor
-            inline explicit NONE() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(NONE); } //!< initialize
-            inline virtual Pattern *clone() const { return __clone( new NONE() ); }     //!< clone
-            virtual void            __viz(ios::ostream &) const;                        //!< GraphViz
-            virtual bool            weak() const throw();                               //!< false
-            virtual bool            univocal() const throw();                           //!< false, even if could exceptionnaly be true if only 1 possible choice...
+            virtual         ~NONE() throw();                           //!< destructor
+            explicit         NONE() throw();                           //!< initialize
+            virtual Pattern *clone() const;                            //!< clone
+            virtual void     __viz(ios::ostream &) const;              //!< GraphViz
+            virtual bool     weak() const throw();                     //!< false
+            virtual bool     univocal() const throw();                 //!< false, even if could exceptionnaly be true if only 1 possible choice...
 
             //! match none of the patterns, returns single next char of false if no char
             virtual bool match(Token &, Source &) const;
