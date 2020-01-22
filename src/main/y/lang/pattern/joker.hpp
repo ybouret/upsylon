@@ -6,114 +6,90 @@
 #include "y/ptr/auto.hpp"
 #include "y/type/utils.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
 
+    namespace Lang {
+
+        //----------------------------------------------------------------------
+        //
         //! joker base class
+        //
+        //----------------------------------------------------------------------
         class Joker : public Pattern
         {
         public:
-            typedef auto_ptr<Pattern> Motif;       //!< alias
+            typedef auto_ptr<const Pattern> Motif; //!< alias
             virtual ~Joker() throw();              //!< destructor
             void optimize() throw();               //!< call optimize on the motif
 
         protected:
-            const Motif motif;                                      //!< the motif
-            explicit Joker(const uint32_t id, Pattern *jk) throw(); //!< initialize
-            void vizlink( ios::ostream &fp ) const;                 //!< create a directed link
+            explicit Joker(const uint32_t, Pattern *) throw(); //!< initialize
+            void     vizlink(ios::ostream &) const;            //!< create a directed link
+
+            const Motif motif; //!< the motif
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Joker);
         };
 
+        //----------------------------------------------------------------------
+        //
         //! optional pattern
+        //
+        //----------------------------------------------------------------------
         class Optional : public Joker
         {
         public:
             static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< [0x?000]
-            inline virtual ~Optional() throw() {}             //!< destructor
-            //! create with memory management
-            static  Pattern *Create( Pattern *jk );
 
-            //! clone
-            inline virtual Pattern *clone() const { return Create( motif->clone() ); }
-
-            //! GraphViz
-            virtual void __viz( ios::ostream &fp ) const;
-
-            //! output
-            virtual void write( ios::ostream &fp ) const;
-
-            //! match
-            virtual bool match( Token &tkn, Source &src) const;
-
-            //! always true
-            inline virtual bool weak() const throw() { return true; }
-
-            //! always false
-            virtual bool univocal() const throw();
+            virtual         ~Optional() throw() ;             //!< destructor
+            virtual Pattern *clone() const;                   //!< clone
+            virtual void     __viz(ios::ostream &)    const;  //!< GraphViz
+            virtual void     write(ios::ostream &)    const;  //!< output
+            virtual bool     match(Token &, Source &) const;  //!< match
+            virtual bool     weak()     const throw();        //!< always true
+            virtual bool     univocal() const throw();        //!< always false
+            static  Pattern *Create(Pattern *jk);             //!< create with memory management
 
         private:
-            inline explicit Optional( Pattern *jk ) throw() : Joker(UUID,jk)
-            {
-                Y_LANG_PATTERN_IS(Optional);
-            }
+            explicit Optional(Pattern *jk) throw();           //!< setup
             Y_DISABLE_COPY_AND_ASSIGN(Optional);
         };
 
+        //----------------------------------------------------------------------
+        //
         //! #motif >= nmin
+        //
+        //----------------------------------------------------------------------
         class Repeating : public Joker
         {
         public:
             static const uint32_t UUID = Y_FOURCC('>','=',0,0); //!< ID
-            const size_t          nmin; //!< minimal count
+            const size_t          nmin;                         //!< minimal count
 
-            inline virtual ~Repeating() throw() {}
+            virtual         ~Repeating() throw();               //!< cleanup
+            virtual Pattern *clone() const;                     //!< clone
+            virtual void     __viz(ios::ostream &)    const;    //!< GraphViz
+            virtual void     write(ios::ostream &)    const;    //!< output
+            virtual bool     match(Token &, Source &) const;    //!< match
+            virtual bool     weak()     const throw();          //!< check
+            virtual bool     univocal() const throw();          //!< false
 
-            //! create with memory management, jk must NOT be weak!!
-            static  Pattern *Create( Pattern *jk, const size_t n);
-            
-            //! clone
-            inline virtual Pattern *clone() const { return Create( motif->clone(), nmin ); }
-
-            //! GraphViz
-            virtual void __viz( ios::ostream &fp ) const;
-
-            //! output
-            virtual void write( ios::ostream &fp ) const;
-
-            //! match
-            virtual bool match( Token &tkn, Source &src) const;
-
-            //! check
-            virtual bool weak() const throw()
-            {
-                assert(!motif->weak());
-                return (nmin<=0);
-            }
-
-            //! '*'
-            static inline Pattern *ZeroOrMore( Pattern *p ) { return Repeating::Create(p,0); }
-
-            //! '+'
-            static inline Pattern *OneOrMore( Pattern * p ) { return Repeating::Create(p,1); }
-
-            virtual bool univocal() const throw(); //!< false
+            static Pattern  *ZeroOrMore(Pattern *);             //!< '*'
+            static Pattern  *OneOrMore(Pattern *);              //!< '+'
+            static Pattern  *Create(Pattern *, const size_t);   //!< create with memory management, jk must NOT be weak!!
 
         private:
-            inline explicit Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n)
-            {
-                assert(! motif->weak() );
-                Y_LANG_PATTERN_IS(Repeating);
-            }
-
+            explicit Repeating(Pattern *jk, const size_t n) throw();
             Y_DISABLE_COPY_AND_ASSIGN(Repeating);
         };
 
 
+        //----------------------------------------------------------------------
+        //
         //! nmin <= count <= nmax
+        //
+        //----------------------------------------------------------------------
         class Counting : public Joker
         {
         public:
