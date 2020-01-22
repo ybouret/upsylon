@@ -87,10 +87,10 @@ namespace upsylon
         };
 
         //! base class to encode portable sizes
-        typedef upack<uint64_t> upack_size_;
+        typedef upack<uint64_t> upack_size_type;
 
         //! encode sizes
-        class upack_size : public upack<uint64_t>
+        class upack_size : public upack_size_type
         {
         public:
             explicit upack_size() throw(); //!< setup

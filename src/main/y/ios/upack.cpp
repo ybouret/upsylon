@@ -1,30 +1,30 @@
 
 #include "y/ios/upack.hpp"
-#include <cstring>
 
 #include "y/ios/omstream.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/type/aliasing.hpp"
 
-namespace upsylon
-{
+#include <cstring>
 
-    namespace ios
-    {
+namespace upsylon {
+
+    namespace ios {
+
         upack_::  upack_() throw() : size(0) {}
         upack_:: ~upack_() throw() {}
 
 
         void upack_:: clear(const size_t sz, void *p, const size_t n) throw()
         {
-            (size_t &)size = sz;
+            aliasing::_(size) = sz;
             memset(p,0,n);
         }
 
 #define Y_IOS_UPACK_ENCODE(TYPE) \
 ios::omstream fp(p,n);           \
-fp.emit_upack<TYPE>( *static_cast<const TYPE *>(addr), (size_t *)&size );\
+fp.emit_upack<TYPE>( *static_cast<const TYPE *>(addr), & aliasing::_(size) );\
 assert(size<=n)
-//memset( static_cast<char*>(p)+size,0,n-size)
 
         void upack_:: encode_( Y_IOS_UPACK_ENCODE_PROTO(1) ) throw()
         {
@@ -78,7 +78,7 @@ namespace upsylon
 
     namespace ios
     {
-        upack_size:: upack_size() throw() : upack_size_() {}
+        upack_size:: upack_size() throw() : upack_size_type() {}
 
         upack_size:: ~upack_size() throw() {}
 
