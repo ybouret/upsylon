@@ -5,30 +5,33 @@
 #include "y/lang/pattern.hpp"
 #include "y/ptr/auto.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
+
+    namespace Lang {
+
+        //----------------------------------------------------------------------
+        //
         //! Logical operands
+        //
+        //----------------------------------------------------------------------
         class Logical : public Pattern
         {
         public:
-            Pattern::List operands;  //!< list of operands
+            Pattern::List operands;          //!< list of operands
 
-            virtual ~Logical() throw(); //!< destructor
-            virtual void write( ios::ostream &fp ) const; //!< [ID] [#operands] [operands]
+            virtual     ~Logical() throw();           //!< destructor
+            virtual void write(ios::ostream &) const; //!< [ID] [#operands] [operands]
 
             //__________________________________________________________________
             //
             // helpers
             //__________________________________________________________________
-            template <typename PATTERN> inline PATTERN *add( PATTERN *p ) throw()
-            {
-                operands.push_back(p);
-                return p;
-            } //!< syntax helper
-            inline size_t   size() const throw() { return operands.size;       } //!< syntax helper
-            inline Pattern *remove() throw()     { return operands.pop_back(); } //!< remove last pattern helper
+
+            //! syntax helper
+            template <typename PATTERN>
+            inline PATTERN * add(PATTERN *p ) throw() { (void)operands.push_back(p); return p; } //!< syntax helper
+            inline size_t    size() const throw()     { return operands.size;         }          //!< syntax helper
+            inline Pattern * remove() throw()         { return operands.pop_back();   }          //!< remove last pattern helper
 
             //__________________________________________________________________
             //
@@ -36,57 +39,67 @@ namespace upsylon
             //__________________________________________________________________
             static Pattern *Equal(const string &); //!< matching exact string
             static Pattern *Among(const string &); //!< one character of the string
-            static Pattern *Equal(const char *s);  //!<  matching exact string
-            static Pattern *Among(const char *s);  //!< one character of the string
+            static Pattern *Equal(const char   *); //!< matching exact string
+            static Pattern *Among(const char   *); //!< one character of the string
 
         protected:
-            //! initialize
-            inline explicit Logical(const uint32_t id) throw() : Pattern(id), operands() {}
-
-            Pattern *__clone( Logical *l ) const;   //!< finalize cloning by copy of operands
-            void vizlink( ios::ostream &fp ) const; //!< link to operands in graphviz
+            explicit  Logical(const uint32_t) throw();//< initialize
+            Pattern * __clone(Logical *) const;       //!< finalize cloning by copy of operands
+            void      vizlink(ios::ostream &) const;  //!< link to operands in graphviz
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Logical);
         };
 
+        //----------------------------------------------------------------------
+        //
         //! logical AND
+        //
+        //----------------------------------------------------------------------
         class AND : public Logical
         {
         public:
             static const uint32_t UUID = Y_FOURCC(' ','&', '&', ' ' ); //!< [0x && ]
 
-            inline virtual ~AND() throw() {}                                           //!< destructor
-            inline explicit AND() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(AND); }  //!< initialize
-            inline virtual Pattern *clone() const { return __clone( new AND() ); }     //!< clone
-            virtual void            __viz( ios::ostream &fp ) const;                   //!< GraphViz output
-            virtual bool            match( Token &tkn, Source &src ) const;            //!< must match all patterns
-            virtual bool            weak() const throw();                              //!< if all operands are weak
-            virtual bool            univocal() const throw();                          //!< true is all are univocal
+            virtual         ~AND() throw();                            //!< destructor
+            explicit         AND() throw();                            //!< initialize
+            virtual Pattern *clone() const;                            //!< clone
+            virtual void     __viz(ios::ostream &) const;              //!< GraphViz output
+            virtual bool     match(Token &, Source &) const;           //!< must match all patterns
+            virtual bool     weak() const throw();                     //!< if all operands are weak
+            virtual bool     univocal() const throw();                 //!< true is all are univocal
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AND);
         };
 
+        //----------------------------------------------------------------------
+        //
         //! logical OR
+        //
+        //----------------------------------------------------------------------
         class OR : public Logical
         {
         public:
             static const uint32_t UUID = Y_FOURCC(' ','|', '|', ' ' ); //!< [0x || ]
 
-            inline virtual ~OR() throw() {}                                         //!< destructor
-            inline explicit OR() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(OR); } //!< initialize
-            inline virtual Pattern *clone() const { return __clone( new OR() ); }   //!< clone
-            virtual void            __viz( ios::ostream &fp ) const;                //!< GraphViz
-            virtual bool            match( Token &tkn, Source &src ) const;         //!< true if finds a matching first operands
-            virtual bool            weak() const throw();                           //!< true if one is weak
-            virtual bool            univocal() const throw();                       //!< true if one univocal operand
+            virtual         ~OR() throw();                             //!< destructor
+            explicit         OR() throw();                             //!< initialize
+            virtual Pattern *clone() const;                            //!< clone
+            virtual void     __viz(ios::ostream &) const;              //!< GraphViz
+            virtual bool     match(Token &, Source &) const;           //!< true if finds a matching first operands
+            virtual bool     weak() const throw();                     //!< true if one is weak
+            virtual bool     univocal() const throw();                 //!< true if single univocal operand
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OR);
         };
 
+        //----------------------------------------------------------------------
+        //
         //! accept something but NONE of the patterns
+        //
+        //----------------------------------------------------------------------
         class NONE : public Logical
         {
         public:
@@ -95,13 +108,13 @@ namespace upsylon
             inline virtual ~NONE() throw() {}                                           //!< destructor
             inline explicit NONE() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(NONE); } //!< initialize
             inline virtual Pattern *clone() const { return __clone( new NONE() ); }     //!< clone
-            virtual void            __viz( ios::ostream &fp ) const;                    //!< GraphViz
+            virtual void            __viz(ios::ostream &) const;                        //!< GraphViz
             virtual bool            weak() const throw();                               //!< false
             virtual bool            univocal() const throw();                           //!< false, even if could exceptionnaly be true if only 1 possible choice...
 
             //! match none of the patterns, returns single next char of false if no char
-            virtual bool match( Token &tkn, Source &src ) const;
-
+            virtual bool match(Token &, Source &) const;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NONE);
         };

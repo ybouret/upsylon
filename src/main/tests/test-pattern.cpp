@@ -19,7 +19,7 @@ namespace
         {
             ios::imstream fp(bin);
             q = Pattern::Load(fp);
-            
+            Y_ASSERT( q->toBinary() == bin );
         }
     }
 }

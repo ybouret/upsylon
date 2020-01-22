@@ -20,19 +20,19 @@ Y_UTEST(regex)
         auto_ptr<Pattern> p = RegExp(rx,&dict);
         if(p->weak())
         {
-            std::cerr << "\tthis is a WEAK regular expression" << std::endl;
+            std::cerr << "\t|_WEAK" << std::endl;
         }
         else
         {
-            std::cerr << "\tthis is a FULL regular expression" << std::endl;
+            std::cerr << "\t|_FULL" << std::endl;
         }
         if(p->univocal())
         {
-            std::cerr << "\t\tand UNIVOCAL" << std::endl;
+            std::cerr << "\t|_UNIVOCAL" << std::endl;
         }
         else
         {
-            std::cerr << "\t\tand NOT univocal" << std::endl;
+            std::cerr << "\t|_AMBIGUOUS" << std::endl;
         }
 
         p->GraphViz("regex.dot");

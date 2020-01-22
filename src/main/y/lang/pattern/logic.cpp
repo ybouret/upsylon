@@ -1,13 +1,18 @@
 #include "y/lang/pattern/logic.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
+
+    namespace Lang {
+
         Logical:: ~Logical() throw()
         {
         }
-        
+
+
+        Logical:: Logical(const uint32_t id) throw() : Pattern(id), operands()
+        {
+        }
+
         Pattern * Logical:: __clone( Logical *l ) const
         {
             auto_ptr<Logical> p = l;
@@ -39,10 +44,15 @@ namespace upsylon
 
 }
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
+
+    namespace Lang {
+
+        AND::  ~AND() throw() {}
+
+        AND:: AND() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(AND); }
+
+        Pattern * AND:: clone() const { return __clone( new AND() ); }
 
         bool AND::match(Token &tkn, Source &src) const
         {
@@ -91,10 +101,16 @@ namespace upsylon
 
 }
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
+
+    namespace Lang {
+
+        OR:: ~OR() throw() {}
+
+        OR::  OR() throw() : Logical(UUID) { Y_LANG_PATTERN_IS(OR); }
+
+        Pattern * OR:: clone() const { return __clone( new OR() ); }
+
         bool OR:: match( Token &tkn, Source &src ) const
         {
             assert(0==tkn.size);
@@ -138,10 +154,9 @@ namespace upsylon
     }
 }
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
+
+    namespace Lang {
 
         bool NONE:: match(Token &tkn, Source &src ) const
         {
