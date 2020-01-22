@@ -18,9 +18,9 @@ namespace upsylon {
         class Joker : public Pattern
         {
         public:
-            typedef auto_ptr<const Pattern> Motif; //!< alias
-            virtual ~Joker() throw();              //!< destructor
-            void optimize() throw();               //!< call optimize on the motif
+            typedef auto_ptr<Pattern> Motif; //!< alias
+            virtual ~Joker()    throw();     //!< destructor
+            void     optimize() throw();     //!< call optimize on the motif
 
         protected:
             explicit Joker(const uint32_t, Pattern *) throw(); //!< initialize

@@ -1,6 +1,7 @@
 
 #include "y/lang/pattern/joker.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -22,8 +23,8 @@ namespace upsylon {
 
         void Joker:: optimize() throw()
         {
-            auto_ptr<Pattern> &m = (auto_ptr<Pattern> &)motif;
-            Pattern *p = Pattern::Optimize( m.yield() );
+            auto_ptr<Pattern> &m = aliasing::_(motif);
+            Pattern           *p = Pattern::Optimize( m.yield() );
             m = p;
         }
 
