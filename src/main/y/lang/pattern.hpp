@@ -3,9 +3,10 @@
 #define Y_LANG_PATTERN_INCLUDED 1
 
 #include "y/lang/token.hpp"
-#include "y/ios/ocstream.hpp"
 #include "y/lang/source.hpp"
 #include "y/type/fourcc.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/ios/serializable.hpp"
 
 namespace upsylon
 {
