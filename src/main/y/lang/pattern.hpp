@@ -45,8 +45,8 @@ namespace upsylon
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
             void        GraphViz( const string &fn, bool keepFile=false) const; //!< write a directed graph
             void        GraphViz( const char   *fn, bool keepFile=false) const; //!< write a directed graph, wrapper
-            string      to_binary() const;                                      //!< use write() to get a binary code
-            string      to_base64() const;                                      //!< human readable from to_binary()
+            string      toBinary() const;                                       //!< use write() to get a binary code
+            string      toBase64() const;                                       //!< human readable from toBinary()
 
             //__________________________________________________________________
             //

@@ -13,7 +13,7 @@ namespace
 {
     static inline void test_io( const Pattern &p )
     {
-        const string bin = p.to_binary();
+        const string bin = p.toBinary();
 
         auto_ptr<Pattern> q = 0;
         {

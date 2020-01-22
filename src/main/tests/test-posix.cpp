@@ -18,11 +18,11 @@ std::cerr << "\t|_saving" << std::endl;                             \
 std::cerr << "\t|_reloading" << std::endl;                          \
 { ios::icstream fp( #EXPR ".bin");                                  \
 auto_ptr<Pattern> q = Pattern::Load(fp);                            \
-const string p_bin = p->to_binary();                                \
-const string q_bin = q->to_binary();                                \
+const string p_bin = p->toBinary();                                \
+const string q_bin = q->toBinary();                                \
 Y_CHECK(p_bin==q_bin);                                              \
 }                                                                   \
-std::cerr << "\t|_b64=" << p->to_base64() << std::endl;             \
+std::cerr << "\t|_b64=" << p->toBase64() << std::endl;             \
 dict(#EXPR,p.yield());                                              \
 std::cerr << std::endl;                                             \
 } while(false)

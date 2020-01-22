@@ -53,7 +53,7 @@ namespace upsylon
         void Pattern:: GraphViz( const char   *fn, bool keepFile) const
         { const string _ = fn; GraphViz(_,keepFile); }
 
-        string Pattern:: to_binary() const
+        string Pattern:: toBinary() const
         {
             string           ans;
             ios::osstream    fp(ans);
@@ -61,7 +61,7 @@ namespace upsylon
             return ans;
         }
 
-        string Pattern:: to_base64() const
+        string Pattern:: toBase64() const
         {
             string           ans;
             {
