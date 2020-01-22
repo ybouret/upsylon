@@ -43,9 +43,9 @@ namespace upsylon {
             static Pattern *Among(const char   *); //!< one character of the string
 
         protected:
-            explicit  Logical(const uint32_t) throw();//< initialize
-            Pattern * __clone(Logical *) const;       //!< finalize cloning by copy of operands
-            void      vizlink(ios::ostream &) const;  //!< link to operands in graphviz
+            explicit  Logical(const uint32_t) throw(); //!< initialize
+            Pattern * __clone(Logical *) const;        //!< finalize cloning by copy of operands
+            void      vizlink(ios::ostream &) const;   //!< link to operands in graphviz
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Logical);
