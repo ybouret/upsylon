@@ -59,6 +59,14 @@ namespace upsylon
                     const size_t nmax = fp.read_upack<size_t>();
                     return Counting::Create(Pattern::Load(fp),nmin,nmax); }
 
+                    //__________________________________________________________
+                    //
+                    // special jokers
+                    //__________________________________________________________
+                case Repeating::_ZOM: return Repeating::ZeroOrMore( Pattern::Load(fp) );
+                case Repeating::_OOM: return Repeating::OneOrMore(  Pattern::Load(fp) );
+
+                    
                 default:
                     break;
             }

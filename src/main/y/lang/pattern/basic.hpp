@@ -36,15 +36,32 @@ namespace upsylon {
         class Any1 : public Match1
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //!< 0xANY1
             static const char     CLID[8];                             //!< UUID
 
-            virtual       ~Any1() throw();                  //!< destructor
-            explicit       Any1() throw();                  //!< constructor
-            virtual Any1 * clone() const;                   //!< clone
-            virtual void   __viz(ios::ostream &) const;     //!< GraphViz
-            virtual bool   univocal() const throw();        //!< false
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual            ~Any1() throw();                  //!< destructor
+            explicit            Any1() throw();                  //!< constructor
 
+            //__________________________________________________________________
+            //
+            // interface: Pattern
+            //__________________________________________________________________
+            virtual Any1 *      clone() const;                   //!< clone
+            virtual void        __viz(ios::ostream &) const;     //!< GraphViz
+            virtual bool        univocal() const throw();        //!< false
+
+            //__________________________________________________________________
+            //
+            // interface: Serializable
+            //__________________________________________________________________
             virtual const char *className() const throw();      //!< CLID
             virtual size_t      serialize(ios::ostream&) const; //!< [0xANY1] (+4)
 
@@ -61,16 +78,33 @@ namespace upsylon {
         class Single : public Match1
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const uint32_t UUID = Y_FOURCC('S', 'N', 'G', 'L'); //!< 0xSNGL
             static const char     CLID[8];                             //!< UUID
-            const uint8_t         code;                                //!< the matching code
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            const uint8_t    code;                            //!< the matching code
             explicit         Single(const uint8_t c) throw(); //!< setup
             virtual         ~Single() throw();                //!< destructor
+
+            //__________________________________________________________________
+            //
+            // interface: Pattern
+            //__________________________________________________________________
             virtual Single * clone() const;                   //!< clone
             virtual void     __viz(ios::ostream &) const;     //!< GraphViz
             virtual bool     univocal() const throw();        //!< true
 
+            //__________________________________________________________________
+            //
+            // interface: Serializable
+            //__________________________________________________________________
             virtual size_t      serialize(ios::ostream&) const; //!< [0xSNGL] [code] (+5)
             virtual const char *className() const throw();      //!< CLID
 
@@ -87,17 +121,34 @@ namespace upsylon {
         class Range : public Match1
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const uint32_t UUID = Y_FOURCC('R','N','G','E');  //!< 0xRNGE
             static const char     CLID[8];                           //!< UUID
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             const uint8_t         lower;                             //!< lower code
             const uint8_t         upper;                             //!< lower code
-
             explicit       Range(const uint8_t, const uint8_t) throw(); //!< intialize
             virtual       ~Range() throw();                             //!< destructor
+
+            //__________________________________________________________________
+            //
+            // interface: Pattern
+            //__________________________________________________________________
             virtual Range *clone() const;                               //!< clone
             virtual void   __viz(ios::ostream &) const;                 //!< GraphViz
             virtual bool   univocal() const throw();                    //!< true is lower==upper
 
+            //__________________________________________________________________
+            //
+            // interface: Serializable
+            //__________________________________________________________________
             virtual size_t      serialize(ios::ostream&) const; //!< output [0xRNGE] [lower] [upper] (+6)
             virtual const char *className() const throw();      //!< CLID
 

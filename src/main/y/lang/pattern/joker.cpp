@@ -136,9 +136,11 @@ namespace upsylon {
         size_t Repeating:: serialize(ios::ostream &fp) const
         {
             size_t count = 0;
+            (void) fp.emit_net<uint32_t>(uuid,&count); assert(4==count);
+            if(nmin>1)
             {
                 size_t nNMIN = 0;
-                (void) fp.emit_net<uint32_t>(uuid,&count).emit_upack(nmin,&nNMIN);
+                (void) fp.emit_upack(nmin,&nNMIN);
                 assert(4==count);
                 count += nNMIN;
             }
@@ -181,7 +183,20 @@ namespace upsylon {
 
         Pattern * Repeating:: OneOrMore( Pattern * p ) { return Repeating::Create(p,1); }
 
-        Repeating:: Repeating( Pattern *jk, const size_t n) throw() : Joker(UUID,jk), nmin(n)
+
+        static inline
+        uint32_t uuid_for( const size_t n ) throw()
+        {
+            switch(n)
+            {
+                case 0:  return Repeating::_ZOM;
+                case 1:  return Repeating::_OOM;
+                default: break;
+            }
+            return Repeating::UUID;
+        }
+
+        Repeating:: Repeating( Pattern *jk, const size_t n) throw() : Joker(uuid_for(n),jk), nmin(n)
         {
             assert(! motif->weak() );
             Y_LANG_PATTERN_IS(Repeating);
@@ -189,8 +204,32 @@ namespace upsylon {
 
         Y_LANG_PATTERN_CLID(Repeating);
 
+        const char Repeating:: _ID0[8] =
+        {
+            Y_FOURCC_AT(0, _ZOM),
+            Y_FOURCC_AT(1, _ZOM),
+            Y_FOURCC_AT(2, _ZOM),
+            Y_FOURCC_AT(3, _ZOM),
+            0,0,0,0
+        };
+
+        const char Repeating:: _ID1[8] =
+        {
+            Y_FOURCC_AT(0, _OOM),
+            Y_FOURCC_AT(1, _OOM),
+            Y_FOURCC_AT(2, _OOM),
+            Y_FOURCC_AT(3, _OOM),
+            0,0,0,0
+        };
+
         const char *Repeating:: className() const throw()
         {
+            switch(nmin)
+            {
+                case 0:  return _ID0;
+                case 1:  return _ID1;
+                default: break;
+            }
             return CLID;
         }
 

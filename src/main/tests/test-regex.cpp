@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/imstream.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -33,6 +34,17 @@ Y_UTEST(regex)
         else
         {
             std::cerr << "\t|_AMBIGUOUS" << std::endl;
+        }
+
+        {
+            const string bin = p->toBinary();
+            {
+                ios::imstream fp(bin);
+                auto_ptr<Pattern> q = Pattern::Load(fp);
+                const string loaded = q->toBinary();
+                Y_CHECK(loaded==bin);
+            }
+
         }
 
         p->GraphViz("regex.dot");

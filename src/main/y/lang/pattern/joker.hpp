@@ -18,7 +18,16 @@ namespace upsylon {
         class Joker : public Pattern
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef auto_ptr<Pattern> Motif; //!< alias
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~Joker()    throw();     //!< destructor
             void     optimize() throw();     //!< call optimize on the motif
 
@@ -40,17 +49,34 @@ namespace upsylon {
         class Optional : public Joker
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
             static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< [0x?000]
             static const char     CLID[8];                    //!< UUID
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual         ~Optional() throw() ;             //!< destructor
+            static  Pattern *Create(Pattern *jk);             //!< create with memory management
+
+            //__________________________________________________________________
+            //
+            // interface: Pattern
+            //__________________________________________________________________
             virtual Pattern *clone() const;                   //!< clone
             virtual void     __viz(ios::ostream &)    const;  //!< GraphViz
             virtual bool     match(Token &, Source &) const;  //!< match
             virtual bool     weak()     const throw();        //!< always true
             virtual bool     univocal() const throw();        //!< always false
-            static  Pattern *Create(Pattern *jk);             //!< create with memory management
 
+            //__________________________________________________________________
+            //
+            // interface: Serializable
+            //__________________________________________________________________
             virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [motif]
             const char *     className() const throw();       //!< CLID
 
@@ -67,11 +93,22 @@ namespace upsylon {
         class Repeating : public Joker
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const uint32_t UUID = Y_FOURCC('>','=',0,0); //!< ID
+            static const uint32_t _ZOM = Y_FOURCC('*',0,0,0);   //!< nmin=0
+            static const uint32_t _OOM = Y_FOURCC('+',0,0,0);   //!< nmin=1
             static const char     CLID[8];                      //!< UUID
+            static const char     _ID0[8];                      //!< _ZOM
+            static const char     _ID1[8];                      //!< _OOM
 
-            const size_t          nmin;                         //!< minimal count
-
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            const size_t     nmin;                              //!< minimal count
             virtual         ~Repeating() throw();               //!< cleanup
             virtual Pattern *clone() const;                     //!< clone
             virtual void     __viz(ios::ostream &)    const;    //!< GraphViz
@@ -81,7 +118,10 @@ namespace upsylon {
             virtual size_t   serialize(ios::ostream &) const;   //!< [UUID] [nmin] [motif]
             const char *     className() const throw();         //!< CLID
 
-
+            //__________________________________________________________________
+            //
+            // Static Methods
+            //__________________________________________________________________
             static Pattern  *ZeroOrMore(Pattern *);             //!< '*'
             static Pattern  *OneOrMore(Pattern *);              //!< '+'
             static Pattern  *Create(Pattern *, const size_t);   //!< create with memory management, jk must NOT be weak!!
@@ -100,7 +140,7 @@ namespace upsylon {
         class Counting : public Joker
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('<','=','=','>'); //!< ID
+            static const uint32_t UUID = Y_FOURCC('[',']',0,0); //!< ID
             static const char     CLID[8];                          //!< UUID
             const size_t          nmin;                             //!< minimal count
             const size_t          nmax;                             //!< maximal count
