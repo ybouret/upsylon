@@ -18,5 +18,11 @@
 
 #define Y_FOURCC_AT(INDX,DWORD) ( uint8_t( uint32_t(DWORD) >> ( (3-(INDX)) << 3) ) )
 
+namespace upsylon {
+
+    const char *fourcc_( const uint32_t dw ) throw();
+
+}
+
 #endif
 

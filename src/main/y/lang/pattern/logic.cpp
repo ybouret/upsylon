@@ -29,18 +29,6 @@ namespace upsylon {
             }
         }
 
-
-        void Logical:: write( ios::ostream &fp ) const
-        {
-            fp.emit_net(uuid);
-            fp.emit_upack(operands.size);
-            for(const Pattern *p = operands.head;p;p=p->next)
-            {
-                p->write(fp);
-            }
-        }
-
-
         size_t Logical:: serialize(ios::ostream &fp) const
         {
             size_t count = 0;

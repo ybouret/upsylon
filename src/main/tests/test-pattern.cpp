@@ -12,12 +12,18 @@ using namespace Lang;
 
 namespace
 {
-    static inline void test_io( const Pattern &p )
+    static inline void test_io( const Pattern &p, const char *saveName=NULL)
     {
         std::cerr << "Testing <" << p.className() << ">" << std::endl;
         
         const string bin = p.toBinary();
-
+        if(saveName)
+        {
+            string fileName = saveName;
+            fileName += ".bin";
+            ios::ocstream fp(fileName);
+            fp << bin;
+        }
         auto_ptr<Pattern> q = 0;
         {
             ios::imstream fp(bin);
@@ -76,23 +82,24 @@ Y_UTEST(pattern)
     q->add( Repeating::Create( new Single('D'), 2 ) );
     q->add( Counting ::Create( new Single('E'),0,5) );
     q->GraphViz("jk.dot");
-    test_io(*q);
+
+    test_io(*q,"AND");
 
     q = new OR();
-    test_io(*q);
+    test_io(*q,"OR");
 
 
     q = new NONE();
-    test_io(*q);
+    test_io(*q,"NONE");
 
     p =  Optional ::Create( new Single('A') );
-    test_io(*p);
+    test_io(*p,"OPT");
 
     p =  Repeating::Create( new Single('A'), 1);
-    test_io(*p);
+    test_io(*p,"REP");
 
     p =  Counting::Create( new Single('A'), 1,2);
-    test_io(*p);
+    test_io(*p,"CNT");
 
 }
 Y_UTEST_DONE()

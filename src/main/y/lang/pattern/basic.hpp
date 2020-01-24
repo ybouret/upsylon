@@ -43,7 +43,6 @@ namespace upsylon {
             explicit       Any1() throw();                  //!< constructor
             virtual Any1 * clone() const;                   //!< clone
             virtual void   __viz(ios::ostream &) const;     //!< GraphViz
-            virtual void   write(ios::ostream &) const;     //!< output [0xANY1] (+4)
             virtual bool   univocal() const throw();        //!< false
 
             virtual const char *className() const throw();      //!< CLID
@@ -70,7 +69,6 @@ namespace upsylon {
             virtual         ~Single() throw();                //!< destructor
             virtual Single * clone() const;                   //!< clone
             virtual void     __viz(ios::ostream &) const;     //!< GraphViz
-            virtual void     write(ios::ostream &) const;     //!< output [0xSNGL] [code] (+5)
             virtual bool     univocal() const throw();        //!< true
 
             virtual size_t      serialize(ios::ostream&) const; //!< [0xSNGL] [code] (+5)
@@ -98,7 +96,6 @@ namespace upsylon {
             virtual       ~Range() throw();                             //!< destructor
             virtual Range *clone() const;                               //!< clone
             virtual void   __viz(ios::ostream &) const;                 //!< GraphViz
-            virtual void   write(ios::ostream &) const;                 //!< output [0xRNGE] [lower] [upper] (+6)
             virtual bool   univocal() const throw();                    //!< true is lower==upper
 
             virtual size_t      serialize(ios::ostream&) const; //!< output [0xRNGE] [lower] [upper] (+6)

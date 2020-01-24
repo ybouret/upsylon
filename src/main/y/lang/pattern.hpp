@@ -31,13 +31,12 @@ namespace upsylon
             //
             // virtual interface
             //__________________________________________________________________
-            virtual ~Pattern() throw();                                 //!< destructor
-            virtual Pattern *clone() const = 0;                         //!< clone
-            virtual void     __viz(ios::ostream &) const = 0;       //!< GraphViz appearance
-            virtual void     write(ios::ostream &) const = 0;       //!< binary output
-            virtual bool     weak()        const throw() = 0;                  //!< a pattern is weak if it matches an empty expression
-            virtual bool     match(Token &t, Source &) const = 0; //!< try to match
-            virtual bool     univocal() const throw() = 0;              //!< guess if univocal
+            virtual         ~Pattern() throw();                     //!< destructor
+            virtual Pattern *clone() const                   = 0;   //!< clone
+            virtual void     __viz(ios::ostream &) const     = 0;   //!< GraphViz appearance
+            virtual bool     weak()        const throw()     = 0;   //!< a pattern is weak if it matches an empty expression
+            virtual bool     match(Token &t, Source &) const = 0;   //!< try to match
+            virtual bool     univocal() const throw()        = 0;   //!< guess if univocal
 
             //__________________________________________________________________
             //
@@ -70,12 +69,14 @@ namespace upsylon
 
         //! macro to mark priv as class
 #define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
+
+        //! implementing class wide className
 #define Y_LANG_PATTERN_CLID(CLASS) \
-const char CLASS::CLID[8] = { \
-Y_FOURCC_AT(0,UUID),\
-Y_FOURCC_AT(1,UUID),\
-Y_FOURCC_AT(2,UUID),\
-Y_FOURCC_AT(3,UUID),\
+const char CLASS::CLID[8] = {      \
+Y_FOURCC_AT(0,UUID),               \
+Y_FOURCC_AT(1,UUID),               \
+Y_FOURCC_AT(2,UUID),               \
+Y_FOURCC_AT(3,UUID),               \
 0,0,0,0 }
         
     }

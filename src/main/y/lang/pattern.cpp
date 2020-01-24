@@ -60,18 +60,23 @@ namespace upsylon
 
         string Pattern:: toBinary() const
         {
-            string           ans;
+            const size_t     len = serialize_length();
+            string           ans( len, as_capacity, false );
             ios::osstream    fp(ans);
-            write(fp);
+            (void) serialize(fp);
+            assert( len == ans.size() );
             return ans;
         }
 
         string Pattern:: toBase64() const
         {
-            string           ans;
+
+            const size_t     len = serialize_length();
+            string           ans( len, as_capacity, false );
             {
-                ios::osstream fp(ans);
-                write(fp);
+                ios::osstream    fp(ans);
+                (void) serialize(fp);
+                assert( len == ans.size() );
             }
             ios::base64::encoder b64;
             return b64.to_string(ans);

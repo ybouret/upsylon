@@ -14,7 +14,7 @@ std::cerr << "Checking " << #EXPR << std::endl;                     \
 std::cerr << "\t|_GraphViz" << std::endl;                           \
 auto_ptr<Pattern> p = posix::EXPR(); p->GraphViz( #EXPR ".dot" );   \
 std::cerr << "\t|_saving" << std::endl;                             \
-{ ios::ocstream fp( #EXPR ".bin" ); p->write(fp); }                 \
+{ ios::ocstream fp( #EXPR ".bin" ); p->serialize(fp); }             \
 std::cerr << "\t|_reloading" << std::endl;                          \
 { ios::icstream fp( #EXPR ".bin");                                  \
 auto_ptr<Pattern> q = Pattern::Load(fp);                            \

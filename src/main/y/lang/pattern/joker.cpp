@@ -56,12 +56,6 @@ namespace upsylon {
             vizlink(fp);
         }
 
-        void Optional:: write(ios::ostream &fp) const
-        {
-            fp.emit_net(UUID);
-            motif->write(fp);
-        }
-
         size_t Optional:: serialize(ios::ostream &fp) const
         {
             size_t count = 0;
@@ -138,19 +132,13 @@ namespace upsylon {
             vizlink(fp);
         }
 
-        void Repeating:: write(ios::ostream &fp) const
-        {
-            fp.emit_net(UUID);
-            fp.emit_upack(nmin);
-            motif->write(fp);
-        }
 
         size_t Repeating:: serialize(ios::ostream &fp) const
         {
             size_t count = 0;
             {
                 size_t nNMIN = 0;
-                (void) fp.emit_net<uint32_t>(uuid,&count).emit_net<uint8_t>(nmin,&nNMIN);
+                (void) fp.emit_net<uint32_t>(uuid,&count).emit_upack(nmin,&nNMIN);
                 assert(4==count);
                 count += nNMIN;
             }
@@ -244,22 +232,13 @@ namespace upsylon {
             vizlink(fp);
         }
 
-        void Counting:: write(ios::ostream &fp) const
-        {
-            fp.emit_net(UUID);
-            fp.emit_upack(nmin);
-            fp.emit_upack(nmax);
-            motif->write(fp);
-        }
-
-
         size_t Counting:: serialize(ios::ostream &fp) const
         {
             size_t count = 0;
             {
                 size_t nNMIN = 0;
                 size_t nNMAX = 0;
-                (void) fp.emit_net<uint32_t>(uuid,&count).emit_net<uint8_t>(nmin,&nNMIN).emit_net<uint8_t>(nmax,&nNMAX);
+                (void) fp.emit_net<uint32_t>(uuid,&count).emit_upack(nmin,&nNMIN).emit_upack(nmax,&nNMAX);
                 assert(4==count);
                 count += nNMIN;
                 count += nNMAX;

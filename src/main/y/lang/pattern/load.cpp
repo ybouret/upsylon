@@ -24,6 +24,7 @@ namespace upsylon
         Pattern * Pattern::Load( ios::istream &fp )
         {
             const uint32_t which = fp.read_net<uint32_t>();
+            std::cerr << "Loading <" << fourcc_(which) << ">" << std::endl;
             switch(which)
             {
                     //__________________________________________________________
@@ -43,7 +44,7 @@ namespace upsylon
                     //__________________________________________________________
                 case AND::  UUID: return __load( new AND(),  fp);
                 case OR ::  UUID: return __load( new OR(),   fp);
-                case NONE:: UUID: return __load( new NONE(), fp );
+                case NONE:: UUID: return __load( new NONE(), fp);
 
                     //__________________________________________________________
                     //
@@ -61,7 +62,8 @@ namespace upsylon
                 default:
                     break;
             }
-            throw exception("Pattern::Load(unknown UUID=0x%08x)", unsigned(which) );
+            Y_GIANT_LOCK();
+            throw exception("Pattern::Load(unknown UUID=0x%08x=<%s>)", unsigned(which), fourcc_(which) );
         }
 
     }

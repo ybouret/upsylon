@@ -48,10 +48,6 @@ namespace upsylon {
             fp(" [shape=circle,label=\"any1\"];\n");
         }
 
-        void Any1:: write(ios::ostream &fp) const
-        {
-            fp.emit_net(UUID);
-        }
 
         bool Any1:: univocal() const throw()
         {
@@ -101,12 +97,7 @@ namespace upsylon {
         {
             fp(" [shape=square,label=\"%s\"];\n", printable_char[code] );
         }
-
-        void Single:: write(ios::ostream &fp) const
-        {
-            fp.emit_net(UUID).emit_net(code);
-        }
-
+        
         bool Single:: univocal() const throw()
         {
             return true;
@@ -147,12 +138,7 @@ namespace upsylon {
         {
             fp(" [shape=box,label=\"%s-%s\"];\n", printable_char[lower], printable_char[upper] );
         }
-
-        void Range:: write(ios::ostream &fp) const
-        {
-            fp.emit_net(UUID).emit_net(lower).emit_net(upper);
-        }
-
+        
         size_t Range:: serialize(ios::ostream &fp) const
         {
             size_t nUUID  = 0; (void)fp.emit_net<uint32_t>(uuid,&nUUID);  assert(4==nUUID);

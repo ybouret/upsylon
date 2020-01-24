@@ -17,10 +17,9 @@ namespace upsylon {
         class Logical : public Pattern
         {
         public:
-            Pattern::List operands;          //!< list of operands
+            Pattern::List operands;                         //!< list of operands
 
-            virtual     ~Logical() throw();           //!< destructor
-            virtual void write(ios::ostream &) const; //!< [ID] [#operands] [operands]
+            virtual     ~Logical() throw();                 //!< destructor
             virtual size_t serialize(ios::ostream &) const; //!< [UUID] [#operands] [operands]
 
             //__________________________________________________________________
