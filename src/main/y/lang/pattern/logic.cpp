@@ -40,6 +40,23 @@ namespace upsylon {
             }
         }
 
+
+        size_t Logical:: serialize(ios::ostream &fp) const
+        {
+            size_t count = 0;
+            {
+                size_t nOPSZ = 0;
+                (void) fp.emit_net<uint32_t>(uuid,&count).emit_upack(operands.size,&nOPSZ);
+                assert(4==count);
+                count += nOPSZ;
+            }
+            for(const Pattern *p = operands.head;p;p=p->next)
+            {
+                count += p->serialize(fp);
+            }
+            return count;
+        }
+
     }
 
 }

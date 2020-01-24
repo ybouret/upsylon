@@ -51,6 +51,8 @@ namespace upsylon {
             virtual bool     univocal() const throw();        //!< always false
             static  Pattern *Create(Pattern *jk);             //!< create with memory management
 
+            virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [motif]
+
         private:
             explicit Optional(Pattern *jk) throw();           //!< setup
             Y_DISABLE_COPY_AND_ASSIGN(Optional);
@@ -74,6 +76,8 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;    //!< match
             virtual bool     weak()     const throw();          //!< check
             virtual bool     univocal() const throw();          //!< false
+            virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [nmin] [motif]
+
 
             static Pattern  *ZeroOrMore(Pattern *);             //!< '*'
             static Pattern  *OneOrMore(Pattern *);              //!< '+'
@@ -104,6 +108,7 @@ namespace upsylon {
             virtual bool     match(Token &, Source &)  const; //!< match
             virtual bool     weak()     const throw();        //! nmin<=0
             virtual bool     univocal() const throw();        //!< true if nmin==nmax and motif->univocal
+            virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [nmin] [nmax] [motif]
 
             //! create with memory management
             static  Pattern *Create(Pattern *jk, const size_t n, const size_t m);

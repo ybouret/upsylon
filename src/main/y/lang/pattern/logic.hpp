@@ -21,6 +21,7 @@ namespace upsylon {
 
             virtual     ~Logical() throw();           //!< destructor
             virtual void write(ios::ostream &) const; //!< [ID] [#operands] [operands]
+            virtual size_t serialize(ios::ostream &) const; //!< [UUID] [#operands] [operands]
 
             //__________________________________________________________________
             //
@@ -91,6 +92,7 @@ namespace upsylon {
             virtual bool     weak() const throw();                     //!< true if one is weak
             virtual bool     univocal() const throw();                 //!< true if single univocal operand
 
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(OR);
         };
@@ -113,7 +115,8 @@ namespace upsylon {
 
             //! match none of the patterns, returns single next char of false if no char
             virtual bool match(Token &, Source &) const;
-            
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(NONE);
         };

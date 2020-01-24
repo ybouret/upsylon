@@ -12,9 +12,11 @@ namespace upsylon
 {
     namespace Lang
     {
+        //! alias
+        typedef ios::serializable Serializable;
 
         //! a pattern to accept from a source
-        class Pattern : public CountedObject
+        class Pattern : public CountedObject, public Serializable
         {
         public:
             typedef core::list_of_cloneable<Pattern> List;   //!< list of cloneable patterns
@@ -24,25 +26,27 @@ namespace upsylon
             Pattern       *prev; //!< for List
             void          *priv; //!< pointer on derived type for optimization/compilation
 
+            virtual const char *className() const throw(); //!< [UUID]
+            
             //__________________________________________________________________
             //
             // virtual interface
             //__________________________________________________________________
             virtual ~Pattern() throw();                                 //!< destructor
             virtual Pattern *clone() const = 0;                         //!< clone
-            virtual void     __viz( ios::ostream &fp ) const = 0;       //!< GraphViz appearance
-            virtual void     write( ios::ostream &fp ) const = 0;       //!< binary output
-            virtual bool     weak() const throw() = 0;                  //!< a pattern is weak if it matches an empty expression
-            virtual bool     match( Token &tkn, Source &src) const = 0; //!< try to match
+            virtual void     __viz(ios::ostream &) const = 0;       //!< GraphViz appearance
+            virtual void     write(ios::ostream &) const = 0;       //!< binary output
+            virtual bool     weak()        const throw() = 0;                  //!< a pattern is weak if it matches an empty expression
+            virtual bool     match(Token &t, Source &) const = 0; //!< try to match
             virtual bool     univocal() const throw() = 0;              //!< guess if univocal
 
             //__________________________________________________________________
             //
             // non virtual interface
             //__________________________________________________________________
-            void        tag( ios::ostream &os ) const;                          //!< emit its address for GraphViz
-            void        link( const Pattern *p, ios::ostream  &os ) const;      //!< create a directed link between 'this' and 'p' for GraphViz
-            void        viz( ios::ostream &os ) const;                          //!< emit tag+__viz as a GraphViz node
+            void        tag(ios::ostream &) const;                              //!< emit its address for GraphViz
+            void        link(const Pattern *p, ios::ostream &) const;      //!< create a directed link between 'this' and 'p' for GraphViz
+            void        viz(ios::ostream &) const;                          //!< emit tag+__viz as a GraphViz node
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
             void        GraphViz( const string &fn, bool keepFile=false) const; //!< write a directed graph
             void        GraphViz( const char   *fn, bool keepFile=false) const; //!< write a directed graph, wrapper

@@ -63,6 +63,15 @@ namespace upsylon {
             return true;
         }
 
+        size_t Any1:: serialize(ios::ostream &fp) const
+        {
+            size_t count = 0;
+            (void)fp.emit_net<uint32_t>(uuid,&count);
+            assert(4==count);
+            return count;
+        }
+        
+
     }
 
 }
@@ -96,6 +105,14 @@ namespace upsylon {
         {
             return true;
         }
+
+        size_t Single:: serialize(ios::ostream &fp) const
+        {
+            size_t nUUID = 0, nCODE = 0;
+            fp.emit_net<uint32_t>(UUID,&nUUID).emit_net<uint8_t>(code,&nCODE);
+            assert(4==nUUID); assert(1==nCODE);
+            return nUUID+nCODE;
+        }
         
     }
 
@@ -121,6 +138,14 @@ namespace upsylon {
         void Range:: write(ios::ostream &fp) const
         {
             fp.emit_net(UUID).emit_net(lower).emit_net(upper);
+        }
+
+        size_t Range:: serialize(ios::ostream &fp) const
+        {
+            size_t nUUID  = 0; (void)fp.emit_net<uint32_t>(uuid,&nUUID);  assert(4==nUUID);
+            size_t nLOWER = 0; (void)fp.emit_net<uint8_t>(lower,&nLOWER); assert(1==nLOWER);
+            size_t nUPPER = 0; (void)fp.emit_net<uint8_t>(lower,&nUPPER); assert(1==nUPPER);
+            return nUUID+nLOWER+nUPPER;
         }
 
         bool Range:: univocal() const throw()

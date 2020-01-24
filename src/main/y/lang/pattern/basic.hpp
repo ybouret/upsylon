@@ -45,6 +45,8 @@ namespace upsylon {
             virtual void   write(ios::ostream &) const;     //!< output [0xANY1] (+4)
             virtual bool   univocal() const throw();        //!< false
 
+            virtual size_t      serialize(ios::ostream&) const; //!< [0xANY1] (+4)
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Any1);
             virtual bool accept_byte( const uint8_t ) const throw();
@@ -67,6 +69,8 @@ namespace upsylon {
             virtual void     __viz(ios::ostream &) const;     //!< GraphViz
             virtual void     write(ios::ostream &) const;     //!< output [0xSNGL] [code] (+5)
             virtual bool     univocal() const throw();        //!< true
+
+            virtual size_t      serialize(ios::ostream&) const; //!< [0xSNGL] [code] (+5)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Single);
@@ -91,6 +95,8 @@ namespace upsylon {
             virtual void   __viz(ios::ostream &) const;                 //!< GraphViz
             virtual void   write(ios::ostream &) const;                 //!< output [0xRNGE] [lower] [upper] (+6)
             virtual bool   univocal() const throw();                    //!< true is lower==upper
+
+            virtual size_t serialize(ios::ostream&) const; //!< output [0xRNGE] [lower] [upper] (+6)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);

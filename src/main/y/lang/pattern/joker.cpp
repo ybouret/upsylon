@@ -62,6 +62,13 @@ namespace upsylon {
             motif->write(fp);
         }
 
+        size_t Optional:: serialize(ios::ostream &fp) const
+        {
+            size_t count = 0;
+            (void) fp.emit_net<uint32_t>(uuid, &count); assert(4==count);
+            return count + motif->serialize(fp);
+        }
+
         bool Optional :: match(Token &tkn, Source &src ) const
         {
             assert(0==tkn.size);
@@ -132,6 +139,19 @@ namespace upsylon {
             fp.emit_net(UUID);
             fp.emit_upack(nmin);
             motif->write(fp);
+        }
+
+        size_t Repeating:: serialize(ios::ostream &fp) const
+        {
+            size_t count = 0;
+            {
+                size_t nNMIN = 0;
+                (void) fp.emit_net<uint32_t>(uuid,&count).emit_net<uint8_t>(nmin,&nNMIN);
+                assert(4==count);
+                count += nNMIN;
+            }
+            return count + motif->serialize(fp);
+
         }
 
         bool Repeating:: match(Token &tkn, Source &src ) const
@@ -219,6 +239,22 @@ namespace upsylon {
             fp.emit_upack(nmin);
             fp.emit_upack(nmax);
             motif->write(fp);
+        }
+
+
+        size_t Counting:: serialize(ios::ostream &fp) const
+        {
+            size_t count = 0;
+            {
+                size_t nNMIN = 0;
+                size_t nNMAX = 0;
+                (void) fp.emit_net<uint32_t>(uuid,&count).emit_net<uint8_t>(nmin,&nNMIN).emit_net<uint8_t>(nmax,&nNMAX);
+                assert(4==count);
+                count += nNMIN;
+                count += nNMAX;
+            }
+            return count + motif->serialize(fp);
+
         }
 
         bool Counting:: match(Token &tkn, Source &src ) const
