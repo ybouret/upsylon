@@ -32,6 +32,11 @@ namespace upsylon
 
         }
 
+        bool Pattern:: multiple() const throw()
+        {
+            return !univocal();
+        }
+
 
         void Pattern:: viz( ios::ostream &os ) const
         {

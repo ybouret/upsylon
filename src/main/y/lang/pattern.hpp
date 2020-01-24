@@ -19,14 +19,37 @@ namespace upsylon
         class Pattern : public CountedObject, public Serializable
         {
         public:
+            //------------------------------------------------------------------
+            //
+            //
+            // types and definitions
+            //
+            //
+            //------------------------------------------------------------------
             typedef core::list_of_cloneable<Pattern> List;   //!< list of cloneable patterns
+
+            //------------------------------------------------------------------
+            //
+            //
+            // public members
+            //
+            //
+            //------------------------------------------------------------------
 
             const uint32_t uuid; //!< unique ID for the class
             Pattern       *next; //!< for List
             Pattern       *prev; //!< for List
             void          *priv; //!< pointer on derived type for optimization/compilation
 
-            
+
+            //------------------------------------------------------------------
+            //
+            //
+            // public methods
+            //
+            //
+            //------------------------------------------------------------------
+
             //__________________________________________________________________
             //
             // virtual interface
@@ -43,22 +66,23 @@ namespace upsylon
             // non virtual interface
             //__________________________________________________________________
             void        tag(ios::ostream &) const;                              //!< emit its address for GraphViz
-            void        link(const Pattern *p, ios::ostream &) const;      //!< create a directed link between 'this' and 'p' for GraphViz
-            void        viz(ios::ostream &) const;                          //!< emit tag+__viz as a GraphViz node
+            void        link(const Pattern *, ios::ostream &) const;            //!< create a directed link between 'this' and 'p' for GraphViz
+            void        viz(ios::ostream &) const;                              //!< emit tag+__viz as a GraphViz node
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
             void        GraphViz( const string &fn, bool keepFile=false) const; //!< write a directed graph
             void        GraphViz( const char   *fn, bool keepFile=false) const; //!< write a directed graph, wrapper
             string      toBinary() const;                                       //!< use write() to get a binary code
             string      toBase64() const;                                       //!< human readable from toBinary()
+            bool        multiple() const throw();                               //!< !univocal
 
             //__________________________________________________________________
             //
             // static interface
             //__________________________________________________________________
-            static Pattern *Load( ios::istream &fp );                                 //!< load from an input stream
-            static Pattern *Optimize( Pattern *p ) throw();                           //!< optimize pattern
+            static Pattern *Load(ios::istream &);                                     //!< load from an input stream
+            static Pattern *Optimize(Pattern *) throw();                              //!< optimize pattern
             static bool     AreEqual(const Pattern &lhs, const Pattern &rhs) throw(); //!< test equality (Single only!!)
-            static void     NoMultiple( List &ops ) throw();                          //!< remove multiple same patterns in a list of operands
+            static void     NoMultiple(List &ops) throw();                            //!< remove multiple same patterns in a list of operands
 
         protected:
             explicit Pattern(const uint32_t id)  throw();  //!< build pattern with a given ID
