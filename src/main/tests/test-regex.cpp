@@ -38,6 +38,7 @@ Y_UTEST(regex)
 
         {
             const string bin = p->toBinary();
+            Y_CHECK( bin.size() == p->serialize_length() );
             {
                 ios::imstream fp(bin);
                 auto_ptr<Pattern> q = Pattern::Load(fp);
