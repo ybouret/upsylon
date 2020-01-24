@@ -70,7 +70,13 @@ namespace upsylon {
             assert(4==count);
             return count;
         }
-        
+
+        const char *Any1:: className() const throw()
+        {
+            return CLID;
+        }
+
+        Y_LANG_PATTERN_CLID(Any1);
 
     }
 
@@ -113,7 +119,14 @@ namespace upsylon {
             assert(4==nUUID); assert(1==nCODE);
             return nUUID+nCODE;
         }
-        
+
+        const char *Single:: className() const throw()
+        {
+            return CLID;
+        }
+
+        Y_LANG_PATTERN_CLID(Single);
+
     }
 
 }
@@ -148,6 +161,11 @@ namespace upsylon {
             return nUUID+nLOWER+nUPPER;
         }
 
+        const char *Range:: className() const throw()
+        {
+            return CLID;
+        }
+
         bool Range:: univocal() const throw()
         {
             return (lower==upper);
@@ -160,5 +178,8 @@ namespace upsylon {
         {
             return (c>=lower) && (c<=upper);
         }
+
+        Y_LANG_PATTERN_CLID(Range);
+
     }
 }

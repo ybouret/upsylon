@@ -5,6 +5,7 @@
 #include "y/ios/imstream.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -13,6 +14,8 @@ namespace
 {
     static inline void test_io( const Pattern &p )
     {
+        std::cerr << "Testing <" << p.className() << ">" << std::endl;
+        
         const string bin = p.toBinary();
 
         auto_ptr<Pattern> q = 0;
@@ -26,6 +29,21 @@ namespace
 
 Y_UTEST(pattern)
 {
+
+    Y_UTEST_SIZEOF(Pattern);
+
+    Y_UTEST_SIZEOF(Any1);
+    Y_UTEST_SIZEOF(Single);
+    Y_UTEST_SIZEOF(Range);
+
+    Y_UTEST_SIZEOF(AND);
+    Y_UTEST_SIZEOF(OR);
+    Y_UTEST_SIZEOF(NONE);
+
+    Y_UTEST_SIZEOF(Optional);
+    Y_UTEST_SIZEOF(Repeating);
+    Y_UTEST_SIZEOF(Counting);
+
     auto_ptr<Pattern> p = new Any1();
     p->GraphViz("any1.dot");
     test_io(*p);
@@ -59,6 +77,22 @@ Y_UTEST(pattern)
     q->add( Counting ::Create( new Single('E'),0,5) );
     q->GraphViz("jk.dot");
     test_io(*q);
+
+    q = new OR();
+    test_io(*q);
+
+
+    q = new NONE();
+    test_io(*q);
+
+    p =  Optional ::Create( new Single('A') );
+    test_io(*p);
+
+    p =  Repeating::Create( new Single('A'), 1);
+    test_io(*p);
+
+    p =  Counting::Create( new Single('A'), 1,2);
+    test_io(*p);
 
 }
 Y_UTEST_DONE()

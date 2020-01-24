@@ -37,6 +37,7 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //!< 0xANY1
+            static const char     CLID[8];                             //!< UUID
 
             virtual       ~Any1() throw();                  //!< destructor
             explicit       Any1() throw();                  //!< constructor
@@ -45,6 +46,7 @@ namespace upsylon {
             virtual void   write(ios::ostream &) const;     //!< output [0xANY1] (+4)
             virtual bool   univocal() const throw();        //!< false
 
+            virtual const char *className() const throw();      //!< CLID
             virtual size_t      serialize(ios::ostream&) const; //!< [0xANY1] (+4)
 
         private:
@@ -61,6 +63,7 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC('S', 'N', 'G', 'L'); //!< 0xSNGL
+            static const char     CLID[8];                             //!< UUID
             const uint8_t         code;                                //!< the matching code
 
             explicit         Single(const uint8_t c) throw(); //!< setup
@@ -71,6 +74,7 @@ namespace upsylon {
             virtual bool     univocal() const throw();        //!< true
 
             virtual size_t      serialize(ios::ostream&) const; //!< [0xSNGL] [code] (+5)
+            virtual const char *className() const throw();      //!< CLID
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Single);
@@ -86,6 +90,7 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC('R','N','G','E');  //!< 0xRNGE
+            static const char     CLID[8];                           //!< UUID
             const uint8_t         lower;                             //!< lower code
             const uint8_t         upper;                             //!< lower code
 
@@ -96,7 +101,8 @@ namespace upsylon {
             virtual void   write(ios::ostream &) const;                 //!< output [0xRNGE] [lower] [upper] (+6)
             virtual bool   univocal() const throw();                    //!< true is lower==upper
 
-            virtual size_t serialize(ios::ostream&) const; //!< output [0xRNGE] [lower] [upper] (+6)
+            virtual size_t      serialize(ios::ostream&) const; //!< output [0xRNGE] [lower] [upper] (+6)
+            virtual const char *className() const throw();      //!< CLID
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);

@@ -114,6 +114,13 @@ namespace upsylon {
             }
             return true;
         }
+
+        Y_LANG_PATTERN_CLID(AND);
+
+        const char *AND:: className() const throw()
+        {
+            return CLID;
+        }
     }
 
 }
@@ -168,6 +175,13 @@ namespace upsylon {
         {
             return (1==operands.size) && operands.head->univocal();
         }
+
+        Y_LANG_PATTERN_CLID(OR);
+
+        const char *OR:: className() const throw()
+        {
+            return CLID;
+        }
     }
 }
 
@@ -219,6 +233,13 @@ namespace upsylon {
         bool NONE:: univocal() const throw()
         {
             return false;
+        }
+
+        Y_LANG_PATTERN_CLID(NONE);
+
+        const char *NONE:: className() const throw()
+        {
+            return CLID;
         }
     }
 }

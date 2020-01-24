@@ -41,6 +41,7 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< [0x?000]
+            static const char     CLID[8];                    //!< UUID
 
             virtual         ~Optional() throw() ;             //!< destructor
             virtual Pattern *clone() const;                   //!< clone
@@ -52,6 +53,7 @@ namespace upsylon {
             static  Pattern *Create(Pattern *jk);             //!< create with memory management
 
             virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [motif]
+            const char *     className() const throw();       //!< CLID
 
         private:
             explicit Optional(Pattern *jk) throw();           //!< setup
@@ -67,6 +69,8 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC('>','=',0,0); //!< ID
+            static const char     CLID[8];                      //!< UUID
+
             const size_t          nmin;                         //!< minimal count
 
             virtual         ~Repeating() throw();               //!< cleanup
@@ -76,7 +80,8 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;    //!< match
             virtual bool     weak()     const throw();          //!< check
             virtual bool     univocal() const throw();          //!< false
-            virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [nmin] [motif]
+            virtual size_t   serialize(ios::ostream &) const;   //!< [UUID] [nmin] [motif]
+            const char *     className() const throw();         //!< CLID
 
 
             static Pattern  *ZeroOrMore(Pattern *);             //!< '*'
@@ -98,6 +103,7 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC('<','=','=','>'); //!< ID
+            static const char     CLID[8];                          //!< UUID
             const size_t          nmin;                             //!< minimal count
             const size_t          nmax;                             //!< maximal count
 
@@ -109,6 +115,7 @@ namespace upsylon {
             virtual bool     weak()     const throw();        //! nmin<=0
             virtual bool     univocal() const throw();        //!< true if nmin==nmax and motif->univocal
             virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [nmin] [nmax] [motif]
+            const char *     className() const throw();         //!< CLID
 
             //! create with memory management
             static  Pattern *Create(Pattern *jk, const size_t n, const size_t m);

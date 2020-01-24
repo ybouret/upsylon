@@ -26,7 +26,6 @@ namespace upsylon
             Pattern       *prev; //!< for List
             void          *priv; //!< pointer on derived type for optimization/compilation
 
-            virtual const char *className() const throw(); //!< [UUID]
             
             //__________________________________________________________________
             //
@@ -71,7 +70,13 @@ namespace upsylon
 
         //! macro to mark priv as class
 #define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
-
+#define Y_LANG_PATTERN_CLID(CLASS) \
+const char CLASS::CLID[8] = { \
+Y_FOURCC_AT(0,UUID),\
+Y_FOURCC_AT(1,UUID),\
+Y_FOURCC_AT(2,UUID),\
+Y_FOURCC_AT(3,UUID),\
+0,0,0,0 }
         
     }
 }

@@ -16,5 +16,7 @@
 //! Four Characters Code
 #define Y_FOURCC(A,B,C,D) (Y_FOURCC3(A) | Y_FOURCC2(B) | Y_FOURCC1(C) | Y_FOURCC0(D))
 
+#define Y_FOURCC_AT(INDX,DWORD) ( uint8_t( uint32_t(DWORD) >> ( (3-(INDX)) << 3) ) )
+
 #endif
 

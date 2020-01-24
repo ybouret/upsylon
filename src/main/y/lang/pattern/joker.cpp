@@ -89,8 +89,12 @@ namespace upsylon {
             return false;
         }
 
+        Y_LANG_PATTERN_CLID(Optional);
 
-
+        const char *Optional:: className() const throw()
+        {
+            return CLID;
+        }
     }
 }
 
@@ -195,6 +199,13 @@ namespace upsylon {
             Y_LANG_PATTERN_IS(Repeating);
         }
 
+        Y_LANG_PATTERN_CLID(Repeating);
+
+        const char *Repeating:: className() const throw()
+        {
+            return CLID;
+        }
+
     }
 }
 
@@ -287,6 +298,13 @@ namespace upsylon {
         {
             return (nmin>0) && (nmin==nmax) && motif->univocal();
         }
+
+        const char *Counting:: className() const throw()
+        {
+            return CLID;
+        }
+
+        Y_LANG_PATTERN_CLID(Counting);
 
     }
 

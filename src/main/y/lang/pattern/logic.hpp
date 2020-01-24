@@ -61,6 +61,7 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC(' ','&', '&', ' ' ); //!< [0x && ]
+            static const char     CLID[8];                             //!< UUID
 
             virtual         ~AND() throw();                            //!< destructor
             explicit         AND() throw();                            //!< initialize
@@ -69,7 +70,7 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;           //!< must match all patterns
             virtual bool     weak() const throw();                     //!< if all operands are weak
             virtual bool     univocal() const throw();                 //!< true is all are univocal
-
+            const char *     className() const throw();                //!< CLID
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AND);
         };
@@ -83,6 +84,7 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC(' ','|', '|', ' ' ); //!< [0x || ]
+            static const char     CLID[8];                             //!< UUID
 
             virtual         ~OR() throw();                             //!< destructor
             explicit         OR() throw();                             //!< initialize
@@ -91,6 +93,7 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;           //!< true if finds a matching first operands
             virtual bool     weak() const throw();                     //!< true if one is weak
             virtual bool     univocal() const throw();                 //!< true if single univocal operand
+            const char *     className() const throw();                //!< CLID
 
 
         private:
@@ -106,12 +109,15 @@ namespace upsylon {
         {
         public:
             static const uint32_t UUID = Y_FOURCC(' ','!', '!', ' ' ); //!< [0x !! ]
+            static const char     CLID[8];                             //!< UUID
+
             virtual         ~NONE() throw();                           //!< destructor
             explicit         NONE() throw();                           //!< initialize
             virtual Pattern *clone() const;                            //!< clone
             virtual void     __viz(ios::ostream &) const;              //!< GraphViz
             virtual bool     weak() const throw();                     //!< false
             virtual bool     univocal() const throw();                 //!< false, even if could exceptionnaly be true if only 1 possible choice...
+            const char *     className() const throw();                //!< CLID
 
             //! match none of the patterns, returns single next char of false if no char
             virtual bool match(Token &, Source &) const;

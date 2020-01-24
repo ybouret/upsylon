@@ -22,17 +22,15 @@ namespace upsylon
             os.viz(this);
         }
 
-        const char * Pattern:: className() const throw()
-        {
-            return "BEUH";
-        }
-
         void  Pattern:: link( const Pattern *p, ios::ostream  &os ) const
         {
             this->tag(os); os << "->"; p->tag(os); os << ";\n";
         }
 
-        Pattern:: Pattern(const uint32_t t) throw() : CountedObject(), uuid(t), next(0), prev(0), priv(0) {}
+        Pattern:: Pattern(const uint32_t t) throw() : CountedObject(), uuid(t), next(0), prev(0), priv(0)
+        {
+
+        }
 
 
         void Pattern:: viz( ios::ostream &os ) const
