@@ -235,8 +235,8 @@ namespace upsylon {
 #define Y_VTK_U(TYPE) do { const SharedWriter w = new WriterU<TYPE>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_W(TYPE) Y_VTK_I(TYPE); Y_VTK_U(unsigned TYPE)
 
-#define Y_VTK_IB(BITS) do { const SharedWriter w = new WriterI<int##BITS##_t>(); (void) writers.insert(w); } while(false)
-#define Y_VTK_UB(BITS) do { const SharedWriter w = new WriterI<uint##BITS##_t>(); (void) writers.insert(w); } while(false)
+#define Y_VTK_IB(BITS) do { const SharedWriter w = new WriterI<int##BITS##_t>();  (void) writers.insert(w); } while(false)
+#define Y_VTK_UB(BITS) do { const SharedWriter w = new WriterU<uint##BITS##_t>(); (void) writers.insert(w); } while(false)
 #define Y_VTK_B(BITS ) Y_VTK_IB(BITS); Y_VTK_UB(BITS)
 
 #define Y_VTK_(TYPE,WRITER) do { const SharedWriter w = new WRITER(); if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE ">)",Fn ); } while(false)
@@ -280,12 +280,13 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
                 if(!writers.insert(w)) throw exception("%s(multiple <%s>)",Fn,w->tid.name());
             }
 
-#if 0
-            std::cerr << "#vtk::Writer=" << writers.size() << std::endl;
+#if 1
+            std::cerr << "<vtk::Writer count=\"" << writers.size() << "\">" << std::endl;
             for( SharedWriters::iterator i=writers.begin();i!=writers.end();++i)
             {
                 std::cerr << "\t(*) " << (*i)->key().name() << std::endl;
             }
+            std::cerr << "<vtk::Writer/>" << std::endl;
 #endif
 
         }
