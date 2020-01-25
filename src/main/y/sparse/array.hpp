@@ -41,8 +41,8 @@ namespace upsylon
         typedef sparse::dok<size_t,T,key_dumper,ALLOCATOR> dok_type;       //!< alias
         typedef typename dok_type::iterator                iterator;       //!< alias
         typedef typename dok_type::const_iterator          const_iterator; //!< alias
-        typedef typename dok_type::item_type                item_type;      //!< alias
-        typedef typename dok_type::item_ptr                 item_ptr;       //!< alias
+        typedef typename dok_type::item_type               item_type;      //!< alias
+        typedef typename dok_type::item_ptr                item_ptr;       //!< alias
         
         //! destructor
         inline virtual ~sparse_array() throw(){}
