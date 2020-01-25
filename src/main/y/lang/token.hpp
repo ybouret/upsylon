@@ -15,23 +15,16 @@ namespace upsylon
         {
         public:
             //! constructor
-            inline Token() throw() : Object(), Char::List() {}
+            explicit Token() throw();
 
             //! desctructor
-            inline virtual ~Token() throw()
-            {
-            }
+            virtual ~Token() throw();
 
             //! direct copy
-            inline Token(const Token &other) : object(), Object(), Char::List(other){}
-
+            Token(const Token &other);
+            
             //! assign
-            inline Token & operator=( const Token &other )
-            {
-                Token tmp(other);
-                this->swap_with(tmp);
-                return *this;
-            }
+            Token & operator=( const Token &other );
 
             //! generic output of token
             template <typename OUTPUT> inline

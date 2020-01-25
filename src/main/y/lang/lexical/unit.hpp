@@ -18,7 +18,7 @@ namespace upsylon
 
             const Tag      label; //!< rule label
             
-            explicit Lexeme(const Tag &ruleLabel);   //!< initialize
+            explicit Lexeme(const Tag &) throw();   //!< initialize
             Lexeme(const Lexeme &other);             //!< copy content and label
             virtual ~Lexeme() throw();               //!< destructor
             const CharInfo & info() const;           //!< info for first token

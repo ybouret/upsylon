@@ -5,6 +5,24 @@ namespace upsylon
 {
     namespace Lang
     {
+        
+        Token:: Token() throw() : Object(), Char::List() {}
+        
+        Token:: ~Token() throw()
+        {
+        }
+        
+        Token:: Token(const Token &other) :
+        object(), Object(), Char::List(other)
+        {}
+
+        Token & Token::operator=( const Token &other )
+        {
+            Token tmp(other);
+            this->swap_with(tmp);
+            return *this;
+        }
+        
         string Token::toString(const size_t nskip, const size_t ntrim) const
         {
             const size_t ndrop = nskip+ntrim;

@@ -9,7 +9,7 @@ namespace upsylon
         {
         }
 
-        Lexeme:: Lexeme(const Tag &ruleLabel) :
+        Lexeme:: Lexeme(const Tag &ruleLabel) throw():
         object(),
         Token(),Base(),label(ruleLabel)
         {

@@ -16,7 +16,7 @@ namespace upsylon
             typedef arc_ptr<const Pattern>          Motif;  //!< shared pattern
             typedef functor<void,TL1(const Token&)> Action; //!< executed on pattern recognition
 
-            //! base class for an scanner event
+            //! base class for a scanner event
             class Event : public CountedObject
             {
             public:

@@ -48,7 +48,7 @@ namespace upsylon
         private:
             Input          input;
             Y_DISABLE_COPY_AND_ASSIGN(Module);
-            explicit Module(const Tag &org, const Input &inp, const Type t);
+            explicit Module(const Tag &org, const Input &inp, const Type t) throw();
 
         public:
             const Type type; //!< keep track of the opening mode

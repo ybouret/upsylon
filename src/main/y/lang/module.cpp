@@ -1,6 +1,7 @@
 #include "y/lang/module.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -9,7 +10,7 @@ namespace upsylon
         Module:: ~Module() throw() {}
 
 
-        Module:: Module( const Tag &org, const Input &inp, const Type t ) :
+        Module:: Module( const Tag &org, const Input &inp, const Type t ) throw() :
         CharInfo(org,1,1),
         input(inp),
         type(t)
@@ -19,8 +20,8 @@ namespace upsylon
 
         void Module:: newLine() const throw()
         {
-            ++((int &)line);
-            (int&)column = 1;
+            ++aliasing::_(line);
+            aliasing::_(column) = 1;
         }
 
         Char * Module:: get()
@@ -29,7 +30,7 @@ namespace upsylon
             if(input->query(C))
             {
                 Char *ch = new Char(C,*this);
-                ++( (int&)column );
+                ++aliasing::_(column);
                 return ch;
             }
             else

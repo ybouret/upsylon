@@ -10,7 +10,13 @@ namespace upsylon
     namespace Lang
     {
 
-        //! convert Module into a source of tokens
+        //----------------------------------------------------------------------
+        //! convert a Module into a Source of tokens
+        /**
+         a source is primarily a smart pointer for a newly created module
+         */
+        //----------------------------------------------------------------------
+
         class Source : public Object, public ios::istream
         {
         public:
