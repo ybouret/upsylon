@@ -11,7 +11,7 @@ namespace upsylon {
                               const char           *f) :
         tid(t), fmt( (0!=f) ? new string(f) : 0 )
         {
-			//std::cerr << "-- new vtk::Writer for <" << tid.name() << ">" << std::endl;
+            //std::cerr << "-- new vtk::Writer for <" << tid.name() << ">" << std::endl;
         }
 
         const std::type_info &  vtk::Writer:: key() const throw() { return tid; }
@@ -19,201 +19,201 @@ namespace upsylon {
         bool  vtk::Writer:: isScalar() const throw() { return 1 == components(); }
 
 
-        namespace
+        namespace {
+
+            static const char __dataType[] = "int";
+
+            template <typename T>
+            class WriterI : public vtk::Writer
             {
-                static const char __dataType[] = "int";
-
-                template <typename T>
-                class WriterI : public vtk::Writer
+            public:
+                inline WriterI() : vtk::Writer( typeid(T), "%ld" )
                 {
-                public:
-                    inline WriterI() : vtk::Writer( typeid(T), "%ld" )
-                    {
-                    }
+                }
 
-                    inline virtual ~WriterI() throw()
-                    {
-                    }
-
-                    inline virtual void write( ios::ostream &fp, const void *addr) const
-                    {
-                        assert(addr);
-                        assert(fmt.is_valid());
-                        const long i = long(*static_cast<const T *>(addr) );
-                        fp( **fmt, i );
-                    }
-
-                    inline virtual const char * dataType()   const throw() { return __dataType; }
-                    inline virtual unsigned     components() const throw() { return  1;         }
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(WriterI);
-                };
-
-                template <typename T>
-                class WriterU : public vtk::Writer
+                inline virtual ~WriterI() throw()
                 {
-                public:
-                    inline WriterU() : vtk::Writer( typeid(T), "%lu" )
-                    {
-                    }
+                }
 
-                    inline virtual ~WriterU() throw()
-                    {
-                    }
-
-                    inline virtual void write( ios::ostream &fp, const void *addr) const
-                    {
-                        assert(addr);
-                        assert(fmt.is_valid());
-                        const unsigned long i = (unsigned long)(*static_cast<const T *>(addr));
-                        fp( **fmt, i );
-                    }
-
-                    inline virtual const char * dataType()   const throw() { return __dataType; }
-                    inline virtual unsigned     components() const throw() { return 1;          }
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(WriterU);
-                };
-
-
-                class WriterF : public vtk::Writer
+                inline virtual void write( ios::ostream &fp, const void *addr) const
                 {
-                public:
-                    inline explicit WriterF() : vtk::Writer( typeid(float), "%.3g" ) {}
-                    inline virtual ~WriterF() throw() {}
+                    assert(addr);
+                    assert(fmt.is_valid());
+                    const long i = long(*static_cast<const T *>(addr) );
+                    fp( **fmt, i );
+                }
 
-                    virtual void write( ios::ostream &fp, const void *addr) const
-                    {
-                        assert(addr);
-                        assert(fmt.is_valid());
-                        fp( **fmt, *static_cast<const float *>(addr)  );
-                    }
+                inline virtual const char * dataType()   const throw() { return __dataType; }
+                inline virtual unsigned     components() const throw() { return  1;         }
 
-                    inline virtual const char * dataType()   const throw() { return "float"; }
-                    inline virtual unsigned     components() const throw() { return 1;       }
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterI);
+            };
 
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(WriterF);
-                };
-
-                class WriterD : public vtk::Writer
+            template <typename T>
+            class WriterU : public vtk::Writer
+            {
+            public:
+                inline WriterU() : vtk::Writer( typeid(T), "%lu" )
                 {
-                public:
-                    inline explicit WriterD() : vtk::Writer( typeid(double), "%.3lg" ) {}
-                    inline virtual ~WriterD() throw() {}
+                }
 
-                    virtual void write( ios::ostream &fp, const void *addr) const
-                    {
-                        assert(addr);
-                        assert(fmt.is_valid());
-                        fp( **fmt, *static_cast<const double *>(addr) );
-                    }
-
-                    inline virtual const char * dataType()   const throw() { return "double"; }
-                    inline virtual unsigned     components() const throw() { return 1;       }
-
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(WriterD);
-                };
-
-                template <typename T, typename COORD>
-                class WriterMulti : public vtk::Writer
+                inline virtual ~WriterU() throw()
                 {
-                public:
-                    static const unsigned Components = sizeof(COORD)/sizeof(T);
+                }
 
-                    const vtk::SharedWriter shared;
-
-                    explicit WriterMulti( const vtk &VTK ) :
-                    vtk::Writer( typeid(COORD), NULL ),
-                    shared( (vtk::Writer *)&VTK.get<T>() )
-                    {
-                        assert(Components>0);
-                        assert(1==shared->components());
-                    }
-
-                    inline virtual ~WriterMulti() throw()
-                    {
-                    }
-
-                    inline virtual void write( ios::ostream &fp, const void *addr) const
-                    {
-                        assert(addr);
-                        assert(fmt.is_empty());
-                        const T *p = static_cast<const T *>(addr);
-                        shared->write(fp,p);
-                        for(unsigned i=1;i<Components;++i)
-                        {
-                            shared->write(fp << ' ',++p);
-                        }
-                    }
-
-                    inline virtual const char * dataType() const throw()
-                    {
-                        return shared->dataType();
-                    }
-
-                    inline virtual unsigned     components() const throw() { return Components; }
-
-
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(WriterMulti);
-                };
-
-                //! using MPT::to_decimal()
-                template <typename MPT>
-                class WriterMP : public vtk::Writer
+                inline virtual void write( ios::ostream &fp, const void *addr) const
                 {
-                public:
-                    inline virtual ~WriterMP() throw() {}
-                    inline explicit WriterMP() : vtk::Writer( typeid(MPT), NULL ) {}
-                    inline virtual const char * dataType()   const throw() { return __dataType; }
-                    inline virtual unsigned     components() const throw() { return 1;          }
+                    assert(addr);
+                    assert(fmt.is_valid());
+                    const unsigned long i = (unsigned long)(*static_cast<const T *>(addr));
+                    fp( **fmt, i );
+                }
 
-                    inline virtual void write( ios::ostream &fp, const void *addr) const
-                    {
-                        assert(addr);
-                        assert(fmt.is_empty());
-                        const MPT   *p = static_cast<const MPT *>(addr);
-                        const string s = p->to_decimal();
-                        fp << s;
-                    }
+                inline virtual const char * dataType()   const throw() { return __dataType; }
+                inline virtual unsigned     components() const throw() { return 1;          }
 
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(WriterMP);
-                };
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterU);
+            };
 
-                class WriterMPQ : public vtk::Writer
+
+            class WriterF : public vtk::Writer
+            {
+            public:
+                inline explicit WriterF() : vtk::Writer( typeid(float), "%.3g" ) {}
+                inline virtual ~WriterF() throw() {}
+
+                virtual void write( ios::ostream &fp, const void *addr) const
                 {
-                public:
-                    const Writer &dw;
+                    assert(addr);
+                    assert(fmt.is_valid());
+                    fp( **fmt, *static_cast<const float *>(addr)  );
+                }
 
-                    inline virtual ~WriterMPQ() throw() {}
-                    inline explicit WriterMPQ(const vtk &VTK ) :
-                    vtk::Writer( typeid(mpq), NULL ), dw(VTK.get<double>())
-                    {}
+                inline virtual const char * dataType()   const throw() { return "float"; }
+                inline virtual unsigned     components() const throw() { return 1;       }
 
-                    inline virtual const char * dataType()   const throw() { return dw.dataType(); }
-                    inline virtual unsigned     components() const throw() { return 1;             }
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterF);
+            };
 
-                    inline virtual void write( ios::ostream &fp, const void *addr) const
+            class WriterD : public vtk::Writer
+            {
+            public:
+                inline explicit WriterD() : vtk::Writer( typeid(double), "%.3lg" ) {}
+                inline virtual ~WriterD() throw() {}
+
+                virtual void write( ios::ostream &fp, const void *addr) const
+                {
+                    assert(addr);
+                    assert(fmt.is_valid());
+                    fp( **fmt, *static_cast<const double *>(addr) );
+                }
+
+                inline virtual const char * dataType()   const throw() { return "double"; }
+                inline virtual unsigned     components() const throw() { return 1;       }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterD);
+            };
+
+            template <typename T, typename COORD>
+            class WriterMulti : public vtk::Writer
+            {
+            public:
+                static const unsigned Components = sizeof(COORD)/sizeof(T);
+
+                const vtk::SharedWriter shared;
+
+                explicit WriterMulti( const vtk &VTK ) :
+                vtk::Writer( typeid(COORD), NULL ),
+                shared( (vtk::Writer *)&VTK.get<T>() )
+                {
+                    assert(Components>0);
+                    assert(1==shared->components());
+                }
+
+                inline virtual ~WriterMulti() throw()
+                {
+                }
+
+                inline virtual void write( ios::ostream &fp, const void *addr) const
+                {
+                    assert(addr);
+                    assert(fmt.is_empty());
+                    const T *p = static_cast<const T *>(addr);
+                    shared->write(fp,p);
+                    for(unsigned i=1;i<Components;++i)
                     {
-                        assert(addr);
-                        assert(fmt.is_empty());
-                        const mpq   *q = static_cast<const mpq *>(addr);
-                        const double d = q->to_real();
-                        dw.write(fp,&d);
+                        shared->write(fp << ' ',++p);
                     }
+                }
 
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(WriterMPQ);
-                };
+                inline virtual const char * dataType() const throw()
+                {
+                    return shared->dataType();
+                }
 
-            }
+                inline virtual unsigned     components() const throw() { return Components; }
+
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterMulti);
+            };
+
+            //! using MPT::to_decimal()
+            template <typename MPT>
+            class WriterMP : public vtk::Writer
+            {
+            public:
+                inline virtual ~WriterMP() throw() {}
+                inline explicit WriterMP() : vtk::Writer( typeid(MPT), NULL ) {}
+                inline virtual const char * dataType()   const throw() { return __dataType; }
+                inline virtual unsigned     components() const throw() { return 1;          }
+
+                inline virtual void write( ios::ostream &fp, const void *addr) const
+                {
+                    assert(addr);
+                    assert(fmt.is_empty());
+                    const MPT   *p = static_cast<const MPT *>(addr);
+                    const string s = p->to_decimal();
+                    fp << s;
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterMP);
+            };
+
+            class WriterMPQ : public vtk::Writer
+            {
+            public:
+                const Writer &dw;
+
+                inline virtual ~WriterMPQ() throw() {}
+                inline explicit WriterMPQ(const vtk &VTK ) :
+                vtk::Writer( typeid(mpq), NULL ), dw(VTK.get<double>())
+                {}
+
+                inline virtual const char * dataType()   const throw() { return dw.dataType(); }
+                inline virtual unsigned     components() const throw() { return 1;             }
+
+                inline virtual void write( ios::ostream &fp, const void *addr) const
+                {
+                    assert(addr);
+                    assert(fmt.is_empty());
+                    const mpq   *q = static_cast<const mpq *>(addr);
+                    const double d = q->to_real();
+                    dw.write(fp,&d);
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(WriterMPQ);
+            };
+
+        }
 
         vtk:: ~vtk() throw()
         {

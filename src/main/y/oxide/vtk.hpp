@@ -11,6 +11,7 @@
 #include "y/hashing/type-info.hpp"
 #include "y/associative/set.hpp"
 
+
 namespace upsylon {
 
     namespace Oxide {
@@ -77,7 +78,7 @@ namespace upsylon {
 
             typedef hashing::type_info_hasher<>      Hasher;        //!< hasher for database
             typedef intr_ptr<std::type_info,Writer>  SharedWriter;  //!< shared writer
-            typedef set<std::type_info,SharedWriter> SharedWriters; //!< set of shared writers
+            typedef set<std::type_info,SharedWriter,hashing::type_info_hasher<> > SharedWriters; //!< set of shared writers
 
             //==================================================================
             //
