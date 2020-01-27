@@ -22,7 +22,7 @@ namespace upsylon  {
             //! return a hash of the name
             inline size_t operator()( const type_mark &mark ) throw()
             {
-                return H.template key<size_t>(mark->name());
+                return H.template key<size_t>(mark->uuid);
             }
 
         private:

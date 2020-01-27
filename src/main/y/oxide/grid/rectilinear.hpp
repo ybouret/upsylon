@@ -114,7 +114,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             inline virtual void write( vtk &VTK, ios::ostream &fp, const LayoutType &sub ) const
             {
-                static const vtk::Writer &tw = VTK.get<type>();
+                static const vtk::Writer &tw = VTK.get( type_spec_of<type>() );
 
                 // emit dataset
                 fp << vtk::DATASET << ' ' << VTK_DATASET_ID << '\n';

@@ -21,5 +21,11 @@ namespace upsylon {
 
     type_mark:: type_mark( const type_spec &ts ) throw() : type_mark_( &ts ) {}
 
+    type_mark:: type_mark( const std::type_info &tid ) :
+    type_mark_( & type_spec::declare(tid) )
+    {
+
+    }
+
     
 }

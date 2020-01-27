@@ -8,7 +8,7 @@
 #include "y/ptr/intr.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/string.hpp"
-#include "y/hashing/type-info.hpp"
+#include "y/hashing/type-mark.hpp"
 #include "y/associative/set.hpp"
 #include "y/type/spec.hpp"
 
@@ -50,8 +50,8 @@ namespace upsylon {
             class Writer : public counted_object
             {
             public:
-                const std::type_info &tid; //!< type info, used as key
-                auto_ptr<string>      fmt; //!< format
+                const type_mark   tid; //!< type mark, used as key
+                auto_ptr<string>  fmt; //!< format
 
                 //--------------------------------------------------------------
                 // virtual interface
@@ -64,21 +64,21 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // non-virtual interface
                 //--------------------------------------------------------------
-                bool                   isScalar() const throw();                       //!< 1 == components()
-                const std::type_info & key() const throw();                            //!< key for database
+                bool              isScalar() const throw();                       //!< 1 == components()
+                const type_mark & key() const throw();                            //!< key for database
 
             protected:
                 //! setup using type info a default format
-                explicit Writer(const std::type_info &,
-                                const char           *) ;
+                explicit Writer(const type_spec &,
+                                const char      *) ;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Writer);
             };
 
-            typedef hashing::type_info_hasher<>      Hasher;        //!< hasher for database
-            typedef intr_ptr<std::type_info,Writer>  SharedWriter;  //!< shared writer
-            typedef set<std::type_info,SharedWriter,hashing::type_info_hasher<> > SharedWriters; //!< set of shared writers
+            typedef hashing::type_mark_hasher<>        Hasher;        //!< hasher for database
+            typedef intr_ptr<type_mark,Writer>         SharedWriter;  //!< shared writer
+            typedef set<type_mark,SharedWriter,Hasher> SharedWriters; //!< set of shared writers
 
             //==================================================================
             //
@@ -87,21 +87,14 @@ namespace upsylon {
             //==================================================================
 
             //! access a registered writer
-            const Writer & get( const std::type_info &tid ) const;
+            const Writer & get( const type_spec &ts ) const;
 
-            //! cached access to a registered writer for a type
-            template <typename T> inline const Writer & get() const
-            {
-                static const Writer &_ = get( typeid(typename type_traits<T>::mutable_type) );
-                return _;
-
-            }
 
             //! write object to stream
             template <typename T> inline
             ios::ostream & operator()( ios::ostream &fp, const T &args ) const
             {
-                static const Writer &_ = get<T>();
+                static const Writer &_ = get( type_spec_of(args) );
                 _.write(fp,&args);
                 return fp;
             }

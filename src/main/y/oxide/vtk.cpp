@@ -7,14 +7,15 @@ namespace upsylon {
     namespace Oxide {
 
         vtk::Writer:: ~Writer() throw() {}
-        vtk::Writer::  Writer(const std::type_info &t,
+
+
+        vtk::Writer::  Writer(const type_spec      &t,
                               const char           *f) :
         tid(t), fmt( (0!=f) ? new string(f) : 0 )
         {
-            //std::cerr << "-- new vtk::Writer for <" << tid.name() << ">" << std::endl;
         }
 
-        const std::type_info &  vtk::Writer:: key() const throw() { return tid; }
+        const type_mark &  vtk::Writer:: key() const throw() { return tid; }
 
         bool  vtk::Writer:: isScalar() const throw() { return 1 == components(); }
 
@@ -27,7 +28,7 @@ namespace upsylon {
             class WriterI : public vtk::Writer
             {
             public:
-                inline WriterI() : vtk::Writer( typeid(T), "%ld" )
+                inline WriterI() : vtk::Writer( type_spec_of<T>(), "%ld" )
                 {
                 }
 
@@ -54,7 +55,7 @@ namespace upsylon {
             class WriterU : public vtk::Writer
             {
             public:
-                inline WriterU() : vtk::Writer( typeid(T), "%lu" )
+                inline WriterU() : vtk::Writer( type_spec_of<T>(), "%lu" )
                 {
                 }
 
@@ -81,7 +82,7 @@ namespace upsylon {
             class WriterF : public vtk::Writer
             {
             public:
-                inline explicit WriterF() : vtk::Writer( typeid(float), "%.3g" ) {}
+                inline explicit WriterF() : vtk::Writer( type_spec_of<float>(), "%.3g" ) {}
                 inline virtual ~WriterF() throw() {}
 
                 virtual void write( ios::ostream &fp, const void *addr) const
@@ -101,7 +102,7 @@ namespace upsylon {
             class WriterD : public vtk::Writer
             {
             public:
-                inline explicit WriterD() : vtk::Writer( typeid(double), "%.3lg" ) {}
+                inline explicit WriterD() : vtk::Writer( type_spec_of<double>(), "%.3lg" ) {}
                 inline virtual ~WriterD() throw() {}
 
                 virtual void write( ios::ostream &fp, const void *addr) const
@@ -128,8 +129,8 @@ namespace upsylon {
                 const vtk::SharedWriter shared;
 
                 explicit WriterMulti( const vtk &VTK ) :
-                vtk::Writer( typeid(COORD), NULL ),
-                shared( (vtk::Writer *)&VTK.get<T>() )
+                vtk::Writer( type_spec_of<COORD>(), NULL ),
+                shared( (vtk::Writer *)&VTK.get( type_spec_of<T>() ) )
                 {
                     assert(Components>0);
                     assert(1==shared->components());
@@ -170,7 +171,7 @@ namespace upsylon {
             {
             public:
                 inline virtual ~WriterMP() throw() {}
-                inline explicit WriterMP() : vtk::Writer( typeid(MPT), NULL ) {}
+                inline explicit WriterMP() : vtk::Writer( type_spec_of<MPT>(), NULL ) {}
                 inline virtual const char * dataType()   const throw() { return __dataType; }
                 inline virtual unsigned     components() const throw() { return 1;          }
 
@@ -194,7 +195,7 @@ namespace upsylon {
 
                 inline virtual ~WriterMPQ() throw() {}
                 inline explicit WriterMPQ(const vtk &VTK ) :
-                vtk::Writer( typeid(mpq), NULL ), dw(VTK.get<double>())
+                vtk::Writer( type_spec_of<mpq>(), NULL ), dw(VTK.get( type_spec_of<double>() ))
                 {}
 
                 inline virtual const char * dataType()   const throw() { return dw.dataType(); }
@@ -222,12 +223,13 @@ namespace upsylon {
         static const char Fn[] = "vtk::Writer";
 
 
-        const vtk::Writer & vtk:: get(const std::type_info &tid) const
+        const vtk::Writer & vtk:: get(const type_spec &ts) const
         {
-            const SharedWriter *ppW = writers.search(tid);
+            const type_mark key = ts;
+            const SharedWriter *ppW = writers.search(key);
             if(!ppW)
             {
-                throw exception("%s(no <%s>)", Fn, tid.name() );
+                throw exception("%s(no <%s>)", Fn, *ts.name() );
             }
             return **ppW;
         }
@@ -278,14 +280,14 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
             Y_VTK_(mpz,WriterMP<mpz>);
             {
                 const SharedWriter w = new WriterMPQ(*this);
-                if(!writers.insert(w)) throw exception("%s(multiple <%s>)",Fn,w->tid.name());
+                if(!writers.insert(w)) throw exception("%s(multiple <%s>)",Fn,*(w->tid->name()));
             }
 
 #if 1
             std::cerr << "<vtk::Writer count=\"" << writers.size() << "\">" << std::endl;
             for( SharedWriters::iterator i=writers.begin();i!=writers.end();++i)
             {
-                std::cerr << "\t(*) " << (*i)->key().name() << std::endl;
+                std::cerr << "\t(*) " << (*i)->key()->name() << std::endl;
             }
             std::cerr << "<vtk::Writer/>" << std::endl;
 #endif
@@ -375,7 +377,7 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
         const vtk::Writer & vtk:: revealField(ios::ostream &fp,
                                               const Field  &F ) const
         {
-            const Writer &W = get(F.typeOfObject);
+            const Writer &W = get( type_spec::declare(F.typeOfObject) );
 
             if( W.components() == 1)
             {
