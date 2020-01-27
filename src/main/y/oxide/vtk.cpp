@@ -11,6 +11,7 @@ namespace upsylon {
                               const char           *f) :
         tid(t), fmt( (0!=f) ? new string(f) : 0 )
         {
+			//std::cerr << "-- new vtk::Writer for <" << tid.name() << ">" << std::endl;
         }
 
         const std::type_info &  vtk::Writer:: key() const throw() { return tid; }
