@@ -119,34 +119,15 @@ namespace upsylon
         const std::type_info &info; //!< the unique system type_info
         const string          uuid; //!< UUID from system=mangled name
         const aliases         user; //!< user aliases
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(type_spec);
     };
 
-    template <typename T> static inline
-    const type_spec & type_spec_of(void)
-    {
-        return type_spec::of<T>();
-    }
-
-    template <typename T> static inline
-    const type_spec & type_spec_of(T &)
-    {
-        return type_spec_of<T>();
-    }
-
-    template <typename T> static inline
-    const string & type_name_of(void)
-    {
-        return type_spec_of<T>().name();
-    }
-
-    template <typename T> static inline
-    const string & type_name_of( T & )
-    {
-        return type_name_of<T>();
-    }
+    template <typename T> static inline const type_spec & type_spec_of(void) { return type_spec::of<T>();       }
+    template <typename T> static inline const type_spec & type_spec_of(T &)  { return type_spec_of<T>();        }
+    template <typename T> static inline const string    & type_name_of(void) { return type_spec_of<T>().name(); }
+    template <typename T> static inline const string    & type_name_of(T &)  { return type_name_of<T>();        }
 
 
 

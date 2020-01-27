@@ -80,20 +80,33 @@ if(#ID==type_spec_of<TYPE>()) std::cerr << "\tis  " << #ID << std::endl; else st
     NAMED(float,double);
 
 	std::cerr << "type_name_of<short>()=" << type_name_of<short>() << std::endl;
+
+    std::cerr << "sizeof(type_spec)=" << sizeof(type_spec) << std::endl;
+    
 }
 Y_UTEST_DONE()
 
-
+#include "y/hashing/type-mark.hpp"
+#include "y/associative/map.hpp"
 
 Y_UTEST(spec_db)
 {
     std::cerr << "query among: "<< std::endl;
     type_spec::display(std::cerr);
+
+    map<type_mark,string,hashing::type_mark_hasher<> > db;
+
     for(int i=1;i<argc;++i)
     {
         const char      *id = argv[i];
         const type_spec &ts = type_spec::query( argv[i] );
         std::cerr << id << " => " << ts << std::endl;
+
+        const type_mark key = ts;
+        const string    value = id;
+        (void) db.insert(key,value);
     }
+
+    std::cerr << "db: " << db << std::endl;
 }
 Y_UTEST_DONE()

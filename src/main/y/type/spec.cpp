@@ -14,7 +14,7 @@ namespace upsylon {
 #define Y_TYPE_SPEC_CTOR() \
 info( tid ),               \
 uuid( tid.name() ),        \
-user()
+user() 
 
     type_spec:: type_spec(const std::type_info &tid) : Y_TYPE_SPEC_CTOR() { }
 
@@ -225,7 +225,7 @@ namespace upsylon {
     {
         static const char        prefix[] = "[";
         static const char        suffix[] = "]";
-        static const type_specs &tss = type_specs::instance();
+        static const type_specs &tss      = type_specs::instance();
         string_display::align(os,t.uuid,tss.max_uuid,prefix,suffix) << " :";
         for( const type_spec::alias *a = t.user.head; a; a=a->next )
         {

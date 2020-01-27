@@ -5,10 +5,9 @@
 #include "y/hashing/fnv.hpp"
 #include <typeinfo>
 
-namespace upsylon
-{
-    namespace hashing
-    {
+namespace upsylon {
+    
+    namespace hashing {
 
         //! dedicated hasher type for type info
         template <typename HASH_FUNCTION = hashing::fnv >
