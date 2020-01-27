@@ -1,7 +1,7 @@
 #include "y/oxide/field3d.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 
 using namespace upsylon;
@@ -27,7 +27,7 @@ namespace {
     static inline void testField1D()
     {
         const Layout1D L( Coord::Integer<Coord1D>(20, alea),  Coord::Integer<Coord1D>(20, alea) );
-        const string   id = typeid(T).name();
+        const string   id = type_name_of<T>();
         Field1D<T>     F(id,L);
         std::cerr << "Field1D <" << F.name << ">: " << F << std::endl;
         std::cerr << "\tsizeof=" << sizeof(Field1D<T>) << std::endl;
@@ -38,7 +38,7 @@ namespace {
     static inline void testField2D()
     {
         const Layout2D L( Coord::Integer<Coord2D>(20, alea),  Coord::Integer<Coord2D>(20, alea) );
-        const string   id = typeid(T).name();
+        const string   id = type_name_of<T>();
         Field2D<T>     F(id,L);
         std::cerr << "Field2D <" << F.name << ">: " << F << std::endl;
         std::cerr << "\tsizeof=" << sizeof(Field2D<T>) << std::endl;
@@ -50,7 +50,7 @@ namespace {
     static inline void testField3D()
     {
         const Layout3D L( Coord::Integer<Coord3D>(20, alea),  Coord::Integer<Coord3D>(20, alea) );
-        const string   id = typeid(T).name();
+        const string   id = type_name_of<T>();
         Field3D<T>     F(id,L);
         std::cerr << "Field3D <" << F.name << ">: " << F << std::endl;
         std::cerr << "\tsizeof=" << sizeof(Field3D<T>) << std::endl;

@@ -14,7 +14,7 @@ namespace  {
     template <typename T> static inline
     void doVTK()
     {
-        std::cerr << "<" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "<" << type_name_of<T>() << ">" << std::endl;
         const vtk          &VTK = vtk::instance();
         ios::ocstream fp( ios::cstderr );
         for(size_t iter=0;iter<8;++iter)
@@ -22,7 +22,7 @@ namespace  {
             const T tmp = support::get<T>();
             VTK(fp << "\t<",tmp) << '>' << '\n';
         }
-        std::cerr << "<" << typeid(T).name() << "/>" << std::endl;
+        std::cerr << "<" << type_name_of<T>() << "/>" << std::endl;
     }
 
     
