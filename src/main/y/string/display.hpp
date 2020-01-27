@@ -11,11 +11,26 @@ namespace upsylon
     struct string_display
     {
         //! output an aligned block
-        static std::ostream &  align( std::ostream &os, const char   *s, const size_t n, const size_t width );
+        static std::ostream &  align(std::ostream &os,
+                                     const char   *s,
+                                     const size_t  n,
+                                     const size_t  width,
+                                     const char   *prefix=0,
+                                     const char   *suffix=0);
+
         //! output an aligned text
-        static std::ostream &  align( std::ostream &os, const char   *s, const size_t width );
+        static std::ostream &  align(std::ostream &os,
+                                     const char    *s,
+                                     const size_t   width,
+                                     const char    *prefix=0,
+                                     const char    *suffix=0);
+
         //! output and aligned stringstring_display:: align
-        static std::ostream &  align( std::ostream &os, const string &s, const size_t width );
+        static std::ostream &  align(std::ostream &os,
+                                     const string &s,
+                                     const size_t  width,
+                                     const char   *prefix=0,
+                                     const char   *suffix=0);
     };
 }
 

@@ -4,8 +4,8 @@
 
 #include "y/string.hpp"
 #include "y/type/traits.hpp"
-#include <typeinfo>
 #include "y/core/list.hpp"
+#include <typeinfo>
 
 namespace upsylon
 {

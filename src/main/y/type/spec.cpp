@@ -220,13 +220,16 @@ namespace upsylon {
 
     const at_exit::longevity type_specs::life_time =memory::pooled::life_time-2;
 
+
     std::ostream & operator<<(std::ostream &os, const type_spec &t)
     {
-        static const type_specs &ts = type_specs::instance();
-        string_display::align(os,t.uuid,ts.max_uuid) << " :";
+        static const char        prefix[] = "[";
+        static const char        suffix[] = "]";
+        static const type_specs &tss = type_specs::instance();
+        string_display::align(os,t.uuid,tss.max_uuid,prefix,suffix) << " :";
         for( const type_spec::alias *a = t.user.head; a; a=a->next )
         {
-            os << ' ' << a->name;
+            os << ' ' << prefix << a->name << suffix;
         }
         return os;
     }
