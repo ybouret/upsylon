@@ -34,8 +34,8 @@ namespace upsylon
             virtual           ~function() throw();          //!< destructor
 			virtual const char *name()   const throw() = 0; //!< get a name
 			virtual void        set() throw() = 0;          //!< initialize
-			virtual void        run( const void *buffer, size_t buflen ) throw() = 0; //!< process bytes
-			virtual void        get( void *output, size_t outlen ) throw() = 0;       //!< finalize/fill array
+			virtual void        run(const void *buffer, size_t buflen) throw() = 0; //!< process bytes
+			virtual void        get(void *output, size_t outlen) throw() = 0;       //!< finalize/fill array
 
             //__________________________________________________________________
             //

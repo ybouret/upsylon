@@ -55,6 +55,9 @@ user()
 
     const string & type_spec:: name() const throw()
     {
+#if defined(_MSC_VER)
+        return uuid;
+#else
         if( user.has_nodes() )
         {
             return user.head->name;
@@ -63,6 +66,8 @@ user()
         {
             return uuid;
         }
+#endif
+
     }
 
     const std::type_info & type_spec:: key() const throw()
@@ -194,7 +199,7 @@ namespace upsylon {
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(type_specs);
-        static const at_exit::longevity life_time = 0;
+        static const at_exit::longevity life_time;
 
         friend class singleton<type_specs>;
 
@@ -213,6 +218,7 @@ namespace upsylon {
 
     };
 
+    const at_exit::longevity type_specs::life_time =memory::pooled::life_time-2;
 
     std::ostream & operator<<(std::ostream &os, const type_spec &t)
     {

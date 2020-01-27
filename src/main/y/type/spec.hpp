@@ -49,8 +49,8 @@ namespace upsylon
         // C++
         //______________________________________________________________________
         explicit type_spec(const std::type_info &tid);                       //!< setup
-        explicit type_spec(const std::type_info &id, const string &known);   //!< setup and add a default alias
-        explicit type_spec(const std::type_info &id, const char   *known);   //!< steup and add a default alias
+        explicit type_spec(const std::type_info &tid, const string &known);  //!< setup and add a default alias
+        explicit type_spec(const std::type_info &tid, const char   *known);  //!< steup and add a default alias
         virtual ~type_spec() throw();                                        //!< cleanup
         friend std::ostream & operator<<(std::ostream &, const type_spec &); //!< output
 
