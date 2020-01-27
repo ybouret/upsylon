@@ -131,6 +131,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(u64);
     Y_UTEST(b64id);
     Y_UTEST(spec);
+    Y_UTEST(spec_db);
     Y_UTEST(lzo);
     Y_UTEST(iobits);
     Y_UTEST(mtf);

@@ -240,8 +240,8 @@ namespace upsylon {
 
     const type_spec &  type_spec:: aka(const std::type_info &tid, const string &known)
     {
-        static type_specs &ts = type_specs::instance();
-        return ts.name(tid,known);
+        static type_specs &tss = type_specs::instance();
+        return tss.name(tid,known);
     }
 
     const type_spec &  type_spec:: aka(const std::type_info &tid, const char *known)
@@ -249,6 +249,21 @@ namespace upsylon {
         const string _(known); return aka(tid,_);
     }
 
+    const type_spec & type_spec:: query(const string &id)
+    {
+        static const type_specs &tss = type_specs::instance();
+        const type_spec_pointer *pp  = tss.dict.search(id);
+        if(!pp)
+        {
+            throw exception("no upsylon::type_spec<%s>", *id );
+        }
+        return **pp;
+    }
+
+    const type_spec & type_spec:: query(const char *id)
+    {
+        const string _(id); return query(_);
+    }
 
     void type_spec:: display( std::ostream &os)
     {
@@ -319,6 +334,7 @@ namespace upsylon {
 
         TS(int);
         TS(unsigned int);
+        TS(unsigned);
 
         TS(long);
         TS(unsigned long);
@@ -328,11 +344,13 @@ namespace upsylon {
 
         TS(float);
         TS(double);
+        TS(long double);
 
         TS(string);
 
         TS(complex<float>);
         TS(complex<double>);
+        TS(complex<long double>);
 
         TS(mpn);
         TS(mpz);

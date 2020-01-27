@@ -10,7 +10,7 @@
 #include "y/string.hpp"
 #include "y/hashing/type-info.hpp"
 #include "y/associative/set.hpp"
-
+#include "y/type/spec.hpp"
 
 namespace upsylon {
 

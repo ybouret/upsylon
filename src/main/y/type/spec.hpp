@@ -103,6 +103,13 @@ namespace upsylon
         //! display registered type spec
         static void display( std::ostream &);
 
+        //! query a type_spec by name
+        static const type_spec & query(const string &id);
+
+        //! query a type_spec by name
+        static const type_spec & query(const char   *id);
+        
+
         //______________________________________________________________________
         //
         //

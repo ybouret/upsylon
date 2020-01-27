@@ -5,7 +5,6 @@
 #include "y/container/matrix.hpp"
 #include "y/mpl/rational.hpp"
 
-
 using namespace upsylon;
 
 #define TS(TYPE) do { const type_spec &ts = type_spec::of<TYPE>(); \
@@ -83,4 +82,18 @@ if(#ID==type_spec_of<TYPE>()) std::cerr << "\tis  " << #ID << std::endl; else st
 	std::cerr << "type_name_of<short>()=" << type_name_of<short>() << std::endl;
 }
 Y_UTEST_DONE()
- 
+
+
+
+Y_UTEST(spec_db)
+{
+    std::cerr << "query among: "<< std::endl;
+    type_spec::display(std::cerr);
+    for(int i=1;i<argc;++i)
+    {
+        const char      *id = argv[i];
+        const type_spec &ts = type_spec::query( argv[i] );
+        std::cerr << id << " => " << ts << std::endl;
+    }
+}
+Y_UTEST_DONE()
