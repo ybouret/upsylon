@@ -7,6 +7,7 @@
 #include "y/strfwd.hpp"
 #include "y/type/bzset.hpp"
 #include "y/comparison.hpp"
+#include "y/type/int2int.hpp"
 
 #include <cstring>
 #include <cstdlib>
@@ -76,13 +77,13 @@ namespace upsylon
             };
 
             //! display with width
-            static std::ostream & Display( std::ostream &os, const Coord1D *addr, const size_t size, const unsigned w);
+            static std::ostream & Display(std::ostream &os,const Coord1D *addr,const size_t size,const unsigned w);
 
             //! display a coordinate as a vector with width for each component
             template <typename COORD> static inline
-            std::ostream & Disp( std::ostream &os, const COORD &c, const unsigned w=3)
+            std::ostream & Disp(std::ostream &os,const COORD &c,const unsigned w=3)
             {
-                return Display(os, (const Coord1D *) &c, Get<COORD>::Dimensions, w);
+                return Display(os,(const Coord1D *)&c,Get<COORD>::Dimensions,w);
             }
 
 
@@ -166,8 +167,8 @@ namespace upsylon
             template <typename COORD> static inline
             Coord1D Norm1( const COORD &c ) throw()
             {
-                const Coord1D *p = (const Coord1D*)&c;
-                Coord1D ans = abs_of(p[0]);
+                const Coord1D *p   = (const Coord1D*)&c;
+                Coord1D        ans = abs_of(p[0]);
                 for(size_t i=1;i<Get<COORD>::Dimensions;++i)
                 {
                     ans += abs_of(p[i]);
@@ -322,7 +323,7 @@ namespace upsylon
              //! return local ranks 2D: (ranks.y=r/sizes.x,ranks.x=r%sizes.x)
             static inline Coord2D LocalRanks( const Coord2D &sizes, const Coord1D &rank)
             {
-                const ldiv_t  dx = ldiv(rank,sizes.x);
+                const lldiv_t  dx = lldiv( rank,sizes.x);
                 const Coord2D ranks(dx.rem,dx.quot);
                 CheckRanks(&sizes.x, &ranks.x, 2);
                 return ranks;

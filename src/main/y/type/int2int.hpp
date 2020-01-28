@@ -14,6 +14,9 @@ namespace upsylon {
         {
             static void overflow_exception(const type_spec &target,
                                            const type_spec &source);
+
+            static void negative_exception(const type_spec &target,
+                                           const type_spec &source);
         };
 
         template <typename TARGET,typename SOURCE>
@@ -34,6 +37,15 @@ namespace upsylon {
             }
 
         private:
+            //------------------------------------------------------------------
+            //
+            //  UNSIGNED TARGET <- UNSIGNED SOURCE
+            //
+            //------------------------------------------------------------------
+
+            //------------------------------------------------------------------
+            // |_sizeof(SOURCE)<=sizeof(TARGET)
+            //------------------------------------------------------------------
             static inline
             TARGET convert(const SOURCE &source,
                            int2type<false>,        // SIGNED_TARGET
@@ -44,6 +56,9 @@ namespace upsylon {
                 return static_cast<TARGET>( source );
             }
 
+            //------------------------------------------------------------------
+            // |_sizeof(SOURCE)>sizeof(TARGET)
+            //------------------------------------------------------------------
             static inline
             TARGET convert(SOURCE   source,
                            int2type<false>,        // SIGNED_TARGET
@@ -56,6 +71,26 @@ namespace upsylon {
                 if(source>source_max) _i2i:: overflow_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
                 source = swap_le(source);
                 return swap_le( *(const TARGET *)&source );
+            }
+
+            //------------------------------------------------------------------
+            //
+            //  SIGNED TARGET <- UNSIGNED SOURCE
+            //
+            //------------------------------------------------------------------
+
+            //------------------------------------------------------------------
+            // |_sizeof(SOURCE)<=sizeof(TARGET)
+            //------------------------------------------------------------------
+            static inline
+            TARGET convert(const SOURCE &source,
+                           int2type<true>,         // SIGNED_TARGET
+                           int2type<false>,        // SIGNED_SOURCE
+                           int2type<false>         // LARGER_SOURCE
+            )
+            {
+                if(source<0) _i2i::negative_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
+                return static_cast<TARGET>( source );
             }
 
         };
