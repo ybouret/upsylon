@@ -91,7 +91,7 @@ namespace upsylon {
     class type_info_hasher
     {
     public:
-        inline  type_info_hasher() throw() {}
+        inline  type_info_hasher() throw() : H() {}
         inline ~type_info_hasher() throw() {}
 
         hashing::fnv H;
