@@ -88,24 +88,28 @@ user()
 
 namespace upsylon {
 
-    class type_info_hasher
-    {
-    public:
-        inline  type_info_hasher() throw() : H() {}
-        inline ~type_info_hasher() throw() {}
-
-        hashing::fnv H;
-
-        inline size_t operator()( const std::type_info &tid ) throw()
+    namespace {
+        
+        class type_info_hasher
         {
-            H.set();
-            H(tid.name());
-            return H.key<size_t>();
-        }
+        public:
+            inline  type_info_hasher() throw() : H() {}
+            inline ~type_info_hasher() throw() {}
 
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(type_info_hasher);
-    };
+            hashing::fnv H;
+
+            inline size_t operator()( const std::type_info &tid ) throw()
+            {
+                H.set();
+                H(tid.name());
+                return H.key<size_t>();
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(type_info_hasher);
+        };
+
+    }
 
     typedef intr_ptr<std::type_info,type_spec> type_spec_pointer;
     typedef memory::pooled                     type_spec_memory;
