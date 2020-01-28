@@ -86,6 +86,11 @@ namespace upsylon {
             use( new PNG_Format()  );
             use( new JPEG_Format() );
             use( new TIFF_Format() );
+
+            (void) type_spec::aka( typeid(rgb),  "rgb" );
+            (void) type_spec::aka( typeid(rgba), "rgba");
+            (void) type_spec::aka( typeid(YUV),  "YUV" );
+
          }
     }
 }
