@@ -122,7 +122,7 @@ namespace upsylon
                 for(data_type::db::iterator i=types.begin();i!=types.end();++i)
                 {
                     const data_type    &t = *i;
-                    fprintf(fp,"\t<%s>:\n", t.label.name());
+                    fprintf(fp,"\t<%s>:\n", *(t.label->name()));
                 }
                 fprintf(fp,"<MPI::DataTypes>\n");
             }

@@ -78,10 +78,10 @@ namespace upsylon
         namespace Oxide
             {
 
-                static inline ios::plugin * __plg( const std::type_info &tid )
+                static inline ios::plugin * __plg( const type_spec &tid )
                 {
                     static const IO &io = IO::instance();
-                    return io.create_for( type_spec::declare(tid) );
+                    return io.create_for( tid );
                 }
 
 #define Y_OXIDE_FIELD_INFO_CTOR() \
@@ -95,12 +95,12 @@ transfer(__plg(typeOfObject)),    \
 privateData(0),                   \
 privateSize(0)
 
-                Field:: Field(const string &id, const LayoutInfo &L, const size_t szObj, const std::type_info &tid) :
+                Field:: Field(const string &id, const LayoutInfo &L, const size_t szObj, const type_spec &tid) :
                 Y_OXIDE_FIELD_INFO_CTOR()
                 {
                 }
 
-                Field:: Field(const char *id, const LayoutInfo &L, const size_t szObj, const std::type_info &tid) :
+                Field:: Field(const char *id, const LayoutInfo &L, const size_t szObj, const type_spec &tid) :
                 Y_OXIDE_FIELD_INFO_CTOR()
                 {
                 }

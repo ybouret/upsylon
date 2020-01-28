@@ -9,7 +9,7 @@ namespace upsylon
     namespace Oxide
     {
         //! common constructor part
-#define Y_OXIDE_FIELD_CTOR() Field(id, L, sizeof(T), typeid(T) ), entry(NULL), _data(NULL)
+#define Y_OXIDE_FIELD_CTOR() Field(id, L, sizeof(T), type_spec_of<T>() ), entry(NULL), _data(NULL)
         
         //! common abstract API for typed fields, no dimension yet
         template <typename T>

@@ -80,17 +80,34 @@ user()
 
 #include "y/associative/set.hpp"
 #include "y/associative/map.hpp"
-#include "y/hashing/type-info.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/exception.hpp"
 #include "y/string/display.hpp"
-
+#include "y/hashing/fnv.hpp"
 
 namespace upsylon {
 
+    class type_info_hasher
+    {
+    public:
+        inline  type_info_hasher() throw() {}
+        inline ~type_info_hasher() throw() {}
+
+        hashing::fnv H;
+
+        inline size_t operator()( const std::type_info &tid ) throw()
+        {
+            H.set();
+            H(tid.name());
+            return H.key<size_t>();
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(type_info_hasher);
+    };
+
     typedef intr_ptr<std::type_info,type_spec> type_spec_pointer;
-    typedef hashing::type_info_hasher<>        type_info_hasher;
     typedef memory::pooled                     type_spec_memory;
     typedef set<
     std::type_info,
@@ -104,6 +121,8 @@ namespace upsylon {
     key_hasher<string>,
     type_spec_memory> type_name_db;
 
+
+    static const char fn[] = "type_spec";
 
     class type_specs : public singleton<type_specs>, public type_spec_db
     {
@@ -129,7 +148,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 type_spec              *ptr = new type_spec( tid );
                 const type_spec_pointer tsp = ptr;
-                if(!insert(tsp)) throw exception("unexpected insert failure");
+                if(!insert(tsp)) throw exception("%s: nexpected insert failure",fn);
 
                 //--------------------------------------------------------------
                 // insert uuid in dictionary
@@ -138,7 +157,7 @@ namespace upsylon {
                 {
                     if( !dict.insert(tsp->uuid,tsp) )
                     {
-                        throw exception("unexpected multiple uuid <%s>", *(tsp->uuid) );
+                        throw exception("%s: unexpected multiple uuid <%s>", fn, *(tsp->uuid) );
                     }
                 }
                 catch(...)
@@ -162,7 +181,7 @@ namespace upsylon {
                     const type_spec_pointer tsp = &ts;
                     if( ! dict.insert(known,tsp) )
                     {
-                        throw exception("unexpected multiple alias <%s> for <%s>", *known, *ts.uuid);
+                        throw exception("%s: unexpected multiple alias <%s> for <%s>", fn, *known, *ts.uuid);
                     }
                 }
                 catch(...)

@@ -40,8 +40,8 @@ namespace upsylon
 
 namespace upsylon
 {
-    mpi::data_type:: data_type(const std::type_info &t,
-                               const_type            v ) :
+    mpi::data_type:: data_type(const type_spec &t,
+                               const_type       v ) :
     label(t),
     value(v)
     {
@@ -54,7 +54,7 @@ namespace upsylon
     value(other.value)
     {}
 
-    const std::type_info & mpi::data_type:: key() const throw() { return label; }
+    const type_mark & mpi::data_type:: key() const throw() { return label; }
 
 
 }

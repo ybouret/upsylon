@@ -377,7 +377,7 @@ if(!writers.insert(w)) throw exception("%s(multiple <" #TYPE "," #COORD  ">)",Fn
         const vtk::Writer & vtk:: revealField(ios::ostream &fp,
                                               const Field  &F ) const
         {
-            const Writer &W = get( type_spec::declare(F.typeOfObject) );
+            const Writer &W = get(  F.typeOfObject );
 
             if( W.components() == 1)
             {

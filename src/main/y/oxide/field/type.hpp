@@ -6,7 +6,7 @@
 #include "y/oxide/layout.hpp"
 #include "y/string.hpp"
 #include "y/ios/plugin.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 namespace upsylon
 {
@@ -34,7 +34,7 @@ namespace upsylon
             const size_t               ownedObjects; //!< owned built objects
             const size_t               linearExtent; //!< EXPECTED linear extent in bytes
             const size_t               sizeOfObject; //!< sizeof(T)
-            const std::type_info      &typeOfObject; //!< system wide type info name
+            const type_spec           &typeOfObject; //!< system wide type info name
             const ios::plugin::pointer transfer;     //!< type related load/save method for one object
 
 
@@ -179,8 +179,8 @@ namespace upsylon
 
 
         protected:
-            explicit Field(const string &id, const LayoutInfo &L, const size_t szObj, const std::type_info &); //!< setup
-            explicit Field(const char   *id, const LayoutInfo &L, const size_t szObj, const std::type_info &); //!< setup
+            explicit Field(const string &id, const LayoutInfo &L, const size_t szObj, const type_spec &); //!< setup
+            explicit Field(const char   *id, const LayoutInfo &L, const size_t szObj, const type_spec &); //!< setup
 
             void    *privateData; //!< private data if dynamic
             size_t   privateSize; //!< private size if dynamic

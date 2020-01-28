@@ -8,7 +8,7 @@
 #include "y/associative/map.hpp"
 #include "y/ios/upack.hpp"
 #include "y/ios/ovstream.hpp"
-#include "y/hashing/type-info.hpp"
+#include "y/hashing/type-mark.hpp"
 #include "y/hashing/imph.hpp"
 #include <cstdio>
 
@@ -59,23 +59,23 @@ namespace upsylon
             //------------------------------------------------------------------
             // types
             //------------------------------------------------------------------
-            typedef hashing::type_info_hasher<>          hasher;      //!< hasher for typeinfo
+            typedef hashing::type_mark_hasher<>          hasher;      //!< hasher for typeinfo
             typedef MPI_Datatype                         type;        //!< value type
             typedef const type                           const_type;  //!< content type
-            typedef set<std::type_info,data_type,hasher> db;          //!< database
+            typedef set<type_mark,data_type,hasher>      db;          //!< database
 
             //------------------------------------------------------------------
             // methods
             //------------------------------------------------------------------
-            explicit data_type(const std::type_info &,const_type);       //!< initialize
-            virtual ~data_type() throw();                                //!< destructor
-            data_type(const data_type &other);                           //!< copy
-            const std::type_info & key() const throw();                  //!< key for set
+            explicit data_type(const type_spec &,const_type);       //!< initialize
+            virtual ~data_type() throw();                           //!< destructor
+            data_type(const data_type &other);                      //!< copy
+            const type_mark & key() const throw();                  //!< key for set
 
             //------------------------------------------------------------------
             // members
             //------------------------------------------------------------------
-            const std::type_info &label;                                 //!< system identifier
+            const type_mark       label;                                 //!< system identifier
             const_type            value;                                 //!< wrapped value
 
         private:

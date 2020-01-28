@@ -8,8 +8,7 @@ namespace upsylon
         void __register(mpi::data_type::db &types,
                         MPI_Datatype        v )
         {
-            const std::type_info & info = typeid(T);
-            const mpi::data_type   dt(info,v);
+            const mpi::data_type   dt( type_spec_of<T>(),v);
             (void) types.insert(dt);
         }
     }

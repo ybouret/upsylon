@@ -1,5 +1,6 @@
 #include "y/hashing/function.hpp"
 #include "y/string.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -9,8 +10,8 @@ namespace upsylon
 
 		function:: ~function() throw()
         {
-            (size_t &)length = 0;
-            (size_t &)window = 0;
+            aliasing::_(length) = 0;
+            aliasing::_(window) = 0;
         }
 
 		function:: function( size_t L, size_t W ) throw() : length(L), window(W)
