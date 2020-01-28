@@ -1,21 +1,6 @@
 #include "y/ios/plugins.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon
-{
-
-#if 0
-    namespace ios
-    {
-
-
-        class_plugin:: hasher::  hasher() throw() {}
-        class_plugin:: hasher:: ~hasher() throw() {}
-
-    }
-#endif
-    
-}
 
 namespace upsylon
 {
@@ -27,7 +12,7 @@ namespace upsylon
         }
 
 
-        class_plugin:: class_plugin( const std::type_info &t, const plugin::pointer  &p) throw() :
+        class_plugin:: class_plugin(const type_spec &t,const plugin::pointer  &p) throw() :
         tid(t), plg(p)
         {
         }
@@ -38,7 +23,7 @@ namespace upsylon
         {
         }
 
-        const std::type_info &  class_plugin:: key() const throw()
+        const type_mark &  class_plugin:: key() const throw()
         {
             return tid;
         }
@@ -62,7 +47,7 @@ namespace upsylon
         {
         }
 
-        void plugins:: declare(const std::type_info    &tid,
+        void plugins:: declare(const type_spec         &tid,
                                const plugin::pointer   &ptr )
         {
             static const char fn[] = "ios::plugins:declare";
@@ -76,20 +61,20 @@ namespace upsylon
                 }
                 else
                 {
-                    throw exception("%s(different plugins for same type_info<%s>)",fn,tid.name());
+                    throw exception("%s(different plugins for same type_info<%s>)",fn,*(tid.name()));
                 }
             }
             else
             {
                 const class_plugin tmp(tid,ptr);
-                if(!insert(tmp)) throw exception("%s(unexpected insert failure for <%s>)",fn, tid.name() );
+                if(!insert(tmp)) throw exception("%s(unexpected insert failure for <%s>)",fn, *(tid.name()) );
             }
         }
 
-        plugin * plugins:: create_for( const std::type_info &tid ) const
+        plugin * plugins:: create_for( const type_spec &tid ) const
         {
             const class_plugin *p = search(tid);
-            if(!p) throw exception("no ios::plugin for <%s>", tid.name() );
+            if(!p) throw exception("no ios::plugin for <%s>", *(tid.name()) );
             return p->plg->clone();
         }
 

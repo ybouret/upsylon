@@ -179,7 +179,7 @@ Y_UTEST(oxide_wksp)
         std::cerr << "OxideIO.size() = " << OxideIO.size()    << std::endl;
         for(IO::iterator it = OxideIO.begin(); it != OxideIO.end(); ++it )
         {
-            std::cerr << "io for <" << it->key().name() << ">" << std::endl;
+            std::cerr << "io for <" << it->key()->name() << ">" << std::endl;
         }
     }
 

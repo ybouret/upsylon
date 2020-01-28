@@ -5,7 +5,7 @@
 
 #include "y/ios/plugin.hpp"
 #include "y/associative/set.hpp"
-#include "y/hashing/type-info.hpp"
+#include "y/hashing/type-mark.hpp"
 
 namespace upsylon
 {
@@ -26,7 +26,7 @@ namespace upsylon
             // members
             //
             //------------------------------------------------------------------
-            const std::type_info   &tid; //!< system typeid
+            const type_mark         tid; //!< system typeid
             const plugin::pointer   plg; //!< shared pointer
             
             //------------------------------------------------------------------
@@ -34,8 +34,8 @@ namespace upsylon
             // methods
             //
             //------------------------------------------------------------------
-            const std::type_info & key() const throw();                             //!< key for database
-            class_plugin( const std::type_info &, const plugin::pointer &) throw(); //!< setup
+            const type_mark & key() const throw();                             //!< key for database
+            class_plugin( const type_spec &, const plugin::pointer &) throw(); //!< setup
             class_plugin(const class_plugin &other) throw();                        //!< copy
             ~class_plugin() throw();                                                //!< cleanup
             
@@ -44,7 +44,7 @@ namespace upsylon
             //! dedicated hasher
             //
             //------------------------------------------------------------------
-            typedef  hashing::type_info_hasher<> hasher;
+            typedef  hashing::type_mark_hasher<> hasher;
             
             
         private:
@@ -58,7 +58,7 @@ namespace upsylon
         //
         //
         //----------------------------------------------------------------------
-        typedef set<std::type_info,class_plugin,class_plugin::hasher> plugins_type;
+        typedef set<type_mark,class_plugin,class_plugin::hasher> plugins_type;
         
         //! dedicated operations, factory design pattern
         class plugins : public plugins_type
@@ -72,7 +72,7 @@ namespace upsylon
             void declare( plugin *P )
             {
                 const plugin::pointer  ptr(P);
-                declare( typeid(T), ptr );
+                declare( type_spec_of<T>(), ptr );
             }
             
             //! network byte order plugin for T
@@ -85,14 +85,14 @@ namespace upsylon
             template <typename T> inline void declare_srz() { declare<T>( new srz_plugin<T>() ); }
             
             //! return a cloned plugin
-            plugin * create_for( const std::type_info & ) const;
+            plugin * create_for( const type_spec & ) const;
             
             //! helper
-            template <typename T> inline plugin * query() const { return create_for( typeid(T) ); }
+            template <typename T> inline plugin * query() const { return create_for( type_spec_of<T>() ); }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(plugins);
-            void declare( const std::type_info &tid, const plugin::pointer  &ptr );
+            void declare(const type_spec &,const plugin::pointer &);
         };
         
         

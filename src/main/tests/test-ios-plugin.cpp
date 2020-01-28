@@ -13,7 +13,7 @@ namespace
     template <typename T>
     static inline void do_plugin( ios::plugin &plg )
     {
-        std::cerr << "I/O for <" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "I/O for <" << type_name_of<T>() << ">" << std::endl;
         ios::ovstream data;
         for(size_t cycle=0;cycle<16;++cycle)
         {
@@ -126,7 +126,7 @@ Y_UTEST(ios_plugin)
     {
         const uint32_t uuid = (*i).plg->uuid;
         const string   sid  = vformat("0x%08x",uuid);
-        std::cerr << "<" << i->key().name() << "> : " << sid << std::endl;
+        std::cerr << "<" << i->key()->name() << "> : " << sid << std::endl;
     }
 
     do_with<uint32_t>( pdb );

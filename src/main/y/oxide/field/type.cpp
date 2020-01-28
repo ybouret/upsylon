@@ -81,7 +81,7 @@ namespace upsylon
                 static inline ios::plugin * __plg( const std::type_info &tid )
                 {
                     static const IO &io = IO::instance();
-                    return io.create_for(tid);
+                    return io.create_for( type_spec::declare(tid) );
                 }
 
 #define Y_OXIDE_FIELD_INFO_CTOR() \
