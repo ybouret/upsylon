@@ -99,7 +99,19 @@ namespace upsylon
     struct is_signed {
         static const bool value = (T(-1) < T(0)); //!< compile time detection
     };
-    
+
+    template <typename T>
+    struct integral_of
+    {
+        enum            { sizeof_T = sizeof(T) };         //!< alias
+        static const bool signed_T = is_signed<T>::value; //!< alias
+
+        typedef unsigned_int<sizeof_T>                                 u_int_T;       //!< the matching unsigned struct, in any case
+        typedef signed_int<sizeof_T>                                   s_int_T;       //!< the matching signed struct
+        typedef typename select_type<signed_T,s_int_T,u_int_T>::result __integral;    //!< the matching struct
+        typedef typename __integral::type                              type;          //!< the matching type
+    };
+
     //! compute the limits on an integral type
     template <typename T>
     struct limit_of
