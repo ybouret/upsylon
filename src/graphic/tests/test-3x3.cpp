@@ -10,10 +10,10 @@ using namespace Graphic;
 
 template <typename T>
 static inline
-void apply( const Pixmap<T> &source, Tiles &tiles, const char *sfx )
+void apply( const Pixmap<T> &source, Tiles &tiles )
 {
-    Image              &IMG      = Image::instance();
-
+    Image              &IMG = Image::instance();
+    const  string      &sfx = IMG.tags.of<T>();
     Pixmap<T> target( source->w, source->h );
 
     Apply3x3::Median(target, source, tiles);
@@ -86,10 +86,10 @@ Y_UTEST(3x3)
         IMG.saveAs("org.png", pxm4, 0);
         Tiles     tiles( *pxm1, par );
 
-        apply( pxm1, tiles, "1" );
-        apply( pxmf, tiles, "f" );
-        apply( pxm3, tiles, "3" );
-        apply( pxm4, tiles, "4" );
+        apply( pxm1, tiles);
+        apply( pxmf, tiles);
+        apply( pxm3, tiles);
+        apply( pxm4, tiles);
 
 
     }

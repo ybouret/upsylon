@@ -10,14 +10,14 @@ namespace upsylon {
         {
         }
 
-        PixTag_:: PixTag_(const std::type_info &tid_,
+        PixTag_:: PixTag_(const type_spec      &tid_,
                           const char           *tag_ ) :
         tid( tid_ ),
         tag( tag_ )
         {
         }
 
-        const std::type_info & PixTag_:: key() const throw()
+        const type_mark & PixTag_:: key() const throw()
         {
             return tid;
         }
@@ -40,14 +40,15 @@ namespace upsylon {
         {
             if( !insert(p) )
             {
-                throw exception("PixTags: multiple '%s", p->tid.name() );
+                throw exception("PixTags: multiple '%s", *(p->tid->name()) );
             }
         }
 
-        const string & PixTags:: of(const std::type_info &tid) const
+        const string & PixTags:: of(const type_spec &ts) const
         {
-            const PixTag *pp = search(tid);
-            if(!pp) throw exception("PixTags: no '%s'", tid.name() );
+            const type_mark tm(ts);
+            const PixTag    *pp = search(tm);
+            if(!pp) throw exception("PixTags: no '%s'", *(ts.name()) );
             return ( (**pp).tag );
         }
 

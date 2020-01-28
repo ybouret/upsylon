@@ -3,7 +3,7 @@
 #ifndef Y_GRAPHIC_IMAGE_PIXTAGS_INCLUDED
 #define Y_GRAPHIC_IMAGE_PIXTAGS_INCLUDED 1
 
-#include "y/hashing/type-info.hpp"
+#include "y/hashing/type-mark.hpp"
 #include "y/string.hpp"
 #include "y/graphic/color/rgb.hpp"
 #include "y/graphic/types.hpp"
@@ -19,21 +19,21 @@ namespace upsylon {
         class PixTag_ : public Object
         {
         public:
-            typedef hashing::type_info_hasher<> Hasher; //!< special hasher
+            typedef hashing::type_mark_hasher<> Hasher; //!< special hasher
 
 
-            const std::type_info &tid; //!< global type id
-            const string          tag; //!< short tag
+            const type_mark tid; //!< global type id
+            const string    tag; //!< short tag
 
-            const std::type_info & key() const throw(); //!< for pointer
-            virtual ~PixTag_() throw(); //!< cleanup
-            explicit PixTag_(const std::type_info &, const char *); //!< setup
+            const type_mark & key() const throw(); //!< for pointer
+            virtual          ~PixTag_() throw(); //!< cleanup
+            explicit          PixTag_(const type_spec &, const char *); //!< setup
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixTag_);
         };
 
-        typedef intr_ptr<std::type_info,PixTag_>           PixTag;   //!< alias
-        typedef set<std::type_info,PixTag,PixTag_::Hasher> PixTags_; //!< alias
+        typedef intr_ptr<type_mark,PixTag_>           PixTag;   //!< alias
+        typedef set<type_mark,PixTag,PixTag_::Hasher> PixTags_; //!< alias
 
         //! datbase of pixtags
         class PixTags : public PixTags_
@@ -46,7 +46,7 @@ namespace upsylon {
             template <typename T> inline
             void create( const char *tag )
             {
-                const PixTag p = new PixTag_( typeid(T), tag );
+                const PixTag p = new PixTag_( type_spec_of<T>(), tag );
                 create(p);
             }
 
@@ -54,14 +54,13 @@ namespace upsylon {
             template <typename T> inline
             const string &of() const
             {
-                const std::type_info &tid = typeid(T);
-                return of(tid);
+                return of( type_spec_of<T>() );
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixTags);
             void create( const PixTag & );
-            const string &of(const std::type_info &) const;
+            const string &of(const type_spec &) const;
         };
 
     }
