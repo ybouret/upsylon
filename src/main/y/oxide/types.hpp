@@ -332,8 +332,8 @@ namespace upsylon
             //! return local ranks 3D
             static inline Coord3D LocalRanks( const Coord3D &sizes, const Coord1D &rank)
             {
-                const ldiv_t dx = ldiv(rank,sizes.x);
-                const ldiv_t dy = ldiv(dx.quot,sizes.y);
+                const lldiv_t dx = lldiv(rank,sizes.x);
+                const lldiv_t dy = lldiv(dx.quot,sizes.y);
                 const Coord3D ranks(dx.rem,dy.rem,dy.quot);
                 CheckRanks(&sizes.x,&ranks.x,3);
                 return ranks;

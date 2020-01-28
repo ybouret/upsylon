@@ -44,8 +44,9 @@ namespace upsylon
             {
                 assert(level>=min_level);
                 assert(level<=max_level);
+				static const size_t one   = 1;
                 static const T      half  = T(0.5);
-                const  size_t       iter  = 1 << (level-2);  // local number of iterations
+                const  size_t       iter  = one << (level-2);  // local number of iterations
                 T                   value[max_iters];        // local stack
 
                 // accumulate values
