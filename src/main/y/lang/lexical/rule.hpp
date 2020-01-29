@@ -13,54 +13,98 @@ namespace upsylon
     {
         namespace Lexical
         {
+            //------------------------------------------------------------------
+            //
+            // Aliases
+            //
+            //------------------------------------------------------------------
             typedef arc_ptr<const Pattern>          Motif;  //!< shared pattern
             typedef functor<void,TL1(const Token&)> Action; //!< executed on pattern recognition
 
-            //! base class for a scanner event
+            //--------------------------------------------------------------
+            //
+            //! base class for a scanner event = type+action
+            /**
+             an event is a wrapper for an action to take upon a pattern
+             */
+            //------------------------------------------------------------------
             class Event : public CountedObject
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // types and definitions
+                //
+                //--------------------------------------------------------------
                 //! type of event
-                enum Type
+                enum Kind
                 {
                     Regular, //!< for lexeme production  (Forward/Discard)
                     Control  //!< for translator control (Jump/Call/Back)
                 };
+                typedef arc_ptr<const Event> Pointer; //!< shared pointer
 
-                typedef arc_ptr<Event> Pointer; //!< shared pointer
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+                virtual ~Event() throw(); //!<destructor
 
-                const   Type   type;   //!< category of event
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const   Kind   kind;   //!< category of event
                 mutable Action action; //!< action to be taken
-                
-                //! destructor
-                virtual ~Event() throw();
 
             protected:
                 //! initialize
-                explicit Event(const Type t, const Action &a);
+                explicit Event(const Kind k, const Action &a);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Event);
             };
 
+            //------------------------------------------------------------------
+            //
             //! base class for regular events
+            /**
+             regular events will produce or discard lexemes after a given action
+             */
+            //------------------------------------------------------------------
             class RegularEvent : public Event
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // types and definitions
+                //
+                //--------------------------------------------------------------
                 //! type of regular event
                 enum Type
                 {
                     Forward, //!< will produce a lexeme
                     Discard  //!< will be discarded after action
                 };
+
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+                virtual ~RegularEvent() throw(); //!< destructor
+
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
                 const Type type; //!< category of regular event
 
-                //! destructor
-                virtual ~RegularEvent() throw();
-
             protected:
-                //! initialize
-                explicit RegularEvent(const Type t, const Action &a);
+                explicit RegularEvent(const Type, const Action &); //!< setup
 
             private:
                 Y_DISABLE_ASSIGN(RegularEvent);
@@ -68,35 +112,48 @@ namespace upsylon
 
             typedef arc_ptr<RegularEvent> RegularCode; //!< shared pointer
 
+
+            //------------------------------------------------------------------
+            //
             //! forwarding event
+            /**
+             take action an produce lexeme
+             */
+            //------------------------------------------------------------------
             class OnForward : public RegularEvent
             {
             public:
-                //! initialize
-                explicit OnForward(const Action &a);
-
-                //! destructor
-                virtual ~OnForward() throw();
+                explicit OnForward(const Action &); //!< setup
+                virtual ~OnForward() throw();       //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnForward);
             };
 
+            //------------------------------------------------------------------
+            //
             //! discarding event
+            /**
+             take action and discard lexeme
+             */
+            //------------------------------------------------------------------
             class OnDiscard : public RegularEvent
             {
             public:
-                //! initialize
-                explicit OnDiscard(const Action &a);
-
-                //! desctructor
-                virtual ~OnDiscard() throw();
+                explicit OnDiscard(const Action &); //!< setup
+                virtual ~OnDiscard() throw();       //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnDiscard);
             };
 
+            //------------------------------------------------------------------
+            //
             //! base class for control events
+            /**
+             a control event will change a translator's state
+             */
+            //------------------------------------------------------------------
             class ControlEvent : public Event
             {
             public:
@@ -128,49 +185,64 @@ namespace upsylon
 
             typedef arc_ptr<ControlEvent> ControlCode; //!< shared control event
 
+            //------------------------------------------------------------------
+            //
             //! make a call
+            /**
+             change local scanner, recording caller
+             */
+            //------------------------------------------------------------------
             class OnCall : public ControlEvent
             {
             public:
-                //!initialize
-                explicit OnCall(const string &l, const Action &a);
-
-                //!destructor
-                virtual ~OnCall() throw();
+                explicit OnCall(const string &, const Action &);  //!< setup
+                virtual ~OnCall() throw();                        //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnCall);
             };
 
+            //------------------------------------------------------------------
+            //
             //! make a jump
+            /**
+             change local scanner without caller record
+             */
+            //------------------------------------------------------------------
             class OnJump : public ControlEvent
             {
             public:
-                //!initialize
-                explicit OnJump(const string &l, const Action &a);
-
-                //!destructor
-                virtual ~OnJump() throw();
+                explicit OnJump(const string &, const Action &);  //!< setup
+                virtual ~OnJump() throw();                        //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnJump);
             };
 
+            //------------------------------------------------------------------
+            //
             //! make a come back
+            /**
+             come back to a former caller
+             */
+            //------------------------------------------------------------------
             class OnBack : public ControlEvent
             {
             public:
-                //! initialize
-                explicit OnBack(const Action &a);
-                
-                //! destructor
-                virtual ~OnBack() throw();
+                explicit OnBack(const Action &a);//!< setup
+                virtual ~OnBack() throw();       //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnBack);
             };
-            
+
+            //------------------------------------------------------------------
+            //
             //! lexical rule motif->action
+            /**
+             the motif cannot be weak
+             */
+            //------------------------------------------------------------------
             class Rule : public Object
             {
             public:

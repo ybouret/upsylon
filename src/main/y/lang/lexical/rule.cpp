@@ -9,18 +9,18 @@ namespace upsylon
         namespace Lexical
         {
             Event:: ~Event() throw() {}
-            Event:: Event(const Type t, const Action &a) : type(t), action(a) {}
+            Event:: Event(const Kind k, const Action &a) : kind(k), action(a) {}
 
             //
             RegularEvent:: ~RegularEvent() throw() {}
-            RegularEvent:: RegularEvent(const Type t, const Action &a) : Event(Regular,a), type(t) {}
+            RegularEvent::  RegularEvent(const Type t, const Action &a) : Event(Regular,a), type(t) {}
 
             //
-            OnForward:: OnForward(const Action &a) : RegularEvent(Forward,a) {}
+            OnForward::  OnForward(const Action &a) : RegularEvent(Forward,a) {}
             OnForward:: ~OnForward() throw()  {}
 
             //
-            OnDiscard:: OnDiscard(const Action &a) : RegularEvent(Discard,a) {}
+            OnDiscard::  OnDiscard(const Action &a) : RegularEvent(Discard,a) {}
             OnDiscard:: ~OnDiscard() throw() {}
 
             //
@@ -38,11 +38,11 @@ namespace upsylon
             OnCall:: ~OnCall() throw() {}
 
             //
-            OnJump:: OnJump(const string &l, const Action &a) : ControlEvent(Jump,a,l) {}
+            OnJump::  OnJump(const string &l, const Action &a) : ControlEvent(Jump,a,l) {}
             OnJump:: ~OnJump() throw() {}
 
             //
-            OnBack:: OnBack(const Action &a) : ControlEvent(a) {}
+            OnBack::  OnBack(const Action &a) : ControlEvent(a) {}
             OnBack:: ~OnBack() throw() {}
 
         }
@@ -70,7 +70,7 @@ namespace upsylon
             label(ruleLabel),
             motif(ruleMotif),
             handle( & *ruleEvent ),
-            event( (Event*)handle )
+            event( (RegularEvent*)handle )
             {
                 checkMotif();
             }
@@ -83,7 +83,7 @@ namespace upsylon
             label(ruleLabel),
             motif(ruleMotif),
             handle( & *ruleEvent ),
-            event( (Event*)handle )
+            event( (ControlEvent*)handle )
             {
                 checkMotif();
             }
@@ -95,7 +95,7 @@ namespace upsylon
                 {
                     const char *rid = **label;
                     const char *tid = "Regular";
-                    if(event->type==Event::Control)
+                    if(event->kind==Event::Control)
                     {
                         tid = "Control";
                     }

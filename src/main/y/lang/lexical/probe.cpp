@@ -115,7 +115,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     // check production
                     //----------------------------------------------------------
-                    switch(bestRule->event->type)
+                    switch(bestRule->event->kind)
                     {
                         case Event::Regular: {
 
