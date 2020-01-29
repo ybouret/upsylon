@@ -2,7 +2,7 @@
 #ifndef Y_LANG_SYNTAX_PARSER_INCLUDED
 #define Y_LANG_SYNTAX_PARSER_INCLUDED 1
 
-#include "y/lang/lexical/translator.hpp"
+#include "y/lang/lexical/lexer.hpp"
 #include "y/lang/syntax/grammar.hpp"
 
 #include "y/lang/syntax/terminal.hpp"

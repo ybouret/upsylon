@@ -3,15 +3,14 @@
 #define Y_LANG_SYNTAX_RULE_INCLUDED 1
 
 #include "y/lang/syntax/node.hpp"
-#include "y/lang/lexical/translator.hpp"
+#include "y/lang/lexical/lexer.hpp"
 #include <typeinfo>
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Syntax {
 
 
             //! arguments for accept

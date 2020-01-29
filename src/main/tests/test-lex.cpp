@@ -1,5 +1,5 @@
 
-#include "y/lang/lexical/translator.hpp"
+#include "y/lang/lexical/lexer.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 

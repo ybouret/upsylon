@@ -2,7 +2,7 @@
 #ifndef Y_LANG_SYNTAX_NODE_INCLUDED
 #define Y_LANG_SYNTAX_NODE_INCLUDED 1
 
-#include "y/lang/lexical/translator.hpp"
+#include "y/lang/lexical/lexer.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/lang/pattern/matching.hpp"
 

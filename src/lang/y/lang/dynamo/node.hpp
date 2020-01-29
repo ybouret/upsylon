@@ -2,7 +2,7 @@
 #ifndef Y_DYNAMO_NODE_INCLUDED
 #define Y_DYNAMO_NODE_INCLUDED 1
 
-#include "y/lang/lexical/unit.hpp"
+#include "y/lang/lexical/lexeme.hpp"
 #include "y/lang/dynamo/types.hpp"
 #include "y/lang/source.hpp"
 #include "y/hashing/function.hpp"

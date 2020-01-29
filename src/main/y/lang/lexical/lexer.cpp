@@ -1,5 +1,5 @@
 
-#include "y/lang/lexical/translator.hpp"
+#include "y/lang/lexical/lexer.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon

@@ -1,6 +1,6 @@
 
 #include "y/lang/lexical/plugin/strings.hpp"
-#include "y/lang/lexical/translator.hpp"
+#include "y/lang/lexical/lexer.hpp"
 #include "y/exception.hpp"
 #include "y/code/utils.hpp"
 
