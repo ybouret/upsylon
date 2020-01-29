@@ -44,8 +44,7 @@ echo(false)
                 os << ' ';
                 return os;
             }
-
-
+            
             void Scanner:: emitLabel(const Tag &ruleLabel) const
             {
                 indent(std::cerr) << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;

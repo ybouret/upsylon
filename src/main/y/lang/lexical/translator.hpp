@@ -20,6 +20,7 @@ namespace upsylon
                 typedef Lexical::Scanner             Scanner;  //!< alias for derived classes
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
                 typedef set<string,Plugin::Pointer>  Plugins;  //!< database of plugins
+                
                 const Tag  label;                              //!< shared label
                 
                 //! destructor

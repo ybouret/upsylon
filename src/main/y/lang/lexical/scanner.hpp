@@ -15,7 +15,6 @@ namespace upsylon
         {
             typedef const ControlEvent *Directive; //!< used in probe method
 
-
             //------------------------------------------------------------------
             //
             //! simple 'Flex' scanner
