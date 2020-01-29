@@ -10,8 +10,7 @@ namespace upsylon
     {
         namespace Lexical
         {
-            class Translator; //!< forward declaration
-
+            
             //! plugin API: a dedicated scanner
             /**
              a plugin is a reusable dedicated scanner that will create a lexeme

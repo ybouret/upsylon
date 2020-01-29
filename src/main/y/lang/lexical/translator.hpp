@@ -137,9 +137,11 @@ namespace upsylon
                 void    link(Scanner &, Plugin & );   //!< scanner calls plugin upon trigger
 
                 void setup();
-                
+                void setStemOf( Scanner *scanner ) throw();
+
             public:
                 Dictionary dict; //!< shared dictionary, set as userDict for registers scanners
+                size_t     depth() const throw(); //!< history.size()
             };
         }
 

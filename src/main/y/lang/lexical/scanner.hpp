@@ -13,6 +13,7 @@ namespace upsylon
     {
         namespace Lexical
         {
+            class Translator;                      //!< forward declaration
             typedef const ControlEvent *Directive; //!< used in probe method
 
             //------------------------------------------------------------------
@@ -59,7 +60,7 @@ namespace upsylon
                                     METHOD_POINTER  meth)
                 {
                     const Tag          ruleLabel = new string(id);
-                    const Motif        ruleMotif = RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,dict);
                     const Action       ruleAction(host,meth);
                     const RegularCode  ruleEvent = new OnForward(ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -87,7 +88,7 @@ namespace upsylon
                                     METHOD_POINTER  meth)
                 {
                     const Tag          ruleLabel = new string(id);
-                    const Motif        ruleMotif = RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,dict);
                     const Action       ruleAction(host,meth);
                     const RegularCode  ruleEvent = new OnDiscard(ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -121,7 +122,7 @@ namespace upsylon
                 {
                     const string       id        = JumpLabel(target);
                     const Tag          ruleLabel = new string(id);
-                    const Motif        ruleMotif = RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,dict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnJump(target,ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -167,7 +168,7 @@ namespace upsylon
                 {
                     const string       id        = CallLabel(target);
                     const Tag          ruleLabel = new string(id);
-                    const Motif        ruleMotif = RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,dict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnCall(target,ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -212,7 +213,7 @@ namespace upsylon
                 {
                     const string       id        = BackLabel(*label,rx);
                     const Tag          ruleLabel = new string(id);
-                    const Motif        ruleMotif = RegExp(rx,userDict);
+                    const Motif        ruleMotif = RegExp(rx,dict);
                     const Action       ruleAction(host,meth);
                     const ControlCode  ruleEvent = new OnBack(ruleAction);
                     add(ruleLabel,ruleMotif,ruleEvent);
@@ -279,19 +280,24 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                Rule::List    rules;
-                const Module *probed;
+                Rule::List        rules;
+                const Module     *probed;
+
                 void checkLabel(const Tag &ruleLabel) const;
                 void checkMotif(const Tag &ruleLabel, const Motif &ruleMotif) const;
                 void emitLabel(const Tag &ruleLabel) const;
 
+
             public:
-                const Dictionary *userDict; //!< validity must be checked by user
+                const Translator *stem; //!< default to NULL
+                const Dictionary *dict; //!< validity must be checked by user
+
                 bool              verbose;  //!< to check build up of the scanner
                 bool              echo;     //!< to echo within the nothing() call
                 
                 //! indent using depth
                 std::ostream     &indent( std::ostream &) const;
+
             };
 
         }

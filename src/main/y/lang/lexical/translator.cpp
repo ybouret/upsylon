@@ -19,6 +19,12 @@ scanners(4,as_capacity), \
 plugins(4,as_capacity),  \
 dict()
 
+            void Translator:: setStemOf( Scanner *scanner ) throw()
+            {
+                assert(scanner);
+                scanner->dict = &dict;
+                scanner->stem =  this;
+            }
 
             void Translator:: setup()
             {
@@ -28,7 +34,7 @@ dict()
                     if(!scanners.insert(p)) throw exception("[%s] cannot initialize scanners!!!", **label );
                 }
                 curr = base;
-                base->userDict = &dict;
+                setStemOf(base);
             }
 
             Translator:: Translator(const string &id) :
@@ -49,6 +55,11 @@ dict()
             }
 
 
+            size_t Translator:: depth() const throw()
+            {
+                return history.size;
+            }
+
             void Translator :: enroll( Scanner *s )
             {
                 assert(s);
@@ -57,7 +68,7 @@ dict()
                 {
                     throw exception("[%s] multiple scanner [%s]", **label, **(p->label) );
                 }
-                p->userDict = &dict;
+                setStemOf( & *p );
             }
 
             Plugin & Translator:: enroll_plugin( Plugin *plg )

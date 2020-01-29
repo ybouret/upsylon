@@ -12,7 +12,8 @@ namespace upsylon {
 label(ID),                      \
 rules(),                        \
 probed(0),                      \
-userDict(0),                    \
+stem(0),                        \
+dict(0),                        \
 verbose(false),                 \
 echo(false)
 
