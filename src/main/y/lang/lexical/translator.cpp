@@ -204,7 +204,7 @@ namespace upsylon
                     {
                         assert(curr!=NULL);
                         //std::cerr << "with [" << curr->label << "]" << std::endl;
-                        Message msg = 0;
+                        ControlMessage msg = 0;
                         Lexeme *lx  = curr->probe(source,msg);
                         if(lx)
                         {

@@ -13,8 +13,8 @@ namespace upsylon
     {
         namespace Lexical
         {
-            typedef const ControlEvent *Message; //!< alias for probe
-
+            typedef const ControlEvent *ControlMessage; //!< alias for probe
+            
             //------------------------------------------------------------------
             //
             //! simple 'Flex' scanner
@@ -268,7 +268,8 @@ namespace upsylon
                  - return NULL: if no event, EOF, otherwise control for translator
                  - otherwise result of a forwarding rule
                  */
-                Lexeme *probe( Source &source, Message &msg );
+                Lexeme *probe(Source         &source,
+                              ControlMessage &msg);
 
                 //! find a rule by its label
                 const Rule * getRuleByLabel( const string &id ) const throw();

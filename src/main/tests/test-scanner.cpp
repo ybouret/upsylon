@@ -44,7 +44,7 @@ Y_UTEST(scanner)
         Source   source( Module::OpenSTDIN() );
         Lexeme::List            lexemes;
         Lexeme                 *lx  = 0;
-        Lexical::Message        msg = 0;
+        Lexical::ControlMessage msg = 0;
         while(NULL!=(lx=scanner.probe(source,msg)))
         {
             lexemes.push_back(lx);
