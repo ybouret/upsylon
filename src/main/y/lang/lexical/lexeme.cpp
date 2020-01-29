@@ -1,54 +1,57 @@
 #include "y/lang/lexical/lexeme.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        Lexeme:: ~Lexeme() throw()
-        {
-        }
+namespace upsylon {
 
-        Lexeme:: Lexeme(const Tag &ruleLabel) throw():
-        object(),
-        Token(),Base(),label(ruleLabel)
-        {
-        }
+    namespace Lang {
 
-        Lexeme:: Lexeme(const Lexeme &other):
-        object(),
-        Token(other), Base(), label(other.label)
-        {}
+        namespace Lexical {
 
-        const CharInfo & Lexeme:: info() const
-        {
-            const Char *ch = head;
-            if(!ch) throw exception("Lexeme::info(Empty Lexeme)");
-            return *ch;
-        }
-
-
-        int Lexeme:: line() const throw()
-        {
-            return (head) ? head->line : 0;
-        }
-
-        int Lexeme:: column() const throw()
-        {
-            return (head) ? head->column : 0;
-        }
-
-        const char * Lexeme:: origin() const throw()
-        {
-            if(head)
+            Unit:: ~Unit() throw()
             {
-                return **(head->origin);
             }
-            else
-            {
-                return "?";
-            }
-        }
 
+            Unit:: Unit(const Tag &ruleLabel) throw():
+            object(),
+            Token(),Base(),label(ruleLabel)
+            {
+            }
+
+            Unit:: Unit(const Unit &other):
+            object(),
+            Token(other), Base(), label(other.label)
+            {}
+
+            const CharInfo & Unit:: info() const
+            {
+                const Char *ch = head;
+                if(!ch) throw exception("Lexeme::info: no chars!");
+                return *ch;
+            }
+
+
+            int Unit:: line() const throw()
+            {
+                return (head) ? head->line : 0;
+            }
+
+            int Unit:: column() const throw()
+            {
+                return (head) ? head->column : 0;
+            }
+
+            const char * Unit:: origin() const throw()
+            {
+                if(head)
+                {
+                    return **(head->origin);
+                }
+                else
+                {
+                    return "?";
+                }
+            }
+
+        }
     }
 }
