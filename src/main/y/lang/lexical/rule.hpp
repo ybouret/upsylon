@@ -3,7 +3,7 @@
 #ifndef Y_LANG_LEXICAL_RULE_INCLUDED
 #define Y_LANG_LEXICAL_RULE_INCLUDED 1
 
-#include "y/lang/lexical/unit.hpp"
+#include "y/lang/lexical/lexeme.hpp"
 #include "y/lang/pattern.hpp"
 #include "y/functor.hpp"
 
