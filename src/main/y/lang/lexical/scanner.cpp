@@ -40,11 +40,7 @@ echo(false)
 
             Scanner:: ~Scanner() throw() {}
 
-            std::ostream  & Scanner:: indent( std::ostream &os) const
-            {
-                os << ' ';
-                return os;
-            }
+           
             
             void Scanner:: emitLabel(const Tag &ruleLabel) const
             {

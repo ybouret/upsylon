@@ -9,6 +9,16 @@ namespace upsylon
         namespace Lexical
         {
 
+            std::ostream  & Scanner:: indent( std::ostream &os) const
+            {
+                if(stem)
+                {
+                    for(size_t i=stem->depth();i>0;--i)
+                        os << ' ';
+                }
+                return os;
+            }
+
 #define Y_LANG_TRANS()   \
 label( new string(id) ), \
 curr(0),                 \
