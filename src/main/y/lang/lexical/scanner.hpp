@@ -15,10 +15,13 @@ namespace upsylon
         {
             typedef const ControlEvent *Message; //!< alias for probe
 
+            //------------------------------------------------------------------
+            //
             //! simple 'Flex' scanner
             /**
-             Events are triggeres upong pattern recognition
+             Events are triggered upon pattern recognition
              */
+            //------------------------------------------------------------------
             class Scanner : public CountedObject
             {
             public:
@@ -278,7 +281,7 @@ namespace upsylon
                 Rule::List    rules;
                 const Module *probed;
                 void checkLabel(const Tag &ruleLabel) const;
-                void checkMotif(const Tag &ruleLabel ,const Motif &ruleMotif) const;
+                void checkMotif(const Tag &ruleLabel, const Motif &ruleMotif) const;
                 void emitLabel(const Tag &ruleLabel) const;
 
             public:
