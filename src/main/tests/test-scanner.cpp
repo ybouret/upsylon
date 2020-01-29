@@ -38,13 +38,15 @@ namespace
 Y_UTEST(scanner)
 {
     localScanner scanner;
+    scanner.echo = true;
+    
     if(argc<=1 || 0!=strcmp(argv[1],"NULL") )
     {
         std::cerr << "Scanning STDIN..." << std::endl;
         Source   source( Module::OpenSTDIN() );
         Lexeme::List            lexemes;
         Lexeme                 *lx  = 0;
-        Lexical::ControlMessage msg = 0;
+        Lexical::Directive      msg = 0;
         while(NULL!=(lx=scanner.probe(source,msg)))
         {
             lexemes.push_back(lx);

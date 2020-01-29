@@ -203,9 +203,8 @@ namespace upsylon
                     while(true)
                     {
                         assert(curr!=NULL);
-                        //std::cerr << "with [" << curr->label << "]" << std::endl;
-                        ControlMessage msg = 0;
-                        Lexeme *lx  = curr->probe(source,msg);
+                        Directive result = 0;
+                        Lexeme   *lx     = curr->probe(source,result);
                         if(lx)
                         {
                             //--------------------------------------------------
@@ -213,18 +212,19 @@ namespace upsylon
                             //--------------------------------------------------
                             return lx;
                         }
-                        else if(msg!=0)
+                        else if(0!=result)
                         {
                             //--------------------------------------------------
                             // control lexeme, action was performed
                             //--------------------------------------------------
                             assert(NULL==lx);
-                            switch(msg->type)
+                            switch(result->type)
                             {
                                 case ControlEvent::Call: history.append(curr); // FALLTHRU
                                 case ControlEvent::Jump: {
-                                    Scanner::Pointer *ppScanner = scanners.search(msg->label);
-                                    if(!ppScanner) throw exception("[%s] jump/call to undeclared [%s]", **(curr->label), *(msg->label) );
+                                    const string      resultID  = result->label;
+                                    Scanner::Pointer *ppScanner = scanners.search(resultID);
+                                    if(!ppScanner) throw exception("[%s] jump/call to undeclared [%s]", **(curr->label), *resultID );
                                     curr = & (**ppScanner);
                                 } break;
 

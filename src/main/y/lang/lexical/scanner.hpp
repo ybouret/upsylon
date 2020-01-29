@@ -13,8 +13,9 @@ namespace upsylon
     {
         namespace Lexical
         {
-            typedef const ControlEvent *ControlMessage; //!< alias for probe
-            
+            typedef const ControlEvent *Directive; //!< used in probe method
+
+
             //------------------------------------------------------------------
             //
             //! simple 'Flex' scanner
@@ -234,11 +235,11 @@ namespace upsylon
                 inline void back(const char *rx) { const string _(rx); back(_); }
 
                 //! do nothing
-                void nothing(const Token &) throw();
-
+                void nothing(const Token &);
+                
                 //! newline of the probed source
-                void newline(const Token &) throw();
-
+                void newline(const Token &);
+                
                 //! helper to emit ID on rx
                 void emit(const string &id,const string &rx);
 
@@ -269,7 +270,7 @@ namespace upsylon
                  - otherwise result of a forwarding rule
                  */
                 Lexeme *probe(Source         &source,
-                              ControlMessage &msg);
+                              Directive      &result);
 
                 //! find a rule by its label
                 const Rule * getRuleByLabel( const string &id ) const throw();
@@ -288,6 +289,7 @@ namespace upsylon
             public:
                 const Dictionary *userDict; //!< validity must be checked by user
                 bool              verbose;  //!< to check build up of the scanner
+                bool              echo;     //!< to echo within the nothing() call
                 
                 //! indent using depth
                 std::ostream     &indent( std::ostream &) const;

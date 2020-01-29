@@ -9,11 +9,11 @@ namespace upsylon
     {
         namespace Lexical
         {
-            Lexeme *Scanner:: probe(Source         &source,
-                                    ControlMessage &event )
+            Lexeme *Scanner:: probe(Source    &source,
+                                    Directive &result)
             {
                 probed = *source;
-                event  = NULL;
+                result = 0;
                 
                 while(true)
                 {
@@ -139,7 +139,7 @@ namespace upsylon
                         } break;
 
                         case Event::Control:
-                            event = static_cast<const ControlEvent *>(bestRule->handle);
+                            result = static_cast<const ControlEvent *>(bestRule->handle);
                             return NULL;
                     }
 

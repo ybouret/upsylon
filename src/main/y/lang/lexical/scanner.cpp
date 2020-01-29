@@ -2,18 +2,19 @@
 #include "y/lang/lexical/scanner.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Lexical
-        {
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Lexical {
+
 #define Y_LANG_SCANNER_CTOR(ID) \
 label(ID),                      \
 rules(),                        \
 probed(0),                      \
 userDict(0),                    \
-verbose(false)
+verbose(false),                 \
+echo(false)
 
             Scanner:: Scanner( const string &id ) :
             Y_LANG_SCANNER_CTOR(new string(id))
@@ -105,9 +106,19 @@ verbose(false)
                 return "<=" + l + '.' + rx;
             }
 
-            void Scanner:: nothing(const Token &) throw() {}
-
-            void Scanner:: newline(const Token &) throw() { if(probed) probed->newLine(); }
+            void Scanner:: nothing(const Token &t)
+            {
+                if(echo) {
+                    const string s = t.toVisible();
+                    std::cerr << '<' << s << '>';
+                }
+            }
+            
+            void Scanner:: newline(const Token &t)  
+            {
+                if(probed) probed->newLine();
+                nothing(t);
+            }
 
             void Scanner:: emit(const string &id,const string &rx) { forward(id,rx,this,&Scanner::nothing); }
 
