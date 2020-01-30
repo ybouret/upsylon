@@ -100,6 +100,7 @@ namespace upsylon
         static const bool value = (T(-1) < T(0)); //!< compile time detection
     };
 
+    //! finding matching integral type
     template <typename T>
     struct integral_of
     {

@@ -10,23 +10,28 @@ namespace upsylon {
 
     namespace core {
 
+        //! integral to integral common
         struct _i2i
         {
+            //! throw on overflow
             static void overflow_exception(const type_spec &target,
                                            const type_spec &source);
 
+            //! throw on negative to positive
             static void negative_exception(const type_spec &target,
                                            const type_spec &source);
         };
 
+        //! converting according to integral type
         template <typename TARGET,typename SOURCE>
         struct i2i {
-            static const size_t SIZEOF_TARGET = sizeof(TARGET);
-            static const bool   SIGNED_TARGET = is_signed<TARGET>::value;
-            static const size_t SIZEOF_SOURCE = sizeof(SOURCE);
-            static const bool   SIGNED_SOURCE = is_signed<SOURCE>::value;
-            static const bool   LARGER_SOURCE = SIZEOF_SOURCE > SIZEOF_TARGET;
+            static const size_t SIZEOF_TARGET = sizeof(TARGET);                //!< alias
+            static const bool   SIGNED_TARGET = is_signed<TARGET>::value;      //!< alias
+            static const size_t SIZEOF_SOURCE = sizeof(SOURCE);                //!< alias
+            static const bool   SIGNED_SOURCE = is_signed<SOURCE>::value;      //!< alias
+            static const bool   LARGER_SOURCE = SIZEOF_SOURCE > SIZEOF_TARGET; //!< alias
 
+            //! triple dispatch function
             static inline
             TARGET _( const SOURCE &source )
             {
@@ -97,6 +102,7 @@ namespace upsylon {
 
     }
 
+    //! top level call by integral type matching
     template <typename TARGET, typename SOURCE>
     inline TARGET i2i( const SOURCE &source )
     {

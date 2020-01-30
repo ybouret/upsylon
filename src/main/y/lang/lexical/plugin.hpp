@@ -24,10 +24,9 @@ namespace upsylon {
                 
                 virtual ~Plugin() throw(); //!< destructor
 
-                const string trigger;                 //!< triggering expression
                 virtual void Init(const Token &) = 0; //!< what do do when plugin is called
+                const string trigger;                 //!< triggering expression
 
-                const Translator *attached() const throw();
 
             protected:
                 explicit Plugin(Translator &, const string &id, const char   *rx); //!< initialize
