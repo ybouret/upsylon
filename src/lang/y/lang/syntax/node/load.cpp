@@ -83,7 +83,6 @@ namespace upsylon
                         LoadChildren(node->children(),source,G);
                         return node.yield();
                     }
-
                     default: break;
                 }
 
