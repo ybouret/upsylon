@@ -62,7 +62,15 @@ namespace upsylon {
 
                 //! create, register and return a new scanner, wrapper
                 Scanner & decl(const char *id);
-                
+
+                bool owns( const Scanner &s ) const throw();
+
+                //--------------------------------------------------------------
+                //
+                // Plugin API
+                //
+                //--------------------------------------------------------------
+
                 //! no args PLUGIN constructor
                 template <typename PLUGIN>
                 inline void hook( Scanner &scanner, const string &pluginName )
@@ -152,7 +160,7 @@ namespace upsylon {
 
                 Scanner     *curr;     //!< current scanner
                 Scanner     *base;     //!< root scanner
-                Lexeme::List cache;    //!< cache of lexemes
+                Lexeme::List treated;  //!< cache of lexemes
                 History      history;  //!< for call/back
                 DataBase     scanners; //!< database of scanners
                 Plugins      plugins;  //!< database of plugins

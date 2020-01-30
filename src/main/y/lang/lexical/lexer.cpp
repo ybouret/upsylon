@@ -13,7 +13,7 @@ namespace upsylon {
 label( new string(id) ), \
 curr(0),                 \
 base(0),                 \
-cache(),                 \
+treated(),               \
 history(),               \
 scanners(4,as_capacity), \
 plugins(4,as_capacity),  \
@@ -89,6 +89,9 @@ dict()
             void Translator:: link(Scanner &scanner,
                                    Plugin  &plugin)
             {
+                assert( owns(scanner) );
+                assert( owns(plugin)  );
+                
                 if(scanner.verbose) { std::cerr << "@plug[" << scanner.label << "-->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl; }
                 scanner.call(*(plugin.label),plugin.trigger, &plugin, & Plugin::Init );
             }
@@ -104,25 +107,31 @@ dict()
             { const string _(id); return decl(_); }
 
 
+            bool Translator:: owns( const Scanner &s ) const throw()
+            {
+                const Scanner::Pointer *pp = scanners.search(s.key());
+                return pp && (&s == & **pp );
+            }
+
 
             void Translator:: reset() throw()
             {
                 curr = base;
                 history.release();
-                cache.release();
+                treated.release();
             }
 
             void   Translator:: unget( Lexeme *lx ) throw()
             {
                 assert(lx);
-                cache.push_front(lx);
+                treated.push_front(lx);
             }
 
             void   Translator:: unget( Lexeme::List &lxm ) throw()
             {
                 while(lxm.size)
                 {
-                    cache.push_front(lxm.pop_back());
+                    treated.push_front(lxm.pop_back());
                 }
             }
 
@@ -134,12 +143,13 @@ dict()
 
             bool Translator:: active( Source &source )
             {
-                if(cache.size>0)
+                if(treated.has_nodes())
                 {
                     return true;
                 }
                 else
                 {
+                    assert( treated.is_vacant() );
                     Lexeme *lx = get(source);
                     if(!lx)
                     {
@@ -147,7 +157,7 @@ dict()
                     }
                     else
                     {
-                        cache.push_front(lx);
+                        treated.push_front(lx);
                         return true;
                     }
                 }
@@ -157,16 +167,17 @@ dict()
             {
                 if(active(source))
                 {
-                    assert(cache.size>0);
-                    return cache.head;
+                    assert( treated.has_nodes() );
+                    return treated.head;
                 }
                 else
                 {
+                    assert( treated.is_vacant() );
                     return NULL;
                 }
             }
 
-            const Lexeme * Translator:: last() const throw() { return cache.tail; }
+            const Lexeme * Translator:: last() const throw() { return treated.tail; }
 
 
         }
@@ -189,13 +200,13 @@ namespace upsylon {
                 //
                 //______________________________________________________________
             RESCAN:
-                if(cache.size)
+                if(treated.has_nodes())
                 {
                     //__________________________________________________________
                     //
                     // cached!
                     //__________________________________________________________
-                    return cache.pop_front();
+                    return treated.pop_front();
                 }
                 else
                 {
