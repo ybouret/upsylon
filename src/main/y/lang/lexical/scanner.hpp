@@ -13,7 +13,6 @@ namespace upsylon
     {
         namespace Lexical
         {
-            class Translator;                      //!< forward declaration
             typedef const ControlEvent *Directive; //!< used in probe method
 
             //------------------------------------------------------------------
@@ -289,15 +288,10 @@ namespace upsylon
 
 
             public:
-                const Translator *stem; //!< default to NULL
-                const Dictionary *dict; //!< validity must be checked by user
-
+                const Dictionary *dict;     //!< validity must be checked by user
                 bool              verbose;  //!< to check build up of the scanner
                 bool              echo;     //!< to echo within the nothing() call
                 
-                //! indent using depth
-                std::ostream     &indent( std::ostream &) const;
-
             };
 
         }

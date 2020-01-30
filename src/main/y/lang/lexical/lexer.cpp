@@ -2,22 +2,12 @@
 #include "y/lang/lexical/lexer.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Lexical
-        {
+namespace upsylon {
 
-            std::ostream  & Scanner:: indent( std::ostream &os) const
-            {
-                if(stem)
-                {
-                    for(size_t i=stem->depth();i>0;--i)
-                        os << ' ';
-                }
-                return os;
-            }
+    namespace Lang {
+
+        namespace Lexical {
+
 
 #define Y_LANG_TRANS()   \
 label( new string(id) ), \
@@ -29,11 +19,10 @@ scanners(4,as_capacity), \
 plugins(4,as_capacity),  \
 dict()
 
-            void Translator:: setStemOf( Scanner *scanner ) throw()
+            void Translator:: attach( Scanner *scanner ) throw()
             {
                 assert(scanner);
                 scanner->dict = &dict;
-                scanner->stem =  this;
             }
 
             void Translator:: setup()
@@ -44,7 +33,7 @@ dict()
                     if(!scanners.insert(p)) throw exception("[%s] cannot initialize scanners!!!", **label );
                 }
                 curr = base;
-                setStemOf(base);
+                attach(base);
             }
 
             Translator:: Translator(const string &id) :
@@ -64,13 +53,7 @@ dict()
             {
             }
 
-
-            size_t Translator:: depth() const throw()
-            {
-                return history.size;
-            }
-
-            void Translator :: enroll( Scanner *s )
+            Scanner *Translator :: enroll( Scanner *s )
             {
                 assert(s);
                 Scanner::Pointer p = s;
@@ -78,7 +61,8 @@ dict()
                 {
                     throw exception("[%s] multiple scanner [%s]", **label, **(p->label) );
                 }
-                setStemOf( & *p );
+                attach( s );
+                return s;
             }
 
             Plugin & Translator:: enroll_plugin( Plugin *plg )
@@ -91,7 +75,7 @@ dict()
                 }
                 try
                 {
-                    enroll(plg);
+                    (void) enroll(plg);
                 }
                 catch(...)
                 {
@@ -105,14 +89,13 @@ dict()
             void Translator:: link(Scanner &scanner,
                                    Plugin  &plugin)
             {
-                if(scanner.verbose) { scanner.indent(std::cerr) << "@plug[" << scanner.label << "-->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl; }
+                if(scanner.verbose) { std::cerr << "@plug[" << scanner.label << "-->" << plugin.label << "] on '" << plugin.trigger << "'" << std::endl; }
                 scanner.call(*(plugin.label),plugin.trigger, &plugin, & Plugin::Init );
             }
 
             Scanner & Translator:: decl(const string &id)
             {
-                Scanner *s = new Scanner(id);
-                enroll(s);
+                Scanner *s = enroll( new Scanner(id) );
                 s->verbose = (**this).verbose;
                 return *s;
             }
@@ -190,12 +173,11 @@ dict()
     }
 }
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Lexical
-        {
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Lexical {
 
             Lexeme * Translator:: get( Source &source )
             {

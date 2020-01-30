@@ -7,22 +7,38 @@
 #include "y/associative/set.hpp"
 #include "y/core/addr-list.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Lexical
-        {
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Lexical {
+
             //! transform a source of Char into a source of Lexeme
             class Translator : public Object
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // types and declaration
+                //
+                //--------------------------------------------------------------
                 typedef Lexical::Scanner             Scanner;  //!< alias for derived classes
                 typedef set<string,Scanner::Pointer> DataBase; //!< database of scanners
                 typedef set<string,Plugin::Pointer>  Plugins;  //!< database of plugins
-                
+
+                //--------------------------------------------------------------
+                //
+                // public members
+                //
+                //--------------------------------------------------------------
                 const Tag  label;                              //!< shared label
-                
+
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+
                 //! destructor
                 virtual ~Translator() throw();
 
@@ -32,6 +48,12 @@ namespace upsylon
                 //! initialize
                 explicit Translator(const char *id);
 
+                //--------------------------------------------------------------
+                //
+                // Scanner API
+                //
+                //--------------------------------------------------------------
+
                 //! return root scanner
                 Scanner & operator *() throw();
 
@@ -40,29 +62,7 @@ namespace upsylon
 
                 //! create, register and return a new scanner, wrapper
                 Scanner & decl(const char *id);
-
-                //! reset curr to base and clean history
-                void    reset() throw();
-
-                //! unget an extracted lexeme
-                void    unget( Lexeme *lx ) throw();
-
-                //! unget a chain of extracted lexemes
-                void    unget( Lexeme::List &lxm ) throw();
-
-                //! get the next lexeme
-                Lexeme *get( Source &source );
-
-                //! check if there is a next lexeme
-                bool          active(Source &source);
-
-                //! check if there is a next lexeme
-                const Lexeme *peek(Source &source);
                 
-                //! get the last matched lexeme
-                const Lexeme *last() const throw();
-
-
                 //! no args PLUGIN constructor
                 template <typename PLUGIN>
                 inline void hook( Scanner &scanner, const string &pluginName )
@@ -118,7 +118,32 @@ namespace upsylon
                     const string _(pluginName); return hook<PLUGIN>(scanner,_,rxInit,rxQuit);
                 }
 
+                //--------------------------------------------------------------
+                //
+                // lexer API
+                //
+                //--------------------------------------------------------------
 
+                //! reset curr to base and clean history
+                void    reset() throw();
+
+                //! unget an extracted lexeme
+                void    unget( Lexeme *lx ) throw();
+
+                //! unget a chain of extracted lexemes
+                void    unget( Lexeme::List &lxm ) throw();
+
+                //! get the next lexeme
+                Lexeme *get( Source &source );
+
+                //! check if there is a next lexeme
+                bool          active(Source &source);
+
+                //! check if there is a next lexeme
+                const Lexeme *peek(Source &source);
+
+                //! get the last matched lexeme
+                const Lexeme *last() const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Translator);
@@ -132,16 +157,15 @@ namespace upsylon
                 DataBase     scanners; //!< database of scanners
                 Plugins      plugins;  //!< database of plugins
 
-                void    enroll( Scanner *s );         //!< insert into scanners
-                Plugin &enroll_plugin( Plugin *plg ); //!< insert into plugins AND scanners
-                void    link(Scanner &, Plugin & );   //!< scanner calls plugin upon trigger
+                Scanner *enroll( Scanner *s );         //!< insert into scanners
+                Plugin  &enroll_plugin( Plugin *plg ); //!< insert into plugins AND scanners
+                void     link(Scanner &, Plugin & );   //!< scanner calls plugin upon trigger
 
                 void setup();
-                void setStemOf( Scanner *scanner ) throw();
+                void attach( Scanner *scanner ) throw();
 
             public:
                 Dictionary dict; //!< shared dictionary, set as userDict for registers scanners
-                size_t     depth() const throw(); //!< history.size()
             };
         }
 

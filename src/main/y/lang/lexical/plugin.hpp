@@ -4,13 +4,14 @@
 
 #include "y/lang/lexical/scanner.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Lexical
-        {
-            
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Lexical {
+
+            class Translator; //!< forward declaration
+
             //! plugin API: a dedicated scanner
             /**
              a plugin is a reusable dedicated scanner that will create a lexeme
@@ -25,10 +26,12 @@ namespace upsylon
 
                 const string trigger;                 //!< triggering expression
                 virtual void Init(const Token &) = 0; //!< what do do when plugin is called
-                
+
+                const Translator *attached() const throw();
+
             protected:
-                explicit Plugin(Translator &attached, const string &id, const char   *rx); //!< initialize
-                explicit Plugin(Translator &attacher, const string &id, const string &rx); //!< initialize
+                explicit Plugin(Translator &, const string &id, const char   *rx); //!< initialize
+                explicit Plugin(Translator &, const string &id, const string &rx); //!< initialize
 
                 Translator &lexer; //!< lexer to store a compiled lexeme
 

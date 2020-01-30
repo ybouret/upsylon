@@ -26,6 +26,10 @@ namespace upsylon
                 verbose=(*t).verbose;
             }
 
+            const Translator * Plugin:: attached() const throw()
+            {
+                return &lexer;
+            }
             
 
         }

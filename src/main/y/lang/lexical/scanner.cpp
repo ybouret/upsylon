@@ -12,7 +12,6 @@ namespace upsylon {
 label(ID),                      \
 rules(),                        \
 probed(0),                      \
-stem(0),                        \
 dict(0),                        \
 verbose(false),                 \
 echo(false)
@@ -40,11 +39,12 @@ echo(false)
 
             Scanner:: ~Scanner() throw() {}
 
-           
+
+
             
             void Scanner:: emitLabel(const Tag &ruleLabel) const
             {
-                indent(std::cerr) << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
+                std::cerr << "@scan[" << label << "].add( '" << ruleLabel << "' )" << std::endl;
             }
 
 
