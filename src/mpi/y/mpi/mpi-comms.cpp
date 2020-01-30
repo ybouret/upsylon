@@ -99,7 +99,7 @@ namespace upsylon
         update(send_,type);
         recv_.like(send_);
         const uint64_t mark = rt_clock::ticks();
-        Y_MPI_CHECK(MPI_Reduce(send_data, recv_data,count,type, op, root, MPI_COMM_WORLD));
+        Y_MPI_CHECK(MPI_Reduce((void*)send_data, recv_data,count,type, op, root, MPI_COMM_WORLD));
         Y_MPI_TICKS();
         if(root==rank)
         {
@@ -124,7 +124,7 @@ namespace upsylon
         update(send_,type);
         recv_.like(send_);
         const uint64_t mark = rt_clock::ticks();
-        Y_MPI_CHECK(MPI_Allreduce(send_data, recv_data,count,type, op, MPI_COMM_WORLD));
+        Y_MPI_CHECK(MPI_Allreduce((void*)send_data, recv_data,count,type, op, MPI_COMM_WORLD));
         Y_MPI_TICKS();
         const size_t all_count = count * last;
         send_.comm(all_count);
