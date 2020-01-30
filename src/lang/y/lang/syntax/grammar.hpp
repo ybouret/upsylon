@@ -107,6 +107,7 @@ namespace upsylon
             private:
                 Rule::List        rules;
                 RuleReferenceSet *rrs;
+
             public:
                 const bool        hasOperators; //!< detected by finalize()
 
@@ -114,12 +115,12 @@ namespace upsylon
                 bool              verbose;      //!< verbosity debug flag
 
             private:
+                Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 unsigned          iAlt;
 
-                Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;
-                void              no_rrs() throw(); //!< safely remove rrs
-                void validate() const; //!< check all rules are used
+                void   no_rrs() throw(); //!< safely remove rrs
+                void   validate() const; //!< check all rules are used
 
             public:
                 const size_t maxRuleNameLength; //!< if need to align

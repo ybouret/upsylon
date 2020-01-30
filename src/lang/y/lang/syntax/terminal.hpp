@@ -23,7 +23,7 @@ namespace upsylon
             class Terminal :  public Rule
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('T','E','R','M'); //!< UUID
+                static const uint32_t UUID = Y_FOURCC('T','E','R','M');   //!< UUID
 
                 explicit Terminal(const string &n);                       //!< setup
                 virtual ~Terminal() throw();                              //!< destructor

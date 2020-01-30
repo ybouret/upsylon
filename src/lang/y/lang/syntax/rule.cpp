@@ -1,6 +1,7 @@
 #include "y/lang/syntax/rule.hpp"
 #include "y/string/convert.hpp"
 #include "y/exception.hpp"
+#include "y/type/bzset.hpp"
 
 namespace upsylon
 {
@@ -11,6 +12,8 @@ namespace upsylon
         {
             Rule:: ~Rule() throw()
             {
+                _bzset(uuid);
+                derived = 0;
             }
 
             Rule:: Rule(const uint32_t        u,
@@ -26,7 +29,7 @@ namespace upsylon
 
             void Rule:: checkConsistency( const std::type_info &target ) const
             {
-                if(!derived)         throw exception("%s <%s>.derived=NULL",   typeName(), *name );
+                if(!derived)         throw exception("%s <%s>.derived=NULL",    typeName(), *name );
                 if( info != target ) throw exception("%s <%s>.mismatch typeid", typeName(), *name);
             }
 

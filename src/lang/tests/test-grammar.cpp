@@ -6,6 +6,7 @@
 #include "y/lang/syntax/analyzer.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -81,6 +82,14 @@ Y_UTEST(grammar)
 
 
     }
+
+    Y_UTEST_SIZEOF(Syntax::Grammar);
+    Y_UTEST_SIZEOF(Syntax::Rule);
+    Y_UTEST_SIZEOF(Syntax::Terminal);
+    Y_UTEST_SIZEOF(Syntax::Internal);
+    Y_UTEST_SIZEOF(Syntax::RuleReference);
+    Y_UTEST_SIZEOF(Syntax::RuleReferenceSet);
+
 
 
 }

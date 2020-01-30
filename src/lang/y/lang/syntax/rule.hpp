@@ -11,8 +11,6 @@ namespace upsylon {
     namespace Lang {
 
         namespace Syntax {
-
-
             //! arguments for accept
 #define Y_LANG_SYNTAX_ACCEPT_ARGS Source &source, Lexer &lexer, Node * &tree
 
@@ -25,12 +23,26 @@ namespace upsylon {
             //! switchable output on verbose flag
 #define Y_LANG_SYNTAX_VERBOSE(OUTPUT) do { if(verbose) { OUTPUT; } } while(false)
 
+            //------------------------------------------------------------------
+            //
             //! Rule interface
+            /**
+             a rule will grow a syntax tree with a source and a lexer
+             */
+            //------------------------------------------------------------------
             class Rule : public Object, public core::inode<Rule>
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definition
+                //______________________________________________________________
                 typedef core::list_of_cpp<Rule> List; //!< alias
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 const uint32_t        uuid;     //!< class identifier
                 const string          name;     //!< user's identifier
                 const void           *derived;  //!< helper for optimizations

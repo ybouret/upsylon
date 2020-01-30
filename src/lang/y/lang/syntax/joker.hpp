@@ -18,7 +18,7 @@ namespace upsylon
                 const Rule &jk;           //!< the joker rule
 
                 virtual void graphVizEpilog(ios::ostream &) const; //!< link to jk
-                virtual void checkReady() const; //!< jk must be non hollow
+                virtual void checkReady() const;                   //!< jk must be non hollow
 
             protected:
                 //! construct and reject a hollow rule!
@@ -50,7 +50,7 @@ namespace upsylon
             class ZeroOrMore : public Joker
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('>', '=', '0', 0); //!< UUID
+                static const uint32_t UUID = Y_FOURCC('*', 0, 0, 0); //!< UUID
 
                 explicit ZeroOrMore(const string &n, const Rule &r); //!< setup
                 virtual ~ZeroOrMore() throw();                       //!< desctructor
@@ -68,7 +68,7 @@ namespace upsylon
             class OneOrMore : public Joker
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('>', '=', '1', 0); //!< UUID
+                static const uint32_t UUID = Y_FOURCC('+',0,0,0); //!< UUID
 
                 explicit OneOrMore(const string &n, const Rule &r); //!< setup
                 virtual ~OneOrMore() throw();                       //!< desctructor

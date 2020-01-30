@@ -4,6 +4,7 @@
 #include "y/lang/syntax/rule-probe.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 using namespace Lang;
@@ -22,11 +23,16 @@ Y_UTEST(rules)
     {
         std::cerr << "typeName=" << r->typeName() << " : " << r->name << std::endl;
     }
-    std::cerr << "sizeof(Node)         = " << sizeof(Syntax::Node)          << std::endl;
-    std::cerr << "sizeof(TerminalNode) = " << sizeof(Syntax::TerminalNode)  << std::endl;
-    std::cerr << "sizeof(InternalNode) = " << sizeof(Syntax::InternalNode)  << std::endl;
-    std::cerr << "sizeof(ExtendedNode) = " << sizeof(Syntax::ExtendedNode)  << std::endl;
-    std::cerr << "sizeof(Node::Data)   = " << sizeof(Syntax::Node::Data)    << std::endl;
+
+    __sizeof::width = 24;
+
+    Y_UTEST_SIZEOF(Syntax::Node);
+    Y_UTEST_SIZEOF(Syntax::TerminalNode);
+    Y_UTEST_SIZEOF(Syntax::InternalNode);
+    Y_UTEST_SIZEOF(Syntax::ExtendedNode);
+    Y_UTEST_SIZEOF(Syntax::Node::Data);
+    
+    
 }
 Y_UTEST_DONE()
 
