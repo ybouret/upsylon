@@ -63,7 +63,11 @@ namespace upsylon {
                 //! create, register and return a new scanner, wrapper
                 Scanner & decl(const char *id);
 
-                bool owns( const Scanner &s ) const throw();
+                //! mostly to debug, check scanner ownership
+                bool owns(const Scanner &s) const throw();
+
+                //! set echo flag for all scanners
+                void echo(const bool flag) throw();
 
                 //--------------------------------------------------------------
                 //

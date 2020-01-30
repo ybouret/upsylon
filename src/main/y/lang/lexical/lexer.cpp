@@ -113,6 +113,14 @@ dict()
                 return pp && (&s == & **pp );
             }
 
+            void Translator:: echo(const bool flag) throw()
+            {
+                for( DataBase::iterator it = scanners.begin(); it != scanners.end(); ++it )
+                {
+                    (**it).echo = flag;
+                }
+            }
+
 
             void Translator:: reset() throw()
             {
@@ -218,20 +226,20 @@ namespace upsylon {
                     {
                         assert(curr!=NULL);
                         Directive result = 0;
-                        Lexeme   *lx     = curr->probe(source,result);
-                        if(lx)
+                        Lexeme   *lexeme = curr->probe(source,result);
+                        if(NULL!=lexeme)
                         {
                             //--------------------------------------------------
                             // ok, regular one (some are possibly discarded...)
                             //--------------------------------------------------
-                            return lx;
+                            return lexeme;
                         }
                         else if(0!=result)
                         {
                             //--------------------------------------------------
                             // control lexeme, action was performed
                             //--------------------------------------------------
-                            assert(NULL==lx);
+                            assert(NULL==lexeme);
                             switch(result->type)
                             {
                                 case ControlEvent::Call: history.append(curr); // FALLTHRU
