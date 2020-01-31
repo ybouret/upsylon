@@ -19,25 +19,19 @@
 //! extracting byte from a four char code
 #define Y_FOURCC_AT(INDX,DWORD) ( uint8_t( uint32_t(DWORD) >> ( (3-(INDX)) << 3) ) )
 
+//! convert a dword into an array of 8 chars
+#define Y_FOURCC_CHAR8(DWORD) { \
+char(Y_FOURCC_AT(0,DWORD)),     \
+char(Y_FOURCC_AT(1,DWORD)),     \
+char(Y_FOURCC_AT(2,DWORD)),     \
+char(Y_FOURCC_AT(3,DWORD)),     \
+0,0,0,0 }
+
+
 namespace upsylon {
 
     //! thread unsafe conversion
     const char *fourcc_( const uint32_t dw ) throw();
-
-    //! fourcc class helper
-    class fourcc
-    {
-    public:
-        const uint32_t uuid;    //!< user's unique identifier
-        const char     clid[8]; //!< class identifier name
-
-        fourcc( const uint32_t dw ) throw(); //!< setup
-        fourcc( const fourcc  &   ) throw(); //!< copy
-        virtual ~fourcc() throw();           //!< cleanup
-        
-    private:
-        Y_DISABLE_ASSIGN(fourcc);
-    };
 
 }
 

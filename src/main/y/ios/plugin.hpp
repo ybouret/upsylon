@@ -25,6 +25,7 @@ namespace upsylon
         {
         public:
             typedef arc_ptr<plugin> pointer; //!< shared pointer
+
             const uint32_t          uuid;    //!< identifier
             const comm_mode         mode;    //!< for I/O information
 

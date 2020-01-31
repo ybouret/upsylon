@@ -50,16 +50,16 @@ namespace {
 
         for(size_t iter=0;iter<8;++iter)
         {
-            const unsigned a0 = alea.range<char>('a','z');
-            const unsigned a1 = alea.range<char>('A','Z');
-            const unsigned a2 = alea.range<char>('0','9');
-            const unsigned a3 = alea.range<char>('a','z');
-            const uint32_t dw = Y_FOURCC(a0,a1,a2,a3);
+            const unsigned a0    = alea.range<char>('a','z');
+            const unsigned a1    = alea.range<char>('A','Z');
+            const unsigned a2    = alea.range<char>('0','9');
+            const unsigned a3    = alea.range<char>('a','z');
+            const uint32_t dw    = Y_FOURCC(a0,a1,a2,a3);
+            const char     id[8] = Y_FOURCC_CHAR8(dw);
 
-            fourcc fc = dw;
-            fprintf(stderr, "0x%02x => '%s'\n", fc.uuid, fc.clid);
+            fprintf(stderr, "0x%02x => '%s' / '%s' \n", dw, fourcc_(dw), id);
+
         }
-
     }
 
 }

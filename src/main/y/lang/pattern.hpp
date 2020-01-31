@@ -95,13 +95,7 @@ namespace upsylon
 #define Y_LANG_PATTERN_IS(CLASS) do { priv = static_cast<CLASS*>(this); } while(false)
 
         //! implementing class wide className
-#define Y_LANG_PATTERN_CLID(CLASS) \
-const char CLASS::CLID[8] = {      \
-Y_FOURCC_AT(0,UUID),               \
-Y_FOURCC_AT(1,UUID),               \
-Y_FOURCC_AT(2,UUID),               \
-Y_FOURCC_AT(3,UUID),               \
-0,0,0,0 }
+#define Y_LANG_PATTERN_CLID(CLASS) const char CLASS::CLID[8] = Y_FOURCC_CHAR8(CLASS::UUID)
         
     }
 }
