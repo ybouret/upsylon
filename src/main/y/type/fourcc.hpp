@@ -24,6 +24,21 @@ namespace upsylon {
     //! thread unsafe conversion
     const char *fourcc_( const uint32_t dw ) throw();
 
+    //! fourcc class helper
+    class fourcc
+    {
+    public:
+        const uint32_t uuid;    //!< user's unique identifier
+        const char     clid[8]; //!< class identifier name
+
+        fourcc( const uint32_t dw ) throw(); //!< setup
+        fourcc( const fourcc  &   ) throw(); //!< copy
+        virtual ~fourcc() throw();           //!< cleanup
+        
+    private:
+        Y_DISABLE_ASSIGN(fourcc);
+    };
+
 }
 
 #endif

@@ -46,9 +46,20 @@ namespace {
             Y_ASSERT(b1==a1);
             Y_ASSERT(b2==a2);
             Y_ASSERT(b3==a3);
-
-
         }
+
+        for(size_t iter=0;iter<8;++iter)
+        {
+            const unsigned a0 = alea.range<char>('a','z');
+            const unsigned a1 = alea.range<char>('A','Z');
+            const unsigned a2 = alea.range<char>('0','9');
+            const unsigned a3 = alea.range<char>('a','z');
+            const uint32_t dw = Y_FOURCC(a0,a1,a2,a3);
+
+            fourcc fc = dw;
+            fprintf(stderr, "0x%02x => '%s'\n", fc.uuid, fc.clid);
+        }
+
     }
 
 }
