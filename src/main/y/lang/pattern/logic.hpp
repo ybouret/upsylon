@@ -86,9 +86,9 @@ namespace upsylon {
             // interface: Pattern
             //__________________________________________________________________
             virtual Pattern *clone() const;                            //!< clone
-            virtual void     __viz(ios::ostream &) const;              //!< GraphViz output
+            virtual void     vizCore(ios::ostream &)  const;           //!< GraphViz output
             virtual bool     match(Token &, Source &) const;           //!< must match all patterns
-            virtual bool     weak() const throw();                     //!< if all operands are weak
+            virtual bool     weak()     const throw();                 //!< if all operands are weak
             virtual bool     univocal() const throw();                 //!< true is all are univocal
 
             //__________________________________________________________________
@@ -128,9 +128,9 @@ namespace upsylon {
             // interface: Pattern
             //__________________________________________________________________
             virtual Pattern *clone() const;                            //!< clone
-            virtual void     __viz(ios::ostream &) const;              //!< GraphViz
+            virtual void     vizCore(ios::ostream &)  const;           //!< GraphViz
             virtual bool     match(Token &, Source &) const;           //!< true if finds a matching first operands
-            virtual bool     weak() const throw();                     //!< true if one is weak
+            virtual bool     weak()     const throw();                 //!< true if one is weak
             virtual bool     univocal() const throw();                 //!< true if single univocal operand
 
             //__________________________________________________________________
@@ -173,8 +173,8 @@ namespace upsylon {
             //! match none of the patterns, returns single next char of false if no char
             virtual bool     match(Token &, Source &) const;
             virtual Pattern *clone() const;                            //!< clone
-            virtual void     __viz(ios::ostream &) const;              //!< GraphViz
-            virtual bool     weak() const throw();                     //!< false
+            virtual void     vizCore(ios::ostream &) const;            //!< GraphViz
+            virtual bool     weak()     const throw();                 //!< false
             virtual bool     univocal() const throw();                 //!< false, even if could exceptionnaly be true if only 1 possible choice...
 
             //__________________________________________________________________

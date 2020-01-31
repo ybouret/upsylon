@@ -55,7 +55,7 @@ namespace upsylon {
             // interface: Pattern
             //__________________________________________________________________
             virtual Any1 *      clone() const;                   //!< clone
-            virtual void        __viz(ios::ostream &) const;     //!< GraphViz
+            virtual void        vizCore(ios::ostream &) const;   //!< GraphViz
             virtual bool        univocal() const throw();        //!< false
 
             //__________________________________________________________________
@@ -98,7 +98,7 @@ namespace upsylon {
             // interface: Pattern
             //__________________________________________________________________
             virtual Single * clone() const;                   //!< clone
-            virtual void     __viz(ios::ostream &) const;     //!< GraphViz
+            virtual void     vizCore(ios::ostream &) const;   //!< GraphViz
             virtual bool     univocal() const throw();        //!< true
 
             //__________________________________________________________________
@@ -142,7 +142,7 @@ namespace upsylon {
             // interface: Pattern
             //__________________________________________________________________
             virtual Range *clone() const;                               //!< clone
-            virtual void   __viz(ios::ostream &) const;                 //!< GraphViz
+            virtual void   vizCore(ios::ostream &) const;               //!< GraphViz
             virtual bool   univocal() const throw();                    //!< true is lower==upper
 
             //__________________________________________________________________

@@ -24,8 +24,8 @@ namespace upsylon {
         {
             for(const Pattern *p = operands.head;p;p=p->next)
             {
-                p->viz(fp);
-                link(p,fp);
+                p->vizSave(fp);
+                endl(vizJoin(fp,p));
             }
         }
 
@@ -79,9 +79,9 @@ namespace upsylon {
             return true;
         }
 
-        void AND:: __viz( ios::ostream &fp ) const
+        void AND:: vizCore( ios::ostream &fp ) const
         {
-            fp(" [shape=house,style=%s,label=\"&\"];\n",vizStyle());
+            endl(fp(" [shape=house,style=%s,label=\"&\"]",vizStyle()));
             vizlink(fp);
         }
 
@@ -137,9 +137,9 @@ namespace upsylon {
             return false;
         }
 
-        void OR:: __viz( ios::ostream &fp ) const
+        void OR:: vizCore( ios::ostream &fp ) const
         {
-            fp(" [shape=house,style=%s,label=\"|\"];\n", vizStyle());
+            endl(fp(" [shape=house,style=%s,label=\"|\"]", vizStyle()));
             vizlink(fp);
         }
 
@@ -207,9 +207,9 @@ namespace upsylon {
             }
         }
 
-        void NONE:: __viz( ios::ostream &fp ) const
+        void NONE:: vizCore( ios::ostream &fp ) const
         {
-            fp(" [shape=house,label=\"!\"];\n");
+            endl(fp(" [shape=house,label=\"!\"]"));
             vizlink(fp);
         }
 

@@ -64,12 +64,16 @@ namespace upsylon
 
         ostream & ostream:: viz( const void *addr )
         {
-            write('a');
-            uint8_t block[ sizeof(void *) ];
-            memcpy(block, &addr, sizeof(void*) );
-            for(size_t i=0;i<sizeof(block);++i)
+            write('x');
+            
+            const union {
+                const void *addr;
+                uint8_t     byte[ sizeof(void*) ];
+            } alias = { addr };
+
+            for(size_t i=0;i<sizeof(void*);++i)
             {
-                output(hexadecimal::uppercase[block[i]],2);
+                output(hexadecimal::uppercase[alias.byte[i]],2);
             }
             return *this;
         }

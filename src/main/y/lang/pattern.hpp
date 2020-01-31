@@ -7,16 +7,18 @@
 #include "y/type/fourcc.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/serializable.hpp"
+#include "y/ios/tools/vizible.hpp"
 
 namespace upsylon
 {
     namespace Lang
     {
-        //! alias
-        typedef ios::serializable Serializable;
+
+        typedef ios::serializable Serializable; //!< alias
+        typedef ios::vizible      Vizible;      //!< alias
 
         //! a pattern to accept from a source
-        class Pattern : public CountedObject, public Serializable
+        class Pattern : public CountedObject, public Serializable, public Vizible
         {
         public:
             //------------------------------------------------------------------
@@ -56,7 +58,6 @@ namespace upsylon
             //__________________________________________________________________
             virtual         ~Pattern() throw();                     //!< destructor
             virtual Pattern *clone() const                   = 0;   //!< clone
-            virtual void     __viz(ios::ostream &) const     = 0;   //!< GraphViz appearance
             virtual bool     weak()        const throw()     = 0;   //!< a pattern is weak if it matches an empty expression
             virtual bool     match(Token &t, Source &) const = 0;   //!< try to match
             virtual bool     univocal() const throw()        = 0;   //!< guess if univocal
@@ -65,9 +66,6 @@ namespace upsylon
             //
             // non virtual interface
             //__________________________________________________________________
-            void        tag(ios::ostream &) const;                              //!< emit its address for GraphViz
-            void        link(const Pattern *, ios::ostream &) const;            //!< create a directed link between 'this' and 'p' for GraphViz
-            void        viz(ios::ostream &) const;                              //!< emit tag+__viz as a GraphViz node
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
             void        GraphViz( const string &fn, bool keepFile=false) const; //!< write a directed graph
             void        GraphViz( const char   *fn, bool keepFile=false) const; //!< write a directed graph, wrapper

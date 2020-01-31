@@ -43,9 +43,9 @@ namespace upsylon {
 
         Any1 * Any1:: clone() const { return new Any1(); }   
 
-        void Any1:: __viz(ios::ostream &fp) const
+        void Any1:: vizCore(ios::ostream &fp) const
         {
-            fp(" [shape=circle,label=\"any1\"];\n");
+            endl(fp(" [shape=circle,label=\"any1\"]"));
         }
 
 
@@ -93,9 +93,9 @@ namespace upsylon {
             return c==code;
         }
 
-        void Single:: __viz(ios::ostream &fp) const
+        void Single:: vizCore(ios::ostream &fp) const
         {
-            fp(" [shape=square,label=\"%s\"];\n", printable_char[code] );
+            endl(fp(" [shape=square,label=\"%s\"]", printable_char[code] ));
         }
         
         bool Single:: univocal() const throw()
@@ -134,9 +134,9 @@ namespace upsylon {
             if(upper<lower) _cswap(lower,upper);
         }
 
-        void Range:: __viz(ios::ostream &fp) const
+        void Range:: vizCore(ios::ostream &fp) const
         {
-            fp(" [shape=box,label=\"%s-%s\"];\n", printable_char[lower], printable_char[upper] );
+            endl(fp(" [shape=box,label=\"%s-%s\"]", printable_char[lower], printable_char[upper] ));
         }
         
         size_t Range:: serialize(ios::ostream &fp) const

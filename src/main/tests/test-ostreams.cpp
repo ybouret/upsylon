@@ -5,6 +5,7 @@
 #include "y/ios/imstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/string.hpp"
+#include "y/code/utils.hpp"
 
 using namespace upsylon;
 
@@ -118,6 +119,7 @@ Y_UTEST(ostreams)
 
 
         }
+
         {
             std::cerr << "Reading Upacked..." << std::endl;
             ios::icstream fp("upack.dat");
@@ -127,6 +129,19 @@ Y_UTEST(ostreams)
                 Y_ASSERT(loaded==data[i]);
             }
         }
+
+        int i=0;
+        const void *addr = &i;
+        union
+        {
+            const void *addr;
+            uint8_t     byte[ sizeof(void*) ];
+        } alias = { addr };
+
+        std::cerr << "addr=" << addr << std::endl;
+        std::cerr << "byte=0x"; for(size_t i=0;i<sizeof(void*);++i) std::cerr << hexadecimal::lowercase[ alias.byte[i] ];
+        std::cerr << std::endl;
+
     }
 
 }

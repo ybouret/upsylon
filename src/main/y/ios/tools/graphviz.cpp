@@ -3,10 +3,10 @@
 #include "y/exception.hpp"
 #include <cstdlib>
 
-namespace upsylon
-{
-    namespace ios
-    {
+namespace upsylon {
+
+    namespace ios {
+
         bool GraphViz:: Render(const string &filename, bool keepFile )
         {
 
@@ -39,3 +39,4 @@ namespace upsylon
         }
     }
 }
+

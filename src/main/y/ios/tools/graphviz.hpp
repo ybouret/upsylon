@@ -4,18 +4,21 @@
 
 #include "y/strfwd.hpp"
 
-namespace upsylon
-{
-    namespace ios
-    {
+namespace upsylon {
+
+    namespace ios {
+
         //! GrapViz calls
         struct GraphViz
         {
             //! render a filename into its png counterpart
             static bool Render( const string &filename, bool keepFile = false );
         };
+
+
     }
 }
+
 
 #endif
 

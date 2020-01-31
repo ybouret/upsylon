@@ -68,7 +68,7 @@ namespace upsylon {
             // interface: Pattern
             //__________________________________________________________________
             virtual Pattern *clone() const;                   //!< clone
-            virtual void     __viz(ios::ostream &)    const;  //!< GraphViz
+            virtual void     vizCore(ios::ostream &)  const;  //!< GraphViz
             virtual bool     match(Token &, Source &) const;  //!< match
             virtual bool     weak()     const throw();        //!< always true
             virtual bool     univocal() const throw();        //!< always false
@@ -111,7 +111,7 @@ namespace upsylon {
             const size_t     nmin;                              //!< minimal count
             virtual         ~Repeating() throw();               //!< cleanup
             virtual Pattern *clone() const;                     //!< clone
-            virtual void     __viz(ios::ostream &)    const;    //!< GraphViz
+            virtual void     vizCore(ios::ostream &)  const;    //!< GraphViz
             virtual bool     match(Token &, Source &) const;    //!< match
             virtual bool     weak()     const throw();          //!< check
             virtual bool     univocal() const throw();          //!< false
@@ -147,7 +147,7 @@ namespace upsylon {
 
             virtual         ~Counting() throw();              //!< destructor
             virtual Pattern *clone() const;                   //!< clone
-            virtual void     __viz(ios::ostream &)     const; //!< GraphViz
+            virtual void     vizCore(ios::ostream &)   const; //!< GraphViz
             virtual bool     match(Token &, Source &)  const; //!< match
             virtual bool     weak()     const throw();        //! nmin<=0
             virtual bool     univocal() const throw();        //!< true if nmin==nmax and motif->univocal

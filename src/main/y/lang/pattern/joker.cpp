@@ -17,8 +17,8 @@ namespace upsylon {
 
         void Joker:: vizlink( ios::ostream &fp ) const
         {
-            motif->viz(fp);
-            link( & *motif, fp );
+            motif->vizSave(fp);
+            endl( vizJoin( fp, & *motif ) );
         }
 
         void Joker:: optimize() throw()
@@ -50,9 +50,9 @@ namespace upsylon {
 
         bool Optional:: weak() const throw() { return true; }
 
-        void Optional:: __viz(ios::ostream &fp) const
+        void Optional:: vizCore(ios::ostream &fp) const
         {
-            fp(" [shape=diamond,style=%s,label=\"?\"];",vizStyle());
+            endl(fp(" [shape=diamond,style=%s,label=\"?\"]",vizStyle()));
             vizlink(fp);
         }
 
@@ -118,7 +118,7 @@ namespace upsylon {
             return p;
         }
 
-        void Repeating:: __viz( ios::ostream &fp ) const
+        void Repeating:: vizCore( ios::ostream &fp ) const
         {
             fp("[shape=diamond,style=%s,label=\"", vizStyle());
             switch(nmin)
@@ -128,7 +128,8 @@ namespace upsylon {
                 default:
                     fp(">=%u", unsigned(nmin));
             }
-            fp << "\"];\n";
+            fp << "\"]";
+            endl(fp);
             vizlink(fp);
         }
 
@@ -204,23 +205,11 @@ namespace upsylon {
 
         Y_LANG_PATTERN_CLID(Repeating);
 
-        const char Repeating:: _ID0[8] =
-        {
-            Y_FOURCC_AT(0, _ZOM),
-            Y_FOURCC_AT(1, _ZOM),
-            Y_FOURCC_AT(2, _ZOM),
-            Y_FOURCC_AT(3, _ZOM),
-            0,0,0,0
-        };
+        const char Repeating:: _ID0[8] = Y_FOURCC_CHAR8(_ZOM);
 
-        const char Repeating:: _ID1[8] =
-        {
-            Y_FOURCC_AT(0, _OOM),
-            Y_FOURCC_AT(1, _OOM),
-            Y_FOURCC_AT(2, _OOM),
-            Y_FOURCC_AT(3, _OOM),
-            0,0,0,0
-        };
+
+        const char Repeating:: _ID1[8] = Y_FOURCC_CHAR8(_OOM);
+        
 
         const char *Repeating:: className() const throw()
         {
@@ -265,7 +254,7 @@ namespace upsylon {
             return p;
         }
 
-        void Counting:: __viz( ios::ostream &fp ) const
+        void Counting:: vizCore( ios::ostream &fp ) const
         {
             fp(" [shape=diamond,style=%s,label=\"[%u:%u]\"];\n", vizStyle(),unsigned(nmin), unsigned(nmax) );
             vizlink(fp);
