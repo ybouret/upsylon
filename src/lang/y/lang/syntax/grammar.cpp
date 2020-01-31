@@ -121,7 +121,7 @@ namespace upsylon
                 rules.move_to_front( (Rule *)&r );
             }
 
-            void Grammar:: graphViz( const string &dotfile ) const
+            void Grammar:: graphViz( const string &dotfile, const bool keepFile) const
             {
                 {
                     ios::ocstream fp(dotfile);
@@ -141,13 +141,13 @@ namespace upsylon
                     Vizible::leaveDigraph(fp);
                 }
 
-                ios::GraphViz::Render(dotfile);
+                ios::GraphViz::Render(dotfile,keepFile);
 
             }
 
-            void Grammar:: graphViz( const char *dotfile ) const
+            void Grammar:: graphViz(const char *dotfile, const bool keepFile) const
             {
-                const string _(dotfile); graphViz(_);
+                const string _(dotfile); graphViz(_,keepFile);
             }
 
 

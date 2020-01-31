@@ -97,11 +97,11 @@ namespace upsylon
                 //
                 // other methods
                 //______________________________________________________________
-                string MakeAlternateName( const ArrayOfStrings &) const; //!< make name for an alternate
-                string MakeAggregateName( const ArrayOfStrings &) const; //!< make name for an aggregate
+                string MakeAlternateName(const ArrayOfStrings &) const; //!< make name for an alternate
+                string MakeAggregateName(const ArrayOfStrings &) const; //!< make name for an aggregate
 
-                void graphViz( const string &dotfile ) const; //!< save to GraphViz and try to render
-                void graphViz( const char   *dotfile ) const; //!< save to GraphViz and try to render, wrapper
+                void graphViz(const string &dotfile, const bool keepFile=false) const; //!< save to GraphViz and try to render
+                void graphViz(const char   *dotfile, const bool keepFile=false) const; //!< save to GraphViz and try to render, wrapper
                 
 
             private:
