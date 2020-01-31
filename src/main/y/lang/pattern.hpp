@@ -67,10 +67,6 @@ namespace upsylon
             // non virtual interface
             //__________________________________________________________________
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
-            void        GraphViz( const string &fn, bool keepFile=false) const; //!< write a directed graph
-            void        GraphViz( const char   *fn, bool keepFile=false) const; //!< write a directed graph, wrapper
-            string      toBinary() const;                                       //!< use write() to get a binary code
-            string      toBase64() const;                                       //!< human readable from toBinary()
             bool        multiple() const throw();                               //!< !univocal
 
             //__________________________________________________________________

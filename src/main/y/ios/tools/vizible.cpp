@@ -1,5 +1,6 @@
 #include "y/ios/tools/vizible.hpp"
-#include "y/ios/ostream.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/ios/tools/graphviz.hpp"
 
 namespace upsylon {
 
@@ -33,5 +34,34 @@ namespace upsylon {
             vizCore( vizName(fp) );
         }
 
+
+        bool vizible:: graphViz(const string &fileName, const bool keepFile) const
+        {
+            {
+                ios::ocstream fp(fileName);
+                fp << "digraph G {\n";
+                vizSave(fp);
+                fp << "}\n";
+            }
+            return GraphViz::Render(fileName,keepFile);
+        }
+
+
+
     }
 }
+
+#include "y/string.hpp"
+namespace upsylon {
+
+    namespace ios {
+
+        bool vizible:: graphViz(const char *fileName, const bool keepFile) const
+        {
+            const  string   _(fileName);
+            return graphViz(_,keepFile);
+        }
+    }
+
+}
+

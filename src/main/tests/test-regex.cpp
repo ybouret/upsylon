@@ -37,18 +37,18 @@ Y_UTEST(regex)
         }
 
         {
-            const string bin = p->toBinary();
+            const string bin = p->to_binary();
             Y_CHECK( bin.size() == p->serialize_length() );
             {
                 ios::imstream fp(bin);
                 auto_ptr<Pattern> q = Pattern::Load(fp);
-                const string loaded = q->toBinary();
+                const string loaded = q->to_binary();
                 Y_CHECK(loaded==bin);
             }
 
         }
 
-        p->GraphViz("regex.dot");
+        p->graphViz("regex.dot");
 
         if(argc>2&&0==strcmp(argv[2],"scan"))
         {

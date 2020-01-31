@@ -3,10 +3,10 @@
 #include "y/ios/null-ostream.hpp"
 #include "y/ios/ohstream.hpp"
 
-namespace upsylon
-{
-    namespace ios
-    {
+namespace upsylon {
+
+    namespace ios {
+
         serializable:: serializable() throw()
         {
         }
@@ -64,5 +64,39 @@ namespace upsylon
 
 
 
+
     }
 }
+
+#include "y/ios/osstream.hpp"
+#include "y/exception.hpp"
+#include "y/codec/base64.hpp"
+
+namespace upsylon {
+
+    namespace ios {
+
+        string serializable::to_binary() const
+        {
+            static const char excpfmt[] = "serializable.to_binary(sizes mismatch@level-%d)";
+
+            const  size_t toWrite = serialize_length();
+            string ans( toWrite, as_capacity, false );
+            {
+                ios::osstream fp(ans);
+                const size_t  written = serialize(fp);
+                if(written!=toWrite) throw exception(excpfmt,1);
+            }
+            if(ans.size()!=toWrite)  throw exception(excpfmt,2);
+            return ans;
+        }
+
+        string serializable:: to_base64() const
+        {
+            const string ans = to_binary();
+            ios::base64::encoder b64;
+            return b64.to_string(ans);
+        }
+    }
+}
+

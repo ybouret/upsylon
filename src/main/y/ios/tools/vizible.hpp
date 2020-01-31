@@ -4,12 +4,13 @@
 #define Y_IOS_GRAPHVIZIBLE_INCLUDED 1
 
 #include "y/ios/iosfwd.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon {
 
     namespace ios {
         
-        //! GrapViz class helper
+        //! GraphViz class helper
         class vizible
         {
         public:
@@ -31,12 +32,15 @@ namespace upsylon {
             ostream &    vizJoin(ostream &, const vizible *p) const; //!< join 'this' to 'p';
             void         vizSave(ostream &) const;                   //!< emit vizName() + vizCore()
 
+            bool         graphViz(const string &fileName, const bool keepFile=false) const; //!< save and render
+            bool         graphViz(const char   *fileName, const bool keepFile=false) const; //!< save and render, wrapper
+
             //------------------------------------------------------------------
             //
             // static helpers
             //
             //------------------------------------------------------------------
-            static void  endl( ostream &);                            //!< append ";\n"
+            static void  endl( ostream &); //!< append ";\n"
 
         protected:
             explicit vizible() throw(); //! setup

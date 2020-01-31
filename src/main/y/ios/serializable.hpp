@@ -4,6 +4,7 @@
 
 #include "y/os/platform.hpp"
 #include "y/ios/iosfwd.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon
 {
@@ -42,7 +43,10 @@ namespace upsylon
             size_t hash_className_with(hashing::function &) const; //!< serialize_class_name( ohstream(H) )
             size_t hash_with(hashing::function &)           const; //!< serialize( ohstream(H) )
             size_t hash_class_with(hashing::function &)     const; //!< serialize_class( ohstream(H) )
-            
+
+            string to_binary() const;
+            string to_base64() const;
+
         protected:
             explicit serializable() throw();
 

@@ -16,7 +16,7 @@ namespace
     {
         std::cerr << "Testing <" << p.className() << ">" << std::endl;
         
-        const string bin = p.toBinary();
+        const string bin = p.to_binary();
         if(saveName)
         {
             string fileName = saveName;
@@ -28,7 +28,7 @@ namespace
         {
             ios::imstream fp(bin);
             q = Pattern::Load(fp);
-            Y_ASSERT( q->toBinary() == bin );
+            Y_ASSERT( q->to_binary() == bin );
         }
     }
 }
@@ -51,15 +51,15 @@ Y_UTEST(pattern)
     Y_UTEST_SIZEOF(Counting);
 
     auto_ptr<Pattern> p = new Any1();
-    p->GraphViz("any1.dot");
+    p->graphViz("any1.dot");
     test_io(*p);
 
     p = new Single('\\');
-    p->GraphViz("single.dot");
+    p->graphViz("single.dot");
     test_io(*p);
 
     p = new Range('a','z');
-    p->GraphViz("range.dot");
+    p->graphViz("range.dot");
     test_io(*p);
 
     auto_ptr<Logical> q = new AND();
@@ -72,7 +72,7 @@ Y_UTEST(pattern)
         sub->add(new Range('A','Z'));
     }
     q->add(new Single('p'));
-    q->GraphViz("and.dot");
+    q->graphViz("and.dot");
     test_io(*q);
 
     q = new AND();
@@ -81,7 +81,7 @@ Y_UTEST(pattern)
     q->add( Repeating::Create( new Single('C'), 1 ) );
     q->add( Repeating::Create( new Single('D'), 2 ) );
     q->add( Counting ::Create( new Single('E'),0,5) );
-    q->GraphViz("jk.dot");
+    q->graphViz("jk.dot");
 
     test_io(*q,"AND");
 

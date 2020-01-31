@@ -8,7 +8,7 @@ using namespace Lang;
 
 
 #define BUILD(TT) do { auto_ptr<Pattern> p = RegExp(Common::TT); \
-p->GraphViz( "Common_" #TT ".dot" );\
+p->graphViz( "Common_" #TT ".dot" );\
 } while(false)
 
 Y_UTEST(common)

@@ -35,7 +35,7 @@ namespace upsylon
             return weak() ? "dashed" : "solid";
         }
 
-
+#if 0
         void Pattern:: GraphViz( const string &fn, bool keepFile) const
         {
             {
@@ -49,31 +49,8 @@ namespace upsylon
 
         void Pattern:: GraphViz( const char   *fn, bool keepFile) const
         { const string _ = fn; GraphViz(_,keepFile); }
-
-        string Pattern:: toBinary() const
-        {
-            const size_t     len = serialize_length();
-            string           ans( len, as_capacity, false );
-            ios::osstream    fp(ans);
-            (void) serialize(fp);
-            assert( len == ans.size() );
-            return ans;
-        }
-
-        string Pattern:: toBase64() const
-        {
-
-            const size_t     len = serialize_length();
-            string           ans( len, as_capacity, false );
-            {
-                ios::osstream    fp(ans);
-                (void) serialize(fp);
-                assert( len == ans.size() );
-            }
-            ios::base64::encoder b64;
-            return b64.to_string(ans);
-        }
-
+#endif
+        
         void Pattern:: NoMultiple( List &ops ) throw()
         {
             List                          tmp;

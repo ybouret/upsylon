@@ -12,17 +12,17 @@ using namespace Lang;
 #define __CHECK(EXPR) do {                                          \
 std::cerr << "Checking " << #EXPR << std::endl;                     \
 std::cerr << "\t|_GraphViz" << std::endl;                           \
-auto_ptr<Pattern> p = posix::EXPR(); p->GraphViz( #EXPR ".dot" );   \
+auto_ptr<Pattern> p = posix::EXPR(); p->graphViz( #EXPR ".dot" );   \
 std::cerr << "\t|_saving" << std::endl;                             \
 { ios::ocstream fp( #EXPR ".bin" ); p->serialize(fp); }             \
 std::cerr << "\t|_reloading" << std::endl;                          \
 { ios::icstream fp( #EXPR ".bin");                                  \
 auto_ptr<Pattern> q = Pattern::Load(fp);                            \
-const string p_bin = p->toBinary();                                \
-const string q_bin = q->toBinary();                                \
+const string p_bin = p->to_binary();                                \
+const string q_bin = q->to_binary();                                \
 Y_CHECK(p_bin==q_bin);                                              \
 }                                                                   \
-std::cerr << "\t|_b64=" << p->toBase64() << std::endl;             \
+std::cerr << "\t|_b64=" << p->to_base64() << std::endl;             \
 dict(#EXPR,p.yield());                                              \
 std::cerr << std::endl;                                             \
 } while(false)
