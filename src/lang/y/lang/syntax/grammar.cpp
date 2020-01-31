@@ -125,7 +125,7 @@ namespace upsylon
             {
                 {
                     ios::ocstream fp(dotfile);
-                    fp << "digraph G {\n";
+                    Vizible::enterDigraph(fp, "G");
 
                     // declare all nodes
                     for(const Rule *r=rules.head;r;r=r->next)
@@ -138,7 +138,7 @@ namespace upsylon
                     {
                         r->graphVizEpilog(fp);
                     }
-                    fp << "}\n";
+                    Vizible::leaveDigraph(fp);
                 }
 
                 ios::GraphViz::Render(dotfile);

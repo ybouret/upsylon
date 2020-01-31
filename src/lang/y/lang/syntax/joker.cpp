@@ -19,7 +19,7 @@ namespace upsylon
 
             void Joker:: graphVizEpilog(ios::ostream &fp) const
             {
-                graphVizLink(fp, &jk, 0);
+                graphVizAttach(fp, &jk, 0);
             }
 
             void Joker:: checkReady() const

@@ -29,6 +29,7 @@ namespace upsylon {
             fp << ';' << '\n';
         }
 
+
         void vizible:: vizSave(ostream &fp) const
         {
             vizCore( vizName(fp) );
@@ -39,9 +40,9 @@ namespace upsylon {
         {
             {
                 ios::ocstream fp(fileName);
-                fp << "digraph G {\n";
+                enterDigraph(fp,"G");
                 vizSave(fp);
-                fp << "}\n";
+                leaveDigraph(fp);
             }
             return GraphViz::Render(fileName,keepFile);
         }
@@ -61,6 +62,29 @@ namespace upsylon {
             const  string   _(fileName);
             return graphViz(_,keepFile);
         }
+
+        void  vizible:: enterDigraph(ostream &fp, const string &id)
+        {
+            static const char gvDigraph[] = "digraph ";
+            static const char gvDGEnter[] = " {\n";
+            fp.output(gvDigraph, sizeof(gvDigraph)-1);
+            fp << id;
+            fp.output(gvDGEnter,sizeof(gvDGEnter)-1);
+        }
+
+        void  vizible:: enterDigraph(ostream &fp, const char *id)
+        {
+            const string _(id); enterDigraph(fp,_);
+        }
+
+        void  vizible:: leaveDigraph(ostream &fp)
+        {
+            static const char gvDGLeave[] = "}\n";
+            fp.output(gvDGLeave,sizeof(gvDGLeave)-1);
+        }
+
+
+
     }
 
 }

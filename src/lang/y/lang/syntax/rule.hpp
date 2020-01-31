@@ -57,18 +57,15 @@ namespace upsylon {
                 virtual const char *typeName() const throw()     = 0;         //!< get a textual name
                 virtual bool        isHollow() const throw()     = 0;         //!< if accepts an empty node
                 virtual            ~Rule() throw();                           //!< destructor
-                virtual const char *graphVizShape() const throw() = 0;        //!< shape for graphViz
                 virtual void        graphVizEpilog(ios::ostream &) const = 0; //!< perform necessary linking
-                virtual const char *graphVizStyle() const throw();            //!< based on isHollow, can be superseeded
                 virtual void        checkReady() const = 0;                   //!< check if well designed
 
                 //______________________________________________________________
                 //
                 // non-virtual interface
                 //______________________________________________________________
-                void graphVizName( ios::ostream &fp ) const;                              //!< write 'this' graphViz name
-                void graphVizLink( ios::ostream &fp, const Rule *p, unsigned idx ) const; //!< create a link, numbered if idx>0
-                void graphVizProlog( ios::ostream &fp ) const;                            //!< common prolog for all Rules
+                void graphVizAttach( ios::ostream &fp, const Rule *p, unsigned idx ) const; //!< create a link, numbered if idx>0
+                void graphVizProlog( ios::ostream &fp ) const;                              //!< common prolog for all Rules
 
                 //! conversion to derived class with consistency checking
                 template <typename RULE_TYPE> inline
@@ -82,6 +79,9 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
                 void checkConsistency( const std::type_info &target ) const;
+                virtual const char *graphVizShape() const throw() = 0;        //!< shape for graphViz
+                virtual const char *graphVizStyle() const throw();            //!< based on isHollow, can be superseeded
+
             };
 
         }
