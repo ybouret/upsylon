@@ -17,7 +17,7 @@ namespace upsylon
             class Grammar;   //!< forward declaration
 
             //! store syntax trees
-            class Node : public Object, public core::inode<Node>
+            class Node : public Object, public core::inode<Node>, public Vizible
             {
             public:
                 typedef core::inode<Node>             Base; //!< alias
@@ -34,7 +34,7 @@ namespace upsylon
                 //______________________________________________________________
                 virtual Node *        clone() const               = 0; //!< clone the node
                 virtual const void   *inner() const throw()       = 0; //!< internal address for lexeme/children
-                virtual void          viz( ios::ostream & ) const = 0; //!< output graphViz code
+                //virtual void          viz( ios::ostream & ) const = 0; //!< output graphViz code
                 virtual void          returnTo( Lexer & ) throw() = 0; //!< restore before delete
                 virtual const string *data() const throw()        = 0; //!< return extra data, if any
                 virtual ~Node() throw();                               //!< destructor
@@ -48,9 +48,6 @@ namespace upsylon
                 const Lexeme &lexeme() const throw();                             //!< from inner
                 List         &children() throw();                                 //!< from inner
                 const List   &children() const throw();                           //!< from inner
-                void          graphVizName( ios::ostream &fp) const;              //!< helper: fp.viz(this)
-                void          graphViz( const string &dotfile) const;             //!< save to graphviz and try to render
-                void          graphViz( const char   *dotfile) const;             //!< save to graphviz and try to render
                 void          save( ios::ostream &fp, size_t *bytes=0) const;     //!< save to stream
                 void          save( const string &binfile, size_t *bytes=0) const;//!< save to file
                 void          save( const char   *binfile, size_t *bytes=0) const;//!< save to file
@@ -120,11 +117,11 @@ namespace upsylon
             public:
                 static const uint8_t MAGIC_BYTE = 0x00;            //!< for I/O
 
-                virtual ~TerminalNode() throw();                   //!< destructor
-                virtual Node       *  clone() const;               //!< clone
-                virtual const void *  inner() const throw();       //!< lx
-                virtual void          viz( ios::ostream & ) const; //!< graphViz
-                virtual const string *data() const throw();        //!< NULL
+                virtual ~TerminalNode() throw();                       //!< destructor
+                virtual Node       *  clone() const;                   //!< clone
+                virtual const void *  inner() const throw();           //!< lx
+                virtual void          vizCore( ios::ostream & ) const; //!< for graphViz
+                virtual const string *data() const throw();            //!< NULL
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(TerminalNode);
@@ -145,7 +142,7 @@ namespace upsylon
                 virtual ~InternalNode() throw();                   //!< destructor
                 virtual Node       *  clone() const;               //!< clone
                 virtual const void *  inner() const throw();       //!< this
-                void                  viz( ios::ostream & ) const; //!< graphViz
+                void                  vizCore( ios::ostream & ) const; //!< graphViz
                 virtual const string *data() const throw();        //!< data or NULL
 
             protected:
@@ -170,7 +167,7 @@ namespace upsylon
 
                 virtual ~ExtendedNode() throw();                  //!< destructor
                 virtual  Node   *     clone() const;              //!< hardcopy with shared data
-                void                  viz( ios::ostream &) const; //!< graphViz
+                void                  vizCore( ios::ostream &) const; //!< graphViz
                 virtual const string *data() const throw();       //!< & *shared
 
             private:

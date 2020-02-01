@@ -133,27 +133,8 @@ namespace upsylon
                 node = 0;
             }
             
-            void Node:: graphVizName( ios::ostream &fp) const
-            {
-                fp.viz(this);
-            }
+           
             
-            
-            void Node:: graphViz( const string &dotfile) const
-            {
-                {
-                    ios::ocstream fp(dotfile);
-                    fp << "digraph G {\n";
-                    viz(fp);
-                    fp << "}\n";
-                }
-                ios::GraphViz::Render(dotfile);
-            }
-            
-            void Node:: graphViz( const char *dotfile) const
-            {
-                const string _(dotfile); graphViz(_);
-            }
             
             void Node:: save( ios::ostream &fp, size_t *bytes ) const
             {
@@ -325,21 +306,22 @@ namespace upsylon
             void InternalNode::  vizLink( ios::ostream &fp ) const
             {
                 const bool multiple = size>1;
-                unsigned  idx=1;
+                unsigned   idx      = 1;
                 for(const Node *node = head; node; node=node->next, ++idx)
                 {
-                    node->viz(fp);
-                    graphVizName(fp); fp << "->"; node->graphVizName(fp);
+                    node->vizSave(fp);
+                    vizJoin(fp,node);
+                    //graphVizName(fp); fp << "->"; node->graphVizName(fp);
                     if(multiple) fp("[label=\"%u\"]",idx);
-                    fp << ";\n";
+                    endl(fp);
                 }
             }
             
             
-            void     InternalNode::   viz( ios::ostream &fp ) const
+            void     InternalNode::   vizCore( ios::ostream &fp ) const
             {
                 const string l = string_convert::to_printable(rule.name);
-                graphVizName(fp); fp("[shape=house,label=\""); fp << l; fp("\"];\n");
+                fp("[shape=house,label=\""); fp << l; fp("\"];\n");
                 vizLink(fp);
             }
             
@@ -413,11 +395,11 @@ namespace upsylon
                 emitList(fp,bytes);
             }
             
-            void  ExtendedNode::   viz( ios::ostream &fp ) const
+            void  ExtendedNode::   vizCore( ios::ostream &fp ) const
             {
                 const string l = string_convert::to_printable(rule.name);
                 const string c = string_convert::to_printable(*shared);
-                graphVizName(fp); fp("[shape=house,label=\"%s='%s'\",style=rounded];\n",*l,*c);
+                fp("[shape=house,label=\"%s='%s'\",style=rounded];\n",*l,*c);
                 vizLink(fp);
             }
             
@@ -435,7 +417,7 @@ namespace upsylon
         namespace Syntax
         {
             
-            void     TerminalNode::   viz( ios::ostream &fp ) const
+            void     TerminalNode::   vizCore( ios::ostream &fp ) const
             {
                 assert(lx);
                 string l = string_convert::to_printable( rule.name );
@@ -455,7 +437,8 @@ namespace upsylon
                     case Operator: sh="triangle"; break;
                     case Semantic: st="dashed";   break;
                 }
-                graphVizName(fp); fp("[shape=\"%s\",style=\"%s\",label=\"",sh,st); fp << l; fp("\"];\n");
+                fp("[shape=\"%s\",style=\"%s\",label=\"",sh,st); fp << l << "\"]";
+                endl(fp);
             }
             
         }
