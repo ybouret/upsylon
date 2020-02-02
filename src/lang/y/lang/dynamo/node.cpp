@@ -185,7 +185,39 @@ namespace upsylon
                 } break;
             }
         }
-        
+
+        size_t DynamoNode:: serialize( ios::ostream &fp ) const
+        {
+            size_t ans = name.serialize(fp);
+
+            switch(type)
+            {
+                case DynamoTerminal: {
+                    Y_OSTREAM_ADD_TO(ans,fp.emit_net<uint8_t>,0);
+                    const string tmp = content();
+                    ans += tmp.serialize(fp);
+                } break;
+
+                case DynamoInternal: {
+                    Y_OSTREAM_ADD_TO(ans,fp.emit_net<uint8_t>,1);
+                    const DynamoList &ch = children();
+                    const size_t      nch = ch.size;
+                    Y_OSTREAM_ADD_TO(ans,fp.emit_upack,nch);
+                    for(const DynamoNode *node=ch.head;node;node=node->next)
+                    {
+                        ans += node->serialize(fp);
+                    }
+                } break;
+            }
+
+            return ans;
+        }
+
+        const char *DynamoNode:: className() const throw()
+        {
+            return "DynamoNode";
+        }
+
         size_t DynamoNode:: outputBytes() const
         {
             size_t            bytes = 0;
@@ -284,12 +316,7 @@ namespace upsylon
             }
         }
         
-        digest DynamoNode:: md( hashing::function &H ) const
-        {
-            H.set();
-            run(H);
-            return H.md();
-        }
+        
         
     }
 }

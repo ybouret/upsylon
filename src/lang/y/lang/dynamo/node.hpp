@@ -5,12 +5,12 @@
 #include "y/lang/lexical/lexeme.hpp"
 #include "y/lang/dynamo/types.hpp"
 #include "y/lang/source.hpp"
-#include "y/hashing/function.hpp"
+#include "y/ios/serializable.hpp"
+#include "y/hashing/digest.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon{
+
+    namespace Lang {
         
         //! type of DynamoNode
         enum DynamoType
@@ -23,7 +23,10 @@ namespace upsylon
         typedef core::list_of_cpp<DynamoNode> DynamoList; //!< alias
         
         //! a generic node
-        class DynamoNode : public DynamoObject, public core::inode<DynamoNode>
+        class DynamoNode :
+        public DynamoObject,
+        public core::inode<DynamoNode>,
+        public ios::serializable
         {
         public:
             const DynamoType  type;   //!< node type
@@ -83,9 +86,11 @@ namespace upsylon
             //! recursive run of a hashing function
             void run( hashing::function &H ) const throw();
             
-            //! full digest from this node
-            digest md( hashing::function &H ) const;
             
+
+            virtual const char *className() const throw();
+            virtual size_t      serialize( ios::ostream &fp) const;
+
         private:
             void            *impl;
             Y_DISABLE_COPY_AND_ASSIGN(DynamoNode);

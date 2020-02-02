@@ -12,7 +12,7 @@ namespace upsylon
 
         //! full loading of dynamo trees
         /**
-         run the parser and proces the '%include' commands
+         run the parser and process the '%include' commands
          */
         class DynamoLoader : public DynamoParser
         {

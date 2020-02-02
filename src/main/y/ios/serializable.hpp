@@ -9,10 +9,12 @@
 namespace upsylon
 {
 
+    class digest;
+    
     namespace hashing
     {
         class function; //!< forward declaration
-    };
+     };
 
     namespace ios
     {
