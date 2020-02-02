@@ -9,7 +9,7 @@ namespace upsylon
 {
 
     //! move to fron algorithm
-    class move_to_front
+    class move_to_front : public byte_editor
     {
     public:
         explicit move_to_front() throw();   //!< uinitialize

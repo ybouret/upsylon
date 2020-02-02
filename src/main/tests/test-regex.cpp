@@ -6,6 +6,9 @@
 #include "y/ios/icstream.hpp"
 #include "y/ios/imstream.hpp"
 
+#include "y/codec/delta.hpp"
+#include "y/codec/mtf.hpp"
+
 using namespace upsylon;
 using namespace Lang;
 
@@ -44,6 +47,22 @@ Y_UTEST(regex)
                 auto_ptr<Pattern> q = Pattern::Load(fp);
                 const string loaded = q->to_binary();
                 Y_CHECK(loaded==bin);
+            }
+
+
+
+            {
+                delta_encoding enc;
+                string         binEnc = bin;
+                enc.encode_block( *binEnc, *bin, bin.size() );
+                binEnc.save_to("bin_del.bin");
+            }
+
+            {
+                move_to_front  enc;
+                string         binEnc = bin;
+                enc.encode_block( *binEnc, *bin, bin.size() );
+                binEnc.save_to("bin_mtf.bin");
             }
 
         }

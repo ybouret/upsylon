@@ -7,7 +7,7 @@ namespace upsylon {
 
     byte_editor:: ~byte_editor() throw() {}
 
-    void byte_editor:: encode(void *output,const void *input, size_t length) throw()
+    void byte_editor:: encode_block(void *output,const void *input, size_t length) throw()
     {
         assert(!(0==output&&length>0));
         assert(!(0==input &&length>0));
@@ -19,7 +19,7 @@ namespace upsylon {
         }
     }
 
-    void byte_editor:: decode(void *output,const void *input, size_t length) throw()
+    void byte_editor:: decode_block(void *output,const void *input, size_t length) throw()
     {
         assert(!(0==output&&length>0));
         assert(!(0==input &&length>0));

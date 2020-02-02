@@ -26,10 +26,10 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         //! possible output=input
-        void     encode(void *output,const void *input, size_t length) throw();
+        void     encode_block(void *output,const void *input, size_t length) throw();
 
         //! possible output=input
-        void     decode(void *output,const void *input, size_t length) throw();
+        void     decode_block(void *output,const void *input, size_t length) throw();
 
 
     protected:
