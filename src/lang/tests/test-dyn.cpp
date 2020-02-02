@@ -1,6 +1,5 @@
 #include "y/lang/dynamo/loader.hpp"
 #include "y/lang/dynamo/generator.hpp"
-#include "y/lang/dynamo/hash31.hpp"
 #include "y/fs/local/file.hpp"
 #include "y/utest/run.hpp"
 
@@ -73,18 +72,18 @@ Y_UTEST(dyn)
         std::cerr << "symbols.terminals=" << symbols.terminals << std::endl;
         std::cerr << "symbols.internals=" << symbols.internals << std::endl;
 
-        DynamoHash31 H;
+        //DynamoHash31 H;
 
         for(DynamoSymbolIterator i= symbols.terminals.begin(); i != symbols.terminals.end(); ++i)
         {
             const DynamoInfo &di = *i;
-            std::cerr << "term '" << di.rule.name << "' -> " << H(di.rule.name) << std::endl;
+            std::cerr << "term '" << di.rule.name << std::endl; //"' -> " << H(di.rule.name) << std::endl;
         }
 
         for(DynamoSymbolIterator i= symbols.internals.begin(); i != symbols.internals.end(); ++i)
         {
             const DynamoInfo &di = *i;
-            std::cerr << "rule '" << di.rule.name << "' -> " << H(di.rule.name) << std::endl;
+            std::cerr << "rule '" << di.rule.name << std::endl; //"' -> " << H(di.rule.name) << std::endl;
         }
 
 
