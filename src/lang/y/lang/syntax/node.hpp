@@ -24,7 +24,7 @@ namespace upsylon
             public Serializable
             {
             public:
-                static const char                     UPFX = '$'; //!< Uuid PreFiX
+                static const char                     UPFX = '%'; //!< Uuid PreFiX
                 typedef uint32_t                      id_t;       //!< alias
                 typedef core::inode<Node>             Base;       //!< alias
                 typedef core::list_of_cloneable<Node> List;       //!< alias

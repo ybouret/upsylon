@@ -66,6 +66,7 @@ Y_UTEST(ee)
         Source source( Module::OpenSTDIN() );
         auto_ptr<Syntax::Node> ast = P.run( source );
         ast->graphViz( *(P.name) + "_tree.dot" );
+        ast->save_to( *(P.name) + "_tree.bin" );
         Syntax::Analyzer a;
         a.walk( *ast );
     }
