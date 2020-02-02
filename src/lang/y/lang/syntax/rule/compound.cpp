@@ -1,5 +1,5 @@
 
-#include "y/lang/syntax/compound.hpp"
+#include "y/lang/syntax/rule/compound.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon

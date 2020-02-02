@@ -85,7 +85,7 @@ namespace upsylon {
 
 }
 
-#include "y/lang/syntax/terminal.hpp"
+#include "y/lang/syntax/rule/terminal.hpp"
 #include "y/string/convert.hpp"
 
 namespace upsylon {

@@ -27,6 +27,12 @@ SOURCE_GROUP( lang/syntax/node FILES ${syntax_node_srcs} )
 INSTALL( FILES ${syntax_node_decl} DESTINATION include/y/lang/syntax/node )
 
 
+FILE(GLOB syntax_rule_decl y/lang/syntax/rule/*.hpp)
+FILE(GLOB syntax_rule_code y/lang/syntax/rule/*.cpp)
+SET(syntax_rule_srcs ${syntax_rule_decl} ${syntax_rule_code})
+SOURCE_GROUP( lang/syntax/rule FILES ${syntax_rule_srcs} )
+INSTALL( FILES ${syntax_rule_decl} DESTINATION include/y/lang/syntax/rule )
+
 FILE(GLOB dynamo_decl y/lang/dynamo/*.hpp)
 FILE(GLOB dynamo_code y/lang/dynamo/*.cpp)
 SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
@@ -37,6 +43,7 @@ ADD_LIBRARY(y-lang STATIC
 ${main_srcs} 
 ${syntax_srcs}
 ${syntax_grammar_srcs}
+${syntax_rule_srcs}
 ${syntax_node_srcs}
 ${dynamo_srcs}
 )

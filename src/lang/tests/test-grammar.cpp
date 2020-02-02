@@ -1,7 +1,5 @@
 #include "y/lang/syntax/grammar.hpp"
 
-#include "y/lang/syntax/terminal.hpp"
-#include "y/lang/syntax/joker.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 #include "y/lang/syntax/analyzer.hpp"
 

@@ -5,9 +5,9 @@
 #include "y/lang/lexical/lexer.hpp"
 #include "y/lang/syntax/grammar.hpp"
 
-#include "y/lang/syntax/terminal.hpp"
-#include "y/lang/syntax/joker.hpp"
-#include "y/lang/syntax/compound.hpp"
+//#include "y/lang/syntax/terminal.hpp"
+//#include "y/lang/syntax/joker.hpp"
+//#include "y/lang/syntax/compound.hpp"
 
 
 namespace upsylon

@@ -2,9 +2,9 @@
 #ifndef Y_LANG_SYNTAX_RULE_PROBE_INCLUDED
 #define Y_LANG_SYNTAX_RULE_PROBE_INCLUDED 1
 
-#include "y/lang/syntax/terminal.hpp"
-#include "y/lang/syntax/joker.hpp"
-#include "y/lang/syntax/compound.hpp"
+#include "y/lang/syntax/rule/terminal.hpp"
+#include "y/lang/syntax/rule/joker.hpp"
+#include "y/lang/syntax/rule/compound.hpp"
 #include "y/lang/syntax/rrs.hpp"
 
 namespace upsylon

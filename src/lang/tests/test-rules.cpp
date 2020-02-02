@@ -1,6 +1,6 @@
-#include "y/lang/syntax/terminal.hpp"
-#include "y/lang/syntax/joker.hpp"
-#include "y/lang/syntax/compound.hpp"
+#include "y/lang/syntax/rule/terminal.hpp"
+#include "y/lang/syntax/rule/joker.hpp"
+#include "y/lang/syntax/rule/compound.hpp"
 #include "y/lang/syntax/rule-probe.hpp"
 
 #include "y/utest/run.hpp"

@@ -3,7 +3,7 @@
 #ifndef Y_LANG_SYNTAX_COMPOUND_INCLUDED
 #define Y_LANG_SYNTAX_COMPOUND_INCLUDED 1
 
-#include "y/lang/syntax/internal.hpp"
+#include "y/lang/syntax/rule/internal.hpp"
 
 namespace upsylon
 {

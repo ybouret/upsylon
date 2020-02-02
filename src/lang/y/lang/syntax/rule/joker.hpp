@@ -2,7 +2,7 @@
 #ifndef Y_LANG_SYNTAX_JOKER_INCLUDED
 #define Y_LANG_SYNTAX_JOKER_INCLUDED 1
 
-#include "y/lang/syntax/internal.hpp"
+#include "y/lang/syntax/rule/internal.hpp"
 
 namespace upsylon
 {

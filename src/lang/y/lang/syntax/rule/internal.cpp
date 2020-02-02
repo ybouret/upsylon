@@ -1,4 +1,4 @@
-#include "y/lang/syntax/internal.hpp"
+#include "y/lang/syntax/rule/internal.hpp"
 
 namespace upsylon
 {
