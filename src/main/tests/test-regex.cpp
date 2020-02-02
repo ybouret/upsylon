@@ -49,22 +49,6 @@ Y_UTEST(regex)
                 Y_CHECK(loaded==bin);
             }
 
-
-
-            {
-                delta_encoding enc;
-                string         binEnc = bin;
-                enc.encode_block( *binEnc, *bin, bin.size() );
-                binEnc.save_to("bin_del.bin");
-            }
-
-            {
-                move_to_front  enc;
-                string         binEnc = bin;
-                enc.encode_block( *binEnc, *bin, bin.size() );
-                binEnc.save_to("bin_mtf.bin");
-            }
-
         }
 
         p->graphViz("regex.dot");

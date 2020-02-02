@@ -4,6 +4,88 @@
 
 namespace upsylon {
 
+    namespace information {
+
+        mtf_modulation:: mtf_modulation() throw() :
+        list_(),
+        node_()
+        {
+            build();
+        }
+
+        mtf_modulation:: ~mtf_modulation() throw()
+        {
+            list_.reset();
+            memset( node_, 0, sizeof(node_) );
+        }
+
+        void mtf_modulation:: build() throw()
+        {
+            memset( node_, 0, sizeof(node_) );
+            node_t *node = node_;
+            int i=256;
+            while( --i >= 0 ) {
+                node->data = uint8_t(i);
+                list_.push_front( node );
+                ++node;
+            }
+            assert( 256 == list_.size );
+        }
+
+
+        void mtf_modulation::reset() throw()
+        {
+            list_.reset();
+            build();
+        }
+
+    }
+
+    namespace information {
+
+        mtf_encoder::  mtf_encoder() throw() {}
+        mtf_encoder:: ~mtf_encoder() throw() {}
+
+        uint8_t mtf_encoder:: fetch(const uint8_t x) throw()
+        {
+            assert(list_.size == 256 );
+            node_t *node = list_.head;
+            int     indx = 0;
+            while( node->data != x ) {
+                ++indx;
+                node = node->next;
+                assert( node != NULL );
+                assert( indx < 256   );
+            }
+            list_.move_to_front(node);
+            assert(list_.size == 256 );
+            return uint8_t(indx);
+        }
+
+    }
+
+
+    namespace information {
+
+        mtf_decoder::  mtf_decoder() throw() {}
+        mtf_decoder:: ~mtf_decoder() throw() {}
+
+        uint8_t mtf_decoder:: fetch(const uint8_t x) throw()
+        {
+            assert(list_.size == 256 );
+            node_t *node = list_.head;
+            for(size_t i=x;i>0;--i) {
+                node=node->next;
+                assert(NULL!=node);
+            }
+            list_.move_to_front(node);
+            return node->data;
+        }
+
+    }
+
+
+#if 0
     move_to_front:: ~move_to_front() throw()
     {
         list_.reset();
@@ -67,6 +149,7 @@ namespace upsylon {
         list_.move_to_front(node);
         return node->data;
     }
+#endif
 
    
 

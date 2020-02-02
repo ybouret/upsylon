@@ -24,10 +24,11 @@ namespace upsylon
             public Serializable
             {
             public:
-                typedef uint8_t                       id_t;
-                typedef core::inode<Node>             Base; //!< alias
-                typedef core::list_of_cloneable<Node> List; //!< alias
-                typedef arc_ptr<const string>         Data; //!< alias
+                static const char                     UPFX = '$'; //!< Uuid PreFiX
+                typedef uint32_t                      id_t;       //!< alias
+                typedef core::inode<Node>             Base;       //!< alias
+                typedef core::list_of_cloneable<Node> List;       //!< alias
+                typedef arc_ptr<const string>         Data;       //!< alias
 
                 const Rule &rule;     //!< creating rule
                 const bool  terminal; //!< terminal flag
@@ -97,8 +98,6 @@ namespace upsylon
                 //! remove some nodes matching the expression
                 static void RemoveFrom( Node &node, Matching &name_matches );
 
-
-
             protected:
                 explicit Node(const Rule &r, const bool term) throw(); //!< setup
                 Node(const Node &other) throw();                       //!< copy
@@ -111,7 +110,7 @@ namespace upsylon
             class TerminalNode : public Node
             {
             public:
-                static const id_t UUID = 0x00;            //!< for I/O
+                static const id_t UUID = Y_FOURCC(UPFX,'T','R','M');    //!< for I/O
 
                 virtual ~TerminalNode() throw();                       //!< destructor
                 virtual Node       *  clone() const;                   //!< clone
@@ -135,7 +134,7 @@ namespace upsylon
             class InternalNode : public Node, public Node::List
             {
             public:
-                static const id_t UUID = 0x01;            //!< for I/O
+                static const id_t UUID = Y_FOURCC(UPFX,'I','N','T');  //!< for I/O
 
                 virtual ~InternalNode() throw();                     //!< destructor
                 virtual Node       *  clone() const;                 //!< clone
@@ -163,7 +162,7 @@ namespace upsylon
             class ExtendedNode : public InternalNode
             {
             public:
-                static const id_t UUID = 0x02;                        //!< for I/O
+                static const id_t UUID = Y_FOURCC(UPFX,'E','X','T');  //!< for I/O
 
                 virtual              ~ExtendedNode() throw();         //!< destructor
                 virtual  Node   *     clone() const;                  //!< hardcopy with shared data

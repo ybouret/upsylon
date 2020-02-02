@@ -3,6 +3,7 @@
 #include "y/type/ints.hpp"
 #include "y/string.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/ios/osstream.hpp"
 
 #include "y/ios/upack.hpp"
 
@@ -66,6 +67,9 @@ namespace
     }
 }
 
+#include <cstdio>
+#include "y/code/utils.hpp"
+
 Y_UTEST(upack)
 {
     do_upack<uint8_t>();
@@ -82,6 +86,26 @@ Y_UTEST(upack)
         const size_t sz = alea.partial<size_t>( alea.leq(8*sizeof(size_t)) );
         szpak.encode(sz);
         Y_ASSERT(szpak()==sz);
+    }
+
+    size_t packed = 0;
+    string output(8,as_capacity,false);
+    std::cerr.flush();
+    for(unsigned i=0;;++i)
+    {
+        output.clear();
+        packed=0;
+        {
+            ios::osstream fp(output);
+            (void) fp.emit_upack(i,&packed);
+            if(packed>1)
+            {
+                break;
+            }
+        }
+        assert(1==output.size());
+        const unsigned j = uint8_t(output[0]);
+        fprintf(stderr,"%02u-> %4s = %02u\n",i,visible_char[j],j);
     }
 
 }

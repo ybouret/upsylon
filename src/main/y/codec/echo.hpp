@@ -2,25 +2,27 @@
 #ifndef Y_CODEC_ECHO_INCLUDED
 #define Y_CODEC_ECHO_INCLUDED 1
 
-#include "y/codec/byte-editor.hpp"
+#include "y/codec/shaker.hpp"
 
 namespace upsylon {
 
-    //! delta encoding method
-    class echo_encoding
-    {
-    public:
-        explicit echo_encoding() throw(); //!< initialize
-        virtual ~echo_encoding() throw(); //!< desctructor
+    namespace information {
 
+        //! base class for simple echoing
+        class echo_modulation : public shaker
+        {
+        public:
+            explicit        echo_modulation()    throw(); //!< setup
+            virtual        ~echo_modulation()    throw(); //!< cleanup
+            virtual void    reset()              throw(); //!< do nothing
+            virtual uint8_t fetch(const uint8_t) throw(); //!< do nothing
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(echo_modulation);
+        };
 
-        virtual uint8_t encode(uint8_t) throw(); //!< encode a byte
-        virtual uint8_t decode(uint8_t) throw(); //!< decode a byte
-        virtual void    reset()         throw(); //!< reset
-        
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(echo_encoding);
-    };
+    }
+
 }
 
 #endif

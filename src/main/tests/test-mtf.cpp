@@ -6,14 +6,14 @@ using namespace upsylon;
 
 Y_UTEST(mtf)
 {
-    move_to_front enc;
-    move_to_front dec;
+    information::mtf_encoder enc;
+    information::mtf_decoder dec;
 
     for(size_t i=100000;i>0;--i)
     {
         const uint8_t x = alea.full<uint8_t>();
-        const uint8_t y = enc.encode(x);
-        const uint8_t z = dec.decode(y);
+        const uint8_t y = enc.fetch(x);
+        const uint8_t z = dec.fetch(y);
         Y_ASSERT(x==z);
     }
 
