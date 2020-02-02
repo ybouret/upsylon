@@ -20,8 +20,12 @@ INSTALL( FILES ${syntax_decl} DESTINATION include/y/lang/syntax )
 FILE(GLOB syntax_grammar_srcs y/lang/syntax/grammar/*.cpp)
 SOURCE_GROUP( lang/syntax/grammar FILES ${syntax_grammar_srcs} )
 
-FILE(GLOB syntax_node_srcs y/lang/syntax/node/*.cpp)
+FILE(GLOB syntax_node_decl y/lang/syntax/node/*.hpp)
+FILE(GLOB syntax_node_code y/lang/syntax/node/*.cpp)
+SET(syntax_node_srcs ${syntax_node_decl} ${syntax_node_code})
 SOURCE_GROUP( lang/syntax/node FILES ${syntax_node_srcs} )
+INSTALL( FILES ${syntax_node_decl} DESTINATION include/y/lang/syntax/node )
+
 
 FILE(GLOB dynamo_decl y/lang/dynamo/*.hpp)
 FILE(GLOB dynamo_code y/lang/dynamo/*.cpp)

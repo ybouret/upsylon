@@ -5,6 +5,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/lang/syntax/node/terminal.hpp"
 
 using namespace upsylon;
 using namespace Lang;

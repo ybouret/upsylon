@@ -44,19 +44,6 @@ namespace upsylon {
             }
 
 
-            Node * Node::Create(const Rule &r, Lexeme *l)
-            {
-                assert(l);
-                try
-                {
-                    return new TerminalNode(r,l);
-                }
-                catch(...)
-                {
-                    delete l;
-                    throw;
-                }
-            }
 
             Node * Node::Create(const Rule &r)
             {
@@ -124,12 +111,6 @@ namespace upsylon {
                 }
             }
 
-            void TerminalNode:: returnTo(Lexer &lexer) throw()
-            {
-                assert(lx);
-                lexer.unget(lx);
-                lx=0;
-            }
 
             void   Node:: Unget( Node * &node, Lexer &lexer) throw()
             {
@@ -171,62 +152,15 @@ namespace upsylon {
 }
 
 
-namespace upsylon
-    {
-        namespace Lang
-            {
-                namespace Syntax
-                    {
-                        TerminalNode:: ~TerminalNode() throw()
-                        {
-                            if(lx)
-                            {
-                                delete lx;
-                                lx = 0;
-                            }
-                        }
+namespace upsylon {
 
-                        TerminalNode:: TerminalNode(const Rule &r, Lexeme *l) throw() :
-                        Node(r,true),
-                        lx(l)
-                        {
-                            assert(NULL!=lx);
-                        }
+    namespace Lang {
 
-                        Node * TerminalNode:: clone() const
-                        {
-                            return Node::Create(rule, new Lexeme(*lx) );
-                        }
+        namespace Syntax {
 
-                        const void  * TerminalNode:: inner() const throw()
-                        {
-                            assert(lx);
-                            return lx;
-                        }
-
-
-                        size_t TerminalNode:: serialize(ios::ostream &fp) const
-                        {
-                            size_t ans = rule.name.serialize(fp);
-                            Y_OSTREAM_ADD_TO(ans,fp.emit_net,UUID);
-                            Y_OSTREAM_ADD_TO(ans,fp.emit_upack,lx->size);
-                            for(const Char *ch = lx->head;ch;ch=ch->next)
-                            {
-                                fp.emit_net(ch->code);
-                            }
-                            return ans+lx->size;
-                        }
-
-
-                        const char *TerminalNode:: className() const throw()
-                        {
-                            return "TerminalNode";
-                        }
-
-                        const string * TerminalNode:: data() const throw() { return 0; }
-                    }
-            }
+        }
     }
+}
 
 namespace upsylon {
 
@@ -379,38 +313,4 @@ namespace upsylon {
 }
 
 
-#include "y/lang/syntax/terminal.hpp"
 
-namespace upsylon {
-
-    namespace Lang {
-
-        namespace Syntax {
-
-            void     TerminalNode::   vizCore( ios::ostream &fp ) const
-            {
-                assert(lx);
-                string l = string_convert::to_printable( rule.name );
-                if(!rule.as<Terminal>().univocal)
-                {
-                    if(lx->size)
-                    {
-                        const string content = lx->toPrintable();
-                        l <<'=' << '\'' << content << '\'';
-                    }
-                }
-                const char *sh =  "box";
-                const char *st =  "solid";
-                switch( rule.as<Terminal>().attr )
-                {
-                    case Standard: break;
-                    case Operator: sh="triangle"; break;
-                    case Semantic: st="dashed";   break;
-                }
-                fp("[shape=\"%s\",style=\"%s\",label=\"",sh,st); fp << l << "\"]";
-                endl(fp);
-            }
-
-        }
-    }
-}
