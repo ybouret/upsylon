@@ -24,10 +24,6 @@ namespace upsylon {
             code.reset();
         }
 
-        inline virtual bool query(char &C)
-        {
-            return code.query(C);
-        }
 
         inline virtual void store(const char C)
         {
@@ -59,9 +55,37 @@ namespace upsylon {
             this->code.write( edit.encode(C) );
         }
 
+        //! istream interface of codec
+        inline virtual bool query(char &C)
+        {
+            return this->code.query(C);
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(nested_encoder);
+        EDITOR edit;
+    };
+
+    template <
+    typename DECODER,
+    typename EDITOR=echo_encoding>
+    class nested_decoder : public nested_<DECODER>
+    {
+    public:
+        inline explicit nested_decoder() : nested_<DECODER>(), edit() {}
+        inline virtual ~nested_decoder() throw() {}
+
+        //! ostream interface of codec
+        inline virtual void write(const char C)
+        {
+            this->code.write( C );
+        }
+
+        
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(nested_decoder);
         EDITOR edit;
     };
 
