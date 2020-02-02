@@ -50,7 +50,7 @@ namespace upsylon
                 void append( const Rule &r );          //!< push back a new operand
                 Compound & operator<<( const Rule & ); //!< append a rule
 
-                virtual void        graphVizEpilog(ios::ostream &) const; //!< build links
+                virtual void graphVizEpilog(ios::ostream &) const; //!< build links
 
                 const Behavior behavior; //!< the behavior for the AST
 
