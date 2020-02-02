@@ -10,7 +10,7 @@ namespace upsylon {
 
     namespace ios {
         
-        //! GraphViz class helper
+        //! GraphViz class helper for a tree-like structure
         class vizible
         {
         public:
@@ -40,10 +40,10 @@ namespace upsylon {
             // static helpers
             //
             //------------------------------------------------------------------
-            static void  endl(ostream &); //!< append ";\n"
+            static void  endl(ostream &);                             //!< append ";\n"
             static void  enterDigraph(ostream &fp, const string &id); //!< "digraph id {\n"
             static void  enterDigraph(ostream &fp, const char   *id); //!< wrapper
-            static void  leaveDigraph(ostream &fp ); //!< "}\n"
+            static void  leaveDigraph(ostream &fp );                  //!< "}\n"
             
         protected:
             explicit vizible() throw(); //! setup

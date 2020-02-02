@@ -21,7 +21,10 @@ namespace upsylon
             
             Node:: Node(const Rule &r,
                         const bool term) throw() :
-            Object(), Base(), rule(r), terminal(term), internal(!terminal)
+            Object(), Base(), Vizible(),
+            rule(r),
+            terminal(term),
+            internal(!terminal)
             {
             }
             
@@ -29,6 +32,7 @@ namespace upsylon
             object(),
             Object(),
             Base(),
+            Vizible(),
             rule(other.rule),
             terminal(other.terminal),
             internal(other.internal)
@@ -311,7 +315,6 @@ namespace upsylon
                 {
                     node->vizSave(fp);
                     vizJoin(fp,node);
-                    //graphVizName(fp); fp << "->"; node->graphVizName(fp);
                     if(multiple) fp("[label=\"%u\"]",idx);
                     endl(fp);
                 }

@@ -34,10 +34,9 @@ namespace upsylon
                 //______________________________________________________________
                 virtual Node *        clone() const               = 0; //!< clone the node
                 virtual const void   *inner() const throw()       = 0; //!< internal address for lexeme/children
-                //virtual void          viz( ios::ostream & ) const = 0; //!< output graphViz code
                 virtual void          returnTo( Lexer & ) throw() = 0; //!< restore before delete
                 virtual const string *data() const throw()        = 0; //!< return extra data, if any
-                virtual ~Node() throw();                               //!< destructor
+                virtual              ~Node() throw();                  //!< destructor
                 
                 
                 //______________________________________________________________
@@ -78,7 +77,7 @@ namespace upsylon
                 //! transform a raw node into the direct AST
                 /**
                  remove univocal content and semantic node,
-                 and apply node behavior to merge branches
+                 and apply node behavior to merge possible branches
                  */
                 static Node * AST( Node *node ) throw();
 
@@ -96,7 +95,7 @@ namespace upsylon
                  */
                 static Node * Compact( Node *node ) throw();
 
-                //! remove some nodes
+                //! remove some nodes matching the expression
                 static void RemoveFrom( Node &node, Matching &name_matches );
 
 
