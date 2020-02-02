@@ -64,8 +64,8 @@ Y_UTEST(grammar)
             auto_ptr<Syntax::Node> cst = G.accept(source,lexer);
             std::cerr << "parsed..." << std::endl;
             cst->graphViz("cst.dot");
-            cst->save("cst.bin");
-            s1 = cst->toBase64();
+            cst->save_to("cst.bin");
+            s1 = cst->to_base64();
             Syntax::Analyzer a;
             a.walk( *cst );
         }
@@ -75,7 +75,7 @@ Y_UTEST(grammar)
             Source source( Module::OpenFile("cst.bin") );
             auto_ptr<Syntax::Node> cst = Syntax::Node::Load(source,G);
             cst->graphViz("cst2.dot");
-            s2 = cst->toBase64();
+            s2 = cst->to_base64();
         }
         std::cerr << "s2=" << s2 << std::endl;
         Y_CHECK(s1==s2);

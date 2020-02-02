@@ -3,8 +3,8 @@
 #define Y_LANG_SYNTAX_NODE_INCLUDED 1
 
 #include "y/lang/lexical/lexer.hpp"
-#include "y/ptr/arc.hpp"
 #include "y/lang/pattern/matching.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -17,9 +17,14 @@ namespace upsylon
             class Grammar;   //!< forward declaration
 
             //! store syntax trees
-            class Node : public Object, public core::inode<Node>, public Vizible
+            class Node :
+            public Object,
+            public core::inode<Node>,
+            public Vizible,
+            public Serializable
             {
             public:
+                typedef uint8_t                       id_t;
                 typedef core::inode<Node>             Base; //!< alias
                 typedef core::list_of_cloneable<Node> List; //!< alias
                 typedef arc_ptr<const string>         Data; //!< alias
@@ -47,13 +52,7 @@ namespace upsylon
                 const Lexeme &lexeme() const throw();                             //!< from inner
                 List         &children() throw();                                 //!< from inner
                 const List   &children() const throw();                           //!< from inner
-                void          save( ios::ostream &fp, size_t *bytes=0) const;     //!< save to stream
-                void          save( const string &binfile, size_t *bytes=0) const;//!< save to file
-                void          save( const char   *binfile, size_t *bytes=0) const;//!< save to file
-                size_t        outputBytes() const;                                //!< count the bytes for output
-                string        toBinary() const;                                   //!< to a binary string
-                string        toBase64() const;                                   //!< to a human readable string
-
+                
                 //______________________________________________________________
                 //
                 // static interface
@@ -106,15 +105,13 @@ namespace upsylon
 
             private:
                 Y_DISABLE_ASSIGN(Node);
-                virtual void        emit( ios::ostream & , size_t *) const = 0;
-
             };
 
             //! a Terminal Node, acts as a lexeme smart pointer
             class TerminalNode : public Node
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x00;            //!< for I/O
+                static const id_t UUID = 0x00;            //!< for I/O
 
                 virtual ~TerminalNode() throw();                       //!< destructor
                 virtual Node       *  clone() const;                   //!< clone
@@ -127,56 +124,63 @@ namespace upsylon
                 Lexeme *lx;
 
                 explicit TerminalNode(const Rule &r, Lexeme *l) throw();
-                virtual void emit( ios::ostream &, size_t *) const;
                 virtual void returnTo( Lexer &lexer ) throw();
                 friend class Node;
+
+                virtual const char *className() const throw();
+                virtual size_t      serialize(ios::ostream&) const;
             };
 
             //! an Internal Node, has a list of children
             class InternalNode : public Node, public Node::List
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x01;            //!< for I/O
+                static const id_t UUID = 0x01;            //!< for I/O
 
-                virtual ~InternalNode() throw();                   //!< destructor
-                virtual Node       *  clone() const;               //!< clone
-                virtual const void *  inner() const throw();       //!< this
-                void                  vizCore( ios::ostream & ) const; //!< graphViz
-                virtual const string *data() const throw();        //!< data or NULL
+                virtual ~InternalNode() throw();                     //!< destructor
+                virtual Node       *  clone() const;                 //!< clone
+                virtual const void *  inner() const throw();         //!< this
+                void                  vizCore(ios::ostream &) const; //!< graphViz
+                virtual const string *data() const throw();          //!< data or NULL
 
             protected:
                 InternalNode(const InternalNode &) throw();             //!< copy
                 InternalNode(const Rule &r) throw();                    //!< from rule
-                virtual void emit( ios::ostream &, size_t *) const;     //!< emit binary
-                void         emitList( ios::ostream &, size_t *) const; //!< emit list of children
-                void         vizLink( ios::ostream & ) const;           //!< emit links
+                void         vizLink(ios::ostream &) const;             //!< emit links
+                size_t       serializeList(ios::ostream&) const;        //!< emit list of children
 
             private:
                 friend class Node;
                 Y_DISABLE_ASSIGN(InternalNode);
                 virtual void returnTo( Lexer &lexer ) throw();
-                
+
+                virtual const char *className() const throw();
+                virtual size_t      serialize(ios::ostream&) const;
+
             };
 
             //! an Extended Node is an internal node with data, for variable operator
             class ExtendedNode : public InternalNode
             {
             public:
-                static const uint8_t MAGIC_BYTE = 0x02;           //!< for I/O
+                static const id_t UUID = 0x02;                        //!< for I/O
 
-                virtual ~ExtendedNode() throw();                  //!< destructor
-                virtual  Node   *     clone() const;              //!< hardcopy with shared data
-                void                  vizCore( ios::ostream &) const; //!< graphViz
-                virtual const string *data() const throw();       //!< & *shared
+                virtual              ~ExtendedNode() throw();         //!< destructor
+                virtual  Node   *     clone() const;                  //!< hardcopy with shared data
+                void                  vizCore(ios::ostream &) const;  //!< graphViz
+                virtual const string *data() const throw();           //!< & *shared
 
             private:
                 Y_DISABLE_ASSIGN(ExtendedNode);
-                ExtendedNode(const Rule &, const string &s);
-                ExtendedNode( const ExtendedNode &node ) throw();
-                friend class Node;
-                virtual void emit( ios::ostream &, size_t *bytes) const;
-
                 Data shared;
+
+                ExtendedNode(const Rule &, const string &s);
+                ExtendedNode(const ExtendedNode &node) throw();
+                friend class Node;
+                
+                virtual const char *className() const throw();
+                virtual size_t      serialize(ios::ostream&) const;
+
             };
 
         }

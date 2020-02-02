@@ -22,11 +22,10 @@ Y_UTEST(manager)
         
         // make an XNode
         auto_ptr<XNode> xnode     = mgr.loader().load( Module::OpenFile(fileName) );
-        const string    xnodeCode = xnode->toBinary();
+        const string    xnodeCode = xnode->to_binary();
         {
-            const size_t xnodeOutBytes = xnode->outputBytes();
-            size_t       xnodeCount    = 0;
-            xnode->save("xnode.bin", &xnodeCount);
+            const size_t xnodeOutBytes = xnode->serialize_length();
+            const size_t xnodeCount    = xnode->save_to("xnode.bin");
             
             std::cerr << "xnodeOutBytes="<< xnodeOutBytes << std::endl;
             Y_CHECK(xnodeOutBytes==xnodeCount);
@@ -36,14 +35,14 @@ Y_UTEST(manager)
             // reload from file
             {
                 auto_ptr<XNode> reload = XNode::Load( Module::OpenFile("xnode.bin"), mgr.loader() );
-                const string reloaded_file = reload->toBinary();
+                const string reloaded_file = reload->to_binary();
                 Y_CHECK(xnodeCode==reloaded_file);
             }
             
             // reload from data
             {
                 auto_ptr<XNode> reload = XNode::Load( Module::OpenData("xnode",xnodeCode), mgr.loader() );
-                const string reloaded_data = reload->toBinary();
+                const string reloaded_data = reload->to_binary();
                 Y_CHECK(xnodeCode==reloaded_data);
             }
             

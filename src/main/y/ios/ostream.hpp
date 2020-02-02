@@ -154,4 +154,6 @@ namespace upsylon
     }
 }
 
+#define Y_OSTREAM_ADD_TO(COUNT,METHOD,DATA) do { size_t count=0; (void) METHOD(DATA,&count); (COUNT) += count; } while(false)
+
 #endif

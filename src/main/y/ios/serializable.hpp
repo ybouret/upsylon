@@ -44,8 +44,11 @@ namespace upsylon
             size_t hash_with(hashing::function &)           const; //!< serialize( ohstream(H) )
             size_t hash_class_with(hashing::function &)     const; //!< serialize_class( ohstream(H) )
 
-            string to_binary() const;
-            string to_base64() const;
+            string to_binary() const; //!< serialize into a string
+            string to_base64() const; //!< serialize and convert into base64
+
+            size_t save_to(const string &binaryFile, const bool append=false) const; //!< save to file
+            size_t save_to(const char   *binaryFile, const bool append=false) const; //!< save to file, wrapper
 
         protected:
             explicit serializable() throw();

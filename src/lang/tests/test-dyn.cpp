@@ -31,8 +31,7 @@ Y_UTEST(dyn)
         if(true)
         {
             //g->graphViz( "dynamo_tree.dot" );
-            size_t bytes=0;
-            g->save("dynamo.bin",&bytes);
+            const size_t bytes = g->save_to("dynamo.bin");
             std::cerr << "Written=" << bytes << std::endl;
             Y_CHECK(ios::local_file::length_of("dynamo.bin")==bytes);
             

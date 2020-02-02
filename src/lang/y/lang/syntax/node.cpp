@@ -9,37 +9,41 @@
 
 #include "y/codec/base64.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Syntax {
+
             Node:: ~Node() throw()
             {
             }
-            
+
             Node:: Node(const Rule &r,
                         const bool term) throw() :
-            Object(), Base(), Vizible(),
+            Object(),
+            Base(),
+            Vizible(),
+            Serializable(),
             rule(r),
             terminal(term),
             internal(!terminal)
             {
             }
-            
+
             Node:: Node(const Node &other) throw() :
             object(),
             Object(),
             Base(),
             Vizible(),
+            Serializable(),
             rule(other.rule),
             terminal(other.terminal),
             internal(other.internal)
             {
             }
-            
-            
+
+
             Node * Node::Create(const Rule &r, Lexeme *l)
             {
                 assert(l);
@@ -53,17 +57,17 @@ namespace upsylon
                     throw;
                 }
             }
-            
+
             Node * Node::Create(const Rule &r)
             {
                 return new InternalNode(r);
             }
-            
+
             Node * Node:: Create(const Rule &r, const string &s)
             {
                 return new ExtendedNode(r,s);
             }
-            
+
             const Lexeme & Node:: lexeme() const throw()
             {
                 const void *addr = inner();
@@ -71,7 +75,7 @@ namespace upsylon
                 assert(addr);
                 return *static_cast<const Lexeme *>(addr);
             }
-            
+
             Lexeme & Node:: lexeme() throw()
             {
                 void *addr = (void*)inner();
@@ -79,7 +83,7 @@ namespace upsylon
                 assert(addr);
                 return *static_cast<Lexeme *>(addr);
             }
-            
+
             const Node::List & Node:: children() const throw()
             {
                 const void *addr = inner();
@@ -87,7 +91,7 @@ namespace upsylon
                 assert(addr);
                 return *static_cast<const List *>(addr);
             }
-            
+
             Node::List & Node:: children() throw()
             {
                 void *addr = (void*)inner();
@@ -95,7 +99,7 @@ namespace upsylon
                 assert(addr);
                 return *static_cast<List *>(addr);
             }
-            
+
             void  Node:: Grow( Node * &tree, Node *leaf ) throw()
             {
                 assert(NULL!=leaf);
@@ -109,8 +113,8 @@ namespace upsylon
                     tree->children().push_back(leaf);
                 }
             }
-            
-            
+
+
             void InternalNode:: returnTo(Lexer &lexer) throw()
             {
                 while(size>0)
@@ -119,72 +123,24 @@ namespace upsylon
                     delete pop_back();
                 }
             }
-            
+
             void TerminalNode:: returnTo(Lexer &lexer) throw()
             {
                 assert(lx);
-                //std::cerr << "returning '" << *lx << ", label=<" << lx->label << ">" << std::endl;
                 lexer.unget(lx);
                 lx=0;
             }
-            
+
             void   Node:: Unget( Node * &node, Lexer &lexer) throw()
             {
                 assert(node);
-                //std::cerr << "[UNGET from <" << node->rule.name << ">]" << std::endl;
                 node->returnTo(lexer);
                 delete node;
                 node = 0;
             }
-            
-           
-            
-            
-            void Node:: save( ios::ostream &fp, size_t *bytes ) const
-            {
-                const size_t sz = rule.name.serialize(fp);
-                ios::gist::add_to(bytes,sz);
-                emit(fp,bytes);
-            }
-            
-            size_t Node:: outputBytes() const
-            {
-                size_t bytes = 0;
-                ios::null_ostream fp;
-                save(fp,&bytes);
-                return bytes;
-            }
-            
-            string Node:: toBinary() const
-            {
-                string ans( outputBytes(), as_capacity, false);
-                {
-                    ios::osstream fp(ans);
-                    save(fp);
-                }
-                return ans;
-            }
-            
-            string Node:: toBase64() const
-            {
-                const string bin = toBinary();
-                ios::base64::encoder b64;
-                string       ans = b64.to_string(bin);
-                return ans;
-            }
-            
-            void Node:: save( const string &binfile,size_t *bytes) const
-            {
-                ios::ocstream fp(binfile);
-                save(fp,bytes);
-            }
-            
-            void Node:: save( const char *binfile,size_t *bytes) const
-            {
-                const string _(binfile);
-                save(_,bytes);
-            }
-            
+
+
+
             void Node:: RemoveFrom( Node &node, Matching &name_matches )
             {
                 if(node.internal)
@@ -207,106 +163,107 @@ namespace upsylon
                     temp.swap_with(self);
                 }
             }
-            
-            
+
+
         }
-        
+
     }
 }
 
 
 namespace upsylon
-{
-    namespace Lang
     {
-        namespace Syntax
-        {
-            TerminalNode:: ~TerminalNode() throw()
+        namespace Lang
             {
-                if(lx)
-                {
-                    delete lx;
-                    lx = 0;
-                }
-            }
-            
-            TerminalNode:: TerminalNode(const Rule &r, Lexeme *l) throw() :
-            Node(r,true),
-            lx(l)
-            {
-                assert(NULL!=lx);
-            }
-            
-            Node * TerminalNode:: clone() const
-            {
-                return Node::Create(rule, new Lexeme(*lx) );
-            }
-            
-            const void  * TerminalNode:: inner() const throw()
-            {
-                assert(lx);
-                return lx;
-            }
-            
-            
-            
-            void TerminalNode:: emit(ios::ostream &fp, size_t *bytes) const
-            {
-                assert(lx);
-                fp.emit_net(MAGIC_BYTE);
-                {
-                    size_t sz=0;
-                    fp.emit_upack(lx->size,&sz);
-                    ios::gist::add_to(bytes,sz+1);
-                }
-                for(const Char *ch = lx->head;ch;ch=ch->next)
-                {
-                    fp.emit_net(ch->code);
-                }
-                ios::gist::add_to(bytes,lx->size);
-            }
-            
-            const string * TerminalNode:: data() const throw() { return 0; }
-        }
-    }
-}
+                namespace Syntax
+                    {
+                        TerminalNode:: ~TerminalNode() throw()
+                        {
+                            if(lx)
+                            {
+                                delete lx;
+                                lx = 0;
+                            }
+                        }
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
+                        TerminalNode:: TerminalNode(const Rule &r, Lexeme *l) throw() :
+                        Node(r,true),
+                        lx(l)
+                        {
+                            assert(NULL!=lx);
+                        }
+
+                        Node * TerminalNode:: clone() const
+                        {
+                            return Node::Create(rule, new Lexeme(*lx) );
+                        }
+
+                        const void  * TerminalNode:: inner() const throw()
+                        {
+                            assert(lx);
+                            return lx;
+                        }
+
+
+                        size_t TerminalNode:: serialize(ios::ostream &fp) const
+                        {
+                            size_t ans = rule.name.serialize(fp);
+                            Y_OSTREAM_ADD_TO(ans,fp.emit_net,UUID);
+                            Y_OSTREAM_ADD_TO(ans,fp.emit_upack,lx->size);
+                            for(const Char *ch = lx->head;ch;ch=ch->next)
+                            {
+                                fp.emit_net(ch->code);
+                            }
+                            return ans+lx->size;
+                        }
+
+
+                        const char *TerminalNode:: className() const throw()
+                        {
+                            return "TerminalNode";
+                        }
+
+                        const string * TerminalNode:: data() const throw() { return 0; }
+                    }
+            }
+    }
+
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Syntax {
+
             InternalNode:: ~InternalNode() throw()
             {
             }
-            
+
             InternalNode:: InternalNode(const Rule &r) throw() :
             Node(r,false),
             Node::List()
             {
             }
-            
+
             InternalNode:: InternalNode(const InternalNode &node) throw() :
             object(),
             Node(node),
             Node::List(node)
             {
-                
+
             }
-            
-            
-            
+
+
+
             Node * InternalNode:: clone() const
             {
                 return new InternalNode(*this);
             }
-            
+
             const void  * InternalNode:: inner() const throw()
             {
                 return static_cast<const List *>(this);
             }
-            
+
             void InternalNode::  vizLink( ios::ostream &fp ) const
             {
                 const bool multiple = size>1;
@@ -319,85 +276,91 @@ namespace upsylon
                     endl(fp);
                 }
             }
-            
-            
+
+
             void     InternalNode::   vizCore( ios::ostream &fp ) const
             {
                 const string l = string_convert::to_printable(rule.name);
                 fp("[shape=house,label=\""); fp << l; fp("\"];\n");
                 vizLink(fp);
             }
-            
-            
-            void InternalNode:: emitList(ios::ostream &fp,size_t *bytes) const
+
+
+
+
+            size_t InternalNode:: serializeList(ios::ostream &fp) const
             {
-                {
-                    size_t sz =0;
-                    fp.emit_upack(size,&sz);
-                    ios::gist::add_to(bytes,sz);
-                }
+                size_t ans = 0;
+                Y_OSTREAM_ADD_TO(ans,fp.emit_upack,size);
                 for(const Node *node=head;node;node=node->next)
                 {
-                    node->save(fp,bytes);
+                    ans += node->serialize(fp);
                 }
+                return ans;
             }
-            
-            void InternalNode:: emit(ios::ostream &fp,size_t *bytes) const
+
+            size_t InternalNode:: serialize(ios::ostream &fp) const
             {
-                fp.emit_net(MAGIC_BYTE);
-                ios::gist::add_to(bytes,1);
-                emitList(fp,bytes);
+                size_t ans = rule.name.serialize(fp);
+                Y_OSTREAM_ADD_TO(ans,fp.emit_net,UUID);
+                return ans + serializeList(fp);
             }
-            
+
+            const char *InternalNode:: className() const throw()
+            {
+                return "InternalNode";
+            }
+
             const string * InternalNode:: data() const throw()
             {
                 return 0;
             }
-            
-            
+
+
         }
     }
 }
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Syntax {
+
             ExtendedNode:: ~ExtendedNode() throw() {}
-            
+
             ExtendedNode:: ExtendedNode( const Rule &r, const string &s ) :
             InternalNode(r),
             shared( new string(s) )
             {
             }
-            
+
             ExtendedNode:: ExtendedNode( const ExtendedNode &node ) throw() :
             object(),
             InternalNode(node),
             shared(node.shared)
             {
             }
-            
+
             const string * ExtendedNode:: data() const throw()
             {
                 return & *shared;
             }
-            
+
             Node * ExtendedNode:: clone() const
             {
                 return new ExtendedNode( *this );
             }
-            
-            void ExtendedNode:: emit(ios::ostream &fp, size_t *bytes) const
+
+
+            size_t ExtendedNode:: serialize( ios::ostream &fp ) const
             {
-                fp.emit_net(MAGIC_BYTE);
-                const size_t sz = shared->serialize(fp);
-                ios::gist::add_to(bytes,sz+1);
-                emitList(fp,bytes);
+                size_t ans = rule.name.serialize(fp);
+                Y_OSTREAM_ADD_TO(ans,fp.emit_net,UUID);
+                ans += shared->serialize(fp);
+                return ans + serializeList(fp);
             }
-            
+
             void  ExtendedNode::   vizCore( ios::ostream &fp ) const
             {
                 const string l = string_convert::to_printable(rule.name);
@@ -405,7 +368,12 @@ namespace upsylon
                 fp("[shape=house,label=\"%s='%s'\",style=rounded];\n",*l,*c);
                 vizLink(fp);
             }
-            
+
+            const char *ExtendedNode:: className() const throw()
+            {
+                return "ExtendedNode";
+            }
+
         }
     }
 }
@@ -413,13 +381,12 @@ namespace upsylon
 
 #include "y/lang/syntax/terminal.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
-            
+namespace upsylon {
+
+    namespace Lang {
+
+        namespace Syntax {
+
             void     TerminalNode::   vizCore( ios::ostream &fp ) const
             {
                 assert(lx);
@@ -443,7 +410,7 @@ namespace upsylon
                 fp("[shape=\"%s\",style=\"%s\",label=\"",sh,st); fp << l << "\"]";
                 endl(fp);
             }
-            
+
         }
     }
 }

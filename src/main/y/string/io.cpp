@@ -7,7 +7,7 @@ namespace  upsylon
 
 	string string_io::load_binary(ios::istream &fp)
 	{
-		size_t n = fp.read_upack<size_t>();
+        size_t n = fp.read_upack<size_t>(); //std::cerr << "Load Binary #" << n << std::endl;
 		string ans(n,as_capacity,false);
 		while (n-- > 0)
 		{

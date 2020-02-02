@@ -69,6 +69,7 @@ namespace upsylon {
 }
 
 #include "y/ios/osstream.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/exception.hpp"
 #include "y/codec/base64.hpp"
 
@@ -96,6 +97,18 @@ namespace upsylon {
             const string ans = to_binary();
             ios::base64::encoder b64;
             return b64.to_string(ans);
+        }
+
+        size_t serializable:: save_to(const string &binaryFile, const bool append) const
+        {
+            ios::ocstream fp(binaryFile,append);
+            return serialize(fp);
+        }
+
+        size_t serializable:: save_to(const char *binaryFile, const bool append) const
+        {
+            const string _(binaryFile);
+            return save_to(_,append);
         }
     }
 }

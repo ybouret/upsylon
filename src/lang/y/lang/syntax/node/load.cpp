@@ -2,15 +2,13 @@
 #include "y/exception.hpp"
 #include "y/string/io.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
+namespace upsylon {
 
-            namespace
-            {
+    namespace Lang {
+
+        namespace Syntax {
+
+            namespace {
                 static inline
                 void LoadChildren( Node::List &ch, Source &source, Grammar &G)
                 {
@@ -36,19 +34,18 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // read MAGIC to know if internal or terminal node
+                // read UUID to know if internal or terminal node
                 //
                 //--------------------------------------------------------------
-                const unsigned    magic     = source.read_net<uint8_t>();         //!< then read the type of node
+                const id_t   uuid = source.read_net<id_t>();         //!< then read the type of node
 
-                switch( magic )
+                switch( uuid )
                 {
                         //------------------------------------------------------
                         //
-                    case TerminalNode::MAGIC_BYTE:
+                    case TerminalNode::UUID: {
                         //
                         //------------------------------------------------------
-                    {
                         const Tag       &tag = (*source)->origin; //!< common shallow tag
                         auto_ptr<Lexeme> plx = new Lexeme( tag ); //!< create lexeme
                         {
@@ -61,12 +58,12 @@ namespace upsylon
                         }
                         return Node::Create(the_rule,plx.yield());
                     }
+
                         //------------------------------------------------------
                         //
-                    case InternalNode::MAGIC_BYTE:
+                    case InternalNode::UUID: {
                         //
                         //------------------------------------------------------
-                    {
                         auto_ptr<Node> node    = Node::Create(the_rule);
                         LoadChildren(node->children(),source,G);
                         return node.yield();
@@ -74,10 +71,9 @@ namespace upsylon
 
                         //------------------------------------------------------
                         //
-                    case ExtendedNode::MAGIC_BYTE:
+                    case ExtendedNode::UUID: {
                         //
                         //------------------------------------------------------
-                    {
                         const string   s       = string_io::load_binary(source);
                         auto_ptr<Node> node    = Node::Create(the_rule,s);
                         LoadChildren(node->children(),source,G);
@@ -86,7 +82,7 @@ namespace upsylon
                     default: break;
                 }
 
-                throw exception("%s(unknown MAGIC=0x%02x for <%s>)", fn, magic, *(the_rule.name) );
+                throw exception("%s(unknown uuid=0x%02x for <%s>)", fn, uuid, *(the_rule.name) );
             }
 
             Node  * Node:: Load( Module *m, Grammar &G)
