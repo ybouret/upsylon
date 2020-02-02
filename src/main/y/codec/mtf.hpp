@@ -2,6 +2,7 @@
 #ifndef Y_CODEC_MTF_INCLUDED
 #define Y_CODEC_MTF_INCLUDED 1
 
+#include "y/codec/byte-editor.hpp"
 #include "y/core/list.hpp"
 
 namespace upsylon
@@ -13,15 +14,10 @@ namespace upsylon
     public:
         explicit move_to_front() throw();   //!< uinitialize
         virtual ~move_to_front() throw();   //!< destructor
-        uint8_t  encode( uint8_t ) throw(); //!< encoding
-        uint8_t  decode( uint8_t ) throw(); //!< decoding
-        void     reset(void)   throw();     //!< reset
 
-        //! possible output=input
-        void     encode(void *output,const void *input, size_t length) throw();
-
-        //! possible output=input
-        void     decode(void *output,const void *input, size_t length) throw();
+        virtual uint8_t  encode( uint8_t ) throw(); //!< encoding
+        virtual uint8_t  decode( uint8_t ) throw(); //!< decoding
+        virtual void     reset(void)       throw(); //!< reset
 
 
     private:

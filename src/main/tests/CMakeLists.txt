@@ -185,7 +185,7 @@ ADD_TEST(sort:nw          test-main nwsrt)
 ADD_TEST(sort:locate      test-main locate)
 ADD_TEST(sort:classes     test-main classes)
 
-SOURCE_GROUP(codec FILES test-iobits.cpp test-base64.cpp test-lzo.cpp test-mtf.cpp test-delta.cpp test-asf.cpp test-bwt.cpp)
+SOURCE_GROUP(codec FILES test-iobits.cpp test-base64.cpp test-lzo.cpp test-mtf.cpp test-delta.cpp test-asf.cpp test-bwt.cpp test-nested.cpp)
 ADD_TEST(codec:iobits test-main iobits)
 ADD_TEST(codec:base64 test-main base64 NULL)
 ADD_TEST(codec:lzo    test-main lzo)
@@ -194,6 +194,7 @@ ADD_TEST(codec:delta  test-main delta)
 ADD_TEST(codec:asf    test-main asf)
 ADD_TEST(codec:bwt    test-main bwt)
 ADD_TEST(codec:b64id  test-main b64id)
+ADD_TEST(codec:nested test-main nested)
 
 SOURCE_GROUP(data FILES
 test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-btree.cpp

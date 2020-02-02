@@ -68,8 +68,8 @@ Y_UTEST(asf)
                 dec.filter(output,input);
             }
             const uint64_t H1 = H.key<uint64_t>(decode);
-            std::cerr << target.size() << " -> " << decode.size() << "/" << H1 << std::endl;
-            Y_ASSERT(H0==H1);
+            std::cerr << target.size() << " -> " << decode.size() << "/" << std::hex << H1 << std::dec << "\t | ";
+            Y_CHECK(H0==H1);
         }
     }
 

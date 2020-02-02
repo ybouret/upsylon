@@ -2,21 +2,22 @@
 #ifndef Y_CODEC_DELTA_INCLUDED
 #define Y_CODEC_DELTA_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/codec/byte-editor.hpp"
 
 namespace upsylon
 {
     //! delta encoding method
-    class delta_encoding
+    class delta_encoding : public byte_editor
     {
     public:
         explicit delta_encoding() throw(); //!< initialize
-        virtual ~delta_encoding() throw(); //!< desctructor
-        void reset() throw();              //!< reset
+        virtual ~delta_encoding() throw(); //!< destructor
 
-        uint8_t encode(uint8_t);           //!< encode a byte
-        uint8_t decode(uint8_t);           //!< decode a byte
 
+        virtual uint8_t encode(uint8_t) throw();           //!< encode a byte
+        virtual uint8_t decode(uint8_t) throw();           //!< decode a byte
+        virtual void    reset()         throw();           //!< reset
+        
     private:
         uint8_t last;
         Y_DISABLE_COPY_AND_ASSIGN(delta_encoding);

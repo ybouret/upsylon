@@ -139,7 +139,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(delta);
     Y_UTEST(asf);
     Y_UTEST(bwt);
-    
+    Y_UTEST(nested);   
+ 
     Y_UTEST(local_file);
     Y_UTEST(disk_file);
     Y_UTEST(disk_std);
