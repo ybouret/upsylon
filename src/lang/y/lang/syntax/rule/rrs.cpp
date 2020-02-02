@@ -1,5 +1,5 @@
 
-#include "y/lang/syntax/rrs.hpp"
+#include "y/lang/syntax/rule/rrs.hpp"
 
 namespace upsylon
 {

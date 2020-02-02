@@ -5,7 +5,7 @@
 #include "y/lang/syntax/rule/terminal.hpp"
 #include "y/lang/syntax/rule/joker.hpp"
 #include "y/lang/syntax/rule/compound.hpp"
-#include "y/lang/syntax/rrs.hpp"
+#include "y/lang/syntax/rule/rrs.hpp"
 
 namespace upsylon
 {

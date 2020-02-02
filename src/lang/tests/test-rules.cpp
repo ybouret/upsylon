@@ -1,7 +1,7 @@
 #include "y/lang/syntax/rule/terminal.hpp"
 #include "y/lang/syntax/rule/joker.hpp"
 #include "y/lang/syntax/rule/compound.hpp"
-#include "y/lang/syntax/rule-probe.hpp"
+#include "y/lang/syntax/rule/probe.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"

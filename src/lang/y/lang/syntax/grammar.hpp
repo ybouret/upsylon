@@ -2,7 +2,7 @@
 #ifndef Y_LANG_SYNTAX_GRAMMAR_INCLUDED
 #define Y_LANG_SYNTAX_GRAMMAR_INCLUDED 1
 
-#include "y/lang/syntax/rrs.hpp"
+#include "y/lang/syntax/rule/rrs.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/sequence/vector.hpp"
 

@@ -1,4 +1,4 @@
-#include "y/lang/syntax/rule-probe.hpp"
+#include "y/lang/syntax/rule/probe.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
