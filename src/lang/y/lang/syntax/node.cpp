@@ -45,16 +45,6 @@ namespace upsylon {
 
 
 
-            Node * Node::Create(const Rule &r)
-            {
-                return new InternalNode(r);
-            }
-
-            Node * Node:: Create(const Rule &r, const string &s)
-            {
-                return new ExtendedNode(r,s);
-            }
-
             const Lexeme & Node:: lexeme() const throw()
             {
                 const void *addr = inner();
@@ -102,14 +92,7 @@ namespace upsylon {
             }
 
 
-            void InternalNode:: returnTo(Lexer &lexer) throw()
-            {
-                while(size>0)
-                {
-                    tail->returnTo(lexer);
-                    delete pop_back();
-                }
-            }
+        
 
 
             void   Node:: Unget( Node * &node, Lexer &lexer) throw()
@@ -152,165 +135,6 @@ namespace upsylon {
 }
 
 
-namespace upsylon {
-
-    namespace Lang {
-
-        namespace Syntax {
-
-        }
-    }
-}
-
-namespace upsylon {
-
-    namespace Lang {
-
-        namespace Syntax {
-
-            InternalNode:: ~InternalNode() throw()
-            {
-            }
-
-            InternalNode:: InternalNode(const Rule &r) throw() :
-            Node(r,false),
-            Node::List()
-            {
-            }
-
-            InternalNode:: InternalNode(const InternalNode &node) throw() :
-            object(),
-            Node(node),
-            Node::List(node)
-            {
-
-            }
-
-
-
-            Node * InternalNode:: clone() const
-            {
-                return new InternalNode(*this);
-            }
-
-            const void  * InternalNode:: inner() const throw()
-            {
-                return static_cast<const List *>(this);
-            }
-
-            void InternalNode::  vizLink( ios::ostream &fp ) const
-            {
-                const bool multiple = size>1;
-                unsigned   idx      = 1;
-                for(const Node *node = head; node; node=node->next, ++idx)
-                {
-                    node->vizSave(fp);
-                    vizJoin(fp,node);
-                    if(multiple) fp("[label=\"%u\"]",idx);
-                    endl(fp);
-                }
-            }
-
-
-            void     InternalNode::   vizCore( ios::ostream &fp ) const
-            {
-                const string l = string_convert::to_printable(rule.name);
-                fp("[shape=house,label=\""); fp << l; fp("\"];\n");
-                vizLink(fp);
-            }
-
-
-
-
-            size_t InternalNode:: serializeList(ios::ostream &fp) const
-            {
-                size_t ans = 0;
-                Y_OSTREAM_ADD_TO(ans,fp.emit_upack,size);
-                for(const Node *node=head;node;node=node->next)
-                {
-                    ans += node->serialize(fp);
-                }
-                return ans;
-            }
-
-            size_t InternalNode:: serialize(ios::ostream &fp) const
-            {
-                size_t ans = rule.name.serialize(fp);
-                Y_OSTREAM_ADD_TO(ans,fp.emit_net,UUID);
-                return ans + serializeList(fp);
-            }
-
-            const char *InternalNode:: className() const throw()
-            {
-                return "InternalNode";
-            }
-
-            const string * InternalNode:: data() const throw()
-            {
-                return 0;
-            }
-
-
-        }
-    }
-}
-
-namespace upsylon {
-
-    namespace Lang {
-
-        namespace Syntax {
-
-            ExtendedNode:: ~ExtendedNode() throw() {}
-
-            ExtendedNode:: ExtendedNode( const Rule &r, const string &s ) :
-            InternalNode(r),
-            shared( new string(s) )
-            {
-            }
-
-            ExtendedNode:: ExtendedNode( const ExtendedNode &node ) throw() :
-            object(),
-            InternalNode(node),
-            shared(node.shared)
-            {
-            }
-
-            const string * ExtendedNode:: data() const throw()
-            {
-                return & *shared;
-            }
-
-            Node * ExtendedNode:: clone() const
-            {
-                return new ExtendedNode( *this );
-            }
-
-
-            size_t ExtendedNode:: serialize( ios::ostream &fp ) const
-            {
-                size_t ans = rule.name.serialize(fp);
-                Y_OSTREAM_ADD_TO(ans,fp.emit_net,UUID);
-                ans += shared->serialize(fp);
-                return ans + serializeList(fp);
-            }
-
-            void  ExtendedNode::   vizCore( ios::ostream &fp ) const
-            {
-                const string l = string_convert::to_printable(rule.name);
-                const string c = string_convert::to_printable(*shared);
-                fp("[shape=house,label=\"%s='%s'\",style=rounded];\n",*l,*c);
-                vizLink(fp);
-            }
-
-            const char *ExtendedNode:: className() const throw()
-            {
-                return "ExtendedNode";
-            }
-
-        }
-    }
-}
 
 
 

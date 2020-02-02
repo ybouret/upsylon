@@ -1,5 +1,6 @@
 #include "y/lang/syntax/grammar.hpp"
 #include "y/lang/syntax/node/terminal.hpp"
+#include "y/lang/syntax/node/extended.hpp"
 
 #include "y/exception.hpp"
 #include "y/string/io.hpp"
