@@ -104,6 +104,7 @@ test-bin2dat.cpp
 test-disk-file.cpp test-disk-std.cpp test-serializer.cpp test-upack.cpp test-memory-streams.cpp
 test-ios-plugin.cpp
 test-cmd.cpp
+test-serialize-tools.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams)
@@ -118,6 +119,7 @@ ADD_TEST(ios:serializer  test-main serializer)
 ADD_TEST(ios:upack       test-main upack)
 ADD_TEST(ios:plugin      test-main ios_plugin)
 ADD_TEST(ios:cmd         test-main cmd)
+ADD_TEST(ios:serialized  test-main serialize_tools)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp test-hmac.cpp test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp test-rsa.cpp test-rsa-io.cpp test-mperf.cpp)
 ADD_TEST(crypto:hashing     test-main hashing)

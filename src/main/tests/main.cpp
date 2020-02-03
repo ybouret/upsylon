@@ -144,6 +144,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(disk_file);
     Y_UTEST(disk_std);
     Y_UTEST(serializer);
+    Y_UTEST(serialize_tools);
 
     Y_UTEST(bin2dat);
     Y_UTEST(digest);

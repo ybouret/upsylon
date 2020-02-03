@@ -1,4 +1,5 @@
 #include "y/ios/serializer.hpp"
+#include "y/ios/tools/serializable.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/sequence/vector.hpp"

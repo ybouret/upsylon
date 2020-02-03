@@ -2,7 +2,6 @@
 #ifndef Y_IOS_OHSTREAM_INCLUDED
 #define Y_IOS_OHSTREAM_INCLUDED 1
 
-#include "y/ios/serializable.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/hashing/function.hpp"
 

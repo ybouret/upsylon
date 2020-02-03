@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include <typeinfo>
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 
