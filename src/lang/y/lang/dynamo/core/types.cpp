@@ -1,5 +1,5 @@
 
-#include "y/lang/dynamo/types.hpp"
+#include "y/lang/dynamo/core/types.hpp"
 
 
 

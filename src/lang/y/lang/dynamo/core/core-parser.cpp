@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/core-parser.hpp"
+#include "y/lang/dynamo/core/parser.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
 

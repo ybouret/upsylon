@@ -39,6 +39,13 @@ SET(dynamo_srcs ${dynamo_decl} ${dynamo_code})
 SOURCE_GROUP( lang/dynamo FILES ${dynamo_srcs} )
 INSTALL( FILES ${dynamo_decl} DESTINATION include/y/lang/dynamo )
 
+FILE(GLOB dynamo_core_decl y/lang/dynamo/core/*.hpp)
+FILE(GLOB dynamo_core_code y/lang/dynamo/core/*.cpp)
+SET(dynamo_core_srcs ${dynamo_core_decl} ${dynamo_core_code})
+SOURCE_GROUP( lang/dynamo/core FILES ${dynamo_core_srcs} )
+INSTALL( FILES ${dynamo_core_decl} DESTINATION include/y/lang/dynamo/core )
+
+
 ADD_LIBRARY(y-lang STATIC 
 ${main_srcs} 
 ${syntax_srcs}
@@ -46,6 +53,7 @@ ${syntax_grammar_srcs}
 ${syntax_rule_srcs}
 ${syntax_node_srcs}
 ${dynamo_srcs}
+${dynamo_core_srcs}
 )
 INSTALL( TARGETS y-lang ARCHIVE DESTINATION lib )
 
