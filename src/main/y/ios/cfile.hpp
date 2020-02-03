@@ -19,10 +19,15 @@ namespace upsylon
         extern const cstdout_t cstdout;  //!< for type selection
         extern const cstderr_t cstderr;  //!< for type selection
 
+        extern  const char standard_input[];
+        extern  const char standard_output[];
+        extern  const char standard_error[];
+
         //! wrapper for FILE *
         class cfile : public virtual object
         {
         public:
+
             //! how to open it
             enum open_mode
             {
@@ -49,8 +54,8 @@ namespace upsylon
             FILE * operator*() throw();
 
         private:
-            FILE       *fp;
             const bool  persistent;
+            FILE       *fp;
             Y_DISABLE_COPY_AND_ASSIGN(cfile);
         };
     }
