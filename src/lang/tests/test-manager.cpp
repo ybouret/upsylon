@@ -51,12 +51,11 @@ Y_UTEST(manager)
         
         // make a DynamoNode
         auto_ptr<DynamoNode> dnode     = mgr.compiler().compile(*xnode);
-        const string         dnodeCode = dnode->toBinary();
+        const string         dnodeCode = dnode->to_binary();
         
         {
-            const size_t dnodeOutBytes = dnode->outputBytes();
-            size_t       dnodeCount    = 0;
-            dnode->save("dnode.bin", &dnodeCount);
+            const size_t dnodeOutBytes = dnode->serialize_length();
+            const size_t dnodeCount    = dnode->save_to("dnode.bin");
             
             std::cerr << "dnodeOutBytes="<< dnodeOutBytes << std::endl;
             Y_CHECK(dnodeOutBytes==dnodeCount);
@@ -66,14 +65,14 @@ Y_UTEST(manager)
             // reload from file
             {
                 auto_ptr<DynamoNode> reload = DynamoNode:: Load( Module::OpenFile("dnode.bin") );
-                const string reloaded_file = reload->toBinary();
+                const string reloaded_file = reload->to_binary();
                 Y_CHECK(dnodeCode==reloaded_file);
             }
             
             // reload fron data
             {
                 auto_ptr<DynamoNode> reload = DynamoNode:: Load( Module::OpenData("done",dnodeCode) );
-                const string reloaded_data = reload->toBinary();
+                const string reloaded_data = reload->to_binary();
                 Y_CHECK(dnodeCode==reloaded_data);
             }
         }

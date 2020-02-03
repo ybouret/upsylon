@@ -49,8 +49,7 @@ namespace upsylon
         Syntax::Parser * DynamoManager:: link( Module *dynamoModule, DynamoSymbols *symbols)
         {
             assert( dynamoModule );
-            Source               source(dynamoModule);
-            auto_ptr<DynamoNode> dnode = DynamoNode::Load_(source);
+            auto_ptr<DynamoNode> dnode = DynamoNode::Load(dynamoModule);
             return generator().build(*dnode,symbols);
         }
 

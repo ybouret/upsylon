@@ -1,11 +1,11 @@
 
-#include "y/lang/dynamo/compiler.hpp"
+#include "y/lang/dynamo/node.hpp"
 #include "y/exception.hpp"
 #include "y/string/convert.hpp"
 #include "y/string/io.hpp"
 #include "y/ios/tools/graphviz.hpp"
-#include "y/ios/osstream.hpp"
-#include "y/ios/null-ostream.hpp"
+#include "y/ptr/auto.hpp"
+#include "y/ios/serialized.hpp"
 
 namespace upsylon
 {
@@ -147,6 +147,7 @@ namespace upsylon
         
         void DynamoNode:: graphViz(const string &filename) const
         {
+#if 0
             {
                 ios::ocstream fp(filename);
                 fp << "digraph G {\n";
@@ -154,36 +155,7 @@ namespace upsylon
                 fp << "}\n";
             }
             (void)ios::GraphViz::Render(filename);
-            
-        }
-
-        
-        void DynamoNode:: save( ios::ostream &fp , size_t *bytes) const
-        {
-            const size_t nl = name.serialize(fp); //string_io::save_binary(fp,name);
-            ios::gist::add_to(bytes,nl);
-            switch (type)
-            {
-                case DynamoTerminal: {
-                    fp.emit_net<uint8_t>(0);
-                    const string s  = content();
-                    const size_t sz = s.serialize(fp);
-                    ios::gist::add_to(bytes,sz+1);
-                } break;
-                    
-                case DynamoInternal: {
-                    fp.emit_net<uint8_t>(1);
-                    const DynamoList &ch = children();
-                    const size_t      nch = ch.size;
-                    size_t            sz  = 0;
-                    fp.emit_upack(nch,&sz);
-                    ios::gist::add_to(bytes,sz+1);
-                    for(const DynamoNode *node=ch.head;node;node=node->next)
-                    {
-                        node->save(fp,bytes);
-                    }
-                } break;
-            }
+#endif
         }
 
         size_t DynamoNode:: serialize( ios::ostream &fp ) const
@@ -218,36 +190,9 @@ namespace upsylon
             return "DynamoNode";
         }
 
-        size_t DynamoNode:: outputBytes() const
-        {
-            size_t            bytes = 0;
-            ios::null_ostream fp;
-            save(fp,&bytes);
-            return bytes;
-        }
+
         
-        
-        string DynamoNode:: toBinary() const
-        {
-            string ans(outputBytes(),as_capacity,false);
-            ios::osstream fp(ans);
-            save(fp);
-            
-            return ans;
-        }
-        
-        void DynamoNode::save( const string &binfile, size_t *bytes) const
-        {
-            ios::ocstream fp(binfile);
-            save(fp,bytes);
-        }
-        
-        void DynamoNode::save( const char *binfile, size_t *bytes) const
-        {
-            const string _(binfile);
-            save(_,bytes);
-        }
-        
+
         DynamoNode * DynamoNode:: Load_( Source &fp )
         {
             static const char fn[] = "DynamoNode::Load";
@@ -294,29 +239,11 @@ namespace upsylon
             Source source(m);
             return Load_(source);
         }
-        
-        void DynamoNode::  run( hashing::function &H ) const throw()
+
+        digest DynamoNode::md(hashing::function &H) const
         {
-            static const uint8_t TermHash = 0;
-            static const uint8_t RuleHash = 1;
-            H(name);
-            switch (type)
-            {
-                case DynamoTerminal:
-                    H.run_type(TermHash);
-                    H(content()); break;
-                    
-                case DynamoInternal:
-                    H.run_type(RuleHash);
-                    for(const DynamoNode *node=children().head;node;node=node->next)
-                    {
-                        node->run(H);
-                    }
-                    break;
-            }
+            return ios::serialized::md(*this,H);
         }
-        
-        
         
     }
 }
