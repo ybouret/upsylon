@@ -3,6 +3,7 @@
 
 #include "y/utest/run.hpp"
 #include <typeinfo>
+#include <cstdio>
 
 using namespace upsylon;
 
