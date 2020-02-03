@@ -7,8 +7,7 @@
 
 namespace upsylon    {
 
-    namespace ios
-    {
+    namespace ios {
 
         struct serialized
         {
@@ -20,12 +19,8 @@ namespace upsylon    {
                 return H.key<T>();
             }
 
-            static inline digest  md(const serializable &input, hashing::function &H )
-            {
-                H.set();
-                input.hash_with(H);
-                return H.md();
-            }
+            static   digest  md(const serializable &input, hashing::function &H );
+            
         };
 
     }

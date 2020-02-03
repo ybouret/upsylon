@@ -1,4 +1,4 @@
-#include "y/ios/tools/serializable.hpp"
+#include "y/ios/serialized.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
