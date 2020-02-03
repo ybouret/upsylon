@@ -5,17 +5,11 @@
 #include "y/lang/lexical/lexer.hpp"
 #include "y/lang/syntax/grammar.hpp"
 
-//#include "y/lang/syntax/terminal.hpp"
-//#include "y/lang/syntax/joker.hpp"
-//#include "y/lang/syntax/compound.hpp"
+namespace upsylon {
 
+    namespace Lang {
 
-namespace upsylon
-{
-    namespace Lang
-    {
-        namespace Syntax
-        {
+        namespace Syntax {
 
             //! base class to build a parser
             class Parser : public Lexer, public Grammar, public CountedObject
@@ -27,11 +21,10 @@ namespace upsylon
                 //
                 // Management
                 //______________________________________________________________
-
-                virtual ~Parser() throw();          //!< destructor
-                explicit Parser(const string &id);  //!< setup with *label = *name
-                explicit Parser(const char   *id);  //!< setup with *label = *name
-                const string & key() const throw(); //!< *name
+                virtual       ~Parser() throw();          //!< destructor
+                explicit       Parser(const string &id);  //!< setup with *label = *name
+                explicit       Parser(const char   *id);  //!< setup with *label = *name
+                const string & key() const throw();       //!< *name
 
 
                 //______________________________________________________________

@@ -69,7 +69,7 @@ namespace upsylon
             
         }
         
-        std::ostream & DynamoNode:: display( std::ostream &os, int level ) const
+        std::ostream & DynamoNode:: output( std::ostream &os, int level ) const
         {
             switch(type)
             {
@@ -78,7 +78,7 @@ namespace upsylon
                     Indent(os,level) << "[term] <" << name << ">";
                     if(s.size()>0)
                     {
-                        os << "='" << s << "'";
+                        os << " = '" << s << "'";
                     }
                     os << std::endl;
                 } break;
@@ -89,7 +89,7 @@ namespace upsylon
                     ++level;
                     for(const DynamoNode *node = self.head; node; node=node->next )
                     {
-                        node->display(os,level);
+                        node->output(os,level);
                     }
                     --level;
                 } break;
@@ -108,9 +108,8 @@ namespace upsylon
             return os;
         }
         
-        void DynamoNode:: viz( ios::ostream &fp ) const
+        void DynamoNode:: vizCore( ios::ostream &fp ) const
         {
-            fp.viz(this);
             const string l = string_convert::to_visible(name);
             switch (type) {
                 case DynamoTerminal: {
@@ -133,30 +132,19 @@ namespace upsylon
                     unsigned   idx      = 1;
                     for( const DynamoNode *node=children().head;node;node=node->next,++idx)
                     {
-                        node->viz(fp);
-                        fp.viz(this); fp << "->"; fp.viz(node);
+                        node->vizSave(fp);
+                        this->vizJoin(fp,node);
                         if(multiple)
                         {
                             fp("[label=\"%u\"]",idx);
                         }
-                        fp << ';' << '\n';
+                        endl(fp);
                     }
                 } break;
             }
         }
         
-        void DynamoNode:: graphViz(const string &filename) const
-        {
-#if 0
-            {
-                ios::ocstream fp(filename);
-                fp << "digraph G {\n";
-                viz(fp);
-                fp << "}\n";
-            }
-            (void)ios::GraphViz::Render(filename);
-#endif
-        }
+        
 
         size_t DynamoNode:: serialize( ios::ostream &fp ) const
         {
@@ -240,9 +228,9 @@ namespace upsylon
             return Load_(source);
         }
 
-        digest DynamoNode::md(hashing::function &H) const
+        std::ostream & operator<<( std::ostream &os, const DynamoNode &node )
         {
-            return ios::serialized::md(*this,H);
+            return node.output(os,0);
         }
         
     }

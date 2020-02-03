@@ -17,10 +17,7 @@ namespace upsylon    {
                 H.set();
                 input.hash_with(H);
                 return H.key<T>();
-            }
-
-            static   digest  md(const serializable &input, hashing::function &H );
-            
+            }            
         };
 
     }

@@ -4,18 +4,14 @@
 
 #include "y/lang/token.hpp"
 #include "y/lang/source.hpp"
+#include "y/lang/alias.hpp"
 #include "y/type/fourcc.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/ios/serializable.hpp"
-#include "y/ios/tools/vizible.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
 
-        typedef ios::serializable Serializable; //!< alias
-        typedef ios::vizible      Vizible;      //!< alias
+namespace upsylon {
+
+    namespace Lang {
 
         //! a pattern to accept from a source
         class Pattern : public CountedObject, public Serializable, public Vizible

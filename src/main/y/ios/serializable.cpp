@@ -62,7 +62,12 @@ namespace upsylon {
             return serialize_class(fp);
         }
 
-
+        digest serializable:: md(hashing::function &H) const
+        {
+            H.set();
+            (void) hash_with(H);
+            return H.md();
+        }
 
 
     }

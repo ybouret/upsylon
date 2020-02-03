@@ -5,7 +5,7 @@
 #include "y/lang/lexical/lexeme.hpp"
 #include "y/lang/dynamo/types.hpp"
 #include "y/lang/source.hpp"
-#include "y/ios/serializable.hpp"
+#include "y/lang/alias.hpp"
 #include "y/hashing/digest.hpp"
 
 namespace upsylon{
@@ -26,7 +26,8 @@ namespace upsylon{
         class DynamoNode :
         public DynamoObject,
         public core::inode<DynamoNode>,
-        public ios::serializable
+        public Serializable,
+        public Vizible
         {
         public:
             //------------------------------------------------------------------
@@ -34,17 +35,14 @@ namespace upsylon{
             // members
             //
             //------------------------------------------------------------------
-
             const DynamoType  type;   //!< node type
             const string      name;   //!< from the id=rule.name
-            
 
             //------------------------------------------------------------------
             //
             // C++
             //
             //------------------------------------------------------------------
-
             //! create an internal node with compiled lexeme
             explicit DynamoNode(const string     &id,
                                 const Lexeme     &lx,
@@ -71,29 +69,17 @@ namespace upsylon{
             // output
             //
             //------------------------------------------------------------------
-            std::ostream        & display(std::ostream &os, int level) const; //!< display the node with indentation level
-            static std::ostream & Indent(std::ostream &, int level);          //!< indentation helper
-            
-            //! display helper
-            friend inline std::ostream & operator<<( std::ostream &os, const DynamoNode &node )
-            {
-                return node.display(os,0);
-            }
+            std::ostream        & output(std::ostream &,int) const;               //!< display the node with indentation level
+            static std::ostream & Indent(std::ostream &,int);                     //!< indentation helper
+            friend std::ostream & operator<<(std::ostream &, const DynamoNode &); //! display helper
 
             //------------------------------------------------------------------
             //
             // GraphViz interface
             //
             //------------------------------------------------------------------
-            //! write this node as GraphViz code
-            void viz( ios::ostream &fp ) const;
-            
-            //! create a directed graph and try to render
-            void graphViz( const string &filename ) const;
-            
-            
+            virtual void vizCore(ios::ostream &) const;  //! write node content
 
-            
             //------------------------------------------------------------------
             //
             // serialize interface
@@ -101,7 +87,6 @@ namespace upsylon{
             //------------------------------------------------------------------
             virtual const char *className() const throw();          //!< DynamoNode
             virtual size_t      serialize(ios::ostream &fp) const;  //!< save data
-            digest              md(hashing::function &) const;      //!< serialized::md(H)
             
             //------------------------------------------------------------------
             //
