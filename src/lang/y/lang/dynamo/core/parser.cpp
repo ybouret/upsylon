@@ -56,7 +56,6 @@ namespace upsylon
                     RULE   &rAlt  = design("alt")    << rJk << zeroOrMore(rxJk);
                     RULE   &rAgg  = oneOrMore(rAlt);
                     RULE   &rGrp  = design("grp")    << mark('(') << rAgg <<  mark(')');
-                    //rAtm <<  rid << rx << rs << rGrp;
                     rAtm <<  rid << op << rGrp;
                     rule << rAgg;
                 }
