@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/parser.hpp"
+#include "y/lang/dynamo/core-parser.hpp"
 #include "y/lang/lexical/plugin/strings.hpp"
 #include "y/lang/lexical/plugin/comment.hpp"
 
@@ -9,13 +9,13 @@ namespace upsylon
 {
     namespace Lang
     {
-        DynamoParser:: ~DynamoParser() throw()
+        DynamoCoreParser:: ~DynamoCoreParser() throw()
         {
 
 
         }
 
-        DynamoParser:: DynamoParser() : Syntax::Parser("Dynamo")
+        DynamoCoreParser:: DynamoCoreParser() : Syntax::Parser("Dynamo")
         {
             setVerbose(true);
             dict("ID",Common::C_IDENTIFIER);

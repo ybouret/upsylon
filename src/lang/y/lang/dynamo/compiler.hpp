@@ -3,7 +3,7 @@
 #define Y_DYNAMO_COMPILER_INCLUDED 1
 
 #include "y/lang/dynamo/node.hpp"
-#include "y/lang/dynamo/parser.hpp"
+#include "y/lang/dynamo/core-parser.hpp"
 #include "y/lang/syntax/analyzer.hpp"
 #include "y/hashing/mph.hpp"
 

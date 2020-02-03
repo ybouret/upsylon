@@ -3,7 +3,7 @@
 #ifndef Y_LANG_DYNAMO_LOADER_INCLUDED
 #define Y_LANG_DYNAMO_LOADER_INCLUDED 1
 
-#include "y/lang/dynamo/parser.hpp"
+#include "y/lang/dynamo/core-parser.hpp"
 
 namespace upsylon
 {
@@ -14,7 +14,7 @@ namespace upsylon
         /**
          run the parser and process the '%include' commands
          */
-        class DynamoLoader : public DynamoParser
+        class DynamoLoader : public DynamoCoreParser
         {
         public:
             explicit DynamoLoader();         //!< initialize

@@ -9,7 +9,7 @@ namespace upsylon
 
         DynamoLoader:: ~DynamoLoader() throw() {}
 
-        DynamoLoader:: DynamoLoader() : DynamoParser(),
+        DynamoLoader:: DynamoLoader() : DynamoCoreParser(),
         isRS("rs"),
         isRX("rx"),
         isSTR("rx|rs")
