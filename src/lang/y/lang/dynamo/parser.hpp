@@ -3,7 +3,7 @@
 #ifndef Y_LANG_DYNAMO_PARSER_INCLUDED
 #define Y_LANG_DYNAMO_PARSER_INCLUDED 1
 
-#include "y/lang/dynamo/core-parser.hpp"
+#include "y/lang/dynamo/core/parser.hpp"
 
 namespace upsylon
 {

@@ -3,7 +3,7 @@
 #define Y_DYNAMO_SYMBOLS_INCLUDED 1
 
 #include "y/lang/syntax/grammar.hpp"
-#include "y/lang/dynamo/types.hpp"
+#include "y/lang/dynamo/core/types.hpp"
 
 namespace upsylon {
 

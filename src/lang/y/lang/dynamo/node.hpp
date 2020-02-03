@@ -3,7 +3,7 @@
 #define Y_DYNAMO_NODE_INCLUDED 1
 
 #include "y/lang/lexical/lexeme.hpp"
-#include "y/lang/dynamo/types.hpp"
+#include "y/lang/dynamo/core/types.hpp"
 #include "y/lang/source.hpp"
 #include "y/lang/alias.hpp"
 #include "y/hashing/digest.hpp"
