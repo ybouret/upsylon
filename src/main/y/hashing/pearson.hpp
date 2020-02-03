@@ -11,12 +11,12 @@ namespace upsylon {
     {
 
         //! pearson hashing
-        class pearson
+        class pearson_
         {
         public:
             
-            explicit pearson(randomized::bits *salt = 0) throw();
-            virtual ~pearson() throw();
+            explicit pearson_(randomized::bits *salt = 0) throw();
+            virtual ~pearson_() throw();
 
             const uint8_t table[256];
             void          reset(randomized::bits *salt=0) throw();
@@ -30,8 +30,40 @@ namespace upsylon {
             template <typename T> inline void update(T &arg, const uint8_t c) const throw() { update(&arg,sizeof(T),c);   }
 
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(pearson_);
+        };
+
+
+        template <typename T>
+        class pearson : public function, public pearson_
+        {
+        public:
+            inline explicit pearson() throw() : function( sizeof(T), sizeof(T) ), pearson_(), h(0) {}
+            inline virtual ~pearson() throw() {}
+
+            virtual void set() throw() { initialize(h); }
+            virtual void run(const void *buffer, size_t buflen) throw() {
+                assert( !(0==buffer&&buflen>0) );
+                const uint8_t *p = static_cast<const uint8_t *>(buffer);
+                while(buflen-- > 0) update(h,*(p++));
+            }
+            
+            virtual void get(void *output, size_t outlen) throw()
+            {
+                fill(output,outlen, &h, sizeof(T) );
+            }
+            
+            const char *name() const throw()
+            {
+                return "pearson";
+            }
+
+        private:
+            T h;
             Y_DISABLE_COPY_AND_ASSIGN(pearson);
         };
+
+
 
     }
 

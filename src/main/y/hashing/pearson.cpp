@@ -7,18 +7,18 @@ namespace upsylon {
 
     namespace  hashing  {
         
-        pearson:: ~pearson() throw()
+        pearson_:: ~pearson_() throw()
         {
             memset( (void*)table,0,sizeof(table));
         }
 
-        pearson:: pearson(randomized::bits *salt) throw() :
+        pearson_:: pearson_(randomized::bits *salt) throw() :
         table()
         {
             reset(salt);
         }
 
-        void pearson:: reset(randomized::bits *salt) throw()
+        void pearson_:: reset(randomized::bits *salt) throw()
         {
             uint8_t *t = aliasing::_(table);
             for(size_t i=0;i<256;++i)
@@ -28,12 +28,12 @@ namespace upsylon {
             if(salt) salt->shuffle(t,256);
         }
 
-        uint8_t pearson:: next(const uint8_t h, const uint8_t c) const throw()
+        uint8_t pearson_:: next(const uint8_t h, const uint8_t c) const throw()
         {
             return table[ h ^ c ];
         }
 
-        void pearson:: initialize(void *addr,const size_t size) const throw()
+        void pearson_:: initialize(void *addr,const size_t size) const throw()
         {
             assert(addr!=0);
             assert(size>0);
@@ -45,7 +45,7 @@ namespace upsylon {
             }
         }
 
-        void pearson:: update(void *addr,const size_t size, const uint8_t c) const throw()
+        void pearson_:: update(void *addr,const size_t size, const uint8_t c) const throw()
         {
             assert(addr!=0);
             assert(size>0);

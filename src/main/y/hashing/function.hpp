@@ -49,7 +49,7 @@ namespace upsylon
             template <typename T>
             void run_type( const T &x ) throw() { run(&x,sizeof(T)); }
             
-            //! heklper, usually used by the virtual 'get' method.
+            //! helper, usually used by the virtual 'get' method.
 			static void fill( void *output, size_t outlen, const void *input, size_t inlen ) throw();
 
             //! helper, get( output.rw(), output.length() )

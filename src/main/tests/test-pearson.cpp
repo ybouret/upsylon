@@ -8,18 +8,22 @@ using namespace upsylon;
 
 namespace {
 
-    void testH( hashing::pearson &p, const accessible<string> &arr )
+    void testH( hashing::function &p, const accessible<string> &arr )
     {
-        uint32_t ini = 0;
-        p.initialize(ini);
-        std::cerr << "ini=" << std::hex << ini << std::dec << std::endl;
+
+        for(size_t i=1;i<=arr.size();++i)
+        {
+            const string   &s = arr[i];
+            const uint64_t  h = p.key<uint64_t>(s);
+            std::cerr << s << " : " << std::hex << h << std::dec << std::endl;
+        }
     }
 }
 
 Y_UTEST(pearson)
 {
-    hashing::pearson p;
-    vector<string>   strings;
+    hashing::pearson<uint32_t> p;
+    vector<string>            strings;
     if(argc>1)
     {
         ios::icstream fp( argv[1] );
@@ -32,7 +36,7 @@ Y_UTEST(pearson)
 
     testH(p,strings);
 
-    for(size_t iter=0;iter<4;++iter)
+    for(size_t iter=0;iter<1;++iter)
     {
         p.reset( &alea );
         testH(p,strings);
