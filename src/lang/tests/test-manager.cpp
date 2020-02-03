@@ -1,16 +1,19 @@
 #include "y/lang/dynamo/manager.hpp"
 #include "y/fs/local/file.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 using namespace Lang;
 
 Y_UTEST(manager)
 {
-    std::cerr << "sizeof(DynamoLoader)     = " << sizeof(DynamoLoader)      << std::endl;
-    std::cerr << "sizeof(DynamoCompiler)   = " << sizeof(DynamoCompiler)    << std::endl;
-    std::cerr << "sizeof(DynamoGenerator)  = "  << sizeof(DynamoGenerator)  << std::endl;
-    std::cerr << "sizeof(DynamoManager)    = "  << sizeof(DynamoManager)    << std::endl;
+    Y_UTEST_SIZEOF(DynamoParser);
+    Y_UTEST_SIZEOF(DynamoCompiler);
+    Y_UTEST_SIZEOF(DynamoGenerator);
+    Y_UTEST_SIZEOF(DynamoManager);
+
+
     
     
     DynamoManager &mgr = DynamoManager::instance();

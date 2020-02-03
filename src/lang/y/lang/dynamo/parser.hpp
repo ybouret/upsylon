@@ -1,7 +1,7 @@
 
 //! \file
-#ifndef Y_LANG_DYNAMO_LOADER_INCLUDED
-#define Y_LANG_DYNAMO_LOADER_INCLUDED 1
+#ifndef Y_LANG_DYNAMO_PARSER_INCLUDED
+#define Y_LANG_DYNAMO_PARSER_INCLUDED 1
 
 #include "y/lang/dynamo/core-parser.hpp"
 
@@ -10,15 +10,15 @@ namespace upsylon
     namespace Lang
     {
 
-        //! full loading of dynamo trees
+        //! full parsing of dynamo trees
         /**
          run the parser and process the '%include' commands
          */
-        class DynamoLoader : public DynamoCoreParser
+        class DynamoParser : public DynamoCoreParser
         {
         public:
-            explicit DynamoLoader();         //!< initialize
-            virtual ~DynamoLoader() throw(); //!< desctructor
+            explicit DynamoParser();         //!< initialize
+            virtual ~DynamoParser() throw(); //!< desctructor
 
             XNode * load( Module *m ); //!< load grammar node and perform includes
 
@@ -30,7 +30,7 @@ namespace upsylon
             string   getRID( const XNode &node ) const; //!< extract rid
 
         private:
-            Y_DISABLE_COPY(DynamoLoader);
+            Y_DISABLE_COPY(DynamoParser);
             void checkIncludes(Syntax::Node &node, const Module &currentModule);
             
             string         getString(const XNode &node,

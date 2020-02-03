@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/loader.hpp"
+#include "y/lang/dynamo/parser.hpp"
 #include "y/exception.hpp"
 #include "y/fs/local/fs.hpp"
 
@@ -7,9 +7,9 @@ namespace upsylon
     namespace Lang
     {
 
-        DynamoLoader:: ~DynamoLoader() throw() {}
+        DynamoParser:: ~DynamoParser() throw() {}
 
-        DynamoLoader:: DynamoLoader() : DynamoCoreParser(),
+        DynamoParser:: DynamoParser() : DynamoCoreParser(),
         isRS("rs"),
         isRX("rx"),
         isSTR("rx|rs")
@@ -17,7 +17,7 @@ namespace upsylon
 
         }
 
-        XNode * DynamoLoader:: load( Module *m )
+        XNode * DynamoParser:: load( Module *m )
         {
             Source          source(m);
             auto_ptr<XNode> g = run(source);
@@ -28,7 +28,7 @@ namespace upsylon
         }
 
 
-        XNode  * DynamoLoader:: getCmdArgs( Syntax::Node &cmd, string &cmdName ) const
+        XNode  * DynamoParser:: getCmdArgs( Syntax::Node &cmd, string &cmdName ) const
         {
             assert( "cmd" == cmd.rule.name );
             if(!cmd.internal)        throw exception("{%s} invalid <cmd> node", **name);
@@ -44,7 +44,7 @@ namespace upsylon
         }
 
 
-        string      DynamoLoader:: getString(const XNode &node,
+        string      DynamoParser:: getString(const XNode &node,
                                              const char  *description,
                                              Matching    &matching) const
         {
@@ -56,7 +56,7 @@ namespace upsylon
             return node.lexeme().toString(1,1);
         }
         
-        string DynamoLoader:: getContent(const XNode &node,
+        string DynamoParser:: getContent(const XNode &node,
                                          const char  *description,
                                          const char  *id) const
         {
@@ -69,31 +69,31 @@ namespace upsylon
             return node.lexeme().toString();
         }
         
-        string DynamoLoader:: getRS( const XNode &node ) const
+        string DynamoParser:: getRS( const XNode &node ) const
         {
             return getString(node,"raw string",isRS);
         }
 
 #if 1
-        string DynamoLoader:: getRX( const Syntax::Node &node ) const
+        string DynamoParser:: getRX( const Syntax::Node &node ) const
         {
             return getString(node,"regular expression",isRX);
 
         }
 
-        string DynamoLoader:: getSTR( const XNode &node ) const
+        string DynamoParser:: getSTR( const XNode &node ) const
         {
             return getString(node,"any string",isSTR);
         }
 
-        string DynamoLoader:: getRID( const XNode &node ) const
+        string DynamoParser:: getRID( const XNode &node ) const
         {
             return getContent(node, "rule identifier", "rid");
         }
 #endif
         
 
-        void DynamoLoader:: checkIncludes(Syntax::Node &node, const Module &currentModule)
+        void DynamoParser:: checkIncludes(Syntax::Node &node, const Module &currentModule)
         {
             Y_LANG_SYNTAX_VERBOSE(std::cerr << "{" << name << "} checkInclude" << std::endl);
             if(node.internal)

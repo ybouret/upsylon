@@ -1,4 +1,4 @@
-#include "y/lang/dynamo/loader.hpp"
+#include "y/lang/dynamo/parser.hpp"
 #include "y/lang/dynamo/generator.hpp"
 #include "y/fs/local/file.hpp"
 #include "y/utest/run.hpp"
@@ -14,7 +14,7 @@ static inline Module * doOpen( const string &fn )
 
 Y_UTEST(dyn)
 {
-    DynamoLoader    dynamo;
+    DynamoParser    dynamo;
     DynamoCompiler  dynCmp;
     DynamoGenerator dynGen;
 

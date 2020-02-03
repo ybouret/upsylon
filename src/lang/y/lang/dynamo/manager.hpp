@@ -4,7 +4,7 @@
 #define Y_DYNAMO_MANAGER_INCLUDED 1
 
 #include "y/lang/dynamo/generator.hpp"
-#include "y/lang/dynamo/loader.hpp"
+#include "y/lang/dynamo/parser.hpp"
 
 
 namespace upsylon
@@ -17,7 +17,7 @@ namespace upsylon
         {
         public:
             //! loader on-the-fly creation
-            DynamoLoader   & loader();
+            DynamoParser   & loader();
             
             //! compiler on-the-fly creation
             DynamoCompiler & compiler();
@@ -38,7 +38,7 @@ namespace upsylon
             virtual ~DynamoManager() throw();
             static const at_exit::longevity life_time = -13;
 
-            auto_ptr<DynamoLoader>    __loader;
+            auto_ptr<DynamoParser>    __parser;
             auto_ptr<DynamoCompiler>  __compiler;
             auto_ptr<DynamoGenerator> __generator;
         };

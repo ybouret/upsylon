@@ -11,7 +11,7 @@ namespace upsylon
         }
 
         DynamoManager:: DynamoManager() throw() :
-        __loader(0),
+        __parser(0),
         __compiler(0),
         __generator(0)
         {
@@ -19,13 +19,13 @@ namespace upsylon
 
         
 
-        DynamoLoader & DynamoManager:: loader()
+        DynamoParser & DynamoManager:: loader()
         {
-            if(__loader.is_empty())
+            if(__parser.is_empty())
             {
-                __loader = new DynamoLoader();
+                __parser = new DynamoParser();
             }
-            return * __loader;
+            return * __parser;
         }
         
         DynamoCompiler & DynamoManager:: compiler()
