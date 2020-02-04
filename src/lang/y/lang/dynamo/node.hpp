@@ -71,7 +71,7 @@ namespace upsylon{
             //------------------------------------------------------------------
             std::ostream        & output(std::ostream &,int) const;               //!< display the node with indentation level
             static std::ostream & Indent(std::ostream &,int);                     //!< indentation helper
-            friend std::ostream & operator<<(std::ostream &, const DynamoNode &); //! display helper
+            friend std::ostream & operator<<(std::ostream &, const DynamoNode &); //!< display helper
 
             //------------------------------------------------------------------
             //

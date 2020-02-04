@@ -19,9 +19,18 @@ namespace upsylon
         extern const cstdout_t cstdout;  //!< for type selection
         extern const cstderr_t cstderr;  //!< for type selection
 
-        extern  const char standard_input[];
-        extern  const char standard_output[];
-        extern  const char standard_error[];
+        //! special name for file opening
+#define Y_STDIN  ":STDIN:"
+
+        //! special name for file opening
+#define Y_STDOUT ":STDOUT:"
+
+        //! special name for file opening
+#define Y_STDERR ":STDERR:"
+
+        extern  const char standard_input[];  //!< Y_STDIN
+        extern  const char standard_output[]; //!< Y_STDOUT
+        extern  const char standard_error[];  //!< Y_STDERR
 
         //! wrapper for FILE *
         class cfile : public virtual object

@@ -7,7 +7,7 @@
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/type/spec.hpp"
-#include "y/code/utils.hpp"
+#include "y/type/binary.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -85,7 +85,12 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu = auto_cast<T,U>::_(u[i]);
-            Y_ASSERT( __mod2(tt-uu) <= 0 || memcmp( (const void*)&tt, (const void *)&uu, sizeof(T) ) == 0 );
+            if( __mod2(tt-uu) > 0)
+            {
+                const binary<T> lhs = tt;
+                const binary<T> rhs = uu;
+                if( lhs != rhs ) throw exception("checkCast/SET Failure");
+            }
         }
     }
 
@@ -97,7 +102,15 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu =  x * auto_cast<T,U>::_(u[i]);
-            Y_ASSERT( __mod2(tt-uu) <= 0  || memcmp( (const void*)&tt, (const void *)&uu, sizeof(T) ) != 0 );
+            if( __mod2(tt-uu) > 0)
+            {
+                const binary<T> lhs = tt;
+                const binary<T> rhs = uu;
+                if( lhs != rhs )
+                {
+                    throw exception("checkCast/MULSET Failure");
+                }
+            }
         }
     }
 

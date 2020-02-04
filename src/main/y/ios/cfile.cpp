@@ -37,9 +37,9 @@ namespace upsylon
             return 0;
         }
 
-        const char standard_input[]  = ":STDIN:";
-        const char standard_error[]  = ":STDERR:";
-        const char standard_output[] = ":STDOUT:";
+        const char standard_input[]  = Y_STDIN;
+        const char standard_error[]  = Y_STDERR;
+        const char standard_output[] = Y_STDOUT;
 
 
 #define Y_CFILE_GET(channel) \

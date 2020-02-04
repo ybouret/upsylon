@@ -9,8 +9,10 @@ namespace upsylon    {
 
     namespace ios {
 
+        //! serialized operation
         struct serialized
         {
+            //! get hash key from a serializable type
             template <typename T> static inline
             T  key( const serializable &input, hashing::function &H )
             {
