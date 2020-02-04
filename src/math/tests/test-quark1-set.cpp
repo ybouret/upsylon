@@ -82,7 +82,7 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu = auto_cast<T,U>::_(u[i]);
-            Y_ASSERT( __mod2(tt-uu) <= 0 );
+            Y_ASSERT( __mod2(tt-uu) <= 0 || die("set failure") );
         }
     }
 
@@ -94,7 +94,7 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu =  x * auto_cast<T,U>::_(u[i]);
-            Y_ASSERT( __mod2(tt-uu) <= 0 );
+            Y_ASSERT( __mod2(tt-uu) <= 0  || die("mulset failure") );
         }
     }
 
@@ -108,13 +108,15 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         const size_t n = 10 + alea.leq(1000);
         vector<T> t(n,zt);
         vector<U> u(n,zu);
+        std::cerr << "\t[SEQUENTIAL]" << std::endl;
         load(u); quark::set(t,u); checkCast(t,u);
         const T x = support::get<T>();
         load(u); quark::mulset(t,x,u); checkCast(t,x,u);
         if(loop)
         {
+            std::cerr << "\t[PARALLEL]" << std::endl;
             load(u); quark::set(t,u,*loop);       checkCast(t,u);
-            load(u); quark::mulset(t,x,u,*loop); checkCast(t,x,u);
+            load(u); quark::mulset(t,x,u,*loop);  checkCast(t,x,u);
         }
         std::cerr << "<SET/MULSET/>" << std::endl;
     }
