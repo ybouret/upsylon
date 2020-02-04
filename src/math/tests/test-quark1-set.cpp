@@ -6,7 +6,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -82,6 +82,10 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu = auto_cast<T,U>::_(u[i]);
+            if( __mod2(tt-uu) > 0 )
+            {
+                std::cerr << type_name_of<T>() << " : " << tt << "!=" << uu << " from " << type_name_of<U>() << " = " << u[i] << std::endl;
+            }
             Y_ASSERT( __mod2(tt-uu) <= 0 || die("set failure") );
         }
     }
