@@ -83,7 +83,7 @@ namespace upsylon {
             update();
         }
 
-        //! named 3D setup
+        //! named 4D setup
         template <typename T>
         inline key_address( const T &arg0, const T &arg1, const T &arg2, const T &arg3) throw()
         {
