@@ -160,8 +160,8 @@ Y_UTEST(quark1_set)
     doSET< mpz >(NULL);
     doSET< mpq >(NULL);
 
-    doSET2<float,int>( &loop );
-    doSET2<double,short>( &loop );
+    doSET2<float,short>( &loop );
+    doSET2<double,int>(  &loop );
     doSET2<mpn,unsigned>( NULL );
     doSET2<mpz,int>( NULL );
     doSET2<mpq,int>( NULL );
