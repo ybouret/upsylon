@@ -4,11 +4,17 @@
 
 using namespace upsylon;
 
+namespace {
+
+}
+
 Y_UTEST(divs)
 {
-    std::cerr << type_spec_of<int>() << std::endl;
-    std::cerr << type_spec_of<long>() << std::endl;
+    std::cerr << type_spec_of<int>()       << std::endl;
+    std::cerr << type_spec_of<long>()      << std::endl;
     std::cerr << type_spec_of<long long>() << std::endl;
+    
+
 
 }
 Y_UTEST_DONE()
