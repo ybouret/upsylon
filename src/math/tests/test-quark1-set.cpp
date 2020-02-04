@@ -7,6 +7,7 @@
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/type/spec.hpp"
+#include "y/code/utils.hpp"
 
 using namespace upsylon;
 using namespace math;
@@ -74,6 +75,17 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
     }
 
 
+    template <typename T>
+    static inline void displayHex( const T &arg )
+    {
+        const void    *p = static_cast<const void *>( &arg );
+        const uint8_t *b = static_cast<const uint8_t*>(p);
+        for(size_t i=0;i<sizeof(T);++i)
+        {
+            std::cerr << hexadecimal::lowercase[b[i]];
+        }
+    }
+
     template <typename T, typename U> static inline
     void checkCast( const accessible<T> &t, const accessible<U> &u )
     {
@@ -86,6 +98,9 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
             if( __mod2(tt-uu) > 0 )
             {
                 std::cerr << type_name_of<T>() << " : " << tt << "!=" << uu << " (" << __mod2(tt-uu) << ") from " << type_name_of<U>() << " = " << u[i] << std::endl;
+                std::cerr << "\t";
+                displayHex(tt); std::cerr << " / "; displayHex(uu);
+                std::cerr << std::endl;
             }
             Y_ASSERT( __mod2(tt-uu) <= 0 || die("set failure") );
         }
