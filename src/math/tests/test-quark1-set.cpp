@@ -75,16 +75,7 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
     }
 
 
-    template <typename T>
-    static inline void displayHex( const T &arg )
-    {
-        const void    *p = static_cast<const void *>( &arg );
-        const uint8_t *b = static_cast<const uint8_t*>(p);
-        for(size_t i=0;i<sizeof(T);++i)
-        {
-            std::cerr << hexadecimal::lowercase[b[i]];
-        }
-    }
+
 
     template <typename T, typename U> static inline
     void checkCast( const accessible<T> &t, const accessible<U> &u )
@@ -93,16 +84,8 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         for(size_t i=t.size();i>0;--i)
         {
             const T tt = t[i];
-            //const T uu = auto_cast<T,U>::_(u[i]);
-            const T uu = Y_QUARK_CAST( accessible<T>,accessible<U>,u[i]);
-            if( __mod2(tt-uu) > 0 )
-            {
-                std::cerr << type_name_of<T>() << " : " << tt << "!=" << uu << " (" << __mod2(tt-uu) << ") from " << type_name_of<U>() << " = " << u[i] << std::endl;
-                std::cerr << "\t";
-                displayHex(tt); std::cerr << " / "; displayHex(uu);
-                std::cerr << std::endl;
-            }
-            Y_ASSERT( __mod2(tt-uu) <= 0 || die("set failure") );
+            const T uu = auto_cast<T,U>::_(u[i]);
+            Y_ASSERT( __mod2(tt-uu) <= 0 || memcmp( (const void*)&tt, (const void *)&uu, sizeof(T) ) == 0 );
         }
     }
 
@@ -114,7 +97,7 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu =  x * auto_cast<T,U>::_(u[i]);
-            Y_ASSERT( __mod2(tt-uu) <= 0  || die("mulset failure") );
+            Y_ASSERT( __mod2(tt-uu) <= 0  || memcmp( (const void*)&tt, (const void *)&uu, sizeof(T) ) != 0 );
         }
     }
 
