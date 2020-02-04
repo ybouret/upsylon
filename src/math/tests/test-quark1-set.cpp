@@ -84,7 +84,7 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
             const T uu = auto_cast<T,U>::_(u[i]);
             if( __mod2(tt-uu) > 0 )
             {
-                std::cerr << type_name_of<T>() << " : " << tt << "!=" << uu << " from " << type_name_of<U>() << " = " << u[i] << std::endl;
+                std::cerr << type_name_of<T>() << " : " << tt << "!=" << uu << " (" << __mod2(tt-uu) << ") from " << type_name_of<U>() << " = " << u[i] << std::endl;
             }
             Y_ASSERT( __mod2(tt-uu) <= 0 || die("set failure") );
         }
