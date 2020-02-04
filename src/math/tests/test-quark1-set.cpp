@@ -81,7 +81,8 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         for(size_t i=t.size();i>0;--i)
         {
             const T tt = t[i];
-            const T uu = auto_cast<T,U>::_(u[i]);
+            //const T uu = auto_cast<T,U>::_(u[i]);
+            const T uu = Y_QUARK_CAST( accessible<T>,accessible<U>,u[i]);
             if( __mod2(tt-uu) > 0 )
             {
                 std::cerr << type_name_of<T>() << " : " << tt << "!=" << uu << " (" << __mod2(tt-uu) << ") from " << type_name_of<U>() << " = " << u[i] << std::endl;
