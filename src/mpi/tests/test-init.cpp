@@ -114,7 +114,7 @@ Y_UTEST(init)
     (void) MPI.get_data_type_for<float>();
     (void) MPI.get_data_type_for<double>();
     MPI.print(stderr,"<Checking Data Type/>\n");
-    MPI.print0(stderr, "sizeof(mpi)=%lu\n", sizeof(mpi) );
+    MPI.print0(stderr, "sizeof(mpi)=%u\n", unsigned( sizeof(mpi) ) );
     
 
 }
