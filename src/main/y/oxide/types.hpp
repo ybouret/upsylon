@@ -8,6 +8,7 @@
 #include "y/type/bzset.hpp"
 #include "y/comparison.hpp"
 #include "y/type/int2int.hpp"
+#include "y/type/divs.hpp"
 
 #include <cstring>
 #include <cstdlib>
@@ -21,13 +22,15 @@ namespace upsylon
     
     namespace Oxide
     {
-        typedef unit_t           Coord1D; //!< 1D coordinate
-        typedef point2d<Coord1D> Coord2D; //!< 2D coordinates
-        typedef point3d<Coord1D> Coord3D; //!< 3D coordinate3
+        typedef unit_t            Coord1D; //!< 1D coordinate
+        typedef point2d<Coord1D>  Coord2D; //!< 2D coordinates
+        typedef point3d<Coord1D>  Coord3D; //!< 3D coordinate3
 
-        typedef bool             Bool1D; //!< 1D boolean
-        typedef point2d<bool>    Bool2D; //!< 2D booleans
-        typedef point3d<bool>    Bool3D; //!< 3D booleans
+        typedef bool              Bool1D;  //!< 1D boolean
+        typedef point2d<bool>     Bool2D;  //!< 2D booleans
+        typedef point3d<bool>     Bool3D;  //!< 3D booleans
+        typedef idiv::of<Coord1D> IDiv;    //!< for div_t
+        typedef IDiv::type        DivType; //!< for div_t
 
         //! Boolean vector companion
         template <typename T> struct Boolean;
@@ -323,7 +326,7 @@ namespace upsylon
              //! return local ranks 2D: (ranks.y=r/sizes.x,ranks.x=r%sizes.x)
             static inline Coord2D LocalRanks( const Coord2D &sizes, const Coord1D &rank)
             {
-                const lldiv_t  dx = lldiv( rank,sizes.x);
+                const DivType dx = IDiv::_(rank,sizes.x);
                 const Coord2D ranks(dx.rem,dx.quot);
                 CheckRanks(&sizes.x, &ranks.x, 2);
                 return ranks;
@@ -332,8 +335,8 @@ namespace upsylon
             //! return local ranks 3D
             static inline Coord3D LocalRanks( const Coord3D &sizes, const Coord1D &rank)
             {
-                const lldiv_t dx = lldiv(rank,sizes.x);
-                const lldiv_t dy = lldiv(dx.quot,sizes.y);
+                const DivType dx = IDiv::_(rank,sizes.x);
+                const DivType dy = IDiv::_(dx.quot,sizes.y);
                 const Coord3D ranks(dx.rem,dy.rem,dy.quot);
                 CheckRanks(&sizes.x,&ranks.x,3);
                 return ranks;
