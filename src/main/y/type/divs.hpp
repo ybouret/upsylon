@@ -7,12 +7,12 @@
 
 namespace upsylon {
 
-    namespace core
+    struct idiv
     {
-        template <typename T> struct div_of;
+        template <typename T> struct of;
 
         template <>
-        struct div_of<int>
+        struct of<int>
         {
             typedef div_t  type;
             static inline type _(const int num, const int den)
@@ -22,7 +22,7 @@ namespace upsylon {
         };
 
         template <>
-        struct div_of<long>
+        struct of<long>
         {
             typedef ldiv_t type;
             static inline  type _(const int num, const int den)
@@ -32,7 +32,7 @@ namespace upsylon {
         };
 
         template <>
-        struct div_of<long long>
+        struct of<long long>
         {
             typedef lldiv_t type;
             static inline   type _(const long long num, const long long den)
@@ -40,7 +40,7 @@ namespace upsylon {
                 return lldiv(num,den);
             }
         };
-    }
+    };
 }
 
 #endif
