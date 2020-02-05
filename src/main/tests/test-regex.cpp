@@ -34,6 +34,8 @@ Y_UTEST(regex)
         const string rx = argv[1];
         std::cerr << "Compiling '" << rx << "'" << std::endl;
         auto_ptr<Pattern> p = RegExp(rx,&dict);
+        std::cerr << "[" << p << "]" << std::endl;
+        p->save_to("regex.bin");
         if(p->weak())
         {
             std::cerr << "\t|_WEAK" << std::endl;

@@ -40,7 +40,7 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('A', 'N', 'Y', '1'); //!< 0xANY1
+            static const uint32_t UUID = Y_PATTERN_CC4('A', 'N', 'Y', '1'); //!< 0xANY1
             static const char     CLID[8];                             //!< UUID
 
             //__________________________________________________________________
@@ -82,8 +82,8 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('S', 'N', 'G', 'L'); //!< 0xSNGL
-            static const char     CLID[8];                             //!< UUID
+            static const uint32_t UUID = Y_PATTERN_CC4('S', 'N', 'G', 'L'); //!< 0xSNGL
+            static const char     CLID[8];                                  //!< UUID
 
             //__________________________________________________________________
             //
@@ -125,7 +125,7 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('R','N','G','E');  //!< 0xRNGE
+            static const uint32_t UUID = Y_PATTERN_CC4('R','N','G','E');  //!< 0xRNGE
             static const char     CLID[8];                           //!< UUID
 
             //__________________________________________________________________
@@ -134,8 +134,8 @@ namespace upsylon {
             //__________________________________________________________________
             const uint8_t         lower;                             //!< lower code
             const uint8_t         upper;                             //!< lower code
-            explicit       Range(const uint8_t, const uint8_t) throw(); //!< intialize
-            virtual       ~Range() throw();                             //!< destructor
+            explicit              Range(const uint8_t, const uint8_t) throw(); //!< intialize
+            virtual              ~Range() throw();                             //!< destructor
 
             //__________________________________________________________________
             //

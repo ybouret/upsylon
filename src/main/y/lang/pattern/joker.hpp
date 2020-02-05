@@ -53,8 +53,8 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('?',0,0,0); //!< [0x?000]
-            static const char     CLID[8];                    //!< UUID
+            static const uint32_t UUID = Y_PATTERN_CC1('?'); //!< [0x?   ]
+            static const char     CLID[8];                   //!< UUID
 
             //__________________________________________________________________
             //
@@ -97,12 +97,12 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('>','=',0,0); //!< ID
-            static const uint32_t _ZOM = Y_FOURCC('*',0,0,0);   //!< nmin=0
-            static const uint32_t _OOM = Y_FOURCC('+',0,0,0);   //!< nmin=1
-            static const char     CLID[8];                      //!< UUID
-            static const char     _ID0[8];                      //!< _ZOM
-            static const char     _ID1[8];                      //!< _OOM
+            static const uint32_t UUID = Y_PATTERN_CC2('>','='); //!< ID
+            static const uint32_t _ZOM = Y_PATTERN_CC1('*');     //!< nmin=0
+            static const uint32_t _OOM = Y_PATTERN_CC1('+');     //!< nmin=1
+            static const char     CLID[8];                       //!< UUID
+            static const char     _ID0[8];                       //!< _ZOM
+            static const char     _ID1[8];                       //!< _OOM
 
             //__________________________________________________________________
             //
@@ -140,10 +140,10 @@ namespace upsylon {
         class Counting : public Joker
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('[',']',0,0); //!< ID
-            static const char     CLID[8];                          //!< UUID
-            const size_t          nmin;                             //!< minimal count
-            const size_t          nmax;                             //!< maximal count
+            static const uint32_t UUID = Y_PATTERN_CC2('[',']'); //!< ID
+            static const char     CLID[8];                       //!< UUID
+            const size_t          nmin;                          //!< minimal count
+            const size_t          nmax;                          //!< maximal count
 
             virtual         ~Counting() throw();              //!< destructor
             virtual Pattern *clone() const;                   //!< clone

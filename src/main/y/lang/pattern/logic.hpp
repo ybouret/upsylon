@@ -71,8 +71,8 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('A','N', 'D', ' ' ); //!< [0xAND]
-            static const char     CLID[8];                             //!< UUID
+            static const uint32_t UUID = Y_PATTERN_CC3('A','N','D'); //!< [0xAND]
+            static const char     CLID[8];                            //!< UUID
 
             //__________________________________________________________________
             //
@@ -113,8 +113,8 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('O','R',0,0 );      //!< [0xOR]
-            static const char     CLID[8];                             //!< UUID
+            static const uint32_t UUID = Y_PATTERN_CC2('O','R');      //!< [0xOR]
+            static const char     CLID[8];                            //!< UUID
 
             //__________________________________________________________________
             //
@@ -155,8 +155,8 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const uint32_t UUID = Y_FOURCC('N','O', 'N', 'E' ); //!< [0xNONE]
-            static const char     CLID[8];                             //!< UUID
+            static const uint32_t UUID = Y_PATTERN_CC4('N','O', 'N', 'E' ); //!< [0xNONE]
+            static const char     CLID[8];                                  //!< UUID
 
             //__________________________________________________________________
             //

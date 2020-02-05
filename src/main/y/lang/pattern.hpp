@@ -12,7 +12,12 @@
 namespace upsylon {
 
     namespace Lang {
-
+#define Y_PATTERN_PAD         '.'
+#define Y_PATTERN_CC1(A)       Y_FOURCC(A,Y_PATTERN_PAD,Y_PATTERN_PAD,Y_PATTERN_PAD)
+#define Y_PATTERN_CC2(A,B)     Y_FOURCC(A,B,Y_PATTERN_PAD,Y_PATTERN_PAD)
+#define Y_PATTERN_CC3(A,B,C)   Y_FOURCC(A,B,C,Y_PATTERN_PAD)
+#define Y_PATTERN_CC4(A,B,C,D) Y_FOURCC(A,B,C,D)
+        
         //! a pattern to accept from a source
         class Pattern : public CountedObject, public Serializable, public Vizible
         {

@@ -24,7 +24,7 @@ namespace upsylon
         Pattern * Pattern::Load( ios::istream &fp )
         {
             const uint32_t which = fp.read_net<uint32_t>();
-            std::cerr << "Loading <" << fourcc_(which) << ">" << std::endl;
+            //std::cerr << "Loading <" << fourcc_(which) << ">" << std::endl;
             switch(which)
             {
                     //__________________________________________________________

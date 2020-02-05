@@ -37,7 +37,7 @@ namespace upsylon
 
         std::ostream & operator<<(std::ostream &os, const Pattern &p)
         {
-            const string txt = p.to_visible();
+            const string txt = p.to_printable();
             return (os<<txt);
         }
         
