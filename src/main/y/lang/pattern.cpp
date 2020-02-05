@@ -40,22 +40,25 @@ namespace upsylon
             const string txt = p.to_printable();
             return (os<<txt);
         }
-        
-        void Pattern:: NoMultiple( List &ops ) throw()
+
+         void Pattern:: NoMultiple( List &ops ) throw()
         {
             List                          tmp;
             while( ops.size )
             {
                 const Pattern *lhs      = ops.head;
+                const string   L        = lhs->to_binary();
                 bool           multiple = false;
-                for(const Pattern *rhs=tmp.head;rhs;rhs=rhs->next)
+                 for(const Pattern *rhs=tmp.head;rhs;rhs=rhs->next)
                 {
-                    if( AreEqual(*lhs,*rhs) )
+                    const string R = rhs->to_binary();
+                    if( L == R )
                     {
                         multiple = true;
                         break;
                     }
                 }
+
                 if(multiple)
                 {
                     delete ops.pop_front();
@@ -67,7 +70,7 @@ namespace upsylon
             }
             ops.swap_with(tmp);
         }
-
+ 
     }
 
 }

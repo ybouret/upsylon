@@ -76,7 +76,7 @@ namespace upsylon {
             //__________________________________________________________________
             static Pattern *Load(ios::istream &);                                     //!< load from an input stream
             static Pattern *Optimize(Pattern *) throw();                              //!< optimize pattern
-            static bool     AreEqual(const Pattern &lhs, const Pattern &rhs) throw(); //!< test equality (Single only!!)
+            static bool     AreEqual(const Pattern &lhs, const Pattern &rhs) throw(); //!< test equality
             static void     NoMultiple(List &ops) throw();                            //!< remove multiple same patterns in a list of operands
 
             friend std::ostream & operator<<(std::ostream &, const Pattern &);

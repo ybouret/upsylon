@@ -19,7 +19,9 @@ namespace upsylon    {
                 H.set();
                 input.hash_with(H);
                 return H.key<T>();
-            }            
+            }
+
+            static bool are_same_binary(const serializable &lhs, const serializable &rhs);
         };
 
     }

@@ -3,12 +3,11 @@
 #include "y/lang/pattern/logic.hpp"
 #include "y/lang/pattern/joker.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
 
-        template <typename PAT>
+    namespace Lang {
+
+         template <typename PAT>
         static inline Pattern * __Optimize( Pattern *q ) throw()
         {
             PAT           *p   = static_cast<PAT *>(q->priv);
@@ -37,9 +36,21 @@ namespace upsylon
                     }
                 }
                 ops.swap_with(tmp);
-                return p;
+                if(1==ops.size)
+                {
+                    Pattern *one = ops.pop_back();
+                    delete p;
+                    return one; //! already optimized
+                }
+                else
+                {
+                    return p;
+                }
             }
         }
+
+
+
 
         template <typename PAT>
         static inline Pattern * __OptimizeJoker( Pattern *p ) throw()
@@ -48,7 +59,7 @@ namespace upsylon
             return p;
         }
 
-        Pattern * Pattern::Optimize( Pattern *p ) throw()
+        Pattern * Pattern:: Optimize( Pattern *p ) throw()
         {
             assert(p);
 
@@ -58,13 +69,8 @@ namespace upsylon
                     return __Optimize<AND>(p);
 
                 case OR::UUID:
-                    p = __Optimize<OR>(p);
-                    if(OR::UUID==p->uuid)
-                    {
-                        // still a OR
-                        NoMultiple(static_cast<OR *>(p->priv)->operands);
-                    }
-                    return p;
+                    return __Optimize<OR>(p);
+
 
                 case NONE::UUID: {
                     Pattern::List &ops = static_cast<NONE *>(p->priv)->operands;

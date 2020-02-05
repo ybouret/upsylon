@@ -1,6 +1,7 @@
 #include "y/lang/pattern/basic.hpp"
 #include "y/lang/pattern/logic.hpp"
 #include "y/lang/pattern/joker.hpp"
+#include "y/ios/serialized.hpp"
 
 namespace upsylon
 {
@@ -15,16 +16,17 @@ namespace upsylon
             {
                 return false;
             }
-
-            switch(lid)
+            else if( Single::UUID == lid )
             {
-                case Single::UUID: return static_cast<Single *>(lhs.priv)->code == static_cast<Single *>(rhs.priv)->code;
+                return static_cast<Single *>(lhs.priv)->code == static_cast<Single *>(rhs.priv)->code;
+            }
+            else
+            {
+                // generic case
+                return ios::serialized::are_same_binary(lhs,rhs);
+            }
 
-                default:
-                    break;
-            };
 
-            return false;
         }
 
     }
