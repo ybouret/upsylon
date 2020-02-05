@@ -7,6 +7,16 @@
 
 namespace upsylon {
 
+    template <typename T> struct standard;
+
+    template <> struct standard<int>
+    {
+        typedef div_t  div_type;
+        static  inline div_type div_call(const int num, const int den) { return div(num,den); }
+    };
+    
+
+
     struct idiv
     {
         template <typename T> struct of;
