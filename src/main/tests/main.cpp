@@ -8,7 +8,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(cast);
     Y_UTEST(chkbnd);
     Y_UTEST(i2i);
-    Y_UTEST(divs);
+    Y_UTEST(standard);
     Y_UTEST(lockable);
     Y_UTEST(bswap);
     Y_UTEST(bmove);
