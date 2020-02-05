@@ -13,6 +13,7 @@ namespace upsylon
         class osstream : public ostream
         {
         public:
+            
             //! destructor
             virtual ~osstream() throw();
             
@@ -24,7 +25,7 @@ namespace upsylon
 
             //! do nothing...
             virtual void flush();
-
+            
         private:
             string &host;
             Y_DISABLE_COPY_AND_ASSIGN(osstream);
