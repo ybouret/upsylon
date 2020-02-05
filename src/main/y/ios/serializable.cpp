@@ -118,3 +118,24 @@ namespace upsylon {
     }
 }
 
+#include "y/string/convert.hpp"
+
+namespace upsylon {
+
+    namespace ios {
+
+        string serializable:: to_visible() const
+        {
+            const string ans = to_binary();
+            return string_convert::to_visible(ans);
+        }
+
+        string serializable:: to_printable() const
+        {
+            const string ans = to_binary();
+            return string_convert::to_printable(ans);
+        }
+
+    }
+
+}

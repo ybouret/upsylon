@@ -2,6 +2,8 @@
 #include "y/lang/pattern/dictionary.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
+
 #include "y/ptr/auto.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/imstream.hpp"
@@ -14,9 +16,19 @@ using namespace Lang;
 
 Y_UTEST(regex)
 {
+    Y_UTEST_SIZEOF(Dict::Motif);
+    Y_UTEST_SIZEOF(Dict::Patterns);
+    Y_UTEST_SIZEOF(Dictionary);
+
+
     Dictionary dict;
     dict("INT","[:digit:]+");
-    
+
+    std::cerr << "dict=" << dict << std::endl;
+
+    dict["INT"].graphViz("int.dot");
+    dict["INT"].save_to("int.bin");
+
     if(argc>1)
     {
         const string rx = argv[1];
@@ -85,9 +97,7 @@ Y_UTEST(regex)
 
         }
     }
-
-    std::cerr << "sizeof(Dictionary)=" << sizeof(Dictionary) << std::endl;
-
+    
 }
 Y_UTEST_DONE()
 

@@ -74,6 +74,8 @@ namespace upsylon {
             static bool     AreEqual(const Pattern &lhs, const Pattern &rhs) throw(); //!< test equality (Single only!!)
             static void     NoMultiple(List &ops) throw();                            //!< remove multiple same patterns in a list of operands
 
+            friend std::ostream & operator<<(std::ostream &, const Pattern &);
+
         protected:
             explicit Pattern(const uint32_t id)  throw();  //!< build pattern with a given ID
 

@@ -3,7 +3,6 @@
 #define Y_LANG_SYNTAX_GRAMMAR_INCLUDED 1
 
 #include "y/lang/syntax/rule/rrs.hpp"
-#include "y/ptr/auto.hpp"
 #include "y/sequence/vector.hpp"
 
 #include "y/lang/syntax/rule/terminal.hpp"
@@ -18,7 +17,7 @@ namespace upsylon
         {
 
             typedef vector<string,memory::pooled> Strings;         //!< alias, to store some strings
-            typedef array<string>                 ArrayOfStrings;  //!< alias, interface for functions
+            typedef accessible<string>            ArrayOfStrings;  //!< alias, interface for functions
 
             //! a Grammar is a set of rules
             class Grammar : public Object
@@ -118,7 +117,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 unsigned          iAlt;
 
-                string MakeCompoundName(  const ArrayOfStrings &strings, const char sep) const;
+                string MakeCompoundName(const ArrayOfStrings &strings, const char sep) const;
                 void   no_rrs() throw(); //!< safely remove rrs
                 void   validate() const; //!< check all rules are used
 

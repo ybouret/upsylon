@@ -143,7 +143,7 @@ namespace upsylon {
         {
             size_t nUUID  = 0; (void)fp.emit_net<uint32_t>(uuid,&nUUID);  assert(4==nUUID);
             size_t nLOWER = 0; (void)fp.emit_net<uint8_t>(lower,&nLOWER); assert(1==nLOWER);
-            size_t nUPPER = 0; (void)fp.emit_net<uint8_t>(lower,&nUPPER); assert(1==nUPPER);
+            size_t nUPPER = 0; (void)fp.emit_net<uint8_t>(upper,&nUPPER); assert(1==nUPPER);
             return nUUID+nLOWER+nUPPER;
         }
 

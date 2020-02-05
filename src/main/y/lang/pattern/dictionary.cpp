@@ -6,7 +6,12 @@ namespace upsylon
 {
     namespace Lang
     {
-        Dictionary:: Dictionary() throw() : CountedObject(), entries(), patterns()
+        Dictionary:: Dictionary() throw() : CountedObject(), Dict::Patterns()
+        {
+        }
+
+
+        Dictionary:: Dictionary(const size_t n) : CountedObject(), Dict::Patterns(n,as_capacity)
         {
         }
 
@@ -17,43 +22,40 @@ namespace upsylon
         const Pattern & Dictionary:: operator()(const string &name, Pattern *p)
         {
             assert(p);
-            //std::cerr << "Inserting Pattern as '" << name << "'" << std::endl;
-            patterns.push_back(p);
-            try
+            const Dict::Motif m = p;
+            if( !insert(name,m) )
             {
-                if( !entries.insert(name,p) )
-                {
-                    throw exception("Lang::Dictionary(multiple '%s')", *name);
-                }
-            }
-            catch(...)
-            {
-                delete patterns.pop_back();
-                throw;
+                throw exception("Lang::Dictionary(multiple '%s')", *name);
             }
             return *p;
         }
 
-        const Pattern & Dictionary::operator()(const char   *name, Pattern *p)
+        const Pattern & Dictionary:: operator()(const char   *name, Pattern *p)
         {
             const string _ = name; return (*this)(_,p);
         }
 
-        void Dictionary:: release() throw()
+        const Pattern & Dictionary:: operator[](const string &name) const
         {
-            entries.release();
-            patterns.release();
+            const Dict::Motif  *pp = search(name);
+            if(!pp)
+            {
+                throw exception("Lang::Dictionary: no '%s'",*name);
+            }
+            return **pp;
+        }
+
+        const Pattern & Dictionary:: operator[](const char *name) const
+        {
+            const Dictionary &self = *this;
+            const string      _(name);
+            return self[_];
         }
 
         Pattern * Dictionary:: create(const string &name) const
         {
-            const Handle *ppP = entries.search(name);
-            if(!ppP)
-            {
-                throw exception("Lang::Dictionary: no '%s'",*name);
-            }
-            const Pattern &p = **ppP;
-            return p.clone();
+            const Dictionary &self = *this;
+            return self[name].clone();
         }
 
         Pattern * Dictionary:: create(const char *name) const

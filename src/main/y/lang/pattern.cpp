@@ -35,21 +35,11 @@ namespace upsylon
             return weak() ? "dashed" : "solid";
         }
 
-#if 0
-        void Pattern:: GraphViz( const string &fn, bool keepFile) const
+        std::ostream & operator<<(std::ostream &os, const Pattern &p)
         {
-            {
-                ios::ocstream fp(fn);
-                fp << "digraph G {\n";
-                vizSave(fp);
-                fp << "}\n";
-            }
-            ios::GraphViz::Render(fn,keepFile);
+            const string txt = p.to_visible();
+            return (os<<txt);
         }
-
-        void Pattern:: GraphViz( const char   *fn, bool keepFile) const
-        { const string _ = fn; GraphViz(_,keepFile); }
-#endif
         
         void Pattern:: NoMultiple( List &ops ) throw()
         {
