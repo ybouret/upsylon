@@ -89,6 +89,22 @@ namespace upsylon {
         {
             return CLID;
         }
+
+        bool   Optional::  equals(const Pattern &p) const throw()
+        {
+            if(UUID==p.uuid)
+            {
+                const Optional &rhs = *static_cast<const Optional *>(p.priv);
+                return motif->equals(*rhs.motif);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+
     }
 }
 
@@ -222,6 +238,20 @@ namespace upsylon {
             return CLID;
         }
 
+        bool   Repeating::  equals(const Pattern &p) const throw()
+        {
+            if(UUID==p.uuid)
+            {
+                const Repeating &rhs = *static_cast<const Repeating *>(p.priv);
+                return (nmin==rhs.nmin) && motif->equals(*rhs.motif);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
     }
 }
 
@@ -312,6 +342,20 @@ namespace upsylon {
         }
 
         Y_LANG_PATTERN_CLID(Counting);
+
+        bool   Counting::  equals(const Pattern &p) const throw()
+        {
+            if(UUID==p.uuid)
+            {
+                const Counting &rhs = *static_cast<const Counting *>(p.priv);
+                return (nmin==rhs.nmin) && (nmax==rhs.nmax) && motif->equals(*rhs.motif);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
 
     }
 

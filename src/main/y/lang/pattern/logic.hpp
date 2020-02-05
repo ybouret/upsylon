@@ -30,6 +30,7 @@ namespace upsylon {
             //__________________________________________________________________
             virtual size_t serialize(ios::ostream &) const; //!< [UUID] [#operands] [operands]
 
+
             //__________________________________________________________________
             //
             // helpers
@@ -40,6 +41,7 @@ namespace upsylon {
             inline PATTERN * add(PATTERN *p ) throw() { (void)operands.push_back(p); return p; } //!< syntax helper
             inline size_t    size() const throw()     { return operands.size;         }          //!< syntax helper
             inline Pattern * remove() throw()         { return operands.pop_back();   }          //!< remove last pattern helper
+            bool   is_identical_to( const Logical &other) const throw();
 
             //__________________________________________________________________
             //
@@ -90,7 +92,7 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;           //!< must match all patterns
             virtual bool     weak()     const throw();                 //!< if all operands are weak
             virtual bool     univocal() const throw();                 //!< true is all are univocal
-
+            virtual bool     equals(const Pattern &) const throw();    //!< test
             //__________________________________________________________________
             //
             // interface: Serializable
@@ -132,6 +134,7 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;           //!< true if finds a matching first operands
             virtual bool     weak()     const throw();                 //!< true if one is weak
             virtual bool     univocal() const throw();                 //!< true if single univocal operand
+            virtual bool     equals(const Pattern &) const throw();    //!< test
 
             //__________________________________________________________________
             //
@@ -176,6 +179,7 @@ namespace upsylon {
             virtual void     vizCore(ios::ostream &) const;            //!< GraphViz
             virtual bool     weak()     const throw();                 //!< false
             virtual bool     univocal() const throw();                 //!< false, even if could exceptionnaly be true if only 1 possible choice...
+            virtual bool     equals(const Pattern &) const throw();    //!< test
 
             //__________________________________________________________________
             //

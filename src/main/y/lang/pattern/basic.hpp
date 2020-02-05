@@ -54,9 +54,10 @@ namespace upsylon {
             //
             // interface: Pattern
             //__________________________________________________________________
-            virtual Any1 *      clone() const;                   //!< clone
-            virtual void        vizCore(ios::ostream &) const;   //!< GraphViz
-            virtual bool        univocal() const throw();        //!< false
+            virtual Any1 *      clone()                 const;         //!< clone
+            virtual void        vizCore(ios::ostream &) const;         //!< GraphViz
+            virtual bool        univocal()              const throw(); //!< false
+            virtual bool        equals(const Pattern &) const throw(); //!< test
 
             //__________________________________________________________________
             //
@@ -97,9 +98,10 @@ namespace upsylon {
             //
             // interface: Pattern
             //__________________________________________________________________
-            virtual Single * clone() const;                   //!< clone
-            virtual void     vizCore(ios::ostream &) const;   //!< GraphViz
-            virtual bool     univocal() const throw();        //!< true
+            virtual Single *    clone() const;                         //!< clone
+            virtual void        vizCore(ios::ostream &) const;         //!< GraphViz
+            virtual bool        univocal()              const throw(); //!< true
+            virtual bool        equals(const Pattern &) const throw(); //!< test
 
             //__________________________________________________________________
             //
@@ -144,6 +146,7 @@ namespace upsylon {
             virtual Range *clone() const;                               //!< clone
             virtual void   vizCore(ios::ostream &) const;               //!< GraphViz
             virtual bool   univocal() const throw();                    //!< true is lower==upper
+            virtual bool   equals(const Pattern &) const throw();       //!< test
 
             //__________________________________________________________________
             //

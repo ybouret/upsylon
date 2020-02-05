@@ -74,6 +74,12 @@ namespace upsylon {
 
         Y_LANG_PATTERN_CLID(Any1);
 
+        bool Any1:: equals(const Pattern &p) const throw()
+        {
+            assert(UUID==uuid);
+            return UUID == p.uuid;
+        }
+
     }
 
 }
@@ -118,6 +124,17 @@ namespace upsylon {
 
         Y_LANG_PATTERN_CLID(Single);
 
+        bool Single:: equals(const Pattern &p) const throw()
+        {
+            if( UUID == p.uuid )
+            {
+                return code == static_cast<const Single *>(p.priv)->code;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
 }
@@ -166,6 +183,19 @@ namespace upsylon {
         }
 
         Y_LANG_PATTERN_CLID(Range);
+
+        bool Range:: equals(const Pattern &p) const throw()
+        {
+            if( UUID ==  p.uuid )
+            {
+                const Range &r = *static_cast<const Range *>(p.priv);
+                return (r.lower == lower) && (r.upper==upper);
+            }
+            else
+            {
+                return false;
+            }
+        }
 
     }
 }

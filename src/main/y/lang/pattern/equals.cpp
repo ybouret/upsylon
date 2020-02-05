@@ -8,6 +8,7 @@ namespace upsylon
     namespace Lang
     {
 
+#if 0
         bool Pattern:: AreEqual(const Pattern &lhs, const Pattern &rhs) throw()
         {
             const uint32_t lid = lhs.uuid;
@@ -28,7 +29,8 @@ namespace upsylon
 
 
         }
-
+#endif
+        
     }
 
 }

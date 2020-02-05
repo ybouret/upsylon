@@ -72,6 +72,7 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;  //!< match
             virtual bool     weak()     const throw();        //!< always true
             virtual bool     univocal() const throw();        //!< always false
+            virtual bool     equals(const Pattern &) const throw(); //!< test
 
             //__________________________________________________________________
             //
@@ -115,6 +116,9 @@ namespace upsylon {
             virtual bool     match(Token &, Source &) const;    //!< match
             virtual bool     weak()     const throw();          //!< check
             virtual bool     univocal() const throw();          //!< false
+            virtual bool     equals(const Pattern &) const throw(); //!< test
+
+
             virtual size_t   serialize(ios::ostream &) const;   //!< [UUID] [nmin] [motif]
             const char *     className() const throw();         //!< CLID
 
@@ -151,6 +155,9 @@ namespace upsylon {
             virtual bool     match(Token &, Source &)  const; //!< match
             virtual bool     weak()     const throw();        //! nmin<=0
             virtual bool     univocal() const throw();        //!< true if nmin==nmax and motif->univocal
+            virtual bool     equals(const Pattern &) const throw();    //!< test
+
+
             virtual size_t   serialize(ios::ostream &) const; //!< [UUID] [nmin] [nmax] [motif]
             const char *     className() const throw();         //!< CLID
 

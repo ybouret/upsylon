@@ -57,11 +57,12 @@ namespace upsylon {
             //
             // virtual interface
             //__________________________________________________________________
-            virtual         ~Pattern() throw();                     //!< destructor
-            virtual Pattern *clone() const                   = 0;   //!< clone
-            virtual bool     weak()        const throw()     = 0;   //!< a pattern is weak if it matches an empty expression
-            virtual bool     match(Token &t, Source &) const = 0;   //!< try to match
-            virtual bool     univocal() const throw()        = 0;   //!< guess if univocal
+            virtual         ~Pattern() throw();                             //!< destructor
+            virtual Pattern *clone()                   const         = 0;   //!< clone
+            virtual bool     weak()                    const throw() = 0;   //!< a pattern is weak if it matches an empty expression
+            virtual bool     match(Token &t, Source &) const         = 0;   //!< try to match
+            virtual bool     univocal()                const throw() = 0;   //!< guess if univocal
+            virtual bool     equals(const Pattern &)   const throw() = 0;   //!< test equality
 
             //__________________________________________________________________
             //
@@ -76,7 +77,6 @@ namespace upsylon {
             //__________________________________________________________________
             static Pattern *Load(ios::istream &);                                     //!< load from an input stream
             static Pattern *Optimize(Pattern *) throw();                              //!< optimize pattern
-            static bool     AreEqual(const Pattern &lhs, const Pattern &rhs) throw(); //!< test equality
             static void     NoMultiple(List &ops) throw();                            //!< remove multiple same patterns in a list of operands
 
             friend std::ostream & operator<<(std::ostream &, const Pattern &);

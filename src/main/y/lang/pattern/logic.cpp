@@ -45,6 +45,26 @@ namespace upsylon {
             return count;
         }
 
+        bool Logical:: is_identical_to( const Logical &other) const throw()
+        {
+            if( operands.size == other.operands.size )
+            {
+                for(const Pattern *lhs=operands.head,*rhs=other.operands.head;lhs;lhs=lhs->next,rhs=rhs->next)
+                {
+                    assert(lhs);
+                    assert(rhs);
+                    if(lhs->equals(*rhs)) continue;
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+
     }
 
 }
@@ -109,6 +129,11 @@ namespace upsylon {
         {
             return CLID;
         }
+
+        bool AND:: equals(const Pattern &p) const throw()
+        {
+            return (UUID==p.uuid) &&is_identical_to( *static_cast<const AND *>(p.priv) );
+        }
     }
 
 }
@@ -170,6 +195,11 @@ namespace upsylon {
         {
             return CLID;
         }
+
+        bool OR:: equals(const Pattern &p) const throw()
+        {
+            return (UUID==p.uuid) && is_identical_to( *static_cast<const OR *>(p.priv) );
+        }
     }
 }
 
@@ -228,6 +258,11 @@ namespace upsylon {
         const char *NONE:: className() const throw()
         {
             return CLID;
+        }
+
+        bool NONE:: equals(const Pattern &p) const throw()
+        {
+            return (UUID==p.uuid) && is_identical_to( *static_cast<const NONE *>(p.priv) );
         }
     }
 }
