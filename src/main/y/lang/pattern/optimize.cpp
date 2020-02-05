@@ -7,10 +7,10 @@ namespace upsylon {
 
     namespace Lang {
 
-         template <typename PAT>
+        template <typename PAT>
         static inline Pattern * __Optimize( Pattern *q ) throw()
         {
-            PAT           *p   = static_cast<PAT *>(q->priv);
+            PAT           *p   = q->as<PAT>();
             Pattern::List &ops = p->operands;
             if(1==ops.size)
             {
@@ -20,22 +20,30 @@ namespace upsylon {
             }
             else
             {
-                Pattern::List tmp;
-                while(ops.size)
                 {
-                    Pattern *sub = Pattern::Optimize(ops.pop_front());
-                    if( PAT::UUID == sub->uuid )
+                    Pattern::List tmp;
+                    while(ops.size)
                     {
-                        PAT *fusion = static_cast<PAT *>(sub->priv);
-                        tmp.merge_back(fusion->operands);
-                        delete sub;
+                        Pattern *sub = Pattern::Optimize(ops.pop_front());
+                        if( PAT::UUID == sub->uuid )
+                        {
+                            PAT *fusion = static_cast<PAT *>(sub->priv);
+                            tmp.merge_back(fusion->operands);
+                            delete sub;
+                        }
+                        else
+                        {
+                            tmp.push_back(sub);
+                        }
                     }
-                    else
-                    {
-                        tmp.push_back(sub);
-                    }
+                    ops.swap_with(tmp);
                 }
-                ops.swap_with(tmp);
+
+                if(OR::UUID == q->uuid)
+                {
+                    Pattern::NoMultiple(ops);
+                }
+
                 if(1==ops.size)
                 {
                     Pattern *one = ops.pop_back();

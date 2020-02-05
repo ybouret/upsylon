@@ -71,6 +71,18 @@ namespace upsylon {
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
             bool        multiple() const throw();                               //!< !univocal
 
+            template <typename PAT>
+            PAT *as() throw() {
+                assert(PAT::UUID==uuid);
+                return static_cast<PAT *>(priv);
+            }
+
+            template <typename PAT>
+            const PAT *as() const throw() {
+                assert(PAT::UUID==uuid);
+                return static_cast<const PAT *>(priv);
+            }
+
             //__________________________________________________________________
             //
             // static interface

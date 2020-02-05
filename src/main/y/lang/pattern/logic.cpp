@@ -132,7 +132,7 @@ namespace upsylon {
 
         bool AND:: equals(const Pattern &p) const throw()
         {
-            return (UUID==p.uuid) &&is_identical_to( *static_cast<const AND *>(p.priv) );
+            return (UUID==p.uuid) &&is_identical_to( *p.as<AND>() );
         }
     }
 
@@ -198,7 +198,7 @@ namespace upsylon {
 
         bool OR:: equals(const Pattern &p) const throw()
         {
-            return (UUID==p.uuid) && is_identical_to( *static_cast<const OR *>(p.priv) );
+            return (UUID==p.uuid) && is_identical_to( *p.as<OR>() );
         }
     }
 }
@@ -262,7 +262,7 @@ namespace upsylon {
 
         bool NONE:: equals(const Pattern &p) const throw()
         {
-            return (UUID==p.uuid) && is_identical_to( *static_cast<const NONE *>(p.priv) );
+            return (UUID==p.uuid) && is_identical_to( *p.as<NONE>() );
         }
     }
 }

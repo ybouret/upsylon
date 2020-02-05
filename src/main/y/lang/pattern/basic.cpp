@@ -128,7 +128,7 @@ namespace upsylon {
         {
             if( UUID == p.uuid )
             {
-                return code == static_cast<const Single *>(p.priv)->code;
+                return code == p.as<Single>()->code;
             }
             else
             {
@@ -188,7 +188,7 @@ namespace upsylon {
         {
             if( UUID ==  p.uuid )
             {
-                const Range &r = *static_cast<const Range *>(p.priv);
+                const Range &r = *p.as<Range>();
                 return (r.lower == lower) && (r.upper==upper);
             }
             else

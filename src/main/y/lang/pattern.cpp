@@ -6,17 +6,16 @@
 #include "y/codec/base64.hpp"
 #include "y/type/bzset.hpp"
 
-namespace upsylon
-{
-    namespace Lang
-    {
+namespace upsylon {
+
+    namespace Lang {
 
         Pattern:: ~Pattern() throw()
         {
             _bzset(uuid);
         }
 
-        
+
 
         Pattern:: Pattern(const uint32_t t) throw() : CountedObject(), uuid(t), next(0), prev(0), priv(0)
         {
@@ -41,36 +40,45 @@ namespace upsylon
             return (os<<txt);
         }
 
-         void Pattern:: NoMultiple( List &ops ) throw()
+        void Pattern:: NoMultiple( List &ops ) throw()
         {
-            List                          tmp;
-            while( ops.size )
             {
-                const Pattern *lhs      = ops.head;
-                const string   L        = lhs->to_binary();
-                bool           multiple = false;
-                 for(const Pattern *rhs=tmp.head;rhs;rhs=rhs->next)
+                List                          tmp;
+                while( ops.size )
                 {
-                    const string R = rhs->to_binary();
-                    if( L == R )
+                    const Pattern *lhs      = ops.head;
+                    bool           multiple = false;
+                    for(const Pattern *rhs=tmp.head;rhs;rhs=rhs->next)
                     {
-                        multiple = true;
-                        break;
+                        if( lhs->equals(*rhs) )
+                        {
+                            multiple = true;
+                            break;
+                        }
+                    }
+
+                    if(multiple)
+                    {
+                        delete ops.pop_front();
+                    }
+                    else
+                    {
+                        tmp.push_back( ops.pop_front() );
                     }
                 }
-
-                if(multiple)
+                ops.swap_with(tmp);
+            }
+#ifndef NDEBUG
+            for(const Pattern *lhs=ops.head;lhs;lhs=lhs->next)
+            {
+                for(const Pattern *rhs=lhs->next;rhs;rhs=rhs->next)
                 {
-                    delete ops.pop_front();
-                }
-                else
-                {
-                    tmp.push_back( ops.pop_front() );
+                    assert( ! lhs->equals( *rhs ) );
                 }
             }
-            ops.swap_with(tmp);
+#endif
         }
- 
+
     }
 
 }
