@@ -8,7 +8,9 @@ namespace upsylon
         void osstream:: flush() {}
 
         osstream:: ~osstream() throw() {}
-        osstream:: osstream( string &s ) throw() : host(s) {}
+        osstream:: osstream( string &s ) throw() :
+        host(s)
+        {}
 
         embedded_osstream:: embedded_osstream() : string(), osstream( static_cast<string&>(*this) )
         { }
