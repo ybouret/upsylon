@@ -51,6 +51,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(string);
     Y_UTEST(string_convert);
     Y_UTEST(string_defrag);
+    Y_UTEST(esma);
+
 
     Y_UTEST(tmpname);
     Y_UTEST(tokenizer);
