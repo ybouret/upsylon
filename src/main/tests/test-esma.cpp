@@ -1,11 +1,34 @@
 #include "y/string/esma.hpp"
 #include "y/utest/run.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(esma)
 {
 
+    {
+        core::esma<char> m( "abc", 3 );
+        m.find("abcdabcd",8);
+    }
+
+    {
+        core::esma<char> m( "abcd" );
+
+    }
+
+    return 0;
+
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        string tmp = support::get<string>();
+        const core::esma<char> kmp( tmp );
+        
+    }
+
+
+
+#if 0
     { core::esma mgr; }
 
     {
@@ -19,7 +42,8 @@ Y_UTEST(esma)
             mgr.prepare(numChars,charSize);
         }
     }
-
+#endif
+    
 }
 Y_UTEST_DONE()
 
