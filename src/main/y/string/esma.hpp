@@ -2,9 +2,8 @@
 #ifndef Y_STRING_ESMA_INCLUDED
 #define Y_STRING_ESMA_INCLUDED 1
 
-#include "y/string/basic.hpp"
-
-namespace upsylon {
+#include "y/os/platform.hpp"
+ namespace upsylon {
 
     namespace core {
 
@@ -15,11 +14,11 @@ namespace upsylon {
              k[m], x[m], m>=0
              */
             template <typename T> static inline
-            void build( ptrdiff_t *k, const T x[], const unit_t m) throw()
+            void build( unit_t *k, const T x[], const unit_t m) throw()
             {
-                assert(m>=0);
-                assert(!(0==x&&m>0));
-                assert(!(0==k&&m>0));
+                assert(m>0);
+                assert(k!=0);
+                assert(x!=0);
                 unit_t  i = 0, j = k[0] = -1;
                 while(i<m)
                 {
@@ -27,15 +26,20 @@ namespace upsylon {
                     {
                         j = k[j];
                     }
-                    ++i; ++j;
+                    ++i; assert(i<m);
+                    ++j; assert(j<m);
                     if (x[i] == x[j])
+                    {
                         k[i] = k[j];
+                    }
                     else
+                    {
                         k[i] = j;
+                    }
                 }
             }
 
-            //! find all offset of patter x[m] in string y[n]
+            //! find all offset of pattern x[m] in string y[n]
             /**
              use the precomputed table k[m] for x[n]
              bool proc(index)
