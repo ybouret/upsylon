@@ -13,6 +13,7 @@ namespace upsylon {
     public:
         virtual       ~collection() throw();     //!< cleanup
         virtual size_t size() const throw() = 0; //!< number of alive objects
+        unit_t         ssize() const;            //!< signed size
         
     protected:                                   
         explicit collection() throw();           //!< setup

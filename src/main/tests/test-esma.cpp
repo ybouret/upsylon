@@ -22,15 +22,15 @@ Y_UTEST(esma)
 {
 
     const string            x = "llo";
-    core::string<ptrdiff_t> k(x.size(),as_capacity,true);
+    core::string<unit_t>    k(x.size(),as_capacity,true);
     const string            y = "hello, hello, worllo!";
 
-    core::esma::build( *k, *x, i2i<ptrdiff_t>(x.size()) );
+    core::esma::build( *k, *x, x.ssize() );
     std::cerr << "x=" << x << std::endl;
     std::cerr << "k=" << k << std::endl;
 
     onFind proc;
-    core::esma::find(*y, y.size(), *x, x.size(), *k, proc);
+    core::esma::find(*y, y.ssize(), *x, x.ssize(), *k, proc);
     
 
 }
