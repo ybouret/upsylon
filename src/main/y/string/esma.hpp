@@ -9,33 +9,22 @@
 
         struct esma
         {
+
+
             //! build offset table
             /**
-             k[m], x[m], m>=0
+             k[m+1], x[m], m>=0
              */
             template <typename T> static inline
             void build( unit_t *k, const T x[], const unit_t m) throw()
             {
-                assert(m>0);
-                assert(k!=0);
-                assert(x!=0);
-                unit_t  i = 0, j = k[0] = -1;
-                while(i<m)
+                assert(0!=k);
+                assert(0<=m);
+                assert(!(0==x&&m>0));
+                k[0]=-1;
+                for(unit_t i=0,j=-1;i<m;++i,++j,k[i]=j)
                 {
-                    while( (j> -1) && (x[i] != x[j]) )
-                    {
-                        j = k[j];
-                    }
-                    ++i; assert(i<m);
-                    ++j; assert(j<m);
-                    if (x[i] == x[j])
-                    {
-                        k[i] = k[j];
-                    }
-                    else
-                    {
-                        k[i] = j;
-                    }
+                    while( (j>=0) && (x[i]!=x[j]) ) j = k[j];
                 }
             }
 
@@ -72,8 +61,30 @@
                 return count;
             }
 
-        };
 
+            
+            //! build offset table
+            /**
+             k[m+1], x[m], m>=0
+             */
+            template <typename T> static inline
+            void check_build( unit_t *k, const T x[], const unit_t m) throw()
+            {
+                assert(0!=k);
+                assert(0<=m);
+                assert(!(0==x&&m>0));
+                k[0]=-1;
+                for(unit_t i=0,j=-1;i<m;++i,++j,k[i]=j)
+                {
+                    while( (j>=0) && (x[ check_i(i,m) ]!=x[ check_j(j,m) ]) ) j = k[j];
+                }
+            }
+
+        private:
+            static unit_t check_i(const unit_t i, const unit_t m);
+            static unit_t check_j(const unit_t j, const unit_t m);
+            
+        };
 
         
     }

@@ -21,7 +21,22 @@ namespace {
 Y_UTEST(esma)
 {
 
+    std::cerr << "-- checking construction" << std::endl;
+    for(size_t length=0;length<1024;++length)
+    {
+        string               x(length,as_capacity,true);
+        core::string<unit_t> k(length+1,as_capacity,true);
 
+
+
+        for(size_t i=0;i<length;++i)
+        {
+            x[i] = alea.range<char>(32,126);
+            k[i] = 0;
+        }
+        core::esma::check_build( *k, *x, length );
+        core::esma::build( *k, *x, length );
+    }
 
     if(false)
     {
@@ -37,27 +52,6 @@ Y_UTEST(esma)
         core::esma::find(*y, y.ssize(), *x, x.ssize(), *k, proc);
     }
 
-    for(size_t length=1;length<1024;++length)
-    {
-        string               x(length,as_capacity,true);
-        core::string<unit_t> k(length,as_capacity,true);
-
-        assert(x.size()==length);
-        assert(k.size()==length);
-
-        for(size_t i=0;i<length;++i)
-        {
-            x[i] = alea.range<char>(32,126);
-            k[i] = 0;
-        }
-        core::esma::build( *k, *x, length );
-
-    }
-
-    if(argc>1)
-    {
-        
-    }
 
 
 }
