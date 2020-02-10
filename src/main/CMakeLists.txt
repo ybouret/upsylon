@@ -130,6 +130,12 @@ SET(ios_tools_srcs ${ios_tools_decl} ${ios_tools_code})
 SOURCE_GROUP( ios/tools FILES ${ios_tools_srcs} )
 INSTALL( FILES ${ios_tools_decl} DESTINATION include/y/ios/tools )
 
+FILE(GLOB information_decl y/information/*.hpp)
+FILE(GLOB information_code y/information/*.cpp)
+SET(information_srcs ${information_decl} ${information_code})
+SOURCE_GROUP( information FILES ${information_srcs} )
+INSTALL( FILES ${information_decl} DESTINATION include/y/information )
+
 FILE(GLOB codec_decl y/codec/*.hpp)
 FILE(GLOB codec_code y/codec/*.cpp)
 SET(codec_srcs ${codec_decl} ${codec_code})
@@ -341,6 +347,7 @@ ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
+${information_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}

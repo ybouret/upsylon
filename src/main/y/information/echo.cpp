@@ -1,5 +1,4 @@
-
-#include "y/codec/echo.hpp"
+#include "y/information/echo.hpp"
 
 namespace upsylon {
 

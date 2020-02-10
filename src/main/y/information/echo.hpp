@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_CODEC_ECHO_INCLUDED
-#define Y_CODEC_ECHO_INCLUDED 1
+#ifndef Y_INFORMATION_ECHO_INCLUDED
+#define Y_INFORMATION_ECHO_INCLUDED 1
 
-#include "y/codec/shaker.hpp"
+#include "y/information/shaker.hpp"
 
 namespace upsylon {
 

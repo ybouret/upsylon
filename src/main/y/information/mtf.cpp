@@ -1,4 +1,4 @@
-#include "y/codec/mtf.hpp"
+#include "y/information/mtf.hpp"
 
 #include <cstring>
 

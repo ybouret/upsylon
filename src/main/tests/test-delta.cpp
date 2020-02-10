@@ -1,4 +1,4 @@
-#include "y/codec/delta.hpp"
+#include "y/information/delta.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

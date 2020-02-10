@@ -126,13 +126,13 @@ namespace upsylon {
 
         string serializable:: to_visible() const
         {
-            const string ans = to_binary();
+            const  string ans = to_binary();
             return string_convert::to_visible(ans);
         }
 
         string serializable:: to_printable() const
         {
-            const string ans = to_binary();
+            const  string ans = to_binary();
             return string_convert::to_printable(ans);
         }
 

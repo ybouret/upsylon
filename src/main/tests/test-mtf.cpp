@@ -1,5 +1,4 @@
-
-#include "y/codec/mtf.hpp"
+#include "y/information/mtf.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

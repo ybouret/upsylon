@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_CODEC_MTF_INCLUDED
-#define Y_CODEC_MTF_INCLUDED 1
+#ifndef Y_INFORMATION_MTF_INCLUDED
+#define Y_INFORMATION_MTF_INCLUDED 1
 
-#include "y/codec/shaker.hpp"
+#include "y/information/shaker.hpp"
 #include "y/core/list.hpp"
 
 namespace upsylon {

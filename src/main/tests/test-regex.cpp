@@ -8,8 +8,8 @@
 #include "y/ios/icstream.hpp"
 #include "y/ios/imstream.hpp"
 
-#include "y/codec/delta.hpp"
-#include "y/codec/mtf.hpp"
+#include "y/information/delta.hpp"
+#include "y/information/mtf.hpp"
 
 using namespace upsylon;
 using namespace Lang;

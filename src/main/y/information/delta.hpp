@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_CODEC_DELTA_INCLUDED
-#define Y_CODEC_DELTA_INCLUDED 1
+#ifndef Y_INFORMATION_DELTA_INCLUDED
+#define Y_INFORMATION_DELTA_INCLUDED 1
 
-#include "y/codec/shaker.hpp"
+#include "y/information/shaker.hpp"
 
 namespace upsylon {
 

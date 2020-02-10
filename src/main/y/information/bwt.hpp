@@ -1,15 +1,14 @@
 //! \file
-#ifndef Y_CODEC_BWT_INCLUDED
-#define Y_CODEC_BWT_INCLUDED 1
+#ifndef Y_INFORMATION_BWT_INCLUDED
+#define Y_INFORMATION_BWT_INCLUDED 1
 
 #include "y/os/platform.hpp"
 
 
-namespace upsylon
-{
+namespace upsylon {
 	
-	namespace codec
-	{
+	namespace information 	{
+        
         //! Burrows Wheeler Transform
 		struct bwt
 		{

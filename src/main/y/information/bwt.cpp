@@ -1,15 +1,14 @@
-#include "y/codec/bwt.hpp"
+#include "y/information/bwt.hpp"
 #include "y/sort/heap.hpp"
 #include "y/sequence/array.hpp"
 #include <cstring>
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace codec
-    {
-        namespace
-        {
+    namespace information {
+
+        namespace {
+
             struct rotlexdat
             {
                 const uint8_t *buf;
