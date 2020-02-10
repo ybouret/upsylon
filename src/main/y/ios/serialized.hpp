@@ -21,6 +21,7 @@ namespace upsylon    {
                 return H.key<T>();
             }
 
+            //! use binary content to make a one shot comparison
             static bool are_same_binary(const serializable &lhs, const serializable &rhs);
         };
 

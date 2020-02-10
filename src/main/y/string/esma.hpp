@@ -7,6 +7,7 @@
 
     namespace core {
 
+        //! Exact string matching algorithm
         struct esma
         {
 
@@ -64,7 +65,7 @@
 
 
             
-            //! build offset table
+            //! build offset table, debug bersion
             /**
              k[m+1], x[m], m>=0
              */

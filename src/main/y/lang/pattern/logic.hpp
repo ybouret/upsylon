@@ -41,7 +41,7 @@ namespace upsylon {
             inline PATTERN * add(PATTERN *p ) throw() { (void)operands.push_back(p); return p; } //!< syntax helper
             inline size_t    size() const throw()     { return operands.size;         }          //!< syntax helper
             inline Pattern * remove() throw()         { return operands.pop_back();   }          //!< remove last pattern helper
-            bool   is_identical_to( const Logical &other) const throw();
+            bool   is_identical_to( const Logical &other) const throw();                         //!< recursive testing
 
             //__________________________________________________________________
             //

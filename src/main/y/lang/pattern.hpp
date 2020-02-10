@@ -12,10 +12,20 @@
 namespace upsylon {
 
     namespace Lang {
+        
+        //! padding value for UUID of patterns
 #define Y_PATTERN_PAD         '.'
+
+        //! for 1 char UUID
 #define Y_PATTERN_CC1(A)       Y_FOURCC(A,Y_PATTERN_PAD,Y_PATTERN_PAD,Y_PATTERN_PAD)
+
+        //! for 2 chars UUID
 #define Y_PATTERN_CC2(A,B)     Y_FOURCC(A,B,Y_PATTERN_PAD,Y_PATTERN_PAD)
+
+        //! for 2 chars UUID
 #define Y_PATTERN_CC3(A,B,C)   Y_FOURCC(A,B,C,Y_PATTERN_PAD)
+
+        //! for 4 chars UUID
 #define Y_PATTERN_CC4(A,B,C,D) Y_FOURCC(A,B,C,D)
         
         //! a pattern to accept from a source
@@ -71,15 +81,19 @@ namespace upsylon {
             const char *vizStyle() const throw();                               //!< get GraphViz style for __viz if needed, based on weak()
             bool        multiple() const throw();                               //!< !univocal
 
+            //! checked conversion
             template <typename PAT>
             PAT *as() throw() {
                 assert(PAT::UUID==uuid);
+                assert(NULL!=priv);
                 return static_cast<PAT *>(priv);
             }
 
+            //! checked conversion, const
             template <typename PAT>
             const PAT *as() const throw() {
                 assert(PAT::UUID==uuid);
+                assert(NULL!=priv);
                 return static_cast<const PAT *>(priv);
             }
 
@@ -90,8 +104,7 @@ namespace upsylon {
             static Pattern *Load(ios::istream &);                                     //!< load from an input stream
             static Pattern *Optimize(Pattern *) throw();                              //!< optimize pattern
             static void     NoMultiple(List &ops) throw();                            //!< remove multiple same patterns in a list of operands
-
-            friend std::ostream & operator<<(std::ostream &, const Pattern &);
+            friend std::ostream & operator<<(std::ostream &, const Pattern &); //!< display
 
         protected:
             explicit Pattern(const uint32_t id)  throw();  //!< build pattern with a given ID

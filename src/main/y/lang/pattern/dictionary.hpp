@@ -11,6 +11,7 @@ namespace upsylon
     namespace Lang
     {
 
+        //! dictionary aliases
         struct Dict
         {
             typedef arc_ptr<const Pattern>              Motif;    //!< alias
