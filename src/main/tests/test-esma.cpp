@@ -38,10 +38,10 @@ Y_UTEST(esma)
         core::esma::build( *k, *x, length );
     }
 
-    if(false)
+    if(true)
     {
         const string            x = "llo";
-        core::string<unit_t>    k(x.size(),as_capacity,true);
+        core::string<unit_t>    k(x.size()+1,as_capacity,true);
         const string            y = "hello, hello, worllo!";
 
         core::esma::build( *k, *x, x.ssize() );
