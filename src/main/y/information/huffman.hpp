@@ -64,8 +64,9 @@ namespace upsylon {
                 ~Tree() throw();
 
                 void reset(const Mode mode) throw();
-
                 inline const Node &getRoot() const throw() { assert(root); return *root; }
+
+                void encode( qbits &io, const uint8_t byte );
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);
@@ -75,7 +76,9 @@ namespace upsylon {
                 size_t       nodeCount;
                 size_t       nodeBytes;
                 Node        *nodes;
-
+                Node        *nyt;
+                Node        *eos;
+                
                 void build() throw();
                 void clear() throw();
             };

@@ -70,6 +70,7 @@ namespace upsylon {
             {
                 new ( &nodes[i] ) Node();
             }
+            pq.free();
         }
 
 
@@ -123,6 +124,7 @@ namespace upsylon {
         void Huffman:: Tree:: build() throw()
         {
             assert(alpha.size>0);
+            assert(pq.size()<=0);
 
             for(Node *node=alpha.head;node;node=node->next)
             {
@@ -146,6 +148,16 @@ namespace upsylon {
             root = pq.pop();
         }
 
+        void Huffman:: Tree:: encode(qbits &io, const uint8_t byte)
+        {
+            Node *node = &nodes[byte];
+            if(node->freq++<=0)
+            {
+                alpha.push_back(node);
+            }
+            build();
+
+        }
     }
 
 }

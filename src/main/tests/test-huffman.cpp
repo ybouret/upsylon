@@ -1,6 +1,8 @@
 #include "y/information/huffman.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/string.hpp"
+#include "y/information/qbits.hpp"
 
 using namespace upsylon;
 using namespace information;
@@ -15,6 +17,14 @@ Y_UTEST(huffman)
 
     Huffman::Tree stree( Huffman::StreamMode );
     Huffman::Tree btree( Huffman::BufferMode );
+
+    const string s = "aabdcaa";
+    qbits io;
+    for(size_t i=0;i<s.size();++i)
+    {
+        stree.encode(io,s[i]);
+        btree.encode(io,s[i]);
+    }
 
     stree.getRoot().graphViz("stree.dot");
     btree.getRoot().graphViz("btree.dot");
