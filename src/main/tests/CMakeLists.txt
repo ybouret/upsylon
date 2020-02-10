@@ -98,7 +98,7 @@ ADD_TEST(str:string      test-main string)
 ADD_TEST(str:strconv     test-main string_convert s 123456 s 0xff i -23 i 908 s 0x34)
 ADD_TEST(str:tokenizer   test-main tokenizer)
 ADD_TEST(str:defrag      test-main string_defrag)
-ADD_TEST(str:esma        test-main esma)
+ADD_TEST(str:esma        test-main esma foo ${HERE}/words.db)
 
 
 SOURCE_GROUP(ios FILES test-ostreams.cpp test-istreams.cpp
