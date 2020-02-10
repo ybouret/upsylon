@@ -88,8 +88,8 @@ static const uint##BITS##_t bit[BITS];\
 
         //! push partial, integral unsigned type
         template <typename T>
-        inline void push_as(T      word,
-                            size_t bits)
+        inline void _push(T      word,
+                          size_t bits)
         {
             static const T      _1(1);
             static const T      _0(0);
@@ -103,14 +103,30 @@ static const uint##BITS##_t bit[BITS];\
 
         //! push full unsigned integral type
         template <typename T>
-        inline void push_as(const T word)
+        inline void _push(const T word)
         {
-            push_as<T>(word,sizeof(word)*8);
+            _push<T>(word,sizeof(word)*8);
+        }
+
+        //! push any integral type
+        template <typename T>
+        inline void push(const T     &word,
+                         const size_t bits)
+        {
+            typename unsigned_int< sizeof(T) >::type w(word);
+            _push<typename unsigned_int< sizeof(T) >::type>(w,bits);
+        }
+
+        //! push a full integral type
+        template <typename T>
+        inline void push(const T &word)
+        {
+            push<T>(word,sizeof(T)*8);
         }
 
         //! pop partial, unsigned integral type
         template <typename T>
-        inline T pop_as(const size_t bits) throw()
+        inline T _pop(const size_t bits) throw()
         {
             T              ans(0);
             assert(bits<=size);
@@ -127,9 +143,24 @@ static const uint##BITS##_t bit[BITS];\
 
         //! pop full unsigned integral type
         template <typename T>
-        inline T pop_as() throw()
+        inline T _pop() throw()
         {
-            return pop_as<T>( sizeof(T)*8 );
+            return _pop<T>(sizeof(T)*8);
+        }
+
+        //! pop any integral type
+        template <typename T>
+        inline T pop(const size_t bits) throw()
+        {
+            typename unsigned_int< sizeof(T) >::type w = _pop<typename unsigned_int< sizeof(T) >::type>(bits);
+            return T(w);
+        }
+
+        //! pop a full integral type
+        template <typename T>
+        inline T pop() throw()
+        {
+            return pop<T>(sizeof(T)*8);
         }
 
         void zpad();                    //!< fill to byte boundary with zero

@@ -205,7 +205,7 @@ namespace upsylon {
 
     void qbits:: write(char C)
     {
-        push_as<uint8_t>(C);
+        _push<uint8_t>(C);
     }
 
     void qbits:: flush()
@@ -217,7 +217,7 @@ namespace upsylon {
     {
         if( size >= 8 )
         {
-            C = pop_as<uint8_t>();
+            C = _pop<uint8_t>();
             return true;
         }
         else

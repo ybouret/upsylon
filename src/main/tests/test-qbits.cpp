@@ -39,7 +39,7 @@ Y_UTEST(qbits)
                 const uint8_t word8 = alea.partial<uint8_t>(bits8);
                 v8 << word8;
                 n8 << bits8;
-                Q.push_as<uint8_t>(word8,bits8);
+                Q._push<uint8_t>(word8,bits8);
             }
 
             {
@@ -47,7 +47,7 @@ Y_UTEST(qbits)
                 const uint16_t word16 = alea.partial<uint16_t>(bits16);
                 v16 << word16;
                 n16 << bits16;
-                Q.push_as<uint16_t>(word16,bits16);
+                Q._push<uint16_t>(word16,bits16);
             }
 
             {
@@ -55,7 +55,7 @@ Y_UTEST(qbits)
                 const uint32_t word32 = alea.partial<uint32_t>(bits32);
                 v32 << word32;
                 n32 << bits32;
-                Q.push_as<uint32_t>(word32,bits32);
+                Q._push<uint32_t>(word32,bits32);
             }
 
             {
@@ -63,7 +63,7 @@ Y_UTEST(qbits)
                 const uint64_t word64 = alea.partial<uint64_t>(bits64);
                 v64 << word64;
                 n64 << bits64;
-                Q.push_as<uint64_t>(word64,bits64);
+                Q._push<uint64_t>(word64,bits64);
             }
 
         }
@@ -86,10 +86,10 @@ Y_UTEST(qbits)
         const size_t n = v8.size();
         for(size_t i=1;i<=n;++i)
         {
-            Y_ASSERT(Q.size>=n8[i]);  Y_ASSERT( v8[i]  == Q.pop_as<uint8_t>(n8[i]) );
-            Y_ASSERT(Q.size>=n16[i]); Y_ASSERT( v16[i] == Q.pop_as<uint16_t>(n16[i]) );
-            Y_ASSERT(Q.size>=n32[i]); Y_ASSERT( v32[i] == Q.pop_as<uint32_t>(n32[i]) );
-            Y_ASSERT(Q.size>=n64[i]); Y_ASSERT( v64[i] == Q.pop_as<uint64_t>(n64[i]) );
+            Y_ASSERT(Q.size>=n8[i]);  Y_ASSERT( v8[i]  == Q._pop<uint8_t>(n8[i]) );
+            Y_ASSERT(Q.size>=n16[i]); Y_ASSERT( v16[i] == Q._pop<uint16_t>(n16[i]) );
+            Y_ASSERT(Q.size>=n32[i]); Y_ASSERT( v32[i] == Q._pop<uint32_t>(n32[i]) );
+            Y_ASSERT(Q.size>=n64[i]); Y_ASSERT( v64[i] == Q._pop<uint64_t>(n64[i]) );
         }
 
         Q.drop();
@@ -119,6 +119,27 @@ Y_UTEST(qbits)
         Y_ASSERT( Q.query(C) && c == C );
     }
     std::cerr << "all bytes are ok" << std::endl;
+
+
+    std::cerr << "-- checking any integral type" << std::endl;
+#define Y_QBITS_IO(TYPE) do {            \
+const TYPE a_##TYPE = alea.full<TYPE>(); \
+Q.push(a_##TYPE);                        \
+const TYPE b_##TYPE = Q.pop<TYPE>();     \
+Y_ASSERT( a_##TYPE == b_##TYPE );        \
+} while(false)
+
+
+    typedef long long          my_ilong;
+
+    for(size_t iter=0;iter<100;++iter)
+    {
+        Y_QBITS_IO(char);
+        Y_QBITS_IO(short);
+        Y_QBITS_IO(int);
+        Y_QBITS_IO(long);
+        Y_QBITS_IO(my_ilong);
+    }
 
 
 }
