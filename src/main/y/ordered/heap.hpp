@@ -203,6 +203,10 @@ namespace upsylon
         }
 
 
+        inline size_t allocated() const throw()
+        {
+            return bytes;
+        }
 
     private:
         Y_DISABLE_ASSIGN(heap);
