@@ -65,7 +65,6 @@ static const uint##BITS##_t bit[BITS];\
 
     class qbits :
     public qbit::list,
-    public releasable,
     public ios::ostream,
     public ios::istream
     {
@@ -75,8 +74,8 @@ static const uint##BITS##_t bit[BITS];\
 
         qbit::pool qpool;
 
-        void         free()    throw();
-        virtual void release() throw();
+        void free()    throw();
+        void release() throw();
 
 
         void push( const bool flag );
