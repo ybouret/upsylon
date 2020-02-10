@@ -63,7 +63,11 @@ static const uint##BITS##_t bit[BITS];\
     Y_QBIT_TABLE(32);
     Y_QBIT_TABLE(64);
 
-    class qbits : public qbit::list, public releasable
+    class qbits :
+    public qbit::list,
+    public releasable,
+    public ios::ostream,
+    public ios::istream
     {
     public:
         explicit qbits() throw();
@@ -130,7 +134,11 @@ static const uint##BITS##_t bit[BITS];\
 
         friend std::ostream & operator<<( std::ostream &os, const qbits & );
 
+        virtual void write( char C ); //!< write byte
+        virtual void flush();         //!< zpad
 
+        virtual bool query( char &C ); //!< query next byte if enough bits
+        virtual void store( char  C ); //!< store a byte
 
     private:
         qbit *get(const bool flag);

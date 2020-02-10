@@ -202,4 +202,36 @@ namespace upsylon {
             qpool.store( pop_front() );
         }
     }
+
+    void qbits:: write(char C)
+    {
+        push_as<uint8_t>(C);
+    }
+
+    void qbits:: flush()
+    {
+        zpad();
+    }
+
+    bool qbits:: query( char &C )
+    {
+        if( size >= 8 )
+        {
+            C = pop_as<uint8_t>();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void qbits:: store( char C )
+    {
+        const uint8_t U(C);
+        for(int i=7;i>=0;--i)
+        {
+            push_front( get( 0 != (U&qbit::table<uint8_t>::bit[i]) ) );
+        }
+    }
 }
