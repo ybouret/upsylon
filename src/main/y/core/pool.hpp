@@ -3,7 +3,7 @@
 #define Y_CORE_POOL_INCLUDED 1
 
 
-#include "y/core/linked.hpp"
+#include "y/core/list.hpp"
 #include "y/type/cswap.hpp"
 
 namespace upsylon
@@ -50,6 +50,24 @@ assert((node)->next==NULL)
                 Y_CORE_CHECK_POOL_NODE(node);
                 return node;
             }
+
+            //! store a list
+            inline void store( core::list_of<NODE> &l ) throw()
+            {
+                const size_t n = l.size;
+                if(n>0)
+                {
+                    for(NODE *node = l.head;node;node=node->next)
+                    {
+                        node->prev=0;
+                    }
+                    l.tail->next = head;
+                    head         = l.head;
+                    increase_size(n);
+                    l.reset();
+                }
+            }
+
 
             //! linear search
             inline bool owns( const NODE *node ) const throw()

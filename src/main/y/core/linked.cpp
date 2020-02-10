@@ -24,6 +24,12 @@ namespace upsylon {
             ++aliasing::_(size);
         }
 
+        void linked:: increase_size(const size_t n) throw()
+        {
+            assert(n>0);
+            aliasing::_(size) += n;
+        }
+
         void linked:: decrease_size() throw()
         {
             assert(size>0);

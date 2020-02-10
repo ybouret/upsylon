@@ -11,9 +11,10 @@ namespace {
 
     public:
         dummy *next;
+        dummy *prev;
         int    data;
 
-        inline dummy() throw() : next(0), data( alea.leq(100) ) {
+        inline dummy() throw() : next(0), prev(0), data( alea.leq(100) ) {
 
         }
 
@@ -69,6 +70,24 @@ Y_UTEST(core_pool)
     
     dpool.release();
     dpool.reset();
+
+    {
+        core::list_of_cpp<dummy> dlist;
+        for(size_t iter=10+alea.leq(100);iter>0;--iter)
+        {
+            dpool.store( new dummy() );
+        }
+        for(size_t iter=10+alea.leq(100);iter>0;--iter)
+        {
+            dlist.push_back( new dummy() );
+        }
+        std::cerr << "-- dpool: " << dpool.size << std::endl;
+        std::cerr << "-- dlist: " << dlist.size << std::endl;
+        dpool.store( dlist );
+        std::cerr << "-- dpool: " << dpool.size << std::endl;
+        std::cerr << "-- dlist: " << dlist.size << std::endl;
+    }
+
 
 }
 Y_UTEST_DONE()

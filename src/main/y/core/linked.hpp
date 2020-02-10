@@ -23,7 +23,7 @@ namespace upsylon {
             void increase_size() throw(); //!< ++size
             void decrease_size() throw(); //!< --size
             void force_no_size() throw(); //!< size=0
-
+            void increase_size(const size_t) throw(); //!< size += ...
         private:
             Y_DISABLE_COPY_AND_ASSIGN(linked);
         };
