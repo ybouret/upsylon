@@ -140,15 +140,15 @@ Y_ASSERT( a_##TYPE == b_##TYPE );        \
         Y_QBITS_IO(my_ilong);
     }
 
-
 }
 Y_UTEST_DONE()
 
-#include "y/information/qbytes.hpp"
+#include "y/information/filter.hpp"
 
-Y_UTEST(qbytes)
+Y_UTEST(filter)
 {
-    information::qbytes Q;
+
 }
 Y_UTEST_DONE()
+
 

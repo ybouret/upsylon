@@ -204,6 +204,7 @@ ADD_TEST(info:delta   test-main delta)
 ADD_TEST(info:bwt     test-main bwt)
 ADD_TEST(info:qbits   test-main qbits)
 ADD_TEST(info:huffman test-main huffman)
+ADD_TEST(info:filter  test-main filter)
 
 
 SOURCE_GROUP(data FILES
