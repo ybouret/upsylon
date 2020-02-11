@@ -12,7 +12,6 @@
 
 using namespace upsylon;
 
-#
 
 #include "y/information/echo.hpp"
 #include "y/information/delta.hpp"
