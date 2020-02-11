@@ -2,55 +2,7 @@
 
 namespace upsylon {
 
-    bool       & qbit:: operator*()       throw() { return code; }
-    const bool & qbit:: operator*() const throw() { return code; }
-
-    qbit *qbit:: acquire(const bool flag)
-    {
-        qbit *q = object::acquire1<qbit>();
-        **q = flag;
-        return q;
-    }
-
-    void qbit:: release(qbit * &q) throw()
-    {
-        object::release1<qbit>(q);
-    }
-
-    qbit::list:: list() throw() : core::list_of<qbit>()
-    {
-    }
-
-    qbit::list:: ~list() throw()
-    {
-        clear();
-    }
-
-    void  qbit::list:: clear() throw()
-    {
-        while(size>0)
-        {
-            qbit *node = pop_back();
-            qbit::release(node);
-        }
-    }
-
-    qbit::pool:: pool() throw() : core::pool_of<qbit>()
-    {
-    }
-
-    qbit::pool:: ~pool() throw()    {
-        clear();
-    }
-
-    void qbit::pool:: clear() throw()
-    {
-        while(size>0)
-        {
-            qbit *node = query();
-            qbit::release(node);
-        }
-    }
+    
 
     const uint8_t qbit::table<uint8_t>::bit[8] =
     {
@@ -89,7 +41,7 @@ namespace upsylon {
 
 namespace upsylon {
 
-    qbits:: qbits() throw() : qbit::list(), qpool()
+    qbits:: qbits() throw() : qbits_()
     {
     }
 
@@ -98,81 +50,30 @@ namespace upsylon {
 
     }
 
-    void qbits:: free() throw()
-    {
-        qpool.store( *this );
-    }
-
-    void qbits:: release() throw()
-    {
-        clear();
-        qpool.clear();
-    }
-
-    qbit * qbits:: get(const bool flag)
-    {
-        if( qpool.has_nodes() )
-        {
-            qpool.head->code = flag;
-            return qpool.query();
-        }
-        else
-        {
-            return qbit::acquire(flag);
-        }
-    }
-
-    void qbits:: push( const bool flag )
-    {
-        push_back( get(flag) );
-    }
-
-    bool qbits:: peek() const throw()
-    {
-        assert(has_nodes());
-        return head->code;
-    }
 
     bool qbits:: pop() throw()
     {
-        assert( has_nodes() );
-        return **qpool.store( pop_front() );
+        const bool ans = front();
+        pop_front();
+        return ans;
     }
 
-    void qbits:: reserve(size_t n)
-    {
-        while( n-- > 0 )
-        {
-            qpool.store( qbit::acquire(false) );
-        }
-    }
 
     std::ostream & qbits:: display( std::ostream &os, const size_t nmax) const
     {
         const bool check = (nmax>0);
         os << '[';
         size_t n = 0;
-        for(const qbit *q = head;q;q=q->next)
+        for(const_iterator it=begin();it!=end();++it)
         {
-            os << *q;
+            const bool flag = *it;
+            os << (flag ? '1' : '0' );
             if(check&&++n>0) break;
         }
         os << ']';
         return os;
     }
 
-    std::ostream & operator<<( std::ostream &os, const qbit &q)
-    {
-        if(q.code)
-        {
-            os << '1';
-        }
-        else
-        {
-            os << '0';
-        }
-        return os;
-    }
 
     std::ostream & operator<<( std::ostream &os, const qbits &Q )
     {
@@ -181,25 +82,25 @@ namespace upsylon {
 
     void qbits:: zpad()
     {
-        while( 0 != (size&7) )
+        while( 0 != (size()&7) )
         {
-            push_back( get(false) );
+            push_back( false );
         }
     }
 
     void qbits:: zpad( randomized::bits &ran)
     {
-        while( 0 != (size&7) )
+        while( 0 != (size()&7) )
         {
-            push_back( get( ran.choice() ) );
+            push_back(  ran.choice()  );
         }
     }
 
     void qbits:: drop() throw()
     {
-        while( 0 != (size&7) )
+        while( 0 != (size()&7) )
         {
-            qpool.store( pop_front() );
+            pop_front();
         }
     }
 
@@ -215,7 +116,7 @@ namespace upsylon {
 
     bool qbits:: query( char &C )
     {
-        if( size >= 8 )
+        if( size() >= 8 )
         {
             C = _pop<uint8_t>();
             return true;
@@ -231,7 +132,7 @@ namespace upsylon {
         const uint8_t U(C);
         for(int i=7;i>=0;--i)
         {
-            push_front( get( 0 != (U&qbit::table<uint8_t>::bit[i]) ) );
+            push_front(   0 != (U&qbit::table<uint8_t>::bit[i]) );
         }
     }
 }

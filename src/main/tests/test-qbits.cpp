@@ -77,33 +77,32 @@ Y_UTEST(qbits)
         Y_CHECK( v8.size() == v32.size() );
         Y_CHECK( v8.size() == v64.size() );
 
-        Y_CHECK( sumOf(n8) + sumOf(n16) + sumOf(n32) + sumOf(n64) == Q.size );
-        std::cerr << "#bits=" << Q.size << std::endl;
+        Y_CHECK( sumOf(n8) + sumOf(n16) + sumOf(n32) + sumOf(n64) == Q.size() );
+        std::cerr << "#bits=" << Q.size() << std::endl;
         Q.zpad( alea );
-        std::cerr << "#bits=" << Q.size << std::endl;
+        std::cerr << "#bits=" << Q.size() << std::endl;
 
 
         const size_t n = v8.size();
         for(size_t i=1;i<=n;++i)
         {
-            Y_ASSERT(Q.size>=n8[i]);  Y_ASSERT( v8[i]  == Q._pop<uint8_t>(n8[i]) );
-            Y_ASSERT(Q.size>=n16[i]); Y_ASSERT( v16[i] == Q._pop<uint16_t>(n16[i]) );
-            Y_ASSERT(Q.size>=n32[i]); Y_ASSERT( v32[i] == Q._pop<uint32_t>(n32[i]) );
-            Y_ASSERT(Q.size>=n64[i]); Y_ASSERT( v64[i] == Q._pop<uint64_t>(n64[i]) );
+            Y_ASSERT(Q.size()>=n8[i]);  Y_ASSERT( v8[i]  == Q._pop<uint8_t>(n8[i]) );
+            Y_ASSERT(Q.size()>=n16[i]); Y_ASSERT( v16[i] == Q._pop<uint16_t>(n16[i]) );
+            Y_ASSERT(Q.size()>=n32[i]); Y_ASSERT( v32[i] == Q._pop<uint32_t>(n32[i]) );
+            Y_ASSERT(Q.size()>=n64[i]); Y_ASSERT( v64[i] == Q._pop<uint64_t>(n64[i]) );
         }
 
         Q.drop();
-        Y_CHECK( 0 == Q.size );
+        Y_CHECK( 0 == Q.size() );
     }
 
-    std::cerr << "Q.qpool: " << Q.qpool.size << std::endl;
-
+    
     std::cerr << "-- checking serialization" << std::endl;
     {
         const string s = "Hello, World!";
         const size_t n = s.serialize(Q);
         Q.flush();
-        Y_CHECK( n * 8 == Q.size );
+        Y_CHECK( n * 8 == Q.size() );
         const string r = string_io::load_binary(Q);
         std::cerr << "send=" << s << ", recv=" << r << std::endl;
         Y_CHECK(s==r);
@@ -142,6 +141,14 @@ Y_ASSERT( a_##TYPE == b_##TYPE );        \
     }
 
 
+}
+Y_UTEST_DONE()
+
+#include "y/information/qbytes.hpp"
+
+Y_UTEST(qbytes)
+{
+    information::qbytes Q;
 }
 Y_UTEST_DONE()
 

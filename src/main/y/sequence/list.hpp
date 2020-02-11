@@ -3,7 +3,6 @@
 #define Y_LIST_INCLUDED 1
 
 #include "y/container/sequence.hpp"
-//#include "y/sequence/addressable.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
 #include "y/iterate/linked.hpp"

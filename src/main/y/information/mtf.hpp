@@ -29,7 +29,6 @@ namespace upsylon {
         protected:
             explicit mtf_modulation() throw();     //!< setup
 
-
             core::list_of<node_t>  list_;      //!< fast list
             node_t                 node_[256]; //!< built-in nodes
 

@@ -6,55 +6,14 @@
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
 #include "y/randomized/bits.hpp"
-
-#include "y/core/pool.hpp"
-#include "y/container/container.hpp"
-#include <iosfwd>
+#include "y/sequence/list.hpp"
 
 namespace upsylon {
 
-    //! Queue Bit
+     //! Queue Bit
     struct qbit
     {
-        qbit *next; //!< for list
-        qbit *prev; //!< for list
-        bool  code; //!< boolean value
-
-        bool       & operator*()       throw(); //!< access
-        const bool & operator*() const throw(); //!< const access
-
-        static qbit *acquire(const bool);         //!< small object
-        static void  release(qbit * &) throw();   //!< small object
-
-
-        friend std::ostream & operator<<( std::ostream &os, const qbit & ); //!< display
-
-        //! list management
-        class list  : public core::list_of<qbit>
-        {
-        public:
-            explicit  list() throw();  //!< setup
-            virtual  ~list() throw();  //!< cleanup
-            void      clear() throw(); //!< release all
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(list);
-        };
-
-        //! pool managerment
-        class pool : public core::pool_of<qbit>
-        {
-        public:
-            explicit pool() throw();  //!< setup
-            virtual ~pool() throw();  //!< cleanup
-            void     clear() throw(); //!< release all
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(pool);
-        };
-
         template <typename T> struct table; //!< table of bits declaration
-
     };
 
     //! declare table for specific bits
@@ -68,23 +27,18 @@ static const uint##BITS##_t bit[BITS];\
     Y_QBIT_TABLE(32); //!< for 32 bits
     Y_QBIT_TABLE(64); //!< for 64 bits
 
+    typedef list<bool> qbits_;
+
     //! Queue of Bits
-    class qbits : public qbit::list, public ios::ostream, public ios::istream
+    class qbits : public qbits_, public ios::ostream, public ios::istream
     {
     public:
         explicit qbits() throw(); //!< setup
         virtual ~qbits() throw(); //!< cleanup
 
-        qbit::pool qpool;         //!< pool of bits
+        
 
-        void free()    throw();   //!< empty list into pool
-        void release() throw();   //!< release all memory
-
-
-        void push( const bool flag ); //!< push a new bit
-        bool peek() const throw();    //!< peek front bit
-        bool pop()        throw();    //!< pop front bit
-        void reserve(size_t);         //!< store bits into pool
+        bool pop() throw();    //!< pop front bit
 
         //! push partial, integral unsigned type
         template <typename T>
@@ -96,7 +50,7 @@ static const uint##BITS##_t bit[BITS];\
             assert(bits<=sizeof(word)*8);
             while(bits-- > 0)
             {
-                push( (word&_1) != _0 );
+                push_back( (word&_1) != _0 );
                 word>>=1;
             }
         }
@@ -129,7 +83,7 @@ static const uint##BITS##_t bit[BITS];\
         inline T _pop(const size_t bits) throw()
         {
             T              ans(0);
-            assert(bits<=size);
+            assert(bits<=size());
             assert(bits<=sizeof(T)*8);
             for(size_t i=0;i<bits;++i)
             {
@@ -177,7 +131,6 @@ static const uint##BITS##_t bit[BITS];\
         virtual void store( char  C ); //!< store a byte
 
     private:
-        qbit *get(const bool flag);
         Y_DISABLE_COPY_AND_ASSIGN(qbits);
     };
 
