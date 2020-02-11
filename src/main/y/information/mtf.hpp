@@ -33,7 +33,6 @@ namespace upsylon {
             core::list_of<node_t>  list_;      //!< fast list
             node_t                 node_[256]; //!< built-in nodes
 
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mtf_modulation);
             void build() throw();
