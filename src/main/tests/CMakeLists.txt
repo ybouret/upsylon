@@ -208,7 +208,7 @@ ADD_TEST(info:huffman test-main huffman)
 
 SOURCE_GROUP(data FILES
 test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-btree.cpp
-test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp)
+test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp test-pq.cpp)
 ADD_TEST(data:associative test-main associative)
 ADD_TEST(data:set         test-main set)
 ADD_TEST(data:map         test-main map)
@@ -227,6 +227,7 @@ ADD_TEST(data:key-address test-main key_address)
 ADD_TEST(data:strings     test-main strings ${HERE}/words.db)
 ADD_TEST(data:addressable test-main addressable)
 ADD_TEST(data:query       test-main query ${HERE}/words.db)
+ADD_TEST(data:pq          test-main pq)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
