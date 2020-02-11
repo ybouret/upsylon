@@ -58,7 +58,7 @@ namespace {
     template <>
     inline string support:: get<string>()
     {
-        const size_t len = 1+ alea.leq(63);
+        const size_t len = 1+ alea.leq(16);
         string ans(len,as_capacity,false);
         for(size_t i=0;i<len;++i)
         {

@@ -3,14 +3,98 @@
 #define Y_ORDERED_HEAP_INCLUDED 1
 
 #include "y/container/container.hpp"
+#include "y/ordered/priority-queue.hpp"
 #include "y/comparator.hpp"
-#include "y/memory/buffer.hpp"
-#include "y/type/cswap.hpp"
-#include <cstring>
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
 
+    //! dynamic heap, using internal priority queue
+    template <typename T,
+    typename COMPARATOR = increasing_comparator<T>,
+    typename ALLOCATOR  = memory::global
+    >
+    class heap : public container
+    {
+    public:
+        Y_DECL_ARGS(T,type); //alias
+        typedef core::priority_queue<mutable_type,COMPARATOR> pq_type;
+
+        inline explicit heap(): hmem( ALLOCATOR::instance() ), pq(), bytes(0) {}
+        inline explicit heap(const size_t n, const as_capacity_t &) :
+        hmem( ALLOCATOR::instance() ), pq(), bytes(0)
+        {
+            size_t & capa = aliasing::_(pq.slots);
+            capa          = n;
+            pq.slot       = hmem.template acquire_as<mutable_type*>(capa,bytes);
+        }
+
+        inline virtual ~heap() throw() { __release(); }
+
+        inline virtual size_t size()     const throw() { return pq.count; } //!< dynamic interface: size
+        inline virtual size_t capacity() const throw() { return pq.slots; } //!< dynamic interface: capacity
+        inline virtual void   free()           throw() { pq.clear();      } //!< container interface: free
+        inline virtual void   release()        throw() { __release();     } //!< container interface: release
+        inline virtual void   reserve(const size_t n)  { __reserve(n);    } //!< container interface: reserve
+
+        inline type *extract() throw()
+        {
+            return pq.extract();
+        }
+
+        inline void enqueue_(type *addr) throw()
+        {
+            pq.enqueue((mutable_type *)addr);
+        }
+
+        inline void enqueue(type *addr)
+        {
+            if(pq.count>=pq.slots)
+            {
+                __reserve( next_increase(pq.count) );
+            }
+            enqueue_(addr);
+        }
+
+        inline const_type & peek() const throw()
+        {
+            return pq.peek();
+        }
+
+
+
+    private:
+        memory::allocator &hmem;
+        pq_type            pq;
+        size_t             bytes;
+
+        Y_DISABLE_ASSIGN(heap);
+
+        void __release() throw()
+        {
+            pq.clear(); assert(0==pq.count);
+            hmem.template release_as<mutable_type*>( pq.slot, aliasing::_(pq.slots), bytes);
+            assert(0==pq.slot);
+            assert(0==pq.slots);
+            assert(0==bytes);
+        }
+
+        void __reserve(const size_t n)
+        {
+            if(n>0)
+            {
+                pq_type &self = pq;
+                heap     temp(pq.slots+n,as_capacity);
+                pq_type &other = temp.pq;
+                other.store(self);
+                self.swap_with(other);
+                cswap(bytes,temp.bytes);
+            }
+        }
+    };
+
+#if 0
     //! heap built from addresses
     template <typename T,
     typename COMPARATOR = increasing_comparator<T>,
@@ -242,6 +326,7 @@ namespace upsylon
             swap_with(h);
         }
     };
+#endif
 
 }
 

@@ -13,7 +13,7 @@ namespace upsylon {
 
         //! Algorithm to format priority queue
         template <typename T>
-        struct priority_queue
+        struct prio_queue
         {
             Y_DECL_ARGS(T,type); //!< alias
 
@@ -54,7 +54,7 @@ namespace upsylon {
                 }
             }
 
-            //! extract top data
+            //! extract top data and re-balance queue
             template <typename COMPARE> static inline
             type * extract(type   **slot,
                            size_t  &size,
@@ -126,12 +126,98 @@ namespace upsylon {
                     }
                 }
             }
-
-
-
         };
 
+        //! priority queue on given memory area
+        template <typename T, typename COMPARATOR>
+        class priority_queue
+        {
+        public:
+            Y_DECL_ARGS(T,type); //!< alias
+
+            //! setup empty
+            inline explicit priority_queue() throw() :
+            slot(0), slots(0), count(0) {}
+
+            //! setup
+            inline explicit priority_queue(type       **base,
+                                           const size_t size) throw() :
+            slot(base), slots(size), count(0)
+            {
+                for(size_t i=0;i<slots;++i) slot[i] = 0;
+            }
+
+            //! cleanup
+            inline void clear() throw()
+            {
+                assert(count<=slots);
+                while(count>0) slot[--count] = 0;
+            }
+
+            //! soft copy queue structure
+            inline void store( const priority_queue &other ) throw()
+            {
+                assert(other.count<=this->slots);
+                type       **target    = slot;
+                const_type **source    = (const_type **)(other.slot);
+                const size_t new_count = other.count;
+                while(count>new_count) target[--count] = 0;
+                for(size_t i=0;i<new_count;++i)
+                {
+                    target[i]=(type*)(source[i]);
+                }
+                count = new_count;
+            }
+
+            //! destruct
+            inline virtual ~priority_queue() throw()
+            {
+                clear();
+            }
+
+            //! enqueue address of an object
+            inline void enqueue( type *addr ) throw()
+            {
+                assert(count<slots);
+                core::prio_queue<T>::template enqueue<COMPARATOR>( (type*)addr,slot,count,compare);
+            }
+
+            //! extract address of an object
+            inline type *extract( ) throw()
+            {
+                assert(count>0);
+                return prio_queue<T>::template extract<COMPARATOR>( slot, count, compare);
+            }
+
+            //! get top item
+            inline const_type &peek() const throw()
+            {
+                assert(count>0);
+                return *slot[0];
+            }
+
+            //! no-throw swap of data
+            inline void swap_with( priority_queue &other ) throw()
+            {
+                cswap(slot,other.slot);
+                _cswap(slots,other.slots);
+                cswap(count,other.count);
+            }
+
+
+            type        **slot;    //!< memory
+            const size_t  slots;   //!< number or slots
+            size_t        count;   //!< number of occupied slots
+            COMPARATOR    compare; //!< how to compare things
+
+        private:
+            Y_DISABLE_ASSIGN(priority_queue);
+        };
     }
+
+    
+
+
 
 }
 
