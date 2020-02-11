@@ -89,8 +89,8 @@ namespace upsylon {
                     //__________________________________________________________
                     size_t ipos = 0;
                 RESTORE:
-                    size_t lpos = (ipos<<1) + 1;
-                    size_t rpos = lpos      + 1;
+                    const size_t lpos = (ipos<<1) + 1;
+                    const size_t rpos = lpos      + 1;
 
                     //__________________________________________________________
                     //

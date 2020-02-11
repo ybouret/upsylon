@@ -12,7 +12,7 @@ namespace {
     static inline void doPQ()
     {
         
-        const size_t n = 1+alea.leq(10);
+        const size_t n = 1+alea.leq(100);
         vector<T>    data(n,as_capacity);
         vector<T*>   meta(n,0);
         increasing_comparator<T> compare;
