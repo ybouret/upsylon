@@ -18,10 +18,11 @@ namespace upsylon
     class heap : public container
     {
     public:
-        Y_DECL_ARGS(T,type); //alias
+        Y_DECL_ARGS(T,type); //!< alias
         typedef core::priority_queue<mutable_type,COMPARATOR> pq_type;
 
         inline explicit heap(): hmem( ALLOCATOR::instance() ), pq(), bytes(0) {}
+
         inline explicit heap(const size_t n, const as_capacity_t &) :
         hmem( ALLOCATOR::instance() ), pq(), bytes(0)
         {

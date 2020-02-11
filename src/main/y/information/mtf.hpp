@@ -13,11 +13,10 @@ namespace upsylon {
         class mtf_modulation : public shaker
         {
         public:
-            virtual     ~mtf_modulation() throw(); //!< cleanup
-            virtual void reset()          throw(); //!< rebuild state
+            virtual        ~mtf_modulation() throw(); //!< cleanup
+            virtual void    reset()          throw(); //!< rebuild state
 
-        protected:
-            explicit mtf_modulation() throw();     //!< setup
+            void duplicate( const mtf_modulation &m ) throw(); //!< duplicate ordering
 
             //! basic node for list
             struct node_t
@@ -26,8 +25,14 @@ namespace upsylon {
                 node_t *prev; //!< for list
                 uint8_t data; //!< initial node index
             };
+            
+        protected:
+            explicit mtf_modulation() throw();     //!< setup
+
+
             core::list_of<node_t>  list_;      //!< fast list
             node_t                 node_[256]; //!< built-in nodes
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mtf_modulation);
@@ -41,6 +46,7 @@ namespace upsylon {
             virtual        ~mtf_encoder()        throw(); //!< cleanup
             explicit        mtf_encoder()        throw(); //!< setup
             virtual uint8_t fetch(const uint8_t) throw(); //!< encode
+            virtual shaker *clone()              const;   //!< a new mtf with same nodes ordering
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mtf_encoder);
@@ -53,6 +59,7 @@ namespace upsylon {
             virtual        ~mtf_decoder()        throw();//!< cleanup
             explicit        mtf_decoder()        throw();//!< setup
             virtual uint8_t fetch(const uint8_t) throw();//!< decode
+            virtual shaker *clone()              const;   //!< a new mtf with same nodes ordering
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mtf_decoder);

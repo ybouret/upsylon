@@ -1,6 +1,7 @@
 #include "y/information/mtf.hpp"
 
 #include <cstring>
+#include <iostream>
 
 namespace upsylon {
 
@@ -22,15 +23,29 @@ namespace upsylon {
         void mtf_modulation:: build() throw()
         {
             memset( node_, 0, sizeof(node_) );
-            node_t *node = node_;
-            int i=256;
-            while( --i >= 0 ) {
-                node->data = uint8_t(i);
-                list_.push_front( node );
-                ++node;
+            for(size_t i=0;i<256;++i)
+            {
+                list_.push_back( &node_[i] )->data = uint8_t(i);
             }
             assert( 256 == list_.size );
         }
+
+        void mtf_modulation:: duplicate( const mtf_modulation &m ) throw()
+        {
+            list_.reset();
+            for( const node_t *node = m.list_.head; node; node=node->next)
+            {
+                node_t *sub = &node_[node->data];
+                assert(sub->data==node->data);
+                sub->next = sub->prev = 0;
+                list_.push_back(sub);
+            }
+            assert(256==list_.size);
+#ifndef NDEBUG
+
+#endif
+        }
+
 
 
         void mtf_modulation::reset() throw()
@@ -38,6 +53,7 @@ namespace upsylon {
             list_.reset();
             build();
         }
+
 
     }
 
@@ -62,6 +78,13 @@ namespace upsylon {
             return uint8_t(indx);
         }
 
+        shaker * mtf_encoder :: clone() const
+        {
+            mtf_modulation *m = new mtf_encoder();
+            m->duplicate(*this);
+            return m;
+        }
+
     }
 
 
@@ -82,6 +105,13 @@ namespace upsylon {
             return node->data;
         }
 
+
+        shaker * mtf_decoder :: clone() const
+        {
+            mtf_modulation *m = new mtf_decoder();
+
+            return m;
+        }
     }
 
 

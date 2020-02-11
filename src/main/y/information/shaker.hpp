@@ -3,13 +3,14 @@
 #define Y_INFORMATION_SHAKER_INCLUDED 1
 
 #include "y/memory/buffer.hpp"
+#include "y/object.hpp"
 
 namespace upsylon {
 
     namespace information {
 
         //! basic information shaker interface
-        class shaker
+        class shaker : public object
         {
         public:
 
@@ -18,9 +19,10 @@ namespace upsylon {
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual        ~shaker() throw();                 //!< cleanup
-            virtual void    reset()              throw() = 0; //!< restart state
-            virtual uint8_t fetch(const uint8_t) throw() = 0; //!< byte wise process
+            virtual         ~shaker() throw();                 //!< cleanup
+            virtual void     reset()              throw() = 0; //!< restart state
+            virtual uint8_t  fetch(const uint8_t) throw() = 0; //!< byte wise process
+            virtual shaker  *clone() const                = 0; //!< clone with status
 
             //------------------------------------------------------------------
             //

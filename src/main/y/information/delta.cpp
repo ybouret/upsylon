@@ -11,6 +11,8 @@ namespace upsylon {
 
         void delta_modulation:: reset() throw() { last=0; }
 
+
+
     }
 
     namespace information {
@@ -25,6 +27,12 @@ namespace upsylon {
             return ans;
         }
 
+        shaker * delta_encoder:: clone() const
+        {
+            delta_encoder *d = new delta_encoder();
+            d->last = last;
+            return d;
+        }
 
 
     }
@@ -39,6 +47,13 @@ namespace upsylon {
             const uint8_t ans = c+last;
             last = ans;
             return ans;
+        }
+
+        shaker * delta_decoder:: clone() const
+        {
+            delta_decoder *d = new delta_decoder();
+            d->last = last;
+            return d;
         }
     }
 

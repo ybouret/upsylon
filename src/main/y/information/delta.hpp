@@ -12,8 +12,8 @@ namespace upsylon {
         class delta_modulation : public shaker
         {
         public:
-            virtual      ~delta_modulation() throw(); //!< cleanup
-            virtual  void reset()            throw(); //!< set last=0
+            virtual        ~delta_modulation() throw(); //!< cleanup
+            virtual void    reset()            throw(); //!< set last=0
 
         protected:
             explicit delta_modulation() throw(); //!< setup
@@ -30,6 +30,7 @@ namespace upsylon {
             explicit        delta_encoder()      throw(); //!< initialize
             virtual        ~delta_encoder()      throw(); //!< destructor
             virtual uint8_t fetch(const uint8_t) throw(); //!< encode a byte
+            virtual shaker *clone()                const; //!< a new delta with same last
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(delta_encoder);
@@ -42,6 +43,7 @@ namespace upsylon {
             explicit        delta_decoder()      throw(); //!< initialize
             virtual        ~delta_decoder()      throw(); //!< destructor
             virtual uint8_t fetch(const uint8_t) throw(); //!< decode a byte
+            virtual shaker *clone()                const; //!< a new delta with same last
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(delta_decoder);

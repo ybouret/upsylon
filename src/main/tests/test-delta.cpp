@@ -1,10 +1,13 @@
 #include "y/information/delta.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(delta)
 {
+    Y_UTEST_SIZEOF(information::delta_encoder);
+    Y_UTEST_SIZEOF(information::delta_decoder);
     information::delta_encoder enc;
     information::delta_decoder dec;
 

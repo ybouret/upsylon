@@ -137,12 +137,13 @@ namespace upsylon {
 
             //! setup empty
             inline explicit priority_queue() throw() :
-            slot(0), slots(0), count(0) {}
+            slot(0), slots(0), count(0), compare()
+            {}
 
             //! setup
             inline explicit priority_queue(type       **base,
                                            const size_t size) throw() :
-            slot(base), slots(size), count(0)
+            slot(base), slots(size), count(0), compare()
             {
                 for(size_t i=0;i<slots;++i) slot[i] = 0;
             }
@@ -211,7 +212,7 @@ namespace upsylon {
             COMPARATOR    compare; //!< how to compare things
 
         private:
-            Y_DISABLE_ASSIGN(priority_queue);
+            Y_DISABLE_COPY_AND_ASSIGN(priority_queue);
         };
     }
 

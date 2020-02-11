@@ -17,6 +17,10 @@ namespace upsylon {
             return c;
         }
 
+        shaker * echo_modulation:: clone() const  
+        {
+            return new echo_modulation();
+        }
 
     }
 

@@ -1,10 +1,15 @@
 #include "y/information/mtf.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(mtf)
 {
+    Y_UTEST_SIZEOF(information::mtf_encoder);
+    Y_UTEST_SIZEOF(information::mtf_decoder);
+    Y_UTEST_SIZEOF(information::mtf_modulation::node_t);
+
     information::mtf_encoder enc;
     information::mtf_decoder dec;
 

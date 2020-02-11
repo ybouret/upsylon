@@ -16,6 +16,7 @@ namespace upsylon {
             virtual        ~echo_modulation()    throw(); //!< cleanup
             virtual void    reset()              throw(); //!< do nothing
             virtual uint8_t fetch(const uint8_t) throw(); //!< do nothing
+            virtual shaker *clone() const;                //!< clone with status
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(echo_modulation);
