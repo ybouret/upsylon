@@ -1,4 +1,4 @@
-#include "y/information/huffman.hpp"
+#include "y/information/filter/huffman.hpp"
 #include "y/code/utils.hpp"
 
 namespace upsylon {

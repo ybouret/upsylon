@@ -1,4 +1,4 @@
-#include "y/information/huffman.hpp"
+#include "y/information/filter/huffman.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string.hpp"

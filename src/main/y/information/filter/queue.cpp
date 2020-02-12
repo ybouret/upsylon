@@ -1,4 +1,4 @@
-#include "y/information/q-filter.hpp"
+#include "y/information/filter/queue.hpp"
 
 namespace upsylon {
 

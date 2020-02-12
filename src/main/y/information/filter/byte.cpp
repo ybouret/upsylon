@@ -1,5 +1,5 @@
 
-#include "y/information/b-filter.hpp"
+#include "y/information/filter/byte.hpp"
 #include "y/information/echo.hpp"
 
 namespace upsylon {
@@ -21,7 +21,19 @@ namespace upsylon {
 
         }
 
+        void b_filter:: write(char C)
+        {
+            push_back( transform->fetch(C) );
+        }
 
+        void b_filter:: flush()
+        {
+        }
+
+        void b_filter:: reset() throw()
+        {
+            transform->reset();
+        }
 
     }
 
