@@ -143,7 +143,7 @@ Y_ASSERT( a_##TYPE == b_##TYPE );        \
 }
 Y_UTEST_DONE()
 
-#include "y/information/filter.hpp"
+#include "y/information/q-filter.hpp"
 
 Y_UTEST(filter)
 {

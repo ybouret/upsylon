@@ -16,6 +16,8 @@ namespace upsylon {
         public:
             virtual ~filter() throw();
 
+            virtual void reset() throw() = 0;
+
         protected:
             explicit filter() throw();
             

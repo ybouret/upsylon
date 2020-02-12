@@ -1,5 +1,3 @@
-
-
 #include "y/information/q-filter.hpp"
 
 namespace upsylon {

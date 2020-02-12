@@ -3,17 +3,19 @@
 #define Y_INFORMATION_SHAKER_INCLUDED 1
 
 #include "y/memory/buffer.hpp"
-#include "y/object.hpp"
+#include "y/ptr/arc.hpp"
+#include "y/ptr/counted.hpp"
 
 namespace upsylon {
 
     namespace information {
 
         //! basic information shaker interface
-        class shaker : public object
+        class shaker : public counted_object
         {
         public:
-
+            typedef arc_ptr<shaker> pointer;
+            
             //------------------------------------------------------------------
             //
             // virtual interface
