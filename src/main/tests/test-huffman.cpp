@@ -2,14 +2,17 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string.hpp"
-#include "y/information/qbits.hpp"
 
 using namespace upsylon;
 using namespace information;
 
 Y_UTEST(huffman)
 {
-    
+
+    std::cerr << "Alphabet::Chars = " << Alphabet::Chars << std::endl;
+    std::cerr << "Alphabet::NYT   = " << Alphabet::NYT   << std::endl;
+    std::cerr << "Alphabet::EOS   = " << Alphabet::EOS   << std::endl;
+    std::cerr << "Alphabet::Codes = " << Alphabet::Codes << std::endl;
 
 
 }

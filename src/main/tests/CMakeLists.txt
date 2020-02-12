@@ -198,7 +198,7 @@ ADD_TEST(codec:lzo    test-main lzo)
 ADD_TEST(codec:asf    test-main asf)
 ADD_TEST(codec:b64id  test-main b64id)
 
-SOURCE_GROUP(information FILES  test-mtf.cpp test-delta.cpp test-bwt.cpp test-qbits.cpp test-huffman.cpp)
+SOURCE_GROUP(information FILES  test-mtf.cpp test-delta.cpp test-bwt.cpp test-qbits.cpp test-huffman.cpp test-filter.cpp)
 ADD_TEST(info:mtf     test-main mtf)
 ADD_TEST(info:delta   test-main delta)
 ADD_TEST(info:bwt     test-main bwt)
