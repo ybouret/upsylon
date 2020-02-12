@@ -14,7 +14,7 @@ namespace upsylon {
         class shaker : public counted_object
         {
         public:
-            typedef arc_ptr<shaker> pointer;
+            typedef arc_ptr<shaker> pointer; //!< shared pointer
             
             //------------------------------------------------------------------
             //

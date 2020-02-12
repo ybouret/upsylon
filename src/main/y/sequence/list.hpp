@@ -152,16 +152,11 @@ namespace upsylon {
             self_destruct( cache.store(nodes.pop_front())->data );
         }
 
-        //! cluster interace: lower index=1
-        inline virtual size_t lower_index() const throw() { return 1; }
 
-        //! cluster interface: upper index=size()
-        inline virtual size_t upper_index() const throw() { return this->size(); }
-
-        //! cluster interface: SLOW access
+        //! addressable interface: SLOW access
         inline  virtual type       & operator[](const size_t i) throw()       { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
 
-        //! cluster interface: SLOW access, CONST
+        //! accessible interface: SLOW access, CONST
         inline  virtual const_type & operator[](const size_t i) const throw() { assert(i>0);assert(i<=size()); return nodes.fetch(i-1)->data; }
 
         //! adjust size and pad if needed
@@ -247,9 +242,9 @@ namespace upsylon {
         }
 
         //! delete cache
-        inline void trim() throw()
+        inline void trim(const size_t nmax=0) throw()
         {
-            while(cache.size>0)
+            while(cache.size>nmax)
             {
                 node_type *node = cache.query();
                 object::release1(node);

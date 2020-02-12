@@ -18,11 +18,23 @@ namespace upsylon
     class heap : public container
     {
     public:
-        Y_DECL_ARGS(T,type); //!< alias
-        typedef core::priority_queue<mutable_type,COMPARATOR> pq_type;
+        //----------------------------------------------------------------------
+        //
+        // types and declarations
+        //
+        //----------------------------------------------------------------------
+        Y_DECL_ARGS(T,type);                                            //!< aliases
+        typedef core::priority_queue<mutable_type,COMPARATOR> pq_type;  //!< alias
 
+        //----------------------------------------------------------------------
+        //
+        // C++
+        //
+        //----------------------------------------------------------------------
+        //! setup empty
         inline explicit heap(): hmem( ALLOCATOR::instance() ), pq(), bytes(0) {}
 
+        //! setup with capacity
         inline explicit heap(const size_t n, const as_capacity_t &) :
         hmem( ALLOCATOR::instance() ), pq(), bytes(0)
         {
@@ -33,22 +45,36 @@ namespace upsylon
 
         inline virtual ~heap() throw() { __release(); }
 
+        //----------------------------------------------------------------------
+        //
+        // virtual methods
+        //
+        //----------------------------------------------------------------------
         inline virtual size_t size()     const throw() { return pq.count; } //!< dynamic interface: size
         inline virtual size_t capacity() const throw() { return pq.slots; } //!< dynamic interface: capacity
         inline virtual void   free()           throw() { pq.clear();      } //!< container interface: free
         inline virtual void   release()        throw() { __release();     } //!< container interface: release
         inline virtual void   reserve(const size_t n)  { __reserve(n);    } //!< container interface: reserve
 
+        //----------------------------------------------------------------------
+        //
+        // specific methods
+        //
+        //----------------------------------------------------------------------
+
+        //! extract top data
         inline type *extract() throw()
         {
             return pq.extract();
         }
 
+        //! enqueue data with enough memory
         inline void enqueue_(type *addr) throw()
         {
             pq.enqueue((mutable_type *)addr);
         }
 
+        ///! enqueue data with automatic memory management
         inline void enqueue(type *addr)
         {
             if(pq.count>=pq.slots)
@@ -58,13 +84,12 @@ namespace upsylon
             enqueue_(addr);
         }
 
+        //! check top data
         inline const_type & peek() const throw()
         {
             return pq.peek();
         }
-
-
-
+        
     private:
         memory::allocator &hmem;
         pq_type            pq;

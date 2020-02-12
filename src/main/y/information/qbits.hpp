@@ -27,7 +27,7 @@ static const uint##BITS##_t bit[BITS];\
     Y_QBIT_TABLE(32); //!< for 32 bits
     Y_QBIT_TABLE(64); //!< for 64 bits
 
-    typedef list<bool> qbits_;
+    typedef list<bool> qbits_; //!< base class for qbits
 
     //! Queue of Bits
     class qbits : public qbits_, public ios::ostream, public ios::istream

@@ -13,13 +13,13 @@ namespace upsylon {
         class bytewise_filter : public filterQ
         {
         public:
-            explicit bytewise_filter(const shaker::pointer &) throw();
-            explicit bytewise_filter(shaker *);
-            virtual ~bytewise_filter() throw();
+            explicit bytewise_filter(const shaker::pointer &) throw(); //!< setup with a shared shaker
+            explicit bytewise_filter(shaker *);                        //!< setup with a new shaker, echo_modulation otherwise
+            virtual ~bytewise_filter() throw();                        //!< cleanup
 
-            virtual void write( char C );
-            virtual void flush();
-            virtual void reset() throw();
+            virtual void write( char C ); //!< store transformed char
+            virtual void flush();         //!< do nothing
+            virtual void reset() throw(); //!< reset transform
 
         private:
             shaker::pointer transform;
