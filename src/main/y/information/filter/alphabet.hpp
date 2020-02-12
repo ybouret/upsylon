@@ -23,8 +23,9 @@ namespace upsylon {
 
             typedef size_t        FreqType;          //!< alias
             typedef size_t        CodeType;          //!< alias
+            
             static const size_t   Chars = 256;       //!< encoding bytes
-            static const CodeType NYT   = Chars;     //!< Not Yet Transmitter
+            static const CodeType NYT   = Chars;     //!< Not Yet Transmitted
             static const CodeType EOS   = NYT+1;     //!< End Of Stream
             static const size_t   Codes = EOS+1;     //!< maximum possible codes
             static const CodeType Built = Codes;     //!< built marker
