@@ -4,17 +4,17 @@ namespace upsylon {
 
     namespace information {
         
-        q_filter:: ~q_filter() throw()
+        filterQ:: ~filterQ() throw()
         {
         }
 
-        q_filter:: q_filter() throw() :
+        filterQ:: filterQ() throw() :
         filter(),
         list<char>()
         {
         }
 
-        bool q_filter:: query(char &C)
+        bool filterQ:: query(char &C)
         {
             if( size() > 0 )
             {
@@ -28,12 +28,12 @@ namespace upsylon {
             }
         }
 
-        bool q_filter:: is_active() throw()
+        bool filterQ:: is_active() throw()
         {
             return size()>0;
         }
 
-        void q_filter:: store(char C)
+        void filterQ:: store(char C)
         {
             push_front(C);
         }

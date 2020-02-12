@@ -10,12 +10,12 @@ namespace upsylon {
     namespace information {
 
         //! implement the istream part
-        class b_filter : public q_filter
+        class bytewise_filter : public filterQ
         {
         public:
-            explicit b_filter(const shaker::pointer &) throw();
-            explicit b_filter(shaker *);
-            virtual ~b_filter() throw();
+            explicit bytewise_filter(const shaker::pointer &) throw();
+            explicit bytewise_filter(shaker *);
+            virtual ~bytewise_filter() throw();
 
             virtual void write( char C );
             virtual void flush();
@@ -23,7 +23,7 @@ namespace upsylon {
 
         private:
             shaker::pointer transform;
-            Y_DISABLE_COPY_AND_ASSIGN(b_filter);
+            Y_DISABLE_COPY_AND_ASSIGN(bytewise_filter);
         };
 
     }

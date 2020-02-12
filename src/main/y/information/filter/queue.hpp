@@ -10,18 +10,18 @@ namespace upsylon {
     namespace information {
 
         //! implement the istream part
-        class q_filter : public filter, public list<char>
+        class filterQ : public filter, public list<char>
         {
         public:
-            explicit q_filter() throw();
-            virtual ~q_filter() throw();
+            explicit filterQ() throw();
+            virtual ~filterQ() throw();
 
             virtual bool query( char &C );
             virtual void store( char  C );
             virtual bool is_active() throw();
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(q_filter);
+            Y_DISABLE_COPY_AND_ASSIGN(filterQ);
         };
         
     }

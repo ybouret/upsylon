@@ -147,7 +147,7 @@ Y_UTEST_DONE()
 
 Y_UTEST(filter)
 {
-    information::b_filter F( NULL );
+    information::bytewise_filter F( NULL );
     
 }
 Y_UTEST_DONE()

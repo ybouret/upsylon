@@ -6,31 +6,31 @@ namespace upsylon {
 
     namespace information {
 
-        b_filter:: ~b_filter() throw()
+        bytewise_filter:: ~bytewise_filter() throw()
         {
         }
 
-        b_filter:: b_filter( const shaker::pointer &p ) throw() :
+        bytewise_filter:: bytewise_filter( const shaker::pointer &p ) throw() :
         transform(p)
         {
         }
 
-        b_filter:: b_filter( shaker *p )  :
+        bytewise_filter:: bytewise_filter( shaker *p )  :
         transform(p?p:new echo_modulation())
         {
 
         }
 
-        void b_filter:: write(char C)
+        void bytewise_filter:: write(char C)
         {
             push_back( transform->fetch(C) );
         }
 
-        void b_filter:: flush()
+        void bytewise_filter:: flush()
         {
         }
 
-        void b_filter:: reset() throw()
+        void bytewise_filter:: reset() throw()
         {
             transform->reset();
         }
