@@ -54,14 +54,16 @@ namespace upsylon {
                 explicit Node() throw();                    //!< build extra
 
                 virtual void vizCore(ios::ostream &) const;
+                void    emit( qbits &io ) const;
 
                 class FrequencyComparator
                 {
                 public:
-                    FrequencyComparator();
-                    ~FrequencyComparator();
+                    FrequencyComparator() throw();
+                    ~FrequencyComparator() throw();
                     int operator()(const Node&,const Node&) throw();
                 };
+
 
             private:
                 virtual ~Node() throw();
@@ -76,16 +78,21 @@ namespace upsylon {
             
             virtual ~Alphabet() throw();
 
+            void emit( qbits &io, const uint8_t u );
+
             const Mode   mode;
-            
         protected:
             List         alpha;
-            const size_t count;
-            const size_t shift;
-            size_t       bytes;
-            Node        *nodes;
-            void        *extra;
-            void         format() throw();
+            Node        *nyt;
+            Node        *eos;
+            size_t       level; //!< number of different emitted chars
+            const size_t count; //!< number of nodes
+            const size_t shift; //!< memory shift to get extra
+            size_t       bytes; //!< allocated bytes
+            Node        *nodes; //!< linear access to nodes
+            void        *extra; //!< extra bytes
+            void         initialize() throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);

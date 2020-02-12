@@ -17,6 +17,13 @@ Y_UTEST(huffman)
     Y_UTEST_SIZEOF(Alphabet::Node);
     std::cerr << "Huffman::Nodes = " << Huffman::Nodes << std::endl;
 
+    information::Huffman sHuff( information::Alphabet::StreamMode );
+    information::Huffman bHuff( information::Alphabet::BufferMode );
+
+    sHuff.getRoot().graphViz("shuff.png");
+    bHuff.getRoot().graphViz("bhuff.png");
+
+
 }
 Y_UTEST_DONE()
 

@@ -6,6 +6,7 @@
 
 #include "y/type/args.hpp"
 #include "y/type/cswap.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -152,7 +153,7 @@ namespace upsylon {
             inline void clear() throw()
             {
                 assert(count<=slots);
-                while(count>0) slot[--count] = 0;
+                while(count>0) slot[--aliasing::_(count)] = 0;
             }
 
             //! soft copy queue structure
@@ -162,12 +163,12 @@ namespace upsylon {
                 type       **target    = slot;
                 const_type **source    = (const_type **)(other.slot);
                 const size_t new_count = other.count;
-                while(count>new_count) target[--count] = 0;
+                while(count>new_count) target[--aliasing::_(count)] = 0;
                 for(size_t i=0;i<new_count;++i)
                 {
                     target[i]=(type*)(source[i]);
                 }
-                count = new_count;
+                aliasing::_(count) = new_count;
             }
 
             //! destruct
@@ -180,14 +181,14 @@ namespace upsylon {
             inline void enqueue( type *addr ) throw()
             {
                 assert(count<slots);
-                core::prio_queue<T>::template enqueue<COMPARATOR>( (type*)addr,slot,count,compare);
+                core::prio_queue<T>::template enqueue<COMPARATOR>( (type*)addr,slot,aliasing::_(count),compare);
             }
 
             //! extract address of an object
             inline type *extract( ) throw()
             {
                 assert(count>0);
-                return prio_queue<T>::template extract<COMPARATOR>( slot, count, compare);
+                return prio_queue<T>::template extract<COMPARATOR>( slot, aliasing::_(count), compare);
             }
 
             //! get top item
@@ -200,15 +201,15 @@ namespace upsylon {
             //! no-throw swap of data
             inline void swap_with( priority_queue &other ) throw()
             {
-                cswap(slot,other.slot);
+                _cswap(slot,other.slot);
                 _cswap(slots,other.slots);
-                cswap(count,other.count);
+                _cswap(count,other.count);
             }
 
 
             type        **slot;    //!< memory
             const size_t  slots;   //!< number or slots
-            size_t        count;   //!< number of occupied slots
+            const size_t  count;   //!< number of occupied slots
             COMPARATOR    compare; //!< how to compare things
 
         private:

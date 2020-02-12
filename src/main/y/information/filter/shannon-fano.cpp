@@ -9,11 +9,11 @@ namespace upsylon {
         {
         }
 
-        ShannonFano:: ShannonFano() :
-        Alphabet(Nodes, StreamMode, 0)
+        ShannonFano:: ShannonFano(const Mode m) :
+        Alphabet(Nodes,m, 0)
         {
         }
-        
+
     }
 
 }

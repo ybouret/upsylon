@@ -17,14 +17,16 @@ namespace upsylon {
             typedef core::priority_queue<Node,Node::FrequencyComparator> PrioQ;
             static const size_t Nodes = 2*Codes+1;
 
-            explicit Huffman();
+            explicit Huffman(const Mode operating);
             virtual ~Huffman() throw();
 
+            const Node &getRoot() const throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Huffman);
-            PrioQ pq;
-
+            Node  *root;
+            PrioQ  pq;
+            void buildTree() throw();
         };
 
     }
