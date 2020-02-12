@@ -5,6 +5,7 @@
 
 #include "y/information/qbits.hpp"
 #include "y/ios/tools/vizible.hpp"
+#include "y/sort/merge.hpp"
 
 namespace upsylon {
 
@@ -34,9 +35,9 @@ namespace upsylon {
             class Node : public ios::vizible
             {
             public:
-                const CodeType byte; //!< encoding
-                FreqType       freq; //!< frequency
-                CodeType       code; //!< encoded char
+                const CodeType symbol;    //!< encoding
+                FreqType       frequency; //!< frequency
+                CodeType       code;      //!< encoded char
                 union
                 {
                     Node *next;
@@ -54,16 +55,41 @@ namespace upsylon {
 
                 virtual void vizCore(ios::ostream &) const;
 
+                class FrequencyComparator
+                {
+                public:
+                    FrequencyComparator();
+                    ~FrequencyComparator();
+                    int operator()(const Node&,const Node&) throw();
+                };
+
             private:
                 virtual ~Node() throw();
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
             };
 
-            static void Format( Node *nodes, const size_t count ) throw();
-stat
+            typedef core::list_of<Node> List;
+            
+            explicit Alphabet(const size_t numNodes,
+                              const Mode   operating,
+                              const size_t extraBytes);
+            
+            virtual ~Alphabet() throw();
+
+            const Mode   mode;
+            
+        protected:
+            List         alpha;
+            const size_t count;
+            const size_t shift;
+            size_t       bytes;
+            Node        *nodes;
+            void        *extra;
+            void         format() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
+
         };
 
 

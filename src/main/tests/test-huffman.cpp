@@ -15,6 +15,7 @@ Y_UTEST(huffman)
     std::cerr << "Alphabet::Codes = " << Alphabet::Codes << std::endl;
 
     Y_UTEST_SIZEOF(Alphabet::Node);
+    std::cerr << "Huffman::Nodes = " << Huffman::Nodes << std::endl;
 
 }
 Y_UTEST_DONE()
