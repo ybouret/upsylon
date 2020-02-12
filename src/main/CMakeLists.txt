@@ -136,6 +136,12 @@ SET(information_srcs ${information_decl} ${information_code})
 SOURCE_GROUP( information FILES ${information_srcs} )
 INSTALL( FILES ${information_decl} DESTINATION include/y/information )
 
+FILE(GLOB information_filter_decl y/information/filter/*.hpp)
+FILE(GLOB information_filter_code y/information/filter/*.cpp)
+SET(information_filter_srcs ${information_filter_decl} ${information_filter_code})
+SOURCE_GROUP( information/filter FILES ${information_filter_srcs} )
+INSTALL( FILES ${information_filter_decl} DESTINATION include/y/information/filter )
+
 FILE(GLOB codec_decl y/codec/*.hpp)
 FILE(GLOB codec_code y/codec/*.cpp)
 SET(codec_srcs ${codec_decl} ${codec_code})
@@ -347,7 +353,7 @@ ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
-${information_srcs}
+${information_srcs} ${information_filter_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
