@@ -4,6 +4,7 @@
 #define Y_INFORMATION_Q_FILTER_INCLUDED 1
 
 #include "y/information/filter.hpp"
+#include "y/sequence/list.hpp"
 
 namespace upsylon {
 

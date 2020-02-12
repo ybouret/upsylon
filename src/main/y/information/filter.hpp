@@ -2,7 +2,6 @@
 #ifndef Y_INFORMATION_FILTER_INCLUDED
 #define Y_INFORMATION_FILTER_INCLUDED 1
 
-#include "y/sequence/list.hpp"
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
 
@@ -23,7 +22,9 @@ namespace upsylon {
             virtual void reset()  throw() = 0; //!< reset state
 
             //! process from current state
-            void   process(ios::ostream &target, ios::istream &source);
+            size_t   process(ios::ostream &target,
+                             ios::istream &source,
+                             size_t       *nread=0);
             string to_string(ios::istream &source);
             string to_string(const char   *text);
             string to_string(const memory::ro_buffer &buff);

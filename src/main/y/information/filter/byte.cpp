@@ -33,6 +33,7 @@ namespace upsylon {
         void bytewise_filter:: reset() throw()
         {
             transform->reset();
+            free();
         }
 
     }

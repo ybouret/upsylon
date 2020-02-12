@@ -9,24 +9,31 @@ namespace upsylon {
 
         filter:: ~filter() throw() {}
 
-        void filter:: process( ios::ostream &target, ios::istream &source )
+        size_t filter:: process( ios::ostream &target, ios::istream &source, size_t *nread )
         {
+            size_t icount = 0;
+            size_t ocount = 0;
             filter &self = *this;
             char C = 0;
             while( source.query(C) )
             {
+                ++icount;
                 self.write(C);
                 while( self.query(C) )
                 {
                     target.write(C);
+                    ++ocount;
                 }
             }
             self.flush();
             while( self.query(C) )
             {
                 target.write(C);
+                ++ocount;
             }
             target.flush();
+            if(nread) *nread = icount;
+            return ocount;
         }
 
 

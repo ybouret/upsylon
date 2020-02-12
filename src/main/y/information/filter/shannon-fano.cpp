@@ -10,7 +10,7 @@ namespace upsylon {
         }
 
         ShannonFano:: ShannonFano(const Mode m) :
-        Alphabet(Nodes,m, 0)
+        Alphabet(m,0)
         {
         }
 

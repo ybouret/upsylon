@@ -19,7 +19,7 @@ namespace upsylon {
 
             virtual void write( char C ); //!< store transformed char
             virtual void flush();         //!< do nothing
-            virtual void reset() throw(); //!< reset transform
+            virtual void reset() throw(); //!< reset transform and free 
 
         private:
             shaker::pointer transform;
