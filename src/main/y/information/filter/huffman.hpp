@@ -61,7 +61,7 @@ namespace upsylon {
                 virtual ~Decoder() throw();     //!< cleanup
 
                 virtual void reset() throw();   //!< restart context and free data
-                virtual void write(char C);     //!< write to io
+                virtual void write(char C);     //!< write to io and try to decode
                 virtual void flush();           //!< io.drop
 
             private:
@@ -73,6 +73,8 @@ namespace upsylon {
                 };
                 Flag    flag;
                 Node   *curr;
+
+                void decode();
 
             };
 
