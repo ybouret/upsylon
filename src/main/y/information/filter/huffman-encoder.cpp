@@ -35,8 +35,8 @@ namespace upsylon {
 
         void Huffman:: Encoder:: reset() throw()
         {
-            restart();
-            io.free();
+            setupTree();
+            free_all();
         }
 
 

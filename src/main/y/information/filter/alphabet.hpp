@@ -1,7 +1,6 @@
-
 //! \file
 #ifndef Y_INFORMATION_ALPHABET_INCLUDED
-#define Y_INFORMATION_ALPHANET_INCLUDED 1
+#define Y_INFORMATION_ALPHABET_INCLUDED 1
 
 #include "y/information/qbits.hpp"
 #include "y/ios/tools/vizible.hpp"
@@ -11,10 +10,20 @@ namespace upsylon {
 
     namespace information {
 
+        //! base class for a dynamic alphabet
         class Alphabet
         {
         public:
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+
+            //__________________________________________________________________
+            //
             //! operating on buffer or streams
+            //__________________________________________________________________
             enum Mode
             {
                 StreamMode, //!< will use EOS
@@ -32,9 +41,10 @@ namespace upsylon {
             static const size_t   Alive = Chars+1;   //!< never more in alphabet
             static const size_t   Nodes = 2*Alive+1; //!< maximum number of nodes
 
-            static const char *NameOf( const CodeType byte ) throw();
-
-            //! building
+            //__________________________________________________________________
+            //
+            //! node for alphabet/tree
+            //__________________________________________________________________
             class Node : public ios::vizible
             {
             public:
@@ -42,40 +52,58 @@ namespace upsylon {
                 FreqType       frequency; //!< frequency
                 CodeType       code;      //!< encoded char
                 size_t         bits;      //!< current bits
-                Node          *next;
-                Node          *prev;
-                Node          *left;
-                Node          *right;
+                Node          *next;      //!< for List
+                Node          *prev;      //!< for List
+                Node          *left;      //!< for Tree
+                Node          *right;     //!< for Tree
 
 
                 explicit Node(const CodeType _code, const size_t _bits) throw(); //!< build a leaf
                 explicit Node() throw();                                         //!< build internal
 
-                virtual void vizCore(ios::ostream &) const;
-                void    emit( qbits &io ) const;
+                virtual void vizCore(ios::ostream &) const; //!< for graphViz
+                void    emit( qbits &io ) const;            //!< write code/bits to io
 
-                class FrequencyComparator
+                //! handle priority by highest frequency
+                class Priority
                 {
                 public:
-                    FrequencyComparator() throw();
-                    ~FrequencyComparator() throw();
+                    Priority() throw();  //!< setup
+                    ~Priority() throw(); //!< cleanup
+
+                    //! highest frequency
                     int operator()(const Node&,const Node&) throw();
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Priority);
                 };
 
-                void display() const;
+                void display() const; //!< display data
 
             private:
                 virtual ~Node() throw();
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
             };
 
+            //__________________________________________________________________
+            //
+            //! raw list of nodes
+            //__________________________________________________________________
             typedef core::list_of<Node> List;
-            
+
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+
+            //! setup alphabet
             explicit Alphabet(const Mode   operating,
                               const size_t extraBytes);
-            
+
+            //! cleanup
             virtual ~Alphabet() throw();
 
+            //! manage alphabet and return modified node
             Node        *emit(qbits &io, const uint8_t u);
 
             const Mode   mode;  //!< operating mode
@@ -83,7 +111,9 @@ namespace upsylon {
             const size_t shift; //!< memory shift to get extra
             const size_t bytes; //!< allocated bytes
 
-            void displayAlpha() const;
+            void               displayAlpha() const;           //!< display alphabet
+            static const char *NameOf(const CodeType) throw(); //!< show node name
+
 
         protected:
             List         alpha; //!< currently used alphabet
@@ -91,12 +121,14 @@ namespace upsylon {
             Node        *nyt;   //!< NYT node
             Node        *eos;   //!< EOS node
             
-            void         initialize() throw();
-            void        *extra()      throw();
+            void         initialize() throw(); //!< setup minimal alphabet
+            void        *extra()      throw(); //!< get location of extra memory
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
-
+            
+        public:
+            const size_t added; //!< added byte
         };
 
 

@@ -138,8 +138,7 @@ namespace upsylon {
 
             //! setup empty
             inline explicit priority_queue() throw() :
-            slot(0), slots(0), count(0), compare()
-            {}
+            slot(0), slots(0), count(0), compare() {}
 
             //! setup
             inline explicit priority_queue(type       **base,

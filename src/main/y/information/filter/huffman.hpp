@@ -12,23 +12,25 @@ namespace upsylon {
     namespace information {
 
 
+        //! Huffman Codec
         struct Huffman
         {
+            //! common operation: build the tree and the codes
             class Context : public Alphabet
             {
             public:
-                typedef core::priority_queue<Node,Node::FrequencyComparator> PrioQ;
+                //! prioririty queue to build tree
+                typedef core::priority_queue<Node,Node::Priority> PrioQ;
 
-                virtual ~Context() throw();
-
-                const Node &getRoot() const throw();
+                virtual    ~Context()       throw(); //!< cleanup
+                const Node &getRoot() const throw(); //!< get the root node
 
             protected:
-                explicit Context(const Mode operating);
-                void   buildTree() throw();
-                void   restart() throw();
+                explicit Context(const Mode operating); //!< setup
+                void     buildTree() throw();           //!< build the tree
+                void     setupTree() throw();           //!< initialize alphabet and build tree
                 
-                Node  *root;
+                Node    *root; //!< the never NULL root!
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Context);
@@ -36,19 +38,44 @@ namespace upsylon {
                 
             };
 
+            //! encoder based on a context and an eXtended Queue Filter
             class Encoder : public Context, public filterXQ
             {
             public:
-                explicit Encoder( const Mode m);
-                virtual ~Encoder() throw();
+                explicit Encoder(const Mode m); //!< setup
+                virtual ~Encoder() throw();     //!< cleanup
 
-                virtual void reset() throw();
-                virtual void write( char C );
-                virtual void flush();
+                virtual void reset() throw();   //!< restart context and free all data
+                virtual void write(char C);     //!< encode char
+                virtual void flush();           //!< flush with/out EOS
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
             };
+
+            //! decoder based on a context and a queue filter
+            class Decoder : public Context, public filterXQ
+            {
+            public:
+                explicit Decoder(const Mode m); //!< setup
+                virtual ~Decoder() throw();     //!< cleanup
+
+                virtual void reset() throw();   //!< restart context and free data
+                virtual void write(char C);     //!< write to io
+                virtual void flush();           //!< io.drop
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Decoder);
+                enum Flag
+                {
+                    wait_for_byte,
+                    wait_for_bits
+                };
+                Flag    flag;
+                Node   *curr;
+
+            };
+
 
         };
 

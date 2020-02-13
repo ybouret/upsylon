@@ -25,9 +25,10 @@ namespace upsylon {
             size_t   process(ios::ostream &target,
                              ios::istream &source,
                              size_t       *nread=0);
-            string to_string(ios::istream &source);
-            string to_string(const char   *text);
-            string to_string(const memory::ro_buffer &buff);
+
+            string to_string(ios::istream            &source); //!< wrapper
+            string to_string(const char              *text);   //!< wrapper
+            string to_string(const memory::ro_buffer &buff);   //!< wrapper
 
         protected:
             explicit filter() throw(); //!< setup

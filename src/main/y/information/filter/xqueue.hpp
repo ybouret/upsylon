@@ -15,12 +15,15 @@ namespace upsylon {
         class filterXQ : public filterQ
         {
         public:
-            explicit filterXQ() throw();
-            virtual ~filterXQ() throw();
+            virtual ~filterXQ() throw();  //!< cleanup
 
-            qbits io;
-            void  compile();
-            void  zfinish();
+        protected:
+            explicit filterXQ() throw(); //!< setup
+            void     compile();          //!< io -> list, may leave some bits
+            void     zfinish();          //!< io.zpad() -> list, no more bits
+            void     free_all() throw(); //!< io.free(), this->free
+
+            qbits    io;                 //!< queue of bits
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(filterXQ);

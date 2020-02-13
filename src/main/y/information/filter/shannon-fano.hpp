@@ -10,19 +10,24 @@ namespace upsylon {
 
     namespace information {
 
-
-        class ShannonFano : public Alphabet
+        //! Shannon-Fano encoding
+        struct ShannonFano
         {
-        public:
-            static const size_t Nodes = 2*Codes+1;
+            //! context based on alphabet, used to build tree
+            class Context : public Alphabet
+            {
+            public:
+                virtual ~Context() throw();   //!< cleanup
+                explicit Context(const Mode); //!< setup
 
-            explicit ShannonFano(const Mode m);
-            virtual ~ShannonFano() throw();
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Context);
+            };
 
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ShannonFano);
         };
+
+
 
     }
 

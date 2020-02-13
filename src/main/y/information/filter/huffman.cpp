@@ -17,7 +17,7 @@ namespace upsylon {
             buildTree();
         }
 
-        void Huffman:: Context:: restart() throw()
+        void Huffman:: Context:: setupTree() throw()
         {
             initialize();
             buildTree();

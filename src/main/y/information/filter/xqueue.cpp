@@ -28,6 +28,12 @@ namespace upsylon {
             assert(0==io.size());
         }
 
+        void filterXQ:: free_all() throw()
+        {
+            this->free();
+            io.free();
+        }
+
     }
 
 }

@@ -5,11 +5,12 @@ namespace upsylon {
 
     namespace information {
 
-        ShannonFano:: ~ShannonFano() throw()
-        {
-        }
 
-        ShannonFano:: ShannonFano(const Mode m) :
+        ShannonFano:: Context:: ~Context() throw()
+        {}
+
+
+        ShannonFano:: Context:: Context(const Mode m) :
         Alphabet(m,0)
         {
         }

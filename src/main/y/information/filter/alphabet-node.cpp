@@ -85,16 +85,16 @@ namespace upsylon {
 
 
 
-        Alphabet::Node::FrequencyComparator:: FrequencyComparator() throw()
+        Alphabet::Node::Priority:: Priority() throw()
         {
         }
 
-        Alphabet::Node::FrequencyComparator:: ~FrequencyComparator() throw()
+        Alphabet::Node::Priority:: ~Priority() throw()
         {
         }
 
 
-        int Alphabet::Node::FrequencyComparator:: operator()(const Node &lhs, const Node &rhs) throw()
+        int Alphabet::Node::Priority:: operator()(const Node &lhs, const Node &rhs) throw()
         {
             const FreqType L = lhs.frequency;
             const FreqType R = rhs.frequency;

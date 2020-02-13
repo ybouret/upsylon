@@ -12,7 +12,10 @@ namespace upsylon {
         {
             static const FreqType ControlFreq = 0;
 
+            //! restart level
             aliasing::_(level) = 0;
+
+            //! clean alphabet
             alpha.reset();
 
             for(CodeType i=0;i<Chars;++i)
@@ -67,8 +70,14 @@ namespace upsylon {
         {
             alpha.reset();
             void *addr = nodes;
+            memset(addr,0,bytes);
             memory::global::location().release( addr, aliasing::_(bytes) );
-            
+            nodes = 0;
+            aliasing::_(level) = 0;
+            aliasing::_(shift) = 0;
+            aliasing::_(added) = 0;
+            nyt = 0;
+            eos = 0;
         }
 
         void * Alphabet:: extra() throw()
@@ -87,7 +96,8 @@ namespace upsylon {
         alpha(),
         nodes( static_cast<Node*>(memory::global::instance().acquire( aliasing::_(bytes) ) ) ),
         nyt(nodes+NYT),
-        eos(nodes+EOS)
+        eos(nodes+EOS),
+        added( bytes - shift )
         {
             initialize();
         }
@@ -99,6 +109,7 @@ namespace upsylon {
             if( node->frequency++ <= 0 )
             {
                 assert(level<256);
+                assert(8==node->bits);
                 switch(aliasing::_(level)++)
                 {
                     case 0:    // very first char, no prolog
@@ -114,6 +125,7 @@ namespace upsylon {
                         break;
                 }
                 alpha.push_back(node);
+                // always keep the control chars at the end
                 while(node->prev&&node->prev->symbol>=Chars)
                 {
                     alpha.towards_head(node);
@@ -126,11 +138,12 @@ namespace upsylon {
 
         void Alphabet:: displayAlpha() const
         {
-            std::cerr << "#alpha=" << alpha.size << std::endl;
+            std::cerr << "<alphabet size=" << alpha.size << ", level=" << level << ">" << std::endl;
             for(const Node *node=alpha.head;node;node=node->next)
             {
-                node->display();
+                std::cerr << "\t"; node->display();
             }
+            std::cerr << "<alphabet/>" << std::endl;
         }
 
 
