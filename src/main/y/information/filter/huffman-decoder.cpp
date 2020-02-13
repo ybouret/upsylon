@@ -1,4 +1,5 @@
 #include "y/information/filter/huffman.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
 
@@ -40,33 +41,40 @@ namespace upsylon {
                 switch(flag)
                 {
                     case wait_for_byte:
+                        //std::cerr << "[HUFF]: wait_for_byte" << std::endl;
                         assert(curr!=NULL);
                         assert(curr->symbol>=Chars);
                         if( io.size() < 8 )
                         {
+                            //std::cerr << "[HUFF] return on #bits=" << io.size() <<  std::endl;
                             return; // not enough bits
                         }
                         else
                         {
-                            onNewByte( io.pop<uint8_t>() );
+                            const uint8_t u = io.pop<uint8_t>();
+                            onNewByte( u );
+                            //std::cerr << "[HUFF]: '" << visible_char[u] << "'" << std::endl;
                         }
                         break;
 
                     case wait_for_bits:
+                        //std::cerr << "[HUFF]: wait_for_bits" << std::endl;
                         assert(curr!=NULL);
                         assert(curr->symbol>=Chars);
                         assert(curr->left);
                         assert(curr->right);
                         if( io.size() <= 0 )
                         {
+                            //std::cerr << "[HUFF] return on #bits=" << io.size() <<  std::endl;
                             return;
                         }
                         else
                         {
                             curr                  = io.pop() ? curr->right : curr->left;
                             const CodeType symbol = curr->symbol;
-                            if(symbol<=Codes)
+                            if(symbol<Codes)
                             {
+                                //std::cerr << "[HUFF] walked to '" << NameOf(symbol) << "'" << std::endl;
                                 switch(symbol)
                                 {
                                     case EOS: io.drop(); curr=root; break;
@@ -91,7 +99,7 @@ namespace upsylon {
 
         void Huffman:: Decoder:: flush()
         {
-            
+            decode();
         }
 
     }

@@ -20,20 +20,24 @@ namespace {
         size_t no = 0;
         {
             Huffman::Encoder enc(m);
-            ios::icstream source( fileName );
-            ios::ocstream target( huffName );
+            ios::icstream    source( fileName );
+            ios::ocstream    target( huffName );
 
             enc.reset();
             no = enc.process(target,source,&ni);
             std::cerr << "Encoder: " << ni << "->" << no << std::endl;
+            //enc.displayAlpha();
+            //enc.getRoot().graphViz( huffName + "_tree.dot" );
         }
+
+        //return;
 
         size_t nr = 0;
         size_t nd = 0;
         {
             Huffman::Decoder dec(m);
-            ios::icstream source( huffName );
-            ios::ocstream target( backName );
+            ios::icstream    source( huffName );
+            ios::ocstream    target( backName );
 
             dec.reset();
             nd = dec.process(target,source,&nr);
@@ -64,6 +68,7 @@ Y_UTEST(huffman)
             testHuffmanCodec(Alphabet::StreamMode, fileName, huffName, backName);
         }
 
+        if(true)
         {
             const string huffName = "bhuff.bin";
             const string backName = "bback.bin";
@@ -71,26 +76,6 @@ Y_UTEST(huffman)
         }
 
 
-#if 0
-        {
-            size_t nis = 0;
-            ios::icstream source( fileName );
-            ios::ocstream target( "shuff.bin" );
-            sHuff.reset();
-            const size_t nos = sHuff.process(target,source,&nis);
-            std::cerr << nis << "->" << nos << std::endl;
-        }
-
-        if(true)
-        {
-            size_t nib = 0;
-            ios::icstream source( fileName );
-            ios::ocstream target( "bhuff.bin" );
-            bHuff.reset();
-            const size_t nob = bHuff.process(target,source,&nib);
-            std::cerr << nib << "->" << nob << std::endl;
-        }
-#endif
 
     }
 

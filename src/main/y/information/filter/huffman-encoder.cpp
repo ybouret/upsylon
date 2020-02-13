@@ -26,8 +26,11 @@ namespace upsylon {
         {
             switch( mode )
             {
-                case StreamMode: eos->emit(io); break;
-                case BufferMode: break;
+                case StreamMode: eos->emit(io);
+                    //std::cerr << "[HUFF] " << NameOf(EOS) << std::endl;
+                    break;
+                case BufferMode:
+                    break;
             }
             zfinish();
 

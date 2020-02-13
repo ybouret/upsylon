@@ -31,8 +31,10 @@ namespace upsylon {
             {
                 Alphabet::Node *right = node->right;
                 assert(right);
-                left->bits  = right->bits = node->bits+1;
-                right->code = (left->code = node->code << 1) | 1;
+                const size_t nbit = node->bits;
+                left->bits  = right->bits = nbit+1;
+                left->code  = right->code = node->code;
+                right->code |= (1<<nbit);
                 UpdateCode(left);
                 UpdateCode(right);
             }
@@ -42,8 +44,6 @@ namespace upsylon {
         void Huffman:: Context:: buildTree() throw()
         {
             assert(alpha.size>0);
-            //std::cerr << "Building tree from #" << alpha.size << std::endl;
-
             pq.clear();
             for(Node *node = alpha.tail;node;node=node->prev )
             {
@@ -53,6 +53,7 @@ namespace upsylon {
             }
 
             size_t iNode = Codes;
+            size_t nbits = 0;
             while( pq.count > 1 )
             {
                 assert(iNode<Nodes);
@@ -60,7 +61,7 @@ namespace upsylon {
                 Node *right       = parent->right = pq.extract();
                 Node *left        = parent->left  = pq.extract();
                 parent->frequency = left->frequency+right->frequency;
-                parent->bits      = max_of(left->bits,right->bits)+1;
+                nbits             = (parent->bits = max_of(left->bits,right->bits)+1);
                 pq.enqueue(parent);
             }
             assert(1==pq.count);

@@ -140,6 +140,18 @@ Y_ASSERT( a_##TYPE == b_##TYPE );        \
         Y_QBITS_IO(my_ilong);
     }
 
+    size_t       code = 0;
+    vector<bool> ibits;
+    const size_t nbit = alea.leq(sizeof(code));
+    for(size_t i=0;i<nbit;++i)
+    {
+        const bool b = alea.choice();
+        code <<= 1;
+        if(b) code |= 1;
+        ibits.push_back(b);
+    }
+
+
 }
 Y_UTEST_DONE()
 

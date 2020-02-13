@@ -77,7 +77,7 @@ namespace upsylon {
                     Y_DISABLE_COPY_AND_ASSIGN(Priority);
                 };
 
-                void display() const; //!< display data
+                void display() const;     //!< display data
 
             private:
                 virtual ~Node() throw();

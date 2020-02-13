@@ -129,10 +129,12 @@ namespace upsylon {
                         nyt->emit(io);
                         nyt->frequency = 0;
                         (void) alpha.unlink(nyt);
+                        //std::cerr << "[HUFF] " << NameOf(NYT) << std::endl;
                         break;
                     default:
                         assert(level<256);
                         nyt->emit(io);
+                        //std::cerr << "[HUFF] " << NameOf(NYT) << std::endl;
                         break;
                 }
 
@@ -140,6 +142,7 @@ namespace upsylon {
                 placeBeforeControls(node);
             }
             node->emit(io);
+            //std::cerr << "[HUFF] " << NameOf(u) << std::endl;
             return node;
         }
 
