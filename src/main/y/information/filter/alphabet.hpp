@@ -109,6 +109,9 @@ namespace upsylon {
             //! manage alphabet and return modified node
             Node        *recv(const uint8_t u) throw();
 
+            //! reduce entropy by rescaling frequencyies
+            void reduceEntropy() throw();
+            
             const Mode   mode;  //!< operating mode
             const size_t level; //!< number of different emitted chars
             const size_t shift; //!< memory shift to get extra
@@ -116,7 +119,6 @@ namespace upsylon {
 
             void               displayAlpha() const;           //!< display alphabet
             static const char *NameOf(const CodeType) throw(); //!< show node name
-
 
         protected:
             List         alpha; //!< currently used alphabet

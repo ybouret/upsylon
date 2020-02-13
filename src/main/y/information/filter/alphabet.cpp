@@ -183,6 +183,22 @@ namespace upsylon {
             std::cerr << "<alphabet/>" << std::endl;
         }
 
+        static inline void rescale( size_t &f ) throw()
+        {
+            if(f>0)
+            {
+                f >>= 1;
+                f |=  1;
+            }
+        }
+        
+        void Alphabet:: reduceEntropy() throw()
+        {
+            for(Node *node=alpha.head;node;node=node->next)
+            {
+                rescale(node->frequency);
+            }
+        }
 
     }
 }

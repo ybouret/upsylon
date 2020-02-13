@@ -44,6 +44,7 @@ namespace upsylon {
         void Huffman:: Context:: buildTree() throw()
         {
             assert(alpha.size>0);
+        BUILD_TREE:
             pq.clear();
             for(Node *node = alpha.tail;node;node=node->prev )
             {
@@ -53,7 +54,6 @@ namespace upsylon {
             }
 
             size_t iNode   = Codes;
-            size_t maxBits = 0;
             while( pq.count > 1 )
             {
                 assert(iNode<Nodes);
@@ -61,19 +61,17 @@ namespace upsylon {
                 Node *right        = parent->right = pq.extract();
                 Node *left         = parent->left  = pq.extract();
                 const size_t nbits = parent->bits = max_of(left->bits,right->bits)+1;
-                if(nbits>maxBits)
+                if(nbits>16)
                 {
-                    maxBits = nbits;
+                    //std::cerr << "should rescale" << std::endl;
+                    //reduceEntropy();
+                    //goto BUILD_TREE;
                 }
                 parent->frequency  = left->frequency+right->frequency;
-
                 pq.enqueue(parent);
             }
             assert(1==pq.count);
-            //if(maxBits>16)
-            {
-                std::cerr << "maxBits=" << maxBits << std::endl;
-            }
+            
             root = pq.extract();
 
             root->code = 0;

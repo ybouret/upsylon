@@ -55,7 +55,9 @@ namespace upsylon {
 
         void Alphabet:: Node:: vizCore(ios::ostream &fp) const
         {
-            endl( fp( " [label=\"%s@%lu:%u\"]", NameOf(symbol), (unsigned long)frequency, unsigned(bits)) );
+            const unsigned long f = static_cast<unsigned long>(frequency);
+            const unsigned      b = static_cast<unsigned>(bits);
+            endl( fp( " [label=\"%s#%lu:%u\"]", NameOf(symbol),f,b) );
             if(left)
             {
                 left->vizSave(fp);
