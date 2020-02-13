@@ -74,7 +74,7 @@ namespace upsylon {
             fprintf( stderr, "%4s : 0x%08x : %2u : ", NameOf(symbol), unsigned(frequency), unsigned(bits) );
             fflush(stderr);
 
-            for(int i=0;i<bits;++i)
+            for(size_t i=0;i<bits;++i)
             {
                 if( 0 != (code & (1<< (i) ))) std::cerr << "1"; else std::cerr << "0";
             }

@@ -52,21 +52,30 @@ namespace upsylon {
                 node->bits = 1;
             }
 
-            size_t iNode = Codes;
-            size_t nbits = 0;
+            size_t iNode   = Codes;
+            size_t maxBits = 0;
             while( pq.count > 1 )
             {
                 assert(iNode<Nodes);
-                Node *parent      = &nodes[iNode++]; assert(Built==parent->symbol);
-                Node *right       = parent->right = pq.extract();
-                Node *left        = parent->left  = pq.extract();
-                parent->frequency = left->frequency+right->frequency;
-                nbits             = (parent->bits = max_of(left->bits,right->bits)+1);
+                Node *parent       = &nodes[iNode++]; assert(Built==parent->symbol);
+                Node *right        = parent->right = pq.extract();
+                Node *left         = parent->left  = pq.extract();
+                const size_t nbits = parent->bits = max_of(left->bits,right->bits)+1;
+                if(nbits>maxBits)
+                {
+                    maxBits = nbits;
+                }
+                parent->frequency  = left->frequency+right->frequency;
+
                 pq.enqueue(parent);
             }
             assert(1==pq.count);
+            if(maxBits>16)
+            {
+                std::cerr << "maxBits=" << maxBits << std::endl;
+            }
             root = pq.extract();
-            //std::cerr << "iNode=" << iNode << " / " << Nodes << std::endl;
+
             root->code = 0;
             root->bits = 0;
             UpdateCode(root);

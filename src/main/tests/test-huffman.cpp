@@ -46,12 +46,15 @@ namespace {
             enc.reset();
             no = enc.process(target,source,&ni);
             std::cerr << "Encoder: " << ni << "->" << no << std::endl;
+            enc.displayAlpha();
         }
+
+
 
         const digest h_ini = testDigest(fileName,ni);
         std::cerr << "h_ini=" << h_ini << std::endl;
 
-        //return;
+
 
         size_t nr = 0;
         size_t nd = 0;
