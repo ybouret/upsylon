@@ -63,7 +63,7 @@ namespace upsylon {
                 const size_t nbits = parent->bits = max_of(left->bits,right->bits)+1;
                 if(nbits>16)
                 {
-                    //std::cerr << "should rescale" << std::endl;
+                    std::cerr << "should rescale from " << nbits << std::endl;
                     //reduceEntropy();
                     //goto BUILD_TREE;
                 }
