@@ -17,7 +17,7 @@ namespace upsylon {
         void Huffman:: Encoder:: write( char C )
         {
             const uint8_t u = C;
-            (void) emit(io,u);
+            (void) send(io,u);
             compile();
             buildTree();
         }

@@ -104,7 +104,10 @@ namespace upsylon {
             virtual ~Alphabet() throw();
 
             //! manage alphabet and return modified node
-            Node        *emit(qbits &io, const uint8_t u);
+            Node        *send(qbits &io, const uint8_t u);
+
+            //! manage alphabet and return modified node
+            Node        *recv(const uint8_t u) throw();
 
             const Mode   mode;  //!< operating mode
             const size_t level; //!< number of different emitted chars
@@ -126,7 +129,8 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
-            
+            void placeBeforeControls(Node *) throw();
+
         public:
             const size_t added; //!< added byte
         };

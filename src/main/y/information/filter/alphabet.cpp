@@ -103,7 +103,18 @@ namespace upsylon {
         }
 
 
-        Alphabet::Node *Alphabet:: emit(qbits &io, const uint8_t u)
+
+        void Alphabet:: placeBeforeControls(Node *node) throw()
+        {
+            assert(node);
+            alpha.push_back(node);
+            while(node->prev&&node->prev->symbol>=Chars)
+            {
+                alpha.towards_head(node);
+            }
+        }
+
+        Alphabet::Node *Alphabet:: send(qbits &io, const uint8_t u)
         {
             Node *node = nodes+u; assert(u==node->symbol);
             if( node->frequency++ <= 0 )
@@ -124,16 +135,39 @@ namespace upsylon {
                         nyt->emit(io);
                         break;
                 }
-                alpha.push_back(node);
+
                 // always keep the control chars at the end
-                while(node->prev&&node->prev->symbol>=Chars)
-                {
-                    alpha.towards_head(node);
-                }
+                placeBeforeControls(node);
             }
             node->emit(io);
             return node;
         }
+
+        Alphabet::Node *Alphabet:: recv(const uint8_t u) throw()
+        {
+            Node *node = nodes+u; assert(u==node->symbol);
+            if( node->frequency++ <= 0 )
+            {
+                assert(level<256);
+                assert(8==node->bits);
+                switch(aliasing::_(level)++)
+                {
+                    case 0:    // very first char, no prolog
+                        break;
+                    case 255: // emit nyt and remove it
+                        nyt->frequency = 0;
+                        (void) alpha.unlink(nyt);
+                        break;
+                    default:
+                        assert(level<256);
+                        break;
+                }
+                // always keep the control chars at the end
+                placeBeforeControls(node);
+            }
+            return node;
+        }
+
 
 
         void Alphabet:: displayAlpha() const

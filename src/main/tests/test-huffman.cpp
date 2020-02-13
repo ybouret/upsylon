@@ -9,6 +9,40 @@ using namespace information;
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
 
+namespace {
+
+    void testHuffmanCodec(const Alphabet::Mode m,
+                          const string        &fileName,
+                          const string        &huffName,
+                          const string        &backName)
+    {
+        size_t ni = 0;
+        size_t no = 0;
+        {
+            Huffman::Encoder enc(m);
+            ios::icstream source( fileName );
+            ios::ocstream target( huffName );
+
+            enc.reset();
+            no = enc.process(target,source,&ni);
+            std::cerr << "Encoder: " << ni << "->" << no << std::endl;
+        }
+
+        size_t nr = 0;
+        size_t nd = 0;
+        {
+            Huffman::Decoder dec(m);
+            ios::icstream source( huffName );
+            ios::ocstream target( backName );
+
+            dec.reset();
+            nd = dec.process(target,source,&nr);
+            std::cerr << "Decoder: " << nr << "->" << nd << std::endl;
+        }
+    }
+
+}
+
 Y_UTEST(huffman)
 {
 
@@ -20,15 +54,24 @@ Y_UTEST(huffman)
 
     Y_UTEST_SIZEOF(Alphabet::Node);
 
-    Huffman::Encoder sHuff( Alphabet::StreamMode );
-    Huffman::Encoder bHuff( Alphabet::BufferMode );
-
-    sHuff.displayAlpha();
-    bHuff.displayAlpha();
 
     if( argc> 1 )
     {
         const string  fileName = argv[1];
+        {
+            const string huffName = "shuff.bin";
+            const string backName = "sback.bin";
+            testHuffmanCodec(Alphabet::StreamMode, fileName, huffName, backName);
+        }
+
+        {
+            const string huffName = "bhuff.bin";
+            const string backName = "bback.bin";
+            testHuffmanCodec(Alphabet::BufferMode, fileName, huffName, backName);
+        }
+
+
+#if 0
         {
             size_t nis = 0;
             ios::icstream source( fileName );
@@ -47,14 +90,11 @@ Y_UTEST(huffman)
             const size_t nob = bHuff.process(target,source,&nib);
             std::cerr << nib << "->" << nob << std::endl;
         }
+#endif
 
     }
 
 
-    sHuff.displayAlpha();
-    bHuff.displayAlpha();
-    sHuff.getRoot().graphViz("stree.dot");
-    bHuff.getRoot().graphViz("btree.dot");
 
 
 

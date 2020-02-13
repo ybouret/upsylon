@@ -62,7 +62,7 @@ namespace upsylon {
 
                 virtual void reset() throw();   //!< restart context and free data
                 virtual void write(char C);     //!< write to io and try to decode
-                virtual void flush();           //!< io.drop
+                virtual void flush();           //!< do nothing
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Decoder);
@@ -75,7 +75,7 @@ namespace upsylon {
                 Node   *curr;
 
                 void decode();
-
+                void onNewByte( const uint8_t u );
             };
 
 
