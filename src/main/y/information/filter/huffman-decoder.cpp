@@ -41,31 +41,26 @@ namespace upsylon {
                 switch(flag)
                 {
                     case wait_for_byte:
-                        //std::cerr << "[HUFF]: wait_for_byte" << std::endl;
                         assert(curr!=NULL);
                         assert(curr->symbol>=Chars);
                         if( io.size() < 8 )
                         {
-                            //std::cerr << "[HUFF] return on #bits=" << io.size() <<  std::endl;
                             return; // not enough bits
                         }
                         else
                         {
                             const uint8_t u = io.pop<uint8_t>();
                             onNewByte( u );
-                            //std::cerr << "[HUFF]: '" << visible_char[u] << "'" << std::endl;
                         }
                         break;
 
                     case wait_for_bits:
-                        //std::cerr << "[HUFF]: wait_for_bits" << std::endl;
                         assert(curr!=NULL);
                         assert(curr->symbol>=Chars);
                         assert(curr->left);
                         assert(curr->right);
                         if( io.size() <= 0 )
                         {
-                            //std::cerr << "[HUFF] return on #bits=" << io.size() <<  std::endl;
                             return;
                         }
                         else
@@ -74,10 +69,13 @@ namespace upsylon {
                             const CodeType symbol = curr->symbol;
                             if(symbol<Codes)
                             {
-                                //std::cerr << "[HUFF] walked to '" << NameOf(symbol) << "'" << std::endl;
                                 switch(symbol)
                                 {
-                                    case EOS: io.drop(); curr=root; break;
+                                    case EOS:
+                                        std::cerr << "[EOS]" << std::endl;
+                                        io.drop(); curr=root;
+                                        assert(0==io.size());
+                                        break;
                                     case NYT: flag = wait_for_byte; break;
                                     default: assert(symbol<Chars);
                                         onNewByte(symbol);

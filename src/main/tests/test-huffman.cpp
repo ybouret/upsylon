@@ -8,9 +8,29 @@ using namespace information;
 
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/hashing/sha1.hpp"
 
 namespace {
 
+    static inline
+    digest testDigest( const string &backName, const size_t nmax )
+    {
+        hashing::sha1 H;
+        H.set();
+        {
+            char C = 0;
+            ios::icstream fp(backName);
+            size_t n = 0;
+            while( fp.query(C) )
+            {
+                if(++n>nmax) break;
+                H(&C,1);
+            }
+
+        }
+        return H.md();
+
+    }
     void testHuffmanCodec(const Alphabet::Mode m,
                           const string        &fileName,
                           const string        &huffName,
@@ -26,9 +46,10 @@ namespace {
             enc.reset();
             no = enc.process(target,source,&ni);
             std::cerr << "Encoder: " << ni << "->" << no << std::endl;
-            //enc.displayAlpha();
-            //enc.getRoot().graphViz( huffName + "_tree.dot" );
         }
+
+        const digest h_ini = testDigest(fileName,ni);
+        std::cerr << "h_ini=" << h_ini << std::endl;
 
         //return;
 
@@ -43,6 +64,9 @@ namespace {
             nd = dec.process(target,source,&nr);
             std::cerr << "Decoder: " << nr << "->" << nd << std::endl;
         }
+        const digest h_end= testDigest(fileName,ni);
+        std::cerr << "h_end=" << h_end << std::endl;
+        Y_CHECK(h_ini==h_end);
     }
 
 }
