@@ -70,7 +70,7 @@ namespace upsylon {
                 pq.enqueue(parent);
             }
             assert(1==pq.count);
-            if(maxBits>16)
+            //if(maxBits>16)
             {
                 std::cerr << "maxBits=" << maxBits << std::endl;
             }

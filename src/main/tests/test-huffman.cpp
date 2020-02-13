@@ -31,6 +31,7 @@ namespace {
         return H.md();
 
     }
+    
     void testHuffmanCodec(const Alphabet::Mode m,
                           const string        &fileName,
                           const string        &huffName,
@@ -102,10 +103,24 @@ Y_UTEST(huffman)
             testHuffmanCodec(Alphabet::BufferMode, fileName, huffName, backName);
         }
 
-
-
     }
-
+    else
+    {
+        Huffman::Encoder enc(Alphabet::StreamMode);
+        size_t u0 = 1;
+        size_t u1 = 1;
+        for(size_t ch=0;ch<=15;++ch)
+        {
+            const size_t n=u0+u1;
+            for(size_t i=0;i<n;++i)
+            {
+                enc.write(ch);
+            }
+            u0=u1;
+            u1=n;
+        }
+        enc.getRoot().graphViz("huff.dot");
+    }
 
 
 
