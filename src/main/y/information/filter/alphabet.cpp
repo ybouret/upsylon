@@ -192,7 +192,7 @@ namespace upsylon {
             }
         }
         
-        void Alphabet:: reduceEntropy() throw()
+        void Alphabet:: reduceFrequencies() throw()
         {
             for(Node *node=alpha.head;node;node=node->next)
             {

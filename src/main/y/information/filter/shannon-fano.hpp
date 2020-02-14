@@ -19,7 +19,7 @@ namespace upsylon {
             public:
                 virtual ~Context() throw();   //!< cleanup
                 explicit Context(const Mode); //!< setup
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Context);
             };

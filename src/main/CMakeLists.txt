@@ -142,6 +142,12 @@ SET(information_filter_srcs ${information_filter_decl} ${information_filter_code
 SOURCE_GROUP( information/filter FILES ${information_filter_srcs} )
 INSTALL( FILES ${information_filter_decl} DESTINATION include/y/information/filter )
 
+FILE(GLOB information_filter_huffman_decl y/information/filter/huffman/*.hpp)
+FILE(GLOB information_filter_huffman_code y/information/filter/huffman/*.cpp)
+SET(information_filter_huffman_srcs ${information_filter_huffman_decl} ${information_filter_huffman_code})
+SOURCE_GROUP( information/filter/huffman FILES ${information_filter_huffman_srcs} )
+INSTALL( FILES ${information_filter_huffman_decl} DESTINATION include/y/information/filter/huffman )
+
 FILE(GLOB codec_decl y/codec/*.hpp)
 FILE(GLOB codec_code y/codec/*.cpp)
 SET(codec_srcs ${codec_decl} ${codec_code})
@@ -353,7 +359,7 @@ ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
-${information_srcs} ${information_filter_srcs}
+${information_srcs} ${information_filter_srcs} ${information_filter_huffman_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}

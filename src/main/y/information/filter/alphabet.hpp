@@ -96,12 +96,8 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
 
-            //! setup alphabet
-            explicit Alphabet(const Mode   operating,
-                              const size_t extraBytes);
-
-            //! cleanup
-            virtual ~Alphabet() throw();
+            explicit Alphabet(const Mode operating, const size_t extraBytes); //!< setup alphabet
+            virtual ~Alphabet() throw(); //!< cleanup
 
             //! manage alphabet and return modified node
             Node        *send(qbits &io, const uint8_t u);
@@ -109,8 +105,8 @@ namespace upsylon {
             //! manage alphabet and return modified node
             Node        *recv(const uint8_t u) throw();
 
-            //! reduce entropy by rescaling frequencyies
-            void reduceEntropy() throw();
+            //! reduce all active frequencies
+            void reduceFrequencies() throw();
             
             const Mode   mode;  //!< operating mode
             const size_t level; //!< number of different emitted chars
