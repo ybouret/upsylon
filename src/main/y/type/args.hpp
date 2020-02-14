@@ -4,17 +4,22 @@
 
 #include "y/type/traits.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    /** \brief container like arguments
+
+    //! container like aliases
+#define Y_DECL_ARGS_(T,NAME)                                                  \
+typedef T                                        NAME;                        \
+typedef typename type_traits<T>::mutable_type    mutable_##NAME;              \
+typedef const mutable_##NAME                     const_##NAME
+
+    //! container like aliases and parameter
+    /**
      * streams, containers,..., can't contain references,
      * so these are the aliases used for in/out parameters passing
      */
 #define    Y_DECL_ARGS(T,NAME)                                                \
-typedef T                                        NAME;                        \
-typedef typename type_traits<T>::mutable_type    mutable_##NAME;              \
-typedef const mutable_##NAME                     const_##NAME;                \
+Y_DECL_ARGS_(T,NAME);                                                         \
 typedef typename                                                              \
 upsylon::select_type<                                                         \
 type_traits<mutable_##NAME>::is_primitive, /* no references in containers */  \
