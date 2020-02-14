@@ -152,6 +152,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(qbits);
     Y_UTEST(filter);
     Y_UTEST(huffman);
+    Y_UTEST(shannon_fano);
 
     Y_UTEST(local_file);
     Y_UTEST(disk_file);

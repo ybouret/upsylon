@@ -18,17 +18,18 @@ namespace upsylon {
             public:
                 virtual ~Context() throw();   //!< cleanup
                 explicit Context(const Mode); //!< setup
+                
+                const Node &getRoot() const throw(); //!< get the root node
 
             protected:
-                Node   *root;
-                Node   *nstk;
-                
-                void  update( Node *node ) throw();
-
-                void split(Node *hi, Node *lo);
+                Node  *root;
+                void   update( Node *node ) throw();  //!< put node into position
+                void   buildTree() throw();           //!< build the tree
+                void   setupTree() throw();           //!< initialize alphabet and build tree
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Context);
+                void  split(Node *curr, size_t &iNode) throw();
 
             };
 

@@ -199,14 +199,14 @@ ADD_TEST(codec:lzo    test-main lzo)
 ADD_TEST(codec:asf    test-main asf)
 ADD_TEST(codec:b64id  test-main b64id)
 
-SOURCE_GROUP(information FILES  test-mtf.cpp test-delta.cpp test-bwt.cpp test-qbits.cpp test-huffman.cpp test-filter.cpp)
+SOURCE_GROUP(information FILES  test-mtf.cpp test-delta.cpp test-bwt.cpp test-qbits.cpp test-huffman.cpp test-filter.cpp test-shannon-fano.cpp)
 ADD_TEST(info:mtf     test-main mtf)
 ADD_TEST(info:delta   test-main delta)
 ADD_TEST(info:bwt     test-main bwt)
 ADD_TEST(info:qbits   test-main qbits)
 ADD_TEST(info:huffman test-main huffman)
 ADD_TEST(info:filter  test-main filter)
-
+ADD_TEST(info:shannon_fano test-main shannon_fano)
 
 SOURCE_GROUP(data FILES
 test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-btree.cpp
