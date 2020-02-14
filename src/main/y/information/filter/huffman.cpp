@@ -50,7 +50,7 @@ namespace upsylon {
             {
                 pq.enqueue(node);
                 node->code = 0;
-                node->bits = 1;
+                node->bits = 1; // to count nbits
             }
 
             size_t iNode   = Codes;
@@ -60,12 +60,12 @@ namespace upsylon {
                 Node *parent       = &nodes[iNode++]; assert(Built==parent->symbol);
                 Node *right        = parent->right = pq.extract();
                 Node *left         = parent->left  = pq.extract();
-                const size_t nbits = parent->bits = max_of(left->bits,right->bits)+1;
+                const size_t nbits = parent->bits  = max_of(left->bits,right->bits)+1;
                 if(nbits>16)
                 {
-                    std::cerr << "should rescale from " << nbits << std::endl;
-                    //reduceEntropy();
-                    //goto BUILD_TREE;
+                    //std::cerr << "should rescale from " << nbits << std::endl;
+                    reduceEntropy();
+                    goto BUILD_TREE;
                 }
                 parent->frequency  = left->frequency+right->frequency;
                 pq.enqueue(parent);
