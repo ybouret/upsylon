@@ -47,7 +47,10 @@ namespace upsylon {
 
             inline const_type & peek() const throw()
             {
-                
+                assert(slots);
+                assert(count>0);
+                assert(count<=slots);
+                return *slot[count-1];
             }
 
 

@@ -33,7 +33,10 @@ namespace {
 
         for(size_t i=1;i<=n;++i)
         {
-            std::cerr << "\t" << *stk.pop() << std::endl;
+            const_type &tmp = stk.peek();
+            const_type &ref = *stk.pop();
+            Y_ASSERT(tmp==ref);
+            std::cerr << "\t" << ref << std::endl;
         }
         std::cerr << std::endl;
     }
