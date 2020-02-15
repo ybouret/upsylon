@@ -29,12 +29,19 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Context);
-                bool split(Node *parent, size_t &iNode) throw();
-
-                static Node *Divide(Node *hi, Node *lo) throw();
-                Node  *MakeLeft(Node *parent, Node *prev, Node *node, size_t &iNode) throw();
-                Node  *MakeRght(Node *parent, Node *node, Node *next, size_t &iNode) throw();
-
+                bool split(Node *parent, const size_t length, size_t &iNode) throw();
+                
+                Node *MakeL(Node *prev,
+                            Node *node,
+                            const size_t size,
+                            size_t      &iNode) throw();
+                
+                static Node *Divide(Node   *hi,
+                                    size_t &nhi,
+                                    Node   *lo,
+                                    size_t &nlo,
+                                    const size_t n) throw();
+               
             };
 
 

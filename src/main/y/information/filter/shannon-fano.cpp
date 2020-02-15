@@ -1,5 +1,6 @@
 
 #include "y/information/filter/shannon-fano.hpp"
+#include "y/os/error.hpp"
 
 namespace upsylon {
 
@@ -37,11 +38,18 @@ namespace upsylon {
             }
 
 
-            Alphabet::Node * Context:: Divide(Node *hi, Node *lo) throw()
+            Alphabet::Node * Context:: Divide(Node *hi,
+                                              size_t &nhi,
+                                              Node *lo,
+                                              size_t &nlo,
+                                              const size_t n) throw()
             {
                 assert(hi);
                 assert(lo);
                 assert(lo!=hi);
+                assert(n>=2);
+                assert(0==nhi);
+                assert(0==nlo);
                 std::cerr << "split from " << NameOf(hi->symbol) << " to " << NameOf(lo->symbol) << std::endl;
                 
 #ifndef NDEBUG
@@ -70,52 +78,23 @@ namespace upsylon {
                     {
                         DeltaSum = Dtmp;
                         Dividing = node;
+                        ++nhi;
                     }
                     else
                     {
                         break;
                     }
                 }
-
+                assert(nhi<n);
+                nlo = n-nhi;
                 return Dividing;
             }
 
-            Alphabet::Node  * Context:: MakeLeft(Node *parent, Node *prev, Node *node, size_t &iNode) throw()
-            {
-                if(node==prev)
-                {
-                    Node *left = parent->left = node;
-                    left->prev = left->next   = 0;
-                    return left;
-                }
-                else
-                {
-                    Node *left = parent->left = nodes+iNode++;
-                    left->prev = prev;
-                    left->next = node;
-                    return split(left,iNode)  ? left : 0;
-                }
-            }
-
-            Alphabet::Node  * Context:: MakeRght(Node *parent, Node *node, Node *next, size_t &iNode) throw()
-            {
-                if(node==next)
-                {
-                    Node *right = parent->right = node;
-                    right->left = right->prev   = 0;
-                    return right;
-                }
-                else
-                {
-                    Node *right = parent->right = nodes+iNode++;
-                    right->prev = node;
-                    right->next = next;
-                    return split(right,iNode) ? right : 0;
-                }
-            }
-
-
-            bool Context:: split(Node * parent, size_t &iNode) throw()
+            
+            
+            bool Context:: split(Node        *parent,
+                                 const size_t length,
+                                 size_t      &iNode) throw()
             {
                 assert(parent);
                 assert(Built==parent->symbol);
@@ -123,32 +102,35 @@ namespace upsylon {
                 assert(parent->prev);
                 assert(parent->next);
                 assert(parent->prev!=parent->next);
-
+                assert(length>=2);
+                
                 const size_t bits = parent->bits+1;
-
+                
                 // check
 
-                Node *prev = parent->prev;
-                Node *next = parent->next;
-                Node *node = Divide(prev,next);
-
-                Node *left = MakeLeft(parent, prev, node, iNode);
-                if(!left) return false;
-                left->bits = bits;
-
-                Node *right = MakeRght(parent, node, next, iNode);
-                if(!right) return false;
-                right->bits = bits;
+                // build
+                Node  *prev = parent->prev;
+                Node  *next = parent->next;
+                size_t nPrv = 0;
+                size_t nNxt = 0;
+                Node  *node = Divide(prev,nPrv,next,nNxt,length);
+              
+                
+                
 
                 return true;
             }
 
             void Context:: buildTree() throw()
             {
+              
                 assert(alpha.size>0);
-
+                
+                
+                
                 if(alpha.head==alpha.tail)
                 {
+                    assert(1==alpha.size);
                     root = alpha.head;
                     root->code = 0;
                     root->bits = 0;
@@ -161,7 +143,7 @@ namespace upsylon {
                     root->next = alpha.tail;
                     root->code = 0;
                     root->bits = 0;
-                    split(root,iNode);
+                    split(root,alpha.size,iNode);
                 }
 
             }
