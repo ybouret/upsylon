@@ -56,7 +56,12 @@ namespace upsylon
             static void copy( const string &target, const string &source, const bool append);
 
             //! direct loading using BUFSIZ memory block
-            static void load( chainable<char> &target, const string &source );
+            static size_t load( chainable<char> &target, const string &source );
+
+            //! wrapper
+            static size_t load( chainable<uint8_t> &target, const string &source );
+
+
         };
 
 

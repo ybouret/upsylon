@@ -9,6 +9,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/fs/disk/file.hpp"
 
 using namespace upsylon;
 
@@ -22,15 +23,17 @@ Y_UTEST(pack)
     {
         const string   fileName = argv[1];
         string         source;
+        const size_t   length = ios::disk_file::load(source, fileName);
+        std::cerr << "length=" << length << " / " << source.size() << std::endl;
+        Y_CHECK(length==source.length());
+
         {
-            ios::icstream fp(fileName);
-            char C = 0;
-            while( fp.query(C) )
-            {
-                source << C;
-            }
+            vector<uint8_t> v;
+            const size_t l = ios::disk_file::load(v,fileName);
+            Y_CHECK(l==v.size());
+
         }
-        const size_t   length = source.length();
+
         string         level1( length, as_capacity, true );
         vector<size_t> indices(length,0);
 

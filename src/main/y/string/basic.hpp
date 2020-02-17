@@ -568,10 +568,10 @@ Y_CORE_STRING_CMP(>)
             inline const string & key() const throw() { return *this; }
 
             //! use the add function 
-            inline virtual size_t put( const T *addr, const size_t size )
+            inline virtual size_t put( const T *p, const size_t n )
             {
-                add(addr,size);
-                return size;
+                add(p,n);
+                return n;
             }
 
         private:

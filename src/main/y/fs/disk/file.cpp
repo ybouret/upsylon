@@ -275,23 +275,31 @@ namespace upsylon
             {
                 const size_t nr = src.get(buf,len);
                 if(nr<=0) break;
-                tgt.put_all(buf,len);
+                tgt.put_all(buf,nr);
             }
         }
 
-        void disk_file:: load( chainable<char> &target, const string &source )
+        size_t disk_file:: load( chainable<char> &target, const string &source )
         {
             memory::cblock_of<char> blk( BUFSIZ );
             char                   *buf = blk.data;
             const size_t            len = blk.size;
-
+            size_t count = 0;
             readable_disk_file src(source);
             while(true)
             {
                 const size_t nr = src.get(buf,len);
                 if(nr<=0) break;
-                target.put_all(buf,len);
+                count += nr;
+                target.put_all(buf,nr);
             }
+            return count;
+        }
+
+        size_t disk_file:: load( chainable<uint8_t> &target, const string &source )
+        {
+            assert( sizeof(uint8_t) == sizeof(char) );
+            return load( (chainable<char>&)target, source );
         }
 
 
