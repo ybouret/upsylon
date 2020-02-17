@@ -34,15 +34,51 @@ namespace {
             Y_ASSERT( decoded == src );
         }
         std::cerr << "<RLE_Repetitions/>" << std::endl << std::endl;
-
-
     }
 
+    static inline void testReps()
+    {
+        size_t count =0;
+        {
+            ios::ocstream source( "rle-source.bin" );
+            char C = 'a';
+            for(size_t blocks=5+alea.leq(10);blocks>0;--blocks)
+            {
+                ++C;
+                for(size_t n=alea.leq(1000);n>0;--n)
+                {
+                    source << C;
+                    ++count;
+                }
+            }
+        }
+        
+        size_t n_src=0;
+        size_t n_tgt=0;
+        {
+            ios::icstream             source( "rle-source.bin" );
+            ios::ocstream             target( "rle-target.bin" );
+            information::RLE::Encoder enc;
+            enc.reset();
+            n_tgt = enc.process(target,source,&n_src);
+        }
+        Y_CHECK(count==n_src);
+        
+        size_t n_dec=0;
+        size_t n_enc=0;
+        {
+            ios::icstream             source( "rle-target.bin" );
+            ios::ocstream             target( "rle-recovr.bin" );
+            information::RLE::Decoder dec;
+            dec.reset();
+            n_dec = dec.process(target,source,&n_enc);
+        }
+        Y_CHECK(n_enc==n_tgt);
+    }
 }
 
 Y_UTEST(rle)
 {
-    testRep();
 
     information::RLE::Encoder enc;
     information::RLE::Decoder dec;
@@ -74,30 +110,11 @@ Y_UTEST(rle)
         Y_CHECK( nd == nr );
         Y_CHECK( ns == nc );
     }
-
-
-
-#if 0
-    information::RLE::Encoder rle_encoder;
-    size_t n=10;
-    if(argc>1)
+    else
     {
-        n = string_convert::to<size_t>(argv[1],"n");
+        testRep();
+        testReps();
     }
-    string src(n+10,as_capacity,false);
-    for(size_t i=1;i<=n;++i)
-    {
-        src += 'a';
-    }
-    std::cerr << "src=" << src << std::endl;
-    rle_encoder.reset();
-    const string out = rle_encoder.to_string(src);
-    {
-        ios::ocstream fp("rle.bin");
-        fp << out;
-    }
-#endif
-
 
 }
 Y_UTEST_DONE()

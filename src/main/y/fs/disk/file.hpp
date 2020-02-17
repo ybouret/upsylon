@@ -10,6 +10,10 @@
 
 namespace upsylon
 {
+    namespace hashing {
+        class function;
+    }
+    
     namespace ios
     {
         //! base class to have a shared disk file pointer
@@ -61,7 +65,8 @@ namespace upsylon
             //! wrapper
             static size_t load( chainable<uint8_t> &target, const string &source );
 
-
+            //! direct hashing
+            static void hash_with( hashing::function &H, const string &source);
         };
 
 
