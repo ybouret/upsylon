@@ -1,26 +1,8 @@
-#include "y/information/rle.hpp"
+#include "y/information/filter/rle/encoder.hpp"
 
 namespace upsylon {
 
     namespace information {
-
-        namespace RLE {
-
-            Context:: Context() throw() : last(-1)
-            {
-            }
-
-            Context:: ~Context() throw()
-            {
-                last=-1;
-            }
-
-            void Context:: restart() throw()
-            {
-                last = -1;
-                free();
-            }
-        }
 
         namespace RLE {
 
@@ -94,18 +76,6 @@ namespace upsylon {
 
         }
 
-        namespace RLE {
-
-            Decoder:: Decoder() throw() : Context()
-            {
-
-            }
-
-            Decoder:: ~Decoder() throw()
-            {
-            }
-            
-
-        }
     }
+
 }

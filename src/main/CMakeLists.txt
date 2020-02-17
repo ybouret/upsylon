@@ -154,6 +154,12 @@ SET(information_filter_shannon_fano_srcs ${information_filter_shannon_fano_decl}
 SOURCE_GROUP( information/filter/shannon-fano FILES ${information_filter_shannon_fano_srcs} )
 INSTALL( FILES ${information_filter_shannon_fano_decl} DESTINATION include/y/information/filter/shannon-fano )
 
+FILE(GLOB information_filter_rle_decl y/information/filter/rle/*.hpp)
+FILE(GLOB information_filter_rle_code y/information/filter/rle/*.cpp)
+SET(information_filter_rle_srcs ${information_filter_rle_decl} ${information_filter_rle_code})
+SOURCE_GROUP( information/filter/rle FILES ${information_filter_rle_srcs} )
+INSTALL( FILES ${information_filter_rle_decl} DESTINATION include/y/information/filter/rle )
+
 FILE(GLOB codec_decl y/codec/*.hpp)
 FILE(GLOB codec_code y/codec/*.cpp)
 SET(codec_srcs ${codec_decl} ${codec_code})
@@ -365,7 +371,7 @@ ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
-${information_srcs} ${information_filter_srcs} ${information_filter_huffman_srcs} ${information_filter_shannon_fano_srcs}
+${information_srcs} ${information_filter_srcs} ${information_filter_huffman_srcs} ${information_filter_shannon_fano_srcs} ${information_filter_rle_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
