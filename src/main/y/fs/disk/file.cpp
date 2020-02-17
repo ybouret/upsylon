@@ -279,6 +279,22 @@ namespace upsylon
             }
         }
 
+        void disk_file:: load( chainable<char> &target, const string &source )
+        {
+            memory::cblock_of<char> blk( BUFSIZ );
+            char                   *buf = blk.data;
+            const size_t            len = blk.size;
+
+            readable_disk_file src(source);
+            while(true)
+            {
+                const size_t nr = src.get(buf,len);
+                if(nr<=0) break;
+                target.put_all(buf,len);
+            }
+        }
+
+
     }
 
 }

@@ -8,6 +8,7 @@
 #include "y/comparison.hpp"
 #include "y/ptr/counted.hpp"
 #include "y/ios/serializable.hpp"
+#include "y/core/chainable.hpp"
 
 #include <cstring>
 #include <iosfwd>
@@ -92,7 +93,12 @@ maxi_ = items-1
          assuming that all chars after size() are '0'
          */
         template <typename T>
-        class string : public virtual counted_object, public memory::rw_buffer, public dynamic, public ios::serializable
+        class string :
+        public virtual counted_object,
+        public         memory::rw_buffer,
+        public dynamic,
+        public ios::serializable,
+        public upsylon::chainable<T>
         {
         public:
             static const char CLASS_NAME[]; //!< for serializable
@@ -560,6 +566,13 @@ Y_CORE_STRING_CMP(>)
 
             //! self key
             inline const string & key() const throw() { return *this; }
+
+            //! use the add function 
+            inline virtual size_t put( const T *addr, const size_t size )
+            {
+                add(addr,size);
+                return size;
+            }
 
         private:
             T     *addr_;

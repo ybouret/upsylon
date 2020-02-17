@@ -126,8 +126,27 @@ namespace
             std::cerr << "org=" << seq << std::endl;
             seq.reverse();
             std::cerr << "rev=" << seq << std::endl;
-
         }
+
+        {
+            SEQ seq1;
+            for(size_t i=1+alea.leq(20);i>0;--i)
+            {
+                typename SEQ::const_type args = support::get<typename SEQ::mutable_type>();
+                seq1.push_back(args);
+            }
+            {
+                vector<typename SEQ::mutable_type> seq2;
+                for(size_t i=1+alea.leq(20);i>0;--i)
+                {
+                    typename SEQ::const_type args = support::get<typename SEQ::mutable_type>();
+                    seq2.push_back(args);
+                }
+                const size_t numObjects = seq2.size();
+                Y_CHECK( numObjects == seq1.put( *seq2, seq2.size() ) );
+            }
+        }
+
     }
 
     static inline void do_capa(size_t n)
@@ -158,7 +177,7 @@ Y_UTEST(sequence)
     do_test< list<uint16_t> >();
     do_test< list<string> >();
 
-    return 0;
+    //return 0;
 
     {
         vector<uint16_t,memory::global> cvg(1,as_capacity); std::cerr << "cvg.capacity=" << cvg.capacity() << std::endl;

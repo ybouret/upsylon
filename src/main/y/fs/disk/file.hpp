@@ -6,6 +6,7 @@
 #include "y/fs/local/file.hpp"
 #include "y/ptr/counted.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/core/chainable.hpp"
 
 namespace upsylon
 {
@@ -53,6 +54,9 @@ namespace upsylon
         public:
             //! direct copy using BUFSIZ memory block
             static void copy( const string &target, const string &source, const bool append);
+
+            //! direct loading using BUFSIZ memory block
+            static void load( chainable<char> &target, const string &source );
         };
 
 
@@ -87,6 +91,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(readable_disk_file);
+            
         };
 
         //! write only disk file

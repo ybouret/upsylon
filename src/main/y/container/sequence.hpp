@@ -4,6 +4,7 @@
 
 #include "y/container/container.hpp"
 #include "y/sequence/addressable.hpp"
+#include "y/core/chainable.hpp"
 #include "y/type/args.hpp"
 #include "y/ptr/counted.hpp"
 
@@ -14,7 +15,8 @@ namespace upsylon
     class sequence :
     public virtual   counted_object,
     public           container,
-    public virtual   addressable<T>
+    public virtual   addressable<T>,
+    public           chainable<T>
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
@@ -50,7 +52,26 @@ namespace upsylon
         
         //! adjust size, pad if not enough
         virtual void adjust( const size_t n, param_type pad ) = 0;
-        
+
+        //! default put: use push_back
+        virtual size_t put( const T *addr, const size_t numObjects)
+        {
+            assert(!(addr==0&&numObjects>0));
+            size_t i = 0;
+            try {
+                for(;i<numObjects;++i)
+                {
+                    push_back( addr[i] );
+                }
+                return numObjects;
+            }
+            catch(...)
+            {
+                while(i-- > 0) pop_back();
+                throw;
+            }
+        }
+
     protected:
         //! constructor
         explicit sequence() throw() : container() {}
