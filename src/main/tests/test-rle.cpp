@@ -10,12 +10,40 @@ using namespace upsylon;
 
 namespace {
 
+    static inline void testRep()
+    {
+        std::cerr << "<RLE_Repetitions>" << std::endl;
+        const size_t nmax = 1000;
+        information::RLE::Encoder enc;
+        information::RLE::Decoder dec;
+        string src(nmax,as_capacity,false);
 
+        for(size_t n=0;n<nmax;++n)
+        {
+            src.clear();
+            const char C = alea.range<char>('a','z');
+            for(size_t i=0;i<n;++i)
+            {
+                src << C;
+            }
+            enc.reset();
+            const string encoded = enc.to_string(src);
+
+            dec.reset();
+            const string decoded = dec.to_string(encoded);
+            Y_ASSERT( decoded == src );
+        }
+        std::cerr << "<RLE_Repetitions/>" << std::endl << std::endl;
+
+
+    }
 
 }
 
 Y_UTEST(rle)
 {
+    testRep();
+
     information::RLE::Encoder enc;
     information::RLE::Decoder dec;
 
@@ -43,6 +71,8 @@ Y_UTEST(rle)
             nd = dec.process(target, source, &ns );
         }
         std::cerr << "unrle : " << ns << " -> " << nd << std::endl;
+        Y_CHECK( nd == nr );
+        Y_CHECK( ns == nc );
     }
 
 

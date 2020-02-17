@@ -6,7 +6,10 @@ namespace upsylon {
 
         namespace RLE {
 
-            Encoder:: Encoder() throw() : Context(), flag( waiting )
+            Encoder:: Encoder() throw() :
+            Context(),
+            flag( waiting ),
+            count(0)
             {
             }
 
