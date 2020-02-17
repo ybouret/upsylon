@@ -39,7 +39,7 @@ namespace upsylon {
                         break;
 
                     case counting:
-                        push_back(count);
+                        push_back( uint8_t(count) );
                         count=0;
                         break;
                 }
@@ -82,11 +82,11 @@ namespace upsylon {
                         }
                         else
                         {
-                            push_back(count);
+                            push_back(uint8_t(count));
                             count = 0;
                             last  = curr;
-                            push_back(curr);
                             flag  = waiting;
+                            push_back(curr);
                         }
                         break;
                 }
@@ -94,6 +94,18 @@ namespace upsylon {
 
         }
 
+        namespace RLE {
 
+            Decoder:: Decoder() throw() : Context()
+            {
+
+            }
+
+            Decoder:: ~Decoder() throw()
+            {
+            }
+            
+
+        }
     }
 }

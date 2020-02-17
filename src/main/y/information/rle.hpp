@@ -50,6 +50,23 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
             };
 
+            class Decoder : public Context
+            {
+            public:
+                explicit Decoder() throw();
+                virtual ~Decoder() throw();
+
+                virtual void reset() throw();
+                virtual void write(char);
+                virtual void flush();
+
+            private:
+
+
+                Y_DISABLE_COPY_AND_ASSIGN(Decoder);
+            };
+
+
         }
 
     }
