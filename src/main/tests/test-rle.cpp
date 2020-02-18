@@ -5,6 +5,8 @@
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
 #include "y/string/convert.hpp"
+#include "y/fs/disk/file.hpp"
+#include "y/hashing/md5.hpp"
 
 using namespace upsylon;
 
@@ -52,7 +54,8 @@ namespace {
                 }
             }
         }
-        
+        hashing::md5 H;
+        const digest md0 = ios::disk_file::md(H,"rle-source.bin");
         size_t n_src=0;
         size_t n_tgt=0;
         {
@@ -74,6 +77,9 @@ namespace {
             n_dec = dec.process(target,source,&n_enc);
         }
         Y_CHECK(n_enc==n_tgt);
+        const digest md1 = ios::disk_file::md(H,"rle-recovr.bin");
+        std::cerr << "md0: " << md0 << std::endl;
+        std::cerr << "md1: " << md1 << std::endl;
     }
 }
 

@@ -24,7 +24,7 @@ namespace upsylon {
     template <
     typename T,
     typename KEY,
-    typename CREATOR,
+    typename CREATOR    = T (*)(),
     typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global>
     class factory

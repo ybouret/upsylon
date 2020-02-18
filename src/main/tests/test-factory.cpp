@@ -1,4 +1,4 @@
-#include "y/container/factory.hpp"
+#include "y/container/xfactory.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/hashing/sha1.hpp"
@@ -10,7 +10,7 @@
 using namespace upsylon;
 
 typedef hashing::function * (*hfn_new)();
-typedef factory<hashing::function,string,hfn_new> hfn_factory;
+typedef xfactory<hashing::function,hfn_new> hfn_factory;
 
 #define H_DECL(NAME) do { const string key = hashing::NAME::CLID; f.declare(key,hashing::NAME::create); } while(false)
 
