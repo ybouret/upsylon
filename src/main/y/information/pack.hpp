@@ -3,8 +3,8 @@
 #ifndef Y_INFORMATION_PACK_INCLUDED
 #define Y_INFORMATION_PACK_INCLUDED 1
 
-#include "y/information/filter/queue.hpp"
 #include "y/information/mtf.hpp"
+#include "y/information/filter/rle/encoder.hpp"
 
 namespace upsylon {
 
@@ -21,7 +21,8 @@ namespace upsylon {
                 virtual ~Encoder() throw();
 
                 const size_t blockSize;
-
+                const size_t wordBytes;
+                
                 virtual void reset() throw();
                 virtual void write(char C);
                 virtual void flush();
@@ -29,14 +30,16 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
                 size_t       count;   //!< current loaded bytes
-                uint8_t     *input;   //!< blockSize
-                uint8_t     *output;  //!< blockSize
+                char        *input;   //!< blockSize
+                char        *output;  //!< blockSize
                 size_t      *indices; //!< blockSize
                 mtf_encoder *mtf;
                 void        *wksp;
                 size_t       wlen;
-
+                RLE::Encoder rle;
+                
                 void emit();
+                void emitSize(size_t sz);
             };
         };
 

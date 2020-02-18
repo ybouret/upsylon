@@ -11,13 +11,15 @@ namespace upsylon {
             Encoder:: Encoder( const size_t bs ) :
             filterQ(bs+16),
             blockSize(bs),
+            wordBytes( bytes_for(blockSize) ),
             count(0),
             input(0),
             output(0),
             indices(0),
             mtf(0),
             wksp(0),
-            wlen(0)
+            wlen(0),
+            rle()
             {
                 memory::embed emb[] =
                 {
@@ -54,6 +56,19 @@ namespace upsylon {
                 }
             }
 
+            void Encoder::emitSize(   size_t sz )
+            {
+                assert(sz<=blockSize);
+                for(size_t i=0;i<wordBytes;++i)
+                {
+                    push_back( uint8_t(sz) );
+                    sz >>= 8;
+                }
+                assert(0==sz);
+
+
+            }
+
             void Encoder:: flush()
             {
                 if(count>0)
@@ -65,7 +80,19 @@ namespace upsylon {
             void Encoder:: emit()
             {
                 assert(count>0);
+
                 const size_t pidx = bwt::encode(output, input, count, indices, *mtf);
+                emitSize(count);
+                emitSize(pidx);
+
+                rle.reset(); assert(0==rle.size());
+                for(size_t i=0;i<count;++i)
+                {
+                    rle.write(output[i]);
+                }
+                rle.flush();
+                this->merge_back( rle );
+                //put_all(output,count);
                 count = 0;
             }
 
