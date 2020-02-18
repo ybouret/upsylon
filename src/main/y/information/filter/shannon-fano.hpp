@@ -22,7 +22,7 @@ namespace upsylon {
                 const Node &getRoot() const throw(); //!< get the root node
 
             protected:
-                Node  *root;
+                Node  *root; //!< root node of the enc/decoding tree
                 void   update( Node *node ) throw();  //!< put node into position
                 void   buildTree() throw();           //!< build the tree
                 void   setupTree() throw();           //!< initialize alphabet and build tree

@@ -12,15 +12,16 @@ namespace upsylon {
         namespace RLE {
 
 
+            //! RLE decoder
             class Decoder : public Context
             {
             public:
-                explicit Decoder() throw();
-                virtual ~Decoder() throw();
+                explicit Decoder() throw(); //!< setup
+                virtual ~Decoder() throw(); //!< cleanup
 
-                virtual void reset() throw();
-                virtual void write(char);
-                virtual void flush();
+                virtual void reset() throw(); //!< restart, flag=wait_for_input
+                virtual void write(char);     //!< decode with new char
+                virtual void flush();         //!< check state
 
             private:
                 enum Flag

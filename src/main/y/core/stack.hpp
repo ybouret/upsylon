@@ -11,22 +11,29 @@ namespace upsylon {
 
     namespace core {
 
+        //! stack of addresses
         template <typename T>
         class stack
         {
         public:
-            Y_DECL_ARGS(T,type);
-            typedef mutable_type *addr_type;
+            Y_DECL_ARGS(T,type);              //!< alias
+            typedef mutable_type *addr_type;  //!< alias
 
+            //! setup
             explicit stack( type **base, const size_t size) throw() :
             count(0), slots(size), slot( (addr_type *)base )
             {
             }
 
+            //! cleanup
             virtual ~stack() throw()
             {
+                aliasing::_(count) = 0;
+                aliasing::_(slots) = 0;
+                slot = 0;
             }
 
+            //! push a new address
             inline void push( type *addr ) throw()
             {
                 assert(slots);
@@ -34,6 +41,7 @@ namespace upsylon {
                 slot[ aliasing::_(count)++ ] = (addr_type) addr;
             }
 
+            //! pop last address
             inline type * pop() throw()
             {
                 assert(slots);
@@ -45,6 +53,7 @@ namespace upsylon {
                 return addr;
             }
 
+            //! peek last address
             inline const_type & peek() const throw()
             {
                 assert(slots);
@@ -54,8 +63,8 @@ namespace upsylon {
             }
 
 
-            const size_t count;
-            const size_t slots;
+            const size_t count; //!< currently in stack
+            const size_t slots; //!< maximum number of addresses
 
 
 

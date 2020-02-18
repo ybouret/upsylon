@@ -11,15 +11,16 @@ namespace upsylon {
 
         namespace RLE {
 
+            //! Run-Length encoder
             class Encoder : public Context
             {
             public:
-                explicit Encoder() throw();
-                virtual ~Encoder() throw();
+                explicit Encoder() throw(); //!< setup
+                virtual ~Encoder() throw(); //!< cleanup
 
-                virtual void reset() throw();
-                virtual void write(char);
-                virtual void flush();
+                virtual void reset() throw(); //!< restart
+                virtual void write(char);     //!< encode new char
+                virtual void flush();         //!< finish all
 
             private:
                 enum Flag

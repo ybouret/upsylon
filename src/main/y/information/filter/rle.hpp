@@ -19,7 +19,7 @@ namespace upsylon {
             protected:
                 explicit Context() throw(); //!< setup last=-1
                 void     restart() throw(); //!< last=-1, free()
-                int      last;
+                int      last;              //!< used to monitor status
 
 
             private:

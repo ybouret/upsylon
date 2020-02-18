@@ -9,29 +9,33 @@ namespace upsylon {
 
     namespace core {
 
+        //! base class for chainable object
         class chainable
         {
         public:
-            virtual ~chainable() throw();
+            virtual ~chainable() throw(); //!< cleanup
 
 
         protected:
-            explicit chainable() throw();
-            void     exceeds_capacity() const;
+            explicit chainable() throw(); //!< setup
+            void     exceeds_capacity() const; //!< throw exception
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(chainable);
         };
     }
 
+    //! a chainable object
     template <typename T>
     class chainable : public core::chainable
     {
     public:
-        inline virtual ~chainable() throw() {}
+        inline virtual ~chainable() throw() {} //!< cleanup
 
+        //! memory management function
         virtual size_t put(const T *addr, const size_t size) = 0;
-        
+
+        //! piecewise block insertion
         inline void    put_all(const T *addr, const size_t size)
         {
             assert(!(0==addr&&size>0));
@@ -46,10 +50,8 @@ namespace upsylon {
             }
         }
 
-
     protected:
-        inline explicit chainable() throw() {}
-
+        inline explicit chainable() throw() {} //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(chainable);
