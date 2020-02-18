@@ -15,6 +15,7 @@ namespace upsylon {
         {
         public:
             explicit filterQ() throw();
+            explicit filterQ(const size_t);
             virtual ~filterQ() throw();
 
             virtual bool query( char &C );

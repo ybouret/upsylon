@@ -16,6 +16,9 @@ using namespace upsylon;
 Y_UTEST(pack)
 {
 
+    information::Pack::Encoder   packEnc(8);
+    
+
     information::mtf_encoder     mtf;
     information::echo_modulation echo;
 

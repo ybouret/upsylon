@@ -14,6 +14,12 @@ namespace upsylon {
         {
         }
 
+        filterQ:: filterQ(const size_t n) :
+        filter(),
+        list<char>(n,as_capacity)
+        {
+        }
+
         bool filterQ:: query(char &C)
         {
             if( size() > 0 )
