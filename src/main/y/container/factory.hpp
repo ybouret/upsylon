@@ -24,7 +24,7 @@ namespace upsylon {
     template <
     typename T,
     typename KEY,
-    typename CREATOR    = T (*)(),
+    typename CREATOR    = T * (*)(),
     typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global>
     class factory
@@ -57,13 +57,13 @@ namespace upsylon {
         }
 
         //! query if possible to create
-        const CREATOR *query(param_key_type key) const throw()
+        const CREATOR *look_for(param_key_type key) const throw()
         {
             return db.search(key);
         }
 
         //! zero-arg creator
-        inline T * operator()( param_key_type key ) const
+        inline T * create( param_key_type key ) const
         {
             CREATOR &creator = find(key);
             return creator();
@@ -71,7 +71,7 @@ namespace upsylon {
 
         //! one arg creator
         template <typename U>
-        inline T * operator()( param_key_type key, U &u ) const
+        inline T * create( param_key_type key, U &u ) const
         {
             CREATOR &creator = find(key);
             return creator(u);

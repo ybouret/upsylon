@@ -7,7 +7,6 @@
 #include "y/hashing/pjw.hpp"
 #include "y/hashing/sfh.hpp"
 #include "y/hashing/sha1.hpp"
-
 #include "y/hashing/md2.hpp"
 #include "y/hashing/md4.hpp"
 #include "y/hashing/md5.hpp"
@@ -23,8 +22,9 @@
 #include "y/ios/icstream.hpp"
 #include "y/utest/timings.hpp"
 #include "y/hashing/key-hasher.hpp"
-
 #include "y/string/display.hpp"
+
+#include "y/hashing/factory.hpp"
 
 using namespace upsylon;
 
@@ -75,7 +75,17 @@ namespace
 
 Y_UTEST(hashing)
 {
-    vector< hashing::function::pointer > phash;
+
+    hashing::factory                    &hf = hashing::factory::instance();
+    vector< hashing::function::pointer > phash(hf.size(),as_capacity);
+    for( hashing::factory::const_iterator i = hf.begin(); i != hf.end(); ++i )
+    {
+        std::cerr << "[" << i.key() << "]" << std::endl;
+        const hashing::function::pointer p = hf( i.key() );
+        phash.push_back(p);
+    }
+
+#if 0
 #define __REGISTER(CLASS) \
 do { hashing::function::pointer p = new hashing:: CLASS(); phash.push_back(p); \
 std::cerr << "sizeof(" #CLASS ")=" << sizeof(hashing:: CLASS)<< std::endl;     \
@@ -100,6 +110,7 @@ std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashin
     __REGISTER(sha256);
     __REGISTER(sha384);
     __REGISTER(sha512);
+#endif
 
     std::cerr << "Hashing Functions: " << std::endl;
     for(size_t i=1;i<=phash.size();++i)
