@@ -14,8 +14,9 @@ namespace upsylon
 			hash = 0;
 		}
 		
-		const char * pjw:: name() const throw() { return "PJW"; }
-		
+        
+        const char pjw::CLID[] = "PJW";
+
 		void pjw:: set() throw()
 		{
 			hash = 0;

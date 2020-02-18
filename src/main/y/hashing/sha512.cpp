@@ -302,13 +302,9 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char *sha512:: name() const throw()
-		{
-			return "SHA-512";
-		}
-		
-		
-		void sha512:: set() throw()
+		const char sha512:: CLID[] = "SHA-512";
+
+        void sha512:: set() throw()
 		{
 			sha512_set( &ctx );
 		}
@@ -337,10 +333,7 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char *sha384:: name() const throw()
-		{
-			return "SHA-384";
-		}
+        const char sha384:: CLID[] = "SHA-384";
 		
 		
 		void sha384:: set() throw()

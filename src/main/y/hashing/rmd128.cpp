@@ -280,12 +280,7 @@ namespace upsylon
             Y_BZSET_STATIC(MDbuf);
         }
         
-        const char * rmd128:: name()   const throw()
-        {
-            return "RMD-128";
-        }
-        
-        
+        const char rmd128:: CLID[] = "RMD-128";
         
         void rmd128:: set() throw()
         {

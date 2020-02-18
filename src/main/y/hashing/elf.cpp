@@ -14,8 +14,9 @@ namespace upsylon
 			hash = 0;
 		}
 		
-		const char * elf:: name() const throw() { return "ELF"; }
-		
+        
+        const char elf::CLID[] = "ELF";
+
 		void elf:: set() throw()
 		{
 			hash = 0;

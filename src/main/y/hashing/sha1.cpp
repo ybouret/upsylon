@@ -280,10 +280,7 @@ e += S(a,5) + F(b,c,d) + K + x; b = S(b,30);        \
 		{
 		}
 		
-		const char *sha1:: name() const throw()
-		{
-			return "SHA-1";
-		}
+        const char sha1:: CLID[] = "SHA-1";
 		
 		
 		void sha1:: set() throw()

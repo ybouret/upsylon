@@ -6,8 +6,9 @@ namespace upsylon
 	namespace hashing
 	{
 		
-		const char * crc32:: name() const throw() { return "CRC-32"; }
-		
+        
+        const char crc32:: CLID[] = "CRC-32";
+
 		crc32:: crc32() throw() : function( __length , __window ), hash(0)
 		{
 		}

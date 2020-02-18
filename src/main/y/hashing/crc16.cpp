@@ -6,7 +6,7 @@ namespace upsylon
 	namespace hashing
 	{
 		
-		const char * crc16:: name() const throw() { return "CRC-16"; }
+		const char crc16::CLID[] = "CRC-16";
 		
 		crc16:: crc16() throw() : function( __length , __window ), hash(0)
 		{

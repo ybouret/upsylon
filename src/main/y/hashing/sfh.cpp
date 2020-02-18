@@ -14,8 +14,9 @@ namespace upsylon
 			hash = 0;
 		}
 		
-		const char * sfh:: name() const throw() { return "SFH"; }
-		
+        
+        const char sfh::CLID[] = "SFH";
+
 		void sfh:: set() throw()
 		{
 			hash = 0;

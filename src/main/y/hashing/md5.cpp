@@ -290,10 +290,8 @@ namespace upsylon
 		{
 		}
 
-		const char *md5:: name() const throw()
-		{
-			return "MD5";
-		}
+        const char md5:: CLID[] = "MD5";
+        
 
 
 		void md5:: set() throw()

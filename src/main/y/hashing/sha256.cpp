@@ -296,11 +296,8 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char *sha256:: name() const throw()
-		{
-			return "SHA-256";
-		}
-		
+		const char sha256:: CLID[] ="SHA-256";
+
 		
 		void sha256:: set() throw()
 		{
@@ -333,10 +330,8 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char *sha224:: name() const throw()
-		{
-			return "SHA-224";
-		}
+		const char sha224:: CLID[] = "SHA-224";
+        
 		
 		
 		void sha224:: set() throw()

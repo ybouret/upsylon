@@ -10,6 +10,8 @@
 
 namespace upsylon
 {
+    class digest;
+
     namespace hashing {
         class function;
     }
@@ -67,6 +69,9 @@ namespace upsylon
 
             //! direct hashing
             static void hash_with( hashing::function &H, const string &source);
+
+            //! full md
+            static digest md( hashing::function &H, const string &source);
         };
 
 

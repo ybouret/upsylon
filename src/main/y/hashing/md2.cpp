@@ -187,11 +187,7 @@ namespace upsylon
 		{
 		}
 		
-		const char *md2:: name() const throw()
-		{
-			return "MD2";
-		}
-		
+		const char md2:: CLID[]= "MD2";
 		
 		void md2:: set() throw()
 		{

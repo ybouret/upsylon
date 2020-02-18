@@ -304,15 +304,31 @@ namespace upsylon {
     
 }
 
+#include "y/hashing/function.hpp"
 
 namespace upsylon     {
     namespace ios {
         
-        void hash_with( hashing::function &H, const string &source)
+        void disk_file:: hash_with( hashing::function &H, const string &source)
         {
-            
+            memory::cblock_of<char> blk( BUFSIZ );
+            char                   *buf = blk.data;
+            const size_t            len = blk.size;
+            readable_disk_file      src(source);
+            while(true)
+            {
+                const size_t nr = src.get(buf,len);
+                if(nr<=0) break;
+                H.run(buf,nr);
+            }
         }
-        
+
+        digest disk_file:: md(hashing::function &H, const string &source)
+        {
+            H.set();
+            hash_with(H,source);
+            return H.md();
+        }
     }
     
 }

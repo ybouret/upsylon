@@ -239,10 +239,8 @@ namespace upsylon
 		{
 		}
 		
-		const char *md4:: name() const throw()
-		{
-			return "MD4";
-		}
+        const char md4:: CLID[] = "MD4";
+
 		
 		
 		void md4:: set() throw()

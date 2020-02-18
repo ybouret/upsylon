@@ -74,6 +74,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(endian);
     Y_UTEST(key_address);
     Y_UTEST(addressable);
+    Y_UTEST(factory);
 
     Y_UTEST(heap);
     Y_UTEST(avl);
@@ -104,7 +105,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(rsa);
     Y_UTEST(rsa_keys);
     Y_UTEST(rsa_io);
-
+    
 
     Y_UTEST(hashing);
     Y_UTEST(mperf);
@@ -116,6 +117,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(upack);
     Y_UTEST(ios_plugin);
     Y_UTEST(cmd);
+    Y_UTEST(md);
 
     Y_UTEST(fft);
     Y_UTEST(sort);

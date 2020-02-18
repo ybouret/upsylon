@@ -125,7 +125,12 @@ ADD_TEST(ios:plugin      test-main ios_plugin)
 ADD_TEST(ios:cmd         test-main cmd)
 ADD_TEST(ios:serialized  test-main serialize_tools)
 
-SOURCE_GROUP(crypto FILES test-hashing.cpp test-hmac.cpp test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp test-rsa.cpp test-rsa-io.cpp test-mperf.cpp test-pearson.cpp) 
+SOURCE_GROUP(crypto FILES test-hashing.cpp
+test-hmac.cpp
+test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp test-rsa.cpp test-rsa-io.cpp test-mperf.cpp
+test-pearson.cpp
+test-md.cpp)
+
 ADD_TEST(crypto:hashing     test-main hashing)
 ADD_TEST(crypto:mperf       test-main mperf)
 ADD_TEST(crypto:pearson     test-main pearson)
@@ -140,6 +145,7 @@ ADD_TEST(crypto:rsa3        test-main rsa 3935648537 3730255349 65537)
 ADD_TEST(crypto:rsa4        test-main rsa 18300546520784097569 16483490701427528033 65537)
 ADD_TEST(crypto:rsa_keys    test-main rsa_keys ${HERE}/rsa-keys.bin)
 ADD_TEST(crypto:rsa_io      test-main rsa_io 0 2 4 8)
+ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
 
 SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp)
 ADD_TEST(mk:xbitrev     test-main xbitrev 0.0)
@@ -212,7 +218,8 @@ ADD_TEST(info:pack         test-main pack)
 
 SOURCE_GROUP(data FILES
 test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-btree.cpp
-test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp test-pq.cpp)
+test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
+test-pq.cpp test-factory.cpp)
 ADD_TEST(data:associative test-main associative)
 ADD_TEST(data:set         test-main set)
 ADD_TEST(data:map         test-main map)
@@ -232,6 +239,7 @@ ADD_TEST(data:strings     test-main strings ${HERE}/words.db)
 ADD_TEST(data:addressable test-main addressable)
 ADD_TEST(data:query       test-main query ${HERE}/words.db)
 ADD_TEST(data:pq          test-main pq)
+ADD_TEST(data:factory     test-main factory)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)

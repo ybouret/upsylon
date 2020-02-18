@@ -90,15 +90,17 @@ namespace upsylon
 		};
 		
         //! format hashing function prototype
-#define Y_HASHING_FUNCTION_DECL(NAME,L,W)                \
-explicit NAME() throw();                                 \
-virtual ~NAME() throw();                                 \
-static const size_t __length = L ;                       \
-static const size_t __window = W ;                       \
-virtual const char *name()   const throw();              \
-virtual void set() throw();                              \
-virtual void run( const void *buf, size_t len ) throw(); \
-virtual void get( void *output, size_t outlen ) throw()
+#define Y_HASHING_FUNCTION_DECL(NAME,L,W)                       \
+static const char CLID[];                                       \
+explicit NAME() throw();                                        \
+virtual ~NAME() throw();                                        \
+static inline function * create() { return new NAME(); }        \
+static const size_t __length = L ;                              \
+static const size_t __window = W ;                              \
+inline virtual const char *name() const throw() { return CLID;} \
+virtual void set() throw();                                     \
+virtual void run( const void *buf, size_t len ) throw();        \
+virtual void get( void *output, size_t outlen ) throw() 
 
 	}
 
