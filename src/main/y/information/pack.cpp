@@ -65,7 +65,7 @@ namespace upsylon {
             void Encoder:: emit()
             {
                 assert(count>0);
-
+                const size_t pidx = bwt::encode(output, input, count, indices, *mtf);
                 count = 0;
             }
 
