@@ -1,17 +1,18 @@
-#include "y/information/filter/rle/encoder.hpp"
-#include "y/information/filter/rle/decoder.hpp"
+//#include "y/information/filter/rle/encoder.hpp"
+//#include "y/information/filter/rle/decoder.hpp"
 #include "y/utest/run.hpp"
-#include "y/ios/icstream.hpp"
-#include "y/ios/ocstream.hpp"
-#include "y/string.hpp"
-#include "y/string/convert.hpp"
-#include "y/fs/disk/file.hpp"
-#include "y/hashing/md5.hpp"
+//#include "y/ios/icstream.hpp"
+//#include "y/ios/ocstream.hpp"
+//#include "y/string.hpp"
+//#include "y/string/convert.hpp"
+//#include "y/fs/disk/file.hpp"
+//#include "y/hashing/md5.hpp"
 
 using namespace upsylon;
 
 namespace {
 
+#if 0
     static inline void testRep()
     {
         std::cerr << "<RLE_Repetitions>" << std::endl;
@@ -81,11 +82,13 @@ namespace {
         std::cerr << "md0: " << md0 << std::endl;
         std::cerr << "md1: " << md1 << std::endl;
     }
+#endif
 }
 
 Y_UTEST(rle)
 {
 
+#if 0
     information::RLE::Encoder enc;
     information::RLE::Decoder dec;
 
@@ -121,6 +124,7 @@ Y_UTEST(rle)
         testRep();
         testReps();
     }
+#endif
 
 }
 Y_UTEST_DONE()

@@ -1,19 +1,10 @@
-#include "y/information/pack.hpp"
-#include "y/information/filter/rle/encoder.hpp"
 #include "y/utest/run.hpp"
-#include "y/information/bwt.hpp"
-#include "y/string.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/ios/ocstream.hpp"
-#include "y/ios/icstream.hpp"
-#include "y/ios/imstream.hpp"
-#include "y/fs/disk/file.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(pack)
 {
-
+#if 0
     information::Pack::Encoder   packEnc(1024*512);
 
     if(argc>1)
@@ -28,7 +19,7 @@ Y_UTEST(pack)
         std::cerr << "packEnc: " << nr << " -> " << nc << std::endl;
 
     }
-
+#endif
 
 }
 Y_UTEST_DONE()
