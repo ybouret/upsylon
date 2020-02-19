@@ -5,17 +5,15 @@
 #include "y/sequence/vector.hpp"
 #include "y/string.hpp"
 
-#include "y/information/delta.hpp"
-#include "y/information/mtf.hpp"
+#include "y/information/shift/delta.hpp"
+#include "y/information/shift/mtf.hpp"
 
 #include "y/string/convert.hpp"
 
 using namespace upsylon;
 
 
-#include "y/information/echo.hpp"
-#include "y/information/delta.hpp"
-#include "y/information/mtf.hpp"
+#include "y/information/shift/echo.hpp"
 #include "y/information/entropy.hpp"
 #include "y/ptr/auto.hpp"
 
@@ -46,7 +44,7 @@ void do_bwt(const string &input)
         Y_CHECK(pidx==information::bwt::encode(*outputEcho,*input,n,*indices,echoEnc));
         std::cerr << "$outputEcho  : " << S.of(outputEcho)  << std::endl;
         ios::ocstream fp("bwt-echo.bin"); fp << outputEcho;
-        auto_ptr<information::shaker> pEnc = echoEnc.clone();
+        auto_ptr<information::shift> pEnc = echoEnc.clone();
     }
     {
         information::echo_modulation echoDec;
@@ -58,7 +56,7 @@ void do_bwt(const string &input)
         Y_CHECK(pidx==information::bwt::encode(*outputDelta,*input,n,*indices,deltaEnc));
         ios::ocstream fp("bwt-delta.bin"); fp << outputDelta;
         std::cerr << "$outputDelta : " << S.of(outputDelta) << std::endl;
-        auto_ptr<information::shaker> pEnc = deltaEnc.clone();
+        auto_ptr<information::shift> pEnc = deltaEnc.clone();
     }
     {
         information::delta_decoder deltaDec;
@@ -71,7 +69,7 @@ void do_bwt(const string &input)
         Y_CHECK(pidx==information::bwt::encode(*outputMTF,*input,n,*indices,mtfEnc));
         ios::ocstream fp("bwt-mtf.bin"); fp << outputMTF;
         std::cerr << "$outputMTF   : " << S.of(outputMTF)   << std::endl;
-        auto_ptr<information::shaker> pEnc = mtfEnc.clone();
+        auto_ptr<information::shift> pEnc = mtfEnc.clone();
     }
 
     {

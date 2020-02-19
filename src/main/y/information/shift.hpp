@@ -11,20 +11,20 @@ namespace upsylon {
     namespace information {
 
         //! basic information shaker interface
-        class shaker : public counted_object
+        class shift : public counted_object
         {
         public:
-            typedef arc_ptr<shaker> pointer; //!< shared pointer
+            typedef arc_ptr<shift> pointer; //!< shared pointer
             
             //------------------------------------------------------------------
             //
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual         ~shaker() throw();                 //!< cleanup
+            virtual         ~shift()  throw();                 //!< cleanup
             virtual void     reset()              throw() = 0; //!< restart state
             virtual uint8_t  fetch(const uint8_t) throw() = 0; //!< byte wise process
-            virtual shaker  *clone() const                = 0; //!< clone with status
+            virtual shift   *clone() const                = 0; //!< clone with status
 
             //------------------------------------------------------------------
             //
@@ -42,10 +42,10 @@ namespace upsylon {
             void apply( memory::rw_buffer &buffer ) throw();
 
         protected:
-            explicit shaker() throw(); //!< setup
+            explicit shift() throw(); //!< setup
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(shaker);
+            Y_DISABLE_COPY_AND_ASSIGN(shift);
         };
     }
 

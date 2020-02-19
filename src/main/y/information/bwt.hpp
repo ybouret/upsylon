@@ -2,7 +2,7 @@
 #ifndef Y_INFORMATION_BWT_INCLUDED
 #define Y_INFORMATION_BWT_INCLUDED 1
 
-#include "y/information/shaker.hpp"
+#include "y/information/shift.hpp"
 
 
 namespace upsylon {
@@ -30,7 +30,7 @@ namespace upsylon {
                                  const void  *input,
                                  const size_t size,
                                  size_t      *indices,
-                                 shaker      &proc) throw();
+                                 shift       &proc) throw();
 
             //! reverse transformation using the primary index
             static void   decode(void        *output,
@@ -38,7 +38,7 @@ namespace upsylon {
                                  const size_t size,
                                  size_t      *indices,
                                  const size_t primary_index,
-                                 shaker       &proc) throw();
+                                 shift       &proc) throw();
 		};
 
 	}

@@ -1,4 +1,4 @@
-#include "y/information/delta.hpp"
+#include "y/information/shift/delta.hpp"
 
 namespace upsylon {
 
@@ -27,7 +27,7 @@ namespace upsylon {
             return ans;
         }
 
-        shaker * delta_encoder:: clone() const
+        shift * delta_encoder:: clone() const
         {
             delta_encoder *d = new delta_encoder();
             d->last = last;
@@ -49,7 +49,7 @@ namespace upsylon {
             return ans;
         }
 
-        shaker * delta_decoder:: clone() const
+        shift * delta_decoder:: clone() const
         {
             delta_decoder *d = new delta_decoder();
             d->last = last;

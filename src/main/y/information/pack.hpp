@@ -3,7 +3,7 @@
 #ifndef Y_INFORMATION_PACK_INCLUDED
 #define Y_INFORMATION_PACK_INCLUDED 1
 
-#include "y/information/mtf.hpp"
+#include "y/information/shift/mtf.hpp"
 #include "y/information/filter/rle/encoder.hpp"
 
 namespace upsylon {
@@ -13,19 +13,19 @@ namespace upsylon {
 
         namespace Pack  {
 
-
+            //! encoder
             class Encoder : public filterQ
             {
             public:
-                explicit Encoder(const size_t bs);
-                virtual ~Encoder() throw();
+                explicit Encoder(const size_t bs); //!< setup block size
+                virtual ~Encoder() throw();        //!< cleanup
 
-                const size_t blockSize;
-                const size_t wordBytes;
+                const size_t blockSize; //!< blockSize
+                const size_t wordBytes; //!< bytes to write count/primary index
                 
-                virtual void reset() throw();
-                virtual void write(char C);
-                virtual void flush();
+                virtual void reset() throw(); //!< reset all
+                virtual void write(char C);   //!< write to fill/emit
+                virtual void flush();         //!< emit
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);

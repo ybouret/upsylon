@@ -2,14 +2,14 @@
 #ifndef Y_INFORMATION_DELTA_INCLUDED
 #define Y_INFORMATION_DELTA_INCLUDED 1
 
-#include "y/information/shaker.hpp"
+#include "y/information/shift.hpp"
 
 namespace upsylon {
 
     namespace information {
 
         //! delta modulation base class
-        class delta_modulation : public shaker
+        class delta_modulation : public shift
         {
         public:
             virtual        ~delta_modulation() throw(); //!< cleanup
@@ -30,7 +30,7 @@ namespace upsylon {
             explicit        delta_encoder()      throw(); //!< initialize
             virtual        ~delta_encoder()      throw(); //!< destructor
             virtual uint8_t fetch(const uint8_t) throw(); //!< encode a byte
-            virtual shaker *clone()                const; //!< a new delta with same last
+            virtual shift  *clone()                const; //!< a new delta with same last
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(delta_encoder);
@@ -43,7 +43,7 @@ namespace upsylon {
             explicit        delta_decoder()      throw(); //!< initialize
             virtual        ~delta_decoder()      throw(); //!< destructor
             virtual uint8_t fetch(const uint8_t) throw(); //!< decode a byte
-            virtual shaker *clone()                const; //!< a new delta with same last
+            virtual shift  *clone()                const; //!< a new delta with same last
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(delta_decoder);

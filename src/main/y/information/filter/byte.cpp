@@ -1,6 +1,6 @@
 
 #include "y/information/filter/byte.hpp"
-#include "y/information/echo.hpp"
+#include "y/information/shift/echo.hpp"
 
 namespace upsylon {
 
@@ -10,12 +10,12 @@ namespace upsylon {
         {
         }
 
-        bytewise_filter:: bytewise_filter( const shaker::pointer &p ) throw() :
+        bytewise_filter:: bytewise_filter( const shift::pointer &p ) throw() :
         transform(p)
         {
         }
 
-        bytewise_filter:: bytewise_filter( shaker *p )  :
+        bytewise_filter:: bytewise_filter( shift *p )  :
         transform(p?p:new echo_modulation())
         {
 

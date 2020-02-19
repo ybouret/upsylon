@@ -136,6 +136,12 @@ SET(information_srcs ${information_decl} ${information_code})
 SOURCE_GROUP( information FILES ${information_srcs} )
 INSTALL( FILES ${information_decl} DESTINATION include/y/information )
 
+FILE(GLOB information_shift_decl y/information/shift/*.hpp)
+FILE(GLOB information_shift_code y/information/shift/*.cpp)
+SET(information_shift_srcs ${information_shift_decl} ${information_shift_code})
+SOURCE_GROUP( information/shift FILES ${information_shift_srcs} )
+INSTALL( FILES ${information_shift_decl} DESTINATION include/y/information/shift )
+
 FILE(GLOB information_filter_decl y/information/filter/*.hpp)
 FILE(GLOB information_filter_code y/information/filter/*.cpp)
 SET(information_filter_srcs ${information_filter_decl} ${information_filter_code})
@@ -371,7 +377,7 @@ ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
-${information_srcs} ${information_filter_srcs} ${information_filter_huffman_srcs} ${information_filter_shannon_fano_srcs} ${information_filter_rle_srcs}
+${information_srcs} ${information_shift_srcs} ${information_filter_srcs} ${information_filter_huffman_srcs} ${information_filter_shannon_fano_srcs} ${information_filter_rle_srcs}
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}

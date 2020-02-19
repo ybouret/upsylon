@@ -14,13 +14,13 @@ namespace upsylon {
         class filterQ : public filter, public list<char>
         {
         public:
-            explicit filterQ() throw();
-            explicit filterQ(const size_t);
-            virtual ~filterQ() throw();
+            explicit filterQ() throw();      //!< create empty
+            explicit filterQ(const size_t);  //!< create with memory
+            virtual ~filterQ() throw();      //!< cleanup
 
-            virtual bool query( char &C );
-            virtual void store( char  C );
-            virtual bool is_active() throw();
+            virtual bool query( char &C );    //!< from front()
+            virtual void store( char  C );    //!< push front
+            virtual bool is_active() throw(); //!< not empty
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(filterQ);

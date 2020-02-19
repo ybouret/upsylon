@@ -1,4 +1,4 @@
-#include "y/information/mtf.hpp"
+#include "y/information/shift/mtf.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 

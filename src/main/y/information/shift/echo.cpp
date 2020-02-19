@@ -1,4 +1,4 @@
-#include "y/information/echo.hpp"
+#include "y/information/shift/echo.hpp"
 
 namespace upsylon {
 
@@ -17,7 +17,7 @@ namespace upsylon {
             return c;
         }
 
-        shaker * echo_modulation:: clone() const  
+        shift * echo_modulation:: clone() const  
         {
             return new echo_modulation();
         }

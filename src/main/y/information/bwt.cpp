@@ -76,7 +76,7 @@ namespace upsylon {
             }
         }
 
-        size_t bwt::encode(void *output, const void *input, const size_t size, size_t *indices, shaker &proc) throw()
+        size_t bwt::encode(void *output, const void *input, const size_t size, size_t *indices, shift &proc) throw()
         {
             assert(!(NULL==output&&size>0));
             assert(!(NULL==input&&size>0));
@@ -171,7 +171,7 @@ namespace upsylon {
                            const size_t size,
                            size_t      *indices,
                            const size_t primary_index,
-                           shaker       &proc) throw()
+                           shift       &proc) throw()
         {
             assert(!(NULL==output&&size>0));
             assert(!(NULL==input&&size>0));

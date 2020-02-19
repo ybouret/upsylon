@@ -1,8 +1,6 @@
 #include "y/information/pack.hpp"
 #include "y/information/filter/rle/encoder.hpp"
 #include "y/utest/run.hpp"
-#include "y/information/mtf.hpp"
-#include "y/information/echo.hpp"
 #include "y/information/bwt.hpp"
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"

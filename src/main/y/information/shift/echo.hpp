@@ -2,21 +2,21 @@
 #ifndef Y_INFORMATION_ECHO_INCLUDED
 #define Y_INFORMATION_ECHO_INCLUDED 1
 
-#include "y/information/shaker.hpp"
+#include "y/information/shift.hpp"
 
 namespace upsylon {
 
     namespace information {
 
         //! base class for simple echoing
-        class echo_modulation : public shaker
+        class echo_modulation : public shift
         {
         public:
             explicit        echo_modulation()    throw(); //!< setup
             virtual        ~echo_modulation()    throw(); //!< cleanup
             virtual void    reset()              throw(); //!< do nothing
             virtual uint8_t fetch(const uint8_t) throw(); //!< do nothing
-            virtual shaker *clone() const;                //!< clone with status
+            virtual shift  *clone() const;                //!< clone with status
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(echo_modulation);

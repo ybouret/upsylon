@@ -1,4 +1,4 @@
-#include "y/information/mtf.hpp"
+#include "y/information/shift/mtf.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -75,7 +75,7 @@ namespace upsylon {
             return uint8_t(indx);
         }
 
-        shaker * mtf_encoder :: clone() const
+        shift * mtf_encoder :: clone() const
         {
             mtf_modulation *m = new mtf_encoder();
             m->duplicate(*this);
@@ -103,7 +103,7 @@ namespace upsylon {
         }
 
 
-        shaker * mtf_decoder :: clone() const
+        shift * mtf_decoder :: clone() const
         {
             mtf_modulation *m = new mtf_decoder();
 

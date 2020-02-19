@@ -1,9 +1,9 @@
 
 #include "y/information/filter/byte.hpp"
 
-#include "y/information/echo.hpp"
-#include "y/information/delta.hpp"
-#include "y/information/mtf.hpp"
+#include "y/information/shift/echo.hpp"
+#include "y/information/shift/delta.hpp"
+#include "y/information/shift/mtf.hpp"
 
 #include "y/information/entropy.hpp"
 
