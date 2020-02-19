@@ -11,6 +11,8 @@ namespace upsylon {
 
         TranslatorQueue:: TranslatorQueue() throw() : list<char>() {}
 
+        TranslatorQueue:: TranslatorQueue(const size_t n) throw() : list<char>(n,as_capacity) {}
+
         bool TranslatorQueue:: query(char &C)
         {
             if( size() > 0 )

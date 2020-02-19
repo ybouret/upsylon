@@ -18,9 +18,15 @@ namespace upsylon {
             public:
                 explicit Encoder();
                 virtual ~Encoder() throw();
+
+                virtual void write(char C);
+                virtual void flush();
+                virtual void reset() throw();
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
+                qbits io;
             };
 
         }

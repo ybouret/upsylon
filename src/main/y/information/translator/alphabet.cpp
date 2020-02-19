@@ -16,8 +16,13 @@ namespace upsylon {
         void Alphabet::Char:: display() const
         {
             std::cerr << std::setw(4) << NameOf(symbol) << " #" << std::setw(6) << frequency;
-            std::cerr << " : " << std::setw(3) << bits;
-            std::cerr << std::endl;
+            std::cerr << " : " << std::setw(3) << bits << " [";
+            for(size_t i=0;i<bits;++i)
+            {
+                const bool tst = ( 0 != (code & (1<<i) ) );
+                std::cerr << (tst ? '1' : '0' );
+            }
+            std::cerr << "]" << std::endl;
         }
 
 

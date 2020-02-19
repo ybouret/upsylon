@@ -14,6 +14,7 @@ namespace upsylon {
         {
         public:
             explicit TranslatorQueue()  throw();
+            explicit TranslatorQueue(const size_t) throw();
             virtual ~TranslatorQueue()  throw();
 
             virtual bool query( char &C );

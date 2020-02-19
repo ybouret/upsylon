@@ -7,7 +7,7 @@ namespace upsylon {
 
         namespace Huffman {
 
-            Encoder:: Encoder() : Tree(), TranslatorQueue()
+            Encoder:: Encoder() : Tree(), TranslatorQueue(8), io(32)
             {
             }
 
@@ -15,7 +15,25 @@ namespace upsylon {
             {
             }
 
-            
+            void Encoder:: write(char C)
+            {
+                update(C,&io);
+                io.compile(*this);
+            }
+
+            void Encoder:: flush()
+            {
+                eos->emit(io);
+                io.zfinish(*this);
+            }
+
+            void Encoder:: reset() throw()
+            {
+                restart();
+                free();
+                io.free();
+            }
+
         }
 
     }

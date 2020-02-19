@@ -1,7 +1,7 @@
 
 //! \file
 #ifndef Y_INFORMATION_TRANSLATOR_ALPHABET_INCLUDED
-#define Y_INFORMATION_TRANSLATOR_INCLUDED 1
+#define Y_INFORMATION_TRANSLATOR_ALPHABET_INCLUDED 1
 
 #include "y/information/qbits.hpp"
 
@@ -62,8 +62,8 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
             size_t       usedBytes; //!< 0..256
-            size_t       allocated;
-            Char *       character;
+            size_t       allocated; //!< bytes for character
+            Char *       character; //!< array of Char
         };
 
     }

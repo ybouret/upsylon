@@ -34,6 +34,7 @@ static const uint##BITS##_t bit[BITS];\
     {
     public:
         explicit qbits() throw(); //!< setup
+        explicit qbits(const size_t) throw(); //!< setup with capacity
         virtual ~qbits() throw(); //!< cleanup
 
         

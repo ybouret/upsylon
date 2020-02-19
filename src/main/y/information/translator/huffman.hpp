@@ -3,7 +3,6 @@
 #ifndef Y_TRANSLATOR_HUFFMAN_INCLUDED
 #define Y_TRANSLATOR_HUFFMAN_INCLUDED 1
 
-#include "y/information/translator.hpp"
 #include "y/information/translator/alphabet.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/ordered/priority-queue.hpp"

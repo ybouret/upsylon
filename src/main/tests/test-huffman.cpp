@@ -6,6 +6,8 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string.hpp"
+#include "y/ios/icstream.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace information;
@@ -52,9 +54,25 @@ Y_UTEST(huffman)
     }
 #endif
     
-    //Huffman::Encoder enc;
+    Huffman::Encoder enc;
+
+    if(argc>1)
+    {
+        const string  fileName = argv[1];
+        const string  compName = "huff.bin";
+        size_t nr = 0;
+        size_t nc = 0;
+        {
+            ios::icstream source( fileName );
+            ios::ocstream target( compName );
+            nc = enc.process(target, source, &nr );
+        }
+        std::cerr << "huff : " << nr << " -> " << nc << std::endl;
+    }
 
 
+    enc.displayChars();
+    enc.getRoot().graphViz("huff.dot");
 
 }
 Y_UTEST_DONE()

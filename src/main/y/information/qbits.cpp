@@ -45,6 +45,10 @@ namespace upsylon {
     {
     }
 
+    qbits:: qbits(const size_t n) throw() : qbits_(n,as_capacity)
+    {
+    }
+
     qbits:: ~qbits() throw()
     {
 
