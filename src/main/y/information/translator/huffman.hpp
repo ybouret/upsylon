@@ -50,13 +50,11 @@ namespace upsylon {
                 virtual ~Tree() throw();
                 const Node & getRoot() const throw();
 
-
-                
             protected:
                 Node        *root;
 
-                void update(const uint8_t byte, qbits *io);
-                void restart() throw(); //!< initialize alphabet and build
+                void update(const uint8_t byte, qbits *io); //!< emit current code and updateByte
+                void restart() throw();                     //!< initialize alphabet and build
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);

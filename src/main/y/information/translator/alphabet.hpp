@@ -58,7 +58,8 @@ namespace upsylon {
 
             void   updateByte(const uint8_t byte, qbits *io);
             void   initialize() throw();
-
+            void   rescaleFrequencies() throw();
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
             size_t       usedBytes; //!< 0..256

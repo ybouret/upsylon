@@ -2,6 +2,7 @@
 //#include "y/information/filter/huffman/decoder.hpp"
 
 #include "y/information/translator/huffman/encoder.hpp"
+#include "y/information/translator/huffman/decoder.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -55,6 +56,7 @@ Y_UTEST(huffman)
 #endif
     
     Huffman::Encoder enc;
+    Huffman::Decoder dec;
 
     if(argc>1)
     {
@@ -68,11 +70,20 @@ Y_UTEST(huffman)
             nc = enc.process(target, source, &nr );
         }
         std::cerr << "huff : " << nr << " -> " << nc << std::endl;
+        const string backName = "horg.bin";
+        size_t ns = 0;
+        size_t nd = 0;
+        {
+            ios::icstream source( compName );
+            ios::ocstream target( backName );
+            nd = dec.process(target, source, &ns );
+        }
+        std::cerr << "back : " << ns << " -> " << nd << std::endl;
+        Y_CHECK( nd == nr );
     }
 
 
-    enc.displayChars();
-    enc.getRoot().graphViz("huff.dot");
+
 
 }
 Y_UTEST_DONE()

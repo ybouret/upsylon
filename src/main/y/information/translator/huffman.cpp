@@ -90,6 +90,7 @@ namespace upsylon {
 
             void Tree:: build() throw()
             {
+                BUILD:
                 // enqueue leaves
                 pq.clear();
                 size_t inode = 0;
@@ -107,7 +108,11 @@ namespace upsylon {
                     Node        *right  = pq.extract();
                     Node        *left   = pq.extract();
                     const size_t bits   = max_of(right->bits,left->bits) + 1;
-
+                    if(bits>16)
+                    {
+                        rescaleFrequencies();
+                        goto BUILD;
+                    }
                     Node *parent  = new ( &treeNodes[inode++] ) Node(0,left->freq+right->freq,bits);
                     parent->left  = left;
                     parent->right = right;
@@ -122,6 +127,8 @@ namespace upsylon {
                 root->code = 0;
                 root->bits = 0;
                 UpdateCode(root);
+
+                // propagate the codes
                 for(Char *chr=chars.head;chr;chr=chr->next)
                 {
                     assert(chr->priv);

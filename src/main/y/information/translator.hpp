@@ -4,6 +4,7 @@
 
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon {
 
@@ -19,6 +20,7 @@ namespace upsylon {
             size_t process(ios::ostream &target,
                            ios::istream &source,
                            size_t *sourceLength = 0);
+            
 
         protected:
             explicit Translator() throw();

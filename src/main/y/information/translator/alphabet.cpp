@@ -107,6 +107,18 @@ namespace upsylon {
 
         }
 
+        void Alphabet:: rescaleFrequencies() throw()
+        {
+            for(Char *chr = chars.head;chr;chr=chr->next)
+            {
+                FreqType &f = chr->frequency;
+                if(f!=0)
+                {
+                    f >>= 1;
+                    f |=  1;
+                }
+            }
+        }
 
 
         bool Alphabet:: sameThan( const Alphabet &other ) const throw()

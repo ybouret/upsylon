@@ -7,7 +7,7 @@ namespace upsylon {
 
         namespace Huffman {
 
-            Encoder:: Encoder() : Tree(), TranslatorQueue(8), io(32)
+            Encoder:: Encoder() : Tree(), TranslatorQueue(8), Q(32)
             {
             }
 
@@ -17,21 +17,21 @@ namespace upsylon {
 
             void Encoder:: write(char C)
             {
-                update(C,&io);
-                io.compile(*this);
+                update(C,&Q);
+                Q.compile(*this);
             }
 
             void Encoder:: flush()
             {
-                eos->emit(io);
-                io.zfinish(*this);
+                eos->emit(Q);
+                Q.zfinish(*this);
             }
 
             void Encoder:: reset() throw()
             {
                 restart();
                 free();
-                io.free();
+                Q.free();
             }
 
         }
