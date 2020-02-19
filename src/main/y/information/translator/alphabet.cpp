@@ -35,27 +35,38 @@ namespace upsylon {
             usedBytes = 0;
             chars.reset();
             {
-                void *addr = nodes;
+                void *addr = character;
                 memset(addr,0,allocated);
                 memory::global::location().release(addr,allocated);
             }
-            nodes = 0;
-            nyt   = 0;
-            eos   = 0;
+            character = 0;
+            nyt       = 0;
+            eos       = 0;
         }
 
         Alphabet:: Alphabet() :
         chars(),
-        nyt(0),
         eos(0),
+        nyt(0),
         usedBytes(0),
         allocated( memory::align( Codes * sizeof(Char) ) ),
-        nodes( static_cast<Char *>(memory::global::instance().acquire(allocated)) )
+        character( static_cast<Char *>(memory::global::instance().acquire(allocated)) )
         {
-            nyt = nodes + NYT;
-            eos = nodes + EOS;
+            eos = character + EOS;
+            nyt = character + NYT;
             initialize();
         }
+
+#ifndef NDEBUG
+        static inline bool areOrdered( const Alphabet::Chars &chars )
+        {
+            for(const Alphabet::Char *ch=chars.head;ch&&ch->next;ch=ch->next)
+            {
+                if(ch->frequency<ch->next->frequency) return false;
+            }
+            return true;
+        }
+#endif
 
         void Alphabet:: initialize() throw()
         {
@@ -64,7 +75,7 @@ namespace upsylon {
 
             for(size_t i=0;i<Bytes;++i)
             {
-                Char &ch     = nodes[i];
+                Char &ch     = character[i];
                 ch.symbol    = ch.code = i;
                 ch.bits      = 8;
                 ch.frequency = 0;
@@ -74,7 +85,7 @@ namespace upsylon {
 
             for(size_t i=Bytes;i<Codes;++i)
             {
-                Char &ch     = nodes[i];
+                Char &ch     = character[i];
                 ch.symbol    = ch.code = i;
                 ch.bits      = 9; assert( ch.bits == bits_for(ch.code) );
                 ch.frequency = 0;
@@ -82,26 +93,14 @@ namespace upsylon {
                 ch.prev      = 0;
             }
 
-            chars.push_back(nyt);
             chars.push_back(eos);
+            chars.push_back(nyt);
+
+            assert( areOrdered(chars) );
 
         }
 
-        void Alphabet:: rank( Char *chr ) throw()
-        {
-            assert(chr);
-            assert(chars.owns(chr));
-            while( chr->prev && chr->prev->frequency<chr->frequency )
-            {
-                chars.towards_head(chr);
-            }
-#ifndef NDEBUG
-            for(const Char *node=chars.head;node->next;node=node->next)
-            {
-                assert(node->frequency>=node->next->frequency);
-            }
-#endif
-        }
+
 
         bool Alphabet:: sameThan( const Alphabet &other ) const throw()
         {
@@ -145,9 +144,9 @@ namespace upsylon {
         }
 
 
-        Alphabet::Char * Alphabet:: updateByte( const uint8_t byte, qbits &io ) throw()
+       void Alphabet:: updateByte( const uint8_t byte, qbits *io )
         {
-            Char *chr = nodes + byte;
+            Char *chr = character + byte;
             if( chr->frequency++ <= 0 )
             {
                 //--------------------------------------------------------------
@@ -165,19 +164,26 @@ namespace upsylon {
                         //------------------------------------------------------
                         // first node ever
                         //------------------------------------------------------
-                        chr->emit(io);
+                        if(io)
+                        {
+                            chr->emit(*io);
+                        }
                         chars.push_front(chr);
                         usedBytes = 1;
-                        return chr;
+                        assert(areOrdered(chars));
+                        return;
 
                     case 255:
                         //------------------------------------------------------
                         // last node ever
                         //------------------------------------------------------
-                        nyt->emit(io);
-                        chr->emit(io);
+                        if(io)
+                        {
+                            nyt->emit(*io);
+                            chr->emit(*io);
+                        }
                         usedBytes = Bytes;
-                        chars.insert_before(nyt,chr);
+                        chars.insert_before(eos,chr);
                         (void) chars.unlink(nyt);
                         break;
 
@@ -187,9 +193,12 @@ namespace upsylon {
                         //------------------------------------------------------
                         assert(usedBytes>=1);
                         assert(usedBytes<255);
-                        nyt->emit(io);
-                        chr->emit(io);
-                        chars.insert_before(nyt,chr);
+                        if(io)
+                        {
+                            nyt->emit(*io);
+                            chr->emit(*io);
+                        }
+                        chars.insert_before(eos,chr);
                         ++usedBytes; assert(usedBytes<Bytes);
                         break;
                 }
@@ -198,68 +207,18 @@ namespace upsylon {
             else
             {
                 assert(usedBytes<=Bytes);
-                chr->emit(io);
-            }
-            return chr;
-        }
-
-        Alphabet::Char * Alphabet:: updateByte(const uint8_t byte) throw()
-        {
-            Char *chr = nodes + byte;
-            if( chr->frequency++ <= 0 )
-            {
-                //--------------------------------------------------------------
-                //
-                // this is a new char
-                //
-                //--------------------------------------------------------------
-                assert(usedBytes<Bytes);
-                assert( chars.owns(nyt) );
-
-                switch( usedBytes )
+                if(io)
                 {
-
-                    case 0:
-                        //------------------------------------------------------
-                        // first node ever
-                        //------------------------------------------------------
-                        //chr->emit(io);
-                        chars.push_front(chr);
-                        usedBytes = 1;
-                        return chr;
-
-                    case 255:
-                        //------------------------------------------------------
-                        // last node ever
-                        //------------------------------------------------------
-                        //nyt->emit(io);
-                        //chr->emit(io);
-                        usedBytes = Bytes;
-                        chars.insert_before(nyt,chr);
-                        (void) chars.unlink(nyt);
-                        break;
-
-                    default:
-                        //------------------------------------------------------
-                        // generic update
-                        //------------------------------------------------------
-                        assert(usedBytes>=1);
-                        assert(usedBytes<255);
-                        //nyt->emit(io);
-                        //chr->emit(io);
-                        chars.insert_before(nyt,chr);
-                        ++usedBytes; assert(usedBytes<Bytes);
-                        break;
+                    chr->emit(*io);
                 }
-                assert(usedBytes>=2);
             }
-            else
+            while(chr->prev && chr->prev->frequency<chr->frequency)
             {
-                assert(usedBytes<=Bytes);
-                //chr->emit(io);
+                chars.towards_head(chr);
             }
-            return chr;
+            assert( areOrdered(chars) );
         }
+
 
 
         void Alphabet:: displayChars() const

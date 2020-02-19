@@ -9,7 +9,20 @@
 namespace upsylon {
 
     namespace information {
-        
+
+
+        class Translator
+        {
+        public:
+            virtual ~Translator() throw();
+            
+        protected:
+            explicit Translator() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Translator);
+        };
+
     }
 
 }

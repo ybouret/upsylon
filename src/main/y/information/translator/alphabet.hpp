@@ -32,6 +32,8 @@ namespace upsylon {
                 size_t   bits;      //!< current bits
                 Char    *next;      //!< for list
                 Char    *prev;      //!< for list
+                void    *priv;      //!< private data
+
                 void emit( qbits &io ) const;
                 void display() const;
             };
@@ -42,12 +44,8 @@ namespace upsylon {
             explicit Alphabet();
             virtual ~Alphabet() throw();
 
-            void initialize() throw();
-            
 
-            Char * updateByte(const uint8_t byte, qbits &io) throw();
-            Char * updateByte(const uint8_t byte) throw();
-            void   rank(Char *chr) throw();
+
 
             void displayChars() const;
 
@@ -55,14 +53,17 @@ namespace upsylon {
 
         protected:
             Chars  chars;     //!< currently used char: 2..Alive
-            Char  *nyt;       //!< NYT
             Char  *eos;       //!< EOS
-            
+            Char  *nyt;       //!< NYT
+
+            void   updateByte(const uint8_t byte, qbits *io);
+            void   initialize() throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
             size_t       usedBytes; //!< 0..256
             size_t       allocated;
-            Char        *nodes;
+            Char *       character;
         };
 
     }
