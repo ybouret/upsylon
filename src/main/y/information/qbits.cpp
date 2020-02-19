@@ -135,4 +135,20 @@ namespace upsylon {
             push_front(   0 != (U&qbit::table<uint8_t>::bit[i]) );
         }
     }
+
+    void qbits:: compile(sequence<char> &seq)
+    {
+        while( size() >= 8 )
+        {
+            seq.push_back( pop<char>() );
+        }
+    }
+
+    void qbits:: zfinish(sequence<char> &seq)
+    {
+        zpad();
+        compile(seq);
+        assert(0==size());
+    }
+
 }

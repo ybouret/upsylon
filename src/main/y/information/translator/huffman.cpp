@@ -64,7 +64,7 @@ namespace upsylon {
             fullBytes( treeBytes + (Alive+1) * sizeof(Node*)  ),
             workspace( memory::global::instance().acquire(fullBytes) ),
             treeNodes( static_cast<Node *>(workspace) ),
-            pq( memory::io::cast<Node *>( workspace, treeBytes ), Nodes )
+            pq( memory::io::cast<Node *>( workspace, treeBytes ), Alive+1 )
             {
                 build();
             }

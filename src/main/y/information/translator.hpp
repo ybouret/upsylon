@@ -11,7 +11,7 @@ namespace upsylon {
     namespace information {
 
 
-        class Translator
+        class Translator : public ios::ostream, public ios::istream
         {
         public:
             virtual ~Translator() throw();

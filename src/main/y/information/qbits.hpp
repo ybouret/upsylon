@@ -130,6 +130,10 @@ static const uint##BITS##_t bit[BITS];\
         virtual bool query( char &C ); //!< query next byte if enough bits
         virtual void store( char  C ); //!< store a byte
 
+        void compile( sequence<char> & ); //!< write all possible chars
+        void zfinish( sequence<char> & ); //!< zpad and write possible chars
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(qbits);
     };
