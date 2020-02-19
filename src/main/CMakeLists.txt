@@ -148,17 +148,20 @@ SET(information_translator_srcs ${information_translator_decl} ${information_tra
 SOURCE_GROUP( information/translator FILES ${information_translator_srcs} )
 INSTALL( FILES ${information_translator_decl} DESTINATION include/y/information/translator )
 
+FILE(GLOB information_translator_huffman_decl y/information/translator/huffman/*.hpp)
+FILE(GLOB information_translator_huffman_code y/information/translator/huffman/*.cpp)
+SET(information_translator_huffman_srcs ${information_translator_huffman_decl} ${information_translator_huffman_code})
+SOURCE_GROUP( information/translator/huffman FILES ${information_translator_huffman_srcs} )
+INSTALL( FILES ${information_translator_huffman_decl} DESTINATION include/y/information/translator/huffman )
+
+
+
 FILE(GLOB information_filter_decl y/information/filter/*.hpp)
 FILE(GLOB information_filter_code y/information/filter/*.cpp)
 SET(information_filter_srcs ${information_filter_decl} ${information_filter_code})
 SOURCE_GROUP( information/filter FILES ${information_filter_srcs} )
 INSTALL( FILES ${information_filter_decl} DESTINATION include/y/information/filter )
 
-FILE(GLOB information_filter_huffman_decl y/information/filter/huffman/*.hpp)
-FILE(GLOB information_filter_huffman_code y/information/filter/huffman/*.cpp)
-SET(information_filter_huffman_srcs ${information_filter_huffman_decl} ${information_filter_huffman_code})
-SOURCE_GROUP( information/filter/huffman FILES ${information_filter_huffman_srcs} )
-INSTALL( FILES ${information_filter_huffman_decl} DESTINATION include/y/information/filter/huffman )
 
 FILE(GLOB information_filter_shannon_fano_decl y/information/filter/shannon-fano/*.hpp)
 FILE(GLOB information_filter_shannon_fano_code y/information/filter/shannon-fano/*.cpp)
@@ -385,7 +388,8 @@ ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
 ${information_srcs} 
 ${information_shift_srcs} #${information_filter_srcs} ${information_filter_huffman_srcs} ${information_filter_shannon_fano_srcs} ${information_filter_rle_srcs}
-${information_translator_srcs} 
+${information_translator_srcs}
+${information_translator_huffman_srcs} 
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}

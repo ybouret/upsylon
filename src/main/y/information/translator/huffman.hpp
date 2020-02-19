@@ -1,6 +1,5 @@
 //! \file
 
-
 #ifndef Y_TRANSLATOR_HUFFMAN_INCLUDED
 #define Y_TRANSLATOR_HUFFMAN_INCLUDED 1
 
@@ -52,12 +51,13 @@ namespace upsylon {
                 virtual ~Tree() throw();
                 const Node & getRoot() const throw();
 
-                void update(const uint8_t byte, qbits *io);
-                void restart() throw(); //!< initialize alphabet and build
+
                 
             protected:
                 Node        *root;
 
+                void update(const uint8_t byte, qbits *io);
+                void restart() throw(); //!< initialize alphabet and build
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);

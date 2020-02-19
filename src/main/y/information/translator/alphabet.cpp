@@ -15,7 +15,9 @@ namespace upsylon {
 
         void Alphabet::Char:: display() const
         {
-            std::cerr << std::setw(4) << NameOf(symbol) << " #" << std::setw(6) << frequency << std::endl;
+            std::cerr << std::setw(4) << NameOf(symbol) << " #" << std::setw(6) << frequency;
+            std::cerr << " : " << std::setw(3) << bits;
+            std::cerr << std::endl;
         }
 
 

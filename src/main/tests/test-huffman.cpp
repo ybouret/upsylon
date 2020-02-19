@@ -1,7 +1,7 @@
 //#include "y/information/filter/huffman/encoder.hpp"
 //#include "y/information/filter/huffman/decoder.hpp"
 
-#include "y/information/translator/huffman.hpp"
+#include "y/information/translator/huffman/encoder.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -52,14 +52,9 @@ Y_UTEST(huffman)
     }
 #endif
     
-    Huffman::Tree huff;
-    for(size_t i=0;i<256;++i)
-    {
-        huff.update(i, NULL);
-    }
-    huff.displayChars();
-    huff.getRoot().graphViz("huff.dot");
-    
+    //Huffman::Encoder enc;
+
+
 
 }
 Y_UTEST_DONE()
