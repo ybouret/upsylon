@@ -53,19 +53,13 @@ Y_UTEST(huffman)
 #endif
     
     Huffman::Tree huff;
-    for(int i=1;i<argc;++i)
+    for(size_t i=0;i<256;++i)
     {
-        const string s = argv[i];
-        for(size_t j=0;j<s.size();++j)
-        {
-            huff.update(s[j], NULL);
-        }
+        huff.update(i, NULL);
     }
     huff.displayChars();
     huff.getRoot().graphViz("huff.dot");
-
-
-
+    
 
 }
 Y_UTEST_DONE()

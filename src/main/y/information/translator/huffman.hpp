@@ -4,7 +4,7 @@
 #ifndef Y_TRANSLATOR_HUFFMAN_INCLUDED
 #define Y_TRANSLATOR_HUFFMAN_INCLUDED 1
 
-#include "y/information/translator/queue.hpp"
+#include "y/information/translator.hpp"
 #include "y/information/translator/alphabet.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/ordered/priority-queue.hpp"
@@ -53,7 +53,8 @@ namespace upsylon {
                 const Node & getRoot() const throw();
 
                 void update(const uint8_t byte, qbits *io);
-
+                void restart() throw(); //!< initialize alphabet and build
+                
             protected:
                 Node        *root;
 

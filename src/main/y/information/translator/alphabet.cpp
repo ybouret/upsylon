@@ -25,7 +25,7 @@ namespace upsylon {
             {
                 case EOS: return "EOS";
                 case NYT: return "NYT";
-                default: if(code<Bytes) return visible_char[code&0xff];
+                default: if(code<Bytes) return printable_char[code&0xff];
             }
             return "BAD";
         }

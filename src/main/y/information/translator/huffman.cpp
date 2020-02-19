@@ -61,13 +61,32 @@ namespace upsylon {
             Tree:: Tree() : Alphabet(),
             root(0),
             treeBytes( memory::align( Nodes * sizeof(Node) )  ),
-            fullBytes( treeBytes + (Alive+1) * sizeof(Node*)  ),
+            fullBytes( treeBytes + Alive * sizeof(Node*)  ),
             workspace( memory::global::instance().acquire(fullBytes) ),
             treeNodes( static_cast<Node *>(workspace) ),
-            pq( memory::io::cast<Node *>( workspace, treeBytes ), Alive+1 )
+            pq( memory::io::cast<Node *>( workspace, treeBytes ), Alive )
             {
                 build();
             }
+
+            static inline void UpdateCode( Tree::Node *node ) throw()
+            {
+                assert(node);
+                Tree::Node *left = node->left;
+                if(left)
+                {
+                    Tree::Node *right = node->right;
+                    assert(right);
+                    const size_t nbit = node->bits;
+                    left->bits  = right->bits = nbit+1;
+                    left->code  = right->code = node->code;
+                    right->code |= (1<<nbit);
+                    UpdateCode(left);
+                    UpdateCode(right);
+                }
+
+            }
+
 
             void Tree:: build() throw()
             {
@@ -98,6 +117,19 @@ namespace upsylon {
 
                 assert(1==pq.count);
                 root = pq.extract();
+
+                // build the codes
+                root->code = 0;
+                root->bits = 0;
+                UpdateCode(root);
+                for(Char *chr=chars.head;chr;chr=chr->next)
+                {
+                    assert(chr->priv);
+                    const Node *node = static_cast<Node *>(chr->priv);
+                    chr->code = node->code;
+                    chr->bits = node->bits;
+                }
+
             }
 
             const Tree::Node & Tree:: getRoot() const throw()
@@ -112,6 +144,11 @@ namespace upsylon {
                 build();
             }
 
+            void Tree:: restart() throw()
+            {
+                initialize();
+                build();
+            }
 
         }
 
