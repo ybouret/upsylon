@@ -47,13 +47,13 @@ namespace upsylon {
                     Y_DISABLE_COPY_AND_ASSIGN(Node);
                 };
 
-                virtual     ~Tree() throw(); //!< cleanup
-                const Node & getRoot() const throw();
+                virtual     ~Tree() throw();          //!< cleanup
+                const Node & getRoot() const throw(); //!< get the root node
 
             protected:
                 explicit Tree(); //!< setup
                 void update(const uint8_t byte, qbits *io); //!< emit and build
-                void restart() throw();
+                void restart() throw();                     //!< initialize alphabet and build tree
                 
                 Node *root; //!< root
                 

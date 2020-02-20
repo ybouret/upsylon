@@ -14,17 +14,31 @@ namespace upsylon {
         class Translator : public ios::ostream, public ios::istream
         {
         public:
-            virtual ~Translator() throw();
+            //------------------------------------------------------------------
+            //
+            // virtual interface
+            //
+            //------------------------------------------------------------------
+
+            virtual     ~Translator() throw();       //!< cleanup
+            virtual void reset()      throw() = 0;   //!< make a fresh start
+
+
+            //------------------------------------------------------------------
+            //
+            // non-virtual interface
+            //
+            //------------------------------------------------------------------
 
             //! process/flush without touching state
             size_t process(ios::ostream &target,
                            ios::istream &source,
                            size_t *sourceLength = 0);
             
-            virtual void reset() throw() = 0;
-            
+            //! create a Fibonacci file
             static size_t Fibonacci(const string &fileName, const uint8_t a, const uint8_t b);
 
+            //! test the codec with an optional decoder
             void testCODEC(const string &fileName,
                            const string &compName,
                            const string &backName,
