@@ -29,7 +29,6 @@ namespace upsylon {
                 {
                     fp << Alphabet::NameOf(heavy->symbol);
                 }
-                //fp("#%lu", static_cast<unsigned long>(freq) );
                 fp << "\"]";
                 endl(fp);
                 if(left)
