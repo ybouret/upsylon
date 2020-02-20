@@ -26,35 +26,57 @@ Y_UTEST(huffman)
     
     Huffman::Encoder enc;
     Huffman::Decoder dec;
+    string           fileName;
+    const string     compName = "huff.bin";
+    const string     backName = "horg.bin";
 
     if(argc>1)
     {
-        const string  fileName = argv[1];
-        const string  compName = "huff.bin";
+        fileName = argv[1];
         size_t nr = 0;
         size_t nc = 0;
         {
             ios::icstream source( fileName );
             ios::ocstream target( compName );
+            enc.reset();
             nc = enc.process(target, source, &nr );
         }
         std::cerr << "huff : " << nr << " -> " << nc << std::endl;
-        const string backName = "horg.bin";
         size_t ns = 0;
         size_t nd = 0;
         {
             ios::icstream source( compName );
             ios::ocstream target( backName );
+            dec.reset();
             nd = dec.process(target, source, &ns );
         }
         std::cerr << "back : " << ns << " -> " << nd << std::endl;
         Y_CHECK( nd == nr );
-        hashing::sha1 H;
-        const digest hashOrg = ios::disk_file::md(H,fileName);
-        const digest hashEnd = ios::disk_file::md(H,backName);
-        Y_CHECK( hashEnd == hashOrg );
     }
+    else
+    {
+        std::cerr << "<compression>" << std::endl;
+        fileName    = "fibo.bin";
+        size_t ngen = 0;
+        size_t nenc = enc.testFibonnaci(compName,fileName, 'a', 'a'+20, ngen);
+        std::cerr << "fibonacci: " << ngen << " -> " << nenc << std::endl;
 
+        std::cerr << "<decompression>" << std::endl;
+        size_t ns = 0;
+        size_t nd = 0;
+        {
+            ios::icstream source( compName );
+            ios::ocstream target( backName );
+            dec.reset();
+            nd = dec.process(target, source, &ns );
+        }
+        std::cerr << "back : " << ns << " -> " << nd << std::endl;
+        Y_CHECK( nd == ngen );
+    }
+    hashing::sha1 H;
+    const digest hashOrg = ios::disk_file::md(H,fileName);
+    const digest hashEnd = ios::disk_file::md(H,backName);
+    Y_CHECK( hashEnd == hashOrg );
 
 
 

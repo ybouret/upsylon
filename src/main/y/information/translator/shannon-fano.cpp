@@ -22,6 +22,28 @@ namespace upsylon {
 
             }
 
+            void Tree:: Node:: vizCore(ios::ostream &fp) const
+            {
+                fp << " [label=\"";
+                if(heavy==light)
+                {
+                    fp << Alphabet::NameOf(heavy->symbol);
+                }
+                //fp("#%lu", static_cast<unsigned long>(freq) );
+                fp << "\"]";
+                endl(fp);
+                if(left)
+                {
+                    left->vizSave(fp);
+                    endl( vizJoin(fp,left) << " [label=\"0\"]" );
+                }
+                if(right)
+                {
+                    right->vizSave(fp);
+                    endl( vizJoin(fp,right) << " [label=\"1\"]" );
+                }
+            }
+
             Tree:: Tree() : Alphabet(),
             root(0),
             treeBytes( Nodes * sizeof(Node) ),
@@ -41,6 +63,13 @@ namespace upsylon {
                 root      = 0;
 
             }
+
+            const Tree::Node & Tree:: getRoot() const throw()
+            {
+                assert(root);
+                return *root;
+            }
+
 
             void Tree:: build() throw()
             {
@@ -74,32 +103,48 @@ namespace upsylon {
                 assert(node->light);
                 assert(inode<Nodes);
 
+                //--------------------------------------------------------------
+                //
+                // increase bits
+                //
+                //--------------------------------------------------------------
                 const size_t bits = node->bits+1;
-                std::cerr << "\t[bits: " << bits << "]" << std::endl;
-
                 if(bits>Bits)
                 {
+                    // shall rescale
                     return false;
                 }
 
                 if(node->heavy==node->light)
                 {
+                    //----------------------------------------------------------
+                    //
                     // only one node => leaf
-                    std::cerr << "assign " << NameOf(node->heavy->symbol) << std::endl;
+                    //
+                    //----------------------------------------------------------
                     aliasing::_(node->heavy->priv) = node;
                     return true;
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    //
                     // two or more nodes
-                    std::cerr << "split from " << NameOf(node->heavy->symbol) << " to " << NameOf(node->light->symbol) << std::endl;
+                    //
+                    //----------------------------------------------------------
 
+                    //__________________________________________________________
+                    //
                     // heavy bracket
+                    //__________________________________________________________
                     const Char *hIni  = node->heavy;
                     const Char *hEnd  = hIni;
                     size_t      hFreq = hIni->frequency;
 
+                    //__________________________________________________________
+                    //
                     // light bracket
+                    //__________________________________________________________
                     const Char *lEnd  = node->light;
                     const Char *lIni  = hEnd->next;    assert(lIni!=NULL);
                     size_t      lFreq = lIni->frequency;
@@ -108,9 +153,11 @@ namespace upsylon {
                         lFreq += ch->frequency;
                     }
                     FreqType dFreq = deltaFreq(hFreq,lFreq);
-                    std::cerr << "\tfreqs: " << hFreq << " - " << lFreq << ": " << dFreq << std::endl;
 
+                    //__________________________________________________________
+                    //
                     // bracket until singulet or exceed balance
+                    //__________________________________________________________
                     while(lEnd!=lIni)
                     {
                         assert(hEnd->next==lIni);
@@ -131,24 +178,50 @@ namespace upsylon {
                             break;
                         }
                     }
-                    std::cerr << "\t[" << NameOf(hIni->symbol) << ":" << NameOf(hEnd->symbol) << "] - [" << NameOf(lIni->symbol) << ":" << NameOf(lEnd->symbol) << "]" << std::endl;
 
+                    //__________________________________________________________
+                    //
+                    // make left
+                    //__________________________________________________________
                     {
                         assert(inode<Nodes);
                         Node *left  = node->left  = new ( &treeNodes[inode++] ) Node(hIni,hEnd);
+                        assert(0==left->bits);
+                        assert(0==left->code);
                         left->bits  = bits;
+                        left->code  = node->code;
                         if(!split(left,inode)) return false;
                     }
 
+                    //__________________________________________________________
+                    //
+                    // make right
+                    //__________________________________________________________
                     {
                         assert(inode<Nodes);
                         Node *right = node->right = new ( &treeNodes[inode++] ) Node(lIni,lEnd);
+                        assert(0==right->bits);
+                        assert(0==right->code);
                         right->bits = bits;
+                        right->code = node->code | ( 1 << (bits-1) );
                         if(!split(right,inode)) return false;
                     }
 
                     return true;
                 }
+            }
+
+
+            void Tree:: update(const uint8_t byte, qbits *io)
+            {
+                emitAndUpdateByte(byte,io);
+                build();
+            }
+
+            void Tree:: restart() throw()
+            {
+                initialize();
+                build();
             }
 
         }

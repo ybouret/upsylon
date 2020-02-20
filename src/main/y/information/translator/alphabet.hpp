@@ -65,7 +65,7 @@ namespace upsylon {
             Char  *nyt;       //!< NYT
 
             explicit Alphabet(); //!< setup
-            void     updateByte(const uint8_t byte, qbits *io); //!< emit bits on io!=NULL, updated chars
+            void     emitAndUpdateByte(const uint8_t byte, qbits *io); //!< emit bits on io!=NULL, updated chars
             void     initialize() throw();                      //!< prepare chars
             void     rescaleFrequencies() throw();              //!< scale down used frequencies
             

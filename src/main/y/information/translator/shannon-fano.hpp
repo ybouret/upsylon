@@ -24,36 +24,38 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 static const size_t Nodes  = 2*Alive+1; //!< maximum number of nodes
 
-                class Node
+                //! a node of the tree
+                class Node : public ios::vizible
                 {
                 public:
+                    //! setup with chars range
                     explicit Node(const Char *h, const Char *l) throw();
 
-                    const Char *heavy;
-                    const Char *light;
+                    const Char *heavy; //!< heavy char
+                    const Char *light; //!< light char
 
                     Node       *left;   //!< for tree
                     Node       *right;  //!< for tree
                     CodeType    code;   //!< current code
                     size_t      bits;   //!< current bits
 
+                    //! vizible interface
+                    virtual void vizCore( ios::ostream & ) const;
+                    
                 private:
                     virtual ~Node() throw();
                     Y_DISABLE_COPY_AND_ASSIGN(Node);
                 };
 
-                explicit Tree();
-                virtual ~Tree() throw();
-
-                void update(const uint8_t byte)
-                {
-                    updateByte(byte, NULL);
-                    build();
-                }
-
+                virtual     ~Tree() throw(); //!< cleanup
+                const Node & getRoot() const throw();
 
             protected:
-                Node *root;
+                explicit Tree(); //!< setup
+                void update(const uint8_t byte, qbits *io); //!< emit and build
+                void restart() throw();
+                
+                Node *root; //!< root
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);
@@ -61,8 +63,7 @@ namespace upsylon {
                 Node  *treeNodes;
 
                 void build() throw();
-                bool split(Node   *node,
-                           size_t &inode) throw();
+                bool split(Node *node, size_t &inode) throw();
             };
         }
     }

@@ -163,7 +163,7 @@ namespace upsylon {
 
             void Tree:: update(const uint8_t byte, qbits *io)
             {
-                updateByte(byte,io);
+                emitAndUpdateByte(byte,io);
                 build();
             }
 

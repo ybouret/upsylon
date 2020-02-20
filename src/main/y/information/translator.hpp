@@ -21,6 +21,15 @@ namespace upsylon {
                            ios::istream &source,
                            size_t *sourceLength = 0);
             
+            virtual void reset() throw() = 0;
+            
+            static size_t Fibonnaci(const string &dataName, const uint8_t a, const uint8_t b);
+
+            size_t testFibonnaci(const string &encoded,
+                                 const string &fibonnaci,
+                                 const uint8_t a,
+                                 const uint8_t b,
+                                 size_t       &ngen);
 
         protected:
             explicit Translator() throw();

@@ -109,6 +109,7 @@ namespace upsylon {
 
         void Alphabet:: rescaleFrequencies() throw()
         {
+            std::cerr << "[rescale]" << std::endl;
             for(Char *chr = chars.head;chr;chr=chr->next)
             {
                 FreqType &f = chr->frequency;
@@ -163,7 +164,7 @@ namespace upsylon {
         }
 
 
-       void Alphabet:: updateByte( const uint8_t byte, qbits *io )
+       void Alphabet:: emitAndUpdateByte( const uint8_t byte, qbits *io )
         {
             Char *chr = character + byte;
             if( chr->frequency++ <= 0 )
