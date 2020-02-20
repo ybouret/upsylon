@@ -108,7 +108,7 @@ namespace upsylon {
                     Node        *right  = pq.extract();
                     Node        *left   = pq.extract();
                     const size_t bits   = max_of(right->bits,left->bits) + 1;
-                    if(bits>16)
+                    if(bits>Bits)
                     {
                         rescaleFrequencies();
                         goto BUILD;
