@@ -6,6 +6,13 @@ namespace upsylon {
 
         namespace Huffman {
 
+            const char Decoder::CLID[] = "HuffmanDecoder";
+
+            const char *Decoder:: name() const throw()
+            {
+                return CLID;
+            }
+
             Decoder:: Decoder() :
             Tree(),
             TranslatorQueue(8),

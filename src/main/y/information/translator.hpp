@@ -19,10 +19,9 @@ namespace upsylon {
             // virtual interface
             //
             //------------------------------------------------------------------
-
-            virtual     ~Translator() throw();       //!< cleanup
-            virtual void reset()      throw() = 0;   //!< make a fresh start
-
+            virtual            ~Translator()   throw();     //!< cleanup
+            virtual void        reset()        throw() = 0; //!< make a fresh start
+            virtual const char *name()   const throw() = 0; //!< the name
 
             //------------------------------------------------------------------
             //

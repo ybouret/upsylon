@@ -25,7 +25,7 @@ Y_UTEST(shannon_fano)
     }
     else
     {
-        (void) Translator::Fibonacci(fileName, 'a', 'a'+20 );
+        (void) Translator::Fibonacci(fileName, 'a', 'z' );
     }
     enc.testCODEC(fileName, compName, backName, &dec);
 }

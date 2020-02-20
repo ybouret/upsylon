@@ -109,7 +109,7 @@ namespace upsylon {
 
         void Alphabet:: rescaleFrequencies() throw()
         {
-            std::cerr << "[rescale]" << std::endl;
+            //std::cerr << "[rescale]" << std::endl;
             for(Char *chr = chars.head;chr;chr=chr->next)
             {
                 FreqType &f = chr->frequency;

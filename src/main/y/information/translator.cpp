@@ -53,6 +53,7 @@ namespace upsylon {
 #include "y/string.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/fs/disk/file.hpp"
+#include "y/os/wtime.hpp"
 
 namespace upsylon {
 
@@ -87,33 +88,42 @@ namespace upsylon {
             Translator *encoder    = this;
             size_t      readBytes  = 0;
             size_t      compBytes  = 0;
+            wtime       chrono;
+
             {
-                std::cerr << "<encoding>" << std::endl;
+                std::cerr << "<encoding with " << encoder->name() << ">" << std::endl;
                 ios::icstream source( fileName );
                 ios::ocstream target( compName );
                 encoder->reset();
+                const uint64_t mark = wtime::ticks();
                 compBytes = encoder->process(target,source,&readBytes);
+                const double   tmx  = chrono(wtime::ticks() - mark);
+                const double   rate = (readBytes/tmx)/1e6;
+                std::cerr << "\tencoder: " << readBytes << " -> " << compBytes << " @ " << rate << " MB/s" << std::endl;
+
             }
-            std::cerr << "\tencoder: " << readBytes << " -> " << compBytes << std::endl;
 
             if(decoder)
             {
-                std::cerr << "<decoding>" << std::endl;
+                std::cerr << "<decoding with " << decoder->name() << ">" << std::endl;
                 size_t loadBytes = 0;
                 size_t backBytes = 0;
                 {
                     ios::icstream source( compName );
                     ios::ocstream target( backName );
                     decoder->reset();
+                    const uint64_t mark = wtime::ticks();
                     backBytes = decoder->process(target,source,&loadBytes);
+                    const double   tmx  = chrono(wtime::ticks() - mark);
+                    const double   rate = (readBytes/tmx)/1e6;
+                    std::cerr << "\tdecoder: " << loadBytes << " -> " << backBytes << " @ " << rate << " MB/s" << std::endl;
                 }
-                std::cerr << "\tdecoder: " << loadBytes << " -> " << backBytes << std::endl;
                 if( loadBytes != compBytes ) throw exception("%s: loadBytes != compBytes", fn);
                 if( readBytes != backBytes ) throw exception("%s: readBytes != backBytes", fn);
                 hashing::sha1 H;
                 const digest MDfile = ios::disk_file::md(H,fileName);
-                std::cerr << H.name() << " : " << MDfile << std::endl;
                 const digest MDback = ios::disk_file::md(H,backName);
+                std::cerr << H.name() << " : " << MDfile << "/" << MDback << std::endl;
                 if(MDfile!=MDback) throw exception("%s: invalid checksum", fn);
             }
 

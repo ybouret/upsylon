@@ -32,9 +32,10 @@ Y_UTEST(huffman)
     }
     else
     {
-        (void) Translator::Fibonacci(fileName, 'a', 'a'+20 );
+        (void) Translator::Fibonacci(fileName, 'a', 'z' );
     }
     enc.testCODEC(fileName, compName, backName, &dec);
+    
 
 }
 Y_UTEST_DONE()

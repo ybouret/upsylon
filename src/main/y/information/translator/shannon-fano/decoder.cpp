@@ -7,6 +7,10 @@ namespace upsylon {
 
         namespace ShannonFano {
 
+            const char Decoder::CLID[] = "ShannonFanoDecoder";
+            
+            const char * Decoder:: name() const throw() { return CLID; }
+
             Decoder:: Decoder() :
             Tree(),
             TranslatorQueue(8),
