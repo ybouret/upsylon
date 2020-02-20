@@ -14,16 +14,21 @@ namespace upsylon {
         class Alphabet
         {
         public:
-            typedef size_t CodeType;
-            typedef size_t FreqType;
+            //--------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //--------------------------------------------------------------
+            typedef size_t CodeType; //!< alias
+            typedef size_t FreqType; //!< alias
 
             static const size_t   Bytes = 256;     //!< number of encoded byte   (0-255)
-            static const CodeType NYT   = Bytes;   //!< Not Yet Transmitted Code (256)
-            static const CodeType EOS   = NYT+1;   //!< End Of Stream            (257)
-            static const size_t   Codes = EOS+1;   //!< maximum number of codes  (258)
+            static const CodeType EOS   = Bytes;   //!< Not Yet Transmitted Code (256)
+            static const CodeType NYT   = EOS+1;   //!< End Of Stream            (257)
+            static const size_t   Codes = NYT+1;   //!< maximum number of codes  (258)
             static const size_t   Alive = Codes-1; //!< when all bytes are used, NYT is removed
 
-
+            //! a Char for a list of chars
             struct Char
             {
                 CodeType symbol;    //!< original 0..Codes-1
@@ -34,31 +39,34 @@ namespace upsylon {
                 Char    *prev;      //!< for list
                 void    *priv;      //!< private data
 
-                void emit( qbits &io ) const;
-                void display() const;
+                void emit( qbits &io ) const; //!< write code/bits
+                void display() const;         //!< display info
             };
 
+            //! a dynamic list of chars
             typedef core::list_of<Char> Chars;
 
-            static const char *NameOf(const CodeType code) throw();
-            explicit Alphabet();
-            virtual ~Alphabet() throw();
+            //--------------------------------------------------------------
+            //
+            // public methods
+            //
+            //--------------------------------------------------------------
+            static const char *NameOf(const CodeType) throw(); //!< for information/graphviz
 
 
-
-
-            void displayChars() const;
-
-            bool sameThan( const Alphabet &other ) const throw(); //!< to debug
+            virtual ~Alphabet()    throw(); //!< cleanup
+            void    displayChars() const;   //!< for information
+            bool    sameThan(const Alphabet &) const throw(); //!< to debug
 
         protected:
             Chars  chars;     //!< currently used char: 2..Alive
             Char  *eos;       //!< EOS
             Char  *nyt;       //!< NYT
 
-            void   updateByte(const uint8_t byte, qbits *io);
-            void   initialize() throw();
-            void   rescaleFrequencies() throw();
+            explicit Alphabet(); //!< setup
+            void     updateByte(const uint8_t byte, qbits *io); //!< emit bits on io!=NULL, updated chars
+            void     initialize() throw();                      //!< prepare chars
+            void     rescaleFrequencies() throw();              //!< scale down used frequencies
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);

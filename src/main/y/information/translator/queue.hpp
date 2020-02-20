@@ -10,16 +10,17 @@ namespace upsylon {
 
     namespace information {
 
+        //! implements the ios::istream part
         class TranslatorQueue : public Translator, public list<char>
         {
         public:
-            explicit TranslatorQueue()  throw();
-            explicit TranslatorQueue(const size_t) throw();
-            virtual ~TranslatorQueue()  throw();
+            explicit TranslatorQueue()             throw(); //!< setup
+            explicit TranslatorQueue(const size_t) throw(); //!< setup with memory
+            virtual ~TranslatorQueue()             throw(); //!< cleanup
 
-            virtual bool query( char &C );
-            virtual void store( char  C );
-            virtual bool is_active() throw();
+            virtual bool query( char &C );    //!< from list front
+            virtual void store( char  C );    //!< at list front
+            virtual bool is_active() throw(); //!< size() != 0
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(TranslatorQueue);

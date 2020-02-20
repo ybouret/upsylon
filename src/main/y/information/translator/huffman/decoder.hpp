@@ -12,16 +12,15 @@ namespace upsylon {
 
         namespace Huffman {
 
+            //! decoder for Huffman
             class Decoder : public Tree, public TranslatorQueue
             {
             public:
-                explicit Decoder();
-                virtual ~Decoder() throw();
-
-                virtual void write(char C);
-                virtual void flush();
-                virtual void reset() throw();
-
+                explicit     Decoder();         //!< setup, wit for byte
+                virtual     ~Decoder() throw(); //!< cleanup
+                virtual void write(char C);     //!< process bits
+                virtual void flush();           //!< do nothing
+                virtual void reset() throw();   //!< restart all
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Decoder);

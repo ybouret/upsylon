@@ -13,16 +13,15 @@ namespace upsylon {
 
         namespace Huffman {
 
+            //! Huffman Encoder
             class Encoder : public Tree, public TranslatorQueue
             {
             public:
-                explicit Encoder();
-                virtual ~Encoder() throw();
-
-                virtual void write(char C);
-                virtual void flush();
-                virtual void reset() throw();
-
+                explicit     Encoder();         //!< initialize all
+                virtual     ~Encoder() throw(); //!< cleanup
+                virtual void write(char C);     //!< emit according to tree and update
+                virtual void flush();           //!< emit EOS
+                virtual void reset() throw();   //!< restart and clean all
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
