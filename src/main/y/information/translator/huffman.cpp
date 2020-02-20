@@ -90,8 +90,12 @@ namespace upsylon {
 
             void Tree:: build() throw()
             {
-                BUILD:
+            BUILD:
+                //--------------------------------------------------------------
+                //
                 // enqueue leaves
+                //
+                //--------------------------------------------------------------
                 pq.clear();
                 size_t inode = 0;
                 for(Char *chr = chars.head; chr; chr=chr->next, ++inode)
@@ -101,7 +105,11 @@ namespace upsylon {
                     pq.enqueue(node);
                 }
 
+                //--------------------------------------------------------------
+                //
                 // build the tree
+                //
+                //--------------------------------------------------------------
                 while( pq.count > 1 )
                 {
                     assert(inode<Nodes);
@@ -123,12 +131,20 @@ namespace upsylon {
                 assert(1==pq.count);
                 root = pq.extract();
 
+                //--------------------------------------------------------------
+                //
                 // build the codes
+                //
+                //--------------------------------------------------------------
                 root->code = 0;
                 root->bits = 0;
                 UpdateCode(root);
 
+                //--------------------------------------------------------------
+                //
                 // propagate the codes
+                //
+                //--------------------------------------------------------------
                 for(Char *chr=chars.head;chr;chr=chr->next)
                 {
                     assert(chr->priv);
