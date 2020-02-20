@@ -42,11 +42,11 @@ namespace upsylon {
             usedBytes = 0;
             chars.reset();
             {
-                void *addr = character;
-                memset(addr,0,allocated);
-                memory::global::location().release(addr,allocated);
+                void *addr = charNodes;
+                memset(addr,0,charBytes);
+                memory::global::location().release(addr,charBytes);
             }
-            character = 0;
+            charNodes = 0;
             nyt       = 0;
             eos       = 0;
         }
@@ -56,11 +56,11 @@ namespace upsylon {
         eos(0),
         nyt(0),
         usedBytes(0),
-        allocated( memory::align( Codes * sizeof(Char) ) ),
-        character( static_cast<Char *>(memory::global::instance().acquire(allocated)) )
+        charBytes( memory::align( Codes * sizeof(Char) ) ),
+        charNodes( static_cast<Char *>(memory::global::instance().acquire(charBytes)) )
         {
-            eos = character + EOS;
-            nyt = character + NYT;
+            eos = charNodes + EOS;
+            nyt = charNodes + NYT;
             initialize();
         }
 
@@ -82,7 +82,7 @@ namespace upsylon {
 
             for(size_t i=0;i<Bytes;++i)
             {
-                Char &ch     = character[i];
+                Char &ch     = charNodes[i];
                 ch.symbol    = ch.code = i;
                 ch.bits      = 8;
                 ch.frequency = 0;
@@ -92,7 +92,7 @@ namespace upsylon {
 
             for(size_t i=Bytes;i<Codes;++i)
             {
-                Char &ch     = character[i];
+                Char &ch     = charNodes[i];
                 ch.symbol    = ch.code = i;
                 ch.bits      = 9; assert( ch.bits == bits_for(ch.code) );
                 ch.frequency = 0;
@@ -109,7 +109,6 @@ namespace upsylon {
 
         void Alphabet:: rescaleFrequencies() throw()
         {
-            //std::cerr << "[rescale]" << std::endl;
             for(Char *chr = chars.head;chr;chr=chr->next)
             {
                 FreqType &f = chr->frequency;
@@ -166,7 +165,7 @@ namespace upsylon {
 
        void Alphabet:: emitAndUpdateByte( const uint8_t byte, qbits *io )
         {
-            Char *chr = character + byte;
+            Char *chr = charNodes + byte;
             if( chr->frequency++ <= 0 )
             {
                 //--------------------------------------------------------------

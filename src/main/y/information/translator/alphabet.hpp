@@ -72,8 +72,8 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);
             size_t       usedBytes; //!< 0..256
-            size_t       allocated; //!< bytes for character
-            Char *       character; //!< array of Char
+            size_t       charBytes; //!< bytes for character
+            Char *       charNodes; //!< array of Char
         };
 
     }
