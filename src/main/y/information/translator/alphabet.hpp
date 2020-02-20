@@ -27,6 +27,7 @@ namespace upsylon {
             static const CodeType NYT   = EOS+1;   //!< End Of Stream            (257)
             static const size_t   Codes = NYT+1;   //!< maximum number of codes  (258)
             static const size_t   Alive = Codes-1; //!< when all bytes are used, NYT is removed
+            static const size_t   Bits  = 16;      //!< maxium code bits
 
             //! a Char for a list of chars
             struct Char

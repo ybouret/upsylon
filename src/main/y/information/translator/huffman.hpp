@@ -23,7 +23,6 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 static const size_t Nodes  = 2*Alive+1; //!< maximum number of nodes
-                static const size_t Bits   = 16;        //!< maxium code bits
 
                 //! a node of the tree
                 class Node : public ios::vizible
