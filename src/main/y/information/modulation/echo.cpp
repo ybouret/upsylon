@@ -1,4 +1,4 @@
-#include "y/information/shift/echo.hpp"
+#include "y/information/modulation/echo.hpp"
 
 namespace upsylon {
 
@@ -17,7 +17,7 @@ namespace upsylon {
             return c;
         }
 
-        shift * echo_modulation:: clone() const  
+        modulation * echo_modulation:: clone() const  
         {
             return new echo_modulation();
         }

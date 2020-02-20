@@ -1,4 +1,4 @@
-#include "y/information/shift/delta.hpp"
+#include "y/information/modulation/delta.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 

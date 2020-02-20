@@ -2,7 +2,7 @@
 #ifndef Y_INFORMATION_MTF_INCLUDED
 #define Y_INFORMATION_MTF_INCLUDED 1
 
-#include "y/information/shift.hpp"
+#include "y/information/modulation.hpp"
 #include "y/core/list.hpp"
 
 namespace upsylon {
@@ -10,7 +10,7 @@ namespace upsylon {
     namespace information {
 
         //! move to front base class
-        class mtf_modulation : public shift
+        class mtf_modulation : public modulation
         {
         public:
             virtual        ~mtf_modulation() throw(); //!< cleanup
@@ -41,10 +41,10 @@ namespace upsylon {
         class mtf_encoder : public mtf_modulation
         {
         public:
-            virtual        ~mtf_encoder()        throw(); //!< cleanup
-            explicit        mtf_encoder()        throw(); //!< setup
-            virtual uint8_t fetch(const uint8_t) throw(); //!< encode
-            virtual shift  *clone()              const;   //!< a new mtf with same nodes ordering
+            virtual            ~mtf_encoder()        throw(); //!< cleanup
+            explicit            mtf_encoder()        throw(); //!< setup
+            virtual uint8_t     fetch(const uint8_t) throw(); //!< encode
+            virtual modulation *clone()              const;   //!< a new mtf with same nodes ordering
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mtf_encoder);
@@ -54,10 +54,10 @@ namespace upsylon {
         class mtf_decoder : public mtf_modulation
         {
         public:
-            virtual        ~mtf_decoder()        throw();//!< cleanup
-            explicit        mtf_decoder()        throw();//!< setup
-            virtual uint8_t fetch(const uint8_t) throw();//!< decode
-            virtual shift  *clone()              const;   //!< a new mtf with same nodes ordering
+            virtual            ~mtf_decoder()        throw();//!< cleanup
+            explicit            mtf_decoder()        throw();//!< setup
+            virtual uint8_t     fetch(const uint8_t) throw();//!< decode
+            virtual modulation *clone()              const;   //!< a new mtf with same nodes ordering
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mtf_decoder);

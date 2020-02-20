@@ -2,14 +2,14 @@
 #ifndef Y_INFORMATION_DELTA_INCLUDED
 #define Y_INFORMATION_DELTA_INCLUDED 1
 
-#include "y/information/shift.hpp"
+#include "y/information/modulation.hpp"
 
 namespace upsylon {
 
     namespace information {
 
         //! delta modulation base class
-        class delta_modulation : public shift
+        class delta_modulation : public modulation
         {
         public:
             virtual        ~delta_modulation() throw(); //!< cleanup
@@ -27,10 +27,10 @@ namespace upsylon {
         class delta_encoder : public delta_modulation
         {
         public:
-            explicit        delta_encoder()      throw(); //!< initialize
-            virtual        ~delta_encoder()      throw(); //!< destructor
-            virtual uint8_t fetch(const uint8_t) throw(); //!< encode a byte
-            virtual shift  *clone()                const; //!< a new delta with same last
+            explicit            delta_encoder()      throw(); //!< initialize
+            virtual            ~delta_encoder()      throw(); //!< destructor
+            virtual uint8_t     fetch(const uint8_t) throw(); //!< encode a byte
+            virtual modulation *clone()                const; //!< a new delta with same last
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(delta_encoder);
@@ -40,10 +40,10 @@ namespace upsylon {
         class delta_decoder : public delta_modulation
         {
         public:
-            explicit        delta_decoder()      throw(); //!< initialize
-            virtual        ~delta_decoder()      throw(); //!< destructor
-            virtual uint8_t fetch(const uint8_t) throw(); //!< decode a byte
-            virtual shift  *clone()                const; //!< a new delta with same last
+            explicit            delta_decoder()      throw(); //!< initialize
+            virtual            ~delta_decoder()      throw(); //!< destructor
+            virtual uint8_t     fetch(const uint8_t) throw(); //!< decode a byte
+            virtual modulation *clone()                const; //!< a new delta with same last
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(delta_decoder);

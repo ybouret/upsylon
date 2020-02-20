@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_INFORMATION_SHAKER_INCLUDED
-#define Y_INFORMATION_SHAKER_INCLUDED 1
+#ifndef Y_INFORMATION_MODULATION_INCLUDED
+#define Y_INFORMATION_MODULATION_INCLUDED 1
 
 #include "y/memory/buffer.hpp"
 #include "y/ptr/arc.hpp"
@@ -10,21 +10,21 @@ namespace upsylon {
 
     namespace information {
 
-        //! basic information shaker interface
-        class shift : public counted_object
+        //! basic information modulation interface
+        class modulation : public counted_object
         {
         public:
-            typedef arc_ptr<shift> pointer; //!< shared pointer
+            typedef arc_ptr<modulation> pointer; //!< shared pointer
             
             //------------------------------------------------------------------
             //
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual         ~shift()  throw();                 //!< cleanup
-            virtual void     reset()              throw() = 0; //!< restart state
-            virtual uint8_t  fetch(const uint8_t) throw() = 0; //!< byte wise process
-            virtual shift   *clone() const                = 0; //!< clone with status
+            virtual            ~modulation()  throw();                 //!< cleanup
+            virtual void        reset()              throw() = 0; //!< restart state
+            virtual uint8_t     fetch(const uint8_t) throw() = 0; //!< byte wise process
+            virtual modulation *clone() const                = 0; //!< clone with status
 
             //------------------------------------------------------------------
             //
@@ -42,10 +42,10 @@ namespace upsylon {
             void apply( memory::rw_buffer &buffer ) throw();
 
         protected:
-            explicit shift() throw(); //!< setup
+            explicit modulation() throw(); //!< setup
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(shift);
+            Y_DISABLE_COPY_AND_ASSIGN(modulation);
         };
     }
 
