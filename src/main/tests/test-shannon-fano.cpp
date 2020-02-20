@@ -13,6 +13,12 @@ using namespace information;
 Y_UTEST(shannon_fano)
 {
     ShannonFano::Tree tree;
+
+    tree.update('a');
+    tree.update('b');
+    tree.update('a');
+    tree.displayChars();
+
 }
 Y_UTEST_DONE()
 

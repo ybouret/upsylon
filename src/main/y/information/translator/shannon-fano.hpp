@@ -27,24 +27,42 @@ namespace upsylon {
                 class Node
                 {
                 public:
-                    explicit Node() throw();
-                    const Char *chr;
+                    explicit Node(const Char *h, const Char *l) throw();
 
-                    Node *left;
-                    Node *right;
+                    const Char *heavy;
+                    const Char *light;
 
+                    Node       *left;   //!< for tree
+                    Node       *right;  //!< for tree
+                    CodeType    code;   //!< current code
+                    size_t      bits;   //!< current bits
 
                 private:
+                    virtual ~Node() throw();
                     Y_DISABLE_COPY_AND_ASSIGN(Node);
                 };
 
                 explicit Tree();
                 virtual ~Tree() throw();
 
+                void update(const uint8_t byte)
+                {
+                    updateByte(byte, NULL);
+                    build();
+                }
+
+
+            protected:
+                Node *root;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);
                 size_t treeBytes;
                 Node  *treeNodes;
+
+                void build() throw();
+                bool split(Node   *node,
+                           size_t &inode) throw();
             };
         }
     }
