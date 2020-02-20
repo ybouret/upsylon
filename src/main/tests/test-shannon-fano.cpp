@@ -1,4 +1,5 @@
 #include "y/information/translator/shannon-fano/encoder.hpp"
+#include "y/information/translator/shannon-fano/decoder.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -13,22 +14,20 @@ using namespace information;
 Y_UTEST(shannon_fano)
 {
     ShannonFano::Encoder enc;
-    if(argc>1)
+    ShannonFano::Decoder dec;
+    string           fileName = "fibonacci.bin";
+    const string     compName = "shannon_fano.bin";
+    const string     backName = "shannon_fano_org.bin";
+
+    if( argc > 1 )
     {
-        const string  fileName = argv[1];
-        const string  compName = "sf.bin";
-        size_t nr = 0;
-        size_t nc = 0;
-        {
-            ios::icstream source( fileName );
-            ios::ocstream target( compName );
-            enc.reset();
-            nc = enc.process(target, source, &nr );
-        }
-        std::cerr << "sf : " << nr << " -> " << nc << std::endl;
+        fileName = argv[1];
     }
-    enc.displayChars();
-    //enc.getRoot().graphViz("sf.dot");
+    else
+    {
+        (void) Translator::Fibonacci(fileName, 'a', 'a'+20 );
+    }
+    enc.testCODEC(fileName, compName, backName, &dec);
 }
 Y_UTEST_DONE()
 

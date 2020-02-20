@@ -23,13 +23,12 @@ namespace upsylon {
             
             virtual void reset() throw() = 0;
             
-            static size_t Fibonnaci(const string &dataName, const uint8_t a, const uint8_t b);
+            static size_t Fibonacci(const string &fileName, const uint8_t a, const uint8_t b);
 
-            size_t testFibonnaci(const string &encoded,
-                                 const string &fibonnaci,
-                                 const uint8_t a,
-                                 const uint8_t b,
-                                 size_t       &ngen);
+            void testCODEC(const string &fileName,
+                           const string &compName,
+                           const string &backName,
+                           Translator   *decoder);
 
         protected:
             explicit Translator() throw();

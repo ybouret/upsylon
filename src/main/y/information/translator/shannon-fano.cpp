@@ -108,8 +108,9 @@ namespace upsylon {
                 // increase bits
                 //
                 //--------------------------------------------------------------
-                const size_t bits = node->bits+1;
-                if(bits>Bits)
+                const size_t sourceBits = node->bits;
+                const size_t targetBits = 1+sourceBits;
+                if(targetBits>Bits)
                 {
                     // shall rescale
                     return false;
@@ -188,7 +189,7 @@ namespace upsylon {
                         Node *left  = node->left  = new ( &treeNodes[inode++] ) Node(hIni,hEnd);
                         assert(0==left->bits);
                         assert(0==left->code);
-                        left->bits  = bits;
+                        left->bits  = targetBits;
                         left->code  = node->code;
                         if(!split(left,inode)) return false;
                     }
@@ -198,12 +199,13 @@ namespace upsylon {
                     // make right
                     //__________________________________________________________
                     {
+                        static const CodeType One = 1;
                         assert(inode<Nodes);
                         Node *right = node->right = new ( &treeNodes[inode++] ) Node(lIni,lEnd);
                         assert(0==right->bits);
                         assert(0==right->code);
-                        right->bits = bits;
-                        right->code = node->code | ( 1 << (bits-1) );
+                        right->bits = targetBits;
+                        right->code = node->code | ( One << sourceBits );
                         if(!split(right,inode)) return false;
                     }
 

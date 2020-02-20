@@ -50,14 +50,17 @@ namespace upsylon {
 #include "y/ios/icstream.hpp"
 #include "y/type/cswap.hpp"
 #include "y/exception.hpp"
+#include "y/string.hpp"
+#include "y/hashing/sha1.hpp"
+#include "y/fs/disk/file.hpp"
 
 namespace upsylon {
 
     namespace information {
 
-        size_t Translator:: Fibonnaci( const string &fibName, const uint8_t a, const uint8_t b)
+        size_t Translator:: Fibonacci(const string &fileName, const uint8_t a, const uint8_t b)
         {
-            ios::ocstream fp(fibName);
+            ios::ocstream fp(fileName);
             size_t A = a;
             size_t B = b;
             if(A>B) _cswap(A,B);
@@ -75,20 +78,46 @@ namespace upsylon {
             return count;
         }
 
-        size_t Translator:: testFibonnaci(const string &encoded, const string &fibonacci, const uint8_t a, const uint8_t b, size_t &ngen)
+        void Translator:: testCODEC(const string &fileName,
+                                    const string &compName,
+                                    const string &backName,
+                                    Translator   *decoder)
         {
-            reset();
-            ngen = Fibonnaci(fibonacci,a,b);
-            size_t nenc = 0;
+            static const char fn[] = "testCODEC";
+            Translator *encoder    = this;
+            size_t      readBytes  = 0;
+            size_t      compBytes  = 0;
             {
-                size_t nread = 0;
-                ios::icstream source( fibonacci );
-                ios::ocstream target( encoded   );
-                nenc = process(target,source,&nread);
-                if( nread != ngen ) throw exception("testFibonacci read error");
+                std::cerr << "<encoding>" << std::endl;
+                ios::icstream source( fileName );
+                ios::ocstream target( compName );
+                encoder->reset();
+                compBytes = encoder->process(target,source,&readBytes);
+            }
+            std::cerr << "\tencoder: " << readBytes << " -> " << compBytes << std::endl;
+
+            if(decoder)
+            {
+                std::cerr << "<decoding>" << std::endl;
+                size_t loadBytes = 0;
+                size_t backBytes = 0;
+                {
+                    ios::icstream source( compName );
+                    ios::ocstream target( backName );
+                    decoder->reset();
+                    backBytes = decoder->process(target,source,&loadBytes);
+                }
+                std::cerr << "\tdecoder: " << loadBytes << " -> " << backBytes << std::endl;
+                if( loadBytes != compBytes ) throw exception("%s: loadBytes != compBytes", fn);
+                if( readBytes != backBytes ) throw exception("%s: readBytes != backBytes", fn);
+                hashing::sha1 H;
+                const digest MDfile = ios::disk_file::md(H,fileName);
+                std::cerr << H.name() << " : " << MDfile << std::endl;
+                const digest MDback = ios::disk_file::md(H,backName);
+                if(MDfile!=MDback) throw exception("%s: invalid checksum", fn);
             }
 
-            return nenc;
+
         }
     }
 }
