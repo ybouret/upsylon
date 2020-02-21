@@ -7,6 +7,8 @@ namespace upsylon {
 
         namespace ShannonFano {
 
+            const char Tree:: FMID[] = "ShannonFano";
+            
             Node:: ~Node() throw()
             {
 

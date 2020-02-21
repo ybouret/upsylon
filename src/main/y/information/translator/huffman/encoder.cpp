@@ -7,9 +7,9 @@ namespace upsylon {
 
         namespace Huffman {
 
-            const char Encoder::CLID[] = "HuffmanEncoder";
 
-            const char * Encoder::name() const throw() { return CLID; }
+            const char * Encoder::family() const throw() { return FMID;    }
+            const char * Encoder::name()   const throw() { return ENCODER; }
 
             Encoder:: Encoder() : Tree(), TranslatorQueue(8), Q(32)
             {

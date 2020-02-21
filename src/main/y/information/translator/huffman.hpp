@@ -55,7 +55,9 @@ namespace upsylon {
             class Tree : public TreeOf<Node>
             {
             public:
-                virtual ~Tree() throw(); //!< cleanup
+                static  const char FMID[];                  //!< Huffman
+                virtual const char *family() const throw(); //!< FMID
+                virtual            ~Tree()         throw(); //!< cleanup
 
             protected:
                 explicit Tree();        //!< initialize

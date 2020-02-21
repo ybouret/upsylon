@@ -17,13 +17,13 @@ namespace upsylon {
             class Decoder : public Tree, public TranslatorQueue
             {
             public:
-                static const char   CLID[];               //!< ShannonFanoDecoder
-                virtual const char *name() const throw(); //!< CLID
-                explicit            Decoder();            //!< setup, wit for byte
-                virtual            ~Decoder() throw();    //!< cleanup
-                virtual void        write(char C);        //!< process bits
-                virtual void        flush();              //!< do nothing
-                virtual void        reset() throw();      //!< restart all
+                virtual const char *family() const throw(); //!< FMID
+                virtual const char *name() const throw();   //!< DECODER
+                explicit            Decoder();              //!< setup, wit for byte
+                virtual            ~Decoder() throw();      //!< cleanup
+                virtual void        write(char C);          //!< process bits
+                virtual void        flush();                //!< do nothing
+                virtual void        reset() throw();        //!< restart all
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Decoder);

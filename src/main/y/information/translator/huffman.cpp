@@ -9,6 +9,10 @@ namespace upsylon {
 
         namespace Huffman {
 
+            const char Tree:: FMID[] = "Huffman";
+
+            const char * Tree:: family() const throw() { return FMID; }
+
             Node:: ~Node() throw()
             {
             }

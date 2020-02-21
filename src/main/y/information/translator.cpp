@@ -91,7 +91,7 @@ namespace upsylon {
             wtime       chrono;
 
             {
-                std::cerr << "<encoding with " << encoder->name() << ">" << std::endl;
+                std::cerr << "<encoding with " << encoder->family() << " " << encoder->name() << ">" << std::endl;
                 ios::icstream source( fileName );
                 ios::ocstream target( compName );
                 encoder->reset();
@@ -105,7 +105,7 @@ namespace upsylon {
 
             if(decoder)
             {
-                std::cerr << "<decoding with " << decoder->name() << ">" << std::endl;
+                std::cerr << "<decoding with " << decoder->family() << " " << decoder->name() << ">" << std::endl;
                 size_t loadBytes = 0;
                 size_t backBytes = 0;
                 {

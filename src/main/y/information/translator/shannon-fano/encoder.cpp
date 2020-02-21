@@ -8,9 +8,9 @@ namespace upsylon {
 
         namespace ShannonFano {
 
-            const char Encoder::CLID[] = "ShannonFanoEncoder";
+            const char * Encoder::family() const throw() { return FMID;    }
+            const char * Encoder::name()   const throw() { return ENCODER; }
 
-            const char * Encoder:: name() const throw() { return CLID; }
 
             Encoder:: Encoder() : Tree(), TranslatorQueue(8), Q(32)
             {

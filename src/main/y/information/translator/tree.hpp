@@ -13,7 +13,7 @@ namespace upsylon {
         {
         public:
             virtual ~TranslatorTree() throw(); //!< cleanup
-
+            
         protected:
             //! setup memory
             explicit TranslatorTree(const size_t sizeof_node,

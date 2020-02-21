@@ -21,7 +21,8 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual            ~Translator()   throw();     //!< cleanup
             virtual void        reset()        throw() = 0; //!< make a fresh start
-            virtual const char *name()   const throw() = 0; //!< the name
+            virtual const char *family() const throw() = 0; //!< type of algorithm
+            virtual const char *name()   const throw() = 0; //!< [Enc|Dec]oder
 
             //------------------------------------------------------------------
             //
