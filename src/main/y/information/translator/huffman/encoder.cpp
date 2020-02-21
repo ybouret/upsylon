@@ -8,8 +8,8 @@ namespace upsylon {
         namespace Huffman {
 
 
-            const char * Encoder::family() const throw() { return FMID;    }
-            const char * Encoder::name()   const throw() { return ENCODER; }
+            const char * Encoder::family() const throw() { return FMID;      }
+            const char * Encoder::name()   const throw() { return EncoderID; }
 
             Encoder:: Encoder() : Tree(), TranslatorQueue(8), Q(32)
             {

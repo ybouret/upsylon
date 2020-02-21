@@ -7,9 +7,7 @@
 namespace upsylon {
 
     namespace information {
-
-        const char Alphabet:: ENCODER[] = "Encoder";
-        const char Alphabet:: DECODER[] = "Decoder";
+        
 
         void Alphabet::Char::emit(qbits &io) const
         {

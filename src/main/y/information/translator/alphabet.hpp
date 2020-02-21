@@ -29,10 +29,7 @@ namespace upsylon {
             static const size_t   Alive = Codes-1;   //!< when all bytes are used, NYT is removed
             static const size_t   Nodes = 2*Alive+1; //!< maximum number of node for a tree
             static const size_t   Bits  = 16;        //!< maxium code bits
-
-            static const char     ENCODER[];
-            static const char     DECODER[];
-
+            
             //! a Char for a list of chars
             struct Char
             {

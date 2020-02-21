@@ -59,6 +59,10 @@ namespace upsylon {
 
     namespace information {
 
+        const char Translator:: EncoderID[] = "Encoder";
+        const char Translator:: DecoderID[] = "Decoder";
+
+
         size_t Translator:: Fibonacci(const string &fileName, const uint8_t a, const uint8_t b)
         {
             ios::ocstream fp(fileName);

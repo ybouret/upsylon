@@ -7,8 +7,8 @@ namespace upsylon {
         namespace Huffman {
 
 
-            const char * Decoder::family() const throw() { return FMID;    }
-            const char * Decoder::name()   const throw() { return DECODER; }
+            const char * Decoder::family() const throw() { return FMID;      }
+            const char * Decoder::name()   const throw() { return DecoderID; }
 
             Decoder:: Decoder() :
             Tree(),

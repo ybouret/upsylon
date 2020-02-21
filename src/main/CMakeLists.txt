@@ -379,7 +379,7 @@ ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
 ${information_srcs} 
 ${information_modulation_srcs} 
-${information_translator_srcs} ${information_translator_huffman_srcs}  ${information_translator_shannon_fano_srcs} 
+${information_translator_srcs} ${information_translator_huffman_srcs}  ${information_translator_shannon_fano_srcs} ${information_translator_rle_srcs} 
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
