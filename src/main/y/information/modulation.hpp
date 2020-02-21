@@ -21,10 +21,11 @@ namespace upsylon {
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual            ~modulation()  throw();                 //!< cleanup
+            virtual            ~modulation()  throw();            //!< cleanup
             virtual void        reset()              throw() = 0; //!< restart state
             virtual uint8_t     fetch(const uint8_t) throw() = 0; //!< byte wise process
             virtual modulation *clone() const                = 0; //!< clone with status
+            virtual const char *name()  const        throw() = 0; //!< identifier
 
             //------------------------------------------------------------------
             //
@@ -49,6 +50,9 @@ namespace upsylon {
         };
     }
 
+#define Y_INFORMATION_MODULATION(NAME) \
+const char * NAME:: name() const throw() { return CLID; }\
+const char   NAME:: CLID[] = #NAME
 
 }
 

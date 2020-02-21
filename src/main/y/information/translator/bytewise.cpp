@@ -40,7 +40,7 @@ namespace upsylon {
 
         const char *BytewiseTranslator:: name() const throw()
         {
-            return "todo";
+            return transform->name();
         }
 
         void BytewiseTranslator:: reset() throw()

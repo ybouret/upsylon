@@ -4,6 +4,7 @@
 #include "y/information/modulation/mtf.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 using namespace information;
@@ -21,9 +22,35 @@ Y_UTEST(bytewise)
 
     const modulation::pointer p = new mtf_encoder();
 
-    BytewiseTranslator mtf1( p );
-    BytewiseTranslator enc1( new echo_modulation() );
-    BytewiseTranslator enc2( NULL );
+    BytewiseTranslator mtf( p );
+    BytewiseTranslator unmtf( new mtf_decoder() );
+    BytewiseTranslator ec1( new echo_modulation() );
+    BytewiseTranslator ec2( NULL );
+    BytewiseTranslator del( new delta_encoder() );
+    BytewiseTranslator undel( new delta_decoder() );
+
+    if(argc>1)
+    {
+        const string fileName = argv[1];
+        {
+            const string       compName = "mtf.bin";
+            const string       backName = "unmtf.bin";
+            mtf.testCODEC(fileName, compName, backName, &unmtf);
+        }
+
+        {
+            const string       compName = "del.bin";
+            const string       backName = "undel.bin";
+            del.testCODEC(fileName, compName, backName, &undel);
+        }
+
+        {
+            const string       compName = "echo.bin";
+            const string       backName = "unecho.bin";
+            ec1.testCODEC(fileName, compName, backName, &ec2);
+        }
+
+    }
 
 
 }

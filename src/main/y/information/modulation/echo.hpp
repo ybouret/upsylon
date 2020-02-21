@@ -12,6 +12,8 @@ namespace upsylon {
         class echo_modulation : public modulation
         {
         public:
+            static const char   CLID[];                       //!< class identifier
+            virtual const char *name() const         throw(); //!< CLID
             explicit            echo_modulation()    throw(); //!< setup
             virtual            ~echo_modulation()    throw(); //!< cleanup
             virtual void        reset()              throw(); //!< do nothing

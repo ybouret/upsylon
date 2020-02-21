@@ -17,6 +17,10 @@ namespace upsylon {
 
     namespace information {
 
+
+
+        Y_INFORMATION_MODULATION(delta_encoder);
+
         delta_encoder::  delta_encoder() throw() {}
         delta_encoder:: ~delta_encoder() throw() {}
 
@@ -38,6 +42,9 @@ namespace upsylon {
     }
 
     namespace information {
+
+        Y_INFORMATION_MODULATION(delta_decoder);
+
 
         delta_decoder::  delta_decoder() throw() {}
         delta_decoder:: ~delta_decoder() throw() {}

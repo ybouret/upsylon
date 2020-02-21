@@ -17,6 +17,9 @@ namespace upsylon {
             return c;
         }
 
+
+        Y_INFORMATION_MODULATION(echo_modulation);
+
         modulation * echo_modulation:: clone() const  
         {
             return new echo_modulation();

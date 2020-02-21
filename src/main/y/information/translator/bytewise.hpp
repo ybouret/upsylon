@@ -30,8 +30,6 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(BytewiseTranslator);
             uint64_t            wksp[4];
             modulation::pointer transform;
-
-            //static modulation *MakeEchoAt(void *addr, const size_t size) throw();
         };
 
     }

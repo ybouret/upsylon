@@ -55,6 +55,8 @@ namespace upsylon {
     }
 
     namespace information {
+        Y_INFORMATION_MODULATION(mtf_encoder);
+
 
         mtf_encoder::  mtf_encoder() throw() {}
         mtf_encoder:: ~mtf_encoder() throw() {}
@@ -86,6 +88,9 @@ namespace upsylon {
 
 
     namespace information {
+
+        Y_INFORMATION_MODULATION(mtf_decoder);
+
 
         mtf_decoder::  mtf_decoder() throw() {}
         mtf_decoder:: ~mtf_decoder() throw() {}

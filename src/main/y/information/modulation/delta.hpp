@@ -27,6 +27,8 @@ namespace upsylon {
         class delta_encoder : public delta_modulation
         {
         public:
+            static const char   CLID[];                       //!< class identifier
+            virtual const char *name() const         throw(); //!< CLID
             explicit            delta_encoder()      throw(); //!< initialize
             virtual            ~delta_encoder()      throw(); //!< destructor
             virtual uint8_t     fetch(const uint8_t) throw(); //!< encode a byte
@@ -40,6 +42,8 @@ namespace upsylon {
         class delta_decoder : public delta_modulation
         {
         public:
+            static const char   CLID[];                       //!< class identifier
+            virtual const char *name() const         throw(); //!< CLID
             explicit            delta_decoder()      throw(); //!< initialize
             virtual            ~delta_decoder()      throw(); //!< destructor
             virtual uint8_t     fetch(const uint8_t) throw(); //!< decode a byte

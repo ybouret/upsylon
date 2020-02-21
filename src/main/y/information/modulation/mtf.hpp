@@ -41,6 +41,8 @@ namespace upsylon {
         class mtf_encoder : public mtf_modulation
         {
         public:
+            static const char   CLID[];                       //!< class identifier
+            virtual const char *name() const         throw(); //!< CLID
             virtual            ~mtf_encoder()        throw(); //!< cleanup
             explicit            mtf_encoder()        throw(); //!< setup
             virtual uint8_t     fetch(const uint8_t) throw(); //!< encode
@@ -54,6 +56,8 @@ namespace upsylon {
         class mtf_decoder : public mtf_modulation
         {
         public:
+            static const char   CLID[];                       //!< class identifier
+            virtual const char *name() const         throw(); //!< CLID
             virtual            ~mtf_decoder()        throw();//!< cleanup
             explicit            mtf_decoder()        throw();//!< setup
             virtual uint8_t     fetch(const uint8_t) throw();//!< decode
