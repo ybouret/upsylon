@@ -1,4 +1,5 @@
 #include "y/information/translator/shannon-fano.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -6,12 +7,12 @@ namespace upsylon {
 
         namespace ShannonFano {
 
-            Tree::Node:: ~Node() throw()
+            Node:: ~Node() throw()
             {
 
             }
 
-            Tree:: Node:: Node(const Char *h, const Char *l) throw() :
+            Node:: Node(const Char *h, const Char *l) throw() :
             heavy(h),
             light(l),
             left(0),
@@ -22,7 +23,7 @@ namespace upsylon {
 
             }
 
-            void Tree:: Node:: vizCore(ios::ostream &fp) const
+            void  Node:: vizCore(ios::ostream &fp) const
             {
                 fp << " [label=\"";
                 if(heavy==light)
@@ -43,10 +44,8 @@ namespace upsylon {
                 }
             }
 
-            Tree:: Tree() : Alphabet(),
-            root(0),
-            treeBytes( Nodes * sizeof(Node) ),
-            treeNodes( static_cast<Node *>( memory::global::instance().acquire(treeBytes) ) )
+            Tree:: Tree() :
+            TreeOf<Node>(0)
             {
                 build();
             }
@@ -54,26 +53,15 @@ namespace upsylon {
             Tree:: ~Tree() throw()
             {
 
-                void *addr = treeNodes;
-                memset(addr,0,treeBytes);
-                memory::global::location().release(addr,treeBytes);
-
-                treeNodes = 0;
-                root      = 0;
-
             }
 
-            const Tree::Node & Tree:: getRoot() const throw()
-            {
-                assert(root);
-                return *root;
-            }
+           
 
 
             void Tree:: build() throw()
             {
                 size_t inode = 0;
-                root  = new (&treeNodes[inode++]) Node(chars.head,chars.tail);
+                root  = new (nextNode(inode)) Node(chars.head,chars.tail);
                 assert(0==root->code);
                 assert(0==root->bits);
                 while( !split(root,inode) )
@@ -185,7 +173,7 @@ namespace upsylon {
                     //__________________________________________________________
                     {
                         assert(inode<Nodes);
-                        Node *left  = node->left  = new ( &treeNodes[inode++] ) Node(hIni,hEnd);
+                        Node *left  = node->left  = new ( nextNode(inode) ) Node(hIni,hEnd);
                         assert(0==left->bits);
                         assert(0==left->code);
                         left->bits  = targetBits;
@@ -200,7 +188,7 @@ namespace upsylon {
                     {
                         static const CodeType One = 1;
                         assert(inode<Nodes);
-                        Node *right = node->right = new ( &treeNodes[inode++] ) Node(lIni,lEnd);
+                        Node *right = node->right = new ( nextNode(inode) ) Node(lIni,lEnd);
                         assert(0==right->bits);
                         assert(0==right->code);
                         right->bits = targetBits;

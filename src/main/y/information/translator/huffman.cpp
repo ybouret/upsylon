@@ -2,7 +2,6 @@
 #include "y/information/translator/huffman.hpp"
 #include "y/memory/io.hpp"
 #include "y/type/utils.hpp"
-//#include "y/code/utils.hpp"
 
 namespace upsylon {
 
@@ -10,20 +9,20 @@ namespace upsylon {
 
         namespace Huffman {
 
-            Tree::Node:: ~Node() throw()
+            Node:: ~Node() throw()
             {
             }
 
-            int Tree::Node::Comparator::operator()(const Node &lhs, const Node &rhs) const throw()
+            int Node::Comparator::operator()(const Node &lhs, const Node &rhs) const throw()
             {
                 const FreqType L = lhs.freq;
                 const FreqType R = rhs.freq;
                 return (L<R) ? 1 : ( (R<L) ? -1 : 0 );
             }
 
-            Tree::Node:: Node(const Char   * _char,
-                              const FreqType _freq,
-                              const size_t   _bits) throw() :
+            Node:: Node(const Char   * _char,
+                        const FreqType _freq,
+                        const size_t   _bits) throw() :
             chr(_char),
             left(0),
             right(0),
@@ -33,7 +32,7 @@ namespace upsylon {
             {
             }
 
-            void Tree:: Node:: vizCore(ios::ostream &fp) const
+            void  Node:: vizCore(ios::ostream &fp) const
             {
                 fp << " [label=\"";
                 if(chr) fp << Alphabet::NameOf(chr->symbol);
@@ -69,13 +68,13 @@ namespace upsylon {
                 build();
             }
 
-            static inline void UpdateCode( Tree::Node *node ) throw()
+            static inline void UpdateCode( Node *node ) throw()
             {
                 assert(node);
-                Tree::Node *left = node->left;
+                Node *left = node->left;
                 if(left)
                 {
-                    Tree::Node *right = node->right;
+                    Node *right = node->right;
                     assert(right);
                     const size_t nbit = node->bits;
                     left->bits  = right->bits = nbit+1;
@@ -155,7 +154,7 @@ namespace upsylon {
 
             }
 
-            const Tree::Node & Tree:: getRoot() const throw()
+            const Node & Tree:: getRoot() const throw()
             {
                 assert(root);
                 return *root;
