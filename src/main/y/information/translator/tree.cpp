@@ -23,6 +23,11 @@ namespace upsylon {
 
         }
 
+        void TranslatorTree:: restart() throw()
+        {
+            initialize();
+            buildTree();
+        }
 
 
     }

@@ -52,40 +52,22 @@ namespace upsylon {
             };
 
             //! build an adaptice Huffman tree
-            class Tree : public Alphabet
+            class Tree : public TreeOf<Node>
             {
             public:
-                //--------------------------------------------------------------
-                //
-                // types and definitions
-                //
-                //--------------------------------------------------------------
-
-
-                //--------------------------------------------------------------
-                //
-                // public methods
-                //
-                //--------------------------------------------------------------
-                virtual     ~Tree() throw();            //!< cleanup
-                const Node & getRoot() const throw();   //!< get root node
+                virtual ~Tree() throw();            //!< cleanup
 
             protected:
-                Node    *root; //!< root of the tree
                 
                 explicit Tree();                                //!< initialize
                 void     update(const uint8_t byte, qbits *io); //!< emit current code if io!=NULL, and updateByte
-                void     restart() throw();                     //!< initialize alphabet and build
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);
-                size_t       treeBytes;
-                size_t       fullBytes;
-                void        *workspace;
-                Node        *treeNodes;
+                virtual void buildTree() throw();
+
                 Node::PQueue pq;
-                
-                void build() throw();
+
             };
 
         }

@@ -54,13 +54,13 @@ namespace upsylon {
             protected:
                 explicit Tree(); //!< setup
                 void update(const uint8_t byte, qbits *io); //!< emit and build
-                void restart() throw();                     //!< initialize alphabet and build tree
                 
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);
 
-                void build() throw();
+                virtual void buildTree() throw();
+
                 bool split(Node *node, size_t &inode) throw();
             };
         }

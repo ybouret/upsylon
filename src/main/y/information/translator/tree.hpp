@@ -28,6 +28,10 @@ namespace upsylon {
                 assert(_extra); return static_cast<T *>(_extra);
             }
 
+            virtual void buildTree() throw() = 0;
+
+            void restart() throw(); //!< initialize + buildTree
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(TranslatorTree);
             const size_t _shift;

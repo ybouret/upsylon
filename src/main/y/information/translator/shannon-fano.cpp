@@ -47,7 +47,7 @@ namespace upsylon {
             Tree:: Tree() :
             TreeOf<Node>(0)
             {
-                build();
+                buildTree();
             }
 
             Tree:: ~Tree() throw()
@@ -58,7 +58,7 @@ namespace upsylon {
            
 
 
-            void Tree:: build() throw()
+            void Tree:: buildTree() throw()
             {
                 size_t inode = 0;
                 root  = new (nextNode(inode)) Node(chars.head,chars.tail);
@@ -204,14 +204,10 @@ namespace upsylon {
             void Tree:: update(const uint8_t byte, qbits *io)
             {
                 emitAndUpdateByte(byte,io);
-                build();
+                buildTree();
             }
 
-            void Tree:: restart() throw()
-            {
-                initialize();
-                build();
-            }
+            
 
         }
 

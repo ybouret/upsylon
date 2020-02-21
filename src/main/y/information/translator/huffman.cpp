@@ -54,18 +54,12 @@ namespace upsylon {
 
             Tree:: ~Tree() throw()
             {
-                memory::global::location().release(workspace,fullBytes);
             }
 
-            Tree:: Tree() : Alphabet(),
-            root(0),
-            treeBytes( memory::align( Nodes * sizeof(Node) )  ),
-            fullBytes( treeBytes + Alive * sizeof(Node*)  ),
-            workspace( memory::global::instance().acquire(fullBytes) ),
-            treeNodes( static_cast<Node *>(workspace) ),
-            pq( memory::io::cast<Node *>( workspace, treeBytes ), Alive )
+            Tree:: Tree() : TreeOf<Node>( Alive * sizeof(Node*) ),
+            pq( getExtra<Node *>(), Alive )
             {
-                build();
+                buildTree();
             }
 
             static inline void UpdateCode( Node *node ) throw()
@@ -87,7 +81,7 @@ namespace upsylon {
             }
 
 
-            void Tree:: build() throw()
+            void Tree:: buildTree() throw()
             {
             BUILD:
                 //--------------------------------------------------------------
@@ -97,9 +91,9 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 pq.clear();
                 size_t inode = 0;
-                for(Char *chr = chars.head; chr; chr=chr->next, ++inode)
+                for(Char *chr = chars.head; chr; chr=chr->next)
                 {
-                    Node *node = new (treeNodes+inode) Node(chr,chr->frequency,1);
+                    Node *node = new ( nextNode(inode) ) Node(chr,chr->frequency,1);
                     chr->priv  = node;
                     pq.enqueue(node);
                 }
@@ -120,7 +114,7 @@ namespace upsylon {
                         rescaleFrequencies();
                         goto BUILD;
                     }
-                    Node *parent  = new ( &treeNodes[inode++] ) Node(0,left->freq+right->freq,bits);
+                    Node *parent  = new ( nextNode(inode) ) Node(0,left->freq+right->freq,bits);
                     parent->left  = left;
                     parent->right = right;
 
@@ -154,23 +148,13 @@ namespace upsylon {
 
             }
 
-            const Node & Tree:: getRoot() const throw()
-            {
-                assert(root);
-                return *root;
-            }
-
             void Tree:: update(const uint8_t byte, qbits *io)
             {
                 emitAndUpdateByte(byte,io);
-                build();
+                buildTree();
             }
 
-            void Tree:: restart() throw()
-            {
-                initialize();
-                build();
-            }
+            
 
         }
 
