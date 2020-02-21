@@ -8,6 +8,7 @@ namespace upsylon {
 
         TranslatorTree:: ~TranslatorTree() throw()
         {
+            memset( _nodes, 0, _bytes );
             memory::global::location().release(_nodes,_bytes);
             _extra = 0;
             aliasing::_(_shift) = 0;
@@ -23,12 +24,17 @@ namespace upsylon {
 
         }
 
-        void TranslatorTree:: restart() throw()
+        void TranslatorTree:: setupTree() throw()
         {
             initialize();
             buildTree();
         }
 
+        void TranslatorTree:: inputByte(const uint8_t byte, qbits *io)
+        {
+            emitAndUpdateByte(byte,io);
+            buildTree();
+        }
 
     }
 

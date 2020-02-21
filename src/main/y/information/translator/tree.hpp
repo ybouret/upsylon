@@ -8,29 +8,29 @@ namespace upsylon {
 
     namespace information {
 
+        //! base class to build trees from an alphabet
         class TranslatorTree : public Alphabet
         {
         public:
-            virtual ~TranslatorTree() throw();
-
+            virtual ~TranslatorTree() throw(); //!< cleanup
 
         protected:
+            //! setup memory
             explicit TranslatorTree(const size_t sizeof_node,
                                     const size_t extra_bytes);
 
-            template <typename NODE> inline NODE *getNodes() throw()
-            {
-                return static_cast<NODE *>(_nodes);
-            }
+            //! helper
+            template <typename NODE> inline
+            NODE *getNodes() throw() { assert(_nodes); return static_cast<NODE *>(_nodes); }
 
-            template <typename T> inline T *getExtra() throw()
-            {
-                assert(_extra); return static_cast<T *>(_extra);
-            }
+            //! helper
+            template <typename T> inline
+            T *getExtra() throw() { assert(_extra); return static_cast<T *>(_extra); }
 
-            virtual void buildTree() throw() = 0;
-
-            void restart() throw(); //!< initialize + buildTree
+            virtual void buildTree() throw() = 0;          //!< the main effort
+            void         setupTree() throw();              //!< initialize + buildTree
+            void         inputByte(const uint8_t,qbits *); //!< emitAndUpdate, buildTree
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(TranslatorTree);
@@ -40,26 +40,28 @@ namespace upsylon {
             void        *_extra;
         };
 
+        //! generic tree class
         template <typename NODE>
         class TreeOf : public TranslatorTree
         {
         public:
+            //! cleanup
             inline virtual ~TreeOf() throw() { root=0; _nodes=0; }
 
-
+            //! access root
             inline const NODE & getRoot() const throw() { assert(root); return *root; }
             
         protected:
-            NODE *root;
-            
+            NODE *root; //!< root of the tree
+
+            //! initialize for nodes and extra bytes
             inline explicit TreeOf(const size_t extra_bytes) :
             TranslatorTree( sizeof(NODE), extra_bytes),
-            root(0),
-            _nodes( getNodes<NODE>() )
+            root(0), _nodes( getNodes<NODE>() )
             {
             }
 
-
+            //! address of next node
             inline NODE *nextNode( size_t &inode ) throw()
             {
                 assert(inode<Nodes);

@@ -200,12 +200,7 @@ namespace upsylon {
                 }
             }
 
-
-            void Tree:: update(const uint8_t byte, qbits *io)
-            {
-                emitAndUpdateByte(byte,io);
-                buildTree();
-            }
+            
 
             
 

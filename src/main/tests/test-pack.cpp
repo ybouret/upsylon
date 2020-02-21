@@ -41,7 +41,7 @@ Y_UTEST(pack)
     size_t nHuffman = 0;
     {
         ios::imstream source( output );
-        ios::ocstream target( "pack-huff.bin" );
+        ios::ocstream target( "pack-huffman.bin" );
         Huffman::Encoder enc;
         nHuffman = enc.process(target,source);
     }
@@ -50,7 +50,7 @@ Y_UTEST(pack)
     size_t nShannonFano = 0;
     {
         ios::imstream source( output );
-        ios::ocstream target( "pack-huff.bin" );
+        ios::ocstream target( "pack-shannon-fano.bin" );
         ShannonFano::Encoder enc;
         nShannonFano = enc.process(target,source);
     }

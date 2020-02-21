@@ -17,9 +17,9 @@ namespace upsylon {
             class Node : public ios::vizible
             {
             public:
-                typedef Alphabet::FreqType FreqType;
-                typedef Alphabet::CodeType CodeType;
-                typedef Alphabet::Char     Char;
+                typedef Alphabet::FreqType FreqType; //!< alias
+                typedef Alphabet::CodeType CodeType; //!< alias
+                typedef Alphabet::Char     Char;     //!< alias
                 
                 //! initialize
                 explicit Node(const Char   * _char,
@@ -55,13 +55,11 @@ namespace upsylon {
             class Tree : public TreeOf<Node>
             {
             public:
-                virtual ~Tree() throw();            //!< cleanup
+                virtual ~Tree() throw(); //!< cleanup
 
             protected:
-                
-                explicit Tree();                                //!< initialize
-                void     update(const uint8_t byte, qbits *io); //!< emit current code if io!=NULL, and updateByte
-                
+                explicit Tree();        //!< initialize
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tree);
                 virtual void buildTree() throw();

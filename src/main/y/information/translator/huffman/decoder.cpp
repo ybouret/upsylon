@@ -28,7 +28,7 @@ namespace upsylon {
 
             void Decoder:: reset() throw()
             {
-                restart();
+                setupTree();
                 free();
                 Q.free();
                 flag = waitForByte;
@@ -38,7 +38,7 @@ namespace upsylon {
             void Decoder:: emitByte( const uint8_t byte )
             {
                 push_back(byte);
-                update(byte,NULL);
+                inputByte(byte,NULL);
                 flag = waitForBits;
                 curr = root;
             }

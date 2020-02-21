@@ -21,7 +21,7 @@ namespace upsylon {
 
             void Encoder:: write(char C)
             {
-                update(C,&Q);
+                inputByte(C,&Q);
                 Q.compile(*this);
             }
 
@@ -33,7 +33,7 @@ namespace upsylon {
 
             void Encoder:: reset() throw()
             {
-                restart();
+                setupTree();
                 free();
                 Q.free();
             }
