@@ -26,7 +26,11 @@ namespace upsylon {
             different(0),
             cache()
             {
+                //----------------------------------------------------------
+                //
                 // start in a perfectly agnostic state
+                //
+                //----------------------------------------------------------
                 assert(isJustWaiting());
             }
             

@@ -26,9 +26,9 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
-                int     last;
-                size_t  repeating;
-                size_t  different;
+                int     last;      //!< last read char
+                size_t  repeating; //!< number of repeating same char
+                size_t  different; //!< number of different chars in cache
                 uint8_t cache[CacheLength];
                 void    emit();
                 bool    isJustWaiting() const throw(); //! to debug
