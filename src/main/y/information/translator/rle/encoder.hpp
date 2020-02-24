@@ -31,6 +31,7 @@ namespace upsylon {
                 size_t  different;
                 uint8_t cache[CacheLength];
                 void    emit();
+                bool    isJustWaiting() const throw(); //! to debug
             };
 
         }
