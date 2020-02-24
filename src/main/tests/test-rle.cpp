@@ -7,11 +7,30 @@
 #include "y/string/convert.hpp"
 #include "y/fs/disk/file.hpp"
 #include "y/hashing/md5.hpp"
+#include "y/ios/null-ostream.hpp"
 
 using namespace upsylon;
 
 namespace {
 
+    static inline void testRepetitions()
+    {
+        information::RLE::Encoder rle;
+
+        for(size_t blockSize=0;blockSize<= 1000; ++blockSize )
+        {
+            std::cerr << "<RLE.BlockSize=" << blockSize << ">" << std::endl;
+            rle.reset();
+            const char C = alea.range<char>('a','z');
+            for(size_t i=0;i<blockSize;++i)
+            {
+                rle.write(C);
+            }
+            rle.flush();
+            std::cerr << "<RLE.BlockSize=" << blockSize << "/>" << std::endl << std::endl;
+
+        }
+    }
 
 }
 
@@ -26,6 +45,10 @@ Y_UTEST(rle)
         information::RLE::Encoder rle;
 
         rle.testCODEC(fileName, compName, backName, NULL);
+    }
+    else
+    {
+        testRepetitions();
     }
 
 }

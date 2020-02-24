@@ -20,10 +20,10 @@ namespace upsylon {
             class Parameters
             {
             public:
-                static const char    FMID[];                        //!< RLE
-                static const uint8_t BlockLength = 128;             //!< max block size
-                static const uint8_t BlockSwitch = BlockLength-1;   //!< switch to be compared to
-                static const uint8_t CacheLength = 255-BlockSwitch; //!< bytes to store
+                static const char    FMID[];                          //!< RLE
+                static const uint8_t MaxRepeating = 128;              //!< max repeating block size
+                static const uint8_t BehaviorCode = MaxRepeating-1;   //!< switch to be compared to
+                static const uint8_t MaxDifferent = 255-BehaviorCode; //!< max different block size
                 
                 virtual ~Parameters() throw();
 

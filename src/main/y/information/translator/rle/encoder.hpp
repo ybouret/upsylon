@@ -26,12 +26,21 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
-                int     last;      //!< last read char
-                size_t  repeating; //!< number of repeating same char
-                size_t  different; //!< number of different chars in cache
-                uint8_t cache[CacheLength];
+                enum Status
+                {
+                    waitForFirstByte,
+                    waitForRepeating,
+                    waitForDifferent,
+                };
+                Status  status;      //!< current status
+                int     preceding;   //!< preceding char
+                size_t  repeating;   //!< number of repeating same char
+                size_t  different;   //!< number of different chars in cache
+                uint8_t cache[MaxDifferent];
                 void    emit();
-                bool    isJustWaiting() const throw(); //! to debug
+                void    emitDifferent();
+                void    emitRepeating();
+                bool    checkStatus() const throw();
             };
 
         }
