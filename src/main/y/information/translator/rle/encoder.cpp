@@ -147,8 +147,24 @@ namespace upsylon {
             {
                 const uint8_t byte(C);
                 const int     current = byte;
-                
 
+                assert( checkStatus() || die("RLE.invalid write.entry") );
+                switch( status )
+                {
+                    case waitForFirstByte:
+                        // initialize, assuming repetition
+                        preceding = (cache[0] = current);
+                        repeating = 1;
+                        status    = waitForRepeating;
+                        break;
+
+                    case waitForRepeating:
+                        break;
+
+                    case waitForDifferent:
+                        break;
+                }
+                assert( checkStatus() || die("RLE.invalid write.leave") );
 
             }
             
