@@ -1,6 +1,3 @@
-//#include "y/information/filter/huffman/encoder.hpp"
-//#include "y/information/filter/huffman/decoder.hpp"
-
 #include "y/information/translator/huffman/encoder.hpp"
 #include "y/information/translator/huffman/decoder.hpp"
 

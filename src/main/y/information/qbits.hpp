@@ -134,7 +134,7 @@ static const uint##BITS##_t bit[BITS];\
         void compile( sequence<char> & ); //!< write all possible chars
         void zfinish( sequence<char> & ); //!< zpad and write possible chars
 
-        class broker : public counted_object
+        class broker : public virtual counted_object
         {
         public:
             virtual ~broker() throw();
