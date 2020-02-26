@@ -38,8 +38,8 @@ namespace upsylon {
 
                 //! helper, call emit repeating if count==1
                 static void EmitDifferentTo(sequence<char> &Q,
-                                            const uint8_t *cache,
-                                            const size_t   count);
+                                            const uint8_t  *cache,
+                                            const size_t    count);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parameters);
