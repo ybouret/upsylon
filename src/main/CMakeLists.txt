@@ -166,6 +166,12 @@ SET(information_translator_rle_srcs ${information_translator_rle_decl} ${informa
 SOURCE_GROUP( information/translator/rle FILES ${information_translator_rle_srcs} )
 INSTALL( FILES ${information_translator_rle_decl} DESTINATION include/y/information/translator/rle )
 
+FILE(GLOB information_translator_run_length_decl y/information/translator/run-length/*.hpp)
+FILE(GLOB information_translator_run_length_code y/information/translator/run-length/*.cpp)
+SET(information_translator_run_length_srcs ${information_translator_run_length_decl} ${information_translator_run_length_code})
+SOURCE_GROUP( information/translator/run_length FILES ${information_translator_run_length_srcs} )
+INSTALL( FILES ${information_translator_run_length_decl} DESTINATION include/y/information/translator/run-length )
+
 FILE(GLOB codec_decl y/codec/*.hpp)
 FILE(GLOB codec_code y/codec/*.cpp)
 SET(codec_srcs ${codec_decl} ${codec_code})
@@ -379,7 +385,11 @@ ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs}
 ${information_srcs} 
 ${information_modulation_srcs} 
-${information_translator_srcs} ${information_translator_huffman_srcs}  ${information_translator_shannon_fano_srcs} ${information_translator_rle_srcs} 
+${information_translator_srcs} 
+${information_translator_huffman_srcs}  
+${information_translator_shannon_fano_srcs}
+${information_translator_rle_srcs} 
+${information_translator_run_length_srcs} 
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}

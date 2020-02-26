@@ -24,9 +24,6 @@ namespace upsylon {
                 memset(cache,0,sizeof(cache));
             }
             
-
-
-            
             Encoder:: Encoder() : Parameters(), TranslatorQueue(2),
             status( waitForFirstByte ),
             preceding(-1),

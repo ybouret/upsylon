@@ -21,6 +21,7 @@ static inline void saveQ(const string &compName,
         fp.write( C );
         S.pop_front();
     }
+    std::cerr << "<Same Outputs>" << std::endl;
 }
 
 Y_UTEST(qcodec)
@@ -58,8 +59,8 @@ Y_UTEST(qcodec)
             HuffmanEncoder.flush();
             ShannonFanoEncoder.flush();
         }
-        std::cerr << "HuffmanQ     : " << HuffmanQ.size() << std::endl;
-        std::cerr << "ShannonFanoQ : " << ShannonFanoQ.size() << std::endl;
+        std::cerr << "HuffmanQ     : " << HuffmanQ.size() << " bits" << std::endl;
+        std::cerr << "ShannonFanoQ : " << ShannonFanoQ.size() << " bits" << std::endl;
         Y_CHECK( 0 == (HuffmanQ.size()     & 7) );
         Y_CHECK( 0 == (ShannonFanoQ.size() & 7) );
         Y_CHECK( HuffmanEncoder.size() == HuffmanQ.size()/8 );

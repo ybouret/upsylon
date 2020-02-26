@@ -17,6 +17,7 @@ ENDIF()
 CLI(y_uniq)
 CLI(y_bin2dat)
 CLI(y_hexdump)
+CLI(y_grep)
 
 IF(NOT MSVC)
 # generate rsa keys with msys-openssl

@@ -26,6 +26,17 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(qencoder);
         };
         
+        class qwriter : public qencoder
+        {
+        public:
+            explicit qwriter() throw();
+            virtual ~qwriter() throw();
+            virtual void writeBits(qbits &, const char );
+            virtual void flushBits(qbits &);
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(qwriter);
+        };
     }
 
 }
