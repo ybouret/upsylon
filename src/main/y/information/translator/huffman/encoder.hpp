@@ -25,6 +25,9 @@ namespace upsylon {
                 virtual void        flush();                //!< emit EOS
                 virtual void        reset() throw();        //!< restart and clean all
 
+                virtual void writeBits(qbits &io, const char C);     //!< manually write/update
+                virtual void flushBits(qbits &io);                   //!< manually flush
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
                 qbits Q;

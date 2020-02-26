@@ -11,7 +11,7 @@ namespace upsylon {
             const char * Encoder::family() const throw() { return FMID;      }
             const char * Encoder::name()   const throw() { return EncoderID; }
 
-            Encoder:: Encoder() : Tree(), TranslatorQueue(8), Q(32)
+            Encoder:: Encoder() : Tree(), TranslatorQueue(), Q()
             {
             }
 
@@ -24,6 +24,17 @@ namespace upsylon {
                 inputByte(C,&Q);
                 Q.compile(*this);
             }
+
+            void Encoder:: writeBits(qbits &io, const char C)
+            {
+                inputByte(C,&io);
+            }
+
+            void Encoder:: flushBits(qbits &io)
+            {
+                eos->emit(io);
+            }
+
 
             void Encoder:: flush()
             {

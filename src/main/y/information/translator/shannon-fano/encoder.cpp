@@ -12,13 +12,24 @@ namespace upsylon {
             const char * Encoder::name()   const throw() { return EncoderID; }
 
 
-            Encoder:: Encoder() : Tree(), TranslatorQueue(8), Q(32)
+            Encoder:: Encoder() : Tree(), TranslatorQueue(), Q()
             {
             }
 
             Encoder::~Encoder() throw()
             {
             }
+
+            void Encoder:: writeBits(qbits &io, const char C)
+            {
+                inputByte(C,&io);
+            }
+
+            void Encoder:: flushBits(qbits &io)
+            {
+                eos->emit(io);
+            }
+
 
             void Encoder:: write(char C)
             {

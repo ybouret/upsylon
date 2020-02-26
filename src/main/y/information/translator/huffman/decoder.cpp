@@ -12,8 +12,8 @@ namespace upsylon {
 
             Decoder:: Decoder() :
             Tree(),
-            TranslatorQueue(8),
-            Q(32),
+            TranslatorQueue(),
+            Q(),
             flag( waitForByte ),
             curr( root )
             {
