@@ -9,6 +9,7 @@ namespace upsylon {
 
     namespace information {
 
+       
         //! base class to build trees from an alphabet
         class TranslatorTree : public Alphabet
         {
@@ -32,7 +33,6 @@ namespace upsylon {
             void         setupTree() throw();              //!< initialize + buildTree
             void         inputByte(const uint8_t,qbits *); //!< emitAndUpdate, buildTree
             
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(TranslatorTree);
             const size_t _shift;

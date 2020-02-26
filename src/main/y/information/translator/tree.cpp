@@ -36,6 +36,19 @@ namespace upsylon {
             buildTree();
         }
 
+#if 0
+        void TranslatorTree:: writeBits(qbits &output, const char C)
+        {
+            inputByte(C,&output);
+        }
+
+        void TranslatorTree:: flushBits(qbits &output)
+        {
+            eos->emit(output);
+            output.zpad();
+        }
+#endif
+        
     }
 
 }

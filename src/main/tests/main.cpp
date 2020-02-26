@@ -152,6 +152,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(asf);
     Y_UTEST(bwt);
     Y_UTEST(qbits);
+    Y_UTEST(qcodec);
     Y_UTEST(huffman);
     Y_UTEST(shannon_fano);
     Y_UTEST(rle);

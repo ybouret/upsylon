@@ -134,6 +134,18 @@ static const uint##BITS##_t bit[BITS];\
         void compile( sequence<char> & ); //!< write all possible chars
         void zfinish( sequence<char> & ); //!< zpad and write possible chars
 
+        class broker : public counted_object
+        {
+        public:
+            virtual ~broker() throw();
+            virtual void startBits() throw() = 0;
+            
+        protected:
+            explicit broker() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(broker);
+        };
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(qbits);

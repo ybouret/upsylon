@@ -12,7 +12,7 @@ namespace upsylon {
             const char * Encoder::name()   const throw() { return EncoderID; }
 
 
-            Encoder:: Encoder() : Tree(), TranslatorEncodingQueue()
+            Encoder:: Encoder() : EncodingTree(), TranslatorQueue(), Q()
             {
             }
 
@@ -20,33 +20,22 @@ namespace upsylon {
             {
             }
 
-            void Encoder:: writeBits(qbits &io, const char C)
-            {
-                inputByte(C,&io);
-            }
-
-            void Encoder:: flushBits(qbits &io)
-            {
-                eos->emit(io);
-            }
-
-#if 0
             void Encoder:: write(char C)
             {
-                inputByte(C,&Q);
+                writeBits(Q,C);
                 Q.compile(*this);
             }
 
             void Encoder:: flush()
             {
-                eos->emit(Q);
-                Q.zfinish(*this);
+                flushBits(Q);
+                Q.compile(*this);
+                assert(0==Q.size());
             }
-#endif
             
             void Encoder:: reset() throw()
             {
-                setupTree();
+                startBits();
                 free();
                 Q.free();
             }

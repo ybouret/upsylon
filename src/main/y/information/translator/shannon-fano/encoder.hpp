@@ -6,7 +6,8 @@
 #define Y_TRANSLATOR_SHANNON_FANO_ENCODER_INCLUDED 1
 
 #include "y/information/translator/shannon-fano.hpp"
-#include "y/information/translator/encoding-queue.hpp"
+#include "y/information/translator/queue.hpp"
+#include "y/information/translator/encoding-tree.hpp"
 
 namespace upsylon {
 
@@ -14,8 +15,10 @@ namespace upsylon {
 
         namespace ShannonFano {
 
+            typedef EncodingWith<Tree> EncodingTree;
+
             //! ShannonFano Encoder
-            class Encoder : public Tree, public TranslatorEncodingQueue
+            class Encoder : public EncodingTree, public TranslatorQueue
             {
             public:
                 virtual const char *family() const throw();         //!< FMID
@@ -23,11 +26,12 @@ namespace upsylon {
                 explicit            Encoder();                      //!< initialize all
                 virtual            ~Encoder() throw();              //!< cleanup
                 virtual void        reset() throw();                //!< restart and clean all
-                virtual void        writeBits(qbits &, const char); //!< manually write/update
-                virtual void        flushBits(qbits &);             //!< manually flush
+                virtual void        write(char);                    //!< emit and update
+                virtual void        flush();                        //!< EOS
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
+                qbits Q;
             };
 
         }
