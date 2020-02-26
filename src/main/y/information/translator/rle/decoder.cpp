@@ -2,7 +2,7 @@
 #include "y/information/translator/rle/decoder.hpp"
 #include "y/exceptions.hpp"
 
-#define Y_RLE_DEBUG 1
+//#define Y_RLE_DEBUG 1
 
 #if defined(Y_RLE_DEBUG)
 #include "y/code/utils.hpp"
@@ -89,9 +89,24 @@ namespace upsylon {
 
                     case waitForRepeating:
                         assert(count>0);
-                        Y_RLE(std::cerr << "[UNRLE] will repeat '" << visible_char[byte] << "' #" << count << std::endl);
-                        while(count-- > 0 ) push_back(byte);
+                        Y_RLE(std::cerr << "[UNRLE] '" << visible_char[byte] << "' * " << count << std::endl);
+                        for(;count>0;--count)
+                        {
+                            push_back(byte);
+                        }
+                        assert(0==count);
                         status = waitForDirective;
+                        break;
+
+                    case waitForDifferent:
+                        assert(count>0);
+                        Y_RLE(std::cerr << "[UNRLE] + '" << visible_char[byte] << "'" << std::endl);
+                        push_back(byte);
+                        if(--count<=0)
+                        {
+                            status = waitForDirective;
+                            assert(0==count);
+                        }
                         break;
                 }
             }
