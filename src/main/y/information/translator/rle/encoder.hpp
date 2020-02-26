@@ -11,11 +11,11 @@ namespace upsylon {
 
         namespace RLE {
 
-            //! RLE Decoder
+            //! RLE Encoder
             class Encoder : public Parameters, public TranslatorQueue
             {
             public:
-                virtual const char *name()   const throw(); //!< DecoderID
+                virtual const char *name()   const throw(); //!< EncoderID
                 virtual const char *family() const throw(); //!< FMID
                 
                 explicit Encoder();          //!< setup

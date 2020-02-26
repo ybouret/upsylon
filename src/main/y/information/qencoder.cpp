@@ -30,6 +30,10 @@ namespace upsylon {
             
         }
         
+        void qwriter::  startBits() throw()
+        {
+        }
+        
         void qwriter:: writeBits(qbits &io, const char C)
         {
             io.push(C);

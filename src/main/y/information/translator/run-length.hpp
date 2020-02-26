@@ -31,18 +31,20 @@ namespace upsylon {
                 
             protected:
                 explicit Framework() throw();
-                static void EmitRepeatingTo(qbits        &Q,
-                                            const uint8_t byte,
-                                            const size_t  size,
-                                            qencoder     &characterEncoder,
-                                            qencoder     &repeatingEncoder);
+                static void EmitRepeatingTo(sequence<char> &S,
+                                            qbits          &Q,
+                                            const uint8_t   byte,
+                                            const size_t    size,
+                                            qencoder       &characterEncoder,
+                                            qencoder       &repeatingEncoder);
                 
-                static void EmitDifferentTo(qbits         &Q,
-                                            const uint8_t *cache,
-                                            const uint8_t  count,
-                                            qencoder      &characterEncoder,
-                                            qencoder      &repeatingEncoder,
-                                            qencoder      &differentEncoder);
+                static void EmitDifferentTo(sequence<char> &S,
+                                            qbits          &Q,
+                                            const uint8_t  *cache,
+                                            const uint8_t   count,
+                                            qencoder       &characterEncoder,
+                                            qencoder       &repeatingEncoder,
+                                            qencoder       &differentEncoder);
                 
                 
             private:

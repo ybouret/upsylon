@@ -7,6 +7,8 @@ namespace upsylon {
         
         namespace RunLength {
             
+            const char Framework:: FMID[] = "RunLength";
+            
             Framework:: ~Framework() throw()
             {
             }
@@ -15,9 +17,10 @@ namespace upsylon {
             {
             }
             
-            void Framework:: EmitRepeatingTo(qbits         &Q,
-                                             const uint8_t  byte,
-                                             const size_t   size,
+            void Framework:: EmitRepeatingTo(sequence<char> &S,
+                                             qbits          &Q,
+                                             const uint8_t   byte,
+                                             const size_t    size,
                                              qencoder       &byteEncoder,
                                              qencoder       &sizeEncoder)
             {
@@ -25,9 +28,11 @@ namespace upsylon {
                 assert(size<=MaxRepeating);
                 sizeEncoder.writeBits(Q,uint8_t(size-1));
                 byteEncoder.writeBits(Q,byte);
+                Q.compile(S);
             }
             
-            void Framework:: EmitDifferentTo(qbits         &Q,
+            void Framework:: EmitDifferentTo(sequence<char> &S,
+                                             qbits          &Q,
                                              const uint8_t *cache,
                                              const uint8_t  count,
                                              qencoder      &characterEncoder,
@@ -41,7 +46,7 @@ namespace upsylon {
                 switch(count)
                 {
                     case 1:
-                        EmitRepeatingTo(Q,cache[0],1,characterEncoder,repeatingEncoder);
+                        EmitRepeatingTo(S,Q,cache[0],1,characterEncoder,repeatingEncoder);
                         break;
                         
                     default:
@@ -50,6 +55,7 @@ namespace upsylon {
                         {
                             characterEncoder.writeBits(Q,cache[i]);
                         }
+                        Q.compile(S);
                 }
             }
             

@@ -1,5 +1,8 @@
 #include "y/information/translator/rle/encoder.hpp"
 #include "y/information/translator/rle/decoder.hpp"
+
+#include "y/information/translator/run-length/encoder.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
@@ -44,11 +47,15 @@ namespace {
             count += sz;
         }
         rle.flush();
-        
-
     }
 
-
+    static inline void testComparison()
+    {
+        information::RunLength::EncodeWith< information::RunLength::SingleEncoder<information::qwriter> > enc1;
+        
+    }
+    
+    
 }
 
 Y_UTEST(rle)

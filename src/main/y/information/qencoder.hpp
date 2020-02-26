@@ -31,6 +31,7 @@ namespace upsylon {
         public:
             explicit qwriter() throw();
             virtual ~qwriter() throw();
+            virtual void startBits() throw();
             virtual void writeBits(qbits &, const char );
             virtual void flushBits(qbits &);
             
