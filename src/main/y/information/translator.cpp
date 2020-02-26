@@ -104,6 +104,7 @@ namespace upsylon {
                 const double   tmx  = chrono(wtime::ticks() - mark);
                 const double   rate = (readBytes/tmx)/1e6;
                 std::cerr << "\tencoder: " << readBytes << " -> " << compBytes << " @ " << rate << " MB/s" << std::endl;
+                std::cerr << "<encoding with " << encoder->family() << " " << encoder->name() << "/>" << std::endl << std::endl;
 
             }
 
@@ -129,6 +130,7 @@ namespace upsylon {
                 const digest MDback = ios::disk_file::md(H,backName);
                 std::cerr << H.name() << " : " << MDfile << "/" << MDback << std::endl;
                 if(MDfile!=MDback) throw exception("%s: invalid checksum", fn);
+                std::cerr << "<decoding with " << decoder->family() << " " << decoder->name() << "/>" << std::endl << std::endl;
             }
 
 

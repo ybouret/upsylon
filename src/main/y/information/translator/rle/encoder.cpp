@@ -1,6 +1,6 @@
 #include "y/information/translator/rle/encoder.hpp"
  
-#define Y_RLE_DEBUG 1
+//#define Y_RLE_DEBUG 1
 
 #if defined(Y_RLE_DEBUG)
 #include "y/code/utils.hpp"
@@ -60,7 +60,7 @@ namespace upsylon {
                 assert(preceding>=0);
                 assert(preceding<=255);
 
-                Y_RLE(std::cerr << "[RLE] emit repeating '" << visible_char[preceding] << "' #" << repeating << std::endl);
+                Y_RLE(std::cerr << "[RLE] EMIT #repeating=" << repeating << " '" << visible_char[preceding] << "'" << std::endl);
                 EmitRepeatingTo(*this,preceding,repeating);
                 repeating =  0;
                 preceding = -1;
@@ -72,7 +72,7 @@ namespace upsylon {
                 assert(waitForDifferent==status);
                 assert(0==repeating);
                 assert(different>0);
-                Y_RLE(std::cerr << "[RLE] emit #different=" << different << ": '";
+                Y_RLE(std::cerr << "[RLE] EMIT #different=" << different << ": '";
                       for(size_t i=0;i<different;++i) std::cerr << visible_char[cache[i]];
                       std::cerr << "'" << std::endl);
 #ifndef NDEBUG
@@ -242,26 +242,17 @@ namespace upsylon {
 
             void Encoder:: fromDifferentToRepeatingWith(const uint8_t byte)
             {
-                switch( different )
+                assert(different>0);
+                assert( cache[different-1] == byte );
+                if(--different>0)
                 {
-                        // just a first  different byte
-                    case 1:
-                        assert( int(cache[0]) == preceding );
-                        repeating = 2;
-                        different = 0;
-                        break;
-
-                        // a few different byte
-                    default:
-                        emitDifferent();
-                        cache[0]  = byte;
-                        repeating = 1;
-                        break;
+                    emitDifferent();
                 }
                 assert(0==different);
-                assert(repeating>0);
-                status = waitForRepeating;
+                status    = waitForRepeating;
+                repeating = 2;
                 preceding = int(byte);
+                
             }
             
         }
