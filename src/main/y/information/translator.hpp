@@ -14,8 +14,9 @@ namespace upsylon {
         class Translator : public ios::ostream, public ios::istream
         {
         public:
-            static const char EncoderID[];
-            static const char DecoderID[];
+            static const char EncoderID[]; //!< "Encoder"
+            static const char DecoderID[]; //!< "Decoder"
+            
             //------------------------------------------------------------------
             //
             // virtual interface

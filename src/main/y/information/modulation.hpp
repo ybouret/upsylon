@@ -50,6 +50,7 @@ namespace upsylon {
         };
     }
 
+    //! helper to implement class ID
 #define Y_INFORMATION_MODULATION(NAME) \
 const char * NAME:: name() const throw() { return CLID; }\
 const char   NAME:: CLID[] = #NAME

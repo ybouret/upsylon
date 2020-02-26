@@ -24,17 +24,19 @@ namespace upsylon {
                 static const uint8_t MaxRepeating = 128;              //!< max repeating block size
                 static const uint8_t BehaviorCode = MaxRepeating-1;   //!< switch to be compared to
                 static const uint8_t MaxDifferent = 255-BehaviorCode; //!< max different block size
-                static const uint8_t MaxBlockSize = (MaxRepeating>=MaxDifferent) ? MaxRepeating : MaxDifferent;
+                static const uint8_t MaxBlockSize = (MaxRepeating>=MaxDifferent) ? MaxRepeating : MaxDifferent; //!< for memory caches
 
                 virtual ~Parameters() throw();
 
             protected:
                 explicit Parameters() throw();
 
+                //! helper
                 static void EmitRepeatingTo(sequence<char> &Q,
                                             const uint8_t   b,
                                             const size_t    n);
 
+                //! helper, call emit repeating if count==1
                 static void EmitDifferentTo(sequence<char> &Q,
                                             const uint8_t *cache,
                                             const size_t   count);

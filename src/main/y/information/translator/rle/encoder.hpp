@@ -11,18 +11,19 @@ namespace upsylon {
 
         namespace RLE {
 
+            //! RLE Decoder
             class Encoder : public Parameters, public TranslatorQueue
             {
             public:
-                virtual const char *name()   const throw();
-                virtual const char *family() const throw();
+                virtual const char *name()   const throw(); //!< DecoderID
+                virtual const char *family() const throw(); //!< FMID
                 
-                explicit Encoder();
-                virtual ~Encoder() throw();
+                explicit Encoder();          //!< setup
+                virtual ~Encoder() throw();  //!< cleanup
 
-                virtual void write(char C);
-                virtual void flush();
-                virtual void reset() throw();
+                virtual void write(char C);   //!< encode next char
+                virtual void flush();         //!< flush current status
+                virtual void reset() throw(); //!< fresh start
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);

@@ -10,21 +10,21 @@ namespace upsylon {
 
     namespace information {
 
+        //! apply a modulation
         class BytewiseTranslator : public TranslatorQueue
         {
         public:
-            static const char FMID[];
+            static const char FMID[]; //!< Bytewise
             
-            explicit BytewiseTranslator( const modulation::pointer & ) throw();
-            explicit BytewiseTranslator( modulation *) throw();
-            virtual ~BytewiseTranslator() throw();
+            explicit BytewiseTranslator(const modulation::pointer &) throw(); //!< setup
+            explicit BytewiseTranslator(modulation *) throw();                //!< setup from a new modulation, echo by default
+            virtual ~BytewiseTranslator() throw();                            //!< cleanup
 
-            virtual const char *family() const throw();
-            virtual void        reset() throw(); //!< transform reset and free
-            virtual void        write(char C);   //!< append transformed char
-            virtual void        flush();         //!< do nothing
-
-            virtual const char *name() const throw();
+            virtual const char *family() const throw(); //!< FMID
+            virtual void        reset() throw();        //!< transform reset and free
+            virtual void        write(char C);          //!< append transformed char
+            virtual void        flush();                //!< do nothing
+            virtual const char *name() const throw();   //!< modulation name
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BytewiseTranslator);
