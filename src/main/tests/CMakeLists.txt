@@ -215,7 +215,7 @@ ADD_TEST(info:bwt          test-main bwt)
 ADD_TEST(info:qbits        test-main qbits)
 ADD_TEST(info:huffman      test-main huffman ${HERE}/words.db)
 ADD_TEST(info:shannon_fano test-main shannon_fano ${HERE}/words.db)
-ADD_TEST(info:rle          test-main rle)
+ADD_TEST(info:rle          test-main rle ${HERE}/words.db)
 ADD_TEST(info:pack         test-main pack ${HERE}/words.db)
 ADD_TEST(info:bytewise     test-main bytewise ${HERE}/words.db)
 

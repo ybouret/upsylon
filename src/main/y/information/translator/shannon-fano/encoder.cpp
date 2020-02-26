@@ -12,7 +12,7 @@ namespace upsylon {
             const char * Encoder::name()   const throw() { return EncoderID; }
 
 
-            Encoder:: Encoder() : Tree(), TranslatorQueue(), Q()
+            Encoder:: Encoder() : Tree(), TranslatorEncodingQueue()
             {
             }
 
@@ -30,7 +30,7 @@ namespace upsylon {
                 eos->emit(io);
             }
 
-
+#if 0
             void Encoder:: write(char C)
             {
                 inputByte(C,&Q);
@@ -42,7 +42,8 @@ namespace upsylon {
                 eos->emit(Q);
                 Q.zfinish(*this);
             }
-
+#endif
+            
             void Encoder:: reset() throw()
             {
                 setupTree();
