@@ -16,6 +16,16 @@ namespace upsylon {
         
         namespace RunLength {
             
+            const char *Encoder:: name() const throw()
+            {
+                return EncoderID;
+            }
+            
+            const char *Encoder:: family() const throw()
+            {
+                return FMID;
+            }
+            
             Encoder:: ~Encoder() throw()
             {
                 memset(cache,0,sizeof(cache));

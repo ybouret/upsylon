@@ -57,7 +57,7 @@ namespace upsylon {
             
             
             
-            template <typename QENCODER>
+            template <typename QENCODER = qwriter>
             class SingleEncoder
             {
             public:
@@ -78,8 +78,8 @@ namespace upsylon {
             
             
             template <
-            typename CHARACTER_QENCODER,
-            typename REPEATING_QENCODER
+            typename CHARACTER_QENCODER=qwriter,
+            typename REPEATING_QENCODER=qwriter
             >
             class DoubleEncoder
             {
@@ -104,9 +104,9 @@ namespace upsylon {
             };
             
             template <
-            typename CHARACTER_QENCODER,
-            typename REPEATING_QENCODER,
-            typename DIFFERENT_QENCODER
+            typename CHARACTER_QENCODER=qwriter,
+            typename REPEATING_QENCODER=qwriter,
+            typename DIFFERENT_QENCODER=qwriter
             >
             class TripleEncoder
             {
@@ -135,7 +135,7 @@ namespace upsylon {
             
             
             
-            template <typename ENCODER>
+            template <typename ENCODER = SingleEncoder<> >
             class EncodeWith : public ENCODER, public Encoder
             {
             public:

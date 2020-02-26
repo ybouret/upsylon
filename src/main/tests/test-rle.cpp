@@ -13,13 +13,14 @@
 #include "y/ios/null-ostream.hpp"
 
 using namespace upsylon;
+using namespace information;
 
 namespace {
-
+    
     static inline void testRepetitions()
     {
-        information::RLE::Encoder rle;
-
+        RLE::Encoder rle;
+        
         for(size_t blockSize=0;blockSize<= 1000; ++blockSize )
         {
             std::cerr << "<RLE.BlockSize=" << blockSize << ">" << std::endl;
@@ -31,10 +32,10 @@ namespace {
             }
             rle.flush();
             std::cerr << "<RLE.BlockSize=" << blockSize << "/>" << std::endl << std::endl;
-
+            
         }
     }
-
+    
     static inline void testRandom()
     {
         information::RLE::Encoder rle;
@@ -48,13 +49,8 @@ namespace {
         }
         rle.flush();
     }
-
-    static inline void testComparison()
-    {
-        information::RunLength::EncodeWith< information::RunLength::SingleEncoder<information::qwriter> > enc1;
-        
-    }
     
+   
     
 }
 
@@ -62,23 +58,35 @@ Y_UTEST(rle)
 {
     std::cerr << "RLE::MaxRepeating=" << int(information::RLE::Parameters::MaxRepeating) << std::endl;
     std::cerr << "RLE::MaxDifferent=" << int(information::RLE::Parameters::MaxDifferent) << std::endl;
-
+    
     if(argc>1)
     {
-        const string              fileName = argv[1];
-        const string              compName = "rle.bin";
-        const string              backName = "unrle.bin";
-        information::RLE::Encoder rle;
-        information::RLE::Decoder unrle;
+        const string fileName = argv[1];
+        {
+            const string compName = "rle.bin";
+            const string backName = "unrle.bin";
+            RLE::Encoder rle;
+            RLE::Decoder unrle;
+            rle.testCODEC(fileName, compName, backName, &unrle);
+        }
+        
+        if( fileName != Y_STDIN )
+        {
+            const string compName = "rle1.bin";
+            const string backName = "unrle1.bin";
 
-        rle.testCODEC(fileName, compName, backName, &unrle);
+            RunLength::EncodeWith<  RunLength::SingleEncoder<qwriter> > enc1;
+            enc1.testCODEC(fileName, compName, backName, NULL);
+
+
+        }
     }
     else
     {
         testRepetitions();
         testRandom();
     }
-
+    
 }
 Y_UTEST_DONE()
 
