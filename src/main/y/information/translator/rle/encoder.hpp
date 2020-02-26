@@ -41,6 +41,10 @@ namespace upsylon {
                 void    emit();
                 void    emitRepeating();
                 void    emitDifferent();
+
+                void    fromRepeatingToDifferentWith(const uint8_t byte);  
+
+
             };
 
         }
