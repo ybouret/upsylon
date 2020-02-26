@@ -1,13 +1,14 @@
 #include "y/information/translator/rle/encoder.hpp"
-#include "y/code/utils.hpp"
-
+ 
 #define Y_RLE_DEBUG 1
 
 #if defined(Y_RLE_DEBUG)
+#include "y/code/utils.hpp"
 #define Y_RLE(CODE) do { CODE; } while(false)
 #else
-#define Y_RLE(OUT)
+#define Y_RLE(CODE)
 #endif
+
 
 namespace upsylon {
     
@@ -23,34 +24,8 @@ namespace upsylon {
                 memset(cache,0,sizeof(cache));
             }
             
-            static inline
-            bool checkValidCache(const uint8_t *cache,
-                                 const size_t   count) throw()
-            {
-                assert(cache);
-                assert(count>0);
-                for(size_t i=1;i<count;++i)
-                {
-                    if(cache[i-1]==cache[i]) return false;
-                }
-                return true;
-            }
 
-            bool Encoder:: checkStatus() const throw()
-            {
-                switch (status)
-                {
-                    case waitForFirstByte:
-                        return (-1==preceding) && (0==repeating) && (0==different);
 
-                    case waitForRepeating:
-                        return (preceding>=0) && (preceding<256) && (repeating>0) &&  (repeating<=MaxRepeating) && (0==different);
-
-                    case waitForDifferent:
-                        return (preceding>=0) && (preceding<256) && (0==repeating) && (different>0) && (different<=MaxDifferent) && checkValidCache(cache,different);
-                }
-                return false;
-            }
             
             Encoder:: Encoder() : Parameters(), TranslatorQueue(2),
             status( waitForFirstByte ),
@@ -59,7 +34,6 @@ namespace upsylon {
             different( 0),
             cache()
             {
-                assert( checkStatus() || die("RLE.invalid constructor") );
             }
             
             void Encoder:: reset() throw()
@@ -70,75 +44,64 @@ namespace upsylon {
                 preceding = -1;
                 repeating =  0;
                 different =  0;
-                assert( checkStatus() || die("RLE.invalid reset") );
                 
             }
             
             void Encoder:: flush()
             {
-                // emit current state
                 emit();
-                assert( checkStatus() || die("RLE.invalid flush") );
-
             }
-
 
             void Encoder:: emitRepeating()
             {
+                assert(waitForRepeating==status);
+                assert(0==different);
+                assert(repeating>0);
+                assert(preceding>=0);
+                assert(preceding<=255);
 
-                // debug check
-                assert( checkStatus() || die("RLE.invalid emitRepeating.entry") );
-                Y_RLE(std::cerr << "[RLE] emit repeating #" << repeating << " '" << visible_char[uint8_t(preceding)] << "'" << std::endl);
-
-                // encode
-                push_back( uint8_t(repeating-1) );
-                push_back( uint8_t(preceding)   );
-
-                // get back to agnostic state
-                status    = waitForFirstByte;
-                preceding = -1;
+                Y_RLE(std::cerr << "[RLE] repeating '" << visible_char[preceding] << "' #" << repeating << std::endl);
+                EmitRepeatingTo(*this,preceding,repeating);
                 repeating =  0;
-
-                assert( checkStatus() || die("RLE.invalid emitRepeating.leave") );
-
+                preceding = -1;
+                status    = waitForFirstByte;
             }
-
 
             void Encoder:: emitDifferent()
             {
-                assert( checkStatus() || die("RLE.invalid emitDifferent.entry") );
-                Y_RLE(std::cerr << "[RLE] emit different #" << different << std::endl);
-
-                // debug check
+                assert(waitForDifferent==status);
+                assert(0==repeating);
                 assert(different>0);
-                assert(repeating<=0);
-                assert(different<=MaxDifferent);
-                assert(different+BehaviorCode<=255);
-
-                // emit cache
-                push_back( uint8_t(different+BehaviorCode) );
-                put_all((const char *)cache,different);
-
-                // get back to an agnostic state
-                status    = waitForFirstByte;
+#ifndef NDEBUG
+                for(size_t i=1;i<different;++i)
+                {
+                    assert( cache[i-1] != cache[i]);
+                }
+#endif
+                EmitDifferentTo(*this,cache,different);
+                different = 0;
                 preceding = -1;
-                different =  0;
-                assert( checkStatus() || die("RLE.invalid emitDifferent.leave") );
+                status    = waitForFirstByte;
             }
 
             void Encoder:: emit()
             {
-                if(repeating>0)
+
+                switch(status)
                 {
-                    emitRepeating();
-                }
-                else if(different>0)
-                {
-                    emitDifferent();
-                }
-                else
-                {
-                    assert( checkStatus() || die("RLE.invalid call to emit") );
+                    case waitForFirstByte:
+                        assert( -1 == preceding );
+                        assert(  0 == repeating );
+                        assert(  0 == different );
+                        break;
+
+                    case waitForRepeating:
+                        emitRepeating();
+                        break;
+
+                    case waitForDifferent:
+                        emitDifferent();
+                        break;
                 }
                 
             }
@@ -148,23 +111,46 @@ namespace upsylon {
                 const uint8_t byte(C);
                 const int     current = byte;
 
-                assert( checkStatus() || die("RLE.invalid write.entry") );
-                switch( status )
+                switch(status)
                 {
                     case waitForFirstByte:
-                        // initialize, assuming repetition
+                        //------------------------------------------------------
+                        //
+                        // initialize, assuming repeating
+                        //
+                        //------------------------------------------------------
+                        Y_RLE(std::cerr << "[RLE] initialize with '" << visible_char[byte] << "'" << std::endl);
                         preceding = (cache[0] = current);
                         repeating = 1;
                         status    = waitForRepeating;
                         break;
 
                     case waitForRepeating:
+                        assert(0==different);
+                        assert(repeating>0);
+                        assert(preceding>=0);
+                        assert(preceding<256);
+                        assert(repeating<MaxRepeating);
+                        Y_RLE(std::cerr << "[RLE] repeating with '" << visible_char[byte] << "'/'" << visible_char[preceding] << "'" << std::endl);
+                        if(current==preceding)
+                        {
+                            if(++repeating>=MaxRepeating)
+                            {
+                                emitRepeating();
+                            }
+                        }
+                        else
+                        {
+                            Y_RLE(std::cerr << "[RLE] switch to different" << std::endl);
+                            exit(1);
+                        }
                         break;
 
                     case waitForDifferent:
+                        exit(1);
                         break;
+
                 }
-                assert( checkStatus() || die("RLE.invalid write.leave") );
 
             }
             

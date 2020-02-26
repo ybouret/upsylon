@@ -37,10 +37,10 @@ namespace upsylon {
                 size_t  repeating;   //!< number of repeating same char
                 size_t  different;   //!< number of different chars in cache
                 uint8_t cache[MaxDifferent];
+
                 void    emit();
-                void    emitDifferent();
                 void    emitRepeating();
-                bool    checkStatus() const throw();
+                void    emitDifferent();
             };
 
         }

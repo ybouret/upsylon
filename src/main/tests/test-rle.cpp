@@ -36,6 +36,8 @@ namespace {
 
 Y_UTEST(rle)
 {
+    std::cerr << "RLE::MaxRepeating=" << int(information::RLE::Parameters::MaxRepeating) << std::endl;
+    std::cerr << "RLE::MaxDifferent=" << int(information::RLE::Parameters::MaxDifferent) << std::endl;
 
     if(argc>1)
     {
