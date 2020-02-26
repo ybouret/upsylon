@@ -72,17 +72,18 @@ namespace upsylon {
                 assert(waitForDifferent==status);
                 assert(0==repeating);
                 assert(different>0);
+                Y_RLE(std::cerr << "[RLE] emit #different=" << different << ": '";
+                      for(size_t i=0;i<different;++i) std::cerr << visible_char[cache[i]];
+                      std::cerr << "'" << std::endl);
 #ifndef NDEBUG
                 for(size_t i=1;i<different;++i)
                 {
                     assert( cache[i-1] != cache[i]);
                 }
 #endif
-                Y_RLE(std::cerr << "[RLE] emit #different=" << different << ": '";
-                      for(size_t i=0;i<different;++i) std::cerr << visible_char[cache[i]];
-                      std::cerr << "'" << std::endl);
+
                 EmitDifferentTo(*this,cache,different);
-                different = 0;
+                different =  0;
                 preceding = -1;
                 status    = waitForFirstByte;
             }
@@ -117,11 +118,17 @@ namespace upsylon {
                 switch(status)
                 {
                     case waitForFirstByte:
+                        //------------------------------------------------------
+                        // sanity check
+                        //------------------------------------------------------
                         assert(0==different);
                         assert(0==repeating);
                         assert(-1==preceding);
                         Y_RLE(std::cerr << "[RLE] initialize with '" << visible_char[byte] << "'" << std::endl);
 
+                        //------------------------------------------------------
+                        // initialize, assuming repeating
+                        //------------------------------------------------------
                         preceding = (cache[0] = current);
                         repeating = 1;
                         status    = waitForRepeating;
@@ -129,15 +136,24 @@ namespace upsylon {
                         break;
 
                     case waitForRepeating:
+                        //------------------------------------------------------
+                        // sanity check
+                        //------------------------------------------------------
                         assert(0==different);
                         assert(repeating>0);
                         assert(preceding>=0);
                         assert(preceding<256);
                         assert(repeating<MaxRepeating);
-                        Y_RLE(std::cerr << "[RLE] repeating with '" << visible_char[byte] << "'/'" << visible_char[preceding] << "'" << std::endl);
+                        Y_RLE(std::cerr << "[RLE] update repeating with '" << visible_char[byte] << "'/'" << visible_char[preceding] << "'" << std::endl);
 
+                        //------------------------------------------------------
+                        // case study
+                        //------------------------------------------------------
                         if(current==preceding)
                         {
+                            //--------------------------------------------------
+                            // increase count an flush if necessary
+                            //--------------------------------------------------
                             if(++repeating>=MaxRepeating)
                             {
                                 emitRepeating();
@@ -145,13 +161,19 @@ namespace upsylon {
                         }
                         else
                         {
-                            Y_RLE(std::cerr << "[RLE] switch to different" << std::endl);
-                            fromRepeatingToDifferentWith(current);
+                            //--------------------------------------------------
+                            // change strategy
+                            //--------------------------------------------------
+                            Y_RLE(std::cerr << "[RLE] switch to different from #repeating=" << repeating << std::endl);
+                            fromRepeatingToDifferentWith(byte);
                         }
 
                         break;
 
                     case waitForDifferent:
+                        //------------------------------------------------------
+                        // sanity check
+                        //------------------------------------------------------
                         assert(0==repeating);
                         assert(different>0);
                         assert(different<MaxDifferent);
@@ -159,19 +181,34 @@ namespace upsylon {
                         assert(preceding<256);
                         Y_RLE(std::cerr << "[RLE] different with '" << visible_char[byte] << "'/'" << visible_char[preceding] << "'" << std::endl);
 
+                        //------------------------------------------------------
+                        // case study
+                        //------------------------------------------------------
                         if(current!=preceding)
                         {
+                            //--------------------------------------------------
+                            // increase count an flush if necessary
+                            //--------------------------------------------------
                             cache[different++] = byte;
                             if(different>=MaxDifferent)
                             {
                                 emitDifferent();
                             }
+                            else
+                            {
+                                preceding = current;
+                            }
                         }
                         else
                         {
-                            Y_RLE(std::cerr << "[RLE] switch to repeating" << std::endl);
-                            exit(-1);
+                            //--------------------------------------------------
+                            // change strategy
+                            //--------------------------------------------------
+                            Y_RLE(std::cerr << "[RLE] switch to repeating with #different=" << different << std::endl);
+                            fromDifferentToRepeatingWith(byte);
+                            assert(int(byte)==preceding);
                         }
+
                         break;
 
                 }
@@ -182,8 +219,9 @@ namespace upsylon {
             {
                 switch( repeating )
                 {
-                        // just a first repeating byte
+                        // just a former first repeating byte
                     case 1:
+                        assert( int(cache[0]) == preceding );
                         cache[1]  = byte;
                         different = 2;
                         repeating = 0;
@@ -199,10 +237,32 @@ namespace upsylon {
                 assert(0==repeating);
                 assert(different>0);
                 status    = waitForDifferent;
-                preceding = byte;
+                preceding = int(byte);
             }
 
-            
+            void Encoder:: fromDifferentToRepeatingWith(const uint8_t byte)
+            {
+                switch( different )
+                {
+                        // just a first  different byte
+                    case 1:
+                        assert( int(cache[0]) == preceding );
+                        repeating = 2;
+                        different = 0;
+                        break;
+
+                        // a few different byte
+                    default:
+                        emitDifferent();
+                        cache[0]  = byte;
+                        repeating = 1;
+                        break;
+                }
+                assert(0==different);
+                assert(repeating>0);
+                status = waitForRepeating;
+                preceding = int(byte);
+            }
             
         }
         
