@@ -125,11 +125,14 @@ namespace upsylon {
                 }
                 if( loadBytes != compBytes ) throw exception("%s: loadBytes != compBytes", fn);
                 if( readBytes != backBytes ) throw exception("%s: readBytes != backBytes", fn);
-                hashing::sha1 H;
-                const digest MDfile = ios::disk_file::md(H,fileName);
-                const digest MDback = ios::disk_file::md(H,backName);
-                std::cerr << H.name() << " : " << MDfile << "/" << MDback << std::endl;
-                if(MDfile!=MDback) throw exception("%s: invalid checksum", fn);
+                if(fileName != Y_STDIN )
+                {
+                    hashing::sha1 H;
+                    const digest MDfile = ios::disk_file::md(H,fileName);
+                    const digest MDback = ios::disk_file::md(H,backName);
+                    std::cerr << H.name() << " : " << MDfile << "/" << MDback << std::endl;
+                    if(MDfile!=MDback) throw exception("%s: invalid checksum", fn);
+                }
                 std::cerr << "<decoding with " << decoder->family() << " " << decoder->name() << "/>" << std::endl << std::endl;
             }
 

@@ -1,6 +1,6 @@
 #include "y/information/translator/rle/encoder.hpp"
  
-//#define Y_RLE_DEBUG 1
+#define Y_RLE_DEBUG 1
 
 #if defined(Y_RLE_DEBUG)
 #include "y/code/utils.hpp"

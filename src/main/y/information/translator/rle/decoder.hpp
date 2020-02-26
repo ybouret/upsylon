@@ -26,6 +26,15 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Decoder);
+                enum Status
+                {
+                    waitForDirective,
+                    waitForRepeating,
+                    waitForDifferent
+                };
+                Status status;
+                size_t count;
+                
             };
 
         }

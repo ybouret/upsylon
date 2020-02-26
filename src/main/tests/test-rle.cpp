@@ -32,6 +32,23 @@ namespace {
         }
     }
 
+    static inline void testRandom()
+    {
+        information::RLE::Encoder rle;
+        size_t count = 0;
+        while( count < 1000 )
+        {
+            const char   C  = alea.range<char>('a','z');
+            const size_t sz = alea.leq(100);
+            rle.repeat(sz,C);
+            count += sz;
+        }
+        rle.flush();
+        
+
+    }
+
+
 }
 
 Y_UTEST(rle)
@@ -45,12 +62,14 @@ Y_UTEST(rle)
         const string              compName = "rle.bin";
         const string              backName = "unrle.bin";
         information::RLE::Encoder rle;
+        information::RLE::Decoder unrle;
 
-        rle.testCODEC(fileName, compName, backName, NULL);
+        rle.testCODEC(fileName, compName, backName, &unrle);
     }
     else
     {
         testRepetitions();
+        testRandom();
     }
 
 }

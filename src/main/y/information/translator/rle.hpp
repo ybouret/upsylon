@@ -24,7 +24,8 @@ namespace upsylon {
                 static const uint8_t MaxRepeating = 128;              //!< max repeating block size
                 static const uint8_t BehaviorCode = MaxRepeating-1;   //!< switch to be compared to
                 static const uint8_t MaxDifferent = 255-BehaviorCode; //!< max different block size
-                
+                static const uint8_t MaxBlockSize = (MaxRepeating>=MaxDifferent) ? MaxRepeating : MaxDifferent;
+
                 virtual ~Parameters() throw();
 
             protected:
