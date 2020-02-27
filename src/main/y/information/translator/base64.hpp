@@ -40,6 +40,12 @@ namespace upsylon {
             static void Encode1to2(void *target, const void *source, const char *table) throw();
             static void Decode2to1(void *target, const void *source)                    throw();
             
+            //! encode with target.size >= BytesFor(length,mode)
+            static void Encode(void        *target,
+                               const void  *source,
+                               const size_t length,
+                               const char  *table,
+                               const Mode   mode) throw();
         };
 
     }

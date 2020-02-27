@@ -247,6 +247,48 @@ namespace upsylon {
             b[1] = C1toB1(C1);
         }
 
+        void Base64:: Encode(void        *target,
+                             const void  *source,
+                             const size_t length,
+                             const char  *table,
+                             const Mode   mode) throw()
+        {
+            size_t      num3 = length/3;
+            char       *tgt  = static_cast<char       *>(target);
+            const char *src  = static_cast<const char *>(source);
+            while(num3-- > 0)
+            {
+                Encode3to4(tgt, src, table);
+                tgt+=4;
+                src+=3;
+            }
+            const size_t rem3 = length%3;
+            switch (mode) {
+                case Pad:
+                    switch(rem3)
+                    {
+                        case 1: Encode1to2(tgt,src,table); tgt+=2; tgt[0] = tgt[1] = padding; break;
+                        case 2: Encode2to3(tgt,src,table); tgt+=3; tgt[0] = padding;          break;
+                        default:
+                            assert(0==rem3);
+                            break;
+                    }
+                    break;
+                    break;
+                    
+                case Raw:
+                    switch(rem3)
+                    {
+                        case 1: Encode1to2(tgt,src,table); break;
+                        case 2: Encode2to3(tgt,src,table); break;
+                        default:
+                            assert(0==rem3);
+                            break;
+                    }
+                    break;
+            }
+        }
+        
     }
 
 }
