@@ -159,7 +159,7 @@ Y_ASSERT( a_##TYPE == b_##TYPE );        \
 
     {
         std::cerr << "-- Building Flags Table" << std::endl;
-        ios::ocstream fp( "iobytes.inc" );
+        ios::ocstream fp( "iobytes.bin" );
         bool flags[256][8];
         memset(flags,0,sizeof(flags));
         std::cerr << "sizeof(flags)=" << sizeof(flags) << std::endl;
