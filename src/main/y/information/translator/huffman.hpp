@@ -9,7 +9,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         namespace Huffman {
 

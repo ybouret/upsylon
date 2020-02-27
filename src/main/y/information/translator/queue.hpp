@@ -8,7 +8,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         //! implements the ios::istream part
         class TranslatorQueue : public Translator, public list<char>

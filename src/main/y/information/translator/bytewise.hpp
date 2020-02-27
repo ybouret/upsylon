@@ -8,7 +8,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         //! apply a modulation
         class BytewiseTranslator : public TranslatorQueue
@@ -16,8 +16,8 @@ namespace upsylon {
         public:
             static const char FMID[]; //!< Bytewise
             
-            explicit BytewiseTranslator(const modulation::pointer &) throw(); //!< setup
-            explicit BytewiseTranslator(modulation *) throw();                //!< setup from a new modulation, echo by default
+            explicit BytewiseTranslator(const Modulation::pointer &) throw(); //!< setup
+            explicit BytewiseTranslator(Modulation *) throw();                //!< setup from a new modulation, echo by default
             virtual ~BytewiseTranslator() throw();                            //!< cleanup
 
             virtual const char *family() const throw(); //!< FMID
@@ -29,7 +29,7 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BytewiseTranslator);
             uint64_t            wksp[4];
-            modulation::pointer transform;
+            Modulation::pointer transform;
         };
 
     }

@@ -2,27 +2,27 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
-        echo_modulation::~echo_modulation() throw() {}
-
-
-        echo_modulation:: echo_modulation() throw()  {}
-
-        void echo_modulation:: reset() throw() {   }
+        EchoModulation::~EchoModulation() throw() {}
 
 
-        uint8_t echo_modulation:: fetch(const uint8_t c) throw()
+        EchoModulation:: EchoModulation() throw()  {}
+
+        void EchoModulation:: reset() throw() {   }
+
+
+        uint8_t EchoModulation:: fetch(const uint8_t c) throw()
         {
             return c;
         }
 
 
-        Y_INFORMATION_MODULATION(echo_modulation);
+        Y_INFORMATION_MODULATION(EchoModulation);
 
-        modulation * echo_modulation:: clone() const  
+        Modulation * EchoModulation:: clone() const
         {
-            return new echo_modulation();
+            return new EchoModulation();
         }
 
     }

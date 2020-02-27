@@ -7,7 +7,7 @@
 #include "y/string.hpp"
 
 using namespace upsylon;
-using namespace information;
+using namespace Information;
 
 Y_UTEST(bytewise)
 {
@@ -15,19 +15,19 @@ Y_UTEST(bytewise)
     Y_UTEST_SIZEOF(counted);
     Y_UTEST_SIZEOF(object);
     Y_UTEST_SIZEOF(counted_object);
-    Y_UTEST_SIZEOF(modulation);
-    Y_UTEST_SIZEOF(echo_modulation);
-    Y_UTEST_SIZEOF(delta_encoder);
-    Y_UTEST_SIZEOF(delta_decoder);
+    Y_UTEST_SIZEOF(Modulation);
+    Y_UTEST_SIZEOF(EchoModulation);
+    Y_UTEST_SIZEOF(DeltaEncoder);
+    Y_UTEST_SIZEOF(DeltaDecoder);
 
-    const modulation::pointer p = new mtf_encoder();
+    const Modulation::pointer p = new MoveToFrontEncoder();
 
     BytewiseTranslator mtf( p );
-    BytewiseTranslator unmtf( new mtf_decoder() );
-    BytewiseTranslator ec1( new echo_modulation() );
+    BytewiseTranslator unmtf( new MoveToFrontDecoder() );
+    BytewiseTranslator ec1( new EchoModulation() );
     BytewiseTranslator ec2( NULL );
-    BytewiseTranslator del( new delta_encoder() );
-    BytewiseTranslator undel( new delta_decoder() );
+    BytewiseTranslator del(   new DeltaEncoder() );
+    BytewiseTranslator undel( new DeltaDecoder() );
 
     if(argc>1)
     {

@@ -5,22 +5,22 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
-        mtf_modulation:: mtf_modulation() throw() :
+        MoveToFront:: MoveToFront() throw() :
         list_(),
         node_()
         {
             build();
         }
 
-        mtf_modulation:: ~mtf_modulation() throw()
+        MoveToFront:: ~MoveToFront() throw()
         {
             list_.reset();
             memset( node_, 0, sizeof(node_) );
         }
 
-        void mtf_modulation:: build() throw()
+        void MoveToFront:: build() throw()
         {
             memset( node_, 0, sizeof(node_) );
             for(size_t i=0;i<256;++i)
@@ -30,7 +30,7 @@ namespace upsylon {
             assert( 256 == list_.size );
         }
 
-        void mtf_modulation:: duplicate( const mtf_modulation &m ) throw()
+        void MoveToFront:: duplicate( const MoveToFront &m ) throw()
         {
             list_.reset();
             for( const node_t *node = m.list_.head; node; node=node->next)
@@ -45,7 +45,7 @@ namespace upsylon {
 
 
 
-        void mtf_modulation::reset() throw()
+        void MoveToFront::reset() throw()
         {
             list_.reset();
             build();
@@ -54,14 +54,15 @@ namespace upsylon {
 
     }
 
-    namespace information {
-        Y_INFORMATION_MODULATION(mtf_encoder);
+    namespace Information {
+
+        Y_INFORMATION_MODULATION(MoveToFrontEncoder);
 
 
-        mtf_encoder::  mtf_encoder() throw() {}
-        mtf_encoder:: ~mtf_encoder() throw() {}
+        MoveToFrontEncoder::  MoveToFrontEncoder() throw() {}
+        MoveToFrontEncoder:: ~MoveToFrontEncoder() throw() {}
 
-        uint8_t mtf_encoder:: fetch(const uint8_t x) throw()
+        uint8_t MoveToFrontEncoder:: fetch(const uint8_t x) throw()
         {
             assert(list_.size == 256 );
             node_t *node = list_.head;
@@ -77,9 +78,9 @@ namespace upsylon {
             return uint8_t(indx);
         }
 
-        modulation * mtf_encoder :: clone() const
+        Modulation * MoveToFrontEncoder :: clone() const
         {
-            mtf_modulation *m = new mtf_encoder();
+            MoveToFrontEncoder *m = new MoveToFrontEncoder();
             m->duplicate(*this);
             return m;
         }
@@ -87,15 +88,15 @@ namespace upsylon {
     }
 
 
-    namespace information {
+    namespace Information {
 
-        Y_INFORMATION_MODULATION(mtf_decoder);
+        Y_INFORMATION_MODULATION(MoveToFrontDecoder);
 
 
-        mtf_decoder::  mtf_decoder() throw() {}
-        mtf_decoder:: ~mtf_decoder() throw() {}
+        MoveToFrontDecoder::  MoveToFrontDecoder() throw() {}
+        MoveToFrontDecoder:: ~MoveToFrontDecoder() throw() {}
 
-        uint8_t mtf_decoder:: fetch(const uint8_t x) throw()
+        uint8_t MoveToFrontDecoder:: fetch(const uint8_t x) throw()
         {
             assert(list_.size == 256 );
             node_t *node = list_.head;
@@ -108,10 +109,10 @@ namespace upsylon {
         }
 
 
-        modulation * mtf_decoder :: clone() const
+        Modulation * MoveToFrontDecoder :: clone() const
         {
-            mtf_modulation *m = new mtf_decoder();
-
+            MoveToFrontDecoder *m = new MoveToFrontDecoder();
+            m->duplicate( *this );
             return m;
         }
     }

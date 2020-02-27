@@ -3,7 +3,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         TranslatorQueue:: ~TranslatorQueue() throw()
         {

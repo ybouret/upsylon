@@ -8,7 +8,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         namespace Huffman {
 
@@ -26,7 +26,7 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Decoder);
-                qbits Q;
+                IOBits Q;
                 enum Flag
                 {
                     waitForByte,

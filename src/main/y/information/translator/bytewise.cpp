@@ -3,7 +3,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         const char BytewiseTranslator:: FMID[] = "Bytewise";
 
@@ -14,24 +14,24 @@ namespace upsylon {
 
         }
 
-        BytewiseTranslator:: BytewiseTranslator( const modulation::pointer & m ) throw() :
+        BytewiseTranslator:: BytewiseTranslator( const Modulation::pointer & m ) throw() :
         wksp(),
         transform(m)
         {
 
         }
 
-        static inline modulation *  MakeEchoAt(void *addr, const size_t size) throw()
+        static inline Modulation *  MakeEchoAt(void *addr, const size_t size) throw()
         {
             assert(addr);
-            assert(size>=sizeof(echo_modulation));
+            assert(size>=sizeof(EchoModulation));
             memset(addr,0,size);
-            modulation *m = new (addr) echo_modulation();
+            Modulation *m = new (addr) EchoModulation();
             m->withhold();
             return m;
         }
         
-        BytewiseTranslator:: BytewiseTranslator(modulation *m) throw() :
+        BytewiseTranslator:: BytewiseTranslator(Modulation *m) throw() :
         wksp(),
         transform(m ? m : MakeEchoAt(wksp,sizeof(wksp) ))
         {

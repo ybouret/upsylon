@@ -8,7 +8,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         template <typename TREE>
         class EncodingWith : public TREE, public qencoder
@@ -22,12 +22,12 @@ namespace upsylon {
                 this->setupTree();
             }
 
-            inline virtual void writeBits(qbits &Q, const char C)
+            inline virtual void writeBits(IOBits &Q, const char C)
             {
                 this->inputByte(C,&Q);
             }
 
-            inline virtual void flushBits(qbits &Q)
+            inline virtual void flushBits(IOBits &Q)
             {
                 this->eos->emit(Q);
                 Q.zpad();

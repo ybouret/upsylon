@@ -4,20 +4,20 @@
 #ifndef Y_INFORMATION_QENCODER_INCLUDED
 #define Y_INFORMATION_QENCODER_INCLUDED 1
 
-#include "y/information/qbits.hpp"
+#include "y/information/iobits.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
-        class qencoder : public qbits::broker
+        class qencoder : public IOBits::broker
         {
         public:
             typedef arc_ptr<qencoder> pointer;
             virtual ~qencoder() throw();
-            virtual void writeBits(qbits &, const char ) = 0;
-            virtual void flushBits(qbits &)              = 0;
+            virtual void writeBits(IOBits &, const char ) = 0;
+            virtual void flushBits(IOBits &)              = 0;
 
         protected:
             explicit qencoder() throw();
@@ -32,8 +32,8 @@ namespace upsylon {
             explicit qwriter() throw();
             virtual ~qwriter() throw();
             virtual void startBits() throw();
-            virtual void writeBits(qbits &, const char );
-            virtual void flushBits(qbits &);
+            virtual void writeBits(IOBits &, const char );
+            virtual void flushBits(IOBits &);
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(qwriter);

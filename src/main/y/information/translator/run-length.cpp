@@ -3,7 +3,7 @@
 
 namespace upsylon {
     
-    namespace information {
+    namespace Information {
         
         namespace RunLength {
             
@@ -17,12 +17,12 @@ namespace upsylon {
             {
             }
             
-            void Framework:: EmitRepeatingTo(sequence<char> &S,
-                                             qbits          &Q,
-                                             const uint8_t   byte,
-                                             const size_t    size,
-                                             qencoder       &byteEncoder,
-                                             qencoder       &sizeEncoder)
+            void Framework:: EmitRepeatingTo(sequence<char>  &S,
+                                             IOBits          &Q,
+                                             const uint8_t    byte,
+                                             const size_t     size,
+                                             qencoder        &byteEncoder,
+                                             qencoder        &sizeEncoder)
             {
                 assert(size>0);
                 assert(size<=MaxRepeating);
@@ -32,7 +32,7 @@ namespace upsylon {
             }
             
             void Framework:: EmitDifferentTo(sequence<char> &S,
-                                             qbits          &Q,
+                                             IOBits         &Q,
                                              const uint8_t *cache,
                                              const uint8_t  count,
                                              qencoder      &characterEncoder,

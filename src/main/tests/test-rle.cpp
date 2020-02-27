@@ -13,7 +13,7 @@
 #include "y/ios/null-ostream.hpp"
 
 using namespace upsylon;
-using namespace information;
+using namespace Information;
 
 namespace {
     
@@ -38,7 +38,7 @@ namespace {
     
     static inline void testRandom()
     {
-        information::RLE::Encoder rle;
+        RLE::Encoder rle;
         size_t count = 0;
         while( count < 1000 )
         {
@@ -56,8 +56,8 @@ namespace {
 
 Y_UTEST(rle)
 {
-    std::cerr << "RLE::MaxRepeating=" << int(information::RLE::Parameters::MaxRepeating) << std::endl;
-    std::cerr << "RLE::MaxDifferent=" << int(information::RLE::Parameters::MaxDifferent) << std::endl;
+    std::cerr << "RLE::MaxRepeating=" << int(RLE::Parameters::MaxRepeating) << std::endl;
+    std::cerr << "RLE::MaxDifferent=" << int(RLE::Parameters::MaxDifferent) << std::endl;
     
     if(argc>1)
     {

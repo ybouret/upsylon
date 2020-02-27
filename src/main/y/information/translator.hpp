@@ -8,7 +8,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         //! [enc|dec]oder
         class Translator : public ios::ostream, public ios::istream

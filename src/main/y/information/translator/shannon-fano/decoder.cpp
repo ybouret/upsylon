@@ -1,13 +1,12 @@
-
 #include "y/information/translator/shannon-fano/decoder.hpp"
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         namespace ShannonFano {
 
-            const char * Decoder::family() const throw() { return FMID;    }
+            const char * Decoder::family() const throw() { return FMID;      }
             const char * Decoder::name()   const throw() { return DecoderID; }
 
             Decoder:: Decoder() :

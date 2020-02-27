@@ -4,11 +4,11 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         namespace ShannonFano {
 
-            const char * Encoder::family() const throw() { return FMID;    }
+            const char * Encoder::family() const throw() { return FMID;      }
             const char * Encoder::name()   const throw() { return EncoderID; }
 
 

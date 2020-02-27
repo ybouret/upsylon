@@ -3,9 +3,9 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
-        qencoder:: qencoder() throw() : qbits::broker()
+        qencoder:: qencoder() throw() : IOBits::broker()
         {
         }
 
@@ -19,7 +19,7 @@ namespace upsylon {
 
 namespace upsylon {
     
-    namespace information {
+    namespace Information {
 
         qwriter:: qwriter() throw()
         {
@@ -34,12 +34,12 @@ namespace upsylon {
         {
         }
         
-        void qwriter:: writeBits(qbits &io, const char C)
+        void qwriter:: writeBits(IOBits &io, const char C)
         {
             io.push(C);
         }
         
-        void qwriter:: flushBits(qbits &)
+        void qwriter:: flushBits(IOBits &)
         {
         }
         

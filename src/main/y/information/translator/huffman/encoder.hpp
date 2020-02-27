@@ -10,7 +10,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         namespace Huffman {
 
@@ -31,7 +31,7 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Encoder);
-                qbits Q;
+                IOBits Q;
             };
 
         }

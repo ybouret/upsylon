@@ -3,13 +3,14 @@
 #include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
+using namespace Information;
 
 Y_UTEST(delta)
 {
-    Y_UTEST_SIZEOF(information::delta_encoder);
-    Y_UTEST_SIZEOF(information::delta_decoder);
-    information::delta_encoder enc;
-    information::delta_decoder dec;
+    Y_UTEST_SIZEOF(DeltaEncoder);
+    Y_UTEST_SIZEOF(DeltaEncoder);
+    DeltaEncoder enc;
+    DeltaEncoder dec;
 
     for(size_t i=100000;i>0;--i)
     {

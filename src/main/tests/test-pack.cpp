@@ -13,7 +13,7 @@
 #include "y/information/translator/shannon-fano/encoder.hpp"
 
 using namespace upsylon;
-using namespace information;
+using namespace Information;
 
 Y_UTEST(pack)
 {
@@ -28,7 +28,7 @@ Y_UTEST(pack)
     const size_t         sz = input.size();
     string               output(sz, as_capacity, true );
     vector<size_t>       indices(sz,0);
-    mtf_encoder          mtf;
+    MoveToFrontEncoder   mtf;
     bwt::encode(*output, *input, sz, *indices,mtf);
     {
         ios::ocstream fp("ipack.bin"); fp << input;

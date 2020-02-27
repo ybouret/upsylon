@@ -7,7 +7,7 @@
 
 namespace upsylon {
 	
-	namespace information 	{
+	namespace Information 	{
         
         //! Burrows Wheeler Transform
 		struct bwt
@@ -30,7 +30,7 @@ namespace upsylon {
                                  const void  *input,
                                  const size_t size,
                                  size_t      *indices,
-                                 modulation  &proc) throw();
+                                 Modulation  &proc) throw();
 
             //! reverse transformation using the primary index
             static void   decode(void        *output,
@@ -38,7 +38,7 @@ namespace upsylon {
                                  const size_t size,
                                  size_t      *indices,
                                  const size_t primary_index,
-                                 modulation  &proc) throw();
+                                 Modulation  &proc) throw();
 		};
 
 	}

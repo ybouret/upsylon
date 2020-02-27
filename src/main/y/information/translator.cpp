@@ -3,7 +3,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
 
         Translator:: Translator() throw()
@@ -57,7 +57,7 @@ namespace upsylon {
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         const char Translator:: EncoderID[] = "Encoder";
         const char Translator:: DecoderID[] = "Decoder";

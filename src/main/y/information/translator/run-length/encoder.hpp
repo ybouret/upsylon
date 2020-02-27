@@ -8,7 +8,7 @@
 
 namespace upsylon {
     
-    namespace information {
+    namespace Information {
         
         namespace RunLength {
             
@@ -43,7 +43,7 @@ namespace upsylon {
                 int       preceding;   //!< preceding char
                 size_t    repeating;   //!< number of repeating same char
                 size_t    different;   //!< number of different chars in cache
-                qbits     Q;
+                IOBits    Q;
                 uint8_t   cache[MaxDifferent];
                 
                 void    emit();

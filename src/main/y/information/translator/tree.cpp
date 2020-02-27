@@ -4,7 +4,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         TranslatorTree:: ~TranslatorTree() throw()
         {
@@ -30,24 +30,12 @@ namespace upsylon {
             buildTree();
         }
 
-        void TranslatorTree:: inputByte(const uint8_t byte, qbits *io)
+        void TranslatorTree:: inputByte(const uint8_t byte, IOBits *io)
         {
             emitAndUpdateByte(byte,io);
             buildTree();
         }
 
-#if 0
-        void TranslatorTree:: writeBits(qbits &output, const char C)
-        {
-            inputByte(C,&output);
-        }
-
-        void TranslatorTree:: flushBits(qbits &output)
-        {
-            eos->emit(output);
-            output.zpad();
-        }
-#endif
         
     }
 

@@ -7,10 +7,10 @@
 #include "y/string.hpp"
 
 using namespace upsylon;
-
+using namespace Information;
 
 static inline void saveQ(const string &compName,
-                         qbits        &Q,
+                         IOBits       &Q,
                          list<char>   &S)
 {
     ios::ocstream fp(compName);
@@ -27,14 +27,14 @@ static inline void saveQ(const string &compName,
 Y_UTEST(qcodec)
 {
 
-    information::qencoder::pointer HuffmanEnc     = new information::Huffman::EncodingTree();
-    information::qencoder::pointer ShannonFanoEnc = new information::ShannonFano::EncodingTree();
+    qencoder::pointer HuffmanEnc     = new  Huffman::EncodingTree();
+    qencoder::pointer ShannonFanoEnc = new  ShannonFano::EncodingTree();
 
-    qbits HuffmanQ;
-    qbits ShannonFanoQ;
+    IOBits HuffmanQ;
+    IOBits ShannonFanoQ;
 
-    information::Huffman::Encoder     HuffmanEncoder;
-    information::ShannonFano::Encoder ShannonFanoEncoder;
+    Huffman::Encoder     HuffmanEncoder;
+    ShannonFano::Encoder ShannonFanoEncoder;
 
 
     if( argc > 1 )

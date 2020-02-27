@@ -1,10 +1,11 @@
-#include "y/information/qbits.hpp"
+#include "y/information/iobits.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "y/string/io.hpp"
 
 using namespace upsylon;
+using namespace Information;
 
 static inline size_t sumOf(const accessible<size_t> &sz )
 {
@@ -13,9 +14,9 @@ static inline size_t sumOf(const accessible<size_t> &sz )
     return ans;
 }
 
-Y_UTEST(qbits)
+Y_UTEST(IOBits)
 {
-    qbits Q;
+    IOBits Q;
 
     {
         std::cerr << "-- checking random packing" << std::endl;

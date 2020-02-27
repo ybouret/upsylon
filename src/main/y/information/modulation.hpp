@@ -8,23 +8,23 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         //! basic information modulation interface
-        class modulation : public counted_object
+        class Modulation : public counted_object
         {
         public:
-            typedef arc_ptr<modulation> pointer; //!< shared pointer
+            typedef arc_ptr<Modulation> pointer; //!< shared pointer
             
             //------------------------------------------------------------------
             //
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual            ~modulation()  throw();            //!< cleanup
+            virtual            ~Modulation()  throw();            //!< cleanup
             virtual void        reset()              throw() = 0; //!< restart state
             virtual uint8_t     fetch(const uint8_t) throw() = 0; //!< byte wise process
-            virtual modulation *clone() const                = 0; //!< clone with status
+            virtual Modulation *clone() const                = 0; //!< clone with status
             virtual const char *name()  const        throw() = 0; //!< identifier
 
             //------------------------------------------------------------------
@@ -43,10 +43,10 @@ namespace upsylon {
             void apply( memory::rw_buffer &buffer ) throw();
 
         protected:
-            explicit modulation() throw(); //!< setup
+            explicit Modulation() throw(); //!< setup
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(modulation);
+            Y_DISABLE_COPY_AND_ASSIGN(Modulation);
         };
     }
 

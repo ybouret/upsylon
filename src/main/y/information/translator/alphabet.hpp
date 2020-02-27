@@ -3,11 +3,11 @@
 #ifndef Y_INFORMATION_TRANSLATOR_ALPHABET_INCLUDED
 #define Y_INFORMATION_TRANSLATOR_ALPHABET_INCLUDED 1
 
-#include "y/information/qbits.hpp"
+#include "y/information/iobits.hpp"
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         
         //! base class for a dynamic alphabet
@@ -41,8 +41,8 @@ namespace upsylon {
                 Char    *prev;      //!< for list
                 void    *priv;      //!< private data
 
-                void emit( qbits &io ) const; //!< write code/bits
-                void display() const;         //!< display info
+                void emit(IOBits &io) const; //!< write code/bits
+                void display() const;        //!< display info
             };
 
             //! a dynamic list of chars
@@ -66,9 +66,9 @@ namespace upsylon {
             Char  *nyt;       //!< NYT
 
             explicit Alphabet(); //!< setup
-            void     emitAndUpdateByte(const uint8_t byte, qbits *io); //!< emit bits on io!=NULL, updated chars
-            void     initialize() throw();                      //!< prepare chars
-            void     rescaleFrequencies() throw();              //!< scale down used frequencies
+            void     emitAndUpdateByte(const uint8_t byte, IOBits *io); //!< emit bits on io!=NULL, updated chars
+            void     initialize() throw();                              //!< prepare chars
+            void     rescaleFrequencies() throw();                      //!< scale down used frequencies
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);

@@ -2,13 +2,13 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
-        modulation:: ~modulation() throw() {}
+        Modulation:: ~Modulation() throw() {}
 
-        modulation::  modulation() throw() {}
+        Modulation::  Modulation() throw() {}
 
-        void modulation:: apply(void *target, const void *source, const size_t length) throw()
+        void Modulation:: apply(void *target, const void *source, const size_t length) throw()
         {
             assert(!(0==target&&length>0));
             assert(!(0==source&&length>0));
@@ -21,12 +21,12 @@ namespace upsylon {
             }
         }
 
-        void modulation:: apply(void *target, const size_t length) throw()
+        void Modulation:: apply(void *target, const size_t length) throw()
         {
             apply(target,target,length);
         }
 
-        void  modulation:: apply( memory::rw_buffer &buffer ) throw()
+        void  Modulation:: apply( memory::rw_buffer &buffer ) throw()
         {
             apply( buffer.rw(), buffer.length() );
         }

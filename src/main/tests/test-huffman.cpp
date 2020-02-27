@@ -11,7 +11,7 @@
 #include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
-using namespace information;
+using namespace Information;
 
 
 

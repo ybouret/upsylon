@@ -6,7 +6,7 @@
 #include "y/string.hpp"
 
 using namespace upsylon;
-using namespace information;
+using namespace Information;
 
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"

@@ -6,22 +6,22 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         //! base class for simple echoing
-        class echo_modulation : public modulation
+        class EchoModulation : public Modulation
         {
         public:
             static const char   CLID[];                       //!< class identifier
             virtual const char *name() const         throw(); //!< CLID
-            explicit            echo_modulation()    throw(); //!< setup
-            virtual            ~echo_modulation()    throw(); //!< cleanup
+            explicit            EchoModulation()    throw(); //!< setup
+            virtual            ~EchoModulation()    throw(); //!< cleanup
             virtual void        reset()              throw(); //!< do nothing
             virtual uint8_t     fetch(const uint8_t) throw(); //!< do nothing
-            virtual modulation *clone() const;                //!< clone with status
+            virtual Modulation *clone() const;                //!< clone with status
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(echo_modulation);
+            Y_DISABLE_COPY_AND_ASSIGN(EchoModulation);
         };
 
     }

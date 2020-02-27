@@ -11,7 +11,7 @@
 #include "y/string/convert.hpp"
 
 using namespace upsylon;
-
+using namespace Information;
 
 #include "y/information/modulation/echo.hpp"
 #include "y/information/entropy.hpp"
@@ -32,49 +32,49 @@ void do_bwt(const string &input)
 
 
     vector<size_t> indices(n,0);
-    const size_t   pidx = information::bwt::encode(*output,*input,n,*indices);
+    const size_t   pidx =  bwt::encode(*output,*input,n,*indices);
     {
         ios::ocstream fp("bwt.bin"); fp << output;
         std::cerr << "$output      : " << S.of(output)      << std::endl;
-        information::bwt::decode(*decoded, *output, n, *indices, pidx);
+        bwt::decode(*decoded, *output, n, *indices, pidx);
         Y_CHECK( decoded == input );
     }
     {
-        information::echo_modulation echoEnc;
-        Y_CHECK(pidx==information::bwt::encode(*outputEcho,*input,n,*indices,echoEnc));
+        EchoModulation echoEnc;
+        Y_CHECK(pidx==bwt::encode(*outputEcho,*input,n,*indices,echoEnc));
         std::cerr << "$outputEcho  : " << S.of(outputEcho)  << std::endl;
         ios::ocstream fp("bwt-echo.bin"); fp << outputEcho;
-        auto_ptr<information::modulation> pEnc = echoEnc.clone();
+        auto_ptr<Modulation> pEnc = echoEnc.clone();
     }
     {
-        information::echo_modulation echoDec;
-        information::bwt::decode(*decoded, *outputEcho, n, *indices, pidx, echoDec);
+        EchoModulation echoDec;
+        bwt::decode(*decoded, *outputEcho, n, *indices, pidx, echoDec);
         Y_CHECK( decoded == input );
     }
     {
-        information::delta_encoder deltaEnc;
-        Y_CHECK(pidx==information::bwt::encode(*outputDelta,*input,n,*indices,deltaEnc));
+        DeltaEncoder deltaEnc;
+        Y_CHECK(pidx==bwt::encode(*outputDelta,*input,n,*indices,deltaEnc));
         ios::ocstream fp("bwt-delta.bin"); fp << outputDelta;
         std::cerr << "$outputDelta : " << S.of(outputDelta) << std::endl;
-        auto_ptr<information::modulation> pEnc = deltaEnc.clone();
+        auto_ptr<Modulation> pEnc = deltaEnc.clone();
     }
     {
-        information::delta_decoder deltaDec;
-        information::bwt::decode(*decoded, *outputDelta, n, *indices, pidx, deltaDec);
+        DeltaDecoder deltaDec;
+        bwt::decode(*decoded, *outputDelta, n, *indices, pidx, deltaDec);
         Y_CHECK( decoded == input );
     }
 
     {
-        information::mtf_encoder mtfEnc;
-        Y_CHECK(pidx==information::bwt::encode(*outputMTF,*input,n,*indices,mtfEnc));
+        MoveToFrontEncoder mtfEnc;
+        Y_CHECK(pidx==bwt::encode(*outputMTF,*input,n,*indices,mtfEnc));
         ios::ocstream fp("bwt-mtf.bin"); fp << outputMTF;
         std::cerr << "$outputMTF   : " << S.of(outputMTF)   << std::endl;
-        auto_ptr<information::modulation> pEnc = mtfEnc.clone();
+        auto_ptr<Modulation> pEnc = mtfEnc.clone();
     }
 
     {
-        information::mtf_decoder mtfDec;
-        information::bwt::decode(*decoded, *outputMTF, n, *indices, pidx, mtfDec);
+        MoveToFrontDecoder mtfDec;
+        bwt::decode(*decoded, *outputMTF, n, *indices, pidx, mtfDec);
         Y_CHECK( decoded == input );
     }
 

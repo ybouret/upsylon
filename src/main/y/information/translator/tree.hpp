@@ -7,7 +7,7 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
        
         //! base class to build trees from an alphabet
@@ -29,9 +29,9 @@ namespace upsylon {
             template <typename T> inline
             T *getExtra() throw() { assert(_extra); return static_cast<T *>(_extra); }
 
-            virtual void buildTree() throw() = 0;          //!< the main effort
-            void         setupTree() throw();              //!< initialize + buildTree
-            void         inputByte(const uint8_t,qbits *); //!< emitAndUpdate, buildTree
+            virtual void buildTree() throw() = 0;            //!< the main effort
+            void         setupTree() throw();                //!< initialize + buildTree
+            void         inputByte(const uint8_t, IOBits *); //!< emitAndUpdate, buildTree
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(TranslatorTree);

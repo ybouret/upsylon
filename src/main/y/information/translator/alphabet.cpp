@@ -6,10 +6,10 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
         
 
-        void Alphabet::Char::emit(qbits &io) const
+        void Alphabet::Char::emit(IOBits &io) const
         {
             io.push(code,bits);
         }
@@ -164,7 +164,7 @@ namespace upsylon {
         }
 
 
-       void Alphabet:: emitAndUpdateByte( const uint8_t byte, qbits *io )
+       void Alphabet:: emitAndUpdateByte( const uint8_t byte, IOBits *io )
         {
             Char *chr = charNodes + byte;
             if( chr->frequency++ <= 0 )

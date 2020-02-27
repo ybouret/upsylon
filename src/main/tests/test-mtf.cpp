@@ -3,15 +3,16 @@
 #include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
+using namespace Information;
 
 Y_UTEST(mtf)
 {
-    Y_UTEST_SIZEOF(information::mtf_encoder);
-    Y_UTEST_SIZEOF(information::mtf_decoder);
-    Y_UTEST_SIZEOF(information::mtf_modulation::node_t);
+    Y_UTEST_SIZEOF(MoveToFrontEncoder);
+    Y_UTEST_SIZEOF(MoveToFrontDecoder);
+    Y_UTEST_SIZEOF(MoveToFront::node_t);
 
-    information::mtf_encoder enc;
-    information::mtf_decoder dec;
+    MoveToFrontEncoder enc;
+    MoveToFrontDecoder dec;
 
     for(size_t i=100000;i>0;--i)
     {

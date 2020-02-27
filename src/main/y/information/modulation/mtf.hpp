@@ -7,16 +7,16 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
         //! move to front base class
-        class mtf_modulation : public modulation
+        class MoveToFront : public Modulation
         {
         public:
-            virtual        ~mtf_modulation() throw(); //!< cleanup
+            virtual        ~MoveToFront() throw(); //!< cleanup
             virtual void    reset()          throw(); //!< rebuild state
 
-            void duplicate( const mtf_modulation &m ) throw(); //!< duplicate ordering
+            void duplicate( const MoveToFront &m ) throw(); //!< duplicate ordering
 
             //! basic node for list
             struct node_t
@@ -27,44 +27,44 @@ namespace upsylon {
             };
             
         protected:
-            explicit mtf_modulation() throw();     //!< setup
+            explicit MoveToFront() throw();     //!< setup
 
             core::list_of<node_t>  list_;      //!< fast list
             node_t                 node_[256]; //!< built-in nodes
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(mtf_modulation);
+            Y_DISABLE_COPY_AND_ASSIGN(MoveToFront);
             void build() throw();
         };
 
         //! move to front encoder
-        class mtf_encoder : public mtf_modulation
+        class MoveToFrontEncoder : public MoveToFront
         {
         public:
             static const char   CLID[];                       //!< class identifier
             virtual const char *name() const         throw(); //!< CLID
-            virtual            ~mtf_encoder()        throw(); //!< cleanup
-            explicit            mtf_encoder()        throw(); //!< setup
+            virtual            ~MoveToFrontEncoder() throw(); //!< cleanup
+            explicit            MoveToFrontEncoder() throw(); //!< setup
             virtual uint8_t     fetch(const uint8_t) throw(); //!< encode
-            virtual modulation *clone()              const;   //!< a new mtf with same nodes ordering
+            virtual Modulation *clone()              const;   //!< a new mtf with same nodes ordering
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(mtf_encoder);
+            Y_DISABLE_COPY_AND_ASSIGN(MoveToFrontEncoder);
         };
 
         //! move to front decoder
-        class mtf_decoder : public mtf_modulation
+        class MoveToFrontDecoder : public MoveToFront
         {
         public:
             static const char   CLID[];                       //!< class identifier
             virtual const char *name() const         throw(); //!< CLID
-            virtual            ~mtf_decoder()        throw();//!< cleanup
-            explicit            mtf_decoder()        throw();//!< setup
-            virtual uint8_t     fetch(const uint8_t) throw();//!< decode
-            virtual modulation *clone()              const;   //!< a new mtf with same nodes ordering
+            virtual            ~MoveToFrontDecoder() throw(); //!< cleanup
+            explicit            MoveToFrontDecoder() throw(); //!< setup
+            virtual uint8_t     fetch(const uint8_t) throw(); //!< decode
+            virtual Modulation *clone()              const;   //!< a new mtf with same nodes ordering
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(mtf_decoder);
+            Y_DISABLE_COPY_AND_ASSIGN(MoveToFrontDecoder);
         };
 
     }

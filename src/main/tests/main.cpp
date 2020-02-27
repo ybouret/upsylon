@@ -147,11 +147,12 @@ Y_UTEST_INIT(256)
     Y_UTEST(spec_db);
     Y_UTEST(lzo);
     Y_UTEST(iobits);
+    
     Y_UTEST(mtf);
     Y_UTEST(delta);
     Y_UTEST(asf);
     Y_UTEST(bwt);
-    Y_UTEST(qbits);
+    Y_UTEST(IOBits);
     Y_UTEST(qcodec);
     Y_UTEST(huffman);
     Y_UTEST(shannon_fano);

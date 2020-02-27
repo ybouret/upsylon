@@ -206,13 +206,13 @@ ADD_TEST(codec:asf    test-main asf)
 ADD_TEST(codec:b64id  test-main b64id)
 
 SOURCE_GROUP(information FILES  
-test-mtf.cpp test-delta.cpp test-bwt.cpp test-qbits.cpp test-huffman.cpp test-shannon-fano.cpp test-rle.cpp test-pack.cpp
+test-mtf.cpp test-delta.cpp test-bwt.cpp test-info-iobits.cpp test-huffman.cpp test-shannon-fano.cpp test-rle.cpp test-pack.cpp
 test-info-bytewise.cpp test-qcodec.cpp
 )
 ADD_TEST(info:mtf          test-main mtf)
 ADD_TEST(info:delta        test-main delta)
 ADD_TEST(info:bwt          test-main bwt)
-ADD_TEST(info:qbits        test-main qbits)
+ADD_TEST(info:iobits       test-main IOBits)
 ADD_TEST(info:huffman      test-main huffman ${HERE}/words.db)
 ADD_TEST(info:shannon_fano test-main shannon_fano ${HERE}/words.db)
 ADD_TEST(info:rle          test-main rle ${HERE}/words.db)
