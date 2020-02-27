@@ -20,7 +20,7 @@ static const char   program[] = #NAME;   (void)program ;              \
 const char _check[] = "CHECK [" #CODE "]";                               \
 std::cerr << _check;                                                     \
 if(!(CODE)) throw upsylon::exception(" [FAILED] <<" #CODE ">>");         \
-for(int i=sizeof(_check)/sizeof(_check[0])-1;i<64;++i) std::cerr << ' '; \
+for(int i=sizeof(_check)/sizeof(_check[0])-1;i<48;++i) std::cerr << ' '; \
 std::cerr << "[PASSED]" << std::endl;                                    \
 } while(false)
 
