@@ -1,5 +1,7 @@
 PROJECT(test-main)
 
+IF(FALSE)
+
 ADD_EXECUTABLE(test-lzo ../y/codec/lzo/testmini.c)
 TARGET_LINK_Y(test-lzo)
 ADD_CUSTOM_COMMAND(
@@ -7,6 +9,8 @@ TARGET             test-lzo
 POST_BUILD COMMAND test-lzo
 COMMENT            "Testing LZO"
 )
+
+ENDIF()
 
 FILE(GLOB srcs test-*.cpp)
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -198,12 +202,6 @@ ADD_TEST(sort:nw          test-main nwsrt)
 ADD_TEST(sort:locate      test-main locate)
 ADD_TEST(sort:classes     test-main classes)
 
-SOURCE_GROUP(codec FILES test-iobits.cpp test-base64.cpp test-lzo.cpp  test-asf.cpp)
-ADD_TEST(codec:iobits test-main iobits)
-ADD_TEST(codec:base64 test-main base64 NULL)
-ADD_TEST(codec:lzo    test-main lzo)
-ADD_TEST(codec:asf    test-main asf)
-ADD_TEST(codec:b64id  test-main b64id)
 
 SOURCE_GROUP(information FILES  
 test-mtf.cpp test-delta.cpp test-bwt.cpp test-info-iobits.cpp test-huffman.cpp test-shannon-fano.cpp test-rle.cpp test-pack.cpp

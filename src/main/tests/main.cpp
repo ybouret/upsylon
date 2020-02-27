@@ -140,17 +140,11 @@ Y_UTEST_INIT(256)
     Y_UTEST(points);
     Y_UTEST(tuple);
     Y_UTEST(release);
-    Y_UTEST(base64);
-    Y_UTEST(u64);
-    Y_UTEST(b64id);
     Y_UTEST(spec);
     Y_UTEST(spec_db);
-    Y_UTEST(lzo);
-    Y_UTEST(iobits);
-    
+
     Y_UTEST(mtf);
     Y_UTEST(delta);
-    Y_UTEST(asf);
     Y_UTEST(bwt);
     Y_UTEST(IOBits);
     Y_UTEST(qcodec);
@@ -214,7 +208,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(oxide_par);
     Y_UTEST(oxide_grids);
 
-    Y_UTEST(magic);
     Y_UTEST(zfi);
     Y_UTEST(closest);
 }

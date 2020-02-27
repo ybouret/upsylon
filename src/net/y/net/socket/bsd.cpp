@@ -8,8 +8,6 @@
 #include "y/exceptions.hpp"
 #endif
 
-#include "y/codec/base64.hpp"
-
 namespace upsylon
 {
     namespace net

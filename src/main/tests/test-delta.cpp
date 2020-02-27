@@ -10,7 +10,7 @@ Y_UTEST(delta)
     Y_UTEST_SIZEOF(DeltaEncoder);
     Y_UTEST_SIZEOF(DeltaEncoder);
     DeltaEncoder enc;
-    DeltaEncoder dec;
+    DeltaDecoder dec;
 
     for(size_t i=100000;i>0;--i)
     {

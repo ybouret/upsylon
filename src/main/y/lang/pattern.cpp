@@ -3,8 +3,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/ios/tools/graphviz.hpp"
 #include "y/ios/osstream.hpp"
-#include "y/codec/base64.hpp"
-#include "y/type/bzset.hpp"
+ #include "y/type/bzset.hpp"
 
 namespace upsylon {
 

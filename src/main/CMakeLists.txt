@@ -172,15 +172,6 @@ SET(information_translator_run_length_srcs ${information_translator_run_length_d
 SOURCE_GROUP( information/translator/run_length FILES ${information_translator_run_length_srcs} )
 INSTALL( FILES ${information_translator_run_length_decl} DESTINATION include/y/information/translator/run-length )
 
-FILE(GLOB codec_decl y/codec/*.hpp)
-FILE(GLOB codec_code y/codec/*.cpp)
-SET(codec_srcs ${codec_decl} ${codec_code})
-SOURCE_GROUP( codec FILES ${codec_srcs} )
-INSTALL( FILES ${codec_decl} DESTINATION include/y/codec )
-
-SET(lzo_srcs y/codec/lzo/minilzo.c)
-SOURCE_GROUP( codec/lzo FILES ${lzo_srcs} )
-
 FILE(GLOB fft_decl y/fft/*.hpp)
 FILE(GLOB fft_code y/fft/*.cpp)
 SET(fft_srcs ${fft_decl} ${fft_code})

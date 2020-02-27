@@ -22,7 +22,6 @@ const string p_bin = p->to_binary();                                \
 const string q_bin = q->to_binary();                                \
 Y_CHECK(p_bin==q_bin);                                              \
 }                                                                   \
-std::cerr << "\t|_b64=" << p->to_base64() << std::endl;             \
 dict(#EXPR,p.yield());                                              \
 std::cerr << std::endl;                                             \
 } while(false)

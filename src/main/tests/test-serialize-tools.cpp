@@ -16,8 +16,8 @@ namespace {
         hashing::sha1            H;
         std::cerr << "org=[" << t << "]" << std::endl;
 
-        const string b64 = s.to_base64();
-        std::cerr << "b64=[" << b64 << "]" << std::endl;
+        //const string b64 = s.to_base64();
+        //std::cerr << "b64=[" << b64 << "]" << std::endl;
 
         const size_t hkey = ios::serialized::key<size_t>(s,H);
         std::cerr << "hkey=" << hkey << std::endl;

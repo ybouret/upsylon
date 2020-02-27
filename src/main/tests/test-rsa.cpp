@@ -3,7 +3,6 @@
 #include "y/ios/icstream.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/codec/base64.hpp"
 #include "y/string/convert.hpp"
 #include "y/ios/osstream.hpp"
 #include "y/ios/imstream.hpp"

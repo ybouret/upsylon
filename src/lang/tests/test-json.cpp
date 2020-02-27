@@ -102,11 +102,11 @@ Y_UTEST(json)
         ast->save_to(binfile);
 
         auto_ptr<Syntax::Node> reloaded = Syntax::Node::Load( Module::OpenFile(binfile),*P);
-        const string ast64 = ast->to_base64();
-        const string bin64 = reloaded->to_base64();
+        const string astStr = ast->to_binary();
+        const string binStr = reloaded->to_binary();
         //std::cerr << "ast: " << ast64 << std::endl;
         //std::cerr << "bin: " << bin64 << std::endl;
-        Y_CHECK(ast64==bin64);
+        Y_CHECK(astStr==binStr);
 
         Syntax::Analyzer a;
         a.walk(*ast);

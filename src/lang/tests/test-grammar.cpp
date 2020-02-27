@@ -64,19 +64,19 @@ Y_UTEST(grammar)
             std::cerr << "parsed..." << std::endl;
             cst->graphViz("cst.dot");
             cst->save_to("cst.bin");
-            s1 = cst->to_base64();
+            s1 = cst->to_binary();
             Syntax::Analyzer a;
             a.walk( *cst );
         }
-        std::cerr << "s1=" << s1 << std::endl;
+        //std::cerr << "s1=" << s1 << std::endl;
         string s2;
         {
             Source source( Module::OpenFile("cst.bin") );
             auto_ptr<Syntax::Node> cst = Syntax::Node::Load(source,G);
             cst->graphViz("cst2.dot");
-            s2 = cst->to_base64();
+            s2 = cst->to_binary();
         }
-        std::cerr << "s2=" << s2 << std::endl;
+        //std::cerr << "s2=" << s2 << std::endl;
         Y_CHECK(s1==s2);
 
 
