@@ -11,7 +11,7 @@ namespace upsylon {
 
     namespace Information {
 
-        class qencoder : public IOBits::broker
+        class qencoder : public IOBits::Broker
         {
         public:
             typedef arc_ptr<qencoder> pointer;

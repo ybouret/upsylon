@@ -124,13 +124,35 @@ namespace upsylon {
         inline virtual void reserve(const size_t n) throw() { __reserve(n); }
 
         //! sequence interface: push_back()
-        inline virtual void push_back( param_type args )
+        inline virtual void push_back(param_type args)
         {
             nodes.push_back( query(args) );
         }
 
         //! sequence interface: push_back()
-        inline virtual void push_front( param_type args ) { nodes.push_front( query(args) ); }
+        inline virtual void push_front(param_type args)
+        {
+            nodes.push_front( query(args) );
+        }
+
+        //! specific: is enough memory
+        inline void push_back_(param_type args)
+        {
+            nodes.push_back( query_(args) );
+        }
+
+        //! specific: is enough memory
+        inline void push_front_(param_type args)
+        {
+            nodes.push_front( query_(args) );
+        }
+
+        //! specific
+        inline void guarantee(const size_t n)
+        {
+            while(cache.size<n) cache.store( object::acquire1<node_type>() );
+        }
+
         //! sequence interface: back()
         inline virtual type       & back() throw()       { assert(nodes.size>0); return nodes.tail->data; }
         //! sequence interface: back() const
@@ -285,7 +307,22 @@ namespace upsylon {
             return (cache.size>0) ? cache.query() : object::acquire1<node_type>();
         }
 
-        inline node_type *query(param_type args)
+        inline node_type *query_(const_type &args)
+        {
+            assert(cache.size>0);
+            node_type *node = cache.query();
+            try {
+                new (node) node_type(args);
+            }
+            catch(...)
+            {
+                cache.store(node);
+                throw;
+            }
+            return node;
+        }
+
+        inline node_type *query(const_type &args)
         {
             node_type *node = query_dead_node();
             try

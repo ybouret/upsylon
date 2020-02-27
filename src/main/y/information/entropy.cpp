@@ -7,25 +7,25 @@
 
 namespace upsylon {
 
-    namespace information {
+    namespace Information {
 
-        entropy:: entropy() throw() :
+        Entropy:: Entropy() throw() :
         frequency()
         {
             reset();
         }
 
-        entropy:: ~entropy() throw()
+        Entropy:: ~Entropy() throw()
         {
             reset();
         }
 
-        void entropy:: reset() throw()
+        void Entropy:: reset() throw()
         {
             memset(frequency,0,sizeof(frequency));
         }
 
-        entropy & entropy:: update( const void *data, const size_t size ) throw()
+        Entropy & Entropy:: update( const void *data, const size_t size ) throw()
         {
             assert( !(0==data&&size>0) );
             const uint8_t *u = static_cast<const uint8_t *>(data);
@@ -36,12 +36,12 @@ namespace upsylon {
             return *this;
         }
 
-        entropy & entropy:: operator<<( const char *text ) throw()
+        Entropy & Entropy:: operator<<( const char *text ) throw()
         {
             return update( text, text ? strlen(text) : 0 );
         }
 
-        entropy & entropy:: operator<<( const memory::ro_buffer &buff ) throw()
+        Entropy & Entropy:: operator<<( const memory::ro_buffer &buff ) throw()
         {
             return update( buff.ro(), buff.length() );
          }
@@ -53,7 +53,7 @@ namespace upsylon {
             return (L<R) ? -1 : ( (R<L) ? 1 : 0);
         }
 
-        double entropy:: operator*() const throw()
+        double Entropy:: operator*() const throw()
         {
             double proba[256] = {0};
             size_t count      = 0;
@@ -90,17 +90,17 @@ namespace upsylon {
         }
 
 
-        double entropy:: of( const void *data, const size_t size ) throw()
+        double Entropy:: of( const void *data, const size_t size ) throw()
         {
             reset(); return *update(data,size);
         }
 
-        double entropy:: of( const char *text ) throw()
+        double Entropy:: of( const char *text ) throw()
         {
             reset(); return *( *this << text);
         }
 
-        double entropy:: of( const memory::ro_buffer &buff  ) throw()
+        double Entropy:: of( const memory::ro_buffer &buff  ) throw()
         {
             reset(); return *( *this << buff );
         }

@@ -16,7 +16,7 @@ namespace upsylon {
         public:
             static const char FMID[]; //!< Bytewise
             
-            explicit BytewiseTranslator(const Modulation::pointer &) throw(); //!< setup
+            explicit BytewiseTranslator(const Modulation::Pointer &) throw(); //!< setup
             explicit BytewiseTranslator(Modulation *) throw();                //!< setup from a new modulation, echo by default
             virtual ~BytewiseTranslator() throw();                            //!< cleanup
 
@@ -29,7 +29,7 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BytewiseTranslator);
             uint64_t            wksp[4];
-            Modulation::pointer transform;
+            Modulation::Pointer transform;
         };
 
     }

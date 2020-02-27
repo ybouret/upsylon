@@ -372,6 +372,8 @@ namespace upsylon {
         TS(double);
         TS(long double);
 
+        TS(bool);
+
         TS(string);
 
         TS(complex<float>);

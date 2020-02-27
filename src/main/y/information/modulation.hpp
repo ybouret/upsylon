@@ -14,7 +14,7 @@ namespace upsylon {
         class Modulation : public counted_object
         {
         public:
-            typedef arc_ptr<Modulation> pointer; //!< shared pointer
+            typedef arc_ptr<Modulation> Pointer; //!< shared pointer
             
             //------------------------------------------------------------------
             //

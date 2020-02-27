@@ -10,30 +10,30 @@ namespace upsylon {
 	namespace Information 	{
         
         //! Burrows Wheeler Transform
-		struct bwt
+		struct BWT
 		{
             //! forward transformation, returns the primary index
-			static size_t encode(void        *output,
+			static size_t Encode(void        *output,
                                  const void  *input,
                                  const size_t size,
                                  size_t      *indices) throw();
 
             //! reverse transformation using the primary index
-			static void   decode(void        *output,
+			static void   Decode(void        *output,
                                  const void  *input,
                                  const size_t size,
                                  size_t      *indices,
                                  const size_t primary_index) throw();
 
             //! forward transformation with shaker
-            static size_t encode(void        *output,
+            static size_t Encode(void        *output,
                                  const void  *input,
                                  const size_t size,
                                  size_t      *indices,
                                  Modulation  &proc) throw();
 
             //! reverse transformation using the primary index
-            static void   decode(void        *output,
+            static void   Decode(void        *output,
                                  void        *input,
                                  const size_t size,
                                  size_t      *indices,

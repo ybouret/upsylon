@@ -27,46 +27,46 @@ void do_bwt(const string &input)
     string         outputMTF(n,as_capacity,true);
     string         decoded(n,as_capacity,true);
 
-    information::entropy S;
+    Entropy S;
     std::cerr << "$input       : " << S.of(input)       << std::endl;
 
 
     vector<size_t> indices(n,0);
-    const size_t   pidx =  bwt::encode(*output,*input,n,*indices);
+    const size_t   pidx =  BWT::Encode(*output,*input,n,*indices);
     {
         ios::ocstream fp("bwt.bin"); fp << output;
         std::cerr << "$output      : " << S.of(output)      << std::endl;
-        bwt::decode(*decoded, *output, n, *indices, pidx);
+        BWT::Decode(*decoded, *output, n, *indices, pidx);
         Y_CHECK( decoded == input );
     }
     {
         EchoModulation echoEnc;
-        Y_CHECK(pidx==bwt::encode(*outputEcho,*input,n,*indices,echoEnc));
+        Y_CHECK(pidx==BWT::Encode(*outputEcho,*input,n,*indices,echoEnc));
         std::cerr << "$outputEcho  : " << S.of(outputEcho)  << std::endl;
         ios::ocstream fp("bwt-echo.bin"); fp << outputEcho;
         auto_ptr<Modulation> pEnc = echoEnc.clone();
     }
     {
         EchoModulation echoDec;
-        bwt::decode(*decoded, *outputEcho, n, *indices, pidx, echoDec);
+        BWT::Decode(*decoded, *outputEcho, n, *indices, pidx, echoDec);
         Y_CHECK( decoded == input );
     }
     {
         DeltaEncoder deltaEnc;
-        Y_CHECK(pidx==bwt::encode(*outputDelta,*input,n,*indices,deltaEnc));
+        Y_CHECK(pidx==BWT::Encode(*outputDelta,*input,n,*indices,deltaEnc));
         ios::ocstream fp("bwt-delta.bin"); fp << outputDelta;
         std::cerr << "$outputDelta : " << S.of(outputDelta) << std::endl;
         auto_ptr<Modulation> pEnc = deltaEnc.clone();
     }
     {
         DeltaDecoder deltaDec;
-        bwt::decode(*decoded, *outputDelta, n, *indices, pidx, deltaDec);
+        BWT::Decode(*decoded, *outputDelta, n, *indices, pidx, deltaDec);
         Y_CHECK( decoded == input );
     }
 
     {
         MoveToFrontEncoder mtfEnc;
-        Y_CHECK(pidx==bwt::encode(*outputMTF,*input,n,*indices,mtfEnc));
+        Y_CHECK(pidx==BWT::Encode(*outputMTF,*input,n,*indices,mtfEnc));
         ios::ocstream fp("bwt-mtf.bin"); fp << outputMTF;
         std::cerr << "$outputMTF   : " << S.of(outputMTF)   << std::endl;
         auto_ptr<Modulation> pEnc = mtfEnc.clone();
@@ -74,7 +74,7 @@ void do_bwt(const string &input)
 
     {
         MoveToFrontDecoder mtfDec;
-        bwt::decode(*decoded, *outputMTF, n, *indices, pidx, mtfDec);
+        BWT::Decode(*decoded, *outputMTF, n, *indices, pidx, mtfDec);
         Y_CHECK( decoded == input );
     }
 

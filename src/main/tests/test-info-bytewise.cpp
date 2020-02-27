@@ -20,7 +20,7 @@ Y_UTEST(bytewise)
     Y_UTEST_SIZEOF(DeltaEncoder);
     Y_UTEST_SIZEOF(DeltaDecoder);
 
-    const Modulation::pointer p = new MoveToFrontEncoder();
+    const Modulation::Pointer p = new MoveToFrontEncoder();
 
     BytewiseTranslator mtf( p );
     BytewiseTranslator unmtf( new MoveToFrontDecoder() );

@@ -5,7 +5,7 @@ namespace upsylon {
 
     namespace Information {
 
-        qencoder:: qencoder() throw() : IOBits::broker()
+        qencoder:: qencoder() throw() : IOBits::Broker()
         {
         }
 

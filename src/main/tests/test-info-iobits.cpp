@@ -1,8 +1,11 @@
 #include "y/information/iobits.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
+
 #include "y/string.hpp"
 #include "y/string/io.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace Information;
@@ -16,7 +19,9 @@ static inline size_t sumOf(const accessible<size_t> &sz )
 
 Y_UTEST(IOBits)
 {
+    Y_UTEST_SIZEOF(bool);
     IOBits Q;
+
 
     {
         std::cerr << "-- checking random packing" << std::endl;
@@ -152,6 +157,56 @@ Y_ASSERT( a_##TYPE == b_##TYPE );        \
         ibits.push_back(b);
     }
 
+    {
+        std::cerr << "-- Building Flags Table" << std::endl;
+        ios::ocstream fp( "iobytes.inc" );
+        bool flags[256][8];
+        memset(flags,0,sizeof(flags));
+        std::cerr << "sizeof(flags)=" << sizeof(flags) << std::endl;
+        for(unsigned i=0;i<256;++i)
+        {
+            Q.free();
+            const uint8_t byte = uint8_t(i);
+            Q.push(byte);
+            Y_ASSERT(Q.size()==8);
+            //std::cerr << "Q[" << i << "]=" << Q << std::endl;
+            fp << '{';
+            size_t j=0;
+            for( IOBits::reverse_iterator it=Q.rbegin(); j<8; ++j, ++it)
+            {
+                const bool code = *it;
+                flags[i][j] = code;
+                if(code)
+                {
+                    fp << "  true";
+                }
+                else
+                {
+                    fp << " false";
+                }
+                if(j<7) fp << ',';
+            }
+            fp << ' ' << '}';
+            if(i<255) fp << ','; else fp << ' ';
+            fp(" // 0x%02x = %u", i,i);
+            fp  << '\n';
+        }
+
+        std::cerr << "-- Testing Flags Table" << std::endl;
+        Q.release();
+        Q.guarantee(8);
+
+        for(unsigned i=0;i<256;++i)
+        {
+            Q.free();
+            for(unsigned j=0;j<8;++j)
+            {
+                Q.push_front_( flags[i][j] );
+            }
+            Y_ASSERT(Q.pop<uint8_t>() == i );
+        }
+
+    }
 
 }
 Y_UTEST_DONE()

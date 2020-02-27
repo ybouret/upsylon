@@ -12,22 +12,16 @@ namespace upsylon {
 
     namespace Information {
 
-        //! Queue Bit
-        struct BitFormat
-        {
-            template <typename T> struct Table; //!< table of bits declaration
-        };
+        template <typename T> struct TableOf;
 
-        //! declare table for specific bits
-#define Y_QBIT_TABLE(BITS) \
-template <> struct BitFormat::Table<uint##BITS##_t> {\
+#define Y_INFO_TABLE(BITS) template <> struct TableOf<uint##BITS##_t> {\
 static const uint##BITS##_t Bit[BITS];\
 }
 
-        Y_QBIT_TABLE(8);  //!< for 8 bits
-        Y_QBIT_TABLE(16); //!< for 16 bits
-        Y_QBIT_TABLE(32); //!< for 32 bits
-        Y_QBIT_TABLE(64); //!< for 64 bits
+        Y_INFO_TABLE(8);  //!< for 8 bits
+        Y_INFO_TABLE(16); //!< for 16 bits
+        Y_INFO_TABLE(32); //!< for 32 bits
+        Y_INFO_TABLE(64); //!< for 64 bits
 
         typedef list<bool> IOBits_;//!< base class for IOBits
 
@@ -36,18 +30,15 @@ static const uint##BITS##_t Bit[BITS];\
         class IOBits : public IOBits_, public ios::ostream, public ios::istream
         {
         public:
-            explicit IOBits() throw(); //!< setup
+            explicit IOBits() throw();             //!< setup
             explicit IOBits(const size_t) throw(); //!< setup with capacity
-            virtual ~IOBits() throw(); //!< cleanup
-
-
+            virtual ~IOBits() throw();             //!< cleanup
 
             bool pop() throw();    //!< pop front bit
 
             //! push partial, integral unsigned type
             template <typename T>
-            inline void _push(T      word,
-                              size_t bits)
+            inline void _push(T word,size_t bits)
             {
                 static const T      _1(1);
                 static const T      _0(0);
@@ -75,6 +66,7 @@ static const uint##BITS##_t Bit[BITS];\
                 _push<typename unsigned_int< sizeof(T) >::type>(w,bits);
             }
 
+            
             //! push a full integral type
             template <typename T>
             inline void push(const T &word)
@@ -93,7 +85,7 @@ static const uint##BITS##_t Bit[BITS];\
                 {
                     if( pop() )
                     {
-                        ans |= BitFormat::Table<T>::Bit[i];
+                        ans |= TableOf<T>::Bit[i];
                     }
                 }
                 return ans;
@@ -137,17 +129,17 @@ static const uint##BITS##_t Bit[BITS];\
             void compile( sequence<char> & ); //!< write all possible chars
             void zfinish( sequence<char> & ); //!< zpad and write possible chars
 
-            class broker : public virtual counted_object
+            class Broker : public virtual counted_object
             {
             public:
-                virtual ~broker() throw();
+                virtual ~Broker() throw();
                 virtual void startBits() throw() = 0;
 
             protected:
-                explicit broker() throw();
+                explicit Broker() throw();
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(broker);
+                Y_DISABLE_COPY_AND_ASSIGN(Broker);
             };
 
         private:

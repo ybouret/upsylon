@@ -32,7 +32,7 @@ namespace upsylon {
             };
         }
 
-        size_t bwt::encode( void *output, const void *input, const size_t size, size_t *indices) throw()
+        size_t BWT::Encode( void *output, const void *input, const size_t size, size_t *indices) throw()
         {
             assert(!(NULL==output&&size>0));
             assert(!(NULL==input&&size>0));
@@ -76,7 +76,7 @@ namespace upsylon {
             }
         }
 
-        size_t bwt::encode(void *output, const void *input, const size_t size, size_t *indices, Modulation &proc) throw()
+        size_t BWT::Encode(void *output, const void *input, const size_t size, size_t *indices, Modulation &proc) throw()
         {
             assert(!(NULL==output&&size>0));
             assert(!(NULL==input&&size>0));
@@ -130,7 +130,7 @@ namespace upsylon {
 #define Y_BWT_Z256 Y_BWT_Z128, Y_BWT_Z128
 
 
-        void   bwt:: decode( void *output, const void *input, const size_t size, size_t *indices, const size_t primary_index) throw()
+        void   BWT:: Decode( void *output, const void *input, const size_t size, size_t *indices, const size_t primary_index) throw()
         {
             assert(!(NULL==output&&size>0));
             assert(!(NULL==input&&size>0));
@@ -166,7 +166,7 @@ namespace upsylon {
 
         }
 
-        void  bwt:: decode(void        *output,
+        void  BWT:: Decode(void        *output,
                            void        *input,
                            const size_t size,
                            size_t      *indices,

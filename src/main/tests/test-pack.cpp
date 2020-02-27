@@ -29,7 +29,7 @@ Y_UTEST(pack)
     string               output(sz, as_capacity, true );
     vector<size_t>       indices(sz,0);
     MoveToFrontEncoder   mtf;
-    bwt::encode(*output, *input, sz, *indices,mtf);
+    BWT::Encode(*output, *input, sz, *indices,mtf);
     {
         ios::ocstream fp("ipack.bin"); fp << input;
     }

@@ -14,7 +14,7 @@ namespace upsylon {
 
         }
 
-        BytewiseTranslator:: BytewiseTranslator( const Modulation::pointer & m ) throw() :
+        BytewiseTranslator:: BytewiseTranslator( const Modulation::Pointer & m ) throw() :
         wksp(),
         transform(m)
         {

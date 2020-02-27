@@ -30,7 +30,7 @@ namespace upsylon
         //
         // non-virtual interface
         //______________________________________________________________________
-
+        
         //! ensure the total capacity is greater or equal to max_items
         inline void ensure(const size_t max_items)
         {
