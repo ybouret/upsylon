@@ -47,6 +47,13 @@ namespace upsylon {
                            const string &backName,
                            Translator   *decoder);
 
+
+            string toString(ios::istream &source, size_t *sourceLength = 0);
+            string toString(const void *buffer, const size_t length);
+            string toString(const char *text);
+            string toString(const memory::ro_buffer &buffer);
+
+
         protected:
             explicit Translator() throw();
 

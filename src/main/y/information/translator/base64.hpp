@@ -39,6 +39,7 @@ namespace upsylon {
             static const char    std_table[64];  //!< standard encoding table
             static const char    url_table[64];  //!< url encoding table
             static const uint8_t inv_table[256]; //!< inverse table
+            static const char    FMID[];         //!< "Base64"
             
             static size_t BytesFor(const size_t inputLength, const Mode m) throw();                //!< number of bytes to encode inputLength
             static void   Encode3to4(void *target, const void *source, const char *table) throw(); //!< 'ABC'  -> 'WXYZ'

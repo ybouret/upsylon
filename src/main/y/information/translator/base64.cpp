@@ -5,7 +5,8 @@ namespace upsylon {
 
     namespace Information {
 
-
+        const char Base64:: FMID[] = "Base64";
+        
         size_t Base64:: BytesFor(const size_t inputLength, const Mode m) throw()
         {
             const size_t num3 = inputLength/3;

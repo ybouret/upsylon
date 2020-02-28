@@ -1,5 +1,9 @@
 
 #include "y/information/translator.hpp"
+#include "y/ios/osstream.hpp"
+#include "y/ios/imstream.hpp"
+
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -43,13 +47,40 @@ namespace upsylon {
             return n_out;
         }
 
+        string Translator:: toString(ios::istream &source, size_t *sourceLength)
+        {
+            string ans;
+            {
+                ios::osstream target(ans);
+                const size_t  nw = process( target, source, sourceLength );
+                if( ans.size() != nw ) throw exception("Translator::toString I/O error");
+            }
+            return ans;
+        }
+
+        string Translator:: toString(const void *buffer, const size_t length)
+        {
+            assert(!(NULL==buffer&&length>0));
+            ios::imstream source(buffer,length);
+            return toString(source);
+        }
+
+        string Translator:: toString(const char *text)
+        {
+            return toString( text, length_of(text) );
+        }
+
+        string Translator:: toString( const memory::ro_buffer &buffer )
+        {
+            return toString( buffer.ro(), buffer.length() );
+        }
+
     }
 }
 
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/type/cswap.hpp"
-#include "y/exception.hpp"
 #include "y/string.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/fs/disk/file.hpp"
@@ -135,8 +166,8 @@ namespace upsylon {
                 }
                 std::cerr << "<decoding with " << decoder->family() << " " << decoder->name() << "/>" << std::endl << std::endl;
             }
-
-
         }
+
+
     }
 }

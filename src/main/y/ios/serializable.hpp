@@ -50,7 +50,7 @@ namespace upsylon
 
 
             string to_binary()    const; //!< serialize into a string
-            //string to_base64()    const; //!< serialize and convert into base64
+            string to_base64()    const; //!< serialize and convert into base64
             string to_visible()   const; //!< serialize to a visible string
             string to_printable() const; //!< serialize to a printable string
             

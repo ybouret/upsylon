@@ -1,5 +1,6 @@
 #include "y/information/translator/uuid64.hpp"
-#include "y/information/translator/base64.hpp"
+#include "y/information/translator/base64/encoder.hpp"
+#include "y/information/translator/base64/decoder.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -61,29 +62,27 @@ Y_UTEST(base64)
     doUUID<int32_t>();
     doUUID<uint64_t>();
     doUUID<bool>();
-    
+
+    Base64Encoder enc64raw( Base64::Raw );
+    Base64Encoder enc64pad( Base64::Pad );
+    Base64Decoder dec64;
 
     if( argc > 1 )
     {
         const string  fileName = argv[1];
-        ios::icstream fp( fileName );
-        string line;
-        while( (std::cerr << ">").flush(), fp.gets(line) )
         {
-            {
-                const size_t len = Base64::BytesFor(line.size(), Base64::Pad);
-                string       b64(len,as_capacity,true);
-                Base64::Encode(*b64, *line, line.size(), Base64::std_table, Base64::Pad);
-                std::cerr << "\t" << b64 << std::endl;
-            }
-            
-            {
-                const size_t len = Base64::BytesFor(line.size(), Base64::Raw);
-                string       b64(len,as_capacity,true);
-                Base64::Encode(*b64, *line, line.size(), Base64::std_table, Base64::Raw);
-                std::cerr << "\t" << b64 << std::endl;
-            }
+            const string  compName = "base64raw.bin";
+            const string  backName = "back64raw.bin";
+            enc64raw.testCODEC(fileName, compName, backName, &dec64);
         }
+
+        if( fileName != Y_STDIN )
+        {
+            const string  compName = "base64pad.bin";
+            const string  backName = "back64pad.bin";
+            enc64pad.testCODEC(fileName, compName, backName, &dec64);
+        }
+
     }
     else
     {
