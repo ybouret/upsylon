@@ -3,6 +3,7 @@
 #define Y_NET_BSD_SOCKET_INCLUDED 1
 
 #include "y/net/net.hpp"
+#include "y/information/translator/uuid64.hpp"
 
 namespace upsylon
 {
@@ -31,6 +32,7 @@ namespace upsylon
         class bsd_socket : public net_object
         {
         public:
+            typedef uuid64<socket_id_t> name_type;
             //typedef base64_name<socket_id_t> name_type; //!< alias for named socket
 
             //__________________________________________________________________
@@ -107,7 +109,7 @@ namespace upsylon
         public:
             socket_type        sock;  //!< internal system socket
             const socket_id_t  uuid;  //!< socket unique identifier
-            //const name_type    name;  //!< base64 uuid
+            const name_type    name;  //!< uuid64
 
 
         private:

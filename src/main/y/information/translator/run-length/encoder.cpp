@@ -43,6 +43,7 @@ namespace upsylon {
             preceding(-1),
             repeating( 0),
             different( 0),
+            Q(),
             cache()
             {
                 //characterEncoder.startBits();

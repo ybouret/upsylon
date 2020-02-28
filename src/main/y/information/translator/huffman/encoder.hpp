@@ -14,6 +14,7 @@ namespace upsylon {
 
         namespace Huffman {
 
+            //! use Tree to build Encoder base class
             typedef EncodingWith<Tree> EncodingTree;
             
 

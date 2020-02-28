@@ -172,6 +172,13 @@ SET(information_translator_run_length_srcs ${information_translator_run_length_d
 SOURCE_GROUP( information/translator/run_length FILES ${information_translator_run_length_srcs} )
 INSTALL( FILES ${information_translator_run_length_decl} DESTINATION include/y/information/translator/run-length )
 
+FILE(GLOB information_translator_base64_decl y/information/translator/base64/*.hpp)
+FILE(GLOB information_translator_base64_code y/information/translator/base64/*.cpp)
+SET(information_translator_base64_srcs ${information_translator_base64_decl} ${information_translator_base64_code})
+SOURCE_GROUP( information/translator/base64 FILES ${information_translator_base64_srcs} )
+INSTALL( FILES ${information_translator_base64_decl} DESTINATION include/y/information/translator/base64 )
+
+
 FILE(GLOB fft_decl y/fft/*.hpp)
 FILE(GLOB fft_code y/fft/*.cpp)
 SET(fft_srcs ${fft_decl} ${fft_code})
@@ -380,7 +387,8 @@ ${information_translator_srcs}
 ${information_translator_huffman_srcs}  
 ${information_translator_shannon_fano_srcs}
 ${information_translator_rle_srcs} 
-${information_translator_run_length_srcs} 
+${information_translator_run_length_srcs}
+${information_translator_base64_srcs} 
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
 ${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}

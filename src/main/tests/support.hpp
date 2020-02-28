@@ -56,6 +56,12 @@ namespace {
     };
 
     template <>
+    inline bool support::get<bool>()
+    {
+        return alea.choice();
+    }
+
+    template <>
     inline string support:: get<string>()
     {
         const size_t len = 1+ alea.leq(16);

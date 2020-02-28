@@ -7,7 +7,7 @@
 #include "y/ios/imstream.hpp"
 #include "y/ios/null-ostream.hpp"
 
-#include "y/codec/base64.hpp"
+//#include "y/codec/base64.hpp"
 
 namespace upsylon {
 

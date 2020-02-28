@@ -1,10 +1,15 @@
-#include "y/information/translator/any2base64.hpp"
+#include "y/information/translator/uuid64.hpp"
+#include "y/information/translator/base64.hpp"
+
 #include "y/utest/run.hpp"
 
-#include <cstring>
+#include "support.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace Information;
+
+namespace {
 
 static inline void update_itable( unsigned itable[], const char *table )
 {
@@ -21,18 +26,49 @@ static inline void update_itable( unsigned itable[], const char *table )
     itable[ uint8_t( Base64::padding ) ] = 64;
 }
 
+
+    template <typename T>
+    static inline void doUUID()
+    {
+        std::cerr << "uuid64<" << type_name_of<T>() << "> : sizeof=" << sizeof(uuid64<T>) << std::endl;
+        std::cerr << "      |_type_size  = " << uuid64<T>::type_size << std::endl;
+        std::cerr << "      |_type_num3  = " << uuid64<T>::type_num3 << std::endl;
+        std::cerr << "      |_type_rem3  = " << uuid64<T>::type_rem3 << std::endl;
+        std::cerr << "      |_type_xtra  = " << uuid64<T>::type_xtra << std::endl;
+        std::cerr << "      |_uuid_bytes = " << uuid64<T>::uuid_bytes << std::endl;
+        std::cerr << "      |_uuid_chars = " << uuid64<T>::uuid_chars << std::endl;
+        std::cerr << "      |_uuid_size  = " << uuid64<T>::uuid_size  << std::endl;
+
+        for(size_t i=0;i<4;++i)
+        {
+            const T   tmp = support::get<T>();
+            uuid64<T> uid = tmp;
+            std::cerr << "\t[" << tmp << "]='" << *uid << "'" << std::endl;
+        }
+
+
+    }
+
+}
+
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 
 Y_UTEST(base64)
 {
+    doUUID<char>();
+    doUUID<uint16_t>();
+    doUUID<int32_t>();
+    doUUID<uint64_t>();
+    doUUID<bool>();
     
+
     if( argc > 1 )
     {
-        const string fileName = argv[1];
+        const string  fileName = argv[1];
         ios::icstream fp( fileName );
         string line;
-        while( fp.gets(line) )
+        while( (std::cerr << ">").flush(), fp.gets(line) )
         {
             {
                 const size_t len = Base64::BytesFor(line.size(), Base64::Pad);

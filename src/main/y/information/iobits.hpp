@@ -14,6 +14,7 @@ namespace upsylon {
 
         template <typename T> struct TableOf;
 
+        //! declare table of bits
 #define Y_INFO_TABLE(BITS) template <> struct TableOf<uint##BITS##_t> {\
 static const uint##BITS##_t Bit[BITS];\
 }
@@ -129,14 +130,15 @@ static const uint##BITS##_t Bit[BITS];\
             void compile( sequence<char> & ); //!< write all possible chars
             void zfinish( sequence<char> & ); //!< zpad and write possible chars
 
+            //! base class for I/O on bits
             class Broker : public virtual counted_object
             {
             public:
-                virtual ~Broker() throw();
-                virtual void startBits() throw() = 0;
+                virtual ~Broker() throw();            //!< cleanup
+                virtual void startBits() throw() = 0; //!< start all up
 
             protected:
-                explicit Broker() throw();
+                explicit Broker() throw(); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Broker);

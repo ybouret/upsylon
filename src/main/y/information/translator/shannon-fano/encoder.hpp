@@ -15,6 +15,7 @@ namespace upsylon {
 
         namespace ShannonFano {
 
+            //! use Tree to build Encoder base class
             typedef EncodingWith<Tree> EncodingTree;
 
             //! ShannonFano Encoder

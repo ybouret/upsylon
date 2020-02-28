@@ -10,6 +10,7 @@ namespace upsylon {
 
     namespace Information {
 
+        //! wrap operations
         template <typename TREE>
         class EncodingWith : public TREE, public qencoder
         {
@@ -17,16 +18,19 @@ namespace upsylon {
             inline explicit EncodingWith() : TREE(), qencoder() {}
             inline virtual ~EncodingWith() throw() {}
 
+            //! will setup internal tree
             inline virtual void startBits() throw()
             {
                 this->setupTree();
             }
 
+            //! will emit byte and update tree
             inline virtual void writeBits(IOBits &Q, const char C)
             {
                 this->inputByte(C,&Q);
             }
 
+            //! emit EOS
             inline virtual void flushBits(IOBits &Q)
             {
                 this->eos->emit(Q);
