@@ -160,11 +160,11 @@ SET(information_translator_shannon_fano_srcs ${information_translator_shannon_fa
 SOURCE_GROUP( information/translator/shannon-fano FILES ${information_translator_shannon_fano_srcs} )
 INSTALL( FILES ${information_translator_shannon_fano_decl} DESTINATION include/y/information/translator/shannon-fano )
 
-FILE(GLOB information_translator_rle_decl y/information/translator/rle/*.hpp)
-FILE(GLOB information_translator_rle_code y/information/translator/rle/*.cpp)
-SET(information_translator_rle_srcs ${information_translator_rle_decl} ${information_translator_rle_code})
-SOURCE_GROUP( information/translator/rle FILES ${information_translator_rle_srcs} )
-INSTALL( FILES ${information_translator_rle_decl} DESTINATION include/y/information/translator/rle )
+FILE(GLOB information_translator_qrl_decl y/information/translator/qrl/*.hpp)
+FILE(GLOB information_translator_qrl_code y/information/translator/qrl/*.cpp)
+SET(information_translator_qrl_srcs ${information_translator_qrl_decl} ${information_translator_qrl_code})
+SOURCE_GROUP( information/translator/qrl FILES ${information_translator_qrl_srcs} )
+INSTALL( FILES ${information_translator_qrl_decl} DESTINATION include/y/information/translator/qrl )
 
 FILE(GLOB information_translator_run_length_decl y/information/translator/run-length/*.hpp)
 FILE(GLOB information_translator_run_length_code y/information/translator/run-length/*.cpp)
@@ -386,7 +386,7 @@ ${information_modulation_srcs}
 ${information_translator_srcs} 
 ${information_translator_huffman_srcs}  
 ${information_translator_shannon_fano_srcs}
-${information_translator_rle_srcs} 
+${information_translator_qrl_srcs} 
 ${information_translator_run_length_srcs}
 ${information_translator_base64_srcs} 
 ${codec_srcs} ${lzo_srcs}

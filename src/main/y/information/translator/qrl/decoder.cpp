@@ -1,5 +1,5 @@
 
-#include "y/information/translator/rle/decoder.hpp"
+#include "y/information/translator/qrl/decoder.hpp"
 #include "y/exceptions.hpp"
 
 //#define Y_RLE_DEBUG 1
@@ -16,7 +16,7 @@ namespace upsylon {
 
     namespace Information {
 
-        namespace RLE {
+        namespace QRL {
 
             const char * Decoder:: name()   const throw() { return DecoderID; }
             const char * Decoder:: family() const throw() { return FMID;      }
@@ -41,7 +41,7 @@ namespace upsylon {
 
             void Decoder:: flush()
             {
-                static const char fn[] = "RLE::Decoder::flush";
+                static const char fn[] = "QRL::Decoder::flush";
                 switch( status )
                 {
                     case waitForDirective:

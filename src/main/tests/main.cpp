@@ -150,7 +150,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(qcodec);
     Y_UTEST(huffman);
     Y_UTEST(shannon_fano);
-    Y_UTEST(rle);
+    Y_UTEST(qrl);
     Y_UTEST(pack);
     Y_UTEST(bytewise);
     Y_UTEST(base64);

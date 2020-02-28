@@ -1,17 +1,17 @@
 //! \file
-#ifndef Y_INFORMATION_RLE_ENCODER_INCLUDED
-#define Y_INFORMATION_RLE_ENCODER_INCLUDED 1
+#ifndef Y_INFORMATION_QRL_ENCODER_INCLUDED
+#define Y_INFORMATION_QRL_ENCODER_INCLUDED 1
 
-#include "y/information/translator/rle.hpp"
+#include "y/information/translator/qrl.hpp"
 #include "y/information/translator/queue.hpp"
 
 namespace upsylon {
 
     namespace Information {
 
-        namespace RLE {
+        namespace QRL {
 
-            //! RLE Encoder
+            //! QRL Encoder
             class Encoder : public Parameters, public TranslatorQueue
             {
             public:

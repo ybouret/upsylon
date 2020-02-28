@@ -1,4 +1,4 @@
-#include "y/information/translator/rle/encoder.hpp"
+#include "y/information/translator/qrl/encoder.hpp"
  
 //#define Y_RLE_DEBUG 1
 
@@ -14,7 +14,7 @@ namespace upsylon {
     
     namespace Information {
         
-        namespace RLE {
+        namespace QRL {
             
             const char * Encoder:: name()   const throw() { return EncoderID; }
             const char * Encoder:: family() const throw() { return FMID;      }

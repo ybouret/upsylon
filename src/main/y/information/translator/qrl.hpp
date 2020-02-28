@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_INFORMATION_RLE_INCLUDED
-#define Y_INFORMATION_RLE_INCLUDED 1
+#ifndef Y_INFORMATION_QRL_INCLUDED
+#define Y_INFORMATION_QRL_INCLUDED 1
 
 #include "y/container/sequence.hpp"
 
@@ -9,7 +9,7 @@ namespace upsylon {
 
     namespace Information {
 
-        namespace RLE {
+        namespace QRL {
 
             //! parameters to read/write rle
             /**

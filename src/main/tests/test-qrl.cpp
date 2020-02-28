@@ -1,5 +1,5 @@
-#include "y/information/translator/rle/encoder.hpp"
-#include "y/information/translator/rle/decoder.hpp"
+#include "y/information/translator/qrl/encoder.hpp"
+#include "y/information/translator/qrl/decoder.hpp"
 
 #include "y/information/translator/run-length/encoder.hpp"
 
@@ -19,7 +19,7 @@ namespace {
     
     static inline void testRepetitions()
     {
-        RLE::Encoder rle;
+        QRL::Encoder rle;
         
         for(size_t blockSize=0;blockSize<= 1000; ++blockSize )
         {
@@ -38,7 +38,7 @@ namespace {
     
     static inline void testRandom()
     {
-        RLE::Encoder rle;
+        QRL::Encoder rle;
         size_t count = 0;
         while( count < 1000 )
         {
@@ -54,10 +54,10 @@ namespace {
     
 }
 
-Y_UTEST(rle)
+Y_UTEST(qrl)
 {
-    std::cerr << "RLE::MaxRepeating=" << int(RLE::Parameters::MaxRepeating) << std::endl;
-    std::cerr << "RLE::MaxDifferent=" << int(RLE::Parameters::MaxDifferent) << std::endl;
+    std::cerr << "QRL::MaxRepeating=" << int(QRL::Parameters::MaxRepeating) << std::endl;
+    std::cerr << "QRL::MaxDifferent=" << int(QRL::Parameters::MaxDifferent) << std::endl;
     
     if(argc>1)
     {
@@ -65,8 +65,8 @@ Y_UTEST(rle)
         {
             const string compName = "rle.bin";
             const string backName = "unrle.bin";
-            RLE::Encoder rle;
-            RLE::Decoder unrle;
+            QRL::Encoder rle;
+            QRL::Decoder unrle;
             rle.testCODEC(fileName, compName, backName, &unrle);
         }
         

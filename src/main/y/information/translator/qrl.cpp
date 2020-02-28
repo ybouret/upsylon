@@ -1,11 +1,11 @@
 
-#include "y/information/translator/rle.hpp"
+#include "y/information/translator/qrl.hpp"
 
 namespace upsylon {
     
     namespace Information {
 
-        namespace RLE {
+        namespace QRL {
 
             Parameters:: ~Parameters() throw()
             {
