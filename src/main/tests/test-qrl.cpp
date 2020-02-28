@@ -75,11 +75,30 @@ Y_UTEST(qrl)
             const string compName = "rle1.bin";
             const string backName = "unrle1.bin";
 
-            RunLength::EncodeWith<  RunLength::SingleEncoder<QWriter> > enc1;
+            RunLength::EncodeWith< RunLength::Single<QEncoder,QWriter> >         enc1;
             enc1.testCODEC(fileName, compName, backName, NULL);
-
-
         }
+
+        if( fileName != Y_STDIN )
+        {
+            const string compName = "rle2.bin";
+            const string backName = "unrle2.bin";
+
+            RunLength::EncodeWith< RunLength::Double<QEncoder,QWriter,QWriter> > enc2;
+            enc2.testCODEC(fileName, compName, backName, NULL);
+        }
+
+        if( fileName != Y_STDIN )
+        {
+            const string compName = "rle3.bin";
+            const string backName = "unrle3.bin";
+
+            RunLength::EncodeWith< RunLength::Triple<QEncoder,QWriter,QWriter,QWriter> > enc3;
+            enc3.testCODEC(fileName, compName, backName, NULL);
+        }
+
+
+
     }
     else
     {

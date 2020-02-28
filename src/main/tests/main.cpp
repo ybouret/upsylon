@@ -151,6 +151,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(huffman);
     Y_UTEST(shannon_fano);
     Y_UTEST(qrl);
+    Y_UTEST(run_length);
     Y_UTEST(pack);
     Y_UTEST(bytewise);
     Y_UTEST(base64);

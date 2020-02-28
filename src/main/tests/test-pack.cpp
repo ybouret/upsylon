@@ -30,6 +30,7 @@ Y_UTEST(pack)
     vector<size_t>       indices(sz,0);
     MoveToFrontEncoder   mtf;
     BWT::Encode(*output, *input, sz, *indices,mtf);
+    std::cerr << "encoded..." << std::endl;
     {
         ios::ocstream fp("ipack.bin"); fp << input;
     }

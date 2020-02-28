@@ -57,85 +57,10 @@ namespace upsylon {
             
             
             
-            template <typename QENCODER = QWriter>
-            class SingleEncoder
-            {
-            public:
-                inline virtual ~SingleEncoder() throw() {}
-                
-            protected:
-                inline explicit SingleEncoder() : enc( new QENCODER() )
-                {}
-                
-                inline QEncoder & _character() throw() { return *enc; }
-                inline QEncoder & _repeating() throw() { return *enc; }
-                inline QEncoder & _different() throw() { return *enc; }
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(SingleEncoder);
-                QEncoder::Pointer enc;
-            };
             
             
-            template <
-            typename CHARACTER_QENCODER=QWriter,
-            typename REPEATING_QENCODER=QWriter
-            >
-            class DoubleEncoder
-            {
-            public:
-                inline virtual ~DoubleEncoder() throw() {}
-                
-            protected:
-                inline explicit DoubleEncoder() :
-                characterEnc( new CHARACTER_QENCODER() ),
-                repeatingEnc( new REPEATING_QENCODER() )
-                {}
-                
-                inline QEncoder & _character() throw() { return *characterEnc; }
-                inline QEncoder & _repeating() throw() { return *repeatingEnc; }
-                inline QEncoder & _different() throw() { return *repeatingEnc; }
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(DoubleEncoder);
-                QEncoder::Pointer characterEnc;
-                QEncoder::Pointer repeatingEnc;
-
-            };
-            
-            template <
-            typename CHARACTER_QENCODER=QWriter,
-            typename REPEATING_QENCODER=QWriter,
-            typename DIFFERENT_QENCODER=QWriter
-            >
-            class TripleEncoder
-            {
-            public:
-                inline virtual ~TripleEncoder() throw() {}
-                
-            protected:
-                inline explicit TripleEncoder() :
-                characterEnc( new CHARACTER_QENCODER() ),
-                repeatingEnc( new REPEATING_QENCODER() ),
-                differentEnc( new DIFFERENT_QENCODER() )
-                {}
-                
-                inline QEncoder & _character() throw() { return *characterEnc; }
-                inline QEncoder & _repeating() throw() { return *repeatingEnc; }
-                inline QEncoder & _different() throw() { return *differentEnc; }
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(TripleEncoder);
-                QEncoder::Pointer characterEnc;
-                QEncoder::Pointer repeatingEnc;
-                QEncoder::Pointer differentEnc;
-
-            };
-            
-            
-            
-            
-            template <typename ENCODER = SingleEncoder<> >
+            template <typename ENCODER = Single<QEncoder,QWriter> >
             class EncodeWith : public ENCODER, public Encoder
             {
             public:

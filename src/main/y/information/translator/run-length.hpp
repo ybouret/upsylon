@@ -53,7 +53,90 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Framework);
             };
-            
+
+            template <
+            typename BROKER,
+            typename CHARACTER_BROKER
+            >
+            class Single
+            {
+            public:
+                typedef typename BROKER::Pointer PointerType;
+
+                explicit Single() : characterBroker( new CHARACTER_BROKER() ) {}
+                virtual ~Single() throw() {}
+
+            protected:
+                BROKER & _character() throw() { return *characterBroker; }
+                BROKER & _repeating() throw() { return *characterBroker; }
+                BROKER & _different() throw() { return *characterBroker; }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Single);
+                PointerType characterBroker;
+            };
+
+            template <
+            typename BROKER,
+            typename CHARACTER_BROKER,
+            typename REPEATING_BROKER
+            >
+            class Double
+            {
+            public:
+                typedef typename BROKER::Pointer PointerType;
+
+                explicit Double() :
+                characterBroker( new CHARACTER_BROKER() ),
+                repeatingBroker( new REPEATING_BROKER() )
+                {}
+
+                virtual ~Double() throw() {}
+
+            protected:
+                BROKER & _character() throw() { return *characterBroker; }
+                BROKER & _repeating() throw() { return *repeatingBroker; }
+                BROKER & _different() throw() { return *repeatingBroker; }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Double);
+                PointerType characterBroker;
+                PointerType repeatingBroker;
+            };
+
+
+            template <
+            typename BROKER,
+            typename CHARACTER_BROKER,
+            typename REPEATING_BROKER,
+            typename DIFFERENT_BROKER
+            >
+            class Triple
+            {
+            public:
+                typedef typename BROKER::Pointer PointerType;
+
+                explicit Triple() :
+                characterBroker( new CHARACTER_BROKER() ),
+                repeatingBroker( new REPEATING_BROKER() ),
+                differentBroker( new DIFFERENT_BROKER() )
+                {}
+
+                virtual ~Triple() throw() {}
+
+            protected:
+                BROKER & _character() throw() { return *characterBroker; }
+                BROKER & _repeating() throw() { return *repeatingBroker; }
+                BROKER & _different() throw() { return *differentBroker; }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Triple);
+                PointerType characterBroker;
+                PointerType repeatingBroker;
+                PointerType differentBroker;
+
+            };
+
         }
         
     }
