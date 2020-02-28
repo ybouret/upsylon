@@ -71,6 +71,8 @@ namespace upsylon {
                 BROKER & _repeating() throw() { return *characterBroker; }
                 BROKER & _different() throw() { return *characterBroker; }
 
+                inline void resetBrokers() throw() { characterBroker->startBits(); }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Single);
                 PointerType characterBroker;
@@ -97,6 +99,12 @@ namespace upsylon {
                 BROKER & _character() throw() { return *characterBroker; }
                 BROKER & _repeating() throw() { return *repeatingBroker; }
                 BROKER & _different() throw() { return *repeatingBroker; }
+
+                inline void resetBrokers() throw()
+                {
+                    characterBroker->startBits();
+                    repeatingBroker->startBits();
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Double);
@@ -128,6 +136,13 @@ namespace upsylon {
                 BROKER & _character() throw() { return *characterBroker; }
                 BROKER & _repeating() throw() { return *repeatingBroker; }
                 BROKER & _different() throw() { return *differentBroker; }
+
+                inline void resetBrokers() throw()
+                {
+                    characterBroker->startBits();
+                    repeatingBroker->startBits();
+                    differentBroker->startBits();
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Triple);

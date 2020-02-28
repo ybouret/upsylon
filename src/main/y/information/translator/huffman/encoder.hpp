@@ -15,8 +15,17 @@ namespace upsylon {
         namespace Huffman {
 
             //! use Tree to build Encoder base class
-            typedef EncodingWith<Tree> EncodingTree;
-            
+            class  EncodingTree : public EncodingWith<Tree>
+            {
+            public:
+                static const char CLID[];
+                explicit EncodingTree();
+                virtual ~EncodingTree() throw();
+                virtual const char *label() const throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(EncodingTree);
+            };
 
             //! Huffman Encoder
             class Encoder : public EncodingTree, public TranslatorQueue

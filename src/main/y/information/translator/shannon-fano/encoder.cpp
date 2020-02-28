@@ -8,6 +8,21 @@ namespace upsylon {
 
         namespace ShannonFano {
 
+            EncodingTree:: EncodingTree() : EncodingWith<Tree>()
+            {
+
+            }
+
+            EncodingTree:: ~EncodingTree() throw()
+            {}
+
+            const char EncodingTree:: CLID[] = "ShannonFano-Encoder";
+
+            const char *EncodingTree:: label() const throw()
+            {
+                return CLID;
+            }
+
             const char * Encoder::family() const throw() { return FMID;      }
             const char * Encoder::name()   const throw() { return EncoderID; }
 

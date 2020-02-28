@@ -15,7 +15,7 @@ namespace upsylon {
             {
             }
 
-            const char Parameters:: FMID[] = "RLE";
+            const char Parameters:: FMID[] = "QRL";
 
             void Parameters:: EmitRepeatingTo(sequence<char> &Q,
                                               const uint8_t   b,

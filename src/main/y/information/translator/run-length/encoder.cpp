@@ -60,12 +60,13 @@ namespace upsylon {
                 preceding = -1;
                 repeating =  0;
                 different =  0;
-                
+
+#if 0
                 characterEncoder.startBits();
                 repeatingEncoder.startBits();
                 differentEncoder.startBits();
-
-                
+#endif
+                resetBits();
             }
             
             void Encoder:: flush()

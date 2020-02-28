@@ -134,8 +134,9 @@ static const uint##BITS##_t Bit[BITS];\
             class Broker : public virtual counted_object
             {
             public:
-                virtual ~Broker() throw();            //!< cleanup
-                virtual void startBits() throw() = 0; //!< start all up
+                virtual ~Broker() throw();                     //!< cleanup
+                virtual void        startBits()   throw() = 0; //!< start all up
+                virtual const char *label() const throw() = 0; //!< label
 
             protected:
                 explicit Broker() throw(); //!< setup
@@ -147,6 +148,10 @@ static const uint##BITS##_t Bit[BITS];\
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IOBits);
         };
+
+#define Y_INFORMATION_BROKER(NAME) \
+const char * NAME :: label() const throw() { return CLID; }\
+const char   NAME :: CLID[] = #NAME
 
     }
 }

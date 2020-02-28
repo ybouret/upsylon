@@ -31,12 +31,13 @@ namespace upsylon {
         class QWriter : public QEncoder
         {
         public:
+            static const char CLID[];
             explicit QWriter() throw();                    //!< setup
             virtual ~QWriter() throw();                    //!< cleanup
-            virtual void startBits() throw();              //!< do nothing
-            virtual void writeBits(IOBits &, const char ); //!< push char
-            virtual void flushBits(IOBits &);              //!< do nothing
-            
+            virtual void        startBits() throw();              //!< do nothing
+            virtual void        writeBits(IOBits &, const char ); //!< push char
+            virtual void        flushBits(IOBits &);              //!< do nothing
+            virtual const char *label() const throw();            //!< CLID
         private:
             Y_DISABLE_COPY_AND_ASSIGN(QWriter);
         };

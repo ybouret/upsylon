@@ -42,6 +42,8 @@ namespace upsylon {
         void QWriter:: flushBits(IOBits &)
         {
         }
+
+        Y_INFORMATION_BROKER(QWriter);
         
     }
 }

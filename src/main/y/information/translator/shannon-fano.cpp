@@ -62,6 +62,7 @@ namespace upsylon {
 
             void Tree:: buildTree() throw()
             {
+            BUILD_TREE:
                 size_t inode = 0;
                 root  = new (nextNode(inode)) Node(chars.head,chars.tail);
                 assert(0==root->code);
@@ -69,7 +70,9 @@ namespace upsylon {
                 while( !split(root,inode) )
                 {
                     rescaleFrequencies();
+                    goto BUILD_TREE;
                 }
+                
                 for(Char *ch = chars.head; ch; ch=ch->next )
                 {
                     assert(ch->priv);

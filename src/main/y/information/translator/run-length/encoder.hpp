@@ -52,7 +52,8 @@ namespace upsylon {
                 
                 void    fromRepeatingToDifferentWith(const uint8_t byte);
                 void    fromDifferentToRepeatingWith(const uint8_t byte);
-                
+
+                virtual void resetBits() throw() = 0;
             };
             
             
@@ -70,10 +71,15 @@ namespace upsylon {
                 Encoder( this->_character(), this->_repeating(), this->_different() )
                 {
                 }
-                
+
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EncodeWith);
+                inline virtual void resetBits() throw()
+                {
+                    this->resetBrokers();
+                }
             };
             
             
