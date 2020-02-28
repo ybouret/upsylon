@@ -41,6 +41,10 @@ namespace upsylon {
 
             void clear() throw();
             void emit();
+            void emit1();
+            void emit2();
+            void emit3();
+            
         };
 
     }

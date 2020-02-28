@@ -14,7 +14,7 @@ namespace upsylon {
             Tree(),
             TranslatorQueue(),
             Q(),
-            flag( waitForByte ),
+            flag( waitForBits ),
             curr( root )
             {
             }
@@ -28,7 +28,7 @@ namespace upsylon {
                 setupTree();
                 free();
                 Q.free();
-                flag = waitForByte;
+                flag = waitForBits;
                 curr = root;
             }
 
@@ -56,6 +56,7 @@ namespace upsylon {
                     assert(curr!=NULL);
                     switch(flag)
                     {
+
                         case waitForByte:
                             if(Q.size()<8)
                             {

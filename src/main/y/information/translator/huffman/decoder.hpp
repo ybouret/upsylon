@@ -29,8 +29,8 @@ namespace upsylon {
                 IOBits Q;
                 enum Flag
                 {
-                    waitForByte,
-                    waitForBits
+                    waitForBits,
+                    waitForByte
                 };
                 Flag  flag;
                 Node *curr;

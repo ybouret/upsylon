@@ -60,6 +60,27 @@ namespace upsylon {
             emit();
         }
 
+        void Base64Decoder:: emit1()
+        {
+            Base64::Decode2to1(target,source);
+            push_back(target[0]);
+        }
+
+        void Base64Decoder:: emit2()
+        {
+            Base64::Decode3to2(target,source);
+            push_back(target[0]);
+            push_back(target[1]);
+        }
+
+        void Base64Decoder:: emit3()
+        {
+            Base64::Decode4to3(target,source);
+            push_back(target[0]);
+            push_back(target[1]);
+            push_back(target[2]);
+        }
+
         void Base64Decoder:: emit()
         {
             static const char fn[] = "Base64Decoder";
@@ -76,8 +97,7 @@ namespace upsylon {
 
                 case waitForChar3:
                     // two stored char
-                    Base64::Decode2to1(target,source);
-                    push_back(target[0]);
+                    emit1();
                     break;
 
                 case waitForChar4:
@@ -85,14 +105,11 @@ namespace upsylon {
                     if( Base64::padding == source[2] )
                     {
                         // only two effective chars
-                        Base64::Decode2to1(target,source);
-                        push_back(target[0]);
+                        emit1();
                     }
                     else
                     {
-                        Base64::Decode3to2(target,source);
-                        push_back(target[0]);
-                        push_back(target[1]);
+                        emit2();
                     }
                     break;
 
@@ -100,20 +117,20 @@ namespace upsylon {
                     // four stored char
                     if( Base64::padding == source[3] )
                     {
-                        if(Base64::padding != source[2])
+                        if(Base64::padding == source[2])
                         {
-                            throw exception("%s invalid required padding",fn);
+                            // only two effective chars
+                            emit1();
                         }
-                        // only two effective
-                        Base64::Decode2to1(target,source);
-                        push_back(target[0]);
+                        else
+                        {
+                            // only three effective chars
+                            emit2();
+                        }
                     }
                     else
                     {
-                        Base64::Decode4to3(target,source);
-                        push_back(target[0]);
-                        push_back(target[1]);
-                        push_back(target[2]);
+                        emit3();
                     }
 
 

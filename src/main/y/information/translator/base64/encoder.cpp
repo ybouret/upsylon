@@ -81,13 +81,14 @@ namespace upsylon {
                         switch(mode)
                         {
                             case Base64::Pad:
-                                push_back('=');
-                                push_back('=');
+                                push_back(Base64::padding);
+                                push_back(Base64::padding);
                                 break;
-                            default: break;
+
+                            default:
+                                break;
                         }
                     }
-
                     break;
 
                 case waitForByte3:
@@ -101,7 +102,7 @@ namespace upsylon {
                         switch(mode)
                         {
                             case Base64::Pad:
-                                push_back('=');
+                                push_back(Base64::padding);
                                 break;
                             default: break;
                         }

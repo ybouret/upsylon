@@ -154,7 +154,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(pack);
     Y_UTEST(bytewise);
     Y_UTEST(base64);
-    
+    Y_UTEST(codecs);   
+ 
     Y_UTEST(local_file);
     Y_UTEST(disk_file);
     Y_UTEST(disk_std);

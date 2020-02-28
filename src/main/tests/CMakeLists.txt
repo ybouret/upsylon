@@ -205,7 +205,7 @@ ADD_TEST(sort:classes     test-main classes)
 
 SOURCE_GROUP(information FILES  
 test-info-base64.cpp test-mtf.cpp test-delta.cpp test-bwt.cpp test-info-iobits.cpp test-huffman.cpp test-shannon-fano.cpp test-qrl.cpp test-pack.cpp
-test-info-bytewise.cpp test-qcodec.cpp
+test-info-bytewise.cpp test-qcodec.cpp test-info-codecs.cpp
 )
 ADD_TEST(info:mtf          test-main mtf)
 ADD_TEST(info:delta        test-main delta)
@@ -218,6 +218,7 @@ ADD_TEST(info:pack         test-main pack ${HERE}/words.db)
 ADD_TEST(info:bytewise     test-main bytewise ${HERE}/words.db)
 ADD_TEST(info:qcodec       test-main qcodec ${HERE}/words.db)
 ADD_TEST(info:base64       test-main base64)
+ADD_TEST(info:codecs       test-main codecs)
 
 SOURCE_GROUP(data FILES
 test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-btree.cpp

@@ -176,7 +176,11 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 assert(usedBytes<Bytes);
                 assert( chars.owns(nyt) );
-
+                if(io)
+                {
+                    nyt->emit(*io);
+                    chr->emit(*io);
+                }
                 switch( usedBytes )
                 {
 
@@ -184,10 +188,6 @@ namespace upsylon {
                         //------------------------------------------------------
                         // first node ever
                         //------------------------------------------------------
-                        if(io)
-                        {
-                            chr->emit(*io);
-                        }
                         chars.push_front(chr);
                         usedBytes = 1;
                         assert(areOrdered(chars));
@@ -197,11 +197,6 @@ namespace upsylon {
                         //------------------------------------------------------
                         // last node ever
                         //------------------------------------------------------
-                        if(io)
-                        {
-                            nyt->emit(*io);
-                            chr->emit(*io);
-                        }
                         usedBytes = Bytes;
                         chars.insert_before(eos,chr);
                         (void) chars.unlink(nyt);
@@ -213,11 +208,6 @@ namespace upsylon {
                         //------------------------------------------------------
                         assert(usedBytes>=1);
                         assert(usedBytes<255);
-                        if(io)
-                        {
-                            nyt->emit(*io);
-                            chr->emit(*io);
-                        }
                         chars.insert_before(eos,chr);
                         ++usedBytes; assert(usedBytes<Bytes);
                         break;

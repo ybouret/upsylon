@@ -30,8 +30,8 @@ namespace upsylon {
                 IOBits Q;
                 enum Flag
                 {
+                    waitForBits  ,
                     waitForByte,
-                    waitForBits
                 };
                 Flag  flag;
                 Node *curr;
