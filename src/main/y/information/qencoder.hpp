@@ -12,33 +12,33 @@ namespace upsylon {
     namespace Information {
 
         //! encoding to IObits
-        class qencoder : public IOBits::Broker
+        class QEncoder : public IOBits::Broker
         {
         public:
-            typedef arc_ptr<qencoder> pointer; //!< alias
-            virtual ~qencoder() throw();       //!< cleanup
+            typedef arc_ptr<QEncoder> Pointer; //!< alias
+            virtual ~QEncoder() throw();       //!< cleanup
             virtual void writeBits(IOBits &, const char ) = 0; //!< emit and update
             virtual void flushBits(IOBits &)              = 0; //!< send EOS
 
         protected:
-            explicit qencoder() throw(); //!< setup
+            explicit QEncoder() throw(); //!< setup
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(qencoder);
+            Y_DISABLE_COPY_AND_ASSIGN(QEncoder);
         };
 
         //! default writer
-        class qwriter : public qencoder
+        class QWriter : public QEncoder
         {
         public:
-            explicit qwriter() throw();                    //!< setup
-            virtual ~qwriter() throw();                    //!< cleanup
+            explicit QWriter() throw();                    //!< setup
+            virtual ~QWriter() throw();                    //!< cleanup
             virtual void startBits() throw();              //!< do nothing
             virtual void writeBits(IOBits &, const char ); //!< push char
             virtual void flushBits(IOBits &);              //!< do nothing
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(qwriter);
+            Y_DISABLE_COPY_AND_ASSIGN(QWriter);
         };
     }
 

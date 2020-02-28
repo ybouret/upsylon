@@ -5,11 +5,11 @@ namespace upsylon {
 
     namespace Information {
 
-        qencoder:: qencoder() throw() : IOBits::Broker()
+        QEncoder:: QEncoder() throw() : IOBits::Broker()
         {
         }
 
-        qencoder:: ~qencoder() throw()
+        QEncoder:: ~QEncoder() throw()
         {
         }
         
@@ -21,25 +21,25 @@ namespace upsylon {
     
     namespace Information {
 
-        qwriter:: qwriter() throw()
+        QWriter:: QWriter() throw()
         {
         }
         
-        qwriter:: ~qwriter() throw()
+        QWriter:: ~QWriter() throw()
         {
             
         }
         
-        void qwriter::  startBits() throw()
+        void QWriter::  startBits() throw()
         {
         }
         
-        void qwriter:: writeBits(IOBits &io, const char C)
+        void QWriter:: writeBits(IOBits &io, const char C)
         {
             io.push(C);
         }
         
-        void qwriter:: flushBits(IOBits &)
+        void QWriter:: flushBits(IOBits &)
         {
         }
         

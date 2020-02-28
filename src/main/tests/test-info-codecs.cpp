@@ -22,9 +22,9 @@ using namespace Information;
 namespace {
 
     static inline
-    void testCoDec(Translator        &enc,
-                   Translator        &dec,
-                   const array<char> &src)
+    size_t testCoDec(Translator        &enc,
+                     Translator        &dec,
+                     const array<char> &src)
     {
 
         vector<char>  target( 1024*1024, as_capacity);
@@ -34,19 +34,19 @@ namespace {
         enc.reset();
         {
             ios::imstream source( *src, src.size() );
-            ios::ocstream inp( "source.bin" );
-            ios::ocstream out( "codecs.bin" );
+            //ios::ocstream inp( "source.bin" );
+            //ios::ocstream out( "codecs.bin" );
             char C = 0;
             while( source.query(C) )
             {
                 ++nInp;
-                inp << C;
+                //inp << C;
                 enc.write(C);
                 while( enc.query(C) )
                 {
                     target << C;
                     ++nEnc;
-                    out << C;
+                    //out << C;
                 }
             }
             enc.flush();
@@ -54,7 +54,7 @@ namespace {
             {
                 target << C;
                 ++nEnc;
-                out << C;
+                //out << C;
             }
         }
         Y_ASSERT(nInp==src.size());
@@ -83,18 +83,19 @@ namespace {
             }
         }
         Y_ASSERT( nDec == nInp );
+        return nEnc;
     }
 
     static inline void fullCoDec(Translator   &enc,
                                  Translator   &dec)
     {
         static const size_t maxLength = 16*1024;
-        vector<char> data( maxLength, as_capacity );
+        vector<char> data( 16*maxLength, as_capacity );
         std::cerr << "Encoding with " << enc.family() << " " << enc.name() << std::endl;
         std::cerr << "Decoding with " << dec.family() << " " << dec.name() << std::endl;
 
         {
-            std::cerr << "[";
+            std::cerr << "blocks    : [";
             size_t count = 0;
             for(size_t n=0;n<=maxLength;)
             {
@@ -111,7 +112,6 @@ namespace {
                             data << C;
                         }
                     }
-                    //std::cerr << data << std::endl;
                     testCoDec(enc,dec,data);
                 }
                 if(n<=1024)
@@ -130,6 +130,25 @@ namespace {
                 }
             }
             std::cerr << "]" << std::endl;
+        }
+
+        {
+            data.free();
+            size_t u0 = 0;
+            size_t u1 = 1;
+            for( char i='a'; i <= 'a'+23; ++i )
+            {
+                size_t u2 = u0+u1;
+                for(size_t j=0;j<u2;++j)
+                {
+                    data << i;
+                }
+                u0 = u1;
+                u1 = u2;
+            }
+            std::cerr << "fibonacci : [ " << data.size() << "]" << std::endl;
+            const size_t nEnc = testCoDec(enc,dec,data);
+            std::cerr << "            |_" << nEnc << std::endl;
         }
     }
 

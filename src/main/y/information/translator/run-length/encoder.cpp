@@ -31,9 +31,9 @@ namespace upsylon {
                 memset(cache,0,sizeof(cache));
             }
             
-            Encoder:: Encoder(qencoder &characterEnc,
-                              qencoder &repeatingEnc,
-                              qencoder &differentEnc) :
+            Encoder:: Encoder(QEncoder &characterEnc,
+                              QEncoder &repeatingEnc,
+                              QEncoder &differentEnc) :
             Framework(),
             TranslatorQueue(),
             characterEncoder(characterEnc),

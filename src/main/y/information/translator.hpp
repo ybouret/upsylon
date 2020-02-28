@@ -48,10 +48,10 @@ namespace upsylon {
                            Translator   *decoder);
 
 
-            string toString(ios::istream &source, size_t *sourceLength = 0);
-            string toString(const void *buffer, const size_t length);
-            string toString(const char *text);
-            string toString(const memory::ro_buffer &buffer);
+            string toString(ios::istream &source, size_t *sourceLength = 0); //!< source -> string
+            string toString(const void *buffer, const size_t length);        //!< block  -> string
+            string toString(const char *text);                               //!< text   -> string
+            string toString(const memory::ro_buffer &buffer);                //!< buffer -> string
 
 
         protected:

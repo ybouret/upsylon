@@ -21,8 +21,8 @@ namespace upsylon {
                                              IOBits          &Q,
                                              const uint8_t    byte,
                                              const size_t     size,
-                                             qencoder        &byteEncoder,
-                                             qencoder        &sizeEncoder)
+                                             QEncoder        &byteEncoder,
+                                             QEncoder        &sizeEncoder)
             {
                 assert(size>0);
                 assert(size<=MaxRepeating);
@@ -35,9 +35,9 @@ namespace upsylon {
                                              IOBits         &Q,
                                              const uint8_t *cache,
                                              const uint8_t  count,
-                                             qencoder      &characterEncoder,
-                                             qencoder      &repeatingEncoder,
-                                             qencoder      &differentEncoder)
+                                             QEncoder      &characterEncoder,
+                                             QEncoder      &repeatingEncoder,
+                                             QEncoder      &differentEncoder)
             {
                 assert(NULL!=cache);
                 assert(count>0);

@@ -11,19 +11,20 @@ namespace upsylon {
     namespace Information {
 
 
+        //! Base64 Decoder
         class Base64Decoder : public TranslatorQueue
         {
         public:
 
-            explicit Base64Decoder(   );
-            virtual ~Base64Decoder() throw();
+            explicit Base64Decoder();         //!< setup
+            virtual ~Base64Decoder() throw(); //!< cleanup
 
             virtual const char *family() const throw(); //!< Base64:FMID
             virtual const char *name()   const throw(); //!< EncoderID
 
-            virtual void reset() throw();
-            virtual void write(char C);
-            virtual void flush();
+            virtual void reset() throw(); //!< reset all
+            virtual void write(char C);   //!< write/decode
+            virtual void flush();         //!< decode remaining
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Base64Decoder);

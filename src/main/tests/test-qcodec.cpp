@@ -27,8 +27,8 @@ static inline void saveQ(const string &compName,
 Y_UTEST(qcodec)
 {
 
-    qencoder::pointer HuffmanEnc     = new  Huffman::EncodingTree();
-    qencoder::pointer ShannonFanoEnc = new  ShannonFano::EncodingTree();
+    QEncoder::Pointer HuffmanEnc     = new  Huffman::EncodingTree();
+    QEncoder::Pointer ShannonFanoEnc = new  ShannonFano::EncodingTree();
 
     IOBits HuffmanQ;
     IOBits ShannonFanoQ;

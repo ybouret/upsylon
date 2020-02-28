@@ -19,9 +19,9 @@ namespace upsylon {
                 virtual const char *name()   const throw(); //!< EncoderID
                 virtual const char *family() const throw(); //!< FMID
                 
-                explicit Encoder(qencoder &characterEnc,
-                                 qencoder &repeatingEnc,
-                                 qencoder &differentEnc);   //!< setup
+                explicit Encoder(QEncoder &characterEnc,
+                                 QEncoder &repeatingEnc,
+                                 QEncoder &differentEnc);   //!< setup
                 virtual ~Encoder() throw();                 //!< cleanup
                 
                 virtual void write(char C);   //!< encode next char
@@ -36,9 +36,9 @@ namespace upsylon {
                     waitForRepeating,
                     waitForDifferent,
                 };
-                qencoder &characterEncoder;
-                qencoder &repeatingEncoder;
-                qencoder &differentEncoder;
+                QEncoder &characterEncoder;
+                QEncoder &repeatingEncoder;
+                QEncoder &differentEncoder;
                 Status    status;      //!< current status
                 int       preceding;   //!< preceding char
                 size_t    repeating;   //!< number of repeating same char
@@ -57,7 +57,7 @@ namespace upsylon {
             
             
             
-            template <typename QENCODER = qwriter>
+            template <typename QENCODER = QWriter>
             class SingleEncoder
             {
             public:
@@ -67,19 +67,19 @@ namespace upsylon {
                 inline explicit SingleEncoder() : enc( new QENCODER() )
                 {}
                 
-                inline qencoder & _character() throw() { return *enc; }
-                inline qencoder & _repeating() throw() { return *enc; }
-                inline qencoder & _different() throw() { return *enc; }
+                inline QEncoder & _character() throw() { return *enc; }
+                inline QEncoder & _repeating() throw() { return *enc; }
+                inline QEncoder & _different() throw() { return *enc; }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(SingleEncoder);
-                qencoder::pointer enc;
+                QEncoder::Pointer enc;
             };
             
             
             template <
-            typename CHARACTER_QENCODER=qwriter,
-            typename REPEATING_QENCODER=qwriter
+            typename CHARACTER_QENCODER=QWriter,
+            typename REPEATING_QENCODER=QWriter
             >
             class DoubleEncoder
             {
@@ -92,21 +92,21 @@ namespace upsylon {
                 repeatingEnc( new REPEATING_QENCODER() )
                 {}
                 
-                inline qencoder & _character() throw() { return *characterEnc; }
-                inline qencoder & _repeating() throw() { return *repeatingEnc; }
-                inline qencoder & _different() throw() { return *repeatingEnc; }
+                inline QEncoder & _character() throw() { return *characterEnc; }
+                inline QEncoder & _repeating() throw() { return *repeatingEnc; }
+                inline QEncoder & _different() throw() { return *repeatingEnc; }
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DoubleEncoder);
-                qencoder::pointer characterEnc;
-                qencoder::pointer repeatingEnc;
+                QEncoder::Pointer characterEnc;
+                QEncoder::Pointer repeatingEnc;
 
             };
             
             template <
-            typename CHARACTER_QENCODER=qwriter,
-            typename REPEATING_QENCODER=qwriter,
-            typename DIFFERENT_QENCODER=qwriter
+            typename CHARACTER_QENCODER=QWriter,
+            typename REPEATING_QENCODER=QWriter,
+            typename DIFFERENT_QENCODER=QWriter
             >
             class TripleEncoder
             {
@@ -120,15 +120,15 @@ namespace upsylon {
                 differentEnc( new DIFFERENT_QENCODER() )
                 {}
                 
-                inline qencoder & _character() throw() { return *characterEnc; }
-                inline qencoder & _repeating() throw() { return *repeatingEnc; }
-                inline qencoder & _different() throw() { return *differentEnc; }
+                inline QEncoder & _character() throw() { return *characterEnc; }
+                inline QEncoder & _repeating() throw() { return *repeatingEnc; }
+                inline QEncoder & _different() throw() { return *differentEnc; }
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(TripleEncoder);
-                qencoder::pointer characterEnc;
-                qencoder::pointer repeatingEnc;
-                qencoder::pointer differentEnc;
+                QEncoder::Pointer characterEnc;
+                QEncoder::Pointer repeatingEnc;
+                QEncoder::Pointer differentEnc;
 
             };
             

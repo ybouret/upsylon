@@ -32,8 +32,7 @@ namespace upsylon
         class bsd_socket : public net_object
         {
         public:
-            typedef uuid64<socket_id_t> name_type;
-            //typedef base64_name<socket_id_t> name_type; //!< alias for named socket
+            typedef uuid64<socket_id_t> name_type; //!< alias for named socket
 
             //__________________________________________________________________
             //

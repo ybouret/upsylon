@@ -12,7 +12,7 @@ namespace upsylon {
         
         namespace RunLength {
             
-            //! parameters to read/write rle
+            //! Framework to read/write
             /**
              According to BlockLength:
              - if(count<=BlockSwitch) then repeating (count+1) bytes [1..BlockLength]
@@ -27,24 +27,27 @@ namespace upsylon {
                 static const uint8_t MaxDifferent = 255-BehaviorCode; //!< max different block size
                 static const uint8_t MaxBlockSize = (MaxRepeating>=MaxDifferent) ? MaxRepeating : MaxDifferent; //!< for memory caches
                 
-                virtual ~Framework() throw();
+                virtual ~Framework() throw(); //!< cleanup
                 
             protected:
-                explicit Framework() throw();
+                explicit Framework() throw(); //!< setup
+
+                //! helper to encode a repeating sequence
                 static void EmitRepeatingTo(sequence<char> &S,
                                             IOBits         &Q,
                                             const uint8_t   byte,
                                             const size_t    size,
-                                            qencoder       &characterEncoder,
-                                            qencoder       &repeatingEncoder);
-                
+                                            QEncoder       &characterEncoder,
+                                            QEncoder       &repeatingEncoder);
+
+                //! helper to encode a different sequence, switch to repeating is count==1
                 static void EmitDifferentTo(sequence<char> &S,
                                             IOBits         &Q,
                                             const uint8_t  *cache,
                                             const uint8_t   count,
-                                            qencoder       &characterEncoder,
-                                            qencoder       &repeatingEncoder,
-                                            qencoder       &differentEncoder);
+                                            QEncoder       &characterEncoder,
+                                            QEncoder       &repeatingEncoder,
+                                            QEncoder       &differentEncoder);
                 
                 
             private:

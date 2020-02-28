@@ -75,7 +75,7 @@ Y_UTEST(qrl)
             const string compName = "rle1.bin";
             const string backName = "unrle1.bin";
 
-            RunLength::EncodeWith<  RunLength::SingleEncoder<qwriter> > enc1;
+            RunLength::EncodeWith<  RunLength::SingleEncoder<QWriter> > enc1;
             enc1.testCODEC(fileName, compName, backName, NULL);
 
 

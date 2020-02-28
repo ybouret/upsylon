@@ -12,10 +12,10 @@ namespace upsylon {
 
         //! wrap operations
         template <typename TREE>
-        class EncodingWith : public TREE, public qencoder
+        class EncodingWith : public TREE, public QEncoder
         {
         public:
-            inline explicit EncodingWith() : TREE(), qencoder() {}
+            inline explicit EncodingWith() : TREE(), QEncoder() {}
             inline virtual ~EncodingWith() throw() {}
 
             //! will setup internal tree

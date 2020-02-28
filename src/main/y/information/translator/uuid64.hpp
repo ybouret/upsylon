@@ -63,6 +63,7 @@ namespace upsylon {
         //! get content
         inline const char * operator*() const throw() { return uuid; }
 
+        //! display
         inline friend std::ostream & operator <<( std::ostream &os, const uuid64 &U )
         {
             for(size_t i=0;i<uuid_chars;++i) os << U.uuid[i];
