@@ -32,6 +32,7 @@ Y_UTEST(run_length)
     const size_t   nt   = sizeof(tr)/sizeof(tr[0]);
     vector<size_t> encoded(nt,0);
 
+    
     if( argc > 1 )
     {
         const string  fileName = argv[1];
