@@ -13,7 +13,7 @@ namespace upsylon {
             Tree(),
             TranslatorQueue(8),
             Q(32),
-            flag( waitForBits ),
+            flag( waitForByte ),
             curr( root )
             {
             }
@@ -27,7 +27,7 @@ namespace upsylon {
                 setupTree();
                 free();
                 Q.free();
-                flag = waitForBits;
+                flag = waitForByte;
                 curr = root;
             }
 
@@ -41,7 +41,6 @@ namespace upsylon {
 
             void Decoder:: flush()
             {
-
             }
 
             void Decoder:: write(char C)

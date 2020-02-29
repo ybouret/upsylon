@@ -166,7 +166,10 @@ namespace upsylon {
 
         void Alphabet:: writeEOS(IOBits &io) const
         {
-            eos->emit(io);
+            if(usedBytes)
+            {
+                eos->emit(io);
+            }
         }
 
        void Alphabet:: writeAndUpdateByte( const uint8_t byte, IOBits *io )
@@ -181,11 +184,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 assert(usedBytes<Bytes);
                 assert( chars.owns(nyt) );
-                if(io)
-                {
-                    nyt->emit(*io);
-                    chr->emit(*io);
-                }
+                
                 switch( usedBytes )
                 {
 
@@ -193,6 +192,10 @@ namespace upsylon {
                         //------------------------------------------------------
                         // first node ever
                         //------------------------------------------------------
+                        if(io)
+                        {
+                            chr->emit(*io);
+                        }
                         chars.push_front(chr);
                         usedBytes = 1;
                         assert(areOrdered(chars));
@@ -202,6 +205,11 @@ namespace upsylon {
                         //------------------------------------------------------
                         // last node ever
                         //------------------------------------------------------
+                        if(io)
+                        {
+                            nyt->emit(*io);
+                            chr->emit(*io);
+                        }
                         usedBytes = Bytes;
                         chars.insert_before(eos,chr);
                         (void) chars.unlink(nyt);
@@ -211,6 +219,11 @@ namespace upsylon {
                         //------------------------------------------------------
                         // generic update
                         //------------------------------------------------------
+                        if(io)
+                        {
+                            nyt->emit(*io);
+                            chr->emit(*io);
+                        }
                         assert(usedBytes>=1);
                         assert(usedBytes<255);
                         chars.insert_before(eos,chr);
