@@ -57,8 +57,8 @@ namespace upsylon {
 
 
             virtual ~Alphabet()    throw(); //!< cleanup
-            void    displayChars() const;   //!< for information
-            bool    sameThan(const Alphabet &) const throw(); //!< to debug
+            void     displayChars() const;   //!< for information
+            bool     sameThan(const Alphabet &) const throw(); //!< to debug
 
         protected:
             Chars  chars;     //!< currently used char: 2..Alive
@@ -66,9 +66,10 @@ namespace upsylon {
             Char  *nyt;       //!< NYT
 
             explicit Alphabet(); //!< setup
-            void     emitAndUpdateByte(const uint8_t byte, IOBits *io); //!< emit bits on io!=NULL, updated chars
-            void     initialize() throw();                              //!< prepare chars
-            void     rescaleFrequencies() throw();                      //!< scale down used frequencies
+            void     writeAndUpdateByte(const uint8_t byte, IOBits *io); //!< write bits on io!=NULL, updated chars
+            void     writeEOS(IOBits &io) const;                         //!< write EOS
+            void     initialize() throw();                               //!< prepare chars
+            void     rescaleFrequencies() throw();                       //!< scale down used frequencies
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alphabet);

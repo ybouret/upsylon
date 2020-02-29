@@ -164,7 +164,12 @@ namespace upsylon {
         }
 
 
-       void Alphabet:: emitAndUpdateByte( const uint8_t byte, IOBits *io )
+        void Alphabet:: writeEOS(IOBits &io) const
+        {
+            eos->emit(io);
+        }
+
+       void Alphabet:: writeAndUpdateByte( const uint8_t byte, IOBits *io )
         {
             Char *chr = charNodes + byte;
             if( chr->frequency++ <= 0 )

@@ -33,7 +33,7 @@ namespace upsylon {
             //! emit EOS
             inline virtual void flushBits(IOBits &Q)
             {
-                this->eos->emit(Q);
+                this->writeEOS(Q);
                 Q.zpad();
             }
             

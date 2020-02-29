@@ -32,7 +32,7 @@ namespace upsylon {
 
         void TranslatorTree:: inputByte(const uint8_t byte, IOBits *io)
         {
-            emitAndUpdateByte(byte,io);
+            writeAndUpdateByte(byte,io);
             buildTree();
         }
 
