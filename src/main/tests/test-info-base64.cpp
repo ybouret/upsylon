@@ -9,23 +9,24 @@
 
 using namespace upsylon;
 using namespace Information;
+#include "y/hashing/key-hasher.hpp"
 
 namespace {
 
-static inline void update_itable( unsigned itable[], const char *table )
-{
-    for(unsigned i=0;i<64;++i)
+    static inline void update_itable( unsigned itable[], const char *table )
     {
-        const uint8_t b = uint8_t(table[i]);
-        if(itable[b]<64)
+        for(unsigned i=0;i<64;++i)
         {
-            Y_ASSERT(itable[b] == i );
+            const uint8_t b = uint8_t(table[i]);
+            if(itable[b]<64)
+            {
+                Y_ASSERT(itable[b] == i );
+            }
+            itable[b] = i;
         }
-        itable[b] = i;
+
+        itable[ uint8_t( Base64::padding ) ] = 64;
     }
-    
-    itable[ uint8_t( Base64::padding ) ] = 64;
-}
 
 
     template <typename T>
@@ -40,11 +41,15 @@ static inline void update_itable( unsigned itable[], const char *table )
         std::cerr << "      |_uuid_chars = " << uuid64<T>::uuid_chars << std::endl;
         std::cerr << "      |_uuid_size  = " << uuid64<T>::uuid_size  << std::endl;
 
+        key_hasher< uuid64<T>, hashing::fnv> KH;
+
         for(size_t i=0;i<4;++i)
         {
             const T   tmp = support::get<T>();
             uuid64<T> uid = tmp;
             std::cerr << "\t[" << tmp << "]='" << *uid << "'" << std::endl;
+            const size_t key = KH(uid);
+            std::cerr << "\t|_key=" << key << std::endl;
         }
 
 
