@@ -12,6 +12,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(lockable);
     Y_UTEST(bswap);
     Y_UTEST(bmove);
+    Y_UTEST(bcopy);
     Y_UTEST(zset);
     Y_UTEST(at_exit);
     Y_UTEST(sys);

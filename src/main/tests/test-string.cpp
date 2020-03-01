@@ -32,6 +32,7 @@ namespace
 
 Y_UTEST(string)
 {
+    
     //! test length
     std::cerr << std::endl;
     std::cerr << length_of( ""    ) << std::endl;

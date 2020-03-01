@@ -9,6 +9,7 @@
 #include "y/ptr/counted.hpp"
 #include "y/ios/serializable.hpp"
 #include "y/core/chainable.hpp"
+#include "y/type/bcopy.hpp"
 
 #include <cstring>
 #include <iosfwd>
@@ -226,7 +227,8 @@ maxi_ = items-1
             inline string( const T *s ) :  Y_CORE_STRING_CTOR(length_of(s))
             {
                 Y_CORE_STRING_ALLOC();
-                memcpy(addr_,s,size_*sizeof(T));
+                upsylon::bcopy<T>(addr_,s,size_);
+                //memcpy(addr_,s,size_*sizeof(T));
                 Y_CORE_STRING_CHECK(*this);
             }
 
@@ -234,7 +236,8 @@ maxi_ = items-1
             inline string( const T *s, const size_t n ) : Y_CORE_STRING_CTOR(n)
             {
                 Y_CORE_STRING_ALLOC();
-                memcpy(addr_,s,size_*sizeof(T));
+                upsylon::bcopy<T>(addr_,s,size_);
+                //memcpy(addr_,s,size_*sizeof(T));
                 Y_CORE_STRING_CHECK(*this);
             }
 

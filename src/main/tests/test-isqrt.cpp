@@ -1,6 +1,6 @@
 #include "y/counting/symm-indx.hpp"
 #include "y/utest/run.hpp"
-
+#include "y/utest/timings.hpp"
 #include <cstdio>
 using namespace upsylon;
 
@@ -29,14 +29,14 @@ Y_UTEST(isqrt)
     }
 #endif
 
-    std::cerr << "Testing Table" << std::endl;
+    std::cerr << "-- Testing Table" << std::endl;
     for(size_t i=0;i<sizeof(isqrt::table);++i)
     {
         //std::cerr << "i=" << i << std::endl;
         Y_ASSERT(isqrt::_(i)==isqrt::table[i]);
     }
 
-    std::cerr << "Testing SymmIndx" << std::endl;
+    std::cerr << "-- Testing SymmIndx" << std::endl;
     for(size_t n=1;n<=100;++n)
     {
 
@@ -52,12 +52,28 @@ Y_UTEST(isqrt)
     }
 
 
-    std::cerr << "Testing a Little Bit" << std::endl;
+    std::cerr << "-- Testing a Little Bit" << std::endl;
     for(uint64_t i=1;i<limit_of<uint32_t>::maximum ; i += 1+alea.leq(1024) )
     {
         const uint32_t s = uint32_t(isqrt::_(i));
         Y_ASSERT(s*s<=i);
     }
+    
+    std::cerr << "-- Testing Speed: Raw..." << std::endl;
+    double speed_raw = 0;
+    Y_TIMINGS(speed_raw,1.0,
+              for(size_t i=0;i<65536;++i) { (void)isqrt::_(i); }
+              );
+    std::cerr << "\t" << speed_raw << std::endl;
+    
+    std::cerr << "-- Testing Speed: Opt..." << std::endl;
+    double speed_opt = 0;
+    Y_TIMINGS(speed_opt,1.0,
+              for(size_t i=0;i<65536;++i) { (void)isqrt::of(i); }
+              );
+    std::cerr << "\t" << speed_opt << std::endl;
+
+    
 }
 Y_UTEST_DONE()
 
