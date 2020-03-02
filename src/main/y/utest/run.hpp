@@ -19,7 +19,8 @@ static const char   program[] = #NAME;   (void)program ;              \
 #define Y_CHECK(CODE) do {                                               \
 const char _check[] = "CHECK [" #CODE "]";                               \
 std::cerr << _check;                                                     \
-for(int i=sizeof(_check)/sizeof(_check[0])-1;i<48;++i) std::cerr << ' '; \
+for(int ichk=sizeof(_check)/sizeof(_check[0])-1;ichk<48;++ichk)          \
+std::cerr << ' ';                                                        \
 if(!(CODE)) {                                                            \
 std::cerr << "[FAILED]" << std::endl << std::endl;                       \
 throw upsylon::exception("*** [" #CODE "] FAILED"); }                    \
