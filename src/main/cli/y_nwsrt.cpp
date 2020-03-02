@@ -6,7 +6,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/associative/map.hpp"
-#include "y/fs/vfs.hpp"
+#include "y/fs/local/fs.hpp"
 
 using namespace upsylon;
 
@@ -201,9 +201,97 @@ Y_PROGRAM_START()
     const string dirName = vfs::get_file_dir(dbName);
     const string subName = dirName + "network/";
     std::cerr << "Will write in " << dirName << " and " << subName << std::endl;
+    
+    {
+        const string networkFileName = dirName + "network.hpp";
+        ios::ocstream header(networkFileName);
+        
+        header << "//! \\file\n";
+        header << "#ifndef Y_SORT_NETWORK_INCLUDED\n";
+        header << "#define Y_SORT_NETWORK_INCLUDED 1\n";
+        header << "#include \"y/type/bswap.hpp\"\n";
+        header << "namespace upsylon {\n";
+        header << "\ttemplate <size_t> struct network_sort;\n\n";
+        header << "}\n";
+        header << "#endif\n";
 
+    }
+    
+    vfs &fs = local_fs::instance();
+    fs.create_sub_dir(subName);
+    
+    for(SwapsDB::iterator it=db.begin();it!=db.end();++it)
+    {
+        const unsigned dim        = unsigned(it.key());
+        const Swaps_  &swaps      = **it;
+        const unsigned num        = unsigned(swaps.size());
+        const string   rootName   = vformat("sort%u",dim);
+        const string   headerName = rootName+".hpp";
+        const string   sourceName = rootName+".cpp";
+        const string   headerPath = subName + headerName;
+        const string   sourcePath = subName + sourceName;
+        std::cerr << "creating " << headerPath << " and " << sourcePath << std::endl;
+        
+        
+        {
+            ios::ocstream header( headerPath );
+            
+            header << "//! \\file\n";
+            header << "#ifndef Y_NW_" << rootName << "_INCLUDED\n";
+            header << "#define Y_NW_" << rootName << "_INCLUDED\n";
+            header << "#include \"../network.hpp\"\n";
+            header << "namespace upsylon {\n";
+            
+            {
+                header("\t\t//! network sort for %u items\n",dim);
+                header("\ttemplate <> struct network_sort<%u> {\n",dim);
+                header("\t\tstatic const size_t I[%u]; //!< I swap indices\n",num);
+                header("\t\tstatic const size_t J[%u]; //!< J swap indices\n",num);
+                
+                header("\t\t//! sort...\n");
+                header("\t\ttemplate <typename T,typename COMPARE> static inline\n");
+                header("\t\tvoid on(T *a, COMPARE &compare) throw() {\n");
+                
+                header("\t\t\tassert(NULL!=a);\n");
+                header("\t\t\tfor(size_t k=0;k<%u;++k){\n",num);
+                header("\t\t\t\tconst T &aI=a[I[k]], &aJ=a[J[k]];\n");
+                header("\t\t\t\tif(compare(aI,aJ)<0) bswap(aI,aJ);\n");
 
-
+                header("\t\t\t}\n");
+                header("\t\t}\n");
+                header("\t};\n");
+            }
+            header << "}\n";
+            header << "#endif";
+            
+        }
+        
+        {
+            ios::ocstream source( sourcePath );
+            source << "#include \"" << headerName << "\"\n";
+            source << "namespace upsylon {\n";
+            
+            source("\tconst size_t network_sort<%u>::I[%u] = {\n",dim,num);
+            for(size_t k=1;k<=num;++k)
+            {
+                source(" %u", unsigned( swaps[k].I) );
+                if(k<num) source << ',';
+            }
+            source << "};\n\n";
+            
+            source("\tconst size_t network_sort<%u>::J[%u] = {\n",dim,num);
+            for(size_t k=1;k<=num;++k)
+            {
+                source(" %u", unsigned( swaps[k].J) );
+                if(k<num) source << ',';
+            }
+            source << "};\n\n";
+            
+            source << "}\n";
+        }
+        
+        //if(dim>=5) break;
+    }
 
 
 
