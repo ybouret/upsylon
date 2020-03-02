@@ -2,7 +2,8 @@ PROJECT(cli)
 
 MESSAGE( STATUS "")
 MESSAGE( STATUS "<Command Line Interface Tools>" )
-
+SET( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
+MESSAGE( STATUS "in '${HERE}'" )
 FUNCTION(CLI TOOL)
 	ADD_EXECUTABLE(${TOOL} "${TOOL}.cpp")
 	TARGET_LINK_Y(${TOOL})
@@ -13,6 +14,11 @@ ENDFUNCTION(CLI)
 IF(FALSE)
   CLI(nwsrt)
 ENDIF()
+
+CLI(y_nwsrt)
+add_custom_command(TARGET y_nwsrt
+                   POST_BUILD
+                   COMMAND y_nwsrt ${HERE}/../y/sort/nwsrt.db)
 
 CLI(y_uniq)
 CLI(y_bin2dat)

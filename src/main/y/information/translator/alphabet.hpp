@@ -67,7 +67,7 @@ namespace upsylon {
 
             explicit Alphabet(); //!< setup
             void     writeAndUpdateByte(const uint8_t byte, IOBits *io); //!< write bits on io!=NULL, updated chars
-            void     writeEOS(IOBits &io) const;                         //!< write EOS
+            void     writeEOS(IOBits &io) const;                         //!< write EOS, nothing for no encoded chars!
             void     initialize() throw();                               //!< prepare chars
             void     rescaleFrequencies() throw();                       //!< scale down used frequencies
             
