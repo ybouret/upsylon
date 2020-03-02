@@ -12,7 +12,7 @@ namespace upsylon {
         
         namespace RunLength {
             
-            //! Run Length Encoder
+            //! Run Length Encoder base class
             class Encoder : public Framework, public TranslatorQueue
             {
             public:
@@ -57,22 +57,20 @@ namespace upsylon {
             };
             
             
-            
-
-            
-            
+            //! Run Length Encoder with different QEncoders
             template <typename ENCODER = Single<QEncoder,QWriter> >
             class EncodeWith : public ENCODER, public Encoder
             {
             public:
-                inline virtual ~EncodeWith() throw() {}
+                //! cleanip
+                inline virtual ~EncodeWith() throw()  {}
+
+                //! setup
                 inline explicit EncodeWith() :
                 ENCODER(),
                 Encoder( this->_character(), this->_repeating(), this->_different() )
                 {
                 }
-
-
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EncodeWith);

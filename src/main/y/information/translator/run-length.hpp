@@ -54,6 +54,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Framework);
             };
 
+            //! single [en|de]coder
             template <
             typename BROKER,
             typename CHARACTER_BROKER
@@ -61,23 +62,27 @@ namespace upsylon {
             class Single
             {
             public:
-                typedef typename BROKER::Pointer PointerType;
+                typedef typename BROKER::Pointer PointerType; //!< alias
 
+                //! setup
                 explicit Single() : characterBroker( new CHARACTER_BROKER() ) {}
+
+                //! cleanup
                 virtual ~Single() throw() {}
 
             protected:
-                BROKER & _character() throw() { return *characterBroker; }
-                BROKER & _repeating() throw() { return *characterBroker; }
-                BROKER & _different() throw() { return *characterBroker; }
+                BROKER & _character() throw() { return *characterBroker; } //!< for character
+                BROKER & _repeating() throw() { return *characterBroker; } //!< for repeating
+                BROKER & _different() throw() { return *characterBroker; } //!< for different
 
-                inline void resetBrokers() throw() { characterBroker->startBits(); }
+                inline void resetBrokers() throw() { characterBroker->startBits(); } //!< for startBits
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Single);
                 PointerType characterBroker;
             };
 
+            //! double [en|de]coders
             template <
             typename BROKER,
             typename CHARACTER_BROKER,
@@ -86,20 +91,23 @@ namespace upsylon {
             class Double
             {
             public:
-                typedef typename BROKER::Pointer PointerType;
+                typedef typename BROKER::Pointer PointerType;//!< alias
 
+                //! setup
                 explicit Double() :
                 characterBroker( new CHARACTER_BROKER() ),
                 repeatingBroker( new REPEATING_BROKER() )
                 {}
 
+                //! cleanup
                 virtual ~Double() throw() {}
 
             protected:
-                BROKER & _character() throw() { return *characterBroker; }
-                BROKER & _repeating() throw() { return *repeatingBroker; }
-                BROKER & _different() throw() { return *repeatingBroker; }
+                BROKER & _character() throw() { return *characterBroker; } //!< for character
+                BROKER & _repeating() throw() { return *repeatingBroker; } //!< for repeating
+                BROKER & _different() throw() { return *repeatingBroker; } //!< for different
 
+                //! for startBits()
                 inline void resetBrokers() throw()
                 {
                     characterBroker->startBits();
@@ -113,6 +121,7 @@ namespace upsylon {
             };
 
 
+            //! triple [en|de]coders
             template <
             typename BROKER,
             typename CHARACTER_BROKER,
@@ -122,21 +131,24 @@ namespace upsylon {
             class Triple
             {
             public:
-                typedef typename BROKER::Pointer PointerType;
+                typedef typename BROKER::Pointer PointerType; //!< alias
 
+                //! setup
                 explicit Triple() :
                 characterBroker( new CHARACTER_BROKER() ),
                 repeatingBroker( new REPEATING_BROKER() ),
                 differentBroker( new DIFFERENT_BROKER() )
                 {}
 
+                //! cleanup
                 virtual ~Triple() throw() {}
 
             protected:
-                BROKER & _character() throw() { return *characterBroker; }
-                BROKER & _repeating() throw() { return *repeatingBroker; }
-                BROKER & _different() throw() { return *differentBroker; }
+                BROKER & _character() throw() { return *characterBroker; } //!< for character
+                BROKER & _repeating() throw() { return *repeatingBroker; } //!< for repeating
+                BROKER & _different() throw() { return *differentBroker; } //!< for different
 
+                //! for startBits()
                 inline void resetBrokers() throw()
                 {
                     characterBroker->startBits();

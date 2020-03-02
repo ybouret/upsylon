@@ -7,6 +7,7 @@
 
 namespace upsylon {
 
+    //! out of reach wrappers
     struct out_of_reach
     {
         static void copy(void *target, const void *source, const size_t bytes) throw(); //!< memcpy

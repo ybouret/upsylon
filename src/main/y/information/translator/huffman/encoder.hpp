@@ -18,10 +18,10 @@ namespace upsylon {
             class  EncodingTree : public EncodingWith<Tree>
             {
             public:
-                static const char CLID[];
-                explicit EncodingTree();
-                virtual ~EncodingTree() throw();
-                virtual const char *label() const throw();
+                static const char CLID[];                  //!< Huffman-Encoder for QEncoder label
+                explicit EncodingTree();                   //!< setup
+                virtual ~EncodingTree() throw();           //!< cleanup
+                virtual const char *label() const throw(); //!< CLID
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EncodingTree);
@@ -32,7 +32,7 @@ namespace upsylon {
             {
             public:
                 virtual const char *family() const throw();         //!< FMID
-                virtual const char *name() const throw();           //!< ENCODER
+                virtual const char *name() const throw();           //!< EncoderID
                 explicit            Encoder();                      //!< initialize all
                 virtual            ~Encoder() throw();              //!< cleanup
                 virtual void        reset() throw();                //!< restart and clean all

@@ -31,7 +31,7 @@ namespace upsylon {
         class QWriter : public QEncoder
         {
         public:
-            static const char CLID[];
+            static const char CLID[];                      //!< QWriter
             explicit QWriter() throw();                    //!< setup
             virtual ~QWriter() throw();                    //!< cleanup
             virtual void        startBits() throw();              //!< do nothing

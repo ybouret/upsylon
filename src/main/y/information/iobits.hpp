@@ -149,6 +149,7 @@ static const uint##BITS##_t Bit[BITS];\
             Y_DISABLE_COPY_AND_ASSIGN(IOBits);
         };
 
+        //! helper to make labels
 #define Y_INFORMATION_BROKER(NAME) \
 const char * NAME :: label() const throw() { return CLID; }\
 const char   NAME :: CLID[] = #NAME

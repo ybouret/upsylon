@@ -19,10 +19,10 @@ namespace upsylon {
             class  EncodingTree : public EncodingWith<Tree>
             {
             public:
-                static const char CLID[];
-                explicit EncodingTree();
-                virtual ~EncodingTree() throw();
-                virtual const char *label() const throw();
+                static const char CLID[];                   //!< ShannonFano-Encoder
+                explicit EncodingTree();                    //!< setup
+                virtual ~EncodingTree() throw();            //!< cleanup
+                virtual const char *label() const throw();  //!< CLID
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EncodingTree);

@@ -14,7 +14,8 @@ namespace upsylon {
         class QDecoder : public IOBits::Broker
         {
         public:
-            enum Event
+            //! reading status
+            enum Status
             {
                 Success, //!< a char was read
                 Partial, //!< need more bits
@@ -23,7 +24,7 @@ namespace upsylon {
             typedef arc_ptr<QDecoder> Pointer; //!< alias
             virtual ~QDecoder() throw();       //!< cleanup
 
-            virtual Event   queryBits(char &C, IOBits &) = 0;
+            virtual Status   queryBits(char &C, IOBits &) = 0; //!< try to get a new char
 
 
         protected:
@@ -33,21 +34,19 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(QDecoder);
         };
 
+
+        //! reading from IOBits
         class QReader : public QDecoder
         {
         public:
-            explicit QReader() throw();
-            virtual ~QReader() throw();
+            static const char CLID[];   //!< QReader
+            explicit QReader() throw(); //!< setup
+            virtual ~QReader() throw(); //!< cleanup
 
-            virtual void  startBits() throw() {}
-            virtual Event queryBits(char &C, IOBits &Q)
-            {
-                if( Q.size() < 8 ) return Partial; else
-                {
-                    C = Q.pop<char>();
-                    return Success;
-                }
-            }
+            virtual void        startBits() throw();           //!< do nothing
+            virtual Status      queryBits(char &C, IOBits &Q); //!< success if more than 8 bits
+            virtual const char *label() const throw();         //!< CLID
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(QReader);
         };
