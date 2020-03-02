@@ -46,6 +46,12 @@ SET(sort_srcs ${sort_decl} ${sort_code} y/sort/nwsrt.db)
 SOURCE_GROUP( sort FILES ${sort_srcs} )
 INSTALL( FILES ${sort_decl} DESTINATION include/y/sort )
 
+FILE(GLOB sort_network_decl y/sort/network/*.hpp)
+FILE(GLOB sort_network_code y/sort/network/*.cpp)
+SET(sort_network_srcs ${sort_network_decl} ${sort_network_code})
+SOURCE_GROUP( sort_network FILES ${sort_network_srcs} )
+INSTALL( FILES ${sort_network_decl} DESTINATION include/y/sort/network )
+
 FILE(GLOB randomized_decl y/randomized/*.hpp)
 FILE(GLOB randomized_code y/randomized/*.cpp)
 SET(randomized_srcs ${randomized_decl} ${randomized_code})
@@ -368,6 +374,7 @@ ${type_srcs}
 ${core_srcs}
 ${code_srcs}
 ${sort_srcs}
+${sort_network_srcs}
 ${randomized_srcs}
 ${hashing_srcs}
 ${memory_srcs}

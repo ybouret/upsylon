@@ -1,6 +1,0 @@
-//! \file
-#ifndef Y_NETWORK_SORT_ALL_INCLUDED
-#define Y_NETWORK_SORT_ALL_INCLUDED 1
-
-#endif
-
