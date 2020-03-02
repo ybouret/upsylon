@@ -15,10 +15,12 @@ IF(FALSE)
   CLI(nwsrt)
 ENDIF()
 
+IF(FALSE)
 CLI(y_nwsrt)
 add_custom_command(TARGET y_nwsrt
                    POST_BUILD
                    COMMAND y_nwsrt ${HERE}/../y/sort/nwsrt.db)
+ENDIF()
 
 CLI(y_uniq)
 CLI(y_bin2dat)

@@ -33,13 +33,14 @@ namespace {
         I(swp.I), J(swp.J)
         {
         }
-
+#if 0
         inline friend std::ostream & operator<<( std::ostream &os, const Swap &swp )
         {
             os << '[' << swp.I << "," << swp.J << ']';
             return os;
         }
-
+#endif
+        
     private:
 
     };
@@ -197,8 +198,101 @@ Y_PROGRAM_START()
     const string  dbName = argv[1];
     SwapsDB       db(32,as_capacity);
     loadAndCheck(db,dbName);
-    const string dirName = ".";
-    
+    //const string dirName = ".";
+    const string  dirName = vfs::get_file_dir(dbName);
+    const string  allName = dirName + "network-sort.hpp";
+    ios::ocstream allhdr(allName);
+    {
+        allhdr("//! \\file\n");
+        allhdr("#ifndef Y_NETWORK_SORT_ALL_INCLUDED\n");
+        allhdr("#define Y_NETWORK_SORT_ALL_INCLUDED 1\n");
+    }
+    for( SwapsDB::iterator it = db.begin(); it != db.end(); ++it )
+    {
+        const Swaps_   &swaps      = **it;
+        const unsigned  dim        = unsigned(it.key());
+        const unsigned  num        = unsigned(swaps.size());
+        const string    headerName = dirName + vformat("nwsrt%u.hpp",dim);
+        const string    sourceName = dirName + vformat("nwsrt%u.cpp",dim);
+
+
+        std::cerr << "will write " << headerName << "," << sourceName << std::endl;
+        //continue;
+
+        ios::ocstream   header( headerName );
+        ios::ocstream   source( sourceName );
+
+        // header prolog
+        {
+            header("//! \\file\n");
+            header("#ifndef Y_NETWORK_SORT%u_INCLUDED\n",dim);
+            header("#define Y_NETWORK_SORT%u_INCLUDED 1\n",dim);
+            header("#include \"y/type/bswap.hpp\"\n");
+            header("namespace upsylon{\n");
+        }
+
+        {
+            header("\t//! network sort for %u\n",dim);
+            header("\tstruct nwsrt%u {\n",dim);
+            header("\t\tstatic const size_t I[%u]; //!< I indices\n", num);
+            header("\t\tstatic const size_t J[%u]; //!< J indices\n", num);
+            {
+                header("\t\ttemplate <typename T,typename FUNC> static inline\n");
+                header("\t\tvoid on(T *a, FUNC &compare) throw() {\n");
+
+                header("\t\t\tfor(size_t k=0;k<%u;++k) {\n",num);
+                header("\t\t\t\tT &aI = a[I[k]], &aJ = a[J[k]];\n");
+                header("\t\t\t\tif(compare(aI,aJ)<0) bswap(aI,aJ);\n");
+                header("\t\t\t}\n");
+
+                header("\t\t}\n");
+            }
+
+            header("\t};\n");
+        }
+
+
+        // header epilog
+        {
+            header("}\n");
+            header("#endif\n");
+        }
+
+
+        // source prolog
+        {
+            allhdr("#include \"%s\"\n", vfs::get_base_name(headerName));
+            source("#include \"%s\"\n", vfs::get_base_name(headerName));
+            source("namespace upsylon {\n");
+        }
+
+        {
+            source("\tconst size_t nwsrt%u::I[%u]={\n",dim,num);
+            source("\t};\n");
+        }
+
+        {
+            source("\tconst size_t nwsrt%u::J[%u]={\n",dim,num);
+            source("\t};\n");
+        }
+
+        // source epilog
+        {
+            source("}\n");
+        }
+
+    }
+    {
+        allhdr("#endif\n");
+    }
+
+
+
+
+
+
+
+
 }
 Y_PROGRAM_END()
 

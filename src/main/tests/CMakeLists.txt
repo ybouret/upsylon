@@ -195,6 +195,7 @@ ADD_TEST(mp:primesQ   test-main prime_ratio)
 ADD_TEST(mp:io        test-main mp_io)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-nwsrt.cpp test-locate.cpp test-classes.cpp)
+ADD_TEST(sort:network     test-main network_sort)
 ADD_TEST(sort:sort        test-main sort)
 ADD_TEST(sort:unique      test-main unique)
 ADD_TEST(sort:maintain    test-main maintain)
