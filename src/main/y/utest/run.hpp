@@ -19,7 +19,7 @@ static const char   program[] = #NAME;   (void)program ;              \
 #define Y_CHECK(CODE) do {                                               \
 const char _check[] = "CHECK [" #CODE "]";                               \
 std::cerr << _check;                                                     \
-for(int ichk=sizeof(_check)/sizeof(_check[0])-1;ichk<48;++ichk)          \
+for(int ichk=sizeof(_check)/sizeof(_check[0])-1;ichk<64;++ichk)          \
 std::cerr << ' ';                                                        \
 if(!(CODE)) {                                                            \
 std::cerr << "[FAILED]" << std::endl << std::endl;                       \

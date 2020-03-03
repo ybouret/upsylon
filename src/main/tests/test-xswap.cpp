@@ -1,3 +1,5 @@
+
+#include "y/type/is-aligned.hpp"
 #include "y/type/xswap.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -46,9 +48,37 @@ namespace {
         doSwap<T,8>();
     }
 
+
 }
 
+#include <iomanip>
+#include "y/string.hpp"
+#include "y/type/spec.hpp"
 
+namespace {
+
+    template <typename T>
+    void XALIGN()
+    {
+        std::cerr << "align for " << type_name_of<T>() << std::endl;
+        typedef aligned_type_for<T> aligned_type;
+        std::cerr << "\tkind      : " << aligned_type::text()    << std::endl;
+        std::cerr << "\ttype_size : " << aligned_type::type_size << std::endl;
+        std::cerr << "\tword_size : " << aligned_type::word_size << std::endl;
+        std::cerr << "\twords     : " << aligned_type::words     << std::endl;
+
+        T source = support::get<T>();
+        const T source_org = source;
+        T target = support::get<T>();
+        const T target_org = target;
+
+        bswap(target,source);
+        Y_CHECK(target_org==source);
+        Y_CHECK(source_org==target);
+
+
+    }
+}
 
 Y_UTEST(xswap)
 {
@@ -58,5 +88,18 @@ Y_UTEST(xswap)
     doBlock<int64_t>();
     doBlock<float>();
     doBlock<double>();
+
+    for(size_t i=0;i<=100;++i)
+    {
+        is_aligned::value v = Y_IS_ALIGNED_VALUE(i);
+        std::cerr << std::setw(4) << i << " -> " << is_aligned::text(v) << std::endl;
+    }
+
+    XALIGN<uint8_t>();
+    XALIGN<uint16_t>();
+    XALIGN<uint32_t>();
+    XALIGN<uint64_t>();
+    XALIGN<string>();
+    
 }
 Y_UTEST_DONE()

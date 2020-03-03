@@ -7,9 +7,11 @@
 namespace upsylon
 {
     //! implement a network sort on N items
-#define Y_SORT_IMPL(N)  case N: nwsrt::on##N(&tableau[debut]); break
+#define Y_SORT_IMPL(N)  case N: network_sort<N>::on(&tableau[debut],compare); break
+
     //! implement a network co-sort on N items
 #define Y_SORT_IMPL2(N) case N: nwsrt::co_op##N(&arr[debut],&brr[debut]); break
+
     //! repeat a macro for network sort
 #define Y_SORT_REPEAT(MACRO) \
 MACRO( 2); MACRO( 3); MACRO( 4); MACRO( 5); MACRO( 6); MACRO( 7); MACRO( 8); \
@@ -33,7 +35,7 @@ MACRO(31); MACRO(32)
 
         switch(objets)
         {
-                //Y_SORT_REPEAT(Y_SORT_IMPL);
+                Y_SORT_REPEAT(Y_SORT_IMPL);
 
             default: {
                 const T pivot(tableau[debut]);
@@ -64,7 +66,7 @@ MACRO(31); MACRO(32)
     template <typename T, typename FUNC>
     inline void ysort(array<T> &arr, FUNC &compare)
     {
-        unit_t n = unit_t(arr.size());
+        const unit_t n = unit_t(arr.size());
         _ysort<T>(*arr,0,n-1,compare);
     }
 }

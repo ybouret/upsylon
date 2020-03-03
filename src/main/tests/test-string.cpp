@@ -2,6 +2,8 @@
 #include "y/strfwd.hpp"
 #include "support.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
+
 #include "y/core/node.hpp"
 #include "y/core/list.hpp"
 #include "y/sort/merge.hpp"
@@ -142,6 +144,10 @@ Y_UTEST(string)
         }
         std::cerr << std::endl;
     }
+
+    Y_UTEST_SIZEOF(core::string<char>);
+    Y_UTEST_SIZEOF(core::string<uint32_t>);
+    Y_UTEST_SIZEOF(string);
 
 }
 Y_UTEST_DONE()
