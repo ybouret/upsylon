@@ -6,6 +6,8 @@
 #include <iomanip>
 #include "y/os/wtime.hpp"
 #include <cstring>
+#include "y/code/hr-ints.hpp"
+#include "y/string.hpp"
 
 using namespace upsylon;
 
@@ -51,9 +53,13 @@ namespace {
         const double ops      = N * iterMax;
         const double tqs      = chrono(qs);
         const double tnw      = chrono(nw);
-        const double qs_speed = ops/tqs*1e-6;
-        const double nw_speed = ops/tnw*1e-6;
-        std::cerr << "] : qs=" << qs_speed << " | nw=" << nw_speed << std::endl;
+        const int64_t qs_speed = int64_t(floor(ops/tqs+0.5));
+        const int64_t nw_speed = int64_t(floor(ops/tnw+0.5));
+        const human_readable hrqs = qs_speed; const string sqs = vformat("%8.2lf%c/s",hrqs.value,hrqs.radix);
+        const human_readable hrnw = nw_speed; const string snw = vformat("%8.2lf%c/s",hrnw.value,hrnw.radix);
+        std::cerr << "] : qsort=" << sqs << " | nwsrt=" << snw << std::endl;
+
+
     }
     
     template<typename T>
