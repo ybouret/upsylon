@@ -9,6 +9,7 @@ FUNCTION(__ADD_PATTERN pattern)
 ENDFUNCTION(__ADD_PATTERN)
 
 MESSAGE( STATUS "collecting local temporary files")
+__ADD_PATTERN(*.o)
 __ADD_PATTERN(*.dat)
 __ADD_PATTERN(*.bin)
 __ADD_PATTERN(*.png)

@@ -9,7 +9,7 @@ using namespace upsylon;
 namespace
 {
     template <const size_t BYTES>
-    void xswap(void *a,void *b) throw()
+    void xxswap(void *a,void *b) throw()
     {
         struct mocking { char data[BYTES]; };
         const mocking tmp = *(mocking *)a;
@@ -82,9 +82,9 @@ namespace
         if(N>0)
         {
             init(a,b,N);
-            xswap<N>(a,b);
+            xxswap<N>(a,b);
             check(a,b,N);
-            Y_TIMINGS(x_speed,D, xswap<N>(a,b));
+            Y_TIMINGS(x_speed,D, xxswap<N>(a,b));
         }
         x_speed *= 1e-6;
         std::cerr << "\txswap: " << x_speed << std::endl;
@@ -95,6 +95,22 @@ namespace
         }
     }
 
+    template <typename T>
+    void chkBSWAP()
+    {
+        for(size_t iter=64;iter>0;--iter)
+        {
+            T a; alea.fill( &a,sizeof(a));
+            T b = a;
+            T c; memset(&c,0,sizeof(c));
+            bswap<T>(a,c);
+            Y_ASSERT(c==b);
+            Y_ASSERT(a==0);
+
+        }
+
+    }
+
 }
 
 using namespace upsylon;
@@ -103,6 +119,11 @@ using namespace upsylon;
 
 Y_UTEST(bswap)
 {
+    chkBSWAP<int8_t>();
+    chkBSWAP<int16_t>();
+    chkBSWAP<int32_t>();
+    chkBSWAP<int64_t>();
+    
     double D = 0.02;
     if(argc>1)
     {

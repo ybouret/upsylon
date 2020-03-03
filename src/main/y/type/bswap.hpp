@@ -3,65 +3,58 @@
 #define Y_TYPE_BSWAP_INCLUDED 1
 
 #include "y/type/cswap.hpp"
-#include "y/type/ints.hpp"
-#include "y/core/loop.hpp"
 
 namespace upsylon
 {
 
-    namespace core
-    {
-        typedef unsigned_int<sizeof(ptrdiff_t)>::type bswap_t; //!< word type for bswap
+    namespace core {
 
-        //! inline type exchange
-#define Y_BSWAP_TYPE(T,I)  const T tmp = A[I]; A[I] = B[I]; B[I] = tmp
-        //! inline block exchange
-#define Y_BSWAP_BLOCK(I)  Y_BSWAP_TYPE(bswap_t,I)
-        //! inline byte exchange
-#define Y_BSWAP_BYTE(I)   Y_BSWAP_TYPE(uint8_t,I)
-
-        //! swap BLOCKS blocks
-        template <const size_t BLOCKS>
-        inline void bswap_blocks(bswap_t *A, bswap_t *B) throw()
-        {
-            Y_LOOP_FUNC_STATIC_(BLOCKS,Y_BSWAP_BLOCK,0);
-        }
-
-        //! swap no blocks
-        template < > inline void bswap_blocks<0>(bswap_t *, bswap_t *) throw() {}
-
-        //! swap BYTES bytes
-        template <const size_t BYTES>
-        inline void bswap_bytes(void *a, void *b) throw()
+        //! byte swapping
+        template <const size_t N> inline
+        void bswap(void *a,void *b) throw()
         {
             uint8_t *A = (uint8_t *)a;
             uint8_t *B = (uint8_t *)b;
-            Y_LOOP_FUNC_STATIC_(BYTES,Y_BSWAP_BYTE,0);
+            for(size_t i=0;i<N;++i)
+            {
+                cswap(A[i],B[i]);
+            }
         }
 
-        //! swap no BYTES
-        template <> inline void bswap_bytes<0>(void *, void *) throw() {}
+        //! special case: 0-length
+        template <> inline void bswap<0>(void *,void*) throw() {}
 
-        //! swap N= Q blocks+R bytes
-        template <const size_t N>
-        void bswap(void *a,void *b) throw()
+#if 0
+        //! special case: 1-length
+        template <> inline void bswap<1>(void *a,void *b) throw()
         {
-
-            static const size_t Q = N/sizeof(bswap_t);
-            static const size_t R = N&(sizeof(bswap_t)-1);
-
-            bswap_t *A = static_cast<bswap_t *>(a);
-            bswap_t *B = static_cast<bswap_t *>(b);
-            bswap_blocks<Q>(A,B);
-            bswap_bytes<R>(A+Q,B+Q);
-
+            cswap( *(uint8_t*)a, *(uint8_t*)b );
         }
+
+        //! special case: 2-length
+        template <> inline void bswap<2>(void *a,void *b) throw()
+        {
+            cswap( *(uint16_t*)a, *(uint16_t*)b );
+        }
+
+        //! special case: 4-length
+        template <> inline void bswap<4>(void *a,void *b) throw()
+        {
+            cswap( *(uint32_t*)a, *(uint32_t*)b );
+        }
+
+        //! special case: 8-length
+        template <> inline void bswap<8>(void *a,void *b) throw()
+        {
+            cswap( *(uint64_t*)a, *(uint64_t*)b );
+        }
+#endif
 
     }
 
     //! binary swap of types
     template <typename T>
-    void bswap( T &a, T &b ) throw()
+    inline void bswap( T &a, T &b ) throw()
     {
         core::bswap<sizeof(T)>( (void *)&a, (void *)&b );
     }
@@ -71,7 +64,11 @@ namespace upsylon
     {
         uint8_t *A = (uint8_t *)a;
         uint8_t *B = (uint8_t *)b;
-        Y_LOOP_FUNC_(n,Y_BSWAP_BYTE,0);
+        for(size_t i=0;i<n;++i)
+        {
+            cswap(A[i],B[i]);
+        }
+
     }
 
 

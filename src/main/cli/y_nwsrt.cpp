@@ -209,7 +209,7 @@ Y_PROGRAM_START()
         header << "//! \\file\n";
         header << "#ifndef Y_SORT_NETWORK_INCLUDED\n";
         header << "#define Y_SORT_NETWORK_INCLUDED 1\n";
-        header << "#include \"y/type/bswap.hpp\"\n";
+        header << "#include \"y/type/xswap.hpp\"\n";
         header << "namespace upsylon {\n";
         header << "\ttemplate <size_t> struct network_sort;\n\n";
         header << "}\n";
@@ -256,18 +256,35 @@ Y_PROGRAM_START()
                     header("\ttemplate <> struct network_sort<%u> {\n",dim);
                     header("\t\tstatic const size_t I[%u]; //!< I swap indices\n",num);
                     header("\t\tstatic const size_t J[%u]; //!< J swap indices\n",num);
-                    
+
+                    // simple sort call
                     header("\t\t//! sort...\n");
                     header("\t\ttemplate <typename T,typename COMPARE> static inline\n");
                     header("\t\tvoid on(T *a, COMPARE &compare) throw() {\n");
                     
                     header("\t\t\tassert(NULL!=a);\n");
                     header("\t\t\tfor(size_t k=0;k<%u;++k){\n",num);
-                    header("\t\t\t\tconst T &aI=a[I[k]], &aJ=a[J[k]];\n");
-                    header("\t\t\t\tif(compare(aJ,aI)<0) bswap(aI,aJ);\n");
+                    header("\t\t\t\tT &aI=a[I[k]], &aJ=a[J[k]];\n");
+                    header("\t\t\t\tif(compare(aJ,aI)<0) xswap<T>(aI,aJ);\n");
                     
                     header("\t\t\t}\n");
                     header("\t\t}\n");
+
+                    // co sort
+                    header("\t\ttemplate <typename T,typename U,typename COMPARE> static inline\n");
+                    header("\t\tvoid co(T *a, U *b, COMPARE &compare) throw() {\n");
+
+                    header("\t\t\tassert(NULL!=a);\n");
+                    header("\t\t\tassert(NULL!=b);\n");
+                    header("\t\t\tfor(size_t k=0;k<%u;++k){\n",num);
+                    header("\t\t\t\tconst size_t  i = I[k],   j = J[k];\n");
+                    header("\t\t\t\tT           &aI = a[i], &aJ = a[j];\n");
+                    header("\t\t\t\tif(compare(aJ,aI)<0) { xswap<T>(aI,aJ); xswap<U>(b[i],b[j]); }\n");
+
+                    header("\t\t\t}\n");
+                    header("\t\t}\n");
+
+
                     header("\t};\n");
                 }
                 header << "}\n";

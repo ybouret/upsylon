@@ -170,6 +170,11 @@ namespace upsylon
 
 }
 
+Y_NO_THROW_COPY( point2d<float>  );
+Y_NO_THROW_COPY( point2d<double> );
+Y_NO_THROW_COPY( point2d<unit_t> );
+
+
 #endif
 
 

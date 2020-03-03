@@ -31,7 +31,7 @@ namespace upsylon {
 
     //! mark class as supporting bitwise ops
 #define Y_SUPPORT_BITWISE_OPS(CLASS) \
-namespace upsylon {                        \
+namespace upsylon {                  \
 template <>                          \
 struct support_bitwise_ops< CLASS >  \
 { enum {value = true}; };            \
@@ -39,16 +39,16 @@ struct support_bitwise_ops< CLASS >  \
 
     //! mark class as supporting no destruction
 #define Y_SUPPORT_NO_DESTRUCT(CLASS) \
-namespace upsylon {                        \
+namespace upsylon {                  \
 template <>                          \
-struct support_no_destruct< CLASS >    \
+struct support_no_destruct< CLASS >  \
 { enum {value = true}; };            \
 }
 
     //! mark class as supporting C-style operations: bitwise and no destruction
-#define YOCTO_SUPPORT_C_STYLE_OPS(CLASS) \
-YOCTO_SUPPORT_BITWISE_OPS(CLASS) \
-YOCTO_SUPPORT_NO_DESTRUCT(CLASS)
+#define Y_SUPPORT_C_STYLE_OPS(CLASS) \
+Y_SUPPORT_BITWISE_OPS(CLASS)         \
+Y_SUPPORT_NO_DESTRUCT(CLASS)
 
     
 }
