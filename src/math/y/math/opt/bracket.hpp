@@ -4,6 +4,7 @@
 
 #include "y/math/triplet.hpp"
 #include "y/math/types.hpp"
+#include "y/type/cswap.hpp"
 #include <iostream>
 
 namespace upsylon

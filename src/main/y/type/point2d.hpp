@@ -3,7 +3,7 @@
 #define Y_POINT2D_INCLUDED 1
 
 #include "y/math/types.hpp"
-#include "y/type/bswap.hpp"
+#include "y/type/no-throw-copy.hpp"
 #include "y/core/isqrt.hpp"
 
 namespace upsylon

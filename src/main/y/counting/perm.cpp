@@ -2,6 +2,7 @@
 #include "y/mpl/natural.hpp"
 #include "y/exception.hpp"
 #include "y/type/bzset.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {

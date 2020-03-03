@@ -6,6 +6,7 @@
 #include "y/sequence/array.hpp"
 #include "y/iterate/linear.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/cswap.hpp"
 #include <cstring>
 
 namespace upsylon {

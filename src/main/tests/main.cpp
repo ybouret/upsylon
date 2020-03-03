@@ -10,7 +10,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(i2i);
     Y_UTEST(standard);
     Y_UTEST(lockable);
-    Y_UTEST(bswap);
     Y_UTEST(xswap);
     Y_UTEST(bmove);
     Y_UTEST(zset);
@@ -137,7 +136,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(matrix);
     Y_UTEST(functor);
     Y_UTEST(vfs);
-    Y_UTEST(nwsrt);
     Y_UTEST(triplet);
     Y_UTEST(points);
     Y_UTEST(tuple);

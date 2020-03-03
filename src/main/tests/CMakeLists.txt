@@ -48,11 +48,10 @@ ADD_TEST(os:standard     test-main standard)
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-zset.cpp test-code.cpp test-bits.cpp
 test-core-pool.cpp  test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
 test-progress.cpp
- test-functor.cpp test-tuple.cpp test-traits.cpp test-bswap.cpp test-xswap.cpp test-bmove.cpp test-isqrt.cpp test-zfi.cpp test-binary.cpp)
+ test-functor.cpp test-tuple.cpp test-traits.cpp test-xswap.cpp test-bmove.cpp test-isqrt.cpp test-zfi.cpp test-binary.cpp)
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
 ADD_TEST(core:zset        test-main zset)
-ADD_TEST(core:bswap       test-main bswap)
 ADD_TEST(core:xswap       test-main xswap)
 ADD_TEST(core:bmove       test-main bmove)
 ADD_TEST(core:code        test-main code)
@@ -195,12 +194,11 @@ ADD_TEST(mp:primes    test-main prime_factor 0 1 2 3 4 0x3E8 0x2711)
 ADD_TEST(mp:primesQ   test-main prime_ratio)
 ADD_TEST(mp:io        test-main mp_io)
 
-SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-nwsrt.cpp test-locate.cpp test-classes.cpp)
+SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp)
 ADD_TEST(sort:network     test-main network_sort)
 ADD_TEST(sort:sort        test-main sort)
 ADD_TEST(sort:unique      test-main unique)
 ADD_TEST(sort:maintain    test-main maintain)
-ADD_TEST(sort:nw          test-main nwsrt)
 ADD_TEST(sort:locate      test-main locate)
 ADD_TEST(sort:classes     test-main classes)
 

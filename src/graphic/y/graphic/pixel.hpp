@@ -5,7 +5,8 @@
 #define Y_GRAPHIC_PIXEL_INCLUDED 1
 
 #include "y/graphic/types.hpp"
-#include "y/sort/nwsrt.hpp"
+#include "y/sort/network/sort9.hpp"
+#include "y/comparison.hpp"
 
 namespace upsylon {
 
@@ -14,6 +15,7 @@ namespace upsylon {
         //! Pixel operations
         struct Pixel
         {
+            typedef network_sort<9> nwsrt;
             static const Point delta[8]; //!< 4+4 delta directions
 
             //------------------------------------------------------------------
@@ -42,7 +44,7 @@ namespace upsylon {
             template <typename T> static inline
             T Median9__(  T arr[] ) throw()
             {
-                nwsrt::on9(arr);
+                nwsrt::on(arr,comparison::increasing<T>);
                 return arr[4];
             }
 

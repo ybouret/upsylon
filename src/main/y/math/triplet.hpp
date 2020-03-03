@@ -2,7 +2,8 @@
 #ifndef Y_MATH_TRIPLET_INCLUDED
 #define Y_MATH_TRIPLET_INCLUDED 1
 
-#include "y/sort/nwsrt.hpp"
+#include "y/sort/network/sort3.hpp"
+#include "y/comparison.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -13,18 +14,19 @@ namespace upsylon
         template <typename T>
         struct triplet
         {
+            typedef network_sort<3> nwsrt;
             T a; //!< first
             T b; //!< second
             T c; //!< third
 
             //! inline sorting
-            inline void sort() throw() { nwsrt::on3( &a ); }
+            inline void sort() throw() { nwsrt::on( &a, comparison::increasing<T> ); }
 
             //! inline co-sorting
             template <typename U>
             inline void co_sort( triplet<U> &other ) throw()
             {
-                nwsrt::on3( &a, &other.a );
+                nwsrt::co( &a, &other.a, comparison::increasing<T> );
             }
             //! set same value
             inline void ld(const T x) throw() { a=b=c=x; }

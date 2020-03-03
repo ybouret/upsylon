@@ -2,8 +2,8 @@
 #ifndef Y_GEOM_ISO2D_COORD_INCLUDED
 #define Y_GEOM_ISO2D_COORD_INCLUDED 1
 
-#include "y/geometry/contour.hpp"
 #include "y/type/point2d.hpp"
+#include "y/geometry/contour.hpp"
 #include "y/hashing/function.hpp"
 
 namespace upsylon {

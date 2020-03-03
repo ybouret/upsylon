@@ -3,7 +3,7 @@
 #define Y_RANDOM_BITS_INCLUDED 1
 
 #include "y/type/ints.hpp"
-#include "y/type/bswap.hpp"
+#include "y/type/xswap.hpp"
 #include "y/lockable.hpp"
 #include <stdlib.h>
 #include <cmath>
@@ -120,7 +120,7 @@ namespace upsylon
                     for( size_t i=n;i>0;--i)
                     {
                         const size_t j   = leq(i);
-                        bswap( a[i], a[j] );
+                        xswap( a[i], a[j] );
                     }
                 }
             }
@@ -136,8 +136,8 @@ namespace upsylon
                     for( size_t i=n-1;i>0;--i)
                     {
                         const size_t j   = leq(i);
-                        bswap( a[i], a[j] );
-                        bswap( b[i], b[j] );
+                        xswap( a[i], a[j] );
+                        xswap( b[i], b[j] );
                     }
                 }
             }

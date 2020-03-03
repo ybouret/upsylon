@@ -2,7 +2,7 @@
 #ifndef Y_YSORT_INCLUDED
 #define Y_YSORT_INCLUDED 1
 
-#include "y/sort/nwsrt.hpp"
+#include "y/sort/network/all.hpp"
 
 namespace upsylon
 {
@@ -19,10 +19,11 @@ MACRO(23); MACRO(24); MACRO(25); MACRO(26); MACRO(27); MACRO(28); MACRO(30); \
 MACRO(31); MACRO(32)
 
     //! recursive call for quicksort with internal network sort
-    template <typename T>
+    template <typename T, typename FUNC>
     inline void _ysort(T           *tableau,
                        const unit_t debut,
-                       const unit_t fin )
+                       const unit_t fin,
+                       FUNC        &compare)
     {
         if(debut>=fin) return;
 
@@ -32,7 +33,7 @@ MACRO(31); MACRO(32)
 
         switch(objets)
         {
-                Y_SORT_REPEAT(Y_SORT_IMPL);
+                //Y_SORT_REPEAT(Y_SORT_IMPL);
 
             default: {
                 const T pivot(tableau[debut]);
@@ -40,29 +41,31 @@ MACRO(31); MACRO(32)
 
                 while(true)
                 {
-                    do droite--; while( pivot<tableau[droite] );
-                    do gauche++; while( tableau[gauche]<pivot );
+                    //do droite--; while( pivot<tableau[droite] );
+                    //do gauche++; while( tableau[gauche]<pivot );
+                    do droite--; while( compare(pivot,tableau[droite])<0);
+                    do gauche++; while( compare(tableau[gauche],pivot)<0);
                     if(gauche<droite)
                     {
-                        core::bswap<sizeof(T)>(&tableau[gauche],&tableau[droite]);
+                        xswap(tableau[gauche],tableau[droite]);
                     }
                     else
                     {
                         break;
                     }
                 }
-                _ysort(tableau,debut,droite);
-                _ysort(tableau,++droite,fin);
+                _ysort(tableau,debut,droite,compare);
+                _ysort(tableau,++droite,fin,compare);
             }
         }
     }
 
     //! quicksort with network sort for short arrays
-    template <typename T>
-    inline void ysort(array<T> &arr)
+    template <typename T, typename FUNC>
+    inline void ysort(array<T> &arr, FUNC &compare)
     {
         unit_t n = unit_t(arr.size());
-        _ysort<T>(*arr,0,n-1);
+        _ysort<T>(*arr,0,n-1,compare);
     }
 }
 

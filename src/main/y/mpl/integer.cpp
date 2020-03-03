@@ -53,6 +53,7 @@ namespace upsylon
 }
 
 #include "y/type/aliasing.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {

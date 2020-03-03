@@ -109,11 +109,11 @@ namespace
             {
                 Y_ASSERT(V[indx[i]]<=V[indx[i+1]]);
             }
-            
+
             std::cerr << "\tysort" << std::endl;
             alea.shuffle(*V,V.size());
             std::cerr << "V1=" << V << std::endl;
-            ysort(V);
+            ysort(V,comparison::increasing<T>);
             std::cerr << "V2=" << V << std::endl;
             Y_ASSERT(check_sorted(V));
         }
@@ -164,7 +164,7 @@ namespace
                 alea.shuffle(*arr,n);
                 {
                     const uint64_t mark = rt_clock::ticks();
-                    ysort(arr);
+                    ysort(arr,comparison::increasing<T>);
                     ytmx += rt_clock::ticks() - mark;
                 }
 

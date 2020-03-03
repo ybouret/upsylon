@@ -1,5 +1,6 @@
 #include "y/geometry/iso3d/edge.hpp"
 #include "y/comparison.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon {
 
@@ -26,7 +27,7 @@ namespace upsylon {
                 assert(a!=b);
                 if( Coordinate::Compare(a, b) >= 0 )
                 {
-                    bswap(lower,upper);
+                    xswap(lower,upper);
                 }
                 assert( Coordinate::Compare(lower,upper) < 0 );
             }

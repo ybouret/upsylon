@@ -4,6 +4,7 @@
 #include "y/memory/io.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {

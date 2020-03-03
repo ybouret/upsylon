@@ -1,7 +1,7 @@
 #include "y/memory/slab.hpp"
 #include "y/memory/chunk.hpp"
 #include "y/os/static-check.hpp"
-#include "y/type/bswap.hpp"
+#include "y/type/cswap.hpp"
 #include <cstring>
 
 

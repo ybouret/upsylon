@@ -161,7 +161,7 @@ namespace upsylon {
 
         float Pixel:: Average9__( float   arr[] ) throw()
         {
-            nwsrt::on9(arr);
+            nwsrt::on(arr,comparison::increasing<float>);
             float sum = arr[0];
             sum += arr[1];
             sum += arr[2];

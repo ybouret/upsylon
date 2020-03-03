@@ -29,7 +29,7 @@ namespace upsylon {
                 assert(a!=b);
                 if( Coordinate::Compare(lower,upper) > 0 )
                 {
-                    bswap(lower,upper);
+                    xswap(lower,upper);
                 }
                 assert(Coordinate::Compare(lower,upper)<0);
 
