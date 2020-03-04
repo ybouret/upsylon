@@ -15,7 +15,7 @@ namespace upsylon {
         static void fill(void *target, const uint8_t byte, const size_t bytes) throw(); //!< memset
         static void fill_indices(size_t      *indices,
                                  const size_t length,
-                                 const size_t offset) throw();
+                                 const size_t offset) throw(); //!< indices[0..length-1] = [ offset...offset+length-1]
     };
 
 

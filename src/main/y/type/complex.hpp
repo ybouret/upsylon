@@ -220,11 +220,13 @@ namespace upsylon
             return lhs/rhs;
         }
 
+        //! default equality testing
         inline friend bool operator==( const complex &lhs, const complex &rhs ) throw()
         {
             return (lhs.re==rhs.re) && (lhs.im==rhs.im);
         }
 
+        //! default difference testing
         inline friend bool operator!=( const complex &lhs, const complex &rhs ) throw()
         {
             return (lhs.re!=rhs.re) || (lhs.im!=rhs.im);

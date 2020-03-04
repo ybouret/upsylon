@@ -16,6 +16,7 @@ namespace upsylon {
 				if(compare(aJ,aI)<0) memops::swap<T>(aI,aJ);
 			}
 		}
+		//! co-sorting...
 		template <typename T,typename U,typename COMPARE> static inline
 		void co(T *a, U *b, COMPARE &compare) throw() {
 			assert(NULL!=a);

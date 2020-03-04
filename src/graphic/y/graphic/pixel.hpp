@@ -15,8 +15,8 @@ namespace upsylon {
         //! Pixel operations
         struct Pixel
         {
-            typedef network_sort<9> nwsrt;
-            static const Point delta[8]; //!< 4+4 delta directions
+            typedef network_sort<9> nwsrt;  //!< for sorting 9 points
+            static const Point delta[8];    //!< 4+4 delta directions
 
             //------------------------------------------------------------------
             //

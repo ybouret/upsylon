@@ -14,7 +14,7 @@ namespace upsylon
         template <typename T>
         struct triplet
         {
-            typedef network_sort<3> nwsrt;
+            typedef network_sort<3> nwsrt; //!< for [co]sorting data
             T a; //!< first
             T b; //!< second
             T c; //!< third

@@ -3,7 +3,6 @@
 #define Y_CODE_XBITREV_INCLUDED 1
 
 #include "y/type/complex.hpp"
-//#include "y/type/xswap.hpp"
 
 namespace upsylon
 {
@@ -11,6 +10,7 @@ namespace upsylon
     struct xbitrev
     {
 
+        //! C-style swapping two at once
         template <typename T>
         static inline void xswap2( T *a, T *b ) throw()
         {

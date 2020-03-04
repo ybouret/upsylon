@@ -271,6 +271,7 @@ Y_PROGRAM_START()
                     header("\t\t}\n");
 
                     // co sort
+                    header("\t\t//! co-sorting...\n");
                     header("\t\ttemplate <typename T,typename U,typename COMPARE> static inline\n");
                     header("\t\tvoid co(T *a, U *b, COMPARE &compare) throw() {\n");
 
