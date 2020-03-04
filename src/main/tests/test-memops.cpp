@@ -4,6 +4,8 @@
 #include "y/type/complex.hpp"
 #include "y/type/point3d.hpp"
 
+#include <iomanip>
+
 using namespace upsylon;
 
 namespace {
@@ -14,7 +16,7 @@ namespace {
     static inline void testType()
     {
         typedef typename core::memcull<N,ILOG_MAX>::word_type word_t;
-        std::cerr << "for " << N << ": " << type_name_of<word_t>() << std::endl;
+        std::cerr << "for " << std::setw(3) << N << ": " << type_name_of<word_t>() << std::endl;
     }
 
     static inline void testTypes()
@@ -52,20 +54,49 @@ namespace {
         return isZero_( &tmp, sizeof(tmp) );
     }
 
+    template <typename T,const size_t N>
+    void testZeroBlock()
+    {
+
+        T tmp[N];
+        alea.fill(tmp,sizeof(tmp));
+        while( isZero_(tmp,sizeof(tmp)) ) alea.fill(tmp,sizeof(tmp));
+
+        for(size_t i=0;i<N;++i)
+        {
+            memops::zero(tmp[i]);
+        }
+
+        for(size_t i=0;i<N;++i)
+        {
+            Y_ASSERT( isZero(tmp[i]) );
+        }
+
+    }
 
     template <typename T> static inline
     void testZero()
     {
         typedef core::memops<sizeof(T)> ops;
         typedef typename ops::word_type word_type;
-        std::cerr << "\tzero <" << type_name_of<T>() << ">, size=" << sizeof(T) << " -> " << type_name_of<word_type>() << "/" << ops::num_words << std::endl;
+        std::cerr << "zero <" << type_name_of<T>() << ">, size=" << sizeof(T) << " -> " << type_name_of<word_type>() << "/" << ops::num_words << std::endl;
         {
             T tmp;
             alea.fill( &tmp, sizeof(tmp) );
             while(isZero(tmp)) alea.fill(&tmp,sizeof(tmp));
             memops::zero(tmp);
-            Y_CHECK(isZero(tmp));
+            Y_ASSERT(isZero(tmp));
         }
+        testZeroBlock<T,1>();
+        testZeroBlock<T,2>();
+        testZeroBlock<T,3>();
+        testZeroBlock<T,4>();
+        testZeroBlock<T,5>();
+        testZeroBlock<T,6>();
+        testZeroBlock<T,7>();
+        testZeroBlock<T,8>();
+
+
     }
 
     static inline void testZeros()
