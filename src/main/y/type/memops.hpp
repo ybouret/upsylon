@@ -45,6 +45,18 @@ namespace upsylon {
                 const T *src = static_cast<const T*>(source);
                 for(size_t i=0;i<N;++i) tgt[i] = src[i];
             }
+
+            static inline void swap( void *target, void *source ) throw()
+            {
+                T *tgt = static_cast<T*>(target);
+                T *src = static_cast<T*>(source);
+                for(size_t i=0;i<N;++i)
+                {
+                    T    &  t   = tgt[i];
+                    T    &  s   = src[i];
+                    const T tmp = t; t=s; s=tmp;
+                }
+            }
         };
 
         template <typename T>
@@ -57,7 +69,14 @@ namespace upsylon {
 
             static inline void copy( void *target, const void *source ) throw()
             {
-                *static_cast<T*>(target) = &static_cast<const T*>(source);
+                *static_cast<T*>(target) = *static_cast<const T*>(source);
+            }
+
+            static inline void swap( void *target, void *source ) throw()
+            {
+                T &t = *static_cast<T*>(target);
+                T &s = *static_cast<T*>(source);
+                const T tmp = t; t=s; s=tmp;
             }
         };
 
@@ -97,6 +116,14 @@ namespace upsylon {
             typedef typename ops::word_type word_type;
 
             core::memrun<word_type,ops::num_words>::copy(&a,&b);
+        }
+
+        template <typename T> static inline void swap(T &a, T &b) throw()
+        {
+            typedef core::memops<sizeof(T)> ops;
+            typedef typename ops::word_type word_type;
+
+            core::memrun<word_type,ops::num_words>::swap(&a,&b);
         }
 
         
