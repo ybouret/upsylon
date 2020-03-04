@@ -30,6 +30,26 @@ namespace upsylon {
             typedef uint8_t word_type;
         };
 
+        template <typename T, const size_t N>
+        struct memrun
+        {
+            static inline void zero( void *addr ) throw()
+            {
+                T *p = static_cast<T*>(addr);
+                for(size_t i=0;i<N;++i) p[i] = 0;
+            }
+        };
+
+        template <typename T>
+        struct memrun<T,1>
+        {
+            static inline void zero( void *addr ) throw()
+            {
+                *static_cast<T*>(addr) = 0;
+            }
+        };
+
+
         template <size_t LENGTH>
         struct memops
         {
@@ -51,12 +71,17 @@ namespace upsylon {
         {
             typedef core::memops<sizeof(T)> ops;
             typedef typename ops::word_type word_type;
-            word_type *A = (word_type *) &a;
-            for(size_t i=0;i<ops::num_words;++i)
-            {
-                A[i] = 0;
-            }
+
+            core::memrun<word_type,ops::num_words>::zero( &a );
         }
+
+        template <typename T> static inline
+        void zero_( const T &a ) throw()
+        {
+            zero( (T&)a );
+        }
+
+
     };
 
 
