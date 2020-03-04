@@ -97,41 +97,7 @@ namespace {
                 //std::cerr << "a[" << i << "]=" << int64_t(a[i]) << std::endl;
             }
             network_sort<N>::co(a,idx,comparison::increasing<T>);
-
-            for(size_t i=0;i<N-1;++i)
-            {
-                Y_ASSERT(a[i]<=a[i+1]);
-            }
-
-            for(size_t i=0;i<N;++i)
-            {
-                Y_ASSERT(idx[i]<N);
-                for(size_t j=0;j<N;++j)
-                {
-                    if(i!=j)
-                    {
-                        Y_ASSERT(idx[i]!=idx[j]);
-                    }
-                }
-            }
-
-            for(size_t i=0;i<N-1;++i)
-            {
-                Y_ASSERT(i<N);
-                Y_ASSERT(i+1<N);
-                if(b[idx[i]]>b[idx[i+1]])
-                {
-                    for(size_t j=0;j<N;++j)
-                    {
-                        std::cerr << "a[" << j << "]=" << int64_t(a[j]) << " / idx[" << j << "]=" << idx[j] << " / b[" << j << "]=" << int64_t(b[j]) << std::endl;
-
-                    }
-
-
-                    throw exception("bad!");
-                }
-                Y_ASSERT(b[idx[i]]<=b[idx[i+1]]);
-            }
+            
         }
 
         memory::global::location().release(wksp, wlen);
