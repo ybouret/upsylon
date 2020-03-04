@@ -38,6 +38,13 @@ namespace upsylon {
                 T *p = static_cast<T*>(addr);
                 for(size_t i=0;i<N;++i) p[i] = 0;
             }
+
+            static inline void copy( void *target, const void *source ) throw()
+            {
+                T       *tgt = static_cast<T*>(target);
+                const T *src = static_cast<const T*>(source);
+                for(size_t i=0;i<N;++i) tgt[i] = src[i];
+            }
         };
 
         template <typename T>
@@ -46,6 +53,11 @@ namespace upsylon {
             static inline void zero( void *addr ) throw()
             {
                 *static_cast<T*>(addr) = 0;
+            }
+
+            static inline void copy( void *target, const void *source ) throw()
+            {
+                *static_cast<T*>(target) = &static_cast<const T*>(source);
             }
         };
 
@@ -66,21 +78,28 @@ namespace upsylon {
 
     struct memops
     {
-        template <typename T> static inline
-        void zero( T &a ) throw()
+        template <typename T> static inline void zero(T &a) throw()
         {
             typedef core::memops<sizeof(T)> ops;
             typedef typename ops::word_type word_type;
 
-            core::memrun<word_type,ops::num_words>::zero( &a );
+            core::memrun<word_type,ops::num_words>::zero(&a);
         }
 
-        template <typename T> static inline
-        void zero_( const T &a ) throw()
+        template <typename T> static inline void zero_(const T &a) throw()
         {
-            zero( (T&)a );
+            zero((T&)a);
         }
 
+        template <typename T> static inline void copy(T &a, const T &b) throw()
+        {
+            typedef core::memops<sizeof(T)> ops;
+            typedef typename ops::word_type word_type;
+
+            core::memrun<word_type,ops::num_words>::copy(&a,&b);
+        }
+
+        
 
     };
 

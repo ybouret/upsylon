@@ -58,7 +58,7 @@ namespace {
     {
         typedef core::memops<sizeof(T)> ops;
         typedef typename ops::word_type word_type;
-        std::cerr << "\tzero <" << type_name_of<T>() << ">, size=" << sizeof(T) << " -> " << type_name_of<word_type>() << std::endl;
+        std::cerr << "\tzero <" << type_name_of<T>() << ">, size=" << sizeof(T) << " -> " << type_name_of<word_type>() << "/" << ops::num_words << std::endl;
         {
             T tmp;
             alea.fill( &tmp, sizeof(tmp) );
