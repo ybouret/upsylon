@@ -4,7 +4,7 @@
 
 #include "y/sequence/array.hpp"
 #include "y/ptr/counted.hpp"
-#include "y/type/xswap.hpp"
+#include "y/type/memops.hpp"
 #include "y/type/self-destruct.hpp"
 #include <cstdlib>
 
@@ -417,7 +417,7 @@ namespace upsylon
             addressable<T>  &R2   = self[r2];
             for(size_t i=cols;i>0;--i)
             {
-                xswap(R1[i],R2[i]);
+                memops::swap(R1[i],R2[i]);
             }
         }
 
@@ -427,7 +427,7 @@ namespace upsylon
             matrix<T> &self = *this;
             for(size_t i=rows;i>0;--i)
             {
-                xswap(self[i][c1],self[i][c2]);
+                memops::swap(self[i][c1],self[i][c2]);
             }
         }
 

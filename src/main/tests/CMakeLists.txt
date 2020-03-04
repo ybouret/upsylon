@@ -48,12 +48,11 @@ ADD_TEST(os:standard     test-main standard)
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp test-zset.cpp test-code.cpp test-bits.cpp
 test-core-pool.cpp  test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
 test-progress.cpp
- test-functor.cpp test-tuple.cpp test-traits.cpp test-xswap.cpp test-bmove.cpp test-isqrt.cpp test-zfi.cpp test-binary.cpp)
+ test-functor.cpp test-tuple.cpp test-traits.cpp test-bmove.cpp test-isqrt.cpp test-zfi.cpp test-binary.cpp)
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
 ADD_TEST(core:zset        test-main zset)
 ADD_TEST(core:memops      test-main memops)
-ADD_TEST(core:xswap       test-main xswap)
 ADD_TEST(core:bmove       test-main bmove)
 ADD_TEST(core:code        test-main code)
 ADD_TEST(core:bits        test-main bits)

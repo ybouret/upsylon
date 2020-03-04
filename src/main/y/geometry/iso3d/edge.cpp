@@ -1,5 +1,7 @@
 #include "y/geometry/iso3d/edge.hpp"
 #include "y/comparison.hpp"
+#include "y/type/memops.hpp"
+#include "y/type/aliasing.hpp"
 #include "y/type/cswap.hpp"
 
 namespace upsylon {
@@ -25,9 +27,9 @@ namespace upsylon {
             upper(b)
             {
                 assert(a!=b);
-                if( Coordinate::Compare(a, b) >= 0 )
+                if( Coordinate::Compare(a,b) >= 0 )
                 {
-                    xswap(lower,upper);
+                    memops::swap( aliasing::_(lower), aliasing::_(upper) );
                 }
                 assert( Coordinate::Compare(lower,upper) < 0 );
             }

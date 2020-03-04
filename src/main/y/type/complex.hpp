@@ -2,7 +2,7 @@
 #ifndef Y_TYPE_COMPLEX_INCLUDED
 #define Y_TYPE_COMPLEX_INCLUDED 1
 
-#include "y/type/no-throw-copy.hpp"
+#include "y/os/platform.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -233,9 +233,5 @@ namespace upsylon
 
 
 }
-
-Y_NO_THROW_COPY( complex<float>  );
-Y_NO_THROW_COPY( complex<double> );
-
 
 #endif

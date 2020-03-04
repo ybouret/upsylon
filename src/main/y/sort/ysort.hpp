@@ -2,6 +2,7 @@
 #ifndef Y_YSORT_INCLUDED
 #define Y_YSORT_INCLUDED 1
 
+//#include "y/os/platform.hpp"
 #include "y/sort/network/all.hpp"
 
 namespace upsylon
@@ -43,13 +44,11 @@ MACRO(31); MACRO(32)
 
                 while(true)
                 {
-                    //do droite--; while( pivot<tableau[droite] );
-                    //do gauche++; while( tableau[gauche]<pivot );
                     do droite--; while( compare(pivot,tableau[droite])<0);
                     do gauche++; while( compare(tableau[gauche],pivot)<0);
                     if(gauche<droite)
                     {
-                        xswap(tableau[gauche],tableau[droite]);
+                        memops::swap(tableau[gauche],tableau[droite]);
                     }
                     else
                     {

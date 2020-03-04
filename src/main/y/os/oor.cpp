@@ -22,4 +22,15 @@ namespace upsylon {
         assert( !(NULL==target&&bytes>0) );
         memset(target,byte,bytes);
     }
+
+    void out_of_reach:: fill_indices(size_t      *indices,
+                                     const size_t length,
+                                     const size_t offset) throw()
+    {
+        assert( !(NULL==indices&&length>0) );
+        for(size_t i=0,j=offset;i<length;++i,++j)
+        {
+            indices[i] = j;
+        }
+    }
 }

@@ -1,4 +1,5 @@
 #include "y/geometry/iso2d/edge.hpp"
+#include "y/type/memops.hpp"
 
 namespace upsylon {
 
@@ -29,7 +30,7 @@ namespace upsylon {
                 assert(a!=b);
                 if( Coordinate::Compare(lower,upper) > 0 )
                 {
-                    xswap(lower,upper);
+                    memops::swap_(lower,upper);
                 }
                 assert(Coordinate::Compare(lower,upper)<0);
 

@@ -3,7 +3,6 @@
 #define Y_POINT2D_INCLUDED 1
 
 #include "y/math/types.hpp"
-#include "y/type/no-throw-copy.hpp"
 #include "y/core/isqrt.hpp"
 
 namespace upsylon
@@ -169,11 +168,6 @@ namespace upsylon
     };
 
 }
-
-Y_NO_THROW_COPY( point2d<float>  );
-Y_NO_THROW_COPY( point2d<double> );
-Y_NO_THROW_COPY( point2d<unit_t> );
-
 
 #endif
 

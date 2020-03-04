@@ -1,4 +1,3 @@
-#include "y/sort/network/all.hpp"
 #include "y/comparison.hpp"
 #include "y/utest/run.hpp"
 
@@ -9,8 +8,12 @@
 #include "y/code/hr-ints.hpp"
 #include "y/string.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/memory/embed.hpp"
 
 using namespace upsylon;
+
+#if 1
+#include "y/sort/network/all.hpp"
 
 namespace {
     
@@ -19,11 +22,28 @@ namespace {
     {
         wtime chrono;
         std::cerr << "  N=" << std::setw(2) << N << " [";
-        T a[N];
-        T b[N];
-        const size_t bytes = sizeof(a);
-        uint64_t qs = 0;
-        uint64_t nw = 0;
+
+
+        const size_t bytes = N*sizeof(T);
+        T      *a = 0;
+        T      *b = 0;
+        size_t *idx = 0;
+        void   *wksp = 0;
+        size_t  wlen = 0;
+        {
+            memory::embed emb[] =
+            {
+                memory::embed::as(a,N),
+                memory::embed::as(b,N),
+                memory::embed::as(idx,N)
+            };
+            wksp = memory::embed::create_global(emb, sizeof(emb)/sizeof(emb[0]), wlen);
+        }
+
+
+
+        uint64_t     qs = 0;
+        uint64_t     nw = 0;
         
         const size_t iterMax = 128;
         for(size_t iter=iterMax;iter>0;--iter)
@@ -34,7 +54,7 @@ namespace {
             }
             
             alea.fill(a,bytes);
-            memcpy(b,a,bytes);
+            out_of_reach::move(b,a,bytes);
             {
                 const uint64_t mark = wtime::ticks();
                 qsort(a, N, sizeof(T), comparison::__increasing<T> );
@@ -62,17 +82,19 @@ namespace {
         fp("%u %g %g\n", unsigned(N), 1e-6 * qs_speed, 1e-6 * nw_speed );
 
         std::cerr.flush();
-        size_t idx[N] = { 0 };
-        
+
+
         for(size_t iter=iterMax;iter>0;--iter)
         {
             alea.fill(a,bytes);
-            memcpy(b,a,bytes);
+            out_of_reach::move(b,a,bytes);
+            out_of_reach::fill(idx,0,sizeof(idx));
+            out_of_reach::fill_indices(idx,N,0);
             for(size_t i=0;i<N;++i)
             {
-                idx[i] = i;
                 Y_ASSERT(b[i]   == a[i]);
                 Y_ASSERT(idx[i] == i   );
+                //std::cerr << "a[" << i << "]=" << int64_t(a[i]) << std::endl;
             }
             network_sort<N>::co(a,idx,comparison::increasing<T>);
 
@@ -84,7 +106,7 @@ namespace {
             for(size_t i=0;i<N;++i)
             {
                 Y_ASSERT(idx[i]<N);
-                 for(size_t j=0;j<N;++j)
+                for(size_t j=0;j<N;++j)
                 {
                     if(i!=j)
                     {
@@ -97,9 +119,22 @@ namespace {
             {
                 Y_ASSERT(i<N);
                 Y_ASSERT(i+1<N);
+                if(b[idx[i]]>b[idx[i+1]])
+                {
+                    for(size_t j=0;j<N;++j)
+                    {
+                        std::cerr << "a[" << j << "]=" << int64_t(a[j]) << " / idx[" << j << "]=" << idx[j] << " / b[" << j << "]=" << int64_t(b[j]) << std::endl;
+
+                    }
+
+
+                    throw exception("bad!");
+                }
                 Y_ASSERT(b[idx[i]]<=b[idx[i+1]]);
             }
         }
+
+        memory::global::location().release(wksp, wlen);
 
     }
     
@@ -110,7 +145,7 @@ namespace {
         const string  fn = vformat("nws%u.dat", unsigned( sizeof(T) ) );
         ios::ocstream fp(fn);
 
-        doSort<2,T>(fp);  
+        doSort<2,T>(fp);
         doSort<3,T>(fp);
         doSort<4,T>(fp);
         doSort<5,T>(fp);
@@ -146,13 +181,17 @@ namespace {
     
 }
 
+#endif
+
 Y_UTEST(network_sort)
 {
+#if 1
     doSortAll<int8_t>();
     doSortAll<int16_t>();
     doSortAll<int32_t>();
     doSortAll<int64_t>();
-
+#endif
+    
 }
 Y_UTEST_DONE()
 

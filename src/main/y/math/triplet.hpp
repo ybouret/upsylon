@@ -20,7 +20,10 @@ namespace upsylon
             T c; //!< third
 
             //! inline sorting
-            inline void sort() throw() { nwsrt::on( &a, comparison::increasing<T> ); }
+            inline void sort() throw()
+            {
+                nwsrt::on( &a, comparison::increasing<T> );
+            }
 
             //! inline co-sorting
             template <typename U>

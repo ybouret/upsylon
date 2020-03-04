@@ -102,7 +102,7 @@ namespace upsylon {
         {
             typedef core::memops<sizeof(T)> ops;
             typedef typename ops::word_type word_type;
-
+            assert( sizeof(word_type) * ops::num_words == sizeof(T) );
             core::memrun<word_type,ops::num_words>::zero(&a);
         }
 
@@ -115,7 +115,7 @@ namespace upsylon {
         {
             typedef core::memops<sizeof(T)> ops;
             typedef typename ops::word_type word_type;
-
+            assert( sizeof(word_type) * ops::num_words == sizeof(T) );
             core::memrun<word_type,ops::num_words>::copy(&a,&b);
         }
 
@@ -123,10 +123,17 @@ namespace upsylon {
         {
             typedef core::memops<sizeof(T)> ops;
             typedef typename ops::word_type word_type;
-
+            assert( sizeof(word_type) * ops::num_words == sizeof(T) );
             core::memrun<word_type,ops::num_words>::swap(&a,&b);
         }
 
+        template <typename T> static inline void swap_(const T &a, const T &b) throw()
+        {
+            typedef core::memops<sizeof(T)> ops;
+            typedef typename ops::word_type word_type;
+            assert( sizeof(word_type) * ops::num_words == sizeof(T) );
+            core::memrun<word_type,ops::num_words>::swap((void*)&a,(void*)&b);
+        }
         
 
     };

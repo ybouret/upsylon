@@ -6,7 +6,7 @@
 #include "y/sort/heap.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/array.hpp"
-#include "y/type/xswap.hpp"
+#include "y/type/memops.hpp"
 
 namespace upsylon {
 
@@ -29,7 +29,7 @@ namespace upsylon {
                     // move j at the end
                     for(size_t k=j,kp=k+1;k<n;++k,++kp)
                     {
-                        xswap(arr[k],arr[kp]);
+                        upsylon::memops::swap(arr[k],arr[kp]);
                     }
                     --n;
                 }
