@@ -168,15 +168,6 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
         Y_REP(TPZ);
     }
 
-#if 0
-    static inline void displayRegion( const void *addr, const size_t size )
-    {
-        const uint8_t *p = (const uint8_t *)addr;
-        std::cerr << "[";
-        for(size_t i=0;i<size;++i) std::cerr << std::hex << std::setw(2) << unsigned(p[i]) << std::dec;
-        std::cerr << "]";
-    }
-#endif
 
     template <typename T, size_t N> static inline
     void testCopyBlock(const bool doCheck)
@@ -200,7 +191,7 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
             for(size_t i=0;i<N;++i)
             {
                 Y_ASSERT( 0 == memcmp(&tgt[i], &src[i], sizeof(T) ) );
-                Y_ASSERT( tgt[i] == (T&)src[i] );
+                Y_ASSERT( tgt[i] == src[i] );
             }
         }
 
@@ -218,6 +209,11 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
             T       tgt; out_of_reach::fill(&tgt, 0x00, sizeof(tgt));  Y_ASSERT(isZero(tgt));
             memops::copy(tgt,src);
             Y_ASSERT(0 == memcmp(&src, &tgt, sizeof(T) ) );
+            if(doCheck)
+            {
+                Y_ASSERT(src==tgt);
+            }
+
         }
         std::cerr << "[";
 #define TCB(I) testCopyBlock<T,I>(doCheck)
@@ -259,7 +255,7 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
             ++cycle;
             {
                 alea.fill(src,N);
-                memset(tgt,0,N);
+                out_of_reach::fill(tgt,0,N);
                 const uint64_t mark = rt_clock::ticks();
                 memcpy(tgt,src,N);
                 s += rt_clock::ticks() - mark;
@@ -268,7 +264,7 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
 
             {
                 alea.fill(src,N);
-                memset(tgt,0,N);
+                out_of_reach::fill(tgt,0,N);
                 const uint64_t mark = rt_clock::ticks();
                 core::memrun<word_type,ops::num_words>::copy(tgt,src);
                 y += rt_clock::ticks() - mark;
@@ -291,6 +287,78 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
         Y_REP(TPC);
     }
 
+
+    template <typename T, size_t N> static inline
+    void testSwapBlock(const bool doCheck)
+    {
+        std::cerr << ".";
+        T src[N]; alea.fill((void*)src,sizeof(src));
+        T org[N]; out_of_reach::copy(org,src,sizeof(src));
+        T tgt[N]; out_of_reach::fill(tgt, 0x00, sizeof(tgt)); Y_ASSERT( isZero_( (void*)tgt, sizeof(tgt) ) );
+
+        for(size_t i=0;i<N;++i)
+        {
+            memops::swap(tgt[i],src[i]);
+            Y_ASSERT( 0 == memcmp(&tgt[i], &org[i], sizeof(T) ) );
+            Y_ASSERT( isZero(src[i]) );
+            if(doCheck)
+            {
+                Y_ASSERT(tgt[i]==org[i]);
+            }
+        }
+
+
+        if(doCheck)
+        {
+            std::cerr << "+";
+            for(size_t i=0;i<N;++i)
+            {
+                Y_ASSERT( 0 == memcmp(&tgt[i], &org[i], sizeof(T) ) );
+                Y_ASSERT( tgt[i] == org[i] );
+            }
+        }
+
+    }
+
+    template <typename T> static inline
+    void testSwap(const bool doCheck=true)
+    {
+        typedef core::memops<sizeof(T)> ops;
+        typedef typename ops::word_type word_type;
+        std::cerr << "swap <" << type_name_of<T>() << ">, size=" << sizeof(T) << " -> " << type_name_of<word_type>() << "/" << ops::num_words << std::endl;
+        {
+            T       src; alea.fill(&src,sizeof(T));
+            const T org = src;
+            T       tgt; out_of_reach::fill(&tgt, 0x00, sizeof(tgt));  Y_ASSERT(isZero(tgt));
+            memops::swap(tgt,src);
+            Y_ASSERT(0 == memcmp(&org, &tgt, sizeof(T) ) );
+            if(doCheck)
+            {
+                Y_ASSERT(org==tgt);
+            }
+        }
+        std::cerr << "[";
+#define TCS(I) testSwapBlock<T,I>(doCheck)
+        Y_REP(TCS);
+        std::cerr << "]" << std::endl;
+    }
+
+    static inline void testSwaps()
+    {
+        std::cerr << "-- testing swaps" << std::endl;
+        testSwap<char>();
+        testSwap<int16_t>();
+        testSwap<int32_t>();
+        testSwap<int64_t>();
+        testSwap<double>(false);
+        testSwap<float>(false);
+        testSwap< complex<float>  >(false);
+        testSwap< complex<double> >(false);
+        testSwap< point2d<char>   >();
+        testSwap< point3d<char>   >();
+        testSwap< point3d<int16_t> >();
+    }
+
 }
 
 Y_UTEST(memops)
@@ -298,6 +366,7 @@ Y_UTEST(memops)
     testTypes();
     testZeros();
     testCopies();
+    testSwaps();
     if(false)
     {
         testPerfCopy();
