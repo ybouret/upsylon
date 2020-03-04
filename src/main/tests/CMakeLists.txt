@@ -52,6 +52,7 @@ test-progress.cpp
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
 ADD_TEST(core:zset        test-main zset)
+ADD_TEST(core:memops      test-main memops)
 ADD_TEST(core:xswap       test-main xswap)
 ADD_TEST(core:bmove       test-main bmove)
 ADD_TEST(core:code        test-main code)
