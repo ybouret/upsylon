@@ -4,6 +4,7 @@
 #include "y/type/spec.hpp"
 #include "y/type/complex.hpp"
 #include "y/type/point3d.hpp"
+#include "y/os/oor.hpp"
 
 #include <iomanip>
 
@@ -53,9 +54,10 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
     }
 
     template <typename T,const size_t N>
-    void testZeroBlock()
+    void testZeroBlock(const bool doCheck)
     {
 
+        std::cerr << ".";
         T tmp[N];
         alea.fill(tmp,sizeof(tmp));
         while( isZero_(tmp,sizeof(tmp)) ) alea.fill(tmp,sizeof(tmp));
@@ -69,12 +71,22 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
         {
             Y_ASSERT( isZero(tmp[i]) );
         }
+
+        if(doCheck)
+        {
+            std::cerr << "+";
+            const T z = 0;
+            for(size_t i=0;i<N;++i)
+            {
+                Y_ASSERT( z == tmp[i] );
+            }
+        }
     }
 
 
 
     template <typename T> static inline
-    void testZero()
+    void testZero(const bool doCheck=true)
     {
         typedef core::memops<sizeof(T)> ops;
         typedef typename ops::word_type word_type;
@@ -86,8 +98,10 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
             memops::zero(tmp);
             Y_ASSERT(isZero(tmp));
         }
-#define TZB(I) testZeroBlock<T,I>()
+        std::cerr << "[";
+#define TZB(I) testZeroBlock<T,I>(doCheck)
         Y_REP(TZB);
+        std::cerr << "]" << std::endl;
 
     }
 
@@ -98,10 +112,10 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
         testZero<int16_t>();
         testZero<int32_t>();
         testZero<int64_t>();
-        testZero<double>();
-        testZero<float>();
-        testZero< complex<float>  >();
-        testZero< complex<double> >();
+        testZero<double>(false);
+        testZero<float>(false);
+        testZero< complex<float>  >(false);
+        testZero< complex<double> >(false);
         testZero< point2d<char>   >();
         testZero< point3d<char>   >();
         testZero< point3d<int16_t> >();
@@ -154,22 +168,39 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
         Y_REP(TPZ);
     }
 
+#if 0
+    static inline void displayRegion( const void *addr, const size_t size )
+    {
+        const uint8_t *p = (const uint8_t *)addr;
+        std::cerr << "[";
+        for(size_t i=0;i<size;++i) std::cerr << std::hex << std::setw(2) << unsigned(p[i]) << std::dec;
+        std::cerr << "]";
+    }
+#endif
+
     template <typename T, size_t N> static inline
     void testCopyBlock(const bool doCheck)
     {
-        T src[N]; alea.fill(src,sizeof(src));
-        T tgt[N]; memset(tgt,0,sizeof(tgt));
+        std::cerr << ".";
+        T src[N]; alea.fill((void*)src,sizeof(src));
+        T tgt[N]; out_of_reach::fill(tgt, 0x00, sizeof(tgt));
         for(size_t i=0;i<N;++i)
         {
-            memops::copy(tgt[i], src[i]);
-            assert( 0 == memcmp(&tgt[i], &src[i], sizeof(T) ) );
+            memops::copy(tgt[i],src[i]);
+            Y_ASSERT( 0 == memcmp(&tgt[i], &src[i], sizeof(T) ) );
+            if(doCheck)
+            {
+                Y_ASSERT(tgt[i]==src[i]);
+            }
         }
 
         if(doCheck)
         {
+            std::cerr << "+";
             for(size_t i=0;i<N;++i)
             {
-                Y_ASSERT( tgt[i] == src[i] );
+                Y_ASSERT( 0 == memcmp(&tgt[i], &src[i], sizeof(T) ) );
+                Y_ASSERT( tgt[i] == (T&)src[i] );
             }
         }
 
@@ -184,12 +215,14 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
         std::cerr << "copy <" << type_name_of<T>() << ">, size=" << sizeof(T) << " -> " << type_name_of<word_type>() << "/" << ops::num_words << std::endl;
         {
             T       src; alea.fill(&src,sizeof(T));
-            T       tgt; memset(&tgt,0,sizeof(T));  Y_ASSERT(isZero(tgt));
+            T       tgt; out_of_reach::fill(&tgt, 0x00, sizeof(tgt));  Y_ASSERT(isZero(tgt));
             memops::copy(tgt,src);
             Y_ASSERT(0 == memcmp(&src, &tgt, sizeof(T) ) );
         }
+        std::cerr << "[";
 #define TCB(I) testCopyBlock<T,I>(doCheck)
         Y_REP(TCB);
+        std::cerr << "]" << std::endl;
     }
 
     static inline void testCopies()
@@ -201,8 +234,8 @@ MACRO(30);MACRO(31);MACRO(32); MACRO(40); MACRO(96); MACRO(128)
         testCopy<int64_t>();
         testCopy<double>(false);
         testCopy<float>(false);
-        //testCopy< complex<float>  >();
-        //testCopy< complex<double> >();
+        testCopy< complex<float>  >(false);
+        testCopy< complex<double> >(false);
         testCopy< point2d<char>   >();
         testCopy< point3d<char>   >();
         testCopy< point3d<int16_t> >();
@@ -265,9 +298,9 @@ Y_UTEST(memops)
     testTypes();
     testZeros();
     testCopies();
-    testPerfCopy();
     if(false)
     {
+        testPerfCopy();
         testPerfZeros( );
     }
 }

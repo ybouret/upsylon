@@ -84,7 +84,8 @@ namespace upsylon {
         template <size_t LENGTH>
         struct memops
         {
-            typedef ptrdiff_t                    default_type;
+            //typedef ptrdiff_t                    default_type;
+            typedef uint32_t default_type;
             static  const size_t                 default_iln2 = ilog2_of<default_type>::value;
             typedef memcull<LENGTH,default_iln2> culled;
             typedef typename culled::word_type   word_type;

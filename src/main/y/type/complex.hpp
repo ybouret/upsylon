@@ -219,6 +219,16 @@ namespace upsylon
             const complex lhs(x);
             return lhs/rhs;
         }
+
+        inline friend bool operator==( const complex &lhs, const complex &rhs ) throw()
+        {
+            return (lhs.re==rhs.re) && (lhs.im==rhs.im);
+        }
+
+        inline friend bool operator!=( const complex &lhs, const complex &rhs ) throw()
+        {
+            return (lhs.re!=rhs.re) || (lhs.im!=rhs.im);
+        }
     };
 
 
