@@ -1,4 +1,4 @@
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 #include "y/utest/run.hpp"
 
 #include <typeinfo>
@@ -110,7 +110,7 @@ namespace {
     }
 }
 
-#include "y/type/block-move.hpp"
+#include "y/type/block/move.hpp"
 
 namespace {
 
@@ -169,7 +169,7 @@ namespace {
     }
 }
 
-#include "y/type/block-swap.hpp"
+#include "y/type/block/swap.hpp"
 
 namespace {
 
@@ -234,7 +234,7 @@ namespace {
     }
 }
 
-Y_UTEST(type_cull)
+Y_UTEST(cull)
 {
     testTypes();
     testZeros();

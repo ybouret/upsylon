@@ -1,5 +1,5 @@
 #include "y/type/binary.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 #include <cstring>
 

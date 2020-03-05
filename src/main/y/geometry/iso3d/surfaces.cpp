@@ -1,5 +1,5 @@
 #include "y/geometry/iso3d/surfaces.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 #include "y/exception.hpp"
 
 

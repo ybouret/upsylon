@@ -1,7 +1,7 @@
 #include "y/lang/syntax/rule.hpp"
 #include "y/string/convert.hpp"
 #include "y/exception.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {

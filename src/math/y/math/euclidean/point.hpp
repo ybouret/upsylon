@@ -5,7 +5,7 @@
 
 #include "y/type/point3d.hpp"
 #include "y/type/args.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 #include "y/container/key-address.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/type/aliasing.hpp"

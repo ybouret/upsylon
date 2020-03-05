@@ -28,6 +28,12 @@ SET(type_srcs ${type_decl} ${type_code})
 SOURCE_GROUP( type FILES ${type_srcs} )
 INSTALL( FILES ${type_decl} DESTINATION include/y/type )
 
+FILE(GLOB type_block_decl y/type/block/*.hpp)
+FILE(GLOB type_block_code y/type/block/*.cpp)
+SET(type_block_srcs ${type_block_decl} ${type_block_code})
+SOURCE_GROUP( type/block FILES ${type_block_srcs} )
+INSTALL( FILES ${type_block_decl} DESTINATION include/y/type/block )
+
 FILE(GLOB code_decl y/code/*.hpp)
 FILE(GLOB code_code y/code/*.cpp)
 SET(code_srcs ${code_decl} ${code_code})
@@ -370,7 +376,7 @@ ADD_LIBRARY(y STATIC
 ${main_srcs} 
 ${os_srcs}
 ${utest_srcs} 
-${type_srcs}
+${type_srcs} ${type_block_srcs}
 ${core_srcs}
 ${code_srcs}
 ${sort_srcs}

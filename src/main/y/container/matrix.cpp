@@ -3,7 +3,7 @@
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/cswap.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 #include <cerrno>
 

@@ -1,6 +1,6 @@
 
 #include "y/net/socket/delay.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 #include <cmath>
 

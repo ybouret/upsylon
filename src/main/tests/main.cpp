@@ -11,7 +11,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(standard);
     Y_UTEST(lockable);
 
-    Y_UTEST(type_cull);
+    Y_UTEST(cull);
     Y_UTEST(zset_perf);
     Y_UTEST(move_perf);
 

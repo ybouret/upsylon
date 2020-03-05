@@ -1,7 +1,7 @@
 
 #include "y/geometry/iso2d/levels.hpp"
 #include "y/exception.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon {
 

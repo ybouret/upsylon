@@ -1,5 +1,5 @@
 #include "y/geometry/iso2d/coordinate.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon {
 

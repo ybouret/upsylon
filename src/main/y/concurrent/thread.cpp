@@ -2,7 +2,7 @@
 #include "y/concurrent/thread.hpp"
 #include "y/exceptions.hpp"
 #include "y/os/error.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 #include <iostream>
 

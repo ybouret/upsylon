@@ -1,6 +1,6 @@
 
 #include "y/counting/counting.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 #include "y/memory/pooled.hpp"
 
 namespace upsylon

@@ -10,6 +10,7 @@ namespace upsylon {
 
     namespace core {
 
+        //! code to swap first block
 #define Y_BLOCK_SWAP_EXEC() \
 T &t = *static_cast<T *>(target);\
 T &s = *static_cast<T *>(source);\

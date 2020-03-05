@@ -1,5 +1,5 @@
 #include "y/randomized/bits.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {

@@ -46,7 +46,7 @@ ADD_TEST(os:int-to-int   test-main i2i)
 ADD_TEST(os:standard     test-main standard)
 
 SOURCE_GROUP(type FILES test-type-cull.cpp)
-ADD_TEST(type:cull test-main type_cull)
+ADD_TEST(type:cull test-main cull)
 
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp 

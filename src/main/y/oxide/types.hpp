@@ -5,7 +5,7 @@
 #include "y/type/point3d.hpp"
 #include "y/container/sequence.hpp"
 #include "y/strfwd.hpp"
-#include "y/type/block-zset.hpp"
+#include "y/type/block/zset.hpp"
 #include "y/comparison.hpp"
 #include "y/type/int2int.hpp"
 #include "y/type/standard.hpp"
