@@ -1,5 +1,4 @@
 #include "y/type/block-zset.hpp"
-#include "y/type/block-move.hpp"
 
 #include "y/utest/run.hpp"
 #include <typeinfo>
@@ -101,15 +100,17 @@ namespace {
 
 
 
-    static inline void testZeroes()
+    static inline void testZeros()
     {
-        std::cerr << "-- testing zeroes" << std::endl;
+        std::cerr << "-- testing zeros" << std::endl;
 #define _testZero(I) testZero<I>()
         Y_REP(_testZero);
         zeroTypes();
+        std::cerr << std::endl;
     }
 }
 
+#include "y/type/block-move.hpp"
 
 namespace {
 
@@ -164,14 +165,43 @@ namespace {
 #define _testMove(I) testMove<I>()
         Y_REP(_testMove);
         moveTypes();
+        std::cerr << std::endl;
+    }
+}
+
+#include "y/type/block-swap.hpp"
+
+namespace {
+
+    template <size_t N>
+    static inline void testSwap()
+    {
+        char *target = (char *)calloc(3,N);
+        char *source = target+N;
+        char *origin = source+N;
+        if(!target) throw exception("no memory in testMove");
+
+        alea.fillnz(source,N);
+
+        free(target);
+    }
+
+    static inline void testSwaps()
+    {
+        std::cerr << "-- testing Swaps" << std::endl;
+#define _testSwap(I) testSwap<I>()
+        Y_REP(_testSwap);
+        //        moveTypes();
+        std::cerr << std::endl;
     }
 }
 
 Y_UTEST(type_cull)
 {
     testTypes();
-    testZeroes();
+    testZeros();
     testMoves();
+    testSwaps();
 }
 Y_UTEST_DONE()
 

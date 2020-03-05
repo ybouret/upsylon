@@ -24,11 +24,11 @@ namespace upsylon {
             }
         };
 
-        //! meta block_zset end
+        //! meta block_move end
         template <typename T>
         struct block_move<T,1>
         {
-            //! zero current block
+            //! copy current block
             static inline void on(void *target, const void *source) throw()
             {
                 *(T*)target = *(const T*)source;
