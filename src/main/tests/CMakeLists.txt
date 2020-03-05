@@ -53,11 +53,10 @@ SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp
 test-code.cpp test-bits.cpp
 test-core-pool.cpp  test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
 test-progress.cpp
- test-functor.cpp test-tuple.cpp test-traits.cpp test-bmove.cpp test-isqrt.cpp test-zfi.cpp test-binary.cpp)
+ test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp)
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
 ADD_TEST(core:memops      test-main memops)
-ADD_TEST(core:bmove       test-main bmove)
 ADD_TEST(core:code        test-main code)
 ADD_TEST(core:bits        test-main bits)
 ADD_TEST(core:pool        test-main core_pool)

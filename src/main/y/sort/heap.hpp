@@ -5,7 +5,7 @@
 #include "y/sequence/addressable.hpp"
 #include "y/memory/io.hpp"
 #include "y/code/round.hpp"
-#include "y/type/bmove.hpp"
+#include "y/type/block-move.hpp"
 #include <cstring>
 
 namespace upsylon

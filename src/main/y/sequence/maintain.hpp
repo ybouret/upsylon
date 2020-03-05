@@ -4,7 +4,7 @@
 
 #include "y/sequence/array.hpp"
 #include "y/sequence/list.hpp"
-#include "y/type/bmove.hpp"
+#include "y/type/block-move.hpp"
 #include "y/memory/cppblock.hpp"
 
 namespace upsylon

@@ -1,9 +1,9 @@
 #include "y/type/block-zset.hpp"
-
 #include "y/utest/run.hpp"
-#include <typeinfo>
 
+#include <typeinfo>
 #include <iomanip>
+#include <cstring>
 
 using namespace upsylon;
 
@@ -179,11 +179,49 @@ namespace {
         char *target = (char *)calloc(3,N);
         char *source = target+N;
         char *origin = source+N;
-        if(!target) throw exception("no memory in testMove");
+        if(!target) throw exception("no memory in testSwap");
 
         alea.fillnz(source,N);
-
+        block_zset<N>(target);        Y_ASSERT( block_is_zeroed<N>(target)   );
+        block_move<N>(origin,source); Y_ASSERT( 0 == memcmp(origin,source,N) );
+        block_swap<N>(target,source);
+        Y_ASSERT( block_is_zeroed<N>(source)   );
+        Y_ASSERT( 0 == memcmp(target,origin,N) );
         free(target);
+    }
+
+    template <typename T> static inline
+    void swapType(const bool check=true)
+    {
+        std::cerr << " |_<" << typeid(T).name() << "> / size=" << sizeof(T) << std::endl;
+        std::cerr << "  |_[";
+        for(size_t iter=64;iter>0;--iter)
+        {
+            T target;
+            T source;
+            T origin;
+            alea.fillnz(&source,sizeof(T));
+            bzset(target);        Y_ASSERT( is_zeroed(target) );
+            bmove(origin,source); Y_ASSERT( 0 == memcmp(&source, &origin, sizeof(T) ) );
+            bswap(target,source); Y_ASSERT( 0 == memcmp(&target, &origin, sizeof(T) ) ); Y_ASSERT( is_zeroed(source) );
+            if(check)
+            {
+                Y_ASSERT( target == origin );
+                std::cerr << "+";
+            }
+            else
+            {
+                std::cerr << ".";
+
+            }
+        }
+        std::cerr << "]" << std::endl;
+    }
+
+
+    static inline void swapTypes()
+    {
+        Y_WITH(swapType);
     }
 
     static inline void testSwaps()
@@ -191,7 +229,7 @@ namespace {
         std::cerr << "-- testing Swaps" << std::endl;
 #define _testSwap(I) testSwap<I>()
         Y_REP(_testSwap);
-        //        moveTypes();
+        swapTypes();
         std::cerr << std::endl;
     }
 }
@@ -210,6 +248,7 @@ Y_UTEST_DONE()
 #include "y/code/hr-ints.hpp"
 
 namespace {
+
     template <size_t N>
     static inline void testZSET()
     {
@@ -245,11 +284,10 @@ namespace {
 
         std::cerr << " | sRate=" << sRate << " | yRate=" << yRate << std::endl;
 
-
-
-
         free(addr);
     }
+
+
 
 }
 
@@ -261,3 +299,66 @@ Y_UTEST(zset_perf)
 
 }
 Y_UTEST_DONE()
+
+namespace {
+
+    template <size_t N>
+    static inline void testMOVE()
+    {
+        std::cerr << "N=" << std::setw(3) << N;
+        void *addr = calloc(1,2*N);
+        if(!addr) throw exception("no memory in testMOVE");
+        char *target = (char *) memory::io::__addr(addr);
+        char *source = target + N;
+
+        uint64_t c = 0;
+        uint64_t m = 0;
+        uint64_t y = 0;
+        uint64_t count = 0;
+        wtime chrono;
+
+        while( chrono(c) <= 0.1 )
+        {
+            count += N;
+            {
+                const uint64_t mark = chrono.ticks();
+                memcpy(target,source,N);
+                c += chrono.ticks() - mark;
+            }
+
+            {
+                const uint64_t mark = chrono.ticks();
+                memmove(target,source,N);
+                m += chrono.ticks() - mark;
+            }
+
+            {
+                const uint64_t mark = chrono.ticks();
+                block_move<N>(target,source);
+                y += chrono.ticks() - mark;
+            }
+
+        }
+
+        const human_readable cRate = int64_t( floor( double(count)/chrono(c) + 0.5 ) );
+        const human_readable mRate = int64_t( floor( double(count)/chrono(m) + 0.5 ) );
+        const human_readable yRate = int64_t( floor( double(count)/chrono(y) + 0.5 ) );
+
+        std::cerr << " | cRate=" << cRate << " | mRate=" << mRate << " | yRate=" << yRate << std::endl;
+
+        free(addr);
+    }
+
+
+
+}
+
+Y_UTEST(move_perf)
+{
+
+#define _testMOVE(I) testMOVE<I>()
+    Y_REP(_testMOVE);
+
+}
+Y_UTEST_DONE()
+
