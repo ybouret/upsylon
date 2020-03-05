@@ -1,7 +1,7 @@
 
 #include "y/memory/embed.hpp"
 #include "y/code/round.hpp"
-
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -42,7 +42,7 @@ namespace upsylon
             for(size_t i=0;i<num;++i)
             {
                 embed &em = emb[i];
-                (size_t &)(em.offset) = bytes;
+                aliasing::_(em.offset) = bytes;
                 const size_t alen = memory::align(em.length);
                 bytes += alen;
                 //std::cerr << "emb: @" << em.offset << "+" << alen << "/" << em.length << " -> " << bytes << std::endl;
@@ -50,7 +50,7 @@ namespace upsylon
 
             // allocated memory
             if(data) *data = bytes;
-            void *addr = mem.acquire(bytes);
+            void     *addr = mem.acquire(bytes);
 
             //link
             {
