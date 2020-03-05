@@ -10,6 +10,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(i2i);
     Y_UTEST(standard);
     Y_UTEST(lockable);
+    Y_UTEST(type_cull);
     Y_UTEST(memops);
     Y_UTEST(bmove);
     Y_UTEST(zset);

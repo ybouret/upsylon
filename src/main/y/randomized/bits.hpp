@@ -303,6 +303,8 @@ namespace upsylon
             //! fill random bytes
             void fill( void *data, const size_t size ) throw();
 
+            //! fill random positive bytes
+            void fillnz( void *data, const size_t size ) throw();
 
         protected:
             //! sets span and auxiliary values

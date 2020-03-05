@@ -61,20 +61,24 @@ namespace upsylon
         void bits:: fill( void *data, const size_t size ) throw()
         {
             assert(!(NULL==data&&size>0));
-            const size_t nw = size / sizeof(uint32_t);
-            const size_t nr = size - (nw*sizeof(uint32_t));
-            uint8_t     *p  = static_cast<uint8_t *>(data);
-
-            for(size_t i=nw;i>0;--i,p+=sizeof(uint32_t))
+            uint8_t *p = static_cast<uint8_t *>(data);
+            for(size_t i=0;i<size;++i)
             {
-                *static_cast<uint32_t *>(static_cast<void *>(p)) = next32();
-            }
-
-            {
-                const uint32_t w = next32();
-                memcpy(p,&w,nr);
+                *(p++) = full<uint8_t>();
             }
         }
+
+        void bits:: fillnz( void *data, const size_t size ) throw()
+        {
+            assert(!(NULL==data&&size>0));
+            uint8_t *p = static_cast<uint8_t *>(data);
+            for(size_t i=0;i<size;++i)
+            {
+                const uint8_t b = full<uint8_t>();
+                *(p++) = (b<=0) ? 1 : b;
+            }
+        }
+
 
 
     }
