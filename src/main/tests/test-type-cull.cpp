@@ -1,4 +1,6 @@
 #include "y/type/block-zset.hpp"
+#include "y/type/block-move.hpp"
+
 #include "y/utest/run.hpp"
 #include <typeinfo>
 
@@ -109,10 +111,67 @@ namespace {
 }
 
 
+namespace {
+
+    template <size_t N>
+    static inline void testMove()
+    {
+        char *target = (char *)calloc(2,N);
+        char *source = target+N;
+        if(!target) throw exception("no memory in testMove");
+
+        alea.fillnz(source,N);
+        block_zset<N>(target);        Y_ASSERT(block_is_zeroed<N>(target));
+        block_move<N>(target,source); Y_ASSERT( 0 == memcmp(target,source,N) );
+        free(target);
+    }
+
+    template <typename T>
+    static inline void moveType(const bool check=true)
+    {
+        std::cerr << " |_<" << typeid(T).name() << "> / size=" << sizeof(T) << std::endl;
+        std::cerr << "  |_[";
+        for(size_t iter=64;iter>0;--iter)
+        {
+            T target;
+            T source;
+            alea.fillnz(&source,sizeof(T));
+            bzset(target);        Y_ASSERT( is_zeroed(target) );
+            bmove(target,source); Y_ASSERT( 0 == memcmp( &target, &source, sizeof(T) ) );
+
+            if(check)
+            {
+                Y_ASSERT( target == source );
+                std::cerr << "+";
+            }
+            else
+            {
+                std::cerr << ".";
+
+            }
+        }
+        std::cerr << "]" << std::endl;
+    }
+
+    static inline void moveTypes()
+    {
+        Y_WITH(moveType);
+    }
+
+    static inline void testMoves()
+    {
+        std::cerr << "-- testing Moves" << std::endl;
+#define _testMove(I) testMove<I>()
+        Y_REP(_testMove);
+        moveTypes();
+    }
+}
+
 Y_UTEST(type_cull)
 {
     testTypes();
     testZeroes();
+    testMoves();
 }
 Y_UTEST_DONE()
 
