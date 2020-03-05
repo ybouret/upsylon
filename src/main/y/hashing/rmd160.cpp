@@ -1,5 +1,5 @@
 #include "y/hashing/rmd160.hpp"
-#include "y/type/bzset.hpp"
+#include "y/type/block-zset.hpp"
 
 namespace upsylon
 {

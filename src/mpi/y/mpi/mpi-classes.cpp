@@ -1,5 +1,5 @@
 #include "y/mpi/mpi.hpp"
-#include "y/type/bzset.hpp"
+#include "y/type/block-zset.hpp"
 #include <cstdarg>
 
 

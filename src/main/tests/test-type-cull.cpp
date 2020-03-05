@@ -56,7 +56,7 @@ namespace {
     template <size_t N>
     static inline void testZero()
     {
-        void *addr = calloc(1,8*N);
+        void *addr = calloc(1,N);
         if(!addr) throw exception("no memory in testZero");
 
         alea.fillnz(addr,N);
@@ -75,9 +75,8 @@ namespace {
         for(size_t iter=64;iter>0;--iter)
         {
             T tmp;
-            alea.fillnz(&tmp,sizeof(T));
-            bzset(tmp);
-            Y_ASSERT(is_zeroed(tmp));
+            alea.fillnz(&tmp,sizeof(T)); bzset(tmp);                   Y_ASSERT(is_zeroed(tmp) || die("bzset") );
+            alea.fillnz(&tmp,sizeof(T)); block_zset<sizeof(T)>(&tmp);  Y_ASSERT(is_zeroed(tmp) || die("block_zset") );
             if(checkZ)
             {
                 const T z = 0;
@@ -117,3 +116,59 @@ Y_UTEST(type_cull)
 }
 Y_UTEST_DONE()
 
+#include "y/os/wtime.hpp"
+#include "y/memory/io.hpp"
+#include "y/code/hr-ints.hpp"
+
+namespace {
+    template <size_t N>
+    static inline void testZSET()
+    {
+        std::cerr << "N=" << std::setw(3) << N;
+        void *addr = calloc(1,N);
+        if(!addr) throw exception("no memory in testZSET");
+        void *wksp = memory::io::__addr(addr);
+
+        uint64_t s = 0;
+        uint64_t y = 0;
+        uint64_t count = 0;
+        wtime chrono;
+
+        while( chrono(s) <= 0.1 )
+        {
+            count += N;
+            {
+                const uint64_t mark = chrono.ticks();
+                memset(wksp,0,N);
+                s += chrono.ticks() - mark;
+            }
+
+            {
+                const uint64_t mark = chrono.ticks();
+                block_zset<N>(wksp);
+                y += chrono.ticks() - mark;
+            }
+
+        }
+
+        const human_readable sRate = int64_t( floor( double(count)/chrono(s) + 0.5 ) );
+        const human_readable yRate = int64_t( floor( double(count)/chrono(y) + 0.5 ) );
+
+        std::cerr << " | sRate=" << sRate << " | yRate=" << yRate << std::endl;
+
+
+
+
+        free(addr);
+    }
+
+}
+
+Y_UTEST(zset_perf)
+{
+    
+#define _testZSET(I) testZSET<I>()
+    Y_REP(_testZSET);
+
+}
+Y_UTEST_DONE()

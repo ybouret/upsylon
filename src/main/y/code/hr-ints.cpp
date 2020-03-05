@@ -2,7 +2,7 @@
 #include "y/code/hr-ints.hpp"
 #include "y/type/utils.hpp"
 #include "y/core/ipower.hpp"
-#include <iostream>
+#include "y/string.hpp"
 
 namespace upsylon {
 
@@ -56,4 +56,10 @@ namespace upsylon {
         return *this;
     }
 
+    std::ostream & operator<<( std::ostream &os, const human_readable &hr)
+    {
+        const string value = vformat( "%8.2f", hr.value );
+        os << value << hr.radix;
+        return os;
+    }
 }

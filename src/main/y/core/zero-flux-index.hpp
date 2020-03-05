@@ -3,7 +3,7 @@
 #ifndef Y_ZERO_FLUX_INDEX_INCLUDED
 #define Y_ZERO_FLUX_INDEX_INCLUDED 1
 
-#include "y/type/bzset.hpp"
+#include "y/type/block-zset.hpp"
 
 namespace upsylon {
 

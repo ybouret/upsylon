@@ -2,7 +2,7 @@
 #include "y/graphic/area.hpp"
 #include "y/exception.hpp"
 
-#include "y/type/bzset.hpp"
+#include "y/type/block-zset.hpp"
 
 namespace upsylon {
 

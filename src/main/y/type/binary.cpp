@@ -1,6 +1,7 @@
 #include "y/type/binary.hpp"
-#include "y/type/bzset.hpp"
+#include "y/type/block-zset.hpp"
 
+#include <cstring>
 
 namespace upsylon {
 

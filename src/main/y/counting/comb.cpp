@@ -1,5 +1,5 @@
 #include "y/counting/comb.hpp"
-#include "y/type/bzset.hpp"
+#include "y/type/block-zset.hpp"
 
 
 namespace upsylon {

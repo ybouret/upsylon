@@ -11,9 +11,9 @@ Y_UTEST_INIT(256)
     Y_UTEST(standard);
     Y_UTEST(lockable);
     Y_UTEST(type_cull);
+    Y_UTEST(zset_perf);
     Y_UTEST(memops);
     Y_UTEST(bmove);
-    Y_UTEST(zset);
     Y_UTEST(at_exit);
     Y_UTEST(sys);
     Y_UTEST(bits);

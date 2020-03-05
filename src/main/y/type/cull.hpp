@@ -37,7 +37,7 @@ namespace upsylon {
     template <size_t LENGTH>
     struct cull
     {
-        typedef uint32_t                      os_type;                                      //!< maximum default aligned data type
+        typedef ptrdiff_t                     os_type;                                      //!< maximum default aligned data type
         static  const size_t                  os_log2 = ilog2_of<os_type>::value;           //!< its integer log2
         typedef core::cull_on<os_log2,LENGTH> culled;                                       //!< type selector
         typedef typename culled::word_type    word_type;                                    //!< resulting word type
