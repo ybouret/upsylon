@@ -3,7 +3,7 @@
 #define Y_SEQUENCE_ARRAY_INCLUDED 1
 
 #include "y/sequence/addressable.hpp"
-#include "y/type/memops.hpp"
+#include "y/type/block/swap.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/memory/io.hpp"
 #include <iostream>
@@ -77,7 +77,7 @@ namespace upsylon
             size_t up=size_;
             for(size_t i=size_>>1;i>0;--i)
             {
-                memops::swap(item_[lo++],item_[up--]);
+                bswap(item_[lo++],item_[up--]);
             }
         }
 

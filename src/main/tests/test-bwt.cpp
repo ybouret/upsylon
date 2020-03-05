@@ -39,6 +39,7 @@ void do_bwt(const string &input)
         BWT::Decode(*decoded, *output, n, *indices, pidx);
         Y_CHECK( decoded == input );
     }
+
     {
         EchoModulation echoEnc;
         Y_CHECK(pidx==BWT::Encode(*outputEcho,*input,n,*indices,echoEnc));
@@ -88,13 +89,22 @@ Y_UTEST(bwt)
 {
     if( argc > 1 )
     {
-        string input(32000,as_capacity,false);
+        vector<char> tmp;
         {
-            const string  fileName = argv[1];
-            ios::icstream fp(fileName);
-            char          C=0;
-            while( fp.query(C) ) input << C;
+            std::cerr << "Loading" << std::endl;
+            {
+                const string  fileName = argv[1];
+                ios::icstream fp(fileName);
+                char          C=0;
+                while( fp.query(C) )
+                {
+                    tmp << C;
+                }
+            }
+            std::cerr << "/done" << std::endl;
         }
+        const string input( *tmp, tmp.size() );
+        tmp.release();
         do_bwt(input);
     }
 }

@@ -1,5 +1,5 @@
 #include "y/geometry/iso2d/edge.hpp"
-#include "y/type/memops.hpp"
+#include "y/type/block/swap.hpp"
 
 namespace upsylon {
 
@@ -30,7 +30,7 @@ namespace upsylon {
                 assert(a!=b);
                 if( Coordinate::Compare(lower,upper) > 0 )
                 {
-                    memops::swap_(lower,upper);
+                    _bswap(lower,upper);
                 }
                 assert(Coordinate::Compare(lower,upper)<0);
 

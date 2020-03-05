@@ -34,8 +34,9 @@ namespace upsylon {
 
         size_t BWT::Encode( void *output, const void *input, const size_t size, size_t *indices) throw()
         {
-            assert(!(NULL==output&&size>0));
-            assert(!(NULL==input&&size>0));
+            assert(!(NULL==output  && size>0));
+            assert(!(NULL==input   && size>0));
+            assert(!(NULL==indices && size>0));
 
             if(size<=0)
             {
@@ -78,8 +79,9 @@ namespace upsylon {
 
         size_t BWT::Encode(void *output, const void *input, const size_t size, size_t *indices, Modulation &proc) throw()
         {
-            assert(!(NULL==output&&size>0));
-            assert(!(NULL==input&&size>0));
+            assert(!(NULL==output  && size>0));
+            assert(!(NULL==input   && size>0));
+            assert(!(NULL==indices && size>0));
 
             if(size<=0)
             {

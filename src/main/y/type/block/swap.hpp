@@ -63,6 +63,16 @@ const T tmp = t; t=s; s=tmp
         core::block_swap<word_type,info::num_words>::on(&target,&source);
     }
 
+    //! swap blocks, forced
+    template <typename T>
+    inline void _bswap(const T &target, const T &source) throw()
+    {
+        typedef cull<sizeof(T)>          info;
+        typedef typename info::word_type word_type;
+        assert( sizeof(word_type) * info::num_words == sizeof(T) );
+
+        core::block_swap<word_type,info::num_words>::on((void*)&target,(void*)&source);
+    }
 
 
 }

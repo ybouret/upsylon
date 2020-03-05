@@ -46,6 +46,27 @@ namespace upsylon {
         static  const size_t                  num_words = type_size/word_size;              //!< number of blocks
     };
 
+    //! testing bytewise same blocks
+    template <size_t LENGTH>
+    inline bool are_same_blocks( const void *a, const void *b ) throw()
+    {
+        assert(a);
+        assert(b);
+        const uint8_t *A = static_cast<const uint8_t *>(a);
+        const uint8_t *B = static_cast<const uint8_t *>(b);
+        for(size_t i=0;i<LENGTH;++i)
+        {
+            if(A[i]!=B[i]) return false;
+        }
+        return true;
+    }
+
+    //! testing bytewise same objects
+    template <typename T>
+    inline bool bsame( const T &a, const T &b ) throw()
+    {
+        return are_same_blocks<sizeof(T)>(&a,&b);
+    }
 }
 
 #endif

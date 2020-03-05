@@ -7,7 +7,7 @@
 #include "y/type/utils.hpp"
 #include "y/container/container.hpp"
 #include "y/sort/merge.hpp"
-#include "y/type/memops.hpp"
+#include "y/type/block/swap.hpp"
 
 namespace upsylon
 {
@@ -107,7 +107,7 @@ namespace upsylon
             //! no throw swap
             inline void swap_with( hash_table &other ) throw()
             {
-                upsylon::memops::swap(chain,other.chain);
+                bswap(chain,other.chain);
                 upsylon::cswap(slot,other.slot);
                 upsylon::cswap(slots,other.slots);
                 upsylon::cswap(smask,other.smask);

@@ -209,7 +209,7 @@ Y_PROGRAM_START()
         header << "//! \\file\n";
         header << "#ifndef Y_SORT_NETWORK_INCLUDED\n";
         header << "#define Y_SORT_NETWORK_INCLUDED 1\n";
-        header << "#include \"y/type/memops.hpp\"\n";
+        header << "#include \"y/type/block/swap.hpp\"\n";
         header << "namespace upsylon {\n";
         header << "\ttemplate <size_t> struct network_sort;\n\n";
         header << "}\n";
@@ -265,7 +265,7 @@ Y_PROGRAM_START()
                     header("\t\t\tassert(NULL!=a);\n");
                     header("\t\t\tfor(size_t k=0;k<%u;++k){\n",num);
                     header("\t\t\t\tT &aI=a[I[k]], &aJ=a[J[k]];\n");
-                    header("\t\t\t\tif(compare(aJ,aI)<0) memops::swap<T>(aI,aJ);\n");
+                    header("\t\t\t\tif(compare(aJ,aI)<0) bswap<T>(aI,aJ);\n");
                     
                     header("\t\t\t}\n");
                     header("\t\t}\n");
@@ -280,7 +280,7 @@ Y_PROGRAM_START()
                     header("\t\t\tfor(size_t k=0;k<%u;++k){\n",num);
                     header("\t\t\t\tconst size_t  i = I[k],   j = J[k];\n");
                     header("\t\t\t\tT           &aI = a[i], &aJ = a[j];\n");
-                    header("\t\t\t\tif(compare(aJ,aI)<0) { memops::swap<T>(aI,aJ); memops::swap<U>(b[i],b[j]); }\n");
+                    header("\t\t\t\tif(compare(aJ,aI)<0) { bswap<T>(aI,aJ); bswap<U>(b[i],b[j]); }\n");
 
                     header("\t\t\t}\n");
                     header("\t\t}\n");

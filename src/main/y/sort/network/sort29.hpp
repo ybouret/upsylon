@@ -13,7 +13,7 @@ namespace upsylon {
 			assert(NULL!=a);
 			for(size_t k=0;k<191;++k){
 				T &aI=a[I[k]], &aJ=a[J[k]];
-				if(compare(aJ,aI)<0) memops::swap<T>(aI,aJ);
+				if(compare(aJ,aI)<0) bswap<T>(aI,aJ);
 			}
 		}
 		//! co-sorting...
@@ -24,7 +24,7 @@ namespace upsylon {
 			for(size_t k=0;k<191;++k){
 				const size_t  i = I[k],   j = J[k];
 				T           &aI = a[i], &aJ = a[j];
-				if(compare(aJ,aI)<0) { memops::swap<T>(aI,aJ); memops::swap<U>(b[i],b[j]); }
+				if(compare(aJ,aI)<0) { bswap<T>(aI,aJ); bswap<U>(b[i],b[j]); }
 			}
 		}
 	};

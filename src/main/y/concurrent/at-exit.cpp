@@ -1,7 +1,7 @@
 #include "y/concurrent/at-exit.hpp"
 #include "y/concurrent/mutex.hpp"
 #include "y/os/error.hpp"
-#include "y/type/memops.hpp"
+#include "y/type/block/swap.hpp"
 #include <cerrno>
 #include <cstring>
 #include <cstdlib>
@@ -38,7 +38,7 @@ namespace upsylon
                 --prev;
                 while(curr>tasks && prev->when>=curr->when)
                 {
-                    memops::swap(*prev,*curr);
+                    bswap(*prev,*curr);
                     --prev;
                     --curr;
                 }

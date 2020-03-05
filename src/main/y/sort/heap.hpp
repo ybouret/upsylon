@@ -34,15 +34,15 @@ namespace upsylon
         {
             if (l>1)
             {
-                bmove(rra,ra[--l]);
+                bmove(rra,ra[--l]);      assert( bsame(rra,ra[l]) );
             }
             else
             {
-                bmove( rra,    ra[ir] );
-                bmove( ra[ir], ra[1]  );
+                bmove( rra,    ra[ir] ); assert( bsame(rra,   ra[ir]) );
+                bmove( ra[ir], ra[1]  ); assert( bsame(ra[ir],ra[1])  );
                 if (--ir == 1)
                 {
-                    bmove(ra[1],rra);
+                    bmove(ra[1],rra);    assert( bsame(ra[1],rra) );
                     break;
                 }
             }
@@ -56,7 +56,7 @@ namespace upsylon
                 }
                 if ( compare(rra,ra[j]) < 0)
                 {
-                    bmove( ra[i], ra[j] );
+                    bmove( ra[i], ra[j] ); assert( bsame( ra[i], ra[j] ) );
                     i=j;
                     (j<<=1);
                 }
@@ -65,7 +65,7 @@ namespace upsylon
                     j=ir+1;
                 }
             }
-            bmove( ra[i], rra );
+            bmove( ra[i], rra ); assert( bsame( ra[i], rra ) );
         }
     }
 
