@@ -61,7 +61,7 @@ Y_UTEST(draw)
         const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
         const rgba   C      = NamedColors::GetRGBA(idx);
         const float  f      = Convert::Get<float,rgba>(C);
-        const uint8_t alpha = alea.leq(255);
+        const uint8_t alpha = uint8_t(alea.leq(255));
 
         Draw::HLine(img4, x0, y0, x1, C, alpha);
         Draw::HLine(imgf, x0, y0, x1, f, alpha);

@@ -73,8 +73,8 @@ namespace {
         const double ops      = N * iterMax;
         const double tqs      = chrono(qs);
         const double tnw      = chrono(nw);
-        const size_t qs_speed = int64_t(floor(ops/tqs+0.5));
-        const size_t nw_speed = int64_t(floor(ops/tnw+0.5));
+        const int64_t qs_speed = int64_t(floor(ops/tqs+0.5));
+        const int64_t nw_speed = int64_t(floor(ops/tnw+0.5));
         const human_readable hrqs = qs_speed; const string sqs = vformat("%8.2lf%c/s",hrqs.value,hrqs.radix);
         const human_readable hrnw = nw_speed; const string snw = vformat("%8.2lf%c/s",hrnw.value,hrnw.radix);
         std::cerr << "] : qsort=" << sqs << " | nwsrt=" << snw << std::endl;

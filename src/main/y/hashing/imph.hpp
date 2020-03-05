@@ -20,7 +20,7 @@ namespace upsylon
             Y_DECL_ARGS(T,type); //!< aliases
 
             //! setup, offset=0 for C, offset=1 for C++ for example
-            inline explicit mperf_for( const int offset) throw() : counter(offset), mph() {}
+            inline explicit mperf_for(const int offset) throw() : counter(offset), mph() {}
 
             //! cleanup
             inline virtual ~mperf_for() throw()
@@ -73,7 +73,7 @@ namespace upsylon
             void graphViz(const char   *fn) const { mph.graphViz(fn); }
 
         private:
-            size_t counter;
+            int    counter;
             mperf  mph;
         };
     }

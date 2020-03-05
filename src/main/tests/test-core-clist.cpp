@@ -14,7 +14,7 @@ namespace {
         dummy *prev;
         int    data;
 
-        inline dummy() throw() : next(0), prev(0), data( alea.leq(100) ) {
+        inline dummy() throw() : next(0), prev(0), data( alea.range<int>(0,100) )  {
 
         }
 

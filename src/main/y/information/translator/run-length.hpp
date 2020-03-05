@@ -44,7 +44,7 @@ namespace upsylon {
                 static void EmitDifferentTo(sequence<char> &S,
                                             IOBits         &Q,
                                             const uint8_t  *cache,
-                                            const uint8_t   count,
+                                            const size_t    count,
                                             QEncoder       &characterEncoder,
                                             QEncoder       &repeatingEncoder,
                                             QEncoder       &differentEncoder);

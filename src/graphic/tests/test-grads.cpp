@@ -13,7 +13,7 @@
 #include "y/graphic/ops/filter/sobel.hpp"
 #include "y/graphic/ops/filter/scharr.hpp"
 #include "y/graphic/color/named.hpp"
-
+#include "y/type/int2int.hpp"
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;

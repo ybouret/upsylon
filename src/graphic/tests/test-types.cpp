@@ -72,7 +72,7 @@ Y_UTEST(types)
         {
             for(size_t b=0;b<256;++b)
             {
-                const uint8_t gs = Convert::GreyScale(r,g,b);
+                const uint8_t gs = Convert::GreyScale(uint8_t(r),uint8_t(g),uint8_t(b));
                 if(r<=0&&g<=0&&b<=0)
                 {
                     Y_ASSERT(gs<=0);

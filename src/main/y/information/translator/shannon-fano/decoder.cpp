@@ -86,7 +86,7 @@ namespace upsylon {
                                         case NYT: flag=waitForByte;    break;
                                         case EOS: Q.drop(); curr=root; break;
                                         default:  assert(chr->symbol<Bytes);
-                                            emitByte(chr->symbol);
+                                            emitByte( uint8_t(chr->symbol) );
                                             break;
                                     }
                                 }

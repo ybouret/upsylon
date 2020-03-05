@@ -390,10 +390,10 @@ namespace upsylon {
                 template <typename SEQUENCE> static inline
                 Sample *CreateWith()
                 {
-                    const Series _XS = new SEQUENCE();
-                    const Series _YS = new SEQUENCE();
-                    Series       _ZS = new SEQUENCE();
-                    return new Sample(_XS,_YS,_ZS);
+                    const Series local_XS = new SEQUENCE();
+                    const Series local_YS = new SEQUENCE();
+                    Series       local_ZS = new SEQUENCE();
+                    return new Sample(local_XS,local_YS,local_ZS);
                 }
 
 
