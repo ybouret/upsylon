@@ -67,7 +67,7 @@ std::cerr << "<Loop " << I << "/>" << std::endl << std::endl;
         DO_LOOP(2);
         DO_LOOP(3);
         DO_LOOP(4);
-        DO_LOOP(300);
+        DO_LOOP(32);
     }
 
 }
