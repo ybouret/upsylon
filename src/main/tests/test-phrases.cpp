@@ -29,7 +29,7 @@ Y_UTEST(phrases)
             std::cerr << "#dict=" << dict.entries() << std::endl;
         }
 
-        const bool    hasDict = dict.entries() >= 0 ;
+        const bool    hasDict = (dict.entries() > 0);
         if(hasDict) std::cerr << "use dictionary..." << std::endl;
         permutation   perm(letters);
         string        motif( letters, as_capacity, true);
