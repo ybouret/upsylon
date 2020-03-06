@@ -50,6 +50,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(anagram);
     Y_UTEST(dancing);
     Y_UTEST(scrabble);
+    Y_UTEST(phrases);
     Y_UTEST(metaloop);
 
     Y_UTEST(embed);

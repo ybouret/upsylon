@@ -40,7 +40,19 @@ namespace upsylon {
 
         //! size=n
         virtual size_t size() const throw();  
-        
+
+        //! C-style computation
+        template <typename T>
+        void apply( T *target, const T *source ) const throw()
+        {
+            const permutation &self = *this;
+            for(size_t i=0;i<n;++i)
+            {
+                target[i] = source[ self(i) ];
+            }
+        }
+
+
     private:
         const size_t nm1;
         size_t       wlen;
