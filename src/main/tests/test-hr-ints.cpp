@@ -6,23 +6,20 @@
 
 using namespace upsylon;
 
-static inline void display_hr( const human_readable &hr )
-{
-    fprintf(stderr,"%8.2f%c\n", hr.value, hr.radix);
-}
+
 
 Y_UTEST(hr_ints)
 {
     human_readable hr_max( limit_of<int64_t>::maximum );
-    display_hr(hr_max);
+    std::cerr << "hr_max=" << hr_max << std::endl;
     human_readable hr_min( limit_of<int64_t>::minimum );
-    display_hr(hr_min);
+    std::cerr << "hr_min=" << hr_min << std::endl;
 
     for(int i=1;i<argc;++i)
     {
         const int64_t  a = string_convert::to<unit_t>(argv[i]);
         human_readable hr(a);
-        display_hr(hr);
+        std::cerr << hr << std::endl;
     }
 }
 Y_UTEST_DONE()

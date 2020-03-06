@@ -51,8 +51,8 @@ Y_UTEST(env)
         const envPair &p = *i;
         string         value;
         std::cerr << p.name << ": '" << p.value << "'" << std::endl;
-        std::cerr << "\t|_"; Y_CHECK(environment::get(value,p.name) );
-        std::cerr << "\t|_"; Y_CHECK(value==p.value);
+        Y_CHECK(environment::get(value,p.name) );
+        Y_CHECK(value==p.value);
     }
 
 }

@@ -28,8 +28,8 @@ ADD_LIBRARY(module MODULE module.cpp)
 ADD_DEPENDENCIES(test-main module)
 
 ENABLE_TESTING()
-SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp test-i2i.cpp
-test-hr-ints.cpp test-ints-display.cpp test-cast.cpp test-ints-to-real.cpp test-standard.cpp)
+SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp 
+test-hr-ints.cpp test-ints-display.cpp test-cast.cpp  test-standard.cpp)
 ADD_TEST(os:platform     test-main platform)
 ADD_TEST(os:types        test-main types)
 ADD_TEST(os:sys          test-main sys)
@@ -41,19 +41,24 @@ ADD_TEST(os:chkbnd       test-main chkbnd)
 ADD_TEST(os:hr-ints      test-main hr_ints)
 ADD_TEST(os:ints-display test-main ints_display)
 ADD_TEST(os:cast         test-main cast)
-ADD_TEST(os:ints-to-real test-main i2r)
-ADD_TEST(os:int-to-int   test-main i2i)
 ADD_TEST(os:standard     test-main standard)
 
-SOURCE_GROUP(type FILES test-type-cull.cpp)
+SOURCE_GROUP(type FILES 
+test-type-cull.cpp
+test-ints-to-real.cpp
+test-i2i.cpp
+)
 ADD_TEST(type:cull test-main cull)
-
+ADD_TEST(type:ints-to-real test-main i2r)
+ADD_TEST(type:int-to-int   test-main i2i)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp 
 test-code.cpp test-bits.cpp
 test-core-pool.cpp  test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
 test-progress.cpp
- test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp)
+ test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp
+ test-meta-loop.cpp
+ )
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
 ADD_TEST(core:code        test-main code)
@@ -69,6 +74,7 @@ ADD_TEST(core:traits      test-main traits)
 ADD_TEST(core:isqrt       test-main isqrt)
 ADD_TEST(core:zfi         test-main zfi)
 ADD_TEST(core:binary      test-main binary)
+ADD_TEST(core:metaloop    test-main metaloop)
 
 SOURCE_GROUP(mem FILES test-chunk.cpp test-arena.cpp test-alloc.cpp test-blocks.cpp test-slab.cpp test-object.cpp test-slice.cpp test-embed.cpp
 test-carver.cpp test-pooled.cpp test-buffers.cpp test-xslot.cpp test-nugget.cpp test-vein.cpp test-dyadic.cpp test-ptr.cpp test-release.cpp test-static-slots.cpp)
