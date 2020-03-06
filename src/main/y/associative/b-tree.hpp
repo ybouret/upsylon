@@ -27,6 +27,52 @@ namespace upsylon {
             //! throw during copy
             static void throw_on_insert_failure();
 
+            //! node to rebuild local key
+            struct knode
+            {
+                knode  *next;
+                knode  *prev;
+                uint8_t code;
+            };
+
+            class kpool : public pool_of<knode>
+            {
+            public:
+                explicit kpool() throw() : pool_of<knode>() {}
+                virtual ~kpool() throw()
+                {
+                    while(size>0) { knode *node = query(); object::release1(node); }
+                }
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(kpool);
+            };
+
+            class klist : public list_of<knode>
+            {
+            public:
+                explicit klist( kpool &mgr ) throw() :
+                list_of<knode> (),
+                pool_(mgr)
+                {
+
+                }
+
+                //! push front
+                void operator()(const uint8_t byte)
+                {
+                    knode *node = (pool_.size>0) ? pool_.query() : object::acquire1<knode>();
+                    node->code = byte;
+                    push_front(node);
+                }
+
+                virtual ~klist() throw()
+                {
+                    pool_.store(*this);
+                }
+            private:
+                kpool &pool_;
+                Y_DISABLE_COPY_AND_ASSIGN(klist);
+            };
         };
     }
 
@@ -35,6 +81,11 @@ namespace upsylon {
     class btree
     {
     public:
+        //----------------------------------------------------------------------
+        //
+        // types and definitions
+        //
+        //----------------------------------------------------------------------
         Y_DECL_ARGS(T,type);                            //!< alias
         class                            node_type;     //!< forward declaration
         typedef core::list_of<node_type> list_type;     //!< list for nodes
@@ -44,9 +95,10 @@ namespace upsylon {
         typedef core::list_of<data_node> data_list;     //!< list for data
         typedef core::pool_of<data_node> data_pool;     //!< pool for data
         typedef core::btree::lw_key_type lw_key_type;   //!< alias
+        typedef core::btree::klist       key_path;      //!< alias
+        typedef core::btree::kpool       key_pool;      //!< alias
 
-
-        //! compacte linked data handling
+        //! compact linked data handling
         class data_node
         {
         public:
@@ -106,6 +158,15 @@ namespace upsylon {
             node_type(); ~node_type() throw();
         };
 
+
+
+
+        //----------------------------------------------------------------------
+        //
+        // C++
+        //
+        //----------------------------------------------------------------------
+
         //! setup an empty tree
         inline explicit btree() throw() : dlist(), dpool(), root(0), pool() {}
 
@@ -129,6 +190,8 @@ namespace upsylon {
             {
                 for(const data_node *dnode = other.dlist.head; dnode; dnode=dnode->next )
                 {
+                    //key_path          path( kmgr );
+                    //build_path(path,dnode->hook);
                     const size_t      key_length = key_length_of(dnode->hook);
                     lw_key_type       key( key_length );
                     rebuild_key(key,dnode->hook,key_length);
@@ -144,6 +207,12 @@ namespace upsylon {
                 throw;
             }
         }
+
+        //----------------------------------------------------------------------
+        //
+        // methods
+        //
+        //----------------------------------------------------------------------
 
         //! return number of data nodes
         inline size_t entries() const throw() { return dlist.size; }
@@ -188,7 +257,7 @@ namespace upsylon {
                             break;
                         }
                     }
-                    // check is a new child is to be set //
+                    // check if a new child is to be set //
                     if(!found)
                     {
                         ptr = ptr->chld.push_back( query(ptr,code) );
@@ -382,13 +451,11 @@ namespace upsylon {
         data_list  dlist; //!< data list
         data_pool  dpool; //!< data pool
 
-
-
     private:
         Y_DISABLE_ASSIGN(btree);
         node_type *root;  //!< root node for empty key
         pool_type  pool;  //!< available nodes
-
+        key_pool   kmgr;  //!< for dynamic key reconstruction
 
         size_t key_length_of( const node_type *node ) const
         {
@@ -400,6 +467,17 @@ namespace upsylon {
                 node=node->parent;
             }
             return ans;
+        }
+
+        void build_path(key_path           &key,
+                        const node_type    *node) const
+        {
+            assert(node);
+            while(node->parent)
+            {
+                key(node->code);
+                node=node->parent;
+            }
         }
 
         void rebuild_key(lw_key_type     &key,

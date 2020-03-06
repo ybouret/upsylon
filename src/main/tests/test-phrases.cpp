@@ -1,11 +1,17 @@
-#include "y/associative/b-tree.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "y/counting/perm.hpp"
 #include "y/counting/comb.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ordered/sorted-vector.hpp"
+#include "y/associative/map.hpp"
 
 using namespace upsylon;
+
+typedef sorted_vector<string>       svec_type;
+typedef ordered_single< svec_type > dict_type;
+//typedef ordered_unique< svec_type > db_type;
+typedef map<string,string> db_type;
 
 Y_UTEST(phrases)
 {
@@ -13,7 +19,7 @@ Y_UTEST(phrases)
     {
         const string  alphabet = argv[1];
         const size_t  letters  = alphabet.size();
-        btree<string> dict;
+        dict_type     dict( 32 * 1024, as_capacity );
 
         if( argc > 2 )
         {
@@ -23,27 +29,32 @@ Y_UTEST(phrases)
                 string        line;
                 while( fp.gets(line) )
                 {
-                    (void)dict.insert_(line,line);
+                    dict.insert(line);
                 }
             }
-            std::cerr << "#dict=" << dict.entries() << std::endl;
+            std::cerr << "#dict=" << dict.size() << std::endl;
         }
 
-        const bool    hasDict = (dict.entries() > 0);
+        const bool    hasDict = (dict.size() > 0);
         if(hasDict) std::cerr << "use dictionary..." << std::endl;
         permutation   perm(letters);
         string        motif( letters, as_capacity, true);
 
-        btree<string> motifs;
-
+        db_type motifs( perm.count, as_capacity );
+        std::cerr << "studying #perm=" << perm.count << " [";
         for( perm.start(); perm.valid(); perm.next() )
         {
             perm.apply(*motif,*alphabet);
-            if( !motifs.insert_( motif, motif ) ) continue;
+            if( !motifs.insert(motif,motif) ) continue;
+            const size_t n = motifs.size();
+            if( 0 == (n%1000) )
+            {
+                ( std::cerr << '.' ).flush();
+            }
             //std::cerr << "[" << motif << "]" << std::endl;
         }
 
-        std::cerr << "[" << motifs.entries() << "/" << perm.count << "]" << std::endl;
+        std::cerr << "]\n[" << motifs.size() << "/" << perm.count << "]" << std::endl;
 
 
 
