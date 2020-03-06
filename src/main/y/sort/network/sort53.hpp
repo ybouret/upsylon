@@ -21,7 +21,7 @@ namespace upsylon {
 		void co(T *a, U *b, COMPARE &compare) throw() {
 			assert(NULL!=a);
 			assert(NULL!=b);
-			for(size_t k=0;k<535;++k){
+			for(unsigned k=0;k<535;++k){
 				const unsigned  i = I[k],   j = J[k];
 				T             &aI = a[i], &aJ = a[j];
 				if(compare(aJ,aI)<0) { bswap<T>(aI,aJ); bswap<U>(b[i],b[j]); }

@@ -55,7 +55,7 @@ INSTALL( FILES ${sort_decl} DESTINATION include/y/sort )
 FILE(GLOB sort_network_decl y/sort/network/*.hpp)
 FILE(GLOB sort_network_code y/sort/network/*.cpp)
 SET(sort_network_srcs ${sort_network_decl} ${sort_network_code})
-SOURCE_GROUP( sort_network FILES ${sort_network_srcs} )
+SOURCE_GROUP( sort/network FILES ${sort_network_srcs} )
 INSTALL( FILES ${sort_network_decl} DESTINATION include/y/sort/network )
 
 FILE(GLOB randomized_decl y/randomized/*.hpp)
