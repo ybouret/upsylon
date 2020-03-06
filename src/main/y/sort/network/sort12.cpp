@@ -1,9 +1,9 @@
 #include "sort12.hpp"
 namespace upsylon {
-	const size_t network_sort<12>::I[39] = {
+	const unsigned network_sort<12>::I[39] = {
  0, 2, 4, 3, 8, 1, 5, 1, 0, 2, 9, 7, 7, 10, 1, 4, 6, 0, 5, 3, 1, 2, 7, 6, 2, 4, 8, 5, 1, 9, 6, 3, 8, 2, 4, 6, 7, 5, 3};
 
-	const size_t network_sort<12>::J[39] = {
+	const unsigned network_sort<12>::J[39] = {
  5, 7, 10, 6, 11, 9, 6, 8, 3, 4, 11, 10, 9, 11, 2, 8, 11, 1, 8, 7, 4, 5, 10, 9, 3, 6, 10, 7, 2, 10, 8, 4, 9, 3, 5, 7, 8, 6, 4};
 
 }

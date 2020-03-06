@@ -254,8 +254,8 @@ Y_PROGRAM_START()
                 {
                     header("\t\t//! network sort for %u items\n",dim);
                     header("\ttemplate <> struct network_sort<%u> {\n",dim);
-                    header("\t\tstatic const size_t I[%u]; //!< I swap indices\n",num);
-                    header("\t\tstatic const size_t J[%u]; //!< J swap indices\n",num);
+                    header("\t\tstatic const unsigned I[%u]; //!< I swap indices\n",num);
+                    header("\t\tstatic const unsigned J[%u]; //!< J swap indices\n",num);
 
                     // simple sort call
                     header("\t\t//! sort...\n");
@@ -263,7 +263,7 @@ Y_PROGRAM_START()
                     header("\t\tvoid on(T *a, COMPARE &compare) throw() {\n");
                     
                     header("\t\t\tassert(NULL!=a);\n");
-                    header("\t\t\tfor(size_t k=0;k<%u;++k){\n",num);
+                    header("\t\t\tfor(unsigned k=0;k<%u;++k){\n",num);
                     header("\t\t\t\tT &aI=a[I[k]], &aJ=a[J[k]];\n");
                     header("\t\t\t\tif(compare(aJ,aI)<0) bswap<T>(aI,aJ);\n");
                     
@@ -278,8 +278,8 @@ Y_PROGRAM_START()
                     header("\t\t\tassert(NULL!=a);\n");
                     header("\t\t\tassert(NULL!=b);\n");
                     header("\t\t\tfor(size_t k=0;k<%u;++k){\n",num);
-                    header("\t\t\t\tconst size_t  i = I[k],   j = J[k];\n");
-                    header("\t\t\t\tT           &aI = a[i], &aJ = a[j];\n");
+                    header("\t\t\t\tconst unsigned  i = I[k],   j = J[k];\n");
+                    header("\t\t\t\tT             &aI = a[i], &aJ = a[j];\n");
                     header("\t\t\t\tif(compare(aJ,aI)<0) { bswap<T>(aI,aJ); bswap<U>(b[i],b[j]); }\n");
 
                     header("\t\t\t}\n");
@@ -298,7 +298,7 @@ Y_PROGRAM_START()
                 source << "#include \"" << headerName << "\"\n";
                 source << "namespace upsylon {\n";
                 
-                source("\tconst size_t network_sort<%u>::I[%u] = {\n",dim,num);
+                source("\tconst unsigned network_sort<%u>::I[%u] = {\n",dim,num);
                 for(size_t k=1;k<=num;++k)
                 {
                     source(" %u", unsigned( swaps[k].I) );
@@ -306,7 +306,7 @@ Y_PROGRAM_START()
                 }
                 source << "};\n\n";
                 
-                source("\tconst size_t network_sort<%u>::J[%u] = {\n",dim,num);
+                source("\tconst unsigned network_sort<%u>::J[%u] = {\n",dim,num);
                 for(size_t k=1;k<=num;++k)
                 {
                     source(" %u", unsigned( swaps[k].J) );

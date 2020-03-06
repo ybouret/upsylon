@@ -5,13 +5,13 @@
 namespace upsylon {
 		//! network sort for 18 items
 	template <> struct network_sort<18> {
-		static const size_t I[84]; //!< I swap indices
-		static const size_t J[84]; //!< J swap indices
+		static const unsigned I[78]; //!< I swap indices
+		static const unsigned J[78]; //!< J swap indices
 		//! sort...
 		template <typename T,typename COMPARE> static inline
 		void on(T *a, COMPARE &compare) throw() {
 			assert(NULL!=a);
-			for(size_t k=0;k<84;++k){
+			for(unsigned k=0;k<78;++k){
 				T &aI=a[I[k]], &aJ=a[J[k]];
 				if(compare(aJ,aI)<0) bswap<T>(aI,aJ);
 			}
@@ -21,9 +21,9 @@ namespace upsylon {
 		void co(T *a, U *b, COMPARE &compare) throw() {
 			assert(NULL!=a);
 			assert(NULL!=b);
-			for(size_t k=0;k<84;++k){
-				const size_t  i = I[k],   j = J[k];
-				T           &aI = a[i], &aJ = a[j];
+			for(size_t k=0;k<78;++k){
+				const unsigned  i = I[k],   j = J[k];
+				T             &aI = a[i], &aJ = a[j];
 				if(compare(aJ,aI)<0) { bswap<T>(aI,aJ); bswap<U>(b[i],b[j]); }
 			}
 		}

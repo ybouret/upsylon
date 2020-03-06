@@ -44,13 +44,14 @@ namespace {
 
         uint64_t     qs = 0;
         uint64_t     nw = 0;
-        
-        const size_t iterMax = 128;
+        uint64_t     ops = 0;
+        const size_t iterMax = 2048;
         for(size_t iter=iterMax;iter>0;--iter)
         {
-            if(0==(iter&3))
+            ops += N;
+            if( 0 == (iter&31) )
             {
-                std::cerr << "."; std::cerr.flush();
+                ( std::cerr << '.' ).flush();
             }
             
             alea.fill(a,bytes);
@@ -70,11 +71,10 @@ namespace {
                 Y_ASSERT(a[i]==b[i]);
             }
         }
-        const double ops      = N * iterMax;
         const double tqs      = chrono(qs);
         const double tnw      = chrono(nw);
-        const int64_t qs_speed = int64_t(floor(ops/tqs+0.5));
-        const int64_t nw_speed = int64_t(floor(ops/tnw+0.5));
+        const int64_t qs_speed = int64_t(floor(double(ops)/tqs+0.5));
+        const int64_t nw_speed = int64_t(floor(double(ops)/tnw+0.5));
         const human_readable hrqs = qs_speed; const string sqs = vformat("%8.2lf%c/s",hrqs.value,hrqs.radix);
         const human_readable hrnw = nw_speed; const string snw = vformat("%8.2lf%c/s",hrnw.value,hrnw.radix);
         std::cerr << "] : qsort=" << sqs << " | nwsrt=" << snw << std::endl;
@@ -84,7 +84,7 @@ namespace {
         std::cerr.flush();
 
 
-        for(size_t iter=iterMax;iter>0;--iter)
+        for(size_t iter=8;iter>0;--iter)
         {
             alea.fill(a,bytes);
             out_of_reach::move(b,a,bytes);
@@ -142,7 +142,43 @@ namespace {
         doSort<30,T>(fp);
         doSort<31,T>(fp);
         doSort<32,T>(fp);
-        
+
+        doSort<33,T>(fp);
+        doSort<34,T>(fp);
+        doSort<35,T>(fp);
+        doSort<36,T>(fp);
+        doSort<37,T>(fp);
+        doSort<38,T>(fp);
+        doSort<39,T>(fp);
+
+        doSort<40,T>(fp);
+        doSort<41,T>(fp);
+        doSort<42,T>(fp);
+        doSort<43,T>(fp);
+        doSort<44,T>(fp);
+        doSort<45,T>(fp);
+        doSort<46,T>(fp);
+        doSort<47,T>(fp);
+        doSort<48,T>(fp);
+        doSort<49,T>(fp);
+
+        doSort<50,T>(fp);
+        doSort<51,T>(fp);
+        doSort<52,T>(fp);
+        doSort<53,T>(fp);
+        doSort<54,T>(fp);
+        doSort<55,T>(fp);
+        doSort<56,T>(fp);
+        doSort<57,T>(fp);
+        doSort<58,T>(fp);
+        doSort<59,T>(fp);
+
+        doSort<60,T>(fp);
+        doSort<61,T>(fp);
+        doSort<62,T>(fp);
+        doSort<63,T>(fp);
+        doSort<64,T>(fp);
+
     }
     
 }
