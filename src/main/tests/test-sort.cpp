@@ -50,7 +50,7 @@ namespace
         {
             const size_t n = 1+alea.leq(100);
             std::cerr << "\tMerge" << std::endl;
-            typedef core::node_of<T> Node;
+            typedef core::cpp_node_of<T> Node;
             core::list_of_cpp<Node>  L;
             for(size_t i=1;i<=n;++i)
             {

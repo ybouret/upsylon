@@ -12,7 +12,7 @@ namespace upsylon {
 
     namespace Graphic {
 
-        typedef core::node_of<const Point>     PNode;   //!< Point Node
+        typedef core::cpp_node_of<const Point> PNode;   //!< Point Node
         typedef core::pool_of_cpp<PNode>       PPool;   //!< Point Pool
         typedef core::list_of_cpp<PNode>       PList;   //!< Point List
         typedef Pixmap<size_t>                 Indices; //!< pixmap of indices

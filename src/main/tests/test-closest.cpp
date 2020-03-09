@@ -85,9 +85,9 @@ Y_UTEST(closest)
 {
     concurrent::simd loop;
 
-    doFind< core::node_of< point2d<float>  >  >(loop,"p2f.dat");
-    doFind< core::node_of< point3d<double> >  >(loop,"p3f.dat");
-    doFind< core::node_of< point2d<unit_t> >  >(loop,"p2i.dat");
+    doFind< core::cpp_node_of< point2d<float>  >  >(loop,"p2f.dat");
+    doFind< core::cpp_node_of< point3d<double> >  >(loop,"p3f.dat");
+    doFind< core::cpp_node_of< point2d<unit_t> >  >(loop,"p2i.dat");
 
 }
 Y_UTEST_DONE()
