@@ -11,10 +11,10 @@ Y_UTEST(stree)
 {
 
     Y_UTEST_SIZEOF( suffix_tree<int>::data_node );
-    Y_UTEST_SIZEOF( suffix_tree<int>::tree_node );
+    Y_UTEST_SIZEOF( suffix_tree<int>::node_type );
 
     Y_UTEST_SIZEOF( suffix_tree<string>::data_node );
-    Y_UTEST_SIZEOF( suffix_tree<string>::tree_node );
+    Y_UTEST_SIZEOF( suffix_tree<string>::node_type );
 
 
     suffix_tree<int>    itree;
