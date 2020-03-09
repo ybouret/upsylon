@@ -30,15 +30,19 @@ namespace upsylon {
             //! node to rebuild local key
             struct knode
             {
-                knode  *next;
-                knode  *prev;
-                uint8_t code;
+                knode  *next; //!< for list
+                knode  *prev; //!< for list
+                uint8_t code; //!< for list
             };
 
+            //! kpool
             class kpool : public pool_of<knode>
             {
             public:
+                //! ctor
                 explicit kpool() throw() : pool_of<knode>() {}
+
+                //! dtor
                 virtual ~kpool() throw()
                 {
                     while(size>0) { knode *node = query(); object::release1(node); }
@@ -47,9 +51,11 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(kpool);
             };
 
+            //! klist
             class klist : public list_of<knode>
             {
             public:
+                //! ctor
                 explicit klist( kpool &mgr ) throw() :
                 list_of<knode> (),
                 pool_(mgr)
@@ -65,6 +71,7 @@ namespace upsylon {
                     push_front(node);
                 }
 
+                //! dtor
                 virtual ~klist() throw()
                 {
                     pool_.store(*this);
