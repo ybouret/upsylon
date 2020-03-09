@@ -25,7 +25,7 @@ namespace upsylon{
         //! a generic node
         class DynamoNode :
         public DynamoObject,
-        public core::inode<DynamoNode>,
+        public inode<DynamoNode>,
         public Serializable,
         public Vizible
         {

@@ -3,7 +3,7 @@
 #define Y_NET_IO_TCP_RECV_QUEUE_INCLUDED 1
 
 #include "y/net/io/tcp-queue.hpp"
-#include "y/core/node.hpp"
+#include "y/core/inode.hpp"
 
 namespace upsylon
 {
@@ -11,7 +11,7 @@ namespace upsylon
     {
 
         //! tcp queue to recieve data
-        class tcp_recv_queue : public tcp_queue, public core::inode<tcp_recv_queue>
+        class tcp_recv_queue : public tcp_queue, public inode<tcp_recv_queue>
         {
         public:
             virtual ~tcp_recv_queue() throw();        //!< cleanup

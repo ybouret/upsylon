@@ -6,7 +6,7 @@
 
 #include "y/graphic/pixel.hpp"
 #include "y/graphic/linked.hpp"
-
+#include "y/core/inode.hpp"
 
 namespace upsylon {
 
@@ -14,7 +14,7 @@ namespace upsylon {
 
         
         //! a blob is a list of points with a unique label
-        class Blob : public Object, public PList, public core::inode<Blob>
+        class Blob : public Object, public PList, public inode<Blob>
         {
         public:
             typedef core::list_of_cpp<Blob> List; //!< alias

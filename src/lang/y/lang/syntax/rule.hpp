@@ -30,7 +30,7 @@ namespace upsylon {
              a rule will grow a syntax tree with a source and a lexer
              */
             //------------------------------------------------------------------
-            class Rule : public Object, public core::inode<Rule>
+            class Rule : public Object, public inode<Rule>
             {
             public:
                 //______________________________________________________________

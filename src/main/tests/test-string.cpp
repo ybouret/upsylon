@@ -4,7 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
-#include "y/core/node.hpp"
+#include "y/core/inode.hpp"
 #include "y/core/list.hpp"
 #include "y/sort/merge.hpp"
 
@@ -14,11 +14,11 @@ using namespace upsylon;
 
 namespace
 {
-    class s_node : public core::inode<s_node>
+    class s_node : public inode<s_node>
     {
     public:
         string s;
-        explicit s_node(const string &_) : core::inode<s_node>(), s(_) {}
+        explicit s_node(const string &_) : inode<s_node>(), s(_) {}
         virtual ~s_node() throw() {}
 
     private:

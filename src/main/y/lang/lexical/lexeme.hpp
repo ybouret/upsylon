@@ -11,7 +11,7 @@ namespace upsylon {
         namespace Lexical {
 
             //! a Unit is a labeled Token
-            class Unit : public Token, public core::inode<Unit>
+            class Unit : public Token, public inode<Unit>
             {
             public:
                 //--------------------------------------------------------------
@@ -19,7 +19,7 @@ namespace upsylon {
                 // types and definitions
                 //
                 //--------------------------------------------------------------
-                typedef core::inode<Unit>       Base; //!< alias
+                typedef inode<Unit>             Base; //!< alias
                 typedef core::list_of_cpp<Unit> List; //!< alias
 
                 //--------------------------------------------------------------

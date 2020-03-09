@@ -3,7 +3,7 @@
 #define Y_LANG_CHAR_INCLUDED 1
 
 #include "y/lang/char-info.hpp"
-#include "y/core/node.hpp"
+#include "y/core/inode.hpp"
 #include "y/core/list.hpp"
 
 namespace upsylon
@@ -12,14 +12,14 @@ namespace upsylon
     {
 
         //! full fledged class, a code and its position
-        class Char : public CharInfo, public core::inode<Char>
+        class Char : public CharInfo, public inode<Char>
         {
         public:
             //__________________________________________________________________
             //
             // types
             //__________________________________________________________________
-            typedef core::inode<Char>       Base; //!< alias
+            typedef inode<Char>             Base; //!< alias
             typedef core::list_of_cpp<Char> List; //!< list for I/O or buffer
 
             //__________________________________________________________________

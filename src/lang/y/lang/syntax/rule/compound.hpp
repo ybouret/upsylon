@@ -12,10 +12,10 @@ namespace upsylon
         namespace Syntax
         {
             //! holds a reference to a Rule
-            class Operand : public Object, public core::inode<Operand>
+            class Operand : public Object, public inode<Operand>
             {
             public:
-                typedef core::inode<Operand>       Base; //!< alias
+                typedef inode<Operand>             Base; //!< alias
                 typedef core::list_of_cpp<Operand> List; //!< alias
 
                 explicit Operand( const Rule &r) throw(); //!< setup

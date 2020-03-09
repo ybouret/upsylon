@@ -4,7 +4,7 @@
 #define Y_NET_IO_TCP_SEND_QUEUE_INCLUDED 1
 
 #include "y/net/io/tcp-queue.hpp"
-#include "y/core/node.hpp"
+#include "y/core/inode.hpp"
 
 namespace upsylon
 {
@@ -12,7 +12,7 @@ namespace upsylon
     {
 
         //! tcp queue to send data
-        class tcp_send_queue : public tcp_queue, public core::inode<tcp_send_queue>
+        class tcp_send_queue : public tcp_queue, public inode<tcp_send_queue>
         {
         public:
             virtual ~tcp_send_queue() throw();                 //!< cleanup

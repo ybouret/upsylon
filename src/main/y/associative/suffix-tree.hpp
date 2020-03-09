@@ -15,6 +15,10 @@
 
 namespace upsylon {
 
+    namespace core {
+        
+    }
+    
     //! generic suffix tree
     template <typename T>
     class suffix_tree
@@ -246,6 +250,10 @@ namespace upsylon {
             }
         }
 
+        inline void trim() throw()
+        {
+            
+        }
 
 
     private:

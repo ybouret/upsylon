@@ -19,14 +19,14 @@ namespace upsylon
             //! store syntax trees
             class Node :
             public Object,
-            public core::inode<Node>,
+            public inode<Node>,
             public Vizible,
             public Serializable
             {
             public:
                 static const char                     UPFX = '%'; //!< Uuid PreFiX
                 typedef uint32_t                      id_t;       //!< alias
-                typedef core::inode<Node>             Base;       //!< alias
+                typedef inode<Node>                   Base;       //!< alias
                 typedef core::list_of_cloneable<Node> List;       //!< alias
                 typedef arc_ptr<const string>         Data;       //!< alias
 

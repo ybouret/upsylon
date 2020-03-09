@@ -8,13 +8,14 @@
 #include "y/graphic/ops/histogram.hpp"
 #include "y/graphic/linked.hpp"
 #include "y/graphic/parallel/ops.hpp"
+#include "y/core/inode.hpp"
 
 namespace upsylon {
 
     namespace Graphic {
 
         //! an edge is a list of points
-        class Edge : public Object, public PList, public core::inode<Edge>
+        class Edge : public Object, public PList, public inode<Edge>
         {
         public:
             //! Edge force

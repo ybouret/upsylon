@@ -4,7 +4,7 @@
 #include "y/sequence/list.hpp"
 #include "y/ios/tools/posix-command.hpp"
 #include "y/core/list.hpp"
-#include "y/core/node.hpp"
+#include "y/core/inode.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/ordered/sorted-vector.hpp"
 #include "y/string/tokenizer.hpp"
@@ -16,7 +16,7 @@ namespace {
 
     typedef list<string>               strings;
     class                              Port;
-    typedef core::inode<Port>          PortNode;
+    typedef inode<Port>                PortNode;
     typedef core::list_of_cpp<Port>    Ports;
     typedef sorted_vector<string>      Collection;
     typedef ordered_single<Collection> Required;
