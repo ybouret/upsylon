@@ -41,7 +41,6 @@ namespace upsylon {
         //! constructor with n objects having default constructor
         inline explicit list(const size_t n)  : nodes(), cache()
         {
-            
             try
             {
                 while( nodes.size < n )
@@ -57,7 +56,7 @@ namespace upsylon {
             try {
                 while( nodes.size < n )
                 {
-                    nodes.push_back( node_type::create(value) );
+                    nodes.push_back( node_type::create_alive(value) );
                 }
             } catch(...) { node_type::destruct(nodes); throw; }
         }
@@ -67,13 +66,14 @@ namespace upsylon {
         {
             try
             {
-                for(const node_type *node = other.head; node; node=node->next )
+                for(const node_type *node = other.nodes.head; node; node=node->next )
                 {
-                    nodes.push_back( node_type::create(node->data) );
+                    nodes.push_back( node_type::create_alive(node->data) );
                 }
             }
             catch(...)
             {
+                assert(0==cache.size);
                 node_type::destruct(nodes);
                 throw;
             }
@@ -85,11 +85,11 @@ namespace upsylon {
             if(this!=&other)
             {
                 core::list_of<node_type> tmp;
-                for(const node_type *node = other.head; node; node=node->next )
+                for(const node_type *node = other.nodes.head; node; node=node->next )
                 {
-                    tmp.push_back( node_type::create(node->data) );
+                    tmp.push_back( node_type::create_alive(node->data) );
                 }
-                this->free();
+                __free();
                 tmp.swap_with(nodes);
             }
             return *this;
@@ -112,25 +112,25 @@ namespace upsylon {
         //! sequence interface: push_back()
         inline virtual void push_back(param_type args)
         {
-            nodes.push_back( node_type::create(args,cache) );
+            nodes.push_back( node_type::create_alive_with(args,cache) );
         }
 
         //! sequence interface: push_back()
         inline virtual void push_front(param_type args)
         {
-            nodes.push_front( node_type::create(args,cache) );
+            nodes.push_front( node_type::create_alive_with(args,cache) );
         }
 
         //! specific: is enough memory
         inline void push_back_(param_type args)
         {
-            nodes.push_back( node_type::create_(args,cache) );
+            nodes.push_back( node_type::create_alive_with_(args,cache) );
         }
 
         //! specific: is enough memory
         inline void push_front_(param_type args)
         {
-            nodes.push_front( node_type::create_(args,cache) );
+            nodes.push_front( node_type::create_alive_with_(args,cache) );
         }
         
         //! specific
@@ -171,7 +171,7 @@ namespace upsylon {
         virtual void adjust( const size_t n, param_type pad )
         {
             while(nodes.size>n) pop_back();
-            while(nodes.size<n) nodes.push_back( node_type::create(pad,cache) );
+            while(nodes.size<n) nodes.push_back( node_type::create_alive_with(pad,cache) );
         }
 
         typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator

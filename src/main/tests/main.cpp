@@ -71,6 +71,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(ptr);
     Y_UTEST(slots);
     Y_UTEST(env);
+    Y_UTEST(list);
     Y_UTEST(sequence);
     Y_UTEST(pipe);
     Y_UTEST(arrays);

@@ -88,6 +88,11 @@ namespace
                 }
             }
 
+            {
+                SEQ seq1;
+                SEQ seq2(seq);
+                seq1 = seq;
+            }
 
             seq.reserve( alea.leq(100) );
             std::cerr << "seq.size     = " << seq.size() << std::endl;
