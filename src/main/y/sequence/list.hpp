@@ -3,8 +3,7 @@
 #define Y_LIST_INCLUDED 1
 
 #include "y/container/sequence.hpp"
-#include "y/core/list.hpp"
-#include "y/core/pool.hpp"
+#include "y/core/knode.hpp"
 #include "y/iterate/linked.hpp"
 #include "y/sort/merge.hpp"
 #include "y/type/self-destruct.hpp"
@@ -20,30 +19,11 @@ namespace upsylon {
     public:
         Y_DECL_ARGS(T,type); //!<! aliases
         
-        //! internal node type
-        class node_type
-        {
-        public:
-            //! build data by copy constructor
-            inline  node_type(param_type args) : next(0), prev(0), data(args) {}
+        typedef core::knode<T>                node_type;
+        typedef typename node_type::list_type nodes_list;
+        typedef typename node_type::pool_type nodes_pool;
 
-            //! build data by default constructor
-            inline  node_type() : next(0), prev(0), data() {}
-
-            //! destructor
-            inline ~node_type() throw() {}
-
-            node_type *next; //!< for list/pool
-            node_type *prev; //!< for list
-            T          data; //!< holds effective data
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(node_type);
-        };
-
-        typedef core::list_of<node_type> nodes_list; //!< hold active nodes
-        typedef core::pool_of<node_type> nodes_pool; //!< hold inactive nodes
-
+        
         //! default constructor
         inline explicit list() throw() : nodes(), cache() {}
 
@@ -54,18 +34,21 @@ namespace upsylon {
         inline explicit list(const size_t n, const as_capacity_t &) :
         nodes(), cache()
         {
-            try { __reserve(n); } catch(...) { __release(); throw; }
+            try        { node_type::prefetch(cache,n);      }
+            catch(...) { node_type::destruct(cache); throw; }
         }
 
         //! constructor with n objects having default constructor
         inline explicit list(const size_t n)  : nodes(), cache()
         {
-            try {
+            
+            try
+            {
                 while( nodes.size < n )
                 {
-                    nodes.push_back( query() );
+                    nodes.push_back( node_type::create() );
                 }
-            } catch(...) { __release(); throw; }
+            } catch(...) { node_type::destruct(nodes); throw; }
         }
 
         //! constructor with n objects having copy constructor
@@ -74,9 +57,9 @@ namespace upsylon {
             try {
                 while( nodes.size < n )
                 {
-                    nodes.push_back( query(value) );
+                    nodes.push_back( node_type::create(value) );
                 }
-            } catch(...) { __release(); throw; }
+            } catch(...) { node_type::destruct(nodes); throw; }
         }
 
         //! copy constructor
@@ -86,12 +69,13 @@ namespace upsylon {
             {
                 for(const node_type *node = other.head; node; node=node->next )
                 {
-                    nodes.push_back( query(node->data) );
+                    nodes.push_back( node_type::create(node->data) );
                 }
             }
             catch(...)
             {
-                release();
+                node_type::destruct(nodes);
+                throw;
             }
         }
 
@@ -103,7 +87,7 @@ namespace upsylon {
                 core::list_of<node_type> tmp;
                 for(const node_type *node = other.head; node; node=node->next )
                 {
-                    tmp.push_back( query(node->data) );
+                    tmp.push_back( node_type::create(node->data) );
                 }
                 this->free();
                 tmp.swap_with(nodes);
@@ -117,36 +101,38 @@ namespace upsylon {
         inline virtual size_t capacity() const throw() { return nodes.size+cache.size; }
 
         //! container interface: free()
-        inline virtual void free()    throw() { __free();        }
+        inline virtual void free()    throw() {  node_type::destruct_to(cache,nodes); }
+        
         //! container interface: release()
         inline virtual void release() throw() { __release(); }
+        
         //! container interface: reserve()
-        inline virtual void reserve(const size_t n) throw() { __reserve(n); }
+        inline virtual void reserve(const size_t n) throw() { node_type::prefetch(cache,n); }
 
         //! sequence interface: push_back()
         inline virtual void push_back(param_type args)
         {
-            nodes.push_back( query(args) );
+            nodes.push_back( node_type::create(args,cache) );
         }
 
         //! sequence interface: push_back()
         inline virtual void push_front(param_type args)
         {
-            nodes.push_front( query(args) );
+            nodes.push_front( node_type::create(args,cache) );
         }
 
         //! specific: is enough memory
         inline void push_back_(param_type args)
         {
-            nodes.push_back( query_(args) );
+            nodes.push_back( node_type::create_(args,cache) );
         }
 
         //! specific: is enough memory
         inline void push_front_(param_type args)
         {
-            nodes.push_front( query_(args) );
+            nodes.push_front( node_type::create_(args,cache) );
         }
-
+        
         //! specific
         inline void guarantee(const size_t n)
         {
@@ -154,9 +140,9 @@ namespace upsylon {
         }
 
         //! sequence interface: back()
-        inline virtual type       & back() throw()       { assert(nodes.size>0); return nodes.tail->data; }
+        inline virtual type       & back() throw()        { assert(nodes.size>0); return nodes.tail->data; }
         //! sequence interface: back() const
-        inline virtual const_type & back() const throw() { assert(nodes.size>0); return nodes.tail->data; }
+        inline virtual const_type & back() const throw()  { assert(nodes.size>0); return nodes.tail->data; }
         //! sequence interface : front()
         inline virtual type       & front() throw()       { assert(nodes.size>0); return nodes.head->data; }
         //! sequence interface : front(), const
@@ -185,7 +171,7 @@ namespace upsylon {
         virtual void adjust( const size_t n, param_type pad )
         {
             while(nodes.size>n) pop_back();
-            while(nodes.size<n) nodes.push_back( query(pad) );
+            while(nodes.size<n) nodes.push_back( node_type::create(pad,cache) );
         }
 
         typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
@@ -300,84 +286,17 @@ namespace upsylon {
     private:
         nodes_list nodes;
         nodes_pool cache;
-
-
-        inline node_type *query_dead_node()
-        {
-            return (cache.size>0) ? cache.query() : object::acquire1<node_type>();
-        }
-
-        inline node_type *query_(const_type &args)
-        {
-            assert(cache.size>0);
-            node_type *node = cache.query();
-            try {
-                new (node) node_type(args);
-            }
-            catch(...)
-            {
-                cache.store(node);
-                throw;
-            }
-            return node;
-        }
-
-        inline node_type *query(const_type &args)
-        {
-            node_type *node = query_dead_node();
-            try
-            {
-                new (node) node_type(args);
-            }
-            catch(...)
-            {
-                cache.store(node);
-                throw;
-            }
-            return node;
-        }
-
-        inline node_type *query()
-        {
-            node_type *node = query_dead_node();
-            try
-            {
-                new (node) node_type();
-            }
-            catch(...)
-            {
-                cache.store(node);
-                throw;
-            }
-            return node;
-        }
-
-
-
-        inline void __reserve(size_t n)
-        {
-            while(n-->0) cache.store( object::acquire1<node_type>() );
-        }
+        
 
         inline void __free() throw()
         {
-            while( nodes.size )
-            {
-                self_destruct( cache.store( nodes.pop_back() )->data );
-            }
+            node_type::destruct_to(cache,nodes);
         }
 
         inline void __release() throw()
         {
-            // remove active nodes
-            while(nodes.size>0)
-            {
-                node_type *node = nodes.pop_back();
-                self_destruct(node->data);
-                object::release1(node);
-            }
-            // remove cached nodes
-            trim();
+            node_type::destruct(nodes);
+            node_type::destruct(cache);
         }
 
         template <typename FUNC> static inline

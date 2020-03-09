@@ -63,6 +63,7 @@ namespace
         {
             (void) seq[i];
         }
+        std::cerr << "done" << std::endl;
     }
 
     template <typename SEQ>
@@ -176,8 +177,8 @@ Y_UTEST(sequence)
 
     do_test< list<uint16_t> >();
     do_test< list<string> >();
-
-    //return 0;
+    
+    return 0;
 
     {
         vector<uint16_t,memory::global> cvg(1,as_capacity); std::cerr << "cvg.capacity=" << cvg.capacity() << std::endl;

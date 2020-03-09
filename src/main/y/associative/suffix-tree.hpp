@@ -4,10 +4,7 @@
 #ifndef Y_SUFFIX_TREE_INCLUDED
 #define Y_SUFFIX_TREE_INCLUDED 1
 
-#include "y/core/pool.hpp"
-#include "y/type/args.hpp"
-#include "y/type/self-destruct.hpp"
-#include "y/object.hpp"
+#include "y/core/knode.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/code/utils.hpp"
