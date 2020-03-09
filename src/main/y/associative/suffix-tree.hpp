@@ -192,7 +192,7 @@ namespace upsylon {
                 }
                 if(!found)
                 {
-                    return false;
+                    return NULL;
                 }
             }
             assert(curr);
