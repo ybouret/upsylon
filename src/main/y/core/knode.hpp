@@ -11,7 +11,8 @@
 namespace upsylon {
     
     namespace core {
-        
+
+        //! kernel kind node
         template <typename T>
         class knode
         {
@@ -56,12 +57,20 @@ namespace upsylon {
             }
             
             //! direct with 1-args constructor
-            static inline knode *create_alive(param_type args)
+            template <typename U>
+            static inline knode *create_alive(const U &args)
             {
                 return new( acquire_empty() ) knode(args);
             }
-            
-            
+
+            //! direct with 2-args constructor
+            template <typename U, typename V>
+            static inline knode *create_alive(const U &u, const V &v)
+            {
+                return new( acquire_empty() ) knode(u,v);
+            }
+
+
             //! cached with default constructor
             static inline knode *create_alive_with(pool_type &cache)
             {
@@ -71,10 +80,20 @@ namespace upsylon {
             }
             
             //! cached with 1-args constructor
-            static inline knode *create_alive_with(pool_type &cache,param_type args)
+            template <typename U>
+            static inline knode *create_alive_with(pool_type &cache,const U &args)
             {
                 knode *node = acquire_empty_with(cache);
                 try { new (node) knode(args); } catch(...) { cache.store(node); throw; }
+                return node;
+            }
+
+            //! cached with 2-args constructor
+            template <typename U,typename V>
+            static inline knode *create_alive_with(pool_type &cache,const U &u, const V &v)
+            {
+                knode *node = acquire_empty_with(cache);
+                try { new (node) knode(u,v); } catch(...) { cache.store(node); throw; }
                 return node;
             }
             
@@ -87,14 +106,26 @@ namespace upsylon {
                 return node;
             }
             
-            //! cached (not empty) with default constructor
-            static inline knode *create_alive_with_(pool_type &cache, param_type args)
+            //! cached (not empty) with 1-args constructor
+            template <typename U>
+            static inline knode *create_alive_with_(pool_type &cache,const U & args)
             {
                 assert(cache.size>0);
                 knode *node = cache.query();
                 try { new (node) knode(args); } catch(...) { cache.store(node); throw; }
                 return node;
             }
+
+            //! cached (not empty) with 2-args constructor
+            template <typename U,typename V>
+            static inline knode *create_alive_with_(pool_type &cache,const U & u, const V &v)
+            {
+                assert(cache.size>0);
+                knode *node = cache.query();
+                try { new (node) knode(u,v); } catch(...) { cache.store(node); throw; }
+                return node;
+            }
+
             
             
             //! prefetch empty nodes
@@ -137,7 +168,8 @@ namespace upsylon {
                     destruct(alive,cache);
                 }
             }
-            
+
+            //! destruct a cache
             static inline void destruct(pool_type &cache) throw()
             {
                 while(cache.size)
@@ -146,7 +178,8 @@ namespace upsylon {
                     release_empty(node);
                 }
             }
-            
+
+            //! destruct a list
             static inline void destruct(list_type &nodes) throw()
             {
                 while(nodes.size)
@@ -160,9 +193,12 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(knode);
             ~knode() throw();
-            inline knode() :                 next(0), prev(0), data()     {}
-            inline knode(const_type &args) : next(0), prev(0), data(args) {}
+            inline knode()              : next(0), prev(0), data()     {}
+            template <typename U>
+            inline knode(const U &args) : next(0), prev(0), data(args) {}
 
+            template <typename U, typename V>
+            inline knode(const U &u, const V &v) : next(0), prev(0), data(u,v) {}
 
         };
         

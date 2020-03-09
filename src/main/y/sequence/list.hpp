@@ -19,9 +19,9 @@ namespace upsylon {
     public:
         Y_DECL_ARGS(T,type); //!<! aliases
         
-        typedef core::knode<T>                node_type;
-        typedef typename node_type::list_type nodes_list;
-        typedef typename node_type::pool_type nodes_pool;
+        typedef core::knode<T>                node_type;   //!< alias
+        typedef typename node_type::list_type nodes_list;  //!< alias
+        typedef typename node_type::pool_type nodes_pool;  //!< alias
 
         
         //! default constructor
