@@ -71,7 +71,7 @@ namespace upsylon {
             }
             
             //! cached with 1-args constructor
-            static inline knode *create_alive_with(param_type args, pool_type &cache)
+            static inline knode *create_alive_with(pool_type &cache,param_type args)
             {
                 knode *node = acquire_empty_with(cache);
                 try { new (node) knode(args); } catch(...) { cache.store(node); throw; }
@@ -88,7 +88,7 @@ namespace upsylon {
             }
             
             //! cached (not empty) with default constructor
-            static inline knode *create_alive_with_(param_type args, pool_type &cache)
+            static inline knode *create_alive_with_(pool_type &cache, param_type args)
             {
                 assert(cache.size>0);
                 knode *node = cache.query();

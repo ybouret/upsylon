@@ -9,7 +9,6 @@
 #include "y/ios/tools/vizible.hpp"
 #include "y/code/utils.hpp"
 
-
 namespace upsylon {
 
     namespace core {
@@ -21,19 +20,8 @@ namespace upsylon {
     class suffix_tree
     {
     public:
-        Y_DECL_ARGS(T,type);                //!< aliases
-
-        //! holding data
-        class data_node {
-        public:
-            data_node *next; //!< for list
-            data_node *prev; //!< for list
-            type       data; //!< effective data
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(data_node);
-        };
-
+        Y_DECL_ARGS(T,type);                        //!< aliases
+        typedef core::knode<T>           data_node; //!< data node
         typedef core::list_of<data_node> data_list; //!< list of data
         typedef core::pool_of<data_node> data_pool; //!< pool of data
 
@@ -152,20 +140,19 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 if(!found)
                 {
-                    curr = curr->chld.push_back( new tree_node(curr,code) );
+                    (curr = curr->chld.push_back( new tree_node(curr,code) ))->freq++;
                 }
-                
-
             }
             assert(NULL!=curr);
-
+            
             if(NULL != curr->addr )
             {
                 return false; // already someone
             }
             else
             {
-                curr->addr = dlist.push_back( query(args) );
+                curr->addr = dlist.push_back( data_node::create_alive_with(dpool,args) );
+                assert(curr->addr!=NULL);
                 return true;
             }
 
@@ -259,38 +246,13 @@ namespace upsylon {
         data_list            dlist;
         data_pool            dpool;
 
-        inline data_node *query( const_type &args )
-        {
-            data_node *node = dpool.size ? dpool.query() : object::acquire1<data_node>();
-            try {
-                new ( &(node->data) ) type(args);
-            }
-            catch(...)
-            {
-                dpool.store(node);
-                throw;
-            }
-            return node;
-        }
+
 
         void release_data() throw()
         {
-            while( dlist.size )
-            {
-                data_node *node = dlist.pop_back();
-                self_destruct(node->data);
-                object::release1(node);
-            }
-
-            while( dpool.size )
-            {
-                data_node *node = dpool.query();
-                object::release1(node);
-            }
+            data_node::destruct(dlist);
+            data_node::destruct(dpool);
         }
-
-
-
 
     };
 

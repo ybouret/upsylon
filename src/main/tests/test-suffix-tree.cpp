@@ -32,9 +32,18 @@ Y_UTEST(stree)
             keys << line;
             const char *k = *line;
             ++i;
-            itree.insert_with(k, line.size(), i);
-            stree.insert_with(k, line.size(), line);
+            std::cerr << "+[" << line << "]" << std::endl;
+            if(itree.insert_with(k, line.size(), i))
+            {
+                std::cerr << "ok" << std::endl;
+                Y_ASSERT(stree.insert_with(k, line.size(), line));
+            }
         }
+    }
+
+    if( itree.entries() <= 100 )
+    {
+        itree.get_root().graphViz("itree.dot");
     }
 
     std::cerr << "look for keys" << std::endl;
@@ -51,10 +60,7 @@ Y_UTEST(stree)
         Y_ASSERT( itree.remove_with( *keys[i], keys[i].size() ) );
     }
 
-    if( itree.entries() <= 100 )
-    {
-        itree.get_root().graphViz("itree.dot");
-    }
+
 
     std::cerr << "end..." << std::endl;
 

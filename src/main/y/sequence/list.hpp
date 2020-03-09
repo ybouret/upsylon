@@ -39,19 +39,19 @@ namespace upsylon {
         }
 
         //! constructor with n objects having default constructor
-        inline explicit list(const size_t n)  : nodes(), cache()
+        inline explicit list(const size_t n)  : sequence<T>(), nodes(), cache()
         {
             try
             {
                 while( nodes.size < n )
                 {
-                    nodes.push_back( node_type::create() );
+                    nodes.push_back( node_type::create_alive() );
                 }
             } catch(...) { node_type::destruct(nodes); throw; }
         }
 
         //! constructor with n objects having copy constructor
-        inline explicit list(const size_t n, param_type value)  : nodes(), cache()
+        inline explicit list(const size_t n, param_type value)  : sequence<T>(), nodes(), cache()
         {
             try {
                 while( nodes.size < n )
@@ -62,7 +62,7 @@ namespace upsylon {
         }
 
         //! copy constructor
-        list( const list &other ) : nodes(), cache()
+        list( const list &other ) : counted_object(), collection(), addressable<T>(),  sequence<T>(), nodes(), cache()
         {
             try
             {
@@ -112,25 +112,25 @@ namespace upsylon {
         //! sequence interface: push_back()
         inline virtual void push_back(param_type args)
         {
-            nodes.push_back( node_type::create_alive_with(args,cache) );
+            nodes.push_back( node_type::create_alive_with(cache,args) );
         }
 
         //! sequence interface: push_back()
         inline virtual void push_front(param_type args)
         {
-            nodes.push_front( node_type::create_alive_with(args,cache) );
+            nodes.push_front( node_type::create_alive_with(cache,args) );
         }
 
         //! specific: is enough memory
         inline void push_back_(param_type args)
         {
-            nodes.push_back( node_type::create_alive_with_(args,cache) );
+            nodes.push_back( node_type::create_alive_with_(cache,args) );
         }
 
         //! specific: is enough memory
         inline void push_front_(param_type args)
         {
-            nodes.push_front( node_type::create_alive_with_(args,cache) );
+            nodes.push_front( node_type::create_alive_with_(cache,args) );
         }
         
         //! specific
@@ -171,7 +171,7 @@ namespace upsylon {
         virtual void adjust( const size_t n, param_type pad )
         {
             while(nodes.size>n) pop_back();
-            while(nodes.size<n) nodes.push_back( node_type::create_alive_with(pad,cache) );
+            while(nodes.size<n) nodes.push_back( node_type::create_alive_with(cache,pad) );
         }
 
         typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
