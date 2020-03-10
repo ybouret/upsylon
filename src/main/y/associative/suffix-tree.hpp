@@ -19,41 +19,53 @@ namespace upsylon {
         class suffix_tree
         {
         public:
-            class node_type : public object,
-            public inode<node_type>,
-            public ios::vizible
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            typedef list<uint8_t>                path;      //!< used to rebuild keys
+            class                                node_type; //!< forward declaration
+            typedef core::list_of_cpp<node_type> node_list; //!< for tree
+
+            //! internal node for tree
+            class node_type : public object, public inode<node_type>, public ios::vizible
             {
             public:
-                typedef core::list_of_cpp<node_type> children; //!< sub-trees
-                node_type       *parent; //!< parent node
-                void            *impl;   //!< address of data node
-                const uint8_t    code;   //!< local code
-                size_t           freq;   //!< local frequency for optimization
-                children         chld;   //!< children
+                node_type       *parent;                       //!< parent node
+                void            *impl;                         //!< address of data node
+                const uint8_t    code;                         //!< local code
+                size_t           freq;                         //!< local frequency for optimization
+                node_list        chld;                         //!< children
                 
                 
                 explicit node_type(node_type *, const uint8_t) throw(); //!< setup
-                virtual ~node_type() throw(); //!< cleanup
+                virtual ~node_type() throw();                           //!< cleanup
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(node_type);
                 virtual void vizCore(ios::ostream &) const;
             };
-            
-            typedef list<uint8_t>  path;     //!< used to rebuild keys
-            
-            virtual ~suffix_tree() throw();  //!< cleanup
-            
-            
-            
+
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            virtual    ~suffix_tree() throw();  //!< cleanup
+
         protected:
-            explicit suffix_tree(); //!< setup
-            static void throw_on_insert_failure(const path &); //!< common exception
-            static void build_path_from(const node_type *curr,path &key);
-            
-            node_type           *root;
-            
-            
+            explicit    suffix_tree(); //!< setup
+            node_type  *root;          //!< root node
+
+            //------------------------------------------------------------------
+            //
+            // static helpers
+            //
+            //------------------------------------------------------------------
+            static void throw_on_insert_failure(const path &);         //!< common exception
+            static void rebuild_path(path &key,const node_type *curr); //!< common rebuild of path
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(suffix_tree);
         };
@@ -64,7 +76,12 @@ namespace upsylon {
     class suffix_tree : public core::suffix_tree
     {
     public:
-        Y_DECL_ARGS(T,type);                        //!< aliases
+        //----------------------------------------------------------------------
+        //
+        // types and definitions
+        //
+        //----------------------------------------------------------------------
+        Y_DECL_ARGS(T,type); //!< aliases
         
         //! a leave in a tree
         class leave
@@ -72,8 +89,10 @@ namespace upsylon {
         public:
             type             data; //!< the actual data
             const node_type &hook; //!< place in the tree
-                                   //! setup
+
+            //! setup
             inline  leave(const_type &args, const node_type &node) : data(args), hook(node) {}
+
             //! cleanup
             inline ~leave() throw() {}
         private:
@@ -83,7 +102,12 @@ namespace upsylon {
         typedef core::knode<leave>       data_node; //!< data node
         typedef core::list_of<data_node> data_list; //!< list of data
         typedef core::pool_of<data_node> data_pool; //!< pool of data
-        
+
+        //----------------------------------------------------------------------
+        //
+        // C++
+        //
+        //----------------------------------------------------------------------
         
         //! setup
         inline explicit suffix_tree() : core::suffix_tree(), dlist(), dpool()
@@ -112,13 +136,18 @@ namespace upsylon {
             assert( dlist.size == other.dlist.size );
             
         }
-        
+
+        //----------------------------------------------------------------------
+        //
+        // methods
+        //
+        //----------------------------------------------------------------------
+
         //! accessing root
         inline const node_type & get_root() const throw() { return *root; }
         
         //! number of entries
         inline size_t entries() const throw() { return dlist.size; }
-        
         
         //! type insertion with key iterator
         template <typename ITERATOR> inline
@@ -144,7 +173,7 @@ namespace upsylon {
                 // look for the code in child(ren)
                 //
                 //--------------------------------------------------------------
-                node_type::children   &chld = curr->chld;
+                node_list     &chld = curr->chld;
                 for(node_type *node = chld.head;node;node=node->next)
                 {
                     if(code==node->code)
@@ -180,8 +209,8 @@ namespace upsylon {
                 // update frequencies and ordering
                 while(curr->parent)
                 {
-                    node_type           *parent   = curr->parent; curr->freq++;
-                    node_type::children &siblings = parent->chld; assert(siblings.owns(curr));
+                    node_type  *parent   = curr->parent; curr->freq++;
+                    node_list  &siblings = parent->chld; assert(siblings.owns(curr));
                     while(curr->prev && curr->prev->freq<curr->freq)
                     {
                         siblings.towards_head(curr);
@@ -221,7 +250,7 @@ namespace upsylon {
             assert(curr);
             if(curr->impl)
             {
-                const data_node *dnode = static_cast<data_node *>(curr->impl);
+                const data_node *dnode = static_cast<const data_node *>(curr->impl);
                 return &(dnode->data.data);
             }
             else
@@ -281,7 +310,7 @@ namespace upsylon {
         {
             assert( NULL != dnode     );
             assert( dlist.owns(dnode) );
-            build_path_from( &(dnode->data.hook), key );
+            rebuild_path(key,&(dnode->data.hook));
         }
         
         

@@ -21,7 +21,7 @@ namespace upsylon {
             throw exception("unexpected suffix_tree insert failure w/key.size=%u", unsigned(key.size()));
         }
         
-        void suffix_tree:: build_path_from( const node_type *curr, path &key )
+        void suffix_tree:: rebuild_path(path &key, const node_type *curr)
         {
             key.free();
             assert(curr);
