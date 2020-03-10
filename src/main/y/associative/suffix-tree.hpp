@@ -297,6 +297,8 @@ namespace upsylon {
             }
         }
 
+
+
         //! sort data
         template <typename FUNC> inline
         void sort_with( FUNC &func )
@@ -326,6 +328,27 @@ namespace upsylon {
             return insert_by(buffer.ro(),buffer.length(),args);
         }
 
+        //! remove with memory area as key
+        inline bool remove_by(const void  *key_addr,
+                              const size_t key_size) throw()
+        {
+            assert( !(NULL==key_addr&&key_size>0) );
+            const uint8_t *key = static_cast<const uint8_t *>(key_addr);
+            return remove_with(key,key_size);
+        }
+
+
+        //! remove with text
+        inline bool remove_by(const char *text) throw()
+        {
+            return remove_by(text, text ? strlen(text) : 0);
+        }
+
+        //! remove with buffer
+        inline bool remove_by(const memory::ro_buffer &buffer) throw()
+        {
+            return remove_by(buffer.ro(),buffer.length());
+        }
 
 
     private:

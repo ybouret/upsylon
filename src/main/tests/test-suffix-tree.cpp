@@ -18,11 +18,6 @@ static inline int compare_strings_by_length( const string &lhs, const string &rh
 Y_UTEST(stree)
 {
 
-    Y_UTEST_SIZEOF( suffix_tree<int>::data_node );
-    Y_UTEST_SIZEOF( suffix_tree<int>::node_type );
-
-    Y_UTEST_SIZEOF( suffix_tree<string>::data_node );
-    Y_UTEST_SIZEOF( suffix_tree<string>::node_type );
 
 
     suffix_tree<int>    itree;
@@ -81,14 +76,43 @@ Y_UTEST(stree)
 
     std::cerr << "removing some keys" << std::endl;
     alea.shuffle( *keys, keys.size() );
+    vector<string> removed;
     for(size_t i=keys.size()/2;i>0;--i)
     {
-        Y_ASSERT( itree.remove_with( *keys[i], keys[i].size() ) );
+        removed.push_back( keys.back() );
+        keys.pop_back();
+    }
+
+    for(size_t i=1;i<=removed.size();++i)
+    {
+        Y_ASSERT( itree.remove_with( *removed[i], removed[i].size() ) );
+        Y_ASSERT( stree.remove_by( removed[i] ) );
+    }
+
+    std::cerr << "testing keys on/off"  << std::endl;
+    for(size_t i=1;i<=removed.size();++i)
+    {
+        Y_ASSERT( !itree.has( removed[i] ) );
+        Y_ASSERT( !stree.has( removed[i] ) );
+    }
+
+    for(size_t i=keys.size();i>0;--i)
+    {
+        Y_ASSERT( itree.has( keys[i] ) );
+        Y_ASSERT( stree.has( keys[i] ) );
     }
 
 
 
     std::cerr << "end..." << std::endl;
 
+    Y_UTEST_SIZEOF( suffix_tree<int>::data_node );
+    Y_UTEST_SIZEOF( suffix_tree<int>::node_type );
+
+    Y_UTEST_SIZEOF( suffix_tree<string>::data_node );
+    Y_UTEST_SIZEOF( suffix_tree<string>::node_type );
+
+    Y_UTEST_SIZEOF( suffix_tree<uint8_t>::data_node );
+    Y_UTEST_SIZEOF( suffix_tree<uint8_t>::node_type );
 }
 Y_UTEST_DONE()
