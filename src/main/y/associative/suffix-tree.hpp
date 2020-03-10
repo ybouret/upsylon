@@ -297,13 +297,23 @@ namespace upsylon {
             }
         }
         
-        
+        template <typename FUNC> inline
+        void sort_with( FUNC &func )
+        {
+            merging<data_node>::sort( dlist, call_compare<FUNC>, (void*) &func );
+        }
         
     private:
         Y_DISABLE_ASSIGN(suffix_tree);
         data_list            dlist;
         data_pool            dpool;
 
+        template <typename FUNC>
+        static inline int call_compare( const data_node *lhs, const data_node *rhs, void *args )
+        {
+            FUNC &func = *(FUNC *)args;
+            return func(lhs->data.data,rhs->data.data);
+        }
         
         inline void release_data() throw()
         {

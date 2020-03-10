@@ -4,8 +4,16 @@
 #include "y/string.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/comparison.hpp"
 
 using namespace upsylon;
+
+static inline int compare_strings_by_length( const string &lhs, const string &rhs ) throw()
+{
+    const size_t L = lhs.size();
+    const size_t R = rhs.size();
+    return comparison::increasing(L,R);
+}
 
 Y_UTEST(stree)
 {
@@ -40,21 +48,28 @@ Y_UTEST(stree)
     }
     std::cerr << "#itree: " << itree.entries() << std::endl;
     std::cerr << "#stree: " << stree.entries() << std::endl;
-    
+
     if( itree.entries() <= 100 )
     {
         itree.get_root().graphViz("itree.dot");
     }
 
+    itree.sort_with( comparison::increasing<int> );
+    stree.sort_with( compare_strings_by_length   );
+
     {
         const suffix_tree<int>    itree2(itree);
         Y_CHECK(itree2.entries()==itree.entries());
+
     }
 
     {
         const suffix_tree<string> stree2(stree);
         Y_CHECK(stree2.entries()==stree.entries());
-
+        if( stree2.entries() <= 100 )
+        {
+            stree2.get_root().graphViz("stree.dot");
+        }
     }
 
     std::cerr << "look for keys" << std::endl;
