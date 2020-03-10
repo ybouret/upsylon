@@ -153,6 +153,12 @@ namespace upsylon {
         inline explicit suffix_tree() : core::suffix_tree(), dlist(), dpool()
         {
         }
+
+        //! setup with n data node
+        inline explicit suffix_tree(const size_t n, const as_capacity_t &) : core::suffix_tree(), dlist(), dpool()
+        {
+            data_node::prefetch(dpool,n);
+        }
         
         //! cleaning up
         inline virtual ~suffix_tree() throw()
