@@ -133,9 +133,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(associative);
     Y_UTEST(map);
     Y_UTEST(set);
-    Y_UTEST(btree);
     Y_UTEST(stree);
-    Y_UTEST(assoc_perf);
     Y_UTEST(strings);
     Y_UTEST(query);
 
