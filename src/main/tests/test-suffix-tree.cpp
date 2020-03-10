@@ -38,7 +38,9 @@ Y_UTEST(stree)
             }
         }
     }
-
+    std::cerr << "#itree: " << itree.entries() << std::endl;
+    std::cerr << "#stree: " << stree.entries() << std::endl;
+    
     if( itree.entries() <= 100 )
     {
         itree.get_root().graphViz("itree.dot");
