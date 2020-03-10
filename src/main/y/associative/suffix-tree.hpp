@@ -164,7 +164,7 @@ namespace upsylon {
             node_type *curr = root;
             for(size_t i=0;i<key_size;++i)
             {
-                const uint8_t code = *(key_data++);
+                const uint8_t code  = *(key_data++);
                 bool          found = false;
                 
                 //--------------------------------------------------------------
@@ -236,8 +236,8 @@ namespace upsylon {
                 {
                     if(code==node->code)
                     {
-                        curr=node;
-                        found=true;
+                        curr  = node;
+                        found = true;
                         break;
                     }
                 }
@@ -273,8 +273,8 @@ namespace upsylon {
                 {
                     if(code==node->code)
                     {
-                        curr=node;
-                        found=true;
+                        curr  = node;
+                        found = true;
                         break;
                     }
                 }
