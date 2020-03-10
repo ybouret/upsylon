@@ -5,6 +5,7 @@
 #include "y/string/display.hpp"
 
 #include "y/ordered/sorted-vector.hpp"
+#include "y/associative/suffix-tree.hpp"
 #include "y/ios/icstream.hpp"
 
 using namespace upsylon;
@@ -62,14 +63,15 @@ Y_UTEST(scrabble)
             const string fn = argv[2];
             std::cerr << "loading " << fn << "[";
             ios::icstream fp(argv[2]);
-            ordered_single<words> dict(1024*1024,as_capacity);
+
+            suffix_tree<bool> dict;
             {
                 string line;
                 size_t count = 0;
                 while( fp.gets(line) )
                 {
                     line.clean(WS);
-                    dict.insert(line);
+                    (void) dict.insert_by(line,true);
                     if(++count>=1000)
                     {
                         count=0;
@@ -78,14 +80,14 @@ Y_UTEST(scrabble)
                 }
             } std::cerr << "]" << std::endl;
 
-            std::cerr << "Testing against |dict|=" << dict.size() << std::endl;
+            std::cerr << "Testing against |dict|=" << dict.entries() << std::endl;
             {
                 size_t count = 0;
                 for(size_t i=1;i<=total;++i)
                 {
                     const string &word = db[i];
                     if(word.size()<=1) continue;
-                    if( dict.search(word) )
+                    if( dict.has(word) )
                     {
                         string_display::align(std::cerr, word, n);
                         if(++count>=8) { count = 0; std::cerr << std::endl;} else { std::cerr << ' '; }

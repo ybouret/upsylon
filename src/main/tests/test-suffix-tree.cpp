@@ -1,4 +1,4 @@
-#include "y/associative/string-tree.hpp"
+#include "y/associative/suffix-tree.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string.hpp"

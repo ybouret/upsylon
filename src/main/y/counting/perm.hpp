@@ -43,8 +43,10 @@ namespace upsylon {
 
         //! C-style computation
         template <typename T>
-        void apply( T *target, const T *source ) const throw()
+        void apply(T *target, const T *source) const throw()
         {
+            assert(NULL!=target);
+            assert(NULL!=source);
             const permutation &self = *this;
             for(size_t i=0;i<n;++i)
             {
