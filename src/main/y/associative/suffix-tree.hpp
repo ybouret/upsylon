@@ -121,13 +121,12 @@ namespace upsylon {
         }
         
         //! hard copy
-        inline suffix_tree( const suffix_tree &other ) :
-        core::suffix_tree(), dlist(), dpool()
+        inline suffix_tree( const suffix_tree &other ) : core::suffix_tree(), dlist(), dpool()
         {
             path key;
             for(const data_node *dnode=other.dlist.head;dnode;dnode=dnode->next)
             {
-                other.build_path(key,dnode);
+                other.rebuild_path(key,&(dnode->data.hook));
                 if(!insert_with(key.begin(), key.size(), (**dnode).data))
                 {
                     throw_on_insert_failure(key);
@@ -287,10 +286,9 @@ namespace upsylon {
             assert(curr);
             if(curr->impl)
             {
-                data_node *d = static_cast<data_node *>(curr->impl);
+                data_node *d = dlist.unlink( static_cast<data_node *>(curr->impl) );
                 curr->impl   = NULL;
-                self_destruct(d->data);
-                dpool.store( dlist.unlink(d) );
+                data_node::destruct(d,dpool);
                 return true;
             }
             else
@@ -305,14 +303,7 @@ namespace upsylon {
         Y_DISABLE_ASSIGN(suffix_tree);
         data_list            dlist;
         data_pool            dpool;
-        
-        inline void build_path( path &key, const data_node  *dnode) const
-        {
-            assert( NULL != dnode     );
-            assert( dlist.owns(dnode) );
-            rebuild_path(key,&(dnode->data.hook));
-        }
-        
+
         
         inline void release_data() throw()
         {
