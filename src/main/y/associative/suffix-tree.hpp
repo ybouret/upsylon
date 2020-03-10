@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_SUFFIX_TREE_INCLUDED
@@ -54,9 +53,50 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual    ~suffix_tree() throw();  //!< cleanup
 
+            template <typename ITERATOR> inline
+            bool registered(ITERATOR     key_data,
+                            const size_t key_size) const throw()
+            {
+                const node_type *node = find_node(key_data,key_size);
+                return (NULL!=node) && (NULL!=node->impl);
+            }
+
+            bool has( const void *key_addr, const size_t key_size ) const throw();
+            bool has( const char *text ) const throw();
+            bool has( const memory::ro_buffer &buffer ) const throw();
+
+
         protected:
             explicit    suffix_tree(); //!< setup
             node_type  *root;          //!< root node
+
+            template <typename ITERATOR> inline
+            node_type *find_node(ITERATOR     key_data,
+                                 const size_t key_size) const throw()
+            {
+                assert(root);assert(0==root->code);
+                const node_type *curr = root;
+                for(size_t i=0;i<key_size;++i)
+                {
+                    const uint8_t code = *(key_data++);
+                    bool          found = false;
+                    for(const node_type *node=curr->chld.head;node;node=node->next)
+                    {
+                        if(code==node->code)
+                        {
+                            curr  = node;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found)
+                    {
+                        return NULL;
+                    }
+                }
+                assert(curr);
+                return (node_type *)curr;
+            }
 
             //------------------------------------------------------------------
             //
@@ -226,30 +266,10 @@ namespace upsylon {
         const_type *look_for(ITERATOR     key_data,
                              const size_t key_size) const throw()
         {
-            assert(root);assert(0==root->code);
-            const node_type *curr = root;
-            for(size_t i=0;i<key_size;++i)
+            const node_type *node = find_node(key_data,key_size);
+            if(node&&node->impl)
             {
-                const uint8_t code = *(key_data++);
-                bool          found = false;
-                for(const node_type *node=curr->chld.head;node;node=node->next)
-                {
-                    if(code==node->code)
-                    {
-                        curr  = node;
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found)
-                {
-                    return NULL;
-                }
-            }
-            assert(curr);
-            if(curr->impl)
-            {
-                const data_node *dnode = static_cast<const data_node *>(curr->impl);
+                const data_node *dnode = static_cast<const data_node *>(node->impl);
                 return &(dnode->data.data);
             }
             else
@@ -263,31 +283,11 @@ namespace upsylon {
         bool remove_with(ITERATOR     key_data,
                          const size_t key_size) throw()
         {
-            assert(root);assert(0==root->code);
-            node_type *curr = root;
-            for(size_t i=0;i<key_size;++i)
+            node_type *node = find_node(key_data,key_size);
+            if(node&&node->impl)
             {
-                const uint8_t  code  = *(key_data++);
-                bool           found = false;
-                for(node_type *node  = curr->chld.head;node;node=node->next)
-                {
-                    if(code==node->code)
-                    {
-                        curr  = node;
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found)
-                {
-                    return false;
-                }
-            }
-            assert(curr);
-            if(curr->impl)
-            {
-                data_node *d = dlist.unlink( static_cast<data_node *>(curr->impl) );
-                curr->impl   = NULL;
+                data_node *d = dlist.unlink( static_cast<data_node *>(node->impl) );
+                node->impl   = NULL;
                 data_node::destruct(d,dpool);
                 return true;
             }
@@ -296,13 +296,38 @@ namespace upsylon {
                 return false;
             }
         }
-        
+
+        //! sort data
         template <typename FUNC> inline
         void sort_with( FUNC &func )
         {
             merging<data_node>::sort( dlist, call_compare<FUNC>, (void*) &func );
         }
-        
+
+        //! insert with memory area as key
+        inline bool insert_by(const void  *key_addr,
+                              const size_t key_size,
+                              param_type   args)
+        {
+            assert( !(NULL==key_addr&&key_size>0) );
+            const uint8_t *key = static_cast<const uint8_t *>(key_addr);
+            return insert_with(key,key_size,args);
+        }
+
+        //! insert with text
+        inline bool insert_by(const char *text, param_type args)
+        {
+            return insert_by(text, text ? strlen(text) : 0, args);
+        }
+
+        //! insert with buffer
+        inline bool insert_by(const memory::ro_buffer &buffer, param_type args)
+        {
+            return insert_by(buffer.ro(),buffer.length(),args);
+        }
+
+
+
     private:
         Y_DISABLE_ASSIGN(suffix_tree);
         data_list            dlist;

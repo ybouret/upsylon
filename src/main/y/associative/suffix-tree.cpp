@@ -32,6 +32,22 @@ namespace upsylon {
             }
         }
 
+        bool suffix_tree:: has( const void *key_addr, const size_t key_size ) const throw()
+        {
+            assert(!(NULL==key_addr&&key_size>0));
+            const uint8_t *key = static_cast<const uint8_t *>(key_addr);
+            return registered(key,key_size);
+        }
+
+        bool suffix_tree:: has(const char *text) const throw()
+        {
+            return has(text,text?strlen(text):0);
+        }
+
+        bool suffix_tree:: has(const memory::ro_buffer &buffer) const throw()
+        {
+            return has( buffer.ro(), buffer.length() );
+        }
         
         suffix_tree:: node_type:: ~node_type() throw() {}
         

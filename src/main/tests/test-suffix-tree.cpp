@@ -1,4 +1,4 @@
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/string-tree.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string.hpp"
@@ -38,11 +38,10 @@ Y_UTEST(stree)
         while( fp.gets(line) )
         {
             keys << line;
-            const char *k = *line;
             ++i;
-            if(itree.insert_with(k, line.size(), i))
+            if(itree.insert_by(line,i))
             {
-                 Y_ASSERT(stree.insert_with(k, line.size(), line));
+                 Y_ASSERT(stree.insert_by(line,line));
             }
         }
     }
@@ -77,6 +76,7 @@ Y_UTEST(stree)
     for(size_t i=1;i<=keys.size();++i)
     {
         Y_ASSERT( itree.look_for( *keys[i], keys[i].size() ) );
+        Y_ASSERT( stree.has( keys[i] ) );
     }
 
     std::cerr << "removing some keys" << std::endl;
