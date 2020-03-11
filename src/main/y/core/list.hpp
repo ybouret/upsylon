@@ -465,6 +465,13 @@ namespace upsylon
                 }
             }
 
+            template <typename U>
+            inline list_of_cpp & operator<<( const U &args )
+            {
+                this->push_back( new NODE(args) );
+                return *this;
+            }
+
             //! copy and merge_back
             inline void merge_back_copy( const list_of_cpp &other)
             {
