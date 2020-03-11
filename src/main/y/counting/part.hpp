@@ -10,6 +10,7 @@ namespace upsylon {
 
     struct partition
     {
+        //! iterate on possible decomposition of a given integer
         class builder : public accessible<size_t>
         {
         public:
@@ -20,16 +21,16 @@ namespace upsylon {
             const size_t n; //!< integer to part...
             const size_t m; //!< current size
 
-            bool                   next() throw(); //!< compute next partition
-            void                   init() throw(); //!< restart with singulet
-
+            bool                   build_next() throw(); //!< compute next partition
+            void                   initialize() throw(); //!< restart with singulet
+            size_t                 partitions() throw(); //!< number of possibilities
+            
             virtual size_t         size()             const throw();            //!< m
             virtual const size_t & operator[](size_t) const;                    //! [1..m]
             static        size_t   count_for(const size_t n);                   //!< compute the size
 
-            size_t        permutations() const;
-
-
+            size_t                 permutations() const; //!< compute number of permutations for current config
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(builder);
 

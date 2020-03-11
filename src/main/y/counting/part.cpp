@@ -33,7 +33,7 @@ namespace upsylon {
     }
 
 
-    void partition::builder::init() throw()
+    void partition::builder::initialize() throw()
     {
         now[1] = n;
         aliasing::_(m) = 1;
@@ -46,14 +46,20 @@ namespace upsylon {
         return m;
     }
 
+    size_t partition::builder:: partitions() throw()
+    {
+        initialize();
+        size_t ans = 1;
+        while( build_next() )
+            ++ans;
+        return ans;
+    }
 
+    
     size_t partition::builder:: count_for(const size_t n)
     {
         partition::builder pb(n);
-        pb.init();
-        size_t ans = 1;
-        while( pb.next() ) ++ans;
-        return ans;
+        return pb.partitions();
     }
 
 
@@ -64,6 +70,8 @@ namespace upsylon {
         return now[i];
     }
 
+    
+    
 
     size_t partition::builder:: permutations() const
     {
@@ -104,7 +112,7 @@ namespace upsylon {
         aliasing::_(m) = 0;
     }
 
-    bool partition::builder:: next() throw()
+    bool partition::builder:: build_next() throw()
     {
         size_t curr= 0;
         size_t k   = 0;
