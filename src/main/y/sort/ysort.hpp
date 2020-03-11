@@ -69,7 +69,7 @@ MACRO(31); MACRO(32)
         template <typename T, typename FUNC>
         inline void ysort(array<T> &arr, FUNC &compare)
         {
-            const unit_t n = unit_t(arr.size());
+            const unit_t n = arr.ssize();
             _ysort<T>(*arr,0,n-1,compare);
         }
     }

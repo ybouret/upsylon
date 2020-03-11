@@ -30,7 +30,16 @@ namespace upsylon
         bool           valid() const throw();     //!< index<=count after a start()
         void           start()       throw();     //!< set index to 1 and call start_()
         void           next()        throw();     //!< update index and call next_() if valid
+
+        //! check dimension>0
+        static size_t chkdim(const size_t);
         
+        //! internal allocator instance
+        static memory::allocator & mem_instance();
+
+        //! internal allocator location
+        static memory::allocator & mem_location() throw();
+
     protected:
         static size_t *acquire_( size_t &bytes );                            //!< acquire a count of bytes=workspace*sizeof(size_t)
         static void    release_(size_t *&wksp, size_t &bytes) throw();       //!< release workspace
@@ -41,14 +50,8 @@ namespace upsylon
         //! display arr[1..num]
         static std::ostream &display( std::ostream &, const size_t *arr, const size_t num );
 
-        //! check dimension>0
-        static size_t chkdim(const size_t);
 
-        //! internal allocator instance
-        static memory::allocator & mem_instance();
 
-        //! internal allocator location
-        static memory::allocator & mem_location() throw();
 
         //! check status
         static

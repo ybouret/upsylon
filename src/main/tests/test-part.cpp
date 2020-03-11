@@ -22,6 +22,16 @@ namespace {
         std::cerr << " ]" << std::endl;
     }
 
+    inline unsigned sum_of(const list_type &L )
+    {
+        unsigned ans = 0;
+        for(const node_type *node=L.head;node;node=node->next)
+        {
+            ans += node->data;
+        }
+        return ans;
+    }
+
     inline void next_list(list_type       &b,
                           const list_type &a )
     {
@@ -58,7 +68,7 @@ namespace {
             const unsigned q = d.quot;
             const unsigned r = d.rem;
 
-            for(unsigned j=k;j<=k+q;++j)
+            for(unsigned j=0;j<=q;++j)
             {
                 b << bk;
             }
@@ -66,8 +76,9 @@ namespace {
             {
                 b << r;
             }
-
         }
+
+        Y_CHECK(sum_of(b)==sum_of(a));
 
 
     }
@@ -76,31 +87,60 @@ namespace {
 }
 
 #include "y/string/convert.hpp"
+#include "y/ios/ocstream.hpp"
 
 Y_UTEST(part)
 {
-    unsigned n = 5;
-    if( argc > 1 )
     {
-        n = string_convert::to<size_t>( argv[1], "n" );
-    }
-    if(n<=1) throw exception("n<=1");
-    list_type L;
-    L.push_back( new node_type(n) );
+        unsigned n = 5;
+        if( argc > 1 )
+        {
+            n = string_convert::to<size_t>( argv[1], "n" );
+        }
+        if(n<=1) throw exception("n<=1");
+        list_type L;
+        L.push_back( new node_type(n) );
 
-    display(L);
-    size_t count = 1;
-    while( L.size < n )
-    {
-        list_type L2;
-        next_list(L2,L);
+        Y_CHECK( sum_of(L) == n );
 
-        L.swap_with(L2);
+
+
         display(L);
-        ++count;
+        size_t count = 1;
+        while( L.size < n )
+        {
+            list_type L2;
+            next_list(L2,L);
+
+            L.swap_with(L2);
+            display(L);
+            ++count;
+        }
+
+        std::cerr << "#count=" << count << std::endl;
+
+
+        partition::builder pb(n);
+
+        size_t num = 1;
+        std::cerr << pb << std::endl;
+        while( pb.next() )
+        {
+            ++num;
+            std::cerr << pb << std::endl;
+        }
+        Y_CHECK(num==count);
     }
 
-    std::cerr << "#count=" << count << std::endl;
+    {
+        ios::ocstream fp("part.dat");
+        for(size_t n=1;n<=32;++n)
+        {
+            const size_t p = partition::builder::count_for(n);
+            fp("%u %u\n", unsigned(n), unsigned(p));
+        }
+        
+    }
 
 }
 Y_UTEST_DONE()
