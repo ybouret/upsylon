@@ -344,8 +344,15 @@ Y_UTEST(mpn)
             const mpn M(alea.lt(n.bits()),randomized::bits::simple());
             const mpn C = mpn::mod_exp(M,e,n);
             const mpn D = mpn::mod_exp(C,d,n);
-            std::cerr << "M=" << M << "->" << C << "->" << D << std::endl;
-            Y_ASSERT(D==M);
+            std::cerr << "M=" << M << "->" << C << "->" << D << " : ";
+            if(D==M)
+            {
+                std::cerr << "success" << std::endl;
+            }
+            else
+            {
+                std::cerr << "failure!" << std::endl;
+            }
         }
 
     }
