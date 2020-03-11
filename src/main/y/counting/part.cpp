@@ -3,6 +3,8 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/standard.hpp"
 #include "y/type/cswap.hpp"
+#include "y/mpl/natural.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -11,7 +13,6 @@ namespace upsylon {
     m(1),
     now(0),
     tmp(0),
-    arr(0),
     wksp(0),
     wlen(0)
     {
@@ -20,8 +21,7 @@ namespace upsylon {
         memory::embed emb[] =
         {
             memory::embed::as(now,n),
-            memory::embed::as(tmp,n),
-            memory::embed::as(arr,n),
+            memory::embed::as(tmp,n)
         };
         wksp = memory::embed::create(emb,
                                      sizeof(emb)/sizeof(emb[0]),
@@ -30,7 +30,6 @@ namespace upsylon {
         --now;
         --tmp;
         now[1] = n;
-        update();
     }
 
 
@@ -38,17 +37,9 @@ namespace upsylon {
     {
         now[1] = n;
         aliasing::_(m) = 1;
-        update();
     }
 
-    void partition::builder::update() throw()
-    {
-        for(size_t i=m;i>0;)
-        {
-            const size_t value = now[i--] - 1;
-            arr[i] = value;
-        }
-    }
+
 
     size_t partition::builder:: size() const throw()
     {
@@ -73,13 +64,42 @@ namespace upsylon {
         return now[i];
     }
 
+
+    size_t partition::builder:: permutations() const
+    {
+        const accessible<size_t> &self = *this;
+        mpn p = mpn::factorial(m);
+        for(size_t i=m;i>0;)
+        {
+            const size_t value = self[i];
+            size_t       j     = i-1;
+            while(j>0&&self[j]==value)
+                --j;
+            const size_t rep = i-j;
+            //std::cerr << '\t' << '[' << value << ']' << '$' << rep << std::endl;
+            i=j;
+            if(rep>1)
+            {
+                const mpn d = mpn::factorial(rep);
+                p/=d;
+            }
+        }
+        size_t np = 0;
+        if( !counting::mpn2count(np,p) )
+        {
+            throw exception("#permutations overflow in partition::builder");
+        }
+        return np;
+    }
+
+
+
     partition::builder::~builder() throw()
     {
         static memory::allocator &mmgr = counting::mem_location();
         mmgr.release(wksp, wlen);
         now = 0;
         tmp = 0;
-        arr = 0;
         aliasing::_(n) = 0;
         aliasing::_(m) = 0;
     }
@@ -119,9 +139,9 @@ namespace upsylon {
             ustd::div_type d  = ustd::div_call(N+1,bk);
             const size_t   q  = d.quot;
             const size_t   r  = d.rem;
-            for(size_t j=k+1;j<=k+q;++j)
+            for(size_t j=1;j<=q;++j)
             {
-                tmp[++curr] = bk; assert(j==curr);
+                tmp[++curr] = bk; //assert(j==curr);
             }
             if(r>0)
             {
@@ -129,10 +149,76 @@ namespace upsylon {
             }
             _cswap(now,tmp);
             _cswap(curr,m);
-            update();
             return true;
         }
     }
 
+    partition:: shaker:: shaker( const builder &config ) :
+    m(config.m),
+    perm(m),
+    wlen(3*m*sizeof(size_t)),
+    indx( static_cast<size_t *>( counting::mem_instance().acquire(wlen) ) - 1 ),
+    jndx( indx+m ),
+    data( jndx+m )
+    {
+        assert(perm.size()==m);
+        for(size_t i=1;i<=m;++i)
+        {
+            aliasing::_(data[i]) = jndx[i] = indx[i] = config[ perm[i] ];
+        }
+    }
+
+    partition:: shaker:: ~shaker() throw()
+    {
+        static memory::allocator &mmgr = counting::mem_location();
+        {
+            void *p = ++indx;
+            mmgr.release(p,wlen);
+        }
+        indx=0;
+        jndx=0;
+        aliasing::_(m) = 0;
+    }
+
+    size_t partition:: shaker:: size() const throw()
+    {
+        return m;
+    }
+
+    const size_t & partition:: shaker:: operator[](size_t i) const
+    {
+        assert(i>0);
+        assert(i<=m);
+        return indx[i];
+    }
+
+
+    bool partition::shaker:: next() throw()
+    {
+    NEXT:
+        if( perm.valid() )
+        {
+            perm.next();
+            bool same = true;
+            for(size_t i=m;i>0;--i)
+            {
+                const size_t j = (indx[i] = data[ perm[i] ]);
+                if( j != jndx[i] )
+                {
+                    same = false;
+                }
+            }
+            if(same)
+            {
+                goto NEXT;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
 
 }

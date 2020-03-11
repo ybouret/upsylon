@@ -84,6 +84,13 @@ namespace {
     }
 
 
+    void doShake( const partition::builder  &config )
+    {
+        const size_t np = config.permutations();
+        std::cerr << "np=" << np << std::endl;
+        
+    }
+
 }
 
 #include "y/string/convert.hpp"
@@ -124,10 +131,12 @@ Y_UTEST(part)
 
         size_t num = 1;
         std::cerr << pb << std::endl;
+        doShake(pb);
         while( pb.next() )
         {
             ++num;
             std::cerr << pb << std::endl;
+            doShake(pb);
         }
         Y_CHECK(num==count);
     }

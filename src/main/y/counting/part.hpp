@@ -3,7 +3,7 @@
 #ifndef Y_COUNTING_PART_INCLUDED
 #define Y_COUNTING_PART_INCLUDED 1
 
-#include "y/counting/counting.hpp"
+#include "y/counting/perm.hpp"
 #include "y/sequence/accessible.hpp"
 
 namespace upsylon {
@@ -20,25 +20,48 @@ namespace upsylon {
             const size_t n; //!< integer to part...
             const size_t m; //!< current size
 
-            virtual size_t         size()             const throw(); //!< m
-            virtual const size_t & operator[](size_t) const;         //! [1..m]
+            bool                   next() throw(); //!< compute next partition
+            void                   init() throw(); //!< restart with singulet
 
-            bool next() throw();
-            void init() throw();
+            virtual size_t         size()             const throw();            //!< m
+            virtual const size_t & operator[](size_t) const;                    //! [1..m]
+            static        size_t   count_for(const size_t n);                   //!< compute the size
 
-            static size_t count_for(const size_t n);
+            size_t        permutations() const;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(builder);
 
             size_t *now;  //!< 1..n   max
             size_t *tmp;  //!< 1..n   max
-            size_t *arr;  //!< 0..n-1 max
             void   *wksp; 
             size_t  wlen;
 
-            void update() throw();
         };
+
+        class shaker : public accessible<size_t>
+        {
+        public:
+            explicit shaker( const builder &config );
+            virtual ~shaker() throw();
+            const size_t m;
+
+            virtual size_t         size()             const throw();            //!< m
+            virtual const size_t & operator[](size_t) const;                    //! [1..m]
+
+            bool next() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(shaker);
+            permutation   perm;
+            size_t        wlen;
+            size_t       *indx;
+            size_t       *jndx;
+            const size_t *data;
+        };
+
+
     };
 
 }

@@ -40,12 +40,14 @@ namespace upsylon
         //! internal allocator location
         static memory::allocator & mem_location() throw();
 
+        //! convert with size overflow checking
+        static bool    mpn2count(size_t &sz, const mpl::natural &n) throw();
+
     protected:
         static size_t *acquire_( size_t &bytes );                            //!< acquire a count of bytes=workspace*sizeof(size_t)
         static void    release_(size_t *&wksp, size_t &bytes) throw();       //!< release workspace
         explicit       counting(const size_t   n) throw();                   //!< setup count=n, index=0
         explicit       counting(const counting &) throw();                   //!< copy
-        static bool    mpn2count(size_t &sz, const mpl::natural &n) throw(); //!< convert with size overflow checking
 
         //! display arr[1..num]
         static std::ostream &display( std::ostream &, const size_t *arr, const size_t num );
