@@ -32,7 +32,9 @@ Y_UTEST(part)
     {
         ++count;
         std::cerr << pb << std::endl;
-        num += pb.permutations();
+        const size_t np = pb.permutations();
+        std::cerr << "\t|_" << np << std::endl;
+        num += np;
     }
     while( pb.build_next() );
     Y_CHECK(parts==count);
