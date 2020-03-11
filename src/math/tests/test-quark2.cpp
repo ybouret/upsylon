@@ -15,11 +15,17 @@ using namespace math;
 namespace {
 
     template <typename LHS, typename RHS>
-    void check1D( const LHS &lhs, const RHS &rhs )
+    void check1D( const LHS &lhs, const RHS &rhs, const char *context )
     {
+        assert(context);
         for(size_t i=lhs.size();i>0;--i)
         {
-            Y_ASSERT( __mod2(lhs[i]-rhs[i]) <= 0 );
+            const typename LHS::type delta =__mod2(lhs[i]-rhs[i]);
+            if( !(delta<=0) )
+            {
+                std::cerr << "found delta=" << delta << " for " << lhs[i] << " - " << rhs[i] << std::endl;
+                throw exception("failure for [%s]", context);
+            }
         }
     }
 
@@ -50,7 +56,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul");
                         }
                     }
 
@@ -64,7 +70,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul_add(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul_add");
                         }
                     }
 
@@ -78,7 +84,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul_sub(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul_sub");
                         }
                     }
 
@@ -92,7 +98,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul_subp(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul_subp");
                         }
                     }
 
@@ -126,9 +132,9 @@ namespace {
                 quark::mul_sub(lhs,M,rhs);
 
                 quark::ld(tmp,zt);
-                check1D(tmp,lhs);
+                check1D(tmp,lhs,"quark::mul_sub/exact");
                 quark::mul_add(lhs,M,rhs);
-                check1D(cpy,lhs);
+                check1D(cpy,lhs,"quark::mul_add/exact");
 
                 support::fill1D(rhs);
                 support::fill2D(M);
@@ -137,7 +143,7 @@ namespace {
                 quark::mul_sub(lhs,M,rhs);
                 quark::mul_subp(tmp,M,rhs);
                 quark::neg(tmp);
-                check1D(lhs,tmp);
+                check1D(lhs,tmp,"quark::mul_subp/exact");
             }
 
         }
@@ -171,7 +177,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul_trn(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul_trn");
                         }
                     }
 
@@ -186,7 +192,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul_add_trn(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul_add_trn");
                         }
                     }
 
@@ -200,7 +206,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul_sub_trn(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul_sub_trn");
                         }
                     }
 
@@ -214,7 +220,7 @@ namespace {
                         if(loop)
                         {
                             quark::mul_subp_trn(tmp,M,rhs,*loop);
-                            check1D(lhs,tmp);
+                            check1D(lhs,tmp,"quark::mul_subp_trn");
                         }
                     }
 
@@ -250,9 +256,9 @@ namespace {
                 quark::mul_sub_trn(lhs,M,rhs);
 
                 quark::ld(tmp,zt);
-                check1D(tmp,lhs);
+                check1D(tmp,lhs,"quark::mul_sub_trn/exact");
                 quark::mul_add_trn(lhs,M,rhs);
-                check1D(cpy,lhs);
+                check1D(cpy,lhs,"quark::mul_add_trn/exact");
 
 
                 support::fill1D(rhs);
@@ -262,7 +268,7 @@ namespace {
                 quark::mul_sub_trn(lhs,M,rhs);
                 quark::mul_subp_trn(tmp,M,rhs);
                 quark::neg(tmp);
-                check1D(lhs,tmp);
+                check1D(lhs,tmp,"quark::mul_subp_trn/exact");
             }
 
         }
@@ -277,12 +283,10 @@ Y_UTEST(quark2)
     concurrent::simd loop;
     doMMUL<float,float,float>( &loop );
     doMMUL<float,unit_t,short>( &loop );
+    checkExact<mpz>();
 
     doMMUL_TRN<double,double,double>( &loop );
     doMMUL_TRN<double,int,double>( &loop );
-
-
-    checkExact<mpz>();
     checkExactTRN<mpz>();
 
 }
