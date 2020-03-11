@@ -9,6 +9,7 @@
 #include "y/code/utils.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/core/inode.hpp"
+#include "y/iterate/linked.hpp"
 
 namespace upsylon {
     
@@ -53,6 +54,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual    ~suffix_tree() throw();  //!< cleanup
 
+            //! check for registered key
             template <typename ITERATOR> inline
             bool registered(ITERATOR     key_data,
                             const size_t key_size) const throw()
@@ -61,8 +63,13 @@ namespace upsylon {
                 return (NULL!=node) && (NULL!=node->impl);
             }
 
+            //! check registered
             bool has( const void *key_addr, const size_t key_size ) const throw();
+
+            //! check registered
             bool has( const char *text ) const throw();
+
+            //! check registered
             bool has( const memory::ro_buffer &buffer ) const throw();
 
 
@@ -70,6 +77,7 @@ namespace upsylon {
             explicit    suffix_tree(); //!< setup
             node_type  *root;          //!< root node
 
+            //! generic node finding following key
             template <typename ITERATOR> inline
             node_type *find_node(ITERATOR     key_data,
                                  const size_t key_size) const throw()
@@ -135,6 +143,8 @@ namespace upsylon {
 
             //! cleanup
             inline ~leave() throw() {}
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(leave);
         };
@@ -142,6 +152,12 @@ namespace upsylon {
         typedef core::knode<leave>       data_node; //!< data node
         typedef core::list_of<data_node> data_list; //!< list of data
         typedef core::pool_of<data_node> data_pool; //!< pool of data
+
+        //! accessing data from leave, for iterators
+        struct leave_data {
+            //! node->type
+            static inline const_type &get(const data_node *node) throw() { assert(node); return node->data.data; }
+        };
 
         //----------------------------------------------------------------------
         //
@@ -302,7 +318,8 @@ namespace upsylon {
             if(node&&node->impl)
             {
                 const data_node *dnode = static_cast<const data_node *>(node->impl);
-                return &(dnode->data.data);
+                const leave     &value = **dnode;
+                return &(value.data);
             }
             else
             {
@@ -382,6 +399,27 @@ namespace upsylon {
             return remove_by(buffer.ro(),buffer.length());
         }
 
+        //! search with memory area as key
+        inline const_type * search_by(const void  *key_addr,
+                                      const size_t key_size) const throw()
+        {
+            assert( !(NULL==key_addr&&key_size>0) );
+            const uint8_t *key = static_cast<const uint8_t *>(key_addr);
+            return look_for(key,key_size);
+        }
+
+        //! search with text
+        inline bool search_by(const char *text) throw()
+        {
+            return search_by(text, text ? strlen(text) : 0);
+        }
+
+        //! search with buffer
+        inline bool search_by(const memory::ro_buffer &buffer) throw()
+        {
+            return search_by(buffer.ro(),buffer.length());
+        }
+
     protected:
         data_list            dlist; //!< list of data nodes
         data_pool            dpool; //!< pool of data nodes
@@ -408,6 +446,17 @@ namespace upsylon {
             data_node::destruct(dlist);
             data_node::destruct(dpool);
         }
+
+    public:
+        typedef iterate::linked<type,data_node,iterate::forward,leave_data>             iterator;        //!< forward iterator
+        typedef iterate::linked<const_type,const data_node,iterate::forward,leave_data> const_iterator;  //!< forward iterator
+
+        inline iterator       begin() throw() { return iterator(dlist.head); } //!< begin
+        inline iterator       end()   throw() { return iterator(NULL);       } //!< end
+
+        inline const_iterator begin() const throw() { return const_iterator(dlist.head); } //!< begin, const
+        inline const_iterator end()   const throw() { return const_iterator(NULL);       } //!< end, const
+
         
     };
     

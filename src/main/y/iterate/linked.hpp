@@ -10,11 +10,21 @@ namespace upsylon
     namespace iterate
     {
 
+        //! default access to node data
+        template <typename T,typename NODE>
+        struct linked_data
+        {
+            Y_DECL_ARGS(T,type); //!< aliases
+            //! node->data
+            inline static const_type & get(const NODE *node) throw() { assert(node); return node->data; }
+        };
+
         //! linked iterator
         template <
         typename  T,
         typename  NODE,
-        direction D>
+        direction D,
+        typename  access = linked_data<T,NODE> >
         class linked
         {
         public:
@@ -125,25 +135,25 @@ namespace upsylon
             //! content
             inline type & operator*() throw()
             {
-                assert(node); return node->data;
+                assert(node); return (type&) access::get(node);
             }
 
             //! const content
             inline const_type & operator*() const throw()
             {
-                assert(node); return node->data;
+                assert(node); return access::get(node);
             }
 
             //! transitive
             inline type * operator->() throw()
             {
-                assert(node); return &(node->data);
+                assert(node); return (type *) & access::get(node);
             }
 
             //! transitive const
             inline const_type * operator->() const throw()
             {
-                assert(node); return &(node->data);
+                assert(node); return & access::get(node);
             }
 
 

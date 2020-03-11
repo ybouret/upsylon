@@ -5,28 +5,48 @@
 #include "y/ios/icstream.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/comparison.hpp"
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 
-static inline int compare_strings_by_length( const string &lhs, const string &rhs ) throw()
-{
-    const size_t L = lhs.size();
-    const size_t R = rhs.size();
-    return comparison::increasing(L,R);
+namespace {
+    static inline int compare_strings_by_length( const string &lhs, const string &rhs ) throw()
+    {
+        const size_t L = lhs.size();
+        const size_t R = rhs.size();
+        return comparison::increasing(L,R);
+    }
+
+    template <typename ITERATOR>
+    void display(ITERATOR curr, const ITERATOR last)
+    {
+        std::cerr << '[';
+        while( curr != last )
+        {
+            std::cerr << *(curr++) << '/';
+        }
+        std::cerr << '#' << ']' << std::endl;
+    }
+
+
 }
+
+
 
 Y_UTEST(stree)
 {
 
-
+    hashing::sha1 H;
 
     suffix_tree<int>    itree;
     suffix_tree<string> stree;
     vector<string>      keys;
 
-    suffix_table<string,long> ltable;
+    suffix_table<string,long>  ltable;
+    suffix_table<uint64_t,int> utable;
 
     std::cerr << "inserting keys" << std::endl;
+    size_t collisions = 0;
     if(argc>1)
     {
         ios::icstream fp( argv[1] );
@@ -38,20 +58,32 @@ Y_UTEST(stree)
             ++i;
             if(itree.insert_by(line,i))
             {
-                 Y_ASSERT(stree.insert_by(line,line));
+                Y_ASSERT(stree.insert_by(line,line));
+                Y_ASSERT(ltable.insert(line,i));
+            }
+            const uint64_t h = H.key<uint64_t>(line);
+            if(!utable.insert(h,i))
+            {
+                ++collisions;
             }
         }
     }
-    std::cerr << "#itree: " << itree.entries() << std::endl;
-    std::cerr << "#stree: " << stree.entries() << std::endl;
+    std::cerr << "#itree      : " << itree.entries() << std::endl;
+    std::cerr << "#stree      : " << stree.entries() << std::endl;
+    std::cerr << "#collisions : " << collisions      << std::endl;
 
     if( itree.entries() <= 100 )
     {
         itree.get_root().graphViz("itree.dot");
+        display( itree.begin(),  itree.end()  );
+        const suffix_tree<int> &cu = utable;
+        display( cu.begin(), cu.end() );
     }
 
-    itree.sort_with( comparison::increasing<int> );
-    stree.sort_with( compare_strings_by_length   );
+    itree.sort_with(  comparison::increasing<int> );
+    stree.sort_with(  compare_strings_by_length   );
+    utable.sort_with( comparison::decreasing<int> );
+
 
     {
         const suffix_tree<int>    itree2(itree);
