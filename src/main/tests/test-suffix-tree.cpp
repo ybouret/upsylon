@@ -1,4 +1,4 @@
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/suffix-table.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string.hpp"
@@ -23,6 +23,8 @@ Y_UTEST(stree)
     suffix_tree<int>    itree;
     suffix_tree<string> stree;
     vector<string>      keys;
+
+    suffix_table<string,long> ltable;
 
     std::cerr << "inserting keys" << std::endl;
     if(argc>1)

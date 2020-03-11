@@ -157,9 +157,9 @@ namespace upsylon {
         //! setup with n data node
         inline explicit suffix_tree(const size_t n, const as_capacity_t &) : core::suffix_tree(), dlist(), dpool()
         {
-            data_node::prefetch(dpool,n);
+            extra(n);
         }
-        
+
         //! cleaning up
         inline virtual ~suffix_tree() throw()
         {
@@ -188,12 +188,38 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
 
+        //! append extra node
+        inline void extra(const size_t n)
+        {
+            data_node::prefetch(dpool,n);
+        }
+
         //! accessing root
         inline const node_type & get_root() const throw() { return *root; }
         
         //! number of entries
-        inline size_t entries() const throw() { return dlist.size; }
-        
+        inline size_t entries()    const throw() { return dlist.size; }
+
+        //! number in cache
+        inline size_t cache_size() const throw() { return  dpool.size; }
+
+
+        //! dismiss all nodes
+        inline void free_all() throw()
+        {
+            data_node::destruct_to(dpool,dlist);
+            release_root();
+        }
+
+        //! release all data
+        inline void release_all() throw()
+        {
+            release_data();
+            release_root();
+        }
+
+
+
         //! type insertion with key iterator
         template <typename ITERATOR> inline
         bool insert_with(ITERATOR     key_data,
@@ -356,11 +382,13 @@ namespace upsylon {
             return remove_by(buffer.ro(),buffer.length());
         }
 
+    protected:
+        data_list            dlist; //!< list of data nodes
+        data_pool            dpool; //!< pool of data nodes
 
     private:
         Y_DISABLE_ASSIGN(suffix_tree);
-        data_list            dlist;
-        data_pool            dpool;
+
 
         template <typename FUNC>
         static inline int call_compare( const data_node *lhs, const data_node *rhs, void *args )
@@ -368,7 +396,13 @@ namespace upsylon {
             FUNC &func = *(FUNC *)args;
             return func(lhs->data.data,rhs->data.data);
         }
-        
+
+        inline void release_root() throw()
+        {
+            root->chld.release();
+            root->impl = NULL;
+        }
+
         inline void release_data() throw()
         {
             data_node::destruct(dlist);
