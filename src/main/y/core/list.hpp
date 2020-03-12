@@ -465,6 +465,7 @@ namespace upsylon
                 }
             }
 
+            //! syntactic sugar to push back a NODE from args
             template <typename U>
             inline list_of_cpp & operator<<( const U &args )
             {

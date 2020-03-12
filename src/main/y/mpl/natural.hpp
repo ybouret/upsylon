@@ -336,6 +336,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
                     template <typename T>
                     bool to(T &target) const throw();
 
+                    //! convert to integral type
                     template <typename T>
                     inline bool as(T &target) const throw()
                     {

@@ -32,6 +32,8 @@ namespace upsylon
 
         //! compute the number of combinations using mpn
         static mpn    compute(const size_t N, const size_t K, const with_mp_t &);
+
+        //! compute the integral number of combinations, with size check
         static size_t compute(const size_t N, const size_t K, const with_sz_t &);
         
         //! access C++ style

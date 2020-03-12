@@ -16,8 +16,8 @@ namespace upsylon {
     {
     public:
         
-        explicit integer_partition(const size_t n);
-        virtual ~integer_partition() throw();
+        explicit integer_partition(const size_t n); //!< setup n>0
+        virtual ~integer_partition() throw();       //!< cleanup
 
         const size_t n; //!< integer to part...
         const size_t m; //!< current size
@@ -33,6 +33,7 @@ namespace upsylon {
         virtual const size_t & operator[](size_t) const;         //!< [1..m]
         static        size_t   outcomes(const size_t n);         //!< compute number of outcomes for a given size
 
+        //! compute the Bell's number
         template <typename T> static inline
         T Bell(const size_t value)
         {
@@ -52,8 +53,9 @@ namespace upsylon {
         size_t *now;  //!< 1..n   max
         size_t *tmp;  //!< 1..n   max
         size_t  wlen; //!< private bytes
-
     };
+
+
 
 
 

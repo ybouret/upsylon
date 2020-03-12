@@ -5,7 +5,7 @@
 #define Y_COUNTING_PERM_INCLUDED 1
 
 #include "y/counting/counting.hpp"
-#include "y/sequence/accessible.hpp"
+#include "y/sequence/addressable.hpp"
 #include "y/mpl/natural.hpp"
 
 namespace upsylon {
@@ -54,6 +54,19 @@ namespace upsylon {
             for(size_t i=0;i<n;++i)
             {
                 target[i] = source[ self(i) ];
+            }
+        }
+
+        //! C++ style
+        template <typename T,typename U>
+        void make( addressable<T> &target, const accessible<U> &source ) const
+        {
+            assert( this->size()  == target.size() );
+            assert( target.size() == source.size() );
+            const accessible<size_t> &self = *this;
+            for(size_t i=n;i>0;--i)
+            {
+                target[i] = source[ self[i] ];
             }
         }
 
