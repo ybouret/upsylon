@@ -48,6 +48,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(comb);
     Y_UTEST(perm);
     Y_UTEST(part);
+    Y_UTEST(bell);
     Y_UTEST(anagram);
     Y_UTEST(dancing);
     Y_UTEST(scrabble);

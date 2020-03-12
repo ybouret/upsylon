@@ -2,6 +2,7 @@
 #include "y/counting/counting.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/memory/pooled.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -53,10 +54,12 @@ namespace upsylon
         assert(0==bytes);
     }
 
+    const counting::with_sz_t counting::with_sz = {};
+    const counting::with_mp_t counting::with_mp = {};
 
 }
 
-#include "y/mpl/natural.hpp"
+#include <iostream>
 
 namespace upsylon
 {

@@ -22,6 +22,10 @@ namespace upsylon
     class counting
     {
     public:
+        typedef type2type<mpl::natural> with_mp_t;
+        typedef type2type<size_t>       with_sz_t;
+        static  const with_mp_t         with_mp;
+        static  const with_sz_t         with_sz;
 
         const size_t index; //!< index in 1..count
         const size_t count; //!< number of possible objects

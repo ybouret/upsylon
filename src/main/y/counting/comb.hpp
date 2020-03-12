@@ -5,6 +5,7 @@
 
 #include "y/counting/counting.hpp"
 #include "y/sequence/accessible.hpp"
+#include "y/mpl/natural.hpp"
 
 namespace upsylon
 {
@@ -30,7 +31,8 @@ namespace upsylon
      
 
         //! compute the number of combinations using mpn
-        static size_t compute_for(const size_t N, const size_t K);
+        static mpn    compute(const size_t N, const size_t K, const with_mp_t &);
+        static size_t compute(const size_t N, const size_t K, const with_sz_t &);
         
         //! access C++ style
         virtual const size_t & operator[](const size_t j) const throw();

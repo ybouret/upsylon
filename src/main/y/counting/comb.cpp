@@ -5,7 +5,7 @@
 namespace upsylon {
 
     combination:: combination(const size_t N, const size_t K) :
-    counting(compute_for(N,K)),
+    counting( compute(N,K,with_sz) ),
     accessible<size_t>(),
     n(N),
     k(K),
@@ -127,7 +127,7 @@ namespace upsylon
     }
 
 
-    size_t combination:: compute_for(const size_t N, const size_t K)
+    mpn  combination::  compute(const size_t N, const size_t K, const with_mp_t &)
     {
         if(N<=0) throw exception("%s(N=0)",fn);
         if(K<=0) throw exception("%s(K=0)",fn);
@@ -158,9 +158,14 @@ namespace upsylon
         }
 
         if( ! q.den.is_byte(1) ) throw exception("%sFAILURE!",fn);
+        return q.num.n;
+    }
 
-        size_t     res = 0;
-        if( ! q.num.n.as(res) )
+    size_t combination:: compute(const size_t N, const size_t K, const with_sz_t &)
+    {
+        const mpn mp_count = compute(N,K,with_mp);
+        size_t    res = 0;
+        if( ! mp_count.as(res) )
         {
             throw exception("%s(%lu,%lu) overflow!",fn,static_cast<unsigned long>(N), static_cast<unsigned long>(K));
         }

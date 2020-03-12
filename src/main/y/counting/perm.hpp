@@ -6,6 +6,7 @@
 
 #include "y/counting/counting.hpp"
 #include "y/sequence/accessible.hpp"
+#include "y/mpl/natural.hpp"
 
 namespace upsylon {
     
@@ -22,7 +23,9 @@ namespace upsylon {
         permutation(const permutation &other); //!< copy
         
         const size_t  n; //!< n
-        static size_t compute_for(const size_t N); //!< check overflow
+
+        static mpn    compute(const size_t N, const with_mp_t &); //!< multi-precision count
+        static size_t compute(const size_t N, const with_sz_t &); //!< check overflow
         
         
         //! display
