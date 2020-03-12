@@ -14,7 +14,30 @@ using namespace upsylon;
 #define ITERS       (1<<11)
 #define ITERS_SMALL (1<<8)
 
+namespace {
 
+    template <typename T>
+    static inline void test_convert()
+    {
+        std::cerr << std::dec;
+        std::cerr << "|_test_convert<uint" << sizeof(T) * 8 << "_t>" << std::endl;
+        {
+            mpn zero;
+            T   ans=0;
+            Y_ASSERT(zero.to<T>(ans));
+            Y_ASSERT(0==ans);
+        }
+
+        for(size_t iter=0;iter<16*024*1024;++iter)
+        {
+            const T   x = alea.full<T>();
+            const mpn n = x;
+            T         y = alea.full<T>();
+            Y_ASSERT(n.to<T>(y));
+            Y_ASSERT(x==y);
+        }
+    }
+}
 
 Y_UTEST(mpn)
 {
@@ -76,6 +99,14 @@ Y_UTEST(mpn)
         Y_ASSERT(X.bits()==bits_for(x));
     }
 
+    std::cerr << "-- words conversion" << std::endl;
+    test_convert<uint8_t>();
+    test_convert<uint16_t>();
+    test_convert<uint32_t>();
+    test_convert<uint64_t>();
+
+
+    
     std::cerr << "-- comparison with words" << std::endl;
     for(size_t iter=0;iter<ITERS;++iter)
     {

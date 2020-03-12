@@ -1,78 +1,69 @@
 #include "y/counting/part.hpp"
-#include "y/memory/embed.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/standard.hpp"
 #include "y/type/cswap.hpp"
-#include "y/mpl/natural.hpp"
 #include "y/exception.hpp"
+#include "y/memory/allocator.hpp"
 
 namespace upsylon {
 
-    partition::builder:: builder(const size_t value) :
+    integer_partition:: integer_partition(const size_t value) :
     n( counting::chkdim(value) ),
     m(1),
     now(0),
     tmp(0),
-    wksp(0),
-    wlen(0)
+    wlen(2*n*sizeof(size_t))
     {
         static memory::allocator &mmgr = counting::mem_instance();
+        now = static_cast<size_t *>(mmgr.acquire(wlen));
 
-        memory::embed emb[] =
-        {
-            memory::embed::as(now,n),
-            memory::embed::as(tmp,n)
-        };
-        wksp = memory::embed::create(emb,
-                                     sizeof(emb)/sizeof(emb[0]),
-                                     mmgr,
-                                     wlen);
-        --now;
-        --tmp;
+        tmp    = (--now) + n;
         now[1] = n;
     }
 
 
-    void partition::builder::initialize() throw()
+    void integer_partition:: initialize() throw()
     {
-        now[1] = n;
+        now[1]         = n;
         aliasing::_(m) = 1;
     }
 
 
 
-    size_t partition::builder:: size() const throw()
+    size_t integer_partition:: size() const throw()
     {
         return m;
     }
 
-    size_t partition::builder:: partitions() throw()
+    size_t integer_partition:: outcomes() throw()
     {
         initialize();
         size_t ans = 1;
         while( build_next() )
             ++ans;
+        initialize();
         return ans;
     }
 
     
-    size_t partition::builder:: count_for(const size_t n)
+    size_t integer_partition:: count_for(const size_t n)
     {
-        partition::builder pb(n);
-        return pb.partitions();
+        integer_partition pb(n);
+        return pb.outcomes();
     }
 
 
-    const size_t & partition::builder:: operator[](size_t i) const
+    const size_t & integer_partition:: operator[](size_t i) const
     {
         assert(i>0);
         assert(i<=m);
+        assert(i<=n);
         return now[i];
     }
 
     
     
-
+#if 0
     size_t partition::builder:: permutations() const
     {
         const accessible<size_t> &self = *this;
@@ -99,20 +90,20 @@ namespace upsylon {
         }
         return np;
     }
+#endif
 
 
-
-    partition::builder::~builder() throw()
+    integer_partition::~integer_partition() throw()
     {
         static memory::allocator &mmgr = counting::mem_location();
-        mmgr.release(wksp, wlen);
+        { void *addr = ++now;     mmgr.release(addr, wlen); }
         now = 0;
         tmp = 0;
         aliasing::_(n) = 0;
         aliasing::_(m) = 0;
     }
 
-    bool partition::builder:: build_next() throw()
+    bool integer_partition:: build_next() throw()
     {
         size_t curr= 0;
         size_t k   = 0;
@@ -161,72 +152,5 @@ namespace upsylon {
         }
     }
 
-    partition:: shaker:: shaker( const builder &config ) :
-    m(config.m),
-    perm(m),
-    wlen(3*m*sizeof(size_t)),
-    indx( static_cast<size_t *>( counting::mem_instance().acquire(wlen) ) - 1 ),
-    jndx( indx+m ),
-    data( jndx+m )
-    {
-        assert(perm.size()==m);
-        for(size_t i=1;i<=m;++i)
-        {
-            aliasing::_(data[i]) = jndx[i] = indx[i] = config[ perm[i] ];
-        }
-    }
-
-    partition:: shaker:: ~shaker() throw()
-    {
-        static memory::allocator &mmgr = counting::mem_location();
-        {
-            void *p = ++indx;
-            mmgr.release(p,wlen);
-        }
-        indx=0;
-        jndx=0;
-        aliasing::_(m) = 0;
-    }
-
-    size_t partition:: shaker:: size() const throw()
-    {
-        return m;
-    }
-
-    const size_t & partition:: shaker:: operator[](size_t i) const
-    {
-        assert(i>0);
-        assert(i<=m);
-        return indx[i];
-    }
-
-
-    bool partition::shaker:: next() throw()
-    {
-    NEXT:
-        if( perm.valid() )
-        {
-            perm.next();
-            bool same = true;
-            for(size_t i=m;i>0;--i)
-            {
-                const size_t j = (indx[i] = data[ perm[i] ]);
-                if( j != jndx[i] )
-                {
-                    same = false;
-                }
-            }
-            if(same)
-            {
-                goto NEXT;
-            }
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
 
 }
