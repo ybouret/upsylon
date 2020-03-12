@@ -60,24 +60,7 @@ namespace upsylon
 
 namespace upsylon
 {
-
-#if 0
-    bool counting:: mpn2count(size_t &sz, const mpl::natural &n ) throw()
-    {
-        static const size_t sz_bytes = sizeof(size_t);
-        static const size_t sz_bits  = sz_bytes * 8;
-
-        sz=0;
-        if(n.bits()>sz_bits) return false;
-        sz = n.byte_at(0);
-        for(size_t i=1;i<sz_bytes;++i)
-        {
-            const size_t B = n.byte_at(i);
-            sz |= (B << (i*8));
-        }
-        return true;
-    }
-#endif
+    
     
     std::ostream & counting:: display( std::ostream &os, const size_t *arr, const size_t num )
     {
