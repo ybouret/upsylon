@@ -160,7 +160,7 @@ namespace upsylon
         if( ! q.den.is_byte(1) ) throw exception("%sFAILURE!",fn);
 
         size_t     res = 0;
-        if( !mpn2count(res,q.num.n) )
+        if( ! q.num.n.as(res) )
         {
             throw exception("%s(%lu,%lu) overflow!",fn,static_cast<unsigned long>(N), static_cast<unsigned long>(K));
         }

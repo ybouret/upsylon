@@ -14,7 +14,8 @@ namespace upsylon
         if(N<=0) throw exception("%sN=0",fn);
         const mpn F   = mpn::factorial(N);
         size_t    res = 0;
-        if( !mpn2count(res,F) ) throw exception("%soverflow for N=%lu",fn,static_cast<unsigned long>(N));
+        //if( !mpn2count(res,F) ) throw exception("%soverflow for N=%lu",fn,static_cast<unsigned long>(N));
+        if( !F.as(res) ) throw exception("%soverflow for N=%lu",fn,static_cast<unsigned long>(N));
         return res;
     }
 

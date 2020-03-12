@@ -61,6 +61,7 @@ namespace upsylon
 namespace upsylon
 {
 
+#if 0
     bool counting:: mpn2count(size_t &sz, const mpl::natural &n ) throw()
     {
         static const size_t sz_bytes = sizeof(size_t);
@@ -76,7 +77,8 @@ namespace upsylon
         }
         return true;
     }
-
+#endif
+    
     std::ostream & counting:: display( std::ostream &os, const size_t *arr, const size_t num )
     {
         os << '{';

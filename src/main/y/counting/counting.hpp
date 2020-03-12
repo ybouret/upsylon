@@ -41,7 +41,7 @@ namespace upsylon
         static memory::allocator & mem_location() throw();
 
         //! convert with size overflow checking
-        static bool    mpn2count(size_t &sz, const mpl::natural &n) throw();
+        //static bool    mpn2count(size_t &sz, const mpl::natural &n) throw();
 
     protected:
         static size_t *acquire_( size_t &bytes );                            //!< acquire a count of bytes=workspace*sizeof(size_t)

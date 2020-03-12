@@ -336,6 +336,12 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
                     template <typename T>
                     bool to(T &target) const throw();
 
+                    template <typename T>
+                    inline bool as(T &target) const throw()
+                    {
+                        typedef typename unsigned_int<sizeof(T)>::type utype;
+                        return to<utype>( (utype&)target );
+                    }
 
 
                 private:
