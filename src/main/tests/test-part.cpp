@@ -24,17 +24,27 @@ Y_UTEST(part)
     
     integer_partition pb(n);
     const size_t       ns = pb.outcomes();
-    std::cerr << "<" << n << "> can be sum in " << ns << " outcomes" << std::endl;
+    //Y_CHECK(ns== integer_partition::outcomes(n) );
+    std::cerr << "<" << n << "> can be summed in " << ns << " outcomes" << std::endl;
 
     pb.initialize();
     size_t count = 0;
+    mpn    total = 0;
+    size_t iBell = 0;
     do
     {
         ++count;
-        std::cerr << pb << std::endl;
+        std::cerr << pb << " ->";
+        const mpn nc = pb.mp_configurations();
+        std::cerr << "+" << nc << std::endl;
+        total += nc;
+        iBell += pb.configurations();
       }
     while( pb.build_next() );
     Y_CHECK(ns==count);
- }
+    std::cerr << "#outcomes= " << ns << std::endl;
+    std::cerr << "#total   = " << total << std::endl;
+    std::cerr << "#Bell    = " << iBell << std::endl;
+}
 Y_UTEST_DONE()
 

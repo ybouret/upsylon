@@ -5,6 +5,7 @@
 
 #include "y/counting/counting.hpp"
 #include "y/sequence/accessible.hpp"
+#include "y/mpl/natural.hpp"
 
 namespace upsylon {
 
@@ -22,11 +23,14 @@ namespace upsylon {
 
         bool                   build_next() throw(); //!< compute next partition
         void                   initialize() throw(); //!< restart with singulet
-        size_t                 outcomes()   throw(); //!< number of possibilities
+        size_t                 outcomes()   throw(); //!< number of possible outcomtes
+        mpn                    mp_configurations() const;   //!< number of configurations for this outcome
+        size_t                 configurations()    const;   //!< with extraction
 
         virtual size_t         size()             const throw(); //!< m
         virtual const size_t & operator[](size_t) const;         //!< [1..m]
-        static        size_t   count_for(const size_t n);        //!< compute the size
+        static        size_t   outcomes(const size_t n);        //!< compute the size
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(integer_partition);

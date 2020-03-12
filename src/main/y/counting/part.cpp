@@ -4,6 +4,7 @@
 #include "y/type/cswap.hpp"
 #include "y/exception.hpp"
 #include "y/memory/allocator.hpp"
+#include "y/mpl/rational.hpp"
 
 namespace upsylon {
 
@@ -46,7 +47,7 @@ namespace upsylon {
     }
 
     
-    size_t integer_partition:: count_for(const size_t n)
+    size_t integer_partition:: outcomes(const size_t n)
     {
         integer_partition pb(n);
         return pb.outcomes();
@@ -61,36 +62,71 @@ namespace upsylon {
         return now[i];
     }
 
-    
-    
-#if 0
-    size_t partition::builder:: permutations() const
+    static inline
+    void decrease_repeating( mpq &value, const accessible<size_t> &tab )
     {
-        const accessible<size_t> &self = *this;
-        mpn p = mpn::factorial(m);
-        for(size_t i=m;i>0;)
+
+
+        const size_t n = tab.size();
+        size_t       i = n;
+        while(i>0)
         {
-            const size_t value = self[i];
-            size_t       j     = i-1;
-            while(j>0&&self[j]==value)
+            const size_t t = tab[i];
+            size_t       j = i-1;
+            while(j>0&&tab[j]== t)
+            {
                 --j;
+            }
             const size_t rep = i-j;
-            //std::cerr << '\t' << '[' << value << ']' << '$' << rep << std::endl;
             i=j;
             if(rep>1)
             {
-                const mpn d = mpn::factorial(rep);
-                p/=d;
+                for(size_t j=2;j<=rep;++j)
+                {
+                    value /= j;
+                }
             }
         }
-        size_t np = 0;
-        if( !counting::mpn2count(np,p) )
-        {
-            throw exception("#permutations overflow in partition::builder");
-        }
-        return np;
+
     }
-#endif
+
+
+    mpn integer_partition:: mp_configurations() const
+    {
+        const accessible<size_t> &self = *this;
+        assert(m>0);
+        size_t remaining  = n;
+
+        mpq q = 1;
+        for(size_t i=1;i<=m;++i)
+        {
+            const size_t groupSize = self[i];
+            for(size_t j=2;j<=remaining;++j)
+            {
+                q *= j;
+            }
+            for(size_t j=2;j<=groupSize;++j)
+            {
+                q /= j;
+            }
+            remaining -= groupSize;
+            for(size_t j=2;j<=remaining;++j)
+            {
+                q /= j;
+            }
+        }
+        decrease_repeating(q,self);
+        if( !q.den.is_byte(1) ) throw exception("integer_partition::mp_configurations failure!!!");
+        return q.num.n;
+    }
+
+    size_t integer_partition:: configurations()    const
+    {
+        size_t     ans = 0;
+        const  mpn nc = mp_configurations();
+        if(!nc.as(ans)) throw exception("integer_partion::configurations overflow");
+        return ans;
+    }
 
 
     integer_partition::~integer_partition() throw()
