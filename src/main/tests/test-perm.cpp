@@ -1,4 +1,5 @@
 
+#include "y/counting/permuter.hpp"
 #include "y/counting/perm.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
