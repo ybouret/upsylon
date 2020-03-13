@@ -1,7 +1,8 @@
 
 #include "y/counting/permuter.hpp"
 #include "y/counting/perm.hpp"
-#include "y/counting/permops.hpp"
+#include "y/counting/perm-ops.hpp"
+#include "y/counting/counting-ops.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
 #include "y/sequence/vector.hpp"
@@ -22,25 +23,25 @@ namespace {
         size_t       wksp[N];
         size_t       addr[N];
         size_t      *P     = memory::io::__force<size_t>(wksp)-1;
-        const size_t count = mpn::factorial(N).cast<size_t>("#perm");
+        const size_t count = mpn::factorial(N).cast_to<size_t>("#perm");
 
         std::cerr << "count=" << count << std::endl;
-        permops::init(P,N);
+        core::counting::init(P,N);
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
 
-        permops::init(P,N,addr);
+        core::counting::init(P,N,addr);
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
         display_int::to(std::cerr << "@init   $ ", addr, N, ",") << std::endl;
 
         for(size_t i=2;i<=count;++i)
         {
-            Y_ASSERT(permops::next(P,N));
-            permops::to_C(addr,P,N);
+            Y_ASSERT(core::permutation::next(P,N));
+            core::counting::to_C(addr,P,N);
             display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",wksp,N,":");
             display_int::to(std::cerr << " | @" << std::setw(6) << i << " $ ",addr,N,",") << std::endl;
         }
 
-        Y_ASSERT(!permops::next(P,N));
+        Y_ASSERT(!core::permutation::next(P,N));
 
 
         std::cerr << "<permops/>" << std::endl << std::endl;

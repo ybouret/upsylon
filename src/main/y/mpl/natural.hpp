@@ -343,7 +343,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
 
             //! wrapper
             template <typename T>
-            inline T cast(const char *when = 0) const
+            inline T cast_to(const char *when = 0) const
             {
                 T ans(0);
                 if(!as<T>(ans))

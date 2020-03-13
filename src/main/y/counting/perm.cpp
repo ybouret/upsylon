@@ -2,7 +2,8 @@
 #include "y/mpl/natural.hpp"
 #include "y/exception.hpp"
 #include "y/type/block/zset.hpp"
-#include "y/counting/permops.hpp"
+#include "y/counting/perm-ops.hpp"
+#include "y/counting/counting-ops.hpp"
 
 namespace upsylon
 {
@@ -63,7 +64,7 @@ namespace upsylon
     void permutation:: start_() throw()
     {
         assert(1==index);
-        permops::init(perm,n,addr);
+        core::counting::init(perm,n,addr);
     }
 
    
@@ -71,8 +72,8 @@ namespace upsylon
     void permutation:: next_()  throw()
     {
         assert(index<=count);
-        permops::_nxt(perm,n);
-        permops::to_C(addr,perm,n);
+        core::permutation::_nxt(perm,n);
+        core::counting::to_C(addr,perm,n);
     }
 
     void permutation:: memchk(const permutation &lhs, const permutation &rhs)
