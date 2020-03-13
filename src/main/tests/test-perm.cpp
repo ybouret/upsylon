@@ -15,7 +15,7 @@
 using namespace upsylon;
 
 namespace {
-
+    
     template <size_t N>
     void test_permops()
     {
@@ -25,15 +25,15 @@ namespace {
         size_t      *P     = memory::io::__force<size_t>(wksp)-1;
         const mpn    np    = mpn::factorial(N);
         const size_t count = np.cast_to<size_t>("#perm");
-
+        
         std::cerr << "count=" << count << std::endl;
         core::counting::init(P,N);
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
-
+        
         core::counting::init(P,N,addr);
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
         display_int::to(std::cerr << "@init   $ ", addr, N, ",") << std::endl;
-
+        
         for(size_t i=2;i<=count;++i)
         {
             Y_ASSERT(core::permutation::next(P,N));
@@ -41,17 +41,17 @@ namespace {
             display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",wksp,N,":");
             display_int::to(std::cerr << " | @" << std::setw(6) << i << " $ ",addr,N,",") << std::endl;
         }
-
+        
         Y_ASSERT(!core::permutation::next(P,N));
-
-
+        
+        
         std::cerr << "<permops/>" << std::endl << std::endl;
     }
 }
 
 Y_UTEST(perm)
 {
-
+    
     test_permops<1>();
     test_permops<2>();
     test_permops<3>();
@@ -59,14 +59,14 @@ Y_UTEST(perm)
     test_permops<5>();
     test_permops<6>();
     test_permops<7>();
-
+    
     for(int iarg=1;iarg<argc;++iarg)
     {
         const size_t n =  string_convert::to<size_t>(argv[iarg]);
-
+        
         permutation         perm(n);
         vector<permutation> Perm( perm.count, as_capacity );
-
+        
         std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
         for( perm.boot(); perm.good(); perm.next() )
         {
@@ -86,7 +86,7 @@ Y_UTEST(perm)
             }
         }
     }
-
+    
 }
 Y_UTEST_DONE()
 
@@ -114,11 +114,48 @@ Y_UTEST(anagram)
             std::cerr << all[i] << std::endl;
         }
     }
-
+    
 }
 Y_UTEST_DONE()
 
 #include "y/counting/permuter.hpp"
+#include "y/ios/ocstream.hpp"
+
+namespace {
+ 
+    template <typename T>
+    void doPerm(const size_t n, const size_t m)
+    {
+        const mpn    countMaxMP = mpn::factorial(n);
+        const size_t countMax   = countMaxMP.cast_to<size_t>();
+        std::cerr << "countMax=" << countMax << std::endl;
+        
+        vector<T> data(n,0);
+        for(size_t i=1;i<=n;++i)
+        {
+            data[i] = T( alea.leq(m) );
+        }
+        
+        permuter<T> perm( data );
+        std::cerr << "data  = " << data << std::endl;
+        std::cerr << "perm  = " << perm << std::endl;
+        std::cerr << "count = " << perm.count << "/" << countMax << std::endl;
+        
+        for( perm.boot(); perm.good(); perm.next() )
+        {
+        }
+        std::cerr << "required nodes: " << perm.required_nodes() << std::endl;
+        perm.trim();
+        std::cerr << "              : " << perm.required_nodes() << std::endl;
+        perm.boot();
+        std::cerr << "              : " << perm.required_nodes() << std::endl;
+
+        const double ratio = double(perm.required_nodes()) / perm.count;
+        std::cerr << "ratio: " << ratio << std::endl;
+        
+    }
+    
+}
 
 Y_UTEST(permuter)
 {
@@ -127,31 +164,23 @@ Y_UTEST(permuter)
     {
         n = string_convert::to<size_t>(argv[1],"n");
     }
-
-    size_t m = 10;
+    
+    size_t m=10;
     if(argc>2)
     {
         m = string_convert::to<size_t>(argv[2],"m");
     }
-
-    vector<uint16_t> data(n,0);
-    for(size_t i=data.size();i>0;--i)
-    {
-        data[i] = uint16_t( alea.leq(m) );
-    }
-    permuter<uint16_t> P( data );
-
-    std::cerr << "data= " << data << std::endl;
-    std::cerr << "P   = " << P << std::endl;
-    std::cerr << "#P  = " << P.count << "/" << mpn::factorial(n) << std::endl;
-    for( P.boot(); P.good(); P.next() )
-    {
-        std::cerr << P << " | #nodes = " << P.store().nodes << " | cache=" << P.store().cache.size << std::endl;
-    }
-    std::cerr << "#P  = " << P.count << "/" << mpn::factorial(n) << std::endl;
-    std::cerr << "Rebooting..." << std::endl;
-    P.boot();
-    std::cerr << P << " | #nodes = " << P.store().nodes << " | cache=" << P.store().cache.size << std::endl;
+    
+    
+    doPerm<uint16_t>(n,m);
+    
+    
+    
+    
+    
+    
+    
+    
     
 }
 Y_UTEST_DONE()

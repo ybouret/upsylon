@@ -11,36 +11,39 @@
 #include "y/core/node.hpp"
 
 namespace upsylon {
-
+    
     namespace core {
-
+        
         class permuter : public upsylon::counting
         {
         public:
             typedef core::cpp_node_of<size_t> repeat;
             typedef core::list_of_cpp<repeat> repeats;
-
+            
             virtual ~permuter() throw();
-
+            
+            //! count and set weak
             mpl::natural count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const;
             size_t       count_with(const repeats &reps, const upsylon::counting::with_sz_t &) const;
-
+            
+            const size_t dims;
+            const bool   weak;
+            
         protected:
             explicit permuter(const size_t n);
-
-            const size_t dims;
+            
             size_t      *perm;
-
+            
             void init_perm() throw(); //!< reset perm
             void next_perm() throw(); //!< compute valid next permutation
-
+            
             void throw_invalid_first_key() const;
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(permuter);
         };
     }
-
+    
 }
 
 #include "y/type/aliasing.hpp"
@@ -52,7 +55,7 @@ namespace upsylon {
 #include "y/associative/suffix-store.hpp"
 
 namespace upsylon {
-
+    
 #define Y_PERMUTER_CTOR(N) \
 core::permuter(N),         \
 target(0),                 \
@@ -60,9 +63,9 @@ source(0),                 \
 kstore(),                  \
 wksp(0),                   \
 wlen(0)
-
-
-
+    
+    
+    
     //! permuter of integral type
     template <typename T>
     class permuter :
@@ -71,7 +74,8 @@ wlen(0)
     {
     public:
         Y_DECL_ARGS(T,type);
-
+        typedef suffix_store<type> store_type;
+        
         explicit permuter( const accessible<T> &seq ) :
         Y_PERMUTER_CTOR( seq.size() )
         {
@@ -84,7 +88,7 @@ wlen(0)
         {
             release();
         }
-
+        
         virtual size_t       size() const throw() { return dims; }
         virtual const_type & operator[](const size_t index) const
         {
@@ -92,35 +96,45 @@ wlen(0)
             assert(index<=dims);
             return target[index];
         }
-
+        
         inline const suffix_store<type> & store() const throw()
         {
             return kstore;
         }
-
+        
+        inline size_t required_nodes() const throw()
+        {
+            return kstore.nodes + kstore.cache.size - 1;
+        }
+        
+        inline void trim() throw()
+        {
+            kstore.cache.release();
+        }
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(permuter);
         mutable_type       *target;
         mutable_type       *source;
-        suffix_store<type>  kstore;
+        store_type          kstore;
         void               *wksp;
         size_t              wlen;
-
-
+        
+        
         // release all memoru
         inline void release() throw()
         {
             static memory::allocator &mmgr = counting::mem_location();
             mmgr.release(wksp,wlen);
         }
-
+        
         inline void build_extent()
         {
             try {
-
+                
                 // sort current, copy to previous
                 initialize();
-
+                
                 // check repetitions
                 repeats reps;
                 {
@@ -135,13 +149,16 @@ wlen(0)
                         }
                         const size_t num = i-j;
                         i=j;
-                        if(num>1) reps << num;
+                        if(num>1)
+                        {
+                            reps << num;
+                        }
                     }
                 }
-
+                
                 // computing effective number of permutations
                 aliasing::_(count) = count_with(reps,counting::with_sz);
-
+                
             }
             catch(...)
             {
@@ -149,7 +166,7 @@ wlen(0)
                 throw;
             }
         }
-
+        
         inline void make_content( const accessible<T> &seq )
         {
             assert( seq.size() >= dims );
@@ -159,9 +176,9 @@ wlen(0)
             }
             lightweight_array<mutable_type> arr( &source[1], dims);
             hsort(arr, comparison::decreasing<mutable_type> );
-
+            
         }
-
+        
         // allocated memory
         void setup_memory()
         {
@@ -177,9 +194,9 @@ wlen(0)
             --source;
             --perm;
         }
-
+        
         // make default permutation and target=source
-        void initialize()  
+        void initialize()
         {
             init_perm();
             kstore.free();
@@ -188,31 +205,43 @@ wlen(0)
                 assert(k==perm[k]);
                 target[k] = source[k];
             }
-            if( !kstore.insert(target,dims) )
+            if( weak && !kstore.insert(target,dims) )
             {
                 throw_invalid_first_key();
             }
         }
-
+        
         virtual void onBoot()
         {
             initialize();
         }
-
-        virtual void onNext()  
+        
+        inline void next_config() throw()
+        {
+            next_perm();
+            for(size_t k=dims;k>0;--k)
+            {
+                target[k] = source[ perm[k] ];
+            }
+        }
+        
+        virtual void onNext()
         {
             assert(index<=count);
-            do
+            if(weak)
             {
-                next_perm();
-                for(size_t k=dims;k>0;--k)
+                do
                 {
-                    target[k] = source[ perm[k] ];
+                    next_config();
                 }
+                while( !kstore.insert(target,dims) );
             }
-            while( !kstore.insert(target,dims) );
+            else
+            {
+                next_config();
+            }
         }
-
+        
         
     };
     

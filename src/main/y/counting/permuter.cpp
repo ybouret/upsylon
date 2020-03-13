@@ -20,6 +20,7 @@ namespace upsylon {
         permuter:: permuter(const size_t n) :
         upsylon::counting(0),
         dims(n),
+        weak(false),
         perm(0)
         {
             if(dims<=0) throw libc::exception(ERANGE,"%s has no dimension",fn);
@@ -27,11 +28,13 @@ namespace upsylon {
 
         mpn permuter:: count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const
         {
+            aliasing::_(weak) = false;
             mpn res = mpn::factorial(dims);
             for(const repeat *rep = reps.head; rep; rep=rep->next )
             {
                 if(rep->data>1)
                 {
+                    aliasing::_(weak) = true;
                     const mpn den = mpn::factorial(rep->data);
                     if( ! res.is_divisible_by(den) )
                     {
