@@ -57,6 +57,7 @@ namespace upsylon {
 core::permuter(N),         \
 target(0),                 \
 source(0),                 \
+kstore(),                  \
 wksp(0),                   \
 wlen(0)
 
