@@ -71,7 +71,7 @@ namespace upsylon
     void permutation:: next_()  throw()
     {
         assert(index<=count);
-        permops::next(perm,n);
+        permops::_nxt(perm,n);
         permops::to_C(addr,perm,n);
     }
 
@@ -79,14 +79,13 @@ namespace upsylon
     {
         assert(lhs.n==rhs.n);
         assert(lhs.count==rhs.count);
-        //assert(lhs.nm1==rhs.nm1);
         check_contents(fn, lhs, &lhs.perm[1], rhs, &rhs.perm[1], lhs.n * sizeof(size_t));
     }
     
 #define Y_CHECK_PERM_CXX_INDX() \
-assert(indx>0);             \
-assert(indx<=n);            \
-assert(perm[indx]>0);       \
+assert(indx>0);                 \
+assert(indx<=n);                \
+assert(perm[indx]>0);           \
 assert(perm[indx]<=n)
     
     const size_t & permutation:: operator[](const size_t indx) const throw()

@@ -36,23 +36,21 @@ namespace upsylon {
     }
     
 
-    bool permops::next(size_t      *p,
-                       const size_t n) throw()
-    {
-        assert(p!=NULL);
-        assert(n>0);
+    namespace {
+
         //----------------------------------------------------------------------
         // find the largest perm[i]
         //----------------------------------------------------------------------
-        size_t i=n-1;
-        while( (i>0) && p[i]>p[i+1] ) --i;
-
-        if(i<=0)
+        static inline size_t find_largest(const size_t *p,const size_t n) throw()
         {
-            return false;
+            size_t i=n-1;
+            while( (i>0) && p[i]>p[i+1] ) --i;
+            return i;
         }
-        else
+
+        static inline void   compute_from(size_t i, size_t *p,const size_t n) throw()
         {
+            assert(i>0);
             //------------------------------------------------------------------
             // find the largest element after perm[i]
             // but not larger than perm[i]
@@ -74,6 +72,28 @@ namespace upsylon {
             {
                 cswap(p[j], p[n-k]);
             }
+        }
+    }
+
+    void permops:: _nxt(size_t *p, const size_t n) throw()
+    {
+        compute_from( find_largest(p,n), p, n);
+    }
+    
+    bool permops:: next(size_t      *p,
+                       const size_t n) throw()
+    {
+        assert(p!=NULL);
+        assert(n>0);
+
+        const size_t i = find_largest(p,n);
+        if(i<=0)
+        {
+            return false;
+        }
+        else
+        {
+            compute_from(i,p,n);
             return true;
         }
     }

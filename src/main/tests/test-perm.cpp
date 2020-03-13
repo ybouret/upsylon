@@ -23,7 +23,7 @@ namespace {
         size_t       addr[N];
         size_t      *P     = memory::io::__force<size_t>(wksp)-1;
         const size_t count = mpn::factorial(N).cast<size_t>("#perm");
-        
+
         std::cerr << "count=" << count << std::endl;
         permops::init(P,N);
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
@@ -56,6 +56,7 @@ Y_UTEST(perm)
     test_permops<4>();
     test_permops<5>();
     test_permops<6>();
+    test_permops<7>();
 
     for(int iarg=1;iarg<argc;++iarg)
     {
