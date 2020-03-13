@@ -4,7 +4,7 @@
 
 namespace upsylon {
 
-    size_t __sizeof::width = 32;
+    size_t __sizeof::width = 40;
 
     std::ostream & __sizeof::display(std::ostream &os, const char *type, const size_t value )
     {
