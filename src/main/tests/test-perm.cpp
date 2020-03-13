@@ -33,13 +33,13 @@ namespace {
 
         for(size_t i=2;i<=count;++i)
         {
-            permops::next(P,N);
+            Y_ASSERT(permops::next(P,N));
             permops::to_C(addr,P,N);
             display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",wksp,N,":");
             display_int::to(std::cerr << " | @" << std::setw(6) << i << " $ ",addr,N,",") << std::endl;
         }
 
-        //permops::next(P,N); display_int::to(std::cerr << "@out    $ ", wksp, N, ":") << std::endl;
+        Y_ASSERT(!permops::next(P,N));
 
 
         std::cerr << "<permops/>" << std::endl << std::endl;
@@ -52,12 +52,9 @@ Y_UTEST(perm)
     test_permops<1>();
     test_permops<2>();
     test_permops<3>();
-    if(false)
-    {
-        test_permops<4>();
-        test_permops<5>();
-        test_permops<6>();
-    }
+    test_permops<4>();
+    test_permops<5>();
+    test_permops<6>();
 
     for(int iarg=1;iarg<argc;++iarg)
     {
