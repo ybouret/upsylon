@@ -7,6 +7,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/type/ints-display.hpp"
 #include "y/mpl/natural.hpp"
+#include "y/memory/io.hpp"
 
 #include <iomanip>
 
@@ -20,7 +21,7 @@ namespace {
         std::cerr << "<permops " << N << ">" << std::endl;
         size_t       wksp[N];
         size_t       addr[N];
-        size_t      *P = wksp-1;
+        size_t      *P = memory::io::__force<size_t>(wksp)-1;
         const size_t count = mpn::factorial(N).cast<size_t>("#perm");
         std::cerr << "count=" << count << std::endl;
         permops::init(P,N);
@@ -32,11 +33,14 @@ namespace {
 
         for(size_t i=2;i<=count;++i)
         {
+            permops::next(P,N);
             permops::to_C(addr,P,N);
-            display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",wksp,N,":") << std::endl;
-            display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",addr,N,",") << std::endl;
-
+            display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",wksp,N,":");
+            display_int::to(std::cerr << " | @" << std::setw(6) << i << " $ ",addr,N,",") << std::endl;
         }
+
+        //permops::next(P,N); display_int::to(std::cerr << "@out    $ ", wksp, N, ":") << std::endl;
+
 
         std::cerr << "<permops/>" << std::endl << std::endl;
     }
