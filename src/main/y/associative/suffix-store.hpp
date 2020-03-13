@@ -110,6 +110,8 @@ namespace upsylon {
             }
         }
 
+        
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_store);
