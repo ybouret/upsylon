@@ -3,7 +3,7 @@
 #include "y/exception.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/counting/perm-ops.hpp"
-#include "y/counting/counting-ops.hpp"
+#include "y/counting/ops.hpp"
 
 namespace upsylon
 {

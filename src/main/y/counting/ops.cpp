@@ -1,4 +1,4 @@
-#include "y/counting/counting-ops.hpp"
+#include "y/counting/ops.hpp"
 
 namespace upsylon {
 

@@ -2,7 +2,7 @@
 #include "y/counting/permuter.hpp"
 #include "y/counting/perm.hpp"
 #include "y/counting/perm-ops.hpp"
-#include "y/counting/counting-ops.hpp"
+#include "y/counting/ops.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
 #include "y/sequence/vector.hpp"
@@ -117,3 +117,18 @@ Y_UTEST(anagram)
 }
 Y_UTEST_DONE()
 
+#include "y/counting/permuter.hpp"
+
+Y_UTEST(permuter)
+{
+    size_t n = 5;
+    vector<uint8_t> data(n,5);
+    for(size_t i=data.size();i>0;--i)
+    {
+        data[i] = i;
+    }
+
+    permuter<uint8_t> P( data );
+    
+}
+Y_UTEST_DONE()
