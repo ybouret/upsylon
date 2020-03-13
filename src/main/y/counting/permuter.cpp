@@ -1,5 +1,6 @@
 #include "y/counting/permuter.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/mpl/natural.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
 
@@ -14,13 +15,47 @@ namespace upsylon {
         }
 
         permuter:: permuter(const size_t n) :
+        upsylon::counting(0),
         dims(n),
         perm(0)
         {
-            if(dims<=0) throw libc::exception( ERANGE, "permuter(0)" );
+            if(dims<=0) throw libc::exception(ERANGE,"permuter(0)");
         }
 
+        mpn permuter:: count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const
+        {
+            mpn res = mpn::factorial(dims);
+            for(const repeat *rep = reps.head; rep; rep=rep->next )
+            {
+                if(rep->data>1)
+                {
+                    const mpn den = mpn::factorial(rep->data);
+                    if( ! res.is_divisible_by(den) )
+                    {
+                        throw exception("permuter count corruption");
+                    }
+                    res /= den;
+                }
 
+            }
+            return res;
+        }
+
+        size_t permuter:: count_with(const repeats &reps, const upsylon::counting::with_sz_t &) const
+        {
+            const mpn mp = count_with(reps,upsylon::counting::with_mp);
+            size_t    res=0;
+            if( !mp.as(res) )
+            {
+                throw libc::exception( ERANGE, "permuter overflow for dims=%u", unsigned(dims) );
+            }
+            return res;
+        }
+
+        void permuter:: init_perm() throw()
+        {
+            core::counting::init(perm,dims);
+        }
 
     }
 

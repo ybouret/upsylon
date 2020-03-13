@@ -60,6 +60,7 @@ namespace upsylon
 }
 
 #include <iostream>
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -76,13 +77,13 @@ namespace upsylon
 
     void counting:: start() throw()
     {
-        (size_t &)index = 1;
+        aliasing::_(index) = 1;
         start_();
     }
 
     void counting:: next() throw()
     {
-        if( ++(size_t &)index <= count ) next_();
+        if( ++aliasing::_(index) <= count ) next_();
     }
 
 }

@@ -6,11 +6,7 @@
 
 #include "y/counting/counting.hpp"
 #include "y/counting/ops.hpp"
-#include "y/memory/allocator.hpp"
-#include "y/memory/embed.hpp"
-#include "y/sequence/array.hpp"
-#include "y/sort/heap.hpp"
-#include "y/comparison.hpp"
+
 #include "y/core/list.hpp"
 #include "y/core/node.hpp"
 
@@ -18,12 +14,16 @@ namespace upsylon {
 
     namespace core {
 
-        class permuter {
+        class permuter : public upsylon::counting
+        {
         public:
             typedef core::cpp_node_of<size_t> repeat;
             typedef core::list_of_cpp<repeat> repeats;
 
             virtual ~permuter() throw();
+
+            mpl::natural count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const;
+            size_t       count_with(const repeats &reps, const upsylon::counting::with_sz_t &) const;
 
         protected:
             explicit permuter(const size_t n);
@@ -31,16 +31,30 @@ namespace upsylon {
             const size_t dims;
             size_t      *perm;
 
+            void init_perm() throw(); //!< reset perm
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(permuter);
         };
     }
 
+}
+
+#include "y/type/aliasing.hpp"
+#include "y/sort/heap.hpp"
+#include "y/comparison.hpp"
+#include "y/memory/allocator.hpp"
+#include "y/memory/embed.hpp"
+#include "y/sequence/array.hpp"
+
+namespace upsylon {
+
 #define Y_PERMUTER_CTOR(N) \
 core::permuter(N),\
-curr(0),\
-prev(0),\
-wksp(0),\
+curr(0),  \
+prev(0),  \
+wksp(0),  \
 wlen(0)
 
 
@@ -83,6 +97,7 @@ wlen(0)
         size_t       wlen;
 
 
+        // release all memoru
         inline void release() throw()
         {
             static memory::allocator &mmgr = counting::mem_location();
@@ -92,11 +107,30 @@ wlen(0)
         inline void build_extent()
         {
             try {
-                lightweight_array<T> arr( &curr[1], dims);
-                hsort(arr, comparison::decreasing<T> );
-                for(size_t i=dims;i>0;--i)
+
+                // sort current, copy to previous
+                initialize();
+
+                // check repetitions
                 {
-                    prev[i] = curr[i];
+                    repeats reps;
+                    {
+                        size_t       i = dims;
+                        while(i>0)
+                        {
+                            const_type & t = curr[i];
+                            size_t       j = i-1;
+                            while(j>0&&curr[j]== t)
+                            {
+                                --j;
+                            }
+                            const size_t num = i-j;
+                            i=j;
+                            std::cerr << '(' << t << ')' << 'x' << num << std::endl;
+                            if(num>1) reps << num;
+                        }
+                    }
+                    aliasing::_(count) = count_with(reps,counting::with_sz);
                 }
             }
             catch(...)
@@ -129,7 +163,27 @@ wlen(0)
             --curr;
             --prev;
             --perm;
-            core::counting::init(perm,dims);
+        }
+
+        void initialize() throw()
+        {
+            init_perm();
+            lightweight_array<T> arr( &curr[1], dims);
+            hsort(arr, comparison::decreasing<T> );
+            for(size_t k=dims;k>0;--k)
+            {
+                prev[k] = curr[k];
+            }
+        }
+
+        virtual void start_() throw()
+        {
+            initialize();
+        }
+
+        virtual void next_() throw()
+        {
+
         }
 
         

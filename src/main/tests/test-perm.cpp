@@ -126,11 +126,16 @@ Y_UTEST(permuter)
     vector<uint16_t> data(n,5);
     for(size_t i=data.size();i>0;--i)
     {
-        data[i] = i;
+        data[i] = uint16_t( alea.leq(10) );
     }
 
     std::cerr << "data=" << data << std::endl;
     permuter<uint16_t> P( data );
     std::cerr << "P=" << P << std::endl;
+
+    std::cerr << "P.count=" << P.count << "/" << mpn::factorial(n) << std::endl;
+
+    
+
 }
 Y_UTEST_DONE()
