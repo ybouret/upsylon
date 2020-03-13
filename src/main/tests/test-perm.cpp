@@ -21,8 +21,9 @@ namespace {
         std::cerr << "<permops " << N << ">" << std::endl;
         size_t       wksp[N];
         size_t       addr[N];
-        size_t      *P = memory::io::__force<size_t>(wksp)-1;
+        size_t      *P     = memory::io::__force<size_t>(wksp)-1;
         const size_t count = mpn::factorial(N).cast<size_t>("#perm");
+        
         std::cerr << "count=" << count << std::endl;
         permops::init(P,N);
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
