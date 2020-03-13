@@ -23,7 +23,8 @@ namespace {
         size_t       wksp[N];
         size_t       addr[N];
         size_t      *P     = memory::io::__force<size_t>(wksp)-1;
-        const size_t count = mpn::factorial(N).cast_to<size_t>("#perm");
+        const mpn    np    = mpn::factorial(N);
+        const size_t count = np.cast_to<size_t>("#perm");
 
         std::cerr << "count=" << count << std::endl;
         core::counting::init(P,N);
@@ -122,13 +123,14 @@ Y_UTEST_DONE()
 Y_UTEST(permuter)
 {
     size_t n = 5;
-    vector<uint8_t> data(n,5);
+    vector<uint16_t> data(n,5);
     for(size_t i=data.size();i>0;--i)
     {
         data[i] = i;
     }
 
-    permuter<uint8_t> P( data );
-    
+    std::cerr << "data=" << data << std::endl;
+    permuter<uint16_t> P( data );
+    std::cerr << "P=" << P << std::endl;
 }
 Y_UTEST_DONE()

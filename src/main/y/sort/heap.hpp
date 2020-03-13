@@ -11,7 +11,6 @@
 namespace upsylon
 {
     
-
     //! heap sort
     template <typename T,typename FUNC>
     inline void hsort( addressable<T> &ra, FUNC &compare ) throw()
