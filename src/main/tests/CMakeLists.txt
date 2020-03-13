@@ -230,13 +230,14 @@ ADD_TEST(info:base64       test-main base64)
 ADD_TEST(info:codecs       test-main codecs)
 
 SOURCE_GROUP(data FILES
-test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-stree.cpp
+test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-stree.cpp test-suffix-store.cpp
 test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
 test-pq.cpp test-factory.cpp test-list.cpp test-suffix-tree.cpp)
 ADD_TEST(data:associative test-main associative)
 ADD_TEST(data:set         test-main set)
 ADD_TEST(data:map         test-main map)
 ADD_TEST(data:stree       test-main stree ${HERE}/words.db)
+ADD_TEST(data:store       test-main store)
 ADD_TEST(data:matrix      test-main matrix)
 ADD_TEST(data:slots       test-main slots)
 ADD_TEST(data:list        test-main list)

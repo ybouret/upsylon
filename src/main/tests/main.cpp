@@ -137,6 +137,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(map);
     Y_UTEST(set);
     Y_UTEST(stree);
+    Y_UTEST(store);
     Y_UTEST(strings);
     Y_UTEST(query);
 
