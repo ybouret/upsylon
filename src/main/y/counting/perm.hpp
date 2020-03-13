@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_COUNTING_PERM_INCLUDED
@@ -6,10 +5,10 @@
 
 #include "y/counting/counting.hpp"
 #include "y/sequence/addressable.hpp"
-#include "y/mpl/natural.hpp"
 
 namespace upsylon {
     
+
     //! permutations
     class permutation : public counting, public accessible<size_t>
     {
@@ -24,8 +23,8 @@ namespace upsylon {
         
         const size_t  n; //!< n
 
-        static mpn    compute(const size_t N, const with_mp_t &); //!< multi-precision count
-        static size_t compute(const size_t N, const with_sz_t &); //!< check overflow
+        static mpl::natural compute(const size_t N, const with_mp_t &); //!< multi-precision count
+        static size_t       compute(const size_t N, const with_sz_t &); //!< check overflow
         
         
         //! display
@@ -72,7 +71,6 @@ namespace upsylon {
 
 
     private:
-        const size_t nm1;
         size_t       wlen;
         size_t      *perm; //!< [1:n]
         size_t      *addr; //!< [0:n-1]

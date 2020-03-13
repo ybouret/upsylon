@@ -1,15 +1,60 @@
 
 #include "y/counting/permuter.hpp"
 #include "y/counting/perm.hpp"
+#include "y/counting/permops.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/type/ints-display.hpp"
+#include "y/mpl/natural.hpp"
+
+#include <iomanip>
 
 using namespace upsylon;
 
+namespace {
+
+    template <size_t N>
+    void test_permops()
+    {
+        std::cerr << "<permops " << N << ">" << std::endl;
+        size_t       wksp[N];
+        size_t       addr[N];
+        size_t      *P = wksp-1;
+        const size_t count = mpn::factorial(N).cast<size_t>("#perm");
+        std::cerr << "count=" << count << std::endl;
+        permops::init(P,N);
+        display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
+
+        permops::init(P,N,addr);
+        display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
+        display_int::to(std::cerr << "@init   $ ", addr, N, ",") << std::endl;
+
+        for(size_t i=2;i<=count;++i)
+        {
+            permops::to_C(addr,P,N);
+            display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",wksp,N,":") << std::endl;
+            display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",addr,N,",") << std::endl;
+
+        }
+
+        std::cerr << "<permops/>" << std::endl << std::endl;
+    }
+}
 
 Y_UTEST(perm)
 {
+
+    test_permops<1>();
+    test_permops<2>();
+    test_permops<3>();
+    if(false)
+    {
+        test_permops<4>();
+        test_permops<5>();
+        test_permops<6>();
+    }
+
     for(int iarg=1;iarg<argc;++iarg)
     {
         const size_t n =  string_convert::to<size_t>(argv[iarg]);

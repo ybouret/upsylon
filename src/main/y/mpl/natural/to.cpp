@@ -1,11 +1,15 @@
-
-
 #include "y/mpl/natural.hpp"
+#include "y/exceptions.hpp"
+#include <cerrno>
 
 namespace upsylon {
 
     namespace mpl {
 
+        void natural:: throw_cast_overflow(const char *when) const
+        {
+            throw libc::exception( ERANGE, "mpn.cast overflow %s", (when ? when : "!") );
+        }
 
 
 

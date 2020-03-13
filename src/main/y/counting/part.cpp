@@ -3,7 +3,6 @@
 #include "y/type/standard.hpp"
 #include "y/type/cswap.hpp"
 #include "y/exception.hpp"
-#include "y/memory/allocator.hpp"
 #include "y/counting/comb.hpp"
 
 namespace upsylon {
@@ -15,11 +14,10 @@ namespace upsylon {
     tmp(0),
     wlen(2*n*sizeof(size_t))
     {
-        static memory::allocator &mmgr = counting::mem_instance();
-        now = static_cast<size_t *>(mmgr.acquire(wlen));
-        assert(wlen/sizeof(size_t)>=2*n);
-        tmp    = (--now) + n;
+        now    = counting::acquire_(wlen);
+        tmp    = now + n;
         now[1] = n;
+
     }
 
 
@@ -74,7 +72,7 @@ namespace upsylon {
         {
             const size_t groupSize = self[i];
             const mpn    numCombis = combination::compute(remaining,groupSize,counting::with_mp);
-            nconf *= numCombis;
+            nconf     *= numCombis;
             remaining -= groupSize;
         }
 
@@ -116,10 +114,8 @@ namespace upsylon {
 
     integer_partition::~integer_partition() throw()
     {
-        static memory::allocator &mmgr = counting::mem_location();
         if(now>=tmp) cswap(now,tmp);
-        { void *addr = ++now;     mmgr.release(addr, wlen); }
-        now = 0;
+        counting::release_(now,wlen);
         tmp = 0;
         aliasing::_(n) = 0;
         aliasing::_(m) = 0;

@@ -53,7 +53,7 @@ Y_UTEST(part)
             ++count;
             std::cerr << pb << " ->";
             const mpn nc = pb.configs( counting::with_mp );
-            std::cerr << "+" << nc << "/" << permutation::compute(pb.size(), counting::with_mp )  << std::endl;
+            std::cerr << " +" << nc << std::endl;
             mpBell += nc;
             const size_t sz =pb.configs(counting::with_sz);
             szBell += sz;
