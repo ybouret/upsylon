@@ -148,7 +148,7 @@ namespace upsylon
                 assert(selfOuter.contains(subLayout));
                 assert(peerOuter.contains(subLayout));
                 typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
-                for(loop.start();loop.valid();loop.next())
+                for(loop.boot();loop.good();loop.next())
                 {
                     peerField.copyExternalObject( peerOuter.indexOf(loop.value) , *this, selfOuter.indexOf(loop.value) );
                 }
@@ -164,7 +164,7 @@ namespace upsylon
                 assert(selfOuter.contains(subLayout));
                 assert(peerOuter.contains(subLayout));
                 typename LAYOUT::Loop loop(subLayout.lower,subLayout.upper);
-                for(loop.start();loop.valid();loop.next())
+                for(loop.boot();loop.good();loop.next())
                 {
                     copyExternalObject( selfOuter.indexOf(loop.value), peerField, peerOuter.indexOf(loop.value) );
                 }

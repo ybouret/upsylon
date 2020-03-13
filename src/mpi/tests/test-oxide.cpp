@@ -34,7 +34,7 @@ namespace
                       typename FIELD::const_type &V )
     {
         typename Layout<COORD>::Loop loop(L.lower,L.upper);
-        for( loop.start(); loop.valid(); loop.next() )
+        for(loop.boot();loop.good();loop.next())
         {
             if(V!=F(loop.value)) throw exception("Mismatch Value");// %ld/%ld",long(F(loop.value)),long(V));
         }
@@ -92,7 +92,7 @@ void make_for(mpi                 &MPI,
         }
 
         typename Layout<COORD>::Loop pbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
-        for(pbc.start(); pbc.valid(); pbc.next())
+        for(pbc.boot(); pbc.good(); pbc.next())
         {
 
             size_t ghostsZone=1;
@@ -279,7 +279,7 @@ Y_UTEST(oxide)
     const Coord3D  top(2,2,2);
     Layout3D::Loop loop(org,top);
 
-    for( loop.start(); loop.valid(); loop.next() )
+    for( loop.boot(); loop.good(); loop.next() )
     {
         const Coord3D  upper = 8 * loop.value;
         const Layout1D full1D( lower.x, upper.x);
