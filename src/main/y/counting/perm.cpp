@@ -32,7 +32,7 @@ namespace upsylon
     perm( acquire_(wlen)       ),
     addr(perm+n+1)
     {
-        start();
+        boot();
     }
 
     permutation:: permutation(const permutation &other) :
@@ -61,7 +61,7 @@ namespace upsylon
     size_t permutation:: size() const throw() { return n; }
 
 
-    void permutation:: start_() throw()
+    void permutation:: onBoot() throw()
     {
         assert(1==index);
         core::counting::init(perm,n,addr);
@@ -69,7 +69,7 @@ namespace upsylon
 
    
 
-    void permutation:: next_()  throw()
+    void permutation:: onNext()  throw()
     {
         assert(index<=count);
         core::permutation::_nxt(perm,n);

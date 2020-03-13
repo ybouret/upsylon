@@ -28,12 +28,12 @@ Y_UTEST(scrabble)
         {
             size_t sub_total = 0;
             combination C(n,k);
-            for( C.start(); C.valid(); C.next() )
+            for( C.boot(); C.good(); C.next() )
             {
                 string choice;
                 for(size_t i=0;i<C.size();++i) choice << original[ C(i) ];
                 permutation P( C.size() );
-                for( P.start(); P.valid(); P.next() )
+                for( P.boot(); P.good(); P.next() )
                 {
                     string anagram;
                     for(size_t i=0;i<P.size();++i) anagram << choice[ P(i) ];

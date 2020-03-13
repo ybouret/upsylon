@@ -20,7 +20,7 @@ Y_UTEST(comb)
 
             vector<combination> Comb(comb.count,as_capacity);
 
-            for( comb.start(); comb.valid(); comb.next() )
+            for( comb.boot(); comb.good(); comb.next() )
             {
                 std::cerr << "\t" << comb;
                 std::cerr << " (";

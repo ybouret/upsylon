@@ -77,7 +77,7 @@ Y_UTEST(contour3d)
             const Edge3 org3( *pa, *pb, *pc );
 
             permutation perm(3);
-            for( perm.start(); perm.valid(); perm.next() )
+            for( perm.boot(); perm.good(); perm.next() )
             {
                 const Edge3 prm3( *org3.edge[ perm(0) ], *org3.edge[ perm(1) ],*org3.edge[ perm(2) ] );
                 Y_ASSERT(prm3==org3);
@@ -126,7 +126,7 @@ Y_UTEST(contour3d)
         
         Layout3D::Loop loop( L.lower, L.upper );
 
-        for( loop.start(); loop.valid(); loop.next() )
+        for(loop.boot();loop.good();loop.next())
         {
             const Coord3D &c = loop.value;
             const vertex   v = G(c);

@@ -1,4 +1,5 @@
 #include "y/counting/permuter.hpp"
+#include "y/counting/perm-ops.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/mpl/natural.hpp"
 #include "y/exceptions.hpp"
@@ -7,6 +8,8 @@
 namespace upsylon {
 
     namespace core {
+
+        static const char fn[] = "permuter";
 
         permuter:: ~permuter() throw()
         {
@@ -19,7 +22,7 @@ namespace upsylon {
         dims(n),
         perm(0)
         {
-            if(dims<=0) throw libc::exception(ERANGE,"permuter(0)");
+            if(dims<=0) throw libc::exception(ERANGE,"%s has no dimension",fn);
         }
 
         mpn permuter:: count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const
@@ -32,7 +35,7 @@ namespace upsylon {
                     const mpn den = mpn::factorial(rep->data);
                     if( ! res.is_divisible_by(den) )
                     {
-                        throw exception("permuter count corruption");
+                        throw exception("%s count corruption",fn);
                     }
                     res /= den;
                 }
@@ -47,7 +50,7 @@ namespace upsylon {
             size_t    res=0;
             if( !mp.as(res) )
             {
-                throw libc::exception( ERANGE, "permuter overflow for dims=%u", unsigned(dims) );
+                throw libc::exception( ERANGE, "%s overflow for dims=%u",fn,unsigned(dims));
             }
             return res;
         }
@@ -56,6 +59,17 @@ namespace upsylon {
         {
             core::counting::init(perm,dims);
         }
+
+        void permuter:: next_perm() throw()
+        {
+            core::permutation::next(perm,dims);
+        }
+
+        void permuter:: throw_invalid_first_key() const
+        {
+            throw exception("%s unexpected invalid first key!",fn);
+        }
+
 
     }
 

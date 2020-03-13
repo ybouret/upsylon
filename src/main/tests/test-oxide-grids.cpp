@@ -64,7 +64,7 @@ namespace {
         if(true)
         {
             typename Layout<COORD>::Loop loop(L.lower,L.upper);
-            for(loop.start(); loop.valid(); loop.next())
+            for(loop.boot();loop.good();loop.next())
             {
                 sgF(loop.value) = makeValue(sgf( loop.value ));
                 rgF(loop.value) = makeValue(rgf( loop.value ));

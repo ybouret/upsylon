@@ -31,9 +31,9 @@ namespace upsylon
         const size_t count; //!< number of possible objects
 
         virtual       ~counting()    throw();     //!< cleanup
-        bool           valid() const throw();     //!< index<=count after a start()
-        void           start()       throw();     //!< set index to 1 and call start_()
-        void           next()        throw();     //!< update index and call next_() if valid
+        bool           good()  const throw();     //!< index<=count after a start()
+        void           boot();                    //!< set index to 1 and call start_()
+        void           next();                    //!< update index and call next_() if valid
 
         //! check dimension>0
         static size_t chkdim(const size_t);
@@ -64,8 +64,8 @@ namespace upsylon
         
     private:
         Y_DISABLE_ASSIGN(counting);
-        virtual void start_()    throw() = 0; //!< initialize first objects
-        virtual void next_()     throw() = 0; //!< update next objects, index<=count
+        virtual void onBoot() = 0; //!< initialize first objects
+        virtual void onNext() = 0; //!< update next objects, index<=count
 
     };
 

@@ -29,7 +29,7 @@ Y_UTEST(phrases)
         progress          bar;
         bar.start();
         double old = bar.query();
-        for( perm.start(); perm.valid(); perm.next() )
+        for( perm.boot(); perm.good(); perm.next())
         {
 
             perm.apply(*motif,*alphabet);

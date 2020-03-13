@@ -175,7 +175,7 @@ namespace upsylon
         {
             combination  comb(n,k);
             (size_t &) amount = comb.count;
-            for( comb.start(); comb.valid(); comb.next() )
+            for(comb.boot(); comb.good(); comb.next())
             {
                 G.push_back( new_group_from(comb) );
             }

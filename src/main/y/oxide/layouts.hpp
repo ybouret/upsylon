@@ -370,7 +370,7 @@ namespace upsylon {
                     coord __lo(0); Coord::Ld(__lo,-1);
                     coord __up(0); Coord::Ld(__up, 1);
                     typename LayoutType::Loop loop(__lo,__up);
-                    loop.start();
+                    loop.boot();
 
                     for( size_t j=0; j<Orientations; ++j, loop.next() )
                     {
@@ -469,18 +469,18 @@ namespace upsylon {
                     // first pass: count and allocate
                     {
                         size_t count = 0;
-                        for(loop.start();loop.valid();loop.next()) if( !center->has( loop.value ) ) ++count;
+                        for(loop.boot();loop.good();loop.next()) if( !center->has( loop.value ) ) ++count;
                         seq.ensure(count);
                     }
                     // second pass: load
-                    for(loop.start();loop.valid();loop.next()) if( !center->has( loop.value ) ) seq.push_back(loop.value);
+                    for(loop.boot();loop.good();loop.next()) if( !center->has( loop.value ) ) seq.push_back(loop.value);
 
                 }
                 else
                 {
                     // everybody is border
                     seq.ensure( inner.items );
-                    for(loop.start();loop.valid();loop.next()) seq.push_back( loop.value );
+                    for(loop.boot();loop.good();loop.next()) seq.push_back( loop.value );
                 }
             }
 

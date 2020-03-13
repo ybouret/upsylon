@@ -228,7 +228,7 @@ namespace upsylon
                 {                                                  //
                     Loop       loop(sub.lower,sub.upper);          // make the loop
                     indices.ensure( indices.size() + loop.count ); // adjust memory
-                    for(loop.start();loop.valid();loop.next())     // loop on sub coordinates
+                    for(loop.boot();loop.good();loop.next())       // loop on sub coordinates
                     {                                              //
                         indices.push_back( indexOf(loop.value) );  //
                     }                                              //
@@ -290,7 +290,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // check all possible values
                 //--------------------------------------------------------------
-                for(loop.start();loop.valid();loop.next())
+                for(loop.boot();loop.good();loop.next())
                 {
                     //----------------------------------------------------------
                     // check number of cores

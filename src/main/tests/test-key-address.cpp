@@ -32,7 +32,7 @@ Y_UTEST(key_address)
     {
         const key_address<3> K3( a[0], a[1], a[2] );
         permutation          perm(3);
-        for( perm.start(); perm.valid(); perm.next() )
+        for( perm.boot(); perm.good(); perm.next() )
         {
             const key_address<3> tmp( a[ perm(0) ], a[ perm(1) ], a[ perm(2) ] );
             Y_CHECK(tmp==K3);
@@ -43,7 +43,7 @@ Y_UTEST(key_address)
     {
         const key_address<4> K4( a[0], a[1], a[2], a[3] );
         permutation          perm(4);
-        for( perm.start(); perm.valid(); perm.next() )
+        for( perm.boot(); perm.good(); perm.next())
         {
             const key_address<4> tmp( a[ perm(0) ], a[ perm(1) ], a[ perm(2) ], a[ perm(3) ] );
             Y_CHECK(tmp==K4);

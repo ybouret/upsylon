@@ -61,7 +61,7 @@ Y_UTEST(part)
             permutation          perm( pb.size() );
             hashing::sha1        H;
             vec_t p( perm.size(), 0 );
-            for( perm.start(); perm.valid(); perm.next() )
+            for( perm.boot(); perm.good(); perm.next() )
             {
                 perm.make(p,pb);
                 const key_t k = H.key<key_t>(p);

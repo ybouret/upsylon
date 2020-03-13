@@ -20,7 +20,7 @@ namespace upsylon
     {
     }
     
-    bool counting:: valid() const throw()
+    bool counting:: good() const throw()
     {
         assert(index>0);
         return (index<=count);
@@ -75,15 +75,22 @@ namespace upsylon
         return os;
     }
 
-    void counting:: start() throw()
+    void counting:: boot()
     {
         aliasing::_(index) = 1;
-        start_();
+        onBoot();
     }
 
-    void counting:: next() throw()
+    void counting:: next()
     {
-        if( ++aliasing::_(index) <= count ) next_();
+        try {
+            if( ++aliasing::_(index) <= count ) onNext();
+        }
+        catch(...)
+        {
+            --aliasing::_(index);
+            throw;
+        }
     }
 
 }

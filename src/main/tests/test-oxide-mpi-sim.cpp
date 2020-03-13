@@ -41,7 +41,7 @@ namespace
     void CheckValueOf( const FIELD &F, const Layout<COORD> &L, typename FIELD::const_type V )
     {
         typename Layout<COORD>::Loop loop(L.lower,L.upper);
-        for( loop.start(); loop.valid(); loop.next() )
+        for(loop.boot();loop.good();loop.next())
         {
             if(V!=F(loop.value)) throw exception("Mismatch Value %ld/%ld",long(F(loop.value)),long(V));
         }
@@ -75,7 +75,7 @@ namespace
                 std::cerr << "/mapping=" << mappings[j];
 
                 typename Layout<COORD>::Loop pbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
-                for(pbc.start(); pbc.valid(); pbc.next())
+                for(pbc.boot(); pbc.good(); pbc.next())
                 {
                     std::cerr << ".";
 
@@ -227,7 +227,7 @@ Y_UTEST(oxide_mpi)
     const Coord3D  top(2,2,2);
     Layout3D::Loop loop(org,top);
 
-    for( loop.start(); loop.valid(); loop.next() )
+    for(loop.boot();loop.good();loop.next())
     {
         const Coord3D  upper = lower + 4 * loop.value;
         const Layout1D full1D( lower.x, upper.x);

@@ -28,7 +28,7 @@ namespace {
     {
         std::cerr << "|_In " << full.Dimensions << "D for " << full << std::endl;
         typename Layout<COORD>::Loop pbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
-        for(pbc.start(); pbc.valid(); pbc.next())
+        for(pbc.boot(); pbc.good(); pbc.next())
         {
             std::cerr << " |_boundaries=" << pbc.value << std::endl;
             std::cerr << " |_preferred =" << preferred << ": ";

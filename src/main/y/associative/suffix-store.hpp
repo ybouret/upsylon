@@ -5,9 +5,11 @@
 #define Y_SUFFIX_STORE_INCLUDED 1
 
 #include "y/core/list.hpp"
+#include "y/core/pool.hpp"
 #include "y/type/args.hpp"
 #include "y/object.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
@@ -18,6 +20,7 @@ namespace upsylon {
         Y_DECL_ARGS(T,type);
         class node_type;
         typedef core::list_of_cpp<node_type> node_list;
+        typedef core::pool_of_cpp<node_type> node_pool;
 
         class node_type : public object
         {
@@ -37,16 +40,30 @@ namespace upsylon {
             {
             }
 
+            void free_into(node_pool &cache) throw()
+            {
+                while(chld.size)
+                {
+                    cache.store(chld.pop_back())->free_into(cache);
+                }
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
         };
 
         inline explicit suffix_store() :
         root( new node_type(0) ),
+        cache(),
         nodes(1)
         {
         }
 
+        void free() throw()
+        {
+            root->free_into(cache);
+            aliasing::_(nodes) = 1;
+        }
 
         inline virtual ~suffix_store() throw()
         {
@@ -94,7 +111,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 if(!found)
                 {
-                    curr = curr->chld.push_back( new node_type(code) );
+                    curr = curr->chld.push_back( query_node(code) );
                     ++aliasing::_(nodes);
                 }
             }
@@ -116,8 +133,25 @@ namespace upsylon {
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_store);
         node_type *root;
+
+        inline node_type *query_node( const_type code )
+        {
+            if(cache.size>0)
+            {
+                node_type *node = cache.query();
+                aliasing::_(node->code) = code;
+                node->used              = false;
+                return node;
+            }
+            else
+            {
+                return new node_type(code);
+            }
+        }
+
     public:
-        const size_t nodes;
+        node_pool    cache;
+        const size_t nodes; //!< number of nodes into tree
     };
 
 }

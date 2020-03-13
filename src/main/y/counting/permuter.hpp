@@ -32,7 +32,9 @@ namespace upsylon {
             size_t      *perm;
 
             void init_perm() throw(); //!< reset perm
+            void next_perm() throw(); //!< compute valid next permutation
 
+            void throw_invalid_first_key() const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(permuter);
@@ -47,21 +49,24 @@ namespace upsylon {
 #include "y/memory/allocator.hpp"
 #include "y/memory/embed.hpp"
 #include "y/sequence/array.hpp"
+#include "y/associative/suffix-store.hpp"
 
 namespace upsylon {
 
 #define Y_PERMUTER_CTOR(N) \
-core::permuter(N),\
-curr(0),  \
-prev(0),  \
-wksp(0),  \
+core::permuter(N),         \
+target(0),                 \
+source(0),                 \
+wksp(0),                   \
 wlen(0)
 
 
 
     //! permuter of integral type
     template <typename T>
-    class permuter : public core::permuter, public accessible<T>
+    class permuter :
+    public core::permuter,
+    public accessible<T>
     {
     public:
         Y_DECL_ARGS(T,type);
@@ -84,17 +89,21 @@ wlen(0)
         {
             assert(index>0);
             assert(index<=dims);
-            return curr[index];
+            return target[index];
         }
 
+        inline const suffix_store<type> & store() const throw()
+        {
+            return kstore;
+        }
 
-        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(permuter);
-        T           *curr;
-        T           *prev;
-        void        *wksp;
-        size_t       wlen;
+        mutable_type       *target;
+        mutable_type       *source;
+        suffix_store<type>  kstore;
+        void               *wksp;
+        size_t              wlen;
 
 
         // release all memoru
@@ -112,26 +121,26 @@ wlen(0)
                 initialize();
 
                 // check repetitions
+                repeats reps;
                 {
-                    repeats reps;
+                    size_t       i = dims;
+                    while(i>0)
                     {
-                        size_t       i = dims;
-                        while(i>0)
+                        const_type & t = source[i];
+                        size_t       j = i-1;
+                        while(j>0&&source[j]== t)
                         {
-                            const_type & t = curr[i];
-                            size_t       j = i-1;
-                            while(j>0&&curr[j]== t)
-                            {
-                                --j;
-                            }
-                            const size_t num = i-j;
-                            i=j;
-                            std::cerr << '(' << t << ')' << 'x' << num << std::endl;
-                            if(num>1) reps << num;
+                            --j;
                         }
+                        const size_t num = i-j;
+                        i=j;
+                        if(num>1) reps << num;
                     }
-                    aliasing::_(count) = count_with(reps,counting::with_sz);
                 }
+
+                // computing effective number of permutations
+                aliasing::_(count) = count_with(reps,counting::with_sz);
+
             }
             catch(...)
             {
@@ -145,45 +154,62 @@ wlen(0)
             assert( seq.size() >= dims );
             for(size_t i=dims;i>0;--i)
             {
-                curr[i] = seq[i];
+                source[i] = seq[i];
             }
+            lightweight_array<mutable_type> arr( &source[1], dims);
+            hsort(arr, comparison::decreasing<mutable_type> );
 
         }
 
+        // allocated memory
         void setup_memory()
         {
             static memory::allocator &mmgr = counting::mem_instance();
             memory::embed emb[] =
             {
-                memory::embed::as(curr,dims),
-                memory::embed::as(prev,dims),
+                memory::embed::as(target,dims),
+                memory::embed::as(source,dims),
                 memory::embed::as(perm,dims)
             };
             wksp = memory::embed::create(emb,sizeof(emb)/sizeof(emb[0]),mmgr,wlen);
-            --curr;
-            --prev;
+            --target;
+            --source;
             --perm;
         }
 
-        void initialize() throw()
+        // make default permutation and target=source
+        void initialize()  
         {
             init_perm();
-            lightweight_array<T> arr( &curr[1], dims);
-            hsort(arr, comparison::decreasing<T> );
+            kstore.free();
             for(size_t k=dims;k>0;--k)
             {
-                prev[k] = curr[k];
+                assert(k==perm[k]);
+                target[k] = source[k];
+            }
+            if( !kstore.insert(target,dims) )
+            {
+                throw_invalid_first_key();
             }
         }
 
-        virtual void start_() throw()
+        virtual void onBoot()
         {
             initialize();
         }
 
-        virtual void next_() throw()
+        virtual void onNext()  
         {
-
+            assert(index<=count);
+            do
+            {
+                next_perm();
+                for(size_t k=dims;k>0;--k)
+                {
+                    target[k] = source[ perm[k] ];
+                }
+            }
+            while( !kstore.insert(target,dims) );
         }
 
         

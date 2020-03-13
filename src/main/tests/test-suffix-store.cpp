@@ -52,7 +52,7 @@ Y_UTEST(store)
     std::cerr << "        = " << s64.nodes << " -> " << s64.nodes * sizeof(suffix_store<uint64_t>::node_type) <<std::endl;
 
     std::cerr << "#bytes  = " << total    << std::endl;
-
+    
 }
 Y_UTEST_DONE()
 

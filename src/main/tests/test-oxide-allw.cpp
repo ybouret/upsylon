@@ -46,7 +46,7 @@ namespace
             {
                 std::cerr << "/mapping=" << mappings[j];
                 typename Layout<COORD>::Loop pbc( Coord::Zero<COORD>(), Coord::Ones<COORD>() );
-                for(pbc.start(); pbc.valid(); pbc.next())
+                for(pbc.boot(); pbc.good(); pbc.next())
                 {
                     for(size_t rank=0;rank<size;++rank)
                     {
@@ -105,7 +105,7 @@ Y_UTEST(oxide_allw)
     const Coord3D  top(2,2,2);
     Layout3D::Loop loop(org,top);
 
-    for( loop.start(); loop.valid(); loop.next() )
+    for( loop.boot(); loop.good(); loop.next() )
     {
         const Coord3D  upper = lower + 4 * loop.value;
         const Layout1D full1D( lower.x, upper.x);

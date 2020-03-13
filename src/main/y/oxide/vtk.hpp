@@ -141,7 +141,7 @@ namespace upsylon {
                 typename LAYOUT::Loop loop(L.lower,L.upper);
                 for(size_t r=0;r<repeat;++r)
                 {
-                    for( loop.start(); loop.valid(); loop.next() )
+                    for(loop.boot();loop.good();loop.next())
                     {
                         (*this.*write1)(fp,writer, & F(loop.value) );
                     }

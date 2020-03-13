@@ -31,7 +31,7 @@ namespace upsylon
             {
                 assert(F.contains(L));
                 typename FIELD::LayoutType::Loop loop(L.lower,L.upper);
-                for( loop.start(); loop.valid(); loop.next() )
+                for(loop.boot();loop.good();loop.next())
                 {
                     F( loop.value ) = V;
                 }

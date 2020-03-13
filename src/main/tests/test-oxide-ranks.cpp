@@ -21,7 +21,7 @@ void do_ranks( const COORD &sizes )
         Coord::Of(top,dim) =  Coord::Of(sizes,dim) - 1;
     }
     mloop<Coord1D,COORD> loop(org,top);
-    for(loop.start();loop.valid();loop.next())
+    for(loop.boot();loop.good();loop.next())
     {
         const Coord1D rank  = Coord::GlobalRank(sizes,loop.value);
         Y_ASSERT(rank==Coord1D(loop.index-1));

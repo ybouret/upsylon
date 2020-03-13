@@ -15,7 +15,7 @@ namespace upsylon {
     base( comb+k )
     {
         ++base;
-        start();
+        boot();
     }
 
     combination:: combination(const combination &other) :
@@ -48,7 +48,7 @@ namespace upsylon {
         _bzset(k);
     }
 
-    void combination:: start_() throw()
+    void combination:: onBoot() throw()
     {
         assert(1==index);
         for(size_t i=k;i>0;)
@@ -60,7 +60,7 @@ namespace upsylon {
     }
 
     
-    void combination:: next_() throw()
+    void combination:: onNext() throw()
     {
         assert(index<=count);
         

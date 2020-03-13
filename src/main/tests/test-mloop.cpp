@@ -16,7 +16,7 @@ namespace
 
         vector< core::mloop<T> > loops(loop.count,as_capacity);
 
-        for( loop.start(); loop.valid(); loop.next() )
+        for( loop.boot(); loop.good(); loop.next() )
         {
             loops.push_back_(loop);
             //std::cerr << "loop@" << loop.index << ": " << loop << std::endl;
@@ -62,7 +62,7 @@ namespace
         vector< core::mloop<typename LOOP::type> > loops(loop.count,as_capacity);
 
         std::cerr << "<" << loop.lower << "->" << loop.upper << ">" << std::endl;
-        for( loop.start(); loop.valid(); loop.next() )
+        for( loop.boot(); loop.good(); loop.next() )
         {
             std::cerr << "\t@" << loop.index << " : " << loop.value << " <= " << loop << std::endl;
             loops.push_back_(loop);

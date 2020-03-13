@@ -31,7 +31,7 @@ namespace
         std::cerr << "full=" << full << std::endl;
 
         vector<COORD> mappings;
-        for(pbc.start(); pbc.valid(); pbc.next() )
+        for(pbc.boot(); pbc.good(); pbc.next() )
         {
             std::cerr << "|_pbc=" << pbc.value << std::endl;
             const COORD opt =  Divide::Find(full, cores, pbc.value, &mappings);
@@ -93,7 +93,7 @@ namespace
             Coord::Ld(top,cores);
             mloop<Coord1D,COORD> loop( org, top );
 
-            for( loop.start(); loop.valid(); loop.next() )
+            for(loop.boot();loop.good();loop.next())
             {
                 if( cores == size_t( Coord::Product(loop.value) ) )
                 {

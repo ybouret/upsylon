@@ -99,7 +99,7 @@ namespace upsylon {
                 const Grid  &self = *this;
                 Loop        loop(self.lower,self.upper);
 
-                loop.start();
+                loop.boot();
                 lo = hi = self(loop.value);
 
 
@@ -107,7 +107,7 @@ namespace upsylon {
                     mutable_type *l = (mutable_type *) &lo;
                     mutable_type *h = (mutable_type *) &hi;
 
-                    for(loop.next();loop.valid();loop.next())
+                    for(loop.next();loop.good();loop.next())
                     {
                         const vertex tmp = self(loop.value);
                         const_type  *t   = (const_type *) &tmp;

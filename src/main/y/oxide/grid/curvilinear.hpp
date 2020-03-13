@@ -152,7 +152,7 @@ namespace upsylon {
                 }
 
                 typename LayoutType::Loop loop(sub.lower,sub.upper);
-                for( loop.start(); loop.valid(); loop.next() )
+                for( loop.boot();loop.good();loop.next() )
                 {
                     const_coord &c = loop.value;
                     for(size_t dim=0;dim<Dimensions;++dim)
@@ -242,7 +242,7 @@ namespace upsylon {
                 for(size_t k=0;k<4;++k)
                 {
                     local_vertex &v = xyz[k];
-                    for(loop.start();loop.valid();loop.next())
+                    for(loop.boot();loop.good();loop.next())
                     {
                         v.x = self(loop.value);
                         VTK(fp,v) << '\n';
@@ -260,7 +260,7 @@ namespace upsylon {
                 for(size_t k=0;k<2;++k)
                 {
                     const_type z = Z[k];
-                    for( loop.start(); loop.valid(); loop.next() )
+                    for(loop.boot();loop.good();loop.next())
                     {
                         const vertex v = self(loop.value);
                         VTK(VTK(fp,v) << ' ',z) << '\n';
@@ -273,7 +273,7 @@ namespace upsylon {
             {
                 const GridType &self = *this;
                 Loop            loop(sub.lower,sub.upper);
-                for( loop.start(); loop.valid(); loop.next() )
+                for(loop.boot();loop.good();loop.next())
                 {
                     const vertex v = self(loop.value);
                     VTK(fp,v) << '\n';

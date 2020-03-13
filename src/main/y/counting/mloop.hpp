@@ -122,7 +122,7 @@ data(0)
             Y_DISABLE_ASSIGN(mloop);
 
 
-            virtual void start_() throw()
+            virtual void onBoot() throw()
             {
                 assert(1==index);
                 for(size_t i=0;i<dimensions;++i)
@@ -131,7 +131,7 @@ data(0)
                 }
             }
 
-            virtual void next_() throw()
+            virtual void onNext() throw()
             {
                 assert(index<=count);
                 recursive_update(0);
@@ -260,7 +260,7 @@ data(0)
         inline void reset(const_coord &ini, const_coord &end)
         {
             this->setup( (const type *)&ini, (const type *)&end );
-            this->start();
+            this->boot();
         }
 
 

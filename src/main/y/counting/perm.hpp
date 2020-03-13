@@ -76,8 +76,8 @@ namespace upsylon {
         size_t      *addr; //!< [0:n-1]
         
         Y_DISABLE_ASSIGN(permutation);
-        virtual void start_() throw(); //!< index=1, perm=[1..n]
-        virtual void next_()  throw(); //!< find next one
+        virtual void onBoot() throw(); //!< index=1, perm=[1..n]
+        virtual void onNext()  throw(); //!< find next one
     };
     
     

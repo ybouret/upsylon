@@ -89,7 +89,7 @@ namespace upsylon
                 assert(outer.contains(inner));
                 typename LAYOUT::Loop loop(inner.lower,inner.upper);
                 size_t total = 0;
-                for(loop.start();loop.valid();loop.next())
+                for(loop.boot();loop.good();loop.next())
                 {
                     total += save(fp, outer.indexOf(loop.value) );
                 }
@@ -103,7 +103,7 @@ namespace upsylon
                 assert(outer.contains(inner));
                 typename LAYOUT::Loop loop(inner.lower,inner.upper);
                 size_t total = 0;
-                for(loop.start();loop.valid();loop.next())
+                for(loop.boot();loop.good();loop.next())
                 {
                     total += load(fp, outer.indexOf(loop.value)  );
                 }

@@ -109,7 +109,7 @@ Y_UTEST(contour2d)
 
         {
             Oxide::Layout2D::Loop loop(V.lower,V.upper);
-            for( loop.start(); loop.valid(); loop.next() )
+            for(loop.boot();loop.good();loop.next())
             {
                 const p2d p( x[loop.value.x], y[loop.value.y] );
                 const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1f);
@@ -192,7 +192,7 @@ Y_UTEST(contour2d)
 
         {
             Oxide::Layout2D::Loop loop(V.lower,V.upper);
-            for( loop.start(); loop.valid(); loop.next() )
+            for(loop.boot();loop.good();loop.next())
             {
                 const p2d p( x[loop.value.x], y[loop.value.y] );
                 const float v1 = 1.0f/(sqrtf((p-p1).norm2())+0.1f);

@@ -68,7 +68,7 @@ Y_UTEST(perm)
         vector<permutation> Perm( perm.count, as_capacity );
 
         std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
-        for( perm.start(); perm.valid(); perm.next() )
+        for( perm.boot(); perm.good(); perm.next() )
         {
             std::cerr << "\t" << perm;
             std::cerr << " (";
@@ -99,7 +99,7 @@ Y_UTEST(anagram)
         const size_t num = org.length();
         permutation  perm(num);
         vector<string> all( perm.count, as_capacity );
-        for( perm.start(); perm.valid(); perm.next() )
+        for( perm.boot(); perm.good(); perm.next() )
         {
             string ana;
             for(size_t i=0;i<perm.n;++i)
@@ -127,18 +127,31 @@ Y_UTEST(permuter)
     {
         n = string_convert::to<size_t>(argv[1],"n");
     }
-    vector<uint16_t> data(n,5);
-    for(size_t i=data.size();i>0;--i)
+
+    size_t m = 10;
+    if(argc>2)
     {
-        data[i] = uint16_t( alea.leq(10) );
+        m = string_convert::to<size_t>(argv[2],"m");
     }
 
-    std::cerr << "data=" << data << std::endl;
+    vector<uint16_t> data(n,0);
+    for(size_t i=data.size();i>0;--i)
+    {
+        data[i] = uint16_t( alea.leq(m) );
+    }
     permuter<uint16_t> P( data );
-    std::cerr << "P =" << P << std::endl;
-    std::cerr << "#P=" << P.count << "/" << mpn::factorial(n) << std::endl;
 
+    std::cerr << "data= " << data << std::endl;
+    std::cerr << "P   = " << P << std::endl;
+    std::cerr << "#P  = " << P.count << "/" << mpn::factorial(n) << std::endl;
+    for( P.boot(); P.good(); P.next() )
+    {
+        std::cerr << P << " | #nodes = " << P.store().nodes << " | cache=" << P.store().cache.size << std::endl;
+    }
+    std::cerr << "#P  = " << P.count << "/" << mpn::factorial(n) << std::endl;
+    std::cerr << "Rebooting..." << std::endl;
+    P.boot();
+    std::cerr << P << " | #nodes = " << P.store().nodes << " | cache=" << P.store().cache.size << std::endl;
     
-
 }
 Y_UTEST_DONE()
