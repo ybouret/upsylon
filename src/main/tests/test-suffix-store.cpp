@@ -46,10 +46,10 @@ Y_UTEST(store)
     }
 
 
-    std::cerr << "#nodes  = " << s8.nodes  << std::endl;
-    std::cerr << "        = " << s16.nodes << std::endl;
-    std::cerr << "        = " << s32.nodes << std::endl;
-    std::cerr << "        = " << s64.nodes << std::endl;
+    std::cerr << "#nodes  = " << s8.nodes  << " -> " <<  s8.nodes * sizeof(suffix_store<uint8_t>::node_type) << std::endl;
+    std::cerr << "        = " << s16.nodes << " -> " << s16.nodes * sizeof(suffix_store<uint16_t>::node_type) <<std::endl;
+    std::cerr << "        = " << s32.nodes << " -> " << s32.nodes * sizeof(suffix_store<uint32_t>::node_type) <<std::endl;
+    std::cerr << "        = " << s64.nodes << " -> " << s64.nodes * sizeof(suffix_store<uint64_t>::node_type) <<std::endl;
 
     std::cerr << "#bytes  = " << total    << std::endl;
 

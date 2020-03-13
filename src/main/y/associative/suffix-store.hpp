@@ -43,7 +43,7 @@ namespace upsylon {
 
         inline explicit suffix_store() :
         root( new node_type(0) ),
-        nodes(0)
+        nodes(1)
         {
         }
 
