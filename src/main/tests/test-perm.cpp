@@ -96,33 +96,6 @@ Y_UTEST(perm)
 }
 Y_UTEST_DONE()
 
-#include "y/sort/unique.hpp"
-Y_UTEST(anagram)
-{
-    if(argc>1)
-    {
-        const string org = argv[1];
-        const size_t num = org.length();
-        permutation  perm(num);
-        vector<string> all( perm.count, as_capacity );
-        for( perm.boot(); perm.good(); perm.next() )
-        {
-            string ana;
-            for(size_t i=0;i<perm.n;++i)
-            {
-                ana << org[ perm(i) ];
-            }
-            all << ana;
-        }
-        unique(all);
-        for(size_t i=1;i<=all.size();++i)
-        {
-            std::cerr << all[i] << std::endl;
-        }
-    }
-    
-}
-Y_UTEST_DONE()
 
 #include "y/counting/permuter.hpp"
 #include "y/ios/ocstream.hpp"
