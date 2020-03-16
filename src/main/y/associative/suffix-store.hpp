@@ -13,33 +13,36 @@
 
 namespace upsylon {
 
+    //! fast suffix store to keep track of keys
     template <typename T>
     class suffix_store
     {
     public:
-        Y_DECL_ARGS(T,type);
-        class node_type;
-        typedef core::list_of_cpp<node_type> node_list;
-        typedef core::pool_of_cpp<node_type> node_pool;
+        Y_DECL_ARGS(T,type);                            //!< aliases
+        class node_type;                                //!< forward declaration
+        typedef core::list_of_cpp<node_type> node_list; //!< list of tree nodes
+        typedef core::pool_of_cpp<node_type> node_pool; //!< pool of tree nodes
 
+        //! tree node
         class node_type : public object
         {
         public:
-            node_type  *next;
-            node_type  *prev;
-            node_list   chld;
-            bool        used;
-            const_type  code;
+            node_type  *next; //!< for list
+            node_type  *prev; //!< for list
+            node_list   chld; //!< for tree
+            bool        used; //!< flag to check used/unused node
+            const_type  code; //!< current code
 
+            //! setup
             inline explicit node_type(const_type args) throw() :
             next(0), prev(0), chld(), used(false), code(args)
             {
             }
+            
+            //! cleanup
+            inline virtual ~node_type() throw() { }
 
-            inline virtual ~node_type() throw()
-            {
-            }
-
+            //! recursive garbage collection
             void free_into(node_pool &cache) throw()
             {
                 while(chld.size)
@@ -52,6 +55,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
         };
 
+        //! setup
         inline explicit suffix_store() :
         root( new node_type(0) ),
         cache(),
@@ -59,12 +63,14 @@ namespace upsylon {
         {
         }
 
+        //! free all sub-nodes
         void free() throw()
         {
             root->free_into(cache);
             aliasing::_(nodes) = 1;
         }
 
+        //! cleanup
         inline virtual ~suffix_store() throw()
         {
             delete root;
@@ -72,6 +78,7 @@ namespace upsylon {
             aliasing::_(nodes) = 0;
         }
 
+        //! generic insertion following and iterator
         template <typename ITERATOR>
         bool insert(ITERATOR     path_iter,
                     size_t       path_size)
@@ -150,7 +157,7 @@ namespace upsylon {
         }
 
     public:
-        node_pool    cache;
+        node_pool    cache; //!< cache of unused nodes
         const size_t nodes; //!< number of nodes into tree
     };
 

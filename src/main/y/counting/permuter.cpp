@@ -68,7 +68,7 @@ namespace upsylon {
             core::permutation::next(perm,dims);
         }
 
-        void permuter:: throw_invalid_first_key() const
+        void permuter:: invalid_first_key() const
         {
             throw exception("%s unexpected invalid first key!",fn);
         }

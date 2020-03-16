@@ -9,8 +9,7 @@
 
 namespace upsylon {
 
-
-
+    
     //! iterate on possible decomposition of a given integer
     class integer_partition : public accessible<size_t>
     {

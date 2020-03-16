@@ -1,12 +1,9 @@
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
-#include "y/counting/perm.hpp"
-#include "y/counting/comb.hpp"
+#include "y/counting/part.hpp"
+#include "y/counting/permuter.hpp"
 #include "y/ios/icstream.hpp"
-#include "y/associative/suffix-tree.hpp"
-#include "y/os/progress.hpp"
-#include "y/core/node.hpp"
-#include "y/ptr/arc.hpp"
+#include "y/associative/suffix-table.hpp"
 
 using namespace upsylon;
 
@@ -20,39 +17,41 @@ Y_UTEST(phrases)
 {
     if(argc>1)
     {
-        const string      alphabet = argv[1];
-        const size_t      letters  = alphabet.size(); std::cerr << "'" << alphabet << "'" << std::endl; std::cerr << "#card=" << letters << std::endl;
-        permutation       perm(letters);              std::cerr << "#perm=" << perm.count << std::endl;
-        suffix_tree<bool> dict(perm.count,as_capacity);
-        string            motif(letters,as_capacity,true);
+        const string                alphabet = argv[1];
+        const size_t                letters  = alphabet.size();
+        permuter<char>              perm( *alphabet, alphabet.size() );
+        integer_partition           part(letters);
 
-        progress          bar;
-        bar.start();
-        double old = bar.query();
-        for( perm.boot(); perm.good(); perm.next())
+        std::cerr << "#permutation : " << perm.count      << std::endl;
+        std::cerr << "#outcome     : " << part.outcomes() << std::endl;
+        suffix_table<string,string> dict;
+        if(argc>2)
         {
-
-            perm.apply(*motif,*alphabet);
-            if(!dict.insert_by(motif,true))
+            ios::icstream fp( argv[2] );
+            string        line;
+            while(fp.gets(line))
             {
-                continue;
+                (void) dict.insert(line,line);
             }
-
-            if( bar.query() - old >= 0.5 )
-            {
-                bar.update(perm.index, perm.count);
-                bar.display(std::cerr) << '\r';
-                old = bar.query();
-            }
-
-
+            std::cerr << "#dict=" << dict.size() << std::endl;
         }
-        bar.update(1.0);
-        bar.display(std::cerr) << std::endl;
-        std::cerr << "found [" << dict.entries() << "/" << perm.count << "]" << std::endl;
-
-
-
+        
+        do
+        {
+            std::cerr << "<" << part << ">" << std::endl;
+            permuter<size_t> block( part );
+            std::cerr << "_#blocks=" << block.count << std::endl;
+            
+            for( block.boot(); block.good(); block.next() )
+            {
+                std::cerr << "\t-> " << block << std::endl;
+            }
+            
+        } while(part.build_next());
+        
+        
+        
+        
 
     }
 }

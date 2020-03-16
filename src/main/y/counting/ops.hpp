@@ -9,6 +9,7 @@ namespace upsylon  {
 
     namespace core {
 
+        //! basic functions to init arrays
         struct counting
         {
             static void init(size_t *p, const size_t n)                  throw(); //!< p[1..n]=1..n

@@ -14,30 +14,34 @@ namespace upsylon {
     
     namespace core {
         
+        //! base class for object permuter
         class permuter : public upsylon::counting
         {
         public:
-            typedef core::cpp_node_of<size_t> repeat;
-            typedef core::list_of_cpp<repeat> repeats;
+            typedef core::cpp_node_of<size_t> repeat;  //!< multiple number count
+            typedef core::list_of_cpp<repeat> repeats; //!< repeats decomposition
             
+            //! cleanup
             virtual ~permuter() throw();
             
             //! count and set weak
             mpl::natural count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const;
+          
+            //! converting from mp version
             size_t       count_with(const repeats &reps, const upsylon::counting::with_sz_t &) const;
             
-            const size_t dims;
-            const bool   weak;
+            const size_t dims; //!< 1..dims objects
+            const bool   weak; //!< weak if there are some repeats
             
         protected:
+            //! setup, just check that dims=n>0
             explicit permuter(const size_t n);
             
-            size_t      *perm;
+            size_t      *perm; //!< user's set perm [1...dims]
             
-            void init_perm() throw(); //!< reset perm
-            void next_perm() throw(); //!< compute valid next permutation
-            
-            void throw_invalid_first_key() const;
+            void init_perm() throw();        //!< reset perm
+            void next_perm() throw();       //!< compute valid next permutation
+            void invalid_first_key() const; //!< shouldn't happen
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(permuter);
@@ -56,6 +60,7 @@ namespace upsylon {
 
 namespace upsylon {
     
+    //! setup permuter for N items
 #define Y_PERMUTER_CTOR(N) \
 core::permuter(N),         \
 target(0),                 \
@@ -73,40 +78,57 @@ wlen(0)
     public accessible<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
-        typedef suffix_store<type> store_type;
+        Y_DECL_ARGS(T,type);                    //!< aliases
+        typedef suffix_store<type> store_type;  //!< alias
         
-        explicit permuter( const accessible<T> &seq ) :
+        //! full setup
+        inline explicit permuter( const accessible<T> &seq ) :
         Y_PERMUTER_CTOR( seq.size() )
         {
             setup_memory();
-            make_content(seq);
+            copy_content(seq);
             build_extent();
         }
         
-        virtual ~permuter() throw()
+        inline explicit permuter( const_type *buffer, const size_t buflen ) :
+        Y_PERMUTER_CTOR(buflen)
+        {
+            setup_memory();
+            copy_content(buffer,buflen);
+            build_extent();
+        }
+        
+        
+        //! cleanup
+        inline virtual ~permuter() throw()
         {
             release();
         }
         
-        virtual size_t       size() const throw() { return dims; }
-        virtual const_type & operator[](const size_t index) const
+        //! accessible interface
+        inline virtual size_t       size() const throw() { return dims; }
+        
+        //! accessible interface
+        inline virtual const_type & operator[](const size_t index) const
         {
             assert(index>0);
             assert(index<=dims);
             return target[index];
         }
         
+        //! return internal store
         inline const suffix_store<type> & store() const throw()
         {
             return kstore;
         }
         
+        //! return required nodes so far
         inline size_t required_nodes() const throw()
         {
             return kstore.nodes + kstore.cache.size - 1;
         }
         
+        //! cleanup cache
         inline void trim() throw()
         {
             kstore.cache.release();
@@ -130,9 +152,15 @@ wlen(0)
         
         inline void build_extent()
         {
+           
+            
             try {
                 
-                // sort current, copy to previous
+                // once init
+                lightweight_array<mutable_type> arr( &source[1], dims);
+                hsort(arr, comparison::decreasing<mutable_type> );
+                
+                // build first configuration
                 initialize();
                 
                 // check repetitions
@@ -167,20 +195,29 @@ wlen(0)
             }
         }
         
-        inline void make_content( const accessible<T> &seq )
+        inline void copy_content( const accessible<T> &seq )
         {
             assert( seq.size() >= dims );
             for(size_t i=dims;i>0;--i)
             {
                 source[i] = seq[i];
             }
-            lightweight_array<mutable_type> arr( &source[1], dims);
-            hsort(arr, comparison::decreasing<mutable_type> );
-            
+          
         }
         
+        inline void copy_content( const_type *buffer, const size_t buflen )
+        {
+            assert( buflen >= dims );
+            const_type *last = buffer + buflen;
+            for(size_t i=dims;i>0;--i)
+            {
+                source[i] = *(--last);
+            }
+        }
+        
+        
         // allocated memory
-        void setup_memory()
+        inline void setup_memory()
         {
             static memory::allocator &mmgr = counting::mem_instance();
             memory::embed emb[] =
@@ -196,7 +233,7 @@ wlen(0)
         }
         
         // make default permutation and target=source
-        void initialize()
+        inline void initialize()
         {
             init_perm();
             kstore.free();
@@ -207,11 +244,11 @@ wlen(0)
             }
             if( weak && !kstore.insert(target,dims) )
             {
-                throw_invalid_first_key();
+                invalid_first_key();
             }
         }
         
-        virtual void onBoot()
+        inline virtual void onBoot()
         {
             initialize();
         }
