@@ -4,6 +4,7 @@
 #include "y/counting/permuter.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/associative/suffix-table.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 
@@ -36,19 +37,63 @@ Y_UTEST(phrases)
             std::cerr << "#dict=" << dict.size() << std::endl;
         }
         
+        size_t         total = 0;
+        vector<string> phrase(letters,as_capacity);
         do
         {
-            std::cerr << "<" << part << ">" << std::endl;
-            permuter<size_t> block( part );
-            std::cerr << "_#blocks=" << block.count << std::endl;
+            //! take an integer partition
+            //std::cerr << "-- with: <" << part << "> => ";
             
-            for( block.boot(); block.good(); block.next() )
+            //! prepare all possible arrangements
+            permuter<size_t> arrangement( part );
+            //std::cerr << " #arrangement=" << arrangement.count << std::endl;
+            
+            for( arrangement.boot(); arrangement.good(); arrangement.next() )
             {
-                std::cerr << "\t-> " << block << std::endl;
+                //std::cerr << "--       <" << arrangement << ">" << std::endl;
+                const size_t blocks = arrangement.size();
+                
+                for(perm.boot();perm.good();perm.next())
+                {
+                    phrase.free();
+                    size_t i=1;
+                    for(size_t block=1;block<=blocks;++block)
+                    {
+                        size_t rep = arrangement[block];
+                        string word(rep,as_capacity,false);
+                        while(rep-- > 0)
+                        {
+                            word << perm[i++];
+                        }
+                        phrase << word;
+                    }
+                    if(dict.size()>0)
+                    {
+                        bool ok = true;
+                        for(size_t i=phrase.size();i>0;--i)
+                        {
+                            if( !dict.search(phrase[i]))
+                            {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        if(ok)
+                        {
+                            std::cerr << phrase << std::endl;
+                        }
+                    }
+                    else
+                    {
+                        std::cerr << phrase << std::endl;
+                    }
+                    ++total;
+                }
             }
-            
+            //std::cerr << "-- done" << std::endl << std::endl;
+
         } while(part.build_next());
-        
+        std::cerr << "#phrases=" << total << std::endl;
         
         
         
