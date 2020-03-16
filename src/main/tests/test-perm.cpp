@@ -16,6 +16,8 @@ using namespace upsylon;
 
 namespace {
     
+    
+    
     template <size_t N>
     void test_permops()
     {
@@ -52,13 +54,17 @@ namespace {
 Y_UTEST(perm)
 {
     
-    test_permops<1>();
-    test_permops<2>();
-    test_permops<3>();
-    test_permops<4>();
-    test_permops<5>();
-    test_permops<6>();
-    test_permops<7>();
+    {
+        test_permops<1>();
+        test_permops<2>();
+        test_permops<3>();
+        test_permops<4>();
+        test_permops<5>();
+        test_permops<6>();
+        test_permops<7>();
+        //test_permops<8>();
+    }
+    
     
     for(int iarg=1;iarg<argc;++iarg)
     {
@@ -174,12 +180,7 @@ Y_UTEST(permuter)
     
     doPerm<uint16_t>(n,m);
     
-    
-    
-    
-    
-    
-    
+
     
     
 }
