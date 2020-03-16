@@ -271,7 +271,7 @@ ADD_TEST(counting:anagram  test-main permuter)
 ADD_TEST(counting:mloops   test-main mloops)
 ADD_TEST(counting:dancing  test-main dancing)
 ADD_TEST(counting:scrabble test-main scrabble estelle ${HERE}/words.db)
-ADD_TEST(counting:phrases  test-main phrases)
+ADD_TEST(counting:phrases  test-main phrases fighter ${HERE}/words.db)
 ADD_TEST(counting:part     test-main part)
 ADD_TEST(counting:counting test-main bell)
 

@@ -90,6 +90,7 @@ wlen(0)
             build_extent();
         }
         
+        //! full setup from a buffer of objects
         inline explicit permuter( const_type *buffer, const size_t buflen ) :
         Y_PERMUTER_CTOR(buflen)
         {

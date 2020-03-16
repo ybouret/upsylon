@@ -52,7 +52,19 @@ Y_UTEST(phrases)
             {
                 //std::cerr << "--       <" << arrangement << ">" << std::endl;
                 const size_t blocks = arrangement.size();
-                
+                if(blocks==letters) break;
+                size_t num1 = 0;
+                for(size_t i=blocks;i>0;--i)
+                {
+                    if( 1 == arrangement[i] )
+                    {
+                        ++num1;
+                    }
+                }
+                if(num1>1)
+                {
+                    break;
+                }
                 for(perm.boot();perm.good();perm.next())
                 {
                     phrase.free();
