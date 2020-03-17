@@ -133,6 +133,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(set);
     Y_UTEST(stree);
     Y_UTEST(store);
+    Y_UTEST(store_perf);
     Y_UTEST(strings);
     Y_UTEST(lexicon);
     
