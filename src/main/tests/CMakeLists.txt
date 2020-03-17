@@ -230,14 +230,10 @@ ADD_TEST(info:base64       test-main base64)
 ADD_TEST(info:codecs       test-main codecs)
 
 SOURCE_GROUP(data FILES
-test-associative.cpp test-set.cpp test-map.cpp test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp test-stree.cpp test-suffix-store.cpp
+test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp 
 test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
-test-pq.cpp test-factory.cpp test-list.cpp test-suffix-tree.cpp)
-ADD_TEST(data:associative test-main associative)
-ADD_TEST(data:set         test-main set)
-ADD_TEST(data:map         test-main map)
-ADD_TEST(data:stree       test-main stree ${HERE}/words.db)
-ADD_TEST(data:store       test-main store)
+test-pq.cpp test-factory.cpp test-list.cpp )
+
 ADD_TEST(data:matrix      test-main matrix)
 ADD_TEST(data:slots       test-main slots)
 ADD_TEST(data:list        test-main list)
@@ -250,11 +246,23 @@ ADD_TEST(data:const-field test-main const_field)
 ADD_TEST(data:for_each    test-main for_each)
 ADD_TEST(data:ordered     test-main ordered)
 ADD_TEST(data:key-address test-main key_address)
-ADD_TEST(data:strings     test-main strings ${HERE}/words.db)
 ADD_TEST(data:addressable test-main addressable)
 ADD_TEST(data:query       test-main query ${HERE}/words.db)
 ADD_TEST(data:pq          test-main pq)
 ADD_TEST(data:factory     test-main factory)
+
+SOURCE_GROUP(associative FILES
+test-associative.cpp test-set.cpp test-map.cpp
+test-suffix-tree.cpp 
+test-suffix-store.cpp
+test-lexicon.cpp)
+ADD_TEST(associative:types   test-main associative)
+ADD_TEST(associative:set     test-main set)
+ADD_TEST(associative:map     test-main map)
+ADD_TEST(associative:stree   test-main stree ${HERE}/words.db)
+ADD_TEST(associative:store   test-main store)
+ADD_TEST(associative:strings test-main strings ${HERE}/words.db)
+ADD_TEST(associative:lexcion test-main lexicon)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)

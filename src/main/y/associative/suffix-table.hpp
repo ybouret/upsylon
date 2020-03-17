@@ -4,7 +4,7 @@
 #define Y_SUFFIX_TABLE_INCLUDED 1
 
 #include "y/associative/suffix-tree.hpp"
-#include "y/container/associative.hpp"
+#include "y/associative/lexicon.hpp"
 #include "y/type/class-conversion.hpp"
 
 namespace upsylon {
@@ -12,10 +12,10 @@ namespace upsylon {
 
     //! suffix table, no key stored
     template <typename KEY,typename T>
-    class suffix_table : public associative<KEY,T>, public suffix_tree<T>
+    class suffix_table : public lexicon<KEY,T>, public suffix_tree<T>
     {
     public:
-        typedef associative<KEY,T> base_type;//!< alias
+        typedef lexicon<KEY,T>     base_type;//!< alias
         Y_DECL_ARGS(T,type);                 //!< aliases
         Y_DECL_ARGS(KEY,key_type);           //!< aliases
         //! detect kind of key

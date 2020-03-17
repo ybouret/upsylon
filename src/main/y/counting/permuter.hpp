@@ -24,7 +24,7 @@ namespace upsylon {
             //! cleanup
             virtual ~permuter() throw();
             
-            //! count and set weak
+            //! count and set weak if a repetition is detected
             mpl::natural count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const;
           
             //! converting from mp version
@@ -72,6 +72,9 @@ wlen(0)
     
     
     //! permuter of integral type
+    /**
+     produce all the distinct permutation of given objects
+     */
     template <typename T>
     class permuter :
     public core::permuter,

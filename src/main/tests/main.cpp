@@ -127,20 +127,24 @@ Y_UTEST_INIT(256)
     Y_UTEST(cmd);
     Y_UTEST(md);
 
-    Y_UTEST(fft);
-    Y_UTEST(network_sort);
-    Y_UTEST(sort);
-    Y_UTEST(unique);
-    Y_UTEST(classes);
-    Y_UTEST(maintain);
+    // assoc
     Y_UTEST(associative);
     Y_UTEST(map);
     Y_UTEST(set);
     Y_UTEST(stree);
     Y_UTEST(store);
     Y_UTEST(strings);
+    Y_UTEST(lexicon);
+    
+    Y_UTEST(fft);
+    Y_UTEST(network_sort);
+    Y_UTEST(sort);
+    Y_UTEST(unique);
+    Y_UTEST(classes);
+    Y_UTEST(maintain);
+   
     Y_UTEST(query);
-
+    
     Y_UTEST(matrix);
     Y_UTEST(functor);
     Y_UTEST(vfs);

@@ -74,7 +74,7 @@ Y_UTEST(associative)
         }
     }
 
-#if 1
+#if 0
     { hash_container<size_t,int,hnode> hc; }
     { hash_container<size_t,int,hnode> hc(100,as_capacity); }
 #endif

@@ -3,6 +3,7 @@
 #define Y_ASSOCIATIVE_MAP_INCLUDED 1
 
 #include "y/associative/hash-container.hpp"
+#include "y/associative/lexicon.hpp"
 
 namespace upsylon
 {
@@ -57,11 +58,11 @@ namespace upsylon
     typename T,
     typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global >
-    class map : public hash_container<KEY,T, core::map_node<KEY,T>, KEY_HASHER, ALLOCATOR >
+    class map : public hash_container<KEY,T,lexicon,core::map_node<KEY,T>, KEY_HASHER, ALLOCATOR >
     {
     public:
         typedef core::map_node<KEY,T>                                node_type; //!< internal node
-        typedef hash_container<KEY,T,node_type,KEY_HASHER,ALLOCATOR> base_type; //!< hash_table wrapper
+        typedef hash_container<KEY,T,lexicon,node_type,KEY_HASHER,ALLOCATOR> base_type; //!< hash_table wrapper
         Y_DECL_ARGS(KEY,key_type); //!< alias
         Y_DECL_ARGS(T,type);       //!< alias
 
