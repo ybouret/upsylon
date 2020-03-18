@@ -31,9 +31,10 @@ Y_UTEST(jargon_source)
             {
                 std::cerr << line << std::endl;
             }
-            
         }
     }
+    
+    std::cerr << "#cache=" << cache->size << std::endl;
     
 }
 Y_UTEST_DONE()
