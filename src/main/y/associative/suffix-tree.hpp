@@ -7,7 +7,6 @@
 #include "y/ios/ostream.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/code/utils.hpp"
-#include "y/ptr/auto.hpp"
 #include "y/core/inode.hpp"
 #include "y/iterate/linked.hpp"
 
@@ -171,7 +170,8 @@ namespace upsylon {
         }
 
         //! setup with n data node
-        inline explicit suffix_tree(const size_t n, const as_capacity_t &) : core::suffix_tree(), dlist(), dpool()
+        inline explicit suffix_tree(const size_t n, const as_capacity_t &) :
+        core::suffix_tree(), dlist(), dpool()
         {
             extra(n);
         }

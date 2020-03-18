@@ -112,7 +112,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         //! insert using key as path
-        inline bool insert(param_key_type key, param_type args)
+        inline virtual bool insert(param_key_type key, param_type args)
         {
             static const int2type<ro_buffer_key> kind;
             return this->insert_by(__addr_of(key,kind),__size_of(key,kind),args);
