@@ -80,9 +80,14 @@ namespace upsylon {
     
     namespace Jargon {
         
-        void Char::Pool:: maxChars(const size_t max_chars)
+        void Char::Pool:: optimize()
         {
             merging<Char>::sort_by_addr(*this);
+        }
+        
+        void Char::Pool:: maxChars(const size_t max_chars)
+        {
+            optimize();
             while(size>max_chars)
             {
                 delete pop_back();

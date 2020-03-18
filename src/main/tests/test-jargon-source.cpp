@@ -25,6 +25,7 @@ Y_UTEST(jargon_source)
         std::cerr << "#content=" << content.size << std::endl;
         
         source.unget(content);
+        cache->optimize();
         {
             string line;
             while( source.gets(line) )
