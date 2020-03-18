@@ -32,12 +32,7 @@ namespace upsylon {
             cache->store(*this);
         }
         
-#if 0
-        void Token:: release() throw()
-        {
-            erase();
-        }
-#endif
+        
         
         void Token:: append(const Context &context,
                             const uint8_t  content)

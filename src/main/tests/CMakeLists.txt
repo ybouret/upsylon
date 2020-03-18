@@ -302,8 +302,12 @@ ADD_TEST(oxide:vtk        test-main  oxide_vtk)
 ADD_TEST(oxide:par        test-main  oxide_par)
 ADD_TEST(oxide:grids      test-main  oxide_grids)
 
-SOURCE_GROUP( jargon FILES test-jargon-module.cpp)
-ADD_TEST(jargon:module test-main jargon_module)
+SOURCE_GROUP( jargon FILES 
+test-jargon-module.cpp
+test-jargon-source.cpp
+)
+ADD_TEST(jargon:module test-main jargon_module ${HERE}/words.db)
+ADD_TEST(jargon:source test-main jargon_source )
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

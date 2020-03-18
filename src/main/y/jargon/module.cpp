@@ -13,11 +13,11 @@ namespace upsylon {
         Module:: Module(const Stamp       &s,
                         const Input       &i,
                         const Char::Cache &c,
-                        const OpenType     t) throw():
+                        const Type         t) throw():
         CountedObject(),
         Context(s),
         input(i),
-        iobuf(c),
+        cache(c),
         type(t)
         {
         }
@@ -27,7 +27,7 @@ namespace upsylon {
         {
             const Stamp s = new string(f);
             const Input i = Kernel::MakeInput::FromFile(f);
-            return new Module(s,i,c,OpenWithFile);
+            return new Module(s,i,c,FileStream);
         }
 
         Module * Module:: OpenFile(const Char::Cache &c, const char *f)
@@ -44,7 +44,7 @@ namespace upsylon {
             assert(!(NULL==data&&size>0));
             const Stamp s = new string(dataName);
             const Input i = Kernel::MakeInput::FromData(data,size);
-            return new Module(s,i,c,OpenWithData);
+            return new Module(s,i,c,DataStream);
         }
 
         Module * Module:: OpenData(const Char::Cache &c,
@@ -77,60 +77,22 @@ namespace upsylon {
             aliasing::_(column) = 1;
         }
 
-        Char * Module:: read()
+        Char * Module:: getChar()
         {
-            if( iobuf.size > 0)
+            char code = 0;
+            if(input->query(code))
             {
-                return iobuf.pop_front();
+                Char * ch = Char::Make(cache,*this,code);
+                ++aliasing::_(column);
+                return ch;
             }
             else
             {
-                char code = 0;
-                if(input->query(code))
-                {
-                    Char * ch = Char::Make(iobuf.cache,*this,code);
-                    ++aliasing::_(column);
-                    return ch;
-                }
-                else
-                {
-                    return NULL;
-                }
+                return NULL;
             }
         }
         
-        void  Module:: unread(Char *ch) throw()
-        {
-            assert(ch);
-            iobuf.push_front(ch);
-        }
-        
-        void  Module:: unread(Char::List &l) throw()
-        {
-            while(l.size)
-            {
-                unread( l.pop_back() );
-            }
-        }
-        
-        void Module:: uncopy(const Char::List &l)
-        {
-            Char::Cache &cache = iobuf.cache;
-            size_t       done = 0;
-            try
-            {
-                for(const Char *ch=l.tail;ch;ch=ch->prev)
-                {
-                    unread( Char::Copy(cache,*ch) );
-                }
-            }
-            catch(...)
-            {
-                iobuf.skip(done);
-                throw;
-            }
-        }
-        
+
         
     }
     

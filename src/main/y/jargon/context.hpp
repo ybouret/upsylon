@@ -15,8 +15,8 @@ namespace upsylon {
         {
         public:
             const Stamp    stamp;   //!< shared stamp
-            const unsigned line;    //!< current line of content
-            const unsigned column;  //!< current column of content
+            const int      line;    //!< current line of content
+            const int      column;  //!< current column of content
             
             explicit Context(const Stamp  &) throw(); //!< setup line=1, column=1
             explicit Context(const string &);         //!< setup from string

@@ -22,10 +22,10 @@ namespace upsylon {
             typedef arc_ptr<Module> Handle; //!< alias
 
             //! keep track of module type
-            enum OpenType
+            enum Type
             {
-                OpenWithFile, //!< dealing with a file
-                OpenWithData  //!< dealing with data
+                FileStream, //!< dealing with a file
+                DataStream  //!< dealing with data
             };
             
             //------------------------------------------------------------------
@@ -35,10 +35,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual ~Module()  throw();            //!< cleanup
             void     newLine() throw();            //!< update line count, reset column
-            Char    *read();                       //!< read next Char, NULL on End of Data
-            void     unread(Char *) throw();       //!< unread a Char
-            void     unread(Char::List &) throw(); //!< unread a Token
-            void     uncopy(const Char::List &);   //!< uncopy a Token
+            Char    *getChar();                    //!< get next Char
             
             
             //------------------------------------------------------------------
@@ -49,14 +46,14 @@ namespace upsylon {
             
             //__________________________________________________________________
             //
-            // files
+            // opening file stream
             //__________________________________________________________________
             static Module * OpenFile(const Char::Cache &, const string &fileName); //!< open a file
             static Module * OpenFile(const Char::Cache &, const char   *fileName); //!< open a file
           
             //__________________________________________________________________
             //
-            // data
+            // opening data stream
             //__________________________________________________________________
             static Module * OpenData(const Char::Cache &, const string &dataName,const void *data,const size_t size); //!< open some data with dataName
             static Module * OpenData(const Char::Cache &, const char   *dataName,const void *data,const size_t size); //!< open some data with dataName
@@ -71,12 +68,12 @@ namespace upsylon {
             explicit Module(const Stamp       &,
                             const Input       &,
                             const Char::Cache &,
-                            const OpenType      ) throw();
+                            const Type         ) throw();
             
             Input          input;
-            Token          iobuf;
         public:
-            const OpenType type; //!< what we are dealing with
+            Char::Cache    cache;
+            const Type     type; //!< what we are dealing with
             
         };
         
