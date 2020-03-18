@@ -15,7 +15,10 @@ namespace upsylon {
         class Char : public Object, public inode<Char>, public Context
         {
         public:
+            typedef core::list_of<Char>     List_;
             typedef core::list_of_cpp<Char> List;
+           
+            
             typedef core::pool_of_cpp<Char> PoolType;
             
             class Pool : public CountedObject, public PoolType
@@ -27,19 +30,24 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Pool);
             };
             
-            typedef arc_ptr<Pool> SharedPool;
+            typedef arc_ptr<Pool> Cache;
             
             
             virtual ~Char() throw();
-            static Char *Create(const Context &, const uint8_t, SharedPool &);
+            
+            static Char *Make(Cache &, const Context &, const uint8_t);
+            static Char *Copy(Cache &, const Char &);
             
             const uint8_t code;
+            
+            friend std::ostream & operator<<( std::ostream &, const Char &);
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Char);
             explicit Char(const Context &context,
                           const uint8_t  content) throw();
         };
+        
         
     }
     

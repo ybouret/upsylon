@@ -15,7 +15,7 @@ namespace upsylon {
             
             struct MakeInput
             {
-                static ios::istream * FromFile( const string &fileName );
+                static ios::istream * FromFile(const string &fileName);
                 static ios::istream * FromData(const void *data, const size_t size);
                 
             };

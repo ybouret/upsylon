@@ -1,23 +1,36 @@
 #include "y/jargon/module.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
+using namespace Jargon;
 
 Y_UTEST(jargon_module)
 {
-    const Jargon::Context ctx( "hello" );
     
+    Y_UTEST_SIZEOF(Jargon::Context);
+    Y_UTEST_SIZEOF(Jargon::Char);
+    Y_UTEST_SIZEOF(Jargon::Char::Pool);
+    Y_UTEST_SIZEOF(Jargon::Token);
+    std::cerr << std::endl;
     
-    Jargon::Char::List       chList;
-    Jargon::Char::SharedPool chPool = new Jargon::Char::Pool();
+    Char::Cache cache = new Char::Pool();
     
-    for(unsigned i='a'; i <= 'z'; ++i )
+    if( argc > 1)
     {
-        chList.push_back( Jargon::Char::Create(ctx,i,chPool) );
+        Token          content(cache);
+        Module::Handle handle =  Module::OpenFile(cache,argv[1]);
+        Char          *ch     = 0;
+        while( NULL != ( ch=handle->read()) )
+        {
+            content.push_back( ch );
+        }
+        std::cerr << "#token=" << content.size << std::endl;
+        
     }
     
-    chPool->store(chList);
-    
+    std::cerr << "#cache=" << cache->size << std::endl;
+
     
 }
 Y_UTEST_DONE()
