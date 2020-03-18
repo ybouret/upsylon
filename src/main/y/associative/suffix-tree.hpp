@@ -118,6 +118,7 @@ namespace upsylon {
         };
     }
     
+    //! alias to rebuild keys
     typedef core::suffix_tree::path suffix_path;
     
     //! generic suffix tree

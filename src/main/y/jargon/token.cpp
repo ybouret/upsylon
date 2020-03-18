@@ -32,10 +32,12 @@ namespace upsylon {
             cache->store(*this);
         }
         
+#if 0
         void Token:: release() throw()
         {
             erase();
         }
+#endif
         
         void Token:: append(const Context &context,
                             const uint8_t  content)
@@ -55,7 +57,8 @@ namespace upsylon {
         
         void Token:: skip(size_t n) throw()
         {
-            while( (n-- >0) && size>0 )
+            assert(n<=size);
+            while(n-- >0)
             {
                 cache->store(pop_front());
             }
@@ -63,7 +66,9 @@ namespace upsylon {
         
         void Token:: trim(size_t n) throw()
         {
-            while( (n-- >0) && size>0 )
+            assert(n<=size);
+
+            while(n-- >0)
             {
                 cache->store(pop_back());
             }

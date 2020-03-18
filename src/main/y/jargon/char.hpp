@@ -12,35 +12,58 @@ namespace upsylon {
     namespace Jargon {
         
         
+        //! a dynamic char for tokens, with a context
+        /**
+         the content of a Char is perfectly located
+         */
         class Char : public Object, public inode<Char>, public Context
         {
         public:
-            typedef core::list_of<Char>     List_;
-            typedef core::list_of_cpp<Char> List;
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
            
+            //------------------------------------------------------------------
+            // for Token
+            //------------------------------------------------------------------
+            typedef core::list_of<Char>     List;     //!< list base class
+            typedef core::pool_of_cpp<Char> PoolType; //!< pool base class
             
-            typedef core::pool_of_cpp<Char> PoolType;
-            
+            //------------------------------------------------------------------
+            // for Cache
+            //------------------------------------------------------------------
+
+            //! a pool to create a char cache
             class Pool : public CountedObject, public PoolType
             {
             public:
-                explicit Pool() throw();
-                virtual ~Pool() throw();
+                explicit Pool() throw(); //!< setup
+                virtual ~Pool() throw(); //!< cleanup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Pool);
             };
             
-            typedef arc_ptr<Pool> Cache;
+            typedef arc_ptr<Pool> Cache; //!< alias
             
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            virtual     ~Char() throw();                                     //!< cleanup
+            static Char *Make(Cache &, const Context &, const uint8_t);      //!< make a Char
+            static Char *Copy(Cache &, const Char &);                        //!< copy a Char
+            friend std::ostream & operator<<( std::ostream &, const Char &); //!< display
+
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            const uint8_t code; //!< low level content
             
-            virtual ~Char() throw();
-            
-            static Char *Make(Cache &, const Context &, const uint8_t);
-            static Char *Copy(Cache &, const Char &);
-            
-            const uint8_t code;
-            
-            friend std::ostream & operator<<( std::ostream &, const Char &);
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Char);

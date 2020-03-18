@@ -10,18 +10,19 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! precise localisation of content
         class Context
         {
         public:
-            const Stamp    stamp;
-            const unsigned line;
-            const unsigned column;
+            const Stamp    stamp;   //!< shared stamp
+            const unsigned line;    //!< current line of content
+            const unsigned column;  //!< current column of content
             
-            explicit Context(const Stamp  &) throw();
-            explicit Context(const string &);
-            explicit Context(const char   *);
-            Context(const Context &) throw();
-            virtual ~Context() throw();
+            explicit Context(const Stamp  &) throw(); //!< setup line=1, column=1
+            explicit Context(const string &);         //!< setup from string
+            explicit Context(const char   *);         //!< setup from text
+            Context(const Context &) throw();         //!< no-throw copy
+            virtual ~Context() throw();               //!< cleanup
             
         private:
             Y_DISABLE_ASSIGN(Context);

@@ -10,26 +10,38 @@ namespace upsylon {
     
     namespace Jargon {
         
-        
+        //! a dynamic Token of Chars
         class Token : public Char::List
         {
         public:
-            explicit Token(const Char::Cache &) throw();
-            Token( const Token &);
-            virtual ~Token() throw();
-            virtual void release() throw();
-            
-            //!
-            void append(const Context &, const uint8_t);
-            void erase() throw();
-            
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            explicit Token(const Char::Cache &) throw(); //!< setup
+            virtual ~Token() throw();                    //!< erase
+            Token(const Token &);                        //!< copy
+
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            void append(const Context &, const uint8_t); //!< append a new char
+            void erase() throw();                        //!< erase content into cache
+            void skip(size_t n) throw();                 //!< skip n chars
+            void trim(size_t n) throw();                 //!< trim n chars
+            //! display all Chars
             friend std::ostream & operator<<( std::ostream &, const Token &);
            
-            Char::Cache cache;
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            Char::Cache cache; //!< shared cache for I/O
 
-            void skip(size_t n) throw();
-            void trim(size_t n) throw();
-            
         private:
             Y_DISABLE_ASSIGN(Token);
         };

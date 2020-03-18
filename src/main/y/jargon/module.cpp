@@ -105,7 +105,7 @@ namespace upsylon {
             iobuf.push_front(ch);
         }
         
-        void  Module:: unread(Char::List_ &l) throw()
+        void  Module:: unread(Char::List &l) throw()
         {
             while(l.size)
             {
@@ -113,7 +113,7 @@ namespace upsylon {
             }
         }
         
-        void Module:: uncopy(const Char::List_ &l)
+        void Module:: uncopy(const Char::List &l)
         {
             Char::Cache &cache = iobuf.cache;
             size_t       done = 0;

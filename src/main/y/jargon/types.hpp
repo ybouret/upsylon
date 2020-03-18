@@ -10,9 +10,9 @@ namespace upsylon {
  
     namespace Jargon {
      
-        typedef object                Object;
-        typedef counted_object        CountedObject;
-        typedef arc_ptr<const string> Stamp;
+        typedef object                Object;        //!< alias
+        typedef counted_object        CountedObject; //!< alias
+        typedef arc_ptr<const string> Stamp;         //!< shared stamp
         
     }
     

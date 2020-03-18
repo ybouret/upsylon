@@ -9,15 +9,15 @@ namespace upsylon {
     
     namespace Jargon {
      
-        typedef arc_ptr<ios::istream> Input;
+        typedef arc_ptr<ios::istream> Input; //!< alias
         
         namespace Kernel {
             
+            //! setup inputs for module
             struct MakeInput
             {
-                static ios::istream * FromFile(const string &fileName);
-                static ios::istream * FromData(const void *data, const size_t size);
-                
+                static ios::istream * FromFile(const string &fileName);              //!< ios::icstream
+                static ios::istream * FromData(const void *data, const size_t size); //!< ios::imstream, must be persistent
             };
         }
         

@@ -11,36 +11,60 @@ namespace upsylon {
     namespace Jargon {
         
         //! convert a source of char into a source of Char
-        /**
-         
-         */
         class Module : public CountedObject, public Context
         {
         public:
-            typedef arc_ptr<Module> Handle;
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            typedef arc_ptr<Module> Handle; //!< alias
 
+            //! keep track of module type
             enum OpenType
             {
-                OpenWithFile,
-                OpenWithData
+                OpenWithFile, //!< dealing with a file
+                OpenWithData  //!< dealing with data
             };
             
-            virtual ~Module() throw();
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            virtual ~Module()  throw();            //!< cleanup
+            void     newLine() throw();            //!< update line count, reset column
+            Char    *read();                       //!< read next Char, NULL on End of Data
+            void     unread(Char *) throw();       //!< unread a Char
+            void     unread(Char::List &) throw(); //!< unread a Token
+            void     uncopy(const Char::List &);   //!< uncopy a Token
             
-            void newLine() throw();
             
-            static Module * OpenFile(const Char::Cache &, const string &fileName);
-            static Module * OpenFile(const Char::Cache &, const char   *fileName);
-            static Module * OpenData(const Char::Cache &, const string &dataName,const void *data,const size_t size);
-            static Module * OpenData(const Char::Cache &, const char   *dataName,const void *data,const size_t size);
-            static Module * OpenData(const Char::Cache &, const char   *data, const size_t size);
-            static Module * OpenData(const Char::Cache &, const char   *data);
-            static Module * OpenData(const Char::Cache &, const string &data);
+            //------------------------------------------------------------------
+            //
+            // static methods
+            //
+            //------------------------------------------------------------------
+            
+            //__________________________________________________________________
+            //
+            // files
+            //__________________________________________________________________
+            static Module * OpenFile(const Char::Cache &, const string &fileName); //!< open a file
+            static Module * OpenFile(const Char::Cache &, const char   *fileName); //!< open a file
+          
+            //__________________________________________________________________
+            //
+            // data
+            //__________________________________________________________________
+            static Module * OpenData(const Char::Cache &, const string &dataName,const void *data,const size_t size); //!< open some data with dataName
+            static Module * OpenData(const Char::Cache &, const char   *dataName,const void *data,const size_t size); //!< open some data with dataName
+            static Module * OpenData(const Char::Cache &, const char   *data, const size_t size);                     //!< open some data with same name
+            static Module * OpenData(const Char::Cache &, const char   *data);                                        //!< open some data with same name
+            static Module * OpenData(const Char::Cache &, const string &data);                                        //!< open some data with same name
 
-            Char *read();
-            void  unread(Char *) throw();
-            void  unread(Char::List_ &) throw();
-            void  uncopy(const Char::List_ &);
+           
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Module);
@@ -52,7 +76,7 @@ namespace upsylon {
             Input          input;
             Token          iobuf;
         public:
-            const OpenType type;
+            const OpenType type; //!< what we are dealing with
             
         };
         
