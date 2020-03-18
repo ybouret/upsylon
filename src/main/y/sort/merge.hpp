@@ -40,6 +40,13 @@ namespace upsylon
             }
         }
 
+        //! sorting nodes by address
+        template <typename LIST> static inline
+        void sort_by_addr( LIST &source )
+        {
+            sort<LIST>(source,compare_nodes_addr,NULL);
+        }
+        
     private:
         //! merge two sorted list
         template <typename LIST>
@@ -64,6 +71,11 @@ namespace upsylon
             assert(0==L.size||0==R.size);
             while( L.size > 0 ) target.push_back( L.pop_front() );
             while( R.size > 0 ) target.push_back( R.pop_front() );
+        }
+        
+        static inline int compare_nodes_addr( const NODE *lhs, const NODE *rhs, void *) throw()
+        {
+            return int( static_cast<ptrdiff_t>(rhs-lhs) );
         }
     };
 }

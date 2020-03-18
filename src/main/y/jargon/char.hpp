@@ -5,11 +5,12 @@
 
 #include "y/jargon/context.hpp"
 #include "y/core/inode.hpp"
-#include "y/core/pool.hpp"
+#include "y/core/list.hpp"
 
 namespace upsylon {
 
     namespace Jargon {
+        
         
         
         //! a dynamic char for tokens, with a context
@@ -29,18 +30,25 @@ namespace upsylon {
             // for Token
             //------------------------------------------------------------------
             typedef core::list_of<Char>     List;     //!< list base class
-            typedef core::pool_of_cpp<Char> PoolType; //!< pool base class
+            typedef core::list_of_cpp<Char> PoolType; //!< pool base class
             
             //------------------------------------------------------------------
             // for Cache
             //------------------------------------------------------------------
-
+            
             //! a pool to create a char cache
             class Pool : public CountedObject, public PoolType
             {
             public:
                 explicit Pool() throw(); //!< setup
                 virtual ~Pool() throw(); //!< cleanup
+                void     store( Char *ch ) throw(); //!< store a used Char
+                void     store( List &l  ) throw(); //!< store a used Token
+                Char    *query() throw();           //!< query a used Char
+                
+                void     maxChars(const size_t max_chars); //!< keep no more that max_chars in cache
+                void     maxBytes(const size_t max_bytes); //!< keep no more that max_bytes in cache
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Pool);
             };

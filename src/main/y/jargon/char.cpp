@@ -57,9 +57,43 @@ namespace upsylon {
         Char::Pool::  Pool() throw() : CountedObject(), PoolType() {}
         Char::Pool:: ~Pool() throw()  {}
         
+        void Char::Pool:: store(Char *ch) throw()
+        {
+            assert(ch);
+            (void) push_back(ch);
+        }
         
+        void  Char::Pool:: store( List &l  ) throw()
+        {
+            merge_back(l);
+        }
         
+        Char * Char::Pool:: query() throw() { assert(size>0); return pop_back(); }
+
+    }
+    
+}
+
+#include "y/sort/merge.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
         
+        void Char::Pool:: maxChars(const size_t max_chars)
+        {
+            merging<Char>::sort_by_addr(*this);
+            while(size>max_chars)
+            {
+                delete pop_back();
+            }
+        }
+        
+        void Char::Pool:: maxBytes(const size_t max_bytes)
+        {
+            maxChars(max_bytes/sizeof(Char));
+        }
+
     }
     
 }

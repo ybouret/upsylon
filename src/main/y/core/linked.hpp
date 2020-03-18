@@ -16,7 +16,7 @@ namespace upsylon {
             bool has_nodes() const throw(); //!< helper to check positive size
 
             const size_t size;              //!< number of nodes/items...
-
+            
         protected:
             explicit linked() throw(); //!< setup
 

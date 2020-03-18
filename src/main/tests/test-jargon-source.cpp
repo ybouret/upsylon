@@ -34,7 +34,10 @@ Y_UTEST(jargon_source)
         }
     }
     
-    std::cerr << "#cache=" << cache->size << std::endl;
+    std::cerr << "#cache=" << cache->size <<  "/bytes=" << cache->size * sizeof(Char) << std::endl;
+    cache->maxBytes(1024);
+    std::cerr << "#cache=" << cache->size <<  "/bytes=" << cache->size * sizeof(Char) << std::endl;
+
     
 }
 Y_UTEST_DONE()

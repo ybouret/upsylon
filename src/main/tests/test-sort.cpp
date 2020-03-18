@@ -70,7 +70,10 @@ namespace
                 std::cerr << node->data << " ";
             }
             std::cerr << std::endl;
-
+            
+            merging<Node>::sort_by_addr(L);
+            
+            
             std::cerr << "\tHeap" << std::endl;
             vector<T> V;
             while(L.size)
