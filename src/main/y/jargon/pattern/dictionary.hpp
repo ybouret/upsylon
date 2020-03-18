@@ -10,7 +10,15 @@ namespace upsylon {
     
     namespace Jargon {
         
+        typedef suffix_tree<Motif> DictionaryType;
         
+        class Dictionary : public DictionaryType
+        {
+        public:
+            
+        private:
+            
+        };
         
     }
     
