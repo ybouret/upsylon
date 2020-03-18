@@ -28,6 +28,12 @@ namespace {
         std::cerr << '#' << ']' << std::endl;
     }
 
+    static inline bool doCallback(const suffix_path &path,
+                                  const string      &data)
+    {
+        
+        return path.size() == data.size();
+    }
 
 }
 
@@ -84,7 +90,8 @@ Y_UTEST(stree)
     stree.sort_with(  compare_strings_by_length   );
     utable.sort_with( comparison::decreasing<int> );
 
-
+    Y_ASSERT(stree.for_each(doCallback));
+    
     {
         const suffix_tree<int>    itree2(itree);
         Y_CHECK(itree2.entries()==itree.entries());

@@ -118,6 +118,8 @@ namespace upsylon {
         };
     }
     
+    typedef core::suffix_tree::path suffix_path;
+    
     //! generic suffix tree
     template <typename T>
     class suffix_tree : public core::suffix_tree
@@ -420,10 +422,25 @@ namespace upsylon {
             return search_by(buffer.ro(),buffer.length());
         }
 
+        //! for_each func(suffix_key,data)
+        template <typename FUNC>
+        inline bool for_each( FUNC &func ) const
+        {
+            path key;
+            for(const data_node *node=dlist.head;node;node=node->next)
+            {
+                const leave &l = node->data;
+                rebuild_path(key,&(l.hook));
+                if(!func(key,l.data)) return false;
+            }
+            return true;
+        }
+        
     protected:
         data_list            dlist; //!< list of data nodes
         data_pool            dpool; //!< pool of data nodes
-
+        
+        
     private:
         Y_DISABLE_ASSIGN(suffix_tree);
 

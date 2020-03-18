@@ -1,4 +1,5 @@
 #include "y/counting/comb.hpp"
+#include "y/counting/ops.hpp"
 #include "y/type/block/zset.hpp"
 
 
@@ -51,12 +52,7 @@ namespace upsylon {
     void combination:: onBoot() throw()
     {
         assert(1==index);
-        for(size_t i=k;i>0;)
-        {
-            comb[i] = i;
-            --i;
-            base[i] = i;
-        }
+        core::counting::init(comb, k, base);
     }
 
     
@@ -77,11 +73,7 @@ namespace upsylon {
             comb[i] = comb[i-1]+1;
         }
 
-        for(size_t i=k;i>0;)
-        {
-            size_t tmp = comb[i];
-            base[--i]  = --tmp;
-        }
+        core::counting::to_C(base,comb,k);
     }
 
     const size_t & combination:: operator[](const size_t j) const throw()
