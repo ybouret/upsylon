@@ -225,6 +225,10 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(zfi);
     Y_UTEST(closest);
+
+    // jargon
+    Y_UTEST(jargon_module);
+
 }
 Y_UTEST_EXEC()
 

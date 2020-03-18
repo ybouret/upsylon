@@ -372,6 +372,12 @@ SET(oxide_mpi_srcs ${oxide_mpi_decl} ${oxide_mpi_code})
 SOURCE_GROUP( oxide/mpi FILES ${oxide_mpi_srcs} )
 INSTALL( FILES ${oxide_mpi_decl} DESTINATION include/y/oxide/mpi )
 
+FILE(GLOB jargon_decl y/jargon/*.hpp)
+FILE(GLOB jargon_code y/jargon/*.cpp)
+SET(jargon_srcs ${jargon_decl} ${jargon_code})
+SOURCE_GROUP( jargon FILES ${jargon_srcs} )
+INSTALL( FILES ${jargon_decl} DESTINATION include/y/jargon )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -417,6 +423,7 @@ ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
 ${counting_srcs}
 ${oxide_srcs} ${oxide_field_srcs} ${oxide_grid_srcs} ${oxide_algo_srcs} ${oxide_mpi_srcs}
+${jargon_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
