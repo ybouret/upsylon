@@ -229,7 +229,7 @@ Y_UTEST_INIT(256)
     // jargon
     Y_UTEST(jargon_module);
     Y_UTEST(jargon_source);
-
+    Y_UTEST(jargon_pattern);
 }
 Y_UTEST_EXEC()
 

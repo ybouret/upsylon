@@ -306,8 +306,9 @@ SOURCE_GROUP( jargon FILES
 test-jargon-module.cpp
 test-jargon-source.cpp
 )
-ADD_TEST(jargon:module test-main jargon_module ${HERE}/words.db)
-ADD_TEST(jargon:source test-main jargon_source )
+ADD_TEST(jargon:module  test-main jargon_module ${HERE}/words.db)
+ADD_TEST(jargon:source  test-main jargon_source )
+ADD_TEST(jargon:pattern test-main jargon_pattern)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
