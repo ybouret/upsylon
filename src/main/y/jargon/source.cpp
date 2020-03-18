@@ -44,6 +44,17 @@ namespace upsylon {
         {
             return (iobuf.size>0) ? iobuf.pop_front() : tryGet();
         }
+        
+        void  Source:: prefetch(size_t n)
+        {
+            while(n-- > 0 )
+            {
+                Char *ch = tryGet();
+                if(!ch) break;
+                iobuf.push_back(ch);
+            }
+        }
+
 
         bool Source:: query(char &C)
         {

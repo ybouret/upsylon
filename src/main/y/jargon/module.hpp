@@ -33,9 +33,9 @@ namespace upsylon {
             // methods
             //
             //------------------------------------------------------------------
-            virtual ~Module()  throw();            //!< cleanup
-            void     newLine() throw();            //!< update line count, reset column
-            Char    *getChar();                    //!< get next Char
+            virtual ~Module()  throw(); //!< cleanup
+            void     newLine() throw(); //!< update line count, reset column
+            Char    *getChar();         //!< get next Char
             
             
             //------------------------------------------------------------------
@@ -69,11 +69,10 @@ namespace upsylon {
                             const Input       &,
                             const Char::Cache &,
                             const Type         ) throw();
-            
             Input          input;
         public:
-            Char::Cache    cache;
-            const Type     type; //!< what we are dealing with
+            Char::Cache    cache; //!< shared cache for Char creation
+            const Type     type;  //!< what we are dealing with
             
         };
         
