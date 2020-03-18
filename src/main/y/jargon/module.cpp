@@ -10,7 +10,7 @@ namespace upsylon {
         {
         }
         
-        Module:: Module(const Stamp       &s,
+        Module:: Module(const Tag         &s,
                         const Input       &i,
                         const Char::Cache &c,
                         const Type         t) throw():
@@ -25,7 +25,7 @@ namespace upsylon {
         Module * Module:: OpenFile(const Char::Cache &c,
                                    const string      &f)
         {
-            const Stamp s = new string(f);
+            const Tag   s = new string(f);
             const Input i = Kernel::MakeInput::FromFile(f);
             return new Module(s,i,c,FileStream);
         }
@@ -42,7 +42,7 @@ namespace upsylon {
                                    const size_t       size)
         {
             assert(!(NULL==data&&size>0));
-            const Stamp s = new string(dataName);
+            const Tag   s = new string(dataName);
             const Input i = Kernel::MakeInput::FromData(data,size);
             return new Module(s,i,c,DataStream);
         }

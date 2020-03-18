@@ -27,6 +27,16 @@ namespace upsylon {
             handle = h;
         }
         
+        size_t Source:: depth() const throw()
+        {
+            return history.size();
+        }
+
+        void Source:: newLine() throw()
+        {
+            handle->newLine();
+        }
+        
         Char * Source:: tryGet()
         {
         TRY_GET_CHAR:

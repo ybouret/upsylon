@@ -29,7 +29,7 @@ namespace upsylon {
             {
                 Char *ch = cache->query();
                 aliasing::_(ch->code)    = content;
-                aliasing::_(ch->stamp)   = context.stamp;
+                aliasing::_(ch->tag)     = context.tag;
                 aliasing::_(ch->line)    = context.line;
                 aliasing::_(ch->column)  = context.column;
                 return ch;

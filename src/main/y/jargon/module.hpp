@@ -65,7 +65,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Module);
-            explicit Module(const Stamp       &,
+            explicit Module(const Tag         &,
                             const Input       &,
                             const Char::Cache &,
                             const Type         ) throw();

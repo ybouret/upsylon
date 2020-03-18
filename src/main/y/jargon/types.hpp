@@ -12,8 +12,7 @@ namespace upsylon {
      
         typedef object                Object;        //!< alias
         typedef counted_object        CountedObject; //!< alias
-        typedef arc_ptr<const string> Stamp;         //!< shared stamp
-        
+        typedef arc_ptr<const string> Tag;           //!< shared tag
     }
     
 }

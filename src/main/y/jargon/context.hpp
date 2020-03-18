@@ -14,15 +14,15 @@ namespace upsylon {
         class Context
         {
         public:
-            const Stamp    stamp;   //!< shared stamp
+            const Tag      tag;     //!< shared tag
             const int      line;    //!< current line of content
             const int      column;  //!< current column of content
             
-            explicit Context(const Stamp  &) throw(); //!< setup line=1, column=1
+            explicit Context(const Tag    &) throw(); //!< setup line=1, column=1
             explicit Context(const string &);         //!< setup from string
             explicit Context(const char   *);         //!< setup from text
             Context(const Context &) throw();         //!< no-throw copy
-            virtual ~Context() throw();               //!< cleanup
+            virtual ~Context()       throw();         //!< cleanup
             
         private:
             Y_DISABLE_ASSIGN(Context);
