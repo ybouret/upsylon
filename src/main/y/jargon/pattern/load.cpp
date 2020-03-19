@@ -63,8 +63,9 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // logic
                     //----------------------------------------------------------
-                case AND::UUID: return LoadLogical(AND::Create(),fp);
-                case OR:: UUID: return LoadLogical(OR:: Create(),fp );
+                case AND:: UUID: return LoadLogical(AND:: Create(),fp);
+                case OR::  UUID: return LoadLogical(OR::  Create(),fp );
+                case NONE::UUID: return LoadLogical(NONE::Create(),fp );
 
                     
                     

@@ -113,6 +113,15 @@ Y_UTEST(jargon_pattern)
         Y_CHECK( dict.insert("Or",p.yield())   ); Y_CHECK( dict.search("Or") );
     }
     
+    {
+        auto_ptr<Logical> p = NONE::Create();
+        p->push_back( Single::Create('a') );
+        p->push_back( Single::Create('b') );
+        p->push_back( Single::Create('a') );
+        p->simplify();
+        Y_CHECK( dict.insert("None",p.yield())   ); Y_CHECK( dict.search("None") );
+    }
+    
     
     const bool jargon_pattern_success = dict.for_each( test ) ;
     Y_CHECK(jargon_pattern_success);
