@@ -24,11 +24,10 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            typedef list<uint8_t>                path;      //!< used to rebuild keys
-            class                                node_type; //!< forward declaration
-            typedef core::list_of_cpp<node_type> node_list; //!< for tree
-            
-            static upsylon::string path2string( const path &key );
+            typedef list<uint8_t>                path;         //!< used to rebuild keys
+            class                                node_type;    //!< forward declaration
+            typedef core::list_of_cpp<node_type> node_list;    //!< for tree
+            static  upsylon::string path2string(const path &); //!< helper
             
             //! internal node for tree
             class node_type : public object, public inode<node_type>, public ios::vizible

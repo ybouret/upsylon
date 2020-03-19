@@ -18,7 +18,7 @@ namespace upsylon {
         public Vizible
         {
         public:
-            typedef core::list_of_cloneable<Pattern> List;
+            typedef core::list_of_cloneable<Pattern> List; //!< alias
             //------------------------------------------------------------------
             //
             // virtual interface

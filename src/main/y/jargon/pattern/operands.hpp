@@ -10,14 +10,16 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! upgraded list of cloneable patters
         class Operands : public Pattern::List
         {
         public:
-            explicit Operands() throw();
-            virtual ~Operands() throw();
-            Operands(const Operands &);
+            explicit Operands() throw(); //!< setup
+            virtual ~Operands() throw(); //!< cleanup
+            Operands(const Operands &);  //!< copy by cloing
             
-            static bool Alike( const Operands &lhs, const Operands &rhs ) throw();
+            
+            static bool Alike(const Operands &, const Operands &) throw(); //!< test alike
             
         private:
             Y_DISABLE_ASSIGN(Operands);

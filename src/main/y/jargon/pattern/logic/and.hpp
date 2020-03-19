@@ -9,7 +9,7 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //! Logic based pattern
+        //! Logic AND based patter
         class And : public Logic
         {
         public:
@@ -27,7 +27,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             virtual      ~And() throw(); //!< cleanup
-            static Logic *Create();
+            static Logic *Create();      //!< create without operands
             
         
             
