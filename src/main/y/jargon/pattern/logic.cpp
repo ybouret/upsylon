@@ -6,23 +6,23 @@ namespace upsylon {
     
     namespace Jargon {
         
-        Logic:: ~Logic() throw()
+        Logical:: ~Logical() throw()
         {
         }
         
-        Logic:: Logic(const uint32_t u) throw() :
+        Logical:: Logical(const uint32_t u) throw() :
         Pattern(u)
         {
         }
         
-        Logic::Logic(const Logic &other) :
+        Logical::Logical(const Logical &other) :
         Pattern(other),
         Operands(other)
         {
             
         }
         
-        size_t Logic:: serialize(ios::ostream &fp) const
+        size_t Logical:: serialize(ios::ostream &fp) const
         {
             size_t n = emitUUID(fp);
             {
@@ -37,7 +37,7 @@ namespace upsylon {
             return n;
         }
         
-        void Logic:: viz(ios::ostream &fp) const
+        void Logical:: viz(ios::ostream &fp) const
         {
             for(const Pattern *op = head; op; op=op->next)
             {

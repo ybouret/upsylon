@@ -16,7 +16,7 @@ using namespace Jargon;
 namespace {
     
     
-
+    
     class Tester
     {
     public:
@@ -38,7 +38,7 @@ namespace {
         void run(const Pattern &p)
         {
             std::cerr << "testing <" << p.className() << ">" << std::endl;
-           
+            
         }
         
         bool operator()( const suffix_path &key, const Motif &m )
@@ -88,7 +88,7 @@ Y_UTEST(jargon_pattern)
     Y_UTEST_SIZEOF( Single   );
     Y_UTEST_SIZEOF( Range    );
     Y_UTEST_SIZEOF( Excluded );
-
+    
     Tester      test( (argc>1) ? argv[1] : NULL );
     Dictionary  dict;
     Y_CHECK( dict.insert("Any1",     Any1::Create()          ) ); Y_CHECK( dict.search("Any1")     );
@@ -96,12 +96,23 @@ Y_UTEST(jargon_pattern)
     Y_CHECK( dict.insert("Range",    Range::Create('a', 'z') ) ); Y_CHECK( dict.search("Range")    );
     Y_CHECK( dict.insert("Excluded", Excluded::Create('a') )   ); Y_CHECK( dict.search("Excluded") );
     
-    auto_ptr<Logic> p = And::Create();
-    p->push_back( Single::Create('a') );
-    p->push_back( Single::Create('b') );
-
-    Y_CHECK( dict.insert("And",p.yield())   ); Y_CHECK( dict.search("And") );
-
+    {
+        auto_ptr<Logical> p = AND::Create();
+        p->push_back( Single::Create('a') );
+        p->push_back( Single::Create('b') );
+        p->simplify();
+        Y_CHECK( dict.insert("And",p.yield())   ); Y_CHECK( dict.search("And") );
+    }
+    
+    {
+        auto_ptr<Logical> p = OR::Create();
+        p->push_back( Single::Create('a') );
+        p->push_back( Single::Create('b') );
+        p->push_back( Single::Create('a') );
+        p->simplify();
+        Y_CHECK( dict.insert("Or",p.yield())   ); Y_CHECK( dict.search("Or") );
+    }
+    
     
     const bool jargon_pattern_success = dict.for_each( test ) ;
     Y_CHECK(jargon_pattern_success);

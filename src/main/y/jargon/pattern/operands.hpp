@@ -16,10 +16,13 @@ namespace upsylon {
         public:
             explicit Operands() throw(); //!< setup
             virtual ~Operands() throw(); //!< cleanup
-            Operands(const Operands &);  //!< copy by cloing
+            Operands(const Operands &);  //!< copy by cloning
             
             
-            static bool Alike(const Operands &, const Operands &) throw(); //!< test alike
+            static bool Alike(const Operands *, const Operands *) throw(); //!< test alike
+            
+        protected:
+            void removeRedondant() throw(); //!< remove redondant operands, keeping order
             
         private:
             Y_DISABLE_ASSIGN(Operands);

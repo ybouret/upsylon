@@ -10,7 +10,7 @@ namespace upsylon {
     namespace Jargon {
         
         //! Logic AND based patter
-        class And : public Logic
+        class AND : public Logical
         {
         public:
             //------------------------------------------------------------------
@@ -26,15 +26,15 @@ namespace upsylon {
             // specific methods
             //
             //------------------------------------------------------------------
-            virtual      ~And() throw(); //!< cleanup
-            static Logic *Create();      //!< create without operands
-            
+            virtual         ~AND() throw();      //!< cleanup
+            static  Logical *Create();           //!< create without operands
+            virtual void     simplify() throw(); //!< ...
         
             
         private:
-            explicit And() throw();
-            explicit And(const And &other);
-            Y_DISABLE_ASSIGN(And);
+            explicit AND() throw();
+            explicit AND(const AND &other);
+            Y_DISABLE_ASSIGN(AND);
             virtual  Pattern    *clone()                    const;
             virtual  bool        alike(const Pattern *)     const throw();
             virtual  bool        univocal()                 const throw();

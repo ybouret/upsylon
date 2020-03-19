@@ -13,7 +13,7 @@ namespace upsylon {
         static const char fn[] = "Jargon::Pattern::Load";
         
         
-        Pattern * LoadLogic( Logic *p, ios::istream &fp)
+        Pattern * LoadLogical( Logical *p, ios::istream &fp)
         {
             assert(p);
             auto_ptr<Pattern> guard(p);
@@ -33,6 +33,10 @@ namespace upsylon {
             
             switch(id)
             {
+                    //----------------------------------------------------------
+                    // basic
+                    //----------------------------------------------------------
+
                 case Any1  ::UUID: return Any1::Create();
                     
                 case Single::UUID: {
@@ -56,8 +60,12 @@ namespace upsylon {
                     return Range::Create(lower,upper);
                 }
                     
-                case And::UUID: return LoadLogic( And::Create(), fp );
-                    
+                    //----------------------------------------------------------
+                    // logic
+                    //----------------------------------------------------------
+                case AND::UUID: return LoadLogical(AND::Create(),fp);
+                case OR:: UUID: return LoadLogical(OR:: Create(),fp );
+
                     
                     
                 default:

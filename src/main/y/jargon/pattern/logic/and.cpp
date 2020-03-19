@@ -5,28 +5,32 @@ namespace upsylon {
     
     namespace Jargon {
         
-        Y_PATTERN_CLID(And);
+        Y_PATTERN_CLID(AND);
         
-        And:: And() throw() : Logic(UUID)
+        AND:: AND() throw() : Logical(UUID)
         {
-            Y_PATTERN_SELF(And);
+            Y_PATTERN_SELF(AND);
         }
         
-        And:: And(const And &other) : Logic(other)
+        AND:: AND(const AND &other) : Logical(other)
         {
-            Y_PATTERN_SELF(And);
+            Y_PATTERN_SELF(AND);
         }
         
-        And:: ~And() throw()
+        AND:: ~AND() throw()
         {
         }
         
-        Logic * And::Create()
+        Logical * AND::Create()
         {
-            return new And();
+            return new AND();
         }
         
-        bool And:: feeble() const throw()
+        void AND:: simplify() throw()
+        {
+        }
+        
+        bool AND:: feeble() const throw()
         {
             for(const Pattern *op=head;op;op=op->next)
             {
@@ -35,7 +39,7 @@ namespace upsylon {
             return true;
         }
         
-        bool And:: univocal() const throw()
+        bool AND:: univocal() const throw()
         {
             for(const Pattern *op=head;op;op=op->next)
             {
@@ -44,24 +48,24 @@ namespace upsylon {
             return true;
         }
 
-        Pattern *And:: clone() const
+        Pattern *AND:: clone() const
         {
-            return new And(*this);
+            return new AND(*this);
         }
         
-        bool And:: alike(const Pattern *p) const throw()
+        bool AND:: alike(const Pattern *p) const throw()
         {
             assert(p);
-            return ( (UUID==p->uuid) && Alike(*this, *(p->as<And>()) ) );
+            return ( (UUID==p->uuid) && Alike(this,p->as<AND>()) );
         }
         
-        void And:: vizCore(ios::ostream &fp)  const
+        void AND:: vizCore(ios::ostream &fp)  const
         {
             endl(fp << " [label=\"&&\",shape=house,style=" << vizStyle() << "]");
             viz(fp);
         }
         
-        bool And:: match(Token &token, Source &source)   const
+        bool AND:: match(Token &token, Source &source)   const
         {
             assert(0==token.size);
             try
