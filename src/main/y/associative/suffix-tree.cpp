@@ -77,3 +77,23 @@ namespace upsylon {
     }
 }
 
+#include "y/string.hpp"
+
+namespace upsylon {
+    
+    namespace core {
+        
+        upsylon::string suffix_tree:: path2string( const path &key )
+        {
+            size_t               n = key.size();
+            upsylon::string      s(n,as_capacity,false);
+            path::const_iterator k = key.begin();
+            while(n-- >0 )
+            {
+                s << char(*(k++));
+            }
+            return s;
+        }
+    }
+    
+}

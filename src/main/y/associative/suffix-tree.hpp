@@ -9,6 +9,7 @@
 #include "y/code/utils.hpp"
 #include "y/core/inode.hpp"
 #include "y/iterate/linked.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon {
     
@@ -26,7 +27,9 @@ namespace upsylon {
             typedef list<uint8_t>                path;      //!< used to rebuild keys
             class                                node_type; //!< forward declaration
             typedef core::list_of_cpp<node_type> node_list; //!< for tree
-
+            
+            static upsylon::string path2string( const path &key );
+            
             //! internal node for tree
             class node_type : public object, public inode<node_type>, public ios::vizible
             {
@@ -412,13 +415,13 @@ namespace upsylon {
         }
 
         //! search with text
-        inline bool search_by(const char *text) throw()
+        inline const_type *search_by(const char *text) const throw()
         {
             return search_by(text, text ? strlen(text) : 0);
         }
 
         //! search with buffer
-        inline bool search_by(const memory::ro_buffer &buffer) throw()
+        inline const_type *search_by(const memory::ro_buffer &buffer) const throw()
         {
             return search_by(buffer.ro(),buffer.length());
         }

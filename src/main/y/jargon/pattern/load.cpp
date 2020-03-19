@@ -28,6 +28,13 @@ namespace upsylon {
                     return Single::Create(code);
                 }
                     
+                case Excluded::UUID: {
+                    uint8_t code = 0;
+                    if(!fp.query_net(code))
+                        throw exception("%s(missing Excluded.code)",fn);
+                    return Excluded::Create(code);
+                }
+                    
                 case Range::UUID: {
                     uint8_t lower=0, upper=0;
                     if(!fp.query_net(lower)) throw exception("%s(missing Range.lower)",fn);

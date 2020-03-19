@@ -1,7 +1,6 @@
 
-#include "y/jargon/pattern/basic/any1.hpp"
-#include "y/jargon/pattern/basic/single.hpp"
-#include "y/jargon/pattern/basic/range.hpp"
+#include "y/jargon/pattern/basic/all.hpp"
+#include "y/jargon/pattern/dictionary.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -12,43 +11,79 @@ using namespace Jargon;
 
 namespace {
     
-    void doTest(const Pattern &p,
-                Source &source,
-                Token  &content)
+    
+
+    class Tester
     {
-        std::cerr << "testing <" << p.className() << ">" << std::endl;
+    public:
+        Char::Cache cache;
+        Source      source;
+        Token       content;
         
+        Tester(const char *filename) :
+        cache( new Char::Pool() ),
+        source( cache, (NULL!=filename) ? Module::OpenFile(cache,filename) : Module::OpenData(cache,"NULL", 0,0) ),
+        content(cache)
         {
-            const string binName = string("p") + p.className() + ".bin";
-            p.save_to(binName);
-            {
-                ios::icstream fp(binName);
-                auto_ptr<Pattern> q = Pattern::Load(fp);
-                Y_CHECK( q->alike(&p) );
-            }
         }
         
-        p.test(source, content);
-        source.unget(content);
-        std::cerr << "/done" << std::endl;
+        ~Tester() throw()
+        {
+        }
+        
+        void run(const Pattern &p)
+        {
+            std::cerr << "testing <" << p.className() << ">" << std::endl;
+           
+        }
+        
+        bool operator()( const suffix_path &key, const Motif &m )
+        {
+            const Pattern &p    = *m;
+            const string   name = core::suffix_tree::path2string(key);
+            std::cerr << "Testing " << name << " as <" << p.className() << ">" << std::endl;
+            std::cerr << "|_feeble:   " << p.feeble()   << std::endl;
+            std::cerr << "|_strong:   " << p.strong()   << std::endl;
+            std::cerr << "|_multiple: " << p.multiple() << std::endl;
+            std::cerr << "|_univocal: " << p.univocal() << std::endl;
+            {
+                const string binName = string("p") + p.className() + ".bin";
+                p.save_to(binName);
+                {
+                    ios::icstream fp(binName);
+                    auto_ptr<Pattern> q = Pattern::Load(fp);
+                    Y_ASSERT( q->alike(&p) );
+                }
+            }
+            
+            p.test(source, content);
+            source.unget(content);
+            return true;
+        }
         
         
-    }
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Tester);
+    };
+    
     
 }
 
 Y_UTEST(jargon_pattern)
 {
-    Char::Cache cache  = new Char::Pool();
-    Module     *module = (argc>1) ? Module::OpenFile(cache,argv[1]) : Module::OpenData(cache,"NULL", 0,0);
-    Source      source(cache,module);
-    Token       content(cache);
-    
+    Tester      test( (argc>1) ? argv[1] : NULL );
+    Dictionary  dict;
+    Y_CHECK( dict.insert("Any1",   Any1::Create()         ) ); Y_CHECK( dict.search("Any1")   );
+    Y_CHECK( dict.insert("Single", Single::Create('a')    ) ); Y_CHECK( dict.search("Single") );
+    Y_CHECK( dict.insert("Range",  Range::Create('a', 'z')) ); Y_CHECK( dict.search("Range")  );
+    Y_CHECK( dict.insert("Excluded", Excluded::Create('a') ) ); Y_CHECK( dict.search("Excluded") );
+
     auto_ptr<Pattern> p = NULL;
     
-    p = Any1::Create();           doTest(*p,source,content);
-    p = Single::Create('a');      doTest(*p,source,content);
-    p = Range::Create('a', 'z');  doTest(*p,source,content);
+    const bool success = dict.for_each( test ) ;
+    Y_CHECK(success);
+    
     
 }
 Y_UTEST_DONE()

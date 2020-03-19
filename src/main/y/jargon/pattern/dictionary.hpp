@@ -21,6 +21,11 @@ namespace upsylon {
             virtual ~Dictionary() throw();  //!< cleanup
             Dictionary(const Dictionary &); //!< copy
             
+            bool insert(const string &name, const Pattern *p);
+            bool insert(const char   *name, const Pattern *p);
+            const Motif *search(const string &name) const throw();
+            const Motif *search(const char   *name) const throw();
+
         private:
             Y_DISABLE_ASSIGN(Dictionary);
         };
