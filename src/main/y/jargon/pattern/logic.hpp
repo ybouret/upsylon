@@ -2,14 +2,14 @@
 #ifndef Y_JARGON_PATTERN_LOGIC_INCLUDED
 #define Y_JARGON_PATTERN_LOGIC_INCLUDED 1
 
-#include "y/jargon/pattern.hpp"
+#include "y/jargon/pattern/operands.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
         
         //! Logic based pattern
-        class Logic : public Pattern
+        class Logic : public Pattern, public Operands
         {
         public:
             virtual ~Logic() throw(); //!< cleanup

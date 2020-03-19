@@ -25,7 +25,11 @@ namespace upsylon {
             bool insert(const char   *name, const Pattern *p);
             const Motif *search(const string &name) const throw();
             const Motif *search(const char   *name) const throw();
+            
+            const Motif & operator[](const string &name) const;
+            const Motif & operator[](const char   *name) const;
 
+            
         private:
             Y_DISABLE_ASSIGN(Dictionary);
         };

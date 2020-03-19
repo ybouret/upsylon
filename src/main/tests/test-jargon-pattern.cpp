@@ -1,10 +1,13 @@
 
 #include "y/jargon/pattern/basic/all.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
+#include "y/jargon/pattern/operands.hpp"
 
 #include "y/utest/run.hpp"
-#include "y/ptr/auto.hpp"
+#include "y/utest/sizeof.hpp"
+
 #include "y/ios/icstream.hpp"
+#include "y/ptr/auto.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -72,18 +75,27 @@ namespace {
 
 Y_UTEST(jargon_pattern)
 {
+    Y_UTEST_SIZEOF( Pattern  );
+    Y_UTEST_SIZEOF( Any1     );
+    Y_UTEST_SIZEOF( Single   );
+    Y_UTEST_SIZEOF( Range    );
+    Y_UTEST_SIZEOF( Excluded );
+
     Tester      test( (argc>1) ? argv[1] : NULL );
     Dictionary  dict;
-    Y_CHECK( dict.insert("Any1",   Any1::Create()         ) ); Y_CHECK( dict.search("Any1")   );
-    Y_CHECK( dict.insert("Single", Single::Create('a')    ) ); Y_CHECK( dict.search("Single") );
-    Y_CHECK( dict.insert("Range",  Range::Create('a', 'z')) ); Y_CHECK( dict.search("Range")  );
-    Y_CHECK( dict.insert("Excluded", Excluded::Create('a') ) ); Y_CHECK( dict.search("Excluded") );
+    Y_CHECK( dict.insert("Any1",     Any1::Create()          ) ); Y_CHECK( dict.search("Any1")     );
+    Y_CHECK( dict.insert("Single",   Single::Create('a')     ) ); Y_CHECK( dict.search("Single")   );
+    Y_CHECK( dict.insert("Range",    Range::Create('a', 'z') ) ); Y_CHECK( dict.search("Range")    );
+    Y_CHECK( dict.insert("Excluded", Excluded::Create('a') )   ); Y_CHECK( dict.search("Excluded") );
 
-    auto_ptr<Pattern> p = NULL;
     
     const bool success = dict.for_each( test ) ;
     Y_CHECK(success);
     
+    
+    Operands ops;
+    ops << dict["Any1"];
+    ops << dict["Range"]->clone();
     
 }
 Y_UTEST_DONE()

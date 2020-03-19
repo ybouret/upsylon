@@ -43,7 +43,34 @@ namespace upsylon {
         {
             return search_by(name);
         }
+        
+       
+        
+        const Motif & Dictionary:: operator[](const char *name) const
+        {
+            const Dictionary &self = *this;
+            const string      _    =  name;
+            return self[_];
 
+        }
+    }
+    
+}
+
+#include "y/exception.hpp"
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        const Motif & Dictionary:: operator[](const string &name) const
+        {
+            const Motif *motif = search(name);
+            if( !motif ) throw exception("no Jargon::Dictionary['%s']", *name);
+            return *motif;
+        }
+        
+        
+      
         
     }
     

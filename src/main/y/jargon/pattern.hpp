@@ -12,7 +12,6 @@ namespace upsylon {
     
         //! base class for patterns recognition
         class Pattern : public CountedObject,
-        public inode<Pattern>,
         public Serializable
         {
         public:
@@ -76,8 +75,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Pattern);
         };
         
-        //! smart pointer for a compilerd pattern
-        typedef arc_ptr<const Pattern> Motif;
+        
         
         //! registering self
 #define Y_PATTERN_SELF(CLASS) do { self = static_cast<CLASS*>(this); } while(false)
@@ -101,6 +99,11 @@ const char CLASS::CLID[] = Y_FOURCC_CHAR8(CLASS::UUID)
         
         //! for 4 chars UUID
 #define Y_PATTERN_CC4(A,B,C,D) Y_FOURCC(A,B,C,D)
+        
+        //! smart pointer for a compilerd pattern
+        typedef arc_ptr<const Pattern> Motif;
+        
+        
         
     }
     
