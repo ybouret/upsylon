@@ -384,6 +384,12 @@ SET(jargon_pattern_srcs ${jargon_pattern_decl} ${jargon_pattern_code})
 SOURCE_GROUP( jargon/pattern FILES ${jargon_pattern_srcs} )
 INSTALL( FILES ${jargon_pattern_decl} DESTINATION include/y/jargon/pattern )
 
+FILE(GLOB jargon_pattern_basic_decl y/jargon/pattern/basic/*.hpp)
+FILE(GLOB jargon_pattern_basic_code y/jargon/pattern/basic/*.cpp)
+SET(jargon_pattern_basic_srcs ${jargon_pattern_basic_decl} ${jargon_pattern_basic_code})
+SOURCE_GROUP( jargon/pattern/basic FILES ${jargon_pattern_basic_srcs} )
+INSTALL( FILES ${jargon_pattern_basic_decl} DESTINATION include/y/jargon/pattern/basic )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -429,7 +435,7 @@ ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
 ${counting_srcs}
 ${oxide_srcs} ${oxide_field_srcs} ${oxide_grid_srcs} ${oxide_algo_srcs} ${oxide_mpi_srcs}
-${jargon_srcs} ${jargon_pattern_srcs}
+${jargon_srcs} ${jargon_pattern_srcs} ${jargon_pattern_basic_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

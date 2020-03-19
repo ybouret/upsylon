@@ -1,6 +1,7 @@
 
 #include "y/jargon/pattern.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon {
     
@@ -18,6 +19,13 @@ namespace upsylon {
         {
         }
         
+        size_t Pattern:: emitUUID(ios::ostream &fp) const
+        {
+            size_t nw = 0;
+            fp.emit_net(uuid,&nw);
+            return nw;
+        }
+
     }
     
 }
