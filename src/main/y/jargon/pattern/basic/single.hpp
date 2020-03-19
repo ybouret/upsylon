@@ -26,11 +26,13 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Single);
-            virtual Pattern    *clone() const;
-            virtual bool        alike(const Pattern *) const throw();
+            virtual Pattern    *clone()                    const;
+            virtual bool        alike(const Pattern *)     const throw();
+            virtual bool        good(const uint8_t)        const throw();
+            virtual bool        univocal()                 const throw();
+            
             virtual size_t      serialize( ios::ostream &) const;
-            virtual const char *className() const throw();
-            virtual bool        good(const uint8_t) const throw();
+            virtual const char *className()                const throw();
         };
         
     }

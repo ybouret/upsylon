@@ -42,6 +42,10 @@ namespace upsylon {
         {
             return true;
         }
+        
+        bool Any1:: univocal() const throw() { return false; }
+        
+        
 
     }
     

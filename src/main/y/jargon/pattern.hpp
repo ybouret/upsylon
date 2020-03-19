@@ -16,18 +16,20 @@ namespace upsylon {
         {
         public:
             
-            virtual ~Pattern() throw();
-            
             // virtual interface
-            virtual Pattern * clone() const = 0;
-            virtual bool      alike(const Pattern *) const throw() = 0;
-            
-            const uint32_t uuid;
-            void          *self;
+            virtual          ~Pattern() throw();
+            virtual Pattern * clone()                   const         = 0;
+            virtual bool      alike(const Pattern *)    const throw() = 0;
+            virtual bool      match(Token &t, Source &) const         = 0;   //!< try to match
+            virtual bool      univocal()                const throw() = 0;   //!< guess if univocal
+           
+           
             
             // non virtual interface
             size_t emitUUID(ios::ostream &fp) const;
-          
+            bool   multiple() const throw(); //!< !univocal()
+            
+            
             template <typename PATTERN> inline
             PATTERN *as() throw()
             {
@@ -41,6 +43,11 @@ namespace upsylon {
                 assert(PATTERN::UUID==uuid);assert(self);
                 return static_cast<const PATTERN *>(self);
             }
+            
+            const uint32_t uuid;
+            void          *self;
+            
+            void test(Source &source, Token &content) const;
             
         protected:
             explicit Pattern(const uint32_t) throw();

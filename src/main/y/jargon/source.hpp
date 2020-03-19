@@ -19,8 +19,8 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-            explicit     Source(Module *module) throw(); //!< setup with first module
-            virtual     ~Source() throw();               //!< cleanup
+            explicit     Source(const Char::Cache &,Module *) throw(); //!< setup with first module
+            virtual     ~Source() throw();                       //!< cleanup
        
             //__________________________________________________________________
             //
@@ -38,20 +38,27 @@ namespace upsylon {
             void         unget(Char *)        throw();   //!< unget a Char
             void         unget(Char::List &l) throw();   //!< unget a Token
             void         uncpy(const Char::List &l);     //!< unget a copy of a Token
+          
             
             //__________________________________________________________________
             //
-            // Cache management
+            // I/O  management
             //__________________________________________________________________
             void         skip(const size_t n) throw();   //!< skip iobuf
-            void         prefetch(size_t n);             //!< prefetch at most n Char
-          
+            size_t       prefetch(size_t n);             //!< prefetch at most n Char
+            bool         alive();                        //!< check if get() shall return a valid Char
+            uint8_t      peek() const throw();           //!< if iobuf not empty
+            uint8_t      pop()  throw();                 //!< peek and skip(1)
+            size_t       buffered() const throw();
+            
             //__________________________________________________________________
             //
             // istream behavior, will drop contexts
             //__________________________________________________________________
             virtual bool query(char &C);                 //!< ios::istream interface
             virtual void store(char  C);                 //!< ios::istream interface
+            
+            Char::Cache & cache() const throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);

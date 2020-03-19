@@ -73,6 +73,10 @@ namespace upsylon {
             return lower<=ch && ch<=upper;
         }
         
+        bool Range:: univocal() const throw() { return lower==upper; }
+        
+        
+        
     }
     
 }

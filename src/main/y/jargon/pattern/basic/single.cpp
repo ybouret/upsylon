@@ -45,6 +45,10 @@ namespace upsylon {
             return ch==code;
         }
         
+        bool Single:: univocal() const throw() { return true; }
+        
+        
+
     }
     
 }

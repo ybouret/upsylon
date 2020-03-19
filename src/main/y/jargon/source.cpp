@@ -11,9 +11,9 @@ namespace upsylon {
         }
         
         
-        Source:: Source( Module *module ) throw() :
+        Source:: Source( const Char::Cache &cache, Module *module ) throw() :
         handle(module),
-        iobuf(handle->cache),
+        iobuf(cache),
         history()
         {
             
@@ -55,14 +55,62 @@ namespace upsylon {
             return (iobuf.size>0) ? iobuf.pop_front() : tryGet();
         }
         
-        void  Source:: prefetch(size_t n)
+        bool Source:: alive()
         {
+            if(iobuf.size>0)
+            {
+                return true;
+            }
+            else
+            {
+                Char *ch = tryGet();
+                if(ch)
+                {
+                    iobuf.push_back(ch);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        
+        uint8_t Source:: peek() const throw()
+        {
+            assert(iobuf.size>0);
+            return iobuf.head->code;
+        }
+        
+        uint8_t Source:: pop()  throw()
+        {
+            assert(iobuf.size>0);
+            const uint8_t ans = iobuf.head->code;
+            iobuf.skip(1);
+            return ans;
+        }
+        
+        size_t Source:: buffered() const throw()
+        {
+            return iobuf.size;
+        }
+        
+        Char::Cache & Source:: cache() const throw()
+        {
+            return aliasing::_(iobuf.cache);
+        }
+        
+        size_t  Source:: prefetch(size_t n)
+        {
+            size_t count = 0;
             while(n-- > 0 )
             {
                 Char *ch = tryGet();
                 if(!ch) break;
                 iobuf.push_back(ch);
+                ++count;
             }
+            return count;
         }
 
 

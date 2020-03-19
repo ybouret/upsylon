@@ -12,7 +12,7 @@ Y_UTEST(jargon_source)
     if(argc>1)
     {
         int j=argc-1;
-        Source source(Module::OpenFile(cache,argv[j]));
+        Source source(cache,Module::OpenFile(cache,argv[j]));
         while(j>1) source.load( Module::OpenFile(cache,argv[--j]));
         
         Token content(cache);

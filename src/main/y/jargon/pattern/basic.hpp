@@ -19,7 +19,9 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Basic);
-            virtual bool good(const uint8_t ch) const throw() = 0;
+            virtual bool good(const uint8_t)        const throw() = 0;
+            virtual bool match(Token &, Source &)   const;
+            
         };
         
     }
