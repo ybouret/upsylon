@@ -5,6 +5,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/ios/icstream.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -16,9 +17,22 @@ namespace {
                 Token  &content)
     {
         std::cerr << "testing <" << p.className() << ">" << std::endl;
+        
+        {
+            const string binName = string("p") + p.className() + ".bin";
+            p.save_to(binName);
+            {
+                ios::icstream fp(binName);
+                auto_ptr<Pattern> q = Pattern::Load(fp);
+                Y_CHECK( q->alike(&p) );
+            }
+        }
+        
         p.test(source, content);
         source.unget(content);
         std::cerr << "/done" << std::endl;
+        
+        
     }
     
 }

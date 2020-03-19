@@ -46,7 +46,7 @@ namespace upsylon {
                 void     store( List &l  ) throw(); //!< store a used Token
                 Char    *query() throw();           //!< query a used Char
                 
-                void     optimize();
+                void     optimize();                       //!< sort by increasing addres
                 void     maxChars(const size_t max_chars); //!< keep no more that max_chars in cache
                 void     maxBytes(const size_t max_bytes); //!< keep no more that max_bytes in cache
                 

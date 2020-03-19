@@ -47,11 +47,16 @@ namespace upsylon {
                 {
                     assert(source.alive());
                     assert(0==token.size);
-                    assert(source.buffered());
+                    assert(source.bufferSize());
                     content << source.get();
                     std::cerr << *content.tail;
                 }
             }
+        }
+        
+        bool Pattern:: strong() const throw()
+        {
+            return !feeble();
         }
 
     }

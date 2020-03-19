@@ -10,20 +10,36 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! accept a range [lower-upper] of chars
         class Range : public Basic
         {
         public:
-            static const uint32_t UUID = Y_PATTERN_CC3('R','N','G');
-            static const char     CLID[];
+            //------------------------------------------------------------------
+            //
+            // definitions
+            //
+            //------------------------------------------------------------------
+            static const uint32_t UUID = Y_PATTERN_CC3('R','N','G'); //!< UUID
+            static const char     CLID[];                            //!< CLID
             
-            virtual        ~Range() throw();
-            static Pattern *Create(const uint8_t a, const uint8_t b);
+            //------------------------------------------------------------------
+            //
+            // specific methods
+            //
+            //------------------------------------------------------------------
+            virtual        ~Range() throw();                          //!< cleanup
+            static Pattern *Create(const uint8_t a, const uint8_t b); //!< create with optimization if a==b
             
-            const uint8_t lower;
-            const uint8_t upper;
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            const uint8_t lower; //!< lower bound
+            const uint8_t upper; //!< upper bound
             
         protected:
-            explicit Range(const uint8_t,const uint8_t) throw();
+            explicit Range(const uint8_t,const uint8_t) throw(); //!< setup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Range);

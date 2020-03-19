@@ -76,6 +76,7 @@ namespace upsylon {
             }
         }
         
+#if 0
         uint8_t Source:: peek() const throw()
         {
             assert(iobuf.size>0);
@@ -89,8 +90,9 @@ namespace upsylon {
             iobuf.skip(1);
             return ans;
         }
+#endif
         
-        size_t Source:: buffered() const throw()
+        size_t Source:: bufferSize() const throw()
         {
             return iobuf.size;
         }

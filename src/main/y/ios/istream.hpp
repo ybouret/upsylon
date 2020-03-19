@@ -45,9 +45,9 @@ namespace upsylon
             bool gets( string &line );
 
             //! read exactly buflen bytes
-            void input(void *buffer,const size_t buflen);
+            void input(void *buffer,const size_t buflen, const char *when=0);
 
-            //! read at most bulen
+            //! read at most buflen
             size_t try_get(void *buffer,const size_t buflen);
 
             //! get an integral type in network byte order, with optional COUNT of read bytes=sizeofT()
@@ -55,6 +55,24 @@ namespace upsylon
             T read_net(size_t *count=NULL)
             { T ans(0); input(&ans,sizeof(T)); gist::assign(count,sizeof(T)); return swap_be_as<T>(ans); }
 
+            //! try to query an integral type in network byte order, with optional COUNT of read bytes
+            template <typename T> inline
+            bool query_net(T &ans, size_t *count=NULL)
+            {
+                const size_t num = try_get(&ans,sizeof(T));
+                gist::assign(count,sizeof(T));
+                if(num<sizeof(T))
+                {
+                    
+                    return false;
+                }
+                else
+                {
+                    ans = swap_be_as(ans);
+                    return true;
+                }
+            }
+            
             //! read a packed unsigned, with optional COUNT of read byte
             template <typename T>
             inline T read_upack(size_t *count=NULL)

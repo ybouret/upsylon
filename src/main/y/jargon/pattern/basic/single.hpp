@@ -9,20 +9,36 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! matching a single char
         class Single : public Basic
         {
         public:
-            static const uint32_t UUID = Y_PATTERN_CC4('S','N','G','L');
-            static const char     CLID[];
+            //------------------------------------------------------------------
+            //
+            // definitions
+            //
+            //------------------------------------------------------------------
+            static const uint32_t UUID = Y_PATTERN_CC4('S','N','G','L'); //!< UUID
+            static const char     CLID[];                                //!< CLID
             
-            virtual        ~Single() throw();
-            static Pattern *Create(const uint8_t c);
+            //------------------------------------------------------------------
+            //
+            // specific methods
+            //
+            //------------------------------------------------------------------
+            virtual        ~Single() throw();        //!< cleanup
+            static Pattern *Create(const uint8_t c); //!< create
             
-            const uint8_t code;
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            const uint8_t code; //!< the matching code
             
             
         protected:
-            explicit Single(const uint8_t) throw();
+            explicit Single(const uint8_t) throw(); //!< setup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Single);

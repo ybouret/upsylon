@@ -148,6 +148,7 @@ head = tail = node; increase_size()
                 }
             }
             
+            //! syntactix sugar to merge back another list
             inline list_of & operator<<( list_of &other ) throw()
             {
                 merge_back(other);

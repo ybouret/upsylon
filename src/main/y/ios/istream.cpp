@@ -31,7 +31,9 @@ namespace upsylon
             }
         }
 
-        void istream:: input(void *buffer,const size_t buflen)
+        void istream:: input(void        *buffer,
+                             const size_t buflen,
+                             const char  *when)
         {
             assert(!(0==buffer&&buflen>0));
             char *target = static_cast<char *>(buffer);
@@ -41,7 +43,8 @@ namespace upsylon
             {
                 if(!query(C))
                 {
-                    throw imported::exception("End Of Input","istream.read(%u/%u)", unsigned(i+1), unsigned(buflen));
+                    if(!when) when = "!";
+                    throw imported::exception("End Of Input","istream.read(%u/%u) %s", unsigned(i+1), unsigned(buflen), when);
                 }
                 *(target++) = C;
             }

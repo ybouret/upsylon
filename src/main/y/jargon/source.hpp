@@ -47,10 +47,9 @@ namespace upsylon {
             void         skip(const size_t n) throw();   //!< skip iobuf
             size_t       prefetch(size_t n);             //!< prefetch at most n Char
             bool         alive();                        //!< check if get() shall return a valid Char
-            uint8_t      peek() const throw();           //!< if iobuf not empty
-            uint8_t      pop()  throw();                 //!< peek and skip(1)
-            size_t       buffered() const throw();
-            
+            size_t       bufferSize() const throw();     //!< number of chars in buffer
+            Char::Cache &cache()      const throw();     //!< shared cache access
+
             //__________________________________________________________________
             //
             // istream behavior, will drop contexts
@@ -58,7 +57,6 @@ namespace upsylon {
             virtual bool query(char &C);                 //!< ios::istream interface
             virtual void store(char  C);                 //!< ios::istream interface
             
-            Char::Cache & cache() const throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);

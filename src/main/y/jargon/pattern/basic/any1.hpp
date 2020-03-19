@@ -8,14 +8,25 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! accept any char
         class Any1 : public Basic
         {
         public:
-            static const uint32_t UUID = Y_PATTERN_CC3('A','N','Y');
-            static const char     CLID[];
+            //------------------------------------------------------------------
+            //
+            // definitions
+            //
+            //------------------------------------------------------------------
+            static const uint32_t UUID = Y_PATTERN_CC3('A','N','Y'); //!< UUID
+            static const char     CLID[];                            //!< CLID
             
-            virtual         ~Any1() throw();
-            static  Pattern *Create();
+            //------------------------------------------------------------------
+            //
+            // specific methods
+            //
+            //------------------------------------------------------------------
+            virtual         ~Any1() throw(); //!< cleanup
+            static  Pattern *Create();       //!< create a new pattern
             
         private:
             explicit Any1() throw();

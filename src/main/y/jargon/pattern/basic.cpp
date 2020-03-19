@@ -10,6 +10,8 @@ namespace upsylon {
             
         }
         
+        bool Basic:: feeble() const throw() { return false; }
+        
         Basic:: Basic(const uint32_t u) throw() : Pattern(u) {}
         
         bool Basic:: match(Token &token, Source &source) const
