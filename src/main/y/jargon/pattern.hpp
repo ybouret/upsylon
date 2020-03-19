@@ -12,7 +12,8 @@ namespace upsylon {
     
         //! base class for patterns recognition
         class Pattern : public CountedObject,
-        public Serializable
+        public Serializable,
+        public Vizible
         {
         public:
             //------------------------------------------------------------------
@@ -34,9 +35,10 @@ namespace upsylon {
             // non virtual interface
             //
             //------------------------------------------------------------------
-            size_t emitUUID(ios::ostream &fp) const; //!< helper to emit uuid
-            bool   multiple() const throw();         //!< !univocal()
-            bool   strong()   const throw();         //!< !feeble()
+            size_t       emitUUID(ios::ostream &fp) const; //!< helper to emit uuid
+            bool         multiple() const throw();         //!< !univocal()
+            bool         strong()   const throw();         //!< !feeble()
+            const  char *vizStyle() const throw();         //!< according to string/feeble
             
             //! retrieve derived class
             template <typename PATTERN> inline

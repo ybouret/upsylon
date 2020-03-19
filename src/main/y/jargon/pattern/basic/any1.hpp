@@ -38,7 +38,7 @@ namespace upsylon {
             
             virtual size_t      serialize( ios::ostream &) const;
             virtual const char *className()                const throw();
-          
+            virtual void        vizCore(ios::ostream &fp)  const;
         };
         
     }

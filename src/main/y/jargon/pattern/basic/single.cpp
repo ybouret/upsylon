@@ -1,5 +1,6 @@
 #include "y/jargon/pattern/basic/single.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
     
@@ -47,7 +48,10 @@ namespace upsylon {
         
         bool Single:: univocal() const throw() { return true; }
         
-        
+        void Single:: vizCore(ios::ostream &fp) const
+        {
+            endl(fp << " [label=\"" << printable_char[code] << "\",shape=square,style=" << vizStyle() << "]");
+        }
 
     }
     

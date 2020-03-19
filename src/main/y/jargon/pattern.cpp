@@ -59,6 +59,10 @@ namespace upsylon {
             return !feeble();
         }
 
+        const char *Pattern:: vizStyle() const throw()
+        {
+            return feeble() ? "dashed" : "solid";
+        }
     }
     
 }

@@ -59,6 +59,11 @@ namespace {
                 }
             }
             
+            {
+                const string dotFile = name + ".dot";
+                p.graphViz(dotFile);
+            }
+            
             p.test(source, content);
             source.unget(content);
             return true;

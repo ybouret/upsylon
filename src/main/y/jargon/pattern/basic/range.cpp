@@ -5,6 +5,7 @@
 #include "y/jargon/pattern/basic/single.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/type/cswap.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
     
@@ -75,6 +76,15 @@ namespace upsylon {
         
         bool Range:: univocal() const throw() { return lower==upper; }
         
+        void Range:: vizCore(ios::ostream &fp) const
+        {
+            endl(fp
+                 << " [label=\"["
+                 << printable_char[lower]
+                 << '-'
+                 << printable_char[upper]
+                 << "]\",shape=rect,style=" << vizStyle() << "]");
+        }
         
         
     }

@@ -45,6 +45,10 @@ namespace upsylon {
         
         bool Any1:: univocal() const throw() { return false; }
         
+        void Any1:: vizCore(ios::ostream &fp) const
+        {
+            endl(fp << " [label=\"any1\",shape=circle,style=" << vizStyle() << "]");
+        }
         
 
     }

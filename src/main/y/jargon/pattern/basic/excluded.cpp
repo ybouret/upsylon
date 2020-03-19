@@ -1,6 +1,7 @@
 
 #include "y/jargon/pattern/basic/excluded.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
     
@@ -48,7 +49,10 @@ namespace upsylon {
         
         bool Excluded:: univocal() const throw() { return false; }
         
-        
+        void Excluded:: vizCore(ios::ostream &fp) const
+        {
+            endl(fp << " [label=\"" << printable_char[code] << "\",shape=Msquare,style=" << vizStyle() << "]");
+        }
         
     }
     
