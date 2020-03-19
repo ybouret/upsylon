@@ -19,8 +19,8 @@ namespace upsylon {
             // definitions
             //
             //------------------------------------------------------------------
-            static const uint32_t UUID = Y_PATTERN_CC3('R','N','G'); //!< UUID
-            static const char     CLID[];                            //!< CLID
+            static const uint32_t UUID = Y_FOURCC('R','N','G','E'); //!< UUID
+            static const char     CLID[];                           //!< CLID
             
             //------------------------------------------------------------------
             //

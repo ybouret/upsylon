@@ -1,22 +1,6 @@
 
 #include "y/jargon/pattern/operands.hpp"
 
-namespace upsylon {
-    
-    namespace Jargon {
-        
-        Operand:: ~Operand() throw() {}
-        
-        Operand * Operand:: Create( const Motif   &m ) { return new Operand(m); }
-        
-        Operand * Operand:: Create( const Pattern *p ) { const Motif m = p; return Create(m); }
-        Operand * Operand:: clone() const { const Pattern &self = **this; return Create(self.clone()); }
-        
-        Operand:: Operand(const Motif &m) throw() : Object(), inode<Operand>(), Motif(m) {}
-
-    }
-    
-}
 
 namespace upsylon {
     
@@ -26,19 +10,28 @@ namespace upsylon {
         {
         }
         
-        Operands::  Operands() throw() : Operand::List() {}
+        Operands::  Operands() throw() : Pattern::List() {}
         
-        Operands & Operands:: operator<<( const Motif &m)
+        Operands:: Operands( const Operands &other ) : Pattern::List(other)
         {
-            (void) push_back( Operand::Create(m) );
-            return *this;
         }
         
-        Operands & Operands:: operator<<( const Pattern *p)
+        bool Operands::Alike( const Operands &lhs, const Operands &rhs ) throw()
         {
-            (void) push_back( Operand::Create(p) );
-            return *this;
+            if(lhs.size==rhs.size)
+            {
+                for(const Pattern *p=lhs.head,*q=rhs.head;p;p=p->next,q=q->next)
+                {
+                    if( !p->alike(q) ) return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
+
         
     }
 }

@@ -1,8 +1,10 @@
 
 
 #include "y/jargon/pattern/basic/all.hpp"
+#include "y/jargon/pattern/logic/all.hpp"
 #include "y/ios/istream.hpp"
 #include "y/exception.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
     
@@ -10,6 +12,18 @@ namespace upsylon {
         
         static const char fn[] = "Jargon::Pattern::Load";
         
+        
+        Pattern * LoadLogic( Logic *p, ios::istream &fp)
+        {
+            assert(p);
+            auto_ptr<Pattern> guard(p);
+            size_t count = fp.read_upack<size_t>();
+            while(count-- > 0)
+            {
+                p->push_back( Pattern::Load(fp) );
+            }
+            return guard.yield();
+        }
         
         Pattern * Pattern:: Load(ios::istream &fp)
         {
@@ -41,6 +55,11 @@ namespace upsylon {
                     if(!fp.query_net(upper)) throw exception("%s(missing Range.upper)",fn);
                     return Range::Create(lower,upper);
                 }
+                    
+                case And::UUID: return LoadLogic( And::Create(), fp );
+                    
+                    
+                    
                 default:
                     break;
                     

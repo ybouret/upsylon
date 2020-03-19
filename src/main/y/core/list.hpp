@@ -67,13 +67,7 @@ head = tail = node; increase_size()
                 }
                 return node;
             }
-
-            //! append node, syntactic helper
-            inline list_of & operator<<( NODE *node ) throw()
-            {
-                push_back(node); return *this;
-            }
-
+            
             //! prepend a NODE
             inline NODE *push_front( NODE *node ) throw()
             {
@@ -148,12 +142,6 @@ head = tail = node; increase_size()
                 }
             }
             
-            //! syntactix sugar to merge back another list
-            inline list_of & operator<<( list_of &other ) throw()
-            {
-                merge_back(other);
-                return *this;
-            }
 
             //! prepend another list content
             inline void merge_front( list_of &other ) throw()
@@ -472,15 +460,7 @@ namespace upsylon
                 }
             }
 
-#if 1
-            //! syntactic sugar to push back a NODE from args
-            template <typename U>
-            inline list_of_cpp & operator<<( const U &args )
-            {
-                this->push_back( new NODE(args) );
-                return *this;
-            }
-#endif
+
             //! copy and merge_back
             inline void merge_back_copy( const list_of_cpp &other)
             {

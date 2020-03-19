@@ -183,7 +183,8 @@ wlen(0)
                         i=j;
                         if(num>1)
                         {
-                            reps << num;
+                            reps.push_back( new repeat(num) );
+                            //reps << num;
                         }
                     }
                 }

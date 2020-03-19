@@ -11,11 +11,14 @@ namespace upsylon {
     namespace Jargon {
     
         //! base class for patterns recognition
-        class Pattern : public CountedObject,
+        class Pattern :
+        public CountedObject,
+        public inode<Pattern>,
         public Serializable,
         public Vizible
         {
         public:
+            typedef core::list_of_cloneable<Pattern> List;
             //------------------------------------------------------------------
             //
             // virtual interface
@@ -72,9 +75,10 @@ namespace upsylon {
             
         protected:
             explicit Pattern(const uint32_t) throw(); //!< setup uuid, self=0
+            explicit Pattern(const Pattern&) throw(); //!< setup uuid, self=0
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Pattern);
+            Y_DISABLE_ASSIGN(Pattern);
         };
         
         
@@ -85,22 +89,8 @@ namespace upsylon {
         //! uses CLID as className
 #define Y_PATTERN_CLID(CLASS) \
 const char *CLASS:: className() const throw() { return CLASS::CLID; }\
-const char CLASS::CLID[] = Y_FOURCC_CHAR8(CLASS::UUID)
+const char  CLASS::CLID[8] = Y_FOURCC_CHAR8(CLASS::UUID)
         
-        //! padding value for UUID of patterns
-#define Y_PATTERN_PAD         '_'
-        
-        //! for 1 char UUID
-#define Y_PATTERN_CC1(A)       Y_FOURCC(A,Y_PATTERN_PAD,Y_PATTERN_PAD,Y_PATTERN_PAD)
-        
-        //! for 2 chars UUID
-#define Y_PATTERN_CC2(A,B)     Y_FOURCC(A,B,Y_PATTERN_PAD,Y_PATTERN_PAD)
-        
-        //! for 2 chars UUID
-#define Y_PATTERN_CC3(A,B,C)   Y_FOURCC(A,B,C,Y_PATTERN_PAD)
-        
-        //! for 4 chars UUID
-#define Y_PATTERN_CC4(A,B,C,D) Y_FOURCC(A,B,C,D)
         
         //! smart pointer for a compilerd pattern
         typedef arc_ptr<const Pattern> Motif;

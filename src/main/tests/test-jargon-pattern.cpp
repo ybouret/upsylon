@@ -1,5 +1,6 @@
 
 #include "y/jargon/pattern/basic/all.hpp"
+#include "y/jargon/pattern/logic/all.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
 #include "y/jargon/pattern/operands.hpp"
 
@@ -64,7 +65,9 @@ namespace {
                 p.graphViz(dotFile);
             }
             
-            p.test(source, content);
+            if(p.strong())
+                p.test(source, content);
+            
             source.unget(content);
             return true;
         }
@@ -92,15 +95,17 @@ Y_UTEST(jargon_pattern)
     Y_CHECK( dict.insert("Single",   Single::Create('a')     ) ); Y_CHECK( dict.search("Single")   );
     Y_CHECK( dict.insert("Range",    Range::Create('a', 'z') ) ); Y_CHECK( dict.search("Range")    );
     Y_CHECK( dict.insert("Excluded", Excluded::Create('a') )   ); Y_CHECK( dict.search("Excluded") );
+    
+    auto_ptr<Logic> p = And::Create();
+    p->push_back( Single::Create('a') );
+    p->push_back( Single::Create('b') );
+
+    Y_CHECK( dict.insert("And",p.yield())   ); Y_CHECK( dict.search("And") );
 
     
-    const bool success = dict.for_each( test ) ;
-    Y_CHECK(success);
+    const bool jargon_pattern_success = dict.for_each( test ) ;
+    Y_CHECK(jargon_pattern_success);
     
-    
-    Operands ops;
-    ops << dict["Any1"];
-    ops << dict["Range"]->clone();
     
 }
 Y_UTEST_DONE()

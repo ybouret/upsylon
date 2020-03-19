@@ -16,10 +16,13 @@ namespace upsylon {
             
         protected:
             explicit Logic(const uint32_t) throw(); //!< forward uuid
+            Logic(const Logic &);                   //!< full copy
+            size_t   srz(ios::ostream &fp) const;   //!< serialize
+            void     viz(ios::ostream &fp) const;   //!< graphviz
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Logic);
-        
+            Y_DISABLE_ASSIGN(Logic);
+            virtual size_t serialize( ios::ostream &) const;
         };
         
     }

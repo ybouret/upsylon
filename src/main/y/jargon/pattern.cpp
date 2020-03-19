@@ -19,13 +19,19 @@ namespace upsylon {
         {
         }
         
+        Pattern:: Pattern(const Pattern &p) throw() :
+        uuid(p.uuid),
+        self(0)
+        {
+        }
+        
         size_t Pattern:: emitUUID(ios::ostream &fp) const
         {
             size_t nw = 0;
             fp.emit_net(uuid,&nw);
             return nw;
         }
-
+        
         bool Pattern:: multiple() const throw()
         {
             return !univocal();
@@ -35,30 +41,32 @@ namespace upsylon {
         void Pattern:: test( Source &source, Token &content ) const
         {
             content.erase();
+            
             while( source.alive() )
             {
                 Token token(source.cache());
                 if( match(token,source) )
                 {
                     std::cerr << "<" << token << ">";
-                    content << token;
+                    content.merge_back(token);
                 }
                 else
                 {
                     assert(source.alive());
                     assert(0==token.size);
                     assert(source.bufferSize());
-                    content << source.get();
+                    content.push_back(source.get());
                     std::cerr << *content.tail;
                 }
             }
+            
         }
         
         bool Pattern:: strong() const throw()
         {
             return !feeble();
         }
-
+        
         const char *Pattern:: vizStyle() const throw()
         {
             return feeble() ? "dashed" : "solid";
