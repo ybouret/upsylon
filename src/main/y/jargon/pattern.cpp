@@ -14,12 +14,20 @@ namespace upsylon {
         }
         
         Pattern:: Pattern(const uint32_t u) throw() :
+        CountedObject(),
+        inode<Pattern>(),
+        Serializable(),
+        Vizible(),
         uuid(u),
         self(0)
         {
         }
         
         Pattern:: Pattern(const Pattern &p) throw() :
+        CountedObject(),
+        inode<Pattern>(),
+        Serializable(),
+        Vizible(),
         uuid(p.uuid),
         self(0)
         {
