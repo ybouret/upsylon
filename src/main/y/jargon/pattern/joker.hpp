@@ -21,7 +21,7 @@ namespace upsylon {
             explicit Joker(const uint32_t, const Motif &) throw(); //!< forward uuid
             Joker(const Joker &);                                  //!< full copy
             
-            
+            static const char feeble_pattern[]; //!< for exception strings
         private:
             Y_DISABLE_ASSIGN(Joker);
         };

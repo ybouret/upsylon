@@ -11,6 +11,8 @@
 #include "y/ios/icstream.hpp"
 #include "y/ptr/auto.hpp"
 
+#include "y/fs/local/file.hpp"
+
 using namespace upsylon;
 using namespace Jargon;
 
@@ -36,11 +38,6 @@ namespace {
         {
         }
         
-        void run(const Pattern &p)
-        {
-            std::cerr << "testing <" << p.className() << ">" << std::endl;
-            
-        }
         
         bool operator()( const suffix_path &key, const Motif &m )
         {
@@ -53,12 +50,14 @@ namespace {
             std::cerr << "|_univocal: " << p.univocal() << std::endl;
             {
                 const string binName = string("p") + p.className() + ".bin";
-                p.save_to(binName);
+                const size_t written = p.save_to(binName);
+                Y_CHECK( ios::local_file::length_of(binName) == written );
                 {
                     ios::icstream fp(binName);
                     auto_ptr<Pattern> q = Pattern::Load(fp);
-                    Y_ASSERT( q->alike(&p) );
+                    Y_CHECK( q->alike(&p) );
                 }
+                
             }
             
             {
@@ -67,8 +66,9 @@ namespace {
             }
             
             if(p.strong())
-                p.test(source, content);
-            
+            {
+                p.test(source, content); std::cerr << std::endl;
+            }
             source.unget(content);
             return true;
         }
@@ -133,6 +133,21 @@ Y_UTEST(jargon_pattern)
         ab->push_back( Single::Create( 'a' ) );
         ab->push_back( Optional::Create( Single::Create('b') ) );
         Y_CHECK( dict.insert("ab",ab.yield()) );Y_CHECK( dict.search("ab") );
+    }
+    
+    {
+        auto_ptr<Pattern> p = Repeating::ZeroOrMore( Single::Create('a') );
+        Y_CHECK( dict.insert("ZOM",p.yield())   ); Y_CHECK( dict.search("ZOM") );
+    }
+    
+    {
+        auto_ptr<Pattern> p = Repeating::OneOrMore( Single::Create('a') );
+        Y_CHECK( dict.insert("OOM",p.yield())   ); Y_CHECK( dict.search("OOM") );
+    }
+    
+    {
+        auto_ptr<Pattern> p = Repeating::Create( Single::Create('a'), 2 );
+        Y_CHECK( dict.insert("Rep",p.yield())   ); Y_CHECK( dict.search("Rep") );
     }
     
     const bool jargon_pattern_success = dict.for_each( test ) ;

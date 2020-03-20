@@ -2,6 +2,7 @@
 
 #include "y/jargon/pattern/joker/optional.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
@@ -13,7 +14,7 @@ namespace upsylon {
         {
             assert(p);
             const Motif m(p);
-            
+            if(p->feeble()) throw exception("Jargon::Optional::Create(%s)",feeble_pattern);
             return new Optional(m);
         }
         

@@ -69,7 +69,13 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // joker
                     //----------------------------------------------------------
-                case Optional::UUID: return Optional::Create( Load(fp) );
+                case Optional :: UUID : return Optional::Create( Load(fp) );
+                case Repeating:: UUID0: return Repeating::ZeroOrMore( Load(fp) );
+                case Repeating:: UUID1: return Repeating::OneOrMore( Load(fp) );
+                case Repeating:: UUID: {
+                    const size_t nmin = fp.read_upack<size_t>();
+                    return Repeating::Create( Load(fp), nmin);
+                }
                 default:
                     break;
                     

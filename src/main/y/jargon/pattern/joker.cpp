@@ -14,15 +14,17 @@ namespace upsylon {
         Pattern(u),
         motif(m)
         {
+            assert(motif->strong());
         }
         
         Joker:: Joker( const Joker &J ) :
         Pattern(J),
         motif(J.motif->clone())
         {
+            assert(motif->strong());
         }
         
-        
+        const char Joker::feeble_pattern[] = "feeble pattern";
     }
     
 }
