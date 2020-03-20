@@ -60,7 +60,7 @@ namespace upsylon {
         
         void OR:: vizCore(ios::ostream &fp)  const
         {
-            endl(fp << " [label=\"||\",shape=diamond,style=" << vizStyle() << "]");
+            endl(fp << " [label=\"||\",shape=egg,style=" << vizStyle() << "]");
             viz(fp);
         }
         

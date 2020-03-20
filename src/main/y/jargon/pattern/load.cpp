@@ -1,7 +1,6 @@
 
 
-#include "y/jargon/pattern/basic/all.hpp"
-#include "y/jargon/pattern/logic/all.hpp"
+#include "y/jargon/pattern/all.hpp"
 #include "y/ios/istream.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/auto.hpp"
@@ -67,8 +66,10 @@ namespace upsylon {
                 case OR::  UUID: return LoadLogical(OR::  Create(),fp );
                 case NONE::UUID: return LoadLogical(NONE::Create(),fp );
 
-                    
-                    
+                    //----------------------------------------------------------
+                    // joker
+                    //----------------------------------------------------------
+                case Optional::UUID: return Optional::Create( Load(fp) );
                 default:
                     break;
                     

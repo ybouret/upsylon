@@ -125,6 +125,14 @@ Y_UTEST(jargon_pattern)
     
     {
         auto_ptr<Pattern> p = Optional::Create( Single::Create('a') );
+        Y_CHECK( dict.insert("Opt",p.yield())   ); Y_CHECK( dict.search("Opt") );
+    }
+    
+    {
+        auto_ptr<Logical> ab = AND::Create();
+        ab->push_back( Single::Create( 'a' ) );
+        ab->push_back( Optional::Create( Single::Create('b') ) );
+        Y_CHECK( dict.insert("ab",ab.yield()) );Y_CHECK( dict.search("ab") );
     }
     
     const bool jargon_pattern_success = dict.for_each( test ) ;

@@ -55,7 +55,7 @@ namespace upsylon {
         
         void NONE:: vizCore(ios::ostream &fp)  const
         {
-            endl(fp << " [label=\"!!\",shape=Mdiamond,style=" << vizStyle() << "]");
+            endl(fp << " [label=\"!!\",shape=invhouse,style=" << vizStyle() << "]");
             viz(fp);
         }
         

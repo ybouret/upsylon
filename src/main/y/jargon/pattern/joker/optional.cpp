@@ -24,11 +24,13 @@ namespace upsylon {
         Optional:: Optional(const Motif &m) throw() :
         Joker(UUID,m)
         {
+            Y_PATTERN_SELF(Optional);
         }
         
         Optional:: Optional(const Optional &other) :
         Joker(other)
         {
+            Y_PATTERN_SELF(Optional);
         }
         
         
@@ -50,7 +52,7 @@ namespace upsylon {
         
         void Optional:: vizCore(ios::ostream &fp) const
         {
-            endl(fp << " [label=\"?\",shape=circle]");
+            endl(fp << " [label=\"?\",shape=diamond]");
             motif->vizSave(fp);
             endl(vizJoin(fp, & *motif));
         }
@@ -75,7 +77,12 @@ namespace upsylon {
         
         bool Optional:: match(Token &token, Source &source) const
         {
-            
+            assert(0==token.size);
+            if( motif->match(token,source) )
+            {
+                return true;
+            }
+            assert(0==token.size);
             return true;
         }
         
