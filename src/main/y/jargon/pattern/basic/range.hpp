@@ -19,7 +19,7 @@ namespace upsylon {
             // definitions
             //
             //------------------------------------------------------------------
-            static const uint32_t UUID = Y_FOURCC('R','N','G','E'); //!< UUID
+            static const uint32_t UUID = Y_FOURCC('R','N','G','_'); //!< UUID
             static const char     CLID[];                           //!< CLID
             
             //------------------------------------------------------------------

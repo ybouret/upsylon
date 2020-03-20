@@ -76,6 +76,14 @@ namespace upsylon {
                     const size_t nmin = fp.read_upack<size_t>();
                     return Repeating::Create( Load(fp), nmin);
                 }
+                    
+                case Counting:: UUID: {
+                    const size_t nmin = fp.read_upack<size_t>();
+                    const size_t nmax = fp.read_upack<size_t>();
+                    if(nmin>nmax) throw exception("%s(invalid min/max for Counting",fn);
+                    return Counting::Create(Load(fp),nmin,nmax);
+                }
+                    
                 default:
                     break;
                     

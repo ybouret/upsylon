@@ -27,11 +27,13 @@ namespace upsylon {
                 if( good(ch->code) )
                 {
                     token.push_back(ch);
+                    assert(token.size>0);
                     return true;
                 }
                 else
                 {
                     source.unget(ch);
+                    assert(0==token.size);
                     return false;
                 }
             }

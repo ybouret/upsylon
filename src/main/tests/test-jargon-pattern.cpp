@@ -49,12 +49,14 @@ namespace {
             std::cerr << "|_multiple: " << p.multiple() << std::endl;
             std::cerr << "|_univocal: " << p.univocal() << std::endl;
             {
-                const string binName = string("p") + p.className() + ".bin";
+                const string binName = name + ".bin";
                 const size_t written = p.save_to(binName);
                 Y_CHECK( ios::local_file::length_of(binName) == written );
                 {
                     ios::icstream fp(binName);
                     auto_ptr<Pattern> q = Pattern::Load(fp);
+                    std::cerr << "save " << fourcc_(p.uuid) << std::endl;
+                    std::cerr << "load " << fourcc_(q->uuid) << std::endl;
                     Y_CHECK( q->alike(&p) );
                 }
                 
@@ -149,6 +151,27 @@ Y_UTEST(jargon_pattern)
         auto_ptr<Pattern> p = Repeating::Create( Single::Create('a'), 2 );
         Y_CHECK( dict.insert("Rep",p.yield())   ); Y_CHECK( dict.search("Rep") );
     }
+    
+    {
+        auto_ptr<Pattern> p = Counting::Create( Single::Create('a'), 0,0 );
+        Y_CHECK( dict.insert("Cnt00",p.yield())   ); Y_CHECK( dict.search("Cnt00") );
+    }
+    
+    {
+        auto_ptr<Pattern> p = Counting::Create( Single::Create('a'), 0,1 );
+        Y_CHECK( dict.insert("Cnt01",p.yield())   ); Y_CHECK( dict.search("Cnt01") );
+    }
+    
+    {
+        auto_ptr<Pattern> p = Counting::Create( Single::Create('a'), 0,2 );
+        Y_CHECK( dict.insert("Cnt02",p.yield())   ); Y_CHECK( dict.search("Cnt02") );
+    }
+    
+    {
+        auto_ptr<Pattern> p = Counting::Create( Single::Create('a'), 1,5 );
+        Y_CHECK( dict.insert("Cnt15",p.yield())   ); Y_CHECK( dict.search("Cnt15") );
+    }
+    
     
     const bool jargon_pattern_success = dict.for_each( test ) ;
     Y_CHECK(jargon_pattern_success);
