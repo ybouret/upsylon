@@ -85,7 +85,13 @@ namespace upsylon {
             
         public:
             //! remove redundant alike patterns from the list, preserve order
-            static void RemoveRedundant( Pattern::List &patterns );
+            static void RemoveRedundant(List &patterns );
+            
+            //! pattern-wise procedure
+            typedef Pattern * (*Proc)( Pattern *);
+            
+            //! replace all patterns by its transformed
+            static void Transform(List &patterns, Proc proc ) throw();
             
         };
         

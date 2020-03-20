@@ -73,9 +73,9 @@ namespace upsylon {
         }
         
         
-        void Pattern::RemoveRedundant( Pattern::List &patterns )
+        void Pattern::RemoveRedundant(List &patterns)
         {
-            Pattern::List tmp;
+            List tmp;
             while(patterns.size)
             {
                 Pattern *p     = patterns.pop_front();
@@ -100,6 +100,18 @@ namespace upsylon {
             patterns.swap_with(tmp);
         }
 
+        void Pattern:: Transform(List &patterns, Proc proc ) throw()
+        {
+            assert(proc);
+            List tmp;
+            while(patterns.size)
+            {
+                Pattern *p = patterns.pop_front(); assert(p);
+                Pattern *q = proc(p);              assert(q);
+                tmp.push_back(q);
+            }
+            patterns.swap_with(tmp);
+        }
     }
     
 }

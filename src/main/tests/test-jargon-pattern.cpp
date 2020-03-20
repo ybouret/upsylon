@@ -111,6 +111,7 @@ Y_UTEST(jargon_pattern)
         p->push_back( Single::Create('a') );
         p->push_back( Single::Create('b') );
         p->push_back( Single::Create('a') );
+        Pattern::RemoveRedundant(*p);
         Y_CHECK( dict.insert("Or",p.yield())   ); Y_CHECK( dict.search("Or") );
     }
     
@@ -119,6 +120,7 @@ Y_UTEST(jargon_pattern)
         p->push_back( Single::Create('a') );
         p->push_back( Single::Create('b') );
         p->push_back( Single::Create('a') );
+        Pattern::RemoveRedundant(*p);
         Y_CHECK( dict.insert("None",p.yield())   ); Y_CHECK( dict.search("None") );
     }
     
