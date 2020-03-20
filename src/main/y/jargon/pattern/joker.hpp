@@ -13,9 +13,8 @@ namespace upsylon {
         class Joker : public Pattern
         {
         public:
-            virtual ~Joker() throw();            //!< cleanup
-                                                 
-            const Motif motif;
+            virtual ~Joker() throw(); //!< cleanup
+            const Motif motif;        //!< pointer to motif
             
         protected:
             explicit Joker(const uint32_t, const Motif &) throw(); //!< forward uuid

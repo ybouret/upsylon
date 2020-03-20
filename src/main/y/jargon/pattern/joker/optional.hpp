@@ -9,6 +9,8 @@ namespace upsylon {
     
     namespace Jargon {
         
+        class Counting; //!< forward declaration
+        
         //! accept any char
         class Optional : public Joker
         {
@@ -32,7 +34,10 @@ namespace upsylon {
         private:
             explicit Optional(const Motif &) throw();
             explicit Optional(const Optional&);
+            
             Y_DISABLE_ASSIGN(Optional);
+            friend class Counting;
+            
             virtual Pattern    *clone()                    const;
             virtual bool        alike(const Pattern *)     const throw();
             virtual bool        univocal()                 const throw();

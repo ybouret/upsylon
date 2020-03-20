@@ -30,7 +30,6 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual        ~NONE() throw();     //!< cleanup
             static Logical *Create();           //!< create without operands
-            virtual void    simplify() throw(); //!< remove redundant
             
             
         private:

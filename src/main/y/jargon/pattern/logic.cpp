@@ -47,7 +47,22 @@ namespace upsylon {
         }
         
        
-        
+        Pattern *Logical:: Compact(Logical *p)
+        {
+            assert(p);
+            if(p->size==1)
+            {
+                Pattern *one = p->pop_back(); assert(0==p->size);
+                delete   p;
+                return   one;
+            }
+            else
+            {
+                return p;
+            }
+            
+        }
+
     }
     
 }

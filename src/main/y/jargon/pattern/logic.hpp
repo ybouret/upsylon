@@ -13,7 +13,6 @@ namespace upsylon {
         {
         public:
             virtual ~Logical() throw();            //!< cleanup
-            virtual  void simplify() throw()  = 0; //!< simplify arguments
             
         protected:
             explicit Logical(const uint32_t) throw();   //!< forward uuid
@@ -24,6 +23,10 @@ namespace upsylon {
         private:
             Y_DISABLE_ASSIGN(Logical);
             virtual size_t serialize( ios::ostream &) const;
+            
+        public:
+            //! return head pattern/delete logical if only one item
+            static Pattern *Compact(Logical *p);
         };
         
     }

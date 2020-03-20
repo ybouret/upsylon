@@ -26,11 +26,6 @@ namespace upsylon {
             return new NONE();
         }
         
-        void NONE:: simplify() throw()
-        {
-            removeRedondant();
-        }
-        
         
         bool NONE:: feeble() const throw()
         {

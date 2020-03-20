@@ -82,6 +82,11 @@ namespace upsylon {
             
         private:
             Y_DISABLE_ASSIGN(Pattern);
+            
+        public:
+            //! remove redundant alike patterns from the list, preserve order
+            static void RemoveRedundant( Pattern::List &patterns );
+            
         };
         
         

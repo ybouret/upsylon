@@ -30,8 +30,8 @@ namespace upsylon {
             virtual         ~Counting() throw(); //!< cleanup
             static  Pattern *Create(Pattern *, const size_t, const size_t);  //!< create!
             
-            const size_t minimalCount;
-            const size_t maximalCount;
+            const size_t minimalCount; //!< minimal valid count
+            const size_t maximalCount; //!< maximal valid count
             
         private:
             explicit Counting(const Motif &, const size_t, const size_t) throw();

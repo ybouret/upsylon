@@ -20,7 +20,6 @@ namespace upsylon {
         static inline Logical *simplify(Logical *p) throw()
         {
             optimize(p);
-            p->simplify();
             return p;
         }
         

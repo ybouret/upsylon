@@ -26,10 +26,7 @@ namespace upsylon {
             return new AND();
         }
         
-        void AND:: simplify() throw()
-        {
-        }
-        
+       
         bool AND:: feeble() const throw()
         {
             for(const Pattern *op=head;op;op=op->next)

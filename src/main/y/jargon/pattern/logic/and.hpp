@@ -28,8 +28,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual         ~AND() throw();      //!< cleanup
             static  Logical *Create();           //!< create without operands
-            virtual void     simplify() throw(); //!< ...
-        
+            
             
         private:
             explicit AND() throw();

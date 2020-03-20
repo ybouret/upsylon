@@ -34,32 +34,6 @@ namespace upsylon {
             }
         }
         
-        void Operands:: removeRedondant() throw()
-        {
-            Pattern::List tmp;
-            while(size)
-            {
-                Pattern *p     = pop_front();
-                bool    found = false;
-                for(const Pattern *q=tmp.head;q;q=q->next)
-                {
-                    if( p->alike(q) )
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                if(found)
-                {
-                    delete p;
-                }
-                else
-                {
-                    tmp.push_back(p);
-                }
-            }
-            swap_with(tmp);
-        }
 
 
         

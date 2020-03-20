@@ -71,6 +71,35 @@ namespace upsylon {
         {
             return feeble() ? "dashed" : "solid";
         }
+        
+        
+        void Pattern::RemoveRedundant( Pattern::List &patterns )
+        {
+            Pattern::List tmp;
+            while(patterns.size)
+            {
+                Pattern *p     = patterns.pop_front();
+                bool    found = false;
+                for(const Pattern *q=tmp.head;q;q=q->next)
+                {
+                    if( p->alike(q) )
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if(found)
+                {
+                    delete p;
+                }
+                else
+                {
+                    tmp.push_back(p);
+                }
+            }
+            patterns.swap_with(tmp);
+        }
+
     }
     
 }

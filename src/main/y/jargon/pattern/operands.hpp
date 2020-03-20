@@ -21,8 +21,6 @@ namespace upsylon {
             
             static bool Alike(const Operands *, const Operands *) throw(); //!< test alike
             
-        protected:
-            void removeRedondant() throw(); //!< remove redondant operands, keeping order
             
         private:
             Y_DISABLE_ASSIGN(Operands);

@@ -27,10 +27,7 @@ namespace upsylon {
             return new OR();
         }
         
-        void OR:: simplify() throw()
-        {
-            removeRedondant();
-        }
+       
 
         
         bool OR:: feeble() const throw()

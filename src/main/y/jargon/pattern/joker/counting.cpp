@@ -1,5 +1,6 @@
 
 #include "y/jargon/pattern/joker/counting.hpp"
+#include "y/jargon/pattern/joker/optional.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/exception.hpp"
 
@@ -20,8 +21,14 @@ namespace upsylon {
             {
                 _cswap(nmin,nmax);
             }
-            
-            return new Counting(m,nmin,nmax);
+            if(nmin==0&&nmax==1)
+            {
+                return new Optional(m);
+            }
+            else
+            {
+                return new Counting(m,nmin,nmax);
+            }
             
         }
         
@@ -101,7 +108,26 @@ namespace upsylon {
         
         bool Counting:: match(Token &token, Source &source) const
         {
-            return false;
+            assert(0==token.size);
+            size_t count = 0;
+            {
+                Token  tmp( source.cache() );
+                while( motif->match(tmp,source) )
+                {
+                    ++count;
+                    token.merge_back(tmp);
+                }
+            }
+            if(minimalCount<=count && count<=maximalCount)
+            {
+                return true;
+            }
+            else
+            {
+                source.unget(token);
+                return false;
+            }
+            
         }
         
     }
