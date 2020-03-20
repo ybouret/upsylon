@@ -38,18 +38,18 @@ namespace {
 }
 
 
-#define Y_JPOSIX(EXPR)                     \
-do {                                       \
-std::cerr << "\t\t<posix::" #EXPR ">" << std::endl; \
-auto_ptr<Pattern> p = posix::EXPR();       \
-Y_CHECK( p->strong()  );                   \
-Y_CHECK( p->checkIO() );                   \
+#define Y_JPOSIX(EXPR)                           \
+do {                                            \
+std::cerr << "\t\tposix::" #EXPR << std::endl; \
+auto_ptr<Pattern> p = posix::EXPR();          \
+Y_CHECK( p->strong()  );                     \
+Y_CHECK( p->checkIO() );                    \
 auto_ptr<Pattern> q = posix::get(#EXPR);   \
-Y_CHECK( p->alike( & *q) );                \
-p->graphViz( #EXPR ".dot" );              \
-test.run(*p);                            \
-std::cerr << std::endl;                 \
+Y_CHECK( p->alike( & *q) );               \
+p->graphViz( #EXPR ".dot" );             \
+test.run(*p);                           \
 std::cerr << std::endl;                \
+std::cerr << std::endl;               \
 } while(false)
 
 Y_UTEST(jargon_posix)

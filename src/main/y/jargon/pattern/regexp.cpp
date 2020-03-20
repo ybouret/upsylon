@@ -1,13 +1,14 @@
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
 #include "y/jargon/pattern/all.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
         
         
-        bool RegularExpression::Verbose = false;
+        bool RegularExpression::Verbose = true;
         
 #define LPAREN     '('
 #define RPAREN     ')'
@@ -56,6 +57,25 @@ namespace upsylon {
             }
             
             
+            //------------------------------------------------------------------
+            //
+            // compile expression starting from curr
+            //
+            //------------------------------------------------------------------
+            Logical *compileExpression()
+            {
+                auto_ptr<Logical> expr = AND::Create();
+            
+                while(curr<last)
+                {
+                    const char C = *curr;
+                    expr->add(C);
+                    ++curr;
+                }
+                
+                return expr.yield();
+            }
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
@@ -64,13 +84,13 @@ namespace upsylon {
         Pattern * RegularExpression::Compile(const string &rx, const Dictionary *dict)
         {
             Engine engine(*rx,rx.size(),dict);
-            return 0;
+            return engine.compileExpression();
         }
         
         Pattern * RegularExpression::Compile(const char *rx, const Dictionary *dict)
         {
-            Engine engine(rx,length_of(rx),dict);
-            return 0;
+            const  string _(rx);
+            return Compile(_,dict);
         }
     }
     
