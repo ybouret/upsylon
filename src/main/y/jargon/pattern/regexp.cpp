@@ -6,6 +6,7 @@ namespace upsylon {
     
     namespace Jargon {
         
+        
         bool RegularExpression::Verbose = false;
         
 #define LPAREN     '('
@@ -45,11 +46,12 @@ namespace upsylon {
             // startup
             //
             //------------------------------------------------------------------
-            inline Engine(const string &rx, const Dictionary *d) :
-            curr( *rx ),
-            last( curr + rx.size() ),
+            inline Engine(const char *rx, const size_t nc, const Dictionary *d) :
+            curr( rx ),
+            last( rx + nc ),
             dict( d )
             {
+                assert( !(NULL==rx&&nc>0) );
                 Y_RX_VERBOSE(std::cerr << "compiling" << std::endl);
             }
             
@@ -61,7 +63,13 @@ namespace upsylon {
         
         Pattern * RegularExpression::Compile(const string &rx, const Dictionary *dict)
         {
-            Engine engine(rx,dict);
+            Engine engine(*rx,rx.size(),dict);
+            return 0;
+        }
+        
+        Pattern * RegularExpression::Compile(const char *rx, const Dictionary *dict)
+        {
+            Engine engine(rx,length_of(rx),dict);
             return 0;
         }
     }

@@ -18,7 +18,10 @@ namespace upsylon {
             
             static bool Verbose;
             static Pattern *Compile(const string &rx, const Dictionary * =0);
+            static Pattern *Compile(const char   *rx, const Dictionary * =0);
         };
+        
+      
     }
 }
 

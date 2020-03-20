@@ -44,6 +44,8 @@ std::cerr << "\t\t<posix::" #EXPR ">" << std::endl; \
 auto_ptr<Pattern> p = posix::EXPR();       \
 Y_CHECK( p->strong()  );                   \
 Y_CHECK( p->checkIO() );                   \
+auto_ptr<Pattern> q = posix::get(#EXPR);   \
+Y_CHECK( p->alike( & *q) );                \
 p->graphViz( #EXPR ".dot" );              \
 test.run(*p);                            \
 std::cerr << std::endl;                 \
