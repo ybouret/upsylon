@@ -65,6 +65,9 @@ namespace upsylon {
             //! load from previously serialized patterns
             static Pattern *Load(ios::istream&);
             
+            //! optimize
+            static Pattern *Optimize( Pattern *p ) throw();
+            
             //------------------------------------------------------------------
             //
             // common members

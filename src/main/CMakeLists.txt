@@ -396,6 +396,12 @@ SET(jargon_pattern_logic_srcs ${jargon_pattern_logic_decl} ${jargon_pattern_logi
 SOURCE_GROUP( jargon/pattern/logic FILES ${jargon_pattern_logic_srcs} )
 INSTALL( FILES ${jargon_pattern_logic_decl} DESTINATION include/y/jargon/pattern/logic )
 
+FILE(GLOB jargon_pattern_joker_decl y/jargon/pattern/joker/*.hpp)
+FILE(GLOB jargon_pattern_joker_code y/jargon/pattern/joker/*.cpp)
+SET(jargon_pattern_joker_srcs ${jargon_pattern_joker_decl} ${jargon_pattern_joker_code})
+SOURCE_GROUP( jargon/pattern/joker FILES ${jargon_pattern_joker_srcs} )
+INSTALL( FILES ${jargon_pattern_joker_decl} DESTINATION include/y/jargon/pattern/joker )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -445,6 +451,7 @@ ${jargon_srcs}
 ${jargon_pattern_srcs} 
 ${jargon_pattern_basic_srcs}
 ${jargon_pattern_logic_srcs}
+${jargon_pattern_joker_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

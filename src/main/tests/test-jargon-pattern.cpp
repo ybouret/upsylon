@@ -1,6 +1,7 @@
 
 #include "y/jargon/pattern/basic/all.hpp"
 #include "y/jargon/pattern/logic/all.hpp"
+#include "y/jargon/pattern/joker/all.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
 #include "y/jargon/pattern/operands.hpp"
 
@@ -122,6 +123,9 @@ Y_UTEST(jargon_pattern)
         Y_CHECK( dict.insert("None",p.yield())   ); Y_CHECK( dict.search("None") );
     }
     
+    {
+        auto_ptr<Pattern> p = Optional::Create( Single::Create('a') );
+    }
     
     const bool jargon_pattern_success = dict.for_each( test ) ;
     Y_CHECK(jargon_pattern_success);
