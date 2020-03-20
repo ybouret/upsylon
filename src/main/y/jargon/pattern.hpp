@@ -62,6 +62,9 @@ namespace upsylon {
             //! test pattern on all source, save content for re-use
             void            test(Source &source, Token &content) const;
             
+            //! check serialization
+            bool            checkIO() const;
+            
             //! load from previously serialized patterns
             static Pattern *Load(ios::istream&);
             

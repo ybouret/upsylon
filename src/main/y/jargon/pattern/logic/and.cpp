@@ -5,6 +5,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        Pattern * Logical:: Equal(const string &s )
+        {
+            return Compact( Feed(AND::Create(),s) );
+        }
+        
         Y_PATTERN_CLID(AND);
         
         AND:: AND() throw() : Logical(UUID)

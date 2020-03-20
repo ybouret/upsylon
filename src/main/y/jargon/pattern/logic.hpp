@@ -14,6 +14,9 @@ namespace upsylon {
         public:
             virtual ~Logical() throw();            //!< cleanup
             
+            void add(const uint8_t );              //!< new single
+            void add(const uint8_t,const uint8_t); //!< new range
+            
         protected:
             explicit Logical(const uint32_t) throw();   //!< forward uuid
             Logical(const Logical &);                   //!< full copy
@@ -25,8 +28,13 @@ namespace upsylon {
             virtual size_t serialize( ios::ostream &) const;
             
         public:
-            //! return head pattern/delete logical if only one item
-            static Pattern *Compact(Logical *p);
+            static Pattern *Compact(Logical *p); //!< return head pattern/delete logical if only one item
+            static Logical *NoMulti(Logical *p); //!< remove multiple alike
+            
+            static Pattern *Equal(const string &); //!< AND(content)
+            static Pattern *Among(const string &); //!< OR(content)
+        private:
+            static Logical *Feed( Logical *p, const string &s );
         };
         
     }

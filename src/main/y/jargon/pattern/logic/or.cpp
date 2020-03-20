@@ -6,6 +6,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        Pattern * Logical:: Among(const string &s)
+        {
+            return Compact(NoMulti(Feed(OR::Create(),s)));
+        }
+        
         Y_PATTERN_CLID(OR);
         
         OR:: OR() throw() : Logical(UUID)

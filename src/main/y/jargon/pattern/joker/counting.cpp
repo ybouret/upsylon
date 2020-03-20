@@ -1,8 +1,12 @@
 
 #include "y/jargon/pattern/joker/counting.hpp"
 #include "y/jargon/pattern/joker/optional.hpp"
+#include "y/jargon/pattern/logic/none.hpp"
+
 #include "y/ios/ostream.hpp"
 #include "y/exception.hpp"
+
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
     
@@ -14,20 +18,70 @@ namespace upsylon {
         
         Pattern * Counting:: Create(Pattern *p, const size_t nmin, const size_t nmax)
         {
+            //------------------------------------------------------------------
+            //
+            // securise pointer
+            //
+            //------------------------------------------------------------------
             assert(p);
-            const Motif m(p);
+            auto_ptr<Pattern> guard(p);
+            
+            //------------------------------------------------------------------
+            //
+            // check if strong
+            //
+            //------------------------------------------------------------------
             if(p->feeble()) throw exception("%s(%s)",fn,feeble_pattern);
+           
+            //------------------------------------------------------------------
+            //
+            // adjust parameters
+            //
+            //------------------------------------------------------------------
             if(nmin>nmax)
             {
                 _cswap(nmin,nmax);
             }
-            if(nmin==0&&nmax==1)
+            
+            //------------------------------------------------------------------
+            //
+            // special case: nmax=0 => none
+            //
+            //------------------------------------------------------------------
+            if(nmax==0)
             {
-                return new Optional(m);
+                assert(0==nmin);
+                auto_ptr<Logical> none = NONE::Create();
+                none->push_back(p);
+                return none.yield();
             }
             else
             {
-                return new Counting(m,nmin,nmax);
+                //--------------------------------------------------------------
+                //
+                // change original pointer owneship
+                //
+                //--------------------------------------------------------------
+                const Motif m = guard.yield();
+                
+                if(nmin==0&&nmax==1)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // special case: 0 or 1, it's an Optional
+                    //
+                    //----------------------------------------------------------
+                    return new Optional(m);
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    //
+                    // default case
+                    //
+                    //----------------------------------------------------------
+                    return new Counting(m,nmin,nmax);
+                }
             }
             
         }

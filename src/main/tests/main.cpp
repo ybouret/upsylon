@@ -230,6 +230,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(jargon_module);
     Y_UTEST(jargon_source);
     Y_UTEST(jargon_pattern);
+    Y_UTEST(jargon_posix);
 }
 Y_UTEST_EXEC()
 

@@ -47,6 +47,13 @@ namespace upsylon {
         }
         
        
+        Logical *Logical:: NoMulti(Logical *p)
+        {
+            assert(p);
+            Pattern::RemoveRedundant(*p);
+            return p;
+        }
+        
         Pattern *Logical:: Compact(Logical *p)
         {
             assert(p);
@@ -62,7 +69,40 @@ namespace upsylon {
             }
             
         }
+    }
+    
+}
 
+#include "y/ptr/auto.hpp"
+#include "y/jargon/pattern/basic/single.hpp"
+#include "y/jargon/pattern/basic/range.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        Logical * Logical:: Feed( Logical *p, const string &s )
+        {
+            auto_ptr<Logical> guard(p);
+            for(size_t i=0;i<s.size();++i)
+            {
+                p->push_back( Single::Create( s[i] ) );
+            }
+            return guard.yield();
+        }
+        
+        void Logical:: add(const uint8_t c)
+        {
+            push_back( Single::Create(c) );
+        }
+        
+        void Logical:: add(const uint8_t a, const uint8_t b)
+        {
+            push_back( Range::Create(a,b) );
+        }
+        
+      
+        
     }
     
 }

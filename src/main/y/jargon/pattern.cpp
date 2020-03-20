@@ -45,30 +45,7 @@ namespace upsylon {
             return !univocal();
         }
         
-        
-        void Pattern:: test( Source &source, Token &content ) const
-        {
-            content.erase();
-            
-            while( source.alive() )
-            {
-                Token token(source.cache());
-                if( match(token,source) )
-                {
-                    std::cerr << "<" << token << ">";
-                    content.merge_back(token);
-                }
-                else
-                {
-                    assert(source.alive());
-                    assert(0==token.size);
-                    assert(source.bufferSize());
-                    content.push_back(source.get());
-                    std::cerr << *content.tail;
-                }
-            }
-            
-        }
+      
         
         bool Pattern:: strong() const throw()
         {
