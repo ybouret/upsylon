@@ -24,12 +24,12 @@ namespace upsylon {
 
             if( 0 != system(*cmd) )
             {
-                std::cerr << "[failure]" << std::endl;
+                //std::cerr << "[failure]" << std::endl;
                 return false;
             }
             else
             {
-                std::cerr << "[success]" << std::endl;
+                //std::cerr << "[success]" << std::endl;
                 if(!keepFile)
                 {
                     fs.try_remove_file(filename);

@@ -30,6 +30,14 @@ Y_UTEST(jargon_regexp)
         
         p->graphViz("regexp.dot");
         q->graphViz("regexp2.dot");
+        
+        Y_CHECK(p->univocal()==q->univocal());
+        Y_CHECK(p->feeble()==q->feeble());
+
+        
+        std::cerr << "feeble:   " << q->feeble() << std::endl;
+        std::cerr << "univocal: " << q->univocal() << std::endl;
+        
     }
     
 }

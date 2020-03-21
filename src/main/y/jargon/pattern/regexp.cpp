@@ -11,7 +11,7 @@ namespace upsylon {
     namespace Jargon {
         
         
-        bool RegularExpression::Verbose = true;
+        bool RegularExpression::Verbose = false;
         static const char fn[] = "RegularExpression: ";
         
 #define LPAREN     '('
