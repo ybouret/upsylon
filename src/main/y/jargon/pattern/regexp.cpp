@@ -1,6 +1,7 @@
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
 #include "y/jargon/pattern/all.hpp"
+#include "y/jargon/pattern/posix.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
 //#include "y/string/tokenizer.hpp"
@@ -23,7 +24,9 @@ namespace upsylon {
 #define DASH       '-'
 #define LBRACE     '{'
 #define RBRACE     '}'
-#define CARRET     '^'
+#define CARET      '^'
+#define TILDE      '~'
+#define DOT        '.'
         
 #define Y_RX_VERBOSE(code) if (Verbose) do { code; } while(false)
         
@@ -119,6 +122,16 @@ namespace upsylon {
                             
                             //--------------------------------------------------
                             //
+                            // DOT
+                            //
+                            //--------------------------------------------------
+                        case DOT:
+                            ++curr; // skip DOT;
+                            expr->push_back( posix::dot() );
+                            break;
+                            
+                            //--------------------------------------------------
+                            //
                             // simple Joker
                             //
                             //--------------------------------------------------
@@ -137,6 +150,14 @@ namespace upsylon {
                             expr->push_back( Optional::Create( extractJoker(*expr,C) ) );
                             break;
                             
+                        case '~': {
+                            ++curr; //! skip '~'
+                            auto_ptr<Pattern> J = extractJoker(*expr,C);
+                            auto_ptr<Logical> P = NONE::Create();
+                            P->push_back( J.yield() );
+                            expr->push_back( P.yield() );
+                        } break;
+                            
                             //--------------------------------------------------
                             //
                             // counting Joker
@@ -144,6 +165,16 @@ namespace upsylon {
                             //--------------------------------------------------
                         case LBRACE:
                             compileCounting(*expr);
+                            break;
+                            
+                            //--------------------------------------------------
+                            //
+                            // Escape Sequence
+                            //
+                            //--------------------------------------------------
+                        case BACKSLASH:
+                            ++curr; // skip BACKSLASH
+                            expr->push_back( expressionESC() );
                             break;
                             
                             //--------------------------------------------------
@@ -266,6 +297,76 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
+            // escape sequence for expression/block
+            //
+            //------------------------------------------------------------------
+            static inline
+            Pattern *TryControlESC(const char C)
+            {
+                switch(C)
+                {
+                    case 'n': return Single::Create('\n');
+                    case 'r': return Single::Create('\r');
+                    case 't': return Single::Create('\t');
+                    case 'v': return Single::Create('\v');
+                    case 'f': return Single::Create('\f');
+                    default:
+                        break;
+                }
+                return NULL;
+            }
+            
+            inline
+            Pattern *hexaESC()
+            {
+                assert('x'==curr[-1]);
+                if(curr>=last)   throw exception("%smissing xdigits in '%s'",fn,text);
+                const int hi = hexadecimal::to_decimal(*curr);
+                if(hi<0)         throw exception("%sinvalid first xdigit '%c' in '%s'",fn,*curr,text);
+                if(++curr>=last) throw exception("%sunfinished xdigits '%s'",fn,text);
+                const int lo = hexadecimal::to_decimal(*curr);
+                if(lo<0)         throw exception("%sinvalid second xdigit '%c' in '%s'",fn,*curr,text);
+                const int code = hi*16+lo;
+                ++curr;
+                return Single::Create( uint8_t(code) );
+            }
+            
+            inline Pattern *expressionESC()
+            {
+                const char C = *(curr++);
+                
+                {
+                    Pattern   *ctrl = TryControlESC(C);
+                    if(ctrl) return ctrl;
+                }
+                
+                switch(C)
+                {
+                        // hexa:
+                    case 'x':
+                        return hexaESC();
+                        
+                        // direct
+                    case BACKSLASH:
+                    case LBRACE:
+                    case RBRACE:
+                    case LBRACK:
+                    case RBRACK:
+                    case ALT:
+                    case DOT:
+                    case TILDE:
+                    case '+':
+                    case '?':
+                    case '*':
+                        return Single::Create(C);
+                        
+                    default:
+                        throw exception("%sunknown expression escape sequence '\\%c'",fn,C);
+                }
+            }
+            
+            //------------------------------------------------------------------
+            //
             // Entry point
             //
             //------------------------------------------------------------------
@@ -274,7 +375,6 @@ namespace upsylon {
                 Engine            engine(*rx,rx.size(),dict);
                 auto_ptr<Logical> result =  engine.compileExpression();
                 if( engine.depth != 0) throw exception("%sunfinished '%s'",fn,*rx);
-                
                 return result.yield();
             }
             
