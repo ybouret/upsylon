@@ -16,6 +16,11 @@ namespace upsylon {
         
         static const char fn[] = "Jargon::Counting::Create";
         
+        Pattern * Counting:: Create(Pattern *p, const size_t n)
+        {
+            return Create(p,n,n);
+        }
+        
         Pattern * Counting:: Create(Pattern *p, const size_t nmin, const size_t nmax)
         {
             //------------------------------------------------------------------
@@ -52,7 +57,7 @@ namespace upsylon {
             {
                 assert(0==nmin);
                 auto_ptr<Logical> none = NONE::Create();
-                none->push_back(p);
+                none->push_back( guard.yield() );
                 return none.yield();
             }
             else

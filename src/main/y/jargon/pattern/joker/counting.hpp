@@ -29,7 +29,8 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual         ~Counting() throw(); //!< cleanup
             static  Pattern *Create(Pattern *, const size_t, const size_t);  //!< create!
-            
+            static  Pattern *Create(Pattern *, const size_t);                //!< create with one count
+
             const size_t minimalCount; //!< minimal valid count
             const size_t maximalCount; //!< maximal valid count
             

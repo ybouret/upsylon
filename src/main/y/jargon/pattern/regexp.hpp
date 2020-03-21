@@ -17,10 +17,14 @@ namespace upsylon {
             class Engine; //!< forward declaration
             
             static bool Verbose;
+            static Pattern *Compile_(const string &rx, const Dictionary * =0);
+            static Pattern *Compile_(const char   *rx, const Dictionary * =0);
             static Pattern *Compile(const string &rx, const Dictionary * =0);
             static Pattern *Compile(const char   *rx, const Dictionary * =0);
+            
         };
         
+       
       
     }
 }
