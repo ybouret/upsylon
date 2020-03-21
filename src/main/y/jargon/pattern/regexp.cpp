@@ -27,6 +27,7 @@ namespace upsylon {
 #define CARET      '^'
 #define TILDE      '~'
 #define DOT        '.'
+#define COLON      ':'
         
 #define Y_RX_VERBOSE(code) if (Verbose) do { code; } while(false)
         
@@ -175,6 +176,16 @@ namespace upsylon {
                         case BACKSLASH:
                             ++curr; // skip BACKSLASH
                             expr->push_back( expressionESC() );
+                            break;
+                            
+                            //--------------------------------------------------
+                            //
+                            // blocks
+                            //
+                            //--------------------------------------------------
+                        case LBRACK:
+                            ++depth;
+                            expr->push_back( compileBlock() );
                             break;
                             
                             //--------------------------------------------------
@@ -363,6 +374,78 @@ namespace upsylon {
                     default:
                         throw exception("%sunknown expression escape sequence '\\%c'",fn,C);
                 }
+            }
+            
+            
+            //------------------------------------------------------------------
+            //
+            // Block parsing
+            //
+            //------------------------------------------------------------------
+            Pattern *compileBlock()
+            {
+                Y_RX_VERBOSE(std::cerr << fn << "[+] block@" << depth << std::endl);
+                assert( LBRACK == *curr );
+                if(++curr>=last) throw exception("%searly unfinished block in '%s'",fn,text);
+                auto_ptr<Logical> q = 0;
+                
+                // first char after LBRACK
+                switch(*curr)
+                {
+                    case CARET: q = NONE::Create(); ++curr; break;
+                    case DASH:  q = OR::Create(); q->add(DASH); ++curr; break;
+                    case COLON: return compilePOSIX();
+                    default:    q = OR::Create();
+                }
+                
+                while(curr<last)
+                {
+                    const char C = *curr;
+                    switch(C)
+                    {
+                            
+                        case LBRACK:
+                            ++depth;
+                            q->push_back( compileBlock() );
+                            break;
+                            
+                        case RBRACK:
+                            --depth;
+                            ++curr;   // skip rbrack
+                            if(q->size<=0) throw exception("%sempty block in '%s'",fn,text);
+                            return q.yield();
+                            
+                        default:
+                            q->add(C);
+                            ++curr;
+                    }
+                }
+                throw exception("%sunfinished block in '%s'",fn,text);
+            }
+            
+            //------------------------------------------------------------------
+            //
+            // POSIX parsing
+            //
+            //------------------------------------------------------------------
+            Pattern *compilePOSIX()
+            {
+                assert(COLON==*curr);
+                const char *org = curr;
+                while(++curr<=last)
+                {
+                    if(COLON==*curr)
+                    {
+                        exit(0);
+                        ++org;
+                        const string id(org,curr-org);
+                        Y_RX_VERBOSE(std::cerr << fn << "[+] POSIX :" << id << ":" << std::endl);
+                        Pattern *p = posix::query(id);
+                        if(!p) throw exception("%sunknown posix [:%s:]",fn,*id);
+                        return p;
+                    }
+                }
+                throw exception("%sunfinished POSIX name in '%s'",fn,text);
             }
             
             //------------------------------------------------------------------

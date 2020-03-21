@@ -17,6 +17,7 @@ namespace {
 Y_UTEST(jargon_regexp)
 {
     Dictionary dict;
+    RegularExpression::Verbose = true;
     
     if(argc>1)
     {

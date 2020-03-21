@@ -67,6 +67,20 @@ throw exception(fmt,key);\
             return get(_);
         }
         
+        Pattern * posix::query(const string &id)
+        {
+            const posix_db &db = posix_db::instance();
+            const creator  *cb = db.look_for(*id, id.size());
+            if( !cb )
+            {
+                return NULL;
+            }
+            else
+            {
+                return (*cb)();
+            }
+        }
+        
     }
     
 }
