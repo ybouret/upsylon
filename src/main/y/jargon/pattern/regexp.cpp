@@ -284,10 +284,24 @@ namespace upsylon {
                 {
                     //__________________________________________________________
                     //
-                    // with a separator
+                    // without a separator
                     //__________________________________________________________
-                    const size_t n = to_size(data,"single [min|max]imalCount");
-                    expr.push_back( Counting::Create(expr.pop_back(),n) );
+                    if(data.size()<=0) throw exception("%sinvalid empty braces in '%s'",fn,text);
+                    const char   c = data[0];
+                    if(c>='0'&&c<='9')
+                    {
+                        // new counting
+                        const size_t n = to_size(data,"single [min|max]imalCount");
+                        expr.push_back( Counting::Create(expr.pop_back(),n) );
+                    }
+                    else
+                    {
+                        // use dictionary
+                        if(!dict) throw exception("%sno dictionary to find [%s] in '%s'",fn,*data,text);
+                        const Motif *m = dict->search(data);
+                        if(!m)    throw exception("%sno dictionary[%s] for '%s'",fn,*data,text);
+                        expr.push_back( (**m).clone() );
+                    }
                 }
                 ++curr; // skip RBRACE
             }
@@ -456,8 +470,8 @@ namespace upsylon {
                 // check LHS
                 if( (q.size<=0) || q.tail->uuid != Single::UUID )
                     throw exception("%s%smissing single char before '-' in '%s'",fn,sub,text);
-                
                 const auto_ptr<Pattern> lhs = q.pop_back();
+               
                 // check RHS
                 const char        C   = *(curr++);
                 auto_ptr<Pattern> rhs = 0;

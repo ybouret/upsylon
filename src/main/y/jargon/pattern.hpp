@@ -30,8 +30,6 @@ namespace upsylon {
             virtual bool      match(Token &t, Source &) const         = 0;  //!< try to match
             virtual bool      feeble()                  const throw() = 0;  //!< accept empty token!
             virtual bool      univocal()                const throw() = 0;  //!< guess if univocal
-           
-           
             
             //------------------------------------------------------------------
             //

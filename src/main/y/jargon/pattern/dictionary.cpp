@@ -69,8 +69,26 @@ namespace upsylon {
             return *motif;
         }
         
+    }
+    
+}
+
+#include "y/jargon/pattern/regexp.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
         
-      
+        bool  Dictionary:: insert(const string &name, const string &rx)
+        {
+            return insert(name, RegularExpression::Compile(rx,this) );
+        }
+
+        bool  Dictionary:: insert(const char *name, const char *rx)
+        {
+            const string _ = name, __=rx;
+            return insert(_,__);
+        }
         
     }
     

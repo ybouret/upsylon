@@ -29,8 +29,10 @@ namespace upsylon {
             
             const Motif & operator[](const string &name) const;    //!< throw if not found
             const Motif & operator[](const char   *name) const;    //!< throw if not found
-
             
+            bool  insert(const string &name, const string &rx);    //!< compile and insert
+            bool  insert(const char   *name, const char   *rx);    //!< compile and insert
+
         private:
             Y_DISABLE_ASSIGN(Dictionary);
         };
