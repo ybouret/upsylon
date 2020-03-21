@@ -96,6 +96,10 @@ namespace upsylon {
             //! replace all patterns by its transformed
             static void Transform(List &patterns, Proc proc ) throw();
             
+            
+            //! try to merge pairwise
+            static void TryMerge(List &patterns);
+            
         };
         
         

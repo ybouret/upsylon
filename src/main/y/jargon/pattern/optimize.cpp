@@ -69,6 +69,9 @@ namespace upsylon {
                 q->swap_with(tmp);
             }
             
+            // merge
+            //Pattern::TryMerge(*q);
+            
             // compact
             return Logical::Compact(q);
         }
@@ -83,26 +86,10 @@ namespace upsylon {
             
             // no multiple
             Pattern::RemoveRedundant(*q);
-#if 0
-            // fusion OR
-            {
-                Pattern::List tmp;
-                while(q->size)
-                {
-                    Pattern *sub = q->pop_front();
-                    if(OR::UUID==sub->uuid)
-                    {
-                        tmp.merge_back( *sub->as<OR>() );
-                        delete sub;
-                    }
-                    else
-                    {
-                        tmp.push_back(sub);
-                    }
-                }
-                q->swap_with(tmp);
-            }
-#endif
+            
+            // merge
+            //Pattern::TryMerge(*q);
+
             
             // compact return Logical::Compact(q);
             return q;

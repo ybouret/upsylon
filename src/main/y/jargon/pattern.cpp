@@ -2,6 +2,7 @@
 #include "y/jargon/pattern.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/jargon/pattern/basic/merge.hpp"
 
 namespace upsylon {
     
@@ -97,6 +98,33 @@ namespace upsylon {
             }
             patterns.swap_with(tmp);
         }
+        
+        void Pattern:: TryMerge(List &patterns)
+        {
+#if 0
+            if( patterns.size > 1 )
+            {
+                List tmp;
+                tmp.push_back( patterns.pop_front() );
+                while(patterns.size)
+                {
+                    Pattern * p = Merge::Try(tmp.tail,patterns.head);
+                    if(p)
+                    {
+                        delete tmp.pop_back();
+                        delete patterns.pop_back();
+                        tmp.push_back(p);
+                    }
+                    else
+                    {
+                        tmp.push_back( patterns.pop_front() );
+                    }
+                }
+                patterns.swap_with(tmp);
+            }
+#endif
+        }
+        
     }
     
 }
