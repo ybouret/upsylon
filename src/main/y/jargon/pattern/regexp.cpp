@@ -389,7 +389,10 @@ namespace upsylon {
                 if(++curr>=last) throw exception("%searly unfinished block in '%s'",fn,text);
                 auto_ptr<Logical> q = 0;
                 
+                //______________________________________________________________
+                //
                 // first char after LBRACK
+                //______________________________________________________________
                 switch(*curr)
                 {
                     case CARET: q = NONE::Create(); ++curr; break;
@@ -398,6 +401,10 @@ namespace upsylon {
                     default:    q = OR::Create();
                 }
                 
+                //______________________________________________________________
+                //
+                // content
+                //______________________________________________________________
                 while(curr<last)
                 {
                     const char C = *curr;
@@ -411,9 +418,14 @@ namespace upsylon {
                             
                         case RBRACK:
                             --depth;
-                            ++curr;   // skip rbrack
+                            ++curr;   // skip RBRACK
                             if(q->size<=0) throw exception("%sempty block in '%s'",fn,text);
                             return q.yield();
+                            
+                        case BACKSLASH:
+                            ++curr; // skip BACKSLASH
+                            q->push_back( blockESC() );
+                            break;
                             
                         default:
                             q->add(C);
@@ -421,6 +433,38 @@ namespace upsylon {
                     }
                 }
                 throw exception("%sunfinished block in '%s'",fn,text);
+            }
+            
+            //------------------------------------------------------------------
+            //
+            // block escape sequence
+            //
+            //------------------------------------------------------------------
+            inline Pattern *blockESC()
+            {
+                const char C = *(curr++);
+                
+                {
+                    Pattern   *ctrl = TryControlESC(C);
+                    if(ctrl) return ctrl;
+                }
+                
+                switch(C)
+                {
+                        // hexa:
+                    case 'x':
+                        return hexaESC();
+                        
+                        // direct
+                    case BACKSLASH:
+                    case LBRACK:
+                    case RBRACK:
+                    case DASH:
+                        return Single::Create(C);
+                        
+                    default:
+                        throw exception("%sunknown block escape sequence '\\%c'",fn,C);
+                }
             }
             
             //------------------------------------------------------------------
