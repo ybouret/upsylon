@@ -394,7 +394,7 @@ namespace upsylon {
                 {
                     case CARET: q = NONE::Create(); ++curr; break;
                     case DASH:  q = OR::Create(); q->add(DASH); ++curr; break;
-                    case COLON: return compilePOSIX();
+                    case COLON: --depth; return compilePOSIX();
                     default:    q = OR::Create();
                 }
                 
@@ -430,20 +430,30 @@ namespace upsylon {
             //------------------------------------------------------------------
             Pattern *compilePOSIX()
             {
+                //______________________________________________________________
+                //
+                // setup name origin
+                //______________________________________________________________
                 assert(COLON==*curr);
-                const char *org = curr;
-                while(++curr<=last)
+                const char *org = ++curr;
+                if(curr>=last) throw exception("%sunfinished POSIX in '%s'",fn,text);
+               
+                //______________________________________________________________
+                //
+                // look up for end
+                //______________________________________________________________
+                while(curr+1<last)
                 {
-                    if(COLON==*curr)
+                    if(COLON==curr[0]&&RBRACK==curr[1])
                     {
-                        exit(0);
-                        ++org;
                         const string id(org,curr-org);
                         Y_RX_VERBOSE(std::cerr << fn << "[+] POSIX :" << id << ":" << std::endl);
                         Pattern *p = posix::query(id);
                         if(!p) throw exception("%sunknown posix [:%s:]",fn,*id);
+                        curr += 2;
                         return p;
                     }
+                    ++curr;
                 }
                 throw exception("%sunfinished POSIX name in '%s'",fn,text);
             }
