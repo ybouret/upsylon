@@ -99,9 +99,30 @@ namespace upsylon {
             patterns.swap_with(tmp);
         }
         
-        void Pattern:: TryMerge(List &pat)
+        void Pattern:: PairwiseMerge(List &pat)
         {
-            
+            if(pat.size>1)
+            {
+                List tmp;
+                tmp.push_back( pat.pop_front() );
+                while(pat.size)
+                {
+                    const Pattern *lhs = tmp.tail;
+                    const Pattern *rhs = pat.head;
+                    Pattern       *mrg = Merge::Try(lhs, rhs);
+                    if(mrg)
+                    {
+                        delete tmp.pop_back();
+                        delete pat.pop_front();
+                        tmp.push_back( mrg );
+                    }
+                    else
+                    {
+                        tmp.push_back( pat.pop_front() );
+                    }
+                }
+                pat.swap_with(tmp);
+            }
         }
         
     }

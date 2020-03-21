@@ -1,5 +1,6 @@
 
 #include "y/jargon/pattern/basic/merge.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon {
     
@@ -8,12 +9,13 @@ namespace upsylon {
         static inline
         Pattern * _try_merge( const Single *s, const Range *r )
         {
-            const uint8_t ch = s->code;
-            const uint8_t lo = r->lower;
-            const uint8_t up = r->upper;
+            const int ch = s->code;
+            const int lo = r->lower;
+            const int up = r->upper;
             
             if(ch>=lo&&ch<=up)
             {
+                // single is included in range
                 return static_cast<const Pattern *>(r)->clone();
             }
             
@@ -22,6 +24,7 @@ namespace upsylon {
                 const uint8_t lom = lo-1;
                 if(lom==ch)
                 {
+                    // single is at lower boundary
                     return Range::Create(lom,up);
                 }
             }
@@ -31,6 +34,7 @@ namespace upsylon {
                 const uint8_t upp = up+1;
                 if(upp==ch)
                 {
+                    // single is at upper boundary
                     return Range::Create(lo,upp);
                 }
             }
@@ -47,6 +51,13 @@ namespace upsylon {
             }
             assert(a->lower<=b->lower);
             
+            const int a_up = a->upper;
+            const int b_lo = b->lower;
+            if(b_lo<=a_up+1)
+            {
+                return Range::Create(a->lower, max_of(a->upper,b->upper) );
+            }
+            
             return NULL;
         }
         
@@ -60,7 +71,7 @@ namespace upsylon {
             
             if(Single::UUID==L&&Range::UUID==R) return _try_merge( lhs->as<Single>(), rhs->as<Range>() );
             if(Single::UUID==R&&Range::UUID==L) return _try_merge( rhs->as<Single>(), lhs->as<Range>() );
-            if(Range::UUID==R&&Range::UUID==L)  return _try_merge( lhs->as<Range>(),  rhs->as<Range>()  );
+            if(Range:: UUID==R&&Range::UUID==L) return _try_merge( lhs->as<Range>(),  rhs->as<Range>()  );
             
             
             return NULL;

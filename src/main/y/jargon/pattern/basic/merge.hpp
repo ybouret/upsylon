@@ -9,7 +9,9 @@ namespace upsylon {
     
     namespace Jargon {
      
+        //! Merge functions
         struct Merge {
+            //! try to merge two patterns
             static Pattern * Try(const Pattern *lhs, const Pattern *rhs);
         };
         
