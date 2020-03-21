@@ -427,12 +427,56 @@ namespace upsylon {
                             q->push_back( blockESC() );
                             break;
                             
+                        case DASH:
+                            ++curr; // skip DASH
+                            compileRange(*q);
+                            break;
+                            
                         default:
                             q->add(C);
                             ++curr;
                     }
                 }
                 throw exception("%sunfinished block in '%s'",fn,text);
+            }
+            
+            //------------------------------------------------------------------
+            //
+            // range parsing
+            //
+            //------------------------------------------------------------------
+            void compileRange( Logical &q )
+            {
+                static const char sub[] = " Range: ";
+                assert(DASH==curr[-1]);
+                // check if enough chars
+                if(curr>=last)
+                    throw exception("%s%sunfinished block range in '%s'",fn,sub,text);
+                
+                // check LHS
+                if( (q.size<=0) || q.tail->uuid != Single::UUID )
+                    throw exception("%s%smissing single char before '-' in '%s'",fn,sub,text);
+                
+                const auto_ptr<Pattern> lhs = q.pop_back();
+                // check RHS
+                const char        C   = *(curr++);
+                auto_ptr<Pattern> rhs = 0;
+                switch(C)
+                {
+                    case LBRACK:
+                    case RBRACK:
+                        throw exception("%s%sinvalid '%c' after '-' in '%s'",fn,sub,C,text);
+                        
+                    case BACKSLASH:
+                        rhs = blockESC();
+                        break;
+                        
+                    default:
+                        rhs = Single::Create(C);
+                }
+                assert(rhs.is_valid());
+                assert(Single::UUID==rhs->uuid);
+                q.add( lhs->as<Single>()->code, rhs->as<Single>()->code );
             }
             
             //------------------------------------------------------------------
@@ -460,6 +504,7 @@ namespace upsylon {
                     case LBRACK:
                     case RBRACK:
                     case DASH:
+                    case COLON:
                         return Single::Create(C);
                         
                     default:
