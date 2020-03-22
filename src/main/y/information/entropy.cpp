@@ -109,3 +109,52 @@ namespace upsylon {
 
 }
 
+#include "y/ios/serializable.hpp"
+#include "y/ios/ostream.hpp"
+
+namespace upsylon {
+    
+    namespace Information {
+        
+        namespace {
+            
+            class estream : public ios::ostream
+            {
+            public:
+                inline explicit estream() throw() : entropy()
+                {
+                }
+                
+                inline virtual ~estream() throw()
+                {
+                }
+                
+                inline virtual void write( char C )
+                {
+                    entropy.update(&C,1);
+                }
+                
+                inline virtual void flush() throw()
+                {
+                    
+                }
+                
+                
+                Entropy entropy;
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(estream);
+            };
+        
+            }
+        
+        double Entropy:: Of( ios::serializable &args )
+        {
+            estream fp;
+            args.serialize(fp);
+            return *fp.entropy;
+        }
+
+    }
+}
+

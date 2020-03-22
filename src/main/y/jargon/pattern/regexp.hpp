@@ -15,9 +15,10 @@ namespace upsylon {
         //! regular expression engine
         /**
          group : '(', ')'
-         alt:   '|'
-         joker: '?', '+', '*', '~'
-         dot  : '.'
+         alt   :   '|'
+         joker : '?', '+', '*', '~'
+         dot   : '.'
+         block : '[', ']' with caret and dash...
          */
         struct RegularExpression
         {

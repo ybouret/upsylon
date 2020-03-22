@@ -6,6 +6,10 @@
 
 namespace upsylon {
 
+    namespace ios {
+        class serializable; //!< forward
+    }
+    
     namespace Information {
 
         //! computing entropy
@@ -28,7 +32,9 @@ namespace upsylon {
             double of( const void *data, const size_t size ) throw(); //!< reset/compute
             double of( const char *text ) throw();                    //!< reset/compute
             double of( const memory::ro_buffer &buff) throw();        //!< reset/compute
-
+            
+            static double Of( ios::serializable & );
+            
         private:
             size_t frequency[256];
             Y_DISABLE_COPY_AND_ASSIGN(Entropy);
