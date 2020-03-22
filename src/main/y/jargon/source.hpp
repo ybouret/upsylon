@@ -64,7 +64,7 @@ namespace upsylon {
             Module::Handle       handle;
             Token                iobuf;
             History              history;
-            Char *tryGet();
+            Char                *tryGet();
             
         };
         

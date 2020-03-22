@@ -76,22 +76,7 @@ namespace upsylon {
             }
         }
         
-#if 0
-        uint8_t Source:: peek() const throw()
-        {
-            assert(iobuf.size>0);
-            return iobuf.head->code;
-        }
-        
-        uint8_t Source:: pop()  throw()
-        {
-            assert(iobuf.size>0);
-            const uint8_t ans = iobuf.head->code;
-            iobuf.skip(1);
-            return ans;
-        }
-#endif
-        
+
         size_t Source:: bufferSize() const throw()
         {
             return iobuf.size;
@@ -161,6 +146,7 @@ namespace upsylon {
                 for(const Char *ch=l.tail;ch;ch=ch->prev)
                 {
                     unget( Char::Copy(cache,*ch) );
+                    ++done;
                 }
             }
             catch(...)
