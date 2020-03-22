@@ -22,7 +22,7 @@ namespace upsylon {
             while( source.alive() )
             {
                 Token token(source.cache());
-                if( match(token,source) )
+                if( match(token,source) && token.size>0 )
                 {
                     std::cerr << "<" << token << ">";
                     content.merge_back(token);

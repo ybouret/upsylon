@@ -40,6 +40,10 @@ Y_UTEST(jargon_regexp)
         std::cerr << "feeble:   " << q->feeble() << std::endl;
         std::cerr << "univocal: " << q->univocal() << std::endl;
         
+        if( q->strong() )
+        {
+            
+        }
     }
     
 }

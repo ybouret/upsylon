@@ -12,7 +12,7 @@ namespace upsylon {
  
     namespace Jargon {
      
-        typedef object                Object;        //!< alias
+        typedef object                Object;        //!< alias for small objects
         typedef counted_object        CountedObject; //!< alias
         typedef arc_ptr<const string> Tag;           //!< shared tag
         typedef ios::serializable     Serializable;  //!< alias
