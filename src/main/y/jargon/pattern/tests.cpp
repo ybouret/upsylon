@@ -36,6 +36,7 @@ namespace upsylon {
                     std::cerr << *content.tail;
                 }
             }
+            std::cerr << std::endl;
             
         }
         

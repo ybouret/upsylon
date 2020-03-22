@@ -42,6 +42,15 @@ Y_UTEST(jargon_regexp)
         std::cerr << "univocal : " << q->univocal() << std::endl;
         std::cerr << "entropy  : " << Information::Entropy::Of(*q) << std::endl;
         
+        if(argc>2)
+        {
+            Char::Cache  cache = new Char::Pool();
+            Source       source(cache,Module::OpenFile(cache, argv[2]));
+            Token        content(cache);
+            q->test(source,content);
+        }
+        
+        
     }
     
 }
