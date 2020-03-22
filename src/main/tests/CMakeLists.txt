@@ -303,12 +303,14 @@ ADD_TEST(oxide:par        test-main  oxide_par)
 ADD_TEST(oxide:grids      test-main  oxide_grids)
 
 SOURCE_GROUP( jargon FILES 
+test-jargon-types.cpp
 test-jargon-module.cpp
 test-jargon-source.cpp
 test-jargon-pattern.cpp
 test-jargon-posix.cpp
 test-jargon-regexp.cpp
 )
+ADD_TEST(jargon:types   test-main jargon_types)
 ADD_TEST(jargon:module  test-main jargon_module ${HERE}/words.db)
 ADD_TEST(jargon:source  test-main jargon_source )
 ADD_TEST(jargon:pattern test-main jargon_pattern)

@@ -227,6 +227,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(closest);
 
     // jargon
+    Y_UTEST(jargon_types);
     Y_UTEST(jargon_module);
     Y_UTEST(jargon_source);
     Y_UTEST(jargon_pattern);

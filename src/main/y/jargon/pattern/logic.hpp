@@ -28,13 +28,13 @@ namespace upsylon {
             
         public:
             static Pattern *Compact(Logical *p); //!< return head pattern/delete logical if only one item
-            static Logical *NoMulti(Logical *p); //!< remove multiple alike
+            static Logical *NoMulti(Logical *p); //!< remove multiple alike, use Patten::RemoveRedundant
             
             static Pattern *Equal(const string &); //!< AND(content)
             static Pattern *Among(const string &); //!< OR(content)
             
         private:
-            static Logical *Feed( Logical *p, const string &s );
+            static Logical *Feed( Logical *p, const string &s ); //!< create a single for each char of s
         };
         
     }

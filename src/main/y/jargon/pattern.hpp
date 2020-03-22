@@ -85,6 +85,12 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Pattern);
             
         public:
+            //------------------------------------------------------------------
+            //
+            // advandec ops
+            //
+            //------------------------------------------------------------------
+            
             //! remove redundant alike patterns from the list, preserve order
             static void RemoveRedundant(List &patterns );
             
@@ -95,6 +101,9 @@ namespace upsylon {
             static void Transform(List &patterns, Proc proc ) throw();
             
             //! try to merge pairwise
+            /**
+             recursively check if two consecutive pattens may be merged
+             */
             static void PairwiseMerge(List &patterns);
             
         };
