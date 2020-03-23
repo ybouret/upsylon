@@ -1,6 +1,7 @@
 
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/jargon/lexical/scanner.hpp"
+#include "y/jargon/lexeme.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"

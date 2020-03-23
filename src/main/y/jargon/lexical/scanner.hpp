@@ -6,7 +6,10 @@
 #define Y_JARGON_LEXICAL_SCANNER_INCLUDED 1
 
 #include "y/jargon/lexical/rule.hpp"
-#include "y/jargon/lexeme.hpp"
+#include "y/jargon/lexical/event/regular-family.hpp"
+#include "y/jargon/lexical/event/control-family.hpp"
+
+#include "y/jargon/lexical/unit.hpp"
 #include "y/jargon/pattern/regexp.hpp"
 
 namespace upsylon {

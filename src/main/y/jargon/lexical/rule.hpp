@@ -3,7 +3,7 @@
 #ifndef Y_JARGON_LEXICAL_RULE_INCLUDED
 #define Y_JARGON_LEXICAL_RULE_INCLUDED 1
 
-#include "y/jargon/lexical/event/regular-family.hpp"
+#include "y/jargon/lexical/event.hpp"
 
 namespace upsylon {
  
