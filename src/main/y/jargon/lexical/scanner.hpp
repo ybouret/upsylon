@@ -15,23 +15,27 @@ namespace upsylon {
         
         namespace Lexical {
             
+            //------------------------------------------------------------------
+            //! simple lexical scanner
+            //------------------------------------------------------------------
             class Scanner : public CountedObject
             {
             public:
-                const string name;
+                const string name; //!< identifier
                 
-                explicit Scanner( const string &id );
-                virtual ~Scanner() throw();
+                explicit Scanner( const string &id ); //!< setup
+                virtual ~Scanner() throw();           //!< cleanu[
                 
-                void add(Rule *rule);
+                void add(Rule *rule);  //!< add a rule, check no multiple
                 
-                bool building() const throw();
-                void finish() throw();
-                void resume();
+                bool building() const throw(); //!< check building state
+                void finish() throw();         //!< finish, release extra memory
+                void resume();                 //!< resume building
                 
-                void doNothing(const Token &) const throw();
-                void doNewLine(const Token &) throw();
+                void doNothing(const Token &) const throw(); //!< ...
+                void doNewLine(const Token &) throw();       //!< send newLine to current source
                 
+                //! build a regular event
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -52,6 +56,7 @@ namespace upsylon {
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
                 
+                //! build a forwarding regular evne
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -66,6 +71,8 @@ namespace upsylon {
                     regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnForward>(label,regexp,hObject,hMethod);
                 }
                 
+                
+                //! build a discarding regular event
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -80,25 +87,32 @@ namespace upsylon {
                     regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnDiscard>(label,regexp,hObject,hMethod);
                 }
                 
+                //! default emit
                 template <typename LABEL, typename REGEXP>
                 void emit(const LABEL  &label, const REGEXP &regexp)
                 {
                     forward(label, regexp, this, & Scanner:: doNothing );
                 }
                 
+                //! default drop
                 template <typename LABEL, typename REGEXP>
                 void drop(const LABEL  &label, const REGEXP &regexp)
                 {
                     discard(label,regexp,this,&Scanner::doNothing);
                 }
                 
-                
+                //! default endl
                 template <typename LABEL, typename REGEXP>
                 void endl(const LABEL &label, const REGEXP &regexp)
                 {
                     discard(label,regexp,this,&Scanner::doNewLine);
                 }
                 
+                //! the flex-like probing function
+                /**
+                 - if != NULL: a unit is produced
+                 - if NULL   :
+                 */
                 Lexical::Unit *probe(Source &);
                 
                 

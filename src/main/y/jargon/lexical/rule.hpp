@@ -11,24 +11,34 @@ namespace upsylon {
         
         namespace Lexical {
             
+            //------------------------------------------------------------------
+            //! base class for rules
+            /**
+             trigger and event uppon motif
+             */
+            //------------------------------------------------------------------
+
             class Rule : public Object, public inode<Rule>
             {
             public:
+                
+                const Tag           label; //!< shared label for Lexemes
+                const Motif         motif; //!< motif to match
+                const Event::Handle event; //!< event to trigger
+                
+                //! cleanup
                 virtual ~Rule() throw();
                 
-                const Tag           label;
-                const Motif         motif;
-                const Event::Handle event;
-                
-                
+                //! setup
                 explicit Rule(const Tag           &ruleLabel,
                               const Motif         &ruleMotif,
                               const Event::Handle &ruleEvent);
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rule);
             };
             
-            typedef core::list_of_cpp<Rule> Rules;
+            typedef core::list_of_cpp<Rule> Rules; //!< alias
             
         }
     }

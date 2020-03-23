@@ -26,12 +26,14 @@ namespace upsylon {
             class Event : public CountedObject
             {
             public:
-                typedef arc_ptr<const Event> Handle;
+                typedef arc_ptr<const Event> Handle; //!< alias
+                
                 //--------------------------------------------------------------
                 //
                 // types and definitions
                 //
                 //--------------------------------------------------------------
+                //! handled kind of events
                 enum  Kind
                 {
                     Regular, //!< [Forward|Discard]

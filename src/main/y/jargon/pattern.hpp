@@ -76,9 +76,9 @@ namespace upsylon {
             //------------------------------------------------------------------
             const uint32_t uuid;    //!< identifier
             void          *self;    //!< pointer to derived class
-            const double   entropy; //!<
+            const double   entropy; //!< entropy, if necessary
             
-            void updateEntropy() const throw();
+            void updateEntropy() const throw(); //!< update current entropy
             
         protected:
             explicit Pattern(const uint32_t) throw(); //!< setup uuid, self=0
