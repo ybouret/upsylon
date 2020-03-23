@@ -158,7 +158,7 @@ namespace upsylon {
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
                 
-                //! build a nack
+                //! build a back
                 template <
                 typename REGEXP,
                 typename OBJECT_POINTER,
