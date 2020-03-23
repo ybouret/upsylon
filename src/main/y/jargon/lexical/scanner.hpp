@@ -18,6 +18,7 @@ namespace upsylon {
         
         namespace Lexical {
             
+            //! directive for Lexer during probe
             typedef const ControlEvent *Directive;
             
             //------------------------------------------------------------------
@@ -184,9 +185,9 @@ namespace upsylon {
                  */
                 Lexical::Unit *probe(Source &, Directive &);
                 
-                static const char callPrefix[];
-                static const char jumpPrefix[];
-                static const char backPrefix[];
+                static const char callPrefix[]; //!< used to build inline call label
+                static const char jumpPrefix[]; //!< used to build inline jump label
+                static const char backPrefix[]; //!< used to build inline call label
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

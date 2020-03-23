@@ -13,10 +13,14 @@ namespace upsylon {
         
         namespace Lexical {
             
+            //! create event to jump to another scanner
             class OnJump : public ControlEvent
             {
             public:
+                //! ccleanup
                 virtual ~OnJump() throw();
+                
+                //! setup action to take before jumping to a named sub-scanner
                 explicit OnJump(const Action &, const string &);
                 
             private:

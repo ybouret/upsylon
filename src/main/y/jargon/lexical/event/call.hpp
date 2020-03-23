@@ -12,10 +12,14 @@ namespace upsylon {
         
         namespace Lexical {
  
+            //! create envent to call a named sub-scanner
             class OnCall : public ControlEvent
             {
             public:
+                //! cleanup
                 virtual ~OnCall() throw();
+                
+                //! setup action to take befor call sub-scanner
                 explicit OnCall(const Action &, const string &);
                 
             private:

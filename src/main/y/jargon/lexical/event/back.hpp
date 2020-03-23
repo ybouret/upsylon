@@ -13,10 +13,14 @@ namespace upsylon {
         
         namespace Lexical {
             
+            //! creating an event to come back from a sub-scanner
             class OnBack : public ControlEvent
             {
             public:
+                //! cleanup
                 virtual ~OnBack() throw();
+                
+                //! setup action to be taken before coming back
                 explicit OnBack(const Action &);
                 
             private:

@@ -29,7 +29,7 @@ namespace upsylon {
                     Jump  //!< jump to a new scanner
                 };
                 const Type   type;  //!< category of control event
-                const string name;
+                const string name;  //!< name to jump/call to, empty for back
                 virtual ~ControlEvent() throw();
                 
             protected:
