@@ -15,7 +15,8 @@ namespace {
 Y_UTEST(jargon_lexeme)
 {
     Y_UTEST_SIZEOF(Lexeme);
-    
+    Y_UTEST_SIZEOF(Lexemes);
+
 }
 Y_UTEST_DONE()
 

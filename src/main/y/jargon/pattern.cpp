@@ -14,23 +14,22 @@ namespace upsylon {
             self = 0;
         }
         
+#define Y_JPATTERN(U) \
+CountedObject(),      \
+inode<Pattern>(),     \
+Serializable(),       \
+Vizible(),            \
+uuid(U),              \
+self(0),              \
+entropy(-1)
+        
         Pattern:: Pattern(const uint32_t u) throw() :
-        CountedObject(),
-        inode<Pattern>(),
-        Serializable(),
-        Vizible(),
-        uuid(u),
-        self(0)
+        Y_JPATTERN(u)
         {
         }
         
         Pattern:: Pattern(const Pattern &p) throw() :
-        CountedObject(),
-        inode<Pattern>(),
-        Serializable(),
-        Vizible(),
-        uuid(p.uuid),
-        self(0)
+        Y_JPATTERN(p.uuid)
         {
         }
         
@@ -127,4 +126,47 @@ namespace upsylon {
         
     }
     
+}
+
+#include "y/sort/merge.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        static inline int compareByEntropy(const Pattern *lhs, const Pattern *rhs, void *) throw()
+        {
+            return comparison::increasing(lhs->entropy,rhs->entropy);
+        }
+        
+        void Pattern:: SortByEntropy(List &patterns)
+        {
+            for(Pattern *p=patterns.head;p;p=p->next)
+            {
+                p->updateEntropy();
+            }
+            
+            merging<Pattern>::sort(patterns, compareByEntropy, NULL);
+            
+            
+        }
+        
+    }
+    
+}
+
+#include "y/information/entropy.hpp"
+#include "y/type/aliasing.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
+     
+        
+        void Pattern:: updateEntropy() const throw()
+        {
+            const Serializable &self = *this;
+            aliasing::_(entropy) = Information::Entropy::Of(self);
+        }
+    }
 }

@@ -34,7 +34,7 @@ namespace upsylon {
             double of( const memory::ro_buffer &buff) throw();        //!< reset/compute
             
             //! compute entropy of a serializable object
-            static double Of( ios::serializable & );
+            static double Of( const ios::serializable & );
             
         private:
             size_t frequency[256];

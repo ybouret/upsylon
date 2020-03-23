@@ -148,7 +148,7 @@ namespace upsylon {
         
             }
         
-        double Entropy:: Of( ios::serializable &args )
+        double Entropy:: Of( const ios::serializable &args )
         {
             estream fp;
             args.serialize(fp);

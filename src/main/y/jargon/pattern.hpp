@@ -74,8 +74,11 @@ namespace upsylon {
             // common members
             //
             //------------------------------------------------------------------
-            const uint32_t uuid; //!< identifier
-            void          *self; //!< pointer to derived class
+            const uint32_t uuid;    //!< identifier
+            void          *self;    //!< pointer to derived class
+            const double   entropy; //!<
+            
+            void updateEntropy() const throw();
             
         protected:
             explicit Pattern(const uint32_t) throw(); //!< setup uuid, self=0
@@ -105,6 +108,9 @@ namespace upsylon {
              recursively check if two consecutive pattens may be merged
              */
             static void PairwiseMerge(List &patterns);
+            
+            //! sort by increasing entropy
+            static void SortByEntropy(List &patterns);
             
         };
         

@@ -1,4 +1,6 @@
 #include "y/jargon/pattern/posix.hpp"
+#include "y/associative/map.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 
@@ -10,7 +12,7 @@ namespace {
     class Tester
     {
     public:
-        Cache      cache;
+        Cache       cache;
         Source      source;
         Token       content;
         
@@ -38,23 +40,30 @@ namespace {
 }
 
 
-#define Y_JPOSIX(EXPR)                           \
-do {                                            \
-std::cerr << "\t\tposix::" #EXPR << std::endl; \
-auto_ptr<Pattern> p = posix::EXPR();          \
-Y_CHECK( p->strong()  );                     \
-Y_CHECK( p->checkIO() );                    \
-auto_ptr<Pattern> q = posix::get(#EXPR);   \
-Y_CHECK( p->alike( & *q) );               \
-p->graphViz( #EXPR ".dot" );             \
-test.run(*p);                           \
-std::cerr << std::endl;                \
-std::cerr << std::endl;               \
+#define Y_JPOSIX(EXPR)                             \
+do {                                              \
+const string id = #EXPR;                         \
+std::cerr << "\t\tposix::" << id  << std::endl; \
+auto_ptr<Pattern> p = posix::EXPR();           \
+Y_CHECK( p->strong()  );                      \
+Y_CHECK( p->checkIO() );                     \
+auto_ptr<Pattern> q = posix::get(#EXPR);    \
+Y_CHECK( p->alike( & *q) );                \
+p->graphViz( #EXPR ".dot" );              \
+test.run(*p);                            \
+all.push_back( p.yield() );             \
+const Motif m = all.tail->clone();     \
+Y_ASSERT(db.insert(id,m));            \
+std::cerr << std::endl;              \
+std::cerr << std::endl;             \
 } while(false)
 
 Y_UTEST(jargon_posix)
 {
-    Tester test( (argc>1) ? argv[1] : NULL );
+    Tester    test( (argc>1) ? argv[1] : NULL );
+    typedef map<string,Motif> db_type;
+    db_type           db;
+    Pattern::List     all;
     
     Y_JPOSIX(lower);
     Y_JPOSIX(upper);
@@ -71,6 +80,19 @@ Y_UTEST(jargon_posix)
     Y_JPOSIX(dot);
     Y_JPOSIX(core);
     
+    std::cerr << "#patterns: " << all.size << std::endl;
+    Pattern::SortByEntropy(all);
+    for(const Pattern *p=all.head;p;p=p->next)
+    {
+        std::cerr << "\t$" << p->entropy << std::endl;
+    }
+    std::cerr << "#db: " << db.size() << std::endl;
+    for(db_type::iterator it=db.begin();it!=db.end();++it)
+    {
+        const Pattern &p = **it;
+        p.updateEntropy();
+        std::cerr << "\t" << it.key() << " $" << (*it)->entropy << std::endl;
+    }
 }
 Y_UTEST_DONE()
 

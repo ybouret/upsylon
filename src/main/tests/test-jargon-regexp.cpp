@@ -13,8 +13,6 @@ namespace {
     
 }
 
-#include "y/information/entropy.hpp"
-
 Y_UTEST(jargon_regexp)
 {
     Dictionary dict;
@@ -37,10 +35,10 @@ Y_UTEST(jargon_regexp)
         Y_CHECK(p->univocal()==q->univocal());
         Y_CHECK(p->feeble()==q->feeble());
 
-        
-        std::cerr << "strong   : " << q->strong() << std::endl;
+        q->updateEntropy();
+        std::cerr << "strong   : " << q->strong()   << std::endl;
         std::cerr << "univocal : " << q->univocal() << std::endl;
-        std::cerr << "entropy  : " << Information::Entropy::Of(*q) << std::endl;
+        std::cerr << "entropy  : " << q->entropy    << std::endl;
         
         if(argc>2)
         {
