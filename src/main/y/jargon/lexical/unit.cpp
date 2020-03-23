@@ -11,7 +11,17 @@ namespace upsylon {
             {
             }
             
-            
+            Unit:: Unit(const Cache   &cache,
+                        const Context &ctx,
+                        const Tag     &t) throw() :
+            Object(),
+            Token(cache),
+            Context(ctx),
+            inode<Unit>(),
+            label(t)
+            {
+                
+            }
             
         }
         

@@ -1,0 +1,154 @@
+
+#include "y/jargon/lexical/scanner.hpp"
+#include "y/exception.hpp"
+#include "y/code/utils.hpp"
+#include "y/type/aliasing.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        namespace Lexical {
+            
+            Unit * Scanner::probe(Source &source)
+            {
+                chars = &source;
+                PROBE:
+                if(source.isEmpty())
+                {
+                    assert(0==source.IO().size);
+                    return NULL;
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    //
+                    // looking for a fisrt bestRule
+                    //
+                    //----------------------------------------------------------
+                    Cache       &cache    = source.cache();
+                    const Rule  *bestRule = NULL;
+                    Token        bestExpr( cache );
+                    
+                    for(bestRule=rules.head;bestRule;bestRule=bestRule->next)
+                    {
+                        if(bestRule->motif->match(bestExpr,source))
+                        {
+                            break;
+                        }
+                    }
+                    
+                    if(!bestRule)
+                    {
+                        // syntax error
+                        assert(source.IO().size>0);
+                        assert(0==bestExpr.size);
+                        const Char   *badChar = source.IO().head;
+                        const uint8_t badCode = badChar->code;
+                        throw exception("%s:%d:%d: unexpected char '%s' for <%s>",
+                                        **(badChar->tag),
+                                        badChar->line,
+                                        badChar->column,
+                                        printable_char[badCode],
+                                        *name);
+                    }
+                    
+                    size_t bestSize = bestExpr.size;
+                    if(bestSize<=0)
+                    {
+                        throw exception("<%s> corrupted rule '%s' returned an empty token!!!",*name,**(bestRule->label));
+                    }
+                    source.uncpy(bestExpr);
+                    
+                    //----------------------------------------------------------
+                    //
+                    // looking for a overcoming Rule
+                    //
+                    //----------------------------------------------------------
+                    for(const Rule *rule=bestRule->next;rule;rule=rule->next)
+                    {
+                        Token expr(cache);
+                        if(rule->motif->match(expr,source))
+                        {
+                            const size_t size = expr.size;
+                            if(size>bestSize)
+                            {
+                                // new best
+                                source.uncpy(expr);
+                                bestSize = size;
+                                bestExpr.swap_with(expr);
+                                bestRule = rule;
+                            }
+                            else
+                            {
+                                // too late
+                                source.unget(expr);
+                            }
+                        }
+                        else
+                        {
+                            assert(0==expr.size);
+                        }
+                    }
+                    
+                    //----------------------------------------------------------
+                    //
+                    // processing bestRule
+                    //
+                    //----------------------------------------------------------
+                    //std::cerr << "[" << bestRule->label << ":" << bestExpr << "]";
+                    
+                    //__________________________________________________________
+                    //
+                    // skip source bestSize
+                    //__________________________________________________________
+                    source.skip(bestSize);
+                    
+                    //__________________________________________________________
+                    //
+                    // find the proper action
+                    //__________________________________________________________
+                    const Event &event  = *(bestRule->event);
+                    Action      &action = aliasing::_(event.action);
+                    action(bestExpr);
+                    
+                    //__________________________________________________________
+                    //
+                    // then produce
+                    //__________________________________________________________
+                    assert(event.self);
+                    
+                    switch( event.kind )
+                    {
+                        case Event::Regular: {
+                            switch( static_cast<const RegularEvent *>(event.self)->type )
+                            {
+                                case RegularEvent::Forward:
+                                {
+                                    Unit *unit = new Unit(cache,*bestExpr.head,bestRule->label);
+                                    unit->swap_with(bestExpr);
+                                    return unit;
+                                }
+                                  
+                                case RegularEvent::Discard:
+                                {
+                                    goto PROBE;
+                                }
+                            }
+                        }
+                    
+                            
+                        case Event::Control:
+                            throw exception("not implemented");
+                    }
+                   
+                }
+                
+            }
+            
+        }
+    }
+    
+}
+
+

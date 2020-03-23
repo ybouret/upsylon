@@ -13,7 +13,7 @@ namespace upsylon {
         
         Source:: Source(const Cache &cache, Module *module) throw() :
         handle(module),
-        iobuf(cache),
+        iobuff(cache),
         history()
         {
             
@@ -52,12 +52,12 @@ namespace upsylon {
 
         Char * Source:: get()
         {
-            return (iobuf.size>0) ? iobuf.pop_front() : tryGet();
+            return (iobuff.size>0) ? iobuff.pop_front() : tryGet();
         }
         
-        bool Source:: alive()
+        bool Source:: isAlive()
         {
-            if(iobuf.size>0)
+            if(iobuff.size>0)
             {
                 return true;
             }
@@ -66,7 +66,7 @@ namespace upsylon {
                 Char *ch = tryGet();
                 if(ch)
                 {
-                    iobuf.push_back(ch);
+                    iobuff.push_back(ch);
                     return true;
                 }
                 else
@@ -76,15 +76,20 @@ namespace upsylon {
             }
         }
         
-
-        size_t Source:: bufferSize() const throw()
+        bool Source:: isEmpty()
         {
-            return iobuf.size;
+            return !isAlive();
+        }
+        
+
+        const Char::List  & Source:: IO() const throw()
+        {
+            return iobuff;
         }
         
         Cache & Source:: cache() const throw()
         {
-            return aliasing::_(iobuf.cache);
+            return aliasing::_(iobuff.cache);
         }
         
         size_t  Source:: prefetch(size_t n)
@@ -94,7 +99,7 @@ namespace upsylon {
             {
                 Char *ch = tryGet();
                 if(!ch) break;
-                iobuf.push_back(ch);
+                iobuff.push_back(ch);
                 ++count;
             }
             return count;
@@ -107,7 +112,7 @@ namespace upsylon {
             if(ch)
             {
                 C = char(ch->code);
-                iobuf.cache->store(ch);
+                iobuff.cache->store(ch);
                 return true;
             }
             else
@@ -120,13 +125,13 @@ namespace upsylon {
         {
             Context ctx = *handle;
             --aliasing::_(ctx.column);
-            iobuf.push_front( Char::Make(iobuf.cache, ctx, C));
+            iobuff.push_front( Char::Make(iobuff.cache, ctx, C));
         }
         
         void  Source:: unget(Char *ch) throw()
         {
             assert(ch);
-            iobuf.push_front(ch);
+            iobuff.push_front(ch);
         }
         
         void  Source:: unget(Char::List &l) throw()
@@ -139,7 +144,7 @@ namespace upsylon {
         
         void Source:: uncpy(const Char::List &l)
         {
-            Cache &cache = iobuf.cache;
+            Cache &cache = iobuff.cache;
             size_t done = 0;
             try
             {
@@ -151,15 +156,15 @@ namespace upsylon {
             }
             catch(...)
             {
-                iobuf.skip(done);
+                iobuff.skip(done);
                 throw;
             }
         }
         
         void  Source:: skip(const size_t n) throw()
         {
-            assert(n<=iobuf.size);
-            iobuf.skip(n);
+            assert(n<=iobuff.size);
+            iobuff.skip(n);
         }
 
         

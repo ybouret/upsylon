@@ -309,7 +309,7 @@ test-jargon-source.cpp
 test-jargon-pattern.cpp
 test-jargon-posix.cpp
 test-jargon-regexp.cpp
-test-jargon-lexeme.cpp
+test-jargon-scanner.cpp
 )
 ADD_TEST(jargon:types   test-main jargon_types)
 ADD_TEST(jargon:module  test-main jargon_module ${HERE}/words.db)
@@ -317,7 +317,7 @@ ADD_TEST(jargon:source  test-main jargon_source )
 ADD_TEST(jargon:pattern test-main jargon_pattern)
 ADD_TEST(jargon:posix   test-main jargon_posix)
 ADD_TEST(jargon:regexp  test-main jargon_regexp)
-ADD_TEST(jargon:lexeme  test-main jargon_lexeme)
+ADD_TEST(jargon:scanner test-main jargon_scanner)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

@@ -14,8 +14,8 @@ namespace upsylon {
             //! a token created by a lexical rule
             class Unit :
             public Object,
-            public Context,
             public Token,
+            public Context,
             public inode<Unit>
             {
             public:
@@ -24,9 +24,9 @@ namespace upsylon {
                 virtual ~Unit() throw(); //!< cleanup
                 
                 //! setup
-                explicit Unit(const Tag     &,
+                explicit Unit(const Cache   &,
                               const Context &,
-                              const Cache   &) throw();
+                              const Tag     &) throw();
                 
                 const Tag label; //!< creating rule label
                 

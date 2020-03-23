@@ -44,12 +44,14 @@ namespace upsylon {
             //
             // I/O  management
             //__________________________________________________________________
-            void         skip(const size_t n) throw();   //!< skip iobuf
-            size_t       prefetch(size_t n);             //!< prefetch at most n Char
-            bool         alive();                        //!< check if get() shall return a valid Char
-            size_t       bufferSize() const throw();     //!< number of chars in buffer
-            Cache       &cache()      const throw();     //!< shared cache access
-
+            void              skip(const size_t n) throw();   //!< skip iobuf
+            size_t            prefetch(size_t n);             //!< prefetch at most n Char
+            bool              isAlive();                      //!< check if get() shall return a valid Char
+            bool              isEmpty();                      //!< ! isAlive
+            Cache            &cache()  const throw();         //!< shared cache access
+            const Char::List &IO()     const throw();         //!< read-only I/O status
+            
+            
             //__________________________________________________________________
             //
             // istream behavior, will drop contexts
@@ -62,7 +64,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Source);
             typedef lstack<const Module::Handle> History;
             Module::Handle       handle;
-            Token                iobuf;
+            Token                iobuff;
             History              history;
             Char                *tryGet();
             

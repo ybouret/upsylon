@@ -408,6 +408,12 @@ SET(jargon_lexical_srcs ${jargon_lexical_decl} ${jargon_lexical_code})
 SOURCE_GROUP( jargon/lexical FILES ${jargon_lexical_srcs} )
 INSTALL( FILES ${jargon_lexical_decl} DESTINATION include/y/jargon/lexical )
 
+FILE(GLOB jargon_lexical_event_decl y/jargon/lexical/event/*.hpp)
+FILE(GLOB jargon_lexical_event_code y/jargon/lexical/event/*.cpp)
+SET(jargon_lexical_event_srcs ${jargon_lexical_event_decl} ${jargon_lexical_event_code})
+SOURCE_GROUP( jargon/lexical/event FILES ${jargon_lexical_event_srcs} )
+INSTALL( FILES ${jargon_lexical_event_decl} DESTINATION include/y/jargon/lexical/event )
+
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -459,7 +465,7 @@ ${jargon_pattern_srcs}
 ${jargon_pattern_basic_srcs}
 ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
-${jargon_lexical_srcs}
+${jargon_lexical_srcs} ${jargon_lexical_event_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
