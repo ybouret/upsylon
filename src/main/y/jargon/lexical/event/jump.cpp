@@ -14,7 +14,8 @@ namespace upsylon {
             
             OnJump:: OnJump(const Action &a, const string &id) :
             ControlEvent(Jump,a,id)
-            {}
+            {
+            }
             
             
             

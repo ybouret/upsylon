@@ -10,9 +10,10 @@ namespace upsylon {
         
         namespace Lexical {
             
-            Unit * Scanner::probe(Source &source)
+            Unit * Scanner::probe(Source &source, Directive &ctrl)
             {
                 chars = &source;
+                ctrl  = 0;
                 PROBE:
                 if(source.isEmpty())
                 {
@@ -114,12 +115,17 @@ namespace upsylon {
                     
                     //__________________________________________________________
                     //
-                    // then produce
+                    // then produce something of control
                     //__________________________________________________________
                     assert(event.self);
                     
                     switch( event.kind )
                     {
+                            //--------------------------------------------------
+                            //
+                            // regular event: forward or discard
+                            //
+                            //--------------------------------------------------
                         case Event::Regular: {
                             switch( static_cast<const RegularEvent *>(event.self)->type )
                             {
@@ -136,10 +142,15 @@ namespace upsylon {
                                 }
                             }
                         }
-                    
                             
+                            //--------------------------------------------------
+                            //
+                            // control Event
+                            //
+                            //--------------------------------------------------
                         case Event::Control:
-                            throw exception("not implemented");
+                            ctrl = static_cast<const ControlEvent *>(event.self);
+                            return NULL;
                     }
                    
                 }

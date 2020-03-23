@@ -18,6 +18,8 @@ namespace upsylon {
         
         namespace Lexical {
             
+            typedef const ControlEvent *Directive;
+            
             //------------------------------------------------------------------
             //! simple lexical scanner
             //------------------------------------------------------------------
@@ -37,6 +39,7 @@ namespace upsylon {
                 
                 void doNothing(const Token &) const throw(); //!< ...
                 void doNewLine(const Token &) throw();       //!< send newLine to current source
+                
                 
                 //! build a regular event
                 template <
@@ -111,14 +114,79 @@ namespace upsylon {
                     discard(label,regexp,this,&Scanner::doNewLine);
                 }
                 
+                
+                //! build a call
+                template <
+                typename LABEL,
+                typename REGEXP,
+                typename OBJECT_POINTER,
+                typename METHOD_POINTER
+                >
+                void call(const LABEL   &target,
+                          const REGEXP  &regexp,
+                          OBJECT_POINTER hObject,
+                          METHOD_POINTER hMethod)
+                {
+                    const string         callTarget( target );
+                    const string         callLabel = callPrefix + callTarget;
+                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict);
+                    const Tag            ruleLabel = new string(callLabel);
+                    const Action         ruleAction(hObject,hMethod);
+                    const Event::Handle  ruleEvent = new OnCall(ruleAction,callTarget);
+                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                }
+                
+                //! build a jump
+                template <
+                typename LABEL,
+                typename REGEXP,
+                typename OBJECT_POINTER,
+                typename METHOD_POINTER
+                >
+                void jump(const LABEL   &target,
+                          const REGEXP  &regexp,
+                          OBJECT_POINTER hObject,
+                          METHOD_POINTER hMethod)
+                {
+                    const string         jumpTarget( target );
+                    const string         jumpLabel = jumpPrefix + jumpTarget;
+                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict);
+                    const Tag            ruleLabel = new string(jumpLabel);
+                    const Action         ruleAction(hObject,hMethod);
+                    const Event::Handle  ruleEvent = new OnJump(ruleAction,jumpTarget);
+                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                }
+                
+                //! build a nack
+                template <
+                typename REGEXP,
+                typename OBJECT_POINTER,
+                typename METHOD_POINTER
+                >
+                void back(const REGEXP  &regexp,
+                          OBJECT_POINTER hObject,
+                          METHOD_POINTER hMethod)
+                {
+                    const string        rx(regexp);
+                    const string        backLabel = backPrefix + name + '@' + rx;
+                    const Motif         ruleMotif = RegularExpression::Compile(rx,dict);
+                    const Tag           ruleLabel = new string(backLabel);
+                    const Action        ruleAction(hObject,hMethod);
+                    const Event::Handle ruleEvent = new OnBack(ruleAction);
+                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                }
+                
+                
                 //! the flex-like probing function
                 /**
                  - if != NULL: a unit is produced
                  - if NULL   :
                  */
-                Lexical::Unit *probe(Source &);
+                Lexical::Unit *probe(Source &, Directive &);
                 
-                
+                static const char callPrefix[];
+                static const char jumpPrefix[];
+                static const char backPrefix[];
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

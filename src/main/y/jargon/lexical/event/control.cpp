@@ -20,6 +20,7 @@ namespace upsylon {
             name(id)
             {
                 assert(Back!=type);
+                Y_PATTERN_SELF(ControlEvent);
             }
             
             ControlEvent:: ControlEvent(const Action &a) :
@@ -27,6 +28,7 @@ namespace upsylon {
             type(Back),
             name()
             {
+                Y_PATTERN_SELF(ControlEvent);
             }
             
             

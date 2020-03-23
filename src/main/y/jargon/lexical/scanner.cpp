@@ -8,6 +8,10 @@ namespace upsylon {
         
         namespace Lexical {
             
+            const char Scanner:: callPrefix[] = "->";
+            const char Scanner:: jumpPrefix[] = "=>";
+            const char Scanner:: backPrefix[] = "<-";
+
             
             typedef suffix_tree<Rule *> rDict;
             
@@ -29,8 +33,6 @@ namespace upsylon {
             void Scanner:: doNothing(const Token &) const throw()
             {
             }
-            
-         
             
             void Scanner:: finish() throw()
             {

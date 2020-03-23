@@ -61,11 +61,12 @@ Y_UTEST(jargon_scanner)
     
     if(argc>1)
     {
-        Lexemes lexemes;
-        Cache   cache;
-        Source  source(cache,Module::OpenFile(cache, argv[1]));
-        Lexeme *lx = 0;
-        while( NULL != (lx = scan.probe(source)) )
+        Lexemes   lexemes;
+        Cache     cache;
+        Source    source(cache,Module::OpenFile(cache, argv[1]));
+        Lexeme   *lx   = 0;
+        Lexical::Directive ctrl = 0;
+        while( NULL != (lx = scan.probe(source,ctrl)) )
         {
             lexemes.push_back(lx);
         }
