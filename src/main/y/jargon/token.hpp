@@ -19,9 +19,9 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-            explicit Token(const Char::Cache &) throw(); //!< setup
-            virtual ~Token() throw();                    //!< erase
-            Token(const Token &);                        //!< copy
+            explicit Token(const Cache &) throw(); //!< setup
+            virtual ~Token() throw();              //!< erase
+            Token(const Token &);                  //!< copy
 
             //------------------------------------------------------------------
             //
@@ -40,7 +40,7 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            Char::Cache cache; //!< shared cache for I/O
+            Cache cache; //!< shared cache for I/O
 
         private:
             Y_DISABLE_ASSIGN(Token);

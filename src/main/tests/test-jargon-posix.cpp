@@ -10,12 +10,12 @@ namespace {
     class Tester
     {
     public:
-        Char::Cache cache;
+        Cache      cache;
         Source      source;
         Token       content;
         
         inline Tester(const char *filename) :
-        cache( new Char::Pool() ),
+        cache(),
         source( cache, (NULL!=filename) ? Module::OpenFile(cache,filename) : Module::OpenData(cache,"NULL", 0,0) ),
         content(cache)
         {

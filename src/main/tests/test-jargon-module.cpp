@@ -15,7 +15,7 @@ Y_UTEST(jargon_module)
     Y_UTEST_SIZEOF(Jargon::Token);
     std::cerr << std::endl;
     
-    Char::Cache cache = new Char::Pool();
+    Cache cache = new Char::Pool();
     
     if( argc > 1)
     {

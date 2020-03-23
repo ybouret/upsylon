@@ -39,7 +39,7 @@ namespace upsylon {
             
             static Pattern *get(const string &id); //!< get from internal database
             static Pattern *get(const char   *id); //!< get from internal database
-            static Pattern *query(const string &id);
+            static Pattern *query(const string &id); //!< query from internal database, NULL if not found
         };
         
     }

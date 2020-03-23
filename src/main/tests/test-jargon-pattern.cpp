@@ -23,9 +23,9 @@ namespace {
     class Tester
     {
     public:
-        Char::Cache cache;
-        Source      source;
-        Token       content;
+        Cache   cache;
+        Source  source;
+        Token   content;
         
         Tester(const char *filename) :
         cache( new Char::Pool() ),

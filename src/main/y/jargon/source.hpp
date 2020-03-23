@@ -19,7 +19,7 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-            explicit     Source(const Char::Cache &,Module *) throw(); //!< setup with first module
+            explicit     Source(const Cache &, Module *) throw(); //!< setup with first module
             virtual     ~Source() throw();                       //!< cleanup
        
             //__________________________________________________________________
@@ -48,7 +48,7 @@ namespace upsylon {
             size_t       prefetch(size_t n);             //!< prefetch at most n Char
             bool         alive();                        //!< check if get() shall return a valid Char
             size_t       bufferSize() const throw();     //!< number of chars in buffer
-            Char::Cache &cache()      const throw();     //!< shared cache access
+            Cache       &cache()      const throw();     //!< shared cache access
 
             //__________________________________________________________________
             //

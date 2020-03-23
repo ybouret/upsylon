@@ -10,7 +10,8 @@ namespace upsylon {
  
     namespace Jargon {
      
-        typedef Lexical::Unit Lexeme;
+        typedef Lexical::Unit Lexeme;  //!< alias
+        typedef Lexeme::List  Lexemes; //!< alias
     }
 }
 

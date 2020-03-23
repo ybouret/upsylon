@@ -11,7 +11,7 @@ namespace upsylon {
         }
         
         
-        Source:: Source( const Char::Cache &cache, Module *module ) throw() :
+        Source:: Source(const Cache &cache, Module *module) throw() :
         handle(module),
         iobuf(cache),
         history()
@@ -82,7 +82,7 @@ namespace upsylon {
             return iobuf.size;
         }
         
-        Char::Cache & Source:: cache() const throw()
+        Cache & Source:: cache() const throw()
         {
             return aliasing::_(iobuf.cache);
         }
@@ -139,8 +139,8 @@ namespace upsylon {
         
         void Source:: uncpy(const Char::List &l)
         {
-            Char::Cache &cache = iobuf.cache;
-            size_t       done = 0;
+            Cache &cache = iobuf.cache;
+            size_t done = 0;
             try
             {
                 for(const Char *ch=l.tail;ch;ch=ch->prev)

@@ -19,15 +19,16 @@ namespace upsylon {
             public inode<Unit>
             {
             public:
-                typedef core::list_of_cpp<Unit> List;
+                typedef core::list_of_cpp<Unit> List; //!< alias for Lexemes
                 
-                virtual ~Unit() throw();
+                virtual ~Unit() throw(); //!< cleanup
                 
-                explicit Unit(const Tag         &,
-                              const Context     &,
-                              const Char::Cache &) throw();
+                //! setup
+                explicit Unit(const Tag     &,
+                              const Context &,
+                              const Cache   &) throw();
                 
-                const Tag label; //!< rule label
+                const Tag label; //!< creating rule label
                 
             private:
                 Y_DISABLE_ASSIGN(Unit);

@@ -54,7 +54,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Pool);
             };
             
-            typedef arc_ptr<Pool> Cache; //!< alias
+            typedef arc_ptr<Pool> CacheType; //!< alias
             
             //------------------------------------------------------------------
             //
@@ -62,8 +62,8 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             virtual     ~Char() throw();                                     //!< cleanup
-            static Char *Make(Cache &, const Context &, const uint8_t);      //!< make a Char
-            static Char *Copy(Cache &, const Char &);                        //!< copy a Char
+            static Char *Make(CacheType &, const Context &, const uint8_t);      //!< make a Char
+            static Char *Copy(CacheType &, const Char &);                        //!< copy a Char
             friend std::ostream & operator<<( std::ostream &, const Char &); //!< display
 
             //------------------------------------------------------------------
@@ -78,6 +78,19 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Char);
             explicit Char(const Context &context,
                           const uint8_t  content) throw();
+        };
+        
+        //! shared cache for Char I/O
+        class Cache : public Char::CacheType
+        {
+        public:
+            virtual ~Cache() throw();             //!< cleanup
+            Cache(Char::Pool *charPool) throw();  //!< manual setup
+            Cache();                              //!< automatic setup
+            Cache(const Cache &) throw();         //!< shared copy
+            
+        private:
+            Y_DISABLE_ASSIGN(Cache);
         };
         
         

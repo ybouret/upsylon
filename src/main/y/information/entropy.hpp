@@ -33,6 +33,7 @@ namespace upsylon {
             double of( const char *text ) throw();                    //!< reset/compute
             double of( const memory::ro_buffer &buff) throw();        //!< reset/compute
             
+            //! compute entropy of a serializable object
             static double Of( ios::serializable & );
             
         private:

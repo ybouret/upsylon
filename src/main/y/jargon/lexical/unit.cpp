@@ -7,6 +7,10 @@ namespace upsylon {
         
         namespace Lexical {
           
+            Unit:: ~Unit() throw()
+            {
+            }
+            
             
             
         }

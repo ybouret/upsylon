@@ -10,10 +10,10 @@ namespace upsylon {
         {
         }
         
-        Module:: Module(const Tag         &s,
-                        const Input       &i,
-                        const Char::Cache &c,
-                        const Type         t) throw():
+        Module:: Module(const Tag   &s,
+                        const Input &i,
+                        const Cache &c,
+                        const Type   t) throw():
         CountedObject(),
         Context(s),
         input(i),
@@ -22,24 +22,24 @@ namespace upsylon {
         {
         }
         
-        Module * Module:: OpenFile(const Char::Cache &c,
-                                   const string      &f)
+        Module * Module:: OpenFile(const Cache  &c,
+                                   const string &f)
         {
             const Tag   s = new string(f);
             const Input i = Kernel::MakeInput::FromFile(f);
             return new Module(s,i,c,FileStream);
         }
 
-        Module * Module:: OpenFile(const Char::Cache &c, const char *f)
+        Module * Module:: OpenFile(const Cache &c, const char *f)
         {
             const string _(f);
             return OpenFile(c,_);
         }
         
-        Module * Module:: OpenData(const Char::Cache &c,
-                                   const string      &dataName,
-                                   const void        *data,
-                                   const size_t       size)
+        Module * Module:: OpenData(const Cache  &c,
+                                   const string &dataName,
+                                   const void   *data,
+                                   const size_t  size)
         {
             assert(!(NULL==data&&size>0));
             const Tag   s = new string(dataName);
@@ -47,25 +47,25 @@ namespace upsylon {
             return new Module(s,i,c,DataStream);
         }
 
-        Module * Module:: OpenData(const Char::Cache &c,
-                                   const char        *dataName,
-                                   const void        *data,
-                                   const size_t       size)
+        Module * Module:: OpenData(const Cache &c,
+                                   const char  *dataName,
+                                   const void  *data,
+                                   const size_t size)
         {
             const string _(dataName);
             return OpenData(c,_,data,size);
         }
         
-        Module * Module:: OpenData(const Char::Cache &c,
-                                   const char        *data,
-                                   const size_t       size)
+        Module * Module:: OpenData(const Cache  &c,
+                                   const char   *data,
+                                   const size_t  size)
         {
             const string dataName(data,size);
             return OpenData(c,dataName,data,size);
         }
         
-        Module * Module:: OpenData(const Char::Cache &c,
-                                   const string      &data)
+        Module * Module:: OpenData(const Cache  &c,
+                                   const string &data)
         {
             return OpenData(c,data,*data,data.size());
         }

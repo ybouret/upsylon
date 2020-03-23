@@ -7,7 +7,7 @@ using namespace Jargon;
 Y_UTEST(jargon_source)
 {
     
-    Char::Cache cache = new Char::Pool();
+    Cache cache = NULL;
     
     if(argc>1)
     {

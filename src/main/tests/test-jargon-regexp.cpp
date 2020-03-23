@@ -44,9 +44,9 @@ Y_UTEST(jargon_regexp)
         
         if(argc>2)
         {
-            Char::Cache  cache = new Char::Pool();
-            Source       source(cache,Module::OpenFile(cache, argv[2]));
-            Token        content(cache);
+            Cache  cache;
+            Source source(cache,Module::OpenFile(cache, argv[2]));
+            Token  content(cache);
             q->test(source,content);
         }
         

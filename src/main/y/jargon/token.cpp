@@ -10,7 +10,7 @@ namespace upsylon {
             erase();
         }
         
-        Token:: Token(const Char::Cache &shared) throw() :
+        Token:: Token(const Cache &shared) throw() :
         Char::List(),
         cache(shared)
         {

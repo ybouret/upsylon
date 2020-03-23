@@ -21,7 +21,7 @@ namespace upsylon {
         {
         }
         
-        Char * Char:: Make(Cache         &cache,
+        Char * Char:: Make(CacheType     &cache,
                            const Context &context,
                            const uint8_t  content)
         {
@@ -40,7 +40,7 @@ namespace upsylon {
             }
         }
         
-        Char * Char:: Copy(Cache &cache, const Char &ch)
+        Char * Char:: Copy(CacheType &cache, const Char &ch)
         {
             return Make(cache,ch,ch.code);
         }
@@ -70,6 +70,23 @@ namespace upsylon {
         
         Char * Char::Pool:: query() throw() { assert(size>0); return pop_back(); }
 
+        Cache:: Cache( Char::Pool *charPool ) throw() :
+        Char::CacheType(charPool)
+        {}
+        
+        Cache:: Cache() : Char::CacheType( new Char::Pool() )
+        {
+        }
+        
+        Cache:: Cache( const Cache &other ) throw() : Char::CacheType(other)
+        {
+        }
+        
+        Cache:: ~Cache() throw()
+        {}
+        
+        
+        
     }
     
 }
