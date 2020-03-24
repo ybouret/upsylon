@@ -171,7 +171,6 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rules   rules;  // current rules
                 Source *chars;  // current source
-                void   *rdict;  // rule dictionary
                 
             public:
                 const Dictionary *dict; //!< shared dictionary, default is NULL

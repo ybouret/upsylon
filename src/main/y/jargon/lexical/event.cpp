@@ -15,7 +15,8 @@ namespace upsylon {
             Event:: Event(const Kind    k,
                           const Action &a) :
             kind(k),
-            action(a)
+            action(a),
+            self(0)
             {
             }
             
