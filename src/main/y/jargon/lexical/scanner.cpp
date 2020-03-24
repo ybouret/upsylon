@@ -11,7 +11,7 @@ namespace upsylon {
             const char Scanner:: callPrefix[] = "->";
             const char Scanner:: jumpPrefix[] = "=>";
             const char Scanner:: backPrefix[] = "<-";
-
+            
             
             typedef suffix_tree<Rule *> rDict;
             
@@ -20,15 +20,26 @@ namespace upsylon {
                 finish();
             }
             
+#define Y_JSCANNER(TAG) \
+Object(),\
+inode<Scanner>(),\
+label(TAG),\
+rules(),\
+chars(NULL),\
+rdict( new rDict() ),\
+dict(NULL)
+            
             Scanner:: Scanner( const string &id ) :
-            CountedObject(),
-            name(id),
-            rules(),
-            chars(NULL),
-            rdict( new rDict() ),
-            dict(NULL)
+            Y_JSCANNER( new string(id) )
             {
             }
+            
+            Scanner:: Scanner( const Tag &tag ) :
+            Y_JSCANNER( tag )
+            {
+            }
+            
+
             
             void Scanner:: doNothing(const Token &) const throw()
             {
@@ -73,7 +84,7 @@ namespace upsylon {
                 {
                     if( !dict->insert_by(id,rule))
                     {
-                        throw exception("Jargon::Scanner[%s].add(multiple rule <%s>)",*name,*id);
+                        throw exception("Jargon::Scanner[%s].add(multiple rule <%s>)",**label,*id);
                     }
                 }
                 catch(...)
@@ -89,6 +100,20 @@ namespace upsylon {
                 assert(chars);
                 chars->newLine();
             }
+            
+            void Scanner:: compileRulesWith( Analyzer &lexer )
+            {
+                for(Rule *rule=rules.head;rule;rule=rule->next)
+                {
+                    const Event &event = *(rule->event);
+                    if(Event::Control==event.kind)
+                    {
+                        static_cast<ControlEvent *>((void*)event.self)->compileWith(lexer);
+                    }
+                }
+                
+            }
+
             
         }
     }

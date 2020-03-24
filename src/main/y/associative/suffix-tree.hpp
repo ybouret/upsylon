@@ -251,7 +251,7 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            // lool up for a current node
+            // look up for a current node
             //
             //------------------------------------------------------------------
             node_type *curr = root;

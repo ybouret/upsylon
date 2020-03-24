@@ -51,13 +51,13 @@ namespace upsylon {
                                         badChar->line,
                                         badChar->column,
                                         printable_char[badCode],
-                                        *name);
+                                        **label);
                     }
                     
                     size_t bestSize = bestExpr.size;
                     if(bestSize<=0)
                     {
-                        throw exception("<%s> corrupted rule '%s' returned an empty token!!!",*name,**(bestRule->label));
+                        throw exception("<%s> corrupted rule '%s' returned an empty token!!!",**label,**(bestRule->label));
                     }
                     source.uncpy(bestExpr);
                     

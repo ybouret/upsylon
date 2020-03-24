@@ -22,15 +22,19 @@ namespace upsylon {
             typedef const ControlEvent *Directive;
             
             //------------------------------------------------------------------
+            //
             //! simple lexical scanner
+            //
             //------------------------------------------------------------------
-            class Scanner : public CountedObject
+            class Scanner : public Object, public inode<Scanner>
             {
             public:
-                const string name; //!< identifier
                 
-                explicit Scanner( const string &id ); //!< setup
-                virtual ~Scanner() throw();           //!< cleanu[
+                const Tag label; //!< identifier
+                
+                explicit Scanner(const string &); //!< setup
+                explicit Scanner(const Tag    &); //!< setup
+                virtual ~Scanner() throw();       //!< cleanu[
                 
                 void add(Rule *rule);  //!< add a rule, check no multiple
                 
@@ -42,26 +46,7 @@ namespace upsylon {
                 void doNewLine(const Token &) throw();       //!< send newLine to current source
                 
                 
-                //! build a regular event
-                template <
-                typename LABEL,
-                typename REGEXP,
-                typename OBJECT_POINTER,
-                typename METHOD_POINTER,
-                typename REGULAR>
-                void regular(const LABEL         &label,
-                             const REGEXP        &regexp,
-                             const OBJECT_POINTER hObject,
-                             const METHOD_POINTER hMethod)
-                {
-                    assert(hObject);
-                    assert(hMethod);
-                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict);
-                    const Tag            ruleLabel = new string(label);
-                    const Action         ruleAction(hObject,hMethod);
-                    const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
-                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
-                }
+               
                 
                 //! build a forwarding regular evne
                 template <
@@ -70,12 +55,12 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER
                 >
-                void forward(const LABEL   &label,
-                             const REGEXP  &regexp,
+                void forward(const LABEL   &anyLabel,
+                             const REGEXP  &anyRegExp,
                              OBJECT_POINTER hObject,
                              METHOD_POINTER hMethod)
                 {
-                    regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnForward>(label,regexp,hObject,hMethod);
+                    regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnForward>(anyLabel,anyRegExp,hObject,hMethod);
                 }
                 
                 
@@ -86,12 +71,12 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER
                 >
-                void discard(const LABEL   &label,
-                             const REGEXP  &regexp,
+                void discard(const LABEL   &anyLabel,
+                             const REGEXP  &anyRegExp,
                              OBJECT_POINTER hObject,
                              METHOD_POINTER hMethod)
                 {
-                    regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnDiscard>(label,regexp,hObject,hMethod);
+                    regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnDiscard>(anyLabel,anyRegExp,hObject,hMethod);
                 }
                 
                 //! default emit
@@ -115,6 +100,7 @@ namespace upsylon {
                     discard(label,regexp,this,&Scanner::doNewLine);
                 }
                 
+               
                 
                 //! build a call
                 template <
@@ -128,13 +114,7 @@ namespace upsylon {
                           OBJECT_POINTER hObject,
                           METHOD_POINTER hMethod)
                 {
-                    const string         callTarget( target );
-                    const string         callLabel = callPrefix + callTarget;
-                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict);
-                    const Tag            ruleLabel = new string(callLabel);
-                    const Action         ruleAction(hObject,hMethod);
-                    const Event::Handle  ruleEvent = new OnCall(ruleAction,callTarget);
-                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnCall>(target,regexp,hObject,hMethod,callPrefix);
                 }
                 
                 //! build a jump
@@ -149,13 +129,7 @@ namespace upsylon {
                           OBJECT_POINTER hObject,
                           METHOD_POINTER hMethod)
                 {
-                    const string         jumpTarget( target );
-                    const string         jumpLabel = jumpPrefix + jumpTarget;
-                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict);
-                    const Tag            ruleLabel = new string(jumpLabel);
-                    const Action         ruleAction(hObject,hMethod);
-                    const Event::Handle  ruleEvent = new OnJump(ruleAction,jumpTarget);
-                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnJump>(target,regexp,hObject,hMethod,jumpPrefix);
                 }
                 
                 //! build a back
@@ -169,7 +143,7 @@ namespace upsylon {
                           METHOD_POINTER hMethod)
                 {
                     const string        rx(regexp);
-                    const string        backLabel = backPrefix + name + '@' + rx;
+                    const string        backLabel = backPrefix + *label + '@' + rx;
                     const Motif         ruleMotif = RegularExpression::Compile(rx,dict);
                     const Tag           ruleLabel = new string(backLabel);
                     const Action        ruleAction(hObject,hMethod);
@@ -177,11 +151,15 @@ namespace upsylon {
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
                 
+                void compileRulesWith( Analyzer & );
+                
                 
                 //! the flex-like probing function
                 /**
                  - if != NULL: a unit is produced
                  - if NULL   :
+                 -- if Directive==NULL, EOF
+                 -- other wise follow directive!
                  */
                 Lexical::Unit *probe(Source &, Directive &);
                 
@@ -197,6 +175,49 @@ namespace upsylon {
                 
             public:
                 const Dictionary *dict; //!< shared dictionary, default is NULL
+                
+            private:
+                template <
+                typename LABEL,
+                typename REGEXP,
+                typename OBJECT_POINTER,
+                typename METHOD_POINTER,
+                typename REGULAR>
+                void regular(const LABEL         &anyLabel,
+                             const REGEXP        &anyRegExp,
+                             const OBJECT_POINTER hObject,
+                             const METHOD_POINTER hMethod)
+                {
+                    assert(hObject);
+                    assert(hMethod);
+                    const Tag            ruleLabel = new string(anyLabel);
+                    const Motif          ruleMotif = RegularExpression::Compile(anyRegExp,dict);
+                    const Action         ruleAction(hObject,hMethod);
+                    const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
+                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                }
+                
+                template <
+                typename LABEL,
+                typename REGEXP,
+                typename OBJECT_POINTER,
+                typename METHOD_POINTER,
+                typename LEAP
+                >
+                void leap(const LABEL   &target,
+                          const REGEXP  &regexp,
+                          OBJECT_POINTER hObject,
+                          METHOD_POINTER hMethod,
+                          const char     prefix[])
+                {
+                    const string         theTarget( target );
+                    const string         theLabel  = prefix + theTarget;
+                    const Tag            ruleLabel = new string(theLabel);
+                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict);
+                    const Action         ruleAction(hObject,hMethod);
+                    const Event::Handle  ruleEvent = new LEAP(ruleAction,theTarget);
+                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                }
             };
             
         }

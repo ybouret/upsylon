@@ -4,12 +4,16 @@
 #define Y_JARGON_LEXICAL_EVENT_CONTROL_INCLUDED 1
 
 #include "y/jargon/lexical/event.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
         
         namespace Lexical {
+            
+            class Scanner;  //!< forward declaration
+            class Analyzer; //!< forward declaration
             
             //------------------------------------------------------------------
             //
@@ -21,6 +25,9 @@ namespace upsylon {
             class ControlEvent : public Event
             {
             public:
+                //! lightweight address
+                typedef auto_ptr<const string> SUID; //!< Scanner Unique ID
+                
                 //! category of control event
                 enum Type
                 {
@@ -28,9 +35,12 @@ namespace upsylon {
                     Back, //!< back from a sub scanner
                     Jump  //!< jump to a new scanner
                 };
-                const Type   type;  //!< category of control event
-                const string name;  //!< name to jump/call to, empty for back
+                const Type      type;    //!< category of control event
+                const SUID      suid;    //!< name to jump/call to, empty for back
+                Scanner        *scan;    //!< scanner address
                 virtual ~ControlEvent() throw();
+                
+                void compileWith( Analyzer & );
                 
             protected:
                 //! initialize call/jump
