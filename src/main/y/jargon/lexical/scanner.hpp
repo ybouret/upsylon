@@ -21,6 +21,7 @@ namespace upsylon {
             //! directive for Lexer during probe
             typedef const ControlEvent *Directive;
             
+            //! trace calls
 #define Y_JSCANNER(CODE) do { if(Scanner::Verbose) { CODE; } } while(false)
             
             //------------------------------------------------------------------
@@ -31,8 +32,8 @@ namespace upsylon {
             class Scanner : public CountedObject, public inode<Scanner>
             {
             public:
-                static  bool                     Verbose;
-                typedef intr_ptr<string,Scanner> Handle;
+                static  bool                     Verbose; //!< global lexical verbosity
+                typedef intr_ptr<string,Scanner> Handle;  //!< for database
                 const Tag label; //!< identifier
                 
         
@@ -48,8 +49,6 @@ namespace upsylon {
                 void doNothing(const Token &) const throw(); //!< ...
                 void doNewLine(const Token &) throw();       //!< send newLine to current source
                 
-                
-               
                 
                 //! build a forwarding regular evne
                 template <

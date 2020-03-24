@@ -11,15 +11,23 @@ namespace upsylon {
         
         namespace Lexical {
             
-            
+            //------------------------------------------------------------------
+            //
+            //! analyzer, with different sub-scanners
+            /**
+             transform a source of Chars in a source of Units
+             */
+            //------------------------------------------------------------------
             class Analyzer : public Scanner
             {
             public:
-                typedef lstack<Scanner *>           Calls;
-                typedef set<string,Scanner::Handle> Scanners;
-                explicit Analyzer(const string &id);
-                virtual ~Analyzer() throw();
+                typedef lstack<Scanner *>           Calls;    //!< alias to store calls
+                typedef set<string,Scanner::Handle> Scanners; //!< database of scanners
                 
+                explicit Analyzer(const string &id); //!< start
+                virtual ~Analyzer() throw();         //!< cleanup
+                
+                //! scanner declaration
                 template <typename ID> inline
                 Scanner & decl( const ID &id )
                 {
@@ -27,8 +35,10 @@ namespace upsylon {
                     return declare(id);
                 }
                 
+                //! get next unit, processing all events
                 Unit *get(Source &source);
                 
+                //! restart state
                 void restart() throw();
                 
                 
