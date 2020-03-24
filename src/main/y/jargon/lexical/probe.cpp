@@ -154,7 +154,7 @@ namespace upsylon {
                             ctrl = static_cast<const ControlEvent *>(event.self);
                             return NULL;
                     }
-                   
+                    throw exception("[[%s]] corrupted scanner code!", **label);
                 }
                 
             }
