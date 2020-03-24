@@ -12,9 +12,7 @@ namespace upsylon {
         
         namespace Lexical {
             
-            class Scanner;  //!< forward declaration
-            class Analyzer; //!< forward declaration
-            
+             
             //------------------------------------------------------------------
             //
             //! base class for control events
@@ -37,11 +35,8 @@ namespace upsylon {
                 };
                 const Type      type;    //!< category of control event
                 const SUID      suid;    //!< name to jump/call to, empty for back
-                Scanner        *scan;    //!< scanner address
                 virtual ~ControlEvent() throw();
-                
-                void compileWith( Analyzer & );
-                
+                                
             protected:
                 //! initialize call/jump
                 explicit  ControlEvent(const Type,const Action &,const string &);

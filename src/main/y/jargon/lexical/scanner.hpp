@@ -11,7 +11,7 @@
 
 #include "y/jargon/lexical/unit.hpp"
 #include "y/jargon/pattern/regexp.hpp"
-
+#include "y/ptr/intr.hpp"
 namespace upsylon {
     
     namespace Jargon {
@@ -21,27 +21,30 @@ namespace upsylon {
             //! directive for Lexer during probe
             typedef const ControlEvent *Directive;
             
+#define Y_JSCANNER(CODE) do { if(Scanner::Verbose) { CODE; } } while(false)
+            
             //------------------------------------------------------------------
             //
             //! simple lexical scanner
             //
             //------------------------------------------------------------------
-            class Scanner : public Object, public inode<Scanner>
+            class Scanner : public CountedObject, public inode<Scanner>
             {
             public:
-                
+                static  bool                     Verbose;
+                typedef intr_ptr<string,Scanner> Handle;
                 const Tag label; //!< identifier
+                
+        
                 
                 explicit Scanner(const string &); //!< setup
                 explicit Scanner(const Tag    &); //!< setup
                 virtual ~Scanner() throw();       //!< cleanu[
                 
-                void add(Rule *rule);  //!< add a rule, check no multiple
+                const string &key() const throw(); //!< for intr_ptr/set
+                void          add(Rule *rule);     //!< add a rule, check no multiple
                 
-                bool building() const throw(); //!< check building state
-                void finish() throw();         //!< finish, release extra memory
-                void resume();                 //!< resume building
-                
+              
                 void doNothing(const Token &) const throw(); //!< ...
                 void doNewLine(const Token &) throw();       //!< send newLine to current source
                 
@@ -99,8 +102,7 @@ namespace upsylon {
                 {
                     discard(label,regexp,this,&Scanner::doNewLine);
                 }
-                
-               
+                                
                 
                 //! build a call
                 template <
@@ -143,7 +145,7 @@ namespace upsylon {
                           METHOD_POINTER hMethod)
                 {
                     const string        rx(regexp);
-                    const string        backLabel = backPrefix + *label + '@' + rx;
+                    const string        backLabel = backPrefix + *label;// + '@' + rx;
                     const Motif         ruleMotif = RegularExpression::Compile(rx,dict);
                     const Tag           ruleLabel = new string(backLabel);
                     const Action        ruleAction(hObject,hMethod);
@@ -151,7 +153,6 @@ namespace upsylon {
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
                 
-                void compileRulesWith( Analyzer & );
                 
                 
                 //! the flex-like probing function
@@ -159,7 +160,7 @@ namespace upsylon {
                  - if != NULL: a unit is produced
                  - if NULL   :
                  -- if Directive==NULL, EOF
-                 -- other wise follow directive!
+                 -- otherwise follow directive!
                  */
                 Lexical::Unit *probe(Source &, Directive &);
                 

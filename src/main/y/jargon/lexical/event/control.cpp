@@ -17,8 +17,7 @@ namespace upsylon {
                                         const string &id) :
             Event(Control,a),
             type(t),
-            suid( new string(id) ),
-            scan( NULL )
+            suid( new string(id) )
             {
                 assert(Back!=type);
                 Y_PATTERN_SELF(ControlEvent);
@@ -27,8 +26,7 @@ namespace upsylon {
             ControlEvent:: ControlEvent(const Action &a) :
             Event(Control,a),
             type(Back),
-            suid(NULL),
-            scan(NULL)
+            suid(NULL)
             {
                 Y_PATTERN_SELF(ControlEvent);
             }
@@ -36,23 +34,6 @@ namespace upsylon {
             
         }
         
-    }
-    
-}
-
-#include "y/jargon/lexical/analyzer.hpp"
-
-namespace upsylon {
-    
-    namespace Jargon {
-        
-        namespace Lexical {
-           
-            void ControlEvent:: compileWith( Analyzer &lexer )
-            {
-            }
-
-        }
     }
     
 }

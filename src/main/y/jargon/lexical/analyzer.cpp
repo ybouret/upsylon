@@ -1,63 +1,125 @@
 
 #include "y/jargon/lexical/analyzer.hpp"
 #include "y/exception.hpp"
-#include "y/associative/suffix-tree.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
         
         namespace Lexical {
-
-            typedef  suffix_tree<Scanner *> sDict;
+            
             
             Analyzer:: ~Analyzer() throw()
             {
-                if(sdict)
-                {
-                    delete static_cast<sDict *>(sdict);
-                }
+                scanners.release();
+                (void) liberate();
             }
             
             
-            void Analyzer:: compile()
-            {
-                if(!sdict)
-                {
-                    throw exception("[[%s]] is already compiled",**label);
-                }
-                
-                compileRulesWith(*this);
-                sDict *dict = static_cast<sDict *>(sdict);
-                finish();
-                size_t          n = dict->entries();
-                sDict::iterator i = dict->begin();
-                while(n>0)
-                {
-                    Scanner &sub = **i;
-                    sub.finish();
-                    sub.compileRulesWith(*this);
-                    ++i;
-                    --n;
-                }
-                
-                delete dict;
-                sdict=0;
-                
-            }
-
-  
+            
+            
             
             Analyzer:: Analyzer(const string &id) :
             Scanner( new string(id) ),
-            scanners(),
+            current(this),
             units(),
-            sdict( new sDict() )
+            calls(),
+            scanners()
             {
-                
+                withhold();
+                const Scanner::Handle scan = this;
+                try {
+                    if( !scanners.insert(scan) )
+                    {
+                        throw exception("[[%s]] startup failure",**label);
+                    }
+                }
+                catch(...)
+                {
+                    (void) liberate();
+                    throw;
+                }
             }
             
-
+            void Analyzer:: restart() throw()
+            {
+                calls.free();
+                units.release();
+                current = this;
+            }
+            
+            Scanner & Analyzer:: declare(const string &id)
+            {
+                Scanner::Handle scan = new Scanner(id);;
+                if( !scanners.insert(scan) )
+                {
+                    throw exception("[[%s]] multiple sub-scanner [%s]",**label,**(scan->label));
+                }
+                return *scan;
+            }
+            
+            void Analyzer:: leap(const string &id, const char *when)
+            {
+                assert(when);
+                Scanner::Handle *ppS = scanners.search(id);
+                if(!ppS) throw exception("[[%s]] no [%s] to %s",**label,*id,when);
+                current = & (**ppS);
+            }
+            
+            Unit * Analyzer:: get(Source &source)
+            {
+            TRY_GET:
+                assert(current);
+                if(units.size)
+                {
+                    return units.pop_front();
+                }
+                else
+                {
+                    Directive ctrl = 0;
+                    Unit     *unit = current->probe(source,ctrl);
+                    if(unit)
+                    {
+                        return unit;
+                    }
+                    else
+                    {
+                        if(ctrl)
+                        {
+                            switch(ctrl->type)
+                            {
+                                case ControlEvent::Call:
+                                    Y_JSCANNER( std::cerr << '[' << label << ']' << "@call " << '[' << ctrl->suid << ']' << std::endl);
+                                    calls.push(current);
+                                    leap( *(ctrl->suid),"call");
+                                    break;
+                                    
+                                case ControlEvent::Jump:
+                                    Y_JSCANNER( std::cerr << '[' << label << ']' << "@jump " << '[' << ctrl->suid << ']' << std::endl);
+                                    leap( *(ctrl->suid),"jump to");
+                                    break;
+                                    
+                                case ControlEvent::Back:
+                                    Y_JSCANNER( std::cerr << '[' << label << ']' << "@back" << std::endl);
+                                    if( calls.size() <= 0)
+                                    {
+                                        throw exception("[[%s]] unexpected no previous call!",**label);
+                                    }
+                                    current = calls.peek(); assert(current);
+                                    calls.pop();
+                                    break;
+                            }
+                            goto TRY_GET;
+                            
+                        }
+                        else
+                        {
+                            return NULL; // End Of Source
+                        }
+                    }
+                }
+            }
+            
             
         }
         

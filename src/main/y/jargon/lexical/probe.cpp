@@ -131,6 +131,7 @@ namespace upsylon {
                             {
                                 case RegularEvent::Forward:
                                 {
+                                    Y_JSCANNER(std::cerr << '[' << label << ']' << "+<" << bestRule->label << "> '" << bestExpr << "'" << std::endl);
                                     Unit *unit = new Unit(cache,*bestExpr.head,bestRule->label);
                                     unit->swap_with(bestExpr);
                                     return unit;
@@ -138,6 +139,7 @@ namespace upsylon {
                                   
                                 case RegularEvent::Discard:
                                 {
+                                    //Y_JSCANNER(std::cerr << '[' << label << ']' << "/<" << bestRule->label << ">" << std::endl);
                                     goto PROBE;
                                 }
                             }

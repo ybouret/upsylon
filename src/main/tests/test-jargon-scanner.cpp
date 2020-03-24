@@ -50,14 +50,11 @@ Y_UTEST(jargon_scanner)
     Y_UTEST_SIZEOF(Lexeme);
     Y_UTEST_SIZEOF(Lexemes);
     Y_UTEST_SIZEOF(Lexical::Scanner);
-
+    
+    Lexical::Scanner::Verbose = true;
     myScanner scan;
     
-    {
-        scan.finish();
-        scan.resume();
-        scan.finish();
-    }
+  
     
     if(argc>1)
     {

@@ -1,5 +1,4 @@
 #include "y/jargon/lexical/scanner.hpp"
-#include "y/associative/suffix-tree.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -13,84 +12,42 @@ namespace upsylon {
             const char Scanner:: backPrefix[] = "<-";
             
             
-            typedef suffix_tree<Rule *> rDict;
             
             Scanner:: ~Scanner() throw()
             {
-                finish();
             }
             
-#define Y_JSCANNER(TAG) \
-Object(),\
-inode<Scanner>(),\
-label(TAG),\
-rules(),\
-chars(NULL),\
-rdict( new rDict() ),\
+#define Y_JSCANNER_CTOR(TAG) \
+CountedObject(),     \
+inode<Scanner>(),   \
+label(TAG),        \
+rules(),          \
+chars(NULL),     \
 dict(NULL)
             
             Scanner:: Scanner( const string &id ) :
-            Y_JSCANNER( new string(id) )
+            Y_JSCANNER_CTOR( new string(id) )
             {
             }
             
             Scanner:: Scanner( const Tag &tag ) :
-            Y_JSCANNER( tag )
+            Y_JSCANNER_CTOR( tag )
             {
             }
             
-
+            bool Scanner::Verbose = false;
             
             void Scanner:: doNothing(const Token &) const throw()
             {
             }
-            
-            void Scanner:: finish() throw()
-            {
-                if(rdict)
-                {
-                    delete static_cast<rDict *>(rdict);
-                    rdict = 0;
-                }
-            }
-            
-            void Scanner:: resume()
-            {
-                if(!rdict)
-                {
-                    rdict = new rDict();
-                    Rules  temp;
-                    temp.swap_with(rules);
-                    while( temp.size )
-                    {
-                        add( temp.pop_front() );
-                    }
-                }
-            }
-            
-            bool Scanner:: building() const throw()
-            {
-                return NULL!=rdict;
-            }
-            
+           
             void Scanner:: add(Rule *rule)
             {
-                assert(rule!=NULL);
-                assert(building());
-                
-                rDict        *dict = static_cast<rDict *>(rdict);
-                const string &id   = *(rule->label);
-                try
+                assert(rule);
+                Y_JSCANNER(std::cerr << '[' << label << ']' << "+rule <" << rule->label << ">" << std::endl);
+                for(const Rule *r=rules.head;r;r=r->next)
                 {
-                    if( !dict->insert_by(id,rule))
-                    {
-                        throw exception("Jargon::Scanner[%s].add(multiple rule <%s>)",**label,*id);
-                    }
-                }
-                catch(...)
-                {
-                    delete rule;
-                    throw;
+                    if( *(r->label) == *(rule->label) ) throw exception("[%s] multiple rule <%s>", **label, **(r->label));
                 }
                 rules.push_back(rule);
             }
@@ -98,20 +55,13 @@ dict(NULL)
             void Scanner:: doNewLine(const Token &) throw()
             {
                 assert(chars);
+                Y_JSCANNER(std::cerr << '[' << label << ']' << "@newLine " << std::endl);
                 chars->newLine();
             }
             
-            void Scanner:: compileRulesWith( Analyzer &lexer )
+            const string & Scanner:: key() const throw()
             {
-                for(Rule *rule=rules.head;rule;rule=rule->next)
-                {
-                    const Event &event = *(rule->event);
-                    if(Event::Control==event.kind)
-                    {
-                        static_cast<ControlEvent *>((void*)event.self)->compileWith(lexer);
-                    }
-                }
-                
+                return *label;
             }
 
             

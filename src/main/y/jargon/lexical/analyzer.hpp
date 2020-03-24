@@ -3,6 +3,7 @@
 #define Y_JARGON_LEXICAL_ANALYZER_INCLUDED 1
 
 #include "y/jargon/lexical/scanner.hpp"
+#include "y/associative/set.hpp"
 
 namespace upsylon {
     
@@ -14,7 +15,8 @@ namespace upsylon {
             class Analyzer : public Scanner
             {
             public:
-                typedef core::list_of_cpp<Scanner> Scanners;
+                typedef lstack<Scanner *>           Calls;
+                typedef set<string,Scanner::Handle> Scanners;
                 explicit Analyzer(const string &id);
                 virtual ~Analyzer() throw();
                 
@@ -25,16 +27,19 @@ namespace upsylon {
                     return declare(id);
                 }
                 
-                void compile();
+                Unit *get(Source &source);
                 
+                void restart() throw();
                 
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
-                Scanners   scanners;
+                Scanner   *current;
                 Unit::List units;
-                void      *sdict;
+                Calls      calls;
+                Scanners   scanners;
                 Scanner   &declare(const string &id);
+                void       leap( const string &id, const char *when );
             };
             
         }
