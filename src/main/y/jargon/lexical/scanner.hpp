@@ -12,14 +12,16 @@
 #include "y/jargon/lexical/unit.hpp"
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/jargon/tags.hpp"
+
 namespace upsylon {
     
     namespace Jargon {
         
         namespace Lexical {
             
-            //! directive for Lexer during probe
-            typedef const ControlEvent *Directive;
+            class Analyzer; //!< forwar
+            typedef const ControlEvent *Directive;//!< directive for Lexer during probe
             
             //! trace calls
 #define Y_JSCANNER(CODE) do { if(Scanner::Verbose) { CODE; } } while(false)
@@ -35,8 +37,6 @@ namespace upsylon {
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef intr_ptr<string,Scanner> Handle;  //!< for database
                 const Tag label; //!< identifier
-                
-        
                 
                 explicit Scanner(const string &); //!< setup
                 explicit Scanner(const Tag    &); //!< setup
@@ -145,8 +145,8 @@ namespace upsylon {
                 {
                     const string        rx(regexp);
                     const string        backLabel = backPrefix + *label;// + '@' + rx;
-                    const Motif         ruleMotif = RegularExpression::Compile(rx,dict);
-                    const Tag           ruleLabel = new string(backLabel);
+                    const Motif         ruleMotif = RegularExpression::Compile(rx,dict_);
+                    const Tag           ruleLabel = makeLabel(backLabel);
                     const Action        ruleAction(hObject,hMethod);
                     const Event::Handle ruleEvent = new OnBack(ruleAction);
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
@@ -172,10 +172,15 @@ namespace upsylon {
                 Rules   rules;  // current rules
                 Source *chars;  // current source
                 
-            public:
-                const Dictionary *dict; //!< shared dictionary, default is NULL
-                
             private:
+                friend class Analyzer;
+                const Dictionary *dict_; //!< shared dictionary, default is NULL
+                Tags             *tags_; //!< shared tags, default is NULL
+                
+                
+                string *makeLabel( const string &s );
+                string *makeLabel( const char   *s );
+                
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -189,8 +194,8 @@ namespace upsylon {
                 {
                     assert(hObject);
                     assert(hMethod);
-                    const Tag            ruleLabel = new string(anyLabel);
-                    const Motif          ruleMotif = RegularExpression::Compile(anyRegExp,dict);
+                    const Tag            ruleLabel = makeLabel(anyLabel);
+                    const Motif          ruleMotif = RegularExpression::Compile(anyRegExp,dict_);
                     const Action         ruleAction(hObject,hMethod);
                     const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
@@ -211,8 +216,8 @@ namespace upsylon {
                 {
                     const string         theTarget( target );
                     const string         theLabel  = prefix + theTarget;
-                    const Tag            ruleLabel = new string(theLabel);
-                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict);
+                    const Tag            ruleLabel = makeLabel(theLabel);
+                    const Motif          ruleMotif = RegularExpression::Compile(regexp,dict_);
                     const Action         ruleAction(hObject,hMethod);
                     const Event::Handle  ruleEvent = new LEAP(ruleAction,theTarget);
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );

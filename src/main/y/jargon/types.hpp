@@ -17,6 +17,8 @@ namespace upsylon {
         typedef arc_ptr<const string> Tag;           //!< shared tag for char localisation
         typedef ios::serializable     Serializable;  //!< alias
         typedef ios::vizible          Vizible;       //!< alias
+        
+      
     }
     
 }

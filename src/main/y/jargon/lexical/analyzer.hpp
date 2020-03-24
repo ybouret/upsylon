@@ -4,6 +4,7 @@
 
 #include "y/jargon/lexical/scanner.hpp"
 #include "y/associative/set.hpp"
+#include "y/jargon/pattern/dictionary.hpp"
 
 namespace upsylon {
     
@@ -44,12 +45,18 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
+                Scanner   &declare(const string &id);
+                void       leap( const string &id, const char *when );
+                
                 Scanner   *current;
                 Unit::List units;
                 Calls      calls;
                 Scanners   scanners;
-                Scanner   &declare(const string &id);
-                void       leap( const string &id, const char *when );
+                
+            public:
+                Dictionary dict;
+                Tags       tags;
+               
             };
             
         }
