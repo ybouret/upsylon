@@ -21,7 +21,7 @@ namespace upsylon {
                 virtual ~OnBack() throw();
                 
                 //! setup action to be taken before coming back
-                explicit OnBack(const Action &);
+                explicit OnBack(const Action &,const Tag &id);
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnBack);

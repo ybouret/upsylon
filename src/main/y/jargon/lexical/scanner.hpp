@@ -11,15 +11,20 @@
 
 #include "y/jargon/lexical/unit.hpp"
 #include "y/jargon/pattern/regexp.hpp"
+#include "y/jargon/tags.hpp"
 #include "y/ptr/intr.hpp"
-
 namespace upsylon {
     
     namespace Jargon {
         
         namespace Lexical {
             
-            typedef const ControlEvent *Directive; //!< directive for Lexer during probe
+            //! directive for Lexer during probe
+            /**
+             a directive is emitted when a control event (jump/call/back) is
+             triggered
+             */
+            typedef const ControlEvent *Directive;
             
             //! trace calls
 #define Y_JSCANNER(CODE) do { if(Scanner::Verbose) { CODE; } } while(false)
@@ -32,20 +37,32 @@ namespace upsylon {
             class Scanner : public CountedObject, public inode<Scanner>
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // types and definitions
+                //
+                //------------------------------------------------------------------
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef intr_ptr<string,Scanner> Handle;  //!< for database
-                const Tag label; //!< identifier
                 
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //------------------------------------------------------------------
                 explicit Scanner(const string &); //!< setup
                 explicit Scanner(const Tag    &); //!< setup
-                virtual ~Scanner() throw();       //!< cleanu[
+                virtual ~Scanner() throw();       //!< cleanup
                 
+                //--------------------------------------------------------------
+                //
+                // generic method
+                //
+                //------------------------------------------------------------------
                 const string &key() const throw(); //!< for intr_ptr/set
                 void          add(Rule *rule);     //!< add a rule, check no multiple
-                
-              
-                void doNothing(const Token &) const throw(); //!< ...
-                void doNewLine(const Token &) throw();       //!< send newLine to current source
+                void          nothing(const Token &) const throw(); //!< ...
+                void          newLine(const Token &) throw();       //!< send newLine to current source
                 
                 
                 //! build a forwarding regular evne
@@ -83,23 +100,23 @@ namespace upsylon {
                 template <typename LABEL, typename REGEXP>
                 void emit(const LABEL  &label, const REGEXP &regexp)
                 {
-                    forward(label, regexp, this, & Scanner:: doNothing );
+                    forward(label, regexp, this, & Scanner::nothing );
                 }
                 
                 //! default drop
                 template <typename LABEL, typename REGEXP>
                 void drop(const LABEL  &label, const REGEXP &regexp)
                 {
-                    discard(label,regexp,this,&Scanner::doNothing);
+                    discard(label,regexp,this,&Scanner::nothing);
                 }
                 
                 //! default endl
                 template <typename LABEL, typename REGEXP>
                 void endl(const LABEL &label, const REGEXP &regexp)
                 {
-                    discard(label,regexp,this,&Scanner::doNewLine);
+                    discard(label,regexp,this,&Scanner::newLine);
                 }
-                                
+                
                 
                 //! build a call
                 template <
@@ -113,7 +130,7 @@ namespace upsylon {
                           OBJECT_POINTER hObject,
                           METHOD_POINTER hMethod)
                 {
-                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnCall>(target,regexp,hObject,hMethod,callPrefix);
+                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnCall>(target,regexp,hObject,hMethod);
                 }
                 
                 //! build a jump
@@ -128,7 +145,7 @@ namespace upsylon {
                           OBJECT_POINTER hObject,
                           METHOD_POINTER hMethod)
                 {
-                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnJump>(target,regexp,hObject,hMethod,jumpPrefix);
+                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnJump>(target,regexp,hObject,hMethod);
                 }
                 
                 //! build a back
@@ -142,12 +159,10 @@ namespace upsylon {
                           METHOD_POINTER hMethod)
                 {
                     const string        rx(regexp);
-                    const string        backLabel = backPrefix + *label;// + '@' + rx;
                     const Motif         ruleMotif = RegularExpression::Compile(rx,dict_);
-                    const Tag           ruleLabel = new string(backLabel);
                     const Action        ruleAction(hObject,hMethod);
-                    const Event::Handle ruleEvent = new OnBack(ruleAction);
-                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                    const Event::Handle ruleEvent = new OnBack(ruleAction,label);
+                    add( new Rule(label,ruleMotif,ruleEvent) );
                 }
                 
                 
@@ -161,9 +176,10 @@ namespace upsylon {
                  */
                 Lexical::Unit *probe(Source &, Directive &);
                 
-                static const char callPrefix[]; //!< used to build inline call label
-                static const char jumpPrefix[]; //!< used to build inline jump label
-                static const char backPrefix[]; //!< used to build inline call label
+                const Tag label; //!< identifier
+                
+                
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
@@ -188,7 +204,7 @@ namespace upsylon {
                 {
                     assert(hObject);
                     assert(hMethod);
-                    const Tag            ruleLabel = new string(anyLabel);
+                    const Tag            ruleLabel = Tags::Make(anyLabel);
                     const Motif          ruleMotif = RegularExpression::Compile(anyRegExp,dict_);
                     const Action         ruleAction(hObject,hMethod);
                     const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
@@ -205,15 +221,12 @@ namespace upsylon {
                 void leap(const LABEL   &target,
                           const REGEXP  &regexp,
                           OBJECT_POINTER hObject,
-                          METHOD_POINTER hMethod,
-                          const char     prefix[])
+                          METHOD_POINTER hMethod)
                 {
-                    const string         theTarget( target );
-                    const string         theLabel  = prefix + theTarget;
-                    const Tag            ruleLabel = new string(theLabel);
+                    const Tag            ruleLabel = Tags::Make(target);
                     const Motif          ruleMotif = RegularExpression::Compile(regexp,dict_);
                     const Action         ruleAction(hObject,hMethod);
-                    const Event::Handle  ruleEvent = new LEAP(ruleAction,theTarget);
+                    const Event::Handle  ruleEvent = new LEAP(ruleAction,ruleLabel);
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
             };

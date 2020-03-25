@@ -23,8 +23,6 @@ namespace upsylon {
             class ControlEvent : public Event
             {
             public:
-                //! lightweight address
-                typedef auto_ptr<const string> SUID; //!< Scanner Unique ID
                 
                 //! category of control event
                 enum Type
@@ -34,15 +32,15 @@ namespace upsylon {
                     Jump  //!< jump to a new scanner
                 };
                 const Type      type;    //!< category of control event
-                const SUID      suid;    //!< name to jump/call to, empty for back
+                const Tag       label;    //!< name to jump/call to, info for nack
                 virtual ~ControlEvent() throw();
                                 
             protected:
                 //! initialize call/jump
-                explicit  ControlEvent(const Type,const Action &,const string &);
+                explicit  ControlEvent(const Type,const Action &,const Tag &);
                 
                 //! initialize back
-                explicit  ControlEvent(const Action &a);
+                explicit  ControlEvent(const Action &a, const Tag &);
 
                 
             private:

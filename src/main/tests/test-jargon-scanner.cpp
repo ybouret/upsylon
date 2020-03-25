@@ -31,6 +31,8 @@ namespace {
             
             endl("endl","[:endl:]");
             
+            Tags::instance().display();
+            
         }
         
         virtual ~myScanner() throw()

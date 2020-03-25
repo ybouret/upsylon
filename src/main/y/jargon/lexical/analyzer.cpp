@@ -52,7 +52,7 @@ namespace upsylon {
             
             Scanner & Analyzer:: declare(const string &id)
             {
-                Scanner::Handle scan = new Scanner(id);;
+                Scanner::Handle scan = new Scanner(id);
                 if( !scanners.insert(scan) )
                 {
                     throw exception("[[%s]] multiple sub-scanner [%s]",**label,**(scan->label));
@@ -92,14 +92,14 @@ namespace upsylon {
                             switch(ctrl->type)
                             {
                                 case ControlEvent::Call:
-                                    Y_JSCANNER( std::cerr << '[' << label << ']' << "@call " << '[' << ctrl->suid << ']' << std::endl);
+                                    Y_JSCANNER( std::cerr << '[' << label << ']' << "@call " << '[' << ctrl->label << ']' << std::endl);
                                     calls.push(current);
-                                    leap( *(ctrl->suid),"call");
+                                    leap( *(ctrl->label),"call");
                                     break;
                                     
                                 case ControlEvent::Jump:
-                                    Y_JSCANNER( std::cerr << '[' << label << ']' << "@jump " << '[' << ctrl->suid << ']' << std::endl);
-                                    leap( *(ctrl->suid),"jump to");
+                                    Y_JSCANNER( std::cerr << '[' << label << ']' << "@jump " << '[' << ctrl->label << ']' << std::endl);
+                                    leap( *(ctrl->label),"jump to");
                                     break;
                                     
                                 case ControlEvent::Back:

@@ -12,21 +12,21 @@ namespace upsylon {
             }
             
             
-            ControlEvent:: ControlEvent(const Type   t,
+            ControlEvent:: ControlEvent(const Type    t,
                                         const Action &a,
-                                        const string &id) :
+                                        const Tag    &id) :
             Event(Control,a),
             type(t),
-            suid( new string(id) )
+            label(id)
             {
                 assert(Back!=type);
                 Y_PATTERN_SELF(ControlEvent);
             }
             
-            ControlEvent:: ControlEvent(const Action &a) :
+            ControlEvent:: ControlEvent(const Action &a, const Tag &id) :
             Event(Control,a),
             type(Back),
-            suid(NULL)
+            label(id)
             {
                 Y_PATTERN_SELF(ControlEvent);
             }

@@ -7,10 +7,11 @@ namespace upsylon {
         
         namespace Lexical {
             
+#if 0
             const char Scanner:: callPrefix[] = "->";
             const char Scanner:: jumpPrefix[] = "=>";
             const char Scanner:: backPrefix[] = "<-";
-            
+#endif
             
 
             
@@ -19,26 +20,26 @@ namespace upsylon {
             }
             
 #define Y_JSCANNER_CTOR(TAG) \
-CountedObject(),     \
-inode<Scanner>(),   \
-label(TAG),        \
-rules(),          \
-chars(NULL),     \
+CountedObject(),             \
+inode<Scanner>(),            \
+label(TAG),                  \
+rules(),                     \
+chars(NULL),                 \
 dict_(NULL)        
             
             Scanner:: Scanner( const string &id ) :
-            Y_JSCANNER_CTOR( new string(id) )
+            Y_JSCANNER_CTOR( Tags::Make(id) )
             {
             }
             
             Scanner:: Scanner( const Tag &tag ) :
-            Y_JSCANNER_CTOR( tag )
+            Y_JSCANNER_CTOR( Tags::Make(tag) )
             {
             }
             
             bool Scanner::Verbose = false;
             
-            void Scanner:: doNothing(const Token &) const throw()
+            void Scanner:: nothing(const Token &) const throw()
             {
             }
            
@@ -53,7 +54,7 @@ dict_(NULL)
                 rules.push_back(rule);
             }
             
-            void Scanner:: doNewLine(const Token &) throw()
+            void Scanner:: newLine(const Token &) throw()
             {
                 assert(chars);
                 Y_JSCANNER(std::cerr << '[' << label << ']' << "@newLine " << std::endl);

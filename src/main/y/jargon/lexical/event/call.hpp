@@ -20,7 +20,7 @@ namespace upsylon {
                 virtual ~OnCall() throw();
                 
                 //! setup action to take befor call sub-scanner
-                explicit OnCall(const Action &, const string &);
+                explicit OnCall(const Action &, const Tag &);
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnCall);

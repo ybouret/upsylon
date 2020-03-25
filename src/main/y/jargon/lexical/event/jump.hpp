@@ -21,7 +21,7 @@ namespace upsylon {
                 virtual ~OnJump() throw();
                 
                 //! setup action to take before jumping to a named sub-scanner
-                explicit OnJump(const Action &, const string &);
+                explicit OnJump(const Action &, const Tag &);
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(OnJump);

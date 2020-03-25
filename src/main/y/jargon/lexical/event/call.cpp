@@ -11,8 +11,8 @@ namespace upsylon {
             {
             }
             
-            OnCall:: OnCall(const Action &a, const string &id) :
-            ControlEvent(Call,a,id)
+            OnCall:: OnCall(const Action &a, const Tag &tag) :
+            ControlEvent(Call,a,tag)
             {
             }
          

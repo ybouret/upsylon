@@ -12,7 +12,7 @@ namespace upsylon {
             {
             }
             
-            OnJump:: OnJump(const Action &a, const string &id) :
+            OnJump:: OnJump(const Action &a, const Tag &id) :
             ControlEvent(Jump,a,id)
             {
             }

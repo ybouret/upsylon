@@ -46,8 +46,10 @@ namespace {
                 com3.drop("any",".");
             }
             
+            Tags::Display();
             dict.release_all();
-            
+            Tags::Release();
+            Tags::Display();
         }
         
         virtual ~myLex() throw()
@@ -62,7 +64,7 @@ namespace {
         void leaveCom1(const Token &token )
         {
             std::cerr << "</Com1 @" << token << ">" << std::endl;
-            doNewLine(token);
+            newLine(token);
         }
         
         void enterCom2( const Token &token )
@@ -73,7 +75,7 @@ namespace {
         void leaveCom2(const Token &token )
         {
             std::cerr << "</Com2 @" << token << ">" << std::endl;
-            doNewLine(token);
+            newLine(token);
         }
         
         void enterCom3( const Token &token )
