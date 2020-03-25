@@ -19,7 +19,8 @@ namespace upsylon {
         typedef catalog<KEY,T>     base_type;//!< alias
         Y_DECL_ARGS(T,type);                 //!< aliases
         Y_DECL_ARGS(KEY,key_type);           //!< aliases
-                                             //! detect kind of key
+                                            
+        //! detect kind of key
         static const bool ro_buffer_key = Y_IS_SUPERSUBCLASS(memory::ro_buffer,mutable_key_type);
         
         //! setup

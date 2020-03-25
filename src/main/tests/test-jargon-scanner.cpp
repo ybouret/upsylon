@@ -31,7 +31,7 @@ namespace {
             
             endl("endl","[:endl:]");
             
-            Tags::instance().display();
+            Tags::Display();
             
         }
         

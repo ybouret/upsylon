@@ -54,7 +54,7 @@ namespace upsylon {
                 Scanners   scanners;
                 
             public:
-                Dictionary dict;               
+                Dictionary dict;   //!< local dictionary to share amongs scanners
             };
             
         }

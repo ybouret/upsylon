@@ -10,15 +10,17 @@ namespace upsylon {
 
     namespace Jargon {
         
-        typedef suffix_tree<Tag> TagsType;
+        typedef suffix_tree<Tag> TagsType; //!< base class for Tags
         
+        //! global dictionary of shared tags
         class Tags : public singleton<Tags>, public TagsType
         {
         public:
-            string * operator()(const string &s);
-            string * operator()(const char   *s);
-            string * operator()(const Tag     &);
+            string * operator()(const string &s); //!< check string
+            string * operator()(const char   *s); //!< check text
+            string * operator()(const Tag     &); //!< check tag
             
+            //! return pointer to a registered string from any ID
             template <typename ID> static inline
             string * Make(const ID &id)
             {
@@ -26,18 +28,17 @@ namespace upsylon {
                 return tags(id);
             }
             
-            void display() const;
-            static void Display();
-            
-            static void Release() throw();
+            static void Display();          //!< display
+            static void Release() throw();  //!< release resources
             
         private:
+            static const at_exit::longevity life_time = 0;
             Y_DISABLE_COPY_AND_ASSIGN(Tags);
             explicit Tags();
             virtual ~Tags() throw();
             friend class singleton<Tags>;
-        public:
-            static const at_exit::longevity life_time = 0;
+            void display() const;
+
         };
         
     }
