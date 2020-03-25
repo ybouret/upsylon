@@ -19,7 +19,7 @@ inode<Scanner>(),            \
 label(TAG),                  \
 rules(),                     \
 chars(NULL),                 \
-dict_(NULL)        
+dict_(NULL), plug_(NULL)
             
             Scanner:: Scanner( const string &id ) :
             Y_JSCANNER_CTOR( Tags::Make(id) )

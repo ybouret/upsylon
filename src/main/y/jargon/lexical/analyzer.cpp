@@ -75,7 +75,9 @@ namespace upsylon {
             Plugin & Analyzer:: insert( Plugin *plugin )
             {
                 assert(plugin);
+                assert(plugin->plug_==plugin);
                 Y_JSCANNER( std::cerr << '[' << label << ']' << " <== " << '[' << plugin->label << ']' << std::endl);
+               
                 Scanner::Handle scan( plugin );
                 if(!store(scan))
                 {

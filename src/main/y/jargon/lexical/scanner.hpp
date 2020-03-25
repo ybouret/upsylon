@@ -19,6 +19,8 @@ namespace upsylon {
         
         namespace Lexical {
             
+            class Plugin;
+            
             //! directive for Lexer during probe
             /**
              a directive is emitted when a control event (jump/call/back) is
@@ -64,8 +66,16 @@ namespace upsylon {
                 void          nothing(const Token &) const throw(); //!< ...
                 void          newLine(const Token &) throw();       //!< send newLine to current source
                 
+                //------------------------------------------------------------------
+                //
+                //
+                // forward/discard
+                //
+                //
+                //------------------------------------------------------------------
+
                 
-                //! build a forwarding regular evne
+                //! build a forwarding regular event
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -100,7 +110,7 @@ namespace upsylon {
                 template <typename LABEL, typename REGEXP>
                 void emit(const LABEL  &label, const REGEXP &regexp)
                 {
-                    forward(label, regexp, this, & Scanner::nothing );
+                    forward(label,regexp,this,&Scanner::nothing);
                 }
                 
                 //! default drop
@@ -229,6 +239,7 @@ namespace upsylon {
                 
             protected:
                 const Dictionary *dict_; //!< shared dictionary, default is NULL
+                Plugin           *plug_; //!< if is a plugin
             };
             
         }

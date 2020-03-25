@@ -17,6 +17,7 @@ namespace upsylon {
             class Plugin : public Scanner
             {
             public:
+                typedef arc_ptr<Plugin> Handle;
                 //! cleanup
                 virtual ~Plugin() throw();
               
@@ -40,6 +41,7 @@ namespace upsylon {
                 lexer(Lx)
                 {
                     Y_JSCANNER(std::cerr << "|" << id << "| @'" << regexp << "'" << std::endl;);
+                    plug_ = this;
                 }
                                 
                 Analyzer &lexer; //!< used to insert compiled units

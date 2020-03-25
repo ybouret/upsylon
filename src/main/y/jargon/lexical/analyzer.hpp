@@ -73,9 +73,9 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
-                bool       store(Scanner::Handle &scan);
-                Scanner   &insert(Scanner::Handle &scan); //!< insert and set dict
-                Plugin    &insert( Plugin *plugin );
+                bool       store(Scanner::Handle &scan);  //!< insert and set dict_
+                Scanner   &insert(Scanner::Handle &scan); //!< insert a scanner
+                Plugin    &insert(Plugin *plugin);        //!< insert a plugin
                 void       leap( const string &id, const char *when );
                 
                 Scanner   *current;

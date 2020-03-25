@@ -32,7 +32,7 @@ namespace upsylon {
                     Jump  //!< jump to a new scanner
                 };
                 const Type      type;    //!< category of control event
-                const Tag       label;    //!< name to jump/call to, info for nack
+                const Tag       label;   //!< name to jump/call to, info for back
                 virtual ~ControlEvent() throw();
                                 
             protected:
