@@ -7,13 +7,7 @@ namespace upsylon {
         
         namespace Lexical {
             
-#if 0
-            const char Scanner:: callPrefix[] = "->";
-            const char Scanner:: jumpPrefix[] = "=>";
-            const char Scanner:: backPrefix[] = "<-";
-#endif
             
-
             
             Scanner:: ~Scanner() throw()
             {
@@ -42,16 +36,21 @@ dict_(NULL)
             void Scanner:: nothing(const Token &) const throw()
             {
             }
-           
+            
             void Scanner:: add(Rule *rule)
             {
                 assert(rule);
+                auto_ptr<Rule> guard(rule);
+                
                 Y_JSCANNER(std::cerr << '[' << label << ']' << "+rule <" << rule->label << ">" << std::endl);
+                
                 for(const Rule *r=rules.head;r;r=r->next)
                 {
-                    if( *(r->label) == *(rule->label) ) throw exception("[%s] multiple rule <%s>", **label, **(r->label));
+                    if( *(r->label) == *(rule->label) )     throw exception("[%s] multiple rule <%s>", **label, **(r->label));
+                    if( r->motif->alike( & *(rule->motif))) throw exception("[%s] alike patterns <%s> and <%s>",**label,**(r->label),**(rule->label));
                 }
-                rules.push_back(rule);
+                rules.push_back( guard.yield() );
+                
             }
             
             void Scanner:: newLine(const Token &) throw()
@@ -65,7 +64,7 @@ dict_(NULL)
             {
                 return *label;
             }
-
+            
             
         }
     }

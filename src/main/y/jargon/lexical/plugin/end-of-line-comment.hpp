@@ -30,6 +30,8 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EndOfLineComment);
                 void setup();
+                virtual void onInit(const Token &) throw();
+                
             };
             
 #define Y_JARGON_END_OF_LINE_COMMENT(CLASS,TRIGGER) \
@@ -42,7 +44,7 @@ EndOfLineComment(lexer,id,TRIGGER){}\
             Y_JARGON_END_OF_LINE_COMMENT(CppComment,"//");
             Y_JARGON_END_OF_LINE_COMMENT(ShellComment,"#");
             Y_JARGON_END_OF_LINE_COMMENT(LuaComment,"--");
-            Y_JARGON_END_OF_LINE_COMMENT(TexComment,"%");
+            Y_JARGON_END_OF_LINE_COMMENT(TeXComment,"%");
 
         }
     }

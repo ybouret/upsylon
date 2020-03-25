@@ -16,6 +16,11 @@ namespace upsylon
                 back("[:endl:]", this, & Scanner::newLine);
                 drop("dot",".");
             }
+            
+            void EndOfLineComment:: onInit(const Token &) throw()
+            {
+                
+            }
         }
         
     }

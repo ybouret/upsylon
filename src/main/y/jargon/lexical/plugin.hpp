@@ -19,7 +19,7 @@ namespace upsylon {
                 virtual ~Plugin() throw();
               
                 const Tag trigger;
-                void      initialize(const Token &);
+                virtual void onInit( const Token & ) = 0;
                 
                 void hook( Scanner &scanner );
                 
@@ -32,7 +32,7 @@ namespace upsylon {
                 trigger( Tags::Make(regexp) ),
                 analyzer(lexer)
                 {
-                    Y_JSCANNER(std::cerr << "|" << id << "| @ '" << regexp << "'" << std::endl;);
+                    Y_JSCANNER(std::cerr << "|" << id << "| @'" << regexp << "'" << std::endl;);
                 }
                                 
                 

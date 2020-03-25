@@ -31,9 +31,19 @@ namespace {
             Lexical::Plugin &luaEOL = load(type2type<Lexical::EndOfLineComment>(), "luaEOL", "--");
             luaEOL.hook(*this);
             
-            Lexical::Plugin &texEOL = load(type2type<Lexical::TexComment>(),"texEOL");
+            Lexical::Plugin &texEOL = load(type2type<Lexical::TeXComment>(),"texEOL");
             texEOL.hook(*this);
             
+            Lexical::Plugin &xmlCom = load(type2type<Lexical::MultiLinesComment>(),"xmlCom","<!--","-->");
+            xmlCom.hook(*this);
+            
+            Lexical::Plugin & ccom = load(type2type<Lexical::C_Comments>(),"C_Comments");
+            if(false)
+            {
+                ccom.hook(*this);
+            }
+            (void)load(type2type<Lexical::XML_Comments>(),"XML_Comments");
+
             emit("punct","[:punct:]");
             
             

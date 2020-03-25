@@ -56,6 +56,13 @@ namespace upsylon {
                     return insert( static_cast<Plugin*>(new PLUGIN(*this,id)) );
                 }
                 
+                //! load plugin with 2 expressions
+                template <typename PLUGIN, typename ID, typename ENTER, typename LEAVE>
+                Plugin & load(type2type<PLUGIN>, const ID &id, const ENTER &enter, const LEAVE &leave)
+                {
+                    return insert( static_cast<Plugin*>(new PLUGIN(*this,id,enter,leave)) );
+                }
+                
                 
                 
                 
