@@ -185,10 +185,8 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rules   rules;  // current rules
                 Source *chars;  // current source
-                
-            private:
                 friend class Analyzer;
-                const Dictionary *dict_; //!< shared dictionary, default is NULL
+                
                 
                 
                 template <
@@ -229,6 +227,9 @@ namespace upsylon {
                     const Event::Handle  ruleEvent = new LEAP(ruleAction,ruleLabel);
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
+                
+            protected:
+                const Dictionary *dict_; //!< shared dictionary, default is NULL
             };
             
         }

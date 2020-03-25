@@ -3,6 +3,9 @@
 #include "y/jargon/lexer.hpp"
 #include "y/jargon/lexeme.hpp"
 
+#include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
+#include "y/jargon/lexical/plugin/multi-lines-comment.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -24,6 +27,13 @@ namespace {
             call("com1", "#", this, & myLex::enterCom1  );
             jump("com2", "//", this, & myLex::enterCom2 );
             call("com3", "/\\*", this, & myLex::enterCom3 );
+           
+            Lexical::Plugin &luaEOL = load(type2type<Lexical::EndOfLineComment>(), "luaEOL", "--");
+            luaEOL.hook(*this);
+            
+            Lexical::Plugin &texEOL = load(type2type<Lexical::TexComment>(),"texEOL");
+            texEOL.hook(*this);
+            
             emit("punct","[:punct:]");
             
             
@@ -46,10 +56,9 @@ namespace {
                 com3.drop("any",".");
             }
             
+           
             Tags::Display();
             dict.release_all();
-            Tags::Release();
-            Tags::Display();
         }
         
         virtual ~myLex() throw()

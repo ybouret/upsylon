@@ -50,16 +50,41 @@ namespace upsylon {
                 current = this;
             }
             
-            Scanner & Analyzer:: declare(const string &id)
+            Scanner & Analyzer:: insert( Scanner::Handle &scan)
             {
-                Scanner::Handle scan = new Scanner(id);
-                if( !scanners.insert(scan) )
+                if( !store(scan) )
                 {
                     throw exception("[[%s]] multiple sub-scanner [%s]",**label,**(scan->label));
                 }
-                scan->dict_ = &dict;
                 return *scan;
             }
+            
+            bool Analyzer:: store( Scanner::Handle &scan )
+            {
+                if( scanners.insert(scan) )
+                {
+                    scan->dict_ = &dict;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            
+            Plugin & Analyzer:: insert( Plugin *plugin )
+            {
+                assert(plugin);
+                Y_JSCANNER( std::cerr << '[' << label << ']' << " <== " << '[' << plugin->label << ']' << std::endl);
+                Scanner::Handle scan( plugin );
+                if(!store(scan))
+                {
+                    throw exception("[[%s]] multiple plugin [%s]",**label,**(scan->label));
+                }
+                return *plugin;
+            }
+
+            
             
             void Analyzer:: leap(const string &id, const char *when)
             {
