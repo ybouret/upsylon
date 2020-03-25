@@ -12,7 +12,6 @@
 #include "y/jargon/lexical/unit.hpp"
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/jargon/tags.hpp"
 
 namespace upsylon {
     
@@ -20,8 +19,7 @@ namespace upsylon {
         
         namespace Lexical {
             
-            class Analyzer; //!< forwar
-            typedef const ControlEvent *Directive;//!< directive for Lexer during probe
+            typedef const ControlEvent *Directive; //!< directive for Lexer during probe
             
             //! trace calls
 #define Y_JSCANNER(CODE) do { if(Scanner::Verbose) { CODE; } } while(false)
@@ -146,7 +144,7 @@ namespace upsylon {
                     const string        rx(regexp);
                     const string        backLabel = backPrefix + *label;// + '@' + rx;
                     const Motif         ruleMotif = RegularExpression::Compile(rx,dict_);
-                    const Tag           ruleLabel = makeLabel(backLabel);
+                    const Tag           ruleLabel = new string(backLabel);
                     const Action        ruleAction(hObject,hMethod);
                     const Event::Handle ruleEvent = new OnBack(ruleAction);
                     add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
@@ -175,11 +173,7 @@ namespace upsylon {
             private:
                 friend class Analyzer;
                 const Dictionary *dict_; //!< shared dictionary, default is NULL
-                Tags             *tags_; //!< shared tags, default is NULL
                 
-                
-                string *makeLabel( const string &s );
-                string *makeLabel( const char   *s );
                 
                 template <
                 typename LABEL,
@@ -194,7 +188,7 @@ namespace upsylon {
                 {
                     assert(hObject);
                     assert(hMethod);
-                    const Tag            ruleLabel = makeLabel(anyLabel);
+                    const Tag            ruleLabel = new string(anyLabel);
                     const Motif          ruleMotif = RegularExpression::Compile(anyRegExp,dict_);
                     const Action         ruleAction(hObject,hMethod);
                     const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
@@ -216,7 +210,7 @@ namespace upsylon {
                 {
                     const string         theTarget( target );
                     const string         theLabel  = prefix + theTarget;
-                    const Tag            ruleLabel = makeLabel(theLabel);
+                    const Tag            ruleLabel = new string(theLabel);
                     const Motif          ruleMotif = RegularExpression::Compile(regexp,dict_);
                     const Action         ruleAction(hObject,hMethod);
                     const Event::Handle  ruleEvent = new LEAP(ruleAction,theTarget);

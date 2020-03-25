@@ -46,12 +46,6 @@ namespace {
                 com3.drop("any",".");
             }
             
-            for( Tags::iterator i = tags.begin(); i!=tags.end(); ++i)
-            {
-                std::cerr << **i << std::endl;
-            }
-            
-            tags.release_all();
             dict.release_all();
             
         }

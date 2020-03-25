@@ -54,9 +54,7 @@ namespace upsylon {
                 Scanners   scanners;
                 
             public:
-                Dictionary dict;
-                Tags       tags;
-               
+                Dictionary dict;               
             };
             
         }

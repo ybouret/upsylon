@@ -25,8 +25,7 @@ namespace upsylon {
             units(),
             calls(),
             scanners(),
-            dict(),
-            tags()
+            dict()
             {
                 withhold();
                 const Scanner::Handle scan = this;
@@ -42,7 +41,6 @@ namespace upsylon {
                     throw;
                 }
                 dict_ = &dict;
-                tags_ = &tags;
             }
             
             void Analyzer:: restart() throw()
@@ -60,7 +58,6 @@ namespace upsylon {
                     throw exception("[[%s]] multiple sub-scanner [%s]",**label,**(scan->label));
                 }
                 scan->dict_ = &dict;
-                scan->tags_ = &tags;
                 return *scan;
             }
             

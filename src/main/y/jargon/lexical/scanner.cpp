@@ -11,29 +11,7 @@ namespace upsylon {
             const char Scanner:: jumpPrefix[] = "=>";
             const char Scanner:: backPrefix[] = "<-";
             
-            string * Scanner:: makeLabel( const string &s )
-            {
-                if(tags_)
-                {
-                    return tags_->query(s);
-                }
-                else
-                {
-                    return new string(s);
-                }
-            }
             
-            string * Scanner:: makeLabel( const char *s )
-            {
-                if(tags_)
-                {
-                    return tags_->query(s);
-                }
-                else
-                {
-                    return new string(s);
-                }
-            }
 
             
             Scanner:: ~Scanner() throw()
@@ -46,9 +24,7 @@ inode<Scanner>(),   \
 label(TAG),        \
 rules(),          \
 chars(NULL),     \
-dict_(NULL),\
-tags_(NULL)
-        
+dict_(NULL)        
             
             Scanner:: Scanner( const string &id ) :
             Y_JSCANNER_CTOR( new string(id) )
