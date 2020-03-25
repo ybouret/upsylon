@@ -39,6 +39,9 @@ namespace upsylon {
                 //! get next unit, processing all events
                 Unit *get(Source &source);
                 
+                //! unget a created unit
+                void unget( Unit *unit ) throw();
+                
                 //! restart state
                 void restart() throw();
                 

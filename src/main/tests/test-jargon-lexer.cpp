@@ -5,6 +5,7 @@
 
 #include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 #include "y/jargon/lexical/plugin/multi-lines-comment.hpp"
+#include "y/jargon/lexical/plugin/strings.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -44,6 +45,12 @@ namespace {
             }
             (void)load(type2type<Lexical::XML_Comments>(),"XML_Comments");
 
+            Lexical::Plugin &jstring = load(type2type<Lexical::jString>(),"jstring");
+            jstring.hook(*this);
+            
+            Lexical::Plugin &rstring = load(type2type<Lexical::rString>(),"rstring");
+            rstring.hook(*this);
+            
             emit("punct","[:punct:]");
             
             

@@ -18,11 +18,11 @@ namespace upsylon
             public:
                 virtual ~MultiLinesComment() throw();
                 template <typename ID,typename ENTER,typename LEAVE>
-                explicit MultiLinesComment(Analyzer       &lexer,
+                explicit MultiLinesComment(Analyzer       &Lx,
                                            const ID       &id,
                                            const ENTER    &enter,
                                            const LEAVE    &leave ) :
-                Plugin(lexer,id,enter)
+                Plugin(Lx,id,enter)
                 {
                     Y_JSCANNER(std::cerr << "|" << id << "| @'" << leave << "'" << std::endl;);
                     back(leave,this,&Scanner::nothing);
@@ -40,8 +40,8 @@ namespace upsylon
 class CLASS : public MultiLinesComment {\
 private: Y_DISABLE_COPY_AND_ASSIGN(CLASS);\
 public:                 inline virtual ~CLASS() throw() {}\
-template <typename ID>  inline explicit CLASS(Analyzer &lexer, const ID &id) :\
-MultiLinesComment(lexer,id,ENTER,LEAVE){}\
+template <typename ID>  inline explicit CLASS(Analyzer &Lx, const ID &id) :\
+MultiLinesComment(Lx,id,ENTER,LEAVE){}\
 }
             Y_JARGON_MULTI_LINES_COMMENT(C_Comments,"/\\*","\\*/");
             Y_JARGON_MULTI_LINES_COMMENT(XML_Comments,"<!--","-->");

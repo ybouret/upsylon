@@ -94,6 +94,14 @@ namespace upsylon {
                 current = & (**ppS);
             }
             
+            
+            void Analyzer:: unget( Unit *unit ) throw()
+            {
+                assert(unit);
+                units.push_front(unit);
+            }
+
+            
             Unit * Analyzer:: get(Source &source)
             {
             TRY_GET:

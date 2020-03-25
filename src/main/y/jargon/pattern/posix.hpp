@@ -35,7 +35,7 @@ namespace upsylon {
             static Pattern *word();   //!< \verbatim[a-zA-Z0-9_]\endverbatim
             static Pattern *endl();   //!< \verbatim\n|\r|\r\n\endverbatim
             static Pattern *dot();    //!< \verbatim^endl\endverbatim
-            static Pattern *core();   //!< core 7-bits string content, minus " and '
+            static Pattern *core();   //!< core 7-bits string content, minus quote, dquote  and backslash
             
             static Pattern *get(const string &id); //!< get from internal database
             static Pattern *get(const char   *id); //!< get from internal database

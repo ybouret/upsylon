@@ -25,20 +25,20 @@ namespace upsylon {
                 
             protected:
                 template <typename ID,typename EXPR>
-                explicit Plugin(Analyzer       &lexer,
+                explicit Plugin(Analyzer       &Lx,
                                 const ID       &id,
                                 const EXPR     &regexp) :
                 Scanner(id),
                 trigger( Tags::Make(regexp) ),
-                analyzer(lexer)
+                lexer(Lx)
                 {
                     Y_JSCANNER(std::cerr << "|" << id << "| @'" << regexp << "'" << std::endl;);
                 }
                                 
-                
+            protected:
+                Analyzer &lexer;
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
-                Analyzer &analyzer;
             };
         }
         
