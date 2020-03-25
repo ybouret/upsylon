@@ -59,6 +59,20 @@ namespace upsylon {
             }
         }
         
+        string * Tags:: operator()(const char C)
+        {
+            const Tag   *pTag = search_by(&C,1);
+            if(pTag)
+            {
+                const string    *ans = & **pTag;
+                return (string *)ans;
+            }
+            else
+            {
+                return __check(*this,new string(C));
+            }
+        }
+        
         void Tags:: display() const
         {
             std::cerr << "<Jargon::Tags entries=" << entries() << ">" << std::endl;

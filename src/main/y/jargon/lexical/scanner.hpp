@@ -158,8 +158,7 @@ namespace upsylon {
                           OBJECT_POINTER hObject,
                           METHOD_POINTER hMethod)
                 {
-                    const string        rx(regexp);
-                    const Motif         ruleMotif = RegularExpression::Compile(rx,dict_);
+                    const Motif         ruleMotif = RegularExpression::Compile(regexp,dict_);
                     const Action        ruleAction(hObject,hMethod);
                     const Event::Handle ruleEvent = new OnBack(ruleAction,label);
                     add( new Rule(label,ruleMotif,ruleEvent) );

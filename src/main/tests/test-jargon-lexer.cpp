@@ -5,7 +5,8 @@
 
 #include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 #include "y/jargon/lexical/plugin/multi-lines-comment.hpp"
-#include "y/jargon/lexical/plugin/strings.hpp"
+#include "y/jargon/lexical/plugin/jstring.hpp"
+#include "y/jargon/lexical/plugin/rstring.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"

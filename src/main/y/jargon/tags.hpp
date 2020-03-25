@@ -19,6 +19,7 @@ namespace upsylon {
             string * operator()(const string &s); //!< check string
             string * operator()(const char   *s); //!< check text
             string * operator()(const Tag     &); //!< check tag
+            string * operator()(const char    C); //!< check single char
             
             //! return pointer to a registered string from any ID
             template <typename ID> static inline

@@ -13,28 +13,23 @@ namespace upsylon
         
         namespace Lexical {
             
+            //! [r|j]String
             class Strings : public Plugin
             {
             public:
-                enum Separator
-                {
-                    DoubleQuote,
-                    SimpleQuote
-                };
-                static const char *RegExp( const Separator ) throw();
+                virtual ~Strings() throw(); //!< cleanup
                 
-                virtual ~Strings() throw();
-                
-                const Separator symbol;
-                
-                template <typename ID>
+
+            protected:
+                //! setup
+                template <typename ID> inline
                 Strings(Analyzer   &Lx,
                         const ID   &id,
-                        const Separator sym) :
-                Plugin(Lx,id, RegExp(sym) ),
-                symbol(sym),
+                        const char  C) :
+                Plugin(Lx,id,C),
                 content(0),
-                context(0)
+                context(0),
+                symbol(C)
                 {
                     setup();
                 }
@@ -45,33 +40,21 @@ namespace upsylon
                 virtual void onInit(const Token &);
                 auto_ptr<string>  content;
                 auto_ptr<Context> context;
+                const char        symbol;
+                
                 void onCore(const Token &);
                 void onEmit(const Token &);
+                void onEsc0(const Token &); // \nrtvbf
+                void onEsc1(const Token &); // quote, dquote, slash, backslash
+                void onHexa(const Token &); // \xXX
+                void failed(const Token &); // error
                 
                 void checkSymbol(const Token &sep, const char *fn) const;
             };
             
-            class jString : public Strings
-            {
-            public:
-                virtual ~jString() throw() {}
-                template <typename ID>
-                jString(Analyzer   &Lx, const ID   &id) : Strings(Lx,id,DoubleQuote) {}
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(jString);
-            };
+          
             
-            class rString : public Strings
-            {
-            public:
-                virtual ~rString() throw() {}
-                template <typename ID>
-                rString(Analyzer &Lx, const ID   &id) : Strings(Lx,id,SimpleQuote) {}
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(rString);
-            };
+           
             
         }
         

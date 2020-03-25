@@ -9,15 +9,7 @@ namespace upsylon
     namespace Jargon {
         
         namespace Lexical {
-        
-            const char *Strings:: RegExp( const Separator symbol ) throw()
-            {
-                switch(symbol)
-                {
-                    case DoubleQuote: return "\"";
-                    case SimpleQuote: return "\'";
-                }
-            }
+            
             
             Strings:: ~Strings() throw()
             {}
@@ -25,25 +17,22 @@ namespace upsylon
             void Strings:: setup()
             {
                 discard("core", "[:core:]", this, &Strings::onCore);
-                back( RegExp(symbol),this, & Strings::onEmit );
+                back(*trigger,this, & Strings::onEmit );
+                discard("esc0", "\\\\[nrtfvb]",   this, &Strings::onEsc0);
+                discard("esc1", "\\\\[\"'\\\\/]", this, &Strings::onEsc1);
+                discard("hexa", "\\\\x[:xdigit:][:xdigit:]", this, &Strings::onHexa);
+                discard("any","[\\x00-\\xff]",this,&Strings::failed);
             }
             
             
             void Strings:: checkSymbol(const Token &sep, const char *fn) const
             {
-                if(sep.size!=1) throw exception("%sinvalid token.size=%u", fn,unsigned(sep.size) );
-                switch(symbol)
-                {
-                    case DoubleQuote:
-                        if( sep.head->code != '"' )
-                            throw exception("%sexpecting \" instead of '%s'", fn,printable_char[sep.head->code] );
-                        break;
-                        
-                    case SimpleQuote:
-                        if( sep.head->code != '\'')
-                            throw exception("%sexpecting ' instead of '%s'", fn,printable_char[sep.head->code] );
-                        break;
-                }
+                if(sep.size!=1)
+                    throw exception("%sinvalid token.size=%u", fn,unsigned(sep.size) );
+                
+                if(char(sep.head->code) != symbol)
+                    throw exception("%sexpecting %c instead of '%s'", fn,symbol,printable_char[sep.head->code] );
+                
             }
 
             
@@ -65,6 +54,55 @@ namespace upsylon
                 {
                     *content << char(ch->code);
                 }
+            }
+            
+            void Strings:: onEsc0(const Token &esc)
+            {
+                assert(content.is_valid());
+                assert(2==esc.size);
+                assert('\\'==esc.head->code);
+                const char C = esc.tail->code;
+                switch(C)
+                {
+                    case 'n': *content << '\n'; break;
+                    case 'r': *content << '\r'; break;
+                    case 't': *content << '\t'; break;
+                    case 'v': *content << '\v'; break;
+                    case 'f': *content << '\f'; break;
+                    case 'b': *content << '\b'; break;
+                    default : throw exception("%s: corrupted escape sequence code!",**label);
+                }
+            }
+            
+            void Strings:: onEsc1(const Token &esc)
+            {
+                assert(content.is_valid());
+                assert(2==esc.size);
+                assert('\\'==esc.head->code);
+                const char C = esc.tail->code;
+                switch(C)
+                {
+                    case '"':
+                    case '\'':
+                    case '\\':
+                    case '/':
+                        *content << C;
+                        break;
+                    default : throw exception("%s: corrupted escaped character!", **label);
+                }
+            }
+            
+            void Strings:: onHexa(const Token &hexa)
+            {
+                assert(4==hexa.size);
+                assert(content.is_valid());
+                
+                const Char *ch = hexa.head; assert('\\'==ch->code);
+                ch=ch->next;                assert('x' ==ch->code);
+                ch=ch->next; const int hi = hexadecimal::to_decimal(ch->code); assert(hi>=0);
+                ch=ch->next; const int lo = hexadecimal::to_decimal(ch->code); assert(lo>=0);
+                const uint8_t code = hi*16+lo;
+                *content << char(code);
             }
             
             void Strings:: onEmit(const Token &sep)
@@ -89,6 +127,20 @@ namespace upsylon
                 content = 0;
                 context = 0;
                 lexer.unget( unit.yield() );
+            }
+            
+            void Strings:: failed(const Token &t)
+            {
+                assert(t.size>=1);
+                const char bad = t.head->code;
+                if('\\'==bad)
+                {
+                    throw exception("%s: unfinished sequence after '%s\\'", **label, **content);
+                }
+                else
+                {
+                    throw exception("%s: invalid char '%s' after '%s'", **label, printable_char[uint8_t(bad)], **content);
+                }
             }
         }
         
