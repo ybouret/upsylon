@@ -10,7 +10,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //------------------------------------------------------------------
+        //
         //! precise localisation of content
+        //
+        //------------------------------------------------------------------
         class Context
         {
         public:
