@@ -132,14 +132,20 @@ namespace upsylon
             void Strings:: failed(const Token &t)
             {
                 assert(t.size>=1);
-                const char bad = t.head->code;
+                const char    bad = t.head->code;
+                const Context &ctx = *(t.head);
+                
                 if('\\'==bad)
                 {
-                    throw exception("%s: unfinished sequence after '%s\\'", **label, **content);
+                    throw exception("%s:%d:%d: %s unfinished sequence after '%s\\'",
+                                    **ctx.tag, ctx.line, ctx.column,
+                                    **label, **content);
                 }
                 else
                 {
-                    throw exception("%s: invalid char '%s' after '%s'", **label, printable_char[uint8_t(bad)], **content);
+                    throw exception("%s:%d:%d: %s invalid char '%s' after '%s'",
+                                    **ctx.tag, ctx.line, ctx.column,
+                                    **label, visible_char[uint8_t(bad)], **content);
                 }
             }
         }

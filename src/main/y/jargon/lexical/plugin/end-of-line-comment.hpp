@@ -12,10 +12,14 @@ namespace upsylon
         
         namespace Lexical {
          
+            //! generic End of Line Comment
             class EndOfLineComment : public Plugin
             {
             public:
+                //! cleanup
                 virtual ~EndOfLineComment() throw();
+                
+                //! setup
                 template <typename ID,typename EXPR>
                 explicit EndOfLineComment(Analyzer       &Lx,
                                           const ID       &id,
@@ -34,6 +38,7 @@ namespace upsylon
                 
             };
             
+            //! create some common EOL
 #define Y_JARGON_END_OF_LINE_COMMENT(CLASS,TRIGGER) \
 class CLASS : public EndOfLineComment {\
 private: Y_DISABLE_COPY_AND_ASSIGN(CLASS);\
@@ -41,10 +46,10 @@ public:                 inline virtual ~CLASS() throw() {}\
 template <typename ID>  inline explicit CLASS(Analyzer &Lx, const ID &id) :\
 EndOfLineComment(Lx,id,TRIGGER){}\
 }
-            Y_JARGON_END_OF_LINE_COMMENT(CppComment,"//");
-            Y_JARGON_END_OF_LINE_COMMENT(ShellComment,"#");
-            Y_JARGON_END_OF_LINE_COMMENT(LuaComment,"--");
-            Y_JARGON_END_OF_LINE_COMMENT(TeXComment,"%");
+            Y_JARGON_END_OF_LINE_COMMENT(CppComment,"//");  //!< C++ comment
+            Y_JARGON_END_OF_LINE_COMMENT(ShellComment,"#"); //!< Shell comment
+            Y_JARGON_END_OF_LINE_COMMENT(LuaComment,"--");  //!< Lua comment
+            Y_JARGON_END_OF_LINE_COMMENT(TeXComment,"%");   //!< [La]TeX comment
 
         }
     }

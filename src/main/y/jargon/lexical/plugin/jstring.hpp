@@ -12,10 +12,13 @@ namespace upsylon
         
         namespace Lexical {
 
+            //! a double quote delimited string
             class jString : public Strings
             {
             public:
-                virtual ~jString() throw();
+                virtual ~jString() throw(); //!< cleanup
+               
+                //! setup
                 template <typename ID> inline
                 jString(Analyzer &Lx, const ID   &id) : Strings(Lx,id,Separator) {}
                 

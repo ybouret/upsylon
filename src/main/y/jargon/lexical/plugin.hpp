@@ -11,19 +11,26 @@ namespace upsylon {
     {
         namespace Lexical
         {
-            class Analyzer;
+            class Analyzer; //! forward declaration
             
+            //! base class for a plugin
             class Plugin : public Scanner
             {
             public:
+                //! cleanup
                 virtual ~Plugin() throw();
               
-                const Tag trigger;
+                //! called to initialize plugin
                 virtual void onInit( const Token & ) = 0;
                 
+                //! plugin is called upon trigger
                 void hook( Scanner &scanner );
                 
+                //! regular expression
+                const Tag trigger;
+
             protected:
+                //! setup
                 template <typename ID,typename EXPR>
                 explicit Plugin(Analyzer       &Lx,
                                 const ID       &id,
@@ -35,8 +42,8 @@ namespace upsylon {
                     Y_JSCANNER(std::cerr << "|" << id << "| @'" << regexp << "'" << std::endl;);
                 }
                                 
-            protected:
-                Analyzer &lexer;
+                Analyzer &lexer; //!< used to insert compiled units
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
             };
