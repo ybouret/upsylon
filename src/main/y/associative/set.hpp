@@ -61,20 +61,20 @@ namespace upsylon
     typename T,
     typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global >
-    class set : public hash_container<KEY,T,catalog,core::set_node<KEY,T>, KEY_HASHER, ALLOCATOR >
+    class set : public hash_container<KEY,T,catalog<KEY,T>,core::set_node<KEY,T>, KEY_HASHER, ALLOCATOR >
     {
     public:
         Y_DECL_ARGS(KEY,key_type); //!< key alias
         Y_DECL_ARGS(T,type);       //!< alias
 
         typedef core::set_node<KEY,T>                                 node_type; //!< internal node
-        typedef hash_container<KEY,T,catalog,node_type,KEY_HASHER, ALLOCATOR> base_type; //!< base type alias
-        typedef typename base_type::meta_node                         meta_node; //!< meta node alias
+        typedef hash_container<KEY,T,catalog<KEY,T>,node_type,KEY_HASHER, ALLOCATOR> hash_type; //!< base type alias
+        typedef typename hash_type::meta_node                         meta_node; //!< meta node alias
 
         //! default constructor
-        inline explicit set() throw() : base_type() {}
+        inline explicit set() throw() : hash_type() {}
         //! constructor with intitial memory
-        inline explicit set(const size_t n, const as_capacity_t &_) : base_type(n,_) {}
+        inline explicit set(const size_t n, const as_capacity_t &_) : hash_type(n,_) {}
         //! destructor
         inline virtual ~set() throw() {}
         //! data insertion
@@ -87,12 +87,12 @@ namespace upsylon
         }
 
         //! copy constructor
-        inline set( const set &other ) : collection(), base_type(other) {}
+        inline set( const set &other ) : collection(), hash_type(other) {}
 
         //! assign
         inline set & operator=( const set &other )
         {
-            base_type &self = *this;
+            hash_type &self = *this;
             self = other;
             return *this;
         }
@@ -103,7 +103,7 @@ namespace upsylon
             os << '{';
             const size_t n = s.size();
             size_t       i = 1;
-            for( typename base_type::const_iterator j=s.begin();i<=n;++i,++j)
+            for( typename hash_type::const_iterator j=s.begin();i<=n;++i,++j)
             {
                 os << *j;
                 if(i<n) os << ',' << ' ';

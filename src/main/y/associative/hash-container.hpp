@@ -14,11 +14,11 @@ namespace upsylon
     template <
     typename KEY,
     typename T,
-    template <typename,typename> class BASE_CLASS,
+    typename BASE_TYPE,
     typename NODE,
     typename KEY_HASHER = key_hasher<KEY>,
     typename ALLOCATOR  = memory::global >
-    class hash_container : public BASE_CLASS<KEY,T>
+    class hash_container : public BASE_TYPE
     {
     public:
         Y_DECL_ARGS(T,type);       //!< alias
@@ -27,8 +27,7 @@ namespace upsylon
         typedef typename table_type::slot_type   slot_type;  //!< slot of data
         typedef typename table_type::meta_node   meta_node;  //!< meta node
         typedef typename table_type::meta_list   meta_list;  //!< meta node
-        typedef BASE_CLASS<KEY,T>                base_type;  //!< base type
-        typedef hash_container<KEY,T,BASE_CLASS,NODE,KEY_HASHER,ALLOCATOR> hash_type;
+        typedef BASE_TYPE                        base_type;  //!< alias
         
         //! destructor
         inline virtual ~hash_container() throw() {}
