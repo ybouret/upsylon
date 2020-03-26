@@ -28,8 +28,8 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-            void append(const Context &, const uint8_t ); //!< append a new char
-            void append(const Context &, const string &); //!< append a new string
+            void append(const Context &, const uint8_t ); //!< append a new char, using context
+            void append(const Context &, const string &); //!< append a new string, using a context
             void erase() throw();                         //!< erase content into cache
             void skip(size_t n) throw();                  //!< skip n chars
             void trim(size_t n) throw();                  //!< trim n chars

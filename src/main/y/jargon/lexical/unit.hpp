@@ -29,7 +29,7 @@ namespace upsylon {
                               const Tag     &) throw();
                 
                 
-                void append(const uint8_t code);  //!< append one Char
+                void append(const uint8_t code);  //!< append one char
                 void append(const string &data);  //!< append a string
                 void append(const Token  &token); //!< append a token
                 
