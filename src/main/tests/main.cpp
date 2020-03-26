@@ -236,6 +236,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(jargon_regexp);
     Y_UTEST(jargon_scanner);
     Y_UTEST(jargon_lexer);
+    Y_UTEST(jargon_matching);
 }
 Y_UTEST_EXEC()
 
