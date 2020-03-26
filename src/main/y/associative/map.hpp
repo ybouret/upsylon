@@ -61,8 +61,9 @@ namespace upsylon
     class map : public hash_container<KEY,T,lexicon<KEY,T>,core::map_node<KEY,T>, KEY_HASHER, ALLOCATOR >
     {
     public:
-        typedef core::map_node<KEY,T>                                        node_type; //!< internal node
-        typedef hash_container<KEY,T,lexicon<KEY,T>,node_type,KEY_HASHER,ALLOCATOR> hash_type; //!< hash_table wrapper
+        typedef core::map_node<KEY,T>                                          node_type; //!< internal node
+        typedef lexicon<KEY,T>                                                 interface; //!< underlying interface
+        typedef hash_container<KEY,T,interface,node_type,KEY_HASHER,ALLOCATOR> hash_type; //!< hash_table wrapper
         Y_DECL_ARGS(KEY,key_type); //!< alias
         Y_DECL_ARGS(T,type);       //!< alias
 

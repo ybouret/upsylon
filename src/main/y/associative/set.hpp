@@ -67,9 +67,10 @@ namespace upsylon
         Y_DECL_ARGS(KEY,key_type); //!< key alias
         Y_DECL_ARGS(T,type);       //!< alias
 
-        typedef core::set_node<KEY,T>                                 node_type; //!< internal node
-        typedef hash_container<KEY,T,catalog<KEY,T>,node_type,KEY_HASHER, ALLOCATOR> hash_type; //!< base type alias
-        typedef typename hash_type::meta_node                         meta_node; //!< meta node alias
+        typedef core::set_node<KEY,T>                                           node_type; //!< internal node
+        typedef catalog<KEY,T>                                                  interface; //!< underlying interface
+        typedef hash_container<KEY,T,interface,node_type,KEY_HASHER, ALLOCATOR> hash_type; //!< base type alias
+        typedef typename hash_type::meta_node                                   meta_node; //!< meta node alias
 
         //! default constructor
         inline explicit set() throw() : hash_type() {}
