@@ -291,43 +291,17 @@ namespace upsylon
 
 }
 
-#if 0
-#include "y/lang/stream/processor.hpp"
 
-namespace upsylon {
+#include "y/jargon/pattern/regexp.hpp"
+#include "y/jargon/pattern.hpp"
 
-    namespace {
-
-        struct helper
-        {
-            bool us2uc( Lang::Token &token )
-            {
-                assert(2==token.size);
-                delete token.pop_front();
-                token.tail->code = toupper(token.tail->code);
-                return true;
-            }
-        };
-    }
-
-    string vfs:: snake_to_camel(const string &name)
-    {
-        const string            src = '_' + name;
-        Lang::Stream::Processor proc;
-        helper                  help;
-        proc.on("_[:lower:]", help, & helper::us2uc );
-        return proc(src);
-    }
-
-}
-#endif
-
-#include "y/lang/pattern/compiler.hpp"
 #include "y/exception.hpp"
 #include <cctype>
 
 namespace upsylon {
 
+    using namespace Jargon;
+    
     string vfs:: snake_to_camel(const string &name)
     {
         const size_t nameSize = name.size();
@@ -344,18 +318,19 @@ namespace upsylon {
                 result << char( toupper(name[0]) );
                 i=1;
             }
-
-            Lang::Source            source( Lang::Module::OpenData(name, &name[i], nameSize-i) );
-            Lang::Token             token;
-            auto_ptr<Lang::Pattern> motif = Lang::RegExp("_[:lower:]");
-            while( source.active() )
+            
+            Cache  cache;
+            Source source(cache,Module::OpenData(cache,name) );
+            Token  token(cache);
+            Motif  motif = RegularExpression::Compile("_[:lower:]");
+            while( source.isAlive() )
             {
                 if( motif->match(token,source) )
                 {
                     assert(2==token.size);
                     assert('_'==token.head->code);
                     result << char( toupper( token.tail->code ) );
-                    token.release();
+                    token.erase();
                 }
                 else
                 {

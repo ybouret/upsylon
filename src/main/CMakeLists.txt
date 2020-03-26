@@ -262,37 +262,6 @@ SET(rtld_srcs ${rtld_decl} ${rtld_code})
 SOURCE_GROUP( rtld FILES ${rtld_srcs} )
 INSTALL( FILES ${rtld_decl} DESTINATION include/y/rtld )
 
-FILE(GLOB lang_decl y/lang/*.hpp)
-FILE(GLOB lang_code y/lang/*.cpp)
-SET(lang_srcs ${lang_decl} ${lang_code})
-SOURCE_GROUP( lang FILES ${lang_srcs} )
-INSTALL( FILES ${lang_decl} DESTINATION include/y/lang )
-
-FILE(GLOB lang_pattern_decl y/lang/pattern/*.hpp)
-FILE(GLOB lang_pattern_code y/lang/pattern/*.cpp)
-SET(lang_pattern_srcs ${lang_pattern_decl} ${lang_pattern_code})
-SOURCE_GROUP( lang/pattern FILES ${lang_pattern_srcs} )
-INSTALL( FILES ${lang_pattern_decl} DESTINATION include/y/lang/pattern )
-
-FILE(GLOB lang_lexical_decl y/lang/lexical/*.hpp)
-FILE(GLOB lang_lexical_code y/lang/lexical/*.cpp)
-SET(lang_lexical_srcs ${lang_lexical_decl} ${lang_lexical_code})
-SOURCE_GROUP( lang/lexical FILES ${lang_lexical_srcs} )
-INSTALL( FILES ${lang_lexical_decl} DESTINATION include/y/lang/lexical )
-
-FILE(GLOB lexical_plugin_decl y/lang/lexical/plugin/*.hpp)
-FILE(GLOB lexical_plugin_code y/lang/lexical/plugin/*.cpp)
-SET(lexical_plugin_srcs ${lexical_plugin_decl} ${lexical_plugin_code})
-SOURCE_GROUP( lang/lexical/plugin FILES ${lexical_plugin_srcs} )
-INSTALL( FILES ${lexical_plugin_decl} DESTINATION include/y/lang/lexical/plugin )
-
-FILE(GLOB lang_stream_decl y/lang/stream/*.hpp)
-FILE(GLOB lang_stream_code y/lang/stream/*.cpp)
-SET(lang_stream_srcs ${lang_stream_decl} ${lang_stream_code})
-SOURCE_GROUP( lang/stream FILES ${lang_stream_srcs} )
-INSTALL( FILES ${lang_stream_decl} DESTINATION include/y/lang/stream )
-
-
 FILE(GLOB geometry_decl y/geometry/*.hpp)
 FILE(GLOB geometry_code y/geometry/*.cpp)
 SET(geometry_srcs ${geometry_decl} ${geometry_code})
@@ -461,7 +430,6 @@ ${fs_srcs}
 ${fs_disk_srcs}
 ${fs_local_srcs}
 ${rtld_srcs}
-${lang_srcs} ${lang_pattern_srcs} ${lang_lexical_srcs} ${lexical_plugin_srcs} ${lang_stream_srcs}
 ${geometry_srcs} ${geometry_iso2d_srcs} ${geometry_iso3d_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
