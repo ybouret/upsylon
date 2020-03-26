@@ -82,6 +82,7 @@ namespace {
             
            
             Tags::Display();
+            Tags::instance().get_root().graphViz("tags.dot");
             dict.release_all();
         }
         

@@ -90,6 +90,8 @@ namespace upsylon {
             // merge
             Pattern::PairwiseMerge(*q);
 
+            // sort by entropy
+            Pattern::SortByEntropy(*q);
             
             // compact return Logical::Compact(q);
             return q;
