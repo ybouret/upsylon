@@ -28,6 +28,10 @@ namespace upsylon {
                               const Context &,
                               const Tag     &) throw();
                 
+                void append(const uint8_t code);
+                void append(const string &data);
+                void append(const Token  &token);
+                
                 const Tag label; //!< creating rule label
                 
             private:

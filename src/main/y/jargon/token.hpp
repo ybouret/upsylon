@@ -28,10 +28,11 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-            void append(const Context &, const uint8_t); //!< append a new char
-            void erase() throw();                        //!< erase content into cache
-            void skip(size_t n) throw();                 //!< skip n chars
-            void trim(size_t n) throw();                 //!< trim n chars
+            void append(const Context &, const uint8_t ); //!< append a new char
+            void append(const Context &, const string &); //!< append a new string
+            void erase() throw();                         //!< erase content into cache
+            void skip(size_t n) throw();                  //!< skip n chars
+            void trim(size_t n) throw();                  //!< trim n chars
             //! display all Chars
             friend std::ostream & operator<<( std::ostream &, const Token &);
            
@@ -40,7 +41,7 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            Cache cache; //!< shared cache for I/O
+            mutable Cache cache; //!< shared cache for I/O
 
         private:
             Y_DISABLE_ASSIGN(Token);

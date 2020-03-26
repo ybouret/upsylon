@@ -7,6 +7,7 @@
 #include "y/jargon/lexical/plugin/multi-lines-comment.hpp"
 #include "y/jargon/lexical/plugin/jstring.hpp"
 #include "y/jargon/lexical/plugin/rstring.hpp"
+#include "y/jargon/lexical/plugin/block-reader.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -51,6 +52,11 @@ namespace {
             
             Lexical::Plugin &rstring = load(type2type<Lexical::rString>(),"rstring");
             rstring.hook(*this);
+            
+            (void) load(type2type<Lexical::BlockReader>(),"block","@\"","\"");
+            
+            Lexical::Plugin &block = getPlugin("block");//.hook(*this);
+            block.hook(*this);
             
             emit("punct","[:punct:]");
             

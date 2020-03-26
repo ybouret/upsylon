@@ -112,17 +112,9 @@ namespace upsylon
                 assert( content.is_valid() );
                 assert( context.is_valid() );
                 checkSymbol(sep,fn);
-
-                const Context &ctx   = *context;
-                const string  &str   = *content;
-                Cache          cache = sep.cache;
-                const size_t   n     = str.size();
                 
-                auto_ptr<Unit> unit = new Unit(cache,ctx,label);
-                for(size_t i=0;i<n;++i)
-                {
-                    unit->push_back( Char::Make(cache,ctx,str[i] ) );
-                }
+                auto_ptr<Unit> unit = new Unit(sep.cache,*context,label);
+                unit->append(*content);
                 
                 content = 0;
                 context = 0;

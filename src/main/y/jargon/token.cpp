@@ -40,6 +40,15 @@ namespace upsylon {
             push_back( Char::Make(cache,context,content) );
         }
 
+        void Token:: append(const Context &context, const string &content)
+        {
+            const size_t n = content.size();
+            for( size_t i=0;i<n;++i)
+            {
+                push_back( Char::Make(cache,context,content[i]) );
+            }
+        }
+        
         
         std::ostream & operator<<( std::ostream &os, const Token &t)
         {
