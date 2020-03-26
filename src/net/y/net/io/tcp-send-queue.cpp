@@ -166,12 +166,12 @@ namespace upsylon
             os << '[';
             for(size_t i=0;i<to_send;++i)
             {
-                os << visible_char[ buffer[i] ];
+                os << cchars::visible[ buffer[i] ];
             }
             os <<']' << '{';
             for(const byte_node *node = bytes.head; node; node=node->next)
             {
-                os << visible_char[ node->code ];
+                os << cchars::visible[ node->code ];
             }
             os << '}';
             return os;

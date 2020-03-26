@@ -13,10 +13,13 @@ namespace upsylon
         
         namespace Lexical {
 
+            //! read and catenate all chars between enter/leave
             class BlockReader : public Plugin {
             public:
+                //! cleanup
                 virtual ~BlockReader() throw();
                 
+                //! setup
                 template <typename ID,
                 typename ENTER,
                 typename LEAVE> inline

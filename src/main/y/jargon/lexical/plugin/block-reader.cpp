@@ -29,11 +29,9 @@ namespace upsylon
             }
             
             
-            void BlockReader:: onEmit(const Token &token)
+            void BlockReader:: onEmit(const Token &)
             {
-                assert(token.size>0);
-                assert(unit.is_valid());
-                
+                assert(unit.is_valid());                
                 lexer.unget( unit.yield() );
             }
             

@@ -66,7 +66,7 @@ namespace upsylon {
                     return insert( static_cast<Plugin*>(new PLUGIN(*this,id,enter,leave)) );
                 }
                 
-                //!
+                //! retrieve a plugin by its ID
                 template <typename ID>
                 Plugin & getPlugin(const ID &id)
                 {

@@ -40,7 +40,7 @@ Y_UTEST(tcp_echo)
             const size_t len = length_of(buf);
             for(size_t j=0;j<len;++j)
             {
-                out << visible_char[uint8_t(buf[j])];
+                out << cchars::visible[uint8_t(buf[j])];
             }
             out << "\r\n";
         }

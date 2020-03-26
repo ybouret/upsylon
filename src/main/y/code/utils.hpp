@@ -30,6 +30,7 @@ namespace upsylon
         static char digit(const unsigned fourBits);
     };
 
+    //! some different translation tables
     struct cchars
     {
         static const char *visible[256];   //!< human readable chars
