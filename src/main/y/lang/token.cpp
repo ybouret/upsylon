@@ -55,7 +55,7 @@ namespace upsylon
             string ans(2*size,as_capacity,false);
             for(const Char *ch=head;ch;ch=ch->next)
             {
-                ans << printable_char[ch->code];
+                ans << cchars::printable[ch->code];
             }
             return ans;
         }
@@ -65,7 +65,7 @@ namespace upsylon
             string ans(3*size,as_capacity,false);
             for(const Char *ch=head;ch;ch=ch->next)
             {
-                ans << visible_char[ch->code];
+                ans << cchars::visible[ch->code];
             }
             return ans;
         }
@@ -75,7 +75,7 @@ namespace upsylon
             fp << '\'';
             for(const Char *ch=head;ch;ch=ch->next)
             {
-                fp << printable_char[ch->code];
+                fp << cchars::printable[ch->code];
             }
             fp << '\'';
         }

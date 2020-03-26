@@ -61,7 +61,7 @@ namespace upsylon {
             const char *info = (impl!=0) ? "(*)" : "";
             if(parent)
             {
-                endl( fp( " [label=\"%s#%u%s\"]", printable_char[code], unsigned(freq),info) );
+                endl( fp( " [label=\"%s#%u%s\"]", cchars::printable[code], unsigned(freq),info) );
             }
             else
             {

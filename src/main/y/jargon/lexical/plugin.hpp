@@ -17,7 +17,6 @@ namespace upsylon {
             class Plugin : public Scanner
             {
             public:
-                typedef arc_ptr<Plugin> Handle;
                 //! cleanup
                 virtual ~Plugin() throw();
               

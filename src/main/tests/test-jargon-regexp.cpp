@@ -30,7 +30,7 @@ Y_UTEST(jargon_regexp)
         Y_CHECK( ios::local_file::length_of("regexp2.bin") == written2 );
         
         p->graphViz("regexp.dot");
-        q->graphViz("regexp2.dot");
+        q->graphViz("regexp2.dot",true);
         
         Y_CHECK(p->univocal()==q->univocal());
         Y_CHECK(p->feeble()==q->feeble());

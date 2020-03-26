@@ -123,6 +123,7 @@ namespace {
 
 Y_UTEST(jargon_lexer)
 {
+    
     Lexical::Scanner::Verbose = true;
     myLex L;
     if(argc>1)

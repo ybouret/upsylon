@@ -66,6 +66,15 @@ namespace upsylon {
                     return insert( static_cast<Plugin*>(new PLUGIN(*this,id,enter,leave)) );
                 }
                 
+                //!
+                template <typename ID>
+                Plugin & getPlugin(const ID &id)
+                {
+                    const Tag     tag = Tags::Make(id);
+                    const string &key = *tag;
+                    const Scanner::Handle *pps = scanners.search_by(key);
+                    return extract(pps,key);
+                }
                 
                 
                 
@@ -73,15 +82,17 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
-                bool       store(Scanner::Handle &scan);  //!< insert and set dict_
-                Scanner   &insert(Scanner::Handle &scan); //!< insert a scanner
-                Plugin    &insert(Plugin *plugin);        //!< insert a plugin
-                void       leap( const string &id, const char *when );
-                
                 Scanner   *current;
                 Unit::List units;
                 Calls      calls;
                 Scanners   scanners;
+                
+                bool       store(Scanner::Handle &scan);  //!< insert and set dict_
+                Scanner   &insert(Scanner::Handle &scan); //!< insert a scanner
+                Plugin    &insert(Plugin *plugin);        //!< insert a plugin
+                void       leap(const string &id, const char *when ); //!< change current scanner
+                Plugin    &extract(const Scanner::Handle *pps, const string &key) const;
+                
                 
             public:
                 Dictionary dict;   //!< local dictionary to share amongs scanners

@@ -146,7 +146,7 @@ Y_UTEST(code)
 #if 1
     for(size_t i=0;i<=255;++i)
     {
-        std::cerr << i << "->" << visible_char[i];
+        std::cerr << i << "->" << cchars::visible[i];
         if(i<255) std::cerr << ", ";
         if( !((i+1)&7) ) std::cerr << std::endl;
     }

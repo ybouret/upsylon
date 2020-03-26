@@ -86,6 +86,14 @@ namespace upsylon {
                 return *plugin;
             }
 
+            Plugin & Analyzer:: extract(const Scanner::Handle *pps, const string &key) const
+            {
+                if(!pps)  throw exception("[[%s]] has no scanner/plugin [%s]", **label,*key);
+                Scanner::Handle scan = *pps;
+                Plugin         *plug = scan->plug_;
+                if(!plug) throw exception("[[%s]] scanner [%s] is not a plugin",**label,*key);
+                return *(scan->plug_);
+            }
             
             
             void Analyzer:: leap(const string &id, const char *when)

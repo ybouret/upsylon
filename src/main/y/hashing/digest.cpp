@@ -136,7 +136,7 @@ byte( __digest_acquire(blen) )
     uint8_t __digest_hex2dec(const char c)
     {
         const int value = hexadecimal::to_decimal(c);
-        if(value<0) throw exception("digest::hexadecimal(invalid char '%s')", visible_char[ uint8_t(c) ]);
+        if(value<0) throw exception("digest::hexadecimal(invalid char '%s')", cchars::visible[ uint8_t(c) ]);
         return uint8_t(value);
     }
 

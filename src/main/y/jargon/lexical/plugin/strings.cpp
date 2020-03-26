@@ -31,7 +31,7 @@ namespace upsylon
                     throw exception("%sinvalid token.size=%u", fn,unsigned(sep.size) );
                 
                 if(char(sep.head->code) != symbol)
-                    throw exception("%sexpecting %c instead of '%s'", fn,symbol,printable_char[sep.head->code] );
+                    throw exception("%sexpecting '%c' instead of '%s'", fn,symbol,cchars::encoded[sep.head->code] );
                 
             }
 
@@ -145,7 +145,7 @@ namespace upsylon
                 {
                     throw exception("%s:%d:%d: %s invalid char '%s' after '%s'",
                                     **ctx.tag, ctx.line, ctx.column,
-                                    **label, visible_char[uint8_t(bad)], **content);
+                                    **label, cchars::encoded[uint8_t(bad)], **content);
                 }
             }
         }

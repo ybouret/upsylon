@@ -137,7 +137,7 @@ namespace upsylon
         void Source:: store( char C )
         {
             //Char *ch = new Char(C,*module);
-            throw exception("Lang::Source::store('%s') is forbidden", visible_char[uint8_t(C)]);
+            throw exception("Lang::Source::store('%s') is forbidden", cchars::encoded[uint8_t(C)]);
         }
 
 

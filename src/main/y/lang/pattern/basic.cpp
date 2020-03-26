@@ -101,7 +101,7 @@ namespace upsylon {
 
         void Single:: vizCore(ios::ostream &fp) const
         {
-            endl(fp(" [shape=square,label=\"%s\"]", printable_char[code] ));
+            endl(fp(" [shape=square,label=\"%s\"]", cchars::printable[code] ));
         }
         
         bool Single:: univocal() const throw()
@@ -153,7 +153,7 @@ namespace upsylon {
 
         void Range:: vizCore(ios::ostream &fp) const
         {
-            endl(fp(" [shape=box,label=\"%s-%s\"]", printable_char[lower], printable_char[upper] ));
+            endl(fp(" [shape=box,label=\"%s-%s\"]", cchars::printable[lower], cchars::printable[upper] ));
         }
         
         size_t Range:: serialize(ios::ostream &fp) const

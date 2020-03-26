@@ -228,7 +228,7 @@ namespace upsylon
                 }
                 else
                 {
-                    throw exception("%sinvalid content char '%s' in '%s'",fn,visible_char[ uint8_t(content[0]) ],RX);
+                    throw exception("%sinvalid content char '%s' in '%s'",fn,cchars::encoded[ uint8_t(content[0]) ],RX);
                 }
                 ++curr;
             }
@@ -361,7 +361,7 @@ case 'f': return new Single('\f')
                         break;
 
                 }
-                throw exception("%sunknown sub-expression escape sequence '%s' in '%s'",fn,visible_char[uint8_t(C)],RX);
+                throw exception("%sunknown sub-expression escape sequence '%s' in '%s'",fn,cchars::encoded[uint8_t(C)],RX);
             }
 
             //__________________________________________________________________
@@ -379,8 +379,8 @@ case 'f': return new Single('\f')
                 if(curr>=last) throw exception("%smissing second hexadecimal char in '%s'",fn,RX);
                 const char loCH = *(curr++);
 
-                const int hi = hexadecimal::to_decimal(hiCH); if(hi<0) throw exception("%sinvalid first hexadecimal char '%s' in '%s'",fn,visible_char[uint8_t(hiCH)],RX);
-                const int lo = hexadecimal::to_decimal(loCH); if(lo<0) throw exception("%sinvalid second hexadecimal char '%s in '%s''",fn,visible_char[uint8_t(loCH)],RX);
+                const int hi = hexadecimal::to_decimal(hiCH); if(hi<0) throw exception("%sinvalid first hexadecimal char '%s' in '%s'",fn,cchars::encoded[uint8_t(hiCH)],RX);
+                const int lo = hexadecimal::to_decimal(loCH); if(lo<0) throw exception("%sinvalid second hexadecimal char '%s in '%s''",fn,cchars::encoded[uint8_t(loCH)],RX);
 
                 const uint8_t B = uint8_t(hi) << 4 | uint8_t(lo);
                 return new Single(B);
@@ -496,7 +496,7 @@ case 'f': return new Single('\f')
                 while( ':' != *curr );
                 const char *end = curr;
                 if(++curr>=last)  throw exception("%send of expression after ':' in '%s'",fn,RX);
-                if(RBRACK!=*curr) throw exception("%sinvalid '%s' after ':' in '%s'", fn, visible_char[ uint8_t(*curr) ],RX);
+                if(RBRACK!=*curr) throw exception("%sinvalid '%s' after ':' in '%s'", fn, cchars::encoded[ uint8_t(*curr) ],RX);
                 ++curr; // skip RBRACK
                 assert(end>ini);
                 assert(*ini==':');
@@ -558,7 +558,7 @@ case 'f': return new Single('\f')
                         break;
 
                 }
-                throw exception("%sunknown group escape sequence '%s' in '%s'",fn,visible_char[uint8_t(C)],RX);
+                throw exception("%sunknown group escape sequence '%s' in '%s'",fn,cchars::encoded[uint8_t(C)],RX);
             }
 
             //__________________________________________________________________
@@ -593,7 +593,7 @@ case 'f': return new Single('\f')
                 {
                     case RBRACK:
                     case LBRACK:
-                        throw exception("%sinvalid upper value for range='%s' in '%s'",fn,visible_char[ up ],RX);
+                        throw exception("%sinvalid upper value for range='%s' in '%s'",fn,cchars::encoded[ up ],RX);
 
                     case BACKSLASH: {
                         auto_ptr<Pattern> rhs = grpEscape(); assert( Single::UUID==rhs->uuid);

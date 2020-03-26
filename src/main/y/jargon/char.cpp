@@ -47,7 +47,7 @@ namespace upsylon {
         
         std::ostream & operator<<( std::ostream &os, const Char &ch)
         {
-            os << visible_char[ch.code];
+            os << cchars::visible[ch.code];
             return os;
         }
         

@@ -61,10 +61,11 @@ namespace upsylon {
                 // generic method
                 //
                 //------------------------------------------------------------------
-                const string &key() const throw(); //!< for intr_ptr/set
-                void          add(Rule *rule);     //!< add a rule, check no multiple
+                const string &key() const throw();                   //!< for intr_ptr/set
+                void          add(Rule *rule);                      //!< add a rule, check no multiple
                 void          nothing(const Token &) const throw(); //!< ...
                 void          newLine(const Token &) throw();       //!< send newLine to current source
+                bool          isPlugin() const throw();             //!< check if plug in
                 
                 //------------------------------------------------------------------
                 //
@@ -76,6 +77,10 @@ namespace upsylon {
 
                 
                 //! build a forwarding regular event
+                /**
+                 - action is taken
+                 - unit is emitted
+                 */
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -92,6 +97,10 @@ namespace upsylon {
                 
                 
                 //! build a discarding regular event
+                /**
+                 - action is taken
+                 - unit is discarded and scanner goes on
+                 */
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -127,8 +136,20 @@ namespace upsylon {
                     discard(label,regexp,this,&Scanner::newLine);
                 }
                 
+                //------------------------------------------------------------------
+                //
+                //
+                // controlling events
+                //
+                //
+                //------------------------------------------------------------------
+
                 
-                //! build a call
+                //! build a call event
+                /**
+                 - action is taken
+                 - lexer shall call the 'target' scanner
+                 */
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -143,7 +164,11 @@ namespace upsylon {
                     leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnCall>(target,regexp,hObject,hMethod);
                 }
                 
-                //! build a jump
+                //! build a jump event
+                /**
+                 - action is taken
+                 - lexer shall jump to the 'target' scanner
+                 */
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -158,7 +183,11 @@ namespace upsylon {
                     leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnJump>(target,regexp,hObject,hMethod);
                 }
                 
-                //! build a back
+                //! build a back event
+                /**
+                 - action is taken
+                 - lexer shall go back to previous scanner
+                 */
                 template <
                 typename REGEXP,
                 typename OBJECT_POINTER,
@@ -186,7 +215,6 @@ namespace upsylon {
                 Lexical::Unit *probe(Source &, Directive &);
                 
                 const Tag label; //!< identifier
-                
                 
                 
                 

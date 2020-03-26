@@ -22,6 +22,18 @@ namespace upsylon {
                 scanner.add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
             }
 
+            bool Scanner:: isPlugin() const throw()
+            {
+                if(plug_)
+                {
+                    assert( static_cast<const Scanner *>(this) == static_cast<const Scanner *>(plug_) );
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
         
     }

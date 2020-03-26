@@ -30,11 +30,14 @@ namespace upsylon
         static char digit(const unsigned fourBits);
     };
 
-    //! convert a byte into a visible char
-    extern const char *visible_char[256];
-
-    //! convert a byte into a printable char
-    extern const char *printable_char[256];
+    struct cchars
+    {
+        static const char *visible[256];   //!< human readable chars
+        static const char *printable[256]; //!< for external programs/compilation
+        static const char *encoded[256];   //!< C-string version
+    };
+    
+   
 
 
 }

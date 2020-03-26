@@ -51,7 +51,7 @@ namespace upsylon {
         
         void Excluded:: vizCore(ios::ostream &fp) const
         {
-            endl(fp << " [label=\"" << printable_char[code] << "\",shape=Msquare,style=" << vizStyle() << "]");
+            endl(fp << " [label=\"" << cchars::printable[code] << "\",shape=Msquare,style=" << vizStyle() << "]");
         }
         
     }

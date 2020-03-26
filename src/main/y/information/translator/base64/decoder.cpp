@@ -93,7 +93,7 @@ namespace upsylon {
 
                 case waitForChar2:
                     // one stored char
-                    throw exception("%s missing input after '%s'", fn, visible_char[ uint8_t(source[0]) ] );
+                    throw exception("%s missing input after '%s'", fn, cchars::encoded[ uint8_t(source[0]) ] );
 
                 case waitForChar3:
                     // two stored char

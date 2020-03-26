@@ -28,7 +28,7 @@ namespace upsylon
         string ans;
         for(size_t i=0;i<s.size();++i)
         {
-            ans << visible_char[ uint8_t(s[i]) ];
+            ans << cchars::visible[ uint8_t(s[i]) ];
         }
         return ans;
     }
@@ -38,7 +38,7 @@ namespace upsylon
         string ans;
         for(size_t i=0;i<s.size();++i)
         {
-            ans << printable_char[ uint8_t(s[i]) ];
+            ans << cchars::visible[ uint8_t(s[i]) ];
         }
         return ans;
     }
@@ -74,7 +74,7 @@ namespace upsylon
                 case '9': ans *= 10; ans+=9; break;
 
                 default:
-                    throw exception("%sinvalid decimal '%s' for %s",fn, visible_char[ uint8_t(C) ], id);
+                    throw exception("%sinvalid decimal '%s' for %s",fn, cchars::encoded[ uint8_t(C) ], id);
             }
         }
         return ans;
@@ -125,7 +125,7 @@ namespace upsylon
                 case 'F':
                     ans <<= 4; ans += 15; break;
                 default:
-                    throw exception("%sinvalid hexadecimal '%s' for %s",fn, visible_char[ uint8_t(C) ], id);
+                    throw exception("%sinvalid hexadecimal '%s' for %s",fn, cchars::encoded[ uint8_t(C) ], id);
             }
         }
         return ans;
@@ -201,7 +201,7 @@ namespace upsylon
                 case '9': ans *= 10; ans+=9; break;
 
                 default:
-                    throw exception("%sinvalid decimal '%s' for %s",fn, visible_char[ uint8_t(C) ], id);
+                    throw exception("%sinvalid decimal '%s' for %s",fn, cchars::encoded[ uint8_t(C) ], id);
             }
         }
         return ans*s;
@@ -270,7 +270,7 @@ namespace upsylon
                     ++i; // skip [eE]
                     goto PARSE_EXP;
                 default:
-                    throw exception("%sinvalid decimal '%s' for %s integer part",fn, visible_char[ uint8_t(C) ], id);
+                    throw exception("%sinvalid decimal '%s' for %s integer part",fn, cchars::encoded[ uint8_t(C) ], id);
             }
         }
         return s*ip;
@@ -299,7 +299,7 @@ namespace upsylon
                         goto PARSE_EXP;
                         
                     default:
-                        throw exception("%sinvalid decimal '%s' for %s fractional part",fn, visible_char[ uint8_t(C) ], id);
+                        throw exception("%sinvalid decimal '%s' for %s fractional part",fn, cchars::encoded[ uint8_t(C) ], id);
                 }
             }
         }
@@ -334,7 +334,7 @@ namespace upsylon
                     case '8': exp_v *= 10; exp_v += 8; break;
                     case '9': exp_v *= 10; exp_v += 9; break;
                     default:
-                        throw exception("%sinvalid decimal '%s' for %s exponent",fn, visible_char[ uint8_t(C) ], id);
+                        throw exception("%sinvalid decimal '%s' for %s exponent",fn, cchars::encoded[ uint8_t(C) ], id);
                 }
             }
             if(exp_s>0)

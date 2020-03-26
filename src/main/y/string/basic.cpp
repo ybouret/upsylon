@@ -33,14 +33,14 @@ namespace upsylon {
         template <>
         std::ostream & string<char>:: display_visible(std::ostream &os) const
         {
-            for(size_t i=0;i<size_;++i) os << visible_char[ uint8_t(addr_[i]) ];
+            for(size_t i=0;i<size_;++i) os << cchars::visible[ uint8_t(addr_[i]) ];
             return os;
         }
 
         template <>
         std::ostream & string<char>:: display_printable(std::ostream &os) const
         {
-            for(size_t i=0;i<size_;++i) os << printable_char[ uint8_t(addr_[i]) ];
+            for(size_t i=0;i<size_;++i) os << cchars::printable[ uint8_t(addr_[i]) ];
             return os;
         }
 

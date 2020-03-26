@@ -50,7 +50,7 @@ namespace upsylon {
                                         **(badChar->tag),
                                         badChar->line,
                                         badChar->column,
-                                        printable_char[badCode],
+                                        cchars::encoded[badCode],
                                         **label);
                     }
                     

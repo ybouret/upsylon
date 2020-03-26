@@ -51,7 +51,7 @@ namespace upsylon
                     {
                         assert(source.loaded()>0);
                         const Char *ch = source.peek();
-                        throw exception("%s:%d:%d unexpected '%s' for [%s]",**(ch->origin),ch->line,ch->column,visible_char[ch->code],**label);
+                        throw exception("%s:%d:%d unexpected '%s' for [%s]",**(ch->origin),ch->line,ch->column,cchars::encoded[ch->code],**label);
                     }
 
                     //__________________________________________________________

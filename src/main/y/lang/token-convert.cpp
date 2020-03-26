@@ -40,7 +40,7 @@ namespace upsylon
                     case '8': ans += 8; break;
                     case '9': ans += 9; break;
 
-                    default: throw exception("%s(invalid char '%s' for %s)",fn,printable_char[x],ctx);
+                    default: throw exception("%s(invalid char '%s' for %s)",fn,cchars::encoded[x],ctx);
                 }
             }
 
@@ -74,7 +74,7 @@ namespace upsylon
                     case '8': ans += 8; break;
                     case '9': ans += 9; break;
 
-                    default: throw exception("%s(invalid char '%s' for %s)",fn,printable_char[x],ctx);
+                    default: throw exception("%s(invalid char '%s' for %s)",fn,cchars::encoded[x],ctx);
                 }
             }
             return ans;

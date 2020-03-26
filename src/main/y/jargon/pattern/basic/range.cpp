@@ -80,9 +80,9 @@ namespace upsylon {
         {
             endl(fp
                  << " [label=\"["
-                 << printable_char[lower]
+                 << cchars::printable[lower]
                  << '-'
-                 << printable_char[upper]
+                 << cchars::printable[upper]
                  << "]\",shape=rect,style=" << vizStyle() << "]");
         }
         

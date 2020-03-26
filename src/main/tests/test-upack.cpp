@@ -105,7 +105,7 @@ Y_UTEST(upack)
         }
         assert(1==output.size());
         const unsigned j = uint8_t(output[0]);
-        fprintf(stderr,"%02u-> %4s = %02u\n",i,visible_char[j],j);
+        fprintf(stderr,"%02u-> %4s = %02u\n",i,cchars::visible[j],j);
     }
 
 }
