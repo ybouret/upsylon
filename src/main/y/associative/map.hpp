@@ -61,24 +61,24 @@ namespace upsylon
     class map : public hash_container<KEY,T,lexicon,core::map_node<KEY,T>, KEY_HASHER, ALLOCATOR >
     {
     public:
-        typedef core::map_node<KEY,T>                                node_type; //!< internal node
-        typedef hash_container<KEY,T,lexicon,node_type,KEY_HASHER,ALLOCATOR> base_type; //!< hash_table wrapper
+        typedef core::map_node<KEY,T>                                        node_type; //!< internal node
+        typedef hash_container<KEY,T,lexicon,node_type,KEY_HASHER,ALLOCATOR> hash_type; //!< hash_table wrapper
         Y_DECL_ARGS(KEY,key_type); //!< alias
         Y_DECL_ARGS(T,type);       //!< alias
 
         //! default constructor
-        inline explicit map() throw() : base_type() {}
+        inline explicit map() throw() : hash_type() {}
 
         //! constructor with memoru
-        inline explicit map(const size_t n, const as_capacity_t &_) : base_type(n,_) {}
+        inline explicit map(const size_t n, const as_capacity_t &_) : hash_type(n,_) {}
 
         //! copy constructor
-        inline map(const map &other) : collection(), base_type(other) {}
+        inline map(const map &other) : collection(), hash_type(other) {}
 
         //! assign from base type
         inline map & operator=( const map &other )
         {
-            static_cast<base_type&>(*this) = other;
+            static_cast<hash_type&>(*this) = other;
             return *this;
         }
 
@@ -99,7 +99,7 @@ namespace upsylon
             os << '{';
             const size_t n = s.size();
             size_t       i = 1;
-            for( typename base_type::const_iterator j=s.begin();i<=n;++i,++j)
+            for( typename hash_type::const_iterator j=s.begin();i<=n;++i,++j)
             {
                 os << j.key() << ':' << *j;
                 if(i<n) os << ',';

@@ -28,6 +28,8 @@ namespace upsylon
         typedef typename table_type::meta_node   meta_node;  //!< meta node
         typedef typename table_type::meta_list   meta_list;  //!< meta node
         typedef BASE_CLASS<KEY,T>                base_type;  //!< base type
+        typedef hash_container<KEY,T,BASE_CLASS,NODE,KEY_HASHER,ALLOCATOR> hash_type;
+        
         //! destructor
         inline virtual ~hash_container() throw() {}
 
