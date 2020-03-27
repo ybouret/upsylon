@@ -12,10 +12,11 @@ namespace upsylon {
         
         class Dictionary; //!< forward declaration
         
+        //! Helper to use patterns
         class Matching : public Motif
         {
         public:
-            Matching(const Motif &m) throw();
+            Matching(const Motif &m) throw(); //!
             Matching(Pattern     *p) throw();
             Matching(const string &rx, const Dictionary *dict=0);
             Matching(const char   *rx, const Dictionary *dict=0);
