@@ -5,6 +5,7 @@ TARGET_LINK_Y(test-jargon jargon)
 
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ENABLE_TESTING()
+ADD_TEST(types test-jargon types)
 
 ADD_CUSTOM_TARGET(utest-jargon
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

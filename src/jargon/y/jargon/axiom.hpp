@@ -3,11 +3,13 @@
 #ifndef Y_JARGON_AXIOM_INCLUDED
 #define Y_JARGON_AXIOM_INCLUDED 1
 
+#include "y/jargon/xnode.hpp"
 #include "y/jargon/tags.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
+        
         
         class Axiom : public  Object
         {
