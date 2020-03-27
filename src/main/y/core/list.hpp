@@ -434,14 +434,11 @@ namespace upsylon
             //! delete content
             inline virtual void release() throw()
             {
-                while(this->has_nodes())
-                {
-                    delete this->pop_back();
-                }
+                release_();
             }
 
             //! clear on destructor
-            virtual ~list_of_cpp() throw() { release(); }
+            virtual ~list_of_cpp() throw() { release_(); }
 
             //! valid only if a copy ctor is defined for NODE
             inline list_of_cpp( const list_of_cpp &other ) : list_of<NODE>(), releasable()
@@ -478,6 +475,14 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(list_of_cpp);
+            inline void release_() throw()
+            {
+                while(this->has_nodes())
+                {
+                    delete this->pop_back();
+                }
+            }
+            
         };
 
 

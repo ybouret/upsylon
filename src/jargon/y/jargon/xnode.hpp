@@ -13,7 +13,10 @@ namespace upsylon {
         class XNode;
         typedef core::list_of_cpp<XNode> XList;
 
-        class XNode : public Object, public inode<XNode>
+        class XNode :
+        public Object,
+        public inode<XNode>,
+        public Vizible
         {
         public:
             enum Kind
@@ -25,15 +28,31 @@ namespace upsylon {
             
             const Kind  kind;
             
-            static XNode * Create(); //!< create an Inactive XNode
+            static XNode * Create();               //!< create an Inactive XNode
+            static XNode * Create(Lexeme *lexeme); //!< lexeme==NULL => internal
             
-            virtual ~XNode() throw(); //!< cleanup
+            const Lexeme & lexeme() const throw();
+            XList        & children() throw();
+            const XList  & children() const throw();
+
+            virtual       ~XNode() throw(); //!< cleanup
+            static void    Release( XNode *xnode, XList &xcache ) throw();
+            bool           isInternal() const throw();
+            bool           isTerminal() const throw();
+            bool           isInactive() const throw();
+            
+            void           inactiveTo(Lexeme *lexeme) throw();
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);
             explicit XNode() throw(); //!< create an inactive node
-            //union { Lexeme *lexeme; XList  *children; };
-            
+            union {
+                Lexeme *lexeme;
+                char    children[sizeof(XList)];
+            } impl;
+            void clr() throw();
+            virtual void vizCore( ios::ostream &fp ) const;
         };
 
     }
