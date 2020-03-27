@@ -217,7 +217,6 @@ namespace upsylon {
                 const Tag label; //!< identifier
                 
                 
-                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rules   rules;  // current rules

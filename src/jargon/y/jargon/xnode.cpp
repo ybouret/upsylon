@@ -32,29 +32,21 @@ namespace upsylon {
             memset(&impl,0,sizeof(impl));
         }
         
-        XNode:: XNode() throw() :
-        kind(IsInactive),
-        impl()
+        XNode * XNode:: Inactive(const Dogma &d)
         {
-            //std::cerr << "sizeof(imlp)=" << sizeof(impl) << std::endl;
-            clr();
-        }
-        
-        XNode * XNode:: Create()
-        {
-            return new XNode();
+            return new XNode(d);
         }
         
         bool XNode::isInternal() const throw() { return IsInternal == kind; }
         bool XNode::isTerminal() const throw() { return IsTerminal == kind; }
         bool XNode::isInactive() const throw() { return IsInactive == kind; }
-
         
-        XNode * XNode:: Create(Lexeme *lexeme)
+        
+        XNode * XNode:: Create(const Dogma &hAxiom, Lexeme *lexeme)
         {
             auto_ptr<Lexeme> keep(lexeme);
-            XNode           *node = new XNode();
-            node->inactiveTo(keep.yield());
+            XNode           *node = new XNode(hAxiom);
+            node->setLexeme(keep.yield());
             return node;
         }
         
@@ -64,7 +56,7 @@ namespace upsylon {
             assert(impl.lexeme);
             return *(impl.lexeme);
         }
-
+        
         const XList & XNode:: children() const throw()
         {
             assert(IsInternal==kind);
@@ -76,16 +68,34 @@ namespace upsylon {
             assert(IsInternal==kind);
             return *static_cast<XList *>( aliasing::anonymous(impl.children) );
         }
+        
+    }
+    
+}
+
+#include "y/jargon/axiom.hpp"
 
 
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        XNode:: XNode(const Dogma &d) throw() :
+        kind(IsInactive),
+        dogma(d),
+        impl()
+        {
+            clr();
+        }
+        
         
         void XNode:: Release(XNode *xnode, XList &xcache) throw()
         {
             assert(xnode);
             switch(xnode->kind)
             {
-                case IsInactive: return;
-                case IsTerminal: delete & (xnode->lexeme()); break;
+                case IsInactive: goto KEEP;
+                case IsTerminal: delete xnode->impl.lexeme; break;
                 case IsInternal:
                 {
                     XList &chld = xnode->children();
@@ -93,17 +103,43 @@ namespace upsylon {
                     {
                         XNode *xn = chld.pop_back();
                         Release(xn,xcache);
-                        xcache.push_back(xn);
                     }
                 } break;
             }
             xnode->clr();
+        KEEP:
+            xcache.push_back(xnode);
         }
         
-        void  XNode:: inactiveTo(Lexeme *lexeme) throw()
+        void XNode:: Back(XNode *xnode, Lexer &lexer, XList &xcache) throw()
         {
-            assert(isInactive());
-            assert(0==impl.lexeme);
+            assert(xnode);
+            switch(xnode->kind)
+            {
+                case IsInactive: goto KEEP;
+                case IsTerminal: lexer.unget(xnode->impl.lexeme);
+                    break;
+                case IsInternal: {
+                    XList &chld = xnode->children();
+                    while(chld.size)
+                    {
+                        Back(chld.pop_back(),lexer, xcache);
+                    }
+                } break;
+            }
+            xnode->clr();
+        KEEP:
+            xcache.push_back(xnode);
+            
+        }
+        
+        void XNode:: setDogma(const Dogma &hAxiom) throw()
+        {
+            aliasing::_(dogma) = hAxiom;
+        }
+        
+        void XNode:: setLexeme(Lexeme *lexeme) throw()
+        {
             if(lexeme)
             {
                 impl.lexeme       = lexeme;
@@ -115,11 +151,16 @@ namespace upsylon {
                 new( & children() ) XList();
             }
         }
-
         
-        void XNode:: vizCore( ios::ostream &fp ) const
+        void  XNode:: activate(const Dogma &hAxiom, Lexeme *lexeme) throw()
         {
-            
+            assert(isInactive());
+            assert(0==impl.lexeme);
+            setDogma(hAxiom);
+            setLexeme(lexeme);
         }
+        
     }
+    
 }
+
