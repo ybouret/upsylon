@@ -44,7 +44,7 @@ Y_UTEST(xnode)
     const Context   context(label);
     Cache           cache;
     
-    for(size_t iter=1;iter<=2;++iter)
+    for(size_t iter=1;iter<=4;++iter)
     {
         auto_ptr<XNode> xnode = XNode::Create(NULL); Y_ASSERT(xnode->isInternal());
         size_t count = 1;
@@ -68,7 +68,7 @@ Y_UTEST(xnode)
             }
         }
         
-        if(iter<=1)
+        if(1==(iter%2))
         {
             XList xcache;
             XNode::Release(xnode.content(), xcache );

@@ -10,23 +10,17 @@ namespace upsylon {
         
         XNode::~XNode() throw()
         {
-            std::cerr << "~XNode()" << std::endl;
             switch(kind)
             {
-                case IsInactive: std::cerr << "inactive" << std::endl;
+                case IsInactive: //std::cerr << "inactive" << std::endl;
                     return;
                     
-                case IsTerminal: std::cerr << "terminal" << std::endl;
+                case IsTerminal: //std::cerr << "terminal" << std::endl;
                     delete & lexeme();
                     break;
                     
-                case IsInternal: std::cerr << "internal "<< children().size << std::endl;
-                    while( children().size )
-                    {
-                        delete children().pop_back();
-                    }
+                case IsInternal: //std::cerr << "internal "<< children().size << std::endl;
                     children().release();
-                    //assert(0==children().size);
                     break;
             }
             clr();
@@ -109,8 +103,17 @@ namespace upsylon {
         void  XNode:: inactiveTo(Lexeme *lexeme) throw()
         {
             assert(isInactive());
-            impl.lexeme       = lexeme;
-            aliasing::_(kind) =  (NULL!=lexeme) ? IsTerminal : IsInternal;
+            assert(0==impl.lexeme);
+            if(lexeme)
+            {
+                impl.lexeme       = lexeme;
+                aliasing::_(kind) = IsTerminal;
+            }
+            else
+            {
+                aliasing::_(kind) = IsInternal;
+                new( & children() ) XList();
+            }
         }
 
         
