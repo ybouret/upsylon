@@ -1,4 +1,5 @@
-#include "y/jargon/pattern/matching.hpp"
+#include "y/jargon/pattern/regexp.hpp"
+#include "y/jargon/pattern.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/icstream.hpp"
 using namespace upsylon;
@@ -9,7 +10,7 @@ Y_UTEST(jargon_matching)
     Cache cache;
     if(argc>1)
     {
-        Matching match(argv[1]);
+        Motif    p(  RegularExpression::Compile(argv[1]) );
         Token    token(cache);
         
         if(argc>2)
@@ -19,7 +20,7 @@ Y_UTEST(jargon_matching)
             while( fp.gets(line) )
             {
                 std::cerr << "exact:  ";
-                if(match.exactly(token,line))
+                if(p->matches_exactly(token,line))
                 {
                     std::cerr << token << std::endl;
                 }
@@ -28,7 +29,7 @@ Y_UTEST(jargon_matching)
                     std::cerr << "[NO]" << std::endl;
                 }
                 std::cerr << "partly: ";
-                if(match.partly(token,line))
+                if(p->matches_partly(token,line))
                 {
                    std::cerr << token << std::endl;
                 }

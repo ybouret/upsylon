@@ -1,44 +1,17 @@
-#include "y/jargon/pattern/matching.hpp"
+#include "y/jargon/pattern.hpp"
 #include "y/jargon/pattern/regexp.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
      
-        Matching:: Matching(const Motif &m) throw() :
-        Motif(m)
-        {
-        }
         
-        Matching:: Matching(Pattern *p) throw() :
-        Motif(p)
-        {
-        }
         
-        Matching:: Matching(const string &rx, const Dictionary *dict):
-        Motif( RegularExpression::Compile(rx,dict) )
-        {
-        }
-        
-        Matching:: Matching(const char *rx, const Dictionary *dict):
-        Motif( RegularExpression::Compile(rx,dict) )
-        {
-        }
-        
-        Matching:: Matching(const Matching &other) throw() :
-        Motif(other)
-        {
-        }
-        
-        Matching:: ~Matching() throw()
-        {
-        }
-        
-        bool Matching:: exactly(Token &token, const string &s)
+        bool Pattern:: matches_exactly(Token &token, const string &s) const
         {
             Source source( token.cache, Module::OpenData(token.cache,s) );
             token.erase();
-            const Pattern &p = **this;
+            const Pattern &p = *this;
             if( p.match(token,source) )
             {
                 return source.isEmpty();
@@ -49,11 +22,11 @@ namespace upsylon {
             }
         }
         
-        bool Matching:: partly(Token &token, const string &s)
+        bool Pattern:: matches_partly(Token &token, const string &s) const
         {
             Source source( token.cache, Module::OpenData(token.cache,s) );
             token.erase();
-            const Pattern &p = **this;
+            const Pattern &p = *this;
             while( source.isAlive() )
             {
                 if( p.match(token,source) )

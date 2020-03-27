@@ -63,6 +63,12 @@ namespace upsylon {
             //! check serialization
             bool            checkIO() const;
             
+            //! matching extacly
+            bool matches_exactly(Token &token, const string &s) const;
+            
+            //! matching partly
+            bool matches_partly( Token &token, const string &s) const;
+
             //! load from previously serialized patterns
             static Pattern *Load(ios::istream&);
             
