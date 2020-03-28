@@ -7,10 +7,10 @@ using namespace upsylon;
 using namespace Jargon;
 
 namespace {
- 
-    Lexeme *createLexeme(const Tag         &tag,
-                         const Context     &ctx,
-                         Cache             &cache)
+    
+    static inline Lexeme *createLexeme(const Tag         &tag,
+                                       const Context     &ctx,
+                                       Cache             &cache)
     {
         auto_ptr<Lexeme>  lexeme = new Lexeme(cache,ctx,tag);
         for(size_t i=1+alea.leq(8);i>0;--i)
@@ -20,11 +20,11 @@ namespace {
         return lexeme.yield();
     }
     
-    XNode *createXNode(XCache           &xcache,
-                       const Internal   &I,
-                       const array<Tag> &tags,
-                       const Context    &ctx,
-                       Cache            &cache)
+    static inline XNode *createXNode(XCache           &xcache,
+                                     const Internal   &I,
+                                     const array<Tag> &tags,
+                                     const Context    &ctx,
+                                     Cache            &cache)
     {
         switch(alea.range<int>(1,3))
         {
@@ -44,17 +44,21 @@ namespace {
         throw exception("label not implemented");
     }
     
+    
+    
 }
 
 Y_UTEST(xnode)
 {
-   
+    
     const Context ctx       = "xnode";
     const Tag     tagString = Tags::Make( "string" );
     const Tag     tagNumber = Tags::Make( "number" );
+    const Tag     tagValue  = Tags::Make( "value" );
+
     Cache         cache;
     
-    vector<Tag>    tags; tags << tagString << tagNumber;
+    vector<Tag>    tags; tags << tagString << tagNumber << tagValue;
     tags.push_back(tagString);
     tags.push_back(tagNumber);
     
@@ -74,14 +78,19 @@ Y_UTEST(xnode)
         {
             if( xnode->isInternal() )
             {
-                xnode->children().push_back( createXNode(xcache,*LIST,tags,ctx,cache) );
+                XNode *child = createXNode(xcache,*LIST,tags,ctx,cache);
+                xnode->children().push_back( child );
+                if( child->isInternal() )
+                {
+                    child->children().push_back( createXNode(xcache,*LIST,tags,ctx,cache) );
+                }
             }
         }
         
         root->graphViz("xnode.dot");
         
         xcache.store( root.yield() );
-
+        
     }
     
     

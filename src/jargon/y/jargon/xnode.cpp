@@ -77,18 +77,7 @@ namespace upsylon {
             return new XNode(dogma);
         }
         
-        XNode * XNode:: Create(const Terminal &dogma, Lexeme *lexeme)
-        {
-            try
-            {
-                return new XNode(dogma,lexeme);
-            }
-            catch(...)
-            {
-                delete lexeme;
-                throw;
-            }
-        }
+       
         
     }
     
@@ -100,6 +89,24 @@ namespace upsylon {
 namespace upsylon {
     
     namespace Jargon {
+        
+        XNode * XNode:: Create(const Terminal &dogma, Lexeme *lexeme)
+        {
+            assert(lexeme);
+            try
+            {
+                if( *(lexeme->label) != *(dogma.label) )
+                {
+                    throw exception("Jargon::Terminal '%s'!='%s' !!", **(dogma.label), **(lexeme->label) );
+                }
+                return new XNode(dogma,lexeme);
+            }
+            catch(...)
+            {
+                delete lexeme;
+                throw;
+            }
+        }
         
         template <typename DERIVED>
         Axiom * DerivedToAxiom( const DERIVED &derived  ) throw()

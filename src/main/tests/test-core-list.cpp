@@ -97,6 +97,13 @@ Y_UTEST(core_list)
             Y_ASSERT(d==dlist.head);
         }
 
+        for(size_t iter=1024;iter>0;--iter)
+        {
+            dummy *d = dlist.fetch( alea.lt(dlist.size) );
+            dlist.move_to_front(d);
+            Y_ASSERT(d==dlist.head);
+        }
+        
         std::cerr << "...insert after" <<std::endl;
         for(size_t iter=8;iter>0;--iter)
         {

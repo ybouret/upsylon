@@ -12,10 +12,9 @@ namespace upsylon {
 
         //----------------------------------------------------------------------
         //
-        //
+        // forward declarations and aliases
         //
         //----------------------------------------------------------------------
-
         class                  Inactive;
         class                  Terminal;
         class                  Internal;
@@ -30,7 +29,11 @@ namespace upsylon {
         //
         //
         //----------------------------------------------------------------------
-        class XNode : public Object, public inode<XNode>, public Vizible
+        class XNode :
+        public Object,
+        public inode<XNode>,
+        public Vizible,
+        public Serializable
         {
         public:
             //! genre of syntax node
@@ -40,6 +43,9 @@ namespace upsylon {
                 IsInternal, //!< an internal => children
                 IsInactive  //!< prepared memory
             };
+            static const uint8_t TerminalMark = '_';
+            static const uint8_t InternalMark = '@';
+            static const uint8_t InactiveMark = '~';
             
             static XNode *Create( const Inactive & );
             static XNode *Create( const Internal & );
@@ -70,13 +76,15 @@ namespace upsylon {
             explicit XNode(const Inactive &)          throw(); //!< create an inactive node
             explicit XNode(const Terminal &,Lexeme *) throw();
             explicit XNode(const Internal &)          throw();
-            virtual void vizCore(ios::ostream &) const;
-
+            virtual void   vizCore(ios::ostream   &) const;
+            virtual size_t      serialize(ios::ostream &) const;
+            virtual const char *className()        const throw();
+            
             union {
                 Lexeme *lexeme;
                 char    children[sizeof(XList)];
             } depot;
-            void cleanup() throw(); //!< clear depot
+            void cleanup()  throw(); //!< clear depot
             void shutdown() throw(); //!< cleanup() and set inactive
         };
         

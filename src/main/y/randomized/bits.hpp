@@ -307,7 +307,7 @@ namespace upsylon
             void fillnz( void *data, const size_t size ) throw();
 
             //! random item of a sequence
-            template <typename SEQUENCE>
+            template <typename SEQUENCE> inline
             typename SEQUENCE::type & in( SEQUENCE &seq )
             {
                 assert(seq.size()>0);
@@ -321,6 +321,7 @@ namespace upsylon
                 assert(seq.size()>0);
                 return seq[ range<size_t>(1,seq.size() )];
             }
+            
             
         protected:
             //! sets span and auxiliary values
