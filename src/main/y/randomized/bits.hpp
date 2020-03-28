@@ -306,6 +306,22 @@ namespace upsylon
             //! fill random positive bytes
             void fillnz( void *data, const size_t size ) throw();
 
+            //! random item of a sequence
+            template <typename SEQUENCE>
+            typename SEQUENCE::type & in( SEQUENCE &seq )
+            {
+                assert(seq.size()>0);
+                return seq[ range<size_t>(1,seq.size() )];
+            }
+            
+            //! random item of a const sequence
+            template <typename SEQUENCE>
+            typename SEQUENCE::const_type & in( const SEQUENCE &seq )
+            {
+                assert(seq.size()>0);
+                return seq[ range<size_t>(1,seq.size() )];
+            }
+            
         protected:
             //! sets span and auxiliary values
             explicit bits(const uint32_t maxValue) throw();

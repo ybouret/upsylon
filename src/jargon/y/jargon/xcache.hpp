@@ -13,22 +13,21 @@ namespace upsylon {
         class XCache : public XList
         {
         public:
+            virtual ~XCache() throw();
+            void reserve( size_t n);
             template <typename LABEL> inline
-            explicit XCache( const LABEL &id, size_t n =0) :
-            XList(), inactive( new Inactive(id) )
+            explicit XCache(const LABEL &id, size_t n=0 ) :
+            dull( new Inactive(id) )
             {
                 reserve(n);
             }
             
+            const arc_ptr<Inactive> dull;
             
-            virtual ~XCache() throw();
-            const Dogma inactive;
-            
-            XNode *query();                       //!< an inactive node
-            XNode *query(const Dogma &, Lexeme *);//!< a live node
-            void   store(XNode *xnode) throw();   //!< release inside this
-            
-            void   reserve(size_t n);
+            XNode *query(); 
+            XNode *query(const Internal &);
+            XNode *query(const Terminal &, Lexeme *lexeme);
+            void   store(XNode *xnode) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XCache);

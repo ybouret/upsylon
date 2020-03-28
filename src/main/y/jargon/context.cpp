@@ -2,6 +2,7 @@
 #include "y/jargon/context.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/jargon/tags.hpp"
 
 namespace upsylon {
     
@@ -14,11 +15,13 @@ namespace upsylon {
             _bzset(column);
         }
         
-#define Y_JCTX(S) tag(S),line(1),column(1)
+#define Y_JCONTEXT(type) \
+Context:: Context(type dummy) : tag( Tags::Make(dummy) ), line(1), column(1) {}
         
-        Context:: Context(const Tag    &s) throw() : Y_JCTX(s)     { }
-        Context:: Context(const string &s) : Y_JCTX(new string(s)) { }
-        Context:: Context(const char   *s) : Y_JCTX(new string(s)) { }
+        
+        Y_JCONTEXT(const char   *)
+        Y_JCONTEXT(const string &)
+        Y_JCONTEXT(const Tag    &)
 
         Context:: Context(const Context &other) throw() :
         tag(    other.tag    ),

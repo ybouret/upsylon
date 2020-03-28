@@ -6,6 +6,7 @@ namespace upsylon {
     
     namespace Jargon {
         
+#if 1
         static inline void emitLabel(ios::ostream &fp, const Tag &label)
         {
             const char *p = **label;
@@ -25,7 +26,7 @@ namespace upsylon {
             fp << "[shape=" << dogma->vizShape() << ",style=" << dogma->vizStyle() << ",label=\"";
             emitLabel(fp, dogma->label);
             
-            switch(kind)
+            switch(genre)
             {
                 case IsTerminal: {
                     const Lexeme &l = lexeme();
@@ -64,6 +65,8 @@ namespace upsylon {
             
             
         }
+#endif
+        
     }
 }
 

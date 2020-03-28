@@ -49,29 +49,27 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Inactive);
-            virtual const char * vizShape() const throw() { return "circle"; }
+            virtual const char * vizShape() const throw() { return "oval"; }
             virtual const char * vizStyle() const throw() { return "dotted";  }
-            
         };
-        
-        class Terminal : public Axiom
+       
+        class Internal : public Axiom
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('T','E','R','M');
-            
-            virtual ~Terminal() throw() {}
-            
-            template <typename LABEL>
-            explicit Terminal(const LABEL &id) :
-            Axiom(id,UUID)
-            {}
+            virtual ~Internal() throw() {}
+            template <typename LABEL> inline
+            explicit Internal(const LABEL &id, const uint32_t u) : Axiom(id,u)
+            {
+            }
             
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Terminal);
-            virtual const char * vizShape() const throw() { return "rectangle"; }
+            Y_DISABLE_COPY_AND_ASSIGN(Internal);
+            virtual const char * vizShape() const throw() { return "house"; }
             virtual const char * vizStyle() const throw() { return "solid";  }
         };
+        
+        
     }
 }
 

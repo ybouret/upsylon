@@ -10,7 +10,7 @@ namespace upsylon {
         
         XNode::~XNode() throw()
         {
-            switch(kind)
+            switch(genre)
             {
                 case IsInactive: //std::cerr << "inactive" << std::endl;
                     return;
@@ -23,79 +23,149 @@ namespace upsylon {
                     children().release();
                     break;
             }
-            clr();
+            shutdown();
         }
         
-        void XNode:: clr() throw()
+        void XNode:: cleanup() throw()
         {
-            aliasing::_(kind) = IsInactive;
-            memset(&impl,0,sizeof(impl));
+            memset(&depot,0,sizeof(depot));
+            
         }
         
-        XNode * XNode:: MakeInactive(const Dogma &d)
+        
+        void XNode:: shutdown() throw()
         {
-            return new XNode(d);
+            cleanup();
+            aliasing::_(genre) = IsInactive;
         }
         
-        bool XNode::isInternal() const throw() { return IsInternal == kind; }
-        bool XNode::isTerminal() const throw() { return IsTerminal == kind; }
-        bool XNode::isInactive() const throw() { return IsInactive == kind; }
+      
+        
+        bool XNode::isInternal() const throw() { return IsInternal == genre; }
+        bool XNode::isTerminal() const throw() { return IsTerminal == genre; }
+        bool XNode::isInactive() const throw() { return IsInactive == genre; }
         
         
-        XNode * XNode:: NewEffective(const Dogma &hAxiom, Lexeme *lexeme)
-        {
-            auto_ptr<Lexeme> keep(lexeme);
-            XNode           *node = new XNode(hAxiom);
-            node->setLexeme(keep.yield());
-            return node;
-        }
         
         const Lexeme & XNode:: lexeme() const throw()
         {
-            assert(IsTerminal==kind);
-            assert(impl.lexeme);
-            return *(impl.lexeme);
+            assert(isTerminal());
+            assert(depot.lexeme);
+            return *(depot.lexeme);
         }
         
         const XList & XNode:: children() const throw()
         {
-            assert(IsInternal==kind);
-            return *static_cast<const XList *>( aliasing::anonymous(impl.children) );
+            assert(isInternal());
+            return *static_cast<const XList *>( aliasing::anonymous(depot.children) );
         }
         
         XList & XNode:: children() throw()
         {
-            assert(IsInternal==kind);
-            return *static_cast<XList *>( aliasing::anonymous(impl.children) );
+            assert(isInternal());
+            return *static_cast<XList *>( aliasing::anonymous(depot.children) );
+        }
+        
+        XNode * XNode:: Create(const Inactive &dogma)
+        {
+            return new XNode(dogma);
+        }
+        
+        
+        XNode * XNode:: Create(const Internal &dogma)
+        {
+            return new XNode(dogma);
+        }
+        
+        XNode * XNode:: Create(const Terminal &dogma, Lexeme *lexeme)
+        {
+            try
+            {
+                return new XNode(dogma,lexeme);
+            }
+            catch(...)
+            {
+                delete lexeme;
+                throw;
+            }
         }
         
     }
     
 }
 
-#include "y/jargon/axiom.hpp"
-
+#include "y/jargon/axiom/terminal.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
         
-        XNode:: XNode(const Dogma &d) throw() :
-        kind(IsInactive),
-        dogma(d),
-        impl()
+        template <typename DERIVED>
+        Axiom * DerivedToAxiom( const DERIVED &derived  ) throw()
         {
-            clr();
+            const Axiom &axiom = static_cast<const Axiom &>(derived);
+            assert(axiom.refcount()>0);
+            return (Axiom *) &axiom;
         }
         
+        
+        XNode:: XNode(const Inactive &axiom) throw():
+        genre(IsInactive),
+        dogma( DerivedToAxiom(axiom) ),
+        depot()
+        {
+            cleanup();
+        }
+        
+        XNode:: XNode(const Terminal &axiom, Lexeme *lexeme) throw() :
+        genre(IsTerminal),
+        dogma(DerivedToAxiom(axiom)),
+        depot()
+        {
+            cleanup();
+            depot.lexeme = lexeme;
+        }
+        
+        XNode:: XNode(const Internal &axiom) throw():
+        genre(IsInternal),
+        dogma(DerivedToAxiom(axiom)),
+        depot()
+        {
+            cleanup();
+            new ( & children() ) XList();
+        }
+        
+        XNode *XNode:: activate(const Internal &axiom) throw()
+        {
+            assert(isInactive());
+            const Dogma target = DerivedToAxiom(axiom);
+            aliasing::_(dogma) = target;
+            aliasing::_(genre) = IsInternal;
+            return this;
+        }
+
+        XNode *XNode:: activate(const Terminal &axiom, Lexeme *lexeme) throw()
+        {
+            assert(isInactive());
+            assert(lexeme);
+            
+            const Dogma target = DerivedToAxiom(axiom);
+            aliasing::_(dogma) = target;
+            aliasing::_(genre) = IsTerminal;
+            depot.lexeme       = lexeme;
+            
+            return this;
+        }
+
         
         void XNode:: Release(XNode *xnode, XList &xcache) throw()
         {
             assert(xnode);
-            switch(xnode->kind)
+            switch(xnode->genre)
             {
                 case IsInactive: goto KEEP;
-                case IsTerminal: delete xnode->impl.lexeme; break;
+                case IsTerminal: delete xnode->depot.lexeme; break;
                 case IsInternal:
                 {
                     XList &chld = xnode->children();
@@ -106,59 +176,35 @@ namespace upsylon {
                     }
                 } break;
             }
-            xnode->clr();
+            xnode->shutdown();
         KEEP:
             xcache.push_back(xnode);
         }
         
-        void XNode:: Back(XNode *xnode, Lexer &lexer, XList &xcache) throw()
+        void XNode:: Restore(XNode *xnode, Lexer &lexer, XList &xcache) throw()
         {
             assert(xnode);
-            switch(xnode->kind)
+            switch(xnode->genre)
             {
                 case IsInactive: goto KEEP;
-                case IsTerminal: lexer.unget(xnode->impl.lexeme);
+                case IsTerminal: lexer.unget(xnode->depot.lexeme);
                     break;
                 case IsInternal: {
                     XList &chld = xnode->children();
                     while(chld.size)
                     {
-                        Back(chld.pop_back(),lexer, xcache);
+                        Restore(chld.pop_back(),lexer,xcache);
                     }
                 } break;
             }
-            xnode->clr();
+            xnode->shutdown();
         KEEP:
             xcache.push_back(xnode);
             
         }
         
-        void XNode:: setDogma(const Dogma &hAxiom) throw()
-        {
-            aliasing::_(dogma) = hAxiom;
-        }
-        
-        void XNode:: setLexeme(Lexeme *lexeme) throw()
-        {
-            if(lexeme)
-            {
-                impl.lexeme       = lexeme;
-                aliasing::_(kind) = IsTerminal;
-            }
-            else
-            {
-                aliasing::_(kind) = IsInternal;
-                new( & children() ) XList();
-            }
-        }
-        
-        void  XNode:: activate(const Dogma &hAxiom, Lexeme *lexeme) throw()
-        {
-            assert(isInactive());
-            assert(0==impl.lexeme);
-            setDogma(hAxiom);
-            setLexeme(lexeme);
-        }
+      
+       
         
     }
     

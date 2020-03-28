@@ -14,7 +14,36 @@ namespace upsylon {
         {
             while(n-- > 0)
             {
-                push_back( XNode::MakeInactive(inactive) );
+                push_back( XNode::Create(*dull) );
+            }
+        }
+        
+        XNode *XCache:: query()
+        {
+            return (size>0) ? pop_back() : XNode::Create(*dull);
+        }
+
+        XNode *XCache:: query(const Internal &axiom)
+        {
+            if(size)
+            {
+                return pop_back()->activate(axiom);
+            }
+            else
+            {
+                return XNode::Create(axiom);
+            }
+        }
+        
+        XNode *XCache:: query(const Terminal &axiom, Lexeme *lexeme)
+        {
+            if(size)
+            {
+                return pop_back()->activate(axiom,lexeme);
+            }
+            else
+            {
+                return XNode::Create(axiom,lexeme);
             }
         }
 
@@ -24,34 +53,6 @@ namespace upsylon {
             assert(xnode);
             XNode::Release(xnode,*this);
             assert(xnode->isInactive());
-        }
-
-        
-        XNode *XCache:: query(const Dogma &d, Lexeme *l)
-        {
-            if(size)
-            {
-                XNode *xnode = pop_back(); assert(xnode->isInactive());
-                xnode->activate(d,l);
-                return xnode;
-            }
-            else
-            {
-                return XNode::NewEffective(d,l);
-            }
-        }
-        
-        XNode *XCache:: query()
-        {
-            if(size)
-            {
-                XNode *xnode = pop_back(); assert(xnode->isInactive());
-                return xnode;
-            }
-            else
-            {
-                return XNode::MakeInactive(inactive);
-            }
         }
         
     }

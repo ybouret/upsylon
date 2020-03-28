@@ -1,99 +1,87 @@
 #include "y/jargon/xcache.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/jargon/axiom/terminal.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
 
 namespace {
-    
-    
-    Lexeme *createLexeme(Cache         &cache,
-                         const Context &context,
-                         const Tag     &tag
-                         )
+ 
+    Lexeme *createLexeme(const Tag         &tag,
+                         const Context     &ctx,
+                         Cache             &cache)
     {
-        auto_ptr<Lexeme> lexeme = new Lexeme(cache,context,tag);
+        auto_ptr<Lexeme>  lexeme = new Lexeme(cache,ctx,tag);
         for(size_t i=1+alea.leq(8);i>0;--i)
         {
-            lexeme->append( alea.range('a','z'));
+            lexeme->append( alea.range<char>('a','z') );
         }
         return lexeme.yield();
     }
     
-    XNode *createXNode(Cache           &cache,
-                       const Context   &context,
-                       const Tag       &tag,
-                       XCache          &xcache)
+    XNode *createXNode(XCache           &xcache,
+                       const Internal   &I,
+                       const array<Tag> &tags,
+                       const Context    &ctx,
+                       Cache            &cache)
     {
-        const Dogma intr = new Terminal("intr");
-        const Dogma term = new Terminal("term");
-        
-        switch(alea.range<int>(0,2))
+        switch(alea.range<int>(1,3))
         {
-            case 0: return xcache.query();
-            case 1: return xcache.query(intr,NULL);
+            case 1: return xcache.query(I);
+                
+            case 2: return xcache.query();
+                
+            case 3: {
+                const Tag                &tag  = alea.in(tags);
+                const arc_ptr<Terminal>  term = new Terminal(tag);
+                return xcache.query(*term, createLexeme(tag,ctx,cache) );
+            }
+                
+                
             default: break;
         }
-        return xcache.query( term,createLexeme(cache, context, tag) );
-        
+        throw exception("label not implemented");
     }
-    
     
 }
 
 Y_UTEST(xnode)
 {
-    const Tag       label   = Tags::Make("xnode");
-    const Context   context(label);
-    Cache           cache;
-    XCache          xcache("dull");
+   
+    const Context ctx       = "xnode";
+    const Tag     tagString = Tags::Make( "string" );
+    const Tag     tagNumber = Tags::Make( "number" );
+    Cache         cache;
     
-    const Dogma a    = new Inactive("toto");
+    vector<Tag>    tags; tags << tagString << tagNumber;
+    tags.push_back(tagString);
+    tags.push_back(tagNumber);
     
-    for(size_t iter=1;iter<=4;++iter)
+    XCache            xcache( "xcache_dull" );
+    arc_ptr<Internal> LIST = new Internal("LIST",0);
     {
-        auto_ptr<XNode> xnode = xcache.query(a,NULL); Y_ASSERT(xnode->isInternal());
-        size_t          count = 1;
-        // first layer
-        for(size_t n=1+alea.leq(10);n>0;--n)
+        auto_ptr<XNode> root = xcache.query(*LIST); Y_CHECK(root->isInternal());
+        
+        // first level
+        for(size_t i=1+alea.leq(10);i>0;--i)
         {
-            xnode->children().push_back( createXNode(cache, context, label,xcache) );
-            ++count;
+            root->children().push_back( createXNode(xcache,*LIST,tags,ctx,cache) );
         }
         
-        //second layer
-        for(XNode *xn=xnode->children().head;xn;xn=xn->next)
+        // second level
+        for(XNode *xnode = root->children().head; xnode; xnode=xnode->next)
         {
-            if( xn->isInternal() )
+            if( xnode->isInternal() )
             {
-                for(size_t i=1+alea.leq(3);i>0;--i)
-                {
-                    xn->children().push_back(createXNode(cache, context, label,xcache));
-                    ++count;
-                }
+                xnode->children().push_back( createXNode(xcache,*LIST,tags,ctx,cache) );
             }
         }
         
-        if(1==(iter%2))
-        {
-            if(iter<=1)
-            {
-                xnode->graphViz("xnode.dot",true);
-            }
-            xcache.store( xnode.yield() );
-            
-            //xcache.push_back( xnode.yield() );
-            std::cerr << "#cache=" << xcache.size << "/" << count << std::endl;
-            if(1==iter)
-            {
-                assert(xcache.size==count);
-            }
-        }
-        else
-        {
-            std::cerr << "#count=" << count << std::endl;
-        }
+        root->graphViz("xnode.dot");
+        
+        xcache.store( root.yield() );
+
     }
     
     

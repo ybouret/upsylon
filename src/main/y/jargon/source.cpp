@@ -123,7 +123,7 @@ namespace upsylon {
         
         void Source:: store(char C)
         {
-            Context ctx = *handle;
+            Context ctx(*handle);
             --aliasing::_(ctx.column);
             iobuff.push_front( Char::Make(iobuff.cache, ctx, C));
         }
