@@ -10,34 +10,41 @@ namespace upsylon {
     
     namespace Jargon {
 
-        class                  Axiom;
-        typedef arc_ptr<Axiom> Dogma;
+        //----------------------------------------------------------------------
+        //
+        //
+        //
+        //----------------------------------------------------------------------
+
+        class                  Axiom; //! forward declaration
+        typedef arc_ptr<Axiom> Dogma; //! shared rule
         
-        class                            XNode;
-        typedef core::list_of_cpp<XNode> XList;
+        class                            XNode; //!< Syntax Node
+        typedef core::list_of_cpp<XNode> XList; //!< Syntax Node List
         
-        class XNode :
-        public Object,
-        public inode<XNode>,
-        public Vizible
+        //----------------------------------------------------------------------
+        //
+        //
+        //
+        //----------------------------------------------------------------------
+        class XNode : public Object, public inode<XNode>, public Vizible
         {
         public:
+            //! kind of syntax node
             enum Kind
             {
-                IsTerminal,
-                IsInternal,
-                IsInactive
+                IsTerminal, //!< a terminal => lexeme
+                IsInternal, //!< an internal => children
+                IsInactive  //!< memory
             };
+                        
             
-           
+            static XNode * MakeInactive(const Dogma &);          //!< create an Inactive XNode
+            static XNode * NewEffective(const Dogma &,Lexeme *); //!< lexeme==NULL => internal
             
-            
-            static XNode * Inactive(const Dogma &);               //!< create an Inactive XNode
-            static XNode * Create(const Dogma &,Lexeme *); //!< lexeme==NULL => internal
-            
-            const Lexeme & lexeme() const throw();
-            XList        & children() throw();
-            const XList  & children() const throw();
+            const Lexeme & lexeme()   const throw(); //!< lexeme for terminal
+            XList        & children() throw();       //!< children for internal
+            const XList  & children() const throw(); //!< children for internal
 
             virtual       ~XNode() throw(); //!< cleanup
             static void    Release(XNode *, XList &) throw();

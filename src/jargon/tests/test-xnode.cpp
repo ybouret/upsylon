@@ -47,9 +47,9 @@ Y_UTEST(xnode)
     const Tag       label   = Tags::Make("xnode");
     const Context   context(label);
     Cache           cache;
-    XCache          xcache;
+    XCache          xcache("dull");
     
-    const Dogma a    = new Inactive();
+    const Dogma a    = new Inactive("toto");
     
     for(size_t iter=1;iter<=4;++iter)
     {

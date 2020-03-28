@@ -32,7 +32,7 @@ namespace upsylon {
             memset(&impl,0,sizeof(impl));
         }
         
-        XNode * XNode:: Inactive(const Dogma &d)
+        XNode * XNode:: MakeInactive(const Dogma &d)
         {
             return new XNode(d);
         }
@@ -42,7 +42,7 @@ namespace upsylon {
         bool XNode::isInactive() const throw() { return IsInactive == kind; }
         
         
-        XNode * XNode:: Create(const Dogma &hAxiom, Lexeme *lexeme)
+        XNode * XNode:: NewEffective(const Dogma &hAxiom, Lexeme *lexeme)
         {
             auto_ptr<Lexeme> keep(lexeme);
             XNode           *node = new XNode(hAxiom);

@@ -39,8 +39,12 @@ namespace upsylon {
         class Inactive : public Axiom
         {
         public:
+            static const uint32_t UUID = Y_FOURCC('D','U','L','L');
             virtual ~Inactive() throw() {}
-            explicit Inactive() : Axiom( "nil", 0) {}
+            template <typename LABEL> inline
+            explicit Inactive(const LABEL &id) : Axiom(id, UUID)
+            {
+            }
             
             
         private:

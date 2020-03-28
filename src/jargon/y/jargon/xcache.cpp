@@ -9,15 +9,15 @@ namespace upsylon {
         {
         }
         
-        XCache:: XCache(size_t n) :
-        XList(),
-        inactive( new Inactive() )
+        
+        void XCache:: reserve(size_t n)
         {
             while(n-- > 0)
             {
-                push_back( XNode::Inactive(inactive) );
+                push_back( XNode::MakeInactive(inactive) );
             }
         }
+
         
         void  XCache:: store(XNode *xnode) throw()
         {
@@ -37,7 +37,7 @@ namespace upsylon {
             }
             else
             {
-                return XNode::Create(d,l);
+                return XNode::NewEffective(d,l);
             }
         }
         
@@ -50,7 +50,7 @@ namespace upsylon {
             }
             else
             {
-                return XNode::Inactive(inactive);
+                return XNode::MakeInactive(inactive);
             }
         }
         
