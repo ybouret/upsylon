@@ -31,6 +31,7 @@ namespace upsylon
             }
         }
 
+#if 0
         void istream:: input(void        *buffer,
                              const size_t buflen,
                              const char  *when)
@@ -48,9 +49,9 @@ namespace upsylon
                 }
                 *(target++) = C;
             }
-
         }
-
+#endif
+        
         size_t istream:: try_get(void *buffer,const size_t buflen)
         {
             assert(!(0==buffer&&buflen>0));

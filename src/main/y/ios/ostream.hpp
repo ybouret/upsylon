@@ -22,7 +22,7 @@ namespace upsylon
         public:
             //__________________________________________________________________
             //
-            // Virtual Interface
+            // virtual interface
             //__________________________________________________________________
 
             //! destructor
@@ -39,7 +39,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // Non-Virtual Interface
+            // non-virtual interface : output utilities
             //__________________________________________________________________
 
             //! output large buffer
@@ -56,61 +56,8 @@ namespace upsylon
 
             //! output binary address
             ostream & viz( const void *addr );
-
-            //! emit integral types in network byte order, optional ASSIGN count
-            template <typename T> inline
-            ostream & emit_net(T x, size_t *count=NULL)
-            {
-                x = swap_be_as<T>(x);
-                output(&x,sizeof(T));
-                gist::assign(count,sizeof(T));
-                return *this;
-            }
-
-            //! emit compact unsigned, optional ASSIGN count
-            template <typename T> inline
-            ostream & emit_upack(T x, size_t *count=NULL)
-            {
-                //______________________________________________________________
-                //
-                // check value metrics
-                //______________________________________________________________
-                Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
-                const size_t  num_bits     = bits_for(x); assert(num_bits<=64);
-                const uint8_t last4shifted = uint8_t(x&T(0x0f)) << 4;
-                if(num_bits<=4)
-                {
-                    //__________________________________________________________
-                    //
-                    // 0 extra bytes!
-                    //__________________________________________________________
-                    write(last4shifted);
-                    gist::assign(count,1);
-                }
-                else
-                {
-                    //__________________________________________________________
-                    //
-                    // some extra bits/byte(s)
-                    //__________________________________________________________
-                    const size_t extra_bits  = num_bits - 4;
-                    size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
-                    write( char(last4shifted | extra_bytes) );
-                    gist::assign(count,1);
-                    x >>= 4;
-                    while(extra_bytes-->0)
-                    {
-                        const uint8_t B = uint8_t(x&T(0xff));
-                        write(B);
-                        gist::shr8<T>(x, int2type< (sizeof(T)>1) >() );
-                        gist::add_to(count,1);
-                    }
-                    assert(0==x);
-                }
-
-                return *this;
-            }
-
+            
+         
             //! repeat a char
             inline ostream & repeat( size_t sz, const char C)
             {
@@ -135,14 +82,71 @@ namespace upsylon
             //! pad text
             ostream & align(const string &s,const size_t aligned,const char C=' ');
 
+            //__________________________________________________________________
+            //
+            // non-virtual interface : byte-wise output
+            //__________________________________________________________________
+          
+            //! emit network byte order integral type
+            template <typename T> inline
+            size_t write_nbo(T x)
+            {
+                x = swap_be_as<T>(x);
+                output(&x,sizeof(T));
+                return sizeof(T);
+            }
+            
+            //! emit compact unsigned
+            template <typename T> inline
+            size_t write_upack(T x)
+            {
+                //______________________________________________________________
+                //
+                // check value metrics
+                //______________________________________________________________
+                Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
+                const size_t  num_bits     = bits_for(x); assert(num_bits<=64);
+                const uint8_t last4shifted = uint8_t(x&T(0x0f)) << 4;
+                if(num_bits<=4)
+                {
+                    //__________________________________________________________
+                    //
+                    // 0 extra bytes!
+                    //__________________________________________________________
+                    write(last4shifted);
+                    return 1;
+                }
+                else
+                {
+                    //__________________________________________________________
+                    //
+                    // some extra bits/byte(s)
+                    //__________________________________________________________
+                    const size_t extra_bits  = num_bits - 4;
+                    size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
+                    size_t       count = 1;
+                    write( char(last4shifted | extra_bytes) );
+                    x >>= 4;
+                    while(extra_bytes-->0)
+                    {
+                        const uint8_t B = uint8_t(x&T(0xff));
+                        write(B);
+                        gist::shr8<T>(x, int2type< (sizeof(T)>1) >() );
+                        ++count;
+                    }
+                    assert(0==x);
+                    return count;
+                }
+            }
+            
             //! emit a binary block, return written bytes
-            size_t emit_block( const void *data, const size_t size );
+            size_t write_block( const void *data, const size_t size );
 
             //! emit a binary block, return written bytes
-            size_t emit_block( const memory::ro_buffer  &buff );
+            size_t write_block( const memory::ro_buffer  &buff );
 
             //! emit a binary text
-            size_t emit_block( const char *text );
+            size_t write_block( const char *text );
 
         protected:
             //! constructor
@@ -153,8 +157,5 @@ namespace upsylon
         };
     }
 }
-
-//! wrapper to increment data count
-#define Y_OSTREAM_ADD_TO(COUNT,METHOD,DATA) do { size_t count=0; (void) METHOD(DATA,&count); (COUNT) += count; } while(false)
 
 #endif

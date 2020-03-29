@@ -16,7 +16,8 @@ namespace upsylon {
         {
             assert(p);
             auto_ptr<Pattern> guard(p);
-            size_t count = fp.read_upack<size_t>();
+            size_t count = 0;
+            if( ! fp.query_upack(count) ) throw exception("LoadLogical(missing #operands)");
             while(count-- > 0)
             {
                 p->push_back( Pattern::Load(fp) );
@@ -28,7 +29,7 @@ namespace upsylon {
         {
             
             uint32_t id = 0;
-            if( !fp.query_net(id) ) throw exception("%s(missing UUID)",fn);
+            if( !fp.query_nbo(id) ) throw exception("%s(missing UUID)",fn);
             
             switch(id)
             {
@@ -40,22 +41,22 @@ namespace upsylon {
                     
                 case Single::UUID: {
                     uint8_t code = 0;
-                    if(!fp.query_net(code))
+                    if(!fp.query_nbo(code))
                         throw exception("%s(missing Single.code)",fn);
                     return Single::Create(code);
                 }
                     
                 case Excluded::UUID: {
                     uint8_t code = 0;
-                    if(!fp.query_net(code))
+                    if(!fp.query_nbo(code))
                         throw exception("%s(missing Excluded.code)",fn);
                     return Excluded::Create(code);
                 }
                     
                 case Range::UUID: {
                     uint8_t lower=0, upper=0;
-                    if(!fp.query_net(lower)) throw exception("%s(missing Range.lower)",fn);
-                    if(!fp.query_net(upper)) throw exception("%s(missing Range.upper)",fn);
+                    if(!fp.query_nbo(lower)) throw exception("%s(missing Range.lower)",fn);
+                    if(!fp.query_nbo(upper)) throw exception("%s(missing Range.upper)",fn);
                     return Range::Create(lower,upper);
                 }
                     
@@ -73,13 +74,13 @@ namespace upsylon {
                 case Repeating:: UUID0: return Repeating::ZeroOrMore( Load(fp) );
                 case Repeating:: UUID1: return Repeating::OneOrMore( Load(fp) );
                 case Repeating:: UUID: {
-                    const size_t nmin = fp.read_upack<size_t>();
+                    size_t nmin =0; if(!fp.query_upack(nmin)) throw exception("%s(missing Repeating::minimalCount",fn);
                     return Repeating::Create( Load(fp), nmin);
                 }
                     
                 case Counting:: UUID: {
-                    const size_t nmin = fp.read_upack<size_t>();
-                    const size_t nmax = fp.read_upack<size_t>();
+                    size_t nmin =0; if(!fp.query_upack(nmin)) throw exception("%s(missing Counting::minimalCount",fn);
+                    size_t nmax =0; if(!fp.query_upack(nmax)) throw exception("%s(missing Counting::maximalCount",fn);
                     if(nmin>nmax) throw exception("%s(invalid min/max for Counting",fn);
                     return Counting::Create(Load(fp),nmin,nmax);
                 }

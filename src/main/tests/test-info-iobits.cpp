@@ -4,7 +4,6 @@
 #include "y/utest/sizeof.hpp"
 
 #include "y/string.hpp"
-#include "y/string/io.hpp"
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
@@ -109,7 +108,7 @@ Y_UTEST(IOBits)
         const size_t n = s.serialize(Q);
         Q.flush();
         Y_CHECK( n * 8 == Q.size() );
-        const string r = string_io::load_binary(Q);
+        const string r = string::read(Q,NULL,"serialize test");
         std::cerr << "send=" << s << ", recv=" << r << std::endl;
         Y_CHECK(s==r);
     }

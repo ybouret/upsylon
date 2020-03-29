@@ -74,13 +74,12 @@ namespace upsylon {
                     default:
                         break;
                 }
-                fp.emit_net(u,&prolog);
+                prolog = fp.write_nbo(u);
             }
             
             if(minimalCount>1)
             {
-                size_t nc = 0; fp.emit_upack(minimalCount,&nc);
-                prolog += nc;
+                prolog += fp.write_upack(minimalCount);
             }
             return prolog + motif->serialize(fp);
         }

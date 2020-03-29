@@ -2,6 +2,7 @@
 #include "y/mpl/prime/factor.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/exception.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -81,16 +82,21 @@ namespace upsylon
         size_t prime_factor:: serialize(ios::ostream &fp) const
         {
             const size_t bytes_for_p = p.serialize(fp);
-            size_t       bytes_for_n = 0;
-            fp.emit_upack(n,&bytes_for_n);
-            return bytes_for_n+bytes_for_p;
+            return bytes_for_p + fp.write_upack(n);
         }
 
-        prime_factor prime_factor:: read( ios::istream &fp, size_t *shift)
+        prime_factor prime_factor:: read( ios::istream &fp, size_t *shift, const string &which)
         {
+            static const char fn[] = "read";
             size_t np = 0, nn=0;
-            const natural prm = natural::read(fp,&np);      if(prm<=0) throw exception("%s::read(invalid prime)",    CLASS_NAME);
-            const size_t  num = fp.read_upack<size_t>(&nn); if(num<=0) throw exception("%s::read(invalid exponent)", CLASS_NAME);
+            string reason = which + " prime";
+            const natural prm = natural::read(fp,&np,reason);
+            if(prm<=0)                   throw exception("%s::%s(invalid prime for '%s')",fn,CLASS_NAME,*which);
+           
+            size_t        num = 0;
+            if(!fp.query_upack(num,&nn)) throw exception("%s::%s(missing exponent for '%s')",fn,CLASS_NAME,*which);
+            if(num<=0)                   throw exception("%s::%s(invalid exponent for '%s')",fn,CLASS_NAME,*which);
+            
             ios::gist::assign(shift,np+nn);
             return prime_factor(prm,num);
         }

@@ -5,7 +5,7 @@
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
-#include "y/string/io.hpp"
+#include "y/string.hpp"
 
 using namespace  upsylon;
 
@@ -53,53 +53,53 @@ Y_UTEST(mp_io)
         {
             ios::icstream fp("mp-io.dat");
             {
-                const string s = string_io::load_binary(fp);
+                const string s = string::read(fp,0,"mpn className");
                 if( s != mpn::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpn::CLASS_NAME );
                 }
-                const mpn nn = mpn::read(fp,NULL);
+                const mpn nn = mpn::read(fp,NULL,"mpn");
                 Y_CHECK(nn==n);
             }
 
             {
-                const string s = string_io::load_binary(fp);
+                const string s = string::read(fp,NULL,"mpz className");
                 if( s != mpz::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpz::CLASS_NAME );
                 }
-                const mpz zz = mpz::read(fp,NULL);
+                const mpz zz = mpz::read(fp,NULL,"mpz");
                 Y_CHECK(zz==z);
             }
 
 
             {
-                const string s = string_io::load_binary(fp);
+                const string s = string::read(fp,NULL,"mpq className");
                 if( s != mpq::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpq::CLASS_NAME );
                 }
-                const mpq qq = mpq::read(fp,NULL);
+                const mpq qq = mpq::read(fp,NULL,"mpq");
                 Y_CHECK(qq==q);
             }
 
             {
-                const string s = string_io::load_binary(fp);
+                const string s = string::read(fp,NULL,"mpF className");
                 if( s != mpF::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpF::CLASS_NAME );
                 }
-                const mpF FF = mpF::read(fp,NULL);
+                const mpF FF = mpF::read(fp,NULL,"mpF");
                 Y_CHECK(FF==F);
             }
 
             {
-                const string s = string_io::load_binary(fp);
+                const string s = string::read(fp,NULL,"mpQ className");
                 if( s != mpQ::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpQ::CLASS_NAME );
                 }
-                const mpQ QQ = mpQ::read(fp,NULL);
+                const mpQ QQ = mpQ::read(fp,NULL,"QQ");
                 std::cerr << "QQ=" << QQ << std::endl;
                 Y_CHECK(QQ==Q);
             }

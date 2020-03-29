@@ -66,7 +66,7 @@ Y_UTEST(part)
                 perm.make(p,pb);
                 const key_t k = H.key<key_t>(p);
                 bool found   = false;
-                bool collide = false;
+                //bool collide = false;
                 for(size_t i=keys.size();i>0;--i)
                 {
                     if(k==keys[i])
@@ -77,7 +77,7 @@ Y_UTEST(part)
                         if( 0 != memcmp( &v[1], &p[1], sizeof(size_t)*v.size()) )
                         {
                             std::cerr << "collision of " << p << "/" << v << std::endl;
-                            collide = true;
+                            //collide = true;
                         }
                         break;
                     }

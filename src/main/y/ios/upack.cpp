@@ -4,6 +4,7 @@
 #include "y/ios/omstream.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/exception.hpp"
 
 #include <cstring>
 
@@ -23,7 +24,7 @@ namespace upsylon {
 
 #define Y_IOS_UPACK_ENCODE(TYPE) \
 ios::omstream fp(p,n);           \
-fp.emit_upack<TYPE>( *static_cast<const TYPE *>(addr), & aliasing::_(size) );\
+aliasing::_(size) = fp.write_upack<TYPE>( *static_cast<const TYPE *>(addr) );\
 assert(size<=n)
 
         void upack_:: encode_( Y_IOS_UPACK_ENCODE_PROTO(1) ) throw()
@@ -46,9 +47,11 @@ assert(size<=n)
             Y_IOS_UPACK_ENCODE(uint64_t);
         }
 
+        static const char fmt[] = "upack::decode_(missing %s)";
 
 #define Y_IOS_UPACK_DECODE(TYPE) \
-ios::imstream fp(p,size); *static_cast<TYPE*>(addr) = fp.read_upack<TYPE>( )
+ios::imstream fp(p,size);\
+if( !fp.query_upack( *static_cast<TYPE*>(addr) ) ) throw exception(fmt,#TYPE)
 
         void upack_:: decode_( Y_IOS_UPACK_DECODE_PROTO(1) ) const
         {

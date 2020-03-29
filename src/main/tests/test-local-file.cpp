@@ -1,7 +1,7 @@
 #include "y/ios/orstream.hpp"
 #include "y/ios/irstream.hpp"
+#include "y/string.hpp"
 #include "y/utest/run.hpp"
-#include "y/string/io.hpp"
 
 using namespace upsylon;
 
@@ -65,7 +65,7 @@ Y_UTEST(local_file)
                 s2 << C;
             }
             std::cerr << "s2=" << s2 << std::endl;
-            string phrase = string_io::load_binary(fp);
+            string phrase = string::read(fp,NULL,"phrase");
             std::cerr << "phrase=" << phrase << std::endl;
         }
     }

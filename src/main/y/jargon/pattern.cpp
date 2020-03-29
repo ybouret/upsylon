@@ -33,12 +33,7 @@ entropy(-1)
         {
         }
         
-        size_t Pattern:: emitUUID(ios::ostream &fp) const
-        {
-            size_t nw = 0;
-            fp.emit_net(uuid,&nw);
-            return nw;
-        }
+       
         
         bool Pattern:: multiple() const throw()
         {

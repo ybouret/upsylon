@@ -29,7 +29,7 @@ namespace upsylon {
         
         size_t Any1::serialize(ios::ostream &fp) const
         {
-            return emitUUID(fp);
+            return fp.write_nbo(UUID);
         }
         
         bool Any1:: alike(const Pattern *p) const throw()

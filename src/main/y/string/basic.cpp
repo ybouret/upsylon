@@ -4,6 +4,9 @@
 #include "y/code/utils.hpp"
 
 #include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
+#include "y/exception.hpp"
+
 #include <iostream>
 
 namespace upsylon {
@@ -58,9 +61,25 @@ namespace upsylon {
         template <>
         size_t string<char>:: serialize(ios::ostream &fp) const
         {
-            return fp.emit_block(addr_,size_);
+            return fp.write_block(addr_,size_);
         }
 
+        template <>
+        string<char> string<char>:: read(ios::istream &fp, size_t *shift, const string &which)
+        {
+            static const char fn[] = "string::read";
+            size_t nr    = 0;
+            size_t chars = 0;
+            if(!fp.query_upack(chars,&nr)) throw exception("%s(missing #chars for '%s')",fn,*which);
+            string ans(chars,as_capacity,true);
+            const size_t nc = fp.try_get(ans.addr_,chars);
+            if(nc!=chars) throw exception("%s(missing chars for '%s')",fn,*which);
+            
+            ios::gist::assign(shift,nr+chars);
+            ans.size_ = chars;
+            return ans;
+        }
+        
         template <>
         bool string<char>:: compact() throw()
         {
@@ -97,11 +116,12 @@ namespace upsylon     {
         template <>
         size_t string<ptrdiff_t>:: serialize(ios::ostream &fp) const
         {
-            size_t ans = 0;
-            Y_OSTREAM_ADD_TO(ans, fp.emit_upack, size_);
+            size_t ans = fp.write_upack(size_);
+            
+            //Y_OSTREAM_ADD_TO(ans, fp.emit_upack, size_);
             for(size_t i=0;i<size_;++i)
             {
-                Y_OSTREAM_ADD_TO(ans, fp.emit_net,addr_[i]);
+                ans += fp.write_nbo(addr_[i]);
             }
             return ans;
         }

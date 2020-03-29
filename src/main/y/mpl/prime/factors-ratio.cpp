@@ -361,15 +361,20 @@ prime_factors_ratio Q(num,new_den); xch(Q);\
 }
 
 #include "y/ios/gist.hpp"
+#include "y/string.hpp"
+
 namespace upsylon
 {
     namespace mpl
     {
-        prime_factors_ratio prime_factors_ratio::  read(ios::istream &fp, size_t *shift)
+        prime_factors_ratio prime_factors_ratio::  read(ios::istream &fp, size_t *shift, const string &which)
         {
             size_t nn = 0, nd=0;
-            const prime_factors _num = mpF::read(fp, &nn);
-            const prime_factors _den = mpF::read(fp, &nd);
+            string       reason = which + " prime numerators";
+            const prime_factors _num = mpF::read(fp, &nn, reason);
+            
+            reason = which + " prime denominators";
+            const prime_factors _den = mpF::read(fp, &nd, reason);
             ios::gist::assign(shift,nn+nd);
             return prime_factors_ratio(_num,_den);
         }

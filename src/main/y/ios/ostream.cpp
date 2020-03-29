@@ -78,22 +78,22 @@ namespace upsylon
             return *this;
         }
 
-        size_t ostream:: emit_block( const void *data, const size_t size )
+        size_t ostream:: write_block( const void *data, const size_t size )
         {
             assert( !(NULL==data&&size>0) );
-            size_t shift = 0;
-            emit_upack(size,&shift).output( (const char *)data,size);
+            const size_t shift = write_upack(size);
+            output( (const char *)data,size);
             return shift + size;
         }
 
-        size_t ostream:: emit_block( const memory::ro_buffer  &buff )
+        size_t ostream:: write_block( const memory::ro_buffer  &buff )
         {
-            return emit_block(buff.ro(), buff.length());
+            return write_block(buff.ro(), buff.length());
         }
 
-        size_t ostream:: emit_block( const char *text )
+        size_t ostream:: write_block( const char *text )
         {
-            return emit_block( text, length_of(text) );
+            return write_block( text, length_of(text) );
         }
 
         ostream & ostream:: operator<<( const char *buffer )

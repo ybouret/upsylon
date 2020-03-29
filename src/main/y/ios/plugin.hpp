@@ -7,6 +7,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/type/args.hpp"
 #include "y/type/fourcc.hpp"
+#include "y/type/spec.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon
@@ -28,15 +29,17 @@ namespace upsylon
 
             const uint32_t          uuid;    //!< identifier
             const comm_mode         mode;    //!< for I/O information
-
+            const string            name;    //!< named
+            
             virtual size_t  load(ios::istream &, void       *) = 0; //!< load data
             virtual size_t  save(ios::ostream &, const void *) = 0; //!< save data
             virtual plugin *clone() const                      = 0; //!< clone this
             virtual        ~plugin() throw();                       //!< cleanup
 
         protected:
-            explicit plugin(const uint32_t, const comm_mode ) throw(); //!< setup with identifier
-
+            explicit plugin(const uint32_t, const comm_mode, const char *); //!< setup with identifier
+            void missing_data(const char *typeName) const;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(plugin);
 
@@ -56,24 +59,24 @@ namespace upsylon
 
             inline virtual ~nbo_plugin() throw() {}                 //!< cleanup
             inline explicit nbo_plugin() throw() :
-            plugin(UUID,comm_constant_size) {}  //!< setup
+            plugin(UUID,comm_constant_size,"nbo") {}  //!< setup
 
             //! load with swap big endian
             inline virtual size_t load(ios::istream &fp, void *addr)
             {
                 assert(addr);
-                size_t tmp = 0;
-                *static_cast<mutable_type*>(addr) = fp.read_net<mutable_type>(&tmp);
-                return tmp;
+                if(!fp.query_nbo(*static_cast<mutable_type*>(addr)))
+                {
+                    missing_data(*type_name_of<T>() );
+                }
+                return sizeof(type);
             }
 
             //! save with swap big endian
             inline virtual size_t save(ios::ostream &fp, const void *addr)
             {
                 assert(addr);
-                size_t tmp = 0;
-                fp.emit_net<T>( *static_cast<const type*>(addr), &tmp);
-                return tmp;
+                return fp.write_nbo( *static_cast<const type*>(addr) );
             }
 
             //! return a new nbo_plugin
@@ -97,7 +100,7 @@ namespace upsylon
 
             inline virtual ~raw_plugin() throw() {}                  //!< cleanup
             inline explicit raw_plugin() throw() :
-            plugin(UUID,comm_constant_size) {}                       //!< setup
+            plugin(UUID,comm_constant_size,"raw") {}                       //!< setup
 
             //! direct write of bytes
             inline virtual size_t save(ios::ostream &fp, const void *addr)
@@ -110,7 +113,7 @@ namespace upsylon
             //! direct read of bytes
             inline virtual size_t load(ios::istream &fp, void *addr)
             {
-                fp.input(addr,sizeof(type));
+                if(!fp.try_get(addr, sizeof(type) )) missing_data(*type_name_of<T>());
                 return sizeof(type);
             }
 
@@ -135,7 +138,7 @@ namespace upsylon
 
             inline virtual ~srz_plugin() throw() {}                    //!< cleanup
             inline explicit srz_plugin() throw() :
-            plugin(UUID,comm_variable_size) {}                         //!< setup
+            plugin(UUID,comm_variable_size,"srz") {}                         //!< setup
 
 
             //! save using the serializable API
@@ -152,7 +155,7 @@ namespace upsylon
             {
                 assert(addr);
                 size_t count = 0;
-                *static_cast<mutable_type*>(addr) = T::read(fp,&count);
+                *static_cast<mutable_type*>(addr) = T::read(fp,&count,name);
                 return count;
             }
 

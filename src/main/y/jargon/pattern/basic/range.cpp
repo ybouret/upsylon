@@ -50,7 +50,7 @@ namespace upsylon {
         
         size_t Range::serialize(ios::ostream &fp) const
         {
-            const size_t n = emitUUID(fp);
+            const size_t n = fp.write_nbo(uuid);
             fp << lower;
             fp << upper;
             return n+2;

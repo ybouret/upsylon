@@ -8,6 +8,7 @@
 #include "y/ios/icstream.hpp"
 
 #include "y/ptr/shared.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 
@@ -17,11 +18,12 @@ namespace {
     template <typename T>
     static inline size_t do_srz( ios::ostream &fp )
     {
+        std::cerr << "Serializing " << type_name_of<T>() << std::endl;
         vector<T>             v;
         list<T>               l;
         list< shared_ptr<T> > m;
 
-        for(size_t i=alea.leq(10);i>0;--i)
+        for(size_t i=alea.leq(100);i>0;--i)
         {
             const T tmp = support::get<T>();
             v.push_back(tmp);
@@ -46,16 +48,16 @@ namespace {
     static inline
     void do_ld( ios::istream &fp, LOADER &loader)
     {
+        std::cerr << "reloading " << type_name_of<T>() << std::endl;
         list<T> l;
         for(size_t iter=0;iter<3;++iter)
         {
-            ios::serializer::load(l, fp, loader, NULL);
+            ios::serializer::load(l, fp, loader, NULL, *type_name_of<T>());
         }
         
     }
 }
 
-#include "y/string/io.hpp"
 
 Y_UTEST(serializer)
 {

@@ -186,7 +186,7 @@ namespace upsylon
 
         size_t natural:: serialize( ios::ostream &fp ) const
         {
-            return fp.emit_block(*this);
+            return fp.write_block(*this);
         }
 
 
@@ -199,14 +199,23 @@ namespace upsylon
 
         
 
-        natural natural:: read( ios::istream &fp, size_t *count )
+        natural natural:: read( ios::istream &fp, size_t *count, const string &which)
         {
-            size_t        nr        = 0;
-            const  size_t num_bytes = fp.read_upack<size_t>( &nr );
+            static const char fn[] = "natural::read";
+            size_t nr        = 0;
+            size_t num_bytes = 0;
+            if(!fp.query_upack(num_bytes,&nr)) throw exception("%s(missing #bytes for '%s')",fn,*which);
+                
             mpn          ans(num_bytes,as_capacity);
-            fp.input(ans.byte,(ans.bytes=num_bytes));
+            if( fp.try_get(ans.byte,num_bytes) != num_bytes )
+            {
+                memset(ans.byte,0,ans.allocated);
+                throw exception("%s(missing data for '%s')",fn,*which);
+            }
+            
+            ans.bytes = num_bytes;
             ans.upgrade();
-            if(ans.bytes!=num_bytes) throw exception("mpn.read(corrupted bytes)");
+            if(ans.bytes!=num_bytes) throw exception("%s(corrupted data for '%s')",fn,*which);
             ios::gist::assign(count, nr+num_bytes);
             return ans;
         }

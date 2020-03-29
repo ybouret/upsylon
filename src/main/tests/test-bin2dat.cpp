@@ -10,7 +10,7 @@ Y_UTEST(bin2dat)
 {
     if(argc>1&& 0==strcmp("run",argv[1]))
     {
-        size_t w = 16;
+        size_t        w = 16;
         ios::icstream inp( ios::cstdin  );
         ios::ocstream out( ios::cstdout );
         char C=0;

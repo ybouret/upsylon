@@ -6,13 +6,6 @@ namespace upsylon {
     
     namespace Jargon {
         
-        template <typename T> static inline
-        size_t  emitUUID(ios::ostream &fp, const T uuid)
-        {
-            size_t ans = 0 ;
-            fp.emit_net(uuid,&ans);
-            return ans;
-        }
         
        
         
@@ -21,7 +14,7 @@ namespace upsylon {
             switch(genre)
             {
                 case IsInactive:
-                    return emitUUID(fp,InactiveMark) + dogma->label->serialize(fp);
+                    break;
                     
                 case IsTerminal:
                     break;

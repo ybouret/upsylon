@@ -86,7 +86,6 @@ namespace upsylon
 
 #include <iostream>
 #include "y/ios/imstream.hpp"
-#include "y/string/io.hpp"
 
 namespace upsylon
 {
@@ -126,15 +125,17 @@ namespace upsylon
         root( new node_type(0) ),
         nodes( 1 )
         {
+            static const char fn[] = "mperf(data,size) ";
             assert( !(NULL==data&&size>0) );
             if(size>0)
             {
                 ios::imstream fp(data,size);
-                const size_t  n = fp.read_upack<size_t>();
+                size_t        n = 0;
+                if(!fp.query_upack(n) ) throw exception("%smissing #entries",fn);
                 for(size_t i=0;i<n;++i)
                 {
-                    const string   word = string_io::load_binary(fp);
-                    const unsigned code = fp.read_upack<unsigned>();
+                    const string   word = string::read(fp,NULL,fn);
+                    unsigned       code = 0; if( !fp.query_upack(code) ) throw exception("%smissing '%s' code",fn,*word);
                     insert( word, (int)code );
                 }
             }

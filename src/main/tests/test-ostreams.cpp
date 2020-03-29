@@ -53,13 +53,14 @@ Y_UTEST(ostreams)
                 s.clear();
                 {
                     ios::osstream fp(s);
-                    fp.emit_upack(i);
-                    op.emit_upack(i);
+                    fp.write_upack(i);
+                    op.write_upack(i);
                     data << i;
                 }
                 {
                     ios::imstream inp(s);
-                    const size_t j = inp.read_upack<size_t>();
+                    size_t j = 0;
+                    Y_ASSERT( inp.query_upack(j) );
                     std::cerr << "\ti=" << i << " -> j=" << j << std::endl;
                     Y_ASSERT(j==i);
                 }
@@ -72,12 +73,13 @@ Y_UTEST(ostreams)
                 s.clear();
                 ios::osstream fp(s);
                 const uint16_t x = alea.partial<uint16_t>();
-                fp.emit_upack<uint64_t>(x);
-                op.emit_upack<uint64_t>(x);
+                fp.write_upack<uint64_t>(x);
+                op.write_upack<uint64_t>(x);
                 data << x;
                 {
                     ios::imstream inp(s);
-                    const uint16_t j = inp.read_upack<uint16_t>();
+                    uint16_t j = 0;
+                    Y_ASSERT(inp.query_upack(j));
                     std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
@@ -89,12 +91,13 @@ Y_UTEST(ostreams)
                 s.clear();
                 ios::osstream fp(s);
                 const uint32_t x = alea.partial<uint32_t>();
-                fp.emit_upack<uint64_t>(x);
-                op.emit_upack<uint64_t>(x);
+                fp.write_upack<uint64_t>(x);
+                op.write_upack<uint64_t>(x);
                 data << x;
                 {
                     ios::imstream inp(s);
-                    const uint32_t j = inp.read_upack<uint32_t>();
+                    uint32_t j = 0;
+                    Y_ASSERT(inp.query_upack(j));
                     std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
@@ -106,12 +109,13 @@ Y_UTEST(ostreams)
                 s.clear();
                 ios::osstream fp(s);
                 const uint64_t x = alea.partial<uint64_t>();
-                fp.emit_upack<uint64_t>(x);
-                op.emit_upack<uint64_t>(x);
+                fp.write_upack<uint64_t>(x);
+                op.write_upack<uint64_t>(x);
                 data << x;
                 {
                     ios::imstream inp(s);
-                    const uint64_t j = inp.read_upack<uint64_t>();
+                    uint64_t j = 0;
+                    Y_ASSERT(inp.query_upack(j));
                     std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
@@ -125,7 +129,8 @@ Y_UTEST(ostreams)
             ios::icstream fp("upack.dat");
             for(size_t i=1;i<=data.size();++i)
             {
-                const uint64_t loaded = fp.read_upack<uint64_t>();
+                uint64_t loaded = 0;
+                Y_ASSERT(fp.query_upack(loaded));
                 Y_ASSERT(loaded==data[i]);
             }
         }

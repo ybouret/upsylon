@@ -228,7 +228,7 @@ namespace upsylon
 }
 
 #include "y/ios/gist.hpp"
-
+#include "y/string.hpp"
 namespace upsylon {
 
     namespace mpl
@@ -240,11 +240,15 @@ namespace upsylon {
             return bytes_for_num+bytes_for_den;
         }
 
-        rational rational:: read( ios::istream &fp, size_t *shift)
+        rational rational:: read( ios::istream &fp, size_t *shift, const string &which)
         {
             size_t nn = 0, nd=0;
-            const integer _num = integer::read(fp,&nn);
-            const natural _den = natural::read(fp,&nd);
+            string reason = which + " numerator";
+            const integer _num = integer::read(fp,&nn,reason);
+            
+            reason = which + " denominator";
+            const natural _den = natural::read(fp,&nd,reason);
+            
             ios::gist::assign(shift,nd+nn);
             return rational(_num,_den);
         }

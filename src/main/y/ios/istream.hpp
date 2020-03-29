@@ -44,26 +44,18 @@ namespace upsylon
             //! get a new line
             bool gets( string &line );
 
-            //! read exactly buflen bytes
-            void input(void *buffer,const size_t buflen, const char *when=0);
-
+            
             //! read at most buflen
             size_t try_get(void *buffer,const size_t buflen);
 
-            //! get an integral type in network byte order, with optional COUNT of read bytes=sizeofT()
-            template <typename T> inline
-            T read_net(size_t *count=NULL)
-            { T ans(0); input(&ans,sizeof(T)); gist::assign(count,sizeof(T)); return swap_be_as<T>(ans); }
-
+            
             //! try to query an integral type in network byte order, with optional COUNT of read bytes
             template <typename T> inline
-            bool query_net(T &ans, size_t *count=NULL)
+            bool query_nbo(T &ans)
             {
                 const size_t num = try_get(&ans,sizeof(T));
-                gist::assign(count,sizeof(T));
                 if(num<sizeof(T))
                 {
-                    
                     return false;
                 }
                 else
@@ -73,41 +65,45 @@ namespace upsylon
                 }
             }
             
+            
             //! read a packed unsigned, with optional COUNT of read byte
             template <typename T>
-            inline T read_upack(size_t *count=NULL)
+            inline bool query_upack(T &ans, size_t *count=NULL)
             {
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
-                uint8_t      store[8];
-                const size_t prolog      = read_net<uint8_t>();
+                ans = 0;
+                uint8_t      store[8]    = { 0,0,0,0,0,0,0,0 };
+                uint8_t      prolog      = 0; if(!query_nbo(prolog)) return false;
                 size_t       extra_bytes = (prolog&0x0f);
-                if(count)   *count       = 1;
                 gist::assign(count,1);
                 for(size_t i=0;i<extra_bytes;++i)
                 {
-                    store[i] = read_net<uint8_t>();
-                    if(count) ++(*count);
+                    if(!query_nbo(store[i])) return false;
+                    gist::add_to(count,1);
                 }
-                T            ans(0);
+                
                 while(extra_bytes-->0)
                 {
                     gist::shl8(ans,int2type< (sizeof(T)>1) >());
                     ans |= store[extra_bytes];
                 }
+                
                 {
                     const uint8_t B = uint8_t((prolog&0xf0) >> 4);
                     ans <<= 4;
                     ans |= B;
                 }
-                return ans;
+                return true;
             }
 
         protected:
             //! constructor
             explicit istream() throw();
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(istream);
+            static const char upack_prolog[];
+            static const char upack_inside[];
         };
 
         //! read line algorithm

@@ -32,7 +32,7 @@ namespace upsylon {
         
         size_t Excluded::serialize(ios::ostream &fp) const
         {
-            const size_t n = emitUUID(fp);
+            const size_t n = fp.write_nbo(UUID);
             fp << code;
             return n+1;
         }

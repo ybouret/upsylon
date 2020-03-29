@@ -282,17 +282,25 @@ byte( __digest_acquire(blen) )
 
     size_t digest:: serialize( ios::ostream &fp ) const
     {
-        return fp.emit_block(*this);
+        return fp.write_block(*this);
     }
 
-    digest digest:: read(ios::istream &fp, size_t *nr)
+    digest digest:: read(ios::istream &fp, size_t *nr, const string &which)
     {
-        size_t       tmp = 0;
-        const size_t sz = fp.read_upack<size_t>(&tmp);
-        digest       md(sz,0); assert(sz==md.size);
-        fp.input(md.byte,md.size);
-        tmp += md.size;
-        ios::gist::assign(nr,tmp);
+        static const char fn[] = "digest::read";
+        
+        // read size
+        size_t nr_size  = 0;
+        size_t md_size  = 0;
+        if( !fp.query_upack(md_size,&nr_size) ) throw exception("%s(missing size ofr '%s')",fn,*which);
+        
+        // read content
+        digest       md(md_size,0); assert(md_size==md.size);
+        const size_t nr_data = fp.try_get(md.byte,md.size);
+        if(nr_data!=md.size) throw exception("%s(missing data for '%s')",fn,*which);
+            
+        //update and return
+        ios::gist::assign(nr,nr_size+nr_data);
         return md;
     }
 

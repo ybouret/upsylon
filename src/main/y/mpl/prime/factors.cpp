@@ -379,6 +379,7 @@ namespace upsylon
 }
 
 #include "y/ios/serializer.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -393,19 +394,25 @@ namespace upsylon
         }
 
 
-        prime_factors prime_factors:: read(ios::istream &fp, size_t *shift)
+        prime_factors prime_factors:: read(ios::istream &fp, size_t *shift,const string &which)
         {
-            prime_factors ans;
-            size_t        nb = 0;
-            for(size_t count=fp.read_upack<size_t>(&nb); count>0; --count)
+            prime_factors   ans;
+            size_t          nb    = 0;
+            unsigned        count = 0;
+            if(!fp.query_upack(count,&nb))
             {
+                throw exception("prime_factors::read(missing #entries for '%s')",*which);
+            }
+            for(unsigned i=1; count>0; --count,++i)
+            {
+                const string reason = which + vformat(" prime #%u",i);
                 size_t np = 0;
-                const prime_factor f = prime_factor::read(fp,&np);
+                const prime_factor f = prime_factor::read(fp,&np,reason);
                 __ins( ans.factors, f );
                 nb += np;
             }
             ans.update();
-            if(shift) { *shift += nb; }
+            ios::gist::assign(shift,nb);
             return ans;
         }
     }

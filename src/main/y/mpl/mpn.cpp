@@ -328,6 +328,8 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
 }
 
 #include "y/ios/ostream.hpp"
+#include "y/string.hpp"
+
 namespace upsylon
 {
     const char   MPN:: CLASS_NAME[] = "MPN";
@@ -342,12 +344,7 @@ namespace upsylon
         Hasher H;
         H.set();
         assert(plist.size()>=2);
-        size_t len = 0;
-        {
-            size_t shift = 0;
-            fp.emit_upack<size_t>(plist.size()-2,&shift);
-            len += shift;
-        }
+        size_t len = fp.write_upack( plist.size()-2 );
         ListOfPrimeInfo::const_iterator i=plist.begin();
         assert(_2==(*i).p); ++i; //!< skip 2
         assert(_3==(*i).p); ++i; //!< skip 3
@@ -371,34 +368,44 @@ namespace upsylon
 
     void MPN:: reloadPrimes( ios::istream &fp)
     {
+        static const char fn[] = "MPN::reloadPrimes";
         reset();
+        const string which = fn;
         try
         {
             // list
             {
                 ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
-                const size_t     sz  = fp.read_upack<size_t>();
+                size_t           sz  = 0;
+                if(!fp.query_upack(sz)) throw exception("%s(missing #data)",fn);
                 Hasher           H;  H.set();
 
                 // loop
                 mpn curr = _3;
                 for(size_t i=0;i<sz;++i)
                 {
-                    mpn code = mpn::read(fp,NULL);
+                    const string reason = which + vformat(" #%u",unsigned(i));
+                    mpn code = mpn::read(fp,NULL,reason);
                     H(code);
                     curr += ( (++code).shl() );
                     const PrimeInfo tmp(curr);
                     prm.push_back(tmp);
                 }
                 // probe
-                curr = mpn::read(fp,NULL);
-                ( (mpn&) probe ).xch(curr);
-                H(probe);
-
+                {
+                    const string reason = which + " probe";
+                    curr = mpn::read(fp,NULL,reason);
+                    ( (mpn&) probe ).xch(curr);
+                    H(probe);
+                }
+                
                 // check
-                const digest md0 = digest::read(fp,NULL);
-                const digest md1 = H.md();
-                if(md0!=md1) throw exception("MPN.reload(currupted data)");
+                {
+                    const string reason = which + " digest";
+                    const digest md0 = digest::read(fp,NULL,reason);
+                    const digest md1 = H.md();
+                    if(md0!=md1) throw exception("%s(currupted data)",fn);
+                }
             }
 
             // vector

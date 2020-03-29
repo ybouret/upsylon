@@ -51,10 +51,12 @@ namespace upsylon
             static const size_t workspace = Y_ROUND4(requested);  //!< internal workspace
 
             //! cleanup
-            inline virtual ~upack() throw()            { clear(0,        data,requested); }
+            inline virtual ~upack() throw()
+            { clear(0,data,requested); }
 
             //! setup clean, ready data
-            inline explicit upack() throw() : upack_() { clear(requested,data,workspace); }
+            inline explicit upack() throw() : upack_()
+            { clear(requested,data,workspace); }
 
             //! return data
             inline virtual const void *ro()     const throw() { return data; }

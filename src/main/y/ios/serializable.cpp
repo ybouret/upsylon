@@ -23,7 +23,7 @@ namespace upsylon {
 
         size_t serializable:: serialize_className( ios::ostream &fp ) const
         {
-            return fp.emit_block( className() );
+            return fp.write_block( className() );
         }
 
         size_t serializable:: serialize_className_length() const

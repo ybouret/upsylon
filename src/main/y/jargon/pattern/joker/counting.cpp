@@ -115,9 +115,9 @@ namespace upsylon {
         
         size_t Counting:: serialize(ios::ostream &fp) const
         {
-            const size_t nuid = emitUUID(fp);
-            size_t       nmin = 0; fp.emit_upack(minimalCount,&nmin);
-            size_t       nmax = 0; fp.emit_upack(maximalCount,&nmax);
+            const size_t nuid = fp.write_nbo(UUID);
+            const size_t nmin = fp.write_upack(minimalCount);
+            const size_t nmax = fp.write_upack(maximalCount);
             return nuid+nmin+nmax+motif->serialize(fp);
         }
         

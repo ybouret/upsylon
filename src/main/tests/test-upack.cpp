@@ -17,26 +17,27 @@ namespace
     {
 
         string output;
-        size_t count = 0;
-
+        
         {
-            count = 0;
             output.clear();
             ios::osstream fp(output);
-            fp.emit_upack<T>( 0, &count );
+            const size_t count = fp.write_upack<T>( 0 );
             std::cerr << "output.size=" << output.size() << "/" << count << " ";
             ios::imstream inp(output);
-            Y_CHECK( 0 == inp.read_upack<T>() );
+            T ans = 0;
+            Y_CHECK( inp.query_upack(ans) );
+            Y_CHECK( 0 == ans );
         }
 
         {
-            count = 0;
             output.clear();
             ios::osstream fp(output);
-            fp.emit_upack<T>( limit_of<T>::maximum, &count );
+            const size_t count = fp.write_upack<T>( limit_of<T>::maximum);
             std::cerr << "output.size=" << output.size() << "/" << count << " ";
             ios::imstream inp(output);
-            Y_CHECK( limit_of<T>::maximum == inp.read_upack<T>() );
+            T ans = 0;
+            Y_CHECK( inp.query_upack(ans) );
+            Y_CHECK( limit_of<T>::maximum == ans );
         }
 
         std::cerr << "sizeof(upack)  =" << sizeof(ios::upack<T>)    << std::endl;
@@ -49,13 +50,14 @@ namespace
         std::cerr << "..." << std::endl;
         for(size_t iter=0;iter<1024*128;++iter)
         {
-            count = 0;
             output.clear();
             ios::osstream fp(output);
-            const T tmp = alea.full<T>();
-            fp.emit_upack<T>( tmp, &count );
+            const T      tmp   = alea.full<T>();
+            const size_t count = fp.write_upack<T>(tmp);
             ios::imstream inp(output);
-            Y_ASSERT( tmp == inp.read_upack<T>() );
+            T            ldd   = 0;
+            Y_ASSERT( inp.query_upack(ldd) );
+            Y_ASSERT( tmp == ldd);
             pak.encode(tmp);
             Y_ASSERT(pak.size==count);
             Y_ASSERT( 0 == memcmp( *output, pak.ro(), pak.size ) );
@@ -88,22 +90,19 @@ Y_UTEST(upack)
         Y_ASSERT(szpak()==sz);
     }
 
-    size_t packed = 0;
     string output(8,as_capacity,false);
     std::cerr.flush();
     for(unsigned i=0;;++i)
     {
         output.clear();
-        packed=0;
         {
             ios::osstream fp(output);
-            (void) fp.emit_upack(i,&packed);
-            if(packed>1)
+            if(fp.write_upack(i)>1)
             {
                 break;
             }
         }
-        assert(1==output.size());
+        Y_ASSERT(1==output.size());
         const unsigned j = uint8_t(output[0]);
         fprintf(stderr,"%02u-> %4s = %02u\n",i,cchars::visible[j],j);
     }

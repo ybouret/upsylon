@@ -24,12 +24,8 @@ namespace upsylon {
         
         size_t Logical:: serialize(ios::ostream &fp) const
         {
-            size_t n = emitUUID(fp);
-            {
-                size_t ns = 0;
-                fp.emit_upack(size,&ns);
-                n += ns;
-            }
+            size_t n = fp.write_nbo(uuid);
+            n       += fp.write_upack(size);
             for(const Pattern *op = head; op; op=op->next)
             {
                 n += op->serialize(fp);

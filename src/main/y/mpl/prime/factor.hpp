@@ -66,7 +66,7 @@ namespace upsylon
             virtual const char  *className() const throw();               //!< CLASS_NAME
             virtual size_t       serialize( ios::ostream &fp ) const;     //!< num and den
             static const char    CLASS_NAME[];                            //!< "prmf"
-            static  prime_factor read( ios::istream &fp, size_t *shift ); //!< read prime factor
+            static  prime_factor read( ios::istream &fp, size_t *shift, const string &which); //!< read prime factor
 
         private:
             Y_DISABLE_ASSIGN(prime_factor);

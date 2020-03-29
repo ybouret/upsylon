@@ -136,8 +136,7 @@ namespace upsylon
 
         size_t PublicKey:: serialize(ios::ostream &fp) const
         {
-            fp.emit_net(type);
-            size_t total = sizeof(type);
+            size_t total = fp.write_nbo(type);
             Y_RSA_SRZ(modulus);
             Y_RSA_SRZ(publicExponent);
             return total;
@@ -268,8 +267,7 @@ namespace upsylon
 
         size_t PrivateKey:: serialize(ios::ostream &fp) const
         {
-            fp.emit_net(type);
-            size_t total = sizeof(type);
+            size_t total = fp.write_nbo(type);
             Y_RSA_SRZ(modulus);
             Y_RSA_SRZ(publicExponent);
             Y_RSA_SRZ(privateExponent);
@@ -295,13 +293,16 @@ namespace upsylon
 
 }
 
+#include "y/string.hpp"
+
 namespace upsylon
 {
     namespace RSA
     {
         Key * Key:: Read( ios::istream &fp, size_t *shift, const ReadMode readMode )
         {
-            const uint32_t tag = fp.read_net<uint32_t>();
+            uint32_t       tag = 0;
+            if(!fp.query_nbo(tag)) throw exception("RSA::Key::Read(missing tag)");
             size_t         num = sizeof(uint32_t);
             size_t         tmp = 0;
             switch(tag)
@@ -311,8 +312,8 @@ namespace upsylon
                     // read a public key
                     //__________________________________________________________
                 case Key::Public: {
-                    const mpn m = mpn::read(fp,&tmp); num += tmp;
-                    const mpn e = mpn::read(fp,&tmp); num += tmp;
+                    const mpn m = mpn::read(fp,&tmp,"rsa_public_key.m"); num += tmp;
+                    const mpn e = mpn::read(fp,&tmp,"rsa_public_key.m"); num += tmp;
                     if(shift)
                     {
                         *shift = num;
@@ -322,14 +323,14 @@ namespace upsylon
 
                 case Key::Private:
                 {
-                    const mpn m  = mpn::read(fp,&tmp); num += tmp;
-                    const mpn e  = mpn::read(fp,&tmp); num += tmp;
-                    const mpn d  = mpn::read(fp,&tmp); num += tmp;
-                    const mpn p1 = mpn::read(fp,&tmp); num += tmp;
-                    const mpn p2 = mpn::read(fp,&tmp); num += tmp;
-                    const mpn e1 = mpn::read(fp,&tmp); num += tmp;
-                    const mpn e2 = mpn::read(fp,&tmp); num += tmp;
-                    const mpn cf = mpn::read(fp,&tmp); num += tmp;
+                    const mpn m  = mpn::read(fp,&tmp,"rsa_public_key.m");  num += tmp;
+                    const mpn e  = mpn::read(fp,&tmp,"rsa_public_key.e");  num += tmp;
+                    const mpn d  = mpn::read(fp,&tmp,"rsa_public_key.d");  num += tmp;
+                    const mpn p1 = mpn::read(fp,&tmp,"rsa_public_key.p1"); num += tmp;
+                    const mpn p2 = mpn::read(fp,&tmp,"rsa_public_key.p2"); num += tmp;
+                    const mpn e1 = mpn::read(fp,&tmp,"rsa_public_key.e1"); num += tmp;
+                    const mpn e2 = mpn::read(fp,&tmp,"rsa_public_key.e2"); num += tmp;
+                    const mpn cf = mpn::read(fp,&tmp,"rsa_public_key.cf"); num += tmp;
                     if(shift)
                     {
                         *shift = num;
@@ -344,7 +345,7 @@ namespace upsylon
                     break;
             }
             throw exception("RSA.Key.read(invalid type)");
-            return NULL;
+            //return NULL;
         }
     }
 }

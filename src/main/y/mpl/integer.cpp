@@ -353,6 +353,7 @@ namespace upsylon
 
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -367,35 +368,38 @@ namespace upsylon
 
         size_t integer:: serialize( ios::ostream &fp ) const
         {
-            size_t       bytes_for_s = 0;
+            uint8_t      s_code      = 0x00;
             switch(s)
             {
-                case __negative: (void) fp.emit_upack<uint8_t>( 0xff, &bytes_for_s); break;
-                case __zero:     (void) fp.emit_upack<uint8_t>( 0x00, &bytes_for_s); break;
-                case __positive: (void) fp.emit_upack<uint8_t>( 0x01, &bytes_for_s); break;
+                case __negative: s_code=0xff; break;
+                case __zero:     s_code=0x00; break;
+                case __positive: s_code=0x01; break;
             }
-            const size_t bytes_for_n = n.serialize(fp);
-
-            return bytes_for_n + bytes_for_s;
+            const size_t bytes_for_s = fp.write_nbo(s_code);
+            return  bytes_for_s + n.serialize(fp);
         }
 
-        integer integer:: read(ios::istream &fp, size_t *count)
+        integer integer:: read(ios::istream &fp, size_t *count, const  string &which)
         {
-            size_t         nr = 0;
-            sign_type      _s = __zero;
+            static const char fn[] = "integer::read";
+            size_t            nr = 0;
+            sign_type         _s = __zero;
             {
-                const unsigned  u = fp.read_upack<unsigned>(&nr);
+                uint8_t u = 0;
+                if(!fp.query_nbo(u)) throw exception("%s(missing sign for '%s')",fn,*which);
+                nr = 1;
                 switch(u)
                 {
                     case 0xff: _s = __negative; break;
                     case 0x00: _s = __zero;     break;
                     case 0x01: _s = __positive; break;
                     default:
-                        throw exception("integer::read(invalid %s sign=%u)", CLASS_NAME, u );
+                        throw exception("%s(invalid sign=%u for '%s')",fn,unsigned(u),*which);
                 }
             }
-            size_t    nn = 0;
-            const mpn _n = mpn::read(fp,&nn);
+            size_t       nn     = 0;
+            const string reason = which + " natural part";
+            const mpn   _n      = mpn::read(fp,&nn,reason);
             ios::gist::assign(count,nn+nr);
             return integer(_s,_n);
         }

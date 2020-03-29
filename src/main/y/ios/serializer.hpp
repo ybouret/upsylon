@@ -5,21 +5,20 @@
 #include "y/ios/serializable.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
     namespace ios
     {
         //! routines to serialise containers...
-        class serializer
+        struct serializer
         {
-        public:
             //! save a range
             template <typename ITERATOR> static inline
             size_t save( ios::ostream &fp, size_t n, ITERATOR i )
             {
-                size_t total = 0;
-                fp.emit_upack(n, &total);
+                size_t total = fp.write_upack(n);
                 while(n-->0)
                 {
                     total += (*i).serialize(fp);
@@ -39,8 +38,7 @@ namespace upsylon
             template <typename ITERATOR> static inline
             size_t save_meta( ios::ostream &fp, size_t n, ITERATOR i )
             {
-                size_t total = 0;
-                fp.emit_upack(n, &total);
+                size_t total = fp.write_upack(n);
                 while(n-->0)
                 {
                     total += (**i).serialize(fp);
@@ -58,21 +56,27 @@ namespace upsylon
 
             //!load a sequence
             template <typename SEQUENCE, typename LOADER> static inline
-            void load( SEQUENCE &seq, ios::istream &fp, LOADER &loader, size_t *shift)
+            void load( SEQUENCE &seq, ios::istream &fp, LOADER &loader, size_t *shift, const char *which)
             {
+                assert(which);
                 size_t total = 0;
-                for(size_t n = fp.read_upack<size_t>(&total);n>0;--n)
+                size_t n     = 0;
+                if(!fp.query_upack(n,&total) )
                 {
-                    size_t nl = 0;
-                    typename SEQUENCE::const_type tmp = loader(fp,&nl);
+                    throw exception("serializer::load(missing #entries for '%s')",which);
+                }
+                
+                for(unsigned i=1;n>0;--n,++i)
+                {
+                    size_t       nl     = 0;
+                    typename SEQUENCE::const_type tmp = loader(fp,&nl,which);
                     seq.push_back(tmp);
                     total += nl;
                 }
+                
                 gist::assign(shift,total);
             }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(serializer);
+            
         };
     }
 }
