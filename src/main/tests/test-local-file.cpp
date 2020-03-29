@@ -68,7 +68,6 @@ Y_UTEST(local_file)
             size_t length = 0;
             string phrase = string::read(fp,length,"phrase");
             std::cerr << "phrase=" << phrase << std::endl;
-            Y_CHECK(phrase.size()==length);
         }
     }
 
