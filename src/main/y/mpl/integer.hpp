@@ -174,7 +174,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             virtual const char *className() const throw();            //!< CLASS_NAME
             virtual size_t      serialize( ios::ostream &fp ) const;  //!< s and n
             static const char   CLASS_NAME[];                         //!< "mpz"
-            static integer      read( ios::istream &, size_t *shift, const string &which); //!< retrieve a serialized integer
+            static integer      read( ios::istream &, size_t &shift, const char *which); //!< retrieve a serialized integer
 
         private:
             static integer __add(const sign_type ls,

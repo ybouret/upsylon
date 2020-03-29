@@ -374,37 +374,41 @@ namespace upsylon
         try
         {
             // list
+            size_t shift =0;
             {
                 ListOfPrimeInfo &prm = (ListOfPrimeInfo &)plist;
                 size_t           sz  = 0;
-                if(!fp.query_upack(sz)) throw exception("%s(missing #data)",fn);
+                if(!fp.query_upack(sz,shift)) throw exception("%s(missing #data)",fn);
                 Hasher           H;  H.set();
 
                 // loop
                 mpn curr = _3;
                 for(size_t i=0;i<sz;++i)
                 {
-                    const string reason = which + vformat(" #%u",unsigned(i));
-                    mpn code = mpn::read(fp,NULL,reason);
+                    size_t temp = 0;
+                    mpn    code = mpn::read(fp,temp,fn);
                     H(code);
                     curr += ( (++code).shl() );
                     const PrimeInfo tmp(curr);
                     prm.push_back(tmp);
+                    shift += temp;
                 }
                 // probe
                 {
-                    const string reason = which + " probe";
-                    curr = mpn::read(fp,NULL,reason);
+                    size_t temp = 0;
+                    curr = mpn::read(fp,temp,fn);
                     ( (mpn&) probe ).xch(curr);
                     H(probe);
+                    shift += temp;
                 }
                 
                 // check
                 {
-                    const string reason = which + " digest";
-                    const digest md0 = digest::read(fp,NULL,reason);
+                    size_t temp=0;
+                    const digest md0 = digest::read(fp,temp,fn);
                     const digest md1 = H.md();
                     if(md0!=md1) throw exception("%s(currupted data)",fn);
+                    shift += temp;
                 }
             }
 

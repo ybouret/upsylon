@@ -51,7 +51,8 @@ assert(size<=n)
 
 #define Y_IOS_UPACK_DECODE(TYPE) \
 ios::imstream fp(p,size);\
-if( !fp.query_upack( *static_cast<TYPE*>(addr) ) ) throw exception(fmt,#TYPE)
+size_t tmp = 0;\
+if( !fp.query_upack( *static_cast<TYPE*>(addr), tmp ) ) throw exception(fmt,#TYPE)
 
         void upack_:: decode_( Y_IOS_UPACK_DECODE_PROTO(1) ) const
         {

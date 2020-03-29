@@ -285,22 +285,22 @@ byte( __digest_acquire(blen) )
         return fp.write_block(*this);
     }
 
-    digest digest:: read(ios::istream &fp, size_t *nr, const string &which)
+    digest digest:: read(ios::istream &fp, size_t &nr, const string &which)
     {
         static const char fn[] = "digest::read";
         
         // read size
         size_t nr_size  = 0;
         size_t md_size  = 0;
-        if( !fp.query_upack(md_size,&nr_size) ) throw exception("%s(missing size ofr '%s')",fn,*which);
+        if( !fp.query_upack(md_size,nr_size) ) throw exception("%s(missing size ofr '%s')",fn,*which);
         
         // read content
         digest       md(md_size,0); assert(md_size==md.size);
-        const size_t nr_data = fp.try_get(md.byte,md.size);
+        const size_t nr_data = fp.try_query(md.byte,md.size);
         if(nr_data!=md.size) throw exception("%s(missing data for '%s')",fn,*which);
             
         //update and return
-        ios::gist::assign(nr,nr_size+nr_data);
+        nr = nr_size+nr_data;
         return md;
     }
 

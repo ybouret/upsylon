@@ -46,15 +46,15 @@ namespace upsylon
 
             
             //! read at most buflen
-            size_t try_get(void *buffer,const size_t buflen);
+            size_t try_query(void *buffer,const size_t buflen);
 
             
-            //! try to query an integral type in network byte order, with optional COUNT of read bytes
+            //! try to query an integral type in network byte order, set shifted bytes
             template <typename T> inline
-            bool query_nbo(T &ans)
+            bool query_nbo(T &ans,size_t &shift)
             {
-                const size_t num = try_get(&ans,sizeof(T));
-                if(num<sizeof(T))
+                const size_t num = try_query(&ans,sizeof(T));
+                if((shift=num)<sizeof(T))
                 {
                     return false;
                 }
@@ -68,21 +68,27 @@ namespace upsylon
             
             //! read a packed unsigned, with optional COUNT of read byte
             template <typename T>
-            inline bool query_upack(T &ans, size_t *count=NULL)
+            inline bool query_upack(T      &ans,
+                                    size_t &shift)
             {
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
-                ans = 0;
-                uint8_t      store[8]    = { 0,0,0,0,0,0,0,0 };
-                uint8_t      prolog      = 0; if(!query_nbo(prolog)) return false;
-                size_t       extra_bytes = (prolog&0x0f);
-                gist::assign(count,1);
-                for(size_t i=0;i<extra_bytes;++i)
-                {
-                    if(!query_nbo(store[i])) return false;
-                    gist::add_to(count,1);
-                }
+                // read first byte
+                uint8_t prolog = 0;
+                if(!query_nbo(prolog,shift))
+                    return false;
+                assert(1==shift);
                 
-                while(extra_bytes-->0)
+                // read extra bytes
+                uint8_t      store[8]    = { 0,0,0,0,0,0,0,0 };
+                size_t       extra_bytes = (prolog&0x0f);
+                const size_t extra_query = try_query(store,extra_bytes);
+                shift += extra_query;
+                if(extra_query!=extra_bytes)
+                {
+                    return false;
+                }
+                ans = 0;
+                while(extra_bytes-- > 0)
                 {
                     gist::shl8(ans,int2type< (sizeof(T)>1) >());
                     ans |= store[extra_bytes];

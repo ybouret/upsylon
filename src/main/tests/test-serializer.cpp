@@ -50,9 +50,10 @@ namespace {
     {
         std::cerr << "reloading " << type_name_of<T>() << std::endl;
         list<T> l;
+        size_t shift = 0;
         for(size_t iter=0;iter<3;++iter)
         {
-            ios::serializer::load(l, fp, loader, NULL, *type_name_of<T>());
+            ios::serializer::load(l, fp, loader, shift, *type_name_of<T>());
         }
         
     }

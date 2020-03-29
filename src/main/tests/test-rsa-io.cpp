@@ -14,12 +14,13 @@ static const uint8_t rsa_keys_inc[] =
 
 Y_UTEST(rsa_io)
 {
+    size_t shift = 0;
     vector<RSA::SharedKey> keys;
     {
         ios::imstream fp( rsa_keys_inc, sizeof(rsa_keys_inc) );
         while( fp.is_active() )
         {
-            const RSA::SharedKey key = RSA::Key::Read(fp,NULL);
+            const RSA::SharedKey key = RSA::Key::Read(fp,shift);
             keys.push_back(key);
         }
     }

@@ -560,7 +560,7 @@ Y_CORE_STRING_CMP(>)
             virtual size_t serialize( ios::ostream &fp ) const;
 
             //! reload
-            static string read(ios::istream &fp, size_t *shift, const string &which);
+            static string read(ios::istream &fp, size_t &shift, const char *which);
 
             //! compact in memory
             bool compact() throw();

@@ -44,20 +44,6 @@ namespace upsylon
                 x=0;
             }
 
-            //! conditional add extra to count address
-            template <typename T, typename U>
-            static inline void add_to( T *count, const U extra ) throw()
-            {
-                if(count) { *count += extra; }
-            }
-
-            //! conditional assign value to count address
-            template <typename T, typename U>
-            static inline void assign( T *count, const U value ) throw()
-            {
-                if(count) { *count = value; }
-            }
-
 
         };
 

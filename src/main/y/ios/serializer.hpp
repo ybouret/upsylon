@@ -56,12 +56,11 @@ namespace upsylon
 
             //!load a sequence
             template <typename SEQUENCE, typename LOADER> static inline
-            void load( SEQUENCE &seq, ios::istream &fp, LOADER &loader, size_t *shift, const char *which)
+            void load( SEQUENCE &seq, ios::istream &fp, LOADER &loader, size_t &shift, const char *which)
             {
                 assert(which);
-                size_t total = 0;
                 size_t n     = 0;
-                if(!fp.query_upack(n,&total) )
+                if(!fp.query_upack(n,shift) )
                 {
                     throw exception("serializer::load(missing #entries for '%s')",which);
                 }
@@ -69,12 +68,10 @@ namespace upsylon
                 for(unsigned i=1;n>0;--n,++i)
                 {
                     size_t       nl     = 0;
-                    typename SEQUENCE::const_type tmp = loader(fp,&nl,which);
+                    typename SEQUENCE::const_type tmp = loader(fp,nl,which);
                     seq.push_back(tmp);
-                    total += nl;
+                    shift += nl;
                 }
-                
-                gist::assign(shift,total);
             }
             
         };

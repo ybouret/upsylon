@@ -85,19 +85,19 @@ namespace upsylon
             return bytes_for_p + fp.write_upack(n);
         }
 
-        prime_factor prime_factor:: read( ios::istream &fp, size_t *shift, const string &which)
+        prime_factor prime_factor:: read( ios::istream &fp, size_t &shift, const char *which)
         {
             static const char fn[] = "read";
-            size_t np = 0, nn=0;
-            string reason = which + " prime";
-            const natural prm = natural::read(fp,&np,reason);
-            if(prm<=0)                   throw exception("%s::%s(invalid prime for '%s')",fn,CLASS_NAME,*which);
+            assert(which);
+            const natural prm = natural::read(fp,shift,which);
+            if(prm<=0)                   throw exception("%s::%s(invalid prime for '%s')",fn,CLASS_NAME,which);
            
             size_t        num = 0;
-            if(!fp.query_upack(num,&nn)) throw exception("%s::%s(missing exponent for '%s')",fn,CLASS_NAME,*which);
-            if(num<=0)                   throw exception("%s::%s(invalid exponent for '%s')",fn,CLASS_NAME,*which);
+            size_t        shift2 = 0;
+            if(!fp.query_upack(num,shift2)) throw exception("%s::%s(missing exponent for '%s')",fn,CLASS_NAME,which);
+            if(num<=0)                      throw exception("%s::%s(invalid exponent for '%s')",fn,CLASS_NAME,which);
             
-            ios::gist::assign(shift,np+nn);
+            shift += shift2;
             return prime_factor(prm,num);
         }
 

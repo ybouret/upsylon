@@ -394,25 +394,23 @@ namespace upsylon
         }
 
 
-        prime_factors prime_factors:: read(ios::istream &fp, size_t *shift,const string &which)
+        prime_factors prime_factors:: read(ios::istream &fp, size_t &shift,const char *which)
         {
+            assert(which);
             prime_factors   ans;
-            size_t          nb    = 0;
             unsigned        count = 0;
-            if(!fp.query_upack(count,&nb))
+            if(!fp.query_upack(count,shift))
             {
-                throw exception("prime_factors::read(missing #entries for '%s')",*which);
+                throw exception("prime_factors::read(missing #entries for '%s')",which);
             }
-            for(unsigned i=1; count>0; --count,++i)
+            for(;count>0; --count)
             {
-                const string reason = which + vformat(" prime #%u",i);
-                size_t np = 0;
-                const prime_factor f = prime_factor::read(fp,&np,reason);
+                size_t shift2 = 0;
+                const prime_factor f = prime_factor::read(fp,shift2,which);
                 __ins( ans.factors, f );
-                nb += np;
+                shift += shift2;
             }
             ans.update();
-            ios::gist::assign(shift,nb);
             return ans;
         }
     }

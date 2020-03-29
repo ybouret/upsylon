@@ -105,6 +105,13 @@ namespace upsylon
                 // check value metrics
                 //______________________________________________________________
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
+                
+#if 1
+                //______________________________________________________________
+                //
+                // check value metrics
+                //______________________________________________________________
+                Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
                 const size_t  num_bits     = bits_for(x); assert(num_bits<=64);
                 const uint8_t last4shifted = uint8_t(x&T(0x0f)) << 4;
                 if(num_bits<=4)
@@ -127,7 +134,7 @@ namespace upsylon
                     size_t       count = 1;
                     write( char(last4shifted | extra_bytes) );
                     x >>= 4;
-                    while(extra_bytes-->0)
+                    while(extra_bytes-- > 0)
                     {
                         const uint8_t B = uint8_t(x&T(0xff));
                         write(B);
@@ -137,6 +144,7 @@ namespace upsylon
                     assert(0==x);
                     return count;
                 }
+#endif
             }
             
             //! emit a binary block, return written bytes

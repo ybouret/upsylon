@@ -65,17 +65,22 @@ namespace upsylon {
         }
 
         template <>
-        string<char> string<char>:: read(ios::istream &fp, size_t *shift, const string &which)
+        string<char> string<char>:: read(ios::istream &fp, size_t &shift, const char *which)
         {
             static const char fn[] = "string::read";
-            size_t nr    = 0;
+            assert(which);
             size_t chars = 0;
-            if(!fp.query_upack(chars,&nr)) throw exception("%s(missing #chars for '%s')",fn,*which);
+            if(!fp.query_upack(chars,shift)) throw exception("%s(missing #chars for '%s')",fn,which);
+           
             string ans(chars,as_capacity,true);
-            const size_t nc = fp.try_get(ans.addr_,chars);
-            if(nc!=chars) throw exception("%s(missing chars for '%s')",fn,*which);
+            const size_t nc = fp.try_query(ans.addr_,chars); assert(nc<=chars);
+            if(nc!=chars)
+            {
+                memset(ans.addr_,0,chars);
+                throw exception("%s(missing chars for '%s')",fn,which);
+            }
             
-            ios::gist::assign(shift,nr+chars);
+            shift += nc;
             ans.size_ = chars;
             return ans;
         }

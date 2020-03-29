@@ -131,11 +131,12 @@ namespace upsylon
             {
                 ios::imstream fp(data,size);
                 size_t        n = 0;
-                if(!fp.query_upack(n) ) throw exception("%smissing #entries",fn);
+                size_t        nr = 0;
+                if(!fp.query_upack(n,nr) ) throw exception("%smissing #entries",fn);
                 for(size_t i=0;i<n;++i)
                 {
-                    const string   word = string::read(fp,NULL,fn);
-                    unsigned       code = 0; if( !fp.query_upack(code) ) throw exception("%smissing '%s' code",fn,*word);
+                    const string   word = string::read(fp,nr,fn);
+                    unsigned       code = 0; if( !fp.query_upack(code,nr) ) throw exception("%smissing '%s' code",fn,*word);
                     insert( word, (int)code );
                 }
             }

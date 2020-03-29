@@ -13,6 +13,7 @@ using namespace upsylon;
 
 Y_UTEST(ostreams)
 {
+    size_t shift = 0;
     {
         const string fn = "echo.dat";
         ios::ocstream::overwrite(fn);
@@ -60,7 +61,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     size_t j = 0;
-                    Y_ASSERT( inp.query_upack(j) );
+                    Y_ASSERT( inp.query_upack(j,shift) );
                     std::cerr << "\ti=" << i << " -> j=" << j << std::endl;
                     Y_ASSERT(j==i);
                 }
@@ -79,7 +80,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     uint16_t j = 0;
-                    Y_ASSERT(inp.query_upack(j));
+                    Y_ASSERT(inp.query_upack(j,shift));
                     std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
@@ -97,7 +98,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     uint32_t j = 0;
-                    Y_ASSERT(inp.query_upack(j));
+                    Y_ASSERT(inp.query_upack(j,shift));
                     std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
@@ -115,7 +116,7 @@ Y_UTEST(ostreams)
                 {
                     ios::imstream inp(s);
                     uint64_t j = 0;
-                    Y_ASSERT(inp.query_upack(j));
+                    Y_ASSERT(inp.query_upack(j,shift));
                     std::cerr << "\tx=" << x << " -> j=" << j << std::endl;
                     Y_ASSERT(j==x);
                 }
@@ -130,7 +131,7 @@ Y_UTEST(ostreams)
             for(size_t i=1;i<=data.size();++i)
             {
                 uint64_t loaded = 0;
-                Y_ASSERT(fp.query_upack(loaded));
+                Y_ASSERT(fp.query_upack(loaded,shift));
                 Y_ASSERT(loaded==data[i]);
             }
         }

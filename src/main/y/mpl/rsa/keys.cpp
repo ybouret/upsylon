@@ -299,12 +299,9 @@ namespace upsylon
 {
     namespace RSA
     {
-        Key * Key:: Read( ios::istream &fp, size_t *shift, const ReadMode readMode )
+        Key * Key:: Read( ios::istream &fp, size_t &shift, const ReadMode readMode )
         {
-            uint32_t       tag = 0;
-            if(!fp.query_nbo(tag)) throw exception("RSA::Key::Read(missing tag)");
-            size_t         num = sizeof(uint32_t);
-            size_t         tmp = 0;
+            uint32_t       tag = 0; if(!fp.query_nbo(tag,shift)) throw exception("RSA::Key::Read(missing tag)");
             switch(tag)
             {
                     //__________________________________________________________
@@ -312,29 +309,23 @@ namespace upsylon
                     // read a public key
                     //__________________________________________________________
                 case Key::Public: {
-                    const mpn m = mpn::read(fp,&tmp,"rsa_public_key.m"); num += tmp;
-                    const mpn e = mpn::read(fp,&tmp,"rsa_public_key.m"); num += tmp;
-                    if(shift)
-                    {
-                        *shift = num;
-                    }
+                    size_t    tmp = 0;
+                    const mpn m = mpn::read(fp,tmp,"rsa_public_key.m"); shift += tmp;
+                    const mpn e = mpn::read(fp,tmp,"rsa_public_key.m"); shift += tmp;
                     return new PublicKey(m,e);
                 }
 
                 case Key::Private:
                 {
-                    const mpn m  = mpn::read(fp,&tmp,"rsa_public_key.m");  num += tmp;
-                    const mpn e  = mpn::read(fp,&tmp,"rsa_public_key.e");  num += tmp;
-                    const mpn d  = mpn::read(fp,&tmp,"rsa_public_key.d");  num += tmp;
-                    const mpn p1 = mpn::read(fp,&tmp,"rsa_public_key.p1"); num += tmp;
-                    const mpn p2 = mpn::read(fp,&tmp,"rsa_public_key.p2"); num += tmp;
-                    const mpn e1 = mpn::read(fp,&tmp,"rsa_public_key.e1"); num += tmp;
-                    const mpn e2 = mpn::read(fp,&tmp,"rsa_public_key.e2"); num += tmp;
-                    const mpn cf = mpn::read(fp,&tmp,"rsa_public_key.cf"); num += tmp;
-                    if(shift)
-                    {
-                        *shift = num;
-                    }
+                    size_t    tmp = 0;
+                    const mpn m  = mpn::read(fp,tmp,"rsa_public_key.m");  shift += tmp;
+                    const mpn e  = mpn::read(fp,tmp,"rsa_public_key.e");  shift += tmp;
+                    const mpn d  = mpn::read(fp,tmp,"rsa_public_key.d");  shift += tmp;
+                    const mpn p1 = mpn::read(fp,tmp,"rsa_public_key.p1"); shift += tmp;
+                    const mpn p2 = mpn::read(fp,tmp,"rsa_public_key.p2"); shift += tmp;
+                    const mpn e1 = mpn::read(fp,tmp,"rsa_public_key.e1"); shift += tmp;
+                    const mpn e2 = mpn::read(fp,tmp,"rsa_public_key.e2"); shift += tmp;
+                    const mpn cf = mpn::read(fp,tmp,"rsa_public_key.cf"); shift += tmp;
                     switch(readMode)
                     {
                         case ReadDefault:    return new PrivateKey(m,e,d,p1,p2,e1,e2,cf);

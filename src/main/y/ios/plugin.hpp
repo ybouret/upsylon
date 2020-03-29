@@ -29,7 +29,6 @@ namespace upsylon
 
             const uint32_t          uuid;    //!< identifier
             const comm_mode         mode;    //!< for I/O information
-            const string            name;    //!< named
             
             virtual size_t  load(ios::istream &, void       *) = 0; //!< load data
             virtual size_t  save(ios::ostream &, const void *) = 0; //!< save data
@@ -37,8 +36,8 @@ namespace upsylon
             virtual        ~plugin() throw();                       //!< cleanup
 
         protected:
-            explicit plugin(const uint32_t, const comm_mode, const char *); //!< setup with identifier
-            void missing_data(const char *typeName) const;
+            explicit plugin(const uint32_t, const comm_mode) throw(); //!< setup with identifier
+            void missing_data(const char *pluginName,const char *typeName) const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(plugin);
@@ -59,17 +58,18 @@ namespace upsylon
 
             inline virtual ~nbo_plugin() throw() {}                 //!< cleanup
             inline explicit nbo_plugin() throw() :
-            plugin(UUID,comm_constant_size,"nbo") {}  //!< setup
+            plugin(UUID,comm_constant_size) {}  //!< setup
 
             //! load with swap big endian
             inline virtual size_t load(ios::istream &fp, void *addr)
             {
                 assert(addr);
-                if(!fp.query_nbo(*static_cast<mutable_type*>(addr)))
+                size_t shift = 0;
+                if(!fp.query_nbo(*static_cast<mutable_type*>(addr),shift))
                 {
-                    missing_data(*type_name_of<T>() );
+                    missing_data("nbo",*type_name_of<T>() );
                 }
-                return sizeof(type);
+                return shift;
             }
 
             //! save with swap big endian
@@ -100,7 +100,7 @@ namespace upsylon
 
             inline virtual ~raw_plugin() throw() {}                  //!< cleanup
             inline explicit raw_plugin() throw() :
-            plugin(UUID,comm_constant_size,"raw") {}                       //!< setup
+            plugin(UUID,comm_constant_size) {}                       //!< setup
 
             //! direct write of bytes
             inline virtual size_t save(ios::ostream &fp, const void *addr)
@@ -113,7 +113,7 @@ namespace upsylon
             //! direct read of bytes
             inline virtual size_t load(ios::istream &fp, void *addr)
             {
-                if(!fp.try_get(addr, sizeof(type) )) missing_data(*type_name_of<T>());
+                if(!fp.try_query(addr, sizeof(type) )) missing_data("raw",*type_name_of<T>());
                 return sizeof(type);
             }
 
@@ -138,7 +138,7 @@ namespace upsylon
 
             inline virtual ~srz_plugin() throw() {}                    //!< cleanup
             inline explicit srz_plugin() throw() :
-            plugin(UUID,comm_variable_size,"srz") {}                         //!< setup
+            plugin(UUID,comm_variable_size) {}                         //!< setup
 
 
             //! save using the serializable API
@@ -155,7 +155,7 @@ namespace upsylon
             {
                 assert(addr);
                 size_t count = 0;
-                *static_cast<mutable_type*>(addr) = T::read(fp,&count,name);
+                *static_cast<mutable_type*>(addr) = T::read(fp,count,"srz");
                 return count;
             }
 

@@ -65,8 +65,10 @@ Y_UTEST(local_file)
                 s2 << C;
             }
             std::cerr << "s2=" << s2 << std::endl;
-            string phrase = string::read(fp,NULL,"phrase");
+            size_t length = 0;
+            string phrase = string::read(fp,length,"phrase");
             std::cerr << "phrase=" << phrase << std::endl;
+            Y_CHECK(phrase.size()==length);
         }
     }
 

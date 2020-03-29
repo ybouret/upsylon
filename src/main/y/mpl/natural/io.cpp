@@ -199,24 +199,27 @@ namespace upsylon
 
         
 
-        natural natural:: read( ios::istream &fp, size_t *count, const string &which)
+        natural natural:: read( ios::istream &fp, size_t &shift, const char *which)
         {
             static const char fn[] = "natural::read";
-            size_t nr        = 0;
-            size_t num_bytes = 0;
-            if(!fp.query_upack(num_bytes,&nr)) throw exception("%s(missing #bytes for '%s')",fn,*which);
+            assert(which);
+
+            // read number of bytes
+            size_t mpn_bytes = 0;
+            if(!fp.query_upack(mpn_bytes,shift)) throw exception("%s(missing #bytes for '%s')",fn,which);
                 
-            mpn          ans(num_bytes,as_capacity);
-            if( fp.try_get(ans.byte,num_bytes) != num_bytes )
+            // load number of bytes
+            mpn          ans(mpn_bytes,as_capacity);
+            if( fp.try_query(ans.byte,mpn_bytes) != mpn_bytes )
             {
                 memset(ans.byte,0,ans.allocated);
-                throw exception("%s(missing data for '%s')",fn,*which);
+                throw exception("%s(missing data for '%s')",fn,which);
             }
             
-            ans.bytes = num_bytes;
+            ans.bytes = mpn_bytes;
             ans.upgrade();
-            if(ans.bytes!=num_bytes) throw exception("%s(corrupted data for '%s')",fn,*which);
-            ios::gist::assign(count, nr+num_bytes);
+            if(ans.bytes!=mpn_bytes) throw exception("%s(corrupted data for '%s')",fn,which);
+            shift += mpn_bytes;
             return ans;
         }
         

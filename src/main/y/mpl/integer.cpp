@@ -379,28 +379,27 @@ namespace upsylon
             return  bytes_for_s + n.serialize(fp);
         }
 
-        integer integer:: read(ios::istream &fp, size_t *count, const  string &which)
+        integer integer:: read(ios::istream &fp, size_t &shift, const char *which)
         {
             static const char fn[] = "integer::read";
-            size_t            nr = 0;
+            assert(which);
             sign_type         _s = __zero;
             {
                 uint8_t u = 0;
-                if(!fp.query_nbo(u)) throw exception("%s(missing sign for '%s')",fn,*which);
-                nr = 1;
+                if(!fp.query_nbo(u,shift)) throw exception("%s(missing sign for '%s')",fn,which);
+                assert(1==shift);
                 switch(u)
                 {
                     case 0xff: _s = __negative; break;
                     case 0x00: _s = __zero;     break;
                     case 0x01: _s = __positive; break;
                     default:
-                        throw exception("%s(invalid sign=%u for '%s')",fn,unsigned(u),*which);
+                        throw exception("%s(invalid sign=%u for '%s')",fn,unsigned(u),which);
                 }
             }
-            size_t       nn     = 0;
-            const string reason = which + " natural part";
-            const mpn   _n      = mpn::read(fp,&nn,reason);
-            ios::gist::assign(count,nn+nr);
+            size_t       shift2 = 0;
+            const mpn   _n      = natural::read(fp,shift2,which);
+            shift += shift2;
             return integer(_s,_n);
         }
     }

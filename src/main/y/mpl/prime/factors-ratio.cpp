@@ -367,15 +367,13 @@ namespace upsylon
 {
     namespace mpl
     {
-        prime_factors_ratio prime_factors_ratio::  read(ios::istream &fp, size_t *shift, const string &which)
+        prime_factors_ratio prime_factors_ratio::  read(ios::istream &fp, size_t &shift, const  char *which)
         {
-            size_t nn = 0, nd=0;
-            string       reason = which + " prime numerators";
-            const prime_factors _num = mpF::read(fp, &nn, reason);
-            
-            reason = which + " prime denominators";
-            const prime_factors _den = mpF::read(fp, &nd, reason);
-            ios::gist::assign(shift,nn+nd);
+            assert(which);
+            const prime_factors _num   = mpF::read(fp,shift,which);
+            size_t              shift2 = 0;
+            const prime_factors _den   = mpF::read(fp,shift2,which);
+            shift += shift2;
             return prime_factors_ratio(_num,_den);
         }
     }

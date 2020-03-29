@@ -52,54 +52,55 @@ Y_UTEST(mp_io)
 
         {
             ios::icstream fp("mp-io.dat");
+            size_t shift = 0;
             {
-                const string s = string::read(fp,0,"mpn className");
+                const string s = string::read(fp,shift,"mpn className");
                 if( s != mpn::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpn::CLASS_NAME );
                 }
-                const mpn nn = mpn::read(fp,NULL,"mpn");
+                const mpn nn = mpn::read(fp,shift,"mpn");
                 Y_CHECK(nn==n);
             }
 
             {
-                const string s = string::read(fp,NULL,"mpz className");
+                const string s = string::read(fp,shift,"mpz className");
                 if( s != mpz::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpz::CLASS_NAME );
                 }
-                const mpz zz = mpz::read(fp,NULL,"mpz");
+                const mpz zz = mpz::read(fp,shift,"mpz");
                 Y_CHECK(zz==z);
             }
 
 
             {
-                const string s = string::read(fp,NULL,"mpq className");
+                const string s = string::read(fp,shift,"mpq className");
                 if( s != mpq::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpq::CLASS_NAME );
                 }
-                const mpq qq = mpq::read(fp,NULL,"mpq");
+                const mpq qq = mpq::read(fp,shift,"mpq");
                 Y_CHECK(qq==q);
             }
 
             {
-                const string s = string::read(fp,NULL,"mpF className");
+                const string s = string::read(fp,shift,"mpF className");
                 if( s != mpF::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpF::CLASS_NAME );
                 }
-                const mpF FF = mpF::read(fp,NULL,"mpF");
+                const mpF FF = mpF::read(fp,shift,"mpF");
                 Y_CHECK(FF==F);
             }
 
             {
-                const string s = string::read(fp,NULL,"mpQ className");
+                const string s = string::read(fp,shift,"mpQ className");
                 if( s != mpQ::CLASS_NAME )
                 {
                     throw exception("Couldn't read %s", mpQ::CLASS_NAME );
                 }
-                const mpQ QQ = mpQ::read(fp,NULL,"QQ");
+                const mpQ QQ = mpQ::read(fp,shift,"QQ");
                 std::cerr << "QQ=" << QQ << std::endl;
                 Y_CHECK(QQ==Q);
             }

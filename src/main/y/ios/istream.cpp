@@ -52,7 +52,7 @@ namespace upsylon
         }
 #endif
         
-        size_t istream:: try_get(void *buffer,const size_t buflen)
+        size_t istream:: try_query(void *buffer,const size_t buflen)
         {
             assert(!(0==buffer&&buflen>0));
             char *target = static_cast<char *>(buffer);

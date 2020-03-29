@@ -108,9 +108,11 @@ Y_UTEST(IOBits)
         const size_t n = s.serialize(Q);
         Q.flush();
         Y_CHECK( n * 8 == Q.size() );
-        const string r = string::read(Q,NULL,"serialize test");
+        size_t       m = 0;
+        const string r = string::read(Q,m,"serialize test");
         std::cerr << "send=" << s << ", recv=" << r << std::endl;
         Y_CHECK(s==r);
+        Y_CHECK(n==m);
     }
 
     std::cerr << "-- checking store/query" << std::endl;

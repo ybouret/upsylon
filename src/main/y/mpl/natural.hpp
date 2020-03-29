@@ -327,7 +327,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             virtual const char *className() const throw();              //!< "mpn"
             virtual size_t      serialize( ios::ostream &fp ) const;    //!< write binary
-            static natural      read(ios::istream &fp, size_t *shift, const string &which);  //!< reload
+            static natural      read(ios::istream &fp, size_t &shift, const char *which);  //!< reload
 
             //! implemented for uint8_t, uint16_t, uint32_t, uint64_t
             template <typename T>
