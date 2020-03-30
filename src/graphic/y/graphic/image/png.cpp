@@ -100,7 +100,7 @@ namespace upsylon {
             //__________________________________________________________________
             {
                 unsigned char header[8];
-                const size_t  done = fp.try_get(header,8);
+                const size_t  done = fp.try_query(header,8);
                 if(done!=8)
                     throw exception("%s(missing header bytes)",fn);
 

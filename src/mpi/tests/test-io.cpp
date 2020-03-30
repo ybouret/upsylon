@@ -24,7 +24,7 @@ namespace
             {
                 const T tmp = support::get<T>();
                 primary.push_back(tmp);
-                sendBlock.emit_net(tmp);
+                sendBlock.write_nbo(tmp);
             }
             MPI.print0(stderr,"Sending %u items, bytes=%u\n", unsigned(ns), unsigned( sendBlock.size() ));
         }
@@ -47,8 +47,13 @@ namespace
                     ios::imstream fp(recvBlock);
                     while( fp.is_active() )
                     {
-                        const T tmp = fp.read_net<T>();
-                        received.push_back(tmp);
+                        size_t done = 0;
+                        T      temp = 0;
+                        if(!fp.query_nbo(temp,done))
+                        {
+                            throw exception("missing data");
+                        }
+                        received.push_back(temp);
                     }
                     MPI.print0(stderr, "received from %d: #%u\n", r, unsigned(received.size()) );
                 }
@@ -60,8 +65,13 @@ namespace
                 ios::imstream fp(recvBlock);
                 while( fp.is_active() )
                 {
-                    const T tmp = fp.read_net<T>();
-                    local.push_back(tmp);
+                    size_t done = 0;
+                    T      temp = 0;
+                    if(!fp.query_nbo(temp,done))
+                    {
+                        throw exception("missing data");
+                    }
+                    local.push_back(temp);
                     ++nr;
                 }
                 MPI.vSend(comm_variable_size, recvBlock, 0, mpi::io_tag);
@@ -86,7 +96,8 @@ namespace
         ios::imstream fp(data);
         while( fp.is_active() )
         {
-            const T tmp = T::read(fp,NULL);
+            size_t done = 0;
+            const T tmp = T::read(fp,done,"ioSerialRead");
             seq.push_back(tmp);
         }
     }
