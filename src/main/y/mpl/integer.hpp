@@ -92,6 +92,7 @@ inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) thr
 inline friend bool operator OP ( const natural  &lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
 inline friend bool operator OP ( const integer  &lhs, const natural   &rhs ) throw() { return compare(lhs,rhs) OP 0; }
             
+            //! implement all comparisons
 #define Y_MPZ_CMP_OPS() \
 Y_MPZ_CMP(==)           \
 Y_MPZ_CMP(!=)           \

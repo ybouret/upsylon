@@ -67,6 +67,7 @@ Y_MPQ_DEFINE(RET,BODY,CALL,natural &)
 inline friend bool operator OP ( const rational &lhs, const rational &rhs ) { return compare(lhs,rhs) OP 0; }\
 Y_MPQ_OVERLOAD(friend bool,operator OP)
             
+            //! implement all comparisons
 #define Y_MPQ_CMP_OPS() \
 Y_MPQ_CMP(==)           \
 Y_MPQ_CMP(!=)           \

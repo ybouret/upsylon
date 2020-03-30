@@ -10,11 +10,14 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! cache of syntax xnode for tree construction
         class XCache : public XList
         {
         public:
-            virtual ~XCache() throw();
-            void reserve( size_t n);
+            virtual ~XCache() throw(); //!< cleanup
+            void reserve( size_t n);   //!< reserve inactive nodes
+            
+            //! setup
             template <typename LABEL> inline
             explicit XCache(const LABEL &id, size_t n=0 ) :
             dull( new Inactive(id) )
@@ -22,12 +25,14 @@ namespace upsylon {
                 reserve(n);
             }
             
-            const arc_ptr<Inactive> dull;
             
             XNode *query(); 
             XNode *query(const Internal &);
             XNode *query(const Terminal &, Lexeme *lexeme);
             void   store(XNode *xnode) throw();
+
+            //! shared inactive axiom
+            const arc_ptr<Inactive> dull;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XCache);

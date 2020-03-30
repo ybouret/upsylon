@@ -15,18 +15,18 @@ namespace upsylon {
         // forward declarations and aliases
         //
         //----------------------------------------------------------------------
-        class                  Inactive;
-        class                  Terminal;
-        class                  Internal;
-        class                  Axiom;
-        typedef arc_ptr<Axiom> Dogma;
+        class                  Inactive; //!< forward
+        class                  Terminal; //!< forward
+        class                  Internal; //!< forward
+        class                  Axiom;    //!< forward
+        typedef arc_ptr<Axiom> Dogma;    //!< forward
         
         class                            XNode; //!< Syntax Node
         typedef core::list_of_cpp<XNode> XList; //!< Syntax Node List
         
         //----------------------------------------------------------------------
         //
-        //
+        //! versatile, variant syntax node
         //
         //----------------------------------------------------------------------
         class XNode :
@@ -43,9 +43,9 @@ namespace upsylon {
                 IsInternal, //!< an internal => children
                 IsInactive  //!< prepared memory
             };
-            static const uint8_t TerminalMark = '_';
-            static const uint8_t InternalMark = '@';
-            static const uint8_t InactiveMark = '~';
+            static const char TerminalMark = '_';
+            static const char InternalMark = '@';
+            static const char InactiveMark = '~';
             
             static XNode *Create( const Inactive & );
             static XNode *Create( const Internal & );
@@ -68,8 +68,13 @@ namespace upsylon {
             XNode      *activate(const Internal &) throw();
             XNode      *activate(const Terminal &, Lexeme *lexeme) throw();
 
+            virtual size_t      serialize(ios::ostream &) const;
+            virtual const char *className()        const throw();
+            
             const Genre genre;
             const Dogma dogma;
+            
+           
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);
@@ -77,8 +82,7 @@ namespace upsylon {
             explicit XNode(const Terminal &,Lexeme *) throw();
             explicit XNode(const Internal &)          throw();
             virtual void   vizCore(ios::ostream   &) const;
-            virtual size_t      serialize(ios::ostream &) const;
-            virtual const char *className()        const throw();
+           
             
             union {
                 Lexeme *lexeme;

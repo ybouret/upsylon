@@ -88,6 +88,7 @@ Y_UTEST(xnode)
         }
         
         root->graphViz("xnode.dot");
+        root->save_to("xnode.bin");
         
         xcache.store( root.yield() );
         

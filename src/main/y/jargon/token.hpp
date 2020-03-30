@@ -11,7 +11,7 @@ namespace upsylon {
     namespace Jargon {
         
         //! a dynamic Token of Chars
-        class Token : public Char::List
+        class Token : public Char::List, public Serializable
         {
         public:
             //------------------------------------------------------------------
@@ -35,16 +35,25 @@ namespace upsylon {
             void trim(size_t n) throw();                  //!< trim n chars
             //! display all Chars
             friend std::ostream & operator<<( std::ostream &, const Token &);
-           
+            
+            //------------------------------------------------------------------
+            //
+            // interfaces
+            //
+            //------------------------------------------------------------------
+            virtual size_t      serialize( ios::ostream &fp ) const;
+            virtual const char *className()           const throw();
+            
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
             mutable Cache cache; //!< shared cache for I/O
-
+            
         private:
             Y_DISABLE_ASSIGN(Token);
+        
         };
         
     }

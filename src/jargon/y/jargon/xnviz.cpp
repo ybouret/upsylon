@@ -6,7 +6,6 @@ namespace upsylon {
     
     namespace Jargon {
         
-#if 1
         static inline void emitLabel(ios::ostream &fp, const Tag &label)
         {
             const char *p = **label;
@@ -65,7 +64,6 @@ namespace upsylon {
             
             
         }
-#endif
         
     }
 }

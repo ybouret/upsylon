@@ -18,6 +18,7 @@ namespace upsylon {
         
         Token:: Token( const Token &other ) :
         Char::List(),
+        Serializable(),
         cache( other.cache )
         {
             for( const Char *ch=other.head; ch; ch=ch->next)
@@ -39,7 +40,7 @@ namespace upsylon {
         {
             push_back( Char::Make(cache,context,content) );
         }
-
+        
         void Token:: append(const Context &context, const string &content)
         {
             const size_t n = content.size();
@@ -71,14 +72,38 @@ namespace upsylon {
         void Token:: trim(size_t n) throw()
         {
             assert(n<=size);
-
+            
             while(n-- >0)
             {
                 cache->store(pop_back());
             }
         }
-
+        
         
     }
 }
 
+#include "y/ios/ostream.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        const char *Token::className() const throw()
+        {
+            return "Token";
+        }
+        
+        size_t Token:: serialize( ios::ostream &fp ) const
+        {
+            const size_t written = fp.write_upack(size) + size;
+            for(const Char *ch=head;ch;ch=ch->next)
+            {
+                fp.write(ch->code);
+            }
+            return written;
+        }
+        
+    }
+    
+}

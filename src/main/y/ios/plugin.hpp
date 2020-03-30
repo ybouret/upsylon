@@ -37,6 +37,7 @@ namespace upsylon
 
         protected:
             explicit plugin(const uint32_t, const comm_mode) throw(); //!< setup with identifier
+            //! throw on missing data
             void missing_data(const char *pluginName,const char *typeName) const;
             
         private:
