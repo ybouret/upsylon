@@ -4,7 +4,7 @@
 #ifndef Y_JARGON_XCACHE_INCLUDED
 #define Y_JARGON_XCACHE_INCLUDED 1
 
-#include "y/jargon/axiom.hpp"
+#include "y/jargon/axiom/inactive.hpp"
 
 namespace upsylon {
     

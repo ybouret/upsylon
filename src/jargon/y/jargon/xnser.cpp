@@ -1,5 +1,5 @@
 
-#include "y/jargon/axiom/terminal.hpp"
+#include "y/jargon/axiom/all.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/exception.hpp"
 

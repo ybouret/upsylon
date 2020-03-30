@@ -1,7 +1,7 @@
 #include "y/jargon/xcache.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/jargon/axiom/terminal.hpp"
+#include "y/jargon/axiom/all.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
