@@ -8,7 +8,7 @@
 #include "y/os/static-check.hpp"
 #include "y/os/printf-check.hpp"
 #include "y/memory/buffer.hpp"
-#include "y/ios/gist.hpp"
+#include "y/ios/upacker.hpp"
 
 namespace upsylon
 {
@@ -105,46 +105,12 @@ namespace upsylon
                 // check value metrics
                 //______________________________________________________________
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
-                
-#if 1
-                //______________________________________________________________
-                //
-                // check value metrics
-                //______________________________________________________________
-                Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
-                const size_t  num_bits     = bits_for(x); assert(num_bits<=64);
-                const uint8_t last4shifted = uint8_t(x&T(0x0f)) << 4;
-                if(num_bits<=4)
-                {
-                    //__________________________________________________________
-                    //
-                    // 0 extra bytes!
-                    //__________________________________________________________
-                    write(last4shifted);
-                    return 1;
-                }
-                else
-                {
-                    //__________________________________________________________
-                    //
-                    // some extra bits/byte(s)
-                    //__________________________________________________________
-                    const size_t extra_bits  = num_bits - 4;
-                    size_t       extra_bytes = Y_ROUND8(extra_bits)>>3; assert(extra_bytes<=8);
-                    size_t       count = 1;
-                    write( char(last4shifted | extra_bytes) );
-                    x >>= 4;
-                    while(extra_bytes-- > 0)
-                    {
-                        const uint8_t B = uint8_t(x&T(0xff));
-                        write(B);
-                        gist::shr8<T>(x, int2type< (sizeof(T)>1) >() );
-                        ++count;
-                    }
-                    assert(0==x);
-                    return count;
-                }
-#endif
+                size_t n = 0;
+                write(upacker::encode::init(x,n));
+                const size_t written = 1+n;
+                while(n-- > 0)
+                     write( upacker::encode::next(x) );
+                return written;
             }
             
             //! emit a binary block, return written bytes

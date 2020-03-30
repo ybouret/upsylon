@@ -22,7 +22,7 @@ namespace
             output.clear();
             ios::osstream fp(output);
             const size_t count = fp.write_upack<T>( 0 );
-            std::cerr << "output.size=" << output.size() << "/" << count << " ";
+            std::cerr << "output.size=" << output.size() << "/" << count << std::endl;
             ios::imstream inp(output);
             T ans = 0;
             Y_CHECK( inp.query_upack(ans,shift) );
@@ -37,6 +37,7 @@ namespace
             ios::imstream inp(output);
             T ans = 0;
             Y_CHECK( inp.query_upack(ans,shift) );
+            std::cerr << "ans=" << uint64_t(ans) << std::endl;
             Y_CHECK( limit_of<T>::maximum == ans );
         }
 

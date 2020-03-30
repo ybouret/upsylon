@@ -6,7 +6,7 @@
 #include "y/ios/stream.hpp"
 #include "y/os/endian.hpp"
 #include "y/os/static-check.hpp"
-#include "y/ios/gist.hpp"
+#include "y/ios/upacker.hpp"
 
 namespace upsylon
 {
@@ -66,38 +66,24 @@ namespace upsylon
             }
             
             
-            //! read a packed unsigned, with optional COUNT of read byte
+            //! read a packed unsigned, with count of read bytes
             template <typename T>
             inline bool query_upack(T      &ans,
                                     size_t &shift)
             {
                 Y_STATIC_CHECK(sizeof(T)<=8,T_is_too_large);
-                // read first byte
-                uint8_t prolog = 0;
-                if(!query_nbo(prolog,shift))
-                    return false;
-                assert(1==shift);
-                
-                // read extra bytes
-                uint8_t      store[8]    = { 0,0,0,0,0,0,0,0 };
-                size_t       extra_bytes = (prolog&0x0f);
-                const size_t extra_query = try_query(store,extra_bytes);
-                shift += extra_query;
-                if(extra_query!=extra_bytes)
+                shift  = 0;
+                char C = 0;
+                if(!query(C)) return false;
+                shift      = 1;
+                size_t shl = 0;
+                size_t n   = upacker::decode::init(ans,C,shl);
+                if(n>sizeof(T)) return false;
+                while(n-- > 0)
                 {
-                    return false;
-                }
-                ans = 0;
-                while(extra_bytes-- > 0)
-                {
-                    gist::shl8(ans,int2type< (sizeof(T)>1) >());
-                    ans |= store[extra_bytes];
-                }
-                
-                {
-                    const uint8_t B = uint8_t((prolog&0xf0) >> 4);
-                    ans <<= 4;
-                    ans |= B;
+                    if(!query(C)) return false;
+                    ++shift;
+                    upacker::decode::next(ans,C,shl);
                 }
                 return true;
             }
