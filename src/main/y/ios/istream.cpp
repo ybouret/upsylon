@@ -55,20 +55,17 @@ namespace upsylon
         size_t istream:: try_query(void *buffer,const size_t buflen)
         {
             assert(!(0==buffer&&buflen>0));
-            char *target = static_cast<char *>(buffer);
-            char  C      = 0;
-
-            size_t ans = 0;
-            for(size_t i=0;i<buflen;++i)
+            const char *B = static_cast<const char *>(buffer);
+            char       *C = static_cast<char       *>(buffer);
+            
+            for(size_t i=0;i<buflen;++i,++C)
             {
-                if(!query(C))
+                if(!query(*C))
                 {
                     break;
                 }
-                *(target++) = C;
-                ++ans;
             }
-            return ans;
+            return static_cast<size_t>(C-B);
         }
 
         
