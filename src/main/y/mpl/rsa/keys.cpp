@@ -301,7 +301,10 @@ namespace upsylon
     {
         Key * Key:: Read( ios::istream &fp, size_t &shift, const ReadMode readMode )
         {
-            uint32_t       tag = 0; if(!fp.query_nbo(tag,shift)) throw exception("RSA::Key::Read(missing tag)");
+            // read tag and initialize shift
+            uint32_t       tag = 0;
+            if(!fp.query_nbo(tag,shift)) throw exception("RSA::Key::Read(missing tag)");
+
             switch(tag)
             {
                     //__________________________________________________________
