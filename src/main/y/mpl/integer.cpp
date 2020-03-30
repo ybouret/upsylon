@@ -327,6 +327,10 @@ namespace upsylon
             return integer(n2);
         }
 
+        bool integer:: is_divisible_by(const natural &d) const
+        {
+            return n.is_divisible_by(d);
+        }
 
 
 

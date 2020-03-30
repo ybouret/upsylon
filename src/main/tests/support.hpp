@@ -107,7 +107,8 @@ namespace {
             const mpn den = support::get<mpn>();
             if( !den.is_zero() )
             {
-                return mpq(num,den);
+                const mpq Q(num,den);
+                return Q;
             }
         }
     }

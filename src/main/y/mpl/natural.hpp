@@ -157,6 +157,7 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
             //
             //__________________________________________________________________
             bool is_zero() const throw();                //!< fast checking against 0
+            bool is_one()  const throw();                //!< fast checking against 0
             bool is_positive() const throw();            //!< fast checking greater than zero
             bool is_byte(const uint8_t x) const throw(); //!< fast checking against a byte
             void set_byte(const uint8_t x) throw();      //!< fast setting to a byte

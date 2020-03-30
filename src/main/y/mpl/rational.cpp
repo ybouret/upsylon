@@ -1,13 +1,20 @@
 #include "y/mpl/rational.hpp"
 #include "y/exceptions.hpp"
 #include "y/os/error.hpp"
-
+#include "y/type/aliasing.hpp"
 #include <cerrno>
 
 namespace upsylon
 {
     namespace mpl
     {
+        
+        rational:: rational( const integer &n, const natural &d, int2type<false> ) :
+        object(), number_type(), num(n), den(d)
+        {
+            
+        }
+
         void rational:: check()
         {
             if(den.is_zero())
@@ -15,17 +22,23 @@ namespace upsylon
                 throw libc::exception(EDOM,"mpl.rational: zero denominator");
             }
             __simplify();
+           
         }
 
+    
         void rational:: __simplify()
         {
             assert(den.is_positive());
-            natural &d = (natural &) den;
-            integer &z = (integer &) num;
+            natural &d = aliasing::_(den);
+            integer &z = aliasing::_(num);
             if(z.s==__zero)
             {
+                //--------------------------------------------------------------
+                //
                 // numerator is null => denominator to 1
-                assert(true==z.n.is_zero());
+                //
+                //--------------------------------------------------------------
+                assert(z.n.is_zero());
                 if(!d.is_byte(1))
                 {
                     d.set_byte(1);
@@ -33,13 +46,17 @@ namespace upsylon
             }
             else
             {
+                //--------------------------------------------------------------
+                //
                 // numerator is not zero, obviously not for denominator
+                //
+                //--------------------------------------------------------------
                 assert( z.s   != __zero        );
                 assert( false == z.n.is_zero() );
 
-                if(!d.is_byte(1))
+                if(!d.is_one())
                 {
-                    natural      &n = (natural &)(z.n);
+                    natural      &n = aliasing::_(z.n);
                     natural      a=n;
                     natural      b=d;
                     if(b>a)
@@ -191,7 +208,7 @@ namespace upsylon
 
         rational rational::__inc() const
         {
-            const integer new_num = num + den;
+            const  integer new_num = num + den;
             return rational(new_num,den);
         }
 
@@ -241,13 +258,22 @@ namespace upsylon {
 
         rational rational:: read( ios::istream &fp, size_t &shift, const char *which)
         {
+            static const char fn[] = "mpq::read";
             assert(which);
             const integer _num   = integer::read(fp,shift,which);
             size_t        shift2 = 0;
             const natural _den   = natural::read(fp,shift2,which);
-            
             shift += shift2;
-            return rational(_num,_den);
+            
+            if( _den.is_zero() ) throw exception("%s(zero denominator for '%s'",fn,which);
+            if( _num.n.is_positive() )
+            {
+                if( !_den.is_one() )
+                {
+                    if(_num.is_divisible_by(_den)) throw exception("%s('%s' is not reduced)",fn,which);
+                }
+            }
+            return rational(_num,_den,int2type<false>());
         }
     }
 }

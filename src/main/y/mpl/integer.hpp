@@ -15,7 +15,7 @@ namespace upsylon
             __zero,     //!<  0
             __positive  //!<  1
         };
-
+        
         //! operations on signs
         struct sign_ops
         {
@@ -32,8 +32,8 @@ namespace upsylon
         public:
             const sign_type s; //!< it sign
             const natural   n; //!< it natural value
-
-
+            
+            
             virtual ~integer() throw();                        //!< destructor
             integer();                                         //!< zero constructor
             integer(const integer   &z);                       //!< copy constructor
@@ -47,14 +47,14 @@ namespace upsylon
             integer & operator=( const integer   &z);          //!< assign
             integer & operator=( const integer_t  i);          //!< assign
             integer & operator=( const natural   &u);          //!< assign
-
+            
             //! output
             friend std::ostream & operator<<( std::ostream &, const integer &);
-
+            
             //! get a signed decimal string
             string to_decimal() const;
             
-
+            
             //! signed comparison
             static int compare_blocks(const sign_type ls,
                                       const uint8_t  *l,
@@ -62,10 +62,10 @@ namespace upsylon
                                       const sign_type rs,
                                       const uint8_t  *r,
                                       const size_t    nr) throw();
-
+            
             //! binary presentation
             static const uint8_t *prepare( integer_t &i, sign_type &si, size_t &ni ) throw();
-
+            
             //! raw data from integert_t
 #define Y_MPZ_PREPARE() sign_type si = __zero; size_t ni=0; const uint8_t *bi = prepare(i,si,ni)
             //! present arguments from integer
@@ -81,9 +81,9 @@ inline RET BODY(const integer &lhs, integer_t       i  ) throw() { Y_MPZ_PREPARE
 inline RET BODY(integer_t      i,   const integer  &rhs) throw() { Y_MPZ_PREPARE(); return CALL(Y_MPZ_IARGS(),Y_MPZ_ZARGS(rhs)); }\
 inline RET BODY(const natural &u,   const integer  &rhs) throw() { return CALL(Y_MPZ_UARGS(),Y_MPZ_ZARGS(rhs)); }\
 inline RET BODY(const integer &lhs, const natural  &u  ) throw() { return CALL(Y_MPZ_ZARGS(lhs),Y_MPZ_UARGS()); }
-
+            
             Y_MPZ_IMPL_NOTHROW(static int,compare,compare_blocks)
-
+            
             //! comparison operator declarations
 #define Y_MPZ_CMP(OP) \
 inline friend bool operator OP ( const integer  &lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
@@ -91,13 +91,17 @@ inline friend bool operator OP ( const integer  &lhs, const integer_t  rhs ) thr
 inline friend bool operator OP ( const integer_t lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
 inline friend bool operator OP ( const natural  &lhs, const integer   &rhs ) throw() { return compare(lhs,rhs) OP 0; } \
 inline friend bool operator OP ( const integer  &lhs, const natural   &rhs ) throw() { return compare(lhs,rhs) OP 0; }
-            Y_MPZ_CMP(==)
-            Y_MPZ_CMP(!=)
-            Y_MPZ_CMP(<=)
-            Y_MPZ_CMP(<)
-            Y_MPZ_CMP(>=)
-            Y_MPZ_CMP(>)
-
+            
+#define Y_MPZ_CMP_OPS() \
+Y_MPZ_CMP(==)           \
+Y_MPZ_CMP(!=)           \
+Y_MPZ_CMP(<=)           \
+Y_MPZ_CMP(<)            \
+Y_MPZ_CMP(>=)           \
+Y_MPZ_CMP(>)
+            
+            Y_MPZ_CMP_OPS()
+            
             //! define wrappers
 #define Y_MPZ_DEFINE(RET,BODY) \
 static inline RET BODY(const integer &lhs, const integer  &rhs)   {                       return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }\
@@ -105,7 +109,7 @@ static inline RET BODY(const integer &lhs, integer_t       i  )   { Y_MPZ_PREPAR
 static inline RET BODY(integer_t      i,   const integer  &rhs)   { Y_MPZ_PREPARE();      return BODY(Y_MPZ_IARGS(),Y_MPZ_ZARGS(rhs));      }\
 static inline RET BODY(const natural  &u,  const integer &rhs )   { const integer lhs(u); return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); } \
 static inline RET BODY(const integer &lhs, const natural &u   )   { const integer rhs(u); return BODY(Y_MPZ_ZARGS(lhs), Y_MPZ_ZARGS(rhs) ); }
-
+            
             //! multiple prototype for operators
 #define Y_MPZ_IMPL(OP,CALL) \
 integer & operator OP##=(const integer  &rhs) { integer ans = CALL(*this,rhs); xch(ans); return *this; } \
@@ -115,7 +119,7 @@ inline friend integer operator OP ( const integer  &lhs, const integer_t rhs ) {
 inline friend integer operator OP ( const integer_t lhs, const integer  &rhs ) { return CALL(lhs,rhs); } \
 inline friend integer operator OP ( const integer  &lhs, const natural &rhs )  { return CALL(lhs,rhs); } \
 inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  { return CALL(lhs,rhs); }
-
+            
             //! declaration and implementation of function for a given operator
 #define Y_MPZ_WRAP(OP,CALL) Y_MPZ_DEFINE(integer,CALL) Y_MPZ_IMPL(OP,CALL)
             //__________________________________________________________________
@@ -123,16 +127,16 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             // ADD
             //__________________________________________________________________
             Y_MPZ_WRAP(+,__add)
-
+            
             //! unary plus
             integer operator+();
-
+            
             //! increment
             integer __inc() const;
-
+            
             //! pre increment operator
             integer & operator++();
-
+            
             //! post increment operator
             integer   operator++(int);
             
@@ -141,32 +145,33 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             // SUB
             //__________________________________________________________________
             Y_MPZ_WRAP(-,__sub)
-
+            
             //! unary minus
             integer operator-() const;
-
+            
             //! increment
             integer __dec() const;
-
+            
             //! pre increment operator
             integer & operator--();
-
+            
             //! post increment operator
             integer   operator--(int);
-
+            
             //__________________________________________________________________
             //
             // MUL
             //__________________________________________________________________
             Y_MPZ_WRAP(*,__mul)
             static integer square_of( const integer &z ); //!< fast square
-
+            
             //__________________________________________________________________
             //
             // DIV
             //__________________________________________________________________
             Y_MPZ_WRAP(/,__div)
-
+            bool is_divisible_by(const natural &) const;
+            
             //__________________________________________________________________
             //
             // Serialize
@@ -175,7 +180,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             virtual size_t      serialize( ios::ostream &fp ) const;  //!< s and n
             static const char   CLASS_NAME[];                         //!< "mpz"
             static integer      read( ios::istream &, size_t &shift, const char *which); //!< retrieve a serialized integer
-
+            
         private:
             static integer __add(const sign_type ls,
                                  const uint8_t  *l,
@@ -183,21 +188,21 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                                  const sign_type rs,
                                  const uint8_t  *r,
                                  const size_t    nr);
-
+            
             static integer __sub(const sign_type ls,
                                  const uint8_t  *l,
                                  const size_t    nl,
                                  const sign_type rs,
                                  const uint8_t  *r,
                                  const size_t    nr);
-
+            
             static integer __mul(const sign_type ls,
                                  const uint8_t  *l,
                                  const size_t    nl,
                                  const sign_type rs,
                                  const uint8_t  *r,
                                  const size_t    nr);
-
+            
             static integer __div(const sign_type ls,
                                  const uint8_t  *l,
                                  const size_t    nl,
@@ -205,9 +210,9 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                                  const uint8_t  *r,
                                  const size_t    nr);
         };
-
+        
     }
-
+    
     typedef mpl::integer mpz; //!< alias for mp-signed
     namespace math
     {
@@ -215,7 +220,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
         inline mpz  __mod2(const mpz &z) { return z*z;      } //!< overloaded __mod2 function
         mpz        sqrt_of(const mpz &z);                     //!< overloaded sqrt_of
     }
-
+    
     //! extended numeric for mpz
     template <> struct xnumeric<mpz>
     {
@@ -223,7 +228,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
         static inline bool is_zero(const mpz &z)     { return mpl::__zero     == z.s; } //!< z==0
         static inline bool is_positive(const mpz &z) { return mpl::__positive == z.s; } //!< z>0
     };
-
+    
 }
 
 

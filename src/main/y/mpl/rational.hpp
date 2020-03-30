@@ -14,7 +14,7 @@ namespace upsylon
         public:
             const integer num; //!< numerator
             const natural den; //!< denominator>0
-
+            
             virtual ~rational() throw();                   //!< destructor
             rational();                                    //!< default constructor, zero
             rational(const integer_t);                     //!< from integral type
@@ -30,18 +30,18 @@ namespace upsylon
             void       check();                            //!< update to simplified form
             double     to_real() const throw();            //!< conversion
             void       xch( rational &q ) throw();         //!< no throw exchange
-
+            
             //! output
             friend std::ostream & operator<<(std::ostream &, const rational &);
-
+            
             //__________________________________________________________________
             //
             // comparisons
             //__________________________________________________________________
-
+            
             //! basic comparison function
             static int compare( const rational &lhs, const rational &rhs);
-
+            
             //! changing RHS args
 #define Y_MPQ_DEFINE_RHS(RET,BODY,CALL,TYPE)  inline RET BODY( const rational &lhs, const TYPE      rhs ) { const rational R(rhs); return CALL(lhs,R); }
             
@@ -50,7 +50,7 @@ namespace upsylon
             
             //! defining change of args
 #define Y_MPQ_DEFINE(RET,BODY,CALL,TYPE) Y_MPQ_DEFINE_RHS(RET,BODY,CALL,TYPE) Y_MPQ_DEFINE_LHS(RET,BODY,CALL,TYPE)
-
+            
             //! overloaded operators
 #define Y_MPQ_IMPL(RET,BODY,CALL)     \
 Y_MPQ_DEFINE(RET,BODY,CALL,integer_t) \
@@ -59,21 +59,24 @@ Y_MPQ_DEFINE(RET,BODY,CALL,natural &)
             
             //! overloaded function
 #define Y_MPQ_OVERLOAD(RET,CALL) Y_MPQ_IMPL(RET,CALL,CALL)
-
+            
             Y_MPQ_OVERLOAD(static int,compare)
-
+            
             //! use it for comparison
 #define Y_MPQ_CMP(OP) \
 inline friend bool operator OP ( const rational &lhs, const rational &rhs ) { return compare(lhs,rhs) OP 0; }\
 Y_MPQ_OVERLOAD(friend bool,operator OP)
-
-            Y_MPQ_CMP(==)
-            Y_MPQ_CMP(!=)
-            Y_MPQ_CMP(<)
-            Y_MPQ_CMP(<=)
-            Y_MPQ_CMP(>)
-            Y_MPQ_CMP(>=)
-
+            
+#define Y_MPQ_CMP_OPS() \
+Y_MPQ_CMP(==)           \
+Y_MPQ_CMP(!=)           \
+Y_MPQ_CMP(<)            \
+Y_MPQ_CMP(<=)           \
+Y_MPQ_CMP(>)            \
+Y_MPQ_CMP(>=)
+            
+            Y_MPQ_CMP_OPS()
+            
             //! use it for multiple operators API
 #define Y_MPQ_WRAP(OP,CALL) \
 inline rational & operator OP##=(const rational &q) { rational tmp = CALL(*this,q); xch(tmp); return *this; }\
@@ -81,7 +84,7 @@ inline rational & operator OP##=(const integer  &z) { const rational q(z); retur
 inline rational & operator OP##=(const integer_t i) { const rational q(i); return (*this) OP##= q;          }\
 inline friend rational operator OP (const rational &lhs, const rational &rhs ) { return CALL(lhs,rhs);      }\
 Y_MPQ_IMPL(friend rational ,operator OP,CALL)
-
+            
             //__________________________________________________________________
             //
             // ADD
@@ -91,7 +94,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             rational    __inc() const;    //!< increment
             rational & operator++();      //!< pre increment operator
             rational   operator++(int);   //!< post increment operator
-
+            
             //__________________________________________________________________
             //
             // SUB
@@ -101,7 +104,7 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             rational   __dec() const;     //!< increment
             rational & operator--();      //!< pre increment operator
             rational   operator--(int);   //!< post increment operator
-
+            
             
             //__________________________________________________________________
             //
@@ -109,13 +112,13 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             //__________________________________________________________________
             Y_MPQ_WRAP(*,__mul)
             static rational square_of(const rational &q); //!< fast square
-
+            
             //__________________________________________________________________
             //
             // MUL
             //__________________________________________________________________
             Y_MPQ_WRAP(/,__div)
-
+            
             //__________________________________________________________________
             //
             // Serialize
@@ -131,10 +134,10 @@ Y_MPQ_IMPL(friend rational ,operator OP,CALL)
             static  rational __sub( const rational &lhs, const rational &rhs );
             static  rational __mul( const rational &lhs, const rational &rhs );
             static  rational __div( const rational &lhs, const rational &rhs );
-            
+            rational( const integer &, const natural &, int2type<false>);
         };
     }
-
+    
     typedef mpl::rational mpq; //!< alias
     namespace math
     {

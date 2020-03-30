@@ -204,7 +204,9 @@ namespace upsylon
         bool natural:: is_positive() const throw() { return (bytes>0);  }
 
         bool natural:: is_byte(const uint8_t x) const throw() { return (x<=0) ? (bytes<=0) : ((1==bytes) && (x==byte[0])); }
-
+        
+        bool natural:: is_one() const throw() { return (1==bytes) && (1== byte[0]); }
+        
         void natural:: set_byte(const uint8_t x) throw()
         {
             Y_MPN_CHECK(this);
