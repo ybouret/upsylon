@@ -11,6 +11,7 @@
 
 using namespace upsylon;
 using namespace Oxide;
+#define USE_STRINGS 1
 
 namespace
 {
@@ -52,9 +53,10 @@ namespace
     {
 
         typedef typename FieldFor<COORD,double>::Type   dField;
-        typedef typename FieldFor<COORD,string>::Type   sField;
         typedef typename FieldFor<COORD,Coord1D>::Type  iField;
-
+#if USE_STRINGS
+        typedef typename FieldFor<COORD,string>::Type   sField;
+#endif
         const size_t  ng = 1;
         ios::ovstream block( 1024*1024 );
 
@@ -64,20 +66,22 @@ namespace
 
         for(Coord1D size=1;size<=27;++size)
         {
-            std::cerr << "#cores=" << size << ", full=" << full << std::endl;
             memory::cblock_of<typename Workspace<COORD>::AsyncIO > aioData( size * Workspace<COORD>::Orientations );
             typename Workspace<COORD>::AsyncIO *aios = aioData.data;
 
             vector<COORD> mappings;
             full.buildMappings(mappings,size);
+            if(mappings.size()<=0) continue;;
+            std::cerr << full.Dimensions << "D #cores=" << size << ", full=" << full << std::endl;
+            
             for(size_t j=1;j<=mappings.size();++j)
             {
-                std::cerr << "/mapping=" << mappings[j];
+                std::cerr << "\t|_mapping=" << mappings[j];
 
                 typename Layout<COORD>::Loop pbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
                 for(pbc.boot(); pbc.good(); pbc.next())
                 {
-                    std::cerr << ".";
+                    //std::cerr << ".";
 
                     //----------------------------------------------------------
                     //
@@ -97,11 +101,13 @@ namespace
                         Workspace<COORD> &W = WS[rank];
 
                         dField &Fd = W.template create<dField>( "Fd" );
-                        sField &Fs = W.template create<sField>( "Fs" );
                         iField &Fi = W.template create<iField>( "Fi" );
                         fill(Fd);
+#if USE_STRINGS
+                        sField &Fs = W.template create<sField>( "Fs" );
                         fill(Fs);
-
+#endif
+                        
                         IO::LD(Fi,W.outer,-LabelOf(rank));
                         IO::LD(Fi,W.inner, LabelOf(rank));
 
@@ -132,7 +138,7 @@ namespace
                         // and reset for next adventure
                         IO::LD(Fi,W.outer,-LabelOf(rank));
                         IO::LD(Fi,W.inner, LabelOf(rank));
-                        std::cerr << "0";
+                        //std::cerr << "0";
                     }
 
                     //----------------------------------------------------------
@@ -172,7 +178,7 @@ namespace
 
                             }
                         }
-                        std::cerr << "+";
+                        //std::cerr << "+";
                     }
 
 
@@ -205,14 +211,19 @@ namespace
                                 CheckValueOf(Fi,peer->inner, LabelOf(aio.send->rank) );
                             }
                         }
-                        std::cerr << "-";
+                        //std::cerr << "-";
                     }
 
 
                 }
-
-            } std::cerr << std::endl;
+                
+                // end of mapping
+                std::cerr << std::endl;
+            }
+            // end of size
+            // std::cerr << std::endl;
         }
+        // end of all
         std::cerr << std::endl;
     }
 
@@ -229,7 +240,7 @@ Y_UTEST(oxide_mpi)
 
     for(loop.boot();loop.good();loop.next())
     {
-        const Coord3D  upper = lower + 4 * loop.value;
+        const Coord3D  upper = lower + 2 * loop.value;
         const Layout1D full1D( lower.x, upper.x);
         const Layout2D full2D( lower.xy(), upper.xy());
         const Layout3D full3D(lower,upper);
