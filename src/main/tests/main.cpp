@@ -62,6 +62,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(string);
     Y_UTEST(string_convert);
     Y_UTEST(string_defrag);
+    Y_UTEST(string_io);
     Y_UTEST(esma);
 
 

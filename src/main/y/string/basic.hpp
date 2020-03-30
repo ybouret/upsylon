@@ -246,7 +246,7 @@ maxi_ = items-1
                 Y_CORE_STRING_ALLOC();
                 Y_CORE_STRING_CHECK(*this);
                 if(filled) size_ = n;
-                Y_CORE_STRING_CHECK(*this);
+                //Y_CORE_STRING_CHECK(*this);
             }
 
             //! construct with a single char

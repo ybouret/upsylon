@@ -6,14 +6,29 @@
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/string.hpp"
+#include "y/fs/local/file.hpp"
 
 using namespace  upsylon;
 
 Y_UTEST(mp_io)
 {
 
+    size_t np = 200;
+    std::cerr << "-- creating " << np << " primes" << std::endl;
     MPN &mp = MPN::instance();
-    mp.createPrimes(100);
+    mp.createPrimes(np);
+    np = mp.plist.size();
+    std::cerr << "#primes=" <<  np << "/" << mp.mpvec.size << std::endl;
+    {
+        const string fn = "mpn.dat";
+        const size_t nw = mp.save_to(fn);
+        Y_CHECK(ios::local_file::length_of(fn)==nw);
+        {
+            ios::icstream fp(fn);
+            mp.reloadPrimes(fp);
+        }
+        Y_CHECK(mp.plist.size()==np);
+    }
 
     for(size_t iter=1+alea.leq(100);iter>0;--iter)
     {
