@@ -7,6 +7,8 @@ SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ENABLE_TESTING()
 ADD_TEST(types test-jargon types)
 ADD_TEST(xnode test-jargon xnode)
+ADD_TEST(grammar test-jargon grammar)
+
 
 ADD_CUSTOM_TARGET(utest-jargon
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

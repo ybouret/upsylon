@@ -9,6 +9,9 @@ namespace upsylon {
     namespace Jargon {
         
         //! terminal
+        /**
+         accept a lexeme with the same label
+         */
         class Terminal : public Axiom
         {
         public:
@@ -27,6 +30,8 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Terminal);
             virtual const char * vizShape() const throw() { return "rectangle"; }
             virtual const char * vizStyle() const throw() { return "solid";  }
+            virtual bool         accept(Y_JARGON_AXIOM_ARGS) const;
+
         };
         
     }

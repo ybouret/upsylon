@@ -25,6 +25,14 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Internal);
             virtual const char * vizShape() const throw() { return "house";  }
             virtual const char * vizStyle() const throw() { return "solid";  }
+            virtual bool         accept(Y_JARGON_AXIOM_ARGS) const
+            {
+                (void) xtree;
+                (void) lexer;
+                (void) source;
+                (void) xcache;
+                return false;
+            }
         };
         
     }

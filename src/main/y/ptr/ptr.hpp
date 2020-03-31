@@ -64,13 +64,13 @@ namespace upsylon
             return os;
         }
 
-        //! testing equality
+        //! testing pointee equality
         inline friend bool operator==( const ptr<T> &lhs, const ptr<T> &rhs) throw()
         {
             return (lhs.pointee==rhs.pointee);
         }
 
-        //! testing difference
+        //! testing pointee difference
         inline friend bool operator!=( const ptr<T> &lhs, const ptr<T> &rhs) throw()
         {
             return (lhs.pointee!=rhs.pointee);

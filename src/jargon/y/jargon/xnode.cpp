@@ -210,7 +210,20 @@ namespace upsylon {
             
         }
         
-      
+        void XNode:: Advance(XNode * &tree, XNode *node) throw()
+        {
+            assert(node);
+            if(NULL==tree)
+            {
+                tree = node;
+            }
+            else
+            {
+                assert(tree->isInternal());
+                tree->children().push_back(node);
+            }
+        }
+
        
         
     }

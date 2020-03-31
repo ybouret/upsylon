@@ -11,6 +11,16 @@ namespace upsylon {
     
     namespace Jargon {
         
+        class XCache;
+        
+#define Y_JARGON_AXIOM_ARGS \
+XNode * &xtree,  \
+Lexer   &lexer,  \
+Source  &source, \
+XCache  &xcache
+        
+
+
         //! base class for a syntax axiom
         class Axiom : public  CountedObject
         {
@@ -21,8 +31,8 @@ namespace upsylon {
             virtual ~Axiom() throw();
             
             virtual const char * vizShape() const throw() = 0; //!< graphViz shape
-            virtual const char * vizStyle() const throw() = 0; //!< graphViz sty;e
-
+            virtual const char * vizStyle() const throw() = 0; //!< graphViz style
+            virtual bool         accept(Y_JARGON_AXIOM_ARGS) const = 0; //!< main call
             
         protected:
             //! setup

@@ -64,6 +64,7 @@ namespace upsylon {
             
             static void Restore(XNode    *node, Lexer &, XList &) throw();
             static void Release(XNode *, XList &) throw();
+            static void Advance(XNode * &tree, XNode *node) throw();
             
             XNode      *activate(const Internal &) throw();
             XNode      *activate(const Terminal &, Lexeme *lexeme) throw();
