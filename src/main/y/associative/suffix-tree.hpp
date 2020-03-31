@@ -443,7 +443,6 @@ namespace upsylon {
         data_list            dlist; //!< list of data nodes
         data_pool            dpool; //!< pool of data nodes
         
-        
     private:
         Y_DISABLE_ASSIGN(suffix_tree);
 

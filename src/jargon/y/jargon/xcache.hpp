@@ -19,8 +19,8 @@ namespace upsylon {
             
             //! setup
             template <typename LABEL> inline
-            explicit XCache(const LABEL &id, size_t n=0 ) :
-            dull( new Inactive(id) )
+            explicit XCache(const LABEL &inactiveID, size_t n=0 ) :
+            dull( new Inactive(inactiveID) )
             {
                 reserve(n);
             }
