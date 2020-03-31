@@ -102,10 +102,10 @@ namespace upsylon
         inline friend std::ostream & operator<<( std::ostream &os, const set &s )
         {
             os << '{';
-            const size_t n = s.size();
-            size_t       i = 1;
-            typename hash_type::const_iterator j=s.begin();
-            for( ;i<=n;++i,++j)
+            const size_t                       n = s.size();
+            size_t                             i = 1;
+            typename hash_type::const_iterator j = s.begin();
+            for(;i<=n;++i,++j)
             {
                 os << *j;
                 if(i<n) os << ',' << ' ';
