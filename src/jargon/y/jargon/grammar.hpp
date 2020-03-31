@@ -43,6 +43,7 @@ namespace upsylon {
             XCache    xcache;
             
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             const Axiom *ground;
             Axioms       axioms;
             
