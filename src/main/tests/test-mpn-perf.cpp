@@ -157,9 +157,9 @@ static inline bool is_sep( const int C ) throw() { return C == ':'; }
 Y_UTEST(mpn_perf)
 {
 
-    const size_t count = 1024;
+    const size_t count = 1024; // array size
 
-    double delta      = 0.2;
+    double delta      = 0.2;   // number of operations
     size_t iterations = 8;
 
     if(argc>1)

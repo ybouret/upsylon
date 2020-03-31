@@ -44,6 +44,11 @@ static inline void doSRZ(double D, sequence<string> &tid, sequence<double> &spd)
             
         }
     }
+    std::cerr << "|_examples:" << std::endl;
+    for(size_t i=8+alea.leq(8);i>0;--i)
+    {
+        std::cerr << "\t" << alea.in(obj) << std::endl;
+    }
     
     std::cerr << "|_timings..." << std::endl;
     {
