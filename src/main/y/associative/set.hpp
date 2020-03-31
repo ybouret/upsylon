@@ -104,7 +104,8 @@ namespace upsylon
             os << '{';
             const size_t n = s.size();
             size_t       i = 1;
-            for( typename hash_type::const_iterator j=s.begin();i<=n;++i,++j)
+            typename hash_type::const_iterator j=s.begin();
+            for( ;i<=n;++i,++j)
             {
                 os << *j;
                 if(i<n) os << ',' << ' ';
