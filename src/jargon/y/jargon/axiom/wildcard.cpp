@@ -22,6 +22,11 @@ namespace upsylon {
             return *canon;
         }
 
+        string * Wildcard::MakeTag( const char mark, const string &name )
+        {
+            const string id = mark + name;
+            return Tags::Make(id);
+        }
         
     }
     

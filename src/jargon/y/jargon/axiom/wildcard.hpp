@@ -17,19 +17,19 @@ namespace upsylon {
             
             virtual ~Wildcard() throw();
             
-            template <typename LABEL> inline
-            explicit Wildcard(const LABEL   &id,
-                              const uint32_t u,
-                              Axiom         &axiom
-                              ) :
-            Internal(id,u),
-            canon( checkShared(axiom) )
-            {
-            }
             
             const Axiom & operator*() const throw();
             
+            static string *MakeTag(const char mark, const string &name);
+            
         protected:
+            template <typename LABEL> inline
+            explicit Wildcard(const LABEL   &id,
+                              const uint32_t u,
+                              Axiom         &axiom ) :
+            Internal(id,u), canon( checkShared(axiom) )
+            {
+            }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Wildcard);

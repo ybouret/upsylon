@@ -11,19 +11,18 @@ namespace upsylon {
     namespace Jargon {
         
         
-        class Optional : public Wildcard
+        class Option : public Wildcard
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('?','O','P','T');
-            virtual ~Optional() throw();
+            static const char     Mark = '?';
+            static const uint32_t UUID = Y_FOURCC(Mark,'O','P','T');
+            virtual ~Option() throw();
             
-            explicit Optional(Axiom &axiom);
+            explicit Option(Axiom &);
             
-            
-        protected:
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Optional);
+            Y_DISABLE_COPY_AND_ASSIGN(Option);
             
         };
     }

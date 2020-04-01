@@ -7,7 +7,8 @@
 #include "y/jargon/axiom/inactive.hpp"
 #include "y/jargon/axiom/terminal.hpp"
 #include "y/jargon/axiom/compound.hpp"
-#include "y/jargon/axiom/wildcard/optional.hpp"
+#include "y/jargon/axiom/wildcard/option.hpp"
+#include "y/jargon/axiom/wildcard/repeat.hpp"
 
 #endif
 

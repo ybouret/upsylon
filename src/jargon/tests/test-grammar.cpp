@@ -29,6 +29,10 @@ Y_UTEST(grammar)
     Compound &cmpd = G.declare( new Compound("hello",Y_FOURCC('T','R','Y','!')));
     
     cmpd << term;
+    cmpd << G.declare( new Option(term)     );
+    cmpd << G.declare( new OneOrMore(term)  );
+    cmpd << G.declare( new ZeroOrMore(term) );
+    
     
     G.displayAxioms();
     std::cerr << "ground=<" << G.getGround().label << ">" << std::endl;
