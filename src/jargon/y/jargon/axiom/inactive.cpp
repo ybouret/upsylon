@@ -16,6 +16,7 @@ namespace upsylon {
             (void) source;
             (void) xtree;
             (void) xcache;
+            (void) accepted;
             throw exception("Jargon::Inactive cannot accept!!!");
             //return false;
         }

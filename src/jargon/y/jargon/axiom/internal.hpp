@@ -59,6 +59,7 @@ namespace upsylon {
                 (void) lexer;
                 (void) source;
                 (void) xcache;
+                (void) accepted;
                 return false;
             }
         };

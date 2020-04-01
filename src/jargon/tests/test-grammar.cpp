@@ -1,13 +1,35 @@
 #include "y/jargon/grammar.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 
 using namespace  upsylon;
 using namespace  Jargon;
 
 
 namespace {
- 
+    
+    class myLexer   : public Lexer
+    {
+    public:
+        explicit myLexer() :  Lexer("sample")
+        {
+            
+            emit("ID",    "[:alpha:]+");
+            emit("INT",   "[:digit:]+");
+            endl("endl",  "[:endl:]");
+            drop("blanks","[:blank:]");
+            load(type2type<Lexical::ShellComment>(),"comment").hook( *this );
+        }
+        
+        virtual ~myLexer() throw()
+        {
+        }
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(myLexer);
+    };
+    
     class myGrammar : public Grammar
     {
     public:
@@ -16,9 +38,12 @@ namespace {
             
         }
         
-        myGrammar() : Grammar("myGrammar")
+        myGrammar() : Grammar("sample")
         {
-            
+            Axiom &ID = terminal("ID");
+            Axiom &ROOT = zom(ID);
+            setGround(ROOT);
+            displayAxioms();
         }
         
         
@@ -29,7 +54,7 @@ namespace {
 }
 Y_UTEST(grammar)
 {
- 
+    
     Y_UTEST_SIZEOF(Axiom);
     Y_UTEST_SIZEOF(Axioms);
     std::cerr << std::endl;
@@ -38,26 +63,53 @@ Y_UTEST(grammar)
     Y_UTEST_SIZEOF(Terminal);
     Y_UTEST_SIZEOF(Internal);
     std::cerr << std::endl;
-
+    
     Y_UTEST_SIZEOF(Member);
     Y_UTEST_SIZEOF(Manifest);
     Y_UTEST_SIZEOF(Compound);
-    std::cerr << std::endl;
+    Y_UTEST_SIZEOF(Aggregate);
+    Y_UTEST_SIZEOF(Alternate);
 
-    Grammar G("G");
-    std::cerr << "grammar " << G.title  << std::endl;
+    std::cerr << std::endl;
     
-    Terminal  &term = G.declare( new Terminal("word") );
-    Aggregate &cmpd = G.declare( new Aggregate("hello") );
+    {
+        Grammar G("G");
+        std::cerr << "grammar " << G.title  << std::endl;
+        
+        Terminal  &term = G.declare( new Terminal("word") );
+        Aggregate &cmpd = G.declare( new Aggregate("hello") );
+        
+        cmpd << term;
+        cmpd << G.opt(term);
+        cmpd << G.oom(term);
+        cmpd << G.zom(term);
+        
+        
+        G.displayAxioms();
+        std::cerr << "ground=<" << G.getGround().label << ">" << std::endl;
+        Tags::Display();
+        std::cerr << std::endl;
+        Tags::Release();
+    }
     
-    cmpd << term;
-    cmpd << G.opt(term);
-    cmpd << G.oom(term);
-    cmpd << G.zom(term);
+    {
+        Axiom::Verbose = true;
+        myGrammar G;
+        myLexer   L;
+        Tags::Display();
+
+        Cache     tcache;
+        if(argc>1)
+        {
+            Source          source( tcache, Module::OpenFile(tcache,argv[1]) );
+            auto_ptr<XNode> tree = G.accept(L,source);
+            Y_CHECK(tree.is_valid());
+            tree->graphViz("tree.dot");
+            
+        }
+    }
     
     
-    G.displayAxioms();
-    std::cerr << "ground=<" << G.getGround().label << ">" << std::endl;
 }
 Y_UTEST_DONE()
 

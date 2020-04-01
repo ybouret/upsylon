@@ -23,7 +23,9 @@ namespace upsylon {
             template <typename LABEL>
             explicit Terminal(const LABEL &id) :
             Axiom(id,UUID)
-            {}
+            {
+                setup();
+            }
             
             
         private:
@@ -31,7 +33,7 @@ namespace upsylon {
             virtual const char * vizShape() const throw() { return "rectangle"; }
             virtual const char * vizStyle() const throw() { return "solid";  }
             virtual bool         accept(Y_JARGON_AXIOM_ARGS) const;
-
+            void setup();
         };
         
     }

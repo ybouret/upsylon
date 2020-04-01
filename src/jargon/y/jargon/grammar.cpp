@@ -87,6 +87,19 @@ namespace upsylon {
         }
 
         
+        const char * Grammar:: nameOf(const Axiom *accepted) const throw()
+        {
+            if(accepted)
+            {
+                assert( owns(*accepted) );
+                return **(accepted->label);
+            }
+            else
+            {
+                return "no match";
+            }
+        }
+
     }
     
 }

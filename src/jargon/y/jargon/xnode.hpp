@@ -87,7 +87,7 @@ namespace upsylon {
             const Genre genre; //!< genre of this node
             const Dogma dogma; //!< who created this node
             
-           
+            static const Lexeme *LastLexeme(const XNode *xnode) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);

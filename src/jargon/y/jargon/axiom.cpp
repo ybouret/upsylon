@@ -9,5 +9,7 @@ namespace upsylon {
         {
         }
         
+        bool Axiom::Verbose = false;
+        
     }
 }

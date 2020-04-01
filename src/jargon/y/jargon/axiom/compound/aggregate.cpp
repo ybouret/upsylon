@@ -13,6 +13,12 @@ namespace upsylon {
         {
             return false;
         }
+        
+        void Aggregate:: setup()
+        {
+            self = static_cast<Aggregate *>(this);
+            Y_JAXIOM(std::cerr << "+[Aggregate] <" << label << ">" << std::endl);
+        }
 
     }
     

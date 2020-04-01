@@ -37,7 +37,10 @@ namespace upsylon {
                 }
                 
                 //! get next unit, processing all events
-                Unit *get(Source &source);
+                Unit       *get(Source &source);
+                
+                //! check stored unit
+                const Unit *peek() const throw();
                 
                 //! unget a created unit
                 void unget( Unit *unit ) throw();

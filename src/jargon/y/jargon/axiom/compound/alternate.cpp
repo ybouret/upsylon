@@ -14,6 +14,13 @@ namespace upsylon {
         {
             return false;
         }
+        
+        
+        void Alternate:: setup()
+        {
+            self = static_cast<Alternate *>(this);
+            Y_JAXIOM(std::cerr << "+[Alternate] <" << label << ">" << std::endl);
+        }
     }
     
 }

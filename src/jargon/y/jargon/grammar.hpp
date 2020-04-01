@@ -57,7 +57,7 @@ namespace upsylon {
 
             //------------------------------------------------------------------
             //
-            // advancced handling
+            // advanced handling
             //
             //------------------------------------------------------------------
            
@@ -96,20 +96,29 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
+            // main call
+            //
+            //------------------------------------------------------------------
+            XNode *accept(Lexer &, Source &) const;
+            
+            
+            //------------------------------------------------------------------
+            //
             // members
             //
             //------------------------------------------------------------------
-            const Tag title;   //!< grammar title
-            XCache    xcache;  //!< cache of xnode
+            const Tag      title;   //!< grammar title
+            mutable XCache xcache;  //!< cache of xnode
             
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
-            const Axiom *ground;
+            const   Axiom *ground;
             Axioms       axioms;
             
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
-
+            const char *nameOf(const Axiom *accepted) const throw();
+            
         public:
             const size_t maxLength; //!< maximum length of labels
         };

@@ -7,6 +7,8 @@
 
 namespace upsylon {
  
+    class exception;
+    
     namespace Jargon {
      
         namespace Lexical {
@@ -34,6 +36,7 @@ namespace upsylon {
                 void append(const Token  &token); //!< append a token
                 
                 const Tag label; //!< creating rule label
+                void  writeTo(exception &)const;
                 
             private:
                 Y_DISABLE_ASSIGN(Unit);

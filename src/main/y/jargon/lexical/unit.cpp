@@ -1,5 +1,7 @@
 
 #include "y/jargon/lexical/unit.hpp"
+#include "y/exception.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
     
@@ -44,6 +46,21 @@ namespace upsylon {
                     self.append(*this,ch->code);
                 }
             }
+            
+            void  Unit:: writeTo(exception &excp) const
+            {
+                excp.cat(" <%s>", **label);
+                if(size>0)
+                {
+                    excp.cat(" = '");
+                    for(const Char *ch=head;ch;ch=ch->next)
+                    {
+                        excp.cat("%s",cchars::encoded[ch->code]);
+                    }
+                    excp.cat("'");
+                }
+            }
+
         }
         
     }

@@ -224,6 +224,32 @@ namespace upsylon {
             }
         }
 
+        const Lexeme * XNode:: LastLexeme(const XNode *xnode) throw()
+        {
+            assert(xnode);
+            switch(xnode->genre)
+            {
+                case IsInternal:
+                {
+                    const XList &chld = xnode->children();
+                    if(chld.size>0)
+                    {
+                        return LastLexeme(chld.tail);
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                }
+                    
+                case IsTerminal:  return & (xnode->lexeme());
+                    
+                default:
+                    break;
+            }
+            return NULL;
+        }
+
        
         
     }

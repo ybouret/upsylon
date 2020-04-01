@@ -26,9 +26,12 @@ namespace upsylon {
 XNode * &xtree,             \
 Lexer   &lexer,             \
 Source  &source,            \
-XCache  &xcache
+XCache  &xcache,            \
+const Axiom * &accepted
         
-
+        //! for verbosity
+#define Y_JAXIOM(CODE) do { if(Axiom::Verbose) { CODE; } } while(false)
+        
         //----------------------------------------------------------------------
         //
         //! base class for a syntax axiom
@@ -37,6 +40,7 @@ XCache  &xcache
         class Axiom : public  CountedObject
         {
         public:
+            static bool Verbose;
             //------------------------------------------------------------------
             //
             // C++
@@ -61,12 +65,31 @@ XCache  &xcache
             const Tag      label; //!< shared label
             const uint32_t uuid;  //!< UUID for I/O
             
+            template <typename AXIOM> inline
+            AXIOM & as( ) throw()
+            {
+                assert(AXIOM::UUID==uuid);
+                assert(self);
+                return *static_cast<AXIOM*>(self);
+            }
+            
+            template <typename AXIOM> inline
+            const AXIOM & as( ) const throw()
+            {
+                assert(AXIOM::UUID==uuid);
+                assert(self);
+                return *static_cast<const AXIOM*>(self);
+            }
+            
         protected:
+            void           *self; //!< pointer to derived class
+            
             //! setup for derived classes
             template <typename LABEL> inline
             Axiom( const LABEL &id, const uint32_t u) :
             label( Tags::Make(id) ),
-            uuid(u)
+            uuid(u),
+            self(0)
             {
             }
             

@@ -40,11 +40,13 @@ namespace upsylon {
             explicit Alternate(const LABEL &l) :
             Compound(l,UUID)
             {
+                setup();
             }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alternate);
             virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
+            void setup();
 
         };
     }
