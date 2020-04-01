@@ -11,6 +11,7 @@ namespace upsylon {
     namespace Jargon {
      
         typedef suffix_tree<Dogma> Axioms;
+
         
         class Grammar
         {
@@ -29,9 +30,15 @@ namespace upsylon {
             {
             }
             
-            void enroll(Axiom *);
-            bool owns(const Axiom &) const throw();
+            void   enroll(Axiom *);
+            bool   owns(const Axiom &) const throw();
             
+            template <typename AXIOM> inline
+            AXIOM & declare( AXIOM *axiom )
+            {
+                enroll(axiom);
+                return *axiom;
+            }
             
             
             const Axioms & operator*() const throw();

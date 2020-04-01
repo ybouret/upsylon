@@ -70,7 +70,7 @@ namespace upsylon
         //! default constructor
         inline explicit map() throw() : hash_type() {}
 
-        //! constructor with memoru
+        //! constructobr with memoru
         inline explicit map(const size_t n, const as_capacity_t &_) : hash_type(n,_) {}
 
         //! copy constructor

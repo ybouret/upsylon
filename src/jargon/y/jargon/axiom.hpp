@@ -14,9 +14,9 @@ namespace upsylon {
         class XCache;
         
 #define Y_JARGON_AXIOM_ARGS \
-XNode * &xtree,  \
-Lexer   &lexer,  \
-Source  &source, \
+XNode * &xtree,             \
+Lexer   &lexer,             \
+Source  &source,            \
 XCache  &xcache
         
 
@@ -48,7 +48,7 @@ XCache  &xcache
         };
         
        
-       
+
        
         
     }
