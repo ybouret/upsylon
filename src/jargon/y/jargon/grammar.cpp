@@ -119,6 +119,12 @@ namespace upsylon {
             return compound;
         }
 
+        void Grammar:: graphViz(const char *  dotFile, const bool keepFile) const
+        {
+            const  string _(dotFile);
+            graphViz(_,keepFile);
+        }
+
 
     }
     

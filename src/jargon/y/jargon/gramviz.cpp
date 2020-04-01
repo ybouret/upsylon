@@ -52,7 +52,7 @@ namespace upsylon {
             
         }
         
-        void Grammar:: graphViz(const string &dotFile) const
+        void Grammar:: graphViz(const string &dotFile, const bool keepFile) const
         {
             {
                 ios::ocstream fp(dotFile);
@@ -86,7 +86,7 @@ namespace upsylon {
 
                 
             }
-            ios::GraphViz::Render(dotFile,true);
+            ios::GraphViz::Render(dotFile,keepFile);
         }
     }
     

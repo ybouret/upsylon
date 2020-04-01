@@ -112,11 +112,12 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            //!graphViz
+            //! graphViz
             //
             //------------------------------------------------------------------
-            void graphViz( const string &dotFile ) const;
-            
+            void graphViz(const string &dotFile, const bool keepFile=false) const;
+            void graphViz(const char *  dotFile, const bool keepFile=false) const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             const   Axiom *ground;
