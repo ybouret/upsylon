@@ -13,6 +13,12 @@ namespace upsylon {
         Wildcard( MakeTag(Mark,*axiom.label), UUID, axiom )
         {
         }
+        
+        bool Option:: accept(Y_JARGON_AXIOM_ARGS) const
+        {
+            return false;
+        }
+        
     }
     
 }

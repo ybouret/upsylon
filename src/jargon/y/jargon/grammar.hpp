@@ -59,6 +59,24 @@ namespace upsylon {
             Axiom & zom(Axiom &);
             Axiom & opt(Axiom &);
             
+            template <typename LABEL> inline
+            Axiom & terminal(const LABEL &id)
+            {
+                return declare( new Terminal(id) );
+            }
+            
+            template <typename LABEL> inline
+            Aggregate & agg(const LABEL &id)
+            {
+                return declare( new Aggregate(id) );
+            }
+            
+            template <typename LABEL> inline
+            Alternate & alt(const LABEL &id)
+            {
+                return declare( new Alternate(id) );
+            }
+            
             //------------------------------------------------------------------
             //
             //

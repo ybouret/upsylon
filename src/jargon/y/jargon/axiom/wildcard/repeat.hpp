@@ -26,6 +26,7 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Repeat);
+            virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
         };
         
         template <const size_t NMIN, const char MARK>

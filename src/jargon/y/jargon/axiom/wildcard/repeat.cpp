@@ -17,6 +17,11 @@ namespace upsylon {
         minimalCount(nmin)
         {
         }
+        
+        bool Repeat:: accept(Y_JARGON_AXIOM_ARGS) const
+        {
+            return false;
+        }
     }
     
 }

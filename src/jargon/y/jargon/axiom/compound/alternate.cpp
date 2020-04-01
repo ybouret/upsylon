@@ -10,6 +10,10 @@ namespace upsylon {
         {
         }
         
+        bool Alternate:: accept(Y_JARGON_AXIOM_ARGS) const
+        {
+            return false;
+        }
     }
     
 }

@@ -13,18 +13,35 @@ namespace upsylon {
         class Internal : public Axiom
         {
         public:
-            
             virtual ~Internal() throw(); //!< cleanup
+            
+        protected:
+            //! setup
             template <typename LABEL> inline
-            explicit Internal(const LABEL &id, const uint32_t u) : Axiom(id,u)
+            explicit Internal(const LABEL &id, const uint32_t u) :
+            Axiom(id,u)
             {
             }
-            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Internal);
             virtual const char * vizShape() const throw() { return "house";  }
             virtual const char * vizStyle() const throw() { return "solid";  }
+        };
+        
+        class Internal_ : public Internal
+        {
+        public:
+            virtual ~Internal_() throw();
+            
+            template <typename LABEL> inline
+            explicit Internal_(const LABEL &id, const uint32_t u) :
+            Internal(id,u)
+            {
+            }
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Internal_);
             virtual bool         accept(Y_JARGON_AXIOM_ARGS) const
             {
                 (void) xtree;
@@ -34,7 +51,6 @@ namespace upsylon {
                 return false;
             }
         };
-        
     }
     
 }

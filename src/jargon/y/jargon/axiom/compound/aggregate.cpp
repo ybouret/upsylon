@@ -9,6 +9,11 @@ namespace upsylon {
         {
         }
         
+        bool Aggregate:: accept(Y_JARGON_AXIOM_ARGS) const
+        {
+            return false;
+        }
+
     }
     
 }

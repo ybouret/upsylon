@@ -5,6 +5,28 @@
 using namespace  upsylon;
 using namespace  Jargon;
 
+
+namespace {
+ 
+    class myGrammar : public Grammar
+    {
+    public:
+        virtual ~myGrammar() throw()
+        {
+            
+        }
+        
+        myGrammar() : Grammar("myGrammar")
+        {
+            
+        }
+        
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(myGrammar);
+    };
+    
+}
 Y_UTEST(grammar)
 {
  

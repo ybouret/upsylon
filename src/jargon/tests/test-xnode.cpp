@@ -62,8 +62,8 @@ Y_UTEST(xnode)
     tags.push_back(tagString);
     tags.push_back(tagNumber);
     
-    XCache            xcache( "xcache_dull" );
-    arc_ptr<Internal> LIST = new Internal("LIST",0);
+    XCache             xcache( "xcache_dull" );
+    arc_ptr<Internal_> LIST = new Internal_("LIST",0);
     {
         auto_ptr<XNode> root = xcache.query(*LIST); Y_CHECK(root->isInternal());
         

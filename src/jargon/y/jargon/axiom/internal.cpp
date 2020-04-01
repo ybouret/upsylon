@@ -9,6 +9,10 @@ namespace upsylon {
         {
         }
         
+        Internal_:: ~Internal_() throw()
+        {
+        }
+        
         
     }
     
