@@ -25,13 +25,13 @@ Y_UTEST(grammar)
     Grammar G("G");
     std::cerr << "grammar " << G.title  << std::endl;
     
-    Terminal &term = G.declare( new Terminal("word") );
-    Compound &cmpd = G.declare( new Compound("hello",Y_FOURCC('T','R','Y','!')));
+    Terminal  &term = G.declare( new Terminal("word") );
+    Aggregate &cmpd = G.declare( new Aggregate("hello") );
     
     cmpd << term;
-    cmpd << G.declare( new Option(term)     );
-    cmpd << G.declare( new OneOrMore(term)  );
-    cmpd << G.declare( new ZeroOrMore(term) );
+    cmpd << G.opt(term);
+    cmpd << G.oom(term);
+    cmpd << G.zom(term);
     
     
     G.displayAxioms();

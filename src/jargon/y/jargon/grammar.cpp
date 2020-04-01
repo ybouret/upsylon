@@ -70,6 +70,23 @@ namespace upsylon {
             functor<bool,TL2(const Axioms::path&,const Dogma&)> cb( this, & Grammar::displayAxiom);
             (void) axioms.for_each(cb);
         }
+        
+        Axiom & Grammar:: oom(Axiom &axiom)
+        {
+            return declare( new OneOrMore(axiom) );
+        }
+        
+        Axiom & Grammar:: zom(Axiom &axiom)
+        {
+            return declare( new ZeroOrMore(axiom) );
+        }
+
+        Axiom & Grammar:: opt(Axiom &axiom)
+        {
+            return declare( new Option(axiom) );
+        }
+
+        
     }
     
 }

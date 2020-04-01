@@ -19,18 +19,20 @@ namespace upsylon {
         {
         }
         
-        
-        Compound & Compound:: operator<<( Axiom &axiom )
+        void Compound:: add(Axiom &axiom)
         {
-            static const char fn[] = "Jargon::Compound";
-            static const char ax[] = "Axiom";
-            
             // must be a dynamic object
             if(axiom.refcount()<=0)
-                throw exception("%s<%s> << (static %s<%s>)",fn,**label,ax,**(axiom.label));
+                throw exception("Jargon::Compound<%s>.add(static Axiom<%s>)",**label,**(axiom.label));
             
             const Canon canon = &axiom;
             push_back( new Member(canon) );
+        }
+
+        
+        Compound & Compound:: operator<<( Axiom &axiom )
+        {
+            add(axiom);
             return *this;
         }
     }

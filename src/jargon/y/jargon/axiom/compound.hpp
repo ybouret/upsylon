@@ -28,16 +28,18 @@ namespace upsylon {
             
             virtual ~Compound() throw();
             
+            //! axiom must be dynamic
+            void add(Axiom &axiom);
+            
+            //! syntactic sugar
+            Compound & operator<<( Axiom &axiom );
+            
+        protected:
             template <typename LABEL> inline
             explicit Compound(const LABEL &id, const uint32_t u) :
             Internal(id,u), Manifest()
             {
             }
-            
-            //! axiom must be dynamic
-            Compound & operator<<( Axiom &axiom );
-            
-        protected:
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compound);

@@ -30,15 +30,9 @@ namespace upsylon {
             {
             }
             
-            void   enroll(Axiom *);
             bool   owns(const Axiom &) const throw();
             
-            template <typename AXIOM> inline
-            AXIOM & declare( AXIOM *axiom )
-            {
-                enroll(axiom);
-                return *axiom;
-            }
+           
             
             
             const Axioms & operator*() const throw();
@@ -46,8 +40,34 @@ namespace upsylon {
             void           setGround(const Axiom &);
             void           displayAxioms() const;
             
+            void   enroll(Axiom *);
+
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            //------------------------------------------------------------------
+
+            template <typename AXIOM> inline
+            AXIOM & declare( AXIOM *axiom )
+            {
+                enroll(axiom);
+                return *axiom;
+            }
+            
+            Axiom & oom(Axiom &);
+            Axiom & zom(Axiom &);
+            Axiom & opt(Axiom &);
+            
+            //------------------------------------------------------------------
+            //
+            //
+            //
+            //------------------------------------------------------------------
+
             const Tag title;
             XCache    xcache;
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
