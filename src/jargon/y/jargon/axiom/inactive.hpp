@@ -45,6 +45,7 @@ namespace upsylon {
             virtual const char * vizShape() const throw() { return "oval";    }
             virtual const char * vizStyle() const throw() { return "dotted";  }
             virtual bool         accept(Y_JARGON_AXIOM_ARGS) const;
+
         };
         
     }

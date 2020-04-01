@@ -17,14 +17,13 @@ namespace upsylon {
             {
                 for(const Member *member=head;member;member=member->next)
                 {                    
-                    if( ! (**member).accept(ltree,lexer,source,xcache,accepted) )
+                    if( ! (**member).accept(ltree,lexer,source,xcache) )
                     {
                         XNode::Restore(ltree, lexer, xcache);
                         return false;
                     }
                 }
                 XNode::Advance(xtree,ltree);
-                accepted = this;
                 Y_JAXIOM(std::cerr << "|_[Aggregate] <" << label << ">" << std::endl);
                 return true;
             }

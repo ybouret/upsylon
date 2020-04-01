@@ -48,7 +48,6 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Wildcard);
             Axiom * checkShared(Axiom &axiom) const;
-            
         };
     }
     

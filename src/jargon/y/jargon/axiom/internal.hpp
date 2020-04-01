@@ -53,15 +53,8 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Internal_);
-            virtual bool         accept(Y_JARGON_AXIOM_ARGS) const
-            {
-                (void) xtree;
-                (void) lexer;
-                (void) source;
-                (void) xcache;
-                (void) accepted;
-                return false;
-            }
+            virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
+            
         };
     }
     

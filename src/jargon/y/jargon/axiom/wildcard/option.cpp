@@ -20,7 +20,7 @@ namespace upsylon {
         {
             XNode       *ltree = NULL;
             const Axiom &axiom = *canon;
-            if( axiom.accept(ltree,lexer,source,xcache,accepted))
+            if( axiom.accept(ltree,lexer,source,xcache))
             {
                 assert(ltree!=NULL);
                 XNode::Advance(xtree,ltree);

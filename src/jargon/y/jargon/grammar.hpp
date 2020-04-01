@@ -123,8 +123,8 @@ namespace upsylon {
             const   Axiom *ground;
             Axioms         axioms;
             unsigned       iAlt;
+            
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
-            const char *nameOf(const Axiom *accepted) const throw();
             
         public:
             const size_t maxLength; //!< maximum length of labels

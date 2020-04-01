@@ -43,7 +43,6 @@ namespace upsylon {
                 {
                     Y_JAXIOM(std::cerr << "[Terminal]<" << label << "> = '" << *lexeme << "'" << std::endl);
                     XNode::Advance(xtree,xcache.query(*this, lexeme));
-                    accepted = this;
                     return true;
                 }
                 else

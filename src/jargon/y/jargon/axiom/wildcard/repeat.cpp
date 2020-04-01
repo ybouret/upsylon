@@ -28,7 +28,7 @@ namespace upsylon {
             const Axiom     &axiom = *canon;
             try
             {
-                while(axiom.accept(ltree,lexer,source,xcache,accepted))
+                while(axiom.accept(ltree,lexer,source,xcache))
                 {
                     ++count;
                 }

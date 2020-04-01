@@ -11,8 +11,7 @@ namespace upsylon {
         {
             assert(ground);
             XNode       *xtree    = NULL;
-            const Axiom *accepted = NULL;
-            if( ground->accept(xtree,lexer,source,xcache,accepted) )
+            if( ground->accept(xtree,lexer,source,xcache) )
             {
                 //--------------------------------------------------------------
                 //

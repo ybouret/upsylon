@@ -76,7 +76,7 @@ namespace upsylon {
                     
                 }
                 
-                
+                // join top level
                 for( Axioms::const_iterator it=axioms.begin(); it != axioms.end(); ++it )
                 {
                     gvJoin(fp, & **it);

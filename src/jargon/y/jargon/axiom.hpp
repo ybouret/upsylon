@@ -26,8 +26,7 @@ namespace upsylon {
 XNode * &xtree,             \
 Lexer   &lexer,             \
 Source  &source,            \
-XCache  &xcache,            \
-const Axiom * &accepted
+XCache  &xcache
         
         //! for verbosity
 #define Y_JAXIOM(CODE) do { if(Axiom::Verbose) { CODE; } } while(false)
@@ -103,6 +102,8 @@ const Axiom * &accepted
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Axiom);
+            
+            
         };
         
        
