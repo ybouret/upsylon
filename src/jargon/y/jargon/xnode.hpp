@@ -15,11 +15,12 @@ namespace upsylon {
         // forward declarations and aliases
         //
         //----------------------------------------------------------------------
-        class                  Inactive; //!< forward
-        class                  Terminal; //!< forward
-        class                  Internal; //!< forward
-        class                  Axiom;    //!< forward
-        typedef arc_ptr<Axiom> Dogma;    //!< forward
+        class                        Inactive; //!< forward
+        class                        Terminal; //!< forward
+        class                        Internal; //!< forward
+        class                        Axiom;    //!< forward
+        typedef arc_ptr<Axiom>       Dogma;    //!< forward shared Axiom
+        typedef arc_ptr<const Axiom> Canon;    //!< forward shared const Axiom
         
         class                            XNode; //!< Syntax Node
         typedef core::list_of_cpp<XNode> XList; //!< Syntax Node List

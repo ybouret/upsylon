@@ -10,10 +10,10 @@ namespace upsylon {
     
     namespace Jargon {
         
-        class Member : public Object, public inode<Member>, public Dogma
+        class Member : public Object, public inode<Member>, public Canon
         {
         public:
-            explicit Member(const Dogma &) throw();
+            explicit Member(const Canon &) throw();
             virtual ~Member() throw();
             
         private:

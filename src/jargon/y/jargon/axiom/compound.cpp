@@ -14,8 +14,8 @@ namespace upsylon {
         {
         }
         
-        Member:: Member(const Dogma &dogma) throw() :
-        Object(), inode<Member>(), Dogma(dogma)
+        Member:: Member(const Canon &canon) throw() :
+        Object(), inode<Member>(), Canon(canon)
         {
         }
         
@@ -29,8 +29,8 @@ namespace upsylon {
             if(axiom.refcount()<=0)
                 throw exception("%s<%s> << (static %s<%s>)",fn,**label,ax,**(axiom.label));
             
-            const Dogma dogma = &axiom;
-            push_back( new Member(dogma) );
+            const Canon canon = &axiom;
+            push_back( new Member(canon) );
             return *this;
         }
     }

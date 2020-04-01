@@ -24,12 +24,19 @@ SET( axiom_compound_srcs ${axiom_compound_decl} ${axiom_compound_impl})
 INSTALL( FILES ${axiom_compound_decl} DESTINATION include/y/jargon/axiom/compound )
 SOURCE_GROUP( jargon/axiom/compound FILES ${axiom_compound_srcs} )
 
+FILE( GLOB axiom_wildcard_decl y/jargon/axiom/wildcard/*.hpp)
+FILE( GLOB axiom_wildcard_impl y/jargon/axiom/wildcard/*.cpp)
+SET( axiom_wildcard_srcs ${axiom_wildcard_decl} ${axiom_wildcard_impl})
+INSTALL( FILES ${axiom_wildcard_decl} DESTINATION include/y/jargon/axiom/wildcard )
+SOURCE_GROUP( jargon/axiom/wildcard FILES ${axiom_wildcard_srcs} )
+
 INCLUDE_DIRECTORIES( . ../main )
 
 ADD_LIBRARY( y-jargon STATIC
  ${srcs}
  ${axiom_srcs}
  ${axiom_compound_srcs}
+ ${axiom_wildcard_srcs}
    )
 INSTALL( TARGETS y-jargon ARCHIVE DESTINATION lib )
 
