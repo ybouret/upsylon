@@ -87,6 +87,7 @@ namespace upsylon {
             const Genre genre; //!< genre of this node
             const Dogma dogma; //!< who created this node
             
+            //! return the last produced lexeme, may be NULL
             static const Lexeme *LastLexeme(const XNode *xnode) throw();
             
         private:

@@ -13,7 +13,7 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
-        //! Alternate: accept one of the axioms
+        //! Alternate: accept one of the axioms, first in order of appearance
         //
         //----------------------------------------------------------------------
         class Alternate : public Compound

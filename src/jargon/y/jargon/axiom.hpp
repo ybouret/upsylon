@@ -40,7 +40,7 @@ const Axiom * &accepted
         class Axiom : public  CountedObject
         {
         public:
-            static bool Verbose;
+            static bool Verbose; //!< global verbosity flag
             //------------------------------------------------------------------
             //
             // C++
@@ -65,6 +65,13 @@ const Axiom * &accepted
             const Tag      label; //!< shared label
             const uint32_t uuid;  //!< UUID for I/O
             
+            //------------------------------------------------------------------
+            //
+            // helpers
+            //
+            //------------------------------------------------------------------
+            
+            //! recall derived class
             template <typename AXIOM> inline
             AXIOM & as( ) throw()
             {
@@ -73,6 +80,7 @@ const Axiom * &accepted
                 return *static_cast<AXIOM*>(self);
             }
             
+            //! recall const derived class
             template <typename AXIOM> inline
             const AXIOM & as( ) const throw()
             {

@@ -12,6 +12,13 @@ namespace upsylon {
         
         bool Alternate:: accept(Y_JARGON_AXIOM_ARGS) const
         {
+            for(const Member *member=head;member;member=member->next)
+            {
+                if( (**member).accept(xtree, lexer, source, xcache, accepted) )
+                {
+                    return true;
+                }
+            }
             return false;
         }
         

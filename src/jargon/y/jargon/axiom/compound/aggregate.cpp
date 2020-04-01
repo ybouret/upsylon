@@ -13,9 +13,25 @@ namespace upsylon {
         bool Aggregate:: accept(Y_JARGON_AXIOM_ARGS) const
         {
             XNode *ltree = xcache.query(*this);
-            
-            
-            return false;
+            try
+            {
+                for(const Member *member=head;member;member=member->next)
+                {
+                    if( ! (**member).accept(ltree,lexer,source,xcache,accepted) )
+                    {
+                        XNode::Restore(ltree, lexer, xcache);
+                        return false;
+                    }
+                }
+                XNode::Advance(xtree,ltree);
+                accepted = this;
+                return true;
+            }
+            catch(...)
+            {
+                XNode::Release(ltree,xcache);
+                throw;
+            }
         }
         
         void Aggregate:: setup()

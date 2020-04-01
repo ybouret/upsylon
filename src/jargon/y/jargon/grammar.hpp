@@ -96,7 +96,7 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            // main call
+            //! main call, try to accept the ground axiom
             //
             //------------------------------------------------------------------
             XNode *accept(Lexer &, Source &) const;
