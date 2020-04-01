@@ -171,7 +171,7 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             // DIV
             //__________________________________________________________________
             Y_MPZ_WRAP(/,__div)
-            bool is_divisible_by(const natural &) const;
+            bool is_divisible_by(const natural &) const; //!< check
             
             //__________________________________________________________________
             //

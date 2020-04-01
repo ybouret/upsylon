@@ -10,15 +10,29 @@ namespace upsylon {
     
     namespace Jargon {
         
-        
+        //----------------------------------------------------------------------
+        //
+        //! an optional axiom
+        //
+        //----------------------------------------------------------------------
         class Option : public Wildcard
         {
         public:
-            static const char     Mark = '?';
-            static const uint32_t UUID = Y_FOURCC(Mark,'O','P','T');
-            virtual ~Option() throw();
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            static const char     Mark = '?';                        //!< label marker
+            static const uint32_t UUID = Y_FOURCC(Mark,'O','P','T'); //!< UUID
             
-            explicit Option(Axiom &);
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            virtual ~Option() throw(); //!< cleanup
+            explicit Option(Axiom &);  //!< setup
             
             
         private:

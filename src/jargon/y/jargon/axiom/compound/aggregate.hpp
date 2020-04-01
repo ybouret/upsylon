@@ -10,23 +10,41 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
+        //! Aggregate compound, must accept all members
+        //
+        //----------------------------------------------------------------------
         class Aggregate : public Compound
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('A', 'G', 'G', 'R');
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            static const uint32_t UUID = Y_FOURCC('A', 'G', 'G', 'R'); //!< UUID
+            
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            
+            //! cleanup
             virtual ~Aggregate() throw();
             
-            
+            //! setup
             template <typename LABEL> inline
-            explicit Aggregate(const LABEL &id) :
-            Compound(id,UUID)
+            explicit Aggregate(const LABEL &l) :
+            Compound(l,UUID)
             {
             }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
             virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
-
+            virtual const char *vizShape() const throw() { return "egg"; }
         };
     }
 }

@@ -10,36 +10,56 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
+        //! member of a manifest
+        //
+        //----------------------------------------------------------------------
         class Member : public Object, public inode<Member>, public Canon
         {
         public:
-            explicit Member(const Canon &) throw();
-            virtual ~Member() throw();
+            explicit Member(const Canon &) throw(); //!< setup
+            virtual ~Member() throw();              //!< cleanup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Member);
         };
         
+        //----------------------------------------------------------------------
+        //
+        //! a manisfest is a list of shared axioms
+        //
+        //----------------------------------------------------------------------
         typedef core::list_of_cpp<Member> Manifest;
         
+        //----------------------------------------------------------------------
+        //
+        //! base class for Compound axioms (Aggregate|Alternate)
+        //
+        //----------------------------------------------------------------------
         class Compound : public Internal, public Manifest
         {
         public:
-            
-            virtual ~Compound() throw();
-            
-            //! axiom must be dynamic
-            void add(Axiom &axiom);
-            
-            //! syntactic sugar
-            Compound & operator<<( Axiom &axiom );
-            
+            //------------------------------------------------------------------
+            //
+            // building methods
+            //
+            //------------------------------------------------------------------
+            void add(Axiom &);             //!< axiom must be dynamic
+            Compound & operator<<(Axiom &);//!< syntactic sugar
+         
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            virtual ~Compound() throw(); //!< cleanup
+
         protected:
+            //! setup for derived classes
             template <typename LABEL> inline
-            explicit Compound(const LABEL &id, const uint32_t u) :
-            Internal(id,u), Manifest()
-            {
-            }
+            explicit Compound(const LABEL &l, const uint32_t u) :
+            Internal(l,u), Manifest() {}
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compound);

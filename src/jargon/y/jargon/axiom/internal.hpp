@@ -9,7 +9,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! base class for internal axiom
+        //
+        //----------------------------------------------------------------------
         class Internal : public Axiom
         {
         public:
@@ -29,11 +33,18 @@ namespace upsylon {
             virtual const char * vizStyle() const throw() { return "solid";  }
         };
         
+        //----------------------------------------------------------------------
+        //
+        //! dummy Internal for testing
+        //
+        //----------------------------------------------------------------------
         class Internal_ : public Internal
         {
         public:
+            //! cleanup
             virtual ~Internal_() throw();
             
+            //! setup
             template <typename LABEL> inline
             explicit Internal_(const LABEL &id, const uint32_t u) :
             Internal(id,u)

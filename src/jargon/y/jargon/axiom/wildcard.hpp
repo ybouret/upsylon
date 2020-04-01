@@ -9,20 +9,34 @@ namespace upsylon {
     
     namespace Jargon {
         
-        
+        //----------------------------------------------------------------------
+        //
+        //! base class for Wildcards, a smart pointer to an axiom
+        //
+        //----------------------------------------------------------------------
         class Wildcard : public Internal
         {
         public:
-            const Canon canon;
-            
-            virtual ~Wildcard() throw();
+            const Canon canon; //!< shared axiom to use
             
             
-            const Axiom & operator*() const throw();
-            
-            static string *MakeTag(const char mark, const string &name);
-            
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            const  Axiom  & operator*() const throw();                    //!< access the Axiom
+            static string * MakeTag(const char mark, const string &name); //!< proper tag for derived class
+           
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            virtual ~Wildcard() throw(); //!< cleanup
+
         protected:
+            //! setup for derived classes
             template <typename LABEL> inline
             explicit Wildcard(const LABEL   &id,
                               const uint32_t u,

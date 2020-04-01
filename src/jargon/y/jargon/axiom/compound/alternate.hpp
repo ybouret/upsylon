@@ -11,16 +11,34 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
+        //! Alternate: accept one of the axioms
+        //
+        //----------------------------------------------------------------------
         class Alternate : public Compound
         {
         public:
-            static const uint32_t UUID = Y_FOURCC('A', 'L', 'T', 'R');
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            static const uint32_t UUID = Y_FOURCC('A', 'L', 'T', 'R'); //!< UUID
+         
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            
+            //! cleanup
             virtual ~Alternate() throw();
             
-            
+            //! setup
             template <typename LABEL> inline
-            explicit Alternate(const LABEL &id) :
-            Compound(id,UUID)
+            explicit Alternate(const LABEL &l) :
+            Compound(l,UUID)
             {
             }
             

@@ -37,6 +37,12 @@ namespace upsylon {
         public Serializable
         {
         public:
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            
             //! genre of syntax node
             enum Genre
             {
@@ -44,51 +50,56 @@ namespace upsylon {
                 IsInternal, //!< an internal => children
                 IsInactive  //!< prepared memory
             };
-            static const char TerminalMark = '_';
-            static const char InternalMark = '@';
-            static const char InactiveMark = '~';
             
-            static XNode *Create( const Inactive & );
-            static XNode *Create( const Internal & );
-            static XNode *Create( const Terminal &, Lexeme *);
+            static const char TerminalMark = '_'; //!< encoding a terminal
+            static const char InternalMark = '@'; //!< encoding an internal
+            static const char InactiveMark = '~'; //!< encoding an inactive...
+            
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            virtual      ~XNode() throw();                     //!< cleanup
+            static XNode *Create( const Inactive & );          //!< create an inactive node
+            static XNode *Create( const Internal & );          //!< create an internal node
+            static XNode *Create( const Terminal &, Lexeme *); //!< create a terminal node
 
             
             const Lexeme & lexeme()   const throw(); //!< lexeme for terminal
             XList        & children() throw();       //!< children for internal
             const XList  & children() const throw(); //!< children for internal
 
-            virtual       ~XNode() throw(); //!< cleanup
-            bool           isInternal() const throw();
-            bool           isTerminal() const throw();
-            bool           isInactive() const throw();
+            bool           isInternal() const throw(); //!< check if is internal
+            bool           isTerminal() const throw(); //!< check if if terminal
+            bool           isInactive() const throw(); //!< check if is inactive
             
+            static void Restore(XNode *, Lexer &, XList &) throw();  //!< return content to lexer and puah back into list
+            static void Release(XNode *, XList &) throw();           //!< recursive cleanup into list
+            static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
             
-            static void Restore(XNode    *node, Lexer &, XList &) throw();
-            static void Release(XNode *, XList &) throw();
-            static void Advance(XNode * &tree, XNode *node) throw();
-            
-            XNode      *activate(const Internal &) throw();
-            XNode      *activate(const Terminal &, Lexeme *lexeme) throw();
+            XNode      *activate(const Internal &)           throw(); //!< inactive => internal
+            XNode      *activate(const Terminal &, Lexeme *) throw(); //!< inactive => terminal
 
-            virtual size_t      serialize(ios::ostream &) const;
-            virtual const char *className()        const throw();
+            virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface
+            virtual const char *className()        const throw(); //!< serializable interface
             
-            const Genre genre;
-            const Dogma dogma;
+            const Genre genre; //!< genre of this node
+            const Dogma dogma; //!< who created this node
             
            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);
-            explicit XNode(const Inactive &)          throw(); //!< create an inactive node
+            explicit XNode(const Inactive &)          throw();
             explicit XNode(const Terminal &,Lexeme *) throw();
             explicit XNode(const Internal &)          throw();
             virtual void   vizCore(ios::ostream   &) const;
            
             
             union {
-                Lexeme *lexeme;
-                char    children[sizeof(XList)];
+                Lexeme *lexeme;                  //!< lexeme   for terminal
+                char    children[sizeof(XList)]; //!< children for internal
             } depot;
             void cleanup()  throw(); //!< clear depot
             void shutdown() throw(); //!< cleanup() and set inactive

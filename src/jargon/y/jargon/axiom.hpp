@@ -11,8 +11,17 @@ namespace upsylon {
     
     namespace Jargon {
         
-        class XCache;
+        //----------------------------------------------------------------------
+        //
+        //
+        // Helpers
+        //
+        //
+        //----------------------------------------------------------------------
+
+        class XCache; //! forward declaration
         
+        //! accept method arguments
 #define Y_JARGON_AXIOM_ARGS \
 XNode * &xtree,             \
 Lexer   &lexer,             \
@@ -20,22 +29,40 @@ Source  &source,            \
 XCache  &xcache
         
 
-
+        //----------------------------------------------------------------------
+        //
         //! base class for a syntax axiom
+        //
+        //----------------------------------------------------------------------
         class Axiom : public  CountedObject
         {
         public:
-            const Tag      label; //!< shared label
-            const uint32_t uuid;  //!< UUID
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            virtual ~Axiom() throw(); //!< cleanup
             
-            virtual ~Axiom() throw();
-            
-            virtual const char * vizShape() const throw() = 0; //!< graphViz shape
-            virtual const char * vizStyle() const throw() = 0; //!< graphViz style
+            //------------------------------------------------------------------
+            //
+            // virtual interface
+            //
+            //------------------------------------------------------------------
+            virtual const char * vizShape() const throw()          = 0; //!< graphViz shape
+            virtual const char * vizStyle() const throw()          = 0; //!< graphViz style
             virtual bool         accept(Y_JARGON_AXIOM_ARGS) const = 0; //!< main call
             
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            const Tag      label; //!< shared label
+            const uint32_t uuid;  //!< UUID for I/O
+            
         protected:
-            //! setup
+            //! setup for derived classes
             template <typename LABEL> inline
             Axiom( const LABEL &id, const uint32_t u) :
             label( Tags::Make(id) ),
