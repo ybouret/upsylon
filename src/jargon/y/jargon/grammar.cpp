@@ -99,6 +99,26 @@ namespace upsylon {
                 return "no match";
             }
         }
+        
+        Alternate & Grammar::alt()
+        {
+            return declare( new Alternate(iAlt) );
+        }
+        
+        Axiom & Grammar:: choice(Axiom &a, Axiom &b)
+        {
+            Alternate &compound = alt();
+            compound << a << b;
+            return compound;
+        }
+        
+        Axiom & Grammar:: choice(Axiom &a, Axiom &b, Axiom &c)
+        {
+            Alternate &compound = alt();
+            compound << a << b << c;
+            return compound;
+        }
+
 
     }
     

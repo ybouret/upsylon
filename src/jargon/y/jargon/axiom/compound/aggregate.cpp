@@ -16,7 +16,7 @@ namespace upsylon {
             try
             {
                 for(const Member *member=head;member;member=member->next)
-                {
+                {                    
                     if( ! (**member).accept(ltree,lexer,source,xcache,accepted) )
                     {
                         XNode::Restore(ltree, lexer, xcache);
@@ -25,6 +25,7 @@ namespace upsylon {
                 }
                 XNode::Advance(xtree,ltree);
                 accepted = this;
+                Y_JAXIOM(std::cerr << "|_[Aggregate] <" << label << ">" << std::endl);
                 return true;
             }
             catch(...)

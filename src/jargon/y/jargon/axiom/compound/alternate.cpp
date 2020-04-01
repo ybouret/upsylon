@@ -16,14 +16,23 @@ namespace upsylon {
             {
                 if( (**member).accept(xtree, lexer, source, xcache, accepted) )
                 {
+                    Y_JAXIOM(std::cerr << "|_[Alternate] <" << label << ">" << std::endl);
                     return true;
                 }
             }
             return false;
         }
         
+        static inline string * MakeLabel(unsigned &indx)
+        {
+            const string id   = vformat("%c%u", Alternate::Mark, indx);
+            string      *temp = Tags::Make(id);
+            ++indx;
+            return temp;
+        }
         
-        void Alternate:: setup()
+        Alternate:: Alternate(unsigned &indx) :
+        Compound(MakeLabel(indx),UUID)
         {
             self = static_cast<Alternate *>(this);
             Y_JAXIOM(std::cerr << "+[Alternate] <" << label << ">" << std::endl);

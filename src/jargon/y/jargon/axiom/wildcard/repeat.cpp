@@ -35,7 +35,7 @@ namespace upsylon {
                 
                 if(count>=minimalCount)
                 {
-                    Y_JAXIOM(std::cerr << "+[Repeat>=" << minimalCount << "]=" << count << "*<" << axiom.label << ">" << std::endl);
+                    Y_JAXIOM(std::cerr << "|_[Repeat>=" << minimalCount << "]=" << count << "*<" << axiom.label << ">" << std::endl);
                     XNode::Advance(xtree,ltree);
                     return true;
                 }

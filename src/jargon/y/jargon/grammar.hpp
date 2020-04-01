@@ -36,6 +36,7 @@ namespace upsylon {
             xcache(title),
             ground(  &(*xcache.dull) ),
             axioms(),
+            iAlt(1),
             maxLength(0)
             {
             }
@@ -87,12 +88,11 @@ namespace upsylon {
                 return declare( new Aggregate(id) );
             }
             
-            //! new alternate
-            template <typename LABEL> inline
-            Alternate & alt(const LABEL &id)
-            {
-                return declare( new Alternate(id) );
-            }
+            
+            Alternate & alt();//!< new alternate
+            Axiom     & choice(Axiom &a, Axiom &b);           //!< make a choice
+            Axiom     & choice(Axiom &a, Axiom &b, Axiom &c); //!< make a choice
+            
             
             //------------------------------------------------------------------
             //
@@ -110,12 +110,18 @@ namespace upsylon {
             const Tag      title;   //!< grammar title
             mutable XCache xcache;  //!< cache of xnode
             
+            //------------------------------------------------------------------
+            //
+            //!graphViz
+            //
+            //------------------------------------------------------------------
+            void graphViz( const string &dotFile ) const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             const   Axiom *ground;
-            Axioms       axioms;
-            
+            Axioms         axioms;
+            unsigned       iAlt;
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
             const char *nameOf(const Axiom *accepted) const throw();
             

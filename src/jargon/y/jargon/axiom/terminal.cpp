@@ -1,6 +1,7 @@
 
 #include "y/jargon/axiom/terminal.hpp"
 #include "y/jargon/xcache.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
@@ -14,6 +15,21 @@ namespace upsylon {
         {
             self = static_cast<Terminal *>(this);
             Y_JAXIOM(std::cerr << "+[Terminal] <" << label << ">" << std::endl);
+            const string id = **label;
+            if(id.size()>0)
+            {
+                switch(id[0])
+                {
+                    case '+':
+                    case '?':
+                    case '*':
+                    case '#':
+                        throw exception("Jargon::Terminal(invalid label <%s>)",*id);
+                        
+                    default:
+                        break;
+                }
+            }
         }
 
         

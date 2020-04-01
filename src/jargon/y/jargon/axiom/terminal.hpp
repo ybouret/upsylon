@@ -19,7 +19,7 @@ namespace upsylon {
             
             virtual ~Terminal() throw(); //!< cleanup
             
-            //! setup
+            //! setup, check valid name
             template <typename LABEL>
             explicit Terminal(const LABEL &id) :
             Axiom(id,UUID)

@@ -38,6 +38,10 @@ namespace upsylon {
             //! compile with optional dict
             static Pattern *Compile(const char   *rx, const Dictionary * =0);
             
+            //! compile with optional dict
+            static Pattern *Compile(const char   C, const Dictionary * =0);
+            
+            
         };
         
        

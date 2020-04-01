@@ -17,6 +17,7 @@ namespace {
             
             emit("ID",    "[:alpha:]+");
             emit("INT",   "[:digit:]+");
+            emit("SEP",   ';');
             endl("endl",  "[:endl:]");
             drop("blanks","[:blank:]");
             load(type2type<Lexical::ShellComment>(),"comment").hook( *this );
@@ -38,10 +39,14 @@ namespace {
             
         }
         
-        myGrammar() : Grammar("sample")
+        myGrammar() : Grammar("myGrammar")
         {
-            Axiom &ID = terminal("ID");
-            Axiom &ROOT = zom(ID);
+            
+            Axiom    &ID   = terminal("ID");
+            Axiom    &INT  = terminal("INT");
+            Compound &INFO = agg("INFO");
+            INFO << ID << opt(choice(INT,ID)) << terminal("SEP");
+            Axiom &ROOT = zom(INFO);
             setGround(ROOT);
             displayAxioms();
         }
@@ -71,6 +76,7 @@ Y_UTEST(grammar)
     Y_UTEST_SIZEOF(Alternate);
 
     std::cerr << std::endl;
+   
     
     {
         Grammar G("G");
@@ -90,6 +96,8 @@ Y_UTEST(grammar)
         Tags::Display();
         std::cerr << std::endl;
         Tags::Release();
+        G.graphViz("G0.dot");
+
     }
     
     {
@@ -97,7 +105,9 @@ Y_UTEST(grammar)
         myGrammar G;
         myLexer   L;
         Tags::Display();
-
+        
+        G.graphViz("G.dot");
+        
         Cache     tcache;
         if(argc>1)
         {

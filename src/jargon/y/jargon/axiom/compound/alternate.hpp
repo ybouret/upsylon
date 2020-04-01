@@ -25,7 +25,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const uint32_t UUID = Y_FOURCC('A', 'L', 'T', 'R'); //!< UUID
-         
+            static const char     Mark = '#';
             //------------------------------------------------------------------
             //
             // C++
@@ -36,17 +36,14 @@ namespace upsylon {
             virtual ~Alternate() throw();
             
             //! setup
-            template <typename LABEL> inline
-            explicit Alternate(const LABEL &l) :
-            Compound(l,UUID)
-            {
-                setup();
-            }
+            explicit Alternate(unsigned &);
+            
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alternate);
             virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
-            void setup();
+            virtual const char *vizShape() const throw() { return "egg"; }
 
         };
     }

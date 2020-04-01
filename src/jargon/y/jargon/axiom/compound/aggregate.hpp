@@ -45,7 +45,7 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
             virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
-            virtual const char *vizShape() const throw() { return "egg"; }
+            virtual const char *vizShape() const throw() { return "house"; }
             void setup();
         };
     }

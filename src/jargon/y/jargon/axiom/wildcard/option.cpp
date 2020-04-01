@@ -25,12 +25,13 @@ namespace upsylon {
                 assert(ltree!=NULL);
                 XNode::Advance(xtree,ltree);
                 // accepted is node, directly
+                Y_JAXIOM(std::cerr << "|_[Option] <" << label << ">" << std::endl);
                 return true;
             }
             else
             {
                 assert(NULL==ltree);
-                return false;
+                return true;
             }
         }
         

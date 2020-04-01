@@ -42,6 +42,12 @@ namespace upsylon {
             }
         }
         
+        string * Tags:: operator()(const string *s)
+        {
+            assert(s);
+            const Tag tag(s);
+            return (*this)(tag);
+        }
         
         
         string * Tags:: operator()(const char *s)
