@@ -29,7 +29,6 @@ namespace upsylon {
         void XNode:: cleanup() throw()
         {
             memset(&depot,0,sizeof(depot));
-            
         }
         
         
@@ -149,6 +148,7 @@ namespace upsylon {
             const Dogma target = DerivedToAxiom(axiom);
             aliasing::_(dogma) = target;
             aliasing::_(genre) = IsInternal;
+            new( & children() ) XList();
             return this;
         }
 
