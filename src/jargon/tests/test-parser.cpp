@@ -61,5 +61,13 @@ Y_UTEST(parser)
     Lexical::Scanner::Verbose = true;
     JSON_Parser json;
     
+    if( argc>1 )
+    {
+        const string    fileName = argv[1];
+        Source          source(json.tcache,Module::OpenFile(json.tcache,fileName));
+        auto_ptr<XNode> tree = json.parse(source);
+    }
+    
+    
 }
 Y_UTEST_DONE()

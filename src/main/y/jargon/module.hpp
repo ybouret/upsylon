@@ -68,7 +68,7 @@ namespace upsylon {
             explicit Module(const Tag   &,
                             const Input &,
                             const Cache &,
-                            const Type         ) throw();
+                            const Type ) throw();
             Input          input;
         public:
             Cache      cache; //!< shared cache for Char creation

@@ -20,7 +20,7 @@ namespace upsylon {
             // C++
             //__________________________________________________________________
             explicit     Source(const Cache &, Module *) throw(); //!< setup with first module
-            virtual     ~Source() throw();                       //!< cleanup
+            virtual     ~Source() throw();                        //!< cleanup
        
             //__________________________________________________________________
             //
