@@ -88,6 +88,8 @@ XCache  &xcache
                 return *static_cast<const AXIOM*>(self);
             }
             
+            std::ostream & display( std::ostream &os, const char *id ) const;
+            
         protected:
             void           *self; //!< pointer to derived class
             
@@ -98,6 +100,7 @@ XCache  &xcache
             uuid(u),
             self(0)
             {
+                std::cerr << "+Axiom<" << label << "> [" << fourcc_(uuid) << "]" << std::endl;
             }
             
         private:

@@ -7,6 +7,8 @@ namespace upsylon {
         
         Option:: ~Option() throw()
         {
+            Y_JAXIOM(display(std::cerr,"~Option") << " -> ";
+                     canon->display(std::cerr,"~Axiom") << std::endl);
         }
                 
         Option:: Option( Axiom &axiom ) :

@@ -75,9 +75,14 @@ Y_UTEST(grammar)
     Y_UTEST_SIZEOF(Compound);
     Y_UTEST_SIZEOF(Aggregate);
     Y_UTEST_SIZEOF(Alternate);
-
     std::cerr << std::endl;
    
+    Y_UTEST_SIZEOF(Option);
+    Y_UTEST_SIZEOF(Repeat);
+    Y_UTEST_SIZEOF(OneOrMore);
+    Y_UTEST_SIZEOF(ZeroOrMore);
+
+    
     
     {
         Grammar G("G");
@@ -117,7 +122,7 @@ Y_UTEST(grammar)
             std::cerr << "#visited = " << v.entries()    << std::endl;
         }
         
-        G.compile();
+        G.validate();
         
         Cache     tcache;
         if(argc>1)

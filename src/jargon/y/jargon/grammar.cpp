@@ -10,7 +10,14 @@ namespace upsylon {
         
         Grammar:: ~Grammar() throw()
         {
+            std::cerr << "~Grammar [" << title << "]" << std::endl;
             ground = 0;
+            displayAxioms();
+            while( axioms.entries() )
+            {
+                axioms.back()->display(std::cerr << "removing ","Axiom") << std::endl;
+                axioms.pop_back();
+            }
         }
  
         void Grammar:: enroll(Axiom *axiom)
@@ -61,7 +68,9 @@ namespace upsylon {
             const string &akey = * axiom->label;
             std::cerr << akey ; assert(akey.size()<=maxLength);
             for(size_t i=maxLength-akey.length();i>0;--i) std::cerr << ' ';
-            std::cerr << " [" << fourcc_(axiom->uuid) << "]" << std::endl;
+            std::cerr << " [" << fourcc_(axiom->uuid) << "]";
+            std::cerr << " @" << axiom->refcount();
+            std::cerr << std::endl;
             return true;
         }
 
@@ -93,6 +102,27 @@ namespace upsylon {
         {
             return declare( new Alternate(iAlt) );
         }
+        
+        Aggregate & Grammar:: agg()
+        {
+            return declare( new Aggregate(iAgg) );
+        }
+        
+        Axiom     & Grammar:: cat(Axiom &a, Axiom &b)
+        {
+            Aggregate &compound = agg();
+            compound << a << b;
+            return compound;
+        }
+        
+        
+        Axiom     & Grammar:: cat(Axiom &a, Axiom &b, Axiom &c)
+        {
+            Aggregate &compound = agg();
+            compound << a << b << c;
+            return compound;
+        }
+        
         
         Axiom & Grammar:: choice(Axiom &a, Axiom &b)
         {

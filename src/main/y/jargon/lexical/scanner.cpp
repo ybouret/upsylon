@@ -11,6 +11,7 @@ namespace upsylon {
             
             Scanner:: ~Scanner() throw()
             {
+                Y_JSCANNER(std::cerr << "~Scanner<" << label << ">@" << refcount() << std::endl);
             }
             
 #define Y_JSCANNER_CTOR(TAG) \

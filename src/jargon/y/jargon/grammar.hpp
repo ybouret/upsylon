@@ -17,9 +17,10 @@ namespace upsylon {
         //! dummy Internal for testing
         //
         //----------------------------------------------------------------------
-        class Grammar
+        class Grammar 
         {
         public:
+            
             //------------------------------------------------------------------
             //
             // C++
@@ -37,6 +38,7 @@ namespace upsylon {
             ground(  &(*xcache.dull) ),
             axioms(),
             iAlt(1),
+            iAgg(1),
             maxLength(0)
             {
             }
@@ -58,7 +60,9 @@ namespace upsylon {
 
             //------------------------------------------------------------------
             //
+            //
             // advanced handling
+            //
             //
             //------------------------------------------------------------------
            
@@ -70,16 +74,24 @@ namespace upsylon {
                 return *axiom;
             }
             
-            Axiom & oom(Axiom &); //!< new One Or More Axiom
-            Axiom & zom(Axiom &); //!< new Zero Or More Axiom
-            Axiom & opt(Axiom &); //!< new Option Axion
-            
             //! new terminal
             template <typename LABEL> inline
             Axiom & terminal(const LABEL &id)
             {
                 return declare( new Terminal(id) );
             }
+            
+            //------------------------------------------------------------------
+            // wildcards
+            //------------------------------------------------------------------
+            
+            Axiom & oom(Axiom &); //!< new One Or More Axiom
+            Axiom & zom(Axiom &); //!< new Zero Or More Axiom
+            Axiom & opt(Axiom &); //!< new Option Axion
+            
+            //------------------------------------------------------------------
+            // aggregates
+            //------------------------------------------------------------------
             
             //! new aggregate
             template <typename LABEL> inline
@@ -88,6 +100,13 @@ namespace upsylon {
                 return declare( new Aggregate(id) );
             }
             
+            Aggregate & agg();//!< new design agg
+            Axiom     & cat(Axiom &a,Axiom &b);
+            Axiom     & cat(Axiom &a,Axiom &b,Axiom &c);
+
+            //------------------------------------------------------------------
+            // alternates
+            //------------------------------------------------------------------
             
             Alternate & alt();//!< new alternate
             Axiom     & choice(Axiom &a, Axiom &b);           //!< make a choice
@@ -100,8 +119,8 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! compile it
-            void compile(bool allowStandalone=false);
+            //! validate it
+            void validate(bool allowStandalone=false);
             
             //! main call, try to accept the ground axiom
 
@@ -124,12 +143,13 @@ namespace upsylon {
             void graphViz(const string &dotFile, const bool keepFile=false) const;
             void graphViz(const char *  dotFile, const bool keepFile=false) const;
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Grammar);
+        protected:
             const   Axiom *ground;
             Axioms         axioms;
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             unsigned       iAlt;
-            
+            unsigned       iAgg;
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
             
         public:

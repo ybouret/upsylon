@@ -43,6 +43,7 @@ namespace upsylon {
                               Axiom         &axiom ) :
             Internal(id,u), canon( checkShared(axiom) )
             {
+                std::cerr << "axiom.refcount=" << canon.refcount() << std::endl;
             }
             
         private:

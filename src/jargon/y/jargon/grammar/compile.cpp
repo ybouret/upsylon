@@ -9,7 +9,7 @@ namespace upsylon {
     namespace Jargon {
 
         
-        void Grammar:: compile(const bool allowStandalone)
+        void Grammar:: validate(const bool allowStandalone)
         {
             Y_JAXIOM(std::cerr << "[" << title << "] syntax compilation" << std::endl);
            

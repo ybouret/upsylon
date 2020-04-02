@@ -11,6 +11,7 @@ namespace upsylon {
             
             Analyzer:: ~Analyzer() throw()
             {
+                Y_JSCANNER(std::cerr << "~Analyzer<" << label << ">@" << refcount() << std::endl);
                 scanners.release();
                 (void) liberate();
             }

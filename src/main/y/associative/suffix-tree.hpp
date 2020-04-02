@@ -439,6 +439,20 @@ namespace upsylon {
             return true;
         }
         
+        const_type & back()
+        {
+            return dlist.tail->data.data;
+        }
+        
+        void pop_back() throw()
+        {
+            assert(dlist.size);
+            data_node *dnode = dlist.pop_back(); assert(dnode);
+            node_type *tnode = (node_type*)&(dnode->data.hook); assert(tnode);
+            data_node::destruct(dnode,dpool);
+            tnode->impl = 0;
+        }
+        
     protected:
         data_list            dlist; //!< list of data nodes
         data_pool            dpool; //!< pool of data nodes

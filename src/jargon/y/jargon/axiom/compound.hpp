@@ -40,6 +40,7 @@ namespace upsylon {
         class Compound : public Internal, public Manifest
         {
         public:
+            static const char DesignMark = '#';
             //------------------------------------------------------------------
             //
             // building methods

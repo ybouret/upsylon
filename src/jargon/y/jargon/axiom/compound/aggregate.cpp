@@ -34,6 +34,21 @@ namespace upsylon {
             }
         }
         
+        static inline string * MakeLabel(unsigned &indx)
+        {
+            const string id   = vformat("%cagg%u", Compound::DesignMark, indx);
+            string      *temp = Tags::Make(id);
+            ++indx;
+            return temp;
+        }
+        
+        Aggregate:: Aggregate(unsigned &indx) :
+        Compound( MakeLabel(indx), UUID )
+        {
+            setup();
+        }
+
+        
         void Aggregate:: setup()
         {
             self = static_cast<Aggregate *>(this);

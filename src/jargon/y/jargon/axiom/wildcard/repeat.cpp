@@ -8,6 +8,8 @@ namespace upsylon {
         
         Repeat:: ~Repeat() throw()
         {
+            Y_JAXIOM(display(std::cerr,"~Repeat") << " $" << minimalCount << " -> ";
+                     canon->display(std::cerr,"~Axiom") << std::endl);
         }
         
         Repeat:: Repeat(Axiom         &axiom,

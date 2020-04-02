@@ -64,7 +64,8 @@ namespace upsylon {
             }
             
             //! cleanu
-            inline virtual ~Rep() throw() {}
+            inline virtual ~Rep() throw()
+            {}
 
             
         private:

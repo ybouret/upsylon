@@ -615,10 +615,9 @@ namespace upsylon {
         }
         
         Pattern * RegularExpression::Compile(const char       C,
-                                             const Dictionary *dict)
+                                             const Dictionary *)
         {
-            const  string _(C);
-            return Compile(_,dict);
+            return Single::Create(C);
         }
         
     }

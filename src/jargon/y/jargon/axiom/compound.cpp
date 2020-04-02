@@ -8,6 +8,7 @@ namespace upsylon {
         
         Compound:: ~Compound() throw()
         {
+            Y_JAXIOM( display(std::cerr,"~Compound") << "$" << size << std::endl);
         }
         
         Member:: ~Member() throw()
@@ -25,7 +26,7 @@ namespace upsylon {
             if(axiom.refcount()<=0)
                 throw exception("Jargon::Compound<%s>.add(static Axiom<%s>)",**label,**(axiom.label));
             
-            const Canon canon = &axiom;
+            const Canon canon( &axiom );
             push_back( new Member(canon) );
         }
 
