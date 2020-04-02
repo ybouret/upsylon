@@ -18,14 +18,29 @@ namespace upsylon {
         class Visitor : public AxiomAddresses
         {
         public:
+            typedef bool (*Process)(const Axiom &, void *);
+            
             explicit Visitor();
             virtual ~Visitor() throw();
             
             //! register axiom, return true if was not visited
             bool greenLight( const Axiom & );
+            
+            //! check if was visited
             bool wasVisited( const Axiom & ) const throw();
           
+            //! apply proc on each not-visited axiom from root
+            bool walkDown(const Axiom &root,
+                          Process      proc,
+                          void        *args);
             
+            //! return true
+            static bool Check(const Axiom &, void *) throw();
+            
+            //! populate addresses
+            void supplyWith(const Axiom &);
+            
+            void display() const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Visitor);

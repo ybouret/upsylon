@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
+#include "y/jargon/axiom/visitor.hpp"
 
 using namespace  upsylon;
 using namespace  Jargon;
@@ -108,6 +109,14 @@ Y_UTEST(grammar)
         
         G.graphViz("G.dot");
         
+        {
+            Visitor v;
+            v.supplyWith(G.getGround());
+            v.display();
+            std::cerr << "#axioms  = " << (*G).entries() << std::endl;
+            std::cerr << "#visited = " << v.entries()    << std::endl;
+        }
+        
         Cache     tcache;
         if(argc>1)
         {
@@ -115,7 +124,6 @@ Y_UTEST(grammar)
             auto_ptr<XNode> tree = G.accept(L,source);
             Y_CHECK(tree.is_valid());
             tree->graphViz("tree.dot");
-            
         }
     }
     

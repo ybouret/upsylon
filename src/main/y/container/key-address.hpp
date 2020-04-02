@@ -115,6 +115,12 @@ namespace upsylon {
             return 0 != compare(lhs,rhs);
         }
 
+        //! get addresses
+        inline const void * operator[](const size_t i) const throw()
+        {
+            assert(i<N);
+            return addr[i];
+        }
 
 
     private:
