@@ -96,9 +96,15 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            //! main call, try to accept the ground axiom
+            // management
             //
             //------------------------------------------------------------------
+            
+            //! compile it
+            void compile(bool allowStandalone=false);
+            
+            //! main call, try to accept the ground axiom
+
             XNode *accept(Lexer &, Source &) const;
             
             

@@ -12,11 +12,17 @@ SET( axiom_srcs ${axiom_decl} ${axiom_impl})
 INSTALL( FILES ${axiom_decl} DESTINATION include/y/jargon/axiom )
 SOURCE_GROUP( jargon/axiom FILES ${axiom_srcs} )
 
-FILE( GLOB axiom_decl y/jargon/axiom/*.hpp)
-FILE( GLOB axiom_impl y/jargon/axiom/*.cpp)
-SET( axiom_srcs ${axiom_decl} ${axiom_impl})
-INSTALL( FILES ${axiom_decl} DESTINATION include/y/jargon/axiom )
-SOURCE_GROUP( jargon/axiom FILES ${axiom_srcs} )
+FILE( GLOB xnode_decl y/jargon/xnode/*.hpp)
+FILE( GLOB xnode_impl y/jargon/xnode/*.cpp)
+SET( xnode_srcs ${xnode_decl} ${xnode_impl})
+INSTALL( FILES ${xnode_decl} DESTINATION include/y/jargon/xnode )
+SOURCE_GROUP( jargon/xnode FILES ${xnode_srcs} )
+
+FILE( GLOB grammar_decl y/jargon/grammar/*.hpp)
+FILE( GLOB grammar_impl y/jargon/grammar/*.cpp)
+SET( grammar_srcs ${grammar_decl} ${grammar_impl})
+INSTALL( FILES ${grammar_decl} DESTINATION include/y/jargon/grammar )
+SOURCE_GROUP( jargon/grammar FILES ${grammar_srcs} )
 
 FILE( GLOB axiom_compound_decl y/jargon/axiom/compound/*.hpp)
 FILE( GLOB axiom_compound_impl y/jargon/axiom/compound/*.cpp)
@@ -34,10 +40,12 @@ INCLUDE_DIRECTORIES( . ../main )
 
 ADD_LIBRARY( y-jargon STATIC
  ${srcs}
+ ${xnode_srcs}
  ${axiom_srcs}
  ${axiom_compound_srcs}
  ${axiom_wildcard_srcs}
-   )
+ ${grammar_srcs}
+ )
 INSTALL( TARGETS y-jargon ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)

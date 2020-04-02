@@ -117,6 +117,8 @@ Y_UTEST(grammar)
             std::cerr << "#visited = " << v.entries()    << std::endl;
         }
         
+        G.compile();
+        
         Cache     tcache;
         if(argc>1)
         {
