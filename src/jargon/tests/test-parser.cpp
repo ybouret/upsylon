@@ -64,7 +64,7 @@ Y_UTEST(parser)
     if( argc>1 )
     {
         const string    fileName = argv[1];
-        Source          source(json.tcache,Module::OpenFile(json.tcache,fileName));
+        Source          source(Module::OpenFile(json.tcache,fileName));
         auto_ptr<XNode> tree = json.parse(source);
     }
     

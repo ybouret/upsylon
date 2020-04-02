@@ -137,7 +137,7 @@ Y_UTEST(jargon_lexer)
     {
         Lexemes   lexemes;
         Cache     cache;
-        Source    source(cache,Module::OpenFile(cache, argv[1]));
+        Source    source(Module::OpenFile(cache, argv[1]));
         Lexeme   *lx = 0;
         while( NULL != (lx = L.get(source) ) )
         {

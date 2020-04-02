@@ -320,7 +320,7 @@ namespace upsylon {
             }
             
             Cache  cache;
-            Source source(cache,Module::OpenData(cache,name,*name+i,name.size()-i) );
+            Source source(Module::OpenData(cache,name,*name+i,name.size()-i) );
             Token  token(cache);
             Motif  motif = RegularExpression::Compile("_[:lower:]");
             while( source.isAlive() )

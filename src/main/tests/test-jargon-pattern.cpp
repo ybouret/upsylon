@@ -29,7 +29,7 @@ namespace {
         
         Tester(const char *filename) :
         cache( new Char::Pool() ),
-        source( cache, (NULL!=filename) ? Module::OpenFile(cache,filename) : Module::OpenData(cache,"NULL", 0,0) ),
+        source( (NULL!=filename) ? Module::OpenFile(cache,filename) : Module::OpenData(cache,"NULL", 0,0) ),
         content(cache)
         {
         }

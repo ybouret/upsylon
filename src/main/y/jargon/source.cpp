@@ -11,9 +11,9 @@ namespace upsylon {
         }
         
         
-        Source:: Source(const Cache &cache, Module *module) throw() :
+        Source:: Source(Module *module) throw() :
         handle(module),
-        iobuff(cache),
+        iobuff( handle->cache ),
         history()
         {
             

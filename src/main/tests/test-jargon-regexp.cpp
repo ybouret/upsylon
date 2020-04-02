@@ -43,7 +43,7 @@ Y_UTEST(jargon_regexp)
         if(argc>2)
         {
             Cache  cache;
-            Source source(cache,Module::OpenFile(cache, argv[2]));
+            Source source(Module::OpenFile(cache, argv[2]));
             Token  content(cache);
             q->test(source,content);
         }
