@@ -46,9 +46,12 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
-            virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
-            virtual const char *vizShape() const throw() { return "house"; }
+            virtual bool           accept(Y_JARGON_AXIOM_ARGS) const;
+            virtual const char *   vizShape() const throw() { return "house"; }
+            virtual ios::ostream & display(ios::ostream &)     const;
+
             void setup();
+
         };
     }
 }

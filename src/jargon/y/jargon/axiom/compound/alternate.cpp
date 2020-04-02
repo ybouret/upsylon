@@ -37,6 +37,13 @@ namespace upsylon {
             self = static_cast<Alternate *>(this);
             Y_JAXIOM(std::cerr << "+[Alternate] <" << label << ">" << std::endl);
         }
+        
+        ios::ostream & Alternate:: display(ios::ostream &fp) const
+        {
+            fp("|_[Alternate <%s>]\n", **label);
+            displayMembers(fp);
+            return fp;
+        }
     }
     
 }

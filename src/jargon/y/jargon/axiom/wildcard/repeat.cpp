@@ -52,6 +52,13 @@ namespace upsylon {
             }
             return false;
         }
+        
+        ios::ostream & Repeat:: display(ios::ostream &fp) const
+        {
+            return fp("|_[Repeat>=%u <%s>]\n", unsigned(minimalCount), **axiom.label);
+        }
+
+        
     }
     
 }

@@ -42,8 +42,9 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alternate);
-            virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
-            virtual const char *vizShape() const throw() { return "egg"; }
+            virtual bool           accept(Y_JARGON_AXIOM_ARGS) const;
+            virtual const char *   vizShape() const throw() { return "egg"; }
+            virtual ios::ostream & display(ios::ostream &)     const;
 
         };
     }

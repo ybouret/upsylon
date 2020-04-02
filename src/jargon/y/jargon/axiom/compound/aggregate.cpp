@@ -55,6 +55,12 @@ namespace upsylon {
             Y_JAXIOM(std::cerr << "+[Aggregate] <" << label << ">" << std::endl);
         }
 
+        ios::ostream & Aggregate:: display(ios::ostream &fp) const
+        {
+            fp("|_[Aggregate <%s>]\n", **label);
+            displayMembers(fp);
+            return fp;
+        }
     }
     
 }

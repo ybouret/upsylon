@@ -35,7 +35,7 @@ namespace {
             load(type2type<Lexical::CppComment>(),"com").hook(*this);
             endl("endl",  "[:endl:]");
             drop("blanks","[:blank:]");
-            
+            discard("error", ".", this, &JSON_Parser::syntaxError);
             
             setGround(zom(array));
             graphViz("json.dot");
@@ -47,25 +47,44 @@ namespace {
         {
         }
         
+        void syntaxError( const Token &bad ) const
+        {
+            assert(bad.size>=1);
+            const Char &C = *(bad.head);
+            throw exception("%s:%d:%d: %s syntax error following '%s'",
+                            **C.tag,C.line,C.column,**title,cchars::encoded[C.code]);
+        }
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(JSON_Parser);
     };
 
 }
 
+#include "y/ios/ocstream.hpp"
 Y_UTEST(parser)
 {
     Y_UTEST_SIZEOF(Grammar);
     Y_UTEST_SIZEOF(Parser);
     Axiom::Verbose   = true;
-    Lexical::Scanner::Verbose = true;
     JSON_Parser json;
+    
+    {
+        ios::ocstream fp( ios::cstderr );
+        json.display(fp);
+    }
     
     if( argc>1 )
     {
         const string    fileName = argv[1];
         Source          source(Module::OpenFile(json.tcache,fileName));
         auto_ptr<XNode> tree = json.parse(source);
+        
+        tree->graphViz("json_tree.dot");
+        
+        //json.clear( tree.yield() );
+        
+        std::cerr << "done" << std::endl;
     }
     
     

@@ -52,9 +52,10 @@ XCache  &xcache
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual const char * vizShape() const throw()          = 0; //!< graphViz shape
-            virtual const char * vizStyle() const throw()          = 0; //!< graphViz style
-            virtual bool         accept(Y_JARGON_AXIOM_ARGS) const = 0; //!< main call
+            virtual const char *   vizShape() const throw()          = 0; //!< graphViz shape
+            virtual const char *   vizStyle() const throw()          = 0; //!< graphViz style
+            virtual bool           accept(Y_JARGON_AXIOM_ARGS) const = 0; //!< main call
+            virtual ios::ostream & display(ios::ostream &)     const = 0; //!< display
             
             //------------------------------------------------------------------
             //

@@ -49,14 +49,17 @@ namespace upsylon {
             //------------------------------------------------------------------
             void add(Axiom &);             //!< axiom must be dynamic
             Compound & operator<<(Axiom &);//!< syntactic sugar
-         
+            void displayMembers(ios::ostream &) const;
+            
             //------------------------------------------------------------------
             //
             // C++
             //
             //------------------------------------------------------------------
             virtual ~Compound() throw(); //!< cleanup
-
+            
+            
+            
         protected:
             //! setup for derived classes
             template <typename LABEL> inline

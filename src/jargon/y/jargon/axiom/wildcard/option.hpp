@@ -37,8 +37,9 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Option);
-            virtual bool accept(Y_JARGON_AXIOM_ARGS) const;
-            
+            virtual bool           accept(Y_JARGON_AXIOM_ARGS) const;
+            virtual ios::ostream & display(ios::ostream &)     const;
+
         };
     }
     

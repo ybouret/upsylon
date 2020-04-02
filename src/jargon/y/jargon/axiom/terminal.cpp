@@ -58,6 +58,10 @@ namespace upsylon {
             }
         }
 
+        ios::ostream & Terminal:: display(ios::ostream &fp) const
+        {
+            return fp("|_[Terminal<%s>]\n", **label);
+        }
 
     }
     

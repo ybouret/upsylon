@@ -34,7 +34,12 @@ namespace upsylon {
                 return true;
             }
         }
+     
         
+        ios::ostream & Option:: display(ios::ostream &fp) const
+        {
+            return fp("|_[Option <%s>]\n", **axiom.label);
+        }
     }
     
 }

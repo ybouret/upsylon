@@ -51,13 +51,14 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
 
-            bool   owns(const Axiom &) const throw(); //!< check owned axiom
-            const Axioms & operator*() const throw(); //!< access to database
-            const Axiom  & getGround() const throw(); //!< get ground Axiom
-            void           setGround(const Axiom &);  //!< set (enrolled) ground Axiom
-            void           displayAxioms() const;     //!< display enrolled axioms
-            void           enroll(Axiom *);           //!< enroll a valid, new dynamic axiom
-
+            bool   owns(const Axiom &) const throw();     //!< check owned axiom
+            const Axioms & operator*() const throw();     //!< access to database
+            const Axiom  & getGround() const throw();     //!< get ground Axiom
+            void           setGround(const Axiom &);      //!< set (enrolled) ground Axiom
+            void           displayAxioms() const;         //!< display enrolled axioms
+            void           enroll(Axiom *);               //!< enroll a valid, new dynamic axiom
+            void           display(ios::ostream &) const; //!< display summary
+            
             //------------------------------------------------------------------
             //
             //
@@ -76,9 +77,9 @@ namespace upsylon {
             
             //! new terminal
             template <typename LABEL> inline
-            Axiom & terminal(const LABEL &id)
+            Axiom & terminal(const LABEL &id, const Terminal::Feature f = Terminal::Standard)
             {
-                return declare( new Terminal(id) );
+                return declare( new Terminal(id,f) );
             }
             
             //------------------------------------------------------------------
@@ -126,10 +127,9 @@ namespace upsylon {
             XNode *accept(Lexer &, Source &) const;
             
             //! for memory
-            void   clear( XNode * &xnode ) throw()
+            void   clear( XNode * xnode ) throw()
             {
-                XNode::Release(xnode,xcache);
-                xnode = NULL;
+                if(xnode) XNode::Release(xnode,xcache);
             }
             
             //------------------------------------------------------------------

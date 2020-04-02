@@ -19,7 +19,11 @@ namespace upsylon {
             throw exception("Jargon::Inactive cannot accept!!!");
         }
 
-        
+        ios::ostream & Inactive:: display(ios::ostream &fp) const
+        {
+            return fp("|_[Inactive<%s>]\n", **label);
+        }
+
     }
     
 }

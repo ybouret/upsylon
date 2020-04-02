@@ -22,7 +22,10 @@ namespace upsylon {
             return false;
         }
         
-        
+        ios::ostream & Internal_:: display(ios::ostream &fp) const
+        {
+            return fp("|_[Internal_<%s>]\n", **label);
+        }
     }
     
 }

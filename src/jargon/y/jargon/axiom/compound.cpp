@@ -30,6 +30,15 @@ namespace upsylon {
             add(axiom);
             return *this;
         }
+        
+        void Compound:: displayMembers(ios::ostream &fp) const
+        {
+            for(const Member *m=head;m;m=m->next)
+            {
+                fp(" |_<%s>\n", **(m->axiom.label) );
+            }
+        }
+
     }
     
 }

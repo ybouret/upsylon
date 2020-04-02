@@ -62,7 +62,6 @@ namespace upsylon {
             std::cerr << akey ; assert(akey.size()<=maxLength);
             for(size_t i=maxLength-akey.length();i>0;--i) std::cerr << ' ';
             std::cerr << " [" << fourcc_(axiom->uuid) << "]";
-            std::cerr << " @" << axiom->refcount();
             std::cerr << std::endl;
             return true;
         }
@@ -137,6 +136,21 @@ namespace upsylon {
             graphViz(_,keepFile);
         }
 
+        void Grammar:: display(ios::ostream &fp ) const
+        {
+            fp << "<Grammar:Enter [" << *title << "]>\n";
+            ground->display(fp);
+            for( Axioms::const_iterator it=axioms.begin(); it!=axioms.end(); ++it)
+            {
+                const Axiom &axiom = **it;
+                if( &axiom != ground )
+                {
+                    axiom.display(fp);
+                }
+            
+            }
+            fp << "<Grammar:Leave [" << *title << "]>\n";
+        }
 
     }
     
