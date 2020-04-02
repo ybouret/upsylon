@@ -37,7 +37,7 @@ dict_(NULL), plug_(NULL)
             {
             }
             
-            void Scanner:: add(Rule *rule)
+            const Rule & Scanner:: add(Rule *rule)
             {
                 assert(rule);
                 auto_ptr<Rule> guard(rule);
@@ -49,8 +49,7 @@ dict_(NULL), plug_(NULL)
                     if( *(r->label) == *(rule->label) )     throw exception("[%s] multiple rule <%s>", **label, **(r->label));
                     if( r->motif->alike( & *(rule->motif))) throw exception("[%s] alike patterns <%s> and <%s>",**label,**(r->label),**(rule->label));
                 }
-                rules.push_back( guard.yield() );
-                
+                return *rules.push_back( guard.yield() );
             }
             
             void Scanner:: newLine(const Token &) throw()

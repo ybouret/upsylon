@@ -22,19 +22,41 @@ namespace upsylon {
             }
             
             template <typename LABEL,typename REGEXP>
-            Axiom & term(const LABEL &label, const REGEXP &regexp )
+            Axiom & term(const LABEL      &label,
+                         const REGEXP     &regexp)
             {
                 // will emit the terminal
-                emit(label,regexp);
-                
+                const  Motif     &motif   = emit(label,regexp).motif; assert(motif->strong());
+                Terminal::Feature feature = Terminal::Standard;
+                if(motif->univocal())
+                {
+                    feature = Terminal::Univocal;
+                }
                 // and associate it with a terminal
-                return terminal(label);
+                return terminal(label,feature);
             }
             
             template <typename LABEL>
             Axiom & term(const LABEL &both)
             {
                 return term(both,both);
+            }
+            
+            template <typename LABEL,typename REGEXP>
+            Axiom & mark(const LABEL      &label,
+                         const REGEXP     &regexp)
+            {
+                // will emit the terminal
+                const  Lexical::Rule &rule  = emit(label,regexp);
+                checkUnivocal(rule);
+                // and associate it with a terminal
+                return terminal(label,Terminal::Division);
+            }
+            
+            template <typename LABEL>
+            Axiom & mark(const LABEL &both)
+            {
+                return mark(both,both);
             }
             
             //! load a 0-arg plugin that will produce a terminal
@@ -69,6 +91,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
+            void checkUnivocal(const Lexical::Rule &) const;
         };
         
     }

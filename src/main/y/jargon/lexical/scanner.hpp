@@ -62,7 +62,7 @@ namespace upsylon {
                 //
                 //------------------------------------------------------------------
                 const string &key() const throw();                   //!< for intr_ptr/set
-                void          add(Rule *rule);                      //!< add a rule, check no multiple
+                const Rule &  add(Rule *rule);                      //!< add a rule, check no multiple
                 void          nothing(const Token &) const throw(); //!< ...
                 void          newLine(const Token &) throw();       //!< send newLine to current source
                 bool          isPlugin() const throw();             //!< check if plug in
@@ -74,7 +74,7 @@ namespace upsylon {
                 //
                 //
                 //------------------------------------------------------------------
-
+                
                 
                 //! build a forwarding regular event
                 /**
@@ -87,12 +87,12 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER
                 >
-                void forward(const LABEL   &anyLabel,
-                             const REGEXP  &anyRegExp,
-                             OBJECT_POINTER hObject,
-                             METHOD_POINTER hMethod)
+                const Rule & forward(const LABEL   &anyLabel,
+                                     const REGEXP  &anyRegExp,
+                                     OBJECT_POINTER hObject,
+                                     METHOD_POINTER hMethod)
                 {
-                    regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnForward>(anyLabel,anyRegExp,hObject,hMethod);
+                    return regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnForward>(anyLabel,anyRegExp,hObject,hMethod);
                 }
                 
                 
@@ -107,33 +107,33 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER
                 >
-                void discard(const LABEL   &anyLabel,
-                             const REGEXP  &anyRegExp,
-                             OBJECT_POINTER hObject,
-                             METHOD_POINTER hMethod)
+                const Rule & discard(const LABEL   &anyLabel,
+                                     const REGEXP  &anyRegExp,
+                                     OBJECT_POINTER hObject,
+                                     METHOD_POINTER hMethod)
                 {
-                    regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnDiscard>(anyLabel,anyRegExp,hObject,hMethod);
+                    return regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnDiscard>(anyLabel,anyRegExp,hObject,hMethod);
                 }
                 
                 //! default emit
                 template <typename LABEL, typename REGEXP>
-                void emit(const LABEL  &label, const REGEXP &regexp)
+                const Rule & emit(const LABEL  &label, const REGEXP &regexp)
                 {
-                    forward(label,regexp,this,&Scanner::nothing);
+                    return forward(label,regexp,this,&Scanner::nothing);
                 }
                 
                 //! default drop
                 template <typename LABEL, typename REGEXP>
-                void drop(const LABEL  &label, const REGEXP &regexp)
+                const Rule & drop(const LABEL  &label, const REGEXP &regexp)
                 {
-                    discard(label,regexp,this,&Scanner::nothing);
+                    return discard(label,regexp,this,&Scanner::nothing);
                 }
                 
                 //! default endl
                 template <typename LABEL, typename REGEXP>
-                void endl(const LABEL &label, const REGEXP &regexp)
+                const Rule &endl(const LABEL &label, const REGEXP &regexp)
                 {
-                    discard(label,regexp,this,&Scanner::newLine);
+                    return discard(label,regexp,this,&Scanner::newLine);
                 }
                 
                 //------------------------------------------------------------------
@@ -143,7 +143,7 @@ namespace upsylon {
                 //
                 //
                 //------------------------------------------------------------------
-
+                
                 
                 //! build a call event
                 /**
@@ -156,12 +156,12 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER
                 >
-                void call(const LABEL   &target,
-                          const REGEXP  &regexp,
-                          OBJECT_POINTER hObject,
-                          METHOD_POINTER hMethod)
+                const Rule &call(const LABEL   &target,
+                                 const REGEXP  &regexp,
+                                 OBJECT_POINTER hObject,
+                                 METHOD_POINTER hMethod)
                 {
-                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnCall>(target,regexp,hObject,hMethod);
+                    return leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnCall>(target,regexp,hObject,hMethod);
                 }
                 
                 //! build a jump event
@@ -175,12 +175,12 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER
                 >
-                void jump(const LABEL   &target,
-                          const REGEXP  &regexp,
-                          OBJECT_POINTER hObject,
-                          METHOD_POINTER hMethod)
+                const Rule &jump(const LABEL   &target,
+                                 const REGEXP  &regexp,
+                                 OBJECT_POINTER hObject,
+                                 METHOD_POINTER hMethod)
                 {
-                    leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnJump>(target,regexp,hObject,hMethod);
+                    return leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnJump>(target,regexp,hObject,hMethod);
                 }
                 
                 //! build a back event
@@ -193,14 +193,14 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER
                 >
-                void back(const REGEXP  &regexp,
-                          OBJECT_POINTER hObject,
-                          METHOD_POINTER hMethod)
+                const Rule &back(const REGEXP  &regexp,
+                                 OBJECT_POINTER hObject,
+                                 METHOD_POINTER hMethod)
                 {
                     const Motif         ruleMotif = RegularExpression::Compile(regexp,dict_);
                     const Action        ruleAction(hObject,hMethod);
                     const Event::Handle ruleEvent = new OnBack(ruleAction,label);
-                    add( new Rule(label,ruleMotif,ruleEvent) );
+                    return add( new Rule(label,ruleMotif,ruleEvent) );
                 }
                 
                 
@@ -231,7 +231,7 @@ namespace upsylon {
                 typename OBJECT_POINTER,
                 typename METHOD_POINTER,
                 typename REGULAR>
-                void regular(const LABEL         &anyLabel,
+                const Rule &regular(const LABEL         &anyLabel,
                              const REGEXP        &anyRegExp,
                              const OBJECT_POINTER hObject,
                              const METHOD_POINTER hMethod)
@@ -242,7 +242,7 @@ namespace upsylon {
                     const Motif          ruleMotif = RegularExpression::Compile(anyRegExp,dict_);
                     const Action         ruleAction(hObject,hMethod);
                     const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
-                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                    return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
                 
                 template <
@@ -252,16 +252,16 @@ namespace upsylon {
                 typename METHOD_POINTER,
                 typename LEAP
                 >
-                void leap(const LABEL   &target,
-                          const REGEXP  &regexp,
-                          OBJECT_POINTER hObject,
-                          METHOD_POINTER hMethod)
+                const Rule & leap(const LABEL   &target,
+                                  const REGEXP  &regexp,
+                                  OBJECT_POINTER hObject,
+                                  METHOD_POINTER hMethod)
                 {
                     const Tag            ruleLabel = Tags::Make(target);
                     const Motif          ruleMotif = RegularExpression::Compile(regexp,dict_);
                     const Action         ruleAction(hObject,hMethod);
                     const Event::Handle  ruleEvent = new LEAP(ruleAction,ruleLabel);
-                    add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
+                    return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
                 
             protected:
