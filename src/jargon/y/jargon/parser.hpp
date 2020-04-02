@@ -14,7 +14,10 @@ namespace upsylon {
             virtual ~Parser() throw();
             
             template <typename LABEL> inline
-            Parser( const LABEL &id ) : Lexer(id), Grammar(id)
+            Parser( const LABEL &id ) :
+            Lexer(id),
+            Grammar(id),
+            tcache()
             {
             }
             
@@ -32,6 +35,36 @@ namespace upsylon {
             Axiom & term(const LABEL &both)
             {
                 return term(both,both);
+            }
+            
+            //! load a 0-arg plugin that will produce a terminal
+            template <typename PLUGIN,typename LABEL>
+            Axiom & plug(type2type<PLUGIN>,const LABEL &label)
+            {
+                load(type2type<PLUGIN>(),label).hook(*this);
+                return terminal(label);
+            }
+            
+            //! load a 1-arg plugin that will produce a terminal
+            template <typename PLUGIN,typename LABEL,typename ENTER>
+            Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter)
+            {
+                load(type2type<PLUGIN>(),label,enter).hook(*this);
+                return terminal(label);
+            }
+            
+            template <typename PLUGIN,typename LABEL,typename ENTER,typename LEAVE>
+            Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter, const LEAVE &leave)
+            {
+                load(type2type<PLUGIN>(),label,enter,leave).hook(*this);
+                return terminal(label);
+            }
+            
+            mutable Cache tcache;
+            
+            XNode *parse( Source &source )
+            {
+                return accept(*this,source);
             }
             
         private:

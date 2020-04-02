@@ -123,9 +123,14 @@ namespace upsylon {
             void validate(bool allowStandalone=false);
             
             //! main call, try to accept the ground axiom
-
             XNode *accept(Lexer &, Source &) const;
             
+            //! for memory
+            void   clear( XNode * &xnode ) throw()
+            {
+                XNode::Release(xnode,xcache);
+                xnode = NULL;
+            }
             
             //------------------------------------------------------------------
             //

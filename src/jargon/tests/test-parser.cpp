@@ -29,15 +29,15 @@ namespace {
             Axiom &heavy_array = ( agg("heavy_array") << LBRACK << VALUE << zom( cat(COMA,VALUE) ) << RBRACK);
             Axiom &array       = choice(empty_array,heavy_array);
             
-            //std::cerr << "array.refcount=" << array.refcount() << std::endl;
             VALUE << array;
-            //std::cerr << "array.refcount=" << array.refcount() << std::endl;
-
             
+            // lexical
+            load(type2type<Lexical::CppComment>(),"com").hook(*this);
             endl("endl",  "[:endl:]");
             drop("blanks","[:blank:]");
             
-            setGround(oom(array));
+            
+            setGround(zom(array));
             graphViz("json.dot");
             displayAxioms();
             validate();
@@ -60,8 +60,6 @@ Y_UTEST(parser)
     Axiom::Verbose   = true;
     Lexical::Scanner::Verbose = true;
     JSON_Parser json;
-    Tags::Release();
-
-    std::cerr << std::endl << "End of " << program << std::endl;
+    
 }
 Y_UTEST_DONE()
