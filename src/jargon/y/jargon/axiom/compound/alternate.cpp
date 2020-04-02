@@ -14,7 +14,7 @@ namespace upsylon {
         {
             for(const Member *member=head;member;member=member->next)
             {
-                if( (**member).accept(xtree, lexer, source, xcache) )
+                if( member->axiom.accept(xtree, lexer, source, xcache) )
                 {
                     Y_JAXIOM(std::cerr << "|_[Alternate] <" << label << ">" << std::endl);
                     return true;

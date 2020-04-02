@@ -17,7 +17,7 @@ namespace upsylon {
             {
                 for(const Member *member=head;member;member=member->next)
                 {                    
-                    if( ! (**member).accept(ltree,lexer,source,xcache) )
+                    if( ! member->axiom.accept(ltree,lexer,source,xcache) )
                     {
                         XNode::Restore(ltree, lexer, xcache);
                         return false;

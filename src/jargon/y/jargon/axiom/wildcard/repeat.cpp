@@ -8,8 +8,7 @@ namespace upsylon {
         
         Repeat:: ~Repeat() throw()
         {
-            Y_JAXIOM(display(std::cerr,"~Repeat") << " $" << minimalCount << " -> ";
-                     canon->display(std::cerr,"~Axiom") << std::endl);
+            
         }
         
         Repeat:: Repeat(Axiom         &axiom,
@@ -27,7 +26,6 @@ namespace upsylon {
         {
             size_t           count = 0;
             XNode           *ltree = xcache.query(*this);
-            const Axiom     &axiom = *canon;
             try
             {
                 while(axiom.accept(ltree,lexer,source,xcache))

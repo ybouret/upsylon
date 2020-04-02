@@ -10,14 +10,7 @@ namespace upsylon {
         
         Grammar:: ~Grammar() throw()
         {
-            std::cerr << "~Grammar [" << title << "]" << std::endl;
             ground = 0;
-            displayAxioms();
-            while( axioms.entries() )
-            {
-                axioms.back()->display(std::cerr << "removing ","Axiom") << std::endl;
-                axioms.pop_back();
-            }
         }
  
         void Grammar:: enroll(Axiom *axiom)

@@ -15,11 +15,12 @@ namespace upsylon {
         //! member of a manifest
         //
         //----------------------------------------------------------------------
-        class Member : public Object, public inode<Member>, public Canon
+        class Member : public Object, public inode<Member>
         {
         public:
-            explicit Member(const Canon &) throw(); //!< setup
+            explicit Member(const Axiom &) throw(); //!< setup
             virtual ~Member() throw();              //!< cleanup
+            const Axiom &axiom;                     //!< reference to axiom
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Member);

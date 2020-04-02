@@ -7,8 +7,7 @@ namespace upsylon {
         
         Option:: ~Option() throw()
         {
-            Y_JAXIOM(display(std::cerr,"~Option") << " -> ";
-                     canon->display(std::cerr,"~Axiom") << std::endl);
+         
         }
                 
         Option:: Option( Axiom &axiom ) :
@@ -21,7 +20,6 @@ namespace upsylon {
         bool Option:: accept(Y_JARGON_AXIOM_ARGS) const
         {
             XNode       *ltree = NULL;
-            const Axiom &axiom = *canon;
             if( axiom.accept(ltree,lexer,source,xcache))
             {
                 assert(ltree!=NULL);

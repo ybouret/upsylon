@@ -9,11 +9,11 @@ namespace upsylon {
 
         
         template <typename WILDCARD> static inline
-        void gvJoinWC(ios::ostream &fp, const Axiom *axiom)
+        void gvJoinWC(ios::ostream &fp, const Axiom *parent)
         {
-            const Wildcard &w = axiom->as<WILDCARD>();
-            fp.viz(axiom) << "->";
-            fp.viz(w.canon.content()) << ";\n";
+            const Wildcard &w = parent->as<WILDCARD>();
+            fp.viz(parent) << "->";
+            fp.viz(&w.axiom) << ";\n";
         }
         
         template <typename CMP> static inline
@@ -25,7 +25,7 @@ namespace upsylon {
             for(const Member *m =c.head;m;m=m->next,++i)
             {
                 fp.viz(axiom)  << "->";
-                fp.viz( & **m);
+                fp.viz(&(m->axiom));
                 if(show)
                 {
                     fp("[label=\"%u\"]",i);

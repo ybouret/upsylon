@@ -63,7 +63,7 @@ namespace upsylon {
             assert( visitor.wasVisited(axiom) );
             for(const Member *m = axiom.as<COMPOUND>().head;m;m=m->next)
             {
-                if( !visitor.walkDown(**m, proc, args))
+                if( !visitor.walkDown(m->axiom, proc, args))
                 {
                     return false;
                 }
@@ -78,7 +78,7 @@ namespace upsylon {
                               void            *args)
         {
             assert( visitor.wasVisited(axiom) );
-            return visitor.walkDown(*axiom.as<WILDCARD>().canon, proc, args);
+            return visitor.walkDown(axiom.as<WILDCARD>().axiom, proc, args);
         }
         
         bool Visitor:: walkDown(const Axiom &root,
