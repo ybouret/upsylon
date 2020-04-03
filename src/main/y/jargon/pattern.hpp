@@ -111,7 +111,6 @@ namespace upsylon {
             //! try to merge pairwise
             /**
              recursively check if two consecutive pattens may be merged
-             TODO: better version
              */
             static void PairwiseMerge(List &patterns);
             

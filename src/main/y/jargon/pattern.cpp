@@ -33,14 +33,14 @@ entropy(-1)
         {
         }
         
-       
+        
         
         bool Pattern:: multiple() const throw()
         {
             return !univocal();
         }
         
-      
+        
         
         bool Pattern:: strong() const throw()
         {
@@ -79,7 +79,7 @@ entropy(-1)
             }
             patterns.swap_with(tmp);
         }
-
+        
         void Pattern:: Transform(List &patterns, Proc proc ) throw()
         {
             assert(proc);
@@ -93,30 +93,31 @@ entropy(-1)
             patterns.swap_with(tmp);
         }
         
-        void Pattern:: PairwiseMerge(List &pat)
+        void Pattern:: PairwiseMerge(List &rhs)
         {
-            if(pat.size>1)
+        CYCLE:
+            List lhs;
+            bool merged = false;
+        SCAN:
+            if(rhs.size)
             {
-                List tmp;
-                tmp.push_back( pat.pop_front() );
-                while(pat.size)
+                const Pattern *R = rhs.head;
+                for(Pattern *L=lhs.head;L;L=L->next)
                 {
-                    const Pattern *lhs = tmp.tail;
-                    const Pattern *rhs = pat.head;
-                    Pattern       *mrg = Merge::Try(lhs, rhs);
-                    if(mrg)
+                    Pattern *P = Merge::Try(L,R);
+                    if(P)
                     {
-                        delete tmp.pop_back();
-                        delete pat.pop_front();
-                        tmp.push_back( mrg );
-                    }
-                    else
-                    {
-                        tmp.push_back( pat.pop_front() );
+                        merged = true;
+                        delete lhs.replace(L,P);
+                        delete rhs.pop_front();
+                        goto SCAN;
                     }
                 }
-                pat.swap_with(tmp);
+                lhs.push_back(rhs.pop_front());
+                goto SCAN;
             }
+            rhs.swap_with(lhs);
+            if(merged) goto CYCLE;
         }
         
     }
@@ -156,7 +157,7 @@ namespace upsylon {
 namespace upsylon {
     
     namespace Jargon {
-     
+        
         
         void Pattern:: updateEntropy() const throw()
         {

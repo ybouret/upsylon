@@ -70,7 +70,7 @@ namespace upsylon {
             }
             
             // merge
-            Pattern::PairwiseMerge(*q);
+            //Pattern::PairwiseMerge(*q);
             
             // compact
             return Logical::Compact(q);
@@ -88,7 +88,7 @@ namespace upsylon {
             Pattern::RemoveRedundant(*q);
             
             // merge
-            Pattern::PairwiseMerge(*q);
+            //Pattern::PairwiseMerge(*q);
 
             // sort by entropy
             Pattern::SortByEntropy(*q);

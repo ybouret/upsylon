@@ -32,8 +32,8 @@ Y_UTEST(jargon_regexp)
         p->graphViz("regexp.dot");
         q->graphViz("regexp2.dot",true);
         
-        Y_CHECK(p->univocal()==q->univocal());
         Y_CHECK(p->feeble()==q->feeble());
+        Y_CHECK(p->univocal()==q->univocal());
 
         q->updateEntropy();
         std::cerr << "strong   : " << q->strong()   << std::endl;

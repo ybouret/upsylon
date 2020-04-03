@@ -434,6 +434,7 @@ namespace upsylon {
                             --depth;
                             ++curr;   // skip RBRACK
                             if(q->size<=0) throw exception("%sempty block in '%s'",fn,text);
+                            Pattern::PairwiseMerge(*q);
                             return q.yield();
                             
                         case BACKSLASH:

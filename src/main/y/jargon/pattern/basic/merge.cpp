@@ -43,6 +43,29 @@ namespace upsylon {
         }
         
         static inline
+        Pattern * _try_merge( const Single *lhs, const Single *rhs )
+        {
+            int L = lhs->code;
+            int R = rhs->code;
+            if(L==R)
+            {
+                return  Single::Create(lhs->code);
+            }
+            else
+            {
+                if(L>R) cswap(L,R);
+                assert(L<R);
+                if(1==R-L)
+                {
+                    return Range::Create(uint8_t(L),uint8_t(R));
+                }
+            }
+            
+            return NULL;
+        }
+        
+        
+        static inline
         Pattern * _try_merge( const Range *a, const Range *b )
         {
             if(a->lower>b->lower)
@@ -61,6 +84,8 @@ namespace upsylon {
             return NULL;
         }
         
+        
+        
         Pattern * Merge::Try(const Pattern *lhs, const Pattern *rhs)
         {
             assert(lhs);
@@ -69,9 +94,10 @@ namespace upsylon {
             const uint32_t L = lhs->uuid;
             const uint32_t R = rhs->uuid;
             
-            if(Single::UUID==L&&Range::UUID==R) return _try_merge( lhs->as<Single>(), rhs->as<Range>() );
-            if(Single::UUID==R&&Range::UUID==L) return _try_merge( rhs->as<Single>(), lhs->as<Range>() );
-            if(Range:: UUID==R&&Range::UUID==L) return _try_merge( lhs->as<Range>(),  rhs->as<Range>()  );
+            if(Single:: UUID==L&& Single:: UUID==R) return _try_merge( lhs->as<Single>(), rhs->as<Single>() );
+            if(Single:: UUID==L&& Range::  UUID==R) return _try_merge( lhs->as<Single>(), rhs->as<Range>() );
+            if(Single:: UUID==R&& Range::  UUID==L) return _try_merge( rhs->as<Single>(), lhs->as<Range>() );
+            if(Range::  UUID==R&& Range::  UUID==L) return _try_merge( lhs->as<Range>(),  rhs->as<Range>()  );
             
             
             return NULL;
