@@ -223,6 +223,33 @@ namespace upsylon {
                 tree->children().push_back(node);
             }
         }
+        
+        void XNode:: Combine(XNode * &tree, XNode *node, XList &xc) throw()
+        {
+            assert(node);
+            if(NULL==tree)
+            {
+                tree = node; //!< shouldn't happen
+            }
+            else
+            {
+                assert(tree->isInternal());
+                switch(node->genre)
+                {
+                    case IsInactive:
+                    case IsTerminal:
+                        tree->children().push_back(node);
+                        break;
+                        
+                    case IsInternal:
+                        tree->children().merge_back( node->children() );
+                        XNode::Release(node,xc);
+                        break;
+                }
+            }
+        }
+        
+        
 
         const Lexeme * XNode:: LastLexeme(const XNode *xnode) throw()
         {
