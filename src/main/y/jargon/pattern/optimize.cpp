@@ -87,9 +87,6 @@ namespace upsylon {
             // no multiple
             Pattern::RemoveRedundant(*q);
             
-            // merge
-            //Pattern::PairwiseMerge(*q);
-
             // sort by entropy
             Pattern::SortByEntropy(*q);
             

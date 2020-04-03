@@ -77,7 +77,7 @@ namespace upsylon {
             //
             //
             //------------------------------------------------------------------
-            inline Logical *compileExpression()
+            inline Pattern *compileExpression()
             {
                 Y_RX_VERBOSE(std::cerr << fn << "[+] expression@" << depth << std::endl);
                 auto_ptr<Logical> expr = AND::Create();
@@ -205,7 +205,7 @@ namespace upsylon {
             RETURN:
                 Y_RX_VERBOSE(std::cerr << fn << "[-] expression@" << depth << std::endl);
                 if(expr->size<=0) throw exception("%sempty expression in '%s'",fn,text);
-                return expr.yield();
+                return Pattern::Optimize(expr.yield());
             }
             
             //------------------------------------------------------------------
@@ -434,8 +434,18 @@ namespace upsylon {
                             --depth;
                             ++curr;   // skip RBRACK
                             if(q->size<=0) throw exception("%sempty block in '%s'",fn,text);
-                            Pattern::PairwiseMerge(*q);
-                            return q.yield();
+                        {
+                            auto_ptr<Pattern> p = Pattern::Optimize(q.yield());
+                            switch(p->uuid)
+                            {
+                                case OR::  UUID: Pattern::PairwiseMerge( * p->as<OR>()   ); break;
+                                case NONE::UUID: Pattern::PairwiseMerge( * p->as<NONE>() ); break;
+                                default:
+                                    break;
+                            }
+                            
+                            return Pattern::Optimize(p.yield());
+                        }
                             
                         case BACKSLASH:
                             ++curr; // skip BACKSLASH
@@ -570,7 +580,7 @@ namespace upsylon {
             static inline Pattern *Compile(const string &rx, const Dictionary *dict)
             {
                 Engine            engine(*rx,rx.size(),dict);
-                auto_ptr<Logical> result =  engine.compileExpression();
+                auto_ptr<Pattern> result =  engine.compileExpression();
                 if( engine.depth != 0) throw exception("%sunfinished '%s'",fn,*rx);
                 return result.yield();
             }
@@ -589,24 +599,15 @@ namespace upsylon {
     
     namespace Jargon {
         
-        Pattern * RegularExpression::Compile_(const string      &rx,
-                                              const Dictionary *dict)
-        {
-            return RegularExpression::Engine::Compile(rx,dict);
-        }
+       
 
         Pattern * RegularExpression::Compile(const string      &rx,
                                              const Dictionary *dict)
         {
-            return Pattern::Optimize( RegularExpression::Engine::Compile(rx,dict) );
+            return  RegularExpression::Engine::Compile(rx,dict);
         }
         
         
-        Pattern * RegularExpression::Compile_(const char *rx, const Dictionary *dict)
-        {
-            const  string _(rx);
-            return Compile_(_,dict);
-        }
         
         Pattern * RegularExpression::Compile(const char       *rx,
                                              const Dictionary *dict)

@@ -26,11 +26,6 @@ namespace upsylon {
             
             static bool Verbose; //!< global debug flag, default is false
             
-            //! compile without optimization, with optional dict
-            static Pattern *Compile_(const string &rx, const Dictionary * =0);
-            
-            //! compile withouth optimization, with optional dict, wrapper
-            static Pattern *Compile_(const char   *rx, const Dictionary * =0);
             
             //! compile with optional dict
             static Pattern *Compile(const string &rx, const Dictionary * =0);
