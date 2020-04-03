@@ -17,9 +17,9 @@ namespace {
     public:
         explicit JSON_Parser() : Parser( "JSON" )
         {
-            Axiom &LBRACK  = term('[');
-            Axiom &RBRACK  = term(']');
-            Axiom &COMA    = term(',');
+            Axiom &LBRACK  = mark('[');
+            Axiom &RBRACK  = mark(']');
+            Axiom &COMA    = mark(',');
             Axiom &NUMBER  = term("number","[:digit:]+");
 
             Alternate &VALUE = alt();

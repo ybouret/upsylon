@@ -47,6 +47,16 @@ namespace upsylon {
             displayMembers(fp);
             return fp;
         }
+        
+        const char * Alternate:: vizShape() const throw()
+        {
+            return "egg";
+        }
+        
+        const char * Alternate:: vizStyle() const throw()
+        {
+            return "\"bold\"";
+        }
     }
     
 }

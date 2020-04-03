@@ -52,6 +52,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Wildcard);
+            virtual const char *   vizStyle() const throw();
         };
     }
     

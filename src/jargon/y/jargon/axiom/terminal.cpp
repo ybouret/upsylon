@@ -77,6 +77,23 @@ namespace upsylon {
             return FeatureText(feature);
         }
         
+        
+        const char *   Terminal:: vizShape() const throw()
+        {
+            return "rectangle";
+        }
+        
+        const char *   Terminal:: vizStyle() const throw()
+        {
+            switch(feature)
+            {
+                case Univocal: return "\"bold,filled,rounded\"";
+                case Division: return "\"dashed,bold,filled,rounded\"";
+                default:
+                    break;
+            }
+            return "\"bold,filled\"";
+        }
     }
     
 }

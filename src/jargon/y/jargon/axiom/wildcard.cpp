@@ -18,6 +18,11 @@ namespace upsylon {
             return Tags::Make(id);
         }
         
+        const char *   Wildcard:: vizStyle() const throw()
+        {
+            return "bold";
+        }
+
         
         
     }

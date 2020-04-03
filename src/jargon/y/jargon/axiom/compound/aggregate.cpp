@@ -66,6 +66,23 @@ namespace upsylon {
             displayMembers(fp);
             return fp;
         }
+        
+        const char * Aggregate:: vizShape() const throw()
+        {
+            return "house";
+        }
+        
+        const char * Aggregate:: vizStyle() const throw()
+        {
+            switch(feature)
+            {
+                case Transient: return "\"bold,filled,rounded\"";
+                case Vanishing: return "\"bold,dashed\"";
+                default:
+                    break;
+            }
+            return "\"bold,filled\"";
+        }
     }
     
 }

@@ -60,6 +60,10 @@ namespace upsylon {
             return fp("|_[%s>=%u*<%s>]\n", CLID, unsigned(minimalCount), **axiom.label);
         }
 
+        const char * Repeat:: vizShape() const throw()
+        {
+            return "octagon";
+        }
         
     }
     

@@ -1,5 +1,6 @@
 
 #include "y/jargon/parser.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
@@ -13,6 +14,15 @@ namespace upsylon {
         {
             return accept(*this,source);
         }
+        
+        void Parser:: checkUnivocal(const Lexical::Rule &rule) const
+        {
+            if(!rule.motif->univocal())
+            {
+                throw exception("[%s] Terminal<%s> is not univocal", **title, **(rule.label) );
+            }
+        }
+        
     }
 }
 

@@ -42,6 +42,12 @@ namespace upsylon {
         {
             return fp("|_[%s<%s>]\n", CLID, **axiom.label);
         }
+        
+        const char *Option:: vizShape() const throw()
+        {
+            return "diamond";
+        }
+
     }
     
 }

@@ -29,8 +29,8 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Internal);
-            virtual const char * vizShape() const throw() { return "house";  }
-            virtual const char * vizStyle() const throw() { return "solid";  }
+            virtual const char * vizShape() const throw();
+            virtual const char * vizStyle() const throw();
         };
         
         //----------------------------------------------------------------------
