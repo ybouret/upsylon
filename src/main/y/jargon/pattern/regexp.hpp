@@ -36,7 +36,9 @@ namespace upsylon {
             //! compile as single...
             static Pattern *Compile(const char   C, const Dictionary * =0);
             
-            
+            static const char Integer[];
+            static const char Real[];
+            static const char Identifier[];
         };
         
        

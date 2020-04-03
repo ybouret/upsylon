@@ -222,6 +222,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(jargon_pattern);
     Y_UTEST(jargon_posix);
     Y_UTEST(jargon_regexp);
+    Y_UTEST(jargon_regcom);
     Y_UTEST(jargon_scanner);
     Y_UTEST(jargon_lexer);
     Y_UTEST(jargon_matching);

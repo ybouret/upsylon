@@ -435,7 +435,10 @@ namespace upsylon {
                             ++curr;   // skip RBRACK
                             if(q->size<=0) throw exception("%sempty block in '%s'",fn,text);
                         {
+                            // first pass optimization
                             auto_ptr<Pattern> p = Pattern::Optimize(q.yield());
+                            
+                            // second pass optimization
                             switch(p->uuid)
                             {
                                 case OR::  UUID: Pattern::PairwiseMerge( * p->as<OR>()   ); break;
@@ -443,7 +446,6 @@ namespace upsylon {
                                 default:
                                     break;
                             }
-                            
                             return Pattern::Optimize(p.yield());
                         }
                             
