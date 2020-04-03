@@ -17,6 +17,7 @@ namespace upsylon {
         class Wildcard : public Internal
         {
         public:
+            
             //------------------------------------------------------------------
             //
             // methods

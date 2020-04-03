@@ -8,11 +8,22 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
+        //! Parser from a Lexer and a Grammar
+        //
+        //----------------------------------------------------------------------
         class Parser : public Lexer, public Grammar
         {
         public:
-            virtual ~Parser() throw();
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            virtual ~Parser() throw(); //!< cleanup
             
+            //! setup
             template <typename LABEL> inline
             Parser( const LABEL &id ) :
             Lexer(id),
@@ -21,6 +32,13 @@ namespace upsylon {
             {
             }
             
+            //------------------------------------------------------------------
+            //
+            // Terminal
+            //
+            //------------------------------------------------------------------
+           
+            //! create a terminal, detect univocal
             template <typename LABEL,typename REGEXP>
             Axiom & term(const LABEL      &label,
                          const REGEXP     &regexp)
@@ -36,12 +54,20 @@ namespace upsylon {
                 return terminal(label,feature);
             }
             
+            //! create a terminal, wrapper
             template <typename LABEL>
             Axiom & term(const LABEL &both)
             {
                 return term(both,both);
             }
             
+            //------------------------------------------------------------------
+            //
+            // Division
+            //
+            //------------------------------------------------------------------
+            
+            //! create a division mark, must be univocal
             template <typename LABEL,typename REGEXP>
             Axiom & mark(const LABEL      &label,
                          const REGEXP     &regexp)
@@ -53,11 +79,18 @@ namespace upsylon {
                 return terminal(label,Terminal::Division);
             }
             
+            //! create division mark, wrapper
             template <typename LABEL>
             Axiom & mark(const LABEL &both)
             {
                 return mark(both,both);
             }
+            
+            //------------------------------------------------------------------
+            //
+            // Plugins
+            //
+            //------------------------------------------------------------------
             
             //! load a 0-arg plugin that will produce a terminal
             template <typename PLUGIN,typename LABEL>
@@ -75,6 +108,7 @@ namespace upsylon {
                 return terminal(label);
             }
             
+            //! load a 2-args plugin that will produce a terminal
             template <typename PLUGIN,typename LABEL,typename ENTER,typename LEAVE>
             Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter, const LEAVE &leave)
             {
@@ -82,13 +116,23 @@ namespace upsylon {
                 return terminal(label);
             }
             
-            mutable Cache tcache;
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
             
-            XNode *parse( Source &source )
-            {
-                return accept(*this,source);
-            }
+            //! parsing of a source
+            XNode *parse( Source &source );
             
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            
+            mutable Cache tcache; //!< shared token cache
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
             void checkUnivocal(const Lexical::Rule &) const;

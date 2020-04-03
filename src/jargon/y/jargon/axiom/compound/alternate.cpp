@@ -28,7 +28,7 @@ namespace upsylon {
         
         static inline string * MakeLabel(unsigned &indx)
         {
-            const string id   = vformat("%calt%u", Compound::DesignMark, indx);
+            const string id   = vformat("%calt%u", Compound::VanishingMark, indx);
             string      *temp = Tags::Make(id);
             ++indx;
             return temp;

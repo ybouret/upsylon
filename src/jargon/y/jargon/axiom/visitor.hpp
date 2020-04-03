@@ -12,16 +12,35 @@ namespace upsylon {
     
     namespace Jargon {
       
-        typedef key_address<1>            AxiomAddress;
-        typedef suffix_tree<AxiomAddress> AxiomAddresses;
+        typedef key_address<1>            AxiomAddress;   //!< storing address
+        typedef suffix_tree<AxiomAddress> AxiomAddresses; //!< stored addresses
         
+        //! light database of visited axioms
         class Visitor : public AxiomAddresses
         {
         public:
-            typedef bool (*Process)(const Axiom &, void *);
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
             
-            explicit Visitor();
-            virtual ~Visitor() throw();
+            //! process to apply to each axiom, only once
+            typedef bool (*Process)(const Axiom &, void *);
+          
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            explicit Visitor();          //!< setup
+            virtual ~Visitor() throw();  //!< cleanup
+            
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
             
             //! register axiom, return true if was not visited
             bool greenLight( const Axiom & );
@@ -40,6 +59,7 @@ namespace upsylon {
             //! populate addresses
             void supplyWith(const Axiom &);
             
+            //! display the tree
             void display() const;
             
         private:

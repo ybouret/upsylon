@@ -9,6 +9,10 @@ namespace upsylon {
         {
         }
         
+        XNode * Parser:: parse(Source &source)
+        {
+            return accept(*this,source);
+        }
     }
 }
 

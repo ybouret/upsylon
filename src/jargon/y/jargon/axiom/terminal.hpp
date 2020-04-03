@@ -24,18 +24,22 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const uint32_t UUID = Y_FOURCC('T','E','R','M'); //!< UUID
-            static const char     CLID[]; //!< Terminal
+            static const char     CLID[];                           //!< "Terminal"
+            
+            //! properties
             enum Feature
             {
                 Standard, //!< different values, arising from a regular expression
                 Univocal, //!< only one meaningfull value
                 Division  //!< syntax only
             };
+            
+            //! named feature
             static const char *FeatureText(const Feature) throw();
             
             //------------------------------------------------------------------
             //
-            // C++ and definitions
+            // C++
             //
             //------------------------------------------------------------------
             virtual ~Terminal() throw(); //!< cleanup
@@ -48,14 +52,23 @@ namespace upsylon {
                 setup();
             }
             
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
             bool        isStandard()  const throw(); //!< Standard == feature
             bool        isUnivocal()  const throw(); //!< Univocal == feature
             bool        isDivision()  const throw(); //!< Division == feature
             bool        isDefinite()  const throw(); //!< Standard != feature
             const char *featureText() const throw(); //!< FeatureText(feature)
             
-            const Feature feature;
-            
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            const Feature feature; //!< the feature
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Terminal);

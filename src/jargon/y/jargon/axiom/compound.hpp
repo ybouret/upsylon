@@ -41,15 +41,21 @@ namespace upsylon {
         class Compound : public Internal, public Manifest
         {
         public:
-            static const char DesignMark = '#';
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            static const char VanishingMark = '#'; //!< for vanishing compound labels
+            
             //------------------------------------------------------------------
             //
             // building methods
             //
             //------------------------------------------------------------------
-            void add(Axiom &);             //!< axiom must be dynamic
-            Compound & operator<<(Axiom &);//!< syntactic sugar
-            void displayMembers(ios::ostream &) const;
+            void add(Axiom &);                         //!< axiom must be dynamic
+            Compound & operator<<(Axiom &);            //!< syntactic sugar
+            void displayMembers(ios::ostream &) const; //!< display each member
             
             //------------------------------------------------------------------
             //

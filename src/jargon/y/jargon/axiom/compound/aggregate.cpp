@@ -8,6 +8,9 @@ namespace upsylon {
 
         const char Aggregate:: CLID[] = "Aggregate";
         
+        const Aggregate::TransientType  Aggregate:: AsTransient = {};
+
+        
         Aggregate:: ~Aggregate() throw()
         {
         }
@@ -38,19 +41,19 @@ namespace upsylon {
         
         static inline string * MakeLabel(unsigned &indx)
         {
-            const string id   = vformat("%cagg%u", Compound::DesignMark, indx);
+            const string id   = vformat("%cagg%u", Compound::VanishingMark, indx);
             string      *temp = Tags::Make(id);
             ++indx;
             return temp;
         }
         
         Aggregate:: Aggregate(unsigned &indx) :
-        Compound( MakeLabel(indx), UUID )
+        Compound( MakeLabel(indx), UUID ),
+        feature(Vanishing)
         {
             setup();
         }
 
-        
         void Aggregate:: setup()
         {
             self = static_cast<Aggregate *>(this);

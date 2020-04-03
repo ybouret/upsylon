@@ -439,11 +439,13 @@ namespace upsylon {
             return true;
         }
         
+        //! access last inserted item
         const_type & back()
         {
             return dlist.tail->data.data;
         }
         
+        //! remove last inserted item
         void pop_back() throw()
         {
             assert(dlist.size);

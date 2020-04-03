@@ -102,9 +102,9 @@ namespace upsylon {
                 return declare( new Aggregate(id) );
             }
             
-            Aggregate & agg();//!< new design agg
-            Axiom     & cat(Axiom &a,Axiom &b);
-            Axiom     & cat(Axiom &a,Axiom &b,Axiom &c);
+            Aggregate & agg();                           //!< new design aggregate
+            Axiom     & cat(Axiom &a,Axiom &b);          //!< a&&b
+            Axiom     & cat(Axiom &a,Axiom &b,Axiom &c); //!< a&&b&&c
 
             //------------------------------------------------------------------
             // alternates
@@ -152,11 +152,13 @@ namespace upsylon {
             //utilities
             //
             //------------------------------------------------------------------
+            //! get terminal by label
             const Terminal &getTerminal( const Tag &label ) const;
             
         protected:
-            const   Axiom *ground;
-            Axioms         axioms;
+            const   Axiom *ground; //!< ground rule, initially inactive
+            Axioms         axioms; //!< top-level axioms
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             unsigned       iAlt;
