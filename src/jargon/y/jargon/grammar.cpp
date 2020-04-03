@@ -151,7 +151,20 @@ namespace upsylon {
             }
             fp << "<Grammar:Leave [" << *title << "]>\n";
         }
+        
+        void Grammar:: clear(XNode *xnode) const throw()
+        {
+            if(xnode) XNode::Release(xnode,xcache);
+        }
 
+        const Terminal &Grammar:: getTerminal( const Tag &label ) const
+        {
+            const Dogma *ppAxiom = axioms.search_by( *label );
+            if(!ppAxiom) throw exception("[%s] not Terminal<%s>", **title, **label);
+            const Axiom &axiom   = **ppAxiom;
+            if(Terminal::UUID!=axiom.uuid) throw exception("[%s]<%s> is not a Terminal",**title, **label);
+            return axiom.as<Terminal>();
+        }
     }
     
 }

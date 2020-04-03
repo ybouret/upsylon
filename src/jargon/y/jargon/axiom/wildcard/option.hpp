@@ -25,6 +25,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             static const char     Mark = '?';                        //!< label marker
             static const uint32_t UUID = Y_FOURCC(Mark,'O','P','T'); //!< UUID
+            static const char     CLID[];                            //!< "Option"
             
             //------------------------------------------------------------------
             //

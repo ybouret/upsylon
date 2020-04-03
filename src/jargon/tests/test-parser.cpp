@@ -4,7 +4,7 @@
 #include "y/utest/sizeof.hpp"
 
 #include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
-#include "y/jargon/lexical/plugin/strings.hpp"
+#include "y/jargon/lexical/plugin/jstring.hpp"
 
 using namespace  upsylon;
 using namespace  Jargon;
@@ -30,6 +30,7 @@ namespace {
             Axiom &array       = choice(empty_array,heavy_array);
             
             VALUE << array;
+            VALUE << plug( type2type<Lexical::jString>(), "string" );
             
             // lexical
             load(type2type<Lexical::CppComment>(),"com").hook(*this);
@@ -51,8 +52,11 @@ namespace {
         {
             assert(bad.size>=1);
             const Char &C = *(bad.head);
-            throw exception("%s:%d:%d: %s syntax error following '%s'",
-                            **C.tag,C.line,C.column,**title,cchars::encoded[C.code]);
+            exception excp("%s:%d:%d: %s syntax error '",
+                            **C.tag,C.line,C.column,**title);
+            bad.cat(excp);
+            excp.cat("'");
+            throw excp;
         }
         
     private:

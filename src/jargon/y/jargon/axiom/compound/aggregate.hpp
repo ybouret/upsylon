@@ -24,7 +24,8 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const uint32_t UUID = Y_FOURCC('A', 'G', 'G', 'R'); //!< UUID
-            
+            static const char     CLID[]; //!< "Aggregate"
+          
             //------------------------------------------------------------------
             //
             // C++
@@ -39,6 +40,7 @@ namespace upsylon {
             explicit Aggregate(const LABEL &l) :
             Compound(l,UUID)
             {
+                checkLabel(CLID);
                 setup();
             }
             

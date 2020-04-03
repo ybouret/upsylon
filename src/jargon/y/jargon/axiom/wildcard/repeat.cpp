@@ -6,6 +6,8 @@ namespace upsylon {
     
     namespace Jargon {
         
+        const char Repeat::CLID[] = "Repeat";
+        
         Repeat:: ~Repeat() throw()
         {
             
@@ -19,7 +21,7 @@ namespace upsylon {
         minimalCount(nmin)
         {
             self = static_cast<Repeat *>(this);
-            Y_JAXIOM(std::cerr << "+[Repeat>=" << minimalCount <<"] <" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "+" << CLID << ">=" << minimalCount <<"*<" << label << ">" << std::endl);
         }
         
         bool Repeat:: accept(Y_JARGON_AXIOM_ARGS) const
@@ -35,7 +37,7 @@ namespace upsylon {
                 
                 if(count>=minimalCount)
                 {
-                    Y_JAXIOM(std::cerr << "|_[Repeat>=" << minimalCount << "]=" << count << "*<" << axiom.label << ">" << std::endl);
+                    Y_JAXIOM(std::cerr << "|_[" << CLID << ">=" << minimalCount << "]=" << count << "*<" << axiom.label << ">" << std::endl);
                     XNode::Advance(xtree,ltree);
                     return true;
                 }
@@ -55,7 +57,7 @@ namespace upsylon {
         
         ios::ostream & Repeat:: display(ios::ostream &fp) const
         {
-            return fp("|_[Repeat>=%u <%s>]\n", unsigned(minimalCount), **axiom.label);
+            return fp("|_[%s>=%u*<%s>]\n", CLID, unsigned(minimalCount), **axiom.label);
         }
 
         

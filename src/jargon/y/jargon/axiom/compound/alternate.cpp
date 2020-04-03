@@ -6,6 +6,9 @@ namespace upsylon {
     
     namespace Jargon {
         
+        const char Alternate:: CLID[] = "Alternate";
+
+        
         Alternate:: ~Alternate() throw()
         {
         }
@@ -16,7 +19,7 @@ namespace upsylon {
             {
                 if( member->axiom.accept(xtree, lexer, source, xcache) )
                 {
-                    Y_JAXIOM(std::cerr << "|_[Alternate] <" << label << ">" << std::endl);
+                    Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl);
                     return true;
                 }
             }
@@ -35,12 +38,12 @@ namespace upsylon {
         Compound(MakeLabel(indx),UUID)
         {
             self = static_cast<Alternate *>(this);
-            Y_JAXIOM(std::cerr << "+[Alternate] <" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "+" << CLID << "<" << label << ">" << std::endl);
         }
         
         ios::ostream & Alternate:: display(ios::ostream &fp) const
         {
-            fp("|_[Alternate <%s>]\n", **label);
+            fp("|_[%s<%s>]\n", CLID, **label);
             displayMembers(fp);
             return fp;
         }

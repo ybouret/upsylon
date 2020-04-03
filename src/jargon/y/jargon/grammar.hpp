@@ -11,7 +11,8 @@ namespace upsylon {
     namespace Jargon {
         
         typedef suffix_tree<Dogma> Axioms; //!< alias
-
+        class Terminal;
+        
         //----------------------------------------------------------------------
         //
         //! dummy Internal for testing
@@ -127,10 +128,8 @@ namespace upsylon {
             XNode *accept(Lexer &, Source &) const;
             
             //! for memory
-            void   clear( XNode * xnode ) throw()
-            {
-                if(xnode) XNode::Release(xnode,xcache);
-            }
+            void   clear( XNode * xnode ) const throw();
+            
             
             //------------------------------------------------------------------
             //
@@ -142,12 +141,19 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            //! graphViz
+            // graphViz
             //
             //------------------------------------------------------------------
-            void graphViz(const string &dotFile, const bool keepFile=false) const;
-            void graphViz(const char *  dotFile, const bool keepFile=false) const;
+            void graphViz(const string &dotFile, const bool keepFile=false) const; //!< write graphViz
+            void graphViz(const char *  dotFile, const bool keepFile=false) const; //!< write graphViz wrapper
 
+            //------------------------------------------------------------------
+            //
+            //utilities
+            //
+            //------------------------------------------------------------------
+            const Terminal &getTerminal( const Tag &label ) const;
+            
         protected:
             const   Axiom *ground;
             Axioms         axioms;

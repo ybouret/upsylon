@@ -32,6 +32,7 @@ namespace upsylon
         //! prepend to when using printf syntax
         void     hdr(const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
 
+        
     protected:
         explicit exception() throw();                   //!< ""
         void     format(const char *, void *) throw(); //!< common formatting

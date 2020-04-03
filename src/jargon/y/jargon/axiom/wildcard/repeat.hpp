@@ -19,6 +19,7 @@ namespace upsylon {
         class Repeat : public Wildcard
         {
         public:
+            static const char CLID[];  //!< "Repeat"
             const size_t minimalCount; //!< minimal repeats
             virtual ~Repeat() throw(); //!< cleanup
                         

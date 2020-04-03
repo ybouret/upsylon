@@ -7,6 +7,8 @@ namespace upsylon {
     
     namespace Jargon {
 
+        const char Terminal:: CLID[] = "Terminal";
+        
         Terminal:: ~Terminal() throw()
         {
         }
@@ -14,22 +16,8 @@ namespace upsylon {
         void Terminal:: setup()
         {
             self = static_cast<Terminal *>(this);
-            Y_JAXIOM(std::cerr << "+[Terminal] <" << label << ">" << std::endl);
-            const string id = **label;
-            if(id.size()>0)
-            {
-                switch(id[0])
-                {
-                    case '+':
-                    case '?':
-                    case '*':
-                    case '#':
-                        throw exception("Jargon::Terminal(invalid label <%s>)",*id);
-                        
-                    default:
-                        break;
-                }
-            }
+            checkLabel(CLID);
+            Y_JAXIOM(std::cerr << "+" << CLID << " <" << label << ">" << std::endl);
         }
 
         
@@ -41,7 +29,7 @@ namespace upsylon {
             {
                 if( *(lexeme->label) == *label )
                 {
-                    Y_JAXIOM(std::cerr << "[Terminal]<" << label << "> = '" << *lexeme << "'" << std::endl);
+                    Y_JAXIOM(std::cerr << "|_[" << CLID << "]<" << label << "> = '" << *lexeme << "'" << std::endl);
                     XNode::Advance(xtree,xcache.query(*this, lexeme));
                     return true;
                 }
@@ -60,9 +48,35 @@ namespace upsylon {
 
         ios::ostream & Terminal:: display(ios::ostream &fp) const
         {
-            return fp("|_[Terminal<%s>]\n", **label);
+            return fp("|_[%s<%s>] $%s\n", CLID, **label,featureText());
         }
 
+        bool Terminal:: isDefinite() const throw()
+        {
+            return Standard != feature;
+        }
+        
+#define Y_JTERM_IS(EXPR) bool Terminal:: is##EXPR() const throw() { return EXPR == feature; }
+        
+        Y_JTERM_IS(Standard)
+        Y_JTERM_IS(Univocal)
+        Y_JTERM_IS(Division)
+
+        const char * Terminal:: FeatureText(const Feature f)   throw()
+        {
+            switch (f) {
+                case Standard: return "Standard";
+                case Univocal: return "Univocal";
+                case Division: return "Division";
+            }
+            return "???";
+        }
+        
+        const char * Terminal:: featureText() const throw()
+        {
+            return FeatureText(feature);
+        }
+        
     }
     
 }

@@ -30,7 +30,7 @@ XCache  &xcache
         
         //! for verbosity
 #define Y_JAXIOM(CODE) do { if(Axiom::Verbose) { CODE; } } while(false)
-        
+
         //----------------------------------------------------------------------
         //
         //! base class for a syntax axiom
@@ -101,6 +101,9 @@ XCache  &xcache
             self(0)
             {
             }
+            
+            //! check label for derived class, not beginning by reserved chars
+            void checkLabel(const char *which) const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Axiom);

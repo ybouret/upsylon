@@ -107,3 +107,23 @@ namespace upsylon {
     }
     
 }
+
+#include "y/exception.hpp"
+#include "y/code/utils.hpp"
+
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        void Token:: cat(exception &excp) const throw()
+        {
+            
+            for(const Char *ch=head;ch;ch=ch->next)
+            {
+                excp.cat("%s",cchars::encoded[ch->code]);
+            }
+           
+        }
+
+    }
+}

@@ -8,6 +8,8 @@
 
 namespace upsylon {
     
+    class exception;
+    
     namespace Jargon {
         
         //! a dynamic Token of Chars
@@ -25,7 +27,7 @@ namespace upsylon {
 
             //------------------------------------------------------------------
             //
-            // C++
+            // methods
             //
             //------------------------------------------------------------------
             void append(const Context &, const uint8_t ); //!< append a new char, using context
@@ -33,6 +35,8 @@ namespace upsylon {
             void erase() throw();                         //!< erase content into cache
             void skip(size_t n) throw();                  //!< skip n chars
             void trim(size_t n) throw();                  //!< trim n chars
+            void cat(exception &) const throw();          //!< append to exception
+            
             //! display all Chars
             friend std::ostream & operator<<( std::ostream &, const Token &);
             

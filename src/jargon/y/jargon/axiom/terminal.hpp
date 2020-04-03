@@ -24,12 +24,14 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const uint32_t UUID = Y_FOURCC('T','E','R','M'); //!< UUID
+            static const char     CLID[]; //!< Terminal
             enum Feature
             {
                 Standard, //!< different values, arising from a regular expression
                 Univocal, //!< only one meaningfull value
                 Division  //!< syntax only
             };
+            static const char *FeatureText(const Feature) throw();
             
             //------------------------------------------------------------------
             //
@@ -46,7 +48,14 @@ namespace upsylon {
                 setup();
             }
             
+            bool        isStandard()  const throw(); //!< Standard == feature
+            bool        isUnivocal()  const throw(); //!< Univocal == feature
+            bool        isDivision()  const throw(); //!< Division == feature
+            bool        isDefinite()  const throw(); //!< Standard != feature
+            const char *featureText() const throw(); //!< FeatureText(feature)
+            
             const Feature feature;
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Terminal);

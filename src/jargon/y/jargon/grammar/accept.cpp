@@ -34,18 +34,19 @@ namespace upsylon {
                     const Lexeme *lexeme = lexer.peek();
                     if(lexeme)
                     {
+                        const bool definite = getTerminal(lexeme->label).isDefinite();
                         exception excp("%s:%d:%d: [%s] unexpected",
                                        **(lexeme->tag),
                                        lexeme->line,
                                        lexeme->column,
                                        **title);
-                        lexeme->writeTo(excp);
+                        lexeme->writeTo(excp,definite);
                         
                         const Lexeme *last = XNode::LastLexeme(xtree);
                         if(last)
                         {
                             excp.cat(" after");
-                            last->writeTo(excp);
+                            last->writeTo(excp,definite);
                         }
                         throw excp;
                         

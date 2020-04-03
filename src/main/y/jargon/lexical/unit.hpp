@@ -35,8 +35,9 @@ namespace upsylon {
                 void append(const string &data);  //!< append a string
                 void append(const Token  &token); //!< append a token
                 
-                const Tag label;                 //!< creating rule label
-                void  writeTo(exception &)const; //!< append to exception
+                const Tag label;                         //!< creating rule label
+                void  writeTo(exception &excp,
+                              const bool definite)const; //!< append to exception
                 
             private:
                 Y_DISABLE_ASSIGN(Unit);

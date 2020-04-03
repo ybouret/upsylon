@@ -6,6 +6,8 @@ namespace upsylon {
     
     namespace Jargon {
 
+        const char Aggregate:: CLID[] = "Aggregate";
+        
         Aggregate:: ~Aggregate() throw()
         {
         }
@@ -24,7 +26,7 @@ namespace upsylon {
                     }
                 }
                 XNode::Advance(xtree,ltree);
-                Y_JAXIOM(std::cerr << "|_[Aggregate] <" << label << ">" << std::endl);
+                Y_JAXIOM(std::cerr << "+" << CLID << "<" << label << ">" << std::endl);
                 return true;
             }
             catch(...)
@@ -52,12 +54,12 @@ namespace upsylon {
         void Aggregate:: setup()
         {
             self = static_cast<Aggregate *>(this);
-            Y_JAXIOM(std::cerr << "+[Aggregate] <" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "+" << CLID << " <" << label << ">" << std::endl);
         }
 
         ios::ostream & Aggregate:: display(ios::ostream &fp) const
         {
-            fp("|_[Aggregate <%s>]\n", **label);
+            fp("|_[%s<%s>]\n", CLID, **label);
             displayMembers(fp);
             return fp;
         }

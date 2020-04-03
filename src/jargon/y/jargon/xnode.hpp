@@ -94,7 +94,7 @@ namespace upsylon {
             explicit XNode(const Inactive &)          throw();
             explicit XNode(const Terminal &,Lexeme *) throw();
             explicit XNode(const Internal &)          throw();
-            virtual void   vizCore(ios::ostream   &) const;
+            virtual  void vizCore(ios::ostream   &) const;
            
             
             union {

@@ -8,7 +8,7 @@ namespace upsylon {
     namespace Jargon {
         
         namespace Lexical {
-          
+            
             Unit:: ~Unit() throw()
             {
             }
@@ -47,20 +47,27 @@ namespace upsylon {
                 }
             }
             
-            void  Unit:: writeTo(exception &excp) const
+            
+            void  Unit:: writeTo(exception &excp, const bool definite) const
             {
-                excp.cat(" <%s>", **label);
-                if(size>0)
+                if(definite)
                 {
-                    excp.cat(" = '");
-                    for(const Char *ch=head;ch;ch=ch->next)
-                    {
-                        excp.cat("%s",cchars::encoded[ch->code]);
-                    }
+                    excp.cat(" '");
+                    cat(excp);
                     excp.cat("'");
                 }
+                else
+                {
+                    excp.cat(" <%s>", **label);
+                    if(size>0)
+                    {
+                        excp.cat(" = '");
+                        cat(excp);
+                        excp.cat("'");
+                    }
+                }
             }
-
+            
         }
         
     }
