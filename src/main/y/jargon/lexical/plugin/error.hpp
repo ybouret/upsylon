@@ -34,6 +34,9 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Error);
                 auto_ptr<Unit> bad;
                 void setup();
+                virtual void onInit(const Token &);
+                virtual void onGrow(const Token &);
+                virtual void onDone(const Token &);
             };
         }
         
