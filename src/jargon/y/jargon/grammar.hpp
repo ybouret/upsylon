@@ -171,7 +171,8 @@ namespace upsylon {
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
             XNode *onTerminal(XNode *) const throw();
             XNode *onInternal(XNode *) const throw();
-            
+            //! merge child->children into childrent
+            void   amalgamate( XList &children, XNode *child) const throw();
         public:
             const size_t maxLength; //!< maximum length of labels
         };
