@@ -127,6 +127,9 @@ namespace upsylon {
             //! main call, try to accept the ground axiom
             XNode *accept(Lexer &, Source &) const;
             
+            //! recursive call to AST
+            XNode *AST( XNode *xnode ) const throw();
+            
             //! for memory
             void   clear( XNode * xnode ) const throw();
             
@@ -155,6 +158,8 @@ namespace upsylon {
             //! get terminal by label
             const Terminal &getTerminal( const Tag &label ) const;
             
+            
+            
         protected:
             const   Axiom *ground; //!< ground rule, initially inactive
             Axioms         axioms; //!< top-level axioms
@@ -164,6 +169,8 @@ namespace upsylon {
             unsigned       iAlt;
             unsigned       iAgg;
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
+            XNode *onTerminal(XNode *) const throw();
+            XNode *onInternal(XNode *) const throw();
             
         public:
             const size_t maxLength; //!< maximum length of labels

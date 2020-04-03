@@ -11,6 +11,8 @@ namespace upsylon {
         {
             assert(ground);
             XNode       *xtree    = NULL;
+            Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
+            
             if( ground->accept(xtree,lexer,source,xcache) )
             {
                 //--------------------------------------------------------------
@@ -65,8 +67,8 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 
-                
-                return xtree;
+                Y_JAXIOM(std::cerr << "[" << title << "] returning AST" << std::endl);
+                return AST(xtree);
 
             }
             else
