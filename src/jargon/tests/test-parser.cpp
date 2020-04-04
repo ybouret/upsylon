@@ -5,6 +5,7 @@
 
 #include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 #include "y/jargon/lexical/plugin/jstring.hpp"
+#include "y/jargon/evaluator.hpp"
 
 using namespace  upsylon;
 using namespace  Jargon;
@@ -20,7 +21,7 @@ namespace {
             Axiom &LBRACK  = mark('[');
             Axiom &RBRACK  = mark(']');
             Axiom &COMA    = mark(',');
-            Axiom &NUMBER  = term("number","[:digit:]+");
+            Axiom &NUMBER  = term("number",RegularExpression::Real);
 
             Alternate &VALUE = alt();
             VALUE << term("true") << term("false") << term("null") << NUMBER;
@@ -90,7 +91,8 @@ Y_UTEST(parser)
         
         tree->graphViz("json_tree.dot");
         
-        //json.clear( tree.yield() );
+        Evaluator E(json.title);
+        E.browse(*tree);
         
         std::cerr << "done" << std::endl;
     }
