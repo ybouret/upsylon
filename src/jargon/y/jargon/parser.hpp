@@ -28,7 +28,8 @@ namespace upsylon {
             Parser( const LABEL &id ) :
             Lexer(id),
             Grammar(id),
-            tcache()
+            cache(),
+            source(0)
             {
             }
             
@@ -122,17 +123,19 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! parsing of a source
-            XNode *parse( Source &source );
+            //! parsing a module
+            XNode *parse( Module * );
             
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
-            
-            mutable Cache tcache; //!< shared token cache
+            mutable Cache cache; //!< shared token cache
 
+        protected:
+            Source *source; //!< available source when parsing
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
             void checkUnivocal(const Lexical::Rule &) const;

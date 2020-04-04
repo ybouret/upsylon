@@ -68,6 +68,7 @@ namespace {
 #include "y/ios/ocstream.hpp"
 Y_UTEST(parser)
 {
+    Y_UTEST_SIZEOF(Source);
     Y_UTEST_SIZEOF(Grammar);
     Y_UTEST_SIZEOF(Parser);
     Axiom::Verbose   = true;
@@ -81,8 +82,7 @@ Y_UTEST(parser)
     if( argc>1 )
     {
         const string    fileName = argv[1];
-        Source          source(Module::OpenFile(json.tcache,fileName));
-        auto_ptr<XNode> tree = json.parse(source);
+        auto_ptr<XNode> tree = json.parse(Module::OpenFile(json.cache,fileName));
         
         tree->graphViz("json_tree.dot");
         

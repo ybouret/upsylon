@@ -10,9 +10,20 @@ namespace upsylon {
         {
         }
         
-        XNode * Parser:: parse(Source &source)
+        XNode * Parser:: parse(Module *module)
         {
-            return accept(*this,source);
+            Source __source( module );
+            source = & __source;
+            try {
+                XNode *ast = accept(*this,__source);
+                source = NULL;
+                return ast;
+            }
+            catch(...)
+            {
+                source = NULL;
+                throw;
+            }
         }
         
         void Parser:: checkUnivocal(const Lexical::Rule &rule) const
