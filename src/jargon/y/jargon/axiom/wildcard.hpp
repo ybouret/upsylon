@@ -17,7 +17,6 @@ namespace upsylon {
         class Wildcard : public Internal
         {
         public:
-            
             //------------------------------------------------------------------
             //
             // methods
@@ -43,9 +42,7 @@ namespace upsylon {
         protected:
             //! setup for derived classes
             template <typename LABEL> inline
-            explicit Wildcard(const LABEL   &l,
-                              const uint32_t u,
-                              Axiom         &a ) :
+            explicit Wildcard(const LABEL &l, const uint32_t u, Axiom &a) :
             Internal(l,u), axiom(a)
             {
             }

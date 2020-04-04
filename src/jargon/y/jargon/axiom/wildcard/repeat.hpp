@@ -52,7 +52,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const char     Mark         = MARK;                       //!< label marker
-            static const uint32_t UUID         = Y_FOURCC('R','E','P',MARK); //!< UUID
+            static const uint32_t UUID         = Y_FOURCC('R','E','P',Mark); //!< UUID
             static const size_t   MinimalCount = NMIN;                       //!< for minimalCount
           
             //------------------------------------------------------------------
@@ -66,7 +66,7 @@ namespace upsylon {
             {
             }
             
-            //! cleanu
+            //! cleanup
             inline virtual ~Rep() throw()
             {}
 
