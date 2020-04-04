@@ -22,7 +22,7 @@ namespace upsylon {
             // label/shape/style
             //
             //------------------------------------------------------------------
-            fp << "[shape=" << dogma->vizShape() << ",style=" << dogma->vizStyle() << ",label=\"";
+            fp << "[" << dogma->vizual() << ",label=\"";
             emitLabel(fp, dogma->label);
             
             switch(genre)

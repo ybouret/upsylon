@@ -27,8 +27,7 @@ namespace upsylon {
             return fp("|_[Internal_<%s>]\n", **label);
         }
         
-        const char * Internal:: vizShape() const throw() { return "oval";  }
-        const char * Internal:: vizStyle() const throw() { return "solid";  }
+        const char * Internal:: vizual() const throw() { return "shape=oval,style=solid";  }
     }
     
 }

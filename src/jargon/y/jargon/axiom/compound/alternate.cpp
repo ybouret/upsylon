@@ -48,14 +48,10 @@ namespace upsylon {
             return fp;
         }
         
-        const char * Alternate:: vizShape() const throw()
-        {
-            return "egg";
-        }
         
-        const char * Alternate:: vizStyle() const throw()
+        const char * Alternate:: vizual() const throw()
         {
-            return "\"bold\"";
+            return "shape=egg,style=bold";
         }
     }
     

@@ -22,8 +22,7 @@ namespace upsylon {
          */
         struct RegularExpression
         {
-            class Engine; //!< forward declaration
-            
+            class       Engine;  //!< forward declaration
             static bool Verbose; //!< global debug flag, default is false
             
             
@@ -36,9 +35,9 @@ namespace upsylon {
             //! compile as single...
             static Pattern *Compile(const char   C, const Dictionary * =0);
             
-            static const char Integer[];
-            static const char Real[];
-            static const char Identifier[];
+            static const char Integer[];    //!< an integer with optional minus/plus
+            static const char Real[];       //!< a real with optional minus/plus and 'f'
+            static const char Identifier[]; //!< C identifier
         };
         
        

@@ -24,6 +24,10 @@ namespace upsylon {
             return fp("|_[Inactive<%s>]\n", **label);
         }
 
+        const char * Inactive:: vizual() const throw()
+        {
+            return "shape=oval,style=dotted";
+        }
     }
     
 }

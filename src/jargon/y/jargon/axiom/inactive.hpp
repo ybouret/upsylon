@@ -42,8 +42,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Inactive);
-            virtual const char *   vizShape() const throw() { return "oval";    }
-            virtual const char *   vizStyle() const throw() { return "dotted";  }
+            virtual const char *   vizual() const throw();
             virtual bool           accept(Y_JARGON_AXIOM_ARGS) const;
             virtual ios::ostream & display(ios::ostream &)     const;
         };

@@ -69,9 +69,7 @@ namespace upsylon {
                     {
                         fp << cchars::printable[ uint8_t( (*axiom.label)[i] ) ];
                     }
-                    fp << "\"";
-                    fp << ",shape=" << axiom.vizShape();
-                    fp << ",style=" << axiom.vizStyle();
+                    fp << "\"," << axiom.vizual();
                     fp << ']' << ';' << '\n';
                     
                 }

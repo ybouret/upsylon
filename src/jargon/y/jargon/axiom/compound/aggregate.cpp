@@ -67,21 +67,18 @@ namespace upsylon {
             return fp;
         }
         
-        const char * Aggregate:: vizShape() const throw()
-        {
-            return "house";
-        }
         
-        const char * Aggregate:: vizStyle() const throw()
+        
+        const char * Aggregate:: vizual() const throw()
         {
             switch(feature)
             {
-                case Transient: return "\"bold,filled,rounded\"";
-                case Vanishing: return "\"bold,dashed\"";
+                case Transient: return "shape=house,style=\"bold,filled,rounded\"";
+                case Vanishing: return "shape=house,style=\"bold,dashed\"";
                 default:
                     break;
             }
-            return "\"bold,filled\"";
+            return "shape=house,style=\"bold,filled\"";
         }
     }
     
