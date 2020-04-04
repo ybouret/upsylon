@@ -157,9 +157,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             //! get terminal by label
             const Terminal &getTerminal( const Tag &label ) const;
-            
-            
-            
+                        
         protected:
             const   Axiom *ground; //!< ground rule, initially inactive
             Axioms         axioms; //!< top-level axioms

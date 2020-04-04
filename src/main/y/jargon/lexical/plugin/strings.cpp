@@ -26,10 +26,16 @@ namespace upsylon
                 discard("core", "[:core:]", this, &Strings::onCore);
                 
                 back(*trigger,this, & Strings::onEmit );
-                discard("esc0", "\\\\[nrtfvb]",   this, &Strings::onEsc0);
-                discard("esc1", "\\\\[\"'\\\\/]", this, &Strings::onEsc1);
-                discard("hexa", "\\\\x[:xdigit:][:xdigit:]", this, &Strings::onHexa);
-                discard("any","[\\x00-\\xff]",this,&Strings::failed);
+                
+                static const char esc0_rx[] = "\\\\[nrtfvb]";
+                static const char esc1_rx[] = "\\\\[\"'\\\\/]";
+                static const char hexa_rx[] = "\\\\x[:xdigit:][:xdigit:]";
+                static const char any1_rx[] = "[\\x00-\\xff]";
+                
+                discard("esc0", esc0_rx, this, &Strings::onEsc0);
+                discard("esc1", esc1_rx, this, &Strings::onEsc1);
+                discard("hexa", hexa_rx, this, &Strings::onHexa);
+                discard("any1", any1_rx ,this, &Strings::failed);
             }
             
             

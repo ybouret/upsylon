@@ -88,6 +88,7 @@ XCache  &xcache
                 return *static_cast<const AXIOM*>(self);
             }
             
+            //const Axiom    *host;
             
         protected:
             void           *self; //!< pointer to derived class
@@ -97,6 +98,7 @@ XCache  &xcache
             Axiom( const LABEL &id, const uint32_t u) :
             label( Tags::Make(id) ),
             uuid(u),
+            //host(0),
             self(0)
             {
             }

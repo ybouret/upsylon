@@ -24,6 +24,16 @@ namespace upsylon {
             
             //__________________________________________________________________
             //
+            // initialize reverse graph
+            //__________________________________________________________________
+        
+            for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
+            {
+                //(**it).host = 0;
+            }
+            
+            //__________________________________________________________________
+            //
             // load all axioms from the ground
             //__________________________________________________________________
             Y_JAXIOM(std::cerr << "|_loading axioms from ground <" << ground->label << ">" << std::endl);
@@ -69,6 +79,10 @@ namespace upsylon {
             
             
         }
+        
+        
+       
+
     }
     
 }

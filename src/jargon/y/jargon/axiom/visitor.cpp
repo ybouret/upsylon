@@ -49,6 +49,7 @@ namespace upsylon {
 
 #include "y/jargon/axiom/all.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
     
@@ -63,7 +64,9 @@ namespace upsylon {
             assert( visitor.wasVisited(axiom) );
             for(const Member *m = axiom.as<COMPOUND>().head;m;m=m->next)
             {
-                if( !visitor.walkDown(m->axiom, proc, args))
+                const Axiom &used = m->axiom;
+                //aliasing:: _(used).host = &axiom;
+                if( !visitor.walkDown(used, proc, args))
                 {
                     return false;
                 }
@@ -78,7 +81,9 @@ namespace upsylon {
                               void            *args)
         {
             assert( visitor.wasVisited(axiom) );
-            return visitor.walkDown(axiom.as<WILDCARD>().axiom, proc, args);
+            const Axiom &used = axiom.as<WILDCARD>().axiom;
+            //aliasing:: _(used).host = &axiom;
+            return visitor.walkDown(used, proc, args);
         }
         
         bool Visitor:: walkDown(const Axiom &root,
@@ -97,7 +102,7 @@ namespace upsylon {
                 assert( wasVisited(root) );
                 switch(root.uuid)
                 {
-                    case Terminal::UUID:   return true;
+                    case Terminal::  UUID: return true;
                         
                     case Option::    UUID: return __visit_wildcard<Option>(    root,*this,proc,args);
                     case OneOrMore:: UUID: return __visit_wildcard<OneOrMore>( root,*this,proc,args);

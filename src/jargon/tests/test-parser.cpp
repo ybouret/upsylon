@@ -67,32 +67,6 @@ namespace {
             graphViz("json.dot");
             validate();
             
-#if 0
-            Axiom &LBRACK  = mark('[');
-            Axiom &RBRACK  = mark(']');
-            Axiom &COMA    = mark(',');
-            Axiom &NUMBER  = term("number",RegularExpression::Real);
-
-            Alternate &VALUE = alt();
-            VALUE << term("true") << term("false") << term("null") << NUMBER;
-            
-            Axiom &empty_array = ( agg("empty_array") << LBRACK << RBRACK );
-            Axiom &heavy_array = ( agg("heavy_array") << LBRACK << VALUE << zom( cat(COMA,VALUE) ) << RBRACK);
-            Axiom &array       = choice(empty_array,heavy_array);
-            
-            VALUE << array;
-            VALUE << plug( type2type<Lexical::jString>(), "string" );
-            
-            // lexical
-            load(type2type<Lexical::CppComment>(),"com").hook(*this);
-            endl("endl",  "[:endl:]");
-            drop("blanks","[:blank:]");
-            discard("error", ".", this, &JSON_Parser::syntaxError);
-            
-            setGround(zom(array));
-            displayAxioms();
-#endif
-            
         }
         
         virtual ~JSON_Parser() throw()
