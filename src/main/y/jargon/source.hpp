@@ -59,6 +59,11 @@ namespace upsylon {
             virtual bool query(char &C);                 //!< ios::istream interface
             virtual void store(char  C);                 //!< ios::istream interface
             
+            //__________________________________________________________________
+            //
+            // for error processing
+            //__________________________________________________________________
+            void collectNext(Token &bad); //!< try to find a 'bad' token
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);

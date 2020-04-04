@@ -167,7 +167,26 @@ namespace upsylon {
             iobuff.skip(n);
         }
 
-        
+        void Source:: collectNext(Token &bad)
+        {
+            unget(bad);
+            for(Char *ch=get();ch;ch=get())
+            {
+                const uint8_t code = ch->code;
+                if(code>='0'&&code<='9') goto GROW;
+                if(code=='_')            goto GROW;
+                if(code>='a'&&code<='z') goto GROW;
+                if(code>='A'&&code<='Z') goto GROW;
+                
+                cache()->store(ch);
+                continue;
+                
+            GROW:
+                bad.push_back(ch);
+                
+            }
+        }
+
     }
     
 }

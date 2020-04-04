@@ -48,9 +48,13 @@ namespace {
         {
         }
         
-        void syntaxError( const Token &bad ) const
+        void syntaxError( const Token &token ) const
         {
-            assert(bad.size>=1);
+            assert(token.size>=1);
+            assert(source);
+            
+            Token bad( token );
+            source->collectNext(bad);
             const Char &C = *(bad.head);
             exception excp("%s:%d:%d: %s syntax error '",
                             **C.tag,C.line,C.column,**title);
