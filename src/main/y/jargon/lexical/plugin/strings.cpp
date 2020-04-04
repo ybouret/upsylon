@@ -16,7 +16,15 @@ namespace upsylon
             
             void Strings:: setup()
             {
+                switch(symbol)
+                {
+                    case '\'': discard("dquote", '"',  this, &Strings::onCore); break;
+                    case '"':  discard("quote",  '\'', this, &Strings::onCore); break;
+                    default:
+                        break;
+                }
                 discard("core", "[:core:]", this, &Strings::onCore);
+                
                 back(*trigger,this, & Strings::onEmit );
                 discard("esc0", "\\\\[nrtfvb]",   this, &Strings::onEsc0);
                 discard("esc1", "\\\\[\"'\\\\/]", this, &Strings::onEsc1);
