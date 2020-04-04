@@ -25,6 +25,7 @@ namespace upsylon {
             indent( std::cerr << "|-" ) << "[push] " << name;
             if(token.size)
             {
+                std::cerr << " = '" << token << "'";
             }
             std::cerr << std::endl;
         }
