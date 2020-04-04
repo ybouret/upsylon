@@ -18,6 +18,56 @@ namespace {
     public:
         explicit JSON_Parser() : Parser( "JSON" )
         {
+            
+            Alternate &json = alt();
+            
+            // value
+            Alternate &VALUE  = alt();
+            Axiom     &STRING = plug( type2type<Lexical::jString>(), "string" );
+            {
+                VALUE << term("number",RegularExpression::Real);
+                VALUE << term("null");
+                VALUE << term("true");
+                VALUE << term("false");
+                VALUE << STRING;
+            }
+            
+            // common terminal
+            Axiom &COMA    = mark(',');
+            
+            // arrays
+            {
+                Axiom &LBRACK  = mark('[');
+                Axiom &RBRACK  = mark(']');
+                Axiom &empty_array = ( agg("empty_array") << LBRACK << RBRACK );
+                Axiom &heavy_array = ( agg("heavy_array") << LBRACK << VALUE << zom( cat(COMA,VALUE) ) << RBRACK);
+                Axiom &array       = choice(empty_array,heavy_array);
+                
+                VALUE << array;
+                json  << array;
+            }
+            
+            // objects
+            {
+                Axiom  &LBRACE      = mark('{');
+                Axiom  &RBRACE      = mark('}');
+                Axiom  &PAIR        = cat(STRING,mark(':'),VALUE);
+                Axiom &empty_object = ( agg("empty_object") << LBRACE << RBRACE );
+                Axiom &heavy_object = ( agg("heavy_object") << LBRACE << PAIR << zom(cat(COMA,PAIR)) << RBRACE );
+                Axiom &the_object   = choice(empty_object,heavy_object);
+                VALUE << the_object;
+                json  << the_object;
+            }
+            
+            // lexical
+            endl("endl",  "[:endl:]");
+            drop("blanks","[:blank:]");
+            discard("error", ".", this, &JSON_Parser::syntaxError);
+            
+            graphViz("json.dot");
+            validate();
+            
+#if 0
             Axiom &LBRACK  = mark('[');
             Axiom &RBRACK  = mark(']');
             Axiom &COMA    = mark(',');
@@ -40,9 +90,9 @@ namespace {
             discard("error", ".", this, &JSON_Parser::syntaxError);
             
             setGround(zom(array));
-            graphViz("json.dot");
             displayAxioms();
-            validate();
+#endif
+            
         }
         
         virtual ~JSON_Parser() throw()

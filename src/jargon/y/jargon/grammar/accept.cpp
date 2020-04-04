@@ -33,9 +33,10 @@ namespace upsylon {
                     // still some lexeme ?
                     //
                     //----------------------------------------------------------
-                    const Lexeme *lexeme = lexer.peek();
+                    Lexeme *lexeme = lexer.get(source);
                     if(lexeme)
                     {
+                        lexer.unget(lexeme);
                         const bool definite = getTerminal(lexeme->label).isDefinite();
                         exception excp("%s:%d:%d: [%s] unexpected",
                                        **(lexeme->tag),
