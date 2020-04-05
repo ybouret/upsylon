@@ -27,12 +27,13 @@ namespace {
         Cache      cache;
         Source     source;
         Token      content;
-        FirstChars firstChars;
+        FirstChars fc;
         
         Tester(const char *filename) :
         cache( new Char::Pool() ),
         source( (NULL!=filename) ? Module::OpenFile(cache,filename) : Module::OpenData(cache,"NULL", 0,0) ),
-        content(cache)
+        content(cache),
+        fc()
         {
         }
         
@@ -43,7 +44,7 @@ namespace {
         
         bool operator()( const suffix_path &key, const Motif &m )
         {
-            firstChars.free();
+            fc.free();
             const Pattern &p    = *m;
             const string   name = core::suffix_tree::path2string(key);
             std::cerr << "Testing " << name << " as <" << p.className() << ">" << std::endl;
@@ -70,8 +71,8 @@ namespace {
                 p.graphViz(dotFile);
             }
             
-            m->adjoin(firstChars);
-            std::cerr << "|_first=" << firstChars << std::endl;
+            m->adjoin(fc);
+            std::cerr << "|_first=" << fc << std::endl;
             
             if(p.strong())
             {
