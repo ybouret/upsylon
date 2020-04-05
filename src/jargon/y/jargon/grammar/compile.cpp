@@ -89,12 +89,12 @@ namespace upsylon {
             //__________________________________________________________________
             Y_JAXIOM(std::cerr << "[" << title << "] building first apparent list..." << std::endl);
             {
-                Manifest &apparent = aliasing::_(first);
+                Manifest &apparent = aliasing::_(firstApparent);
                 apparent.release();
-                ground->findFirstApparent(apparent);
+                ground->joinFirstApparentTo(apparent);
             }
-            Y_JAXIOM(std::cerr << "[" << title << "] #first=" << first.size << std::endl);
-            for(const Member *m = first.head;m;m=m->next)
+            Y_JAXIOM(std::cerr << "[" << title << "] #firstApparent=" << firstApparent.size << std::endl);
+            for(const Member *m = firstApparent.head;m;m=m->next)
             {
                 Y_JAXIOM(std::cerr << "|_<" << m->axiom.label << ">" << std::endl);
             }

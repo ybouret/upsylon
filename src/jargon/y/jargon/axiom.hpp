@@ -117,7 +117,8 @@ XCache  &xcache
             bool isWildcard() const throw(); //!< ?|*|+
             bool isApparent() const throw(); //!< terminal | !vanishing aggregate
             
-            bool findFirstApparent(Manifest &) const;
+            //! join to manifest first apparent from *this
+            bool joinFirstApparentTo(Manifest &) const;
             
         protected:
             void           *self; //!< pointer to derived class

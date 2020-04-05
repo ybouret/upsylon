@@ -40,7 +40,7 @@ namespace upsylon {
             axioms(),
             iAlt(1),
             iAgg(1),
-            first(),
+            firstApparent(),
             maxLength(0)
             {
             }
@@ -174,8 +174,8 @@ namespace upsylon {
             void   amalgamate( XList &children, XNode *child) const throw();
        
         public:
-            const Manifest first;
-            const size_t   maxLength; //!< maximum length of labels
+            const Manifest firstApparent; //!< manifest of first apparent Axiom(s)
+            const size_t   maxLength;     //!< maximum length of labels
         };
         
     }

@@ -51,7 +51,7 @@ namespace upsylon {
         template <typename WILDCARD> static inline
         bool __proxy(const Axiom &axiom, Manifest &apparent )
         {
-            return axiom.as<WILDCARD>().axiom.findFirstApparent(apparent);
+            return axiom.as<WILDCARD>().axiom.joinFirstApparentTo(apparent);
         }
         
         static inline
@@ -61,7 +61,7 @@ namespace upsylon {
             bool found = false;
             for( const Member *m=alt.head;m;m=m->next)
             {
-                if( m->axiom.findFirstApparent(apparent) )
+                if( m->axiom.joinFirstApparentTo(apparent) )
                 {
                     found = true;
                 }
@@ -77,7 +77,7 @@ namespace upsylon {
                 // first apparents
                 for( const Member *m=agg.head;m;m=m->next)
                 {
-                    if( m->axiom.findFirstApparent(apparent) )
+                    if( m->axiom.joinFirstApparentTo(apparent) )
                     {
                         return true;
                     }
@@ -92,7 +92,7 @@ namespace upsylon {
             }
         }
         
-        bool Axiom:: findFirstApparent(Manifest &apparent) const
+        bool Axiom:: joinFirstApparentTo(Manifest &apparent) const
         {
             switch(uuid)
             {
