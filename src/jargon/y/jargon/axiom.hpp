@@ -88,8 +88,10 @@ XCache  &xcache
                 return *static_cast<const AXIOM*>(self);
             }
             
-            //const Axiom    *host;
-            
+            bool isTerminal() const throw();
+            bool isCompound() const throw();
+            bool isWildcard() const throw();
+
         protected:
             void           *self; //!< pointer to derived class
             
