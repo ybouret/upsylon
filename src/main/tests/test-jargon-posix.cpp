@@ -3,6 +3,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/jargon/first-chars.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -40,22 +41,24 @@ namespace {
 }
 
 
-#define Y_JPOSIX(EXPR)                             \
+#define Y_JPOSIX(EXPR)                            \
 do {                                              \
-const string id = #EXPR;                         \
-std::cerr << "\t\tposix::" << id  << std::endl; \
-auto_ptr<Pattern> p = posix::EXPR();           \
-Y_CHECK( p->strong()  );                      \
-Y_CHECK( p->checkIO() );                     \
-auto_ptr<Pattern> q = posix::get(#EXPR);    \
-Y_CHECK( p->alike( & *q) );                \
-p->graphViz( #EXPR ".dot" );              \
-test.run(*p);                            \
-all.push_back( p.yield() );             \
-const Motif m = all.tail->clone();     \
-Y_ASSERT(db.insert(id,m));            \
+const string id = #EXPR; fc.free();               \
+std::cerr << "\t\tposix::" << id  << std::endl;   \
+auto_ptr<Pattern> p = posix::EXPR();              \
+Y_CHECK( p->strong()  );                         \
+Y_CHECK( p->checkIO() );                        \
+auto_ptr<Pattern> q = posix::get(#EXPR);       \
+Y_CHECK( p->alike( & *q) );                   \
+p->graphViz( #EXPR ".dot" );                 \
+test.run(*p);                               \
+all.push_back( p.yield() );                \
+const Motif m = all.tail->clone();        \
+Y_ASSERT(db.insert(id,m));               \
+m->adjoin(fc);                          \
+std::cerr << "fc=" << fc << std::endl; \
+std::cerr << std::endl;               \
 std::cerr << std::endl;              \
-std::cerr << std::endl;             \
 } while(false)
 
 Y_UTEST(jargon_posix)
@@ -64,6 +67,7 @@ Y_UTEST(jargon_posix)
     typedef map<string,Motif> db_type;
     db_type           db;
     Pattern::List     all;
+    FirstChars        fc(256);
     
     Y_JPOSIX(lower);
     Y_JPOSIX(upper);

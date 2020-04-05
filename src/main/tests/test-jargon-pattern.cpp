@@ -12,6 +12,7 @@
 #include "y/ptr/auto.hpp"
 
 #include "y/fs/local/file.hpp"
+#include "y/jargon/first-chars.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -23,9 +24,10 @@ namespace {
     class Tester
     {
     public:
-        Cache   cache;
-        Source  source;
-        Token   content;
+        Cache      cache;
+        Source     source;
+        Token      content;
+        FirstChars firstChars;
         
         Tester(const char *filename) :
         cache( new Char::Pool() ),
@@ -41,6 +43,7 @@ namespace {
         
         bool operator()( const suffix_path &key, const Motif &m )
         {
+            firstChars.free();
             const Pattern &p    = *m;
             const string   name = core::suffix_tree::path2string(key);
             std::cerr << "Testing " << name << " as <" << p.className() << ">" << std::endl;
@@ -66,6 +69,9 @@ namespace {
                 const string dotFile = name + ".dot";
                 p.graphViz(dotFile);
             }
+            
+            m->adjoin(firstChars);
+            std::cerr << "|_first=" << firstChars << std::endl;
             
             if(p.strong())
             {

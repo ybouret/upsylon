@@ -1,6 +1,7 @@
 
 #include "y/jargon/pattern/basic/any1.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/jargon/first-chars.hpp"
 
 namespace upsylon {
     
@@ -50,6 +51,10 @@ namespace upsylon {
             endl(fp << " [label=\"any1\",shape=circle,style=" << vizStyle() << "]");
         }
         
+        void Any1:: adjoin(FirstChars &fc) const
+        {
+            fc.loadAll();
+        }
 
     }
     

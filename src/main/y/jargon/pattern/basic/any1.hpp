@@ -35,6 +35,7 @@ namespace upsylon {
             virtual bool        alike(const Pattern *)     const throw();
             virtual bool        good(const uint8_t)        const throw();
             virtual bool        univocal()                 const throw();
+            virtual void        adjoin( FirstChars &)      const;
             
             virtual size_t      serialize( ios::ostream &) const;
             virtual const char *className()                const throw();

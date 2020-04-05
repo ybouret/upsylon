@@ -1,6 +1,7 @@
 #include "y/jargon/pattern/basic/single.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/code/utils.hpp"
+#include "y/jargon/first-chars.hpp"
 
 namespace upsylon {
     
@@ -51,6 +52,11 @@ namespace upsylon {
         void Single:: vizCore(ios::ostream &fp) const
         {
             endl(fp << " [label=\"" << cchars::printable[code] << "\",shape=square,style=" << vizStyle() << "]");
+        }
+        
+        void Single:: adjoin(FirstChars &fc) const
+        {
+            fc.insert( code );
         }
 
     }

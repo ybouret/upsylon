@@ -10,6 +10,8 @@ namespace upsylon {
  
     namespace Jargon {
     
+        class FirstChars;
+        
         //! base class for patterns recognition
         class Pattern :
         public CountedObject,
@@ -18,7 +20,13 @@ namespace upsylon {
         public Vizible
         {
         public:
+            //------------------------------------------------------------------
+            //
+            //types and definitions
+            //
+            //------------------------------------------------------------------
             typedef core::list_of_cloneable<Pattern> List; //!< alias
+           
             //------------------------------------------------------------------
             //
             // virtual interface
@@ -30,6 +38,7 @@ namespace upsylon {
             virtual bool      match(Token &t, Source &) const         = 0;  //!< try to match
             virtual bool      feeble()                  const throw() = 0;  //!< accept empty token!
             virtual bool      univocal()                const throw() = 0;  //!< guess if univocal
+            virtual void      adjoin( FirstChars &)     const         = 0;  //!< adjoin first char(s)
             
             //------------------------------------------------------------------
             //
@@ -56,23 +65,23 @@ namespace upsylon {
                 return static_cast<const PATTERN *>(self);
             }
             
-            //! test pattern on all source, save content for re-use
-            void            test(Source &source, Token &content) const;
             
-            //! check serialization
-            bool            checkIO() const;
+            void test(Source &, Token &) const;//!< test pattern on all source, save content for re-use
+            bool checkIO()               const;//!< check serialization
             
             //! matching extacly
-            bool matches_exactly(Token &token, const string &s) const;
+            bool matches_exactly(Token &, const string &) const;
             
             //! matching partly
-            bool matches_partly( Token &token, const string &s) const;
-
-            //! load from previously serialized patterns
-            static Pattern *Load(ios::istream&);
-            
-            //! optimize
-            static Pattern *Optimize( Pattern *p ) throw();
+            bool matches_partly(Token &, const string &) const;
+          
+            //------------------------------------------------------------------
+            //
+            // global static methods
+            //
+            //------------------------------------------------------------------
+            static Pattern *Load(ios::istream&);            //!< load from previously serialized patterns
+            static Pattern *Optimize( Pattern *p ) throw(); //!< optimize
             
             //------------------------------------------------------------------
             //

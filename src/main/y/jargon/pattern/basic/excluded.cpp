@@ -2,6 +2,7 @@
 #include "y/jargon/pattern/basic/excluded.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/code/utils.hpp"
+#include "y/jargon/first-chars.hpp"
 
 namespace upsylon {
     
@@ -54,6 +55,12 @@ namespace upsylon {
             endl(fp << " [label=\"" << cchars::printable[code] << "\",shape=Msquare,style=" << vizStyle() << "]");
         }
         
+        void Excluded ::adjoin(FirstChars &fc) const
+        {
+            const unsigned bad = code;
+            for(unsigned i=0;i<bad;++i)     fc.insert( uint8_t(i) );
+            for(unsigned i=bad+1;i<256;++i) fc.insert( uint8_t(i) );
+        }
     }
     
 }

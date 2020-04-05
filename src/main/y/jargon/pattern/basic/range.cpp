@@ -6,6 +6,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/type/cswap.hpp"
 #include "y/code/utils.hpp"
+#include "y/jargon/first-chars.hpp"
 
 namespace upsylon {
     
@@ -86,6 +87,15 @@ namespace upsylon {
                  << "]\",shape=rect,style=" << vizStyle() << "]");
         }
         
+        void Range ::adjoin(FirstChars &fc) const
+        {
+            const unsigned up = upper;
+            for(unsigned i=lower;i<=up;++i)
+            {
+                fc.insert( uint8_t(i) );
+            }
+            
+        }
         
     }
     

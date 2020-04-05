@@ -43,7 +43,7 @@ namespace upsylon {
             virtual bool        univocal()                 const throw();
             virtual bool        feeble()                   const throw();
             virtual bool        match(Token&,Source&)      const;
-            
+
             virtual size_t      serialize( ios::ostream &) const;
             virtual const char *className()                const throw();
             

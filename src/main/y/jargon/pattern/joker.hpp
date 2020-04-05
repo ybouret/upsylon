@@ -23,6 +23,8 @@ namespace upsylon {
             static const char feeble_pattern[]; //!< for exception strings
         private:
             Y_DISABLE_ASSIGN(Joker);
+            virtual void        adjoin( FirstChars &)      const;
+
         };
         
     }

@@ -25,6 +25,12 @@ namespace upsylon {
         }
         
         const char Joker::feeble_pattern[] = "feeble pattern";
+        
+        void Joker:: adjoin(FirstChars &fc)      const
+        {
+            motif->adjoin(fc);
+        }
+
     }
     
 }

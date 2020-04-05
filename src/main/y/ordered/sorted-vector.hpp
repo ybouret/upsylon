@@ -170,7 +170,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
 
 
     protected:
-        //! put args a a valid place
+        //! put args in a valid place
         inline void insert_multiple( const_type &args )
         {
             size_t where = 0;

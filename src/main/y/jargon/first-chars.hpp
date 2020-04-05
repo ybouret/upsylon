@@ -24,6 +24,10 @@ namespace upsylon {
             explicit FirstChars(size_t n=0);
             virtual ~FirstChars() throw();
             
+            void loadAll();
+            
+            friend std::ostream & operator<<(std::ostream &, const FirstChars &);
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(FirstChars);
         };

@@ -1,5 +1,6 @@
 #include "y/jargon/pattern/logic/none.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/jargon/first-chars.hpp"
 
 namespace upsylon {
     
@@ -76,6 +77,22 @@ namespace upsylon {
             {
                 return false;
             }
+        }
+        
+        void NONE:: adjoin(FirstChars &fc) const
+        {
+            FirstChars allowed(256);
+            allowed.loadAll();
+            {
+                FirstChars content;
+                for(const Pattern *op=head;op;op=op->next)
+                {
+                    op->adjoin(content);
+                }
+                allowed.strip(content);
+            }
+            fc.merge(allowed);
+            
         }
         
     }

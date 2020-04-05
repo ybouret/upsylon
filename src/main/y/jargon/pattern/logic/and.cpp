@@ -93,6 +93,15 @@ namespace upsylon {
             }
         }
         
+        void AND:: adjoin(FirstChars &fc) const
+        {
+            for(const Pattern *op=head;op;op=op->next)
+            {
+                op->adjoin(fc);
+                if(op->strong()) return;
+            }
+        }
+        
     }
 }
 

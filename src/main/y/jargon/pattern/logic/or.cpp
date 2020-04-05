@@ -77,6 +77,13 @@ namespace upsylon {
             return false;
         }
         
+        void OR:: adjoin(FirstChars &fc) const
+        {
+            for(const Pattern *op=head;op;op=op->next)
+            {
+                op->adjoin(fc);
+            }
+        }
     }
 }
 

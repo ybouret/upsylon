@@ -1,6 +1,7 @@
 
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
+#include "y/jargon/first-chars.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -16,6 +17,7 @@ namespace {
 Y_UTEST(jargon_regexp)
 {
     Dictionary dict;
+    FirstChars fc;
     //RegularExpression::Verbose = true;
 
 
@@ -29,10 +31,12 @@ Y_UTEST(jargon_regexp)
        
         p->graphViz("regexp.dot");
         p->updateEntropy();
-        std::cerr << "strong   : " << p->strong()   << std::endl;
-        std::cerr << "univocal : " << p->univocal() << std::endl;
-        std::cerr << "entropy  : " << p->entropy    << std::endl;
-        
+        p->adjoin(fc);
+        std::cerr << "strong      : " << p->strong()   << std::endl;
+        std::cerr << "univocal    : " << p->univocal() << std::endl;
+        std::cerr << "entropy     : " << p->entropy    << std::endl;
+        std::cerr << "first chars : " << fc            << std::endl;
+
         if(argc>2)
         {
             Cache  cache;
