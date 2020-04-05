@@ -10,29 +10,9 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //----------------------------------------------------------------------
-        //
-        //! member of a manifest
-        //
-        //----------------------------------------------------------------------
-        class Member : public Object, public inode<Member>
-        {
-        public:
-            explicit Member(const Axiom &) throw(); //!< setup
-            virtual ~Member() throw();              //!< cleanup
-            const Axiom &axiom;                     //!< reference to axiom
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Member);
-        };
+       
         
-        //----------------------------------------------------------------------
-        //
-        //! a manisfest is a list of shared axioms
-        //
-        //----------------------------------------------------------------------
-        typedef core::list_of_cpp<Member> Manifest;
-        
+       
         //----------------------------------------------------------------------
         //
         //! base class for Compound axioms (Aggregate|Alternate)

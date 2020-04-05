@@ -65,7 +65,6 @@ namespace upsylon {
             for(const Member *m = axiom.as<COMPOUND>().head;m;m=m->next)
             {
                 const Axiom &used = m->axiom;
-                //aliasing:: _(used).host = &axiom;
                 if( !visitor.walkDown(used, proc, args))
                 {
                     return false;
@@ -82,7 +81,6 @@ namespace upsylon {
         {
             assert( visitor.wasVisited(axiom) );
             const Axiom &used = axiom.as<WILDCARD>().axiom;
-            //aliasing:: _(used).host = &axiom;
             return visitor.walkDown(used, proc, args);
         }
         

@@ -40,6 +40,7 @@ namespace upsylon {
             axioms(),
             iAlt(1),
             iAgg(1),
+            first(),
             maxLength(0)
             {
             }
@@ -169,10 +170,12 @@ namespace upsylon {
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
             XNode *onTerminal(XNode *) const throw();
             XNode *onInternal(XNode *) const throw();
-            //! merge child->children into childrent
+            //! merge child->children into children
             void   amalgamate( XList &children, XNode *child) const throw();
+       
         public:
-            const size_t maxLength; //!< maximum length of labels
+            const Manifest first;
+            const size_t   maxLength; //!< maximum length of labels
         };
         
     }

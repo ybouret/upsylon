@@ -103,6 +103,7 @@ Y_UTEST(parser)
     Axiom::Verbose   = true;
     JSON_Parser json;
     
+    if(false)
     {
         ios::ocstream fp( ios::cstderr );
         json.display(fp);

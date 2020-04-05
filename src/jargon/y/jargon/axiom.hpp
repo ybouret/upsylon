@@ -13,13 +13,37 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
+        //! member of a manifest
+        //
+        //----------------------------------------------------------------------
+        class Member : public Object, public inode<Member>
+        {
+        public:
+            explicit Member(const Axiom &) throw(); //!< setup
+            virtual ~Member() throw();              //!< cleanup
+            const Axiom &axiom;                     //!< reference to axiom
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Member);
+        };
+        
+        //----------------------------------------------------------------------
+        //
+        //! a manisfest is a list of members
+        //
+        //----------------------------------------------------------------------
+        typedef core::list_of_cpp<Member> Manifest;
+        
+        
+        //----------------------------------------------------------------------
+        //
         //
         // Helpers
         //
         //
         //----------------------------------------------------------------------
-
-        class XCache; //! forward declaration
+        class XCache; //!< forward declaration
+        
         
         //! accept method arguments
 #define Y_JARGON_AXIOM_ARGS \
@@ -88,10 +112,13 @@ XCache  &xcache
                 return *static_cast<const AXIOM*>(self);
             }
             
-            bool isTerminal() const throw();
-            bool isCompound() const throw();
-            bool isWildcard() const throw();
-
+            bool isTerminal() const throw(); //!< terminal
+            bool isCompound() const throw(); //!< agg|alt
+            bool isWildcard() const throw(); //!< ?|*|+
+            bool isApparent() const throw(); //!< terminal | !vanishing aggregate
+            
+            bool findFirstApparent(Manifest &) const;
+            
         protected:
             void           *self; //!< pointer to derived class
             
@@ -100,7 +127,6 @@ XCache  &xcache
             Axiom( const LABEL &id, const uint32_t u) :
             label( Tags::Make(id) ),
             uuid(u),
-            //host(0),
             self(0)
             {
             }

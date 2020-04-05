@@ -10,14 +10,7 @@ namespace upsylon {
         {
         }
         
-        Member:: ~Member() throw()
-        {
-        }
-        
-        Member:: Member(const Axiom &a) throw() :
-        Object(), inode<Member>(), axiom(a)
-        {
-        }
+      
         
         void Compound:: add(Axiom &axiom)
         {
