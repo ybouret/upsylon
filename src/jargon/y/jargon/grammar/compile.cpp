@@ -87,16 +87,27 @@ namespace upsylon {
             //
             // build the first list
             //__________________________________________________________________
-            Y_JAXIOM(std::cerr << "[" << title << "] building first apparent list..." << std::endl);
+            Y_JAXIOM(std::cerr << "[" << title << "] building alpha list..." << std::endl);
             {
-                Manifest &apparent = aliasing::_(firstApparent);
+                AlphaList &apparent = aliasing::_(alpha);
                 apparent.release();
                 ground->joinFirstApparentTo(apparent);
             }
-            Y_JAXIOM(std::cerr << "[" << title << "] #firstApparent=" << firstApparent.size << std::endl);
-            for(const Member *m = firstApparent.head;m;m=m->next)
+            Y_JAXIOM(std::cerr << "[" << title << "] #alpha=" << alpha.size << std::endl);
+            for(const AlphaNode *m = alpha.head;m;m=m->next)
             {
-                Y_JAXIOM(std::cerr << "|_<" << m->axiom.label << ">" << std::endl);
+                const Axiom &axiom = m->axiom;
+                Y_JAXIOM(std::cerr << "|_<" <<  axiom.label << ">" << std::endl);
+                
+                if(!axiom.joinFirstTerminalTo(aliasing::_(m->terms)))
+                {
+                    throw exception("[%s] <%s> has no starting terminal!", **title, **(m->axiom.label) );
+                }
+                
+                for(const TermNode *t=m->terms.head;t;t=t->next)
+                {
+                    Y_JAXIOM(std::cerr << " |_<" <<  t->axiom.label << ">" << std::endl);
+                }
             }
         }
         

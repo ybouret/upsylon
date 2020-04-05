@@ -123,6 +123,9 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
+            //! validate+build
+            void compile();
+            
             //! parsing a module
             XNode *parse( Module * );
             

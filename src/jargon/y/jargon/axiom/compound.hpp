@@ -11,6 +11,8 @@ namespace upsylon {
     namespace Jargon {
         
        
+        typedef NodeOf<Axiom>             Member;  //!< member of a manifest
+        typedef core::list_of_cpp<Member> Manifest;//! a manisfest is a list of members
         
        
         //----------------------------------------------------------------------

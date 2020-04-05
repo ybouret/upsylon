@@ -12,6 +12,7 @@ namespace upsylon {
             return Terminal::UUID == uuid;
         }
         
+#if 0
         bool Axiom:: isCompound() const throw()
         {
             switch(uuid)
@@ -47,21 +48,32 @@ namespace upsylon {
             
             return false;
         }
+#endif
+        
+    }
+    
+}
+
+namespace upsylon {
+    
+    namespace Jargon {
         
         template <typename WILDCARD> static inline
-        bool __proxy(const Axiom &axiom, Manifest &apparent )
+        bool __proxy_jfa(const Axiom &axiom,
+                         AlphaList   &alpha)
         {
-            return axiom.as<WILDCARD>().axiom.joinFirstApparentTo(apparent);
+            return axiom.as<WILDCARD>().axiom.joinFirstApparentTo(alpha);
         }
         
         static inline
-        bool __proxy_alt( const Alternate &alt, Manifest &apparent )
+        bool __proxy_jfa_alt(const Alternate &alt,
+                             AlphaList       &alpha )
         {
             // catenate all possibilities
             bool found = false;
             for( const Member *m=alt.head;m;m=m->next)
             {
-                if( m->axiom.joinFirstApparentTo(apparent) )
+                if( m->axiom.joinFirstApparentTo(alpha) )
                 {
                     found = true;
                 }
@@ -70,14 +82,15 @@ namespace upsylon {
         }
         
         static inline
-        bool __proxy_agg( const Aggregate &agg, Manifest &apparent )
+        bool __proxy_jfa_agg(const Aggregate &agg,
+                             AlphaList       &alpha )
         {
             if( Aggregate::Vanishing==agg.feature )
             {
                 // first apparents
                 for( const Member *m=agg.head;m;m=m->next)
                 {
-                    if( m->axiom.joinFirstApparentTo(apparent) )
+                    if( m->axiom.joinFirstApparentTo(alpha) )
                     {
                         return true;
                     }
@@ -87,21 +100,21 @@ namespace upsylon {
             else
             {
                 // itself
-                apparent.push_back( new Member(agg) );
+                alpha.push_back( new AlphaNode(agg) );
                 return true;
             }
         }
         
-        bool Axiom:: joinFirstApparentTo(Manifest &apparent) const
+        bool Axiom:: joinFirstApparentTo(AlphaList &alpha) const
         {
             switch(uuid)
             {
-                case Terminal::   UUID:  apparent.push_back( new Member(*this) ); return true;
-                case Option::     UUID:  return __proxy<Option>(*this,apparent);
-                case ZeroOrMore:: UUID:  return __proxy<ZeroOrMore>(*this,apparent);
-                case OneOrMore::  UUID:  return __proxy<OneOrMore>(*this,apparent);
-                case Alternate::  UUID:  return __proxy_alt( as<Alternate>(), apparent );
-                case Aggregate::  UUID:  return __proxy_agg( as<Aggregate>(), apparent );
+                case Terminal::   UUID:  alpha.push_back( new AlphaNode(*this) ); return true;
+                case Option::     UUID:  return __proxy_jfa<Option>(*this,alpha);
+                case ZeroOrMore:: UUID:  return __proxy_jfa<ZeroOrMore>(*this,alpha);
+                case OneOrMore::  UUID:  return __proxy_jfa<OneOrMore>(*this,alpha);
+                case Alternate::  UUID:  return __proxy_jfa_alt( as<Alternate>(), alpha );
+                case Aggregate::  UUID:  return __proxy_jfa_agg( as<Aggregate>(), alpha );
                 default:
                     break;
             }
@@ -111,5 +124,65 @@ namespace upsylon {
         
     }
     
+}
+
+namespace upsylon {
+    
+    namespace Jargon {
+        
+        template <typename WILDCARD> static inline
+        bool __proxy_jft(const Axiom &axiom,
+                         TermList    &tl)
+        {
+            return axiom.as<WILDCARD>().axiom.joinFirstTerminalTo(tl);
+        }
+        
+        static inline
+        bool __proxy_jft_alt(const Alternate &alt, TermList &tl)
+        {
+            // catenate all possibilities
+            bool found = false;
+            for( const Member *m=alt.head;m;m=m->next)
+            {
+                if( m->axiom.joinFirstTerminalTo(tl) )
+                {
+                    found = true;
+                }
+            }
+            return found;
+        }
+        
+        static inline
+        bool __proxy_jft_agg( const Aggregate &agg, TermList &tl )
+        {
+            
+            // first terminal
+            for( const Member *m=agg.head;m;m=m->next)
+            {
+                if( m->axiom.joinFirstTerminalTo(tl) )
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        bool Axiom:: joinFirstTerminalTo(TermList &tl) const
+        {
+            switch(uuid)
+            {
+                case Terminal::   UUID:  tl.push_back( new TermNode(as<Terminal>()) ); return true;
+                case Option::     UUID:  return __proxy_jft<Option>(*this,tl);
+                case ZeroOrMore:: UUID:  return __proxy_jft<ZeroOrMore>(*this,tl);
+                case OneOrMore::  UUID:  return __proxy_jft<OneOrMore>(*this,tl);
+                case Alternate::  UUID:  return __proxy_jft_alt( as<Alternate>(), tl );
+                case Aggregate::  UUID:  return __proxy_jft_agg( as<Aggregate>(), tl );
+                default:
+                    break;
+            }
+            return false;
+        }
+        
+    }
 }
 

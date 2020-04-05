@@ -15,7 +15,11 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
-        //! dummy Internal for testing
+        //! base class for grammar
+        /**
+         upon validation, the starting axioms are computed, the terminal and the
+         not vanishing aggregate.
+         */
         //
         //----------------------------------------------------------------------
         class Grammar 
@@ -40,7 +44,7 @@ namespace upsylon {
             axioms(),
             iAlt(1),
             iAgg(1),
-            firstApparent(),
+            alpha(),
             maxLength(0)
             {
             }
@@ -174,8 +178,8 @@ namespace upsylon {
             void   amalgamate( XList &children, XNode *child) const throw();
        
         public:
-            const Manifest firstApparent; //!< manifest of first apparent Axiom(s)
-            const size_t   maxLength;     //!< maximum length of labels
+            const AlphaList alpha;      //!< list of first apparent Axiom(s)
+            const size_t    maxLength;  //!< maximum length of labels
         };
         
     }

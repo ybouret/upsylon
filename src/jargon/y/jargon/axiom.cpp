@@ -6,6 +6,7 @@ namespace upsylon {
     
     namespace Jargon {
      
+#if 0
         Member:: ~Member() throw()
         {
         }
@@ -14,6 +15,7 @@ namespace upsylon {
         Object(), inode<Member>(), axiom(a)
         {
         }
+#endif
         
         Axiom::~Axiom() throw()
         {

@@ -11,29 +11,43 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //----------------------------------------------------------------------
-        //
-        //! member of a manifest
-        //
-        //----------------------------------------------------------------------
-        class Member : public Object, public inode<Member>
+        template <typename AXIOM>
+        class NodeOf : public Object, public inode< NodeOf<AXIOM> >
         {
         public:
-            explicit Member(const Axiom &) throw(); //!< setup
-            virtual ~Member() throw();              //!< cleanup
-            const Axiom &axiom;                     //!< reference to axiom
+            //! setup
+            inline explicit NodeOf(const AXIOM &args) throw() : axiom(args) {}
             
+            //! cleanup
+            inline virtual ~NodeOf() throw() {}
+            
+            const AXIOM &axiom; //!< reference to AXIOM
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Member);
+            Y_DISABLE_COPY_AND_ASSIGN(NodeOf);
         };
         
-        //----------------------------------------------------------------------
-        //
-        //! a manisfest is a list of members
-        //
-        //----------------------------------------------------------------------
-        typedef core::list_of_cpp<Member> Manifest;
         
+        
+        typedef NodeOf<Terminal>            TermNode;
+        typedef core::list_of_cpp<TermNode> TermList;
+        
+        class AlphaNode : public Object, public inode<AlphaNode>
+        {
+        public:
+            //! setup
+            explicit AlphaNode(const Axiom &args) throw() :
+            axiom(args) {}
+            virtual ~AlphaNode() throw() {}
+            
+            const Axiom &axiom;
+            TermList     terms;
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(AlphaNode);
+        };
+        
+        typedef core::list_of_cpp<AlphaNode> AlphaList;
         
         //----------------------------------------------------------------------
         //
@@ -113,12 +127,12 @@ XCache  &xcache
             }
             
             bool isTerminal() const throw(); //!< terminal
-            bool isCompound() const throw(); //!< agg|alt
-            bool isWildcard() const throw(); //!< ?|*|+
-            bool isApparent() const throw(); //!< terminal | !vanishing aggregate
-            
+           
             //! join to manifest first apparent from *this
-            bool joinFirstApparentTo(Manifest &) const;
+            bool joinFirstApparentTo(AlphaList &) const;
+            
+            //! join to the list the first terminal from *this
+            bool joinFirstTerminalTo(TermList &) const;
             
         protected:
             void           *self; //!< pointer to derived class

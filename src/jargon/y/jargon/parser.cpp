@@ -34,6 +34,12 @@ namespace upsylon {
             }
         }
         
+        void Parser:: compile()
+        {
+            
+        }
+
+        
     }
 }
 
