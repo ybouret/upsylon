@@ -65,7 +65,7 @@ namespace {
             discard("error", ".", this, &JSON_Parser::syntaxError);
             
             graphViz("json.dot");
-            validate();
+            compile();
             
         }
         

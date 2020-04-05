@@ -52,6 +52,16 @@ dict_(NULL), plug_(NULL)
                 return *rules.push_back( guard.yield() );
             }
             
+            const Rule & Scanner:: getRule(const Tag &ruleLabel) const
+            {
+                const string &id = *ruleLabel;
+                for(const Rule *r=rules.head;r;r=r->next)
+                {
+                    if( id == *(r->label) ) return *r;
+                }
+                throw exception("[%s] missing rule <%s>", **label, *id);
+            }
+            
             void Scanner:: newLine(const Token &) throw()
             {
                 assert(chars);

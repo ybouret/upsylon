@@ -66,6 +66,7 @@ namespace upsylon {
                 void          nothing(const Token &) const throw(); //!< ...
                 void          newLine(const Token &) throw();       //!< send newLine to current source
                 bool          isPlugin() const throw();             //!< check if plug in
+                const Rule   &getRule(const Tag &) const;
                 
                 //------------------------------------------------------------------
                 //

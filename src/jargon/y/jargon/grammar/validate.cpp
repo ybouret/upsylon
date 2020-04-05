@@ -97,14 +97,16 @@ namespace upsylon {
             for(const AlphaNode *m = alpha.head;m;m=m->next)
             {
                 const Axiom &axiom = m->axiom;
+                TermList    &terms = aliasing::_(m->terms);
+                
                 Y_JAXIOM(std::cerr << "|_<" <<  axiom.label << ">" << std::endl);
                 
-                if(!axiom.joinFirstTerminalTo(aliasing::_(m->terms)))
+                if(!axiom.joinFirstTerminalTo(terms))
                 {
                     throw exception("[%s] <%s> has no starting terminal!", **title, **(m->axiom.label) );
                 }
                 
-                for(const TermNode *t=m->terms.head;t;t=t->next)
+                for(const TermNode *t=terms.head;t;t=t->next)
                 {
                     Y_JAXIOM(std::cerr << " |_<" <<  t->axiom.label << ">" << std::endl);
                 }
