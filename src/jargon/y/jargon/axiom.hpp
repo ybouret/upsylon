@@ -14,7 +14,7 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
-        //! node to store associated first terminals for each apparent axiom
+        //! node to store associated first terminal(s) for each apparent axiom
         //
         //----------------------------------------------------------------------
         class TermNode : public Object, public inode<TermNode>

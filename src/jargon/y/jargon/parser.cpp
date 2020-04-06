@@ -59,7 +59,7 @@ namespace upsylon {
                 for(const TermNode *tnode=terms.head;tnode;tnode=tnode->next)
                 {
                     const string           &termID = *(tnode->term.label);
-                    Lexical::Rule * const * ppRule= rdb.search_by(termID);
+                    Lexical::Rule * const * ppRule = rdb.search_by(termID);
                     if(!ppRule)
                     {
                         throw exception("[%s] unexpected missing terminal rule <%s>",**title, *termID);
