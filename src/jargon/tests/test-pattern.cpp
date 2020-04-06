@@ -91,7 +91,7 @@ namespace {
     
 }
 
-Y_UTEST(jargon_pattern)
+Y_UTEST(pattern)
 {
     Y_UTEST_SIZEOF( Pattern  );
     Y_UTEST_SIZEOF( Any1     );

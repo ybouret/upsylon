@@ -128,7 +128,7 @@ namespace {
     };
 }
 
-Y_UTEST(jargon_lexer)
+Y_UTEST(lexer)
 {
     
     Lexical::Scanner::Verbose = true;

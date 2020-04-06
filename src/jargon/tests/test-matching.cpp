@@ -5,7 +5,7 @@
 using namespace upsylon;
 using namespace Jargon;
 
-Y_UTEST(jargon_matching)
+Y_UTEST(matching)
 {
     Cache cache;
     if(argc>1)

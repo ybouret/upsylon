@@ -4,7 +4,7 @@
 using namespace upsylon;
 using namespace Jargon;
 
-Y_UTEST(jargon_source)
+Y_UTEST(source)
 {
     
     Cache cache;

@@ -47,7 +47,7 @@ namespace {
     
 }
 
-Y_UTEST(jargon_scanner)
+Y_UTEST(scanner)
 {
     Y_UTEST_SIZEOF(Lexeme);
     Y_UTEST_SIZEOF(Lexemes);

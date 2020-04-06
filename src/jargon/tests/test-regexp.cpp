@@ -14,7 +14,7 @@ namespace {
     
 }
 
-Y_UTEST(jargon_regexp)
+Y_UTEST(regexp)
 {
     Dictionary dict;
     FirstChars fc;
@@ -51,7 +51,7 @@ Y_UTEST(jargon_regexp)
 }
 Y_UTEST_DONE()
 
-Y_UTEST(jargon_regcom)
+Y_UTEST(regcom)
 {
 #define Y_JRX(EXPR) do { const Motif p = RegularExpression::Compile( RegularExpression::EXPR );\
 p->graphViz( #EXPR ".dot" ); p->save_to( #EXPR ".bin" ); com.push_back(p); rid.push_back(#EXPR); } while(false)

@@ -61,7 +61,7 @@ std::cerr << std::endl;               \
 std::cerr << std::endl;              \
 } while(false)
 
-Y_UTEST(jargon_posix)
+Y_UTEST(posix)
 {
     Tester    test( (argc>1) ? argv[1] : NULL );
     typedef map<string,Motif> db_type;

@@ -6,7 +6,7 @@
 using namespace upsylon;
 using namespace Jargon;
 
-Y_UTEST(jargon_module)
+Y_UTEST(module)
 {
     
     Y_UTEST_SIZEOF(Jargon::Context);
