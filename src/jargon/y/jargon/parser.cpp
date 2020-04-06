@@ -37,12 +37,21 @@ namespace upsylon {
         
         void Parser:: compile()
         {
+            //------------------------------------------------------------------
+            //
+            // first, validate grammar
+            //
+            //------------------------------------------------------------------
             validate(false);
             assert(alpha.size>0);
             
+            //------------------------------------------------------------------
+            //
             // build local database of rules
+            //
+            //------------------------------------------------------------------
             suffix_tree<Lexical::Rule*>    rdb;
-            for( const Lexical::Rule * rule = getRules().head; rule; rule=rule->next )
+            for( const Lexical::Rule * rule = rules.head; rule; rule=rule->next )
             {
                 if(!rdb.insert_by( *(rule->label), (Lexical::Rule*)rule) )
                 {

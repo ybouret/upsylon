@@ -156,6 +156,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         //----------------------------------------------------------------------
 
 
+#if 0
         //! display
         inline friend std::ostream & operator<< ( std::ostream &os, const sorted_vector &v )
         {
@@ -166,7 +167,8 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             }
             return os << ' ' << ']' << '\'';
         }
-
+#endif
+        
         //! no throw swap
         inline void swap_with( sorted_vector &_ ) throw()
         {

@@ -1,5 +1,6 @@
 #include "y/jargon/lexical/scanner.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
     
@@ -18,6 +19,7 @@ CountedObject(),             \
 inode<Scanner>(),            \
 label(TAG),                  \
 rules(),                     \
+hoard(),                     \
 chars(NULL),                 \
 dict_(NULL), plug_(NULL)
             
@@ -41,28 +43,33 @@ dict_(NULL), plug_(NULL)
             {
                 assert(rule);
                 auto_ptr<Rule> guard(rule);
-                
-                Y_JSCANNER(std::cerr << '[' << label << ']' << "+rule <" << rule->label << ">" << std::endl);
+                const string  &ruleID = *(rule->label);
+                Y_JSCANNER(std::cerr << '[' << label << ']' << "+rule <" << ruleID << ">" << std::endl);
+               
                 
                 for(const Rule *r=rules.head;r;r=r->next)
                 {
-                    if( *(r->label) == *(rule->label) )     throw exception("[%s] multiple rule <%s>", **label, **(r->label));
+                    if( *(r->label) == ruleID )             throw exception("[%s] multiple rule <%s>", **label, **(r->label));
                     if( r->motif->alike( & *(rule->motif))) throw exception("[%s] alike patterns <%s> and <%s>",**label,**(r->label),**(rule->label));
                 }
-                return *rules.push_back( guard.yield() );
+                const Rule &result = * aliasing::_(rules).push_back( guard.yield() );
+                try
+                {
+                    if( ! aliasing::_(hoard).insert_by(ruleID,rule))
+                    {
+                        throw exception("[%s] unexpected registration failure of <%s>", **label, **(rule->label) );
+                    }
+                }
+                catch(...)
+                {
+                    delete aliasing::_(rules).pop_back();
+                    throw;
+                }
+                assert(hoard.entries() == rules.size );
+                return result;
             }
             
-#if 0
-            const Rule & Scanner:: getRule(const Tag &ruleLabel) const
-            {
-                const string &id = *ruleLabel;
-                for(const Rule *r=rules.head;r;r=r->next)
-                {
-                    if( id == *(r->label) ) return *r;
-                }
-                throw exception("[%s] missing rule <%s>", **label, *id);
-            }
-#endif
+            
             
             void Scanner:: newLine(const Token &) throw()
             {

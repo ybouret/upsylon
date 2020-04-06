@@ -39,7 +39,6 @@ namespace upsylon {
             };
             
             typedef core::list_of_cpp<Rule> Rules; //!< alias
-            
         }
     }
 }

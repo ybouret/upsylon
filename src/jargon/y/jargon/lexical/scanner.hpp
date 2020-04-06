@@ -13,6 +13,7 @@
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/jargon/tags.hpp"
 #include "y/ptr/intr.hpp"
+
 namespace upsylon {
     
     namespace Jargon {
@@ -46,6 +47,7 @@ namespace upsylon {
                 //------------------------------------------------------------------
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef intr_ptr<string,Scanner> Handle;  //!< for database
+                typedef suffix_tree<Rule *>      RuleDB;  //!< rules database
                 
                 //--------------------------------------------------------------
                 //
@@ -66,7 +68,6 @@ namespace upsylon {
                 void          nothing(const Token &) const throw(); //!< ...
                 void          newLine(const Token &) throw();       //!< send newLine to current source
                 bool          isPlugin() const throw();             //!< check if plug in
-                const Rules  &getRules() const throw() { return rules; }
                 
                 //------------------------------------------------------------------
                 //
@@ -215,12 +216,12 @@ namespace upsylon {
                  */
                 Lexical::Unit *probe(Source &, Directive &);
                 
-                const Tag label; //!< identifier
-                
+                const Tag      label; //!< identifier
+                const Rules    rules; //!< current rules
+                const RuleDB   hoard; //!< indexed rules
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                Rules   rules;  // current rules
                 Source *chars;  // current source
                 friend class Analyzer;
                 

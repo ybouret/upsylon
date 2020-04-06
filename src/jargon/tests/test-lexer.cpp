@@ -133,7 +133,7 @@ Y_UTEST(lexer)
     
     Lexical::Scanner::Verbose = true;
     myLex L;
-    std::cerr << L.label << ".entries=" << L.getRules().size << std::endl;
+    std::cerr << L.label << ".entries=" << L.rules.size << std::endl;
     
     if(argc>1)
     {

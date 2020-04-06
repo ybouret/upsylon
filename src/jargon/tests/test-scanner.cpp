@@ -57,7 +57,7 @@ Y_UTEST(scanner)
     Lexical::Scanner::Verbose = true;
     myScanner scan;
     
-    std::cerr << scan.label << ".entries=" << scan.getRules().size << std::endl;
+    std::cerr << scan.label << ".entries=" << scan.rules.size << std::endl;
     
     
     if(argc>1)
