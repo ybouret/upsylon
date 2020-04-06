@@ -47,18 +47,9 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            // build local database of rules
+            //
             //
             //------------------------------------------------------------------
-            suffix_tree<Lexical::Rule*>    rdb;
-            for( const Lexical::Rule * rule = rules.head; rule; rule=rule->next )
-            {
-                if(!rdb.insert_by( *(rule->label), (Lexical::Rule*)rule) )
-                {
-                    throw exception("[%s] unexpected multiple lexical rule <%s>", **title, **(rule->label));
-                }
-            }
-            
             FirstChars  fc;
             for(const AlphaNode *anode=alpha.head;anode;anode=anode->next)
             {
@@ -68,7 +59,7 @@ namespace upsylon {
                 for(const TermNode *tnode=terms.head;tnode;tnode=tnode->next)
                 {
                     const string           &termID = *(tnode->term.label);
-                    Lexical::Rule * const * ppRule = rdb.search_by(termID);
+                    Lexical::Rule * const * ppRule = hoard.search_by(termID);
                     if(!ppRule)
                     {
                         throw exception("[%s] unexpected missing terminal rule <%s>",**title, *termID);
