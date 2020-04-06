@@ -52,11 +52,13 @@ Y_UTEST(jargon_scanner)
     Y_UTEST_SIZEOF(Lexeme);
     Y_UTEST_SIZEOF(Lexemes);
     Y_UTEST_SIZEOF(Lexical::Scanner);
-    
+    Y_UTEST_SIZEOF(suffix_tree<Lexical::Rule*>);
+
     Lexical::Scanner::Verbose = true;
     myScanner scan;
     
-  
+    std::cerr << scan.label << ".entries=" << scan.getRules().size << std::endl;
+    
     
     if(argc>1)
     {

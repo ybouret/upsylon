@@ -61,12 +61,12 @@ namespace upsylon {
                 // generic method
                 //
                 //------------------------------------------------------------------
-                const string &key() const throw();                   //!< for intr_ptr/set
+                const string &key() const throw();                  //!< for intr_ptr/set
                 const Rule &  add(Rule *rule);                      //!< add a rule, check no multiple
                 void          nothing(const Token &) const throw(); //!< ...
                 void          newLine(const Token &) throw();       //!< send newLine to current source
                 bool          isPlugin() const throw();             //!< check if plug in
-                const Rule   &getRule(const Tag &) const;
+                const Rules  &getRules() const throw() { return rules; }
                 
                 //------------------------------------------------------------------
                 //

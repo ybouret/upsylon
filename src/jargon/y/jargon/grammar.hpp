@@ -25,7 +25,6 @@ namespace upsylon {
         class Grammar 
         {
         public:
-            
             //------------------------------------------------------------------
             //
             // C++
@@ -45,6 +44,7 @@ namespace upsylon {
             iAlt(1),
             iAgg(1),
             alpha(),
+            beta(),
             maxLength(0)
             {
             }
@@ -167,6 +167,8 @@ namespace upsylon {
             const   Axiom *ground; //!< ground rule, initially inactive
             Axioms         axioms; //!< top-level axioms
             
+           
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             unsigned       iAlt;
@@ -176,10 +178,14 @@ namespace upsylon {
             XNode *onInternal(XNode *) const throw();
             //! merge child->children into children
             void   amalgamate( XList &children, XNode *child) const throw();
-       
+            void   collect(const AlphaList &);
+            
         public:
             const AlphaList alpha;      //!< list of first apparent Axiom(s)
+            const AlphaList beta;       //!< list of other apparent Axiom(s)
             const size_t    maxLength;  //!< maximum length of labels
+            
+           
         };
         
     }

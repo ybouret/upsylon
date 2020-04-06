@@ -39,6 +39,17 @@ namespace upsylon {
         {
             validate(false);
             assert(alpha.size>0);
+            
+            // build local database of rules
+            suffix_tree<Lexical::Rule*>    rdb;
+            for( const Lexical::Rule * rule = getRules().head; rule; rule=rule->next )
+            {
+                if(!rdb.insert_by( *(rule->label), (Lexical::Rule*)rule) )
+                {
+                    throw exception("[%s] unexpected multiple lexical rule <%s>", **title, **(rule->label));
+                }
+            }
+            
             FirstChars  fc;
             for(const AlphaNode *anode=alpha.head;anode;anode=anode->next)
             {
@@ -47,7 +58,13 @@ namespace upsylon {
                 const TermPool &terms = anode->terms; assert(terms.size>0);
                 for(const TermNode *tnode=terms.head;tnode;tnode=tnode->next)
                 {
-                    getRule(tnode->term.label).motif->adjoin(fc);
+                    const string           &termID = *(tnode->term.label);
+                    Lexical::Rule * const * ppRule= rdb.search_by(termID);
+                    if(!ppRule)
+                    {
+                        throw exception("[%s] unexpected missing terminal rule <%s>",**title, *termID);
+                    }
+                    (**ppRule).motif->adjoin(fc);
                 }
                 std::cerr << "for <" << axiom.label << "> : " << fc << "" << std::endl;
                 

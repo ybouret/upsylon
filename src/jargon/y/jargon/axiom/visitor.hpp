@@ -5,18 +5,16 @@
 #define Y_JARGON_AXIOM_VISITOR_INCLUDED 1
 
 #include "y/jargon/axiom/all.hpp"
+#include "y/jargon/axiom/db.hpp"
 #include "y/jargon/xcache.hpp"
-#include "y/container/key-address.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
       
-        typedef key_address<1>            AxiomAddress;   //!< storing address
-        typedef suffix_tree<AxiomAddress> AxiomAddresses; //!< stored addresses
         
         //! light database of visited axioms
-        class Visitor : public AxiomAddresses
+        class Visitor : public AxiomDB
         {
         public:
             //------------------------------------------------------------------
@@ -43,10 +41,10 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! register axiom, return true if was not visited
-            bool greenLight( const Axiom & );
+            //bool greenLight( const Axiom & );
             
             //! check if was visited
-            bool wasVisited( const Axiom & ) const throw();
+            //bool wasVisited( const Axiom & ) const throw();
           
             //! apply proc on each not-visited axiom from root
             bool walkDown(const Axiom &root,

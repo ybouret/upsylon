@@ -133,6 +133,8 @@ Y_UTEST(jargon_lexer)
     
     Lexical::Scanner::Verbose = true;
     myLex L;
+    std::cerr << L.label << ".entries=" << L.getRules().size << std::endl;
+    
     if(argc>1)
     {
         Lexemes   lexemes;

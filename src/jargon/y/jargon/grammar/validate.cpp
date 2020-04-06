@@ -57,7 +57,7 @@ namespace upsylon {
             for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
             {
                 const Axiom &axiom = **it;
-                if( V.wasVisited(axiom) ) continue;
+                if( V.search(axiom) ) continue;
                 if(allowStandalone) continue;
                 throw exception("[%s] has standalone <%s>", **title, **(axiom.label) );
             }
@@ -69,8 +69,8 @@ namespace upsylon {
             Y_JAXIOM(std::cerr << "[" << title << "] checking foreign axioms..." << std::endl);
             for(Visitor::iterator it=V.begin();it!=V.end();++it)
             {
-                const AxiomAddress &addr = *it;
-                const Axiom        &axiom = *static_cast<const Axiom*>( addr[0] );
+                const Axiom::Address &addr = *it;
+                const Axiom          &axiom = *static_cast<const Axiom*>( addr[0] );
                 if( !owns(axiom) ) throw exception("[%s] has foreign <%s>", **title, **axiom.label);
             }
             
@@ -85,16 +85,52 @@ namespace upsylon {
             
             //__________________________________________________________________
             //
-            // build the first list
+            // build the alpha list
             //__________________________________________________________________
             Y_JAXIOM(std::cerr << "[" << title << "] building alpha list..." << std::endl);
             {
-                AlphaList &apparent = aliasing::_(alpha);
-                apparent.release();
-                ground->joinFirstApparentTo(apparent);
+                AlphaList &a = aliasing::_(alpha);
+                a.release();
+                ground->joinFirstApparentTo(a);
             }
             Y_JAXIOM(std::cerr << "[" << title << "] #alpha=" << alpha.size << std::endl);
+            
+            //__________________________________________________________________
+            //
+            // build the beta list
+            //__________________________________________________________________
+            Y_JAXIOM(std::cerr << "[" << title << "] building beta list..." << std::endl);
+            aliasing::_(beta).release();
+            AxiomDB adb;
             for(const AlphaNode *m = alpha.head;m;m=m->next)
+            {
+                if(!adb.insert(m->axiom))
+                    throw exception("[%s] unexpected multiple alpha axiom <%s>", **title, **(m->axiom.label));
+            }
+            
+            for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
+            {
+                const Axiom &axiom = **it;
+                if(adb.search(axiom)) continue;
+                if(axiom.isApparent())
+                {
+                    aliasing::_(beta).push_back( new AlphaNode(axiom) );
+                }
+            }
+            
+            Y_JAXIOM(std::cerr << "[" << title << "] <alpha>" << std::endl);
+            collect(alpha);
+            Y_JAXIOM(std::cerr << "[" << title << "] <alpha/>" << std::endl);
+
+            Y_JAXIOM(std::cerr << "[" << title << "] <beta>" << std::endl);
+            collect(beta);
+            Y_JAXIOM(std::cerr << "[" << title << "] <beta/>" << std::endl);
+            
+        }
+        
+        void   Grammar:: collect(const AlphaList &alist )
+        {
+            for(const AlphaNode *m = alist.head;m;m=m->next)
             {
                 const Axiom &axiom = m->axiom;
                 TermPool    &terms = aliasing::_(m->terms);
@@ -108,12 +144,11 @@ namespace upsylon {
                 
                 for(const TermNode *t=terms.head;t;t=t->next)
                 {
-                    Y_JAXIOM(std::cerr << " |_<" <<  t->term.label << ">" << std::endl);
+                    Y_JAXIOM(std::cerr << "  \\_<" <<  t->term.label << ">" << std::endl);
                 }
             }
         }
-        
-        
+
        
 
     }

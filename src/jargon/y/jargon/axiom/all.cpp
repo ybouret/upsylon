@@ -35,13 +35,15 @@ namespace upsylon {
             }
             return false;
         }
+#endif
         
+#if 1
         bool Axiom:: isApparent() const throw()
         {
             
             switch(uuid)
             {
-                case Terminal:: UUID: return true;
+                //case Terminal:: UUID: return true;
                 case Aggregate::UUID: return as<Aggregate>().feature != Aggregate::Vanishing;
                 default: break;
             }
@@ -109,7 +111,7 @@ namespace upsylon {
         {
             switch(uuid)
             {
-                case Terminal::   UUID:  alpha.push_back( new AlphaNode(*this) ); return true;
+                case Terminal::   UUID:  return false; //alpha.push_back( new AlphaNode(*this) ); return true;
                 case Option::     UUID:  return __proxy_jfa<Option>(*this,alpha);
                 case ZeroOrMore:: UUID:  return __proxy_jfa<ZeroOrMore>(*this,alpha);
                 case OneOrMore::  UUID:  return __proxy_jfa<OneOrMore>(*this,alpha);

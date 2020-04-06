@@ -4,7 +4,7 @@ namespace upsylon {
     
     namespace Jargon {
         
-        Visitor:: Visitor() : AxiomAddresses()
+        Visitor:: Visitor() : AxiomDB()
         {
         }
         
@@ -12,17 +12,20 @@ namespace upsylon {
         {
         }
         
+#if 0
         bool Visitor:: wasVisited(const Axiom &axiom) const throw()
         {
-            const AxiomAddress addr = axiom;
+            const Axiom::Address addr = axiom;
             return search_by(addr) != NULL;
         }
         
+        
         bool Visitor:: greenLight( const Axiom &axiom )
         {
-            const AxiomAddress addr = axiom;
+            const Axiom::Address addr = axiom;
             return insert_by(addr,addr);
         }
+#endif
         
         bool Visitor::Check(const Axiom &, void *) throw()
         {
@@ -34,8 +37,8 @@ namespace upsylon {
             std::cerr << "<Visitor entries=" << entries() << ">" << std::endl;
             for( const_iterator it=begin(); it!=end();++it)
             {
-                const AxiomAddress &addr  = *it;
-                const Axiom        *axiom = static_cast<const Axiom *>( addr[0] );
+                const Axiom::Address &addr  = *it;
+                const Axiom          *axiom = static_cast<const Axiom *>( addr[0] );
                 std::cerr << "\t<" << axiom->label << ">" << std::endl;
             }
             std::cerr << "<Visitor/>" << std::endl;
@@ -61,7 +64,7 @@ namespace upsylon {
                               Visitor::Process proc,
                               void            *args)
         {
-            assert( visitor.wasVisited(axiom) );
+            assert( visitor.search(axiom) );
             for(const Member *m = axiom.as<COMPOUND>().head;m;m=m->next)
             {
                 const Axiom &used = m->axiom;
@@ -79,7 +82,7 @@ namespace upsylon {
                               Visitor::Process proc,
                               void            *args)
         {
-            assert( visitor.wasVisited(axiom) );
+            assert( visitor.search(axiom) );
             const Axiom &used = axiom.as<WILDCARD>().axiom;
             return visitor.walkDown(used, proc, args);
         }
@@ -90,14 +93,14 @@ namespace upsylon {
         {
             assert(proc);
             
-            if(greenLight(root))
+            if(insert(root))
             {
                 if( !proc(root,args) )
                 {
                     return false; // early return
                 }
                 
-                assert( wasVisited(root) );
+                assert( search(root) );
                 switch(root.uuid)
                 {
                     case Terminal::  UUID: return true;

@@ -6,6 +6,7 @@
 #include "y/jargon/xnode.hpp"
 #include "y/jargon/tags.hpp"
 #include "y/type/fourcc.hpp"
+#include "y/container/key-address.hpp"
 
 namespace upsylon {
     
@@ -79,7 +80,9 @@ XCache  &xcache
         class Axiom : public  CountedObject
         {
         public:
-            static bool Verbose; //!< global verbosity flag
+            static bool             Verbose; //!< global verbosity flag
+            typedef key_address<1>  Address; //!< storing address
+
             //------------------------------------------------------------------
             //
             // C++
@@ -129,7 +132,8 @@ XCache  &xcache
             }
             
             bool isTerminal() const throw(); //!< terminal
-           
+            bool isApparent() const throw(); //!< not vanishing aggregate
+            
             //! join to manifest first apparent from *this
             bool joinFirstApparentTo(AlphaList &) const;
             
