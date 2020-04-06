@@ -37,19 +37,18 @@ namespace upsylon {
                     if(lexeme)
                     {
                         lexer.unget(lexeme);
-                        const bool definite = getTerminal(lexeme->label).isDefinite();
                         exception excp("%s:%d:%d: [%s] unexpected",
                                        **(lexeme->tag),
                                        lexeme->line,
                                        lexeme->column,
                                        **title);
-                        lexeme->writeTo(excp,definite);
+                        lexeme->writeTo(excp,getTerminal(lexeme->label).isDefinite());
                         
                         const Lexeme *last = XNode::LastLexeme(xtree);
                         if(last)
                         {
                             excp.cat(" after");
-                            last->writeTo(excp,definite);
+                            last->writeTo(excp,getTerminal(last->label).isDefinite());
                         }
                         throw excp;
                         
@@ -74,7 +73,24 @@ namespace upsylon {
             }
             else
             {
-                throw exception("[%s] accept <%s> failure...", **title, **(ground->label) );
+                //--------------------------------------------------------------
+                //
+                // rejected!
+                //
+                //--------------------------------------------------------------
+                Lexeme *lexeme = lexer.get(source);
+                if(lexeme)
+                {
+                    lexer.unget(lexeme);
+                    exception excp("%s:%d:%d: [%s] illegal first",
+                                   **(lexeme->tag),
+                                   lexeme->line,
+                                   lexeme->column,
+                                   **title);
+                    lexeme->writeTo(excp,getTerminal(lexeme->label).isDefinite());
+                    throw excp;
+                }
+                throw exception("[%s] rejected <%s>...", **title, **(ground->label) );
             }
             
         }

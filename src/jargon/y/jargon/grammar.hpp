@@ -105,6 +105,7 @@ namespace upsylon {
                 return declare( new Aggregate(id) );
             }
             
+            //! new acting aggregate
             template <typename LABEL> inline
             Aggregate & act(const LABEL &id)
             {

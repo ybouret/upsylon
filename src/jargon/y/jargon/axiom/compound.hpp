@@ -10,6 +10,7 @@ namespace upsylon {
     
     namespace Jargon {
        
+        //! lightweight node for axiom reference
         class Member : public Object, public inode< Member >
         {
         public:
@@ -25,8 +26,8 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Member);
         };
         
-        typedef core::list_of_cpp<Member> Manifest;//! a manisfest is a list of members
-        
+        //! a manisfest is a list of members
+        typedef core::list_of_cpp<Member> Manifest;
        
         //----------------------------------------------------------------------
         //

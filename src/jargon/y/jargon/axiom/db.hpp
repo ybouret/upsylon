@@ -10,15 +10,15 @@ namespace upsylon {
     
     namespace Jargon {
         
-        
+        //! lightweight database of axioms
         class AxiomDB : public suffix_tree<Axiom::Address>
         {
         public:
-            explicit AxiomDB();
-            virtual ~AxiomDB() throw();
+            explicit AxiomDB();          //!< setup
+            virtual ~AxiomDB() throw();  //!< cleanup
             
-            bool insert(const Axiom &);
-            bool search(const Axiom &) const throw();
+            bool insert(const Axiom &);               //!< insert = greenLight
+            bool search(const Axiom &) const throw(); //!< search = wasVisited
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AxiomDB);
