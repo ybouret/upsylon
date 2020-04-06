@@ -90,6 +90,19 @@ namespace upsylon {
 
         //----------------------------------------------------------------------
         //
+        // accessible interface
+        //
+        //----------------------------------------------------------------------
+        const_type &operator[](const size_t indx) const throw()
+        {
+            assert(indx>0);
+            assert(indx<=content.size);
+            return content.fetch(indx-1)->data;
+
+        }
+        
+        //----------------------------------------------------------------------
+        //
         // ordered interface
         //
         //----------------------------------------------------------------------
@@ -438,11 +451,6 @@ namespace upsylon {
         {
             while( content.size ) { node_type *node = content.pop_back(); self_destruct(node->data); object::release1(node); }
             while( dormant.size ) { node_type *node = dormant.query();                               object::release1(node); }
-        }
-
-        virtual const_type & getObjectAt(const size_t indx) const throw()
-        {
-            return content.fetch(indx+1)->data;
         }
 
     };

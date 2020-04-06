@@ -3,13 +3,15 @@
 #define Y_ORDERED_INCLUDED 1
 
 #include "y/container/container.hpp"
+#include "y/sequence/accessible.hpp"
+
 #include "y/type/args.hpp"
 namespace upsylon
 {
     
     //! base class for ordered container
     template <typename T>
-    class ordered : public container
+    class ordered : public container, public accessible<T>
     {
     public:
         //----------------------------------------------------------------------
@@ -47,12 +49,6 @@ namespace upsylon
                 ;
         }
         
-        //! access
-        inline const_type & operator[]( const size_t indx ) const throw()
-        {
-            assert(indx>0); assert(indx<=size());
-            return getObjectAt(indx);
-        }
         
         //! exclude a range of keys
         template <typename ITERATOR>
@@ -85,14 +81,14 @@ namespace upsylon
         }
         
     protected:
-        inline explicit ordered()        throw() : container()               {} //!< setup
-        inline ordered(const ordered & ) throw() : collection(), container() {} //!< copy
+        inline explicit ordered()        throw() : container(),  accessible<T>()              {} //!< setup
+        inline ordered(const ordered & ) throw() : collection(), container(), accessible<T>() {} //!< copy
         
         
         
     private:
         Y_DISABLE_ASSIGN(ordered);
-        virtual const_type & getObjectAt(const size_t indx) const throw() = 0;
+        //virtual const_type & getObjectAt(const size_t indx) const throw() = 0;
     };
     
     //! use an ordered container to build a multiple ordered container

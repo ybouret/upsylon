@@ -4,6 +4,7 @@
 #define Y_SORTED_VECTOR_INCLUDED 1
 
 #include "y/container/ordered.hpp"
+#include "y/sequence/accessible.hpp"
 #include "y/memory/global.hpp"
 #include "y/comparator.hpp"
 #include "y/core/locate.hpp"
@@ -32,7 +33,6 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         // C++ interfaces
         //
         //----------------------------------------------------------------------
-
         //! cleanup
         inline virtual ~sorted_vector() throw() { release__(); }
 
@@ -63,10 +63,9 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         // container interface
         //
         //----------------------------------------------------------------------
-
-        inline virtual void    free()    throw() { free__();    }
-        inline virtual void    release() throw() { release__(); }
-        inline virtual void    reserve(const size_t n)
+        inline virtual void    free()    throw() { free__();    } //!< free
+        inline virtual void    release() throw() { release__(); } //!< release
+        inline virtual void    reserve(const size_t n)            //!< reserve
         {
             if(n>0)
             {
@@ -74,7 +73,17 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
                 swap_with(temp);
             }
         }
-
+        
+        //----------------------------------------------------------------------
+        //
+        // accessible interface
+        //
+        //----------------------------------------------------------------------
+        virtual const_type & operator[](const size_t index) const throw()
+        {
+            assert(index>0); assert(index<=size_); return item[index];
+        }
+        
         //----------------------------------------------------------------------
         //
         // ordered interface
@@ -287,12 +296,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
                 ++size_;
             }
         }
-
-        virtual const_type & getObjectAt(const size_t indx) const throw()
-        {
-            return item[indx];
-        }
-
+        
 
     };
 }
