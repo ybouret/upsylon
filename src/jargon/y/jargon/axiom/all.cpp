@@ -132,13 +132,13 @@ namespace upsylon {
         
         template <typename WILDCARD> static inline
         bool __proxy_jft(const Axiom &axiom,
-                         TermList    &tl)
+                         TermPool    &tl)
         {
             return axiom.as<WILDCARD>().axiom.joinFirstTerminalTo(tl);
         }
         
         static inline
-        bool __proxy_jft_alt(const Alternate &alt, TermList &tl)
+        bool __proxy_jft_alt(const Alternate &alt, TermPool &tl)
         {
             // catenate all possibilities
             bool found = false;
@@ -153,7 +153,7 @@ namespace upsylon {
         }
         
         static inline
-        bool __proxy_jft_agg( const Aggregate &agg, TermList &tl )
+        bool __proxy_jft_agg( const Aggregate &agg, TermPool &tl )
         {
             
             // first terminal
@@ -167,7 +167,7 @@ namespace upsylon {
             return false;
         }
         
-        bool Axiom:: joinFirstTerminalTo(TermList &tl) const
+        bool Axiom:: joinFirstTerminalTo(TermPool &tl) const
         {
             switch(uuid)
             {

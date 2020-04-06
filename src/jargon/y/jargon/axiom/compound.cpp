@@ -6,6 +6,15 @@ namespace upsylon {
     
     namespace Jargon {
         
+        Member:: ~Member() throw()
+        {
+        }
+        
+        Member:: Member(const Axiom &args) throw()  :
+        axiom(args)
+        {
+        }
+        
         Compound:: ~Compound() throw()
         {
         }

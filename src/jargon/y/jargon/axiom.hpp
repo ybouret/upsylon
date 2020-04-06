@@ -11,37 +11,39 @@ namespace upsylon {
     
     namespace Jargon {
         
-        template <typename AXIOM>
-        class NodeOf : public Object, public inode< NodeOf<AXIOM> >
+        //----------------------------------------------------------------------
+        //
+        //! node to store associated first terminals for each apparent axiom
+        //
+        //----------------------------------------------------------------------
+        class TermNode : public Object, public inode<TermNode>
         {
         public:
-            //! setup
-            inline explicit NodeOf(const AXIOM &args) throw() : axiom(args) {}
+            explicit TermNode(const Terminal &) throw(); //!< setup
+            virtual ~TermNode() throw();                 //!< cleanup
+           
+            const Terminal &term;                        //!< reference
             
-            //! cleanup
-            inline virtual ~NodeOf() throw() {}
-            
-            const AXIOM &axiom; //!< reference to AXIOM
-
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(NodeOf);
+            Y_DISABLE_COPY_AND_ASSIGN(TermNode);
         };
         
+        typedef core::list_of_cpp<TermNode> TermPool; //!< alias
         
-        
-        typedef NodeOf<Terminal>            TermNode;
-        typedef core::list_of_cpp<TermNode> TermList;
-        
+        //----------------------------------------------------------------------
+        //
+        //! node to store apparent axioms
+        //
+        //----------------------------------------------------------------------
         class AlphaNode : public Object, public inode<AlphaNode>
         {
         public:
             //! setup
-            explicit AlphaNode(const Axiom &args) throw() :
-            axiom(args) {}
-            virtual ~AlphaNode() throw() {}
+            explicit AlphaNode(const Axiom &args) throw(); //!< setup
+            virtual ~AlphaNode() throw();                  //!< cleanup
             
-            const Axiom &axiom;
-            TermList     terms;
+            const Axiom &axiom; //!< apparent axiom
+            TermPool     terms; //!< associated first terminal(s)
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AlphaNode);
@@ -132,7 +134,7 @@ XCache  &xcache
             bool joinFirstApparentTo(AlphaList &) const;
             
             //! join to the list the first terminal from *this
-            bool joinFirstTerminalTo(TermList &) const;
+            bool joinFirstTerminalTo(TermPool &) const;
             
         protected:
             void           *self; //!< pointer to derived class

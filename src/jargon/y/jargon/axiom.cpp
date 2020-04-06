@@ -6,16 +6,22 @@ namespace upsylon {
     
     namespace Jargon {
      
-#if 0
-        Member:: ~Member() throw()
+ 
+        TermNode:: ~TermNode() throw() {}
+        
+        TermNode::  TermNode(const Terminal & t) throw() :
+        Object(),
+        inode<TermNode>(),
+        term(t)
+        {}
+        
+        AlphaNode:: AlphaNode(const Axiom &args) throw() :
+        axiom(args) {}
+        
+        AlphaNode:: ~AlphaNode() throw()
         {
         }
         
-        Member:: Member(const Axiom &a) throw() :
-        Object(), inode<Member>(), axiom(a)
-        {
-        }
-#endif
         
         Axiom::~Axiom() throw()
         {

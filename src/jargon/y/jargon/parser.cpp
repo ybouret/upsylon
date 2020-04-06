@@ -44,10 +44,10 @@ namespace upsylon {
             {
                 fc.free();
                 const Axiom    &axiom = anode->axiom;
-                const TermList &terms = anode->terms; assert(terms.size>0);
+                const TermPool &terms = anode->terms; assert(terms.size>0);
                 for(const TermNode *tnode=terms.head;tnode;tnode=tnode->next)
                 {
-                    getRule(tnode->axiom.label).motif->adjoin(fc);
+                    getRule(tnode->term.label).motif->adjoin(fc);
                 }
                 std::cerr << "for <" << axiom.label << "> : " << fc << "" << std::endl;
                 

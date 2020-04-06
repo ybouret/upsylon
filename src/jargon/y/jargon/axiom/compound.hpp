@@ -9,9 +9,22 @@
 namespace upsylon {
     
     namespace Jargon {
-        
        
-        typedef NodeOf<Axiom>             Member;  //!< member of a manifest
+        class Member : public Object, public inode< Member >
+        {
+        public:
+            //! setup
+            explicit Member(const Axiom &args) throw();
+            
+            //! cleanup
+            virtual ~Member() throw();
+            
+            const Axiom &axiom; //!< reference to AXIOM
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Member);
+        };
+        
         typedef core::list_of_cpp<Member> Manifest;//! a manisfest is a list of members
         
        
