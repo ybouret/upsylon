@@ -30,6 +30,7 @@ namespace upsylon {
         
         bool Axiom::Verbose = false;
         
+#if 0
         void Axiom:: checkLabel(const char *which) const
         {
             assert(which);
@@ -49,6 +50,7 @@ namespace upsylon {
                 }
             }
         }
-
+#endif
+        
     }
 }

@@ -9,6 +9,7 @@
 namespace upsylon {
     
     namespace Jargon {
+       
         
         //----------------------------------------------------------------------
         //
@@ -33,6 +34,7 @@ namespace upsylon {
                 Transient, //!< merge content to parent is only one child
                 Vanishing  //!< merge all content to parent, ie multiple patterns recognition
             };
+            
             typedef int2type<Transient> TransientType; //!< named type
             static const TransientType  AsTransient;   //!< helper to setup aggregates
             
@@ -50,7 +52,7 @@ namespace upsylon {
             explicit Aggregate(const LABEL &l) :
             Compound(l,UUID), feature(Permanent)
             {
-                checkLabel(CLID);
+                //checkLabel(CLID);
                 setup();
             }
             
@@ -59,7 +61,7 @@ namespace upsylon {
             explicit Aggregate(const LABEL &l, const TransientType &) :
             Compound(l,UUID), feature(Transient)
             {
-                checkLabel(CLID);
+                //checkLabel(CLID);
                 setup();
             }
             

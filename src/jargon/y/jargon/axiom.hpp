@@ -152,8 +152,8 @@ XCache  &xcache
             {
             }
             
-            //! check label for derived class, not beginning by reserved chars
-            void checkLabel(const char *which) const;
+            ////! check label for derived class, not beginning by reserved chars
+            //void checkLabel(const char *which) const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Axiom);

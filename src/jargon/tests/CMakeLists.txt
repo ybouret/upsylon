@@ -18,6 +18,7 @@ ADD_TEST(matching test-jargon matching)
 ADD_TEST(xnode    test-jargon xnode)
 ADD_TEST(grammar  test-jargon grammar)
 ADD_TEST(parser   test-jargon parser)
+ADD_TEST(expr     test-jargon expr)
 
 ADD_CUSTOM_TARGET(utest-jargon
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

@@ -8,7 +8,7 @@ namespace upsylon {
 
         const char Aggregate:: CLID[] = "Aggregate";
         
-        const Aggregate::TransientType  Aggregate:: AsTransient = {};
+        const  Aggregate::TransientType  Aggregate::AsTransient = {};
 
         
         Aggregate:: ~Aggregate() throw()

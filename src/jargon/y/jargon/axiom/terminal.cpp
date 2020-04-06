@@ -16,7 +16,7 @@ namespace upsylon {
         void Terminal:: setup()
         {
             self = static_cast<Terminal *>(this);
-            checkLabel(CLID);
+            //checkLabel(CLID);
             Y_JAXIOM(std::cerr << "+" << CLID << " <" << label << ">" << std::endl);
         }
 

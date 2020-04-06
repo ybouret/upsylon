@@ -107,6 +107,12 @@ namespace upsylon {
                 return declare( new Aggregate(id) );
             }
             
+            template <typename LABEL> inline
+            Aggregate & act(const LABEL &id)
+            {
+                return declare( new Aggregate(id,Aggregate::AsTransient) );
+            }
+            
             Aggregate & agg();                           //!< new design aggregate
             Axiom     & cat(Axiom &a,Axiom &b);          //!< a&&b
             Axiom     & cat(Axiom &a,Axiom &b,Axiom &c); //!< a&&b&&c
