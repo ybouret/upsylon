@@ -16,7 +16,8 @@ namespace upsylon {
         {}
         
         AlphaNode:: AlphaNode(const Axiom &args) throw() :
-        axiom(args) {}
+        axiom(args), terms()
+        {}
         
         AlphaNode:: ~AlphaNode() throw()
         {
