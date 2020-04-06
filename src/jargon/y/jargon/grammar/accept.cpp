@@ -7,7 +7,7 @@ namespace upsylon {
     
     namespace Jargon {
 
-        XNode * Grammar:: accept(Lexer &lexer, Source &source) const
+        XNode * Grammar:: accept(Lexer &lexer, Source &source, const bool doAST) const
         {
             assert(ground);
             XNode       *xtree    = NULL;
@@ -69,7 +69,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 
                 Y_JAXIOM(std::cerr << "[" << title << "] returning AST" << std::endl);
-                return AST(xtree);
+                return doAST ? AST(xtree) : xtree;
 
             }
             else

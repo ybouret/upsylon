@@ -127,7 +127,13 @@ namespace upsylon {
             void compile();
             
             //! parsing a module
-            XNode *parse( Module * );
+            XNode *parse( Module *, const bool doAST=true );
+          
+            template <typename FILENAME>
+            XNode *parseFile(const FILENAME &fileName)
+            {
+                return parse( Module::OpenFile(cache,fileName) );
+            }
             
             //------------------------------------------------------------------
             //

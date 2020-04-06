@@ -58,7 +58,7 @@ namespace upsylon {
             {
                 const Axiom &axiom = **it;
                 if( V.search(axiom) ) continue;
-                if(allowStandalone) continue;
+                if(allowStandalone)   continue;
                 throw exception("[%s] has standalone <%s>", **title, **(axiom.label) );
             }
             
@@ -83,72 +83,11 @@ namespace upsylon {
                 throw exception("[%s] unexpected visited entries",**title);
             }
             
-            //__________________________________________________________________
-            //
-            // build the alpha list
-            //__________________________________________________________________
-            Y_JAXIOM(std::cerr << "[" << title << "] building alpha list..." << std::endl);
-            {
-                AlphaList &a = aliasing::_(alpha);
-                a.release();
-                ground->joinFirstApparentTo(a);
-            }
-            Y_JAXIOM(std::cerr << "[" << title << "] #alpha=" << alpha.size << std::endl);
             
-            //__________________________________________________________________
-            //
-            // build the beta list
-            //__________________________________________________________________
-            Y_JAXIOM(std::cerr << "[" << title << "] building beta list..." << std::endl);
-            aliasing::_(beta).release();
-            AxiomDB adb;
-            for(const AlphaNode *m = alpha.head;m;m=m->next)
-            {
-                if(!adb.insert(m->axiom))
-                    throw exception("[%s] unexpected multiple alpha axiom <%s>", **title, **(m->axiom.label));
-            }
-            
-            for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
-            {
-                const Axiom &axiom = **it;
-                if(adb.search(axiom)) continue;
-                if(axiom.isApparent())
-                {
-                    aliasing::_(beta).push_back( new AlphaNode(axiom) );
-                }
-            }
-            
-            Y_JAXIOM(std::cerr << "[" << title << "] <alpha>" << std::endl);
-            collect(alpha);
-            Y_JAXIOM(std::cerr << "[" << title << "] <alpha/>" << std::endl);
-
-            Y_JAXIOM(std::cerr << "[" << title << "] <beta>" << std::endl);
-            collect(beta);
-            Y_JAXIOM(std::cerr << "[" << title << "] <beta/>" << std::endl);
             
         }
         
-        void   Grammar:: collect(const AlphaList &alist )
-        {
-            for(const AlphaNode *m = alist.head;m;m=m->next)
-            {
-                const Axiom &axiom = m->axiom;
-                TermPool    &terms = aliasing::_(m->terms);
-                
-                Y_JAXIOM(std::cerr << "|_<" <<  axiom.label << ">" << std::endl);
-                
-                if(!axiom.joinFirstTerminalTo(terms))
-                {
-                    throw exception("[%s] <%s> has no starting terminal!", **title, **(m->axiom.label) );
-                }
-                
-                for(const TermNode *t=terms.head;t;t=t->next)
-                {
-                    Y_JAXIOM(std::cerr << "  \\_<" <<  t->term.label << ">" << std::endl);
-                }
-            }
-        }
-
+        
        
 
     }

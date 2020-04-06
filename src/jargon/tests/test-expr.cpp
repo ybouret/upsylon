@@ -32,7 +32,8 @@ namespace {
             Aggregate &MULOP = act("MULOP");
             MULOP << POWER << zom( cat( choice( term('*'), term('/') ), POWER ) );
             
-            ADDOP << MULOP << zom( cat( choice( term('+'), term('-') ), MULOP ) );
+            Axiom &PM = choice( term('+'), term('-') );
+            ADDOP << opt(PM) << MULOP << zom( cat( PM , MULOP ) );
             
             endl("endl", "[:endl:]");
             drop("blank","[:blank:]");
@@ -54,10 +55,10 @@ Y_UTEST(expr)
 {
     Axiom::Verbose = true;
     Expr expr;
-    if( argc>1 )
+    if(argc>1 )
     {
         const string    fileName = argv[1];
-        auto_ptr<XNode> tree = expr.parse(Module::OpenFile(expr.cache,fileName));
+        auto_ptr<XNode> tree = expr.parseFile(fileName);
         
         tree->graphViz("expr_tree.dot");
         

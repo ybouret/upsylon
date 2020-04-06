@@ -12,45 +12,6 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //----------------------------------------------------------------------
-        //
-        //! node to store associated first terminal(s) for each apparent axiom
-        //
-        //----------------------------------------------------------------------
-        class TermNode : public Object, public inode<TermNode>
-        {
-        public:
-            explicit TermNode(const Terminal &) throw(); //!< setup
-            virtual ~TermNode() throw();                 //!< cleanup
-           
-            const Terminal &term;                        //!< reference
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(TermNode);
-        };
-        
-        typedef core::list_of_cpp<TermNode> TermPool; //!< alias
-        
-        //----------------------------------------------------------------------
-        //
-        //! node to store apparent axioms
-        //
-        //----------------------------------------------------------------------
-        class AlphaNode : public Object, public inode<AlphaNode>
-        {
-        public:
-            //! setup
-            explicit AlphaNode(const Axiom &args) throw(); //!< setup
-            virtual ~AlphaNode() throw();                  //!< cleanup
-            
-            const Axiom &axiom; //!< apparent axiom
-            TermPool     terms; //!< associated first terminal(s)
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(AlphaNode);
-        };
-        
-        typedef core::list_of_cpp<AlphaNode> AlphaList;
         
         //----------------------------------------------------------------------
         //
@@ -132,13 +93,10 @@ XCache  &xcache
             }
             
             bool isTerminal() const throw(); //!< terminal
+            bool isCompound() const throw(); //!< alt|agg
             bool isApparent() const throw(); //!< not vanishing aggregate
+            bool isWildcard() const throw(); //!< option/repeat
             
-            //! join to manifest first apparent from *this
-            bool joinFirstApparentTo(AlphaList &) const;
-            
-            //! join to the list the first terminal from *this
-            bool joinFirstTerminalTo(TermPool &) const;
             
         protected:
             void           *self; //!< pointer to derived class

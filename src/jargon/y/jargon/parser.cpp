@@ -11,12 +11,12 @@ namespace upsylon {
         {
         }
         
-        XNode * Parser:: parse(Module *module)
+        XNode * Parser:: parse(Module *module, const bool doAST)
         {
             Source __source( module );
             source = & __source;
             try {
-                XNode *ast = accept(*this,__source);
+                XNode *ast = accept(*this,__source,doAST);
                 source = NULL;
                 return ast;
             }
@@ -26,6 +26,9 @@ namespace upsylon {
                 throw;
             }
         }
+        
+      
+
         
         void Parser:: checkUnivocal(const Lexical::Rule &rule) const
         {
@@ -43,7 +46,6 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             validate(false);
-            assert(alpha.size>0);
             
             //------------------------------------------------------------------
             //
@@ -51,24 +53,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             FirstChars  fc;
-            for(const AlphaNode *anode=alpha.head;anode;anode=anode->next)
-            {
-                fc.free();
-                const Axiom    &axiom = anode->axiom;
-                const TermPool &terms = anode->terms; assert(terms.size>0);
-                for(const TermNode *tnode=terms.head;tnode;tnode=tnode->next)
-                {
-                    const string           &termID = *(tnode->term.label);
-                    Lexical::Rule * const * ppRule = hoard.search_by(termID);
-                    if(!ppRule)
-                    {
-                        throw exception("[%s] unexpected missing terminal rule <%s>",**title, *termID);
-                    }
-                    (**ppRule).motif->adjoin(fc);
-                }
-                std::cerr << "for <" << axiom.label << "> : " << fc << "" << std::endl;
-                
-            }
+            
         }
 
         

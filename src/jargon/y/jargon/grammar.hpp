@@ -43,8 +43,6 @@ namespace upsylon {
             axioms(),
             iAlt(1),
             iAgg(1),
-            alpha(),
-            beta(),
             maxLength(0)
             {
             }
@@ -136,7 +134,7 @@ namespace upsylon {
             void validate(bool allowStandalone=false);
             
             //! main call, try to accept the ground axiom
-            XNode *accept(Lexer &, Source &) const;
+            XNode *accept(Lexer &, Source &, const bool doAST = true) const;
             
             //! recursive call to AST
             XNode *AST( XNode *xnode ) const throw();
@@ -184,11 +182,8 @@ namespace upsylon {
             XNode *onInternal(XNode *) const throw();
             //! merge child->children into children
             void   amalgamate( XList &children, XNode *child) const throw();
-            void   collect(const AlphaList &);
             
         public:
-            const AlphaList alpha;      //!< list of first apparent Axiom(s)
-            const AlphaList beta;       //!< list of other apparent Axiom(s)
             const size_t    maxLength;  //!< maximum length of labels
             
            
