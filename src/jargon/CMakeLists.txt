@@ -18,6 +18,25 @@ SET( xnode_srcs ${xnode_decl} ${xnode_impl})
 INSTALL( FILES ${xnode_decl} DESTINATION include/y/jargon/xnode )
 SOURCE_GROUP( jargon/xnode FILES ${xnode_srcs} )
 
+FILE( GLOB lexical_decl y/jargon/lexical/*.hpp)
+FILE( GLOB lexical_impl y/jargon/lexical/*.cpp)
+SET( lexical_srcs ${lexical_decl} ${lexical_impl})
+INSTALL( FILES ${lexical_decl} DESTINATION include/y/jargon/lexical )
+SOURCE_GROUP( jargon/lexical FILES ${lexical_srcs} )
+
+FILE( GLOB lexical_event_decl y/jargon/lexical/event/*.hpp)
+FILE( GLOB lexical_event_impl y/jargon/lexical/event/*.cpp)
+SET( lexical_event_srcs ${lexical_event_decl} ${lexical_event_impl})
+INSTALL( FILES ${lexical_event_decl} DESTINATION include/y/jargon/lexical/event )
+SOURCE_GROUP( jargon/lexical/event FILES ${lexical_event_srcs} )
+
+FILE( GLOB lexical_plugin_decl y/jargon/lexical/plugin/*.hpp)
+FILE( GLOB lexical_plugin_impl y/jargon/lexical/plugin/*.cpp)
+SET( lexical_plugin_srcs ${lexical_plugin_decl} ${lexical_plugin_impl})
+INSTALL( FILES ${lexical_plugin_decl} DESTINATION include/y/jargon/lexical/plugin )
+SOURCE_GROUP( jargon/lexical/plugin FILES ${lexical_plugin_srcs} )
+
+
 FILE( GLOB grammar_decl y/jargon/grammar/*.hpp)
 FILE( GLOB grammar_impl y/jargon/grammar/*.cpp)
 SET( grammar_srcs ${grammar_decl} ${grammar_impl})
@@ -45,6 +64,7 @@ ADD_LIBRARY( y-jargon STATIC
  ${axiom_compound_srcs}
  ${axiom_wildcard_srcs}
  ${grammar_srcs}
+ ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs} 
  )
 INSTALL( TARGETS y-jargon ARCHIVE DESTINATION lib )
 

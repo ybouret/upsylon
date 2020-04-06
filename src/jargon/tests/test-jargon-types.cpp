@@ -16,7 +16,7 @@ static inline void fmtesc( char *ch, const char C)
 }
 Y_UTEST(jargon_types)
 {
-    
+    if(false)
     {
         const size_t lmax = 5;
         ios::ocstream fp("encoded.hxx");

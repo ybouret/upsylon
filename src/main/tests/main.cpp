@@ -215,17 +215,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(zfi);
     Y_UTEST(closest);
 
-    // jargon
-    Y_UTEST(jargon_types);
-    Y_UTEST(jargon_module);
-    Y_UTEST(jargon_source);
-    Y_UTEST(jargon_pattern);
-    Y_UTEST(jargon_posix);
-    Y_UTEST(jargon_regexp);
-    Y_UTEST(jargon_regcom);
-    Y_UTEST(jargon_scanner);
-    Y_UTEST(jargon_lexer);
-    Y_UTEST(jargon_matching);
+   
 }
 Y_UTEST_EXEC()
 
