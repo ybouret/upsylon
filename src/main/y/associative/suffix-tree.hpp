@@ -458,6 +458,13 @@ namespace upsylon {
             tnode->impl = 0;
         }
         
+        inline void swap_with( suffix_tree &tree ) throw()
+        {
+            cswap(root,tree.root);
+            dlist.swap_with(tree.dlist);
+            dpool.swap_with(tree.dpool);
+        }
+        
     protected:
         data_list            dlist; //!< list of data nodes
         data_pool            dpool; //!< pool of data nodes

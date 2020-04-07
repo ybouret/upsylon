@@ -59,8 +59,46 @@ namespace upsylon {
     
     namespace Jargon {
 
-        
-       
+        void Axiom:: reduce()
+        {
+            DB all;
+            collect(all);
+            parents.swap_with(all);
+        }
+
+        void Axiom:: collect( DB &all ) const
+        {
+            for(DB::const_iterator i = parents.begin(); i != parents.end(); ++i )
+            {
+                const Axiom &parent = *(*i).as<Axiom>();
+                if(all.search(parent)) continue;
+                
+                switch(parent.uuid)
+                {
+                    case Aggregate::UUID:
+                        if(parent.as<Aggregate>().feature!=Aggregate::Vanishing)
+                        {
+                            all.secure(parent);
+                        }
+                        else
+                        {
+                            //forward
+                            parent.collect(all);
+                        }
+                        break;
+                        
+                    case Option::     UUID:
+                    case ZeroOrMore:: UUID:
+                    case OneOrMore::  UUID:
+                    case Alternate::  UUID: parent.collect(all); break;
+                        
+                    default:
+                        throw exception("<%s> should be a parent for <%s>", **(parent.label), **label);
+                }
+            }
+            
+        }
+
         
         
     }

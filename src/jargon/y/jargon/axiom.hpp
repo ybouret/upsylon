@@ -144,7 +144,8 @@ XCache  &xcache
             
         public:
             DB parents;
-           
+            void reduce();
+            void collect( DB &all ) const;
         };
         
        

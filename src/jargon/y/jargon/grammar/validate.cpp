@@ -86,10 +86,25 @@ namespace upsylon {
             V.sort();
             Y_JAXIOM(V.display());
             
+            // first pass
             for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
             {
-                
+                Axiom &axiom = **it;
+                axiom.reduce();
             }
+            
+            //second pass
+            for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
+            {
+                Axiom &axiom = **it;
+                if(!axiom.isTerminal())
+                {
+                    axiom.parents.release_all();
+                }
+            }
+            
+            Y_JAXIOM(V.display());
+
             
         }
         
