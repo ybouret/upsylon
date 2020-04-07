@@ -121,7 +121,22 @@ namespace upsylon {
             assert(i<N);
             return addr[i];
         }
-
+        
+        //! cast address
+        template <typename T>
+        const T * as(const size_t i=0) const throw()
+        {
+            const key_address &self = *this;
+            return static_cast<const T *>( self[i] );
+        }
+        
+        //! cast address
+        template <typename T>
+        T * as(const size_t i=0)   throw()
+        {
+            const key_address &self = *this;
+            return (T*)( self[i] );
+        }
 
     private:
         Y_DISABLE_ASSIGN(key_address);

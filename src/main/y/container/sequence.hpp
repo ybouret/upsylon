@@ -72,6 +72,9 @@ namespace upsylon
             }
         }
 
+      
+        
+        
     protected:
         //! constructor
         explicit sequence() throw() : container() {}

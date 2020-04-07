@@ -1,6 +1,7 @@
 
 #include "y/jargon/axiom/compound.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
     
@@ -24,6 +25,7 @@ namespace upsylon {
         void Compound:: add(Axiom &axiom)
         {
             push_back( new Member(axiom) );
+            aliasing::_(tail->axiom.parents).secure(*this);
         }
 
         

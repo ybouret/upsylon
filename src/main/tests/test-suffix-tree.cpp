@@ -78,7 +78,8 @@ Y_UTEST(stree)
     std::cerr << "#stree      : " << stree.entries() << std::endl;
     std::cerr << "#collisions : " << collisions      << std::endl;
 
-    if( itree.entries() <= 100 )
+    const bool shallSave =itree.entries() <= 100;
+    if(  shallSave )
     {
         itree.get_root().graphViz("itree.dot");
         display( itree.begin(),  itree.end()  );
@@ -143,6 +144,16 @@ Y_UTEST(stree)
         Y_ASSERT( stree.has( keys[i] ) );
     }
 
+    if( shallSave )
+    {
+        itree.get_root().graphViz("itree_clr.dot");
+        itree.trim();
+        itree.get_root().graphViz("itree_trm.dot");
+
+    }
+    
+    itree.release_all();
+    
 
 
     std::cerr << "end..." << std::endl;

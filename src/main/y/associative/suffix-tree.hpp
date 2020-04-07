@@ -43,6 +43,8 @@ namespace upsylon {
                 explicit node_type(node_type *, const uint8_t) throw(); //!< setup
                 virtual ~node_type() throw();                           //!< cleanup
                 
+                void   trim()   throw(); //!< trim dead branches
+                size_t leaves() const throw(); //!< number of reachable leaves
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(node_type);
                 virtual void vizCore(ios::ostream &) const;
@@ -73,7 +75,8 @@ namespace upsylon {
             //! check registered
             bool has( const memory::ro_buffer &buffer ) const throw();
 
-
+            void trim() throw();
+            
         protected:
             explicit    suffix_tree(); //!< setup
             node_type  *root;          //!< root node

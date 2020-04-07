@@ -45,16 +45,27 @@ XCache  &xcache
         class Axiom : public  CountedObject
         {
         public:
+            //----------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //----------------------------------------------------------------------
             static bool                  Verbose; //!< global verbosity flag
             typedef key_address<1>       Address; //!< storing address
-            typedef suffix_tree<Address> DB_Type;
+            typedef suffix_tree<Address> DB_Type; //!< base class for database
+            
+            //! ligweigth database
             class DB : public DB_Type
             {
             public:
-                explicit DB();
-                virtual ~DB() throw();
+                explicit DB();                            //!< setup
+                virtual ~DB() throw();                    //!< cleanup
                 bool insert(const Axiom &);               //!< insert = greenLight
                 bool search(const Axiom &) const throw(); //!< search = wasVisited
+                void secure(const Axiom &);               //!< ensure inserted
+                void reduce();                            //!< reduce parenthood
+                void display(const char *pfx=0) const;    //!< display with parents
+                void sort();
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DB);
@@ -126,13 +137,14 @@ XCache  &xcache
             {
             }
             
-            ////! check label for derived class, not beginning by reserved chars
-            //void checkLabel(const char *which) const;
+         
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Axiom);
             
-            
+        public:
+            DB parents;
+           
         };
         
        

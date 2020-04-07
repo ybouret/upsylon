@@ -83,7 +83,13 @@ namespace upsylon {
                 throw exception("[%s] unexpected visited entries",**title);
             }
             
+            V.sort();
+            Y_JAXIOM(V.display());
             
+            for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
+            {
+                
+            }
             
         }
         

@@ -51,13 +51,18 @@ namespace upsylon {
     
 }
 
-#include "y/jargon/axiom/db.hpp"
+#include "y/container/task.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/memory/pooled.hpp"
+
 namespace upsylon {
     
     namespace Jargon {
-        
-        
 
+        
+       
+        
+        
     }
 }
 

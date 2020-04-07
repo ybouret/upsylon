@@ -5,7 +5,6 @@
 #define Y_JARGON_AXIOM_VISITOR_INCLUDED 1
 
 #include "y/jargon/axiom/all.hpp"
-#include "y/jargon/axiom/db.hpp"
 #include "y/jargon/xcache.hpp"
 
 namespace upsylon {
@@ -57,8 +56,7 @@ namespace upsylon {
             //! populate addresses
             void supplyWith(const Axiom &);
             
-            //! display the tree
-            void display() const;
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Visitor);

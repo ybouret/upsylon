@@ -12,38 +12,12 @@ namespace upsylon {
         {
         }
         
-#if 0
-        bool Visitor:: wasVisited(const Axiom &axiom) const throw()
-        {
-            const Axiom::Address addr = axiom;
-            return search_by(addr) != NULL;
-        }
-        
-        
-        bool Visitor:: greenLight( const Axiom &axiom )
-        {
-            const Axiom::Address addr = axiom;
-            return insert_by(addr,addr);
-        }
-#endif
         
         bool Visitor::Check(const Axiom &, void *) throw()
         {
             return true;
         }
-        
-        void Visitor:: display() const
-        {
-            std::cerr << "<Visitor entries=" << entries() << ">" << std::endl;
-            for( const_iterator it=begin(); it!=end();++it)
-            {
-                const Axiom::Address &addr  = *it;
-                const Axiom          *axiom = static_cast<const Axiom *>( addr[0] );
-                std::cerr << "\t<" << axiom->label << ">" << std::endl;
-            }
-            std::cerr << "<Visitor/>" << std::endl;
-
-        }
+       
 
         
     }

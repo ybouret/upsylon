@@ -42,9 +42,12 @@ namespace upsylon {
         protected:
             //! setup for derived classes
             template <typename LABEL> inline
-            explicit Wildcard(const LABEL &l, const uint32_t u, Axiom &a) :
+            explicit Wildcard(const LABEL   &l,
+                              const uint32_t u,
+                              Axiom         &a) :
             Internal(l,u), axiom(a)
             {
+                a.parents.secure(*this);
             }
             
         private:
