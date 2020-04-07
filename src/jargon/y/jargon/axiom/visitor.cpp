@@ -4,7 +4,7 @@ namespace upsylon {
     
     namespace Jargon {
         
-        Visitor:: Visitor() : AxiomDB()
+        Visitor:: Visitor() : Axiom::DB()
         {
         }
         

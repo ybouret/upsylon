@@ -14,7 +14,7 @@ namespace upsylon {
       
         
         //! light database of visited axioms
-        class Visitor : public AxiomDB
+        class Visitor : public Axiom::DB
         {
         public:
             //------------------------------------------------------------------

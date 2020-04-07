@@ -1,26 +1,25 @@
 
-#include "y/jargon/axiom/db.hpp"
+#include "y/jargon/axiom.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
         
-        AxiomDB :: AxiomDB() :
-        suffix_tree<Axiom::Address>()
+        Axiom::DB :: DB() : DB_Type()
         {
         }
         
-        AxiomDB:: ~AxiomDB() throw()
+        Axiom:: DB:: ~DB() throw()
         {
         }
         
-        bool AxiomDB:: insert(const Axiom &axiom)
+        bool Axiom::DB:: insert(const Axiom &axiom)
         {
             const Axiom::Address addr = axiom;
             return insert_by(addr,addr);
         }
         
-        bool AxiomDB:: search(const Axiom &axiom) const throw()
+        bool Axiom:: DB:: search(const Axiom &axiom) const throw()
         {
             const Axiom::Address addr = axiom;
             return search_by(addr) != NULL;

@@ -1,6 +1,6 @@
 
 //! \file
-
+#if 0
 #ifndef Y_JARGON_AXIOM_DB_INCLUDED
 #define Y_JARGON_AXIOM_DB_INCLUDED 1
 
@@ -28,4 +28,4 @@ namespace upsylon {
 }
 
 #endif
-
+#endif

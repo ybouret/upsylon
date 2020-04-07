@@ -45,9 +45,20 @@ XCache  &xcache
         class Axiom : public  CountedObject
         {
         public:
-            static bool             Verbose; //!< global verbosity flag
-            typedef key_address<1>  Address; //!< storing address
-            
+            static bool                  Verbose; //!< global verbosity flag
+            typedef key_address<1>       Address; //!< storing address
+            typedef suffix_tree<Address> DB_Type;
+            class DB : public DB_Type
+            {
+            public:
+                explicit DB();
+                virtual ~DB() throw();
+                bool insert(const Axiom &);               //!< insert = greenLight
+                bool search(const Axiom &) const throw(); //!< search = wasVisited
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(DB);
+            };
             
             //------------------------------------------------------------------
             //
