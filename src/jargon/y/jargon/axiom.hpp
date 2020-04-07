@@ -47,7 +47,8 @@ XCache  &xcache
         public:
             static bool             Verbose; //!< global verbosity flag
             typedef key_address<1>  Address; //!< storing address
-
+            
+            
             //------------------------------------------------------------------
             //
             // C++
