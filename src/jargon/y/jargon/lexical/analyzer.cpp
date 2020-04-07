@@ -1,6 +1,7 @@
 
 #include "y/jargon/lexical/analyzer.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
     
@@ -22,8 +23,8 @@ namespace upsylon {
             Analyzer:: Analyzer(const string &id) :
             Scanner( new string(id) ),
             current(this),
-            units(),
-            calls(),
+            lexemes(),
+            history(),
             scanners(),
             dict()
             {
@@ -45,8 +46,8 @@ namespace upsylon {
             
             void Analyzer:: restart() throw()
             {
-                calls.free();
-                units.release();
+                history.free();
+                aliasing::_(lexemes).release();
                 current = this;
             }
             
@@ -108,7 +109,7 @@ namespace upsylon {
             void Analyzer:: unget( Unit *unit ) throw()
             {
                 assert(unit);
-                units.push_front(unit);
+                aliasing::_(lexemes).push_front(unit);
             }
             
             //const Unit * Analyzer:: peek() const throw() { return units.head; }
@@ -118,9 +119,9 @@ namespace upsylon {
             {
             TRY_GET:
                 assert(current);
-                if(units.size)
+                if(lexemes.size)
                 {
-                    return units.pop_front();
+                    return aliasing::_(lexemes).pop_front();
                 }
                 else
                 {
@@ -138,7 +139,7 @@ namespace upsylon {
                             {
                                 case ControlEvent::Call:
                                     Y_JSCANNER( std::cerr << '[' << label << ']' << "@call " << '[' << ctrl->label << ']' << std::endl);
-                                    calls.push(current);
+                                    history.push(current);
                                     leap( *(ctrl->label),"call");
                                     break;
                                     
@@ -149,12 +150,12 @@ namespace upsylon {
                                     
                                 case ControlEvent::Back:
                                     Y_JSCANNER( std::cerr << '[' << label << ']' << "@back" << std::endl);
-                                    if( calls.size() <= 0)
+                                    if( history.size() <= 0)
                                     {
                                         throw exception("[[%s]] unexpected no previous call!",**label);
                                     }
-                                    current = calls.peek(); assert(current);
-                                    calls.pop();
+                                    current = history.peek(); assert(current);
+                                    history.pop();
                                     break;
                             }
                             goto TRY_GET;

@@ -27,8 +27,8 @@ namespace upsylon {
                 // types and definition
                 //
                 //--------------------------------------------------------------
-                typedef lstack<Scanner *>                    Calls;    //!< alias to store calls
-                typedef suffix_batch<string,Scanner::Handle> Scanners; //!< database of scanners
+                typedef lstack<Scanner *>                    CallStack;  //!< alias to store calls
+                typedef suffix_batch<string,Scanner::Handle> Scanners;   //!< database of scanners
                 
                 //--------------------------------------------------------------
                 //
@@ -80,8 +80,8 @@ namespace upsylon {
                 template <typename ID>
                 Plugin & getPlugin(const ID &id)
                 {
-                    const Tag     tag = Tags::Make(id);
-                    const string &key = *tag;
+                    const Tag              tag = Tags::Make(id);
+                    const string          &key = *tag;
                     const Scanner::Handle *pps = scanners.search_by(key);
                     return extract(pps,key);
                 }
@@ -90,8 +90,10 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
                 Scanner   *current;
-                Unit::List units;
-                Calls      calls;
+            public:
+                const Unit::List lexemes;
+            private:
+                CallStack  history;
                 Scanners   scanners;
                 
                 bool       store(Scanner::Handle &scan);  //!< insert and set dict_
