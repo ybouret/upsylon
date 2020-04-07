@@ -23,12 +23,17 @@ namespace upsylon {
         class XCache; //!< forward declaration
         
         
+#define Y_JARGON_AXIOM_ARGS_ \
+XNode * &xtree,              \
+Lexer   &lexer,              \
+Source  &source,             \
+XCache  &xcache,             \
+const Axiom * &
+        
         //! accept method arguments
-#define Y_JARGON_AXIOM_ARGS \
-XNode * &xtree,             \
-Lexer   &lexer,             \
-Source  &source,            \
-XCache  &xcache
+#define Y_JARGON_AXIOM_ARGS Y_JARGON_AXIOM_ARGS_ guess
+        
+#define Y_JARGON_AXIOM_ACCEPT(TREE) accept(TREE,lexer,source,xcache,guess)
         
         //! for verbosity
 #define Y_JAXIOM(CODE) do { if(Axiom::Verbose) { CODE; } } while(false)

@@ -22,7 +22,7 @@ namespace upsylon {
             {
                 for(const Member *member=head;member;member=member->next)
                 {                    
-                    if( ! member->axiom.accept(ltree,lexer,source,xcache) )
+                    if( ! member->axiom.Y_JARGON_AXIOM_ACCEPT(ltree) )
                     {
                         XNode::Restore(ltree, lexer, xcache);
                         return false;

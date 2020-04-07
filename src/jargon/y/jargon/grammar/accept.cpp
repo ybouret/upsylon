@@ -10,10 +10,10 @@ namespace upsylon {
         XNode * Grammar:: accept(Lexer &lexer, Source &source, const bool doAST) const
         {
             assert(ground);
-            XNode       *xtree    = NULL;
+            XNode       *xtree = NULL;
+            const Axiom *guess = NULL;
             Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
-            
-            if( ground->accept(xtree,lexer,source,xcache) )
+            if( ground->Y_JARGON_AXIOM_ACCEPT(xtree) )
             {
                 //--------------------------------------------------------------
                 //
@@ -42,13 +42,13 @@ namespace upsylon {
                                        lexeme->line,
                                        lexeme->column,
                                        **title);
-                        lexeme->writeTo(excp,getTerminal(lexeme->label).isDefinite());
+                        lexeme->writeTo(excp,toTerminal(lexeme).isDefinite());
                         
                         const Lexeme *last = XNode::LastLexeme(xtree);
                         if(last)
                         {
                             excp.cat(" after");
-                            last->writeTo(excp,getTerminal(last->label).isDefinite());
+                            last->writeTo(excp,toTerminal(lexeme).isDefinite());
                         }
                         throw excp;
                         
@@ -79,16 +79,7 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 std::cerr << "[Rejected!!]" << std::endl;
-                Lexeme *lexeme = lexer.get(source);
-                if(lexeme)
-                {
-                    lexer.unget(lexeme);
-                    std::cerr << "with lexeme " << *lexeme << std::endl;
-                }
-                else
-                {
-                    std::cerr << "without lexeme" << std::endl;
-                }
+                std::cerr << "with #" << lexer.lexemes.size << std::endl;
                 
 #if 0
                 Lexeme *lexeme = lexer.get(source);

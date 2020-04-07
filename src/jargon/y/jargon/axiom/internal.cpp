@@ -13,7 +13,7 @@ namespace upsylon {
         {
         }
         
-        bool Internal_:: accept(Y_JARGON_AXIOM_ARGS) const
+        bool Internal_:: accept(Y_JARGON_AXIOM_ARGS_) const
         {
             (void) xtree;
             (void) lexer;

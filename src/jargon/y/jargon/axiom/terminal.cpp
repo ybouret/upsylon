@@ -21,7 +21,7 @@ namespace upsylon {
         }
 
         
-        bool Terminal:: accept(Y_JARGON_AXIOM_ARGS) const
+        bool Terminal:: accept(Y_JARGON_AXIOM_ARGS_) const
         {
             assert(NULL==xtree||xtree->isInternal());
             Lexeme *lexeme = lexer.get(source);

@@ -30,7 +30,7 @@ namespace upsylon {
             XNode           *ltree = xcache.query(*this);
             try
             {
-                while(axiom.accept(ltree,lexer,source,xcache))
+                while(axiom.Y_JARGON_AXIOM_ACCEPT(ltree))
                 {
                     ++count;
                 }

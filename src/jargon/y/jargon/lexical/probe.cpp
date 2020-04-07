@@ -14,7 +14,7 @@ namespace upsylon {
             {
                 chars = &source;
                 ctrl  = 0;
-                PROBE:
+            PROBE:
                 if(source.isEmpty())
                 {
                     assert(0==source.io.size);
@@ -24,7 +24,7 @@ namespace upsylon {
                 {
                     //----------------------------------------------------------
                     //
-                    // looking for a fisrt bestRule
+                    // looking for a first bestRule
                     //
                     //----------------------------------------------------------
                     Cache       &cache    = source.io.cache;
@@ -41,17 +41,21 @@ namespace upsylon {
                     
                     if(!bestRule)
                     {
+                        //------------------------------------------------------
+                        //
                         // syntax error
-                        assert(source.io.size>0);
+                        //
+                        //------------------------------------------------------
                         assert(0==bestExpr.size);
-                        const Char   *badChar = source.io.head;
-                        const uint8_t badCode = badChar->code;
-                        throw exception("%s:%d:%d: unexpected char '%s' for <%s>",
-                                        **(badChar->tag),
-                                        badChar->line,
-                                        badChar->column,
-                                        cchars::encoded[badCode],
-                                        **label);
+                        assert(source.io.size>0);
+                        const Char &ctx = *(source.io.head);
+                        exception excp("%s:%d:%d: [%s] unexpected starting with '%s'",
+                                       **ctx.tag,
+                                       ctx.line,
+                                       ctx.column,
+                                       **label,
+                                       cchars::encoded[ctx.code]);
+                        throw excp;
                     }
                     
                     size_t bestSize = bestExpr.size;
@@ -97,7 +101,6 @@ namespace upsylon {
                     // processing bestRule
                     //
                     //----------------------------------------------------------
-                    //std::cerr << "[" << bestRule->label << ":" << bestExpr << "]";
                     
                     //__________________________________________________________
                     //
@@ -136,7 +139,7 @@ namespace upsylon {
                                     unit->swap_with(bestExpr);
                                     return unit;
                                 }
-                                  
+                                    
                                 case RegularEvent::Discard:
                                 {
                                     //Y_JSCANNER(std::cerr << '[' << label << ']' << "/<" << bestRule->label << ">" << std::endl);
@@ -155,6 +158,7 @@ namespace upsylon {
                             return NULL;
                     }
                     throw exception("[[%s]] corrupted scanner code!", **label);
+                    
                 }
                 
             }

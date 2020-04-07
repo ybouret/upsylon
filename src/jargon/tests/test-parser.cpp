@@ -62,7 +62,7 @@ namespace {
             // lexical
             endl("endl",  "[:endl:]");
             drop("blanks","[:blank:]");
-            discard("error", ".", this, &JSON_Parser::syntaxError);
+            //discard("error", ".", this, &JSON_Parser::syntaxError);
             
             graphViz("json.dot");
             compile();
@@ -77,9 +77,14 @@ namespace {
         {
             assert(token.size>=1);
             assert(source);
+            std::cerr << "Error caused by " << token << std::endl;
+            const Token &io = source->io;
+            std::cerr << "io=[" << io << "]" << std::endl;
+            std::cerr << "lx=[" << lexemes.size << "]" << std::endl;
             
+            throw exception("BAD!");
             Token bad( token );
-            source->collectNext(bad);
+            //source->collectNext(bad);
             const Char &C = *(bad.head);
             exception excp("%s:%d:%d: %s syntax error '",
                             **C.tag,C.line,C.column,**title);

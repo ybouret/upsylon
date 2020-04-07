@@ -17,7 +17,7 @@ namespace upsylon {
         {
             for(const Member *member=head;member;member=member->next)
             {
-                if( member->axiom.accept(xtree, lexer, source, xcache) )
+                if( member->axiom.Y_JARGON_AXIOM_ACCEPT(xtree) )
                 {
                     Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl);
                     return true;

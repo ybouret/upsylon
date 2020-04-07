@@ -10,7 +10,7 @@ namespace upsylon {
         {
         }
 
-        bool Inactive::accept(Y_JARGON_AXIOM_ARGS) const
+        bool Inactive::accept(Y_JARGON_AXIOM_ARGS_) const
         {
             (void) lexer;
             (void) source;

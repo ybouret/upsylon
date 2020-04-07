@@ -22,7 +22,7 @@ namespace upsylon {
         bool Option:: accept(Y_JARGON_AXIOM_ARGS) const
         {
             XNode       *ltree = NULL;
-            if( axiom.accept(ltree,lexer,source,xcache))
+            if( axiom.Y_JARGON_AXIOM_ACCEPT(ltree))
             {
                 assert(ltree!=NULL);
                 XNode::Advance(xtree,ltree);
