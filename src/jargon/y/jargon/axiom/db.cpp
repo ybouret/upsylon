@@ -25,6 +25,13 @@ namespace upsylon {
             const Axiom::Address addr = axiom;
             return search_by(addr) != NULL;
         }
+        
+        void Axiom:: DB:: remove(const Axiom &axiom) throw()
+        {
+            const Axiom::Address addr = axiom;
+            (void)remove_by(addr);
+        }
+        
 
         void Axiom:: DB:: secure(const Axiom &axiom)
         {

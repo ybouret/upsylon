@@ -63,6 +63,7 @@ XCache  &xcache
                 bool insert(const Axiom &);               //!< insert = greenLight
                 bool search(const Axiom &) const throw(); //!< search = wasVisited
                 void secure(const Axiom &);               //!< ensure inserted
+                void remove(const Axiom &) throw();       //!< remove
                 void reduce();                            //!< reduce parenthood
                 void display(const char *pfx=0) const;    //!< display with parents
                 void sort();

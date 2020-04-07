@@ -23,9 +23,8 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // initialize reverse graph
+            // check
             //__________________________________________________________________
-        
             size_t numTerm = 0;
             for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
             {
@@ -69,7 +68,7 @@ namespace upsylon {
             Y_JAXIOM(std::cerr << "[" << title << "] checking foreign axioms..." << std::endl);
             for(Visitor::iterator it=V.begin();it!=V.end();++it)
             {
-                const Axiom::Address &addr = *it;
+                const Axiom::Address &addr  = *it;
                 const Axiom          &axiom = *static_cast<const Axiom*>( addr[0] );
                 if( !owns(axiom) ) throw exception("[%s] has foreign <%s>", **title, **axiom.label);
             }
@@ -100,6 +99,7 @@ namespace upsylon {
                 if(!axiom.isTerminal())
                 {
                     axiom.parents.release_all();
+                    V.remove(axiom);
                 }
             }
             
