@@ -21,7 +21,6 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         class XCache;  //!< forward declaration
-        class AxiomDB; //!< forward declaration
         
         //! accept methods, may change...
 #define Y_JARGON_AXIOM_ARGS_ \
