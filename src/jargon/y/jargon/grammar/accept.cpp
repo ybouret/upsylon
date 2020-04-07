@@ -92,9 +92,9 @@ namespace upsylon {
                     last->writeTo(excp, isDefinite(last) );
                     if(last->prev)
                     {
-                        last = last->prev;
+                        const Lexeme *prev = last->prev;
                         excp.cat(" after ");
-                        last->writeTo(excp, isDefinite(last) );
+                        prev->writeTo(excp, isDefinite(prev) );
                     }
                    
                     throw excp;
