@@ -11,7 +11,6 @@ namespace upsylon {
         {
             assert(ground);
             XNode       *xtree = NULL;
-            const Axiom *guess = NULL;
             Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
             if( ground->Y_JARGON_AXIOM_ACCEPT(xtree) )
             {
@@ -80,7 +79,6 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 std::cerr << "[Rejected!!]" << std::endl;
                 std::cerr << "with #" << lexer.lexemes.size << std::endl;
-                if(guess) std::cerr << "guess=" << guess->label << std::endl;
                 
                 const Lexemes &analyzed = lexer.lexemes;
                 if(analyzed.size<=0)
@@ -98,10 +96,7 @@ namespace upsylon {
                         excp.cat(" after ");
                         last->writeTo(excp, isDefinite(last) );
                     }
-                    if(guess)
-                    {
-                        
-                    }
+                   
                     throw excp;
                 }
                 
