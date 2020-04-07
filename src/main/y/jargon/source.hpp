@@ -48,9 +48,6 @@ namespace upsylon {
             size_t            prefetch(size_t n);             //!< prefetch at most n Char
             bool              isAlive();                      //!< check if get() shall return a valid Char
             bool              isEmpty();                      //!< ! isAlive
-            Cache            &cache()  const throw();         //!< shared cache access
-            const Char::List &IO()     const throw();         //!< read-only I/O status
-            
             
             //__________________________________________________________________
             //
@@ -60,7 +57,7 @@ namespace upsylon {
             virtual void store(char  C);                 //!< ios::istream interface
             
             //__________________________________________________________________
-            //
+            //b
             // for error processing
             //__________________________________________________________________
             void collectNext(Token &bad); //!< try to find a 'bad' token
@@ -69,7 +66,9 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Source);
             typedef lstack<const Module::Handle> History;
             Module::Handle       handle;
-            Token                iobuff;
+        public:
+            const Token          io; //!< I/O + cache
+        private:
             History              history;
             Char                *tryGet();
             

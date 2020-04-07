@@ -13,7 +13,7 @@ namespace upsylon {
         
         Source:: Source(Module *module) throw() :
         handle(module),
-        iobuff( handle->cache ),
+        io( handle->cache ),
         history()
         {
             
@@ -52,12 +52,12 @@ namespace upsylon {
 
         Char * Source:: get()
         {
-            return (iobuff.size>0) ? iobuff.pop_front() : tryGet();
+            return (io.size>0) ? aliasing::_(io).pop_front() : tryGet();
         }
         
         bool Source:: isAlive()
         {
-            if(iobuff.size>0)
+            if(io.size>0)
             {
                 return true;
             }
@@ -66,7 +66,7 @@ namespace upsylon {
                 Char *ch = tryGet();
                 if(ch)
                 {
-                    iobuff.push_back(ch);
+                    aliasing::_(io).push_back(ch);
                     return true;
                 }
                 else
@@ -82,15 +82,9 @@ namespace upsylon {
         }
         
 
-        const Char::List  & Source:: IO() const throw()
-        {
-            return iobuff;
-        }
+      
         
-        Cache & Source:: cache() const throw()
-        {
-            return aliasing::_(iobuff.cache);
-        }
+       
         
         size_t  Source:: prefetch(size_t n)
         {
@@ -99,7 +93,7 @@ namespace upsylon {
             {
                 Char *ch = tryGet();
                 if(!ch) break;
-                iobuff.push_back(ch);
+                aliasing::_(io).push_back(ch);
                 ++count;
             }
             return count;
@@ -112,7 +106,7 @@ namespace upsylon {
             if(ch)
             {
                 C = char(ch->code);
-                iobuff.cache->store(ch);
+                io.cache->store(ch);
                 return true;
             }
             else
@@ -125,13 +119,13 @@ namespace upsylon {
         {
             Context ctx(*handle);
             --aliasing::_(ctx.column);
-            iobuff.push_front( Char::Make(iobuff.cache, ctx, C));
+            aliasing::_(io).push_front( Char::Make(io.cache, ctx, C));
         }
         
         void  Source:: unget(Char *ch) throw()
         {
             assert(ch);
-            iobuff.push_front(ch);
+            aliasing::_(io).push_front(ch);
         }
         
         void  Source:: unget(Char::List &l) throw()
@@ -144,8 +138,8 @@ namespace upsylon {
         
         void Source:: uncpy(const Char::List &l)
         {
-            Cache &cache = iobuff.cache;
-            size_t done = 0;
+            Cache &cache = io.cache;
+            size_t done  = 0;
             try
             {
                 for(const Char *ch=l.tail;ch;ch=ch->prev)
@@ -156,15 +150,15 @@ namespace upsylon {
             }
             catch(...)
             {
-                iobuff.skip(done);
+                aliasing::_(io).skip(done);
                 throw;
             }
         }
         
         void  Source:: skip(const size_t n) throw()
         {
-            assert(n<=iobuff.size);
-            iobuff.skip(n);
+            assert(n<=io.size);
+            aliasing::_(io).skip(n);
         }
 
         void Source:: collectNext(Token &bad)
@@ -178,7 +172,7 @@ namespace upsylon {
                 if(code>='a'&&code<='z') goto GROW;
                 if(code>='A'&&code<='Z') goto GROW;
                 
-                cache()->store(ch);
+                io.cache->store(ch);
                 continue;
                 
             GROW:

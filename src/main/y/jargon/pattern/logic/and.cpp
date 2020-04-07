@@ -75,7 +75,7 @@ namespace upsylon {
                 
                 for(const Pattern *op=head;op;op=op->next)
                 {
-                    Token tmp( source.cache() );
+                    Token tmp( source.io.cache );
                     if( !op->match(tmp,source) )
                     {
                         assert(0==tmp.size);

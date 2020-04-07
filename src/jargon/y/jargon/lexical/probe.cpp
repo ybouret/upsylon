@@ -17,7 +17,7 @@ namespace upsylon {
                 PROBE:
                 if(source.isEmpty())
                 {
-                    assert(0==source.IO().size);
+                    assert(0==source.io.size);
                     return NULL;
                 }
                 else
@@ -27,7 +27,7 @@ namespace upsylon {
                     // looking for a fisrt bestRule
                     //
                     //----------------------------------------------------------
-                    Cache       &cache    = source.cache();
+                    Cache       &cache    = source.io.cache;
                     const Rule  *bestRule = NULL;
                     Token        bestExpr( cache );
                     
@@ -42,9 +42,9 @@ namespace upsylon {
                     if(!bestRule)
                     {
                         // syntax error
-                        assert(source.IO().size>0);
+                        assert(source.io.size>0);
                         assert(0==bestExpr.size);
-                        const Char   *badChar = source.IO().head;
+                        const Char   *badChar = source.io.head;
                         const uint8_t badCode = badChar->code;
                         throw exception("%s:%d:%d: unexpected char '%s' for <%s>",
                                         **(badChar->tag),

@@ -21,7 +21,7 @@ namespace upsylon {
             
             while( source.isAlive() )
             {
-                Token token(source.cache());
+                Token token(source.io.cache);
                 if( match(token,source) && token.size>0 )
                 {
                     std::cerr << "<" << token << ">";
@@ -31,7 +31,7 @@ namespace upsylon {
                 {
                     assert(source.isAlive());
                     assert(0==token.size);
-                    assert(source.IO().size);
+                    assert(source.io.size);
                     content.push_back(source.get());
                     std::cerr << *content.tail;
                 }
