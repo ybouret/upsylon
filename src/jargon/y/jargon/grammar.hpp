@@ -172,6 +172,10 @@ namespace upsylon {
             //! get terminal by lexeme label
             const Terminal &toTerminal(const Lexeme *) const;
             
+            
+            //! check if is definitie
+            bool isDefinite(const Lexeme *) const;
+            
         protected:
             const   Axiom *ground; //!< ground rule, initially inactive
             Axioms         axioms; //!< top-level axioms

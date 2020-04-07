@@ -18,6 +18,11 @@ namespace upsylon {
         bool Aggregate:: accept(Y_JARGON_AXIOM_ARGS) const
         {
             XNode *ltree = xcache.query(*this);
+            if(Vanishing!=feature)
+            {
+                guess = this;
+            }
+            
             try
             {
                 for(const Member *member=head;member;member=member->next)

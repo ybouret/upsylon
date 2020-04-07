@@ -171,6 +171,14 @@ namespace upsylon {
             assert(NULL!=lexeme);
             return toTerminal(lexeme->label);
         }
+        
+        bool Grammar:: isDefinite(const Lexeme *lexeme) const
+        {
+            assert(lexeme);
+            return toTerminal(lexeme).isDefinite();
+        }
+        
+
  
     }
     

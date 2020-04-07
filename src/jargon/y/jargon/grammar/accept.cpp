@@ -42,13 +42,13 @@ namespace upsylon {
                                        lexeme->line,
                                        lexeme->column,
                                        **title);
-                        lexeme->writeTo(excp,toTerminal(lexeme).isDefinite());
+                        lexeme->writeTo(excp,isDefinite(lexeme));
                         
                         const Lexeme *last = XNode::LastLexeme(xtree);
                         if(last)
                         {
                             excp.cat(" after");
-                            last->writeTo(excp,toTerminal(lexeme).isDefinite());
+                            last->writeTo(excp,isDefinite(lexeme));
                         }
                         throw excp;
                         
@@ -80,22 +80,32 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 std::cerr << "[Rejected!!]" << std::endl;
                 std::cerr << "with #" << lexer.lexemes.size << std::endl;
+                if(guess) std::cerr << "guess=" << guess->label << std::endl;
                 
-#if 0
-                Lexeme *lexeme = lexer.get(source);
-                if(lexeme)
+                const Lexemes &analyzed = lexer.lexemes;
+                if(analyzed.size<=0)
                 {
-                    lexer.unget(lexeme);
-                    exception excp("%s:%d:%d: [%s] illegal first",
-                                   **(lexeme->tag),
-                                   lexeme->line,
-                                   lexeme->column,
-                                   **title);
-                    lexeme->writeTo(excp,getTerminal(lexeme->label).isDefinite());
+                    throw exception("[%s] rejected empty input",**title);
+                }
+                else
+                {
+                    exception     excp("[%s] rejected ",**title);
+                    const Lexeme *last = analyzed.tail;
+                    last->writeTo(excp, isDefinite(last) );
+                    if(last->prev)
+                    {
+                        last = last->prev;
+                        excp.cat(" after ");
+                        last->writeTo(excp, isDefinite(last) );
+                    }
+                    if(guess)
+                    {
+                        
+                    }
                     throw excp;
                 }
-#endif
-                throw exception("[%s] rejected <%s>...", **title, **(ground->label) );
+                
+
             }
             
         }
