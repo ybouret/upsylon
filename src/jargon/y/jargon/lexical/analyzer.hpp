@@ -22,9 +22,19 @@ namespace upsylon {
             class Analyzer : public Scanner
             {
             public:
+                //--------------------------------------------------------------
+                //
+                // types and definition
+                //
+                //--------------------------------------------------------------
                 typedef lstack<Scanner *>                    Calls;    //!< alias to store calls
                 typedef suffix_batch<string,Scanner::Handle> Scanners; //!< database of scanners
                 
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
                 explicit Analyzer(const string &id); //!< start
                 virtual ~Analyzer() throw();         //!< cleanup
                 
@@ -38,9 +48,6 @@ namespace upsylon {
                 
                 //! get next unit, processing all events
                 Unit       *get(Source &source);
-                
-                //! check stored unit
-                const Unit *peek() const throw();
                 
                 //! unget a created unit
                 void unget( Unit *unit ) throw();

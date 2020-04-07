@@ -78,6 +78,19 @@ namespace upsylon {
                 // rejected!
                 //
                 //--------------------------------------------------------------
+                std::cerr << "[Rejected!!]" << std::endl;
+                Lexeme *lexeme = lexer.get(source);
+                if(lexeme)
+                {
+                    lexer.unget(lexeme);
+                    std::cerr << "with lexeme " << *lexeme << std::endl;
+                }
+                else
+                {
+                    std::cerr << "without lexeme" << std::endl;
+                }
+                
+#if 0
                 Lexeme *lexeme = lexer.get(source);
                 if(lexeme)
                 {
@@ -90,6 +103,7 @@ namespace upsylon {
                     lexeme->writeTo(excp,getTerminal(lexeme->label).isDefinite());
                     throw excp;
                 }
+#endif
                 throw exception("[%s] rejected <%s>...", **title, **(ground->label) );
             }
             

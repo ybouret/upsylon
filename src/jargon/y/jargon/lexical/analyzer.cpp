@@ -111,10 +111,7 @@ namespace upsylon {
                 units.push_front(unit);
             }
             
-            const Unit * Analyzer:: peek() const throw()
-            {
-                return units.head;
-            }
+            //const Unit * Analyzer:: peek() const throw() { return units.head; }
 
             
             Unit * Analyzer:: get(Source &source)
