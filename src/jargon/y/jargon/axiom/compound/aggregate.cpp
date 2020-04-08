@@ -30,6 +30,10 @@ namespace upsylon {
                 }
                 XNode::Advance(xtree,ltree);
                 Y_JAXIOM(std::cerr << "+" << CLID << "<" << label << ">" << std::endl);
+                if(Design!=feature)
+                {
+                    guess = this;
+                }
                 return true;
             }
             catch(...)
