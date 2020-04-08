@@ -8,8 +8,12 @@
 namespace upsylon {
     
     namespace Jargon {
-
+        
+        //----------------------------------------------------------------------
+        //
         //! browsing an ast
+        //
+        //----------------------------------------------------------------------
         class Evaluator : public Object
         {
         public:
@@ -18,8 +22,9 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-
-            virtual ~Evaluator() throw(); //!< cleanup
+            
+            //! cleanup
+            virtual ~Evaluator() throw();
             
             //! setup
             template <typename LABEL> inline
@@ -31,11 +36,11 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            // non-virtual methods
+            // walk down
             //
             //------------------------------------------------------------------
             void browse(const XNode &root); //!< initialize and browse
-
+            
             //------------------------------------------------------------------
             //
             // members
@@ -45,7 +50,7 @@ namespace upsylon {
             
         protected:
             int depth;       //!< current depth
-           
+            
             //! helper to ouput
             std::ostream & indent(std::ostream &) const;
             
@@ -64,7 +69,7 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Evaluator);
             void __browse(const XNode &);
-          
+            
         };
         
     }

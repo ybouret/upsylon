@@ -11,8 +11,11 @@ namespace upsylon {
     
     namespace Jargon {
       
-        
-        //! light database of visited axioms
+        //----------------------------------------------------------------------
+        //
+        //! using database to visit once the presented axioms
+        //
+        //----------------------------------------------------------------------
         class Visitor : public Axiom::DB
         {
         public:
@@ -39,12 +42,6 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! register axiom, return true if was not visited
-            //bool greenLight( const Axiom & );
-            
-            //! check if was visited
-            //bool wasVisited( const Axiom & ) const throw();
-          
             //! apply proc on each not-visited axiom from root
             bool walkDown(const Axiom &root,
                           Process      proc,

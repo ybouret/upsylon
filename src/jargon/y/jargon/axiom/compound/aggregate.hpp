@@ -25,18 +25,18 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const uint32_t UUID = Y_FOURCC('A', 'G', 'G', 'R'); //!< UUID
-            static const char     CLID[]; //!< "Aggregate"
+            static const char     CLID[];                              //!< "Aggregate"
           
             //! properties
             enum Feature
             {
-                Permanent, //!< a permanent aggregate, whatsoever
-                Transient, //!< merge content to parent is only one child
-                Vanishing  //!< merge all content to parent, ie multiple patterns recognition
+                Steady,    //!< a steady aggregate, whatsoever
+                Acting,    //!< merge content to parent is only one child
+                Design     //!< merge all content to parent, ie multiple patterns recognition
             };
             
-            typedef int2type<Transient> TransientType; //!< named type
-            static const TransientType  AsTransient;   //!< helper to setup aggregates
+            typedef int2type<Acting> ActingType; //!< named type
+            static const ActingType  AsActing;   //!< helper to setup aggregates
             
             //------------------------------------------------------------------
             //
@@ -50,7 +50,7 @@ namespace upsylon {
             //! setup a Permanent aggregate
             template <typename LABEL> inline
             explicit Aggregate(const LABEL &l) :
-            Compound(l,UUID), feature(Permanent)
+            Compound(l,UUID), feature(Steady)
             {
                 //checkLabel(CLID);
                 setup();
@@ -58,8 +58,8 @@ namespace upsylon {
             
             //! setup a Transient aggregate
             template <typename LABEL> inline
-            explicit Aggregate(const LABEL &l, const TransientType &) :
-            Compound(l,UUID), feature(Transient)
+            explicit Aggregate(const LABEL &l, const ActingType &) :
+            Compound(l,UUID), feature(Acting)
             {
                 //checkLabel(CLID);
                 setup();

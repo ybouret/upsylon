@@ -40,7 +40,7 @@ namespace upsylon {
             
             switch(uuid)
             {
-                case Aggregate::UUID: return as<Aggregate>().feature != Aggregate::Vanishing;
+                case Aggregate::UUID: return as<Aggregate>().feature != Aggregate::Design;
                 default: break;
             }
             
@@ -59,7 +59,7 @@ namespace upsylon {
     
     namespace Jargon {
 
-        void Axiom:: reduce()
+        void Axiom:: reveal()
         {
             DB all;
             collect(all);
@@ -76,7 +76,7 @@ namespace upsylon {
                 switch(parent.uuid)
                 {
                     case Aggregate::UUID:
-                        if(parent.as<Aggregate>().feature!=Aggregate::Vanishing)
+                        if(parent.as<Aggregate>().feature!=Aggregate::Design)
                         {
                             all.secure(parent);
                         }

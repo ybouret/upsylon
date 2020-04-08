@@ -41,7 +41,7 @@ namespace upsylon {
             // I/O methods
             //
             //------------------------------------------------------------------
-            void reserve( size_t n);                  //!< reserve inactive nodes
+            void   reserve( size_t n);                //!< reserve inactive nodes
             XNode *query();                           //!< query an inactive node...
             XNode *query(const Internal &);           //!< query an internal node
             XNode *query(const Terminal &, Lexeme *); //!< query a terminal node

@@ -66,7 +66,6 @@ namespace {
             
             graphViz("json.dot");
             compile();
-            
         }
         
         virtual ~JSON_Parser() throw()

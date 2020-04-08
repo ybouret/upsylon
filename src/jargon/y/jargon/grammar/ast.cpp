@@ -76,11 +76,11 @@ namespace upsylon {
                         assert(child->isInternal());
                         switch( axiom.as<Aggregate>().feature )
                         {
-                            case Aggregate::Permanent:
+                            case Aggregate::Steady:
                                 temp.push_back(child);
                                 break;
                                 
-                            case Aggregate::Transient: {
+                            case Aggregate::Acting: {
                                 XList &sub = child->children();
                                 if(1==sub.size)
                                 {
@@ -93,7 +93,7 @@ namespace upsylon {
                                 }
                             } break;
                                 
-                            case Aggregate::Vanishing:
+                            case Aggregate::Design:
                                 temp.merge_back( child->children() );
                                 xcache.store(child);
                                 break;

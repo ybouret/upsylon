@@ -17,8 +17,7 @@ namespace upsylon {
         //
         //! base class for grammar
         /**
-         upon validation, the starting axioms are computed, the terminal and the
-         not vanishing aggregate.
+         a grammar is a set of axioms
          */
         //
         //----------------------------------------------------------------------
@@ -109,7 +108,7 @@ namespace upsylon {
             template <typename LABEL> inline
             Aggregate & act(const LABEL &id)
             {
-                return declare( new Aggregate(id,Aggregate::AsTransient) );
+                return declare( new Aggregate(id,Aggregate::AsActing) );
             }
             
             Aggregate & agg();                           //!< new vanishing aggregate

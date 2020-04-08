@@ -25,7 +25,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const uint32_t UUID = Y_FOURCC('A', 'L', 'T', 'R'); //!< UUID
-            static const char     CLID[]; //!< "Alternate"
+            static const char     CLID[];                              //!< "Alternate"
 
             //------------------------------------------------------------------
             //
@@ -38,8 +38,6 @@ namespace upsylon {
             
             //! setup
             explicit Alternate(unsigned &);
-            
-            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alternate);

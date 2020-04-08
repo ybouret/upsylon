@@ -10,17 +10,17 @@ namespace upsylon {
     
     namespace Jargon {
        
+        //----------------------------------------------------------------------
+        //
         //! lightweight node for axiom reference
+        //
+        //----------------------------------------------------------------------
         class Member : public Object, public inode< Member >
         {
         public:
-            //! setup
-            explicit Member(const Axiom &args) throw();
-            
-            //! cleanup
-            virtual ~Member() throw();
-            
-            const Axiom &axiom; //!< reference to AXIOM
+            explicit Member(const Axiom &) throw();//!< setup
+            virtual ~Member() throw();             //!< cleanup
+            const Axiom &axiom;                    //!< the reference
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Member);

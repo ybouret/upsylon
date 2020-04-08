@@ -11,6 +11,10 @@ namespace upsylon {
         //----------------------------------------------------------------------
         //
         //! Parser from a Lexer and a Grammar
+        /**
+         The parser will automatically link the grammar Terminals and the
+         lexical rules.
+         */
         //
         //----------------------------------------------------------------------
         class Parser : public Lexer, public Grammar
@@ -123,7 +127,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! validate+build
+            //! validate grammar
             void compile();
             
             //! parsing a module

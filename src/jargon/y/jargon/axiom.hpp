@@ -147,7 +147,7 @@ XCache  &xcache
 
         public:
             DB   parents;  //!< database of possible parents
-            void reduce(); //!< reduce the database to permanent
+            void reveal(); //!< reveal the permanent parents
         
         };
         

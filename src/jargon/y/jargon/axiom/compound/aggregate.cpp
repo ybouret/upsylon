@@ -6,9 +6,8 @@ namespace upsylon {
     
     namespace Jargon {
 
-        const char Aggregate:: CLID[] = "Aggregate";
-        
-        const  Aggregate::TransientType  Aggregate::AsTransient = {};
+        const char                  Aggregate:: CLID[]   = "Aggregate";
+        const Aggregate::ActingType Aggregate:: AsActing = {};
 
         
         Aggregate:: ~Aggregate() throw()
@@ -50,7 +49,7 @@ namespace upsylon {
         
         Aggregate:: Aggregate(unsigned &indx) :
         Compound( MakeLabel(indx), UUID ),
-        feature(Vanishing)
+        feature(Design)
         {
             setup();
         }
@@ -74,8 +73,8 @@ namespace upsylon {
         {
             switch(feature)
             {
-                case Transient: return "shape=house,style=\"bold,filled,rounded\"";
-                case Vanishing: return "shape=house,style=\"bold,dashed\"";
+                case Acting: return "shape=house,style=\"bold,filled,rounded\"";
+                case Design: return "shape=house,style=\"bold,dashed\"";
                 default:
                     break;
             }
