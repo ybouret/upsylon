@@ -75,6 +75,7 @@ namespace upsylon {
             //! check registered
             bool has( const memory::ro_buffer &buffer ) const throw();
 
+            //! trim dead branches
             void trim() throw();
             
         protected:
@@ -458,6 +459,7 @@ namespace upsylon {
             tnode->impl = 0;
         }
         
+        //! no-throw swap trees
         inline void swap_with( suffix_tree &tree ) throw()
         {
             cswap(root,tree.root);

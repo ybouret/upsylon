@@ -32,6 +32,7 @@ XCache  &xcache
         //! accept method arguments
 #define Y_JARGON_AXIOM_ARGS Y_JARGON_AXIOM_ARGS_
         
+        //! accept call wrapper
 #define Y_JARGON_AXIOM_ACCEPT(TREE) accept(TREE,lexer,source,xcache)
         
         //! for verbosity
@@ -64,9 +65,8 @@ XCache  &xcache
                 bool search(const Axiom &) const throw(); //!< search = wasVisited
                 void secure(const Axiom &);               //!< ensure inserted
                 void remove(const Axiom &) throw();       //!< remove
-                void reduce();                            //!< reduce parenthood
                 void display(const char *pfx=0) const;    //!< display with parents
-                void sort();
+                void sort();                              //!< sort by label
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DB);
@@ -143,11 +143,12 @@ XCache  &xcache
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Axiom);
-            
-        public:
-            DB parents;
-            void reduce();
             void collect( DB &all ) const;
+
+        public:
+            DB   parents;  //!< database of possible parents
+            void reduce(); //!< reduce the database to permanent
+        
         };
         
        

@@ -38,6 +38,12 @@ namespace upsylon {
                 explicit Analyzer(const string &id); //!< start
                 virtual ~Analyzer() throw();         //!< cleanup
                 
+                //--------------------------------------------------------------
+                //
+                // sub-scanners management
+                //
+                //--------------------------------------------------------------
+                
                 //! scanner declaration
                 template <typename ID> inline
                 Scanner & decl( const ID &id )
@@ -46,14 +52,13 @@ namespace upsylon {
                     return insert(scan);
                 }
                 
-                //! get next unit, processing all events
-                Unit       *get(Source &source);
+              
                 
-                //! unget a created unit
-                void unget( Unit *unit ) throw();
-                
-                //! restart state
-                void restart() throw();
+                //--------------------------------------------------------------
+                //
+                // plugins management
+                //
+                //--------------------------------------------------------------
                 
                 //! load plugin with 1 expression
                 template <typename PLUGIN, typename ID, typename EXPR>
@@ -86,15 +91,30 @@ namespace upsylon {
                     return extract(pps,key);
                 }
                 
+                //--------------------------------------------------------------
+                //
+                // analyze functions
+                //
+                //--------------------------------------------------------------
+              
+                //! get next unit, processing all events
+                Unit       *get(Source &source);
+                
+                //! unget a created unit
+                void unget( Unit *unit ) throw();
+                
+                //! restart state
+                void restart() throw();
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);
-                Scanner   *current;
-            public:
-                const Unit::List lexemes;
-            private:
-                CallStack  history;
-                Scanners   scanners;
+                Scanner         *current;  //!< current scanner
+            public:                        //
+                const Unit::List lexemes;  //!< analyzed lexemes so far
+            private:                       //
+                CallStack        history;  //!< history of calls
+                Scanners         scanners; //!< datbase of scanners
                 
                 bool       store(Scanner::Handle &scan);  //!< insert and set dict_
                 Scanner   &insert(Scanner::Handle &scan); //!< insert a scanner
