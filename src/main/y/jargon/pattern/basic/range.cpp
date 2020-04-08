@@ -66,7 +66,7 @@ namespace upsylon {
             }
             else
             {
-                return NULL;
+                return false;
             }
         }
         
