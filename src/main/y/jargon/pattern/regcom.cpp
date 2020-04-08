@@ -4,18 +4,18 @@ namespace upsylon {
     
     namespace Jargon {
         
-        const char RegularExpression:: Integer[]  =
+        const char * const RegularExpression:: Integer  =
         "[-+]?"         // optional sign
         "[:digit:]+";   // content
         
-        const char RegularExpression:: Real[]     =
+        const char * const RegularExpression:: Real    =
         "[-+]?"                    // optional sign
         "[:digit:]+"               // ip
         "([.][:digit:]*)?"         // fp
         "([eE][-+]?[:digit:]+)?"   // exp
         "f?";                      // optional float
         
-        const char *RegularExpression:: Identifier =
+        const char * const RegularExpression:: Identifier =
         "[_[:lower:][:upper:]]"
         "[:word:]*"
         ;

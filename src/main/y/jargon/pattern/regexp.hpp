@@ -35,9 +35,9 @@ namespace upsylon {
             //! compile as single...
             static Pattern *Compile(const char   C, const Dictionary * =0);
             
-            static const char Integer[];    //!< an integer with optional minus/plus
-            static const char Real[];       //!< a real with optional minus/plus and 'f'
-            static const char *Identifier; //!< C identifier
+            static const char * const Integer;    //!< an integer with optional minus/plus
+            static const char * const Real;       //!< a real with optional minus/plus and 'f'
+            static const char * const Identifier; //!< C identifier
         };
         
        
