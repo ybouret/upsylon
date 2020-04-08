@@ -13,7 +13,11 @@ namespace upsylon {
         //! base class for dictionary
         typedef suffix_tree<Motif> DictionaryType;
         
+        //----------------------------------------------------------------------
+        //
         //! dictionary of named patterns
+        //
+        //----------------------------------------------------------------------
         class Dictionary : public DictionaryType
         {
         public:
@@ -22,10 +26,10 @@ namespace upsylon {
             Dictionary(const Dictionary &); //!< copy
             
             
-            bool insert(const string &name, const Pattern *p);     //!< insert a named fixed pattern
-            bool insert(const char   *name, const Pattern *p);     //!< insert a named fixed pattern
-            const Motif *search(const string &name) const throw(); //!< search a pattern
-            const Motif *search(const char   *name) const throw(); //!< seatch a pattern
+            bool insert(const string &, const Pattern *);     //!< insert a named fixed pattern
+            bool insert(const char   *, const Pattern *);     //!< insert a named fixed pattern
+            const Motif *search(const string &) const throw(); //!< search a pattern
+            const Motif *search(const char   *) const throw(); //!< seatch a pattern
             
             const Motif & operator[](const string &name) const;    //!< throw if not found
             const Motif & operator[](const char   *name) const;    //!< throw if not found

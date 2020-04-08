@@ -11,7 +11,11 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //! Logic AND based patter
+        //----------------------------------------------------------------------
+        //
+        //! Logical NONE based pattern
+        //
+        //----------------------------------------------------------------------
         class NONE : public Logical
         {
         public:

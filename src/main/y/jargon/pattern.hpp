@@ -12,7 +12,11 @@ namespace upsylon {
     
         class FirstChars;
         
+        //----------------------------------------------------------------------
+        //
         //! base class for patterns recognition
+        //
+        //------------------------------------------------------------------
         class Pattern :
         public CountedObject,
         public inode<Pattern>,
@@ -117,9 +121,10 @@ namespace upsylon {
             //! replace all patterns by its transformed
             static void Transform(List &patterns, Proc proc ) throw();
             
-            //! try to merge pairwise
+            //! merge all patterns pairwise
             /**
-             recursively check if two consecutive pattens may be merged
+             for a block of OR'd equivalent patterns, get
+             the most simplified version (merge ranges, consecutive singles...)
              */
             static void PairwiseMerge(List &patterns);
             

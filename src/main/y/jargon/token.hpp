@@ -12,7 +12,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! a dynamic Token of Chars
+        //
+        //----------------------------------------------------------------------
         class Token : public Char::List, public Serializable
         {
         public:
@@ -35,7 +39,7 @@ namespace upsylon {
             void erase() throw();                         //!< erase content into cache
             void skip(size_t n) throw();                  //!< skip n chars
             void trim(size_t n) throw();                  //!< trim n chars
-            void cat(exception &) const throw();          //!< append to exception
+            void cat(exception &) const throw();          //!< append content to exception
             
             //! display all Chars
             friend std::ostream & operator<<( std::ostream &, const Token &);

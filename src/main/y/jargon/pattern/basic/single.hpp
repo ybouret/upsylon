@@ -9,7 +9,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! matching a single char
+        //
+        //----------------------------------------------------------------------
         class Single : public Basic
         {
         public:

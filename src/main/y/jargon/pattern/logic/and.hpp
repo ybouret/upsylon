@@ -9,7 +9,11 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //! Logic AND based patter
+        //----------------------------------------------------------------------
+        //
+        //! Logical AND based pattern
+        //
+        //----------------------------------------------------------------------
         class AND : public Logical
         {
         public:

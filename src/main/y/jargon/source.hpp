@@ -11,7 +11,12 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //______________________________________________________________________
+        //
+        //
         //! a source is a smart pointer and cache for modules
+        //
+        //__________________________________________________________________
         class Source : public ios::istream
         {
         public:
@@ -57,7 +62,7 @@ namespace upsylon {
             virtual void store(char  C);                 //!< ios::istream interface
             
             //__________________________________________________________________
-            //b
+            //
             // for error processing
             //__________________________________________________________________
             void collectNext(Token &bad); //!< try to find a 'bad' token

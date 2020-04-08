@@ -10,7 +10,14 @@ namespace upsylon {
  
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! convert a source of char into a source of Char
+        /**
+         the role of the module is to set a proper context to read chars
+         */
+        //----------------------------------------------------------------------
+
         class Module : public CountedObject, public Context
         {
         public:

@@ -8,7 +8,11 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //! accept any char
+        //----------------------------------------------------------------------
+        //
+        //! accept a minimal count of a given pattern
+        //
+        //----------------------------------------------------------------------
         class Repeating : public Joker
         {
         public:

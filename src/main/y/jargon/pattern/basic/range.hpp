@@ -10,7 +10,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! accept a range [lower-upper] of chars
+        //
+        //----------------------------------------------------------------------
         class Range : public Basic
         {
         public:

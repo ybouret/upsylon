@@ -11,7 +11,11 @@ namespace upsylon {
         
         class Counting; //!< forward declaration
         
-        //! accept any char
+        //----------------------------------------------------------------------
+        //
+        //! accept an optional pattern
+        //
+        //----------------------------------------------------------------------
         class Optional : public Joker
         {
         public:

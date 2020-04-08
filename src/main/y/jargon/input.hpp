@@ -9,7 +9,7 @@ namespace upsylon {
     
     namespace Jargon {
      
-        typedef arc_ptr<ios::istream> Input; //!< alias
+        typedef arc_ptr<ios::istream> Input; //!< alias to a shared input
         
         namespace Kernel {
             

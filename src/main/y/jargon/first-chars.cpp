@@ -10,6 +10,10 @@ namespace upsylon {
         {
         }
         
+        FirstChars:: FirstChars() throw() : FirstCharsType()
+        {
+        }
+        
         FirstChars:: FirstChars(size_t n) :
         FirstCharsType(n,as_capacity)
         {
@@ -18,10 +22,9 @@ namespace upsylon {
         std::ostream & operator<<(std::ostream &os, const FirstChars &fc)
         {
             os << "[";
-            for( FirstChars::const_iterator it=fc.begin();it!=fc.end();++it)
+            for(size_t i=1;i<=fc.size();++i)
             {
-                const uint8_t code = *it;
-                os << cchars::encoded[code];
+                os << cchars::encoded[fc[i]];
             }
             os << "]";
             return os;

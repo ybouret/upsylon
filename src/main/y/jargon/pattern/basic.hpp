@@ -9,7 +9,11 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //! Basic pattern, accepting or not 1 char
+        //----------------------------------------------------------------------
+        //
+        //! Basic pattern, accepting or not only ONE char
+        //
+        //----------------------------------------------------------------------
         class Basic : public Pattern
         {
         public:
@@ -22,7 +26,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Basic);
             virtual bool good(const uint8_t)        const throw() = 0;
             virtual bool match(Token &, Source &)   const; //!< if good!
-            virtual bool feeble() const throw(); //!< false
+            virtual bool feeble() const throw();           //!< false
         };
         
     }

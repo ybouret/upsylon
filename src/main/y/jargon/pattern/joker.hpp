@@ -9,7 +9,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! Logical operations based pattern
+        //
+        //----------------------------------------------------------------------
         class Joker : public Pattern
         {
         public:
@@ -19,8 +23,8 @@ namespace upsylon {
         protected:
             explicit Joker(const uint32_t, const Motif &) throw(); //!< forward uuid
             Joker(const Joker &);                                  //!< full copy
-            
-            static const char feeble_pattern[]; //!< for exception strings
+            static const char feeble_pattern[];                    //!< for exception strings
+       
         private:
             Y_DISABLE_ASSIGN(Joker);
             virtual void        adjoin( FirstChars &)      const;

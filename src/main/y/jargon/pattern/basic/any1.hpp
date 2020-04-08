@@ -8,7 +8,11 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //! accept any char
+        //----------------------------------------------------------------------
+        //
+        //! accept any ONE char
+        //
+        //----------------------------------------------------------------------
         class Any1 : public Basic
         {
         public:

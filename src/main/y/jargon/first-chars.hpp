@@ -11,11 +11,7 @@ namespace upsylon {
     namespace Jargon {
      
         //! base class for ordered first chars
-        typedef sorted_vector<
-        uint8_t,
-        increasing_comparator<uint8_t>,
-        memory::pooled
-        > SortedChars;
+        typedef sorted_vector<uint8_t,increasing_comparator<uint8_t>,memory::pooled> SortedChars;
     
         //! base class for first chars
         typedef ordered_single<SortedChars> FirstCharsType;
@@ -24,8 +20,9 @@ namespace upsylon {
         class FirstChars : public FirstCharsType
         {
         public:
-            explicit FirstChars(size_t n=0); //!< initialize with capacity
-            virtual ~FirstChars() throw();   //!< cleanup
+            explicit FirstChars() throw(); //!< initialize
+            explicit FirstChars(size_t n); //!< initialize with capacity
+            virtual ~FirstChars() throw(); //!< cleanup
             
             void loadAll(); //!< [0..255]
             

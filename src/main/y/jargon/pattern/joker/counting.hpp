@@ -10,7 +10,11 @@ namespace upsylon {
     
     namespace Jargon {
         
-        //! accept any char
+        //----------------------------------------------------------------------
+        //
+        //! accept a given number of repeated pattern
+        //
+        //----------------------------------------------------------------------
         class Counting : public Joker
         {
         public:

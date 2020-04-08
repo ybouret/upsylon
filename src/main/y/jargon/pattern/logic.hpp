@@ -8,7 +8,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! Logical operations based pattern
+        //
+        //----------------------------------------------------------------------
         class Logical : public Pattern, public Operands
         {
         public:

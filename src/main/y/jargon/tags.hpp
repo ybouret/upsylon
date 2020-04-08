@@ -12,7 +12,7 @@ namespace upsylon {
         
         typedef suffix_tree<Tag> TagsType; //!< base class for Tags
         
-        //! global dictionary of shared tags
+        //! global dictionary of shared tags to reduce memory load
         class Tags : public singleton<Tags>, public TagsType
         {
         public:

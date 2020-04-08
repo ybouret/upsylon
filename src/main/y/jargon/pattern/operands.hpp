@@ -10,7 +10,11 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //----------------------------------------------------------------------
+        //
         //! upgraded list of cloneable patters
+        //
+        //----------------------------------------------------------------------
         class Operands : public Pattern::List
         {
         public:

@@ -9,9 +9,11 @@ namespace upsylon {
     
     namespace Jargon {
         
-        class Dictionary;
-        class Pattern;
+        class Dictionary; //!< forward declcaration
+        class Pattern;    //!< forward declaration
         
+        //----------------------------------------------------------------------
+        //
         //! regular expression engine
         /**
          group : '(', ')'
@@ -20,6 +22,7 @@ namespace upsylon {
          dot   : '.'
          block : '[', ']' with caret and dash...
          */
+        //----------------------------------------------------------------------
         struct RegularExpression
         {
             class       Engine;  //!< forward declaration
