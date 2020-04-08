@@ -22,7 +22,7 @@ namespace upsylon {
         //----------------------------------------------------------------------
         class XCache;  //!< forward declaration
         
-        //! accept methods, may change...
+        //! accept methods
 #define Y_JARGON_AXIOM_ARGS_ \
 XNode * &xtree,              \
 Lexer   &lexer,              \
@@ -134,7 +134,8 @@ XCache  &xcache
             Axiom( const LABEL &id, const uint32_t u) :
             label( Tags::Make(id) ),
             uuid(u),
-            self(0)
+            self(0),
+            parents()
             {
             }
             
