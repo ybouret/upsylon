@@ -20,6 +20,7 @@ namespace upsylon {
             auto_ptr<Logical> p = OR::Create();
             p->push_back( lower() );
             p->push_back( upper() );
+            Pattern::SortByEntropy(*p);
             return p.yield();
         }
         
@@ -34,6 +35,7 @@ namespace upsylon {
             p->push_back( lower() );
             p->push_back( upper() );
             p->push_back( digit() );
+            Pattern::SortByEntropy(*p);
             return p.yield();
         }
         
@@ -44,6 +46,7 @@ namespace upsylon {
             p->push_back( upper() );
             p->push_back( digit() );
             p->add(  '_'  );
+            Pattern::SortByEntropy(*p);
             return p.yield();
         }
         
@@ -53,6 +56,7 @@ namespace upsylon {
             p->push_back( digit() );
             p->add('a','f');
             p->add('A','F');
+            Pattern::SortByEntropy(*p);
             return p.yield();
         }
         
@@ -100,6 +104,7 @@ namespace upsylon {
             p->add( 0x23,0x26 );
             p->add( 0x28,0x5B );
             p->add( 0x5D,0x7F );
+            Pattern::SortByEntropy(*p);
             return p.yield();
         }
     }

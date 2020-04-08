@@ -95,30 +95,34 @@ entropy(-1)
         
         void Pattern:: PairwiseMerge(List &rhs)
         {
-        CYCLE:
-            List lhs;
-            bool merged = false;
-        SCAN:
-            if(rhs.size)
             {
-                const Pattern *R = rhs.head;
-                for(Pattern *L=lhs.head;L;L=L->next)
+            CYCLE:
+                List lhs;
+                bool merged = false;
+            SCAN:
+                if(rhs.size)
                 {
-                    Pattern *P = Merge::Try(L,R);
-                    if(P)
+                    const Pattern *R = rhs.head;
+                    for(Pattern *L=lhs.head;L;L=L->next)
                     {
-                        merged = true;
-                        delete lhs.replace(L,P);
-                        delete rhs.pop_front();
-                        goto SCAN;
+                        Pattern *P = Merge::Try(L,R);
+                        if(P)
+                        {
+                            merged = true;
+                            delete lhs.replace(L,P);
+                            delete rhs.pop_front();
+                            goto SCAN;
+                        }
                     }
+                    lhs.push_back(rhs.pop_front());
+                    goto SCAN;
                 }
-                lhs.push_back(rhs.pop_front());
-                goto SCAN;
+                rhs.swap_with(lhs);
+                if(merged) goto CYCLE;
             }
-            rhs.swap_with(lhs);
-            if(merged) goto CYCLE;
+            SortByEntropy(rhs);
         }
+        
         
     }
     
