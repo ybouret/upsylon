@@ -17,7 +17,7 @@ Y_PROGRAM_START()
     {
         throw exception("usage: %s hostfile [binary]",program);
     }
-
+    
     // parsing hosts
     vector<string,memory::pooled> hosts(16,as_capacity);
     {
@@ -37,7 +37,7 @@ Y_PROGRAM_START()
         }
     }
     unique(hosts);
-
+    
     if(argc>2)
     {
         const string filename = argv[2];
@@ -46,11 +46,14 @@ Y_PROGRAM_START()
         {
             const string cmd      = "scp " + filename + " " + hosts[i] + ":" + basename;
             std::cerr << "executing <" << cmd << ">" << std::endl;
-            (void) system( *cmd );
+            if( 0 != system( *cmd ) )
+            {
+                throw exception("unable to [%s]", *cmd);
+            }
         }
     }
-
-
+    
+    
 }
 Y_PROGRAM_END()
 

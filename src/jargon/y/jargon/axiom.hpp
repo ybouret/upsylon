@@ -55,7 +55,7 @@ XCache  &xcache
             typedef key_address<1>       Address; //!< storing address
             typedef suffix_tree<Address> DB_Type; //!< base class for database
             
-            //! ligweigth database
+            //! lightweigth database
             class DB : public DB_Type
             {
             public:
