@@ -15,7 +15,7 @@ namespace upsylon {
         "([eE][-+]?[:digit:]+)?"   // exp
         "f?";                      // optional float
         
-        const char RegularExpression:: Identifier[] =
+        const char *RegularExpression:: Identifier =
         "[_[:lower:][:upper:]]"
         "[:word:]*"
         ;

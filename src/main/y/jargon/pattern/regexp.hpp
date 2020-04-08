@@ -37,7 +37,7 @@ namespace upsylon {
             
             static const char Integer[];    //!< an integer with optional minus/plus
             static const char Real[];       //!< a real with optional minus/plus and 'f'
-            static const char Identifier[]; //!< C identifier
+            static const char *Identifier; //!< C identifier
         };
         
        
