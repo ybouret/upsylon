@@ -32,6 +32,7 @@ namespace upsylon {
                              if(Standard==feature)
                              std::cerr << " = '" << *lexeme << "'";
                              std::cerr << std::endl);
+                    
                     XNode::Advance(xtree,xcache.query(*this, lexeme));
                     return true;
                 }
