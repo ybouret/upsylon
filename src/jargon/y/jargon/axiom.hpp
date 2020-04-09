@@ -67,7 +67,7 @@ XCache  &xcache
                 void remove(const Axiom &) throw();       //!< remove
                 void display(const char *pfx=0) const;    //!< display with parents
                 void sort();                              //!< sort by label
-                void cat(exception &excp) const throw();
+                void cat(exception &excp) const throw();  //!< append named to exception
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DB);
             };

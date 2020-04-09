@@ -49,12 +49,12 @@ namespace upsylon {
                         assert(0==bestExpr.size);
                         assert(source.io.size>0);
                         const Char &ctx = *(source.io.head);
-                        exception excp("%s:%d:%d: [%s] unexpected starting with '%s'",
-                                       **ctx.tag,
-                                       ctx.line,
-                                       ctx.column,
-                                       **label,
-                                       cchars::encoded[ctx.code]);
+                        exception   excp("%s:%d:%d: [%s] unexpected lexical expression starting with '%s'",
+                                         **ctx.tag,
+                                         ctx.line,
+                                         ctx.column,
+                                         **label,
+                                         cchars::encoded[ctx.code]);
                         throw excp;
                     }
                     

@@ -65,9 +65,9 @@ namespace {
             endl("endl",  "[:endl:]");
             drop("blanks","[:blank:]");
             
-            //Axiom & ERROR = plug( type2type<Lexical::Error>(), "ta mere" );
             
-            load( type2type<Lexical::Error>(), "!!ERROR!!" ).hook(*this);
+            load( type2type<Lexical::Error>(), "JSON Error" ).hook(*this);
+           
             Tags::Display();
             graphViz("json.dot");
             compile();
