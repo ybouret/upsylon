@@ -443,17 +443,35 @@ namespace upsylon {
             return true;
         }
         
-        //! access last inserted item
-        const_type & back()
+        //! access first inserted item
+        inline const_type &front() const throw()
         {
+            assert(entries()>0);
+            return dlist.head->data.data;
+        }
+        
+        //! access last inserted item
+        inline const_type & back() const throw()
+        {
+            assert(entries()>0);
             return dlist.tail->data.data;
         }
         
         //! remove last inserted item
-        void pop_back() throw()
+        inline void pop_back() throw()
         {
             assert(dlist.size);
             data_node *dnode = dlist.pop_back(); assert(dnode);
+            node_type *tnode = (node_type*)&(dnode->data.hook); assert(tnode);
+            data_node::destruct(dnode,dpool);
+            tnode->impl = 0;
+        }
+        
+        //! remove first inserted item
+        inline void pop_front() throw()
+        {
+            assert(dlist.size);
+            data_node *dnode = dlist.pop_front(); assert(dnode);
             node_type *tnode = (node_type*)&(dnode->data.hook); assert(tnode);
             data_node::destruct(dnode,dpool);
             tnode->impl = 0;

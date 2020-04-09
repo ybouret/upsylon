@@ -20,6 +20,7 @@ namespace upsylon {
             
             try
             {
+               
                 for(const Member *member=head;member;member=member->next)
                 {                    
                     if( ! member->axiom.Y_JARGON_AXIOM_ACCEPT(ltree) )
@@ -30,10 +31,6 @@ namespace upsylon {
                 }
                 XNode::Advance(xtree,ltree);
                 Y_JAXIOM(std::cerr << "+" << CLID << "<" << label << ">" << std::endl);
-                if(Design!=feature)
-                {
-                    guess = this;
-                }
                 return true;
             }
             catch(...)

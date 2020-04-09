@@ -27,13 +27,13 @@ namespace upsylon {
 XNode * &xtree,              \
 Lexer   &lexer,              \
 Source  &source,             \
-XCache  &xcache, const Axiom * &
+XCache  &xcache
         
         //! accept method arguments
-#define Y_JARGON_AXIOM_ARGS Y_JARGON_AXIOM_ARGS_ guess
+#define Y_JARGON_AXIOM_ARGS Y_JARGON_AXIOM_ARGS_
         
         //! accept call wrapper
-#define Y_JARGON_AXIOM_ACCEPT(TREE) accept(TREE,lexer,source,xcache,guess)
+#define Y_JARGON_AXIOM_ACCEPT(TREE) accept(TREE,lexer,source,xcache)
         
         //! for verbosity
 #define Y_JAXIOM(CODE) do { if(Axiom::Verbose) { CODE; } } while(false)
@@ -67,7 +67,7 @@ XCache  &xcache, const Axiom * &
                 void remove(const Axiom &) throw();       //!< remove
                 void display(const char *pfx=0) const;    //!< display with parents
                 void sort();                              //!< sort by label
-                
+                void cat(exception &excp) const throw();
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DB);
             };

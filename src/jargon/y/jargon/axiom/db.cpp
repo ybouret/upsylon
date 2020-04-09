@@ -1,6 +1,7 @@
 
 #include "y/jargon/axiom.hpp"
 #include "y/string/display.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
@@ -32,7 +33,7 @@ namespace upsylon {
             (void)remove_by(addr);
         }
         
-
+        
         void Axiom:: DB:: secure(const Axiom &axiom)
         {
             (void)insert(axiom);
@@ -80,6 +81,36 @@ namespace upsylon {
         void Axiom::DB:: sort()
         {
             sort_with(compareAddr);
+        }
+        
+        void  Axiom::DB:: cat(exception &excp) const throw()
+        {
+            const size_t n = entries();
+            if(n<=0)
+            {
+                excp.cat("unknown compound");
+                
+            }
+            else
+            {
+                const size_t nm1 = n-1;
+                size_t       i   = 1;
+                for( const_iterator it=begin(); it != end(); ++it, ++i)
+                {
+                    excp.cat("%s", **((*it).as<Axiom>()->label) );
+                    if(i<nm1)
+                    {
+                        excp.cat(", ");
+                    }
+                    else
+                    {
+                        if(i==nm1)
+                        {
+                            excp.cat(" or ");
+                        }
+                    }
+                }
+            }
         }
         
         

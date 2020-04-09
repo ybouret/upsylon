@@ -11,6 +11,7 @@ namespace upsylon {
                                        const Grammar &G,
                                        const Lexeme  *lexeme)
         {
+            assert(lexeme);
             const Tag      &label = lexeme->label;
             const Terminal *term  = G.toTerminal(label);
             if( term )
@@ -25,17 +26,33 @@ namespace upsylon {
         
         static inline exception onError(const char   *which,
                                         const Grammar &G,
-                                        const Lexeme *lexeme,
-                                        const Axiom  *guess)
+                                        const Lexeme *lexeme)
         {
             assert(which);
             assert(lexeme);
-            exception       excp("[%s] %s ", ** G.title, which);
+            const Context  &ctx = *lexeme;
+            exception       excp("%s:%d%d: [%s] %s ",
+                                 **(ctx.tag),
+                                 ctx.line,
+                                 ctx.column,
+                                 ** G.title, which);
             writeLexeme(excp,G,lexeme);
-            if(lexeme->prev)
+            const Lexeme *prev = lexeme->prev;
+            if(prev)
             {
                 excp.cat( " after ");
                 writeLexeme(excp,G,lexeme->prev);
+                const Terminal *term = G.toTerminal(prev->label);
+                excp.cat(", in ");
+                
+                if(!term)
+                {
+                    excp.cat( "unknown structure: check Gammar !!!");
+                }
+                else
+                {
+                    term->parents.cat(excp);
+                }
             }
             return excp;
         }
@@ -44,11 +61,9 @@ namespace upsylon {
         {
             assert(ground);
             XNode       *xtree = NULL;
-            const Axiom *guess = NULL;
             Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
             const bool  ok  = ground->Y_JARGON_AXIOM_ACCEPT(xtree);
             Y_JAXIOM(std::cerr << "[" << title << "] ok = " << ok << std::endl);
-            Y_JAXIOM(std::cerr << "[" << title << "] by = " << (guess ? **(guess->label) : "none") << std::endl);
             
             if( ok )
             {
@@ -76,7 +91,7 @@ namespace upsylon {
                     if(lexeme)
                     {
                         lexer.unget(lexeme);
-                        throw onError("extraneous",*this,lexeme,guess);
+                        throw onError("extraneous",*this,lexeme);
                     }
                     
                 }
@@ -104,12 +119,7 @@ namespace upsylon {
                 // rejected!
                 //
                 //--------------------------------------------------------------
-                std::cerr << "[Rejected!!]" << std::endl;
-                std::cerr << "with #" << lexer.lexemes.size << std::endl;
-                
-                exception excp("[%s] rejected",**title);
-                
-                
+                exception      excp("[%s] rejected",**title);
                 const Lexemes &analyzed = lexer.lexemes;
                 if(analyzed.size<=0)
                 {
@@ -117,7 +127,7 @@ namespace upsylon {
                 }
                 else
                 {
-                    throw onError("rejected", *this, analyzed.tail, guess);
+                    throw onError("rejected", *this, analyzed.tail);
                 }
                 
                 
