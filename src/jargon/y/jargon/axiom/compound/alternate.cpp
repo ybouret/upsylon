@@ -19,7 +19,7 @@ namespace upsylon {
             {
                 if( member->axiom.Y_JARGON_AXIOM_ACCEPT(xtree) )
                 {
-                    Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl);
+                    //Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl);
                     return true;
                 }
             }
@@ -38,7 +38,7 @@ namespace upsylon {
         Compound(MakeLabel(indx),UUID)
         {
             self = static_cast<Alternate *>(this);
-            Y_JAXIOM(std::cerr << "+" << CLID << "<" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "+[" << CLID << "]<" << label << ">" << std::endl);
         }
         
         ios::ostream & Alternate:: display(ios::ostream &fp) const

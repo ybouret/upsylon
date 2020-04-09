@@ -16,7 +16,7 @@ namespace upsylon {
         Wildcard( MakeTag(Mark,*axiom.label), UUID, axiom )
         {
             self = static_cast<Option *>(this);
-            Y_JAXIOM(std::cerr << "+" << CLID << "<" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "+[" << CLID << "]<" << label << ">" << std::endl);
         }
         
         bool Option:: accept(Y_JARGON_AXIOM_ARGS) const
@@ -27,7 +27,7 @@ namespace upsylon {
                 assert(ltree!=NULL);
                 XNode::Advance(xtree,ltree);
                 // accepted is node, directly
-                Y_JAXIOM(std::cerr << "|_[" << CLID << "]<" << label << ">" << std::endl);
+                //Y_JAXIOM(std::cerr << "|_[" << CLID << "]<" << label << ">" << std::endl);
                 return true;
             }
             else

@@ -21,7 +21,7 @@ namespace upsylon {
         minimalCount(nmin)
         {
             self = static_cast<Repeat *>(this);
-            Y_JAXIOM(std::cerr << "+" << CLID << ">=" << minimalCount <<"*<" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "|_[" << CLID << "] >=" << minimalCount <<"*<" << label << ">" << std::endl);
         }
         
         bool Repeat:: accept(Y_JARGON_AXIOM_ARGS) const
@@ -37,7 +37,6 @@ namespace upsylon {
                 
                 if(count>=minimalCount)
                 {
-                    Y_JAXIOM(std::cerr << "|_[" << CLID << ">=" << minimalCount << "]=" << count << "*<" << axiom.label << ">" << std::endl);
                     XNode::Combine(xtree,ltree,xcache);
                     return true;
                 }

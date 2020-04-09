@@ -30,7 +30,7 @@ namespace upsylon {
                     }
                 }
                 XNode::Advance(xtree,ltree);
-                Y_JAXIOM(std::cerr << "+" << CLID << "<" << label << ">" << std::endl);
+                Y_JAXIOM( if(feature!=Design) std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl );
                 return true;
             }
             catch(...)
@@ -58,7 +58,7 @@ namespace upsylon {
         void Aggregate:: setup()
         {
             self = static_cast<Aggregate *>(this);
-            Y_JAXIOM(std::cerr << "+" << CLID << " <" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "+[" << CLID << "] <" << label << ">" << std::endl);
         }
 
         ios::ostream & Aggregate:: display(ios::ostream &fp) const

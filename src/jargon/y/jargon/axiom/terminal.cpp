@@ -16,8 +16,7 @@ namespace upsylon {
         void Terminal:: setup()
         {
             self = static_cast<Terminal *>(this);
-            //checkLabel(CLID);
-            Y_JAXIOM(std::cerr << "+" << CLID << " <" << label << ">" << std::endl);
+            Y_JAXIOM(std::cerr << "+[" << CLID << "] <" << label << ">" << std::endl);
         }
 
         
@@ -29,7 +28,10 @@ namespace upsylon {
             {
                 if( *(lexeme->label) == *label )
                 {
-                    Y_JAXIOM(std::cerr << "|_[" << CLID << "]<" << label << "> = '" << *lexeme << "'" << std::endl);
+                    Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">";
+                             if(Standard==feature)
+                             std::cerr << " = '" << *lexeme << "'";
+                             std::cerr << std::endl);
                     XNode::Advance(xtree,xcache.query(*this, lexeme));
                     return true;
                 }
