@@ -32,6 +32,7 @@ namespace upsylon {
                 if(axiom.isTerminal())
                 {
                     ++numTerm;
+                    Y_JAXIOM(std::cerr << "Terminal<" << axiom.label << ">" << std::endl);
                 }
             }
             if(numTerm<=0) throw exception("[%s] has no Terminal",**title);

@@ -3,8 +3,10 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
-#include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
+//#include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 #include "y/jargon/lexical/plugin/jstring.hpp"
+#include "y/jargon/lexical/plugin/error.hpp"
+
 #include "y/jargon/evaluator.hpp"
 
 using namespace  upsylon;
@@ -62,7 +64,8 @@ namespace {
             // lexical
             endl("endl",  "[:endl:]");
             drop("blanks","[:blank:]");
-            //discard("error", ".", this, &JSON_Parser::syntaxError);
+            
+            Axiom & ERROR = plug( type2type<Lexical::Error>(), "ta mere" );
             
             graphViz("json.dot");
             compile();
@@ -72,25 +75,7 @@ namespace {
         {
         }
         
-        void syntaxError( const Token &token ) const
-        {
-            assert(token.size>=1);
-            assert(source);
-            std::cerr << "Error caused by " << token << std::endl;
-            const Token &io = source->io;
-            std::cerr << "io=[" << io << "]" << std::endl;
-            std::cerr << "lx=[" << lexemes.size << "]" << std::endl;
-            
-            throw exception("BAD!");
-            Token bad( token );
-            //source->collectNext(bad);
-            const Char &C = *(bad.head);
-            exception excp("%s:%d:%d: %s syntax error '",
-                            **C.tag,C.line,C.column,**title);
-            bad.cat(excp);
-            excp.cat("'");
-            throw excp;
-        }
+        
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(JSON_Parser);
