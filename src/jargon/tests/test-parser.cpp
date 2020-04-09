@@ -86,6 +86,9 @@ namespace {
 }
 
 #include "y/ios/ocstream.hpp"
+#include "y/ios/icstream.hpp"
+#include "y/ios/serialized.hpp"
+
 Y_UTEST(parser)
 {
     Y_UTEST_SIZEOF(Source);
@@ -110,7 +113,18 @@ Y_UTEST(parser)
         Evaluator E(json.title);
         E.browse(*tree);
         
-        std::cerr << "done" << std::endl;
+        tree->save_to("tree.bin");
+        
+        {
+            Context         ctx( "tree.bin" );
+            ios::icstream   fp( *(ctx.tag) );
+            auto_ptr<XNode> reloaded = json.loadTree(ctx,json.cache,fp);
+            reloaded->save_to( "tree2.bin" );
+            Y_CHECK( ios::serialized::are_same_binary(*tree, *reloaded) );
+        }
+        
+        
+        
     }
     
     

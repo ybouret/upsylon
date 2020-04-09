@@ -165,10 +165,12 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! get terminal by label
+            //! get terminal by label, NULL if not registered
             const Terminal *toTerminal(const Tag &) const throw();
             
-            
+            XNode *loadTree(Context      &where,
+                            Cache        &cache,
+                            ios::istream &input) const;
             
             
         protected:
@@ -186,6 +188,8 @@ namespace upsylon {
             XNode *onInternal(XNode *) const throw();
             //! merge child->children into children
             void   amalgamate( XList &children, XNode *child) const throw();
+            
+            const Axiom & loadAxiom(ios::istream &fp, int &r, const char *which) const;
             
         public:
             const size_t    maxLength;  //!< maximum length of labels

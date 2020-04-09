@@ -134,6 +134,9 @@ Y_UTEST(grammar)
             tree->graphViz("tree.dot");
             Evaluator E(G.title);
             E.browse(*tree);
+            
+            tree->save_to("tree.bin");
+            
         }
     }
     
