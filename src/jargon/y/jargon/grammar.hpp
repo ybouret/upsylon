@@ -166,14 +166,10 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! get terminal by label
-            const Terminal &toTerminal(const Tag &) const;
-            
-            //! get terminal by lexeme label
-            const Terminal &toTerminal(const Lexeme *) const;
+            const Terminal *toTerminal(const Tag &) const throw();
             
             
-            //! check if is definitie
-            bool isDefinite(const Lexeme *) const;
+            
             
         protected:
             const   Axiom *ground; //!< ground rule, initially inactive

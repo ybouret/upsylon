@@ -189,6 +189,7 @@ namespace upsylon {
                 /**
                  - action is taken
                  - lexer shall go back to previous scanner
+                 - different regexp may come back
                  */
                 template <
                 typename REGEXP,
@@ -199,7 +200,8 @@ namespace upsylon {
                                  OBJECT_POINTER hObject,
                                  METHOD_POINTER hMethod)
                 {
-                    const string        id = *label + "<-" + regexp;
+                    string              id = "<-";
+                    id += regexp;
                     const Tag           ruleLabel = Tags::Make(id);
                     const Motif         ruleMotif = RegularExpression::Compile(regexp,dict_);
                     const Action        ruleAction(hObject,hMethod);

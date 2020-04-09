@@ -157,26 +157,21 @@ namespace upsylon {
             if(xnode) XNode::Release(xnode,xcache);
         }
 
-        const Terminal &Grammar:: toTerminal( const Tag &label ) const
+        const Terminal *Grammar:: toTerminal( const Tag &label ) const throw()
         {
             const Dogma *ppAxiom = axioms.search_by( *label );
-            if(!ppAxiom) throw exception("[%s] not Terminal<%s>", **title, **label);
-            const Axiom &axiom   = **ppAxiom;
-            if(Terminal::UUID!=axiom.uuid) throw exception("[%s]<%s> is not a Terminal",**title, **label);
-            return axiom.as<Terminal>();
+            if(!ppAxiom)
+            {
+                return NULL;
+            }
+            else
+            {
+                const Axiom &axiom   = **ppAxiom;
+                if(Terminal::UUID!=axiom.uuid) return NULL;
+                return &axiom.as<Terminal>();
+            }
         }
-        
-        const Terminal & Grammar::toTerminal(const Lexeme *lexeme) const
-        {
-            assert(NULL!=lexeme);
-            return toTerminal(lexeme->label);
-        }
-        
-        bool Grammar:: isDefinite(const Lexeme *lexeme) const
-        {
-            assert(lexeme);
-            return toTerminal(lexeme).isDefinite();
-        }
+       
         
 
  

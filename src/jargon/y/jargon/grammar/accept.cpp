@@ -2,11 +2,44 @@
 
 #include "y/jargon/grammar.hpp"
 #include "y/exception.hpp"
- 
+
 namespace upsylon {
     
     namespace Jargon {
-
+        
+        static inline void writeLexeme(exception     &excp,
+                                       const Grammar &G,
+                                       const Lexeme  *lexeme)
+        {
+            const Tag      &label = lexeme->label;
+            const Terminal *term  = G.toTerminal(label);
+            if( term )
+            {
+                lexeme->writeTo(excp, term->isDefinite() );
+            }
+            else
+            {
+                lexeme->writeTo(excp,false);
+            }
+        }
+        
+        static inline exception onError(const char   *which,
+                                        const Grammar &G,
+                                        const Lexeme *lexeme,
+                                        const Axiom  *guess)
+        {
+            assert(which);
+            assert(lexeme);
+            exception       excp("[%s] %s ", ** G.title, which);
+            writeLexeme(excp,G,lexeme);
+            if(lexeme->prev)
+            {
+                excp.cat( " after ");
+                writeLexeme(excp,G,lexeme->prev);
+            }
+            return excp;
+        }
+        
         XNode * Grammar:: accept(Lexer &lexer, Source &source, const bool doAST) const
         {
             assert(ground);
@@ -14,10 +47,9 @@ namespace upsylon {
             const Axiom *guess = NULL;
             Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
             const bool  ok  = ground->Y_JARGON_AXIOM_ACCEPT(xtree);
-            const char *by  = guess ? **(guess->label) : NULL;
             Y_JAXIOM(std::cerr << "[" << title << "] ok = " << ok << std::endl);
-            Y_JAXIOM(std::cerr << "[" << title << "] by = " << (by ? by : "none") << std::endl);
-
+            Y_JAXIOM(std::cerr << "[" << title << "] by = " << (guess ? **(guess->label) : "none") << std::endl);
+            
             if( ok )
             {
                 //--------------------------------------------------------------
@@ -25,42 +57,28 @@ namespace upsylon {
                 // detecting errors
                 //
                 //--------------------------------------------------------------
+                
+                //--------------------------------------------------------------
+                // NULL tree..
+                //--------------------------------------------------------------
                 if(xtree==NULL)
                 {
                     exception excp("[%s] accepted <%s> a NULL tree",**title, **(ground->label));
-                    if( by ) excp.cat(" of <%s>", by);
                     throw excp;
                 }
                 
-                
+                //--------------------------------------------------------------
+                // check input
+                //--------------------------------------------------------------
                 try
                 {
-                    //----------------------------------------------------------
-                    //
-                    // still some lexeme ?
-                    //
-                    //----------------------------------------------------------
                     Lexeme *lexeme = lexer.get(source);
                     if(lexeme)
                     {
                         lexer.unget(lexeme);
-                        exception excp("%s:%d:%d: [%s] unexpected extraneous",
-                                       **(lexeme->tag),
-                                       lexeme->line,
-                                       lexeme->column,
-                                       **title);
-                        lexeme->writeTo(excp,isDefinite(lexeme));
-                        
-                        const Lexeme *last = XNode::LastLexeme(xtree);
-                        if(last)
-                        {
-                            excp.cat(" after");
-                            last->writeTo(excp,isDefinite(lexeme));
-                        }
-                        if( by ) excp.cat(" of <%s>", by);
-                        throw excp;
+                        throw onError("extraneous",*this,lexeme,guess);
                     }
-                                
+                    
                 }
                 catch(...)
                 {
@@ -75,47 +93,34 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 Y_JAXIOM(std::cerr << "[" << title << "] returning AST" << std::endl);
                 return doAST ? AST(xtree) : xtree;
-
+                
             }
             else
             {
+                assert(NULL==xtree);
+                
                 //--------------------------------------------------------------
                 //
                 // rejected!
                 //
                 //--------------------------------------------------------------
-                //std::cerr << "[Rejected!!]" << std::endl;
-                //std::cerr << "with #" << lexer.lexemes.size << std::endl;
+                std::cerr << "[Rejected!!]" << std::endl;
+                std::cerr << "with #" << lexer.lexemes.size << std::endl;
+                
+                exception excp("[%s] rejected",**title);
+                
                 
                 const Lexemes &analyzed = lexer.lexemes;
                 if(analyzed.size<=0)
                 {
-                    throw exception("[%s] rejected empty input",**title);
+                    throw exception("[%s] invalid empty input",**title);
                 }
                 else
                 {
-                    exception     excp("[%s] rejected ",**title);
-                    if(1==analyzed.size)
-                    {
-                        excp.cat("single ");
-                    }
-                    const Lexeme *last = analyzed.tail;
-                    last->writeTo(excp,isDefinite(last));
-                    
-                    if(last->prev)
-                    {
-                        const Lexeme *prev = last->prev;
-                        excp.cat(" after ");
-                        prev->writeTo(excp, isDefinite(prev) );
-                    }
-                    
-                    //TODO analyze which..
-                    if( by ) excp.cat(" of <%s>", by);
-
-                    throw excp;
+                    throw onError("rejected", *this, analyzed.tail, guess);
                 }
                 
-
+                
             }
             
         }

@@ -26,6 +26,7 @@ namespace upsylon
                 const Context & context = *(token.head);
                 const Cache   & cache   = token.cache;
                 unit = new Unit(cache,context,label);
+                unit->append(token);
             }
             
             void Error:: onEndl(const Token &_)
