@@ -17,7 +17,11 @@ ADD_TEST(lexer    test-jargon lexer)
 ADD_TEST(matching test-jargon matching)
 ADD_TEST(xnode    test-jargon xnode)
 ADD_TEST(grammar  test-jargon grammar)
-ADD_TEST(parser   test-jargon parser)
+ADD_TEST(parser1  test-jargon parser ${HERE}/../../json/tests/sample1.js)
+ADD_TEST(parser2  test-jargon parser ${HERE}/../../json/tests/sample2.js)
+ADD_TEST(parser3  test-jargon parser ${HERE}/../../json/tests/sample3.js)
+ADD_TEST(parser4  test-jargon parser ${HERE}/../../json/tests/sample4.js)
+ADD_TEST(parser5  test-jargon parser ${HERE}/../../json/tests/db.js)
 ADD_TEST(expr     test-jargon expr)
 
 ADD_CUSTOM_TARGET(utest-jargon
