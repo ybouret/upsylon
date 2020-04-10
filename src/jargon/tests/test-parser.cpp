@@ -53,7 +53,7 @@ namespace {
             {
                 Axiom  &LBRACE      = mark('{');
                 Axiom  &RBRACE      = mark('}');
-                Axiom  &PAIR        = cat(STRING,mark(':'),VALUE);
+                Axiom  &PAIR        = ( agg("pair") << STRING << mark(':') << VALUE);
                 Axiom &empty_object = ( agg("empty_object") << LBRACE << RBRACE );
                 Axiom &heavy_object = ( agg("heavy_object") << LBRACE << PAIR << zom(cat(COMA,PAIR)) << RBRACE );
                 Axiom &the_object   = choice(empty_object,heavy_object);
@@ -88,6 +88,7 @@ namespace {
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/serialized.hpp"
+using namespace ios;
 
 Y_UTEST(parser)
 {
@@ -118,9 +119,9 @@ Y_UTEST(parser)
         {
             Context         ctx( "tree.bin" );
             ios::icstream   fp( *(ctx.tag) );
-            auto_ptr<XNode> reloaded = json.loadTree(ctx,json.cache,fp);
-            reloaded->save_to( "tree2.bin" );
-            Y_CHECK( ios::serialized::are_same_binary(*tree, *reloaded) );
+            auto_ptr<XNode> tree2 = json.loadTree(ctx,json.cache,fp);
+            tree2->save_to( "tree2.bin" );
+            Y_CHECK(serialized::are_same_binary(*tree,*tree2));
         }
         
         
