@@ -161,13 +161,14 @@ namespace upsylon {
 
             //------------------------------------------------------------------
             //
-            //utilities
+            // utilities
             //
             //------------------------------------------------------------------
             
             //! get terminal by label, NULL if not registered
             const Terminal *toTerminal(const Tag &) const throw();
             
+            //! reload tree
             XNode *loadTree(Context      &where,
                             Cache        &cache,
                             ios::istream &input) const;
