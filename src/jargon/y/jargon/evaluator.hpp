@@ -14,7 +14,7 @@ namespace upsylon {
         //! browsing an ast
         //
         //----------------------------------------------------------------------
-        class Evaluator : public Object
+        class Evaluator : public virtual Object
         {
         public:
             //------------------------------------------------------------------
