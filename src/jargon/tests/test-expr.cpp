@@ -62,7 +62,7 @@ Y_UTEST(expr)
         
         tree->graphViz("expr_tree.dot");
         
-        Evaluator E(expr.title);
+        Evaluator_ E(expr.title);
         E.browse(*tree);
         
         std::cerr << "done" << std::endl;

@@ -8,7 +8,7 @@ SET( srcs ${decl} ${impl}
 INSTALL( FILES ${decl} DESTINATION include/y/json )
 SOURCE_GROUP( json FILES ${srcs} )
 
-INCLUDE_DIRECTORIES( . ../main ../lang)
+INCLUDE_DIRECTORIES( . ../main ../jargon)
 
 ADD_LIBRARY( y-json STATIC ${srcs}  )
 INSTALL( TARGETS y-json ARCHIVE DESTINATION lib )

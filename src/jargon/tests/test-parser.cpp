@@ -111,7 +111,7 @@ Y_UTEST(parser)
         
         tree->graphViz("json_tree.dot");
         
-        Evaluator E(json.title);
+        Evaluator_ E(json.title);
         E.browse(*tree);
         
         tree->save_to("tree.bin");

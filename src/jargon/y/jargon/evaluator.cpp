@@ -40,6 +40,7 @@ namespace upsylon {
         void Evaluator:: browse(const XNode &root)
         {
             depth = 0;
+            onBrowsing();
             __browse(root);
             assert(0==depth);
         }
@@ -62,6 +63,16 @@ namespace upsylon {
                 } return;
             }
         }
+     
+        
+        Evaluator_:: ~Evaluator_() throw()
+        {
+        }
+        
+        void Evaluator_:: onBrowsing() throw()
+        {
+        }
+        
         
     }
     

@@ -119,7 +119,7 @@ namespace upsylon {
                 bool       store(Scanner::Handle &scan);  //!< insert and set dict_
                 Scanner   &insert(Scanner::Handle &scan); //!< insert a scanner
                 Plugin    &insert(Plugin *plugin);        //!< insert a plugin
-                void       leap(const string &id, const char *when ); //!< change current scanner
+                void       leap(const string &id, const char *when); //!< change current scanner
                 Plugin    &extract(const Scanner::Handle *pps, const string &key) const;
                 
                 

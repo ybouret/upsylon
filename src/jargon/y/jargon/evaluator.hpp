@@ -65,13 +65,36 @@ namespace upsylon {
             
             //! default call when an internal is met
             virtual void onInternal(const Tag &, const size_t );
-            
+
+           
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Evaluator);
             void __browse(const XNode &);
             
+            //! initialize extra data
+            virtual void onBrowsing() = 0;
+
         };
         
+        //----------------------------------------------------------------------
+        //
+        //! browsing an ast
+        //
+        //----------------------------------------------------------------------
+        class Evaluator_ : public Evaluator
+        {
+        public:
+            template <typename LABEL> inline
+            explicit Evaluator_(const LABEL &id) : Evaluator(id)
+            {
+            }
+            
+            virtual ~Evaluator_() throw();
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Evaluator_);
+            virtual void onBrowsing() throw();
+        };
     }
     
 }

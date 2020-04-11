@@ -101,9 +101,7 @@ namespace upsylon {
             template <typename PLUGIN,typename LABEL>
             Axiom & plug(type2type<PLUGIN>,const LABEL &label)
             {
-                std::cerr << "Loading <" << label << ">" << std::endl;
                 load(type2type<PLUGIN>(),label).hook(*this);
-                std::cerr << "Registering terminal<" << label << ">" << std::endl;
                 return terminal(label);
             }
             
@@ -140,6 +138,12 @@ namespace upsylon {
             XNode *parseFile(const FILENAME &fileName)
             {
                 return parse( Module::OpenFile(cache,fileName) );
+            }
+            
+            void cleanup() throw()
+            {
+                cache->release();
+                xcache.release();
             }
             
             //------------------------------------------------------------------

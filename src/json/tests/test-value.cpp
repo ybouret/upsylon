@@ -1,4 +1,4 @@
-#include "y/json/value.hpp"
+#include "y/json/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -25,8 +25,15 @@ Y_UTEST(value)
             v0 = world;
         }
     }
-
     
+    Jargon::Axiom::Verbose = true;
+    JSON::Parser json;
+    json.graphViz("json.dot");
+    if(argc>1)
+    {
+        auto_ptr<Jargon::XNode> tree = json.parseFile(argv[1]);
+        tree->graphViz("json_tree.dot");
+    }
 
 }
 Y_UTEST_DONE()

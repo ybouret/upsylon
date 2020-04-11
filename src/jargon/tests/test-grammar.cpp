@@ -132,7 +132,7 @@ Y_UTEST(grammar)
             auto_ptr<XNode> tree = G.accept(L,source);
             Y_CHECK(tree.is_valid());
             tree->graphViz("tree.dot");
-            Evaluator E(G.title);
+            Evaluator_ E(G.title);
             E.browse(*tree);
             
             tree->save_to("tree.bin");
