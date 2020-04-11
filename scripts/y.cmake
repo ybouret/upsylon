@@ -247,11 +247,7 @@ MACRO(TARGET_LINK_Y tgt)
 		ENDIF()
 		
 		IF( ${extra} STREQUAL "json" )
-			LIST(APPEND ylibs "y-lang")
-		ENDIF()
-		
-		IF( ${extra} STREQUAL "seem" )
-			LIST(APPEND ylibs "y-lang")
+			LIST(APPEND ylibs "y-jargon")
 		ENDIF()
 		
 		IF( ${extra} STREQUAL "graphic" )

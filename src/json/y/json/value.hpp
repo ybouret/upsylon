@@ -6,6 +6,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -48,9 +49,14 @@ namespace upsylon
         class Value
         {
         public:
-            Value() throw(); //!< IsNull
-            virtual ~Value() throw(); //!< desctructor
-            Value(const Value &other); //!< hard copy
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            Value() throw();                         //!< IsNull
+            virtual ~Value() throw();                //!< cleanup
+            Value(const Value &other);               //!< hard copy
             Value & operator=( const Value &other ); //!< hard-copy/swap
 
             Value( const NullType_t  & ) throw(); //!< null
@@ -62,18 +68,22 @@ namespace upsylon
             Value( const char   *text  );         //!< make string
             Value( const string &str   );         //!< make string
             
-            void  swap_with( Value &other ) throw(); //!< no-throw swap
-            
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            void        swapWith( Value &other ) throw(); //!< no-throw swap
+            const char *typeName() const throw();         //!< type name
+
             template <typename T> T       & as() throw();       //!< data conversion
             template <typename T> const T & as() const throw(); //!< data conversion
-
-            //! get type name
-            inline const char *typeName() const throw() { return ValueTypeText(type); }
-
+            
             //! display
-            ios::ostream & display(ios::ostream &os, int depth=0) const;
+            ios::ostream & display(ios::ostream &, int depth=0) const;
             
             const ValueType type; //!< named type
+            
         private:
             void *impl;
         };
@@ -93,8 +103,8 @@ namespace upsylon
             inline void   push( const Value &v )  { push_back(v);  }                           //!< push a copy
             inline size_t length() const throw()  { return size(); }                           //!< size
             inline void   pop()    throw()        { pop_back();    }                           //!< remove last
-            inline void   pop( Value &v ) throw() { v.swap_with(back()); pop_back(); }         //!< get then pop
-            inline void   _push(Value &v)         { push(NullType); back().swap_with(v); }     //!< push content
+            inline void   pop( Value &v ) throw() { v.swapWith(back()); pop_back(); }         //!< get then pop
+            inline void   _push(Value &v)         { push(NullType); back().swapWith(v); }     //!< push content
 
             inline void   push( const NullType_t  &_) { const Value tmp(_); push_back(tmp); }  //!< push a new null
             inline void   push( const TrueType_t  &_) { const Value tmp(_); push_back(tmp); }  //!< push a new true

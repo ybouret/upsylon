@@ -23,6 +23,9 @@ namespace upsylon
             return "???";
         }
         
+        
+        const char * Value:: typeName() const throw() { return ValueTypeText(type); }
+        
         const NullType_t   NullType   = {};
         const TrueType_t   TrueType   = {};
         const FalseType_t  FalseType  = {};
@@ -118,18 +121,21 @@ namespace upsylon
                 case IsArray:  assert(impl); delete static_cast<Array  *>(impl); break;
                 case IsObject: assert(impl); delete static_cast<Object *>(impl); break;
             }
+            impl = 0;
         }
+        
+       
 
-        void Value:: swap_with(Value &other) throw()
+        void Value:: swapWith(Value &other) throw()
         {
-            cswap(type,other.type);
-            cswap(impl,other.impl);
+            _cswap(type,other.type);
+            _cswap(impl,other.impl);
         }
 
         Value & Value:: operator=(const Value &other)
         {
             Value tmp(other);
-            swap_with(tmp);
+            swapWith(tmp);
             return *this;
         }
 
@@ -145,9 +151,9 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         Array::  Array() throw() : _Array() {}
         Array:: ~Array() throw() {}
         
-        Array:: Array(const Array &other) : dynamic(), _Array(other) {}
+        Array:: Array(const Array &other) :  collection(), addressable<Value>(), counted_object(), _Array(other) {}
 
-        Array:: Array(const size_t n) : _Array(n,as_capacity)
+        Array:: Array(const size_t n) : collection(), _Array(n,as_capacity)
         {
             nil(n);
         }
@@ -187,7 +193,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
 
         Object:: ~Object() throw() {}
         
-        Object:: Object( const Object &other ) : dynamic(), _Object(other) {}
+        Object:: Object( const Object &other ) :  collection(), _Object(other) {}
 
         Value &Object:: add(const string &label, const Value &v)
         {
@@ -203,7 +209,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         {
             Value tmp(_);
             Value &v = add(label,NullType);
-            v.swap_with(tmp);
+            v.swapWith(tmp);
             return v.as<Array>();
         }
 
@@ -211,7 +217,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         {
             Value tmp(_);
             Value &v = add(label,NullType);
-            v.swap_with(tmp);
+            v.swapWith(tmp);
             return v.as<Object>();
         }
 
@@ -219,7 +225,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         {
             Value tmp(_);
             Value &v = add(label,NullType);
-            v.swap_with(tmp);
+            v.swapWith(tmp);
             return v.as<Number>();
         }
 
@@ -227,7 +233,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         {
             Value tmp(_);
             Value &v = add(label,NullType);
-            v.swap_with(tmp);
+            v.swapWith(tmp);
             return v.as<String>();
         }
 
@@ -236,7 +242,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         {
             Value tmp(_);
             Value &v = add(label,NullType);
-            v.swap_with(tmp);
+            v.swapWith(tmp);
             return v.as<String>();
         }
 
@@ -245,7 +251,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
 }
 
 
-#include "y/string/io.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -256,7 +262,12 @@ namespace upsylon
         static inline void __emit_string( ios::ostream &os, const String &s )
         {
             static const char quotes = '"';
-            string_io::write_C(os << quotes,s) << quotes;
+            os << quotes;
+            for(size_t i=0;i<s.size();++i)
+            {
+                os << cchars::encoded[ uint8_t(s[i]) ];
+            }
+            os << quotes;
         }
 
         ios::ostream & Value:: display(ios::ostream &os, int level) const
