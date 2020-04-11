@@ -1,4 +1,4 @@
-#include "y/json/parser.hpp"
+#include "y/json/compiler.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -27,12 +27,13 @@ Y_UTEST(value)
     }
     
     Jargon::Axiom::Verbose = true;
-    JSON::Parser json;
+    JSON::Compiler json;
     json.graphViz("json.dot");
     if(argc>1)
     {
         auto_ptr<Jargon::XNode> tree = json.parseFile(argv[1]);
         tree->graphViz("json_tree.dot");
+        json.browse(*tree);
     }
 
 }

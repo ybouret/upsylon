@@ -1,5 +1,5 @@
 
-#include "y/json/parser.hpp"
+#include "y/json/compiler.hpp"
 #include "y/jargon/lexical/plugin/jstring.hpp"
 #include "y/jargon/lexical/plugin/error.hpp"
 
@@ -10,7 +10,10 @@ namespace upsylon {
         
         using namespace Jargon;
         
-        Parser:: Parser() : Jargon::Parser("JSON"), value()
+        Compiler:: Compiler() :
+        Jargon::Parser("JSON"),
+        Jargon::Evaluator(title),
+        value()
         {
             
             // top level: array|object
@@ -70,9 +73,14 @@ namespace upsylon {
             
         }
         
-        Parser:: ~Parser() throw()
+        Compiler:: ~Compiler() throw()
         {
             
+        }
+        
+        void Compiler:: onBrowsing()
+        {
+            value = NullType;
         }
         
     }
