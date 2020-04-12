@@ -6,7 +6,7 @@
 namespace upsylon {
     
     namespace Jargon {
-
+        
         const char Terminal:: CLID[] = "Terminal";
         
         Terminal:: ~Terminal() throw()
@@ -18,7 +18,7 @@ namespace upsylon {
             self = static_cast<Terminal *>(this);
             Y_JAXIOM(std::cerr << "+[" << CLID << "] <" << label << ">" << std::endl);
         }
-
+        
         
         bool Terminal:: accept(Y_JARGON_AXIOM_ARGS_) const
         {
@@ -48,12 +48,12 @@ namespace upsylon {
                 return false;
             }
         }
-
+        
         ios::ostream & Terminal:: display(ios::ostream &fp) const
         {
             return fp("|_[%s<%s>] $%s\n", CLID, **label,featureText());
         }
-
+        
         bool Terminal:: isDefinite() const throw()
         {
             return Standard != feature;
@@ -64,7 +64,7 @@ namespace upsylon {
         Y_JTERM_IS(Standard)
         Y_JTERM_IS(Univocal)
         Y_JTERM_IS(Division)
-
+        
         const char * Terminal:: FeatureText(const Feature f)   throw()
         {
             switch (f) {
@@ -85,14 +85,28 @@ namespace upsylon {
         
         const char *   Terminal:: vizual() const throw()
         {
-            switch(feature)
+            if(isOperator)
             {
-                case Univocal: return "shape=rectangle,style=\"bold,filled,rounded\"";
-                case Division: return "shape=rectangle,style=\"dashed,bold,filled,rounded\"";
-                default:
-                    break;
+                switch(feature)
+                {
+                    case Univocal: return "shape=triangle,style=\"bold,filled,rounded\"";
+                    case Division: return "shape=triangle,style=\"dashed,bold,filled,rounded\"";
+                    default:
+                        break;
+                }
+                return "shape=triangle,style=\"bold,filled\"";
             }
-            return "shape=rectangle,style=\"bold,filled\"";
+            else
+            {
+                switch(feature)
+                {
+                    case Univocal: return "shape=rectangle,style=\"bold,filled,rounded\"";
+                    case Division: return "shape=rectangle,style=\"dashed,bold,filled,rounded\"";
+                    default:
+                        break;
+                }
+                return "shape=rectangle,style=\"bold,filled\"";
+            }
         }
     }
     

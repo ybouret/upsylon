@@ -46,8 +46,10 @@ namespace upsylon {
             
             //! setup, check valid name
             template <typename LABEL>
-            explicit Terminal(const LABEL &id, const Feature f = Standard) :
-            Axiom(id,UUID), feature(f)
+            explicit Terminal(const LABEL  &id,
+                              const Feature ft = Standard,
+                              const bool    op = false) :
+            Axiom(id,UUID), feature(ft), isOperator(op)
             {
                 setup();
             }
@@ -68,7 +70,9 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            const Feature feature; //!< the feature
+            const Feature feature;    //!< the feature
+            const bool    isOperator; //!< operator property
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Terminal);

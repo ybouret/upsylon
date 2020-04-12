@@ -30,7 +30,7 @@ namespace {
             POWER << ATOM << opt( cat(mark('^'), POWER) );
             
             Aggregate &MULOP = act("MULOP");
-            MULOP << POWER << zom( cat( choice( term('*'), term('/') ), POWER ) );
+            MULOP << POWER << zom( cat( choice( proc('*'), proc('/') ), POWER ) );
             
             Axiom &PM = choice( term('+'), term('-') );
             ADDOP << opt(PM) << MULOP << zom( cat( PM , MULOP ) );

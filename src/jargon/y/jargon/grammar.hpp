@@ -80,9 +80,11 @@ namespace upsylon {
             
             //! new terminal
             template <typename LABEL> inline
-            Axiom & terminal(const LABEL &id, const Terminal::Feature f = Terminal::Standard)
+            Axiom & terminal(const LABEL             &id,
+                             const Terminal::Feature ft = Terminal::Standard,
+                             const bool              op = false)
             {
-                return declare( new Terminal(id,f) );
+                return declare( new Terminal(id,ft,op) );
             }
             
             //------------------------------------------------------------------

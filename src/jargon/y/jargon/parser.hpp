@@ -42,11 +42,12 @@ namespace upsylon {
             // Terminal
             //
             //------------------------------------------------------------------
-           
+            
             //! create a terminal, detect univocal
             template <typename LABEL,typename REGEXP>
-            Axiom & term(const LABEL      &label,
-                         const REGEXP     &regexp)
+            Axiom & term_(const LABEL      &label,
+                          const REGEXP     &regexp,
+                          const bool        isOp)
             {
                 // will emit the terminal
                 const  Motif     &motif   = emit(label,regexp).motif; assert(motif->strong());
@@ -56,7 +57,15 @@ namespace upsylon {
                     feature = Terminal::Univocal;
                 }
                 // and associate it with a terminal
-                return terminal(label,feature);
+                return terminal(label,feature,isOp);
+            }
+            
+            //! create a terminal, detect univocal
+            template <typename LABEL,typename REGEXP>
+            Axiom & term(const LABEL      &label,
+                         const REGEXP     &regexp)
+            {
+                return term_(label,regexp,false);
             }
             
             //! create a terminal, wrapper
@@ -64,6 +73,27 @@ namespace upsylon {
             Axiom & term(const LABEL &both)
             {
                 return term(both,both);
+            }
+            
+            //------------------------------------------------------------------
+            //
+            // operators
+            //
+            //------------------------------------------------------------------
+            
+            //! create an operator terminal
+            template <typename LABEL,typename REGEXP>
+            Axiom & proc(const LABEL      &label,
+                         const REGEXP     &regexp)
+            {
+                return term_(label,regexp,true);
+            }
+            
+            //! create an operator terminal, wrapper
+            template <typename LABEL>
+            Axiom & proc(const LABEL      &both)
+            {
+                return proc(both,both);
             }
             
             //------------------------------------------------------------------
@@ -81,7 +111,7 @@ namespace upsylon {
                 const  Lexical::Rule &rule  = emit(label,regexp);
                 checkUnivocal(rule);
                 // and associate it with a terminal
-                return terminal(label,Terminal::Division);
+                return terminal(label,Terminal::Division,false);
             }
             
             //! create division mark, wrapper
