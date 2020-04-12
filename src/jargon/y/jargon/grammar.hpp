@@ -193,11 +193,14 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Grammar);
             unsigned       iAlt;
             unsigned       iAgg;
+            
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
+            
             XNode *onTerminal(XNode *) const throw();
             XNode *onInternal(XNode *) const throw();
-            //! merge child->children into children
-            void   amalgamate( XList &children, XNode *child) const throw();
+            void   broadcast(XList &)  const throw();
+            void   amalgamate(XList &) const throw();
+            void   rewrite(XList &)    const throw();
             
             const Axiom & loadAxiom(ios::istream &fp, int &r, const char *which) const;
             

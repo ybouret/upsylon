@@ -87,7 +87,7 @@ namespace upsylon {
            
             XNode      *activate(const Internal &)           throw(); //!< inactive => internal
             XNode      *activate(const Terminal &, Lexeme *) throw(); //!< inactive => terminal
-
+            
             virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface
             virtual const char *className()        const throw(); //!< serializable interface
             
