@@ -31,7 +31,7 @@ namespace upsylon {
             assert(which);
             assert(lexeme);
             const Context  &ctx = *lexeme;
-            exception       excp("%s:%d%d: [%s] %s ",
+            exception       excp("%s:%d:%d: [%s] %s ",
                                  **(ctx.tag),
                                  ctx.line,
                                  ctx.column,

@@ -91,7 +91,7 @@ namespace upsylon {
             
             Axiom & oom(Axiom &); //!< new One Or More Axiom
             Axiom & zom(Axiom &); //!< new Zero Or More Axiom
-            Axiom & opt(Axiom &); //!< new Option Axion
+            Axiom & opt(Axiom &); //!< new Option Axiom
             
             //------------------------------------------------------------------
             // aggregates
@@ -118,7 +118,11 @@ namespace upsylon {
             //------------------------------------------------------------------
             // alternates
             //------------------------------------------------------------------
-            
+            template <typename LABEL> inline
+            Alternate & alt(const LABEL &id)
+            {
+                return declare( new Alternate(id) );
+            }
             Alternate & alt();//!< new alternate
             Axiom     & choice(Axiom &a, Axiom &b);           //!< make a choice
             Axiom     & choice(Axiom &a, Axiom &b, Axiom &c); //!< make a choice

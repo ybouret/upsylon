@@ -37,6 +37,11 @@ namespace upsylon {
         Alternate:: Alternate(unsigned &indx) :
         Compound(MakeLabel(indx),UUID)
         {
+            setup();
+        }
+        
+        void Alternate:: setup()
+        {
             self = static_cast<Alternate *>(this);
             Y_JAXIOM(std::cerr << "+[" << CLID << "]<" << label << ">" << std::endl);
         }

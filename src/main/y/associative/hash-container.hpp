@@ -277,7 +277,9 @@ namespace upsylon
             }
         }
 
-
+        
+       
+        
     protected:
         table_type table; //!< handle low level operations
         

@@ -43,6 +43,7 @@ namespace upsylon {
             onBrowsing();
             __browse(root);
             assert(0==depth);
+            onFinalize();
         }
         
         void Evaluator:: __browse(const XNode &node)
@@ -73,7 +74,11 @@ namespace upsylon {
         {
         }
         
-        
+        void Evaluator_:: onFinalize() throw()
+        {
+            
+        }
+
     }
     
 }

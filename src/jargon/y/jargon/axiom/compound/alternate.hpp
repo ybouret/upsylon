@@ -39,12 +39,22 @@ namespace upsylon {
             //! setup
             explicit Alternate(unsigned &);
             
+            template <typename LABEL>
+            explicit Alternate( const LABEL &ID ) :
+            Compound(ID,UUID)
+            {
+                setup();
+            }
+            
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Alternate);
             virtual bool           accept(Y_JARGON_AXIOM_ARGS) const;
             virtual const char *   vizual() const throw();
             virtual ios::ostream & display(ios::ostream &)     const;
-
+            void setup();
+            
         };
     }
 }

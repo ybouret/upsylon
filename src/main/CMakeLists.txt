@@ -353,6 +353,12 @@ SET(jargon_pattern_srcs ${jargon_pattern_decl} ${jargon_pattern_code})
 SOURCE_GROUP( jargon/pattern FILES ${jargon_pattern_srcs} )
 INSTALL( FILES ${jargon_pattern_decl} DESTINATION include/y/jargon/pattern )
 
+FILE(GLOB jargon_token_decl y/jargon/token/*.hpp)
+FILE(GLOB jargon_token_code y/jargon/token/*.cpp)
+SET(jargon_token_srcs ${jargon_token_decl} ${jargon_token_code})
+SOURCE_GROUP( jargon/token FILES ${jargon_token_srcs} )
+INSTALL( FILES ${jargon_token_decl} DESTINATION include/y/jargon/token )
+
 FILE(GLOB jargon_pattern_basic_decl y/jargon/pattern/basic/*.hpp)
 FILE(GLOB jargon_pattern_basic_code y/jargon/pattern/basic/*.cpp)
 SET(jargon_pattern_basic_srcs ${jargon_pattern_basic_decl} ${jargon_pattern_basic_code})
@@ -437,11 +443,11 @@ ${sparse_srcs}
 ${counting_srcs}
 ${oxide_srcs} ${oxide_field_srcs} ${oxide_grid_srcs} ${oxide_algo_srcs} ${oxide_mpi_srcs}
 ${jargon_srcs} 
+${jargon_token_srcs} 
 ${jargon_pattern_srcs} 
 ${jargon_pattern_basic_srcs}
 ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
-#${jargon_lexical_srcs} ${jargon_lexical_event_srcs} ${jargon_lexical_plugin_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

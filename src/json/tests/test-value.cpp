@@ -26,14 +26,18 @@ Y_UTEST(value)
         }
     }
     
-    Jargon::Axiom::Verbose = true;
+    //Jargon::Axiom::Verbose = true;
     JSON::Compiler json;
     json.graphViz("json.dot");
     if(argc>1)
     {
         auto_ptr<Jargon::XNode> tree = json.parseFile(argv[1]);
         tree->graphViz("json_tree.dot");
+        tree->save_to("json_tree.bin");
         json.browse(*tree);
+        ios::ocstream fp( ios::cstderr );
+        json.value.display(fp,0);
+        fp << '\n';
     }
 
 }
