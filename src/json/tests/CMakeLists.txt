@@ -12,6 +12,6 @@ ADD_TEST(sample3 test-json value ${HERE}/sample3.js)
 ADD_TEST(sample4 test-json value ${HERE}/sample4.js)
 
 ADD_CUSTOM_TARGET(utest-json
-COMMAND ${CMAKE_CTEST_COMMAND} -V
+COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-json)
 
