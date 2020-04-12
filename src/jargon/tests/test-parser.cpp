@@ -3,7 +3,6 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
-//#include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 #include "y/jargon/lexical/plugin/jstring.hpp"
 #include "y/jargon/lexical/plugin/error.hpp"
 
@@ -117,9 +116,7 @@ Y_UTEST(parser)
         tree->save_to("tree.bin");
         
         {
-            Context         ctx( "tree.bin" );
-            ios::icstream   fp( *(ctx.tag) );
-            auto_ptr<XNode> tree2 = json.loadTree(ctx,json.cache,fp);
+            auto_ptr<XNode> tree2 = json.loadTreeFromFile("tree.bin");
             tree2->save_to( "tree2.bin" );
             Y_CHECK(serialized::are_same_binary(*tree,*tree2));
         }

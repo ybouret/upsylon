@@ -2,6 +2,7 @@
 #include "y/jargon/parser.hpp"
 #include "y/exception.hpp"
 #include "y/jargon/first-chars.hpp"
+#include "y/ios/icstream.hpp"
 
 namespace upsylon {
     
@@ -54,6 +55,18 @@ namespace upsylon {
             //------------------------------------------------------------------
             FirstChars  fc;
             
+        }
+
+        void Parser:: cleanup() throw()
+        {
+            cache->release();
+            xcache.release();
+        }
+        
+        XNode *Parser:: treeFromFile(Context &where)
+        {
+            ios::icstream input( *(where.tag) );
+            return loadTree(where,cache,input);
         }
 
         

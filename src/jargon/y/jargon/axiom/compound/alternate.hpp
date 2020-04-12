@@ -39,6 +39,7 @@ namespace upsylon {
             //! setup
             explicit Alternate(unsigned &);
             
+            //! making a named alternate
             template <typename LABEL>
             explicit Alternate( const LABEL &ID ) :
             Compound(ID,UUID)

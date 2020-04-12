@@ -130,7 +130,7 @@ namespace upsylon {
             //! validate grammar
             void compile();
             
-            //! parsing a module
+            //! parsing a module, no restart
             XNode *parse( Module *, const bool doAST=true );
           
             //! parse a file
@@ -140,10 +140,15 @@ namespace upsylon {
                 return parse( Module::OpenFile(cache,fileName) );
             }
             
-            void cleanup() throw()
+            //! clean cache and xcache
+            void cleanup() throw();
+            
+            //! load tree as Intermediate Language
+            template <typename FILENAME>
+            XNode *loadTreeFromFile( const FILENAME &filename )
             {
-                cache->release();
-                xcache.release();
+                Context ctx(filename);
+                return treeFromFile(ctx);
             }
             
             //------------------------------------------------------------------
@@ -159,6 +164,8 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
             void checkUnivocal(const Lexical::Rule &) const;
+            XNode *treeFromFile(Context &ctx);
+            
         };
         
     }

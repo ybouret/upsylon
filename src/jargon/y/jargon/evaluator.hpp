@@ -83,11 +83,13 @@ namespace upsylon {
         class Evaluator_ : public Evaluator
         {
         public:
+            //! setup
             template <typename LABEL> inline
             explicit Evaluator_(const LABEL &id) : Evaluator(id)
             {
             }
             
+            //! cleanup
             virtual ~Evaluator_() throw();
             
         private:

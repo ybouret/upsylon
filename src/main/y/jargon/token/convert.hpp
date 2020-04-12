@@ -12,11 +12,12 @@ namespace upsylon {
     
     namespace Jargon {
 
+        //! conversion of tokens
         struct TokenConvert
         {
-            static void To(string &target, const Token &token);
-            static void To(double &target, const Token &token);
-
+            static void To(string &target, const Token &token); //!< to string
+            static void To(double &target, const Token &token); //!< to double
+            
         };
     }
     

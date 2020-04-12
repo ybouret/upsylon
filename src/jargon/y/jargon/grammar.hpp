@@ -118,11 +118,14 @@ namespace upsylon {
             //------------------------------------------------------------------
             // alternates
             //------------------------------------------------------------------
+            
+            //! creating a named alternate
             template <typename LABEL> inline
             Alternate & alt(const LABEL &id)
             {
                 return declare( new Alternate(id) );
             }
+            
             Alternate & alt();//!< new alternate
             Axiom     & choice(Axiom &a, Axiom &b);           //!< make a choice
             Axiom     & choice(Axiom &a, Axiom &b, Axiom &c); //!< make a choice
@@ -172,7 +175,7 @@ namespace upsylon {
             //! get terminal by label, NULL if not registered
             const Terminal *toTerminal(const Tag &) const throw();
             
-            //! reload tree
+            //! low level reload tree
             XNode *loadTree(Context      &where,
                             Cache        &cache,
                             ios::istream &input) const;

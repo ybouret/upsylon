@@ -1,6 +1,7 @@
 #include "y/json/compiler.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/ios/serialized.hpp"
 
 using namespace upsylon;
 
@@ -32,8 +33,12 @@ Y_UTEST(value)
     if(argc>1)
     {
         auto_ptr<Jargon::XNode> tree = json.parseFile(argv[1]);
-        tree->graphViz("json_tree.dot");
         tree->save_to("json_tree.bin");
+        {
+            auto_ptr<Jargon::XNode> tree2 = json.loadTreeFromFile("json_tree.bin");
+            Y_CHECK(ios::serialized::are_same_binary(*tree, *tree2));
+        }
+        tree->graphViz("json_tree.dot");
         json.browse(*tree);
         ios::ocstream fp( ios::cstderr );
         json.value.display(fp,0);

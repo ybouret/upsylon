@@ -12,21 +12,30 @@ namespace upsylon {
  
     namespace JSON {
       
-        class Compiler :
-        public Jargon::Parser,
-        public Jargon::Evaluator
+        //! compiling JSON files
+        class Compiler : public Jargon::Parser, public Jargon::Evaluator
         {
         public:
-            explicit Compiler();
-            virtual ~Compiler() throw();
+            explicit Compiler();          //!< setup
+            virtual ~Compiler() throw();  //!< cleanup
             
-            Value                 value;
-            Array                 vArray;
-            vector<Pair>          vObject;
-            const hashing::mperf  terminalHash;
-            const hashing::mperf  internalHash;
+            //! all in one function
+            template <typename FILENAME>
+            const Value & operator()( const FILENAME &fileName )
+            {
+                auto_ptr<Jargon::XNode> tree = parseFile(fileName);
+                browse(*tree);
+                return value;
+            }
+           
+            Value                   value;   //!< final value
+            Array                   vArray;  //!< stack of values
+            vector<Pair>            vObject; //!< stack of pairs
+            
             
         private:
+            const hashing::mperf  terminalHash;
+            const hashing::mperf  internalHash;
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
             virtual void onBrowsing();
             virtual void onTerminal(const Jargon::Tag &, const Jargon::Token &);
