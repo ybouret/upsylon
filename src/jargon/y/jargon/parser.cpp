@@ -31,11 +31,11 @@ namespace upsylon {
       
 
         
-        void Parser:: checkUnivocal(const Lexical::Rule &rule) const
+        void Parser:: checkUnivocal(const Lexical::Rule &rule, const char *which) const
         {
             if(!rule.motif->univocal())
             {
-                throw exception("[%s] Terminal<%s> is not univocal", **title, **(rule.label) );
+                throw exception("[%s] %s<%s> is not univocal", **title, which, **(rule.label) );
             }
         }
         

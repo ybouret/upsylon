@@ -45,9 +45,8 @@ namespace upsylon {
             
             //! create a terminal, detect univocal
             template <typename LABEL,typename REGEXP>
-            Axiom & term_(const LABEL      &label,
-                          const REGEXP     &regexp,
-                          const bool        isOp)
+            Axiom & term(const LABEL      &label,
+                          const REGEXP     &regexp)
             {
                 // will emit the terminal
                 const  Motif     &motif   = emit(label,regexp).motif; assert(motif->strong());
@@ -57,16 +56,9 @@ namespace upsylon {
                     feature = Terminal::Univocal;
                 }
                 // and associate it with a terminal
-                return terminal(label,feature,isOp);
+                return terminal(label,feature,false);
             }
             
-            //! create a terminal, detect univocal
-            template <typename LABEL,typename REGEXP>
-            Axiom & term(const LABEL      &label,
-                         const REGEXP     &regexp)
-            {
-                return term_(label,regexp,false);
-            }
             
             //! create a terminal, wrapper
             template <typename LABEL>
@@ -86,7 +78,12 @@ namespace upsylon {
             Axiom & proc(const LABEL      &label,
                          const REGEXP     &regexp)
             {
-                return term_(label,regexp,true);
+                // will emit the terminal
+                const  Lexical::Rule &rule  = emit(label,regexp);
+                checkUnivocal(rule,"Operator");
+
+                // and associate it with a terminal
+                return terminal(label,Terminal::Univocal,true);
             }
             
             //! create an operator terminal, wrapper
@@ -109,7 +106,7 @@ namespace upsylon {
             {
                 // will emit the terminal
                 const  Lexical::Rule &rule  = emit(label,regexp);
-                checkUnivocal(rule);
+                checkUnivocal(rule,"Terminal");
                 // and associate it with a terminal
                 return terminal(label,Terminal::Division,false);
             }
@@ -193,7 +190,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
-            void checkUnivocal(const Lexical::Rule &) const;
+            void checkUnivocal(const Lexical::Rule &, const char *which) const;
             XNode *treeFromFile(Context &ctx);
             
         };

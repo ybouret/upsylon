@@ -46,6 +46,7 @@ namespace upsylon {
             enum Genre
             {
                 IsTerminal, //!< a terminal => lexeme
+                IsOperator, //!< a terminal => children
                 IsInternal, //!< an internal => children
                 IsInactive  //!< prepared memory
             };
