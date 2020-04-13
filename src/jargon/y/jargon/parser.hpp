@@ -65,7 +65,7 @@ namespace upsylon {
                 //
                 // and associate it with a terminal axiom
                 //______________________________________________________________
-                return terminal(label,feature);
+                return _terminal(label,feature);
             }
             
             
@@ -84,7 +84,6 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-#if 0
             //! create an operator terminal
             template <typename LABEL,typename REGEXP>
             Axiom & op(const LABEL      &label,
@@ -101,7 +100,7 @@ namespace upsylon {
                 //
                 // and associate it with a terminal
                 //______________________________________________________________
-                return terminal(label,Terminal::Univocal,true);
+                return _operator(label);
             }
             
             //------------------------------------------------------------------
@@ -112,7 +111,6 @@ namespace upsylon {
             {
                 return op(both,both);
             }
-#endif
 
             //------------------------------------------------------------------
             //
@@ -136,7 +134,7 @@ namespace upsylon {
                 //
                 // and associate it with a terminal
                 //______________________________________________________________
-                return terminal(label,Terminal::Division);
+                return _terminal(label,Terminal::Division);
             }
             
             //! create division mark, wrapper
@@ -157,7 +155,7 @@ namespace upsylon {
             Axiom & plug(type2type<PLUGIN>,const LABEL &label)
             {
                 load(type2type<PLUGIN>(),label).hook(*this);
-                return terminal(label);
+                return _terminal(label);
             }
             
             //! load a 1-arg plugin that will produce a terminal
@@ -165,7 +163,7 @@ namespace upsylon {
             Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter)
             {
                 load(type2type<PLUGIN>(),label,enter).hook(*this);
-                return terminal(label);
+                return _terminal(label);
             }
             
             //! load a 2-args plugin that will produce a terminal
@@ -173,7 +171,7 @@ namespace upsylon {
             Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter, const LEAVE &leave)
             {
                 load(type2type<PLUGIN>(),label,enter,leave).hook(*this);
-                return terminal(label);
+                return _terminal(label);
             }
             
             //------------------------------------------------------------------
@@ -186,7 +184,7 @@ namespace upsylon {
             void compile();
             
             //! parsing a module, no restart
-            XNode *parse( Module *, const bool doAST=true );
+            XNode *parse( Module * );
             
             //! parse a file
             template <typename FILENAME>

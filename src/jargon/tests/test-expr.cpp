@@ -32,7 +32,7 @@ namespace {
             Aggregate &MULOP = act("MULOP");
             MULOP << POWER << zom( cat( choice( term('*'), term('/') ), POWER ) );
             
-            Axiom &PM = choice( term('+'), term('-') );
+            Axiom &PM = choice( op('+'), op('-') );
             ADDOP << opt(PM) << MULOP << zom( cat( PM , MULOP ) );
             
             endl("endl", "[:endl:]");
@@ -57,10 +57,13 @@ Y_UTEST(expr)
     Expr expr;
     if(argc>1 )
     {
+        expr.buildAST = false;
         const string    fileName = argv[1];
         auto_ptr<XNode> tree = expr.parseFile(fileName);
         
         tree->graphViz("expr_tree.dot");
+        
+        return 0;
         
         Evaluator_ E(expr.title);
         E.browse(*tree);

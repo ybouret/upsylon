@@ -1,5 +1,6 @@
 #include "y/jargon/axiom/operator.hpp"
 #include "y/jargon/xcache.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
@@ -20,17 +21,14 @@ namespace upsylon {
         bool Operator:: accept(Y_JARGON_AXIOM_ARGS_) const
         {
             assert(NULL==xtree||xtree->isInternal());
+            
             Lexeme *lexeme = lexer.get(source);
             if( lexeme )
             {
                 if( *(lexeme->label) == *label )
                 {
-#if 0
-                    Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">";
-                             if(Standard==feature)
-                             std::cerr << " = '" << *lexeme << "'";
-                             std::cerr << std::endl);
-#endif
+                    throw exception("need to correct this...");
+                    Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl);
                     XNode::Advance(xtree,xcache.query(*this));
                     return true;
                 }

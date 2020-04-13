@@ -31,7 +31,7 @@ namespace upsylon {
             //! setup, check valid name
             template <typename LABEL>
             explicit Operator(const LABEL  &id) :
-            Axiom(id,UUID)
+            Internal(id,UUID)
             {
                 setup();
             }

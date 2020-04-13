@@ -34,7 +34,6 @@ namespace upsylon {
                     
                 case IsInternal: {
                     size_t count = __XNodeDeclare(fp,*this,InternalMark);
-                    //count       += fp.write_nbo(dogma->uuid);
                     count += fp.write_upack(children().size);
                     for(const XNode *xnode = children().head;xnode;xnode=xnode->next)
                     {

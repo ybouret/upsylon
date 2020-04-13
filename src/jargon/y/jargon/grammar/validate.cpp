@@ -103,11 +103,18 @@ namespace upsylon {
             for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
             {
                 Axiom &axiom = **it;
-                if(!axiom.isTerminal())
+                switch(axiom.uuid)
                 {
-                    axiom.parents.release_all();
-                    V.remove(axiom);
+                    case Terminal::UUID:
+                    case Operator::UUID:
+                        break;
+                        
+                    default:
+                        axiom.parents.release_all();
+                        V.remove(axiom);
+                        break;
                 }
+                
             }
             
             Y_JAXIOM(V.display());

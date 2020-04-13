@@ -23,6 +23,11 @@ const char *TextFor::CLASS = CLASS::CLID
             return Terminal::UUID == uuid;
         }
         
+        bool Axiom:: isOperator() const throw()
+        {
+            return Operator::UUID == uuid;
+        }
+        
         bool Axiom:: isCompound() const throw()
         {
             switch(uuid)

@@ -44,10 +44,10 @@ namespace {
         myGrammar() : Grammar("myGrammar")
         {
             
-            Axiom    &ID   = terminal("ID");
-            Axiom    &INT  = terminal("INT");
+            Axiom    &ID   = _terminal("ID");
+            Axiom    &INT  = _terminal("INT");
             Compound &INFO = agg("INFO");
-            INFO << ID << opt(choice(INT,ID)) << terminal("SEP");
+            INFO << ID << opt(choice(INT,ID)) << _terminal("SEP",Terminal::Division);
             Axiom &ROOT = zom(INFO);
             setGround(ROOT);
             displayAxioms();

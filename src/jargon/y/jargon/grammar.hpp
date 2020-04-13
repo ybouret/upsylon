@@ -42,7 +42,8 @@ namespace upsylon {
             axioms(),
             iAlt(1),
             iAgg(1),
-            maxLength(0)
+            maxLength(0),
+            buildAST(true)
             {
             }
             
@@ -77,12 +78,19 @@ namespace upsylon {
                 return *axiom;
             }
             
-            //! new terminal
+            //! new Terminal
             template <typename LABEL> inline
-            Axiom & terminal(const LABEL             &id,
-                             const Terminal::Feature ft = Terminal::Standard)
+            Axiom & _terminal(const LABEL             &id,
+                              const Terminal::Feature ft = Terminal::Standard)
             {
                 return declare( new Terminal(id,ft) );
+            }
+            
+            //! new Operator
+            template <typename LABEL> inline
+            Axiom & _operator(const LABEL             &id)
+            {
+                return declare( new Operator(id) );
             }
             
             //------------------------------------------------------------------
@@ -141,7 +149,7 @@ namespace upsylon {
             void validate(bool allowStandalone=false);
             
             //! main call, try to accept the ground axiom
-            XNode *accept(Lexer &, Source &, const bool doAST = true) const;
+            XNode *accept(Lexer &, Source &) const;
             
             //! recursive call to AST
             XNode *AST( XNode *xnode ) const throw();
@@ -204,8 +212,7 @@ namespace upsylon {
             
         public:
             const size_t    maxLength;  //!< maximum length of labels
-            
-           
+            bool            buildAST;   //!< default is true
         };
         
     }

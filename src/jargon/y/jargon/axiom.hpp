@@ -121,6 +121,7 @@ XCache  &xcache
             }
             
             bool isTerminal() const throw(); //!< terminal
+            bool isOperator() const throw(); //!< operator
             bool isCompound() const throw(); //!< alt|agg
             bool isApparent() const throw(); //!< not vanishing aggregate
             bool isWildcard() const throw(); //!< option/repeat

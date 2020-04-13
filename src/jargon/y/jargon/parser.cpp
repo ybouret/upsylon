@@ -12,12 +12,12 @@ namespace upsylon {
         {
         }
         
-        XNode * Parser:: parse(Module *module, const bool doAST)
+        XNode * Parser:: parse(Module *module)
         {
             Source __source( module );
             source = & __source;
             try {
-                XNode *ast = accept(*this,__source,doAST);
+                XNode *ast = accept(*this,__source);
                 source = NULL;
                 return ast;
             }

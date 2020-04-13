@@ -78,7 +78,9 @@ namespace upsylon {
                 switch(root.uuid)
                 {
                     case Terminal::  UUID: return true;
-                        
+                    case Operator::  UUID: return true;
+
+                        // wildcards
                     case Option::    UUID: return __visit_wildcard<Option>(    root,*this,proc,args);
                     case OneOrMore:: UUID: return __visit_wildcard<OneOrMore>( root,*this,proc,args);
                     case ZeroOrMore::UUID: return __visit_wildcard<ZeroOrMore>(root,*this,proc,args);

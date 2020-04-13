@@ -57,7 +57,7 @@ namespace upsylon {
             return excp;
         }
         
-        XNode * Grammar:: accept(Lexer &lexer, Source &source, const bool doAST) const
+        XNode * Grammar:: accept(Lexer &lexer, Source &source) const
         {
             assert(ground);
             XNode       *xtree = NULL;
@@ -106,8 +106,16 @@ namespace upsylon {
                 // ok, everything seems good
                 //
                 //--------------------------------------------------------------
-                Y_JAXIOM(std::cerr << "[" << title << "] returning AST" << std::endl);
-                return doAST ? AST(xtree) : xtree;
+                if(buildAST)
+                {
+                    Y_JAXIOM(std::cerr << "[" << title << "] returning AST" << std::endl);
+                    return AST(xtree);
+                }
+                else
+                {
+                    Y_JAXIOM(std::cerr << "[" << title << "] returning Raw Tree" << std::endl);
+                    return xtree;
+                }
                 
             }
             else
