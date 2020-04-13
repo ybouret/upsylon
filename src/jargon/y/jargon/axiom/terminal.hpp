@@ -26,13 +26,15 @@ namespace upsylon {
             static const uint32_t UUID = Y_FOURCC('T','E','R','M'); //!< UUID
             static const char     CLID[];                           //!< "Terminal"
             
-            //! properties
+            //! semantic feature
             enum Feature
             {
                 Standard, //!< different values, arising from a regular expression
                 Univocal, //!< only one meaningfull value
                 Division  //!< syntax only
             };
+            
+            
             
             //! named feature
             static const char *FeatureText(const Feature) throw();
@@ -47,9 +49,8 @@ namespace upsylon {
             //! setup, check valid name
             template <typename LABEL>
             explicit Terminal(const LABEL  &id,
-                              const Feature ft = Standard,
-                              const bool    op = false) :
-            Axiom(id,UUID), feature(ft), isOperator(op)
+                              const Feature ft = Standard) :
+            Axiom(id,UUID), feature(ft)
             {
                 setup();
             }
@@ -71,7 +72,6 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             const Feature feature;    //!< the feature
-            const bool    isOperator; //!< operator property
             
             
         private:

@@ -69,7 +69,6 @@ namespace upsylon {
             //
             //
             //------------------------------------------------------------------
-           
             //! wrapper to enroll a derived, dynamic axiom
             template <typename AXIOM> inline
             AXIOM & declare( AXIOM *axiom )
@@ -81,10 +80,9 @@ namespace upsylon {
             //! new terminal
             template <typename LABEL> inline
             Axiom & terminal(const LABEL             &id,
-                             const Terminal::Feature ft = Terminal::Standard,
-                             const bool              op = false)
+                             const Terminal::Feature ft = Terminal::Standard)
             {
-                return declare( new Terminal(id,ft,op) );
+                return declare( new Terminal(id,ft) );
             }
             
             //------------------------------------------------------------------

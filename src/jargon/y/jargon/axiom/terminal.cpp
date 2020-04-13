@@ -85,28 +85,14 @@ namespace upsylon {
         
         const char *   Terminal:: vizual() const throw()
         {
-            if(isOperator)
+            switch(feature)
             {
-                switch(feature)
-                {
-                    case Univocal: return "shape=triangle,style=\"bold,filled,rounded\"";
-                    case Division: return "shape=triangle,style=\"dashed,bold,filled,rounded\"";
-                    default:
-                        break;
-                }
-                return "shape=triangle,style=\"bold,filled\"";
+                case Univocal: return "shape=rectangle,style=\"bold,filled,rounded\"";
+                case Division: return "shape=rectangle,style=\"dashed,bold,filled,rounded\"";
+                default:
+                    break;
             }
-            else
-            {
-                switch(feature)
-                {
-                    case Univocal: return "shape=rectangle,style=\"bold,filled,rounded\"";
-                    case Division: return "shape=rectangle,style=\"dashed,bold,filled,rounded\"";
-                    default:
-                        break;
-                }
-                return "shape=rectangle,style=\"bold,filled\"";
-            }
+            return "shape=rectangle,style=\"bold,filled\"";
         }
     }
     

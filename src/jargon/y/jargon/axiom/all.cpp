@@ -6,6 +6,17 @@ namespace upsylon {
     
     namespace Jargon {
         
+#define Y_JTEXT_FOR(CLASS) \
+const char *TextFor::CLASS = CLASS::CLID
+       
+        Y_JTEXT_FOR(Terminal);
+        //Y_JTEXT_FOR(Internal);
+        Y_JTEXT_FOR(Operator);
+        Y_JTEXT_FOR(Aggregate);
+        Y_JTEXT_FOR(Alternate);
+        Y_JTEXT_FOR(OneOrMore);
+        Y_JTEXT_FOR(ZeroOrMore);
+
         
         bool Axiom:: isTerminal() const throw()
         {

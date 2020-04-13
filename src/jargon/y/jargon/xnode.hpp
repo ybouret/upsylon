@@ -46,7 +46,7 @@ namespace upsylon {
             enum Genre
             {
                 IsTerminal, //!< a terminal => lexeme
-                IsOperator, //!< a terminal => children
+                //IsOperator, //!< a terminal => children
                 IsInternal, //!< an internal => children
                 IsInactive  //!< prepared memory
             };
@@ -54,7 +54,8 @@ namespace upsylon {
             static const char TerminalMark = '_'; //!< encoding a terminal
             static const char InternalMark = '@'; //!< encoding an internal
             static const char InactiveMark = '~'; //!< encoding an inactive...
-            
+            //static const char OperatorMark = '^'; //!< encoding an operator...
+
             //------------------------------------------------------------------
             //
             // methods

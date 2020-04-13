@@ -118,26 +118,9 @@ namespace upsylon {
             children.swap_with(temp);
         }
         
-        void Grammar:: rewrite(XList &children) const throw()
+        void Grammar:: rewrite(XList &) const throw()
         {
-            XList temp;
-            while(children.size)
-            {
-                XNode       *child = children.pop_front();
-                const Axiom &axiom = *(child->dogma);
-                if( Terminal::UUID == axiom.uuid && axiom.as<Terminal>().isOperator )
-                {
-                    //temp.push_back(child);
-                    aliasing::_(child->genre) = XNode::IsInternal;
-                    
-                }
-                else
-                {
-                    temp.push_back(child);
-                }
-            }
-            children.swap_with(temp);
-
+            
         }
         
     }
