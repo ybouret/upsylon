@@ -1,6 +1,5 @@
 
 #include "y/jargon/axiom/wildcard/repeat.hpp"
-#include "y/jargon/xcache.hpp"
 
 namespace upsylon {
     
@@ -27,7 +26,7 @@ namespace upsylon {
         bool Repeat:: accept(Y_JARGON_AXIOM_ARGS) const
         {
             size_t           count = 0;
-            XNode           *ltree = xcache.query(*this);
+            XNode           *ltree = XNode::Create(*this);
             try
             {
                 while(axiom.Y_JARGON_AXIOM_ACCEPT(ltree))
@@ -37,18 +36,18 @@ namespace upsylon {
                 
                 if(count>=minimalCount)
                 {
-                    XNode::Combine(xtree,ltree,xcache);
+                    XNode::Combine(xtree,ltree);
                     return true;
                 }
                 else
                 {
-                    XNode::Restore(ltree,lexer,xcache);
+                    XNode::Restore(ltree,lexer);
                     return false;
                 }
             }
             catch(...)
             {
-                XNode::Release(ltree,xcache);
+                XNode::Release(ltree);
                 throw;
             }
             return false;

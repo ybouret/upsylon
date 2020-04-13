@@ -26,14 +26,13 @@ namespace upsylon {
 #define Y_JARGON_AXIOM_ARGS_ \
 XNode * &xtree,              \
 Lexer   &lexer,              \
-Source  &source,             \
-XCache  &xcache
+Source  &source
         
         //! accept method arguments
 #define Y_JARGON_AXIOM_ARGS Y_JARGON_AXIOM_ARGS_
         
         //! accept call wrapper
-#define Y_JARGON_AXIOM_ACCEPT(TREE) accept(TREE,lexer,source,xcache)
+#define Y_JARGON_AXIOM_ACCEPT(TREE) accept(TREE,lexer,source)
         
         //! for verbosity
 #define Y_JAXIOM(CODE) do { if(Axiom::Verbose) { CODE; } } while(false)

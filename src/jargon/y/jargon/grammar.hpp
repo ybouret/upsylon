@@ -4,7 +4,6 @@
 #define Y_JARGON_GRAMMAR_INCLUDED 1
 
 #include "y/jargon/axiom/all.hpp"
-#include "y/jargon/xcache.hpp"
 
 namespace upsylon {
     
@@ -37,8 +36,7 @@ namespace upsylon {
             template <typename LABEL>
             inline Grammar( const LABEL &id ) :
             title( Tags::Make(id) ),
-            xcache(title),
-            ground(  &(*xcache.dull) ),
+            ground(NULL),
             axioms(),
             iAlt(1),
             iAgg(1),
@@ -57,6 +55,7 @@ namespace upsylon {
 
             bool   owns(const Axiom &) const throw();     //!< check owned axiom
             const Axioms & operator*() const throw();     //!< access to database
+            bool           hasGround() const throw();     //!< check if has ground rule
             const Axiom  & getGround() const throw();     //!< get ground Axiom
             void           setGround(const Axiom &);      //!< set (enrolled) ground Axiom
             void           displayAxioms() const;         //!< display enrolled axioms
@@ -154,9 +153,6 @@ namespace upsylon {
             //! recursive call to AST
             XNode *AST( XNode *xnode ) const throw();
             
-            //! for memory
-            void   clear( XNode * xnode ) const throw();
-            
             
             //------------------------------------------------------------------
             //
@@ -164,7 +160,6 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             const Tag      title;   //!< grammar title
-            mutable XCache xcache;  //!< cache of xnode
             
             //------------------------------------------------------------------
             //

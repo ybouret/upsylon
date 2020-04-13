@@ -21,10 +21,6 @@ namespace upsylon {
         {
             switch(genre)
             {
-                case IsInactive:
-                    assert(Inactive::UUID==dogma->uuid);
-                    fp.write(InactiveMark);
-                    return 1;
                     
                 case IsTerminal: {
                     assert(Terminal::UUID==dogma->uuid);

@@ -1,6 +1,5 @@
 
 #include "y/jargon/axiom/terminal.hpp"
-#include "y/jargon/xcache.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -33,7 +32,7 @@ namespace upsylon {
                              std::cerr << " = '" << *lexeme << "'";
                              std::cerr << std::endl);
                     
-                    XNode::Advance(xtree,xcache.query(*this, lexeme));
+                    XNode::Advance(xtree,XNode::Create(*this,lexeme));
                     return true;
                 }
                 else

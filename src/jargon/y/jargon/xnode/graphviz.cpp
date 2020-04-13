@@ -39,7 +39,6 @@ namespace upsylon {
                         fp << '\'';
                     }
                 } break;
-                case IsInactive: fp << '_'; break;
                 case IsInternal: break;
             }
             

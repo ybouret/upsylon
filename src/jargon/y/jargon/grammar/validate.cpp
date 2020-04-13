@@ -18,7 +18,7 @@ namespace upsylon {
             //
             // is it active ?
             //__________________________________________________________________
-            if( ground == & *xcache.dull ) throw exception("[%s] has no axioms",**title);
+            if(NULL==ground) throw exception("[%s] has no axioms",**title);
             Y_JAXIOM(std::cerr << "[" << title << "] is active..." << std::endl);
 
             //__________________________________________________________________

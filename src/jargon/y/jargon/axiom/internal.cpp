@@ -18,7 +18,6 @@ namespace upsylon {
             (void) xtree;
             (void) lexer;
             (void) source;
-            (void) xcache;
             return false;
         }
         

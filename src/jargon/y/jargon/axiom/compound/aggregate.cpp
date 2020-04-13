@@ -1,6 +1,5 @@
 
 #include "y/jargon/axiom/compound/aggregate.hpp"
-#include "y/jargon/xcache.hpp"
 
 namespace upsylon {
     
@@ -16,16 +15,14 @@ namespace upsylon {
         
         bool Aggregate:: accept(Y_JARGON_AXIOM_ARGS) const
         {
-            XNode *ltree = xcache.query(*this);            
-            
+            XNode *ltree = XNode::Create(*this);
             try
             {
-               
                 for(const Member *member=head;member;member=member->next)
                 {                    
                     if( ! member->axiom.Y_JARGON_AXIOM_ACCEPT(ltree) )
                     {
-                        XNode::Restore(ltree, lexer, xcache);
+                        XNode::Restore(ltree, lexer);
                         return false;
                     }
                 }
@@ -35,7 +32,7 @@ namespace upsylon {
             }
             catch(...)
             {
-                XNode::Release(ltree,xcache);
+                XNode::Release(ltree);
                 throw;
             }
         }

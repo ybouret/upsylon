@@ -22,7 +22,7 @@ namespace upsylon {
             {
                 throw exception("[%s] enroll multiple <%s>", **title, *key);
             }
-            if( &(*xcache.dull) == ground)
+            if(NULL==ground)
             {
                 ground = axiom;
             }
@@ -45,6 +45,7 @@ namespace upsylon {
         const Axiom  & Grammar:: getGround() const throw()
         {
             assert(ground);
+            assert(owns(*ground));
             return *ground;
         }
         
@@ -152,10 +153,7 @@ namespace upsylon {
             fp << "<Grammar:Leave [" << *title << "]>\n";
         }
         
-        void Grammar:: clear(XNode *xnode) const throw()
-        {
-            if(xnode) XNode::Release(xnode,xcache);
-        }
+        
 
         const Terminal *Grammar:: toTerminal( const Tag &label ) const throw()
         {

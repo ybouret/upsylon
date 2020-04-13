@@ -10,7 +10,6 @@ namespace upsylon {
             
             switch(xnode->genre)
             {
-                case XNode::IsInactive: break;
                 case XNode::IsTerminal: return onTerminal(xnode);
                 case XNode::IsInternal: return onInternal(xnode);
             }
@@ -65,7 +64,7 @@ namespace upsylon {
                 XNode *chld = AST(children.pop_front());
                 if(chld->isTerminal() && chld->dogma->as<Terminal>().isDivision())
                 {
-                    xcache.store(chld);
+                    delete chld;
                 }
                 else
                 {
@@ -96,7 +95,7 @@ namespace upsylon {
                             if(1==sub.size)
                             {
                                 temp.push_back( sub.pop_front() );
-                                xcache.store(child);
+                                delete child;
                             }
                             else
                             {
@@ -106,7 +105,7 @@ namespace upsylon {
                             
                         case Aggregate::Design:
                             temp.merge_back( child->children() );
-                            xcache.store(child);
+                            delete child;
                             break;
                     }
                 }

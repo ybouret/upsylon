@@ -50,7 +50,6 @@ namespace upsylon {
         {
             switch(node.genre)
             {
-                case XNode::IsInactive: return;
                 case XNode::IsTerminal: onTerminal(node.dogma->label,node.lexeme()); return;
                 case XNode::IsInternal: {
                     const XList &children = node.children();

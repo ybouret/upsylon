@@ -66,9 +66,9 @@ Y_UTEST(grammar)
     Y_UTEST_SIZEOF(Axioms);
     std::cerr << std::endl;
     
-    Y_UTEST_SIZEOF(Inactive);
     Y_UTEST_SIZEOF(Terminal);
     Y_UTEST_SIZEOF(Internal);
+    Y_UTEST_SIZEOF(Operator);
     std::cerr << std::endl;
     
     Y_UTEST_SIZEOF(Member);

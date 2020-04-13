@@ -46,13 +46,11 @@ namespace upsylon {
             enum Genre
             {
                 IsTerminal,   //!< a terminal
-                IsInternal,   //!< an internal
-                IsInactive    //!< prepared memory
+                IsInternal    //!< an internal
             };
             
             static const char TerminalMark = '_'; //!< encoding a terminal
             static const char InternalMark = '@'; //!< encoding an internal
-            static const char InactiveMark = '~'; //!< encoding an inactive...
             
             //------------------------------------------------------------------
             //
@@ -73,8 +71,8 @@ namespace upsylon {
             bool           isTerminal() const throw(); //!< check if if terminal
             bool           isInactive() const throw(); //!< check if is inactive
             
-            static void Restore(XNode *, Lexer &, XList &) throw();  //!< return content to lexer and push back into list
-            static void Release(XNode *, XList &) throw();           //!< recursive cleanup into list
+            static void Restore(XNode *, Lexer &) throw();  //!< return content to lexer and push back into list
+            static void Release(XNode *) throw();           //!< recursive cleanup into list
             static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
             
             //!<hande to combine node content into tree
@@ -83,10 +81,8 @@ namespace upsylon {
              - if node is internal/inactive, append it to tree
              - merge content of node into tree and release node
              */
-            static void Combine(XNode * &tree, XNode *node, XList &) throw();
+            static void Combine(XNode * &tree, XNode *node) throw();
            
-            XNode      *activate(const Internal &)           throw(); //!< inactive => internal
-            XNode      *activate(const Terminal &, Lexeme *) throw(); //!< inactive => terminal
             
             virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface
             virtual const char *className()        const throw(); //!< serializable interface
@@ -98,7 +94,6 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);
-            explicit XNode(const Inactive &)          throw();
             explicit XNode(const Terminal &,Lexeme *) throw();
             explicit XNode(const Internal &)          throw();
             virtual  void vizCore(ios::ostream   &) const;
@@ -109,7 +104,6 @@ namespace upsylon {
                 char    children[sizeof(XList)]; //!< children for internal
             } depot;
             void cleanup()  throw(); //!< clear depot
-            void shutdown() throw(); //!< cleanup() and set inactive
         };
         
         

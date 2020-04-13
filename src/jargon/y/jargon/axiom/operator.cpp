@@ -1,5 +1,4 @@
 #include "y/jargon/axiom/operator.hpp"
-#include "y/jargon/xcache.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -29,7 +28,7 @@ namespace upsylon {
                 {
                     throw exception("need to correct this...");
                     Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl);
-                    XNode::Advance(xtree,xcache.query(*this));
+                    //XNode::Advance(xtree,xcache.query(*this));
                     return true;
                 }
                 else

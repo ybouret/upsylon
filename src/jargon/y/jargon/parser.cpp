@@ -57,10 +57,7 @@ namespace upsylon {
             
         }
 
-        void Parser:: cleanup() throw()
-        {
-            xcache.release();
-        }
+        
         
         XNode *Parser:: treeFromFile(Context &where)
         {

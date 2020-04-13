@@ -85,6 +85,8 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // check input
                 //--------------------------------------------------------------
+                std::cerr << "checking input" << std::endl;
+                
                 try
                 {
                     Lexeme *lexeme = lexer.get(source);
@@ -97,7 +99,7 @@ namespace upsylon {
                 }
                 catch(...)
                 {
-                    XNode::Release(xtree,xcache);
+                    XNode::Release(xtree);
                     throw;
                 }
                 
@@ -106,6 +108,7 @@ namespace upsylon {
                 // ok, everything seems good
                 //
                 //--------------------------------------------------------------
+                std::cerr << "building or not..." << std::endl;
                 if(buildAST)
                 {
                     Y_JAXIOM(std::cerr << "[" << title << "] returning AST" << std::endl);

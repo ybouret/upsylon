@@ -44,16 +44,7 @@ namespace upsylon {
             
             switch(C)
             {
-                case XNode::InactiveMark:
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // legal but useless inactive
-                    //
-                    //
-                    //----------------------------------------------------------
-                    return xcache.query();
-                    
+            
                 case XNode::TerminalMark:
                 {
                     //----------------------------------------------------------
@@ -114,7 +105,7 @@ namespace upsylon {
                         unit->append(uint8_t(C));
                     }
                     
-                    return xcache.query(t, unit.yield() );
+                    return XNode::Create(t,unit.yield());
                     
                 }
                     
@@ -152,7 +143,7 @@ namespace upsylon {
                     // get the xnode
                     //
                     //----------------------------------------------------------
-                    auto_ptr<XNode> xnode = xcache.query(internal);
+                    auto_ptr<XNode> xnode = XNode::Create(internal);
                     
                     //----------------------------------------------------------
                     //
