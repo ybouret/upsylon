@@ -108,7 +108,9 @@ Y_UTEST(grammar)
     }
     
     {
-        Axiom::Verbose = true;
+        Axiom::  Verbose = true;
+        Lexical::Scanner::Verbose = true;
+
         myGrammar G;
         myLexer   L;
         Tags::Display();

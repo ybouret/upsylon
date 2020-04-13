@@ -14,7 +14,7 @@ namespace upsylon {
             {
                     
                 case IsTerminal: //std::cerr << "terminal" << std::endl;
-                    delete & lexeme();
+                    if(depot.lexeme) delete depot.lexeme;
                     break;
                     
                 case IsInternal: //std::cerr << "internal "<< children().size << std::endl;
@@ -155,6 +155,7 @@ namespace upsylon {
             {
                 case IsTerminal:
                     lexer.unget(xnode->depot.lexeme);
+                    xnode->depot.lexeme = 0;
                     break;
                     
                 case IsInternal: {

@@ -71,11 +71,11 @@ namespace upsylon {
             bool           isTerminal() const throw(); //!< check if if terminal
             bool           isInactive() const throw(); //!< check if is inactive
             
-            static void Restore(XNode *, Lexer &) throw();  //!< return content to lexer and push back into list
-            static void Release(XNode *) throw();           //!< recursive cleanup into list
+            static void Restore(XNode *, Lexer &)           throw(); //!< return content to lexer and push back into list
+            static void Release(XNode *)                    throw(); //!< recursive cleanup into list
             static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
             
-            //!<hande to combine node content into tree
+            //! combine node content into tree
             /**
              - if NULL==tree, tree=node
              - if node is internal/inactive, append it to tree

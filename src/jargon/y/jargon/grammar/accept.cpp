@@ -30,6 +30,8 @@ namespace upsylon {
         {
             assert(which);
             assert(lexeme);
+            assert(lexeme->label.is_valid());
+            std::cerr << "on error <" << *lexeme << ">" << std::endl;
             const Context  &ctx = *lexeme;
             exception       excp("%s:%d:%d: [%s] %s ",
                                  **(ctx.tag),
