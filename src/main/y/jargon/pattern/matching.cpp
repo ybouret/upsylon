@@ -9,8 +9,8 @@ namespace upsylon {
         
         bool Pattern:: matches_exactly(Token &token, const string &s) const
         {
-            Source source( Module::OpenData(token.cache,s) );
-            token.erase();
+            Source source( Module::OpenData(s) );
+            token.release();
             const Pattern &p = *this;
             if( p.match(token,source) )
             {
@@ -24,8 +24,8 @@ namespace upsylon {
         
         bool Pattern:: matches_partly(Token &token, const string &s) const
         {
-            Source source( Module::OpenData(token.cache,s) );
-            token.erase();
+            Source source( Module::OpenData(s) );
+            token.release();
             const Pattern &p = *this;
             while( source.isAlive() )
             {

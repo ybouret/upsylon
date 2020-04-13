@@ -32,7 +32,6 @@ namespace upsylon {
             Parser( const LABEL &id ) :
             Lexer(id),
             Grammar(id),
-            cache(),
             source(0)
             {
             }
@@ -190,7 +189,7 @@ namespace upsylon {
             template <typename FILENAME>
             XNode *parseFile(const FILENAME &fileName)
             {
-                return parse( Module::OpenFile(cache,fileName) );
+                return parse( Module::OpenFile(fileName) );
             }
             
             //! clean cache and xcache
@@ -204,12 +203,6 @@ namespace upsylon {
                 return treeFromFile(ctx);
             }
             
-            //------------------------------------------------------------------
-            //
-            // members
-            //
-            //------------------------------------------------------------------
-            mutable Cache cache; //!< shared token cache
             
         protected:
             Source *source; //!< available source when parsing

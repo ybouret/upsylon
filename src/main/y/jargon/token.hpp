@@ -25,9 +25,9 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-            explicit Token(const Cache &) throw(); //!< setup
-            virtual ~Token() throw();              //!< erase
-            Token(const Token &);                  //!< copy
+            explicit Token() throw(); //!< setup
+            virtual ~Token() throw(); //!< erase
+            Token(const Token &);     //!< copy
 
             //------------------------------------------------------------------
             //
@@ -36,7 +36,6 @@ namespace upsylon {
             //------------------------------------------------------------------
             void append(const Context &, const uint8_t ); //!< append a new char, using context
             void append(const Context &, const string &); //!< append a new string, using a context
-            void erase() throw();                         //!< erase content into cache
             void skip(size_t n) throw();                  //!< skip n chars
             void trim(size_t n) throw();                  //!< trim n chars
             void cat(exception &) const throw();          //!< append content to exception
@@ -52,12 +51,6 @@ namespace upsylon {
             virtual size_t      serialize( ios::ostream &fp ) const;
             virtual const char *className()           const throw();
             
-            //------------------------------------------------------------------
-            //
-            // members
-            //
-            //------------------------------------------------------------------
-            mutable Cache cache; //!< shared cache for I/O
             
         private:
             Y_DISABLE_ASSIGN(Token);

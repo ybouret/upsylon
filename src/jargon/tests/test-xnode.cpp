@@ -9,10 +9,9 @@ using namespace Jargon;
 namespace {
     
     static inline Lexeme *createLexeme(const Tag         &tag,
-                                       const Context     &ctx,
-                                       Cache             &cache)
+                                       const Context     &ctx)
     {
-        auto_ptr<Lexeme>  lexeme = new Lexeme(cache,ctx,tag);
+        auto_ptr<Lexeme>  lexeme = new Lexeme(ctx,tag);
         for(size_t i=1+alea.leq(8);i>0;--i)
         {
             lexeme->append( alea.range<char>('a','z') );
@@ -23,8 +22,7 @@ namespace {
     static inline XNode *createXNode(XCache           &xcache,
                                      const Internal   &I,
                                      const array<Tag> &tags,
-                                     const Context    &ctx,
-                                     Cache            &cache)
+                                     const Context    &ctx)
     {
         switch(alea.range<int>(1,3))
         {
@@ -35,7 +33,7 @@ namespace {
             case 3: {
                 const Tag                &tag  = alea.in(tags);
                 const arc_ptr<Terminal>  term = new Terminal(tag);
-                return xcache.query(*term, createLexeme(tag,ctx,cache) );
+                return xcache.query(*term, createLexeme(tag,ctx) );
             }
                 
                 
@@ -56,7 +54,6 @@ Y_UTEST(xnode)
     const Tag     tagNumber = Tags::Make( "number" );
     const Tag     tagValue  = Tags::Make( "value" );
 
-    Cache         cache;
     
     vector<Tag>    tags; tags << tagString << tagNumber << tagValue;
     tags.push_back(tagString);
@@ -70,7 +67,7 @@ Y_UTEST(xnode)
         // first level
         for(size_t i=1+alea.leq(10);i>0;--i)
         {
-            root->children().push_back( createXNode(xcache,*LIST,tags,ctx,cache) );
+            root->children().push_back( createXNode(xcache,*LIST,tags,ctx) );
         }
         
         // second level
@@ -78,11 +75,11 @@ Y_UTEST(xnode)
         {
             if( xnode->isInternal() )
             {
-                XNode *child = createXNode(xcache,*LIST,tags,ctx,cache);
+                XNode *child = createXNode(xcache,*LIST,tags,ctx);
                 xnode->children().push_back( child );
                 if( child->isInternal() )
                 {
-                    child->children().push_back( createXNode(xcache,*LIST,tags,ctx,cache) );
+                    child->children().push_back( createXNode(xcache,*LIST,tags,ctx) );
                 }
             }
         }

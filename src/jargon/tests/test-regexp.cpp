@@ -39,9 +39,8 @@ Y_UTEST(regexp)
 
         if(argc>2)
         {
-            Cache  cache;
-            Source source(Module::OpenFile(cache, argv[2]));
-            Token  content(cache);
+            Source source(Module::OpenFile(argv[2]));
+            Token  content;
             p->test(source,content);
         }
         
@@ -65,9 +64,8 @@ p->graphViz( #EXPR ".dot" ); p->save_to( #EXPR ".bin" ); com.push_back(p); rid.p
 
     if(argc>1)
     {
-        Cache  cache;
-        Source source(Module::OpenFile(cache, argv[1]));
-        Token  content(cache);
+        Source source(Module::OpenFile(argv[1]));
+        Token  content;
         
         for(size_t i=1;i<=com.size();++i)
         {

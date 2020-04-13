@@ -25,7 +25,6 @@ namespace upsylon {
         }
         
         XNode * Grammar:: loadTree(Context      &where,
-                                   Cache        &cache,
                                    ios::istream &input) const
         {
             static const char fn[] = "loadTree";
@@ -85,7 +84,7 @@ namespace upsylon {
                     // create the lexeme
                     //
                     //----------------------------------------------------------
-                    auto_ptr<Lexeme> unit = new Lexeme(cache,where,t.label);
+                    auto_ptr<Lexeme> unit = new Lexeme(where,t.label);
                     
                     //----------------------------------------------------------
                     //
@@ -175,7 +174,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     while(nch-- > 0)
                     {
-                        xnode->children().push_back( loadTree(where,cache,input) );
+                        xnode->children().push_back( loadTree(where,input) );
                     }
                     
                     return xnode.yield();

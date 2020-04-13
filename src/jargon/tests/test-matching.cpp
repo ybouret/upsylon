@@ -7,11 +7,10 @@ using namespace Jargon;
 
 Y_UTEST(matching)
 {
-    Cache cache;
     if(argc>1)
     {
         Motif    p(  RegularExpression::Compile(argv[1]) );
-        Token    token(cache);
+        Token    token;
         
         if(argc>2)
         {

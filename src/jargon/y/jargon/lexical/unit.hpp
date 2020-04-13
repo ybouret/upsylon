@@ -26,8 +26,7 @@ namespace upsylon {
                 virtual ~Unit() throw(); //!< cleanup
                 
                 //! setup
-                explicit Unit(const Cache   &,
-                              const Context &,
+                explicit Unit(const Context &,
                               const Tag     &) throw();
                 
                 

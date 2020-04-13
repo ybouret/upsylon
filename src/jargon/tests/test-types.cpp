@@ -87,7 +87,6 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(Token);
     Y_UTEST_SIZEOF(Source);
     Y_UTEST_SIZEOF(Module);
-    Y_UTEST_SIZEOF(Char::Pool);
     std::cerr << std::endl;
     
     Y_UTEST_SIZEOF(Pattern);

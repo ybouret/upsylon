@@ -13,7 +13,7 @@ namespace upsylon {
         
         Source:: Source(Module *module) throw() :
         handle(module),
-        io( handle->cache ),
+        io(),
         history()
         {
             
@@ -106,7 +106,7 @@ namespace upsylon {
             if(ch)
             {
                 C = char(ch->code);
-                io.cache->store(ch);
+                delete ch;
                 return true;
             }
             else
@@ -119,7 +119,7 @@ namespace upsylon {
         {
             Context ctx(*handle);
             --aliasing::_(ctx.column);
-            aliasing::_(io).push_front( Char::Make(io.cache, ctx, C));
+            aliasing::_(io).push_front( new Char(ctx,C) );
         }
         
         void  Source:: unget(Char *ch) throw()
@@ -138,13 +138,12 @@ namespace upsylon {
         
         void Source:: uncpy(const Char::List &l)
         {
-            Cache &cache = io.cache;
             size_t done  = 0;
             try
             {
                 for(const Char *ch=l.tail;ch;ch=ch->prev)
                 {
-                    unget( Char::Copy(cache,*ch) );
+                    unget( new Char(*ch) );
                     ++done;
                 }
             }
@@ -161,25 +160,7 @@ namespace upsylon {
             aliasing::_(io).skip(n);
         }
 
-        void Source:: collectNext(Token &bad)
-        {
-            unget(bad);
-            for(Char *ch=get();ch;ch=get())
-            {
-                const uint8_t code = ch->code;
-                if(code>='0'&&code<='9') goto GROW;
-                if(code=='_')            goto GROW;
-                if(code>='a'&&code<='z') goto GROW;
-                if(code>='A'&&code<='Z') goto GROW;
-                
-                io.cache->store(ch);
-                continue;
-                
-            GROW:
-                bad.push_back(ch);
-                
-            }
-        }
+        
 
     }
     

@@ -125,10 +125,9 @@ Y_UTEST(grammar)
         
         G.validate();
         
-        Cache     tcache;
         if(argc>1)
         {
-            Source          source( Module::OpenFile(tcache,argv[1]) );
+            Source          source( Module::OpenFile(argv[1]) );
             auto_ptr<XNode> tree = G.accept(L,source);
             Y_CHECK(tree.is_valid());
             tree->graphViz("tree.dot");

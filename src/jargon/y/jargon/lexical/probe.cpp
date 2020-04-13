@@ -27,9 +27,8 @@ namespace upsylon {
                     // looking for a first bestRule
                     //
                     //----------------------------------------------------------
-                    Cache       &cache    = source.io.cache;
                     const Rule  *bestRule = NULL;
-                    Token        bestExpr( cache );
+                    Token        bestExpr;
                     
                     for(bestRule=rules.head;bestRule;bestRule=bestRule->next)
                     {
@@ -72,7 +71,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     for(const Rule *rule=bestRule->next;rule;rule=rule->next)
                     {
-                        Token expr(cache);
+                        Token expr;
                         if(rule->motif->match(expr,source))
                         {
                             const size_t size = expr.size;
@@ -135,7 +134,7 @@ namespace upsylon {
                                 case RegularEvent::Forward:
                                 {
                                     Y_JSCANNER(std::cerr << '[' << label << ']' << "+<" << bestRule->label << "> '" << bestExpr << "'" << std::endl);
-                                    Unit *unit = new Unit(cache,*bestExpr.head,bestRule->label);
+                                    Unit *unit = new Unit(*bestExpr.head,bestRule->label);
                                     unit->swap_with(bestExpr);
                                     return unit;
                                 }

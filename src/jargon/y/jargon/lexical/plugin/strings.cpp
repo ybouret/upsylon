@@ -127,7 +127,7 @@ namespace upsylon
                 assert( context.is_valid() );
                 checkSymbol(sep,fn);
                 
-                auto_ptr<Unit> unit = new Unit(sep.cache,*context,label);
+                auto_ptr<Unit> unit = new Unit(*context,label);
                 unit->append(*content);
                 
                 content = 0;

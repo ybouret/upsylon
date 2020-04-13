@@ -7,15 +7,14 @@ using namespace Jargon;
 Y_UTEST(source)
 {
     
-    Cache cache;
     
     if(argc>1)
     {
         int j=argc-1;
-        Source source(Module::OpenFile(cache,argv[j]));
-        while(j>1) source.load( Module::OpenFile(cache,argv[--j]));
+        Source source(Module::OpenFile(argv[j]));
+        while(j>1) source.load( Module::OpenFile(argv[--j]));
         
-        Token content(cache);
+        Token content;
         Char *ch = 0;
         while( NULL != (ch=source.get() ))
         {
@@ -25,7 +24,6 @@ Y_UTEST(source)
         std::cerr << "#content=" << content.size << std::endl;
         
         source.unget(content);
-        cache->optimize();
         {
             string line;
             while( source.gets(line) )
@@ -35,10 +33,7 @@ Y_UTEST(source)
         }
     }
     
-    std::cerr << "#cache=" << cache->size <<  "/bytes=" << cache->size * sizeof(Char) << std::endl;
-    cache->maxBytes(1024);
-    std::cerr << "#cache=" << cache->size <<  "/bytes=" << cache->size * sizeof(Char) << std::endl;
-
+    
     
 }
 Y_UTEST_DONE()

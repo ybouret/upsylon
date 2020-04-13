@@ -136,7 +136,7 @@ namespace upsylon {
             assert(0==token.size);
             size_t count = 0;
             {
-                Token  tmp( source.io.cache );
+                Token  tmp;
                 while( motif->match(tmp,source) )
                 {
                     ++count;

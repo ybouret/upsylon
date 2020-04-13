@@ -17,11 +17,11 @@ namespace upsylon {
         
         void Pattern:: test( Source &source, Token &content ) const
         {
-            content.erase();
+            content.release();
             
             while( source.isAlive() )
             {
-                Token token(source.io.cache);
+                Token token;
                 if( match(token,source) && token.size>0 )
                 {
                     std::cerr << "<" << token << ">";

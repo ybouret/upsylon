@@ -185,7 +185,6 @@ namespace upsylon {
             
             //! low level reload tree
             XNode *loadTree(Context      &where,
-                            Cache        &cache,
                             ios::istream &input) const;
             
             

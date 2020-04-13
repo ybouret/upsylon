@@ -7,30 +7,17 @@ namespace upsylon {
         
         Token:: ~Token() throw()
         {
-            erase();
         }
         
-        Token:: Token(const Cache &shared) throw() :
-        Char::List(),
-        cache(shared)
+        Token:: Token() throw() : Char::List()
         {
         }
         
         Token:: Token( const Token &other ) :
-        Char::List(),
-        Serializable(),
-        cache( other.cache )
+        Char::List(other),
+        Serializable()
         {
-            for( const Char *ch=other.head; ch; ch=ch->next)
-            {
-                push_back( Char::Copy(cache,*ch) );
-            }
-        }
-        
-        
-        void Token:: erase() throw()
-        {
-            cache->store(*this);
+           
         }
         
         
@@ -38,7 +25,7 @@ namespace upsylon {
         void Token:: append(const Context &context,
                             const uint8_t  content)
         {
-            push_back( Char::Make(cache,context,content) );
+            push_back( new Char(context,content) );
         }
         
         void Token:: append(const Context &context, const string &content)
@@ -46,7 +33,7 @@ namespace upsylon {
             const size_t n = content.size();
             for( size_t i=0;i<n;++i)
             {
-                push_back( Char::Make(cache,context,content[i]) );
+                push_back( new Char(context,content[i]) );
             }
         }
         
@@ -65,7 +52,7 @@ namespace upsylon {
             assert(n<=size);
             while(n-- >0)
             {
-                cache->store(pop_front());
+                delete pop_front();
             }
         }
         
@@ -75,7 +62,7 @@ namespace upsylon {
             
             while(n-- >0)
             {
-                cache->store(pop_back());
+                delete pop_back();
             }
         }
         

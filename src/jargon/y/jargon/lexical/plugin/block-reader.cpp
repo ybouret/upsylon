@@ -24,8 +24,7 @@ namespace upsylon
             {
                 assert(token.size>0);
                 const Context & context = *(token.head);
-                const Cache   & cache   = token.cache;
-                unit = new Unit(cache,context,label);
+                unit = new Unit(context,label);
             }
             
             

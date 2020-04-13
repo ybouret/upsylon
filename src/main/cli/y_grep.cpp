@@ -11,8 +11,7 @@ Y_PROGRAM_START()
 {
     if( argc > 1 )
     {
-        Cache cache;
-        Token token(cache);
+        Token token;
         const string expr = argv[1];
         Motif        keep = RegularExpression::Compile(expr);
         keep->save_to( "grep.bin" );

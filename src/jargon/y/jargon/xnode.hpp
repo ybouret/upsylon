@@ -45,17 +45,15 @@ namespace upsylon {
             //! genre of syntax node
             enum Genre
             {
-                IsTerminal, //!< a terminal => lexeme
-                //IsOperator, //!< a terminal => children
-                IsInternal, //!< an internal => children
-                IsInactive  //!< prepared memory
+                IsTerminal,   //!< a terminal
+                IsInternal,   //!< an internal
+                IsInactive    //!< prepared memory
             };
             
             static const char TerminalMark = '_'; //!< encoding a terminal
             static const char InternalMark = '@'; //!< encoding an internal
             static const char InactiveMark = '~'; //!< encoding an inactive...
-            //static const char OperatorMark = '^'; //!< encoding an operator...
-
+            
             //------------------------------------------------------------------
             //
             // methods
@@ -65,7 +63,7 @@ namespace upsylon {
             static XNode *Create( const Inactive & );          //!< create an inactive node
             static XNode *Create( const Internal & );          //!< create an internal node
             static XNode *Create( const Terminal &, Lexeme *); //!< create a terminal node
-
+            
             
             const Lexeme & lexeme()   const throw(); //!< lexeme for terminal
             XList        & children() throw();       //!< children for internal
@@ -96,8 +94,7 @@ namespace upsylon {
             const Genre genre; //!< genre of this node
             const Dogma dogma; //!< who created this node
             
-            //! return the last produced lexeme, may be NULL
-            static const Lexeme *LastLexeme(const XNode *xnode) throw();
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);

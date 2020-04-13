@@ -138,8 +138,7 @@ Y_UTEST(lexer)
     if(argc>1)
     {
         Lexemes   lexemes;
-        Cache     cache;
-        Source    source(Module::OpenFile(cache, argv[1]));
+        Source    source(Module::OpenFile(argv[1]));
         Lexeme   *lx = 0;
         while( NULL != (lx = L.get(source) ) )
         {

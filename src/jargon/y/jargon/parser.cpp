@@ -59,14 +59,13 @@ namespace upsylon {
 
         void Parser:: cleanup() throw()
         {
-            cache->release();
             xcache.release();
         }
         
         XNode *Parser:: treeFromFile(Context &where)
         {
             ios::icstream input( *(where.tag) );
-            return loadTree(where,cache,input);
+            return loadTree(where,input);
         }
 
         

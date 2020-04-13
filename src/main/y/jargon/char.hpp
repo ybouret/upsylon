@@ -29,42 +29,19 @@ namespace upsylon {
             //------------------------------------------------------------------
             // for Token
             //------------------------------------------------------------------
-            typedef core::list_of<Char>     List;     //!< list base class
-            typedef core::list_of_cpp<Char> PoolType; //!< pool base class
+            typedef core::list_of_cpp<Char>     List;     //!< list base class
             
-            //------------------------------------------------------------------
-            // for Cache
-            //------------------------------------------------------------------
             
-            //! a pool to create a char cache
-            class Pool : public CountedObject, public PoolType
-            {
-            public:
-                explicit Pool() throw(); //!< setup
-                virtual ~Pool() throw(); //!< cleanup
-                void     store( Char *ch ) throw(); //!< store a used Char
-                void     store( List &l  ) throw(); //!< store a used Token
-                Char    *query() throw();           //!< query a used Char
-                
-                void     optimize();                       //!< sort by increasing addres
-                void     maxChars(const size_t max_chars); //!< keep no more that max_chars in cache
-                void     maxBytes(const size_t max_bytes); //!< keep no more that max_bytes in cache
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Pool);
-            };
-            
-            typedef arc_ptr<Pool> CacheType; //!< alias
             
             //------------------------------------------------------------------
             //
             // methods
             //
             //------------------------------------------------------------------
-            virtual     ~Char() throw();                                     //!< cleanup
-            static Char *Make(CacheType &, const Context &, const uint8_t);      //!< make a Char
-            static Char *Copy(CacheType &, const Char &);                        //!< copy a Char
-            friend std::ostream & operator<<( std::ostream &, const Char &); //!< display
+            explicit Char(const Context &, const uint8_t) throw(); //!< setup
+            explicit Char(const Char &)                   throw(); //!< copy
+            virtual ~Char()                               throw(); //!< cleanup
+            friend std::ostream & operator<<(std::ostream &, const Char &); //!< display
 
             //------------------------------------------------------------------
             //
@@ -75,23 +52,10 @@ namespace upsylon {
             
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Char);
-            explicit Char(const Context &context,
-                          const uint8_t  content) throw();
+            Y_DISABLE_ASSIGN(Char);
+           
         };
         
-        //! shared cache for Char I/O
-        class Cache : public Char::CacheType
-        {
-        public:
-            virtual ~Cache() throw();             //!< cleanup
-            Cache(Char::Pool *charPool) throw();  //!< manual setup
-            Cache();                              //!< automatic setup
-            Cache(const Cache &) throw();         //!< shared copy
-            
-        private:
-            Y_DISABLE_ASSIGN(Cache);
-        };
         
         
         

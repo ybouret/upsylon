@@ -106,7 +106,7 @@ Y_UTEST(parser)
     if( argc>1 )
     {
         const string    fileName = argv[1];
-        auto_ptr<XNode> tree = json.parse(Module::OpenFile(json.cache,fileName));
+        auto_ptr<XNode> tree = json.parse(Module::OpenFile(fileName));
         
         tree->graphViz("json_tree.dot");
         

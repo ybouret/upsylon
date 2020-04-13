@@ -319,9 +319,8 @@ namespace upsylon {
                 i=1;
             }
             
-            Cache  cache;
-            Source source(Module::OpenData(cache,name,*name+i,name.size()-i) );
-            Token  token(cache);
+            Source source(Module::OpenData(name,*name+i,name.size()-i) );
+            Token  token;
             Motif  motif = RegularExpression::Compile("_[:lower:]");
             while( source.isAlive() )
             {
@@ -330,7 +329,7 @@ namespace upsylon {
                     assert(2==token.size);
                     assert('_'==token.head->code);
                     result << char( toupper( token.tail->code ) );
-                    token.erase();
+                    token.release();
                 }
                 else
                 {

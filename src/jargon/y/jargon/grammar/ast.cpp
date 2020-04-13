@@ -28,7 +28,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             if( xnode->dogma->as<Terminal>().isDefinite() )
             {
-                aliasing::_(xnode->lexeme()).erase();
+                aliasing::_(xnode->lexeme()).release();
             }
             return xnode;
         }

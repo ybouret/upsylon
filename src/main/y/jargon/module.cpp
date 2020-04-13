@@ -12,62 +12,55 @@ namespace upsylon {
         
         Module:: Module(const Tag   &s,
                         const Input &i,
-                        const Cache &c,
                         const Type   t) throw():
         CountedObject(),
         Context(s),
         input(i),
-        cache(c),
         type(t)
         {
         }
         
-        Module * Module:: OpenFile(const Cache  &c,
-                                   const string &f)
+        Module * Module:: OpenFile(const string &f)
         {
             const Tag   s = new string(f);
             const Input i = Kernel::MakeInput::FromFile(f);
-            return new Module(s,i,c,FileStream);
+            return new Module(s,i,FileStream);
         }
 
-        Module * Module:: OpenFile(const Cache &c, const char *f)
+        Module * Module:: OpenFile(const char *f)
         {
             const string _(f);
-            return OpenFile(c,_);
+            return OpenFile(_);
         }
         
-        Module * Module:: OpenData(const Cache  &c,
-                                   const string &dataName,
+        Module * Module:: OpenData(const string &dataName,
                                    const void   *data,
                                    const size_t  size)
         {
             assert(!(NULL==data&&size>0));
             const Tag   s = new string(dataName);
             const Input i = Kernel::MakeInput::FromData(data,size);
-            return new Module(s,i,c,DataStream);
+            return new Module(s,i,DataStream);
         }
 
-        Module * Module:: OpenData(const Cache &c,
-                                   const char  *dataName,
+        Module * Module:: OpenData(const char  *dataName,
                                    const void  *data,
                                    const size_t size)
         {
             const string _(dataName);
-            return OpenData(c,_,data,size);
+            return OpenData(_,data,size);
         }
         
-        Module * Module:: OpenData(const Cache  &c,
-                                   const char   *data,
+        Module * Module:: OpenData(const char   *data,
                                    const size_t  size)
         {
             const string dataName(data,size);
-            return OpenData(c,dataName,data,size);
+            return OpenData(dataName,data,size);
         }
         
-        Module * Module:: OpenData(const Cache  &c,
-                                   const string &data)
+        Module * Module:: OpenData(const string &data)
         {
-            return OpenData(c,data,*data,data.size());
+            return OpenData(data,*data,data.size());
         }
 
 
@@ -82,7 +75,7 @@ namespace upsylon {
             char code = 0;
             if(input->query(code))
             {
-                Char * ch = Char::Make(cache,*this,code);
+                Char * ch = new Char(*this,code);
                 ++aliasing::_(column);
                 return ch;
             }
