@@ -32,7 +32,7 @@ namespace upsylon {
             }
             catch(...)
             {
-                XNode::Release(ltree);
+                delete ltree;
                 throw;
             }
         }

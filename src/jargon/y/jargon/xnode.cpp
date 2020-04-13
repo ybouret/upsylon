@@ -10,23 +10,7 @@ namespace upsylon {
         
         XNode::~XNode() throw()
         {
-            switch(genre)
-            {
-                    
-                case IsTerminal: //std::cerr << "terminal" << std::endl;
-                    if(depot.lexeme) delete depot.lexeme;
-                    break;
-                    
-                case IsInternal: //std::cerr << "internal "<< children().size << std::endl;
-                    children().release();
-                    break;
-            }
-            cleanup();
-        }
-        
-        void XNode:: cleanup() throw()
-        {
-            memset(&depot,0,sizeof(depot));
+            
         }
         
         
@@ -37,25 +21,6 @@ namespace upsylon {
         bool XNode::isTerminal() const throw() { return IsTerminal == genre; }
         
         
-        
-        const Lexeme & XNode:: lexeme() const throw()
-        {
-            assert(isTerminal());
-            assert(depot.lexeme);
-            return *(depot.lexeme);
-        }
-        
-        const XList & XNode:: children() const throw()
-        {
-            assert(isInternal());
-            return *static_cast<const XList *>( aliasing::anonymous(depot.children) );
-        }
-        
-        XList & XNode:: children() throw()
-        {
-            assert(isInternal());
-            return *static_cast<XList *>( aliasing::anonymous(depot.children) );
-        }
         
         
         
@@ -106,45 +71,25 @@ namespace upsylon {
         
         
         
-        XNode:: XNode(const Terminal &axiom, Lexeme *lexeme) throw() :
+        XNode:: XNode(const Terminal &axiom, Lexeme *lex) throw() :
         genre(IsTerminal),
         dogma(DerivedToAxiom(axiom)),
-        depot()
+        lexeme(lex),
+        children()
         {
-            cleanup();
-            depot.lexeme = lexeme;
+            
         }
         
         XNode:: XNode(const Internal &axiom) throw():
         genre(IsInternal),
         dogma(DerivedToAxiom(axiom)),
-        depot()
+        lexeme(0),
+        children()
         {
-            cleanup();
-            new ( & children() ) XList();
+            
         }
         
         
-        void XNode:: Release(XNode *xnode) throw()
-        {
-            assert(xnode);
-            assert(0==xnode->next);
-            assert(0==xnode->prev);
-            switch(xnode->genre)
-            {
-                case IsTerminal: delete xnode->depot.lexeme; break;
-                case IsInternal:
-                {
-                    XList &chld = xnode->children();
-                    while(chld.size)
-                    {
-                        XNode *xn = chld.pop_back();
-                        Release(xn);
-                    }
-                } break;
-            }
-            delete xnode;
-        }
         
         void XNode:: Restore(XNode *xnode, Lexer &lexer) throw()
         {
@@ -154,12 +99,12 @@ namespace upsylon {
             switch(xnode->genre)
             {
                 case IsTerminal:
-                    lexer.unget(xnode->depot.lexeme);
-                    xnode->depot.lexeme = 0;
+                    assert(xnode->lexeme.is_valid());
+                    lexer.unget(xnode->lexeme.yield());
                     break;
                     
                 case IsInternal: {
-                    XList &chld = xnode->children();
+                    XList &chld = xnode->children;
                     while(chld.size)
                     {
                         Restore(chld.pop_back(),lexer);
@@ -179,7 +124,7 @@ namespace upsylon {
             else
             {
                 assert(xtree->isInternal());
-                xtree->children().push_back(xnode);
+                xtree->children.push_back(xnode);
             }
         }
         
@@ -198,12 +143,12 @@ namespace upsylon {
                 switch(xnode->genre)
                 {
                     case IsTerminal:
-                        xtree->children().push_back(xnode);
+                        xtree->children.push_back(xnode);
                         break;
                         
                     case IsInternal:
-                        xtree->children().merge_back( xnode->children() );
-                        XNode::Release(xnode);
+                        xtree->children.merge_back( xnode->children );
+                        delete xnode;
                         break;
                 }
             }

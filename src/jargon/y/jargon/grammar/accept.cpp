@@ -101,7 +101,7 @@ namespace upsylon {
                 }
                 catch(...)
                 {
-                    XNode::Release(xtree);
+                    delete xtree;
                     throw;
                 }
                 

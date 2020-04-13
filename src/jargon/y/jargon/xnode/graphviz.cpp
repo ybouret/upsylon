@@ -28,7 +28,8 @@ namespace upsylon {
             switch(genre)
             {
                 case IsTerminal: {
-                    const Lexeme &l = lexeme();
+                    assert(lexeme.is_valid());
+                    const Lexeme &l = *lexeme;
                     if(l.size)
                     {
                         fp << '=' << '\'';
@@ -46,7 +47,8 @@ namespace upsylon {
             
             if(isInternal())
             {
-                const XList &chld = children();
+                assert(lexeme.is_empty());
+                const XList &chld = children;
                 const bool   show = chld.size>1;
                 unsigned i=0;
                 for(const XNode *node=chld.head;node;node=node->next)

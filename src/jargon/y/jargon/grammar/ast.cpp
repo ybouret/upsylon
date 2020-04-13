@@ -27,7 +27,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             if( xnode->dogma->as<Terminal>().isDefinite() )
             {
-                aliasing::_(xnode->lexeme()).release();
+                xnode->lexeme->release();
             }
             return xnode;
         }
@@ -37,7 +37,8 @@ namespace upsylon {
         XNode *Grammar:: onInternal(XNode *xnode) const throw()
         {
             
-            XList &children = xnode->children();
+            assert(xnode);
+            XList &children = xnode->children;
             
             //------------------------------------------------------------------
             //
@@ -91,7 +92,7 @@ namespace upsylon {
                             break;
                             
                         case Aggregate::Acting: {
-                            XList &sub = child->children();
+                            XList &sub = child->children;
                             if(1==sub.size)
                             {
                                 temp.push_back( sub.pop_front() );
@@ -104,7 +105,7 @@ namespace upsylon {
                         } break;
                             
                         case Aggregate::Design:
-                            temp.merge_back( child->children() );
+                            temp.merge_back( child->children );
                             delete child;
                             break;
                     }

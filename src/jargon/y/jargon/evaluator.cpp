@@ -46,20 +46,22 @@ namespace upsylon {
             onFinalize();
         }
         
-        void Evaluator:: __browse(const XNode &node)
+        void Evaluator:: __browse(const XNode &xnode)
         {
-            switch(node.genre)
+            switch(xnode.genre)
             {
-                case XNode::IsTerminal: onTerminal(node.dogma->label,node.lexeme()); return;
+                case XNode::IsTerminal:
+                    assert(xnode.lexeme.is_valid());
+                    onTerminal(xnode.dogma->label,*xnode.lexeme); return;
                 case XNode::IsInternal: {
-                    const XList &children = node.children();
+                    const XList &children = xnode.children;
                     ++depth;
                     for(const XNode *child=children.head;child;child=child->next)
                     {
                         __browse(*child);
                     }
                     --depth; assert(depth>=0);
-                    onInternal(node.dogma->label,children.size);
+                    onInternal(xnode.dogma->label,children.size);
                 } return;
             }
         }

@@ -24,14 +24,16 @@ namespace upsylon {
                     
                 case IsTerminal: {
                     assert(Terminal::UUID==dogma->uuid);
+                    assert(lexeme.is_valid());
                     const size_t count = __XNodeDeclare(fp,*this,TerminalMark);
-                    return count + lexeme().serialize(fp);
+                    return count + lexeme->serialize(fp);
                 }
                     
                 case IsInternal: {
+                    assert(lexeme.is_empty());
                     size_t count = __XNodeDeclare(fp,*this,InternalMark);
-                    count += fp.write_upack(children().size);
-                    for(const XNode *xnode = children().head;xnode;xnode=xnode->next)
+                    count += fp.write_upack(children.size);
+                    for(const XNode *xnode = children.head;xnode;xnode=xnode->next)
                     {
                         count += xnode->serialize(fp);
                     }

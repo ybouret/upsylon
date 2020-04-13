@@ -165,7 +165,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     while(nch-- > 0)
                     {
-                        xnode->children().push_back( loadTree(where,input) );
+                        xnode->children.push_back( loadTree(where,input) );
                     }
                     
                     return xnode.yield();

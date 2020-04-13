@@ -49,6 +49,7 @@ namespace upsylon {
                 IsInternal    //!< an internal
             };
             
+            
             static const char TerminalMark = '_'; //!< encoding a terminal
             static const char InternalMark = '@'; //!< encoding an internal
             
@@ -63,16 +64,12 @@ namespace upsylon {
             static XNode *Create( const Terminal &, Lexeme *); //!< create a terminal node
             
             
-            const Lexeme & lexeme()   const throw(); //!< lexeme for terminal
-            XList        & children() throw();       //!< children for internal
-            const XList  & children() const throw(); //!< children for internal
-
+            
             bool           isInternal() const throw(); //!< check if is internal
             bool           isTerminal() const throw(); //!< check if if terminal
             bool           isInactive() const throw(); //!< check if is inactive
             
             static void Restore(XNode *, Lexer &)           throw(); //!< return content to lexer and push back into list
-            static void Release(XNode *)                    throw(); //!< recursive cleanup into list
             static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
             
             //! combine node content into tree
@@ -87,23 +84,17 @@ namespace upsylon {
             virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface
             virtual const char *className()        const throw(); //!< serializable interface
             
-            const Genre genre; //!< genre of this node
-            const Dogma dogma; //!< who created this node
-            
-            
+            const Genre      genre;    //!< genre of this node
+            const Dogma      dogma;    //!< who created this node
+            auto_ptr<Lexeme> lexeme;
+            XList            children;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);
             explicit XNode(const Terminal &,Lexeme *) throw();
             explicit XNode(const Internal &)          throw();
-            virtual  void vizCore(ios::ostream   &) const;
-           
+            virtual  void vizCore(ios::ostream   &) const;          
             
-            union {
-                Lexeme *lexeme;                  //!< lexeme   for terminal
-                char    children[sizeof(XList)]; //!< children for internal
-            } depot;
-            void cleanup()  throw(); //!< clear depot
         };
         
         

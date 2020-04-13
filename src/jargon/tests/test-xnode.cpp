@@ -62,19 +62,19 @@ Y_UTEST(xnode)
         // first level
         for(size_t i=1+alea.leq(10);i>0;--i)
         {
-            root->children().push_back( createXNode(*LIST,tags,ctx) );
+            root->children.push_back( createXNode(*LIST,tags,ctx) );
         }
         
         // second level
-        for(XNode *xnode = root->children().head; xnode; xnode=xnode->next)
+        for(XNode *xnode = root->children.head; xnode; xnode=xnode->next)
         {
             if( xnode->isInternal() )
             {
                 XNode *child = createXNode(*LIST,tags,ctx);
-                xnode->children().push_back( child );
+                xnode->children.push_back( child );
                 if( child->isInternal() )
                 {
-                    child->children().push_back( createXNode(*LIST,tags,ctx) );
+                    child->children.push_back( createXNode(*LIST,tags,ctx) );
                 }
             }
         }
