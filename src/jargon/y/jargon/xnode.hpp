@@ -35,8 +35,8 @@ namespace upsylon {
         public Serializable
         {
         public:
-            static const char LexemeMark = '@';
-            static const char BranchMark = '>';
+            static const char LexemeMark = '@'; //!< a lexeme exists
+            static const char BranchMark = '>'; //!< no lexeme
             
             //------------------------------------------------------------------
             //
@@ -44,20 +44,12 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             virtual      ~XNode() throw();                     //!< cleanup
-            static XNode *Create( const Axiom &, Lexeme * );
+            static XNode *Create( const Axiom &, Lexeme * );   //!< create a generic XNode, lexeme is handled
             
             
             static void Restore(XNode *, Lexer &)           throw(); //!< return content to lexer and push back into list
             static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
             
-            //! combine node content into tree
-            /**
-             - if NULL==tree, tree=node
-             - if node is internal/inactive, append it to tree
-             - merge content of node into tree and release node
-             */
-            //static void Combine(XNode * &tree, XNode *node) throw();
-           
             
             virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface
             virtual const char *className()        const throw(); //!< serializable interface

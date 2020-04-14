@@ -15,14 +15,15 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! const char for classes
         struct TextFor
         {
-            static const char *Terminal;
-            static const char *Operator;
-            static const char *Aggregate;
-            static const char *Alternate;
-            static const char *OneOrMore;
-            static const char *ZeroOrMore;
+            static const char *Terminal;   //!< Terminal
+            static const char *Operator;   //!< Operator
+            static const char *Aggregate;  //!< Aggregate
+            static const char *Alternate;  //!< Alternate
+            static const char *OneOrMore;  //!< OneOrMore
+            static const char *ZeroOrMore; //!< ZeroOrMore
 
         };
     }

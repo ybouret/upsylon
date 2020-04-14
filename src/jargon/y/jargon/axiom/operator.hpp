@@ -26,10 +26,11 @@ namespace upsylon {
             static const uint32_t UUID = Y_FOURCC('O','P','E','R'); //!< UUID
             static const char     CLID[];                           //!< "Operator"
             
+            //! attribute of operator
             enum Attribute
             {
-                Multiple,
-                Univocal
+                Multiple, //!< multiple possibilities
+                Univocal  //!< only one possibility
             };
             
             //------------------------------------------------------------------
@@ -50,6 +51,7 @@ namespace upsylon {
                 setup();
             }
             
+            //! attribute, detected by the regular expression
             const Attribute attribute;
             
         private:
