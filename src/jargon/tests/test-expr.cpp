@@ -30,9 +30,9 @@ namespace {
             POWER << ATOM << opt( cat(mark('^'), POWER) );
             
             Aggregate &MULOP = act("MULOP");
-            MULOP << POWER << zom( cat( choice( term('*'), term('/') ), POWER ) );
+            MULOP << POWER << zom( cat( choice( op('*'), op('/') ), POWER ) );
             
-            Axiom &PM = choice( op('+'), op('-') );
+            Axiom &PM = op("PM","[-+]"); //choice( op('+'), op('-') );
             ADDOP << opt(PM) << MULOP << zom( cat( PM , MULOP ) );
             
             endl("endl", "[:endl:]");
@@ -53,17 +53,16 @@ namespace {
 
 Y_UTEST(expr)
 {
-    Axiom::Verbose = true;
+    //Axiom::Verbose = true;
     Expr expr;
     if(argc>1 )
     {
-        expr.buildAST = false;
+        //expr.buildAST = false;
         const string    fileName = argv[1];
         auto_ptr<XNode> tree = expr.parseFile(fileName);
         
         tree->graphViz("expr_tree.dot");
         
-        return 0;
         
         Evaluator_ E(expr.title);
         E.browse(*tree);

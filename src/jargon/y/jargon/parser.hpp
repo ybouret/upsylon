@@ -92,14 +92,17 @@ namespace upsylon {
                 //
                 // will emit the terminal
                 //______________________________________________________________
-                const  Lexical::Rule &rule  = emit(label,regexp);
-                checkUnivocal(rule,TextFor::Operator);
-                
+                const  Motif        &motif     = emit(label,regexp).motif; assert(motif->strong());
+                Operator::Attribute  attribute = Operator::Multiple;
+                if(motif->univocal())
+                {
+                    attribute = Operator::Univocal;
+                }
                 //______________________________________________________________
                 //
                 // and associate it with a terminal
                 //______________________________________________________________
-                return _operator(label);
+                return _operator(label,attribute);
             }
             
             //------------------------------------------------------------------
@@ -154,7 +157,7 @@ namespace upsylon {
             Axiom & plug(type2type<PLUGIN>,const LABEL &label)
             {
                 load(type2type<PLUGIN>(),label).hook(*this);
-                return _terminal(label);
+                return _terminal(label,Terminal::Standard);
             }
             
             //! load a 1-arg plugin that will produce a terminal
@@ -162,7 +165,7 @@ namespace upsylon {
             Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter)
             {
                 load(type2type<PLUGIN>(),label,enter).hook(*this);
-                return _terminal(label);
+                return _terminal(label,Terminal::Standard);
             }
             
             //! load a 2-args plugin that will produce a terminal
@@ -170,7 +173,7 @@ namespace upsylon {
             Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter, const LEAVE &leave)
             {
                 load(type2type<PLUGIN>(),label,enter,leave).hook(*this);
-                return _terminal(label);
+                return _terminal(label,Terminal::Standard);
             }
             
             //------------------------------------------------------------------

@@ -1,7 +1,10 @@
 
 
 #include "y/jargon/evaluator.hpp"
-#include "y/jargon/axiom.hpp"
+#include "y/jargon/axiom/terminal.hpp"
+#include "y/jargon/axiom/operator.hpp"
+#include "y/jargon/axiom/compound/aggregate.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
@@ -34,7 +37,7 @@ namespace upsylon {
         void Evaluator:: onInternal(const Tag    &name,
                                     const size_t  argc)
         {
-            indent( std::cerr << "|-"  ) << "[call] " << name << "/" << argc << std::endl;
+            indent( std::cerr << "|-"  ) << "[make] " << name << "/" << argc << std::endl;
         }
         
         void Evaluator:: browse(const XNode &root)
@@ -48,13 +51,15 @@ namespace upsylon {
         
         void Evaluator:: __browse(const XNode &xnode)
         {
-#if 0
-            switch(xnode.genre)
+            const Axiom &axiom = *(xnode.dogma);
+            switch(axiom.uuid)
             {
-                case XNode::IsTerminal:
+                case Terminal::UUID:
                     assert(xnode.lexeme.is_valid());
-                    onTerminal(xnode.dogma->label,*xnode.lexeme); return;
-                case XNode::IsInternal: {
+                    onTerminal(axiom.label, *xnode.lexeme);
+                    return;
+                    
+                case Aggregate::UUID: {
                     const XList &children = xnode.children;
                     ++depth;
                     for(const XNode *child=children.head;child;child=child->next)
@@ -63,9 +68,15 @@ namespace upsylon {
                     }
                     --depth; assert(depth>=0);
                     onInternal(xnode.dogma->label,children.size);
-                } return;
+                    return;
+                }
+                    
+                default:
+                    throw exception("unhandled %s",fourcc_(axiom.uuid));
             }
-#endif
+            
+            
+            
         }
      
         

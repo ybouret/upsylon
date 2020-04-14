@@ -44,8 +44,8 @@ namespace {
         myGrammar() : Grammar("myGrammar")
         {
             
-            Axiom    &ID   = _terminal("ID");
-            Axiom    &INT  = _terminal("INT");
+            Axiom    &ID   = _terminal("ID",  Terminal::Standard);
+            Axiom    &INT  = _terminal("INT", Terminal::Standard);
             Compound &INFO = agg("INFO");
             INFO << ID << opt(choice(INT,ID)) << _terminal("SEP",Terminal::Division);
             Axiom &ROOT = zom(INFO);

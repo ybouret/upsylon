@@ -12,8 +12,10 @@ namespace upsylon {
             switch(xnode->dogma->uuid)
             {
                 case Terminal::  UUID: return onTerminal(xnode);
+                case Operator::  UUID: return onOperator(xnode);
                 case Aggregate:: UUID: return onInternal(xnode);
-                    std::cerr << "*** unhandled " << fourcc_(xnode->dogma->uuid) << std::endl;
+                default:
+                    break;
             }
             
             return xnode;
@@ -21,7 +23,7 @@ namespace upsylon {
         
         XNode * Grammar:: onTerminal(XNode *xnode) const throw()
         {
-            //assert(xnode);
+            assert(xnode);
             //------------------------------------------------------------------
             //
             // pre-remove content
@@ -30,6 +32,24 @@ namespace upsylon {
             if( xnode->dogma->as<Terminal>().isDefinite() )
             {
                 xnode->lexeme->release();
+            }
+            return xnode;
+        }
+        
+        
+        XNode * Grammar:: onOperator(XNode *xnode) const throw()
+        {
+            assert(xnode);
+            //------------------------------------------------------------------
+            //
+            // pre-remove content
+            //
+            //------------------------------------------------------------------
+            const Operator &op = xnode->dogma->as<Operator>();
+            switch(op.attribute)
+            {
+                case Operator::Multiple: break;
+                case Operator::Univocal: xnode->lexeme->release(); break;
             }
             return xnode;
         }

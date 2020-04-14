@@ -80,16 +80,17 @@ namespace upsylon {
             //! new Terminal
             template <typename LABEL> inline
             Axiom & _terminal(const LABEL             &id,
-                              const Terminal::Feature ft = Terminal::Standard)
+                              const Terminal::Feature  ft)
             {
                 return declare( new Terminal(id,ft) );
             }
             
             //! new Operator
             template <typename LABEL> inline
-            Axiom & _operator(const LABEL             &id)
+            Axiom & _operator(const LABEL               &id,
+                              const Operator::Attribute &attr)
             {
-                return declare( new Operator(id) );
+                return declare( new Operator(id,attr) );
             }
             
             //------------------------------------------------------------------
@@ -196,8 +197,9 @@ namespace upsylon {
             
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
             
-            XNode *onTerminal(XNode *) const throw();
-            XNode *onInternal(XNode *) const throw();
+            XNode *onTerminal(XNode *) const throw(); //!< cleanup terminal
+            XNode *onOperator(XNode *) const throw(); //!< cleanup operator
+            XNode *onInternal(XNode *) const throw(); //!< cleanup internal
             void   reduceAST(XList &)  const throw();
             void   fusionAST(XList &)  const throw();
             void   rewrite(XList &)    const throw();

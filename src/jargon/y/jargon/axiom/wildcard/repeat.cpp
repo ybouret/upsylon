@@ -38,7 +38,7 @@ namespace upsylon {
                 {
                     if(NULL==xtree)
                     {
-                        xtree = ltree;
+                        xtree = ltree; // shouldn't happen, badly designed grammar...
                     }
                     else
                     {

@@ -24,9 +24,8 @@ namespace upsylon {
             {
                 if( *(lexeme->label) == *label )
                 {
-                    throw exception("need to correct this...");
                     Y_JAXIOM(std::cerr << "|_[" << CLID << "] <" << label << ">" << std::endl);
-                    //XNode::Advance(xtree,xcache.query(*this));
+                    XNode::Advance(xtree,XNode::Create(*this,lexeme));
                     return true;
                 }
                 else

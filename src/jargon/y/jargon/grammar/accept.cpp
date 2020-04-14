@@ -87,7 +87,6 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // check input
                 //--------------------------------------------------------------
-                std::cerr << "checking input" << std::endl;
                 
                 try
                 {
@@ -110,7 +109,6 @@ namespace upsylon {
                 // ok, everything seems good
                 //
                 //--------------------------------------------------------------
-                std::cerr << "building or not..." << std::endl;
                 if(buildAST)
                 {
                     Y_JAXIOM(std::cerr << "[" << title << "] returning AST" << std::endl);

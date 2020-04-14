@@ -26,15 +26,31 @@ namespace upsylon {
             static const uint32_t UUID = Y_FOURCC('O','P','E','R'); //!< UUID
             static const char     CLID[];                           //!< "Operator"
             
+            enum Attribute
+            {
+                Multiple,
+                Univocal
+            };
+            
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+           
+            //! cleanup
             virtual ~Operator() throw();
             
             //! setup, check valid name
             template <typename LABEL>
-            explicit Operator(const LABEL  &id) :
-            Internal(id,UUID)
+            explicit Operator(const LABEL  &id, const Attribute attr) :
+            Internal(id,UUID),
+            attribute(attr)
             {
                 setup();
             }
+            
+            const Attribute attribute;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Operator);
