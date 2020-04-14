@@ -37,12 +37,12 @@ namespace upsylon {
             const hashing::mperf  terminalHash;
             const hashing::mperf  internalHash;
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
-            virtual void onBrowsing();
             virtual void onTerminal(const Jargon::Tag &, const Jargon::Token &);
             virtual void onInternal(const Jargon::Tag &, const size_t );
             virtual void onOperator(const Jargon::Tag &,const Jargon::Token &,const size_t);
 
-            virtual void onFinalize();
+            virtual void onInit();
+            virtual void onQuit();
         };
         
     }

@@ -105,14 +105,14 @@ namespace upsylon {
             
         }
         
-        void Compiler:: onBrowsing()
+        void Compiler:: onInit()
         {
             value = NullType;
             vArray.free();
             vObject.free();
         }
         
-        void Compiler:: onFinalize() 
+        void Compiler:: onQuit() 
         {
             if(1!=vArray.size()) throw exception("malformed JSON");
             value.swapWith(vArray.back());

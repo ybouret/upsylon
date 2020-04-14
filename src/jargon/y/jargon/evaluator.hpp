@@ -73,8 +73,8 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Evaluator);
             void __browse(const XNode &);
             void __browse(const XList &);
-            virtual void onBrowsing() = 0; //! initialize extra data
-            virtual void onFinalize() = 0; //! finalize   extra data
+            virtual void onInit() = 0; //! initialize extra data
+            virtual void onQuit() = 0; //! finalize   extra data
         };
         
         //----------------------------------------------------------------------
@@ -96,8 +96,8 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Evaluator_);
-            virtual void onBrowsing() throw();
-            virtual void onFinalize() throw();
+            virtual void onInit() throw();
+            virtual void onQuit() throw();
             
         };
     }

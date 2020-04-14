@@ -53,10 +53,10 @@ namespace upsylon {
         void Evaluator:: browse(const XNode &root)
         {
             depth = 0;
-            onBrowsing();
+            onInit();
             __browse(root);
             assert(0==depth);
-            onFinalize();
+            onQuit();
         }
         
         void Evaluator:: __browse(const XList &children)
@@ -108,11 +108,11 @@ namespace upsylon {
         {
         }
         
-        void Evaluator_:: onBrowsing() throw()
+        void Evaluator_:: onInit() throw()
         {
         }
         
-        void Evaluator_:: onFinalize() throw()
+        void Evaluator_:: onQuit() throw()
         {
             
         }
