@@ -180,8 +180,15 @@ namespace upsylon {
                 switch(xnode->dogma->as<Aggregate>().feature)
                 {
                     case Aggregate::Steady: break;
-                    case Aggregate::Acting: break;
-                    case Aggregate::Design: break;
+                    case Aggregate::Acting:
+                    case Aggregate::Design: // shouldn't happen...
+                        if(1==children.size)
+                        {
+                            XNode *ans = children.pop_front();
+                            delete xnode;
+                            return ans;
+                        }
+                        break;
                 }
                 
                 return xnode;

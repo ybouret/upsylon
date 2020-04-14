@@ -40,6 +40,8 @@ namespace upsylon {
             virtual void onBrowsing();
             virtual void onTerminal(const Jargon::Tag &, const Jargon::Token &);
             virtual void onInternal(const Jargon::Tag &, const size_t );
+            virtual void onOperator(const Jargon::Tag &,const Jargon::Token &,const size_t);
+
             virtual void onFinalize();
         };
         

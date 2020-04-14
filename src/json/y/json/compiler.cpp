@@ -161,6 +161,13 @@ namespace upsylon {
             }
         }
         
+        
+        void Compiler:: onOperator(const Jargon::Tag &tag,const Jargon::Token &,const size_t)
+        {
+            throw exception("%s: unexpected Operator<%s>", **title, **tag);
+        }
+
+        
         void Compiler:: onInternal(const Jargon::Tag &tag, const size_t n)
         {
             //JSON::Evaluator::onInternal(tag,n);
