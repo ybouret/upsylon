@@ -1,180 +1,96 @@
 
 #include "y/jargon/grammar.hpp"
-#include "y/exception.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
     namespace Jargon
     {
         
-        const Axiom & Grammar:: loadAxiom(ios::istream &fp, int &r, const char *which) const
-        {
-            static const char fn[] = "loadAxiom";
-            assert(which);
-            // read the label name
-            size_t        shift  = 0;
-            const string  id     = string::read(fp, shift,which); r += shift;
-            
-            // find the associatied dogma
-            const Dogma  *dogma  = axioms.search_by(id);
-            if(!dogma) throw exception("%s.%s(unknown %s <%s>)", **title,fn, which, *id);
-           
-            // return the axiom
-            return **dogma;
-        }
+       
         
         XNode * Grammar:: loadTree(Context      &where,
                                    ios::istream &input) const
         {
             static const char fn[] = "loadTree";
+            static const char ax[] = "Axiom Label";
+            int              &read = aliasing::_(where.column);
             
             //------------------------------------------------------------------
             //
-            // read the prolog
+            // read the axiom label
             //
             //------------------------------------------------------------------
-
-            char    C = 0;
-            int    &r = aliasing::_(where.column);
+            size_t        nr = 0;
+            const  string id = string::read(input,nr,ax);
+            read+=nr;
             
-            if(!input.query(C)) throw exception("%s.%s(unexpected end of stream)", **title, fn);
-            ++r;
+            //------------------------------------------------------------------
+            //
+            // find the associatied dogma
+            //
+            //------------------------------------------------------------------
+            const Dogma  *dogma  = axioms.search_by(id);
+            if(!dogma) throw exception("%s.%s(unknown %s <%s>) in %s", **title,fn, ax, *id, **(where.tag) );
+            const Axiom &axiom = **dogma;
             
-            
+            //------------------------------------------------------------------
+            //
+            // read a lexeme or not
+            //
+            //------------------------------------------------------------------
+            auto_ptr<Lexeme> unit = NULL;
+            char             C    = 0;
+            if( !input.query(C) ) throw exception("%s.%s(missing marker after <%s>) in %s",**title,fn,*id,**(where.tag));
+            ++read;
             switch(C)
             {
-            
-                case XNode::TerminalMark:
-                {
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // get/create a terminal
-                    //
-                    //
-                    //----------------------------------------------------------
-
-                    //----------------------------------------------------------
-                    //
-                    // get the axiom
-                    //
-                    //----------------------------------------------------------
-                    const Axiom     &axiom = loadAxiom(input, r, "Terminal Label");
+                case XNode:: BranchMark:
+                    break;
                     
-                    //----------------------------------------------------------
-                    //
-                    // get the terminal
-                    //
-                    //----------------------------------------------------------
-                    if(Terminal::UUID!=axiom.uuid) throw exception("%s.%s( <%s> is not a Terminal!)",**title,fn,**(axiom.label) );
-                    const Terminal &t = axiom.as<Terminal>();
-                    
-                    //----------------------------------------------------------
-                    //
-                    // create the lexeme
-                    //
-                    //----------------------------------------------------------
-                    auto_ptr<Lexeme> unit = new Lexeme(where,t.label);
-                    
-                    //----------------------------------------------------------
-                    //
-                    // read the lexeme #chars
-                    //
-                    //----------------------------------------------------------
-                    size_t           nch  = 0;
+                case XNode:: LexemeMark: {
+                    unit      = new Lexeme(where,axiom.label);
+                    size_t nu = 0;
+                    if( !input.query_upack(nu,nr)) throw exception("%s.%s(missing #chars for <%s>) in %s",**title,fn,*id,**(where.tag));
+                    for(size_t i=1;i<=nu;++i)
                     {
-                        size_t          shift = 0;
-                        if(!input.query_upack(nch,shift))
-                            throw exception("%s.%s( cannot read #chars for <%s>)",**title,fn,**(axiom.label) );
-                        r+=shift;
-                    }
-                    
-                    //----------------------------------------------------------
-                    //
-                    // load the content
-                    //
-                    //----------------------------------------------------------
-                    for(size_t i=1;i<=nch;++i)
-                    {
-                        if( !input.query(C))
-                        {
-                            throw exception("%s.%s(missing char %u/%u of <%s>)",**title,fn,unsigned(i), unsigned(nch), **(axiom.label) );
-                        }
-                        ++r;
+                        if( !input.query(C)) throw exception("%s.%s(missing char %u/%u of <%s>)",**title,fn,unsigned(i), unsigned(nu), **(axiom.label) );
+                        ++read;
                         unit->append(uint8_t(C));
                     }
+                } break;
                     
-                    return XNode::Create(t,unit.yield());
-                    
-                }
-                    
-                    
-                case XNode::InternalMark:
-                {
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // get/create an internal node
-                    //
-                    //
-                    //----------------------------------------------------------
-
-                    //----------------------------------------------------------
-                    //
-                    // load the axiom
-                    //
-                    //----------------------------------------------------------
-                    const Axiom &axiom = loadAxiom(input, r, "Internal Label");
-                    
-                    
-                    //----------------------------------------------------------
-                    //
-                    // get the aggregate
-                    //
-                    //----------------------------------------------------------
-                    if(Aggregate::UUID!=axiom.uuid) throw exception("%s.%s( <%s> is not an Aggregrate!)",**title,fn,**(axiom.label) );
-                    
-                    const Aggregate &internal = axiom.as<Aggregate>();
-                    if(Aggregate::Design == internal.feature) throw exception("%s.%s( <%s> is a Design Aggregrate!)",**title,fn,**(axiom.label) );
-                   
-                    //----------------------------------------------------------
-                    //
-                    // get the xnode
-                    //
-                    //----------------------------------------------------------
-                    auto_ptr<XNode> xnode = XNode::Create(internal);
-                    
-                    //----------------------------------------------------------
-                    //
-                    // read the #children
-                    //
-                    //----------------------------------------------------------
-                    size_t          nch   = 0;
-                    {
-                        size_t          shift = 0;
-                        if(!input.query_upack(nch,shift))
-                            throw exception("%s.%s( cannot read #children for <%s>)",**title,fn,**(axiom.label) );
-                        r+=shift;
-                    }
-
-                    //----------------------------------------------------------
-                    //
-                    // load all children
-                    //
-                    //----------------------------------------------------------
-                    while(nch-- > 0)
-                    {
-                        xnode->children.push_back( loadTree(where,input) );
-                    }
-                    
-                    return xnode.yield();
-                }
-                    
-                default: break;
+                default:
+                    throw exception("%s.%s(invalid marker '%s' after <%s>) in %s",**title,fn,cchars::encoded[uint8_t(C)],*id,**(where.tag));
             }
-            throw exception("%s.%s(unknown mark '%s')", **title, fn, cchars::encoded[ uint8_t(C) ]);
+            
+            //------------------------------------------------------------------
+            //
+            // create the xnode
+            //
+            //------------------------------------------------------------------
+            auto_ptr<XNode> xnode = XNode::Create(axiom, unit.yield() );
+            
+            //------------------------------------------------------------------
+            //
+            // read children
+            //
+            //------------------------------------------------------------------
+            size_t nch = 0;
+            if( !input.query_upack(nch,nr)) throw exception("%s.%s(missing #chars for <%s>) in %s",**title,fn,*id,**(where.tag));
+            read += nr;
+            
+            while(nch-- > 0 )
+            {
+                xnode->children.push_back( loadTree(where,input) );
+            }
+            
+            return xnode.yield();
+            
+
         }
+        
     }
     
 }

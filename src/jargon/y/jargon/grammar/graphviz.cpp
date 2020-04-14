@@ -39,9 +39,8 @@ namespace upsylon {
             assert(axiom);
             switch(axiom->uuid)
             {
-                case Terminal::UUID:   break;
-                case Option::UUID:     gvJoinWC<Option>(fp, axiom);    break;
-                case OneOrMore::UUID:  gvJoinWC<OneOrMore>(fp,axiom);  break;
+                case Option::    UUID: gvJoinWC<Option>(fp, axiom);    break;
+                case OneOrMore:: UUID: gvJoinWC<OneOrMore>(fp,axiom);  break;
                 case ZeroOrMore::UUID: gvJoinWC<ZeroOrMore>(fp,axiom); break;
                    
                 case Aggregate::UUID:  gvJoinCM<Aggregate>(fp,axiom);  break;

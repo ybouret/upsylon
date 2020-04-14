@@ -1,8 +1,4 @@
-
-
 #include "y/jargon/xnode.hpp"
-#include "y/type/aliasing.hpp"
-#include "y/ptr/auto.hpp"
 
 namespace upsylon {
     
@@ -13,24 +9,13 @@ namespace upsylon {
             
         }
         
-        
-        
-      
-        
-        bool XNode::isInternal() const throw() { return IsInternal == genre; }
-        bool XNode::isTerminal() const throw() { return IsTerminal == genre; }
-        
-        
-        
-        
-        
-        XNode * XNode:: Create(const Internal &dogma)
+        XNode * XNode:: Create(const Axiom &ax, Lexeme *lx)
         {
-            return new XNode(dogma);
+            auto_ptr<Lexeme> guard(lx);
+            XNode *xnode = new XNode(ax,lx);
+            guard.dismiss();
+            return xnode;
         }
-        
-       
-        
     }
     
 }
@@ -42,26 +27,8 @@ namespace upsylon {
     
     namespace Jargon {
         
-        XNode * XNode:: Create(const Terminal &dogma, Lexeme *lexeme)
-        {
-            assert(lexeme);
-            try
-            {
-                if( *(lexeme->label) != *(dogma.label) )
-                {
-                    throw exception("Jargon::Terminal '%s'!='%s' !!", **(dogma.label), **(lexeme->label) );
-                }
-                return new XNode(dogma,lexeme);
-            }
-            catch(...)
-            {
-                delete lexeme;
-                throw;
-            }
-        }
-        
         template <typename DERIVED>
-        Axiom * DerivedToAxiom( const DERIVED &derived  ) throw()
+        Axiom * _Axiom( const DERIVED &derived  ) throw()
         {
             const Axiom &axiom = static_cast<const Axiom &>(derived);
             assert(axiom.refcount()>0);
@@ -71,46 +38,33 @@ namespace upsylon {
         
         
         
-        XNode:: XNode(const Terminal &axiom, Lexeme *lex) throw() :
-        genre(IsTerminal),
-        dogma(DerivedToAxiom(axiom)),
+        XNode:: XNode(const Axiom &axiom, Lexeme *lex) throw() :
+        dogma(_Axiom(axiom)),
         lexeme(lex),
         children()
         {
             
         }
         
-        XNode:: XNode(const Internal &axiom) throw():
-        genre(IsInternal),
-        dogma(DerivedToAxiom(axiom)),
-        lexeme(0),
-        children()
-        {
-            
-        }
-        
-        
-        
+                
         void XNode:: Restore(XNode *xnode, Lexer &lexer) throw()
         {
             assert(xnode);
             assert(0==xnode->next);
             assert(0==xnode->prev);
-            switch(xnode->genre)
+            
+            if( xnode->lexeme.is_valid() )
             {
-                case IsTerminal:
-                    assert(xnode->lexeme.is_valid());
-                    lexer.unget(xnode->lexeme.yield());
-                    break;
-                    
-                case IsInternal: {
-                    XList &chld = xnode->children;
-                    while(chld.size)
-                    {
-                        Restore(chld.pop_back(),lexer);
-                    }
-                } break;
+                lexer.unget(xnode->lexeme.yield());
             }
+            
+            XList &chld = xnode->children;
+            while(chld.size)
+            {
+                Restore(chld.pop_back(),lexer);
+            }
+            
+            
             delete xnode;
         }
         
@@ -123,7 +77,6 @@ namespace upsylon {
             }
             else
             {
-                assert(xtree->isInternal());
                 xtree->children.push_back(xnode);
             }
         }
@@ -139,17 +92,14 @@ namespace upsylon {
             }
             else
             {
-                assert(xtree->isInternal());
-                switch(xnode->genre)
+                if(xnode->children.size>0)
                 {
-                    case IsTerminal:
-                        xtree->children.push_back(xnode);
-                        break;
-                        
-                    case IsInternal:
-                        xtree->children.merge_back( xnode->children );
-                        delete xnode;
-                        break;
+                    xtree->children.merge_back( xnode->children );
+                    delete xnode;
+                }
+                else
+                {
+                    xtree->children.push_back(xnode);
                 }
             }
         }

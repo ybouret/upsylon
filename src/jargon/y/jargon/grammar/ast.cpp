@@ -8,18 +8,20 @@ namespace upsylon {
         {
             assert(xnode);
             
+#if 0
             switch(xnode->genre)
             {
                 case XNode::IsTerminal: return onTerminal(xnode);
                 case XNode::IsInternal: return onInternal(xnode);
             }
+#endif
             return xnode;
         }
         
         XNode * Grammar:: onTerminal(XNode *xnode) const throw()
         {
-            assert(xnode);
-            assert(xnode->isTerminal());
+            //assert(xnode);
+            //assert(xnode->isTerminal());
             //------------------------------------------------------------------
             //
             // pre-remove content
@@ -59,6 +61,7 @@ namespace upsylon {
 
         void Grammar:: broadcast(XList &children) const throw()
         {
+#if 0
             XList temp;
             while(children.size)
             {
@@ -73,10 +76,12 @@ namespace upsylon {
                 }
             }
             children.swap_with(temp);
+#endif
         }
         
         void Grammar:: amalgamate(XList &children) const throw()
         {
+#if 0
             XList temp;
             while(children.size)
             {
@@ -116,7 +121,9 @@ namespace upsylon {
                 }
             }
             children.swap_with(temp);
+#endif
         }
+        
         
         void Grammar:: rewrite(XList &) const throw()
         {

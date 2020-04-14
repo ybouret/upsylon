@@ -48,6 +48,7 @@ namespace upsylon {
         
         void Evaluator:: __browse(const XNode &xnode)
         {
+#if 0
             switch(xnode.genre)
             {
                 case XNode::IsTerminal:
@@ -64,6 +65,7 @@ namespace upsylon {
                     onInternal(xnode.dogma->label,children.size);
                 } return;
             }
+#endif
         }
      
         

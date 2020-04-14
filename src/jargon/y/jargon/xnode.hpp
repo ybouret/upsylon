@@ -15,18 +15,17 @@ namespace upsylon {
         // forward declarations and aliases
         //
         //----------------------------------------------------------------------
-        class                        Inactive; //!< forward
-        class                        Terminal; //!< forward
-        class                        Internal; //!< forward
-        class                        Axiom;    //!< forward
-        typedef arc_ptr<Axiom>       Dogma;    //!< forward shared Axiom
+        class                            Terminal; //!< forward Terminal declaration
+        class                            Internal; //!< forward Internal declaration
+        class                            Axiom;    //!< forward
+        typedef arc_ptr<Axiom>           Dogma;    //!< forward shared Axiom
         
         class                            XNode; //!< Syntax Node
         typedef core::list_of_cpp<XNode> XList; //!< Syntax Node List
         
         //----------------------------------------------------------------------
         //
-        //! versatile, variant syntax node
+        //! versatile agnostic syntax node
         //
         //----------------------------------------------------------------------
         class XNode :
@@ -36,22 +35,8 @@ namespace upsylon {
         public Serializable
         {
         public:
-            //------------------------------------------------------------------
-            //
-            // types and definitions
-            //
-            //------------------------------------------------------------------
-            
-            //! genre of syntax node
-            enum Genre
-            {
-                IsTerminal,   //!< a terminal
-                IsInternal    //!< an internal
-            };
-            
-            
-            static const char TerminalMark = '_'; //!< encoding a terminal
-            static const char InternalMark = '@'; //!< encoding an internal
+            static const char LexemeMark = '@';
+            static const char BranchMark = '>';
             
             //------------------------------------------------------------------
             //
@@ -59,15 +44,8 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             virtual      ~XNode() throw();                     //!< cleanup
-            static XNode *Create( const Inactive & );          //!< create an inactive node
-            static XNode *Create( const Internal & );          //!< create an internal node
-            static XNode *Create( const Terminal &, Lexeme *); //!< create a terminal node
+            static XNode *Create( const Axiom &, Lexeme * );
             
-            
-            
-            bool           isInternal() const throw(); //!< check if is internal
-            bool           isTerminal() const throw(); //!< check if if terminal
-            bool           isInactive() const throw(); //!< check if is inactive
             
             static void Restore(XNode *, Lexer &)           throw(); //!< return content to lexer and push back into list
             static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
@@ -84,16 +62,14 @@ namespace upsylon {
             virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface
             virtual const char *className()        const throw(); //!< serializable interface
             
-            const Genre      genre;    //!< genre of this node
-            const Dogma      dogma;    //!< who created this node
-            auto_ptr<Lexeme> lexeme;
-            XList            children;
+            const Dogma      dogma;     //!< who created this node
+            auto_ptr<Lexeme> lexeme;    //!< with or without lexeme
+            XList            children;  //!< children
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);
-            explicit XNode(const Terminal &,Lexeme *) throw();
-            explicit XNode(const Internal &)          throw();
-            virtual  void vizCore(ios::ostream   &) const;          
+            explicit XNode(const Axiom &, Lexeme *) throw();
+            virtual  void vizCore(ios::ostream   &) const;
             
         };
         

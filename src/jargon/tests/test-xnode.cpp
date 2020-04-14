@@ -24,7 +24,7 @@ namespace {
     {
         switch(alea.range<int>(1,2))
         {
-            case 1: return XNode::Create(I);
+            case 1: return XNode::Create(I,NULL);
                                 
             case 2: {
                 const Tag                &tag  = alea.in(tags);
@@ -57,7 +57,7 @@ Y_UTEST(xnode)
     
     arc_ptr<Internal_> LIST = new Internal_("LIST",0);
     {
-        auto_ptr<XNode> root = XNode::Create(*LIST); Y_CHECK(root->isInternal());
+        auto_ptr<XNode> root = XNode::Create(*LIST,NULL);
         
         // first level
         for(size_t i=1+alea.leq(10);i>0;--i)
@@ -68,11 +68,11 @@ Y_UTEST(xnode)
         // second level
         for(XNode *xnode = root->children.head; xnode; xnode=xnode->next)
         {
-            if( xnode->isInternal() )
+            if( xnode->lexeme.is_empty() )
             {
                 XNode *child = createXNode(*LIST,tags,ctx);
                 xnode->children.push_back( child );
-                if( child->isInternal() )
+                if( child->lexeme.is_empty() )
                 {
                     child->children.push_back( createXNode(*LIST,tags,ctx) );
                 }

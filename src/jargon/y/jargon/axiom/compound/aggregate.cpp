@@ -15,7 +15,7 @@ namespace upsylon {
         
         bool Aggregate:: accept(Y_JARGON_AXIOM_ARGS) const
         {
-            XNode *ltree = XNode::Create(*this);
+            XNode *ltree = XNode::Create(*this,NULL);
             try
             {
                 for(const Member *member=head;member;member=member->next)

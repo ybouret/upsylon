@@ -26,7 +26,7 @@ namespace upsylon {
         bool Repeat:: accept(Y_JARGON_AXIOM_ARGS) const
         {
             size_t           count = 0;
-            XNode           *ltree = XNode::Create(*this);
+            XNode           *ltree = XNode::Create(*this,NULL);
             try
             {
                 while(axiom.Y_JARGON_AXIOM_ACCEPT(ltree))

@@ -25,6 +25,7 @@ namespace upsylon {
             fp << "[" << dogma->vizual() << ",label=\"";
             emitLabel(fp, dogma->label);
             
+#if 0
             switch(genre)
             {
                 case IsTerminal: {
@@ -42,25 +43,23 @@ namespace upsylon {
                 } break;
                 case IsInternal: break;
             }
+#endif
             
             endl( fp << "\"]");
             
-            if(isInternal())
+            
+            const XList &chld = children;
+            const bool   show = chld.size>1;
+            unsigned i=0;
+            for(const XNode *node=chld.head;node;node=node->next)
             {
-                assert(lexeme.is_empty());
-                const XList &chld = children;
-                const bool   show = chld.size>1;
-                unsigned i=0;
-                for(const XNode *node=chld.head;node;node=node->next)
+                node->vizSave(fp);
+                vizJoin(fp,node);
+                if(show)
                 {
-                    node->vizSave(fp);
-                    vizJoin(fp,node);
-                    if(show)
-                    {
-                        fp(" [label=\"%u\"]",++i);
-                    }
-                    endl(fp);
+                    fp(" [label=\"%u\"]",++i);
                 }
+                endl(fp);
             }
             
             

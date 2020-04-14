@@ -19,8 +19,6 @@ namespace upsylon {
         
         bool Operator:: accept(Y_JARGON_AXIOM_ARGS_) const
         {
-            assert(NULL==xtree||xtree->isInternal());
-            
             Lexeme *lexeme = lexer.get(source);
             if( lexeme )
             {
