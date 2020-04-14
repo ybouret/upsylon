@@ -81,34 +81,7 @@ namespace upsylon {
             }
         }
         
-#if 0
-        void XNode:: Combine(XNode * &xtree, XNode *xnode) throw()
-        {
-            assert(xnode);
-            assert(0==xnode->next);
-            assert(0==xnode->prev);
-            
-            if(NULL==xtree)
-            {
-                xtree = xnode; //!< shouldn't happen
-            }
-            else
-            {
-                if(xnode->children.size>0)
-                {
-                    xtree->children.merge_back( xnode->children );
-                    delete xnode;
-                }
-                else
-                {
-                    xtree->children.push_back(xnode);
-                }
-            }
-        }
-#endif
         
-        
-
 
        
         
