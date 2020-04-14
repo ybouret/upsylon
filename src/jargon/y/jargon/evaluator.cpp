@@ -40,6 +40,16 @@ namespace upsylon {
             indent( std::cerr << "|-"  ) << "[make] " << name << "/" << argc << std::endl;
         }
         
+        void  Evaluator:: onOperator(const Tag   &name,
+                                     const Token &data,
+                                     const size_t argc)
+        {
+            indent( std::cerr << "|-"  ) << "[call] " << name << "/" << argc;
+            if(data.size) std::cerr << ' ' << '<' << data << '>';
+            std::cerr << std::endl;
+        }
+
+        
         void Evaluator:: browse(const XNode &root)
         {
             depth = 0;
@@ -48,6 +58,17 @@ namespace upsylon {
             assert(0==depth);
             onFinalize();
         }
+        
+        void Evaluator:: __browse(const XList &children)
+        {
+            ++depth;
+            for(const XNode *child=children.head;child;child=child->next)
+            {
+                __browse(*child);
+            }
+            --depth; assert(depth>=0);
+        }
+
         
         void Evaluator:: __browse(const XNode &xnode)
         {
@@ -61,13 +82,16 @@ namespace upsylon {
                     
                 case Aggregate::UUID: {
                     const XList &children = xnode.children;
-                    ++depth;
-                    for(const XNode *child=children.head;child;child=child->next)
-                    {
-                        __browse(*child);
-                    }
-                    --depth; assert(depth>=0);
+                    __browse(children);
                     onInternal(xnode.dogma->label,children.size);
+                    return;
+                }
+                    
+                case Operator::UUID: {
+                    assert(xnode.lexeme.is_valid());
+                    const XList &children = xnode.children;
+                    __browse(children);
+                    onOperator(xnode.dogma->label,*xnode.lexeme,children.size);
                     return;
                 }
                     

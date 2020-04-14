@@ -66,11 +66,13 @@ namespace upsylon {
             //! default call when an internal is met
             virtual void onInternal(const Tag &, const size_t );
 
+            //! default call when an operator is met
+            virtual void onOperator(const Tag &, const Token &, const size_t );
            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Evaluator);
             void __browse(const XNode &);
-            
+            void __browse(const XList &);
             virtual void onBrowsing() = 0; //! initialize extra data
             virtual void onFinalize() = 0; //! finalize   extra data
         };
