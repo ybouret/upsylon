@@ -48,7 +48,7 @@ namespace upsylon {
         
         const char *   Operator:: vizual() const throw()
         {
-            return "shape=triangle,style=\"bold,filled\"";
+            return "shape=ellipse,style=\"bold,filled\"";
         }
         
     }

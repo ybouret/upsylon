@@ -7,6 +7,11 @@ namespace upsylon {
         
         XNode *Grammar:: AST( XNode *xnode ) const throw()
         {
+            return rewrite( compact(xnode) );
+        }
+        
+        XNode *Grammar:: compact( XNode *xnode ) const throw()
+        {
             assert(xnode);
             
             switch(xnode->dogma->uuid)
@@ -20,6 +25,8 @@ namespace upsylon {
             
             return xnode;
         }
+        
+        
         
         XNode * Grammar:: onTerminal(XNode *xnode) const throw()
         {
@@ -69,12 +76,14 @@ namespace upsylon {
             //------------------------------------------------------------------
             reduceAST(children);
             
+            
             //------------------------------------------------------------------
             //
             // second pass: study fusion
             //
             //------------------------------------------------------------------
             fusionAST(children);
+            
             
             return xnode;
         }
@@ -84,7 +93,7 @@ namespace upsylon {
             XList temp;
             while(children.size)
             {
-                XNode       *child = AST(children.pop_front());
+                XNode       *child = compact(children.pop_front());
                 const Axiom &axiom = *(child->dogma);
                 if( Terminal::UUID == axiom.uuid && axiom.as<Terminal>().isDivision() )
                 {
@@ -141,9 +150,46 @@ namespace upsylon {
         }
         
         
-        void Grammar:: rewrite(XList &) const throw()
+        XNode * Grammar:: rewrite(XNode *xnode) const throw()
         {
-            
+            if(Aggregate::UUID==xnode->dogma->uuid)
+            {
+                XList &children = xnode->children;
+                {
+                    XList temp;
+                    while(children.size)
+                    {
+                        XNode       *child = rewrite(children.pop_front());
+                        const Axiom &axiom = *(child->dogma);
+                        if(Operator::UUID == axiom.uuid)
+                        {
+                            if(temp.size>0)
+                            {
+                                child->children.push_front(temp.pop_back());
+                            }
+                            if(children.size)
+                            {
+                                child->children.push_back( rewrite(children.pop_front()) );
+                            }
+                        }
+                        temp.push_back(child);
+                    }
+                    children.swap_with(temp);
+                }
+                
+                switch(xnode->dogma->as<Aggregate>().feature)
+                {
+                    case Aggregate::Steady: break;
+                    case Aggregate::Acting: break;
+                    case Aggregate::Design: break;
+                }
+                
+                return xnode;
+            }
+            else
+            {
+                return xnode;
+            }
         }
         
     }

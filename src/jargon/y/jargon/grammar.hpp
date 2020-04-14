@@ -151,9 +151,10 @@ namespace upsylon {
             //! main call, try to accept the ground axiom
             XNode *accept(Lexer &, Source &) const;
             
-            //! recursive call to AST
-            XNode *AST( XNode *xnode ) const throw();
+           
             
+            //! compact/rewrite
+            XNode *AST(XNode *xnode) const throw();
             
             //------------------------------------------------------------------
             //
@@ -197,12 +198,15 @@ namespace upsylon {
             
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
             
+            XNode *compact(XNode *xnode) const throw();
+            XNode *rewrite(XNode *xnode) const throw();
+            
             XNode *onTerminal(XNode *) const throw(); //!< cleanup terminal
             XNode *onOperator(XNode *) const throw(); //!< cleanup operator
             XNode *onInternal(XNode *) const throw(); //!< cleanup internal
+            
             void   reduceAST(XList &)  const throw();
             void   fusionAST(XList &)  const throw();
-            void   rewrite(XList &)    const throw();
             
             const Axiom & loadAxiom(ios::istream &fp, int &r, const char *which) const;
             
