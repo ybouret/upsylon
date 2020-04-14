@@ -56,7 +56,7 @@ namespace upsylon {
              - if node is internal/inactive, append it to tree
              - merge content of node into tree and release node
              */
-            static void Combine(XNode * &tree, XNode *node) throw();
+            //static void Combine(XNode * &tree, XNode *node) throw();
            
             
             virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface

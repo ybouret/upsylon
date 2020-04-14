@@ -1,27 +1,27 @@
 #include "y/jargon/grammar.hpp"
 #include "y/type/aliasing.hpp"
+
 namespace upsylon {
     
     namespace Jargon {
-
+        
         XNode *Grammar:: AST( XNode *xnode ) const throw()
         {
             assert(xnode);
             
-#if 0
-            switch(xnode->genre)
+            switch(xnode->dogma->uuid)
             {
-                case XNode::IsTerminal: return onTerminal(xnode);
-                case XNode::IsInternal: return onInternal(xnode);
+                case Terminal::  UUID: return onTerminal(xnode);
+                case Aggregate:: UUID: return onInternal(xnode);
+                    std::cerr << "*** unhandled " << fourcc_(xnode->dogma->uuid) << std::endl;
             }
-#endif
+            
             return xnode;
         }
         
         XNode * Grammar:: onTerminal(XNode *xnode) const throw()
         {
             //assert(xnode);
-            //assert(xnode->isTerminal());
             //------------------------------------------------------------------
             //
             // pre-remove content
@@ -33,7 +33,7 @@ namespace upsylon {
             }
             return xnode;
         }
-
+        
         
         
         XNode *Grammar:: onInternal(XNode *xnode) const throw()
@@ -47,49 +47,46 @@ namespace upsylon {
             // first pass: propagate and remove divisions
             //
             //------------------------------------------------------------------
-            broadcast(children);
+            reduceAST(children);
             
             //------------------------------------------------------------------
             //
             // second pass: study fusion
             //
             //------------------------------------------------------------------
-            amalgamate(children);
+            fusionAST(children);
             
             return xnode;
         }
-
-        void Grammar:: broadcast(XList &children) const throw()
+        
+        void Grammar:: reduceAST(XList &children) const throw()
         {
-#if 0
             XList temp;
             while(children.size)
             {
-                XNode *chld = AST(children.pop_front());
-                if(chld->isTerminal() && chld->dogma->as<Terminal>().isDivision())
+                XNode       *child = AST(children.pop_front());
+                const Axiom &axiom = *(child->dogma);
+                if( Terminal::UUID == axiom.uuid && axiom.as<Terminal>().isDivision() )
                 {
-                    delete chld;
+                    delete child;
                 }
                 else
                 {
-                    temp.push_back(chld);
+                    temp.push_back(child);
                 }
             }
             children.swap_with(temp);
-#endif
         }
         
-        void Grammar:: amalgamate(XList &children) const throw()
+        void Grammar:: fusionAST(XList &children) const throw()
         {
-#if 0
             XList temp;
             while(children.size)
             {
                 XNode       *child = children.pop_front();
                 const Axiom &axiom = *(child->dogma);
-                if( Aggregate::UUID == axiom.uuid)
+                if(Aggregate::UUID == axiom.uuid)
                 {
-                    assert(child->isInternal());
                     switch( axiom.as<Aggregate>().feature )
                     {
                         case Aggregate::Steady:
@@ -121,7 +118,6 @@ namespace upsylon {
                 }
             }
             children.swap_with(temp);
-#endif
         }
         
         

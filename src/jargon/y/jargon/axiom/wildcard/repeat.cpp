@@ -36,7 +36,15 @@ namespace upsylon {
                 
                 if(count>=minimalCount)
                 {
-                    XNode::Combine(xtree,ltree);
+                    if(NULL==xtree)
+                    {
+                        xtree = ltree;
+                    }
+                    else
+                    {
+                        xtree->children.merge_back(ltree->children);
+                        delete ltree;
+                    }
                     return true;
                 }
                 else

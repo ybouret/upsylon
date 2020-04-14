@@ -198,8 +198,8 @@ namespace upsylon {
             
             XNode *onTerminal(XNode *) const throw();
             XNode *onInternal(XNode *) const throw();
-            void   broadcast(XList &)  const throw();
-            void   amalgamate(XList &) const throw();
+            void   reduceAST(XList &)  const throw();
+            void   fusionAST(XList &)  const throw();
             void   rewrite(XList &)    const throw();
             
             const Axiom & loadAxiom(ios::istream &fp, int &r, const char *which) const;

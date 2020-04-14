@@ -24,29 +24,18 @@ namespace upsylon {
             //------------------------------------------------------------------
             fp << "[" << dogma->vizual() << ",label=\"";
             emitLabel(fp, dogma->label);
-            
-#if 0
-            switch(genre)
+            if( lexeme.is_valid() && lexeme->size>0 )
             {
-                case IsTerminal: {
-                    assert(lexeme.is_valid());
-                    const Lexeme &l = *lexeme;
-                    if(l.size)
-                    {
-                        fp << '=' << '\'';
-                        for(const Char *ch=l.head;ch;ch=ch->next)
-                        {
-                            fp << cchars::printable[ch->code];
-                        }
-                        fp << '\'';
-                    }
-                } break;
-                case IsInternal: break;
+                fp << '=' << '\'';
+                for(const Char *ch=lexeme->head;ch;ch=ch->next)
+                {
+                    fp << cchars::printable[ch->code];
+                }
+                fp << '\'';
             }
-#endif
+            
             
             endl( fp << "\"]");
-            
             
             const XList &chld = children;
             const bool   show = chld.size>1;
