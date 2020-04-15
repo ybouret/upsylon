@@ -10,14 +10,14 @@ namespace upsylon {
     namespace Jargon {
         
         typedef suffix_tree<Dogma> Axioms; //!< alias
-        class Terminal;
         
+        //! status of an Axiom for lexeme production
         enum AxiomStatus
         {
-            DefiniteAxiom,
-            FlexibleAxiom,
-            NoLexemeAxiom,
-            NamelessAxiom
+            DefiniteAxiom, //!< Univocal/Division Terminal | Univocal Operator
+            FlexibleAxiom, //!< Standard Terminal | Multiple Operator
+            NoLexemeAxiom, //!< shouldn't produce lexeme!
+            NamelessAxiom  //!< for error handling
         };
         
         //----------------------------------------------------------------------
@@ -183,13 +183,11 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! get terminal by label, NULL if not registered
-            const Terminal *toTerminal(const Tag &) const throw();
-            
             //! low level reload tree
             XNode *loadTree(Context      &where,
                             ios::istream &input) const;
             
+            //! get status information, for error handling
             AxiomStatus statusOf(const Tag &label, uint32_t &uuid) const throw();
             
         protected:
@@ -205,15 +203,15 @@ namespace upsylon {
             
             bool displayAxiom(const Axioms::path &,const Dogma &) const;
             
-            XNode *compact(XNode *xnode) const throw();
-            XNode *rewrite(XNode *xnode) const throw();
+            XNode *compact(XNode *xnode) const throw(); //!< compact all
+            XNode *rewrite(XNode *xnode) const throw(); //!< rewrite operators
             
             XNode *onTerminal(XNode *) const throw(); //!< cleanup terminal
             XNode *onOperator(XNode *) const throw(); //!< cleanup operator
             XNode *onInternal(XNode *) const throw(); //!< cleanup internal
             
-            void   reduceAST(XList &)  const throw();
-            void   fusionAST(XList &)  const throw();
+            void   reduceAST(XList &)  const throw(); //!< recursive cleanup
+            void   fusionAST(XList &)  const throw(); //!< recursive fusions
             
             const Axiom & loadAxiom(ios::istream &fp, int &r, const char *which) const;
             
