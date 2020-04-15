@@ -7,59 +7,7 @@ namespace upsylon {
     
     namespace Jargon {
         
-#if 0
-        static inline void writeLexeme(exception     &excp,
-                                       const Grammar &G,
-                                       const Lexeme  *lexeme)
-        {
-            assert(lexeme);
-            const Tag      &label = lexeme->label;
-            const Terminal *term  = G.toTerminal(label);
-            if( term )
-            {
-                lexeme->writeTo(excp, term->feature!=Terminal::Standard );
-            }
-            else
-            {
-                lexeme->writeTo(excp,false);
-            }
-        }
-        
-        static inline exception onError(const char   *which,
-                                        const Grammar &G,
-                                        const Lexeme *lexeme)
-        {
-            assert(which);
-            assert(lexeme);
-            assert(lexeme->label.is_valid());
-            std::cerr << "on error <" << *lexeme << ">" << std::endl;
-            const Context  &ctx = *lexeme;
-            exception       excp("%s:%d:%d: [%s] %s ",
-                                 **(ctx.tag),
-                                 ctx.line,
-                                 ctx.column,
-                                 ** G.title, which);
-            writeLexeme(excp,G,lexeme);
-            const Lexeme *prev = lexeme->prev;
-            if(prev)
-            {
-                excp.cat( " after ");
-                writeLexeme(excp,G,lexeme->prev);
-                const Terminal *term = G.toTerminal(prev->label);
-                excp.cat(", in ");
-                
-                if(!term)
-                {
-                    excp.cat( "unknown structure: check Gammar !!!");
-                }
-                else
-                {
-                    term->parents.cat(excp);
-                }
-            }
-            return excp;
-        }
-#endif
+
         
         static inline void writeLexeme(exception     &excp,
                                        const Lexeme  &L,
@@ -82,8 +30,8 @@ namespace upsylon {
             
             switch(kind)
             {
-                case NamelessAxiom:
-                    excp.cat("unknown <%s>, check grammar!!!",lid);
+                case NamelessAxiom: // lexical error handling ?
+                    L.writeTo(excp,false);
                     break;
                     
                 case NoLexemeAxiom:
