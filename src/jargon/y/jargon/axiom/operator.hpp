@@ -10,9 +10,9 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
-        //! operator
+        //! Operator Axiom
         /**
-         accept a UNIVOCAL lexeme with the same label, shall act as internal
+         accept a  lexeme with the same label,
          */
         //----------------------------------------------------------------------
         class Operator : public Internal

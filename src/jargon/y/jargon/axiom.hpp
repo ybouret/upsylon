@@ -56,11 +56,11 @@ Source  &source
             class DB : public DB_Type
             {
             public:
-                explicit DB();                            //!< setup
-                virtual ~DB() throw();                    //!< cleanup
-                void display(const char *pfx=0) const;    //!< display with parents
-                void sort();                              //!< sort by label
-                void cat(exception &excp) const throw();  //!< append named to exception
+                explicit DB();                                //!< setup
+                virtual ~DB() throw();                        //!< cleanup
+                void     display(const char *pfx=0) const;    //!< display with parents
+                void     sort();                              //!< sort by label
+                void     cat(exception &excp) const throw();  //!< append named to exception
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DB);
             };
@@ -113,12 +113,6 @@ Source  &source
                 return *static_cast<const AXIOM*>(self);
             }
             
-            bool isTerminal() const throw(); //!< terminal
-            bool isOperator() const throw(); //!< operator
-            bool isCompound() const throw(); //!< alt|agg
-            bool isApparent() const throw(); //!< not vanishing aggregate
-            bool isWildcard() const throw(); //!< option/repeat
-            
             
         protected:
             void           *self; //!< pointer to derived class
@@ -127,22 +121,17 @@ Source  &source
             template <typename LABEL> inline
             Axiom( const LABEL &id, const uint32_t u) :
             label( Tags::Make(id) ),
-            uuid(u),
-            self(0),
-            parents()
+            uuid(u), self(0), parents()
             {
             }
             
-         
-            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Axiom);
-            void collect( DB &all ) const;
-
+            void collectParents(DB &) const;
+            
         public:
-            DB   parents;  //!< database of possible parents
-            void reveal(); //!< reveal the permanent parents
-        
+            DB    parents;         //!< database of possible parents
+            void  revealParents(); //!< reveal the permanent parents
         };
         
        

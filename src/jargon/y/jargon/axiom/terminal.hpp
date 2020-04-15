@@ -60,10 +60,6 @@ namespace upsylon {
             // methods
             //
             //------------------------------------------------------------------
-            bool        isStandard()  const throw(); //!< Standard == feature
-            bool        isUnivocal()  const throw(); //!< Univocal == feature
-            bool        isDivision()  const throw(); //!< Division == feature
-            bool        isDefinite()  const throw(); //!< Standard != feature
             const char *featureText() const throw(); //!< FeatureText(feature)
             
             //------------------------------------------------------------------

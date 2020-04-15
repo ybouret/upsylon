@@ -52,17 +52,8 @@ namespace upsylon {
             return fp("|_[%s<%s>] $%s\n", CLID, **label,featureText());
         }
         
-        bool Terminal:: isDefinite() const throw()
-        {
-            return Standard != feature;
-        }
         
-#define Y_JTERM_IS(EXPR) bool Terminal:: is##EXPR() const throw() { return EXPR == feature; }
-        
-        Y_JTERM_IS(Standard)
-        Y_JTERM_IS(Univocal)
-        Y_JTERM_IS(Division)
-        
+
         const char * Terminal:: FeatureText(const Feature f)   throw()
         {
             switch (f) {

@@ -15,31 +15,6 @@ namespace upsylon {
         {
         }
         
-#if 0
-        bool Axiom::DB:: insert(const Axiom &axiom)
-        {
-            const Axiom::Address addr = axiom;
-            return insert_by(addr,addr);
-        }
-        
-        bool Axiom:: DB:: search(const Axiom &axiom) const throw()
-        {
-            const Axiom::Address addr = axiom;
-            return search_by(addr) != NULL;
-        }
-        
-        void Axiom:: DB:: remove(const Axiom &axiom) throw()
-        {
-            const Axiom::Address addr = axiom;
-            (void)remove_by(addr);
-        }
-        
-        
-        void Axiom:: DB:: secure(const Axiom &axiom)
-        {
-            (void)insert(axiom);
-        }
-#endif
         
         void Axiom::DB:: display(const char *pfx) const
         {
@@ -58,14 +33,16 @@ namespace upsylon {
             for( const_iterator it=begin(); it!=end();++it)
             {
                 const Axiom          *axiom   = it->as<Axiom>();
-                const Axiom::DB      &parents = axiom->parents;
                 string_display::align(std::cerr << pfx , *(axiom->label), width, "\t<", ">") << " <== ";
-                const size_t   np = parents.entries();
-                const_iterator jt = parents.begin();
-                for(size_t i=1;i<=np;++i,++jt)
                 {
-                    std::cerr << jt->as<Axiom>()->label;
-                    if(i<np) std::cerr << ", ";
+                    const Axiom::DB &parents = (axiom->parents);
+                    const size_t     np      = parents.entries();
+                    const_iterator   jt      = parents.begin();
+                    for(size_t i=1;i<=np;++i,++jt)
+                    {
+                        std::cerr << jt->as<Axiom>()->label;
+                        if(i<np) std::cerr << ", ";
+                    }
                 }
                 std::cerr << std::endl;
             }

@@ -12,8 +12,8 @@ namespace upsylon {
         //
         //! Parser from a Lexer and a Grammar
         /**
-         The parser will automatically link the grammar Terminals and the
-         lexical rules.
+         The parser will automatically link the grammar Terminals and Operators
+         to their repective lexical rules.
          */
         //
         //----------------------------------------------------------------------
@@ -29,16 +29,13 @@ namespace upsylon {
             
             //! setup
             template <typename LABEL> inline
-            Parser( const LABEL &id ) :
-            Lexer(id),
-            Grammar(id),
-            source(0)
+            Parser( const LABEL &id ) : Lexer(id), Grammar(id), source(0)
             {
             }
             
             //------------------------------------------------------------------
             //
-            // Terminal
+            // Terminals
             //
             //------------------------------------------------------------------
             
@@ -51,7 +48,7 @@ namespace upsylon {
             {
                 //______________________________________________________________
                 //
-                // will emit the terminal
+                // will emit the terminal, check feature
                 //______________________________________________________________
                 const  Motif     &motif   = emit(label,regexp).motif; assert(motif->strong());
                 Terminal::Feature feature = Terminal::Standard;
@@ -90,7 +87,7 @@ namespace upsylon {
             {
                 //______________________________________________________________
                 //
-                // will emit the terminal
+                // will emit the terminal, check attribute
                 //______________________________________________________________
                 const  Motif        &motif     = emit(label,regexp).motif; assert(motif->strong());
                 Operator::Attribute  attribute = Operator::Multiple;

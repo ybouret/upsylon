@@ -29,7 +29,7 @@ namespace upsylon {
             for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
             {
                 const Axiom &axiom = **it;
-                if(axiom.isTerminal())
+                if(Terminal::UUID == axiom.uuid)
                 {
                     ++numTerm;
                     Y_JAXIOM(std::cerr << "Terminal<" << axiom.label << ">" << std::endl);
@@ -93,7 +93,7 @@ namespace upsylon {
             for(Axioms::iterator it=axioms.begin();it!=axioms.end();++it)
             {
                 Axiom &axiom = **it;
-                axiom.reveal();
+                axiom.revealParents();
             }
             
             //__________________________________________________________________

@@ -52,7 +52,6 @@ namespace upsylon {
             // basic handling
             //
             //------------------------------------------------------------------
-
             bool   owns(const Axiom &) const throw();     //!< check owned axiom
             const Axioms & operator*() const throw();     //!< access to database
             bool           hasGround() const throw();     //!< check if has ground rule
@@ -60,7 +59,6 @@ namespace upsylon {
             void           setGround(const Axiom &);      //!< set (enrolled) ground Axiom
             void           displayAxioms() const;         //!< display enrolled axioms
             void           enroll(Axiom *);               //!< enroll a valid, new dynamic axiom
-            void           display(ios::ostream &) const; //!< display summary
             
             //------------------------------------------------------------------
             //
@@ -77,7 +75,7 @@ namespace upsylon {
                 return *axiom;
             }
             
-            //! new Terminal
+            //! new Terminal, with feature
             template <typename LABEL> inline
             Axiom & _terminal(const LABEL             &id,
                               const Terminal::Feature  ft)
@@ -85,7 +83,7 @@ namespace upsylon {
                 return declare( new Terminal(id,ft) );
             }
             
-            //! new Operator
+            //! new Operator, with attribute
             template <typename LABEL> inline
             Axiom & _operator(const LABEL               &id,
                               const Operator::Attribute &attr)

@@ -91,17 +91,11 @@ using namespace ios;
 
 Y_UTEST(parser)
 {
-    Y_UTEST_SIZEOF(Source);
-    Y_UTEST_SIZEOF(Grammar);
-    Y_UTEST_SIZEOF(Parser);
+   
+
     Axiom::Verbose   = true;
     JSON_Parser json;
     
-    if(false)
-    {
-        ios::ocstream fp( ios::cstderr );
-        json.display(fp);
-    }
     
     if( argc>1 )
     {
@@ -125,6 +119,10 @@ Y_UTEST(parser)
         
     }
     
+    Y_UTEST_SIZEOF(Source);
+    Y_UTEST_SIZEOF(Grammar);
+    Y_UTEST_SIZEOF(Parser);
+    Y_UTEST_SIZEOF(Axiom::DB);
     
 }
 Y_UTEST_DONE()

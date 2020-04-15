@@ -137,21 +137,6 @@ namespace upsylon {
             graphViz(_,keepFile);
         }
 
-        void Grammar:: display(ios::ostream &fp ) const
-        {
-            fp << "<Grammar:Enter [" << *title << "]>\n";
-            ground->display(fp);
-            for( Axioms::const_iterator it=axioms.begin(); it!=axioms.end(); ++it)
-            {
-                const Axiom &axiom = **it;
-                if( &axiom != ground )
-                {
-                    axiom.display(fp);
-                }
-            
-            }
-            fp << "<Grammar:Leave [" << *title << "]>\n";
-        }
         
         
 

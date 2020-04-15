@@ -20,8 +20,7 @@ namespace upsylon {
     
 }
 
-#include "y/jargon/axiom/all.hpp"
-#include "y/exception.hpp"
+#include "y/jargon/axiom.hpp"
 
 namespace upsylon {
     

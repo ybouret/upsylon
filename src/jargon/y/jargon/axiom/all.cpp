@@ -10,79 +10,29 @@ namespace upsylon {
 const char *TextFor::CLASS = CLASS::CLID
        
         Y_JTEXT_FOR(Terminal);
-        //Y_JTEXT_FOR(Internal);
         Y_JTEXT_FOR(Operator);
         Y_JTEXT_FOR(Aggregate);
         Y_JTEXT_FOR(Alternate);
         Y_JTEXT_FOR(OneOrMore);
         Y_JTEXT_FOR(ZeroOrMore);
-
-        
-        bool Axiom:: isTerminal() const throw()
-        {
-            return Terminal::UUID == uuid;
-        }
-        
-        bool Axiom:: isOperator() const throw()
-        {
-            return Operator::UUID == uuid;
-        }
-        
-        bool Axiom:: isCompound() const throw()
-        {
-            switch(uuid)
-            {
-                case Aggregate::UUID:
-                case Alternate::UUID: return true;
-                default: break;
-            }
-            return false;
-        }
-        
-        bool Axiom:: isWildcard() const throw()
-        {
-            switch(uuid)
-            {
-                case Option::     UUID:
-                case ZeroOrMore:: UUID:
-                case OneOrMore::  UUID: return true;
-                default: break;
-            }
-            return false;
-        }
-        
-        bool Axiom:: isApparent() const throw()
-        {
-            
-            switch(uuid)
-            {
-                case Aggregate::UUID: return as<Aggregate>().feature != Aggregate::Design;
-                default: break;
-            }
-            
-            return false;
-        }
         
     }
     
 }
 
-#include "y/container/task.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
 
 namespace upsylon {
     
     namespace Jargon {
 
-        void Axiom:: reveal()
+        void Axiom:: revealParents()
         {
             DB all;
-            collect(all);
+            collectParents(all);
             parents.swap_with(all);
         }
 
-        void Axiom:: collect( DB &all ) const
+        void Axiom:: collectParents( DB &all ) const
         {
             for(DB::const_iterator i = parents.begin(); i != parents.end(); ++i )
             {
@@ -99,14 +49,14 @@ namespace upsylon {
                         else
                         {
                             //forward
-                            parent.collect(all);
+                            parent.collectParents(all);
                         }
                         break;
                         
                     case Option::     UUID:
                     case ZeroOrMore:: UUID:
                     case OneOrMore::  UUID:
-                    case Alternate::  UUID: parent.collect(all); break;
+                    case Alternate::  UUID: parent.collectParents(all); break;
                         
                     default:
                         throw exception("<%s> should be a parent for <%s>", **(parent.label), **label);
@@ -115,8 +65,16 @@ namespace upsylon {
             
         }
 
-        
-        
     }
 }
+
+namespace upsylon {
+    
+    namespace Jargon {
+        
+       
+     
+    }
+}
+
 

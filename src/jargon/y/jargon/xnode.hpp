@@ -15,11 +15,8 @@ namespace upsylon {
         // forward declarations and aliases
         //
         //----------------------------------------------------------------------
-        class                            Terminal; //!< forward Terminal declaration
-        class                            Internal; //!< forward Internal declaration
-        class                            Axiom;    //!< forward
-        typedef arc_ptr<Axiom>           Dogma;    //!< forward shared Axiom
-        
+        class                            Axiom; //!< forward declaration of Axiom
+        typedef arc_ptr<Axiom>           Dogma; //!< forward shared Axiom
         class                            XNode; //!< Syntax Node
         typedef core::list_of_cpp<XNode> XList; //!< Syntax Node List
         
@@ -28,13 +25,14 @@ namespace upsylon {
         //! versatile agnostic syntax node
         //
         //----------------------------------------------------------------------
-        class XNode :
-        public Object,
-        public inode<XNode>,
-        public Vizible,
-        public Serializable
+        class XNode : public Object, public inode<XNode>, public Vizible, public Serializable
         {
         public:
+            //------------------------------------------------------------------
+            //
+            // definitions
+            //
+            //------------------------------------------------------------------
             static const char LexemeMark = '@'; //!< a lexeme exists
             static const char BranchMark = '>'; //!< no lexeme
             
@@ -60,8 +58,8 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(XNode);
-            explicit XNode(const Axiom &, Lexeme *) throw();
-            virtual  void vizCore(ios::ostream   &) const;
+            explicit      XNode(const Axiom &, Lexeme *) throw();
+            virtual  void vizCore(ios::ostream   &)      const;
             
         };
         

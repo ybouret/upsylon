@@ -36,7 +36,7 @@ namespace upsylon {
             // pre-remove content
             //
             //------------------------------------------------------------------
-            if( xnode->dogma->as<Terminal>().isDefinite() )
+            if( xnode->dogma->as<Terminal>().feature != Terminal::Standard )
             {
                 xnode->lexeme->release();
             }
@@ -95,7 +95,8 @@ namespace upsylon {
             {
                 XNode       *child = compact(children.pop_front());
                 const Axiom &axiom = *(child->dogma);
-                if( Terminal::UUID == axiom.uuid && axiom.as<Terminal>().isDivision() )
+                if(Terminal::UUID     == axiom.uuid &&
+                   Terminal::Division == axiom.as<Terminal>().feature  )
                 {
                     delete child;
                 }

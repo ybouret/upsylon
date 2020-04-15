@@ -16,7 +16,7 @@ namespace upsylon {
             const Terminal *term  = G.toTerminal(label);
             if( term )
             {
-                lexeme->writeTo(excp, term->isDefinite() );
+                lexeme->writeTo(excp, term->feature!=Terminal::Standard );
             }
             else
             {

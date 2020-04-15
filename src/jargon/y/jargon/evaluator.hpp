@@ -11,7 +11,7 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
-        //! browsing an ast
+        //! browsing an AST
         //
         //----------------------------------------------------------------------
         class Evaluator : public virtual Object
@@ -36,10 +36,14 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            // walk down
-            //
+            //! walk down
+            /**
+             - onInit()
+             - walk down, calling onTerminal/onInternal/onOperator
+             - onQuit()
+             */
             //------------------------------------------------------------------
-            void browse(const XNode &root); //!< initialize and browse
+            void browse(const XNode &root);
             
             //------------------------------------------------------------------
             //
