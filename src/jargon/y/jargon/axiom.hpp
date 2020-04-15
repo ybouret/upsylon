@@ -20,7 +20,6 @@ namespace upsylon {
         //
         //
         //----------------------------------------------------------------------
-        class XCache;  //!< forward declaration
         
         //! accept methods
 #define Y_JARGON_AXIOM_ARGS_ \

@@ -10,7 +10,7 @@
 namespace upsylon {
 
 
-    //! suffix table, no key stored
+    //! uses a suffix tree to support the lexicon API
     template <typename KEY,typename T>
     class suffix_table : public lexicon<KEY,T>, public suffix_tree<T>
     {

@@ -10,10 +10,21 @@ namespace upsylon {
 
 
     namespace core {
-        //! sort addresses by increasing values
-        void sort_addresses( void **addr, const size_t n) throw();
-        //! lexicographics comparison of adresses
-        int  lcmp_addresses( void * const *lhs, void * const *rhs, const size_t n) throw();
+        
+        //! helpers
+        struct addresses
+        {
+            //! sort addresses by increasing values
+            static void sort( void **addr, const size_t n) throw();
+            
+            //! lexicographics comparison of adresses
+            static int  lcmp( void * const *lhs, void * const *rhs, const size_t n) throw();
+            
+            //static const void *BE(const void *) throw();
+        };
+       
+      
+        
     }
 
     //! constructor part
@@ -99,7 +110,7 @@ namespace upsylon {
         //! comparison by lexicographic order
         static inline int compare( const key_address &lhs, const key_address &rhs ) throw()
         {
-            return core::lcmp_addresses(lhs.addr, rhs.addr, N);
+            return core::addresses::lcmp(lhs.addr, rhs.addr, N);
         }
 
 
@@ -143,7 +154,7 @@ namespace upsylon {
         void *addr[N];
 
         inline void clear() throw()  { memset(addr,0,sizeof(addr));  }
-        inline void update() throw() { core::sort_addresses(addr,N); }
+        inline void update() throw() { core::addresses::sort(addr,N); }
     };
 
 }

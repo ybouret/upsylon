@@ -137,6 +137,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(store_perf);
     Y_UTEST(lexicon);
     Y_UTEST(catalog);
+    Y_UTEST(ledger);
     
     Y_UTEST(fft);
     Y_UTEST(network_sort);

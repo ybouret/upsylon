@@ -207,6 +207,14 @@ namespace upsylon {
             
         }
 
+        //! assign by copy/swap
+        suffix_tree & operator=( const suffix_tree &_)
+        {
+            suffix_tree temp(_);
+            swap_with(temp);
+            return *this;
+        }
+        
         //----------------------------------------------------------------------
         //
         // methods
@@ -485,12 +493,12 @@ namespace upsylon {
             dpool.swap_with(tree.dpool);
         }
         
+        
     protected:
         data_list            dlist; //!< list of data nodes
         data_pool            dpool; //!< pool of data nodes
         
     private:
-        Y_DISABLE_ASSIGN(suffix_tree);
 
 
         template <typename FUNC>

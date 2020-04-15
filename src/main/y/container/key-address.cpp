@@ -2,6 +2,7 @@
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
 #include "y/sequence/array.hpp"
+#include "y/os/endian.hpp"
 
 namespace upsylon {
 
@@ -14,18 +15,18 @@ namespace upsylon {
             return  static_cast<ptrdiff_t>(l-r);
         }
         
-        void sort_addresses( void **addr, const size_t n) throw()
+        void addresses::sort( void **addr, const size_t n) throw()
         {
             assert(addr);
             lightweight_array<void*> arr( addr, n );
             hsort(arr,__compare_addr);
         }
 
-        int  lcmp_addresses( void * const *lhs, void * const *rhs, const size_t n) throw()
+        int  addresses::lcmp( void * const *lhs, void * const *rhs, const size_t n) throw()
         {
             return comparison::increasing_lexicographic<void*>(lhs, rhs, n);
         }
-
+        
     }
 
 }

@@ -11,7 +11,7 @@
 namespace upsylon {
     
     
-    //! suffix table, no key stored
+    //! uses a suffix tree to support the catalog API
     template <typename KEY,typename T>
     class suffix_batch : public catalog<KEY,T>, public suffix_tree<T>
     {
