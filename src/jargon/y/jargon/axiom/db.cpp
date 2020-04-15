@@ -15,6 +15,7 @@ namespace upsylon {
         {
         }
         
+#if 0
         bool Axiom::DB:: insert(const Axiom &axiom)
         {
             const Axiom::Address addr = axiom;
@@ -38,6 +39,7 @@ namespace upsylon {
         {
             (void)insert(axiom);
         }
+#endif
         
         void Axiom::DB:: display(const char *pfx) const
         {
@@ -71,7 +73,7 @@ namespace upsylon {
             
         }
         
-        static inline int compareAddr( const Axiom::Address &lhs, const Axiom::Address &rhs ) throw()
+        static inline int compareAddr( const BEaddress &lhs, const BEaddress &rhs ) throw()
         {
             const string &L = *(lhs.as<Axiom>()->label);
             const string &R = *(rhs.as<Axiom>()->label);

@@ -4,36 +4,10 @@
 #define Y_LEDGER_INCLUDED 1
 
 #include "y/associative/suffix-tree.hpp"
+#include "y/os/be-address.hpp"
 
 namespace upsylon {
- 
-
-    //! Big Endian address
-    class BEaddress
-    {
-    public:
-        static const size_t size = sizeof(void*); //!< bytes from &data
-        static void *BE(void *) throw();          //!< swap BE address
-        ~BEaddress() throw();                     //!< cleanup
-        BEaddress(const BEaddress&) throw();      //!< copy
-       
-        //! setup from address on one object
-        template <typename T>
-        inline BEaddress(const T &args) :
-        data(  BE( (void*)&args ) )
-        {
-        }
-        
-      
-        const void * const data;  //!< address, stored in BE format
-        
-        //! retrieve original address
-        template <typename T>
-        inline const T *as() const throw() { return static_cast<const T*>( BE((void*)data) ); }
-        
-    private:
-        Y_DISABLE_ASSIGN(BEaddress);
-    };
+    
     
     //! a ledger of addresses
     class ledger : public suffix_tree<BEaddress>
@@ -85,7 +59,7 @@ namespace upsylon {
         }
         
         //! search
-        inline bool search(const T &args)
+        inline bool search(const T &args) const throw()
         {
             const addr_type addr = args;
             return NULL != this->search_by( &addr.data,addr.size);
@@ -99,7 +73,7 @@ namespace upsylon {
         }
         
         //! remove
-        inline void remove(const T &args)
+        inline void remove(const T &args) throw()
         {
             const addr_type addr = args;
             while( this->remove_by( &addr.data, addr.size) )

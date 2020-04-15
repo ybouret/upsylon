@@ -69,8 +69,8 @@ namespace upsylon {
             Y_JAXIOM(std::cerr << "[" << title << "] checking foreign axioms..." << std::endl);
             for(Visitor::iterator it=V.begin();it!=V.end();++it)
             {
-                const Axiom::Address &addr  = *it;
-                const Axiom          &axiom = *static_cast<const Axiom*>( addr[0] );
+                const BEaddress &addr  = *it;
+                const Axiom     &axiom = *addr.as<Axiom>();
                 if( !owns(axiom) ) throw exception("[%s] has foreign <%s>", **title, **axiom.label);
             }
             

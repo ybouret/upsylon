@@ -6,7 +6,7 @@
 #include "y/jargon/xnode.hpp"
 #include "y/jargon/tags.hpp"
 #include "y/type/fourcc.hpp"
-#include "y/container/key-address.hpp"
+#include "y/associative/ledger.hpp"
 
 namespace upsylon {
     
@@ -49,9 +49,8 @@ Source  &source
             // types and definitions
             //
             //----------------------------------------------------------------------
-            static bool                  Verbose; //!< global verbosity flag
-            typedef key_address<1>       Address; //!< storing address
-            typedef suffix_tree<Address> DB_Type; //!< base class for database
+            static bool               Verbose; //!< global verbosity flag
+            typedef ledger_of<Axiom>  DB_Type; //!< base class for database
             
             //! lightweigth database
             class DB : public DB_Type
@@ -59,10 +58,6 @@ Source  &source
             public:
                 explicit DB();                            //!< setup
                 virtual ~DB() throw();                    //!< cleanup
-                bool insert(const Axiom &);               //!< insert = greenLight
-                bool search(const Axiom &) const throw(); //!< search = wasVisited
-                void secure(const Axiom &);               //!< ensure inserted
-                void remove(const Axiom &) throw();       //!< remove
                 void display(const char *pfx=0) const;    //!< display with parents
                 void sort();                              //!< sort by label
                 void cat(exception &excp) const throw();  //!< append named to exception
