@@ -12,6 +12,14 @@ namespace upsylon {
         typedef suffix_tree<Dogma> Axioms; //!< alias
         class Terminal;
         
+        enum AxiomStatus
+        {
+            DefiniteAxiom,
+            FlexibleAxiom,
+            NoLexemeAxiom,
+            NamelessAxiom
+        };
+        
         //----------------------------------------------------------------------
         //
         //! base class for grammar
@@ -182,6 +190,7 @@ namespace upsylon {
             XNode *loadTree(Context      &where,
                             ios::istream &input) const;
             
+            AxiomStatus statusOf(const Tag &label, uint32_t &uuid) const throw();
             
         protected:
             const   Axiom *ground; //!< ground rule, initially inactive

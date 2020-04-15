@@ -12,7 +12,7 @@ namespace upsylon {
         {
             ground = 0;
         }
- 
+        
         void Grammar:: enroll(Axiom *axiom)
         {
             assert( axiom );
@@ -54,7 +54,7 @@ namespace upsylon {
             if(!owns(axiom)) throw exception("%s.setGround(foreign <%s>)", **title, **(axiom.label));
             ground = & axiom;
         }
-
+        
         
         bool Grammar:: displayAxiom(const Axioms::path &, const Dogma &axiom) const
         {
@@ -66,7 +66,7 @@ namespace upsylon {
             std::cerr << std::endl;
             return true;
         }
-
+        
         void Grammar:: displayAxioms() const
         {
             functor<bool,TL2(const Axioms::path&,const Dogma&)> cb( this, & Grammar::displayAxiom);
@@ -82,14 +82,14 @@ namespace upsylon {
         {
             return declare( new ZeroOrMore(axiom) );
         }
-
+        
         Axiom & Grammar:: opt(Axiom &axiom)
         {
             return declare( new Option(axiom) );
         }
-
         
-      
+        
+        
         
         Alternate & Grammar::alt()
         {
@@ -130,34 +130,80 @@ namespace upsylon {
             compound << a << b << c;
             return compound;
         }
-
+        
         void Grammar:: graphViz(const char *  dotFile, const bool keepFile) const
         {
             const  string _(dotFile);
             graphViz(_,keepFile);
         }
-
         
         
-
-        const Terminal *Grammar:: toTerminal( const Tag &label ) const throw()
+        
+        
+        
+        AxiomStatus Grammar:: statusOf(const Tag &label, uint32_t &uuid) const throw()
         {
-            const Dogma *ppAxiom = axioms.search_by( *label );
-            if(!ppAxiom)
+            uuid = 0;
+            const Dogma *dogma = axioms.search_by( *label );
+            if( dogma )
             {
-                return NULL;
+                const Axiom &axiom = **dogma;
+                
+                switch( (uuid=axiom.uuid) )
+                {
+                        //------------------------------------------------------
+                        //
+                        // terminals
+                        //
+                        //------------------------------------------------------
+                    case Terminal::UUID:
+                        switch( axiom.as<Terminal>().feature )
+                        {
+                            case Terminal::Standard:
+                                break;
+                                
+                            default: return DefiniteAxiom;
+                        }
+                        return FlexibleAxiom;
+                        
+                        
+                        //------------------------------------------------------
+                        //
+                        // operators
+                        //
+                        //------------------------------------------------------
+                    case Operator::UUID:
+                        switch( axiom.as<Operator>().attribute )
+                        {
+                            case Operator::Multiple:
+                                break;
+                                
+                            case Operator::Univocal:
+                                return DefiniteAxiom;
+                        }
+                        return FlexibleAxiom;
+                        
+                        //------------------------------------------------------
+                        //
+                        // default: break to NoLexemeAxiom
+                        //
+                        //------------------------------------------------------
+                    default:
+                        break;
+                }
+                return NoLexemeAxiom;
+                
             }
             else
             {
-                const Axiom &axiom   = **ppAxiom;
-                if(Terminal::UUID!=axiom.uuid) return NULL;
-                return &axiom.as<Terminal>();
+                // not known...
+                return NamelessAxiom;
             }
         }
-       
         
-
- 
+        
+        
+        
     }
     
 }

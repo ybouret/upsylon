@@ -51,13 +51,13 @@ namespace upsylon {
             {
                 if(definite)
                 {
-                    excp.cat(" '");
+                    excp.cat("'");
                     cat(excp);
                     excp.cat("'");
                 }
                 else
                 {
-                    excp.cat(" <%s>", **label);
+                    excp.cat("<%s>", **label);
                     if(size>0)
                     {
                         excp.cat(" = '");

@@ -7,6 +7,7 @@ namespace upsylon {
     
     namespace Jargon {
         
+#if 0
         static inline void writeLexeme(exception     &excp,
                                        const Grammar &G,
                                        const Lexeme  *lexeme)
@@ -58,6 +59,70 @@ namespace upsylon {
             }
             return excp;
         }
+#endif
+        
+        static inline void writeLexeme(exception     &excp,
+                                       const Lexeme  &L,
+                                       const Grammar &G)
+        {
+            
+            const Tag        &label = L.label;
+            uint32_t          uuid  = 0;
+            const AxiomStatus kind  = G.statusOf(label,uuid);
+            
+            const char *lid = **label;
+            const char *tid = "";
+            switch(uuid)
+            {
+                case Terminal::UUID: tid = TextFor::Terminal; break;
+                case Operator::UUID: tid = TextFor::Operator; break;
+                default:
+                    break;
+            }
+            
+            switch(kind)
+            {
+                case NamelessAxiom:
+                    excp.cat("unknown <%s>, check grammar!!!",lid);
+                    break;
+                    
+                case NoLexemeAxiom:
+                    excp.cat("unexpected <%s> (%s), check grammar!!!",lid,fourcc_(uuid));
+                    break;
+                    
+                    
+                case DefiniteAxiom:
+                    excp.cat("%s ", tid); L.writeTo(excp,true);
+                    break;
+                    
+                case FlexibleAxiom:
+                    excp.cat("%s ", tid); L.writeTo(excp,false);
+                    break;
+                    
+            }
+            
+            
+            
+        }
+        
+        static inline exception syntaxError(const char    *reason,
+                                            const Grammar  &G,
+                                            const Lexeme   &L)
+        {
+            assert(reason);
+            exception       excp("%s:%d:%d: [%s] %s ",
+                                 **(L.tag),
+                                 L.line,
+                                 L.column,
+                                 **G.title, reason);
+            writeLexeme(excp,L,G);
+            if(L.prev)
+            {
+                excp.cat(" after ");
+                writeLexeme(excp,*(L.prev),G);
+            }
+            return excp;
+        }
         
         XNode * Grammar:: accept(Lexer &lexer, Source &source) const
         {
@@ -94,13 +159,15 @@ namespace upsylon {
                     if(lexeme)
                     {
                         lexer.unget(lexeme);
-                        throw onError("extraneous",*this,lexeme);
+                        XNode::Restore(xtree,lexer);
+                        xtree = NULL;
+                        throw syntaxError("Extraneous", *this, *lexeme);
                     }
                     
                 }
                 catch(...)
                 {
-                    delete xtree;
+                    if(xtree) delete xtree;
                     throw;
                 }
                 
@@ -138,7 +205,8 @@ namespace upsylon {
                 }
                 else
                 {
-                    throw onError("rejected", *this, analyzed.tail);
+                    assert(analyzed.tail);
+                    throw syntaxError("Rejected", *this, *analyzed.tail);
                 }
                 
                 
