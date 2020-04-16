@@ -5,6 +5,7 @@
 #include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 #include "y/jargon/lexical/plugin/jstring.hpp"
 #include "y/jargon/evaluator.hpp"
+#include "y/ios/serialized.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -62,6 +63,11 @@ Y_UTEST(expr)
         auto_ptr<XNode> tree = expr.parseFile(fileName);
         
         tree->graphViz("expr_tree.dot");
+        tree->save_to("expr_tree.bin");
+        {
+            auto_ptr<XNode> tree2 = expr.loadTreeFromFile("expr_tree.bin");
+            Y_CHECK(ios::serialized::are_same_binary(*tree,*tree2));
+        }
         
         
         Evaluator_ E(expr.title);

@@ -23,12 +23,12 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             size_t        nr = 0;
-            const  string id = string::read(input,nr,ax);
-            read+=nr;
+            const  string id = string::read(input,nr,ax); read+=nr;
+           
             
             //------------------------------------------------------------------
             //
-            // find the associatied dogma
+            // find the associatied Axiom
             //
             //------------------------------------------------------------------
             const Dogma  *dogma  = axioms.search_by(id);
@@ -37,7 +37,7 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            // read a lexeme or not
+            // read a lexeme or not ?
             //
             //------------------------------------------------------------------
             auto_ptr<Lexeme> unit = NULL;
@@ -47,6 +47,7 @@ namespace upsylon {
             switch(C)
             {
                 case XNode:: BranchMark:
+                    // no lexeme!
                     break;
                     
                 case XNode:: LexemeMark: {
