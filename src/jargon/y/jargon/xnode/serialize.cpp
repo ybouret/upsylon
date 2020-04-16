@@ -44,9 +44,11 @@ namespace upsylon {
             
         }
         
+        const char XNode:: CLID[] = "XNode";
+        
         const char * XNode:: className() const throw()
         {
-            return "XNode";
+            return CLID;
         }
         
         

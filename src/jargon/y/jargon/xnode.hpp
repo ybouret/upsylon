@@ -35,23 +35,48 @@ namespace upsylon {
             //------------------------------------------------------------------
             static const char LexemeMark = '@'; //!< a lexeme exists
             static const char BranchMark = '>'; //!< no lexeme
+            static const char CLID[];           //!< "XNode"
             
             //------------------------------------------------------------------
             //
-            // methods
+            // C++
             //
             //------------------------------------------------------------------
             virtual      ~XNode() throw();                     //!< cleanup
             static XNode *Create( const Axiom &, Lexeme * );   //!< create a generic XNode, lexeme is handled
             
             
+            //------------------------------------------------------------------
+            //
+            // helpers
+            //
+            //------------------------------------------------------------------
             static void Restore(XNode *, Lexer &)           throw(); //!< return content to lexer and push back into list
             static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
             
             
-            virtual size_t      serialize(ios::ostream &) const;  //!< serializable interface
-            virtual const char *className()        const throw(); //!< serializable interface
+            //------------------------------------------------------------------
+            //
+            // virtual methods
+            //
+            //------------------------------------------------------------------
             
+            //! serializable interface
+            /**
+             Used with a grammar, this is an Intermediate Language to save AST
+             - dogma->label
+             - if lexeme: { LexemeMark + lexeme } else: { BranchMark }
+             - #children
+             - children
+             */
+            virtual size_t      serialize(ios::ostream &) const;
+            virtual const char *className()        const throw(); //!< serializable : CLID
+            
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
             const Dogma      dogma;     //!< who created this node
             auto_ptr<Lexeme> lexeme;    //!< with or without lexeme
             XList            children;  //!< children
