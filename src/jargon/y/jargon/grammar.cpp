@@ -196,8 +196,8 @@ namespace upsylon {
             }
             else
             {
-                // not known...
-                return NamelessAxiom;
+                // user defined
+                return ExternalAxiom;
             }
         }
         

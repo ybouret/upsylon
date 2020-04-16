@@ -17,7 +17,7 @@ namespace upsylon {
             DefiniteAxiom, //!< Univocal/Division Terminal | Univocal Operator
             FlexibleAxiom, //!< Standard Terminal | Multiple Operator
             NoLexemeAxiom, //!< shouldn't produce lexeme!
-            NamelessAxiom  //!< for error handling
+            ExternalAxiom  //!< for error handling
         };
         
         //----------------------------------------------------------------------

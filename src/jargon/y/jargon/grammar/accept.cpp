@@ -30,7 +30,7 @@ namespace upsylon {
             
             switch(kind)
             {
-                case NamelessAxiom: // lexical error handling ?
+                case ExternalAxiom: // lexical error handling...
                     L.writeTo(excp,false);
                     break;
                     
