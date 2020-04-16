@@ -74,10 +74,10 @@ namespace upsylon {
         
         XNode * Grammar:: accept(Lexer &lexer, Source &source) const
         {
-            assert(ground);
-            XNode       *xtree = NULL;
+            assert(hasRoot());
             Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
-            const bool  ok  = ground->Y_JARGON_AXIOM_ACCEPT(xtree);
+            XNode       *xtree = NULL;
+            const bool   ok    = root->Y_JARGON_AXIOM_ACCEPT(xtree);
             Y_JAXIOM(std::cerr << "[" << title << "] ok = " << ok << std::endl);
             
             if( ok )
@@ -93,7 +93,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 if(xtree==NULL)
                 {
-                    exception excp("[%s] accepted <%s> a NULL tree",**title, **(ground->label));
+                    exception excp("[%s] accepted <%s> a NULL tree",**title, **(root->label));
                     throw excp;
                 }
                 

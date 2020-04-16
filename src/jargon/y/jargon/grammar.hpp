@@ -44,7 +44,7 @@ namespace upsylon {
             template <typename LABEL>
             inline Grammar( const LABEL &id ) :
             title( Tags::Make(id) ),
-            ground(NULL),
+            root(NULL),
             axioms(),
             iAlt(1),
             iAgg(1),
@@ -62,9 +62,9 @@ namespace upsylon {
             //------------------------------------------------------------------
             bool   owns(const Axiom &) const throw();     //!< check owned axiom
             const Axioms & operator*() const throw();     //!< access to database
-            bool           hasGround() const throw();     //!< check if has ground rule
-            const Axiom  & getGround() const throw();     //!< get ground Axiom
-            void           setGround(const Axiom &);      //!< set (enrolled) ground Axiom
+            bool           hasRoot() const throw();     //!< check if has ground rule
+            const Axiom  & getRoot() const throw();     //!< get ground Axiom
+            void           setRoot(const Axiom &);      //!< set (enrolled) ground Axiom
             void           displayAxioms() const;         //!< display enrolled axioms
             void           enroll(Axiom *);               //!< enroll a valid, new dynamic axiom
             
@@ -191,7 +191,7 @@ namespace upsylon {
             AxiomStatus statusOf(const Tag &label, uint32_t &uuid) const throw();
             
         protected:
-            const   Axiom *ground; //!< ground rule, initially inactive
+            const   Axiom *root;   //!< root rule, initially inactive
             Axioms         axioms; //!< top-level axioms
             
            

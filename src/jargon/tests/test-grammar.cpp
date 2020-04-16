@@ -49,7 +49,7 @@ namespace {
             Compound &INFO = agg("INFO");
             INFO << ID << opt(choice(INT,ID)) << _terminal("SEP",Terminal::Division);
             Axiom &ROOT = zom(INFO);
-            setGround(ROOT);
+            setRoot(ROOT);
             displayAxioms();
         }
         
@@ -99,7 +99,7 @@ Y_UTEST(grammar)
         
         
         G.displayAxioms();
-        std::cerr << "ground=<" << G.getGround().label << ">" << std::endl;
+        std::cerr << "ground=<" << G.getRoot().label << ">" << std::endl;
         Tags::Display();
         std::cerr << std::endl;
         Tags::Release();
@@ -119,7 +119,7 @@ Y_UTEST(grammar)
         
         {
             Visitor v;
-            v.supplyWith(G.getGround());
+            v.supplyWith(G.getRoot());
             v.display();
             std::cerr << "#axioms  = " << (*G).entries() << std::endl;
             std::cerr << "#visited = " << v.entries()    << std::endl;

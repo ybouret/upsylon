@@ -10,7 +10,7 @@ namespace upsylon {
         
         Grammar:: ~Grammar() throw()
         {
-            ground = 0;
+            root = 0;
         }
         
         void Grammar:: enroll(Axiom *axiom)
@@ -22,9 +22,9 @@ namespace upsylon {
             {
                 throw exception("[%s] enroll multiple <%s>", **title, *key);
             }
-            if(NULL==ground)
+            if(NULL==root)
             {
-                ground = axiom;
+                root = axiom;
             }
             aliasing::_(maxLength) = max_of(maxLength,key.size());
         }
@@ -42,17 +42,23 @@ namespace upsylon {
             return axioms;
         }
         
-        const Axiom  & Grammar:: getGround() const throw()
+        bool Grammar:: hasRoot() const throw()
         {
-            assert(ground);
-            assert(owns(*ground));
-            return *ground;
+            return NULL != root;
         }
         
-        void Grammar:: setGround(const Axiom &axiom)
+        
+        const Axiom  & Grammar:: getRoot() const throw()
+        {
+            assert(root);
+            assert(owns(*root));
+            return *root;
+        }
+        
+        void Grammar:: setRoot(const Axiom &axiom)
         {
             if(!owns(axiom)) throw exception("%s.setGround(foreign <%s>)", **title, **(axiom.label));
-            ground = & axiom;
+            root = & axiom;
         }
         
         

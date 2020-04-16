@@ -18,7 +18,7 @@ namespace upsylon {
             //
             // is it active ?
             //__________________________________________________________________
-            if(NULL==ground) throw exception("[%s] has no axioms",**title);
+            if(NULL==root) throw exception("[%s] has no axioms",**title);
             Y_JAXIOM(std::cerr << "[" << title << "] is active..." << std::endl);
 
             //__________________________________________________________________
@@ -43,10 +43,10 @@ namespace upsylon {
             //
             // load all axioms from the ground
             //__________________________________________________________________
-            Y_JAXIOM(std::cerr << "[" << title << "] loading axioms from ground <" << ground->label << ">..." << std::endl);
+            Y_JAXIOM(std::cerr << "[" << title << "] loading axioms from root <" << root->label << ">..." << std::endl);
             Y_JAXIOM(std::cerr << "[" << title << "] fetched #axiom=" << axioms.entries() << std::endl);
             Visitor V;
-            V.supplyWith(*ground);
+            V.supplyWith(*root);
             Y_JAXIOM(std::cerr << "[" << title << "] visited #axiom=" << V.entries() << std::endl);
 
             //__________________________________________________________________
