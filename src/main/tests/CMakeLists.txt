@@ -140,6 +140,7 @@ ADD_TEST(ios:cmd         test-main cmd)
 ADD_TEST(ios:serialized  test-main serialize_tools)
 ADD_TEST(ios:srz_io      test-main srz_io)
 ADD_TEST(ios:upacker     test-main upacker)
+ADD_TEST(ios:conveyor    test-main conveyor)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp

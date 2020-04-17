@@ -127,6 +127,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(ios_plugin);
     Y_UTEST(cmd);
     Y_UTEST(md);
+    Y_UTEST(conveyor);
 
     // assoc
     Y_UTEST(associative);
