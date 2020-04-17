@@ -33,5 +33,5 @@ ADD_TEST(Channels test-graphic channels ${IMG})
 ADD_TEST(Draw     test-graphic draw)
 
 ADD_CUSTOM_TARGET(utest-graphic
-COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-graphic)

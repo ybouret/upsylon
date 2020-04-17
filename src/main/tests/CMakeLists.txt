@@ -300,5 +300,5 @@ ADD_TEST(oxide:grids      test-main  oxide_grids)
 
 
 ADD_CUSTOM_TARGET(utest-main
-COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)

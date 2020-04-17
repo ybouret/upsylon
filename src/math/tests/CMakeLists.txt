@@ -84,5 +84,5 @@ ADD_TEST(quark2    test-m quark2)
 ADD_TEST(quark3    test-m quark3)
 
 ADD_CUSTOM_TARGET(utest-m
-COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-m)

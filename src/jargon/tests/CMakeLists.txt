@@ -25,6 +25,6 @@ ADD_TEST(parser5  test-jargon parser ${HERE}/../../json/tests/db.js)
 ADD_TEST(expr     test-jargon expr)
 
 ADD_CUSTOM_TARGET(utest-jargon
-COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
+COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-jargon)
 
