@@ -5,9 +5,10 @@
 #include "y/ios/ovstream.hpp"
 #include "support.hpp"
 #include "y/type/mark.hpp"
+#include "y/ios/imstream.hpp"
 
 namespace {
- 
+    
     template <typename T>
     static inline
     size_t append(ios::ostream        &fp,
@@ -16,7 +17,7 @@ namespace {
                   sequence<type_mark> &tmark,
                   sequence<size_t>    &count)
     {
-        size_t n = 1+alea.leq(10);
+        size_t n = 1+alea.leq(100);
         
         count.push_back(n);
         const type_mark tm = typeid(T);
@@ -43,48 +44,88 @@ Y_UTEST(conveyor)
     ios::primary_conveyor<int>    ic; vector<int>    iv;
     ios::network_conveyor<double> dc; vector<double> dv;
     ios::derived_conveyor<string> sc; vector<string> sv;
+    ios::derived_conveyor<mpq>    qc; vector<mpq>    qv;
+
     
     vector<type_mark> tmark;
     vector<size_t>    count;
     size_t            total = 0;
     
-    for(size_t iter=1+alea.leq(10);iter>0;--iter)
+    for(size_t iter=1+alea.leq(100);iter>0;--iter)
     {
         
         total += append(target,ic,iv,tmark,count);
         total += append(target,dc,dv,tmark,count);
         total += append(target,sc,sv,tmark,count);
+        total += append(target,qc,qv,tmark,count);
+
     }
     
-    for(size_t i=1;i<=tmark.size();++i)
-    {
-        std::cerr << tmark[i]->name() << "\t*" << count[i] << std::endl;
-    }
-    std::cerr << std::endl << "total= " << total << std::endl;
+    std::cerr << "total= " << total << std::endl;
     Y_CHECK(target.size()==total);
     
+    std::cerr << std::endl << "reloading..." << std::endl;
+    
+    ios::imstream source(target);
+    
+    size_t ji = 0;
+    size_t jd = 0;
+    size_t js = 0;
+    size_t jq = 0;
+
     for(size_t i=1;i<=tmark.size();++i)
     {
         const size_t n = count[i];
         if( "int" == *tmark[i] )
         {
-            std::cerr << "#int    = " << n << std::endl;
+            int r = 0;
+            for(size_t i=1;i<=n;++i)
+            {
+                if(++ji>iv.size()) throw exception("too many ints");
+                ic.load(&r,source);
+                Y_ASSERT( r == iv[ji] );
+            }
             continue;
         }
         
         if( "double" == *tmark[i] )
         {
-            std::cerr << "#double = " << n << std::endl;
+            double d = 0;
+            for(size_t i=1;i<=n;++i)
+            {
+                if(++jd>dv.size()) throw exception("too many doubles");
+                dc.load(&d,source);
+                Y_ASSERT( 0 == memcmp(&d, &dv[jd], sizeof(double)));
+            }
             continue;
         }
         
         if( "string" == *tmark[i] )
         {
-            std::cerr << "#string = " << n << std::endl;
+            string s;
+            for(size_t i=1;i<=n;++i)
+            {
+                if(++js>sv.size()) throw exception("too many strings");
+                sc.load(&s,source);
+                Y_ASSERT(s==sv[js]);
+            }
             continue;
         }
         
-    
+        if( "mpq" == *tmark[i] )
+        {
+            mpq q;
+            for(size_t i=1;i<=n;++i)
+            {
+                if(++jq>qv.size()) throw exception("too many Qs");
+                qc.load(&q,source);
+                Y_ASSERT(q==qv[jq]);
+            }
+            continue;
+        }
+        
+        
+        throw exception("unhandled <%s>", *(tmark[i]->name()) );
     }
     
     
