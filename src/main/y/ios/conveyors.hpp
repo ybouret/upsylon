@@ -28,22 +28,38 @@ namespace upsylon {
             typedef arc_ptr<const conveyor>  convoy;          //!< internal shared conveyor
             static  const at_exit::longevity life_time = 0;   //!< for singleton
             
+#if 0
             template <typename T>
-            const conveyor & create_for(const comm_environment &where)
+            const conveyor & query(const comm_environment &where)
             {
+                Y_LOCK(access);
+                // prepare typeid
                 typedef typename type_traits<T>::mutable_type type;
-                static const bool            srz = Y_IS_SUPERSUBCLASS(serializable,type);
                 static const std::type_info &tid = typeid(type);
-                const convoy                 cnv = create<type>(where,int2type<srz>());
-                return insert(tid,cnv);
+                
+                // look up
+                const conveyor *pc = search(tid);
+                if( pc )
+                {
+                    return *pc;
+                }
+                else
+                {
+                    static const bool srz = Y_IS_SUPERSUBCLASS(serializable,type);
+                    const convoy      cnv = create<type>(where,int2type<srz>());
+                    return insert(tid,cnv);
+                }
             }
+#endif
             
         private:
             virtual ~conveyors() throw();
             explicit conveyors();
             Y_DISABLE_COPY_AND_ASSIGN(conveyors);
             friend class singleton<conveyors>;
-            
+            void throw_invalid_environment() const;
+
+#if 0
             const conveyor & insert(const std::type_info &, const convoy &);
             const conveyor * search(const std::type_info &) const throw();
             
@@ -56,6 +72,8 @@ namespace upsylon {
                     case comm_homogeneous: return new primary_conveyor<T>();
                     case comm_distributed: return new network_conveyor<T>();
                 }
+                throw_invalid_environment();
+                return NULL;
             }
             
             template <typename T>
@@ -64,6 +82,7 @@ namespace upsylon {
             {
                 return new derived_conveyor<T>();
             }
+#endif
             
         };
         

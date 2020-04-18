@@ -35,6 +35,13 @@ namespace upsylon {
             new ( aliasing::anonymous(wksp) ) db_type();
         }
         
+        
+        void conveyors:: throw_invalid_environment() const
+        {
+            throw exception("ios::conveyors: innvalid environment");
+        }
+        
+#if 0
         const conveyor & conveyors:: insert(const std::type_info &t,
                                       const convoy               &c)
         {
@@ -65,6 +72,8 @@ namespace upsylon {
                 return NULL;
             }
         }
+#endif
+        
 
         
     }

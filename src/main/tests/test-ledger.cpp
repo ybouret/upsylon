@@ -4,6 +4,7 @@
 #include "y/sequence/list.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
+#include "y/os/xbe-address.hpp"
 
 using namespace upsylon;
 
@@ -78,6 +79,10 @@ Y_UTEST(ledger)
     doTest<int>();
     doTest<string>();
     doTest<float>();
+    
+    const string hello = "hello";
+    XBEaddress<int> xbe_i(hello,1);
+    std::cerr << * xbe_i.as<string>() << "/" << xbe_i.data.attr << std::endl;
     
 }
 Y_UTEST_DONE()

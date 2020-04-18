@@ -16,6 +16,9 @@ Y_UTEST(conveyors)
 {
     ios::conveyors & IO = ios::conveyors::instance();
     
+    //IO.query<double>(comm_homogeneous);
+    
+    
 }
 Y_UTEST_DONE()
 
