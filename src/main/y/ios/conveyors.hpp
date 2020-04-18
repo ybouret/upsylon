@@ -28,6 +28,12 @@ namespace upsylon {
             typedef arc_ptr<const conveyor>  convoy;          //!< internal shared conveyor
             static  const at_exit::longevity life_time = 0;   //!< for singleton
             
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            
+            //! conveyor for primary types or serialzable types
             template <typename T>
             const conveyor & query(const comms::medium &where)
             {
@@ -50,7 +56,34 @@ namespace upsylon {
                 }
             }
             
+            //! conveyor for tuple of types
+            template <template <typename> class TUPLE,
+            typename T>
+            const conveyor & query(const comms::medium &where)
+            {
+                Y_LOCK(access);
+                // prepare typeid
+                typedef typename type_traits<T>::mutable_type             type;
+                typedef typename type_traits< TUPLE<type> >::mutable_type tuple_type;
+                static  const    std::type_info &tid = typeid(tuple_type);
+                // look up
+                const conveyor *pc = search(tid,where);
+                if( pc )
+                {
+                    return *pc;
+                }
+                else
+                {
+                    static const bool srz = Y_IS_SUPERSUBCLASS(serializable,type);
+                    const convoy      cnv = create_tuple<TUPLE,type>(where,int2type<srz>());
+                    return insert(tid,where,cnv);
+                }
+                
+            }
             
+            void graphViz(const char   *) const;
+            void graphViz(const string &) const;
+
             
         private:
             virtual ~conveyors() throw();
@@ -81,10 +114,28 @@ namespace upsylon {
             }
             
             template <typename T>
-            const conveyor * create(const comms::medium &,
-                                    int2type<true> )
+            const conveyor * create(const comms::medium &,int2type<true>)
             {
                 return new derived_conveyor<T>();
+            }
+            
+            template < template <typename> class TUPLE,typename T>
+            const conveyor * create_tuple(const comms::medium &where, int2type<false>)
+            {
+                switch(where)
+                {
+                    case comms::homogeneous: return new tuple_conveyor<TUPLE,T,primary_conveyor>();
+                    case comms::distributed: return new tuple_conveyor<TUPLE,T,network_conveyor>();
+                }
+                throw_invalid_environment();
+                return NULL;
+            }
+            
+            template <template <typename> class TUPLE,
+            typename T>
+            const conveyor * create_tuple(const comms::medium &,int2type<true>)
+            {
+                return new tuple_conveyor<TUPLE,T,derived_conveyor>();
             }
             
         };
