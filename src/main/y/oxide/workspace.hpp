@@ -221,10 +221,10 @@ namespace upsylon
             //! lighweight asynchonous information for one-way transfer
             struct AsyncIO
             {
-                Peer      send; //!< whom to send to
-                Peer      recv; //!< from whom to recv
-                comm_mode mode; //!< constant/variable
-                unsigned  comm; //!< GhostsComm info
+                Peer          send; //!< whom to send to
+                Peer          recv; //!< from whom to recv
+                comms::manner mode; //!< constant/variable
+                unsigned      comm; //!< GhostsComm info
             };
 
             //! prolog to send in sendingWay
@@ -264,11 +264,11 @@ namespace upsylon
                         aio.comm |= GhostsComm::Recv;
                         switch(aio.mode)
                         {
-                            case comm_constant_size:
+                            case comms::constant:
                                 recvBlock.set_fast(fields.getBlockSize() * aio.recv->outer.indices.size());
                                 break;
 
-                            case comm_variable_size:
+                            case comms::variable:
                                 assert(0==recvBlock.size());
                                 assert(0==fields.getBlockSize());
                                 break;
@@ -279,7 +279,7 @@ namespace upsylon
                 else
                 {
                     // no async in this orientation
-                    aio.mode = comm_constant_size;
+                    aio.mode = comms::constant;
                 }
             }
 

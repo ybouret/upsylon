@@ -28,9 +28,8 @@ namespace upsylon {
             typedef arc_ptr<const conveyor>  convoy;          //!< internal shared conveyor
             static  const at_exit::longevity life_time = 0;   //!< for singleton
             
-#if 0
             template <typename T>
-            const conveyor & query(const comm_environment &where)
+            const conveyor & query(const comms::medium &where)
             {
                 Y_LOCK(access);
                 // prepare typeid
@@ -38,7 +37,7 @@ namespace upsylon {
                 static const std::type_info &tid = typeid(type);
                 
                 // look up
-                const conveyor *pc = search(tid);
+                const conveyor *pc = search(tid,where);
                 if( pc )
                 {
                     return *pc;
@@ -47,10 +46,11 @@ namespace upsylon {
                 {
                     static const bool srz = Y_IS_SUPERSUBCLASS(serializable,type);
                     const convoy      cnv = create<type>(where,int2type<srz>());
-                    return insert(tid,cnv);
+                    return insert(tid,where,cnv);
                 }
             }
-#endif
+            
+            
             
         private:
             virtual ~conveyors() throw();
@@ -59,30 +59,33 @@ namespace upsylon {
             friend class singleton<conveyors>;
             void throw_invalid_environment() const;
 
-#if 0
-            const conveyor & insert(const std::type_info &, const convoy &);
-            const conveyor * search(const std::type_info &) const throw();
+
+            const conveyor & insert(const std::type_info   &,
+                                    const comms::medium,
+                                    const convoy           &);
             
+            const conveyor * search(const std::type_info   &,
+                                    const comms::medium) const throw();
+
             template <typename T>
-            const conveyor * create(const comm_environment &where,
+            const conveyor * create(const comms::medium &where,
                                     int2type<false> )
             {
                 switch(where)
                 {
-                    case comm_homogeneous: return new primary_conveyor<T>();
-                    case comm_distributed: return new network_conveyor<T>();
+                    case comms::homogeneous: return new primary_conveyor<T>();
+                    case comms::distributed: return new network_conveyor<T>();
                 }
                 throw_invalid_environment();
                 return NULL;
             }
             
             template <typename T>
-            const conveyor * create(const comm_environment &,
+            const conveyor * create(const comms::medium &,
                                     int2type<true> )
             {
                 return new derived_conveyor<T>();
             }
-#endif
             
         };
         

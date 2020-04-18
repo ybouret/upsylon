@@ -7,7 +7,7 @@ namespace upsylon
     namespace ios
     {
 
-        plugin:: plugin( const uint32_t u, const comm_mode m) throw():
+        plugin:: plugin( const uint32_t u, const comms::manner m) throw():
         counted_object(), uuid(u), mode(m)
         {
         }

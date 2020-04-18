@@ -49,7 +49,7 @@ namespace upsylon
         }
 
 
-        comm_mode ActiveFields:: getCommMode() const throw()
+        comms::manner ActiveFields:: getCommMode() const throw()
         {
             iterator  it = begin();
             size_t    n  = size();
@@ -57,12 +57,12 @@ namespace upsylon
             {
                 switch( (**it).transfer->mode )
                 {
-                    case comm_variable_size: return comm_variable_size;
+                    case comms:: variable: return comms::variable;
                     default: break;
                 }
                 ++it;
             }
-            return comm_constant_size;
+            return comms::constant;
         }
 
         size_t ActiveFields:: getBlockSize() const throw()
@@ -75,7 +75,7 @@ namespace upsylon
                 const Field &F = **it;
                 switch( F.transfer->mode )
                 {
-                    case comm_variable_size: return 0;
+                    case comms::variable: return 0;
                     default: break;
                 }
                 bs += F.sizeOfObject;

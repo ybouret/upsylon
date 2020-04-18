@@ -6,7 +6,6 @@
 
 #include "y/ios/conveyor.hpp"
 #include "y/type/args.hpp"
-#include "y/type/spec.hpp"
 
 namespace upsylon {
     
@@ -20,7 +19,9 @@ namespace upsylon {
             Y_DECL_ARGS(T,type); //!< aliases
             
             //! setup
-            inline explicit primary_conveyor() throw() : conveyor(comm_constant_size) {}
+            inline explicit primary_conveyor() throw() :
+            conveyor(comms::constant,typeid(typename type_traits<T>::mutable_type))
+            {}
             
             //! cleanup
             inline virtual ~primary_conveyor() throw() {}
@@ -46,7 +47,7 @@ namespace upsylon {
             {
                 assert(target);
                 const size_t read = source.try_query(target, sizeof(T) );
-                if(read!=sizeof(T)) missing_bytes( type_name_of<T>() );
+                if(read!=sizeof(T)) missing_bytes();
                 return sizeof(T);
             }
             

@@ -23,7 +23,8 @@ namespace upsylon {
             }
             
             inline explicit tuple_conveyor() throw() :
-            limited_conveyor<T,CONVEYOR>( sizeof( TUPLE<T> )/sizeof(T) )
+            limited_conveyor<T,CONVEYOR>(sizeof( TUPLE<T> )/sizeof(T),
+                                         typeid( typename type_traits< TUPLE<T> >::mutable_type ) )
             {
             }
             

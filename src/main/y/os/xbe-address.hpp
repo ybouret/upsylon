@@ -67,7 +67,7 @@ namespace upsylon {
         
         //! retrieve original address
         template <typename U>
-        inline const U *as() const throw() { return static_cast<const U*>( BEaddress::BE((void*)data.addr) ); }
+        inline const U *as() const throw() { return static_cast<const U*>( swap_be_as<void*>((void*)data.addr) ); }
         
         //______________________________________________________________________
         //

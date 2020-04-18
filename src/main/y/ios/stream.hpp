@@ -7,19 +7,27 @@
 
 namespace upsylon
 {
-    //! communication mode
-    enum comm_mode
+    
+    //! information about comms
+    struct comms
     {
-        comm_constant_size, //!< assuming host and peer know the size
-        comm_variable_size  //!< the size must be exchanged
+        enum manner
+        {
+            constant, //!< assuming host and peer know the size
+            variable  //!< the size must be exchanged
+        };
+        
+        enum medium
+        {
+            homogeneous = 0x01, //!< same binary layouts
+            distributed = 0x02  //!< binary layouts may change
+        };
+        
+        static const char *manner_text(const manner) throw();
+        static const char *medium_text(const medium) throw();
+        
     };
     
-    //! communication environment
-    enum comm_environment
-    {
-        comm_homogeneous, //!< same binary layouts
-        comm_distributed  //!< binary layouts may change
-    };
 
     namespace ios
     {

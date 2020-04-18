@@ -26,7 +26,9 @@ namespace upsylon {
             // C++
             //__________________________________________________________________
             //! setup
-            inline explicit derived_conveyor() throw() : conveyor(comm_variable_size) {}
+            inline explicit derived_conveyor() throw() :
+            conveyor(comms::variable,typeid(typename type_traits<T>::mutable_type))
+            {}
             
             //! cleanup
             inline virtual ~derived_conveyor() throw() {}
@@ -60,6 +62,10 @@ namespace upsylon {
                 return shift;
             }
             
+            virtual const std::type_info &get_type_info() const throw()
+            {
+                return typeid( typename type_traits<T>::mutable_type );
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(derived_conveyor);

@@ -5,6 +5,7 @@
 
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
+#include "y/type/mark.hpp"
 
 namespace upsylon {
  
@@ -41,12 +42,15 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
+            const comms::manner      comms_manner; //!< guess communication mode
+            const std::type_info    &tid;
             
-            const comm_mode comm; //!< guess communication mode
-
+            friend std::ostream & operator<<(std::ostream &, const conveyor &);
+            
         protected:
-            explicit conveyor(const comm_mode) throw();   //!< filled by derived class
-            void     missing_bytes(const string &) const; //!< raise exception
+            explicit conveyor(const comms::manner,
+                              const std::type_info &) throw(); //!< filled by derived class
+            void     missing_bytes() const; //!< raise exception
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(conveyor);

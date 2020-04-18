@@ -37,9 +37,9 @@ namespace upsylon {
             {
             }
             
-            inline explicit limited_conveyor(const size_t n) throw() :
+            inline explicit limited_conveyor(const size_t n, const std::type_info &_) throw() :
             base_type(),
-            conveyor( this->io.comm ),
+            conveyor(this->io.comms_manner,_),
             blocks(n)
             {
             }

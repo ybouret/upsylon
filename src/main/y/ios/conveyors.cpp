@@ -5,7 +5,7 @@
 #include "y/type/self-destruct.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/spec.hpp"
-#include "y/associative/be-key.hpp"
+#include "y/associative/xbe-key.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -21,6 +21,8 @@ namespace upsylon {
             {
                 return *static_cast<db_type *>( aliasing::anonymous(wksp));
             }
+            
+            typedef xbe_key<uint8_t> db_key;
         }
                              
         conveyors:: ~conveyors() throw()
@@ -41,13 +43,14 @@ namespace upsylon {
             throw exception("ios::conveyors: innvalid environment");
         }
         
-#if 0
-        const conveyor & conveyors:: insert(const std::type_info &t,
-                                      const convoy               &c)
+        const conveyor & conveyors:: insert(const std::type_info   &t,
+                                            const comms::medium     w,
+                                            const convoy           &c)
+        
         {
-            Y_LOCK(access);
             static db_type &db   = __db();
-            const  be_key   key  = t;
+            const  db_key   key(t,w);
+            
             if(!db.insert_by(key,c))
             {
                 const type_spec &ts = type_spec::declare(t);
@@ -57,11 +60,14 @@ namespace upsylon {
             return *c;
         }
         
-        const conveyor * conveyors:: search(const std::type_info &t) const throw()
+
+        
+        const conveyor * conveyors:: search(const std::type_info  &t,
+                                            const comms::medium    w) const throw()
         {
             Y_LOCK(access);
             static db_type &db   = __db();
-            const  be_key   key  = t;
+            const  db_key   key(t,w);
             const  convoy  *ppC  = db.search_by(key);
             if(ppC)
             {
@@ -72,7 +78,6 @@ namespace upsylon {
                 return NULL;
             }
         }
-#endif
         
 
         

@@ -63,7 +63,7 @@ namespace
                         }
                         active.free();
                         active(W,"Fd;F2"); Y_ASSERT(2==active.size());
-                        Y_ASSERT( comm_constant_size == active.getCommMode()  );
+                        Y_ASSERT( comms::constant    == active.getCommMode()  );
                         Y_ASSERT( 3*sizeof(double)   == active.getBlockSize() );
 
                         W.localExchange(active);

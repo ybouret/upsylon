@@ -6,7 +6,6 @@
 
 #include "y/ios/conveyor.hpp"
 #include "y/os/endian.hpp"
-#include "y/type/spec.hpp"
 #include "y/type/args.hpp"
 
 namespace upsylon {
@@ -30,7 +29,9 @@ namespace upsylon {
             // C++
             //__________________________________________________________________
             //! setup
-            inline explicit network_conveyor() throw() : conveyor(comm_constant_size) {}
+            inline explicit network_conveyor() throw() :
+            conveyor(comms::constant,typeid(typename type_traits<T>::mutable_type))
+            {}
            
             //!cleanup
             inline virtual ~network_conveyor() throw() {}
@@ -58,10 +59,11 @@ namespace upsylon {
             {
                 assert(target);
                 word_type temp = 0;
-                if( source.try_query(&temp,sizeof(T)) != sizeof(T) ) missing_bytes( type_name_of<T>() );
+                if( source.try_query(&temp,sizeof(T)) != sizeof(T) ) missing_bytes();
                 *static_cast<word_type *>(target) = swap_be(temp);
                 return sizeof(T);
             }
+            
             
             
         private:
