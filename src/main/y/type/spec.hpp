@@ -82,6 +82,7 @@ namespace upsylon
         static const type_spec & aka(const std::type_info &tid, const string &known); //!< fill in database with alias
         static const type_spec & aka(const std::type_info &tid, const char   *known); //!< fill in database with alias
 
+        
         //! get/set type spec for type
         template <typename T> inline static const type_spec & of()
         {

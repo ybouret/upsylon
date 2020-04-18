@@ -1,6 +1,7 @@
 #include "y/ios/conveyor/primary.hpp"
 #include "y/ios/conveyor/network.hpp"
 #include "y/ios/conveyor/derived.hpp"
+#include "y/ios/conveyor/tuple.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ovstream.hpp"
 #include "support.hpp"
@@ -45,7 +46,10 @@ Y_UTEST(conveyor)
     ios::network_conveyor<double> dc; vector<double> dv;
     ios::derived_conveyor<string> sc; vector<string> sv;
     ios::derived_conveyor<mpq>    qc; vector<mpq>    qv;
+    ios::tuple_conveyor<complex,float,ios::primary_conveyor>  cc; vector< complex<float> >  cv;
+    ios::tuple_conveyor<point3d,double,ios::network_conveyor> pc; vector< point3d<double> > pv;
 
+    
     
     vector<type_mark> tmark;
     vector<size_t>    count;
@@ -58,6 +62,9 @@ Y_UTEST(conveyor)
         total += append(target,dc,dv,tmark,count);
         total += append(target,sc,sv,tmark,count);
         total += append(target,qc,qv,tmark,count);
+        total += append(target,cc,cv,tmark,count);
+        total += append(target,cc,cv,tmark,count);
+        total += append(target,pc,pv,tmark,count);
 
     }
     
@@ -72,7 +79,9 @@ Y_UTEST(conveyor)
     size_t jd = 0;
     size_t js = 0;
     size_t jq = 0;
-
+    size_t jc = 0;
+    size_t jp = 0;
+    
     for(size_t i=1;i<=tmark.size();++i)
     {
         const size_t n = count[i];
@@ -124,6 +133,31 @@ Y_UTEST(conveyor)
             continue;
         }
         
+        if( "complex<float>" == *tmark[i] )
+        {
+            complex<float> c;
+            for(size_t i=1;i<=n;++i)
+            {
+                if(++jc>cv.size()) throw exception("too many complexes");
+                cc.load(&c,source);
+                Y_ASSERT( 0 == memcmp(&c, &cv[jc], sizeof(complex<float>)));
+            }
+            continue;
+        }
+        
+        
+        if( "point3d<double>" == *tmark[i] )
+        {
+            point3d<double> p;
+            
+            for(size_t i=1;i<=n;++i)
+            {
+                if(++jp>pv.size()) throw exception("too many p3d");
+                pc.load(&p,source);
+                Y_ASSERT( 0 == memcmp(&p, &pv[jp], sizeof(point3d<double>)));
+            }
+            continue;
+        }
         
         throw exception("unhandled <%s>", *(tmark[i]->name()) );
     }

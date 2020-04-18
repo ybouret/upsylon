@@ -13,6 +13,13 @@ namespace upsylon
         comm_constant_size, //!< assuming host and peer know the size
         comm_variable_size  //!< the size must be exchanged
     };
+    
+    //! communication environment
+    enum comm_environment
+    {
+        comm_homogeneous, //!< same binary layouts
+        comm_distributed  //!< binary layouts may change
+    };
 
     namespace ios
     {

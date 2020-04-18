@@ -166,5 +166,12 @@ Y_UTEST(stree)
 
     Y_UTEST_SIZEOF( suffix_tree<uint8_t>::data_node );
     Y_UTEST_SIZEOF( suffix_tree<uint8_t>::node_type );
+    
+    std::cerr << std::endl;
+    Y_UTEST_SIZEOF( core::suffix_tree     );
+    Y_UTEST_SIZEOF( suffix_tree<uint8_t>  );
+    Y_UTEST_SIZEOF( suffix_tree<uint16_t> );
+    Y_UTEST_SIZEOF( suffix_tree<string>   );
+
 }
 Y_UTEST_DONE()
