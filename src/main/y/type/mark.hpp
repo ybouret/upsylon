@@ -19,7 +19,6 @@ namespace upsylon {
         type_mark & operator=(const type_mark &) throw(); //!< no-throw assign
         virtual ~type_mark() throw();                     //!< cleanup
         type_mark( const std::type_info &tid );           //!< setup using type_spec::declare
-
     };
 
 }
