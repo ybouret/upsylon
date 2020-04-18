@@ -181,7 +181,7 @@ namespace upsylon {
 
     //! big endian swapping of integral type
     template <typename T>
-    inline T swap_be_as( T x ) throw()
+    inline T swap_be_as( const T x ) throw()
     {
         typedef typename unsigned_int<sizeof(T)>::type uint_T;
         union {

@@ -4,7 +4,6 @@
 #include "y/sequence/list.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/os/xbe-address.hpp"
 
 using namespace upsylon;
 
@@ -74,15 +73,47 @@ namespace {
     
 }
 
+#include "y/associative/xbe-key.hpp"
+#include "y/code/utils.hpp"
+
+
+namespace {
+
+    template <typename T>
+    static inline void testXBE()
+    {
+        std::cerr << "xbe size=" <<  XBEaddress<T>::size << std::endl;
+        const string  hello = "hello";
+        xbe_key<T>    xk1(hello,1);
+        const string  world = "world";
+        xbe_key<T>    xk2(world,2);
+
+        std::cerr << xk1.template as<string>() << ", " << xk2.template as<string>() << std::endl;
+        for(size_t i=sizeof(void*);i<xk1.length();++i)
+        {
+            std::cerr << " 0x" << hexadecimal::uppercase[ xk1.byte_at(i) ];
+        }
+        std::cerr << std::endl;
+        for(size_t i=sizeof(void*);i<xk2.length();++i)
+        {
+            std::cerr << " 0x" << hexadecimal::uppercase[ xk2.byte_at(i) ];
+        }
+        std::cerr << std::endl;
+    }
+    
+}
+
 Y_UTEST(ledger)
 {
     doTest<int>();
     doTest<string>();
     doTest<float>();
     
-    const string hello = "hello";
-    XBEaddress<int> xbe_i(hello,1);
-    std::cerr << * xbe_i.as<string>() << "/" << xbe_i.data.attr << std::endl;
+    testXBE<int8_t>();
+    testXBE<int16_t>();
+    testXBE<int32_t>();
+    testXBE<int64_t>();
+
     
 }
 Y_UTEST_DONE()

@@ -5,7 +5,7 @@
 #ifndef Y_XBE_ADDRESS_INCLUDED
 #define Y_XBE_ADDRESS_INCLUDED 1
 
-#include "y/os/be-address.hpp"
+#include "y/os/endian.hpp"
 #include "y/type/args.hpp"
 
 namespace upsylon {
@@ -27,9 +27,10 @@ namespace upsylon {
         public:
             const void  *addr;
             mutable_type attr;
+            
             inline layout(const void *p, const_type &u ) throw() :
-            addr(BEaddress::BE((void*)p)),
-            attr(u)
+            addr(swap_be_as<void*>( (void*)p ) ),
+            attr(swap_be_as<type>(u) )
             {
             }
             
@@ -42,7 +43,7 @@ namespace upsylon {
         private:
             Y_DISABLE_ASSIGN(layout);
         };
-        static const size_t size = sizeof(layout); //!< bytes
+        static const size_t size = sizeof(void*) + sizeof(type); //!< bytes
         
         //______________________________________________________________________
         //
@@ -74,7 +75,7 @@ namespace upsylon {
         //______________________________________________________________________
         
         const layout data;
-
+        
     private:
         Y_DISABLE_ASSIGN(XBEaddress);
         
