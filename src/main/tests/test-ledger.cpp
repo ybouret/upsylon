@@ -89,12 +89,12 @@ namespace {
         xbe_key<T>    xk2(world,2);
 
         std::cerr << xk1.template as<string>() << ", " << xk2.template as<string>() << std::endl;
-        for(size_t i=sizeof(void*);i<xk1.length();++i)
+        for(size_t i=0;i<xk1.length();++i)
         {
             std::cerr << " 0x" << hexadecimal::uppercase[ xk1.byte_at(i) ];
         }
         std::cerr << std::endl;
-        for(size_t i=sizeof(void*);i<xk2.length();++i)
+        for(size_t i=0;i<xk2.length();++i)
         {
             std::cerr << " 0x" << hexadecimal::uppercase[ xk2.byte_at(i) ];
         }
