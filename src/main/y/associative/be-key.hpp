@@ -36,7 +36,13 @@ namespace upsylon {
         //
         // methods
         //______________________________________________________________________
-        
+        //! get original data
+        template <typename T> inline
+        const T &as() const
+        {
+            assert( address.data );
+            return * address.as<T>();
+        }
         
         //______________________________________________________________________
         //
@@ -46,7 +52,7 @@ namespace upsylon {
         
     private:
         Y_DISABLE_ASSIGN(be_key);
-        
+        void checkValidAddress(const void *) const;
     };
     
 }

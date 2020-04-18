@@ -123,6 +123,8 @@ test-cmd.cpp
 test-serialize-tools.cpp
 test-srz-io.cpp
 test-upacker.cpp
+test-conveyor.cpp
+test-conveyors.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams)
@@ -141,6 +143,7 @@ ADD_TEST(ios:serialized  test-main serialize_tools)
 ADD_TEST(ios:srz_io      test-main srz_io)
 ADD_TEST(ios:upacker     test-main upacker)
 ADD_TEST(ios:conveyor    test-main conveyor)
+ADD_TEST(ios:conveyors   test-main conveyors)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp
