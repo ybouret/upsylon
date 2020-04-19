@@ -16,7 +16,7 @@ namespace {
     }
     
     template <typename T> static inline
-    void doTest()
+    void doTest(const char *name)
     {
         const string &tid = type_name_of<T>();
         std::cerr << "ledger_of<" << tid << ">" << std::endl;
@@ -36,7 +36,8 @@ namespace {
             Y_ASSERT( L.insert( source[i]) );
         }
         
-        const string fn = "ledger_" + tid + ".dot";
+        const string nn = name;
+        const string fn = "ledger_" + nn + ".dot";
         std::cerr << "\t"; L.get_root().graphViz(fn);
         
         std::cerr << "\tsearching..." << std::endl;
@@ -105,9 +106,9 @@ namespace {
 
 Y_UTEST(ledger)
 {
-    doTest<int>();
-    doTest<string>();
-    doTest<float>();
+    doTest<int>("int");
+    doTest<string>("string");
+    doTest<float>("float");
     
     testXBE<int8_t>();
     testXBE<int16_t>();
