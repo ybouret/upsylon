@@ -63,8 +63,8 @@ namespace
                         }
                         active.free();
                         active(W,"Fd;F2"); Y_ASSERT(2==active.size());
-                        Y_ASSERT( comms::constant    == active.getCommMode()  );
-                        Y_ASSERT( 3*sizeof(double)   == active.getBlockSize() );
+                        Y_ASSERT( comms::computed_block_size == active.getCommMode()  );
+                        Y_ASSERT( 3*sizeof(double)           == active.getBlockSize() );
 
                         W.localExchange(active);
                         typename Workspace<COORD>::AsyncIO  aio;

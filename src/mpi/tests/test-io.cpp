@@ -37,13 +37,13 @@ namespace
             {
                 for(int r=1;r<MPI.size;++r)
                 {
-                    MPI.vSend(comms::variable, sendBlock, r, mpi::io_tag);
+                    MPI.vSend(comms::flexible_block_size, sendBlock, r, mpi::io_tag);
                 }
                 list<T> received;
                 for(int r=1;r<MPI.size;++r)
                 {
                     received.free();
-                    MPI.vRecv(comms::variable, recvBlock, r, mpi::io_tag);
+                    MPI.vRecv(comms::flexible_block_size, recvBlock, r, mpi::io_tag);
                     ios::imstream fp(recvBlock);
                     while( fp.is_active() )
                     {
@@ -60,7 +60,7 @@ namespace
             }
             else
             {
-                MPI.vRecv(comms::variable, recvBlock, 0, mpi::io_tag);
+                MPI.vRecv(comms::flexible_block_size, recvBlock, 0, mpi::io_tag);
                 list<T> local;
                 ios::imstream fp(recvBlock);
                 while( fp.is_active() )
@@ -74,7 +74,7 @@ namespace
                     local.push_back(temp);
                     ++nr;
                 }
-                MPI.vSend(comms::variable, recvBlock, 0, mpi::io_tag);
+                MPI.vSend(comms::flexible_block_size, recvBlock, 0, mpi::io_tag);
             }
         }
         else
@@ -126,7 +126,7 @@ namespace
             {
                 for(int r=1;r<MPI.size;++r)
                 {
-                    MPI.vSendRecv(comms::variable,
+                    MPI.vSendRecv(comms::flexible_block_size,
                                   sendBlock, r, mpi::io_tag,
                                   recvBlock, r, mpi::io_tag);
                     ioSerialRead<T>(recvObjs,recvBlock);
@@ -135,7 +135,7 @@ namespace
             }
             else
             {
-                MPI.vSendRecv(comms::variable,
+                MPI.vSendRecv(comms::flexible_block_size,
                               sendBlock, 0, mpi::io_tag,
                               recvBlock, 0, mpi::io_tag);
                 ioSerialRead<T>(recvObjs,recvBlock);
@@ -144,7 +144,7 @@ namespace
         }
         else
         {
-            MPI.vSendRecv(comms::variable,
+            MPI.vSendRecv(comms::flexible_block_size,
                           sendBlock, 0, mpi::io_tag,
                           recvBlock, 0, mpi::io_tag);
             ioSerialRead<T>(recvObjs,recvBlock);

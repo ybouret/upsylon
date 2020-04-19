@@ -33,7 +33,7 @@ namespace upsylon
 
 namespace upsylon
 {
-    void mpi:: vSend(const comms::manner mode,
+    void mpi:: vSend(const comms::delivery mode,
                      const vBytes       &v,
                      const int           target,
                      const int           tag)
@@ -41,25 +41,25 @@ namespace upsylon
         const size_t n = v.size();
         switch(mode)
         {
-            case comms::variable: SendSize(v.size(),target,tag); /* FALLTHRU */
-            case comms::constant: if(n>0) Send(*v,n, MPI_BYTE, target, tag); break;
+            case comms::flexible_block_size: SendSize(v.size(),target,tag); /* FALLTHRU */
+            case comms::computed_block_size: if(n>0) Send(*v,n, MPI_BYTE, target, tag); break;
         }
     }
     
-    void mpi:: vRecv(const comms::manner  mode,
-                     vBlock          &v,
-                     const int        source,
-                     const int        tag)
+    void mpi:: vRecv(const comms::delivery  mode,
+                     vBlock                &v,
+                     const int              source,
+                     const int              tag)
     {
         size_t n = v.size();
         switch(mode)
         {
-            case comms::variable: n = RecvSize(source,tag); v.set_fast(n); /* FALLTHRU */
-            case comms::constant: if(n>0) Recv(*v,n,MPI_BYTE,source,tag); break;
+            case comms::flexible_block_size: n = RecvSize(source,tag); v.set_fast(n); /* FALLTHRU */
+            case comms::computed_block_size: if(n>0) Recv(*v,n,MPI_BYTE,source,tag); break;
         }
     }
     
-    void mpi:: vSendRecv(const comms::manner mode,
+    void mpi:: vSendRecv(const comms::delivery mode,
                          const vBytes   &sendBytes, const int target, const int sendtag,
                          vBlock         &recvBytes, const int source, const int recvtag)
     {
@@ -68,9 +68,9 @@ namespace upsylon
         
         switch (mode)
         {
-            case comms::variable: recvBytes.set_fast( (nr = SendRecvSizes(ns, target, sendtag, source, recvtag) ) ); /* FALLTHRU */
-            case comms::constant: SendRecv(*sendBytes, ns, MPI_BYTE, target, sendtag,
-                                           *recvBytes, nr, MPI_BYTE, source, recvtag); break;
+            case comms::flexible_block_size: recvBytes.set_fast( (nr = SendRecvSizes(ns, target, sendtag, source, recvtag) ) ); /* FALLTHRU */
+            case comms::computed_block_size: SendRecv(*sendBytes, ns, MPI_BYTE, target, sendtag,
+                                                      *recvBytes, nr, MPI_BYTE, source, recvtag); break;
         }
     }
     

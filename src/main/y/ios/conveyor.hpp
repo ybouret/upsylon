@@ -43,13 +43,13 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const comms::manner      comms_manner; //!< guess communication mode
+            const comms::delivery    how; //!< guess communication mode
             const std::type_info    &tid;
             
             friend std::ostream & operator<<(std::ostream &, const conveyor &);
             
         protected:
-            explicit conveyor(const comms::manner,
+            explicit conveyor(const comms::delivery,
                               const std::type_info &) throw(); //!< filled by derived class
             void     missing_bytes() const; //!< raise exception
             

@@ -62,15 +62,15 @@ namespace
                     {
                         fillRan(sndblk);
                         // upload
-                        MPI.vSend(comms::constant, sndblk, rank, mpi::io_tag);
+                        MPI.vSend(comms::computed_block_size, sndblk, rank, mpi::io_tag);
                         tsnd[irow][icol] += MPI.lastCommTicks;
 
                         // download
-                        MPI.vRecv(comms::constant, rcvblk, rank, mpi::io_tag);
+                        MPI.vRecv(comms::computed_block_size, rcvblk, rank, mpi::io_tag);
                         trcv[irow][icol] += MPI.lastCommTicks;
 
                         // exchange
-                        MPI.vSendRecv(comms::constant,
+                        MPI.vSendRecv(comms::computed_block_size,
                                       sndblk, rank, mpi::io_tag,
                                       rcvblk, rank, mpi::io_tag);
                         txch[irow][icol] += MPI.lastCommTicks;
@@ -86,13 +86,13 @@ namespace
                     for(size_t iter=0;iter<cycles;++iter)
                     {
                         // dowload
-                        MPI.vRecv(comms::constant, rcvblk, origin, mpi::io_tag);
+                        MPI.vRecv(comms::computed_block_size, rcvblk, origin, mpi::io_tag);
 
                         // upload
-                        MPI.vSend(comms::constant,sndblk, origin, mpi::io_tag);
+                        MPI.vSend(comms::computed_block_size,sndblk, origin, mpi::io_tag);
 
                         // exchange
-                        MPI.vSendRecv(comms::constant,
+                        MPI.vSendRecv(comms::computed_block_size,
                                       sndblk, origin, mpi::io_tag,
                                       rcvblk, origin, mpi::io_tag);
                     }

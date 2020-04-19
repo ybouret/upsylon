@@ -38,13 +38,13 @@ namespace upsylon {
         }
         
         
-        void conveyors:: throw_invalid_environment() const
+        void conveyors:: throw_invalid_topology() const
         {
-            throw exception("ios::conveyors: innvalid environment");
+            throw exception("ios::conveyors: innvalid topology");
         }
         
         const conveyor & conveyors:: insert(const std::type_info   &t,
-                                            const comms::medium     w,
+                                            const comms::topology   w,
                                             const convoy           &c)
         
         {
@@ -63,7 +63,7 @@ namespace upsylon {
 
         
         const conveyor * conveyors:: search(const std::type_info  &t,
-                                            const comms::medium    w) const throw()
+                                            const comms::topology  w) const throw()
         {
             Y_LOCK(access);
             static db_type &db   = __db();

@@ -29,7 +29,7 @@ namespace upsylon
             typedef arc_ptr<plugin> pointer; //!< shared pointer
 
             const uint32_t          uuid;    //!< identifier
-            const comms::manner     mode;    //!< for I/O information
+            const comms::delivery   mode;    //!< for I/O information
             
             virtual size_t  load(ios::istream &, void       *) = 0; //!< load data
             virtual size_t  save(ios::ostream &, const void *) = 0; //!< save data
@@ -37,7 +37,7 @@ namespace upsylon
             virtual        ~plugin() throw();                       //!< cleanup
 
         protected:
-            explicit plugin(const uint32_t, const comms::manner) throw(); //!< setup with identifier
+            explicit plugin(const uint32_t, const comms::delivery) throw(); //!< setup with identifier
             //! throw on missing data
             void missing_data(const char *pluginName,const char *typeName) const;
             
@@ -60,7 +60,7 @@ namespace upsylon
 
             inline virtual ~nbo_plugin() throw() {}                 //!< cleanup
             inline explicit nbo_plugin() throw() :
-            plugin(UUID,comms::constant) {}  //!< setup
+            plugin(UUID,comms::computed_block_size) {}  //!< setup
 
             //! load with swap big endian
             inline virtual size_t load(ios::istream &fp, void *addr)
@@ -102,7 +102,7 @@ namespace upsylon
 
             inline virtual ~raw_plugin() throw() {}                  //!< cleanup
             inline explicit raw_plugin() throw() :
-            plugin(UUID,comms::constant) {}                       //!< setup
+            plugin(UUID,comms::computed_block_size) {}                       //!< setup
 
             //! direct write of bytes
             inline virtual size_t save(ios::ostream &fp, const void *addr)
@@ -140,7 +140,7 @@ namespace upsylon
 
             inline virtual ~srz_plugin() throw() {}                    //!< cleanup
             inline explicit srz_plugin() throw() :
-            plugin(UUID,comms::variable) {}                         //!< setup
+            plugin(UUID,comms::flexible_block_size) {}                         //!< setup
 
 
             //! save using the serializable API

@@ -11,20 +11,20 @@ namespace upsylon {
     //! information about comms
     struct comms
     {
-        enum manner
+        enum delivery
         {
-            constant, //!< assuming host and peer know the size
-            variable  //!< the size must be exchanged
+            computed_block_size, //!< assuming host and peer know the block size
+            flexible_block_size, //!< host and peer need to exchange the block size
         };
         
-        enum medium
+        enum topology
         {
             homogeneous = 0x01, //!< same binary layouts
             distributed = 0x02  //!< binary layouts may change
         };
         
-        static const char *manner_text(const manner) throw();
-        static const char *medium_text(const medium) throw();
+        static const char *delivery_id(const delivery) throw();
+        static const char *topology_id(const topology) throw();
         
     };
     

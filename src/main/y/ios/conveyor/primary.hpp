@@ -20,7 +20,7 @@ namespace upsylon {
             
             //! setup
             inline explicit primary_conveyor() throw() :
-            conveyor(comms::constant,typeid(typename type_traits<T>::mutable_type))
+            conveyor(comms::computed_block_size,typeid(typename type_traits<T>::mutable_type))
             {}
             
             //! cleanup

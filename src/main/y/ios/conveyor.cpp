@@ -12,9 +12,9 @@ namespace upsylon {
         {
         }
         
-        conveyor:: conveyor(const comms::manner   how,
-                            const std::type_info &usr) throw() :
-        comms_manner(how),
+        conveyor:: conveyor(const comms::delivery    way,
+                            const std::type_info    &usr) throw() :
+        how(way),
         tid(usr)
         {
         }
@@ -28,7 +28,7 @@ namespace upsylon {
         std::ostream & operator<<(std::ostream &os, const conveyor &c)
         {
             const type_spec &ts = type_spec::declare(c.tid);
-            os << "ios::conveyor<" << ts.name() << ":" << comms::manner_text(c.comms_manner) << ">";
+            os << "ios::conveyor<" << ts.name() << ":" << comms::delivery(c.how) << ">";
             return os;
         }
 

@@ -433,15 +433,15 @@ namespace upsylon
         typedef ios::ovstream  vBlock; //!< variable block  implementation
 
         //! send variable number of bytes
-        void vSend(const comms::manner mode, const vBytes &v, const int target, const int tag);
+        void vSend(const comms::delivery mode, const vBytes &v, const int target, const int tag);
 
         //! recv variable number of bytes
-        void vRecv(const comms::manner mode, vBlock       &v, const int source, const int tag);
+        void vRecv(const comms::delivery mode, vBlock &v, const int source, const int tag);
 
         //! send/recv variable number of bytes
-        void vSendRecv(const comms::manner mode,
-                       const vBytes       &sendBytes, const int target, const int sendtag,
-                       vBlock             &recvBytes, const int source, const int recvtag);
+        void vSendRecv(const comms::delivery mode,
+                       const vBytes         &sendBytes, const int target, const int sendtag,
+                       vBlock               &recvBytes, const int source, const int recvtag);
 
 
         //______________________________________________________________________

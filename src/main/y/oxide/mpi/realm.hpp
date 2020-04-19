@@ -101,7 +101,7 @@ namespace upsylon
                     {
                         blk.free();
                         __Workspace::CheckBlockTotal(blk,source.save<LayoutType>(blk,part,part[rank]));
-                        MPI.vSend(comms::variable,blk,rank,tag);
+                        MPI.vSend(comms::flexible_block_size,blk,rank,tag);
                     }
                 }
                 else
@@ -109,7 +109,7 @@ namespace upsylon
                     assert(child.rank>0);
                     IOBlock &blk = child.recvBlock;
                     blk.free();
-                    MPI.vRecv(comms::variable,blk,0,tag);
+                    MPI.vRecv(comms::flexible_block_size,blk,0,tag);
                     ios::imstream input(blk);
                     __Workspace::CheckBlockTotal(blk,target.load<LayoutType>(input,child.outer,child.inner));
                 }
@@ -149,7 +149,7 @@ namespace upsylon
                     for(size_t rank=1;rank<psz;++rank)
                     {
                         blk.free();
-                        MPI.vRecv(comms::variable,blk,rank,tag);
+                        MPI.vRecv(comms::flexible_block_size,blk,rank,tag);
                         ios::imstream input(blk);
                         __Workspace::CheckBlockTotal(blk,source.load<LayoutType>(input,part,part[rank]));
                     }
@@ -161,7 +161,7 @@ namespace upsylon
                     IOBlock &blk = child.sendBlock;
                     blk.free();
                     __Workspace::CheckBlockTotal(blk,target.save<LayoutType>(blk,child.outer,child.inner));
-                    MPI.vSend(comms::variable,blk,0,tag);
+                    MPI.vSend(comms::flexible_block_size,blk,0,tag);
                 }
 
             }

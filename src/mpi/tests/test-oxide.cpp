@@ -119,7 +119,7 @@ void make_for(mpi                 &MPI,
             iField &Fi = W. template create<iField>( "Fi" );
 
             fields(W);
-            Y_ASSERT(fields.getCommMode()==comms::constant);
+            Y_ASSERT(fields.getCommMode()==comms::computed_block_size);
 
 
             // prepare integer filed with specific data

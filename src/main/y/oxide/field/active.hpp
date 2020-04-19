@@ -30,8 +30,8 @@ namespace upsylon
             ActiveFields  & operator()( Fields    &); //!< add all fields
             ActiveFields  & operator()( Fields &, const string IDs); //!< add some fields name, with separators
 
-            comms::manner getCommMode() const throw();  //!< analyze global comm_mode
-            size_t        getBlockSize() const throw(); //!< analyze blockSize, 0 for variable sized transfer
+            comms::delivery getCommMode() const throw();  //!< analyze global comm_mode
+            size_t          getBlockSize() const throw(); //!< analyze blockSize, 0 for variable sized transfer
 
         private:
             Y_DISABLE_ASSIGN(ActiveFields);

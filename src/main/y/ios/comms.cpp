@@ -2,16 +2,16 @@
 
 namespace upsylon {
     
-    const char * comms:: manner_text(const manner m) throw()
+    const char * comms:: delivery_id(const delivery m) throw()
     {
         switch (m) {
-            case constant: return "constant";
-            case variable: return "variable";
+            case computed_block_size: return "constant_block_size";
+            case flexible_block_size: return "flexible_block_size";
         }
         return "?";
     }
     
-    const char * comms:: medium_text(const medium m) throw()
+    const char * comms:: topology_id(const topology m) throw()
     {
         switch (m) {
             case homogeneous: return "homogeneous";
