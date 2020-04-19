@@ -13,22 +13,24 @@ namespace upsylon {
         }
         
         conveyor:: conveyor(const comms::delivery    way,
-                            const std::type_info    &usr) throw() :
-        how(way),
-        tid(usr)
+                            const std::type_info    &usr,
+                            const size_t             mov) throw() :
+        mode(way),
+        uuid(usr),
+        move(mov)
         {
         }
         
         void conveyor:: missing_bytes() const
         {
-            const type_spec &ts = type_spec::declare(tid);
+            const type_spec &ts = type_spec::declare(uuid);
             throw exception("ios::conveyor(missing bytes for <%s>)", *(ts.name()) );
         }
             
         std::ostream & operator<<(std::ostream &os, const conveyor &c)
         {
-            const type_spec &ts = type_spec::declare(c.tid);
-            os << "ios::conveyor<" << ts.name() << ":" << comms::delivery(c.how) << ">";
+            const type_spec &ts = type_spec::declare(c.uuid);
+            os << "ios::conveyor<" << ts.name() << ":" << comms::delivery_id(c.mode) << ":#" << c.move << ">";
             return os;
         }
 

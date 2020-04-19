@@ -30,27 +30,22 @@ namespace upsylon {
             // interface
             //__________________________________________________________________
             
-            //! direct and local copy
-            virtual void copy(void *target, const void *source) const = 0;
-            
-            //! save for later
-            virtual size_t save(ios::ostream &target, const void *source) const = 0;
-            
-            //! reload
-            virtual size_t load(void *target, ios::istream &source) const = 0;
+            virtual void   copy(void *target, const void *source)         const = 0; //!< direct and local copy
+            virtual size_t save(ios::ostream &target, const void *source) const = 0; //!< save for later
+            virtual size_t load(void *target, ios::istream &source)       const = 0; //!< reload
             
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const comms::delivery    how; //!< guess communication mode
-            const std::type_info    &tid;
+            const comms::delivery    mode; //!< [computed|flexible]_block_size
+            const std::type_info    &uuid; //!< system type info
+            const size_t             move; //!< sizeof(T)
             
             friend std::ostream & operator<<(std::ostream &, const conveyor &);
             
         protected:
-            explicit conveyor(const comms::delivery,
-                              const std::type_info &) throw(); //!< filled by derived class
+            explicit conveyor(const comms::delivery, const std::type_info &, const size_t) throw(); //!< filled by derived class
             void     missing_bytes() const; //!< raise exception
             
         private:

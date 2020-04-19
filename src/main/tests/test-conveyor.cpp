@@ -38,17 +38,21 @@ namespace {
 
 using namespace upsylon;
 
+#define DISPLAY_CNV(NAME) std::cerr << #NAME << " = " << NAME << std::endl
+
 Y_UTEST(conveyor)
 {
     ios::ovstream target;
     
-    ios::primary_conveyor<int>    ic; vector<int>    iv;
-    ios::network_conveyor<double> dc; vector<double> dv;
-    ios::derived_conveyor<string> sc; vector<string> sv;
-    ios::derived_conveyor<mpq>    qc; vector<mpq>    qv;
-    ios::tuple_conveyor<complex,float,ios::primary_conveyor>  cc; vector< complex<float> >  cv;
-    ios::tuple_conveyor<point3d,double,ios::network_conveyor> pc; vector< point3d<double> > pv;
-
+    ios::primary_conveyor<int>    ic; vector<int>    iv; DISPLAY_CNV(ic);
+    ios::network_conveyor<double> dc; vector<double> dv; DISPLAY_CNV(dc);
+    ios::derived_conveyor<string> sc; vector<string> sv; DISPLAY_CNV(sc);
+    ios::derived_conveyor<mpq>    qc; vector<mpq>    qv; DISPLAY_CNV(qc);
+    ios::tuple_conveyor<complex,float,ios::primary_conveyor>  cc; vector< complex<float> >  cv; DISPLAY_CNV(cc);
+    ios::tuple_conveyor<point3d,double,ios::network_conveyor> pc; vector< point3d<double> > pv; DISPLAY_CNV(pc);
+    
+   
+    
     
     
     vector<type_mark> tmark;

@@ -27,7 +27,9 @@ namespace upsylon {
             //__________________________________________________________________
             //! setup
             inline explicit derived_conveyor() throw() :
-            conveyor(comms::flexible_block_size,typeid(typename type_traits<T>::mutable_type))
+            conveyor(comms::flexible_block_size,
+                     typeid(typename type_traits<T>::mutable_type),
+                     sizeof(T))
             {}
             
             //! cleanup
