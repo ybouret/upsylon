@@ -6,6 +6,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
 #include "y/type/mark.hpp"
+#include "y/ios/comms.hpp"
 
 namespace upsylon {
  

@@ -5,6 +5,7 @@
 #include "y/ios/serializable.hpp"
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/ios/comms.hpp"
 #include "y/type/args.hpp"
 #include "y/type/fourcc.hpp"
 #include "y/type/spec.hpp"

@@ -8,6 +8,7 @@
 #include "y/associative/map.hpp"
 #include "y/ios/upack.hpp"
 #include "y/ios/ovstream.hpp"
+#include "y/ios/comms.hpp"
 #include "y/hashing/type-mark.hpp"
 #include "y/hashing/imph.hpp"
 #include <cstdio>
