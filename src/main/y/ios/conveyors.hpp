@@ -36,12 +36,13 @@ namespace upsylon {
             
             //! query/create conveyor for primary types or serialzable types
             template <typename T>
-            const conveyor & query(const comms::topology &where)
+            const conveyor & query(const comms::topology where)
             {
                 Y_LOCK(access);
+                
                 // prepare typeid
                 typedef typename type_traits<T>::mutable_type type;
-                static const std::type_info &tid = typeid(type);
+                static  const std::type_info &tid = typeid(type);
                 
                 // look up
                 const conveyor *pc = search(tid,where);
@@ -60,7 +61,7 @@ namespace upsylon {
             //! query/create conveyor for tuple of types
             template <template <typename> class TUPLE,
             typename T>
-            const conveyor & query(const comms::topology &where)
+            const conveyor & query(const comms::topology topo)
             {
                 Y_LOCK(access);
                 // prepare typeid
@@ -68,7 +69,7 @@ namespace upsylon {
                 typedef typename type_traits< TUPLE<type> >::mutable_type tuple_type;
                 static  const    std::type_info &tid = typeid(tuple_type);
                 // look up
-                const conveyor *pc = search(tid,where);
+                const conveyor *pc = search(tid,topo);
                 if( pc )
                 {
                     return *pc;
@@ -76,13 +77,28 @@ namespace upsylon {
                 else
                 {
                     static const bool srz = Y_IS_SUPERSUBCLASS(serializable,type);
-                    const convoy      cnv = create_tuple<TUPLE,type>(where,int2type<srz>());
-                    return insert(tid,where,cnv);
+                    const convoy      cnv = create_tuple<TUPLE,type>(topo,int2type<srz>());
+                    return insert(tid,topo,cnv);
                 }
                 
             }
             
-            //! get the internal root node, for graphvi
+            //! get a previously created conveyor
+            template <typename T>
+            const conveyor & get(const comms::topology topo) const
+            {
+                // prepare typeid
+                typedef typename type_traits<T>::mutable_type type;
+                static  const std::type_info &tid = typeid(type);
+                const conveyor *pc = search(tid,topo);
+                if(!pc)
+                {
+                    throw_missing_conveyor(tid);
+                }
+                return *pc;
+            }
+            
+            //! get the internal root node, for graphviz
             const vizible & root() const throw();
             
             
@@ -92,7 +108,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(conveyors);
             friend class singleton<conveyors>;
             void throw_invalid_topology() const;
-
+            void throw_missing_conveyor(const std::type_info &) const;
 
             const conveyor & insert(const std::type_info &, const comms::topology, const convoy &);
             const conveyor * search(const std::type_info &, const comms::topology)   const throw();

@@ -40,8 +40,17 @@ namespace upsylon {
         
         void conveyors:: throw_invalid_topology() const
         {
-            throw exception("ios::conveyors: innvalid topology");
+            throw exception("ios::conveyors: invalid topology");
         }
+        
+        
+        void conveyors:: throw_missing_conveyor(const std::type_info &t) const
+        {
+            const type_spec &ts = type_spec::declare(t);
+            throw exception("ios::conveyors(missing <%s>)", *ts.name() );
+        }
+            
+
         
         const conveyor & conveyors:: insert(const std::type_info   &t,
                                             const comms::topology   w,
