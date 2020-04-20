@@ -16,6 +16,7 @@ namespace upsylon {
     
     namespace ios
     {
+        class vizible;
         
         //! database of conveyors
         class conveyors : public singleton<conveyors>
@@ -33,7 +34,7 @@ namespace upsylon {
             // methods
             //__________________________________________________________________
             
-            //! conveyor for primary types or serialzable types
+            //! query/create conveyor for primary types or serialzable types
             template <typename T>
             const conveyor & query(const comms::topology &where)
             {
@@ -56,7 +57,7 @@ namespace upsylon {
                 }
             }
             
-            //! conveyor for tuple of types
+            //! query/create conveyor for tuple of types
             template <template <typename> class TUPLE,
             typename T>
             const conveyor & query(const comms::topology &where)
@@ -81,9 +82,9 @@ namespace upsylon {
                 
             }
             
-            void graphViz(const char   *) const;
-            void graphViz(const string &) const;
-
+            //! get the internal root node, for graphvi
+            const vizible & root() const throw();
+            
             
         private:
             virtual ~conveyors() throw();
@@ -93,12 +94,8 @@ namespace upsylon {
             void throw_invalid_topology() const;
 
 
-            const conveyor & insert(const std::type_info   &,
-                                    const comms::topology,
-                                    const convoy           &);
-            
-            const conveyor * search(const std::type_info   &,
-                                    const comms::topology) const throw();
+            const conveyor & insert(const std::type_info &, const comms::topology, const convoy &);
+            const conveyor * search(const std::type_info &, const comms::topology)   const throw();
 
             template <typename T>
             const conveyor * create(const comms::topology &where,

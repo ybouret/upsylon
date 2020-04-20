@@ -48,7 +48,7 @@ namespace upsylon {
         //
         // members
         //______________________________________________________________________
-        const BEaddress address;
+        const BEaddress address; //!< Big Endian address
         
     private:
         Y_DISABLE_ASSIGN(be_key);

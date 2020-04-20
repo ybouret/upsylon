@@ -42,6 +42,7 @@ namespace upsylon {
             const std::type_info    &uuid; //!< system type info
             const size_t             move; //!< sizeof(T)
             
+            //! display information
             friend std::ostream & operator<<(std::ostream &, const conveyor &);
             
         protected:

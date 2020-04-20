@@ -4,6 +4,8 @@
 #include "y/utest/run.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/ios/tools/vizible.hpp"
+
 #include "support.hpp"
 
 using namespace upsylon;
@@ -34,7 +36,7 @@ Y_UTEST(conveyors)
     
     std::cerr << IO.query<point3d,double>(comms::homogeneous) << std::endl;
     
-    IO.graphViz("convey.dot");
+    IO.root().graphViz("convey.dot");
     
     Y_UTEST_SIZEOF(ios::conveyor);
     Y_UTEST_SIZEOF(ios::primary_conveyor<char>);

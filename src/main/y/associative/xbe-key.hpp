@@ -14,11 +14,17 @@ namespace upsylon {
     class xbe_key : public memory::ro_buffer
     {
     public:
-        Y_DECL_ARGS(T,type);
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        Y_DECL_ARGS(T,type); //!< aliased
+        
         //______________________________________________________________________
         //
         // C++
         //______________________________________________________________________
+      
         //! cleanup
         inline virtual ~xbe_key() throw() {}
         
@@ -44,6 +50,7 @@ namespace upsylon {
         //
         // methods
         //______________________________________________________________________
+       
         //! get original data
         template <typename U> inline
         const U &as() const
@@ -55,7 +62,7 @@ namespace upsylon {
         //
         // members
         //______________________________________________________________________
-        const XBEaddress<T> xaddr;
+        const XBEaddress<T> xaddr; //!< internal eXtended ADDRess.
         
     private:
         Y_DISABLE_ASSIGN(xbe_key);

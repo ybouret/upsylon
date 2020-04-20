@@ -50,7 +50,11 @@ namespace upsylon {
         class limited_conveyor : public limited_conveyor_< CONVEYOR<T> >, public conveyor
         {
         public:
-            typedef limited_conveyor_< CONVEYOR<T> > base_type;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef limited_conveyor_< CONVEYOR<T> > base_type; //!< alias
             
             //__________________________________________________________________
             //
@@ -69,6 +73,12 @@ namespace upsylon {
             {
             }
             
+            //__________________________________________________________________
+            //
+            // conveyor interface
+            //__________________________________________________________________
+            
+            //! copy BLOCKS types
             inline virtual void copy(void *target, const void *source) const
             {
                 char       *p = static_cast<char *>(target);
@@ -81,9 +91,10 @@ namespace upsylon {
                 }
             }
             
+            //! save BLOCKS types
             inline virtual size_t save( ios::ostream &target, const void *source ) const
             {
-                const char *q = static_cast<const char *>(source);
+                const char *q     = static_cast<const char *>(source);
                 size_t      total = 0;
                 for(size_t i=BLOCKS;i>0;--i)
                 {
@@ -93,6 +104,7 @@ namespace upsylon {
                 return total;
             }
             
+            //! load BLOCKS types
             inline virtual size_t load(void *target, ios::istream &source) const
             {
                 char  *p     = static_cast<char *>(target);

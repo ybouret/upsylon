@@ -79,16 +79,11 @@ namespace upsylon {
             }
         }
         
-        void conveyors:: graphViz(const char *filename) const
-        {
-            __db().get_root().graphViz(filename);
-        }
         
-        void conveyors:: graphViz(const string &filename) const
+        const vizible & conveyors:: root() const throw()
         {
-            __db().get_root().graphViz(filename);
+            return __db().get_root();
         }
-
 
         
     }

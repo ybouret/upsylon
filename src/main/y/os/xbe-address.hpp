@@ -21,9 +21,9 @@ namespace upsylon {
         //
         // types and definitions
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);
-        typedef void *address_type;
-        static  const size_t address_size = sizeof(address_type);
+        Y_DECL_ARGS(T,type);                                             //!< aliases
+        typedef void *address_type;                                      //!< alias
+        static  const size_t address_size = sizeof(address_type);        //!< bytes to store address
         static  const size_t size         = address_size + sizeof(type); //!< bytes
         
         
@@ -63,7 +63,7 @@ namespace upsylon {
         //
         // members
         //______________________________________________________________________
-        const char data[size];
+        const char data[size]; //!< compact workspace
         
     private:
         Y_DISABLE_ASSIGN(XBEaddress);
