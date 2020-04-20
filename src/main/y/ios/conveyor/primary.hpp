@@ -21,6 +21,7 @@ namespace upsylon {
             //! setup
             inline explicit primary_conveyor() throw() :
             conveyor(comms::computed_block_size,
+                     comms::homogeneous,
                      typeid(typename type_traits<T>::mutable_type),
                      sizeof(T))
             {}

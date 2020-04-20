@@ -39,6 +39,7 @@ namespace upsylon {
             // members
             //__________________________________________________________________
             const comms::delivery    mode; //!< [computed|flexible]_block_size
+            const comms::topology    topo; //!< [homogeneous|distributed]
             const std::type_info    &uuid; //!< system type info
             const size_t             move; //!< sizeof(T)
             
@@ -46,7 +47,7 @@ namespace upsylon {
             friend std::ostream & operator<<(std::ostream &, const conveyor &);
             
         protected:
-            explicit conveyor(const comms::delivery, const std::type_info &, const size_t) throw(); //!< filled by derived class
+            explicit conveyor(const comms::delivery, const comms::topology, const std::type_info &, const size_t) throw(); //!< filled by derived class
             void     missing_bytes() const; //!< raise exception
             
         private:

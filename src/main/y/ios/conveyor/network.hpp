@@ -31,6 +31,7 @@ namespace upsylon {
             //! setup
             inline explicit network_conveyor() throw() :
             conveyor(comms::computed_block_size,
+                     comms::distributed,
                      typeid(typename type_traits<T>::mutable_type),
                      sizeof(T))
             {}

@@ -101,6 +101,9 @@ namespace upsylon {
             //! get the internal root node, for graphviz
             const vizible & root() const throw();
             
+            void  import();        //!< import useful types
+            void  sort();          //!< sort by names
+            void  display() const; //!< display
             
         private:
             virtual ~conveyors() throw();

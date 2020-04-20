@@ -13,9 +13,11 @@ namespace upsylon {
         }
         
         conveyor:: conveyor(const comms::delivery    way,
+                            const comms::topology    med,
                             const std::type_info    &usr,
                             const size_t             mov) throw() :
         mode(way),
+        topo(med),
         uuid(usr),
         move(mov)
         {
@@ -30,7 +32,11 @@ namespace upsylon {
         std::ostream & operator<<(std::ostream &os, const conveyor &c)
         {
             const type_spec &ts = type_spec::declare(c.uuid);
-            os << "ios::conveyor<" << ts.name() << ":" << comms::delivery_id(c.mode) << ":#" << c.move << ">";
+            os
+            << "ios::conveyor<" << ts.name()
+            << ":" << comms::delivery_id(c.mode)
+            << ":" << comms::topology_id(c.topo)
+            << ":" << c.move << ">";
             return os;
         }
 

@@ -94,6 +94,32 @@ namespace upsylon {
             return __db().get_root();
         }
 
+        void  conveyors:: display() const
+        {
+            Y_LOCK(access);
+            static const db_type &db   = __db();
+            std::cerr << "<ios::conveyors count=" << db.entries() << ">" << std::endl;
+            for( db_type::const_iterator it=db.begin();it!=db.end();++it)
+            {
+                std::cerr << "\t" << *it << std::endl;
+            }
+            std::cerr << "<ios::conveyors/>" << std::endl;
+        }
+
+        static inline int compare_by_names(const conveyors::convoy &lhs,const conveyors::convoy &rhs)
+        {
+            const type_spec &l = type_spec::declare(lhs->uuid);
+            const type_spec &r = type_spec::declare(rhs->uuid);
+            
+            return string::compare(l.name(),r.name());
+        }
+        
+        void conveyors:: sort()
+        {
+            Y_LOCK(access);
+            static db_type &db   = __db();
+            db.sort_with(compare_by_names);
+        }
         
     }
     

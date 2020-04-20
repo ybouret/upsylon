@@ -50,7 +50,13 @@ Y_UTEST(conveyors)
     typedef ios::tuple_conveyor<point2d,double,ios::network_conveyor> point3d_double_conveyer;
     Y_UTEST_SIZEOF(point3d_double_conveyer);
 
+    IO.display();
+    IO.sort();
+    IO.display();
     
+    IO.import();
+    IO.display();
+
     
 }
 Y_UTEST_DONE()
