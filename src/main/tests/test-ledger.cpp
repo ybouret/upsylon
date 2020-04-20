@@ -101,7 +101,7 @@ namespace {
     template <typename T>
     static inline void testXBE()
     {
-        std::cerr << "xbe size=" <<  XBEaddress<T>::size << std::endl;
+        std::cerr << "xbe size=" <<  XBEaddress<T>::size << "/" << sizeof(XBEaddress<T>) << std::endl;
         const string  hello = "hello";
         xbe_key<T>    xk1(hello,1);
         const string  world = "world";
