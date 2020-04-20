@@ -94,7 +94,7 @@ namespace {
             std::cerr << " 0x" << hexadecimal::uppercase[ p[i] ];
         }
         //const uint64_t attr = uint64_t(key.xaddr.data.attr);
-        //std::cerr << " = @" << key.xaddr.data.addr << " $ [" << attr << "] <- [" << uint64_t(swap_be(key.xaddr.data.attr)) << "]";
+        std::cerr << " = @" << key.xaddr.data.addr << " $" << uint64_t(swap_be(key.xaddr.data.attr));
         std::cerr << std::endl;
     }
     
