@@ -26,16 +26,21 @@ namespace upsylon {
         {
         public:
             const void  *addr;
-            mutable_type attr;
+            const char attr[sizeof(T)];
             
             inline layout(const void *p, const_type &u ) throw() :
             addr(swap_be_as<void*>( (void*)p ) ),
-            attr(swap_be_as<mutable_type>(u) )
+            attr()
             {
+                store_be(u,(void*)attr);
             }
             
-            inline layout(const layout &_) throw() : addr(_.addr), attr(_.attr)
+            inline layout(const layout &_) throw() : addr(_.addr), attr()
             {
+                for(size_t i=0;i<sizeof(attr);++i)
+                {
+                    *(char *)(attr[i]) = _.attr[i];
+                }
             }
             
             inline ~layout() throw() { addr=0; }
