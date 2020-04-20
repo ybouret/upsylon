@@ -30,7 +30,7 @@ namespace upsylon {
             
             inline layout(const void *p, const_type &u ) throw() :
             addr(swap_be_as<void*>( (void*)p ) ),
-            attr(swap_be_as<type>(u) )
+            attr(swap_be_as<mutable_type>(u) )
             {
             }
             
