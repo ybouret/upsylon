@@ -83,14 +83,15 @@ namespace {
     template <typename T>
     static inline void displayXBE( const  xbe_key<T> &key )
     {
+        const uint8_t *p = (uint8_t *) (key.ro());
         for(size_t i=0;i<sizeof(void*);++i)
         {
-            std::cerr << " 0x" << hexadecimal::uppercase[ key.byte_at(i) ];
+            std::cerr << " 0x" << hexadecimal::uppercase[ p[i] ];
         }
         std::cerr << " |";
         for(size_t i=sizeof(void*);i<key.length();++i)
         {
-            std::cerr << " 0x" << hexadecimal::uppercase[ key.byte_at(i) ];
+            std::cerr << " 0x" << hexadecimal::uppercase[ p[i] ];
         }
         //const uint64_t attr = uint64_t(key.xaddr.data.attr);
         //std::cerr << " = @" << key.xaddr.data.addr << " $ [" << attr << "] <- [" << uint64_t(swap_be(key.xaddr.data.attr)) << "]";
