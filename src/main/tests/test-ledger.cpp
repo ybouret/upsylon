@@ -81,6 +81,23 @@ namespace {
 namespace {
 
     template <typename T>
+    static inline void displayXBE( const  xbe_key<T> &key )
+    {
+        for(size_t i=0;i<sizeof(void*);++i)
+        {
+            std::cerr << " 0x" << hexadecimal::uppercase[ key.byte_at(i) ];
+        }
+        std::cerr << " |";
+        for(size_t i=sizeof(void*);i<key.length();++i)
+        {
+            std::cerr << " 0x" << hexadecimal::uppercase[ key.byte_at(i) ];
+        }
+        const uint64_t attr = uint64_t(key.xaddr.data.attr);
+        std::cerr << " = @" << key.xaddr.data.addr << " $ [" << attr << "] <- [" << uint64_t(swap_be(key.xaddr.data.attr)) << "]";
+        std::cerr << std::endl;
+    }
+    
+    template <typename T>
     static inline void testXBE()
     {
         std::cerr << "xbe size=" <<  XBEaddress<T>::size << std::endl;
@@ -90,16 +107,9 @@ namespace {
         xbe_key<T>    xk2(world,2);
 
         std::cerr << xk1.template as<string>() << ", " << xk2.template as<string>() << std::endl;
-        for(size_t i=0;i<xk1.length();++i)
-        {
-            std::cerr << " 0x" << hexadecimal::uppercase[ xk1.byte_at(i) ];
-        }
-        std::cerr << std::endl;
-        for(size_t i=0;i<xk2.length();++i)
-        {
-            std::cerr << " 0x" << hexadecimal::uppercase[ xk2.byte_at(i) ];
-        }
-        std::cerr << std::endl;
+        displayXBE(xk1);
+        displayXBE(xk2);
+
     }
     
 }
@@ -110,10 +120,10 @@ Y_UTEST(ledger)
     doTest<string>("string");
     doTest<float>("float");
     
-    testXBE<int8_t>();
-    testXBE<int16_t>();
-    testXBE<int32_t>();
-    testXBE<int64_t>();
+    testXBE<uint8_t>();
+    testXBE<uint16_t>();
+    testXBE<uint32_t>();
+    testXBE<uint64_t>();
 
     
 }
