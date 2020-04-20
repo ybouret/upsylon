@@ -37,7 +37,7 @@ namespace upsylon {
         //
         // memory buffer interface
         //______________________________________________________________________
-        virtual const void *ro()     const throw() { return &xaddr.data; }
+        virtual const void *ro()     const throw() { return &xaddr; }
         virtual size_t      length() const throw() { return  xaddr.size; }
         
         //______________________________________________________________________
