@@ -48,7 +48,6 @@ namespace upsylon {
         template <typename U> inline
         const U &as() const
         {
-            assert( xaddr.data.addr );
             return * xaddr.template as<U>();
         }
         

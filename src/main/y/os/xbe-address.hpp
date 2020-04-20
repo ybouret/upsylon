@@ -22,33 +22,11 @@ namespace upsylon {
         // types and definitions
         //______________________________________________________________________
         Y_DECL_ARGS(T,type);
-        class layout
-        {
-        public:
-            const void  *addr;
-            const char attr[sizeof(T)];
-            
-            inline layout(const void *p, const_type &u ) throw() :
-            addr(swap_be_as<void*>( (void*)p ) ),
-            attr()
-            {
-                store_be(u,(void*)attr);
-            }
-            
-            inline layout(const layout &_) throw() : addr(_.addr), attr()
-            {
-                for(size_t i=0;i<sizeof(attr);++i)
-                {
-                    *(char *)(attr[i]) = _.attr[i];
-                }
-            }
-            
-            inline ~layout() throw() { addr=0; }
-            
-        private:
-            Y_DISABLE_ASSIGN(layout);
-        };
-        static const size_t size = sizeof(void*) + sizeof(type); //!< bytes
+        typedef void *address_type;
+        static  const size_t address_size = sizeof(address_type);
+        static  const size_t size         = address_size + sizeof(type); //!< bytes
+        
+        
         
         //______________________________________________________________________
         //
@@ -59,11 +37,18 @@ namespace upsylon {
         inline ~XBEaddress() throw() {}
         
         //! copy
-        inline  XBEaddress(const XBEaddress &_) throw() : data(_.data) { }
+        inline  XBEaddress(const XBEaddress &_) throw() : data()
+        {
+            memcpy((void*)data,_.data,sizeof(data));
+        }
         
         //! setup from address on one object
         template <typename ARGS>
-        inline XBEaddress(const ARGS &args, param_type user) : data( &args, user) { }
+        inline XBEaddress(const ARGS &args, param_type user) : data()
+        {
+            store_be<address_type>( (address_type)&args, (void *)&data[0]            );
+            store_be<mutable_type>(                user, (void*) &data[address_size] );
+        }
         
         //______________________________________________________________________
         //
@@ -71,15 +56,14 @@ namespace upsylon {
         //______________________________________________________________________
         
         //! retrieve original address
-        template <typename U>
-        inline const U *as() const throw() { return static_cast<const U*>( swap_be_as<void*>((void*)data.addr) ); }
+        template <typename U> inline const U *as() const throw()
+        { return static_cast<const U *>( query_be<address_type>( &data[0] ) ); }
         
         //______________________________________________________________________
         //
         // members
         //______________________________________________________________________
-        
-        const layout data;
+        const char data[size];
         
     private:
         Y_DISABLE_ASSIGN(XBEaddress);
