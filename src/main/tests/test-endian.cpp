@@ -64,6 +64,7 @@ namespace
 
 Y_UTEST(endian)
 {
+    
     Y_CHECK(test_endian<uint8_t>());
     Y_CHECK(test_endian<uint16_t>());
     Y_CHECK(test_endian<uint32_t>());
@@ -75,6 +76,27 @@ Y_UTEST(endian)
     Y_CHECK(test_big_endian<uint32_t>());
     Y_CHECK(test_big_endian<uint64_t>());
 
+    std::cerr << std::hex;
+    {
+        const uint16_t x = 0x1234;
+        const uint16_t y = swap_be(x);
+        const uint16_t z = swap_be(y);
+        std::cerr << x << "->" << y << "->" << z << std::endl;
+    }
+    
+    {
+        const uint32_t x = 0x12345678;
+        const uint32_t y = swap_be(x);
+        const uint32_t z = swap_be(y);
+        std::cerr << x << "->" << y << "->" << z << std::endl;
+    }
+    {
+        const uint64_t x = Y_U64(0x123456789abcef21);
+        const uint64_t y = swap_be(x);
+        const uint64_t z = swap_be(y);
+        std::cerr << x << "->" << y << "->" << z << std::endl;
+    }
+    
 }
 Y_UTEST_DONE()
 
