@@ -15,7 +15,7 @@ namespace upsylon {
         typename                  T,
         template <typename> class CONVEYOR
         >
-        class tuple_conveyor : public limited_conveyor<T,CONVEYOR>
+        class tuple_conveyor : public limited_conveyor<sizeof( TUPLE<T> )/sizeof(T),T,CONVEYOR>
         {
         public:
             inline virtual ~tuple_conveyor() throw()
@@ -23,8 +23,7 @@ namespace upsylon {
             }
             
             inline explicit tuple_conveyor() throw() :
-            limited_conveyor<T,CONVEYOR>(sizeof( TUPLE<T> )/sizeof(T),
-                                         typeid( typename type_traits< TUPLE<T> >::mutable_type ) )
+            limited_conveyor<sizeof( TUPLE<T> )/sizeof(T),T,CONVEYOR>(typeid( typename type_traits< TUPLE<T> >::mutable_type ) )
             {
             }
             
