@@ -17,9 +17,7 @@ namespace upsylon
             class BlockReader : public Plugin {
             public:
                 Y_JARGON_PLUGIN_DECL(BlockReader); //!< aliases
-                
-                //! cleanup
-                virtual ~BlockReader() throw();
+                virtual ~BlockReader() throw();    //!< cleanup
                 
                 //! setup
                 template <typename ID,
@@ -35,7 +33,6 @@ namespace upsylon
                     back(leave, this, &BlockReader::onEmit);
                     setup();
                 }
-                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(BlockReader);

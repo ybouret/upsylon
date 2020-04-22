@@ -18,9 +18,7 @@ namespace upsylon
             {
             public:
                 Y_JARGON_PLUGIN_DECL(MultiLinesComment); //!< aliases
-
-                //! cleanup
-                virtual ~MultiLinesComment() throw();
+                virtual ~MultiLinesComment() throw();    //!< cleanup
                 
                 //! setup
                 template <typename ID,typename ENTER,typename LEAVE>
@@ -34,7 +32,6 @@ namespace upsylon
                     back(leave,this,&Scanner::nothing);
                     setup();
                 }
-                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MultiLinesComment);

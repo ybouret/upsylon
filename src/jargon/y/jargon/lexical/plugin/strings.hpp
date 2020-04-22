@@ -18,7 +18,6 @@ namespace upsylon
             {
             public:
                 virtual ~Strings() throw(); //!< cleanup
-                
 
             protected:
                 //! setup

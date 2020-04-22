@@ -17,8 +17,7 @@ namespace upsylon
             {
             public:
                 Y_JARGON_PLUGIN_DECL(jString); //!< aliases
-
-                virtual ~jString() throw(); //!< cleanup
+                virtual ~jString() throw();    //!< cleanup
                
                 //! setup
                 template <typename ID> inline

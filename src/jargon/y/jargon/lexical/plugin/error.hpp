@@ -18,20 +18,14 @@ namespace upsylon
             class Error : public Plugin {
             public:
                 Y_JARGON_PLUGIN_DECL(Error); //!< aliases
-
-                //! cleanup
-                virtual ~Error() throw();
+                virtual ~Error() throw();    //!< cleanup
                 
                 //! setup
                 template <typename ID> inline
-                explicit Error(Analyzer    &Lx,
-                               const ID    &id) :
-                Plugin(Lx,id,"."),
-                unit(0)
+                explicit Error(Analyzer    &Lx, const ID &id) : Plugin(Lx,id,"."), unit(0)
                 {
                     setup();
                 }
-                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Error);

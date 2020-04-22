@@ -17,9 +17,7 @@ namespace upsylon
             {
             public:
                 Y_JARGON_PLUGIN_DECL(EndOfLineComment); //!< aliases
-                
-                //! cleanup
-                virtual ~EndOfLineComment() throw();
+                virtual ~EndOfLineComment() throw();    //!< cleanup
                 
                 //! setup
                 template <typename ID,typename EXPR>
@@ -30,8 +28,6 @@ namespace upsylon
                 {
                     setup();
                 }
-                
-                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(EndOfLineComment);
