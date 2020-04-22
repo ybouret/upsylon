@@ -53,6 +53,14 @@ namespace upsylon {
             //------------------------------------------------------------------
             static void Restore(XNode *, Lexer &)           throw(); //!< return content to lexer and push back into list
             static void Advance(XNode * &tree, XNode *node) throw(); //!< handle node to advance/setup tree
+            bool   is(const string &) const throw();                 //!< compare to dogma->label
+            bool   is(const char   *) const throw();                 //!< compare to dogma->label
+            
+            template <typename LABEL>
+            inline friend bool operator==(const XNode &lhs, const LABEL &rhs) throw()
+            {
+                return lhs.is(rhs);
+            }
             
             
             //------------------------------------------------------------------

@@ -110,7 +110,6 @@ namespace upsylon {
                         XNode::Restore(xtree,lexer);
                         xtree = NULL;
                         throw syntaxError("Extraneous", *this, *lexer.lexemes.tail);
-                        //throw syntaxError("Extraneous", *this, *lexeme);
                     }
                     
                 }

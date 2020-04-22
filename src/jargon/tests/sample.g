@@ -8,8 +8,12 @@
 LBRACK : '[';
 RBRACK : ']';
 
-ADDOP^: "[-+]";
+ADDOP: "[-+]";
 
 @string : "string" '"' '"';
 
-#include "lex.g" 0
+#if 0
+@jstring : "jstring";
+#endif
+
+#include "lex.g"

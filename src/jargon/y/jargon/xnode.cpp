@@ -26,6 +26,16 @@ namespace upsylon {
     
     namespace Jargon {
         
+        bool   XNode:: is(const string &id) const throw()
+        {
+            return id == *(dogma->label);
+        }
+        
+        bool   XNode:: is(const char *id) const throw()
+        {
+            return id == *(dogma->label);
+        }
+        
         template <typename DERIVED>
         Axiom * _Axiom( const DERIVED &derived  ) throw()
         {

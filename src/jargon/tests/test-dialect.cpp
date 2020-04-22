@@ -19,6 +19,7 @@ Y_UTEST(dialect)
         Y_CHECK(xnode.is_valid());
         xnode->graphViz("dialect_tree.dot");
         xnode->save_to("dialect.bin");
+        xnode = dialect.checkIncludes( xnode.yield(), argv[1] );
         
     }
     

@@ -15,9 +15,13 @@ namespace upsylon {
             explicit Dialect();          //!< setup the parser
             virtual ~Dialect() throw();  //!< cleanup
             
+            XNode *checkIncludes(XNode *root, const string &fileName);
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dialect);
+            string readCID(const XNode &ctl) const;
+            XNode *include(const XNode &ctl, const string &fileName);
         };
         
     }
