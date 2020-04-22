@@ -18,5 +18,7 @@ Y_UTEST_INIT(32)
     Y_UTEST(grammar);
     Y_UTEST(parser);
     Y_UTEST(expr);
+
+    Y_UTEST(dialect);
 }
 Y_UTEST_EXEC()

@@ -55,7 +55,7 @@ namespace upsylon {
         {
             {
                 ios::ocstream fp(dotFile);
-                fp << "digraph " << *title << "{\n";
+                fp << "digraph " << "G" << "{\n";
                 
                 // all top level rules
                 for( Axioms::const_iterator it=axioms.begin(); it != axioms.end(); ++it )

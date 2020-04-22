@@ -23,6 +23,7 @@ ADD_TEST(parser3  test-jargon parser ${HERE}/../../json/tests/sample3.js)
 ADD_TEST(parser4  test-jargon parser ${HERE}/../../json/tests/sample4.js)
 ADD_TEST(parser5  test-jargon parser ${HERE}/../../json/tests/db.js)
 ADD_TEST(expr     test-jargon expr)
+ADD_TEST(dialect  test-jargon dialect)
 
 ADD_CUSTOM_TARGET(utest-jargon
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

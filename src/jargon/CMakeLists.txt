@@ -55,6 +55,13 @@ SET( axiom_wildcard_srcs ${axiom_wildcard_decl} ${axiom_wildcard_impl})
 INSTALL( FILES ${axiom_wildcard_decl} DESTINATION include/y/jargon/axiom/wildcard )
 SOURCE_GROUP( jargon/axiom/wildcard FILES ${axiom_wildcard_srcs} )
 
+
+FILE( GLOB dialect_decl y/jargon/dialect/*.hpp)
+FILE( GLOB dialect_impl y/jargon/dialect/*.cpp)
+SET( dialect_srcs ${dialect_decl} ${dialect_impl})
+INSTALL( FILES ${dialect_decl} DESTINATION include/y/jargon/dialect )
+SOURCE_GROUP( jargon/dialect FILES ${dialect_srcs} )
+
 INCLUDE_DIRECTORIES( . ../main )
 
 ADD_LIBRARY( y-jargon STATIC
@@ -65,6 +72,7 @@ ADD_LIBRARY( y-jargon STATIC
  ${axiom_wildcard_srcs}
  ${grammar_srcs}
  ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs} 
+ ${dialect_srcs}
  )
 INSTALL( TARGETS y-jargon ARCHIVE DESTINATION lib )
 
