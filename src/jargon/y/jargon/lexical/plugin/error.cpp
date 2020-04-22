@@ -7,6 +7,9 @@ namespace upsylon
         
         namespace Lexical {
             
+            Y_JARGON_PLUGIN_IMPL(Error);
+
+            
             Error:: ~Error() throw()
             {
                 

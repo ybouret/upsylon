@@ -16,6 +16,8 @@ namespace upsylon
             class jString : public Strings
             {
             public:
+                Y_JARGON_PLUGIN_DECL(jString); //!< aliases
+
                 virtual ~jString() throw(); //!< cleanup
                
                 //! setup

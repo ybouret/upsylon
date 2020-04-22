@@ -8,6 +8,8 @@ namespace upsylon
         
         namespace Lexical {
             
+            Y_JARGON_PLUGIN_IMPL(rString);
+
             rString:: ~rString() throw()
             {
             }

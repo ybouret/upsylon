@@ -13,6 +13,15 @@ namespace upsylon {
         {
             class Analyzer; //! forward declaration
             
+            //! for template typing definitions
+#define Y_JARGON_PLUGIN_DECL(TYPE) \
+typedef type2type<TYPE> Type_;\
+static const Type_      Type
+            
+            //! for template typing implementation
+#define Y_JARGON_PLUGIN_IMPL(TYPE) \
+const TYPE::Type_ TYPE::Type = {}
+
             //! base class for a plugin
             class Plugin : public Scanner
             {

@@ -24,7 +24,7 @@ namespace {
             
             // value
             Alternate &VALUE  = alt();
-            Axiom     &STRING = plug( type2type<Lexical::jString>(), "string" );
+            Axiom     &STRING = plug(Lexical::jString::Type, "string" );
             {
                 VALUE << term("number",RegularExpression::Real);
                 VALUE << term("null");
@@ -65,7 +65,7 @@ namespace {
             drop("blanks","[:blank:]");
             
             
-            load( type2type<Lexical::Error>(), "JSON Error" ).hook(*this);
+            grab(Lexical::Error::Type, "JSON Error" );
            
             Tags::Display();
             graphViz("json.dot");

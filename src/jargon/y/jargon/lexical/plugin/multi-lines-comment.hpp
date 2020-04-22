@@ -17,6 +17,8 @@ namespace upsylon
             class MultiLinesComment : public Plugin
             {
             public:
+                Y_JARGON_PLUGIN_DECL(MultiLinesComment); //!< aliases
+
                 //! cleanup
                 virtual ~MultiLinesComment() throw();
                 

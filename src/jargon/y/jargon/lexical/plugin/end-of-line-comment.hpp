@@ -16,6 +16,8 @@ namespace upsylon
             class EndOfLineComment : public Plugin
             {
             public:
+                Y_JARGON_PLUGIN_DECL(EndOfLineComment); //!< aliases
+                
                 //! cleanup
                 virtual ~EndOfLineComment() throw();
                 

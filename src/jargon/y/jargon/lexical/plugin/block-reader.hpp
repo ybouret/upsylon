@@ -16,6 +16,8 @@ namespace upsylon
             //! read and catenate all chars between enter/leave
             class BlockReader : public Plugin {
             public:
+                Y_JARGON_PLUGIN_DECL(BlockReader); //!< aliases
+                
                 //! cleanup
                 virtual ~BlockReader() throw();
                 

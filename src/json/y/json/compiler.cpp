@@ -48,7 +48,7 @@ namespace upsylon {
             
             // shared terminals
             Axiom     &COMA   = mark(',');
-            Axiom    &STRING  = plug(type2type<Lexical::jString>(), "string");
+            Axiom    &STRING  = plug(Lexical::jString::Type, "string");
             {
                 Alternate &VALUE = alt("value");
                 {
@@ -94,7 +94,7 @@ namespace upsylon {
             drop("blank", "[:blank:]");
             
             // error on any invalid starting token
-            load( type2type<Lexical::Error>(), "JSON Error" ).hook(*this);
+            grab(Lexical::Error::Type, "JSON Error" );
             
             compile();
             

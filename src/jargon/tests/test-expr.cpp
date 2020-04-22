@@ -4,6 +4,7 @@
 
 #include "y/jargon/lexical/plugin/end-of-line-comment.hpp"
 #include "y/jargon/lexical/plugin/jstring.hpp"
+#include "y/jargon/lexical/plugin/error.hpp"
 #include "y/jargon/evaluator.hpp"
 #include "y/ios/serialized.hpp"
 
@@ -38,6 +39,9 @@ namespace {
             
             endl("endl", "[:endl:]");
             drop("blank","[:blank:]");
+            
+            grab(Lexical::Error::Type,"Expr Error");
+
             
             graphViz("expr.dot");
             compile();

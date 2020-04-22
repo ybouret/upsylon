@@ -17,6 +17,8 @@ namespace upsylon
             //! try to get lexeme until next blank
             class Error : public Plugin {
             public:
+                Y_JARGON_PLUGIN_DECL(Error); //!< aliases
+
                 //! cleanup
                 virtual ~Error() throw();
                 

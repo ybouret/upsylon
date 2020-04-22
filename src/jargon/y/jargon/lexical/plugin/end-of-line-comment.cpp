@@ -21,6 +21,8 @@ namespace upsylon
             {
                 
             }
+            
+            Y_JARGON_PLUGIN_IMPL(EndOfLineComment);
         }
         
     }

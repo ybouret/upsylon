@@ -137,7 +137,7 @@ namespace upsylon {
             }
             
             //! create division mark, wrapper
-            template <typename LABEL>
+            template <typename LABEL> inline
             Axiom & mark(const LABEL &both)
             {
                 return mark(both,both);
@@ -149,27 +149,49 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! load a 0-arg plugin that will produce a terminal
-            template <typename PLUGIN,typename LABEL>
-            Axiom & plug(type2type<PLUGIN>,const LABEL &label)
+            //! load a 0-arg lexical plugin
+            template <typename PLUGIN,typename LABEL> inline
+            void grab(const type2type<PLUGIN> _,const LABEL &label)
             {
-                load(type2type<PLUGIN>(),label).hook(*this);
+                load(_,label).hook(*this);
+            }
+            
+            //! load a 1-arg lexical plugin
+            template <typename PLUGIN,typename LABEL,typename ENTER> inline
+            void grab(const type2type<PLUGIN> _,const LABEL &label, const ENTER &enter)
+            {
+                load(_,label,enter).hook(*this);
+            }
+            
+            //! load a 2-args lexical plugin
+            template <typename PLUGIN,typename LABEL,typename ENTER,typename LEAVE> inline
+            void grab(const type2type<PLUGIN> _,const LABEL &label, const ENTER &enter, const LEAVE &leave)
+            {
+                load(_,label,enter,leave).hook(*this);
+            }
+            
+            
+            //! load a 0-arg plugin that will produce a terminal
+            template <typename PLUGIN,typename LABEL> inline
+            Axiom & plug(const type2type<PLUGIN> _,const LABEL &label)
+            {
+                grab(_,label);
                 return _terminal(label,Terminal::Standard);
             }
             
             //! load a 1-arg plugin that will produce a terminal
-            template <typename PLUGIN,typename LABEL,typename ENTER>
-            Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter)
+            template <typename PLUGIN,typename LABEL,typename ENTER> inline
+            Axiom & plug(const type2type<PLUGIN> _,const LABEL &label, const ENTER &enter)
             {
-                load(type2type<PLUGIN>(),label,enter).hook(*this);
+                grab(_,label,enter);
                 return _terminal(label,Terminal::Standard);
             }
             
             //! load a 2-args plugin that will produce a terminal
-            template <typename PLUGIN,typename LABEL,typename ENTER,typename LEAVE>
-            Axiom & plug(type2type<PLUGIN>,const LABEL &label, const ENTER &enter, const LEAVE &leave)
+            template <typename PLUGIN,typename LABEL,typename ENTER,typename LEAVE> inline
+            Axiom & plug(const type2type<PLUGIN> _,const LABEL &label, const ENTER &enter, const LEAVE &leave)
             {
-                load(type2type<PLUGIN>(),label,enter,leave).hook(*this);
+                grab(_,label,enter,leave);
                 return _terminal(label,Terminal::Standard);
             }
             

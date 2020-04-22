@@ -7,6 +7,8 @@ namespace upsylon
         
         namespace Lexical {
             
+            Y_JARGON_PLUGIN_IMPL(MultiLinesComment);
+
             MultiLinesComment:: ~MultiLinesComment() throw()
             {
             }

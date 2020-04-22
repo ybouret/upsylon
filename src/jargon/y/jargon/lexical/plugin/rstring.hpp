@@ -17,6 +17,8 @@ namespace upsylon
             class rString : public Strings
             {
             public:
+                Y_JARGON_PLUGIN_DECL(rString); //!< aliases
+
                 virtual ~rString() throw(); //!< cleanup
                 
                 //! setup
