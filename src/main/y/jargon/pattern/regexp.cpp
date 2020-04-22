@@ -213,7 +213,7 @@ namespace upsylon {
             // extract Joker
             //
             //------------------------------------------------------------------
-            Pattern  *extractJoker( Logical &expr, const char jk )
+            inline Pattern  *extractJoker( Logical &expr, const char jk )
             {
                 Y_RX_VERBOSE(std::cerr << fn << "[+] joker <" << jk << ">@" << depth << std::endl);
                 if(expr.size<=0) throw exception("%sno expression before '%c' in '%s'",fn,jk,text);
@@ -225,7 +225,12 @@ namespace upsylon {
             // create a Counting
             //
             //------------------------------------------------------------------
-            void compileCounting( Logical &expr )
+            inline void checkBraces(const Logical &expr, const string &data)
+            {
+                if(expr.size<=0) throw exception("%sno expression before {%s} in '%s'",fn,*data,text);
+            }
+            
+            inline void compileCounting( Logical &expr )
             {
                 static const char maxcount[] = "maximalCount";
                 static const char mincount[] = "minimalCount";
@@ -244,11 +249,6 @@ namespace upsylon {
                 const string data(org,curr - org);
                 Y_RX_VERBOSE(std::cerr << fn << "[+] counting <" << data << ">@" << depth << std::endl);
                 
-                //______________________________________________________________
-                //
-                // checking something to jokerize
-                //______________________________________________________________
-                if(expr.size<=0) throw exception("%sno expression before {%s} in '%s'",fn,*data,text);
                 
                 
                 //______________________________________________________________
@@ -271,11 +271,13 @@ namespace upsylon {
                     {
                         // normal counting
                         const size_t nmax = to_size(smax,maxcount);
+                        checkBraces(expr,data);
                         expr.push_back( Counting::Create(expr.pop_back(),nmin,nmax) );
                     }
                     else
                     {
                         // repeating
+                        checkBraces(expr,data);
                         expr.push_back( Repeating::Create(expr.pop_back(),nmin) );
                     }
                     
@@ -292,6 +294,7 @@ namespace upsylon {
                     {
                         // new counting
                         const size_t n = to_size(data,"single [min|max]imalCount");
+                        checkBraces(expr,data);
                         expr.push_back( Counting::Create(expr.pop_back(),n) );
                     }
                     else
@@ -356,7 +359,8 @@ namespace upsylon {
                 return Single::Create( uint8_t(code) );
             }
             
-            inline Pattern *expressionESC()
+            inline
+            Pattern *expressionESC()
             {
                 const char C = *(curr++);
                 
@@ -396,6 +400,7 @@ namespace upsylon {
             // Block parsing
             //
             //------------------------------------------------------------------
+            inline
             Pattern *compileBlock()
             {
                 Y_RX_VERBOSE(std::cerr << fn << "[+] block@" << depth << std::endl);
@@ -472,6 +477,7 @@ namespace upsylon {
             // range parsing
             //
             //------------------------------------------------------------------
+            inline
             void compileRange( Logical &q )
             {
                 static const char sub[] = " Range: ";
@@ -511,7 +517,8 @@ namespace upsylon {
             // block escape sequence
             //
             //------------------------------------------------------------------
-            inline Pattern *blockESC()
+            inline
+            Pattern *blockESC()
             {
                 const char C = *(curr++);
                 
@@ -544,6 +551,7 @@ namespace upsylon {
             // POSIX parsing
             //
             //------------------------------------------------------------------
+            inline
             Pattern *compilePOSIX()
             {
                 //______________________________________________________________
@@ -579,7 +587,8 @@ namespace upsylon {
             // Entry point
             //
             //------------------------------------------------------------------
-            static inline Pattern *Compile(const string &rx, const Dictionary *dict)
+            static inline
+            Pattern *Compile(const string &rx, const Dictionary *dict)
             {
                 Engine            engine(*rx,rx.size(),dict);
                 auto_ptr<Pattern> result =  engine.compileExpression();
