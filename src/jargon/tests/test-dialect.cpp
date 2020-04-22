@@ -18,6 +18,8 @@ Y_UTEST(dialect)
         auto_ptr<XNode> xnode = dialect.parseFile(argv[1]);
         Y_CHECK(xnode.is_valid());
         xnode->graphViz("dialect_tree.dot");
+        xnode->save_to("dialect.bin");
+        
     }
     
 }

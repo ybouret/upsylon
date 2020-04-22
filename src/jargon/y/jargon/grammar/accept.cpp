@@ -109,7 +109,8 @@ namespace upsylon {
                         lexer.unget(lexeme);
                         XNode::Restore(xtree,lexer);
                         xtree = NULL;
-                        throw syntaxError("Extraneous", *this, *lexeme);
+                        throw syntaxError("Extraneous", *this, *lexer.lexemes.tail);
+                        //throw syntaxError("Extraneous", *this, *lexeme);
                     }
                     
                 }
