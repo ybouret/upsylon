@@ -7,12 +7,13 @@ namespace upsylon {
     
     namespace Jargon {
         
+        //! creating/loading a dialect, a.k.a DSL
         class Dialect : public Parser
         {
         public:
-            //! setup the parser
-            explicit Dialect();
-            virtual ~Dialect() throw();
+            
+            explicit Dialect();          //!< setup the parser
+            virtual ~Dialect() throw();  //!< cleanup
             
             
         private:

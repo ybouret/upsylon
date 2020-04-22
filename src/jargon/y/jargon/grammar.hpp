@@ -190,6 +190,8 @@ namespace upsylon {
             //! get status information, for error handling
             AxiomStatus statusOf(const Tag &label, uint32_t &uuid) const throw();
             
+            
+            
         protected:
             const   Axiom *root;   //!< root rule, initially inactive
             Axioms         axioms; //!< top-level axioms

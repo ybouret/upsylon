@@ -43,7 +43,7 @@ namespace upsylon {
             static void  endl(ostream &);                             //!< append ";\n"
             static void  enterDigraph(ostream &fp, const string &id); //!< "digraph id {\n"
             static void  enterDigraph(ostream &fp, const char   *id); //!< wrapper
-            static void  leaveDigraph(ostream &fp );                  //!< "}\n"
+            static void  leaveDigraph(ostream &fp);                   //!< "}\n"
             
         protected:
             explicit vizible() throw(); //! setup

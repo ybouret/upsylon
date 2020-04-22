@@ -70,6 +70,8 @@ namespace {
             Tags::Display();
             graphViz("json.dot");
             compile();
+            graphVizPatterns("json_patterns.dot");
+            
         }
         
         virtual ~JSON_Parser() throw()
@@ -96,6 +98,7 @@ Y_UTEST(parser)
     Axiom::Verbose   = true;
     JSON_Parser json;
     
+    //json.hoard.get_root().graphViz("json_hoard.dot");
     
     if( argc>1 )
     {

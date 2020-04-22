@@ -47,7 +47,7 @@ namespace upsylon {
                 //------------------------------------------------------------------
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef intr_ptr<string,Scanner> Handle;  //!< for database
-                typedef suffix_tree<Rule *>      RuleDB;  //!< rules database
+                typedef suffix_tree<Rule*>       RuleDB;  //!< rules database
                 
                 //--------------------------------------------------------------
                 //
@@ -63,12 +63,13 @@ namespace upsylon {
                 // generic method
                 //
                 //------------------------------------------------------------------
-                const string &key() const throw();                  //!< for intr_ptr/set
-                const Rule &  add(Rule *rule);                      //!< add a rule, check no multiple
-                void          nothing(const Token &) const throw(); //!< ...
-                void          newLine(const Token &) throw();       //!< send newLine to current source
-                bool          isPlugin() const throw();             //!< check if plug in
-                
+                const string &key() const throw();                   //!< for intr_ptr/set
+                const Rule &  add(Rule *rule);                       //!< add a rule, check no multiple
+                void          nothing(const Token &) const throw();  //!< ...
+                void          newLine(const Token &) throw();        //!< send newLine to current source
+                bool          isPlugin() const throw();              //!< check if plug in
+                const Rule   *getByLabel(const Tag &) const throw(); //!< get by label
+
                 //------------------------------------------------------------------
                 //
                 //
@@ -223,6 +224,7 @@ namespace upsylon {
                 const Tag      label; //!< identifier
                 const Rules    rules; //!< current rules
                 const RuleDB   hoard; //!< indexed rules
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

@@ -8,7 +8,7 @@ Y_UTEST(dialect)
     Jargon::Dialect dialect;
     
     dialect.graphViz("dialect.dot");
-    
+    dialect.graphVizPatterns("dialect_patterns.dot");
 }
 Y_UTEST_DONE()
 

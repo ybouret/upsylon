@@ -179,6 +179,9 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
+            //! retrieve pattern
+            const Pattern &patternOf(const Axiom &axiom) const;
+            
             //! validate grammar
             void compile();
             
@@ -202,6 +205,12 @@ namespace upsylon {
                 Context ctx(filename);
                 return treeFromFile(ctx);
             }
+            
+            //! save all axiom patterns
+            void graphVizPatterns(const string &fn) const;
+            
+            //! save all axiom patterns
+            void graphVizPatterns(const char   *fn) const;
             
             
         protected:

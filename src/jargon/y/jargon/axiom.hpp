@@ -113,7 +113,6 @@ Source  &source
                 return *static_cast<const AXIOM*>(self);
             }
             
-            
         protected:
             void           *self; //!< pointer to derived class
             

@@ -41,6 +41,7 @@ namespace {
             
             graphViz("expr.dot");
             compile();
+            graphVizPatterns("expr_patterns.dot");
         }
         
         

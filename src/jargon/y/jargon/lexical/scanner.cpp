@@ -69,7 +69,11 @@ dict_(NULL), plug_(NULL)
                 return result;
             }
             
-            
+            const Rule  * Scanner:: getByLabel(const Tag &label) const throw()
+            {
+                Rule * const * ppRule = hoard.search_by( *label );
+                return (NULL!=ppRule) ? *ppRule : NULL;
+            }
             
             void Scanner:: newLine(const Token &) throw()
             {
