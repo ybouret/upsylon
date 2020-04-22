@@ -29,12 +29,35 @@ namespace upsylon {
             // setup grammar
             //__________________________________________________________________
             Aggregate &G   = agg();
-            Axiom     &END = mark(';');
+            
+            
+            //__________________________________________________________________
+            //
+            // terminals declarations
+            //__________________________________________________________________
+            Axiom     &END   = mark(';');
+            Axiom     &COLON = mark(':');
+            Axiom     &ID    = term("ID","{NAME}");
+            Axiom     &RX    = plug(Lexical::jString::Type,"RX");
+            Axiom     &RS    = plug(Lexical::rString::Type,"RS");
+            Axiom     &STR   = choice(RX,RS);
+            
+            //__________________________________________________________________
+            //
+            // top level: declare module name
+            //__________________________________________________________________
             {
                 G << cat(term("module", "[.]{NAME}"),END);
             }
             
+            //__________________________________________________________________
+            //
+            // aliases
+            //__________________________________________________________________
             
+            Axiom & ALIAS = ( agg("alias") << ID << COLON << STR << END);
+            
+            G << zom(  ( alt() << ALIAS ) );
             
             //__________________________________________________________________
             //
@@ -44,7 +67,7 @@ namespace upsylon {
             grab(Lexical::MultiLinesComment::Type, "MLComments","/\\*","\\*/");
             drop("blank", "[:blank:]");
             endl("endl",  "[:endl:]");
-            grab(Lexical::Error::Type, *title + " Error");
+            grab(Lexical::Error::Type,"Dialect Syntax Error");
             
             dict.release_all();
             compile();
