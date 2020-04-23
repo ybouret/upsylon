@@ -16,4 +16,5 @@ ADDOP: "[-+]";
 @jstring : "jstring";
 #endif
 
+#include "lex.g"
 #include 'lex.g'

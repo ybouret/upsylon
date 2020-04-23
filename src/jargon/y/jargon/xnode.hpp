@@ -58,6 +58,12 @@ namespace upsylon {
             //! convert lexeme to data, if possible
             bool query( string &data, const size_t nskip=0, const size_t ntrim=0) const;
             
+            //! check if lexeme matches data
+            template <typename T>
+            inline bool ties(const T &data) const throw()
+            {
+                return lexeme.is_valid() && lexeme->is(data);
+            }
             
             //------------------------------------------------------------------
             //

@@ -66,7 +66,35 @@ namespace upsylon {
             }
         }
         
+        bool Token:: is(const void *buffer, const size_t buflen) const throw()
+        {
+            assert(!(buffer==0&&buflen>0));
+            if(size==buflen)
+            {
+                const uint8_t *p = static_cast<const uint8_t *>(buffer);
+                const Char    *c = head;
+                
+                for(size_t i=buflen;i>0;--i,++p,c=c->next)
+                {
+                    if(*p!=c->code) return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        bool Token:: is(const char *text) const throw()
+        {
+            return is( text, length_of(text) );
+        }
         
+        bool Token:: is(const memory::ro_buffer &buff) const throw()
+        {
+            return is( buff.ro(), buff.length() );
+        }
     }
 }
 

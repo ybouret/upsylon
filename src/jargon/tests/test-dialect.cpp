@@ -15,11 +15,9 @@ Y_UTEST(dialect)
     
     if(argc>1)
     {
-        auto_ptr<XNode> xnode = dialect.parseFile(argv[1]);
-        Y_CHECK(xnode.is_valid());
+        auto_ptr<XNode> xnode = dialect.compileFile(argv[1]);
         xnode->graphViz("dialect_tree.dot");
         xnode->save_to("dialect.bin");
-        xnode = dialect.checkIncludes( xnode.yield(), argv[1] );
         
     }
     

@@ -18,6 +18,11 @@ namespace upsylon {
         {
             
         }
+        
+        const Module & Source:: operator*() const throw()
+        {
+            return *handle;
+        }
 
         void Source:: load(Module *module)
         {

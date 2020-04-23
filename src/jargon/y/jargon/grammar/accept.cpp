@@ -78,10 +78,11 @@ namespace upsylon {
             Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
             XNode       *xtree = NULL;
             const bool   ok    = root->Y_JARGON_AXIOM_ACCEPT(xtree);
-            Y_JAXIOM(std::cerr << "[" << title << "] ok = " << ok << std::endl);
+            Y_JAXIOM(std::cerr << "[" << title << "] ok = "  << ok << std::endl);
             
             if( ok )
             {
+                
                 //--------------------------------------------------------------
                 //
                 // detecting errors
@@ -93,7 +94,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 if(xtree==NULL)
                 {
-                    exception excp("[%s] accepted <%s> a NULL tree",**title, **(root->label));
+                    exception excp("[%s] accepted <%s> a NULL tree",**title, **(root->label) );
                     throw excp;
                 }
                 
@@ -145,11 +146,11 @@ namespace upsylon {
                 // rejected!
                 //
                 //--------------------------------------------------------------
-                exception      excp("[%s] rejected",**title);
                 const Lexemes &analyzed = lexer.lexemes;
                 if(analyzed.size<=0)
                 {
-                    throw exception("[%s] invalid empty input",**title);
+                    const char *where = **(*source).tag;
+                    throw exception("[%s] invalid empty input from '%s'",**title,where);
                 }
                 else
                 {

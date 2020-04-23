@@ -53,6 +53,7 @@ namespace upsylon {
             size_t            prefetch(size_t n);             //!< prefetch at most n Char
             bool              isAlive();                      //!< check if get() shall return a valid Char
             bool              isEmpty();                      //!< ! isAlive
+            const Module &    operator*() const throw();      //!< current module
             
             //__________________________________________________________________
             //
@@ -60,6 +61,7 @@ namespace upsylon {
             //__________________________________________________________________
             virtual bool query(char &C);                 //!< ios::istream interface
             virtual void store(char  C);                 //!< ios::istream interface
+            
             
             
         private:

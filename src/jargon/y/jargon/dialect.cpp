@@ -93,6 +93,11 @@ namespace upsylon {
         }
         
 
+        XNode * Dialect:: compileFile(const string &fileName)
+        {
+            return checkIncludes(parseFile(fileName),fileName);
+        }
+
     }
     
 }
