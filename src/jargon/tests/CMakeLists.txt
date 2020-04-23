@@ -1,6 +1,6 @@
 
 FILE(GLOB test_srcs test-*.cpp)
-ADD_EXECUTABLE(test-jargon main.cpp ${test_srcs} sample.g)
+ADD_EXECUTABLE(test-jargon main.cpp ${test_srcs} sample.g lex.g)
 TARGET_LINK_Y(test-jargon jargon)
 
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})

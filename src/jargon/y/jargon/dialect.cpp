@@ -42,6 +42,7 @@ namespace upsylon {
             Axiom     &RS    = plug(Lexical::rString::Type,"RS");
             Axiom     &STR   = choice(RX,RS);
             Axiom     &INT   = term("INT","[-+]?[:digit:]+");
+            Axiom     &ZOM_STR = zom(STR);
             
             //__________________________________________________________________
             //
@@ -62,7 +63,7 @@ namespace upsylon {
             //
             // plugins
             //__________________________________________________________________
-            Axiom & PLG = ( agg("plg") << term("pid","@{NAME}") << COLON << STR << zom(STR) << END);
+            Axiom & PLG = ( agg("plg") << term("pid","@{NAME}") << COLON << STR << ZOM_STR << END);
             
             //__________________________________________________________________
             //
@@ -70,12 +71,17 @@ namespace upsylon {
             //__________________________________________________________________
             Axiom & CTL = ( agg("ctl") <<  term("cid","#{NAME}") << zom(choice(STR,INT)) );
             
+            //__________________________________________________________________
+            //
+            // lexical
+            //__________________________________________________________________
+            Axiom & LEX = ( agg("lex") <<  term("lid","%{NAME}") << ZOM_STR );
             
             //__________________________________________________________________
             //
             // define grammar
             //__________________________________________________________________
-            G << zom(  ( alt() << AKA << PLG << CTL ) );
+            G << zom(  ( alt() << AKA << PLG << CTL << LEX) );
 
             
             //__________________________________________________________________
@@ -95,8 +101,31 @@ namespace upsylon {
 
         XNode * Dialect:: compileFile(const string &fileName)
         {
-            return checkIncludes(parseFile(fileName),fileName);
+            return checkIncludes( expressBlocks(parseFile(fileName)),fileName);
         }
+
+        XNode * Dialect:: compileFile(const char   *fileName)
+        {
+            const string _(fileName); return compileFile(_);
+        }
+        
+        XNode * Dialect:: compileFlat(Module *module)
+        {
+            assert(module);
+            
+            auto_ptr<XNode>  root = parse(module);
+            for(const XNode *sub  = root->children.head;sub;sub=sub->next)
+            {
+                if(sub->name()=="ctl")
+                {
+                    const string   cid = readCID(*sub);
+                    const Context &ctx = *module;
+                    throw exception("%s::compileFlat: no allowed control '%s' in '%s'",**title,*cid,**(ctx.tag));
+                }
+            }
+            return root.yield();
+        }
+
 
     }
     

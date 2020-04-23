@@ -3,6 +3,7 @@
 #include "y/exception.hpp"
 #include "y/jargon/first-chars.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/imstream.hpp"
 
 namespace upsylon {
     
@@ -64,6 +65,13 @@ namespace upsylon {
             ios::icstream input( *(where.tag) );
             return loadTree(where,input);
         }
+        
+        XNode * Parser:: treeFromData(Context &where, const void *data, const size_t size)
+        {
+            ios::imstream input(data,size);
+            return loadTree(where,input);
+        }
+
         
         const Pattern & Parser:: patternOf(const Axiom &axiom) const
         {

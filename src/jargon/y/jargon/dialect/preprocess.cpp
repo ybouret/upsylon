@@ -13,23 +13,35 @@ namespace upsylon {
             const XList &args = ctl.children;
             if(args.size<=0) throw exception("%s%sno CommandID in control node",**title,fn);
             const XNode &cid  = *args.head;
-            if( "cid" != cid.name() ) throw exception("%s%scontrol node cid!=%s",**title,fn,*cid.name());
+            if( "cid" != cid.name() ) throw exception("%s%scontrol node '%s' instead of 'cid'",**title,fn,*cid.name());
             string data;
             if(!cid.query(data,1,0)) throw exception("%s%sno control node command",**title,fn);
             return data;
             
         }
         
+        XNode *Dialect:: expressBlocks(XNode *root)
+        {
+            auto_ptr<XNode> guard(root);
+            
+            return guard.yield();
+        }
+        
         XNode *Dialect::checkIncludes(XNode        *root,
                                       const string &fileName)
         {
             
+            //------------------------------------------------------------------
+            // scan the top-level node
+            //------------------------------------------------------------------
             auto_ptr<XNode> guard(root);
             assert(root);
             assert(root->name()=="dialect");
-            Y_JAXIOM(std::cerr << title << " checkIncludes" <<std::endl);
+            Y_JAXIOM(std::cerr << "[" << title << "] checkIncludes" <<std::endl);
             
-            // include
+            //------------------------------------------------------------------
+            // look for control nodes
+            //------------------------------------------------------------------
             XList &children = root->children;
             {
                 XList temp;
@@ -42,6 +54,7 @@ namespace upsylon {
                         if( "include" == cid)
                         {
                             temp.push_back( include(*chld, fileName) );
+                            continue;
                         }
                     }
                     temp.push_back( chld.yield() );

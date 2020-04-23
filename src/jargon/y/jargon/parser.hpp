@@ -222,10 +222,24 @@ namespace upsylon {
             
             //! load tree as Intermediate Language
             template <typename FILENAME>
-            XNode *loadTreeFromFile( const FILENAME &filename )
+            XNode *loadTreeFromFile( const FILENAME &fileName )
             {
-                Context ctx(filename);
+                Context ctx(fileName);
                 return treeFromFile(ctx);
+            }
+            
+            //! load tree as Intermediate Language from data
+            template <typename DATANAME>
+            XNode *loadTreeFromData( const DATANAME &dataName, const void *data, const size_t size )
+            {
+                Context ctx(dataName);
+                return treeFromData(ctx,data,size);
+            }
+            
+            template <typename DATANAME>
+            XNode *loadTreeFromData( const DATANAME &dataName, const memory::ro_buffer &buff )
+            {
+                return loadTreeFromData(dataName, buff.ro(), buff.length());
             }
             
             //! save all axiom patterns
@@ -242,7 +256,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
             void checkUnivocal(const Lexical::Rule &, const char *which) const;
             XNode *treeFromFile(Context &ctx);
-            
+            XNode *treeFromData(Context &ctx, const void *data, const size_t size);
         };
         
     }

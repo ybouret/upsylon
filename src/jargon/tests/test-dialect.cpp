@@ -1,5 +1,6 @@
 #include "y/jargon/dialect.hpp"
 #include "y/utest/run.hpp"
+#include "y/ios/serialized.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -18,6 +19,17 @@ Y_UTEST(dialect)
         auto_ptr<XNode> xnode = dialect.compileFile(argv[1]);
         xnode->graphViz("dialect_tree.dot");
         xnode->save_to("dialect.bin");
+        {
+            auto_ptr<XNode> IL = dialect.loadTreeFromFile("dialect.bin");
+            Y_CHECK(ios::serialized::are_same_binary(*xnode,*IL));
+        }
+        
+        {
+            const string    data = xnode->to_binary();
+            auto_ptr<XNode> IL2  = dialect.loadTreeFromData("compiled",data);
+            Y_CHECK(ios::serialized::are_same_binary(*xnode,*IL2));
+        }
+        
         
     }
     
