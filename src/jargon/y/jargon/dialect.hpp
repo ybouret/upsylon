@@ -15,6 +15,7 @@ namespace upsylon {
             explicit Dialect();          //!< setup the parser
             virtual ~Dialect() throw();  //!< cleanup
             
+            //! checking include control
             XNode *checkIncludes(XNode *root, const string &fileName);
             
             

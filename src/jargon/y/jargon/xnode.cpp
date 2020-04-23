@@ -16,6 +16,33 @@ namespace upsylon {
             guard.dismiss();
             return xnode;
         }
+        
+        
+        bool XNode:: query(string &data,const size_t nskip,const size_t ntrim) const
+        {
+            data.clear();
+            if( lexeme.is_valid() )
+            {
+                const Char::List &self = *lexeme;
+                const size_t      ncut = nskip + ntrim;
+                if(ncut>=self.size)
+                {
+                    data.clear();
+                }
+                else
+                {
+                    const Char *ch  = self.head;
+                    for(size_t i=nskip;i>0;--i)                       ch=ch->next;
+                    for(size_t i=self.size-ncut;i>0;--i,ch=ch->next)  data += char(ch->code);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
     
 }
@@ -26,15 +53,12 @@ namespace upsylon {
     
     namespace Jargon {
         
-        bool   XNode:: is(const string &id) const throw()
+        const string & XNode:: name() const throw()
         {
-            return id == *(dogma->label);
+            return *(dogma->label);
         }
         
-        bool   XNode:: is(const char *id) const throw()
-        {
-            return id == *(dogma->label);
-        }
+        
         
         template <typename DERIVED>
         Axiom * _Axiom( const DERIVED &derived  ) throw()
