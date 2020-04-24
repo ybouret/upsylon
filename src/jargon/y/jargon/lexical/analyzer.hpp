@@ -46,7 +46,7 @@ namespace upsylon {
                 
                 //! scanner declaration
                 template <typename ID> inline
-                Scanner & decl( const ID &id )
+                Scanner & decl( const ID &id, const  EndOfStream = Attached)
                 {
                     Scanner::Handle scan = new Scanner(id);
                     return insert(scan);

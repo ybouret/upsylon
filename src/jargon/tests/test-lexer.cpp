@@ -62,13 +62,13 @@ namespace {
             
             
             {
-                Scanner &com1 = decl("com1");
+                Scanner &com1 = decl("com1",Detached);
                 com1.back("[:endl:]",this,& myLex::leaveCom1);
                 com1.drop("any", ".");
             }
             
             {
-                Scanner &com2 = decl("com2");
+                Scanner &com2 = decl("com2",Detached);
                 com2.jump(*label,"[:endl:]",this, &myLex::leaveCom2);
                 com2.drop("any",".");
             }

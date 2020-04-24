@@ -52,8 +52,8 @@ namespace upsylon {
                 //! what happens when EOS is met during a call
                 enum EndOfStream
                 {
-                    Attached, //!< will fail, and this is the default
-                    Detached  //!< ok, stop
+                    Attached, //!< will fail (and this is the default behavior!)
+                    Detached  //!< ok, may stop
                 };
                 
                 //--------------------------------------------------------------
