@@ -106,6 +106,9 @@ namespace upsylon {
                 //! restart state
                 void restart() throw();
                 
+                //! check if this == current
+                void finalize();
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);

@@ -40,6 +40,7 @@ namespace upsylon
             void Error:: onEmit(const Token &)
             {
                 assert(unit.is_valid());
+                std::cerr << "pushing Error!!" << std::endl;
                 lexer.unget( unit.yield() );
             }
             

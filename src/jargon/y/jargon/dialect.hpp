@@ -15,9 +15,9 @@ namespace upsylon {
             explicit Dialect();          //!< setup the parser
             virtual ~Dialect() throw();  //!< cleanup
             
-            XNode *compileFile(const string &fileName);
-            XNode *compileFile(const char   *fileName);
-            XNode *compileFlat(Module *);
+            XNode *compileFile(const string &fileName); //!< parse grammar and preprocess
+            XNode *compileFile(const char   *fileName); //!< parse grammar and preprocess
+            XNode *compileFlat(Module *);               //!< parse preprocessed grammar: file, data...
             
             
             

@@ -5,6 +5,9 @@
 using namespace upsylon;
 using namespace Jargon;
 
+static const char demo[] =
+".demo;";
+
 Y_UTEST(dialect)
 {
     Lexical::Scanner::Verbose = true;
@@ -13,6 +16,12 @@ Y_UTEST(dialect)
     
     dialect.graphViz("dialect.dot");
     dialect.graphVizPatterns("dialect_patterns.dot");
+    
+    if(false)
+    {
+        auto_ptr<XNode> ast = dialect.compileFlat( Module::Open("demo",demo,sizeof(demo)));
+        ast->graphViz("demo.dot");
+    }
     
     if(argc>1)
     {

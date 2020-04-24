@@ -68,20 +68,23 @@ namespace upsylon {
             static Module * OpenData(const char   *data);                                        //!< open some data with same name
             static Module * OpenData(const string &data);                                        //!< open some data with same name
 
+            //! open any data
             template <typename DATANAME>
-            static inline Module *Open( const DATANAME &dataName, const void *data, const size_t size)
+            static inline Module *Open(const DATANAME &dataName, const void *data, const size_t size)
             {
                 return OpenData(dataName,data,size);
             }
             
+            //! open text as data
             template <typename DATANAME>
-            static inline Module *Open( const DATANAME &dataName, const char *text)
+            static inline Module *Open(const DATANAME &dataName, const char *text)
             {
                 return OpenData(dataName,text,length_of(text));
             }
             
+            //! open buffer as data
             template <typename DATANAME>
-            static inline Module *Open( const DATANAME &dataName, const memory::ro_buffer &buff)
+            static inline Module *Open(const DATANAME &dataName, const memory::ro_buffer &buff)
             {
                 return OpenData(dataName,buff.ro(),buff.length());
             }

@@ -112,7 +112,6 @@ namespace upsylon {
         XNode * Dialect:: compileFlat(Module *module)
         {
             assert(module);
-            
             auto_ptr<XNode>  root = parse(module);
             for(const XNode *sub  = root->children.head;sub;sub=sub->next)
             {

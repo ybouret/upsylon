@@ -170,6 +170,13 @@ namespace upsylon {
             }
             
             
+            void Analyzer:: finalize()
+            {
+                if(this!=current)
+                {
+                    throw exception("[%s] in in <%s>",**label,**(current->label));
+                }
+            }
         }
         
     }

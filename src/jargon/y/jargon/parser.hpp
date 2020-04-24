@@ -207,7 +207,7 @@ namespace upsylon {
             //! validate grammar
             void compile();
             
-            //! parsing a module, no restart
+            //! restart lexer and parse the module
             XNode *parse( Module * );
             
             //! parse a file
@@ -236,6 +236,7 @@ namespace upsylon {
                 return treeFromData(ctx,data,size);
             }
             
+            //! load tree as Intermediate Language from buffer
             template <typename DATANAME>
             XNode *loadTreeFromData( const DATANAME &dataName, const memory::ro_buffer &buff )
             {

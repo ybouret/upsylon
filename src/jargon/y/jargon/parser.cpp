@@ -15,12 +15,15 @@ namespace upsylon {
         
         XNode * Parser:: parse(Module *module)
         {
+            restart();
             Source __source( module );
             source = & __source;
             try {
-                XNode *ast = accept(*this,__source);
+                auto_ptr<XNode> ast = accept(*this,__source);
+                assert(source->isEmpty());
                 source = NULL;
-                return ast;
+                finalize();
+                return ast.yield();
             }
             catch(...)
             {
