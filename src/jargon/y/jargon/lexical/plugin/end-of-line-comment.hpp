@@ -24,7 +24,7 @@ namespace upsylon
                 explicit EndOfLineComment(Analyzer       &Lx,
                                           const ID       &id,
                                           const EXPR     &regexp) :
-                Plugin(Lx,id,regexp)
+                Plugin(Lx,id,regexp,Detached)
                 {
                     setup();
                 }

@@ -62,10 +62,11 @@ const TYPE::Type_ TYPE::Type = {}
             protected:
                 //! setup
                 template <typename ID,typename EXPR>
-                explicit Plugin(Analyzer       &Lx,
-                                const ID       &id,
-                                const EXPR     &regexp) :
-                Scanner(id),
+                explicit Plugin(Analyzer         &Lx,
+                                const ID         &id,
+                                const EXPR       &regexp,
+                                const EndOfStream eos) :
+                Scanner(id,eos),
                 trigger( Tags::Make(regexp) ),
                 lexer(Lx)
                 {

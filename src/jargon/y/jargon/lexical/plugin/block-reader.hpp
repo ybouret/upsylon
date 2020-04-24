@@ -27,7 +27,7 @@ namespace upsylon
                                      const ID    &id,
                                      const ENTER &enter,
                                      const LEAVE &leave) :
-                Plugin(Lx,id,enter),
+                Plugin(Lx,id,enter,Attached),
                 unit(0)
                 {
                     back(leave, this, &BlockReader::onEmit);

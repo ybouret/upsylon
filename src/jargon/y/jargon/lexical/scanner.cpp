@@ -20,15 +20,16 @@ inode<Scanner>(),            \
 label(TAG),                  \
 rules(),                     \
 hoard(),                     \
+onEOS(eos),                  \
 chars(NULL),                 \
 dict_(NULL), plug_(NULL)
             
-            Scanner:: Scanner( const string &id ) :
+            Scanner:: Scanner( const string &id, const EndOfStream eos ) :
             Y_JSCANNER_CTOR( Tags::Make(id) )
             {
             }
             
-            Scanner:: Scanner( const Tag &tag ) :
+            Scanner:: Scanner( const Tag &tag, const EndOfStream eos ) :
             Y_JSCANNER_CTOR( Tags::Make(tag) )
             {
             }

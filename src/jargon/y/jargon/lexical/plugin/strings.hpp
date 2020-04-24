@@ -25,7 +25,7 @@ namespace upsylon
                 Strings(Analyzer   &Lx,
                         const ID   &id,
                         const char  C) :
-                Plugin(Lx,id,C),
+                Plugin(Lx,id,C,Attached),
                 content(0),
                 context(0),
                 symbol(C)

@@ -26,7 +26,7 @@ namespace upsylon
                                            const ID       &id,
                                            const ENTER    &enter,
                                            const LEAVE    &leave ) :
-                Plugin(Lx,id,enter)
+                Plugin(Lx,id,enter,Attached)
                 {
                     Y_JSCANNER(std::cerr << "|" << id << "| @'" << leave << "'" << std::endl;);
                     back(leave,this,&Scanner::nothing);

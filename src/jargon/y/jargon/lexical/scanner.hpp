@@ -48,14 +48,21 @@ namespace upsylon {
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef intr_ptr<string,Scanner> Handle;  //!< for database
                 typedef suffix_tree<Rule*>       RuleDB;  //!< rules database
+               
+                //! what happens when EOS is met during a call
+                enum EndOfStream
+                {
+                    Attached, //!< will fail, and this is the default
+                    Detached  //!< ok, stop
+                };
                 
                 //--------------------------------------------------------------
                 //
                 // C++
                 //
                 //------------------------------------------------------------------
-                explicit Scanner(const string &); //!< setup
-                explicit Scanner(const Tag    &); //!< setup
+                explicit Scanner(const string &, const EndOfStream=Attached); //!< setup
+                explicit Scanner(const Tag    &, const EndOfStream=Attached); //!< setup
                 virtual ~Scanner() throw();       //!< cleanup
                 
                 //--------------------------------------------------------------
@@ -221,10 +228,10 @@ namespace upsylon {
                  */
                 Lexical::Unit *probe(Source &, Directive &);
                 
-                const Tag      label; //!< identifier
-                const Rules    rules; //!< current rules
-                const RuleDB   hoard; //!< indexed rules
-                
+                const Tag         label;      //!< identifier
+                const Rules       rules;      //!< current rules
+                const RuleDB      hoard;      //!< indexed rules
+                const EndOfStream onEOS;      //!< behavior on EOS when called
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

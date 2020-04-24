@@ -22,7 +22,8 @@ namespace upsylon
                 
                 //! setup
                 template <typename ID> inline
-                explicit Error(Analyzer &Lx, const ID &id) : Plugin(Lx,id,"."), unit(0)
+                explicit Error(Analyzer &Lx, const ID &id) :
+                Plugin(Lx,id,".",Attached), unit(0)
                 {
                     setup();
                 }

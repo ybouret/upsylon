@@ -78,7 +78,7 @@ namespace upsylon {
                 assert(plugin);
                 assert(plugin->plug_==plugin);
                 Y_JSCANNER( std::cerr << '[' << label << ']' << " <== " << '[' << plugin->label << ']' << std::endl);
-               
+                
                 Scanner::Handle scan( plugin );
                 if(!store(scan))
                 {
@@ -86,7 +86,7 @@ namespace upsylon {
                 }
                 return *plugin;
             }
-
+            
             Plugin & Analyzer:: extract(const Scanner::Handle *pps, const string &key) const
             {
                 if(!pps)  throw exception("[[%s]] has no scanner/plugin [%s]", **label,*key);
@@ -113,7 +113,7 @@ namespace upsylon {
             }
             
             //const Unit * Analyzer:: peek() const throw() { return units.head; }
-
+            
             
             Unit * Analyzer:: get(Source &source)
             {
@@ -172,17 +172,24 @@ namespace upsylon {
             
             void Analyzer:: finalize(const Context &ctx)
             {
+                assert(current);
                 if(this!=current)
                 {
-                    throw exception("unmatched scanners");
-                    string data;
-                    if(true)
+                    switch(current->onEOS)
                     {
-                        throw exception("%s:%d: [%s] has unfinished <%s> = '%s...'",
-                                        **(ctx.tag),
-                                        ctx.line,
-                                        **label,**(current->label),
-                                        *data);
+                        case Scanner::Attached: try
+                        {
+                            string        data;
+                            throw exception("%s:%d: [%s] has unfinished <%s> = '%s...'",
+                                            **(ctx.tag),
+                                            ctx.line,
+                                            **label,**(current->label),*data);
+                        } catch(...) { restart(); throw; }
+                            
+                            
+                        case Scanner::Detached:
+                            restart();
+                            break;
                     }
                 }
             }
