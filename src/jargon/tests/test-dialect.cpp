@@ -19,7 +19,7 @@ Y_UTEST(dialect)
     
     if(true)
     {
-        auto_ptr<XNode> ast = dialect.compileFlat( Module::Open("demo",demo,sizeof(demo)));
+        auto_ptr<XNode> ast = dialect.compileFlat( Module::Open("demo",demo,sizeof(demo)-1));
         ast->graphViz("demo.dot");
     }
     
