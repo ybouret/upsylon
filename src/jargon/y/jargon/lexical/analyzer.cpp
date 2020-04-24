@@ -174,7 +174,7 @@ namespace upsylon {
             {
                 if(this!=current)
                 {
-                    throw exception("[%s] in in <%s>",**label,**(current->label));
+                    throw exception("[%s] is in <%s>",**label,**(current->label));
                 }
             }
         }
