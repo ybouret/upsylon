@@ -24,6 +24,11 @@ namespace upsylon
                 
             }
             
+            void MultiLinesComment:: collectEOS(string &data) const
+            {
+                data = *trigger;
+            }
+
             
         }
         

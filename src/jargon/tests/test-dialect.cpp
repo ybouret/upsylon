@@ -17,7 +17,7 @@ Y_UTEST(dialect)
     dialect.graphViz("dialect.dot");
     dialect.graphVizPatterns("dialect_patterns.dot");
     
-    if(false)
+    if(true)
     {
         auto_ptr<XNode> ast = dialect.compileFlat( Module::Open("demo",demo,sizeof(demo)));
         ast->graphViz("demo.dot");

@@ -48,7 +48,7 @@ namespace upsylon {
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef intr_ptr<string,Scanner> Handle;  //!< for database
                 typedef suffix_tree<Rule*>       RuleDB;  //!< rules database
-               
+                
                 //! what happens when EOS is met during a call
                 enum EndOfStream
                 {
@@ -235,11 +235,13 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                Source *chars;  // current source
-                friend class Analyzer;
+                Source *chars;         // current source
+                friend class Analyzer; // to handle dict/plug
                 
+                // collect end of stream data for attached sub-scanners
+                virtual void collectEOS(string &data ) const;
                 
-                
+                // create a regular rule
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -247,9 +249,9 @@ namespace upsylon {
                 typename METHOD_POINTER,
                 typename REGULAR>
                 const Rule &regular(const LABEL         &anyLabel,
-                             const REGEXP        &anyRegExp,
-                             const OBJECT_POINTER hObject,
-                             const METHOD_POINTER hMethod)
+                                    const REGEXP        &anyRegExp,
+                                    const OBJECT_POINTER hObject,
+                                    const METHOD_POINTER hMethod)
                 {
                     assert(hObject);
                     assert(hMethod);

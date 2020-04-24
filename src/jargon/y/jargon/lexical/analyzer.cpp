@@ -180,9 +180,11 @@ namespace upsylon {
                         case Scanner::Attached: try
                         {
                             string        data;
-                            throw exception("%s:%d: [%s] has unfinished <%s> = '%s...'",
+                            current->collectEOS(data);
+                            throw exception("%s:%d:%d: [%s] has unfinished <%s> = '%s...'",
                                             **(ctx.tag),
                                             ctx.line,
+                                            ctx.column,
                                             **label,**(current->label),*data);
                         } catch(...) { restart(); throw; }
                             

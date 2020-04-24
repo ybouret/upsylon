@@ -43,7 +43,12 @@ namespace upsylon
                 unit->append(token);
             }
             
-          
+            void BlockReader:: collectEOS(string &data) const
+            {
+                assert(unit.is_valid());
+                TokenConvert::ToEncoded(data,*unit);
+            }
+
 
         }
     }

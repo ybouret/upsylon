@@ -32,10 +32,12 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Error);
                 void setup();
                 auto_ptr<Unit> unit;
-                virtual void onInit(const Token &);
-                void         onEmit(const Token &);
-                void         onChar(const Token &);
-                void         onEndl(const Token &);
+                virtual void  onInit(const Token &);
+                void          onEmit(const Token &);
+                void          onChar(const Token &);
+                void          onEndl(const Token &);
+                virtual void  collectEOS(string &) const;
+
             };
             
         }

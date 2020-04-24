@@ -88,6 +88,11 @@ dict_(NULL), plug_(NULL)
                 return *label;
             }
             
+            void Scanner:: collectEOS(string &data) const
+            {
+                data.clear();
+            }
+
             
             
         }

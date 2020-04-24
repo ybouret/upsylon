@@ -41,6 +41,8 @@ namespace upsylon
                 virtual void onInit(const Token &);
                 void         onEmit(const Token &);
                 void         onChar(const Token &);
+                virtual void collectEOS(string &) const;
+                
             };
             
         }

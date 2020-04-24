@@ -15,8 +15,9 @@ namespace upsylon {
         //! conversion of tokens
         struct TokenConvert
         {
-            static void To(string &target, const Token &token); //!< to string
-            static void To(double &target, const Token &token); //!< to double
+            static void To(string &target, const Token &token);       //!< to string
+            static void ToEncoded(string &target, const Token &token); //!< to encoded string
+            static void To(double &target, const Token &token);       //!< to double
             
         };
     }

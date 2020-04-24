@@ -37,6 +37,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(MultiLinesComment);
                 void setup();
                 virtual void onInit(const Token &) throw();
+                virtual void collectEOS(string &) const;
             };
 
             //! create default comments

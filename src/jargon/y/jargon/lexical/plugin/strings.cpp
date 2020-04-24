@@ -154,10 +154,16 @@ namespace upsylon
                                     **label, cchars::encoded[uint8_t(bad)], **content);
                 }
             }
+         
+            void  Strings:: collectEOS(string &data) const
+            {
+                assert(content.is_valid());
+                data  =  symbol;
+                data += *content;
+            }
+
             
         }
-        
-       
         
     }
 }

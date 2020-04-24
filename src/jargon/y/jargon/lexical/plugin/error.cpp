@@ -1,5 +1,6 @@
 #include "y/jargon/lexical/plugin/error.hpp"
 #include "y/jargon/lexical/analyzer.hpp"
+#include "y/jargon/token/convert.hpp"
 
 namespace upsylon
 {
@@ -49,6 +50,13 @@ namespace upsylon
                 assert(unit.is_valid());
                 unit->append(token);
             }
+            
+            void  Error:: collectEOS(string &data) const
+            {
+                assert(unit.is_valid());
+                TokenConvert::ToEncoded(data,*unit);
+            }
+
         }
     }
 }

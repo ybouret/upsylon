@@ -49,6 +49,8 @@ namespace upsylon
                 void failed(const Token &); // error
                 
                 void          checkSymbol(const Token &sep, const char *fn) const;
+                virtual void  collectEOS(string &) const;
+
             };
             
           
