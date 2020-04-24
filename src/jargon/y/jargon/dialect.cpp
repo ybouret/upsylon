@@ -17,7 +17,7 @@ namespace upsylon {
         {
         }
         
-        Dialect:: Dialect() : Parser( "Jargon::Dialect" )
+        Dialect:: Dialect() : Parser( "Dialect" )
         {
             
             if(!dict.insert("NAME",RegularExpression::Identifier))

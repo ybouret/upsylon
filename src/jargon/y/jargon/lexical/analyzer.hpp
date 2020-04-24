@@ -107,7 +107,7 @@ namespace upsylon {
                 void restart() throw();
                 
                 //! check if this == current
-                void finalize();
+                void finalize(const Context &);
                 
                 
             private:

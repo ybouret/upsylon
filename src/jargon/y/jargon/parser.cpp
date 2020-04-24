@@ -22,7 +22,7 @@ namespace upsylon {
                 auto_ptr<XNode> ast = accept(*this,__source);
                 assert(source->isEmpty());
                 source = NULL;
-                finalize();
+                finalize(*module);
                 return ast.yield();
             }
             catch(...)

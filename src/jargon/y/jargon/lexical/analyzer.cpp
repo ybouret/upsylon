@@ -170,11 +170,14 @@ namespace upsylon {
             }
             
             
-            void Analyzer:: finalize()
+            void Analyzer:: finalize(const Context &ctx)
             {
                 if(this!=current)
                 {
-                    throw exception("[%s] is in <%s>",**label,**(current->label));
+                    throw exception("%s:%d: [%s] has unfinished <%s>",
+                                    **(ctx.tag),
+                                    ctx.line,
+                                    **label,**(current->label));
                 }
             }
         }
