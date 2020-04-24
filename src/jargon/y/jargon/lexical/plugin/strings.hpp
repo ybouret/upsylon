@@ -48,7 +48,7 @@ namespace upsylon
                 void onHexa(const Token &); // \xXX
                 void failed(const Token &); // error
                 
-                void checkSymbol(const Token &sep, const char *fn) const;
+                void          checkSymbol(const Token &sep, const char *fn) const;
             };
             
           

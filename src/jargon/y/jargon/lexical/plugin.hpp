@@ -22,21 +22,42 @@ static const Type_      Type
 #define Y_JARGON_PLUGIN_IMPL(TYPE) \
 const TYPE::Type_ TYPE::Type = {}
 
+            //------------------------------------------------------------------
+            //
             //! base class for a plugin
+            //
+            //------------------------------------------------------------------
             class Plugin : public Scanner
             {
             public:
-                //! cleanup
-                virtual ~Plugin() throw();
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+                virtual ~Plugin() throw(); //!< cleanup
               
-                //! called to initialize plugin
-                virtual void onInit( const Token & ) = 0;
+                //--------------------------------------------------------------
+                //
+                // virtual interface
+                //
+                //--------------------------------------------------------------
+                virtual void onInit( const Token & ) = 0;//!< called to initialize plugin
                 
-                //! plugin is called upon trigger
-                void hook( Scanner &scanner );
                 
-                //! regular expression
-                const Tag trigger;
+                //--------------------------------------------------------------
+                //
+                // non-virtual interface
+                //
+                //--------------------------------------------------------------
+                void hook( Scanner &scanner ); //!< plugin is called upon trigger
+                
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const Tag trigger;//!< regular expression that triggers the call
 
             protected:
                 //! setup

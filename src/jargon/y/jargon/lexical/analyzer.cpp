@@ -174,10 +174,16 @@ namespace upsylon {
             {
                 if(this!=current)
                 {
-                    throw exception("%s:%d: [%s] has unfinished <%s>",
-                                    **(ctx.tag),
-                                    ctx.line,
-                                    **label,**(current->label));
+                    throw exception("unmatched scanners");
+                    string data;
+                    if(true)
+                    {
+                        throw exception("%s:%d: [%s] has unfinished <%s> = '%s...'",
+                                        **(ctx.tag),
+                                        ctx.line,
+                                        **label,**(current->label),
+                                        *data);
+                    }
                 }
             }
         }

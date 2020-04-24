@@ -1,6 +1,7 @@
 
 #include "y/jargon/lexical/plugin/block-reader.hpp"
 #include "y/jargon/lexical/analyzer.hpp"
+#include "y/jargon/token/convert.hpp"
 
 namespace upsylon
 {
@@ -41,6 +42,9 @@ namespace upsylon
                 assert(unit.is_valid());
                 unit->append(token);
             }
+            
+          
+
         }
     }
 }

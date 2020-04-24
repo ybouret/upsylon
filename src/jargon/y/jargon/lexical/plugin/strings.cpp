@@ -1,8 +1,8 @@
 
 #include "y/jargon/lexical/plugin/strings.hpp"
 #include "y/jargon/lexical/analyzer.hpp"
-
 #include "y/exception.hpp"
+#include "y/jargon/token/convert.hpp"
 
 namespace upsylon
 {
@@ -154,7 +154,10 @@ namespace upsylon
                                     **label, cchars::encoded[uint8_t(bad)], **content);
                 }
             }
+            
         }
+        
+       
         
     }
 }

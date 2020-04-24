@@ -145,6 +145,8 @@ Y_UTEST(lexer)
             lexemes.push_back(lx);
         }
         
+        L.finalize(*source);
+        
         while( lexemes.size )
         {
             lx = lexemes.head;

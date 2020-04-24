@@ -69,7 +69,7 @@ namespace upsylon {
                 void          newLine(const Token &) throw();        //!< send newLine to current source
                 bool          isPlugin() const throw();              //!< check if plug in
                 const Rule   *getByLabel(const Tag &) const throw(); //!< get by label
-
+                
                 //------------------------------------------------------------------
                 //
                 //
