@@ -10,12 +10,9 @@ namespace upsylon {
         string Dialect:: readCID(const XNode &ctl) const
         {
             static const char fn[] = "::readCID: ";
-            const XList &args = ctl.children;
-            if(args.size<=0) throw exception("%s%sno CommandID in control node",**title,fn);
-            const XNode &cid  = *args.head;
-            if( "cid" != cid.name() ) throw exception("%s%scontrol node '%s' instead of 'cid'",**title,fn,*cid.name());
-            string data;
-            if(!cid.query(data,1,0)) throw exception("%s%sno control node command",**title,fn);
+            const XList &args = ctl.children; if(args.size<=0)          throw exception("%s%sno CommandID in control node",**title,fn);
+            const XNode &cid  = *args.head;   if( "cid" != cid.name() ) throw exception("%s%scontrol node '%s' instead of 'cid'",**title,fn,*cid.name());
+            string       data;                if(!cid.query(data,1,0))  throw exception("%s%sno control node command",**title,fn);
             return data;
             
         }
@@ -119,7 +116,7 @@ namespace upsylon {
             const includePath flag = includePathFrom( node.name(), **title, fn);
             string            include;
             if(!node.query(include)) throw exception("%s%sunexpected no include name",**title,fn);
-            std::cerr << "include=''" << include << "''" << std::endl;
+            Y_JAXIOM(std::cerr << "[" << title << "] include=''" << include << "''" << std::endl);
 
             //------------------------------------------------------------------
             // and compile again!
@@ -129,7 +126,7 @@ namespace upsylon {
                 case includeRelative:
                 {
                     const string subName = vfs::get_file_dir(fileName) + include;
-                    std::cerr << "load ''" << subName << "''" << std::endl;
+                    Y_JAXIOM(std::cerr << "[" << title << "]    load=''" << subName << "''" << std::endl);
                     return compileFile(subName);
                 }
                 case includeAbsolute:
