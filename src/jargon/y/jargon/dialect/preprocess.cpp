@@ -76,12 +76,12 @@ namespace upsylon {
                                         const char   *gm,
                                         const char   *fn)
             {
-                if( kind == "RX" )
+                if( kind == "rx" )
                 {
                     return includeRelative;
                 }
                 
-                if( kind == "RS" )
+                if( kind == "rs" )
                 {
                     return includeAbsolute;
                 }

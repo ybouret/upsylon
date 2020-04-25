@@ -1,6 +1,7 @@
 #include "y/jargon/dialect.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/serialized.hpp"
+#include "y/jargon/evaluator.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -38,6 +39,10 @@ Y_UTEST(dialect)
             auto_ptr<XNode> IL2  = dialect.loadTreeFromData("compiled",data);
             Y_CHECK(ios::serialized::are_same_binary(*xnode,*IL2));
         }
+        
+        Evaluator_ E( dialect.title );
+        E.browse(*xnode);
+        
         
         
     }

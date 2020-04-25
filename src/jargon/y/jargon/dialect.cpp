@@ -20,69 +20,48 @@ namespace upsylon {
         Dialect:: Dialect() : Parser( "Dialect" )
         {
             
-            if(!dict.insert("NAME",RegularExpression::Identifier))
+            if(!dict.insert("ID",RegularExpression::Identifier))
                 throw exception("[%s] couldn't initialize dictionary!",**title);
             
-            
-            //__________________________________________________________________
-            //
-            // setup grammar
-            //__________________________________________________________________
-            Aggregate &G   = agg("dialect");
-            
-            
-            //__________________________________________________________________
-            //
-            // terminals declarations
-            //__________________________________________________________________
-            Axiom     &END   = mark(';');
-            Axiom     &COLON = mark(':');
-            Axiom     &ID    = term("ID","{NAME}");
-            Axiom     &RX    = plug(Lexical::jString::Type,"RX");
-            Axiom     &RS    = plug(Lexical::rString::Type,"RS");
-            Axiom     &STR   = choice(RX,RS);
-            Axiom     &INT   = term("INT","[-+]?[:digit:]+");
-            Axiom     &ZOM_STR = zom(STR);
-            
-            //__________________________________________________________________
-            //
-            // top level: declare module name
-            //__________________________________________________________________
+            Aggregate &dialect = agg("dialect");
+            Axiom     &stop    = mark(';');
+            Alternate &item    = alt("item");
+            dialect   << cat(term("module", "[.]{ID}"),stop) << zom(item);
+            Axiom     &id      = term("id","{ID}");
+            Axiom     &rx      = plug(Lexical::jString::Type,"rx");
+            Axiom     &rs      = plug(Lexical::rString::Type,"rs");
+            Axiom     &str     = ( alt("str") << rx << rs);
+           
+            Axiom     &zom_str = zom(str);
+            Axiom     &sep     = mark(':');
             {
-                G << cat(term("module", "[.]{NAME}"),END);
+                Axiom     &plg     = ( agg("plg") << term("pid","@{ID}") << sep << id << zom_str << stop);
+                item << plg;
             }
             
-            //__________________________________________________________________
-            //
-            // aliases/operators...
-            //__________________________________________________________________
-            Axiom & AKA = ( agg("aka") << ID << COLON << STR << END);
+            
+            {
+                Axiom     &_int  = term("int","[-+]?[:digit:]+");
+                Axiom     &_hex  = term("hex","0x[:xdigit:]+");
+                Axiom     &ints  = choice(_int,_hex);
+                Axiom     &ctl   = ( agg("ctl") <<  term("cid","#{ID}") << zom(choice(str,ints)) );
+                item << ctl;
+            }
+            
+            Axiom &atom = act("atom") << choice(id,rs,rx) << opt(term('^'));
+            {
+                Axiom & aka = ( agg("aka") << id << sep << atom << stop );
+                item << aka;
+            }
             
             
-            //__________________________________________________________________
-            //
-            // plugins
-            //__________________________________________________________________
-            Axiom & PLG = ( agg("plg") << term("pid","@{NAME}") << COLON << STR << ZOM_STR << END);
+            {
+                Axiom & lex = ( agg("lex") <<  term("lid","%{ID}") << zom_str );
+                item << lex;
+            }
             
-            //__________________________________________________________________
-            //
-            // pre-processor...
-            //__________________________________________________________________
-            Axiom & CTL = ( agg("ctl") <<  term("cid","#{NAME}") << zom(choice(STR,INT)) );
             
-            //__________________________________________________________________
-            //
-            // lexical
-            //__________________________________________________________________
-            Axiom & LEX = ( agg("lex") <<  term("lid","%{NAME}") << ZOM_STR );
             
-            //__________________________________________________________________
-            //
-            // define grammar
-            //__________________________________________________________________
-            G << zom(  ( alt() << AKA << PLG << CTL << LEX) );
-
             
             //__________________________________________________________________
             //

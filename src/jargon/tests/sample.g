@@ -10,10 +10,10 @@ RBRACK : ']';
 
 ADDOP: "[-+]";
 
-@string : "string" '"';
+@string : string '"';
 
 #if 0
-@jstring : "jstring";
+@string : jstring;
 #endif
 
 #include "lex.g"
