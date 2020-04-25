@@ -173,11 +173,15 @@ namespace upsylon {
             void Analyzer:: finalize(const Context &ctx)
             {
                 assert(current);
+                Y_JSCANNER(std::cerr << "[" << label << "] finalize(" << ctx.tag << ")" << std::endl);
                 if(this!=current)
                 {
-                    switch(current->onEOS)
+                    Y_JSCANNER(std::cerr << "[" << label << "] current is <<" << current->getEOS() << ">> [" << current->label << "]" << std::endl);
+                    switch(current->endOfStream)
                     {
-                        case Scanner::Attached: try
+                            
+                        case Scanner::Attached:
+                            try
                         {
                             string        data;
                             current->collectEOS(data);

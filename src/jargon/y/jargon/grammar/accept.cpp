@@ -78,7 +78,7 @@ namespace upsylon {
             Y_JAXIOM(std::cerr << "[" << title << "] accepting..." << std::endl);
             XNode       *xtree = NULL;
             const bool   ok    = root->Y_JARGON_AXIOM_ACCEPT(xtree);
-            Y_JAXIOM(std::cerr << "[" << title << "] ok = "  << ok << std::endl);
+            Y_JAXIOM(std::cerr << "[" << title << "] " << (ok?"accepted" : "rejected!") << std::endl);
             
             if( ok )
             {

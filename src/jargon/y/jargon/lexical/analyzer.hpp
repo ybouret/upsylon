@@ -106,7 +106,7 @@ namespace upsylon {
                 //! restart state
                 void restart() throw();
                 
-                //! check if this == current
+                //! check if this == current and act according to End of Stream status
                 void finalize(const Context &);
                 
                 

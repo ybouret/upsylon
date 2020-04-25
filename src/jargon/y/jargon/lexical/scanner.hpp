@@ -49,12 +49,13 @@ namespace upsylon {
                 typedef intr_ptr<string,Scanner> Handle;  //!< for database
                 typedef suffix_tree<Rule*>       RuleDB;  //!< rules database
                 
-                //! what happens when EOS is met during a call
+                //! what happens when End of Stream if met during a call
                 enum EndOfStream
                 {
                     Attached, //!< will fail (and this is the default behavior!)
                     Detached  //!< ok, may stop
                 };
+                static const char *EndOfStreamText(const EndOfStream) throw();
                 
                 //--------------------------------------------------------------
                 //
@@ -63,19 +64,20 @@ namespace upsylon {
                 //------------------------------------------------------------------
                 explicit Scanner(const string &, const EndOfStream=Attached); //!< setup
                 explicit Scanner(const Tag    &, const EndOfStream=Attached); //!< setup
-                virtual ~Scanner() throw();       //!< cleanup
+                virtual ~Scanner() throw();                                   //!< cleanup
                 
                 //--------------------------------------------------------------
                 //
                 // generic method
                 //
                 //------------------------------------------------------------------
-                const string &key() const throw();                   //!< for intr_ptr/set
+                const string &key() const throw();                   //!< for database
                 const Rule &  add(Rule *rule);                       //!< add a rule, check no multiple
                 void          nothing(const Token &) const throw();  //!< ...
                 void          newLine(const Token &) throw();        //!< send newLine to current source
                 bool          isPlugin() const throw();              //!< check if plug in
                 const Rule   *getByLabel(const Tag &) const throw(); //!< get by label
+                const char   *getEOS() const throw();                //!< named endOfStream
                 
                 //------------------------------------------------------------------
                 //
@@ -228,10 +230,10 @@ namespace upsylon {
                  */
                 Lexical::Unit *probe(Source &, Directive &);
                 
-                const Tag         label;      //!< identifier
-                const Rules       rules;      //!< current rules
-                const RuleDB      hoard;      //!< indexed rules
-                const EndOfStream onEOS;      //!< behavior on EOS when called
+                const Tag         label;       //!< identifier
+                const Rules       rules;       //!< current rules
+                const RuleDB      hoard;       //!< indexed rules
+                const EndOfStream endOfStream; //!< behavior on EOS when called
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);

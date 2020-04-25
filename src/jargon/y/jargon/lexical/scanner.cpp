@@ -8,6 +8,19 @@ namespace upsylon {
         
         namespace Lexical {
             
+            const char * Scanner:: EndOfStreamText(const EndOfStream eos) throw()
+            {
+                switch (eos) {
+                    case Attached: return "Attached";
+                    case Detached: return "Detached";
+                }
+                return "";
+            }
+ 
+            const char *Scanner:: getEOS() const throw()
+            {
+                return EndOfStreamText(endOfStream);
+            }
             
             
             Scanner:: ~Scanner() throw()
@@ -20,7 +33,7 @@ inode<Scanner>(),            \
 label(TAG),                  \
 rules(),                     \
 hoard(),                     \
-onEOS(eos),                  \
+endOfStream(eos),            \
 chars(NULL),                 \
 dict_(NULL), plug_(NULL)
             
