@@ -55,6 +55,8 @@ namespace upsylon {
                     Attached, //!< will fail (and this is the default behavior!)
                     Detached  //!< ok, may stop
                 };
+                
+                //! return "Attached"|"Detached"
                 static const char *EndOfStreamText(const EndOfStream) throw();
                 
                 //--------------------------------------------------------------
