@@ -30,27 +30,24 @@ namespace upsylon {
             Axiom     &id      = term("id","{ID}");
             Axiom     &rx      = plug(Lexical::jString::Type,"rx");
             Axiom     &rs      = plug(Lexical::rString::Type,"rs");
-            Axiom     &str     = ( alt("str") << rx << rs);
-           
-            Axiom     &zom_str = zom(str);
+            Axiom     &op      = term("op",'^');
             Axiom     &sep     = mark(':');
             {
-                Axiom     &plg     = ( agg("plg") << term("pid","@{ID}") << sep << id << zom_str << stop);
+                Axiom   &plg_init = zom( alt("plg.init") << rx << rs );
+                Axiom   &plg      = ( agg("plg") << term("plg.name","@{ID}") << sep << id << plg_init << stop);
                 item << plg;
             }
             
             
             {
-#if 0
-                Axiom     &_int  = term("int","[-+]?[:digit:]+");
-                Axiom     &_hex  = term("hex","0x[:xdigit:]+");
-                Axiom     &ints  = choice(_int,_hex);
-#endif
-                Axiom     &ctl   = ( agg("ctl") <<  term("cid","#{ID}") << zom(choice(str,id)) );
+                Alternate &ctl_args = alt("ctl.args");
+                ctl_args << rs << rx << term("int","[-+]?[:digit:]+") << term("hex","0x[:xdigit:]+");
+                
+                Axiom     &ctl   = ( agg("ctl") <<  term("ctl.name","#{ID}") << zom(ctl_args) );
                 item << ctl;
             }
             
-            Axiom &atom = act("atom") << choice(id,rs,rx) << opt(term('^'));
+            Axiom &atom = act("atom") << choice(id,rs,rx) << opt(op);
             {
                 Axiom & aka = ( agg("aka") << id << sep << atom << stop );
                 item << aka;
@@ -58,7 +55,8 @@ namespace upsylon {
             
             
             {
-                Axiom & lex = ( agg("lex") <<  term("lid","%{ID}") << zom_str );
+                Axiom   &lex_args = zom( alt("lex.args") << rx << rs );
+                Axiom & lex = ( agg("lex") <<  term("lex.name","%{ID}") << lex_args );
                 item << lex;
             }
             
@@ -98,9 +96,9 @@ namespace upsylon {
             {
                 if(sub->name()=="ctl")
                 {
-                    const string   cid = readCID(*sub);
-                    const Context &ctx = *module;
-                    throw exception("%s::compileFlat: no allowed control '%s' in '%s'",**title,*cid,**(ctx.tag));
+                    const string   ctlName = readCtlName(*sub);
+                    const Context &context = *module;
+                    throw exception("%s::compileFlat: no allowed control '%s' in '%s'",**title,*ctlName,**(context.tag));
                 }
             }
             return root.yield();

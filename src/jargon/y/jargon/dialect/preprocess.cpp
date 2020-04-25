@@ -7,12 +7,12 @@ namespace upsylon {
     
     namespace Jargon {
         
-        string Dialect:: readCID(const XNode &ctl) const
+        string Dialect:: readCtlName(const XNode &ctl) const
         {
             static const char fn[] = "::readCID: ";
-            const XList &args = ctl.children; if(args.size<=0)          throw exception("%s%sno CommandID in control node",**title,fn);
-            const XNode &cid  = *args.head;   if( "cid" != cid.name() ) throw exception("%s%scontrol node '%s' instead of 'cid'",**title,fn,*cid.name());
-            string       data;                if(!cid.query(data,1,0))  throw exception("%s%sno control node command",**title,fn);
+            const XList &args = ctl.children; if(args.size<=0)                throw exception("%s%sno name in control node",**title,fn);
+            const XNode &node = *args.head;   if( "ctl.name" != node.name() ) throw exception("%s%scontrol has '%s' instead of 'ctl.name'",**title,fn,*node.name());
+            string       data;                if(!node.query(data,1,0))       throw exception("%s%sno control node argument",**title,fn);
             return data;
             
         }
@@ -47,8 +47,8 @@ namespace upsylon {
                     auto_ptr<XNode> chld = children.pop_front();
                     if( chld->name() == "ctl" )
                     {
-                        const string cid = readCID(*chld);
-                        if( "include" == cid)
+                        const string ctlName = readCtlName(*chld);
+                        if( "include" == ctlName)
                         {
                             temp.push_back( include(*chld, fileName) );
                             continue;
@@ -101,7 +101,7 @@ namespace upsylon {
             const XList &args = ctrl.children;
             
             assert(args.size>=1);
-            assert(args.head->name() == "cid");
+            assert(args.head->name() == "ctl.name");
             assert(args.head->ties("#include"));
             
             //------------------------------------------------------------------

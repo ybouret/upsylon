@@ -12,7 +12,7 @@ ADDOP: "[-+]";
 
 @string : string '"';
 
-#if false
+#if 0
 @string : jstring;
 #endif
 

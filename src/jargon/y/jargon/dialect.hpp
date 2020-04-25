@@ -27,7 +27,7 @@ namespace upsylon {
             // preprocessing
             //------------------------------------------------------------------
             
-            string  readCID(const XNode &ctl) const;                    //! read Command IDentifier from a <ctl> node
+            string  readCtlName(const XNode &ctl) const;                //! read ctl.name from a <ctl> node
             XNode  *expressBlocks(XNode *root);                         //! check if/endif
             XNode  *checkIncludes(XNode *root, const string &fileName); //! checking include control
             XNode  *include(const XNode &ctl, const string &fileName);  //! load sub-content

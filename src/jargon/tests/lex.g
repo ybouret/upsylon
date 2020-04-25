@@ -1,4 +1,4 @@
 .lex;
 
-%drop "[:blank:]"
+%drop "[:blank:]" " "
 %endl "[:endl:]"
