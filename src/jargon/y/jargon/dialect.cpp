@@ -41,10 +41,12 @@ namespace upsylon {
             
             
             {
+#if 0
                 Axiom     &_int  = term("int","[-+]?[:digit:]+");
                 Axiom     &_hex  = term("hex","0x[:xdigit:]+");
                 Axiom     &ints  = choice(_int,_hex);
-                Axiom     &ctl   = ( agg("ctl") <<  term("cid","#{ID}") << zom(choice(str,ints)) );
+#endif
+                Axiom     &ctl   = ( agg("ctl") <<  term("cid","#{ID}") << zom(choice(str,id)) );
                 item << ctl;
             }
             
