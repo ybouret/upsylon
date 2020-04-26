@@ -9,7 +9,7 @@ namespace upsylon {
         
         string Dialect:: readCtlName(const XNode &ctl) const
         {
-            static const char fn[] = "::readCID: ";
+            static const char fn[] = "::readCtlName: ";
             const XList &args = ctl.children; if(args.size<=0)                throw exception("%s%sno name in control node",**title,fn);
             const XNode &node = *args.head;   if( "ctl.name" != node.name() ) throw exception("%s%scontrol has '%s' instead of 'ctl.name'",**title,fn,*node.name());
             string       data;                if(!node.query(data,1,0))       throw exception("%s%sno control node argument",**title,fn);
