@@ -23,22 +23,38 @@ namespace upsylon {
             if(!dict.insert("ID",RegularExpression::Identifier))
                 throw exception("[%s] couldn't initialize dictionary!",**title);
             
+            //------------------------------------------------------------------
+            //
+            // prepare the items to collect
+            //
+            //------------------------------------------------------------------
             Alternate &item    = alt("item");
 
-            
+            //------------------------------------------------------------------
+            // terminals
+            //------------------------------------------------------------------
             Axiom     &stop    = mark(';');
             Axiom     &id      = term("id","{ID}");
             Axiom     &rx      = plug(Lexical::jString::Type,"rx");
             Axiom     &rs      = plug(Lexical::rString::Type,"rs");
-            //Axiom     &op      = term("op",'^');
             Axiom     &sep     = mark(':');
+            
+            //------------------------------------------------------------------
+            //
+            // plugins
+            //
+            //------------------------------------------------------------------
             {
                 Axiom   &plg_init = zom( alt("plg.init") << rx << rs );
                 Axiom   &plg      = ( agg("plg") << term("plg.name","@{ID}") << sep << id << plg_init << stop);
                 item << plg;
             }
             
-            
+            //------------------------------------------------------------------
+            //
+            // controls
+            //
+            //------------------------------------------------------------------
             {
                 Alternate &ctl_args = alt("ctl.args");
                 ctl_args << rs << rx << term("int","[-+]?[:digit:]+") << term("hex","0x[:xdigit:]+");
@@ -47,14 +63,11 @@ namespace upsylon {
                 item << ctl;
             }
             
-#if 0
-            Axiom &atom = act("atom") << choice(id,rs,rx) << opt(op);
-            {
-                Axiom & aka = ( agg("aka") << id << sep << atom << stop );
-                item << aka;
-            }
-#endif
-            
+            //------------------------------------------------------------------
+            //
+            // lexical helpers
+            //
+            //------------------------------------------------------------------
             {
                 Axiom   &lex_args = zom( alt("lex.args") << rx << rs );
                 Axiom & lex = ( agg("lex") <<  term("lex.name","%{ID}") << lex_args );
@@ -76,7 +89,7 @@ namespace upsylon {
             
             //__________________________________________________________________
             //
-            // lexical only
+            // and final Axion which is the root
             //__________________________________________________________________
             setRoot(agg("dialect") << cat(term("module", "[.]{ID}"),stop) << zom(item) );
             
