@@ -70,11 +70,25 @@ namespace upsylon {
             //------------------------------------------------------------------
             {
                 Axiom   &lex_args = zom( alt("lex.args") << rx << rs );
-                Axiom & lex = ( agg("lex") <<  term("lex.name","%{ID}") << lex_args );
+                Axiom   &lex      = ( agg("lex") <<  term("lex.name","%{ID}") << lex_args );
                 item << lex;
             }
             
-            
+            //------------------------------------------------------------------
+            //
+            // axiom
+            //
+            //------------------------------------------------------------------
+            {
+                Aggregate &axiom = agg("axiom");
+                
+                axiom << id << sep;
+                {
+                    
+                }
+                axiom << stop;
+                item << axiom;
+            }
             
             
             //__________________________________________________________________
