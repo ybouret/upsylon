@@ -4,17 +4,20 @@
 
 .sample; // name of this module
 
-/*
-LBRACK : '[';
-RBRACK : ']';
 
-ADDOP: "[-+]";
-*/
+/*
+ LBRACK : '[';
+ RBRACK : ']';
+ 
+ ADDOP: "[-+]";
+ */
 
 @string : string '"';
 
-#if 0
 @string : jstring;
-#endif
+
+rule : toto;
+
 
 #include "lex.g"
+

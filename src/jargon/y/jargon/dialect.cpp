@@ -57,10 +57,15 @@ namespace upsylon {
             //------------------------------------------------------------------
             {
                 Alternate &ctl_args = alt("ctl.args");
-                ctl_args << rs << rx << term("int","[-+]?[:digit:]+") << term("hex","0x[:xdigit:]+");
+                ctl_args << rs << rx << id << term("int","[-+]?[:digit:]+") << term("hex","0x[:xdigit:]+");
                 
                 Axiom     &ctl   = ( agg("ctl") <<  term("ctl.name","#{ID}") << zom(ctl_args) );
                 item << ctl;
+            }
+            
+            
+            {
+                
             }
             
             //------------------------------------------------------------------
@@ -84,6 +89,14 @@ namespace upsylon {
                 
                 axiom << id << sep;
                 {
+                    Aggregate &group = act("group");
+                    {
+                        Alternate &content = alt("content");
+                        content << id << rs << rx;
+                        group << content;
+                    }
+                    
+                    axiom << group << zom( cat(term("or",'|'),group) );
                     
                 }
                 axiom << stop;

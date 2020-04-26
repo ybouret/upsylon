@@ -17,7 +17,7 @@ namespace upsylon {
          - rx      : '...';
          - item    : plg | ctl | lex;
          - plg     : "@{ID}" ':' id (rs|rx)*; // plugin defintion
-         - ctl     : "#{ID}" (rs|rx|int|hex)*; // preprocessing controls
+         - ctl     : "#{ID}" (rs|rx|id|int|hex)*; // preprocessing controls
          - lex     : "%{ID}" (rs|rx)*;
          */
         class Dialect : public Parser
