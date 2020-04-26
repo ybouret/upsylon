@@ -68,8 +68,8 @@ namespace upsylon {
             //
             // lexical only
             //__________________________________________________________________
-            grab(Lexical::EndOfLineComment::Type,  "EOLComment","//");
-            grab(Lexical::MultiLinesComment::Type, "MLComments","/\\*","\\*/");
+            grab(Lexical::EndOfLineComment::Type,  "Comment","//");
+            grab(Lexical::MultiLinesComment::Type, "Comments","/\\*","\\*/");
             drop("blank", "[:blank:]");
             endl("endl",  "[:endl:]");
             grab(Lexical::Error::Type,"Dialect Syntax Error");
