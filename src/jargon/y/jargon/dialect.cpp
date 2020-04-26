@@ -93,10 +93,10 @@ namespace upsylon {
                     {
                         Alternate &content = alt("content");
                         content << id << rs << rx;
-                        group << content;
+                        group << oom(content);
                     }
                     
-                    axiom << group << zom( cat(term("or",'|'),group) );
+                    axiom << group << zom( cat(op("or",'|'),group) );
                     
                 }
                 axiom << stop;

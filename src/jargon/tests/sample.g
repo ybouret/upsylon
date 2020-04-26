@@ -16,7 +16,7 @@
 
 @string : jstring;
 
-rule : toto;
+rule : toto tata | ta mere | "you" | 'me';
 
 
 #include "lex.g"
