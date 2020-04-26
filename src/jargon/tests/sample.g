@@ -4,11 +4,12 @@
 
 .sample; // name of this module
 
-
+/*
 LBRACK : '[';
 RBRACK : ']';
 
 ADDOP: "[-+]";
+*/
 
 @string : string '"';
 

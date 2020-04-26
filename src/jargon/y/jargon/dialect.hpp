@@ -9,6 +9,17 @@ namespace upsylon {
         
         
         //! creating/loading a dialect, a.k.a DSL
+        /**
+         - dialect : module item*;
+         - module  : ".{ID}" ';';
+         - id      : "{ID}";
+         - rs      : "...";
+         - rx      : '...';
+         - item    : plg | ctl | lex;
+         - plg     : "@{ID}" ':' id (rs|rx)*; // plugin defintion
+         - ctl     : "#{ID}" (rs|rx|int|hex)*; // preprocessing controls
+         - lex     : "%{ID}" (rs|rx)*;
+         */
         class Dialect : public Parser
         {
         public:

@@ -23,14 +23,14 @@ namespace upsylon {
             if(!dict.insert("ID",RegularExpression::Identifier))
                 throw exception("[%s] couldn't initialize dictionary!",**title);
             
-            Aggregate &dialect = agg("dialect");
-            Axiom     &stop    = mark(';');
             Alternate &item    = alt("item");
-            dialect   << cat(term("module", "[.]{ID}"),stop) << zom(item);
+
+            
+            Axiom     &stop    = mark(';');
             Axiom     &id      = term("id","{ID}");
             Axiom     &rx      = plug(Lexical::jString::Type,"rx");
             Axiom     &rs      = plug(Lexical::rString::Type,"rs");
-            Axiom     &op      = term("op",'^');
+            //Axiom     &op      = term("op",'^');
             Axiom     &sep     = mark(':');
             {
                 Axiom   &plg_init = zom( alt("plg.init") << rx << rs );
@@ -47,12 +47,13 @@ namespace upsylon {
                 item << ctl;
             }
             
+#if 0
             Axiom &atom = act("atom") << choice(id,rs,rx) << opt(op);
             {
                 Axiom & aka = ( agg("aka") << id << sep << atom << stop );
                 item << aka;
             }
-            
+#endif
             
             {
                 Axiom   &lex_args = zom( alt("lex.args") << rx << rs );
@@ -72,6 +73,12 @@ namespace upsylon {
             drop("blank", "[:blank:]");
             endl("endl",  "[:endl:]");
             grab(Lexical::Error::Type,"Dialect Syntax Error");
+            
+            //__________________________________________________________________
+            //
+            // lexical only
+            //__________________________________________________________________
+            setRoot(agg("dialect") << cat(term("module", "[.]{ID}"),stop) << zom(item) );
             
             dict.release_all();
             compile();
