@@ -217,7 +217,7 @@ namespace upsylon {
             {
                 Y_RX_VERBOSE(std::cerr << fn << "[+] joker <" << jk << ">@" << depth << std::endl);
                 if(expr.size<=0) throw exception("%sno expression before '%c' in '%s'",fn,jk,text);
-                return expr.pop_back();
+                return Pattern::Optimize(expr.pop_back());
             }
             
             //------------------------------------------------------------------
