@@ -68,7 +68,7 @@ Y_UTEST(regexp)
         std::cerr << "first chars : " << fc            << std::endl;
         std::cerr << "expr        : \"" << expr << "\"" << std::endl;
         auto_ptr<Pattern> q    = RegularExpression::Compile(expr);
-        q->graphViz("regexp2.dot");
+        //q->graphViz("regexp2.dot");
         const string      exp2 = q->toRegExp();
         std::cerr << "exp2        : \"" << exp2 << "\"" << std::endl;
 

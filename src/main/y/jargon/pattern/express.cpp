@@ -11,7 +11,7 @@ namespace upsylon {
         void Pattern:: Express(ios::ostream &fp, const uint8_t code)
         {
             static const char extra[] =
-            " !$%&,/;<=>`@_";
+            " !$%&,/;<=>`@_#";
             if(code<32||code>122) goto ESC;
             
             if((NULL!=strchr(extra,int(code)))  ||
