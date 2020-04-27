@@ -196,13 +196,14 @@ ADD_TEST(mp:primes    test-main prime_factor 0 1 2 3 4 0x3E8 0x2711)
 ADD_TEST(mp:primesQ   test-main prime_ratio)
 ADD_TEST(mp:io        test-main mp_io)
 
-SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp)
+SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp)
 ADD_TEST(sort:network     test-main network_sort)
 ADD_TEST(sort:sort        test-main sort)
 ADD_TEST(sort:unique      test-main unique)
 ADD_TEST(sort:maintain    test-main maintain)
 ADD_TEST(sort:locate      test-main locate)
 ADD_TEST(sort:classes     test-main classes)
+ADD_TEST(sort:blk         test-main blk)
 
 
 SOURCE_GROUP(information FILES  

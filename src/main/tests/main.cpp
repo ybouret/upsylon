@@ -183,6 +183,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(bin2dat);
     Y_UTEST(digest);
     Y_UTEST(locate);
+    Y_UTEST(blk);
     Y_UTEST(ppty);
 
     Y_UTEST(progress);
