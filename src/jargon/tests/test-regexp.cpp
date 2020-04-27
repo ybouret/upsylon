@@ -2,6 +2,7 @@
 #include "y/jargon/pattern/regexp.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
 #include "y/jargon/first-chars.hpp"
+#include "y/jargon/pattern/all.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -12,14 +13,42 @@ using namespace Jargon;
 
 namespace {
     
+    static inline void TestRX(const Pattern *_,const char *name)
+    {
+        assert(_);
+        std::cerr << "[Testing '" << name << "']" << std::endl;
+        auto_ptr<const Pattern> p  = _;
+        const string            rx = p->toRegExp();
+        std::cerr << "\\_rx='" << rx << "'" << std::endl;
+        auto_ptr<const Pattern> q  = RegularExpression::Compile(rx);
+        Y_ASSERT(q->toRegExp() == rx);
+    }
+    
+#define Y_RX_TST(EXPR) TestRX(EXPR,#EXPR)
+
+    
+    static inline uint8_t randByte()
+    {
+        return alea.full<uint8_t>();
+    }
+    
+    static inline void TestRXALL()
+    {
+        Y_RX_TST( Any1::   Create() );
+        Y_RX_TST( Single:: Create( randByte() ) );
+        Y_RX_TST( Range::  Create( randByte(), randByte() ) );
+        Y_RX_TST( Excluded:: Create( randByte() ) );
+
+    }
+    
 }
 
 Y_UTEST(regexp)
 {
     Dictionary dict;
     FirstChars fc;
-    //RegularExpression::Verbose = true;
-
+    
+    TestRXALL();
 
     Y_CHECK(dict.insert("INT","[:digit:]+"));
     if(argc>1)
@@ -32,11 +61,14 @@ Y_UTEST(regexp)
         p->graphViz("regexp.dot");
         p->updateEntropy();
         p->adjoin(fc);
+        const string expr = p->toRegExp();
         std::cerr << "strong      : " << p->strong()   << std::endl;
         std::cerr << "univocal    : " << p->univocal() << std::endl;
         std::cerr << "entropy     : " << p->entropy    << std::endl;
         std::cerr << "first chars : " << fc            << std::endl;
-
+        std::cerr << "expr        : \"" << expr << "\"" << std::endl;
+        auto_ptr<Pattern> q = RegularExpression::Compile(expr);
+        Y_ASSERT(q->toRegExp() == expr);
         if(argc>2)
         {
             Source source(Module::OpenFile(argv[2]));

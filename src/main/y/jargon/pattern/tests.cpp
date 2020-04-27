@@ -1,5 +1,6 @@
 #include "y/jargon/pattern.hpp"
 #include "y/ios/imstream.hpp"
+#include "y/ios/osstream.hpp"
 #include "y/ptr/auto.hpp"
 
 namespace upsylon {
@@ -38,6 +39,16 @@ namespace upsylon {
             }
             std::cerr << std::endl;
             
+        }
+        
+        string Pattern:: toRegExp() const
+        {
+            string rx;
+            {
+                ios::osstream fp(rx);
+                express(fp);
+            }
+            return rx;
         }
         
     }

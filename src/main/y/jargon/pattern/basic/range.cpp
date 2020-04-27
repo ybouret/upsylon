@@ -97,6 +97,14 @@ namespace upsylon {
             
         }
         
+        void Range:: express(ios::ostream &fp)    const
+        {
+            fp << '[';
+            Express(fp,lower);
+            fp << '-';
+            Express(fp,upper);
+            fp << ']';
+        }
     }
     
 }

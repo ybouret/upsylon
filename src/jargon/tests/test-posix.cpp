@@ -1,4 +1,5 @@
 #include "y/jargon/pattern/posix.hpp"
+#include "y/jargon/pattern/regexp.hpp"
 #include "y/associative/map.hpp"
 
 #include "y/utest/run.hpp"
@@ -55,8 +56,12 @@ const Motif m = all.tail->clone();        \
 Y_ASSERT(db.insert(id,m));               \
 m->adjoin(fc);                          \
 std::cerr << "fc=" << fc << std::endl; \
-std::cerr << std::endl;               \
-std::cerr << std::endl;              \
+const string rx = m->toRegExp();       \
+std::cerr << "rx=" << rx << std::endl; \
+q = RegularExpression::Compile(rx);    \
+Y_ASSERT(q->toRegExp()==rx);           \
+std::cerr << std::endl;                \
+std::cerr << std::endl;                \
 } while(false)
 
 Y_UTEST(posix)

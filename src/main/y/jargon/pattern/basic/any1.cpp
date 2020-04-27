@@ -55,6 +55,12 @@ namespace upsylon {
         {
             fc.loadAll();
         }
+        
+        void Any1:: express(ios::ostream &fp)    const
+        {
+            fp << "[\\x00-\\xff]";
+        }
+
 
     }
     

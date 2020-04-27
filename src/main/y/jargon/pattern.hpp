@@ -43,6 +43,7 @@ namespace upsylon {
             virtual bool      feeble()                  const throw() = 0;  //!< accept empty token!
             virtual bool      univocal()                const throw() = 0;  //!< guess if univocal
             virtual void      adjoin( FirstChars &)     const         = 0;  //!< adjoin first char(s)
+            virtual void      express(ios::ostream &)   const         = 0;  //!< regular expression
             
             //------------------------------------------------------------------
             //
@@ -70,8 +71,9 @@ namespace upsylon {
             }
             
             
-            void test(Source &, Token &) const;//!< test pattern on all source, save content for re-use
-            bool checkIO()               const;//!< check serialization
+            void   test(Source &, Token &) const; //!< test pattern on all source, save content for re-use
+            bool   checkIO()               const; //!< check serialization
+            string toRegExp()              const; //!< use express()
             
             //! matching extacly
             bool matches_exactly(Token &, const string &) const;
@@ -86,6 +88,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             static Pattern *Load(ios::istream&);            //!< load from previously serialized patterns
             static Pattern *Optimize( Pattern *p ) throw(); //!< optimize
+            static void     Express(ios::ostream &fp, const uint8_t code);
             
             //------------------------------------------------------------------
             //

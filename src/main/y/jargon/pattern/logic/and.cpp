@@ -102,6 +102,16 @@ namespace upsylon {
             }
         }
         
+        void AND:: express(ios::ostream &fp) const
+        {
+            const bool paren = (size>1);
+            if(paren) fp << '(';
+            for(const Pattern *op=head;op;op=op->next)
+            {
+                op->express(fp);
+            }
+            if(paren) fp << ')';
+        }
     }
 }
 

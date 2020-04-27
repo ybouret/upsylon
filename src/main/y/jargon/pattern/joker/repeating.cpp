@@ -153,7 +153,18 @@ namespace upsylon {
                 return false;
             }
         }
+     
         
+        void Repeating:: express(ios::ostream &fp) const
+        {
+            motif->express(fp);
+            switch(minimalCount)
+            {
+                case 0:  fp << '*'; break;
+                case 1:  fp << '+'; break;
+                default: fp("{%u,}",unsigned(minimalCount)); break;
+            }
+        }
     }
     
 }

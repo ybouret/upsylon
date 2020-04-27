@@ -59,6 +59,10 @@ namespace upsylon {
             fc.insert( code );
         }
 
+        void Single:: express(ios::ostream &fp)    const
+        {
+            Express(fp,code);
+        }
     }
     
 }

@@ -84,6 +84,19 @@ namespace upsylon {
                 op->adjoin(fc);
             }
         }
+        
+        void OR:: express(ios::ostream &fp) const
+        {
+            const bool paren = (size>1);
+            if(paren) fp << '(';
+            for(const Pattern *op=head;op;)
+            {
+                op->express(fp);
+                op = op->next;
+                if(op) fp << '|';
+            }
+            if(paren) fp << ')';
+        }
     }
 }
 

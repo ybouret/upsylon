@@ -13,6 +13,7 @@
 
 #include "y/fs/local/file.hpp"
 #include "y/jargon/first-chars.hpp"
+#include "y/ios/osstream.hpp"
 
 using namespace upsylon;
 using namespace Jargon;
@@ -71,12 +72,18 @@ namespace {
             
             m->adjoin(fc);
             std::cerr << "|_first=" << fc << std::endl;
+            {
+                const string rx = p.toRegExp();
+                std::cerr << "|_rx=\"" << rx << "\"" << std::endl;                
+            }
             
             if(p.strong())
             {
                 p.test(source, content); std::cerr << std::endl;
             }
             source.unget(content);
+           
+            
             return true;
         }
         

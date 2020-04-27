@@ -61,6 +61,11 @@ namespace upsylon {
             for(unsigned i=0;i<bad;++i)     fc.insert( uint8_t(i) );
             for(unsigned i=bad+1;i<256;++i) fc.insert( uint8_t(i) );
         }
+        
+        void Excluded:: express(ios::ostream &fp)    const
+        {
+            Express(fp,code); fp << '~';
+        }
     }
     
 }

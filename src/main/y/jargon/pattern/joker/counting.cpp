@@ -189,6 +189,12 @@ namespace upsylon {
             
         }
         
+        void Counting:: express(ios::ostream &fp) const
+        {
+            motif->express(fp);
+            fp("{%u,%u}", unsigned(minimalCount), unsigned(maximalCount));
+        }
+        
     }
     
 }
