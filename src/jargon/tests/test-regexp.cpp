@@ -67,8 +67,12 @@ Y_UTEST(regexp)
         std::cerr << "entropy     : " << p->entropy    << std::endl;
         std::cerr << "first chars : " << fc            << std::endl;
         std::cerr << "expr        : \"" << expr << "\"" << std::endl;
-        auto_ptr<Pattern> q = RegularExpression::Compile(expr);
-        Y_ASSERT(q->toRegExp() == expr);
+        auto_ptr<Pattern> q    = RegularExpression::Compile(expr);
+        q->graphViz("regexp2.dot");
+        const string      exp2 = q->toRegExp();
+        std::cerr << "exp2        : \"" << exp2 << "\"" << std::endl;
+
+        Y_ASSERT(exp2 == expr);
         if(argc>2)
         {
             Source source(Module::OpenFile(argv[2]));
