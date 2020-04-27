@@ -7,15 +7,6 @@ namespace upsylon {
     
     namespace Jargon {
         
-        string Dialect:: readCtlName(const XNode &ctl) const
-        {
-            static const char fn[] = "::readCtlName: ";
-            const XList &args = ctl.children; if(args.size<=0)                throw exception("%s%sno name in control node",**title,fn);
-            const XNode &node = *args.head;   if( "ctl.name" != node.name() ) throw exception("%s%scontrol has '%s' instead of 'ctl.name'",**title,fn,*node.name());
-            string       data;                if(!node.query(data,1,0))       throw exception("%s%sno control node argument",**title,fn);
-            return data;
-            
-        }
         
         XNode *Dialect:: expressBlocks(XNode *root)
         {
@@ -45,14 +36,10 @@ namespace upsylon {
                 while(children.size>0)
                 {
                     auto_ptr<XNode> chld = children.pop_front();
-                    if( chld->name() == "ctl" )
+                    if( chld->name() == "inc" )
                     {
-                        const string ctlName = readCtlName(*chld);
-                        if( "include" == ctlName)
-                        {
-                            temp.push_back( include(*chld, fileName) );
-                            continue;
-                        }
+                        temp.push_back( include(*chld,fileName) );
+                        continue;
                     }
                     temp.push_back( chld.yield() );
                 }
@@ -90,7 +77,7 @@ namespace upsylon {
             }
         }
         
-        XNode * Dialect:: include(const XNode  &ctrl,
+        XNode * Dialect:: include(const XNode  &inc,
                                   const string &fileName)
         {
             static const char fn[] = "::include: ";
@@ -98,25 +85,27 @@ namespace upsylon {
             //------------------------------------------------------------------
             // check args
             //------------------------------------------------------------------
-            const XList &args = ctrl.children;
-            
-            assert(args.size>=1);
-            assert(args.head->name() == "ctl.name");
-            assert(args.head->ties("#include"));
+            const XList &args = inc.children;
             
             //------------------------------------------------------------------
-            // check 1 arg
+            // check args
             //------------------------------------------------------------------
-            if(2!=args.size) throw exception("%s%srequires a single filename",**title,fn);
+            if(2!=args.size)
+                throw exception("%s%sinvalid #children",**title,fn);
+            
+            const string &which = args.head->name();
+            if(which!="#include")
+                throw exception("%s%s: unexpected command '%s'",**title,fn,*which);
+
             
             //------------------------------------------------------------------
             // extract info: kind and include name
             //------------------------------------------------------------------
             const XNode      &node = *args.tail;
             const includePath flag = includePathFrom( node.name(), **title, fn);
-            string            include;
-            if(!node.query(include)) throw exception("%s%sunexpected no include name",**title,fn);
-            Y_JAXIOM(std::cerr << "[" << title << "] include=''" << include << "''" << std::endl);
+            string            incl; if(!node.query(incl)) throw exception("%s%sunexpected no include name",**title,fn);
+            
+            Y_JAXIOM(std::cerr << "[" << title << "] include=''" << incl << "''" << std::endl);
 
             //------------------------------------------------------------------
             // and compile again!
@@ -125,7 +114,7 @@ namespace upsylon {
             {
                 case includeRelative:
                 {
-                    const string subName = vfs::get_file_dir(fileName) + include;
+                    const string subName = vfs::get_file_dir(fileName) + incl;
                     Y_JAXIOM(std::cerr << "[" << title << "]    load=''" << subName << "''" << std::endl);
                     return compileFile(subName);
                 }

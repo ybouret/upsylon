@@ -16,9 +16,9 @@ namespace upsylon {
          - rs      : "...";
          - rx      : '...';
          - item    : plg | ctl | lex;
-         - plg     : "@{ID}" ':' id (rs|rx)*; // plugin defintion
-         - ctl     : "#{ID}" (rs|rx|id|int|hex)*; // preprocessing controls
-         - lex     : "%{ID}" (rs|rx)*;
+         - plg     : "@{ID}" ':' id (rs|rx)*; // plugin definition
+         - inc     : "#include" (rs|rx);      // include rs=>relative, rx=>absolute
+         - lex     : "%{ID}" (rs|rx)*;        // lexical definition
          */
         class Dialect : public Parser
         {
@@ -38,7 +38,7 @@ namespace upsylon {
             // preprocessing
             //------------------------------------------------------------------
             
-            string  readCtlName(const XNode &ctl) const;                //! read ctl.name from a <ctl> node
+            //string  readCtlName(const XNode &ctl) const;                //! read ctl.name from a <ctl> node
             XNode  *expressBlocks(XNode *root);                         //! check if/endif
             XNode  *checkIncludes(XNode *root, const string &fileName); //! checking include control
             XNode  *include(const XNode &ctl, const string &fileName);  //! load sub-content

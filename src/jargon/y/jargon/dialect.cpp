@@ -52,17 +52,15 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            // controls
+            // include
             //
             //------------------------------------------------------------------
             {
-                Alternate &ctl_args = alt("ctl.args");
-                ctl_args << rs << rx << id << term("int","[-+]?[:digit:]+") << term("hex","0x[:xdigit:]+");
-                
-                Axiom     &ctl   = ( agg("ctl") <<  term("ctl.name","#{ID}") << zom(ctl_args) );
-                item << ctl;
+                Axiom &inc_name = term("#include");
+                Axiom &inc_args = ( alt("inc.args") << rs << rx );
+                Axiom &inc      = ( agg("inc") << inc_name << inc_args );
+                item << inc;
             }
-            
             
             {
                 
@@ -141,11 +139,10 @@ namespace upsylon {
             auto_ptr<XNode>  root = parse(module);
             for(const XNode *sub  = root->children.head;sub;sub=sub->next)
             {
-                if(sub->name()=="ctl")
+                if(sub->name()=="inc")
                 {
-                    const string   ctlName = readCtlName(*sub);
                     const Context &context = *module;
-                    throw exception("%s::compileFlat: no allowed control '%s' in '%s'",**title,*ctlName,**(context.tag));
+                    throw exception("%s::compileFlat: no allowed inclusion in '%s'",**title,**(context.tag));
                 }
             }
             return root.yield();
