@@ -86,9 +86,9 @@ namespace upsylon {
             // global static methods
             //
             //------------------------------------------------------------------
-            static Pattern *Load(ios::istream&);            //!< load from previously serialized patterns
-            static Pattern *Optimize( Pattern *p ) throw(); //!< optimize
-            static void     Express(ios::ostream &fp, const uint8_t code);
+            static Pattern *Load(ios::istream&);                    //!< load from previously serialized patterns
+            static Pattern *Optimize( Pattern *p ) throw();         //!< optimize
+            static void     Express(ios::ostream &, const uint8_t); //!< code to compilable regexp
             
             //------------------------------------------------------------------
             //
