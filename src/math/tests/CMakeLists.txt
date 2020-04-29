@@ -47,10 +47,11 @@ ADD_TEST(sig:extend      test-m extend)
 ADD_TEST(sig:smooth      test-m smooth)
 ADD_TEST(sig:bsplines    test-m bspl)
 
-SOURCE_GROUP(stat FILES test-stat-average.cpp test-stat-median.cpp test-stat-corr.cpp)
+SOURCE_GROUP(stat FILES test-stat-average.cpp test-stat-median.cpp test-stat-corr.cpp test-k-means.cpp)
 ADD_TEST(stat:average test-m average)
 ADD_TEST(stat:median  test-m median)
 ADD_TEST(stat:corr    test-m correlation)
+ADD_TEST(stat:k-means test-m k_means)
 
 SOURCE_GROUP(io FILES test-data-set.cpp)
 ADD_TEST(io:ds   test-m data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)

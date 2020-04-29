@@ -55,6 +55,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(quark1_neg);
     Y_UTEST(quark2);    
     Y_UTEST(quark3);
+
+    Y_UTEST(k_means);
 }
 Y_UTEST_EXEC()
 
