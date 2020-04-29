@@ -118,6 +118,15 @@ namespace upsylon
             const point3d tmp = cross(lhs,rhs);
             return math::sqrt_of(tmp.norm2());
         }
+        
+        //! foreign points ops
+        template <typename U>
+        inline point3d( const point3d<U> &p, type2type<U> ) throw() :
+        x( type(p.x) ),
+        y( type(p.y) ),
+        z( type(p.z) )
+        {
+        }
     };
 }
 

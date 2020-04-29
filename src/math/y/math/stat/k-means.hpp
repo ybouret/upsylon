@@ -7,6 +7,8 @@
 #include "y/sort/network/sort3.hpp"
 #include "y/comparison.hpp"
 #include "y/container/sequence.hpp"
+#include "y/type/block/zset.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon {
     
@@ -21,29 +23,33 @@ namespace upsylon {
             {
                 typedef double type;
                 template <typename T> static inline
-                double d2(const T *a, const double *b) throw()
+                double d2(const double *b, const T *a) throw()
                 {
                     return square_of( double(a[0]) -  (b[0]) );
                 }
+                
+                
+                
             };
             
             template <>           struct real_vertex<2>
             {
                 typedef point2d<double> type;
                 template <typename T> static inline
-                double d2(const T *a, const double *b) throw()
+                double d2(const double *b, const T *a) throw()
                 {
                     return
                     square_of( double(a[0]) -  (b[0]) ) +
                     square_of( double(a[1]) -  (b[1]) );
                 }
+                
             };
             
             template <> struct real_vertex<3>
             {
                 typedef point3d<double> type;
                 template <typename T> static inline
-                T d2(const T *a, const double *b) throw()
+                double d2(const double *b, const T *a) throw()
                 {
                     double sq[3] = {
                         square_of( double(a[0]) -  (b[0]) ),
@@ -53,6 +59,8 @@ namespace upsylon {
                     network_sort<3>::on(sq, comparison::increasing<double> );
                     return sq[0]+sq[1]+sq[2];
                 }
+                
+                
             };
         }
         
@@ -66,27 +74,24 @@ namespace upsylon {
             typedef typename ops::type              vertex;
             
             
-            
-            class centroid
+            class centroid_ : public counted_object
             {
             public:
                 vertex  v;
                 vertex  g;
                 size_t  count;
                 
-                inline  centroid(const VERTEX ini) throw() : v(), g(), count(0)
+                inline  centroid_(const VERTEX ini) throw() :
+                v(), g(v), count(0)
                 {
-                    double  *tgt = (double *)&v;
-                    const T *src = (const T*)&ini;
-                    for(size_t i=0;i<dimensions;++i)
-                    {
-                        tgt[i] = double(src[i]);
-                    }
-                    g = v;
+                    double  *p = (double *)&v;
+                    const T *q = (const T *)&ini;
+                    for(size_t i=0;i<dimensions;++i) p[i] = double( q[i] );
+                    g=v;
                 }
-                inline ~centroid() throw() {}
-                inline  centroid(const centroid &_) throw() : v(_.v), g(_.g), count(_.count)  {}
-                inline friend std::ostream & operator<<( std::ostream &os, const centroid &c)
+                inline virtual ~centroid_() throw() {}
+                
+                inline friend std::ostream & operator<<( std::ostream &os, const centroid_ &c)
                 {
                     os << '{' << c.v << '}';
                     return os;
@@ -94,7 +99,7 @@ namespace upsylon {
                 
                 inline void set() throw()
                 {
-                    memset(&g,0,sizeof(g));
+                    bzset(g);
                     count = 0;
                 }
                 
@@ -117,28 +122,24 @@ namespace upsylon {
                 
                 inline double d2(const VERTEX &V) const throw()
                 {
-                    return ops::template d2<T>( (const T *)&V, (const double*)&v);
+                    return ops::template d2<T>( (const double*)&v,(const T *)&V);
                 }
                 
-                
-                static inline int compare_by_count(const centroid &lhs, const centroid &rhs) throw()
-                {
-                    return comparison::increasing(lhs.count,rhs.count);
-                }
-                
-                Y_DISABLE_ASSIGN(centroid);
+                Y_DISABLE_COPY_AND_ASSIGN(centroid_);
             };
             
+            typedef arc_ptr<centroid_> centroid;
+            
             static inline size_t find_closest(const accessible<centroid> &centroids,
-                                              const VERTEX               &v)
+                                              const VERTEX               &v) throw()
             {
                 assert(centroids.size()>0);
                 const size_t nc = centroids.size();
                 size_t       ic = 1;
-                double       d2 = centroids[1].d2(v);
+                double       d2 = centroids[1]->d2(v);
                  for(size_t i=2;i<=nc;++i)
                 {
-                    const double tmp = centroids[i].d2(v);
+                    const double tmp = centroids[i]->d2(v);
                     if(tmp<d2)
                     {
                         ic=i;
@@ -148,11 +149,15 @@ namespace upsylon {
                 return ic;
             }
             
+            
+            
+           
+            
             static inline void set_centroids( addressable<centroid> &centroids ) throw()
             {
                 for(size_t i=centroids.size();i>0;--i)
                 {
-                    centroids[i].set();
+                    centroids[i]->set();
                 }
             }
             
@@ -174,25 +179,27 @@ namespace upsylon {
                 for(size_t j=nv;j>0;--j)
                 {
                     const size_t  k   = indices[j];  assert(k>=1); assert(k<=nc);
-                    centroids[k].run( vertices[j] );
+                    centroids[k]->run( vertices[j] );
                 }
                 
                 bool success = true;
                 for(size_t i=nc;i>0;--i)
                 {
                     centroid &c = centroids[i];
-                    if(c.count<=0)
+                    if(c->count<=0)
                     {
                         success = false;
                     }
                     else
                     {
-                        c.g /= c.count;
-                        c.v = c.g;
+                        c->g /= c->count;
+                        c->v = c->g;
                     }
                 }
                 return success;
             }
+            
+            
             
             
             

@@ -165,6 +165,13 @@ namespace upsylon
                            x * static_cast<const_type>(M[2][1]) + y * static_cast<const_type>(M[2][2]));
         }
 
+        //! foreign points ops
+        template <typename U>
+        inline point2d( const point2d<U> &p, type2type<U> ) throw() :
+        x( type(p.x) ),
+        y( type(p.y) )
+        {
+        }
     };
 
 }

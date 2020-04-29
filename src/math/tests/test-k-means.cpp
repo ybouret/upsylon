@@ -28,9 +28,9 @@ namespace {
         for(size_t i=3;i>0;--i)
         {
             const VERTEX v = support::get<VERTEX>();
-            const centroid c(v);
+            const centroid c = new typename kMeans::centroid_(v);
             centroids.push_back(c);
-            Y_ASSERT( memcmp( &c.v, &centroids.back().v, sizeof(VERTEX)) == 0);
+            Y_ASSERT( memcmp( &(c->v), &(centroids.back()->v), sizeof(VERTEX)) == 0);
         }
         
         std::cerr << "centroids: " << centroids << std::endl;
@@ -78,7 +78,7 @@ namespace {
                 const unsigned ic = unsigned(indices[i]);
                 fp(" %u", ic );
                 fp << "\n";
-                const double *p = (const double*)&(centroids[ic].v);
+                const double *p = (const double*)&(centroids[ic]->v);
                 fp("%g", double(p[0]));
                 for(size_t j=1;j<kMeans::dimensions;++j)
                 {
