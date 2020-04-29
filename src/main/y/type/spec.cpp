@@ -88,6 +88,28 @@ user()
 
 namespace upsylon {
 
+    string type_spec:: to_file_name(const string &id)
+    {
+        
+        string ans = id;
+        for(size_t i=0;i<ans.size();++i)
+        {
+            char &c = ans[i];
+            if(c>='0'&&c<='9') continue;
+            if(c>='a'&&c<='z') continue;
+            if(c>='A'&&c<='Z') continue;
+            switch(c)
+            {
+                case '<':
+                case '>': c = '-';
+                    break;
+                default:
+                    c = '_';
+            }
+        }
+        return ans;
+    }
+    
     namespace {
         
         class type_info_hasher

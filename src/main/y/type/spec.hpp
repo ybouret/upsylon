@@ -110,7 +110,9 @@ namespace upsylon
         //! query a type_spec by name
         static const type_spec & query(const char   *id);
         
-
+        //! identifier to file name
+        static string to_file_name(const string &);
+        
         //______________________________________________________________________
         //
         //
