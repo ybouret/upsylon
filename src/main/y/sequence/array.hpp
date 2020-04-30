@@ -6,7 +6,6 @@
 #include "y/type/block/swap.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/memory/io.hpp"
-#include <iostream>
 
 namespace upsylon
 {

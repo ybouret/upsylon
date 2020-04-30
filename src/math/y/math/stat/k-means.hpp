@@ -4,131 +4,131 @@
 #define Y_MATH_K_MEANS_INCLUDED 1
 
 #include "y/type/point3d.hpp"
-#include "y/sort/network/sort3.hpp"
+#include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
 #include "y/container/sequence.hpp"
 #include "y/type/block/zset.hpp"
-#include "y/ptr/arc.hpp"
 
 namespace upsylon {
     
     namespace math {
         
-        namespace kernel
-        {
-            template <size_t DIM> struct real_vertex;
+        namespace kernel {
             
-            
-            template <> struct real_vertex<1>
+            template <size_t DIM>
+            class centroid
             {
-                typedef double type;
-                template <typename T> static inline
-                double d2(const double *b, const T *a) throw()
-                {
-                    return square_of( double(a[0]) -  (b[0]) );
+            public:
+                double r[DIM];
+                double g[DIM];
+                size_t count;
+                
+                inline  centroid() throw() : r(), g(), count(0) {
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        r[dim]=0;
+                        g[dim]=0;
+                    }
                 }
                 
-                
-                
-            };
-            
-            template <>           struct real_vertex<2>
-            {
-                typedef point2d<double> type;
-                template <typename T> static inline
-                double d2(const double *b, const T *a) throw()
-                {
-                    return
-                    square_of( double(a[0]) -  (b[0]) ) +
-                    square_of( double(a[1]) -  (b[1]) );
+                template <typename T>
+                inline  centroid(const T *v) throw() : r(), g(), count(0) {
+                    assert(v!=NULL);
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        r[dim]=v[dim];
+                        g[dim]=0;
+                    }
                 }
                 
-            };
-            
-            template <> struct real_vertex<3>
-            {
-                typedef point3d<double> type;
-                template <typename T> static inline
-                double d2(const double *b, const T *a) throw()
+                template <typename T>
+                inline void set(const T *v) throw()
                 {
-                    double sq[3] = {
-                        square_of( double(a[0]) -  (b[0]) ),
-                        square_of( double(a[1]) -  (b[1]) ),
-                        square_of( double(a[2]) -  (b[2]) )
-                    };
-                    network_sort<3>::on(sq, comparison::increasing<double> );
-                    return sq[0]+sq[1]+sq[2];
+                    assert(v!=NULL);
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        r[dim]=v[dim];
+                    }
                 }
                 
+                inline void g_reset() throw()
+                {
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        g[dim] = 0;
+                    }
+                    count = 0;
+                }
                 
+                template <typename T>
+                inline void g_update(const T *v) throw()
+                {
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        g[dim] += double(v[dim]);
+                    }
+                    ++count;
+                }
+                
+                template <typename T>
+                inline void g_update(const T *v, const size_t n) throw()
+                {
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        g[dim] += n * double(v[dim]);
+                    }
+                    count += n;
+                }
+                
+                inline ~centroid() throw() {}
+                
+                inline  centroid(const centroid &_) throw() : r(), g(), count(_.count)
+                {
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        r[dim]=_.r[dim];
+                        g[dim]=_.g[dim];
+                    }
+                }
+                
+                template <typename T>
+                double d2(const T *v) const throw()
+                {
+                    assert(v);
+                    double sq[DIM];
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        sq[dim] = square_of(r[dim]-double(v[dim]));
+                    }
+                    hsort(sq,DIM,comparison::increasing<double>);
+                    double ans = sq[0];
+                    for(size_t dim=1;dim<DIM;++dim)
+                    {
+                        ans += sq[dim];
+                    }
+                    return ans;
+                }
+                
+                inline friend std::ostream & operator<<( std::ostream &os, const centroid &c)
+                {
+                    os << '{';
+                    os << c.r[0];
+                    for(size_t i=1;i<DIM;++i) os << ' ' << c.r[i];
+                    os << '}';
+                    return os;
+                }
+                
+            private:
+                Y_DISABLE_ASSIGN(centroid);
             };
+            
         }
-        
-        
         
         template <typename T,typename VERTEX>
         struct k_means
         {
-            static  const size_t                    dimensions = sizeof(VERTEX)/sizeof(T);
-            typedef kernel::real_vertex<dimensions> ops;
-            typedef typename ops::type              vertex;
-            
-            
-            class centroid_ : public counted_object
-            {
-            public:
-                vertex  v;
-                vertex  g;
-                size_t  count;
-                
-                inline  centroid_(const VERTEX ini) throw() :
-                v(), g(v), count(0)
-                {
-                    double  *p = (double *)&v;
-                    const T *q = (const T *)&ini;
-                    for(size_t i=0;i<dimensions;++i) p[i] = double( q[i] );
-                    g=v;
-                }
-                inline virtual ~centroid_() throw() {}
-                
-                inline friend std::ostream & operator<<( std::ostream &os, const centroid_ &c)
-                {
-                    os << '{' << c.v << '}';
-                    return os;
-                }
-                
-                inline void set() throw()
-                {
-                    bzset(g);
-                    count = 0;
-                }
-                
-                inline void run(const VERTEX &V) throw()
-                {
-                    double  *tgt = (double  *)&g;
-                    const T *src = (const T *)&V;
-                    for(size_t i=0;i<dimensions;++i) tgt[i] += double(src[i]);
-                    ++count;
-                }
-                
-                inline void run(const VERTEX &V, const size_t n) throw()
-                {
-                    assert(n>0);
-                    double  *tgt = (double  *)&g;
-                    const T *src = (const T *)&V;
-                    for(size_t i=0;i<dimensions;++i) tgt[i] += n*double(src[i]);
-                    count += n;
-                }
-                
-                inline double d2(const VERTEX &V) const throw()
-                {
-                    return ops::template d2<T>( (const double*)&v,(const T *)&V);
-                }
-                
-                Y_DISABLE_COPY_AND_ASSIGN(centroid_);
-            };
-            
-            typedef arc_ptr<centroid_> centroid;
+            static  const size_t                 dimensions = sizeof(VERTEX)/sizeof(T);
+            typedef kernel::centroid<dimensions> centroid;
             
             static inline size_t find_closest(const accessible<centroid> &centroids,
                                               const VERTEX               &v) throw()
@@ -136,10 +136,10 @@ namespace upsylon {
                 assert(centroids.size()>0);
                 const size_t nc = centroids.size();
                 size_t       ic = 1;
-                double       d2 = centroids[1]->d2(v);
-                 for(size_t i=2;i<=nc;++i)
+                double       d2 = centroids[1].d2((const T*)&v);
+                for(size_t i=2;i<=nc;++i)
                 {
-                    const double tmp = centroids[i]->d2(v);
+                    const double tmp = centroids[i].d2((const T*)&v);
                     if(tmp<d2)
                     {
                         ic=i;
@@ -149,59 +149,85 @@ namespace upsylon {
                 return ic;
             }
             
-            
-            
-           
-            
-            static inline void set_centroids( addressable<centroid> &centroids ) throw()
+            static inline void initialize( addressable<centroid> &centroids ) throw()
             {
                 for(size_t i=centroids.size();i>0;--i)
                 {
-                    centroids[i]->set();
+                    centroids[i].g_reset();
                 }
             }
             
-            
-            static inline bool update(sequence<centroid>          &centroids,
-                                      const accessible<VERTEX>    &vertices,
-                                      const accessible<size_t>    &indices) throw()
+            static inline bool built(addressable<centroid>      &centroids,
+                                     const accessible<VERTEX>   &vertices,
+                                     addressable<size_t>        &indices) throw()
             {
-                assert(centroids.size()>0);
-                assert(vertices.size() >0);
-                
                 assert(vertices.size()==indices.size());
-                const size_t nc = centroids.size();
-                const size_t nv = vertices.size();
+                assert(centroids.size()>0);
                 
-                
-                set_centroids(centroids);
-                
-                for(size_t j=nv;j>0;--j)
+                initialize(centroids);
+                bool achieved = true;
+                for(size_t i=vertices.size();i>0;--i)
                 {
-                    const size_t  k   = indices[j];  assert(k>=1); assert(k<=nc);
-                    centroids[k]->run( vertices[j] );
+                    const VERTEX &v = vertices[i];
+                    const size_t  j = find_closest(centroids,v);
+                    size_t       &J = indices[i];
+                    if( j!=J )
+                    {
+                        achieved = false;
+                        J        = j;
+                    }
+                    centroids[j].g_update( (const T*)&v );
                 }
+                return achieved;
+            }
+            
+            static inline bool built(addressable<centroid>      &centroids,
+                                     const accessible<VERTEX>   &vertices,
+                                     addressable<size_t>        &indices,
+                                     const accessible<size_t>   &weights) throw()
+            {
+                assert(vertices.size()==indices.size());
+                assert(vertices.size()==weights.size());
+                assert(centroids.size()>0);
                 
-                bool success = true;
-                for(size_t i=nc;i>0;--i)
+                initialize(centroids);
+                bool achieved = true;
+                for(size_t i=vertices.size();i>0;--i)
                 {
-                    centroid &c = centroids[i];
-                    if(c->count<=0)
+                    const VERTEX &v = vertices[i];
+                    const size_t  j = find_closest(centroids,v);
+                    size_t       &J = indices[i];
+                    if( j!=J )
+                    {
+                        achieved = false;
+                        J        = j;
+                    }
+                    centroids[j].g_update( (const T*)&v, weights[i] );
+                }
+                return achieved;
+            }
+            
+            
+            static inline bool update(addressable<centroid>      &centroids)
+            {
+                bool success = true;
+                assert(centroids.size()>0);
+                for(size_t j=centroids.size();j>0;--j)
+                {
+                    centroid    &c = centroids[j];
+                    const size_t n = c.count;
+                    if(n<=0)
                     {
                         success = false;
+                        for(size_t i=0;i<dimensions;++i) c.g[i] = c.r[i];
                     }
                     else
                     {
-                        c->g /= c->count;
-                        c->v = c->g;
+                        for(size_t i=0;i<dimensions;++i) c.r[i] = (c.g[i]/=n);
                     }
                 }
                 return success;
             }
-            
-            
-            
-            
             
             
         };
