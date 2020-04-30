@@ -251,6 +251,11 @@ namespace upsylon {
                     }
                     centroids[j].g_update( (const T*)&v, weights[i] );
                 }
+#ifndef NDEBUG
+                size_t w = 0; for(size_t i=weights.size();i>0;--i) w += weights[i];
+                size_t W = 0; for(size_t i=centroids.size();i>0;--i) W += centroids[i].count;
+                assert(w==W);
+#endif
                 return achieved;
             }
             

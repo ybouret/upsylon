@@ -54,6 +54,10 @@ namespace {
                 if(kMeans::built(centroids,vertices,indices))
                 {
                     std::cerr << "\tachieved!" << std::endl;
+                    for(size_t i=vertices.size();i>0;--i)
+                    {
+                        Y_ASSERT( indices[i] == kMeans::find_closest(centroids,vertices[i]));
+                    }
                     break;
                 }
                 
