@@ -15,15 +15,29 @@ namespace upsylon {
         
         namespace kernel {
             
+            //! generic centroid
             template <size_t DIM>
             class centroid
             {
             public:
-                double r[DIM];
-                double g[DIM];
-                size_t count;
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                double r[DIM]; //!< position
+                double g[DIM]; //!< barycenter
+                size_t count;  //!< number of owned points
                 
-                inline  centroid() throw() : r(), g(), count(0) {
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+                
+                //! setup
+                inline  centroid() throw() : r(), g(), count(0)
+                {
                     for(size_t dim=0;dim<DIM;++dim)
                     {
                         r[dim]=0;
@@ -31,6 +45,7 @@ namespace upsylon {
                     }
                 }
                 
+                //! setup with v[0..DIM-1]
                 template <typename T>
                 inline  centroid(const T *v) throw() : r(), g(), count(0) {
                     assert(v!=NULL);
@@ -41,6 +56,26 @@ namespace upsylon {
                     }
                 }
                 
+                //! cleanup
+                inline ~centroid() throw() {}
+                
+                //! copy
+                inline  centroid(const centroid &_) throw() : r(), g(), count(_.count)
+                {
+                    for(size_t dim=0;dim<DIM;++dim)
+                    {
+                        r[dim]=_.r[dim];
+                        g[dim]=_.g[dim];
+                    }
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // methods
+                //
+                //--------------------------------------------------------------
+                
+                //! assign v[0..DIM-1]
                 template <typename T>
                 inline void set(const T *v) throw()
                 {
@@ -51,6 +86,8 @@ namespace upsylon {
                     }
                 }
                 
+                
+                //! g=0
                 inline void g_reset() throw()
                 {
                     for(size_t dim=0;dim<DIM;++dim)
@@ -60,6 +97,7 @@ namespace upsylon {
                     count = 0;
                 }
                 
+                //! g += v, ++count
                 template <typename T>
                 inline void g_update(const T *v) throw()
                 {
@@ -70,6 +108,7 @@ namespace upsylon {
                     ++count;
                 }
                 
+                //! g+= n*v, count += n
                 template <typename T>
                 inline void g_update(const T *v, const size_t n) throw()
                 {
@@ -80,17 +119,8 @@ namespace upsylon {
                     count += n;
                 }
                 
-                inline ~centroid() throw() {}
-                
-                inline  centroid(const centroid &_) throw() : r(), g(), count(_.count)
-                {
-                    for(size_t dim=0;dim<DIM;++dim)
-                    {
-                        r[dim]=_.r[dim];
-                        g[dim]=_.g[dim];
-                    }
-                }
-                
+              
+                //! squared distance from r to v
                 template <typename T>
                 double d2(const T *v) const throw()
                 {
@@ -109,6 +139,7 @@ namespace upsylon {
                     return ans;
                 }
                 
+                //! display
                 inline friend std::ostream & operator<<( std::ostream &os, const centroid &c)
                 {
                     os << '{';
@@ -124,12 +155,25 @@ namespace upsylon {
             
         }
         
+        //! k-means algorithm
         template <typename T,typename VERTEX>
         struct k_means
         {
-            static  const size_t                 dimensions = sizeof(VERTEX)/sizeof(T);
-            typedef kernel::centroid<dimensions> centroid;
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            static  const size_t                 dimensions = sizeof(VERTEX)/sizeof(T); //!< the dimensions
+            typedef kernel::centroid<dimensions> centroid;                              //!< alias
+           
+            //------------------------------------------------------------------
+            //
+            // functions
+            //
+            //------------------------------------------------------------------
             
+            //! find closest centroid
             static inline size_t find_closest(const accessible<centroid> &centroids,
                                               const VERTEX               &v) throw()
             {
@@ -149,6 +193,7 @@ namespace upsylon {
                 return ic;
             }
             
+            //! initialize all barycenters and counts
             static inline void initialize( addressable<centroid> &centroids ) throw()
             {
                 for(size_t i=centroids.size();i>0;--i)
@@ -157,6 +202,7 @@ namespace upsylon {
                 }
             }
             
+            //! build indices, return true if achieved, i.e. same indices
             static inline bool built(addressable<centroid>      &centroids,
                                      const accessible<VERTEX>   &vertices,
                                      addressable<size_t>        &indices) throw()
@@ -181,6 +227,7 @@ namespace upsylon {
                 return achieved;
             }
             
+            //! build indices, return true if achieved, i.e. same indices
             static inline bool built(addressable<centroid>      &centroids,
                                      const accessible<VERTEX>   &vertices,
                                      addressable<size_t>        &indices,
@@ -207,8 +254,8 @@ namespace upsylon {
                 return achieved;
             }
             
-            
-            static inline bool update(addressable<centroid>      &centroids)
+            //! update positions, return false if a centroid is empty
+            static inline bool update(addressable<centroid> &centroids)
             {
                 bool success = true;
                 assert(centroids.size()>0);
