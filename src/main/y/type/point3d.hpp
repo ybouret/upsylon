@@ -50,7 +50,6 @@ namespace upsylon
         inline point3d   operator-() const { return point3d(-x,-y,-z); }
         //! sub
         inline friend point3d   operator-(const point3d lhs, const point3d rhs) { return point3d(lhs.x-rhs.x,lhs.y-rhs.y,lhs.z-rhs.z); }
-
         //! in place mul by scalar
         inline point3d & operator*=( param_type u ) { x*=u;y*=u;z*=u;return *this; }
         //! mul by scalar
@@ -95,6 +94,18 @@ namespace upsylon
             return (lhs.x!=rhs.x) || (lhs.y!=rhs.y) || (lhs.z!=rhs.z);
         }
 
+        //! product of coordinates
+        inline type prod() const throw()
+        {
+            return x*y*z;
+        }
+        
+        //! sum of coordinates
+        inline type sum() const throw()
+        {
+            return x+y+z;
+        }
+        
         //! dimension as size
         inline size_t size() const throw() { return DIMS; }
 

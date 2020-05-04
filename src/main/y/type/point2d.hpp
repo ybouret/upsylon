@@ -105,6 +105,12 @@ namespace upsylon
             return x*y;
         }
 
+        //! sum of coordinates
+        inline type sum() const throw()
+        {
+            return x+y;
+        }
+        
         //! equality
         inline friend bool operator==( const point2d &lhs, const point2d &rhs )
         {
