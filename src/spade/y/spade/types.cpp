@@ -19,6 +19,12 @@ namespace upsylon {
             return ran.range<Coord1D>(-m,m);
         }
         
+        Coord1D Coord:: Within1D(const Coord1D a, const Coord1D b, randomized::bits &ran ) throw()
+        {
+            return ran.range<Coord1D>(a,b);
+        }
+
+        
         static inline void disp1(std::ostream &os, const Coord1D c,const size_t w)
         {
             const string s = vformat("%ld", static_cast<long>(c));

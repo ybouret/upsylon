@@ -102,6 +102,21 @@ namespace upsylon {
                 return ans;
             }
             
+            //! random in [a:b]
+            static Coord1D Within1D(const Coord1D a, const Coord1D b, randomized::bits & ) throw();
+            
+            //! random in [A,B]
+            template <typename COORD>
+            static inline COORD Within(const COORD A, const COORD B, randomized::bits &ran ) throw()
+            {
+                COORD ans(0);
+                for(unsigned dim=0;dim<Get<COORD>::Dimensions;++dim)
+                {
+                    Of(ans,dim) = Within1D( Of(A,dim), Of(B,dim), ran);
+                }
+                return ans;
+            }
+            
             
         };
         
