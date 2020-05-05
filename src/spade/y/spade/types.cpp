@@ -11,7 +11,7 @@ namespace upsylon {
 
         Coord1D Coord::Natural1D(const Coord1D m, randomized::bits &ran ) throw()
         {
-            return ran.range<Coord1D>(0,m);
+            return ran.range<Coord1D>(0, abs_of(m) );
         }
         
         Coord1D Coord::Integer1D(const Coord1D m, randomized::bits &ran ) throw()

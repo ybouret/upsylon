@@ -14,34 +14,39 @@ namespace upsylon {
     
     namespace Spade
     {
-        typedef unit_t           Coord1D;
-        typedef point2d<Coord1D> Coord2D;
-        typedef point3d<Coord1D> Coord3D;
+        typedef unit_t           Coord1D; //!< 1D coordinate
+        typedef point2d<Coord1D> Coord2D; //!< 2D coordinates
+        typedef point3d<Coord1D> Coord3D; //!< 3D coordinates
         
+        //! operations on coordinates
         struct Coord
         {
-            static const  Coord1D __Zero[4];
-            static const  Coord1D __Ones[4];
-            static size_t         DispWidth;
+            static const  Coord1D __Zero[4]; //!< binary mapping of [0[,0[,0]]]
+            static const  Coord1D __Ones[4]; //!< binary mapping of [1[,1[,1]]]
+            static size_t         DispWidth; //!< display width per dimension
             
+            //! get parameters...
             template <typename COORD>
             struct Get
             {
-                static const unsigned Dim = sizeof(COORD)/sizeof(Coord1D);
+                static const unsigned Dim = sizeof(COORD)/sizeof(Coord1D); //!< Dimension(s)
             };
             
+            //! map to zero
             template <typename COORD> static inline
             const COORD & Zero() throw()
             {
                 return *(const COORD *) &__Zero[0];
             }
             
+            //! map to ones
             template <typename COORD> static inline
             const COORD & Ones() throw()
             {
                 return *(const COORD *) &__Ones[0];
             }
             
+            //! get coordinate[dim]
             template <typename COORD> static inline
             Coord1D & Of(COORD &C, const unsigned dim) throw()
             {
@@ -49,6 +54,7 @@ namespace upsylon {
                 return  *(( (Coord1D *)&C ) + dim);
             }
             
+            //! get coordinate[dim], const
             template <typename COORD> static inline
             const Coord1D & Of(const COORD &C, const unsigned dim) throw()
             {
@@ -56,20 +62,23 @@ namespace upsylon {
                 return  *(( (const Coord1D *)&C ) + dim);
             }
             
+            //! display some fixed-width coordinates
             static std::ostream & Disp(std::ostream &,const Coord1D *,const unsigned);
             
+            //! display a coordinate with fixed-width
             template <typename COORD> static inline
             std::ostream & Disp(std::ostream &os, const COORD C)
             {
                 return Disp(os, (const Coord1D *) &C, Get<COORD>::Dim);
             }
             
-            //! [0:m]
+            //! random in [0:m]
             static Coord1D Natural1D(const Coord1D m, randomized::bits & ) throw();
             
-            //! [-m:m]
+            //! random in [-m:m]
             static Coord1D Integer1D(const Coord1D m, randomized::bits & ) throw();
             
+            //! random in [0:C]
             template <typename COORD>
             static inline COORD Natural( const COORD C, randomized::bits &ran ) throw()
             {
@@ -81,6 +90,7 @@ namespace upsylon {
                 return ans;
             }
             
+            //! random in [-C:C]
             template <typename COORD>
             static inline COORD Integer( const COORD C, randomized::bits &ran ) throw()
             {
@@ -92,10 +102,8 @@ namespace upsylon {
                 return ans;
             }
             
+            
         };
-        
-        
-        
         
     }
     

@@ -829,6 +829,7 @@ INPUT                  = src/main/y \
                          src/json/y \
                          src/graphic/y \
                          src/chem/y \
+			 src/spade/y \
                          src/mpi/y \
                          src/net/y \
                          src/lua++/y
