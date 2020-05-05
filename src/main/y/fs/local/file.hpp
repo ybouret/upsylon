@@ -46,7 +46,7 @@ namespace upsylon
             
             explicit local_file( const string &filename, const unsigned mode);  //!< open a file
             explicit local_file( const char   *filename, const unsigned mode);  //!< open a file
-            virtual ~local_file() throw();                                      //!< desctructor
+            virtual ~local_file() throw();                                      //!< destructor
             local_file( const ios::cstdin_t  & );                               //!< map to stdin
             local_file( const ios::cstderr_t & );                               //!< map to stderr
             local_file( const ios::cstdout_t & );                               //!< map to stdout

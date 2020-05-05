@@ -10,15 +10,16 @@ namespace upsylon
 {
     namespace
     {
+        
         struct __at_exit
         {
             at_exit::procedure  proc;
             at_exit::longevity  when;
-
+            
             static __at_exit tasks[at_exit::stack_size];
             static size_t    count;
             static bool      registered;
-
+            
             static inline void call() throw()
             {
                 for(size_t i=0;i<count;++i)
@@ -29,38 +30,39 @@ namespace upsylon
                     memset(&cb,0,sizeof(__at_exit));
                 }
             }
-
+            
             static inline void check() throw()
             {
-                __at_exit *curr = tasks + count;
-                __at_exit *prev = curr-1;
-                --curr;
-                --prev;
-                while(curr>tasks && prev->when>=curr->when)
+                if(count>=2)
                 {
-                    bswap(*prev,*curr);
-                    --prev;
-                    --curr;
-                }
+                    __at_exit *curr = &tasks[count-1];
+                    __at_exit *prev = &tasks[count-2];
+                    while(curr>tasks && prev->when>=curr->when)
+                    {
+                        bswap(*prev,*curr);
+                        --prev;
+                        --curr;
+                    }
 #if !defined(NDEBUG)
-                for(size_t i=1;i<count;++i)
-                {
-                    assert(tasks[i-1].when<=tasks[i].when);
-                }
+                    for(size_t i=1;i<count;++i)
+                    {
+                        assert(tasks[i-1].when<=tasks[i].when);
+                    }
 #endif
+                }
             }
-
+            
         };
-
+        
         size_t    __at_exit:: count      = 0 ;
         __at_exit __at_exit:: tasks[]    = {};
         bool      __at_exit:: registered = false;
     }
-
+    
     void at_exit:: perform(procedure proc, const longevity when) throw()
     {
-
-
+        
+        
         //______________________________________________________________________
         //
         // sanity check
@@ -70,7 +72,7 @@ namespace upsylon
         {
             libc::critical_error(EDOM,"too many at_exit procedures");
         }
-
+        
         //______________________________________________________________________
         //
         // status check
@@ -86,14 +88,20 @@ namespace upsylon
             memset( __at_exit::tasks, 0, sizeof(__at_exit::tasks) );
             __at_exit::registered = true;
         }
-
+        
+        //______________________________________________________________________
+        //
         // create a task at last position
+        //______________________________________________________________________
         __at_exit &cb = __at_exit::tasks[ __at_exit::count++ ];
         cb.proc = proc;
         cb.when = when;
-
+        
+        //______________________________________________________________________
+        //
         // put it into place
+        //______________________________________________________________________
         __at_exit::check();
     }
-
+    
 }

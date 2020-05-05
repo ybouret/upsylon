@@ -11,10 +11,7 @@ using namespace upsylon;
 Y_PROGRAM_START()
 {
     if(argc<=2) throw exception("usage: %s input output", program);
-
-    //const string inpFileName = argv[1];
-    //const string outFileName = argv[2];
-
+    
     vector<char> content(16386,as_capacity);
     {
         ios::icstream fp( argv[1] );
@@ -24,7 +21,7 @@ Y_PROGRAM_START()
             content.push_back(C);
         }
     }
-
+    
     {
         ios::ocstream fp( argv[2] );
         const size_t n = content.size();
@@ -37,8 +34,7 @@ Y_PROGRAM_START()
             }
             b2d.write(fp,content[n],true);
         }
-    }
-    
+    }    
 
 }
 Y_PROGRAM_END()
