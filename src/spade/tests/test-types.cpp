@@ -11,7 +11,7 @@ namespace {
     static inline void show()
     {
         std::cerr << type_name_of<COORD>() << std::endl;
-        std::cerr << "\tDim=" << Coord::Get<COORD>::Dim << std::endl;
+        std::cerr << "\tDim=" << Coord::Get<COORD>::Dimensions << std::endl;
         COORD z = Coord::Zero<COORD>();
         COORD u = Coord::Ones<COORD>();
         COORD n = Coord::Natural( 100*u, alea);

@@ -29,7 +29,7 @@ namespace upsylon {
             template <typename COORD>
             struct Get
             {
-                static const unsigned Dim = sizeof(COORD)/sizeof(Coord1D); //!< Dimension(s)
+                static const unsigned Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< Dimension(s)
             };
             
             //! map to zero
@@ -50,7 +50,7 @@ namespace upsylon {
             template <typename COORD> static inline
             Coord1D & Of(COORD &C, const unsigned dim) throw()
             {
-                assert(dim< Get<COORD>::Dim );
+                assert(dim< Get<COORD>::Dimensions );
                 return  *(( (Coord1D *)&C ) + dim);
             }
             
@@ -58,7 +58,7 @@ namespace upsylon {
             template <typename COORD> static inline
             const Coord1D & Of(const COORD &C, const unsigned dim) throw()
             {
-                assert(dim< Get<COORD>::Dim );
+                assert(dim<Get<COORD>::Dimensions);
                 return  *(( (const Coord1D *)&C ) + dim);
             }
             
@@ -69,7 +69,7 @@ namespace upsylon {
             template <typename COORD> static inline
             std::ostream & Disp(std::ostream &os, const COORD C)
             {
-                return Disp(os, (const Coord1D *) &C, Get<COORD>::Dim);
+                return Disp(os, (const Coord1D *) &C, Get<COORD>::Dimensions);
             }
             
             //! random in [0:m]
@@ -83,7 +83,7 @@ namespace upsylon {
             static inline COORD Natural( const COORD C, randomized::bits &ran ) throw()
             {
                 COORD ans(0);
-                for(unsigned dim=0;dim< Get<COORD>::Dim;++dim)
+                for(unsigned dim=0;dim< Get<COORD>::Dimensions;++dim)
                 {
                     Of(ans,dim) = Natural1D( Of(C,dim), ran);
                 }
@@ -95,7 +95,7 @@ namespace upsylon {
             static inline COORD Integer( const COORD C, randomized::bits &ran ) throw()
             {
                 COORD ans(0);
-                for(unsigned dim=0;dim< Get<COORD>::Dim;++dim)
+                for(unsigned dim=0;dim<Get<COORD>::Dimensions;++dim)
                 {
                     Of(ans,dim) = Integer1D( Of(C,dim), ran);
                 }
