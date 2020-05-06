@@ -10,7 +10,7 @@ namespace upsylon {
     namespace Spade {
         
         //! forward declaration
-        template <typename T> class Field23;
+        template <typename T> class Field3D;
         
         //----------------------------------------------------------------------
         //
@@ -31,7 +31,7 @@ namespace upsylon {
             typedef typename   LayoutType::coord       coord;       //!< alias
             typedef typename   LayoutType::const_coord const_coord; //!< alias
             typedef            Layout1D                RowLayout;   //!< alias
-            typedef            Field1D<T>              RowType;     //!< alias
+            typedef            Field1D<T>              Row;         //!< alias
             
             //------------------------------------------------------------------
             //
@@ -53,7 +53,7 @@ namespace upsylon {
             built(0)
             {
                 const size_t rowOffset = 0;
-                const size_t rowLength = width.y * sizeof(RowType);
+                const size_t rowLength = width.y * sizeof(Row);
                 const size_t objOffset = memory::align(rowOffset+rowLength);
                 const size_t objLength = items*sizeof(T);
                 char        *p         = static_cast<char *>(this->allocate( memory::align(objLength+objOffset) ) );
@@ -76,14 +76,14 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! row access
-            inline RowType & operator[](const Coord1D j) throw()
+            inline Row & operator[](const Coord1D j) throw()
             {
                 assert(j>=lower.y); assert(j<=upper.y);
                 return rows[j];
             }
             
             //! row access, const
-            inline const RowType & operator[](const Coord1D j) const throw()
+            inline const Row & operator[](const Coord1D j) const throw()
             {
                 assert(j>=lower.y); assert(j<=upper.y);
                 return rows[j];
@@ -113,8 +113,11 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field2D);
-            RowType *rows;
+            friend class Field3D<T>;
+            
+            Row     *rows;
             size_t   built;
+            
             
             inline void clear() throw()
             {
@@ -132,12 +135,15 @@ namespace upsylon {
                 try {
                     const size_t  nrow = size_t(width.y);
                     const size_t  skip = rowLayout.items;
-                    rows               = static_cast<RowType      *>(rowAddr);
+                    rows               = static_cast<Row          *>(rowAddr);
                     mutable_type *objs = static_cast<mutable_type *>(objAddr);
+                    Coord1D       indx = lower.y;
                     while(built<nrow)
                     {
-                        new (rows+built) RowType(this->name,rowLayout,objs);
+                        const string id = this->name + Kernel::Field::Suffix(indx);
+                        new (rows+built) Row(id,rowLayout,objs);
                         ++built;
+                        ++indx;
                         objs+=skip;
                     }
                     rows -= lower.y;
@@ -147,6 +153,22 @@ namespace upsylon {
                     clear();
                     throw;
                 }
+            }
+            
+            
+            //! setup with internal memory
+            template <typename LABEL> inline
+            explicit Field2D(const LABEL      &id,
+                             const LayoutType &L,
+                             void             *rowAddr,
+                             void             *objAddr) :
+            Field<T>(id),
+            LayoutType(L),
+            rowLayout(lower.x,upper.x),
+            rows(0),
+            built(0)
+            {
+                build(rowAddr,objAddr);
             }
             
             

@@ -61,6 +61,11 @@ allocated(0)
             {
                 return allocated;
             }
+            
+            string Field:: Suffix(const Coord1D c)
+            {
+                return vformat("[%ld]", static_cast<long>(c) );
+            }
         }
     
     }

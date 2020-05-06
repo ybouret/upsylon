@@ -39,9 +39,9 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 
-                size_t objectBytes() const throw(); //!< bytes for objects
-                
-                size_t localMemory() const throw(); //!< allocated
+                size_t        objectBytes() const throw();    //!< bytes for objects
+                size_t        localMemory() const throw();    //!< allocated
+                static string Suffix(const Coord1D c);        //!< "[c]"
                 
                 //--------------------------------------------------------------
                 //
