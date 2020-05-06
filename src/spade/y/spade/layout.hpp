@@ -233,6 +233,48 @@ namespace upsylon {
                 return Layout(offset,up);
             }
         
+            //! find possible mappings
+            template <typename SEQUENCE>
+            inline size_t findMappings(SEQUENCE    &mappings,
+                                       const size_t cores) const
+            {
+                assert(cores>0);
+                //______________________________________________________________
+                //
+                // prepare loop
+                //______________________________________________________________
+                const Coord1D target = static_cast<Coord1D>(cores);
+                Loop          loop( Coord::Ones<coord>(), Coord::Ld<coord>(target));
+                const_coord  &sizes = loop.value;
+                mappings.free();
+                
+                //______________________________________________________________
+                //
+                // loop over theoretical mappings
+                //______________________________________________________________
+                for(loop.boot();loop.good();loop.next())
+                {
+                    // may match ?
+                    if( target != Coord::Product(sizes) )
+                    {
+                        continue; //! no match
+                    }
+                    // check possibility per dimension
+                    bool possible = true;
+                    for(unsigned dim=0;dim<Dimensions;++dim)
+                    {
+                        if( Coord::Of(sizes,dim) > Coord::Of(width,dim) )
+                        {
+                            possible = false; //! cannot split in that dimension
+                            break;
+                        }
+                    }
+                    if(!possible) continue;
+                    mappings.push_back( sizes );
+                }
+                return mappings.size();
+            }
+            
     private:
         Y_DISABLE_ASSIGN(Layout);
         

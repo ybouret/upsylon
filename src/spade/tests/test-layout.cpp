@@ -13,8 +13,10 @@ namespace {
     static inline
     void doTest()
     {
+        
         std::cerr << std::endl;
         std::cerr << "Layout<" << type_name_of<COORD>() << ">" << std::endl;
+        
         const COORD   lo = Coord::Integer( 100 * Coord::Ones<COORD>(), alea);
         const COORD   up = Coord::Integer( 100 * Coord::Ones<COORD>(), alea);
         Coord::Disp(std::cerr << "lo=",lo) << std::endl;

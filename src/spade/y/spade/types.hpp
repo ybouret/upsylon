@@ -4,6 +4,7 @@
 #define Y_SPADE_TYPES_INCLUDED 1
 
 #include "y/type/point3d.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon {
     
@@ -47,6 +48,8 @@ namespace upsylon {
                 return *(const COORD *) &__Ones[0];
             }
             
+           
+            
             //! get coordinate[dim]
             template <typename COORD> static inline
             Coord1D & Of(COORD &C, const unsigned dim) throw()
@@ -63,6 +66,17 @@ namespace upsylon {
                 return  *(( (const Coord1D *)&C ) + dim);
             }
             
+            //! load to same value
+            template <typename COORD> static inline
+            const COORD Ld(const Coord1D value) throw()
+            {
+                COORD ans(value);
+                for(unsigned dim=1;dim<Get<COORD>::Dimensions;++dim)
+                {
+                    Of(ans,dim) = value;
+                }
+                return ans;
+            }
             
             //! display a coordinate with fixed-width
             template <typename COORD> static inline
@@ -107,10 +121,23 @@ namespace upsylon {
                 return ans;
             }
             
-            inline Coord1D Product(const Coord1D &C) throw() { return C; }
-            inline Coord1D Product(const Coord2D &C) throw() { return C.prod(); }
-            inline Coord1D Product(const Coord3D &C) throw() { return C.prod(); }
-
+            //! product of coordinates
+            static inline Coord1D Product(const Coord1D &C) throw() { return C; }
+           
+            //! product of coordinates
+            static inline Coord1D Product(const Coord2D &C) throw() { return C.prod(); }
+            
+            //! product of coordinates
+            static inline Coord1D Product(const Coord3D &C) throw() { return C.prod(); }
+            
+            //! parse a coordinate X[:Y[:Z]]
+            template <typename COORD> static inline
+            COORD Parse(const string &args)
+            {
+                COORD C(0);
+                Parse( (Coord1D *)&C, Get<COORD>::Dimensions, args);
+                return C;
+            }
             
         private:
             //! random in [0:m]
@@ -124,7 +151,10 @@ namespace upsylon {
             
             //! display some fixed-width coordinates
             static std::ostream & Disp(std::ostream &,const Coord1D *,const unsigned);
-            
+
+            //! parse coordinates
+            static void Parse( Coord1D *c, const unsigned dim, const string &args);
+
         };
         
     }

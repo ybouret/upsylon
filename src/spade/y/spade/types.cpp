@@ -1,6 +1,8 @@
 #include "y/spade/types.hpp"
 #include "y/randomized/bits.hpp"
-#include "y/string.hpp"
+#include "y/string/tokenizer.hpp"
+#include "y/exception.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon {
     
@@ -46,6 +48,29 @@ namespace upsylon {
             }
             os << ']';
             return os;
+        }
+
+        void Coord::Parse(Coord1D       *c,
+                          const unsigned dim,
+                          const string  &args)
+        {
+            assert(NULL!=c);
+            assert(dim>=1);
+            assert(dim<=3);
+            tokenizer<char> tkn(args);
+            char which[8] = { '#', 'd', 'i', 'm', 0, 0, 0 , 0 };
+            
+            for(unsigned i=0;i<dim;++i)
+            {
+                if( !tkn.next_with(':') )
+                {
+                    throw exception("Spade::Coord('%s' missing #dim=%u')", *args, i);
+                }
+                string s(tkn.token(),tkn.units());
+                s.clean_with(" \t");
+                which[4] = '0' + i;
+                c[i] = string_convert::to<unit_t>(s,which);
+            }
         }
 
     }

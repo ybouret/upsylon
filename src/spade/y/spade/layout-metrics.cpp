@@ -43,7 +43,6 @@ namespace upsylon {
                                      const unsigned dim)
         {
             assert(length>0);
-            assert(0==offset);
             assert(size>0);
             assert(rank>=0);
             assert(rank<size);
