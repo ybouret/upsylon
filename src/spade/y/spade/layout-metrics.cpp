@@ -15,8 +15,42 @@ namespace upsylon {
         dimensions(d),
         items(0)
         {
+            
+        }
+        
+        LayoutMetrics:: LayoutMetrics(const LayoutMetrics &L) throw() :
+        dimensions(L.dimensions),
+        items(L.items)
+        {
         }
         
         
+        
     }
+}
+
+#include "y/parops.hpp"
+#include "y/exception.hpp"
+
+namespace upsylon {
+    
+    namespace Spade {
+        
+        void LayoutMetrics:: Split1D(Coord1D       &length,
+                                     Coord1D       &offset,
+                                     const Coord1D  size,
+                                     const Coord1D  rank,
+                                     const unsigned dim)
+        {
+            assert(length>0);
+            assert(0==offset);
+            assert(size>0);
+            assert(rank>=0);
+            assert(rank<size);
+            parops::split_any(length, offset, size, rank);
+            if(length<=0) throw exception("Spade::Layout::Split1D(too many ranks in dim#%u!)",dim);
+        }
+        
+    }
+    
 }

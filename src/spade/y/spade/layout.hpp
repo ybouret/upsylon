@@ -8,6 +8,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/cswap.hpp"
+#include "y/sort/unique.hpp"
 
 namespace upsylon {
     
@@ -30,8 +31,8 @@ namespace upsylon {
             typedef typename type_traits<COORD>::mutable_type   coord;       //!< alias
             typedef const coord                                 const_coord; //!< alias
             typedef mloop<Coord1D,coord>                        Loop;        //!< loop over sub layout
-            static const size_t                                 Dimensions = Coord::Get<COORD>::Dimensions;
-
+            static const size_t Dimensions = Coord::Get<COORD>::Dimensions;  //!< Dimension(s)
+            
             //------------------------------------------------------------------
             //
             // C++
@@ -53,9 +54,9 @@ namespace upsylon {
             lower(lo),
             upper(up),
             width(Coord::Zero<COORD>()),
-            pitch(Coord::Zero<COORD>())
+            pitch(Coord::Ones<COORD>())
             {
-               
+                
                 Coord1D *w = & Coord::Of( aliasing::_(width), 0);
                 {
                     Coord1D *l = & Coord::Of( aliasing::_(lower), 0);
@@ -71,7 +72,6 @@ namespace upsylon {
                 
                 Coord1D *p = & Coord::Of( aliasing::_(pitch), 0);
                 size_t  &n = aliasing::_(items); assert(0==items);
-                p[0] = 1;
                 n    = w[0];
                 for(unsigned dim=1,prv=0;dim<Dimensions;++dim,++prv)
                 {
@@ -79,6 +79,17 @@ namespace upsylon {
                     p[dim] = p[prv] * w[prv];
                 }
             }
+            
+            //! copy
+            inline Layout(const Layout &L) throw() :
+            LayoutMetrics(L),
+            lower(L.lower),
+            upper(L.upper),
+            width(L.width),
+            pitch(L.pitch)
+            {
+            }
+            
             
             //! display
             friend inline std::ostream & operator<<( std::ostream &os, const Layout &L )
@@ -98,8 +109,8 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! compare definitions
-            inline bool is_same_than( const Layout &other ) const throw()
+            //! compare dimensions
+            inline bool isSameThan( const Layout &other ) const throw()
             {
                 if( lower == other.lower && upper==other.upper )
                 {
@@ -146,26 +157,24 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! index of a coordinate
-            inline Coord1D indexOf(const_coord q) const throw()
+            inline size_t indexOf(const_coord q) const throw()
             {
                 assert( has(q) );
-                Coord1D ans = Coord::Of(q,0)-Coord::Of(lower,0);
+                size_t ans = static_cast<size_t>(Coord::Of(q,0)-Coord::Of(lower,0));
                 for(unsigned dim=1;dim<Dimensions;++dim)
                 {
-                    ans += (Coord::Of(q,dim)-Coord::Of(lower,dim))*Coord::Of(pitch,dim);
+                    ans += static_cast<size_t>( (Coord::Of(q,dim)-Coord::Of(lower,dim))*Coord::Of(pitch,dim) );
                 }
-                assert(ans>=0);
-                assert(ans<Coord1D(items));
+                assert(ans<items);
                 return ans;
             }
             
             //! coordinate of index in [0..items-1]
-            inline coord coordOf(const Coord1D idx) const throw()
+            inline coord coordOf(const size_t idx) const throw()
             {
-                assert(idx>=0);
-                assert(idx<Coord1D(items));
+                assert(idx<items);
                 coord   q(0);
-                Coord1D rem = idx;
+                Coord1D rem = Coord1D(idx);
                 for(unsigned dim=Dimensions-1;dim>0;--dim)
                 {
                     const Coord1D den = Coord::Of(pitch,dim);
@@ -176,18 +185,59 @@ namespace upsylon {
                 Coord::Of(q,0) = rem + Coord::Of(lower,0);
                 return q;
             }
-
+            
             
             const_coord lower; //!< lower coordinate
             const_coord upper; //!< upper coordinate
             const_coord width; //!< witdh in each dimension
             const_coord pitch; //!< pitch 1, nx, nx*ny to compute indices
             
-        private:
-            Y_DISABLE_ASSIGN(Layout);
+            //------------------------------------------------------------------
+            //
+            // other methods
+            //
+            //------------------------------------------------------------------
+           
+            //! gatherings indices of a sub layout
+            template <typename SEQUENCE> inline
+            void collect(SEQUENCE &indices, const Layout &sub) const
+            {
+                assert(this->contains(sub));
+                Loop       loop(sub.lower,sub.upper); assert(sub.items==loop.count);
+                indices.ensure( indices.size() + loop.count );
+                for(loop.boot();loop.good();loop.next())
+                {
+                    indices.push_back( indexOf(loop.value) );
+                }
+                unique(indices);
+            }
             
-        };
-    }
+            
+            //! split this according to local ranks among sizes
+            Layout split(const_coord sizes,
+                         const_coord ranks) const
+            {
+                coord length = width;
+                coord offset = lower;
+                for(size_t dim=0;dim<Dimensions;++dim)
+                {
+                    Split1D(Coord::Of(length,dim),
+                            Coord::Of(offset,dim ),
+                            Coord::Of(sizes,dim),
+                            Coord::Of(ranks,dim),
+                            dim);
+                    
+                }
+                coord up = length + offset;
+                up -= Coord::Ones<COORD>();
+                return Layout(offset,up);
+            }
+        
+    private:
+        Y_DISABLE_ASSIGN(Layout);
+        
+    };
+}
 }
 
 #endif
