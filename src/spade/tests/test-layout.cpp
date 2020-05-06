@@ -1,6 +1,7 @@
 
 #include "y/spade/layout.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/type/spec.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -17,8 +18,8 @@ namespace {
         std::cerr << std::endl;
         std::cerr << "Layout<" << type_name_of<COORD>() << ">" << std::endl;
         
-        const COORD   lo = Coord::Integer( 100 * Coord::Ones<COORD>(), alea);
-        const COORD   up = Coord::Integer( 100 * Coord::Ones<COORD>(), alea);
+        const COORD   lo = Coord::Integer( 10 * Coord::Ones<COORD>(), alea);
+        const COORD   up = Coord::Integer( 10 * Coord::Ones<COORD>(), alea);
         Coord::Disp(std::cerr << "lo=",lo) << std::endl;
         Coord::Disp(std::cerr << "up=",up) << std::endl;
         
@@ -76,5 +77,9 @@ Y_UTEST(layout)
     doTest<Coord2D>();
     doTest<Coord3D>();
     
+    Y_UTEST_SIZEOF(Layout<Coord1D>);
+    Y_UTEST_SIZEOF(Layout<Coord2D>);
+    Y_UTEST_SIZEOF(Layout<Coord3D>);
+
 }
 Y_UTEST_DONE()

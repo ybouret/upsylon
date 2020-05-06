@@ -18,6 +18,7 @@ namespace upsylon {
         typedef unit_t           Coord1D; //!< 1D coordinate
         typedef point2d<Coord1D> Coord2D; //!< 2D coordinates
         typedef point3d<Coord1D> Coord3D; //!< 3D coordinates
+        typedef counted_object   Object;  //!< alias
         
         //! operations on coordinates
         class Coord
