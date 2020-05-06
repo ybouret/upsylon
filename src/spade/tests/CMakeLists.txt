@@ -7,6 +7,7 @@ SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ENABLE_TESTING()
 ADD_TEST(types  test-spade types)
 ADD_TEST(layout test-spade layout)
+ADD_TEST(partition test-spade partition)
 
 ADD_CUSTOM_TARGET(utest-spade
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

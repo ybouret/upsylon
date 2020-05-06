@@ -49,7 +49,7 @@ namespace upsylon {
             }
             
             //! setup
-            explicit Layout(const_coord lo, const_coord up) :
+            inline explicit Layout(const_coord lo, const_coord up) :
             LayoutMetrics(Dimensions),
             lower(lo),
             upper(up),
