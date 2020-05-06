@@ -21,7 +21,7 @@ namespace upsylon
         //
         //______________________________________________________________________
 
-        //! a mode for an alias
+        //! a node for an alias
         class alias : public object
         {
         public:

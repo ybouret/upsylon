@@ -28,10 +28,10 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            typedef typename type_traits<COORD>::mutable_type   coord;       //!< alias
-            typedef const coord                                 const_coord; //!< alias
-            typedef mloop<Coord1D,coord>                        Loop;        //!< loop over sub layout
-            static const size_t Dimensions = Coord::Get<COORD>::Dimensions;  //!< Dimension(s)
+            typedef typename type_traits<COORD>::mutable_type   coord;         //!< alias
+            typedef const coord                                 const_coord;   //!< alias
+            typedef mloop<Coord1D,coord>                        Loop;          //!< loop over sub layout
+            static const unsigned Dimensions = Coord::Get<COORD>::Dimensions;  //!< Dimension(s)
             
             //------------------------------------------------------------------
             //
@@ -197,7 +197,7 @@ namespace upsylon {
             // other methods
             //
             //------------------------------------------------------------------
-           
+            
             //! gatherings indices of a sub layout
             template <typename SEQUENCE> inline
             void collect(SEQUENCE &indices, const Layout &sub) const
@@ -232,7 +232,7 @@ namespace upsylon {
                 up -= Coord::Ones<COORD>();
                 return Layout(offset,up);
             }
-        
+            
             //! find possible mappings
             template <typename SEQUENCE>
             inline size_t findMappings(SEQUENCE    &mappings,
@@ -275,11 +275,16 @@ namespace upsylon {
                 return mappings.size();
             }
             
-    private:
-        Y_DISABLE_ASSIGN(Layout);
-        
-    };
-}
+        private:
+            Y_DISABLE_ASSIGN(Layout);
+            
+        };
+      
+        typedef Layout<Coord1D> Layout1D;
+        typedef Layout<Coord2D> Layout2D;
+        typedef Layout<Coord2D> Layout3D;
+
+    }
 }
 
 #endif
