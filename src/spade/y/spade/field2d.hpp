@@ -9,19 +9,40 @@ namespace upsylon {
     
     namespace Spade {
         
+        //! forward declaration
+        template <typename T> class Field23;
+        
+        //----------------------------------------------------------------------
+        //
+        //! 2D fields
+        //
+        //----------------------------------------------------------------------
         template <typename T>
         class Field2D : public Field<T>, public Layout2D
         {
         public:
-            Y_DECL_ARGS(T,type);
-            typedef Layout2D   LayoutType;
-            typedef typename   LayoutType::coord       coord;
-            typedef typename   LayoutType::const_coord const_coord;
-            typedef Layout1D   RowLayout;
-            typedef Field1D<T> RowType;
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            Y_DECL_ARGS(T,type);                                    //!< aliaes
+            typedef            Layout2D                LayoutType;  //!< alias
+            typedef typename   LayoutType::coord       coord;       //!< alias
+            typedef typename   LayoutType::const_coord const_coord; //!< alias
+            typedef            Layout1D                RowLayout;   //!< alias
+            typedef            Field1D<T>              RowType;     //!< alias
             
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            
+            //! cleanup
             inline virtual ~Field2D() throw() { rows += lower.y; clear(); }
             
+            //! setup with internal memory
             template <typename LABEL> inline
             explicit Field2D(const LABEL      &id,
                              const LayoutType &L) :
@@ -39,34 +60,56 @@ namespace upsylon {
                 build(p+rowOffset,p+objOffset);
             }
             
+            //------------------------------------------------------------------
+            //
+            // virtual interface
+            //
+            //------------------------------------------------------------------
+          
+            //! return metrics
             inline virtual const LayoutMetrics & metrics() const throw() { return *this; }
             
+            //------------------------------------------------------------------
+            //
+            // non virtual interface
+            //
+            //------------------------------------------------------------------
+            
+            //! row access
             inline RowType & operator[](const Coord1D j) throw()
             {
                 assert(j>=lower.y); assert(j<=upper.y);
                 return rows[j];
             }
             
+            //! row access, const
             inline const RowType & operator[](const Coord1D j) const throw()
             {
                 assert(j>=lower.y); assert(j<=upper.y);
                 return rows[j];
             }
             
+            //! direct access
             inline type & operator[](const_coord c) throw()
             {
                 assert(this->has(c));
                 return (*this)[c.y][c.x];
             }
             
+            //! direct access, const
             inline const_type & operator[](const_coord c) const throw()
             {
                 assert(this->has(c));
                 return (*this)[c.y][c.x];
             }
             
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
             
-            const RowLayout rowLayout;
+            const RowLayout rowLayout; //!< shared layout for all rows
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field2D);

@@ -21,10 +21,12 @@ namespace {
         
         const coord      rng = 100 * Coord::Ones<coord>();
         const LayoutType L( Coord::Integer(rng,alea), Coord::Integer(rng,alea) );
-        FIELD F("hello",L);
+        FIELD F(vformat("Field%uD<%s>",LayoutType::Dimensions, *type_name_of<type>()),L);
         std::cerr << F << std::endl;
         std::cerr << F.name << " : " << F.objectType.name() << std::endl;
-      
+        std::cerr << "localMemory=" << F.localMemory() << std::endl;
+        std::cerr << "objectBytes=" << F.objectBytes() << std::endl;
+
         Loop  loop(F.lower,F.upper);
         for(loop.boot();loop.good();loop.next())
         {
@@ -44,7 +46,6 @@ namespace {
 
 Y_UTEST(field)
 {
-    
     doAll<int>();
     doAll<string>();
     doAll<mpn>();

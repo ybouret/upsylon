@@ -21,16 +21,20 @@ namespace upsylon {
             
             void *  Field:: allocate(const size_t request)
             {
+                assert(0==allocated);
                 static memory::allocator &mgr = memory::global::instance();
                 return ( workspace = mgr.acquire( (allocated=request) ) );
             }
 
             
 #define Y_SPADE_FIELD_CTOR()\
-Object(),\
-name(id),\
-objectType(ts),\
-objectSize(bs)
+Object(),       \
+name(id),       \
+objectType(ts), \
+objectSize(bs), \
+workspace(0),   \
+allocated(0)
+        
             
             Field:: Field(const string    &id,
                           const type_spec &ts,
@@ -48,6 +52,15 @@ objectSize(bs)
                 assert(bs>0);
             }
             
+            size_t Field:: objectBytes() const throw()
+            {
+                return objectSize * metrics().items;
+            }
+            
+            size_t Field:: localMemory() const throw()
+            {
+                return allocated;
+            }
         }
     
     }

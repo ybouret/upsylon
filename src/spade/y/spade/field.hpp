@@ -14,46 +14,94 @@ namespace upsylon {
         
         namespace Kernel {
             
+            //------------------------------------------------------------------
+            //
+            //! Field(s) base type
+            //
+            //------------------------------------------------------------------
             class Field : public Object
             {
             public:
-                virtual ~Field() throw();
+                virtual ~Field() throw(); //!< cleanup
+                 
+                //--------------------------------------------------------------
+                //
+                // virtual interface
+                //
+                //--------------------------------------------------------------
                 
-                const string     name;
-                const type_spec &objectType;
-                const size_t     objectSize;
-                
+                //! get common metrics
                 virtual const LayoutMetrics &metrics() const throw() = 0;
                 
+                //--------------------------------------------------------------
+                //
+                // non virtual interface
+                //
+                //--------------------------------------------------------------
+                
+                size_t objectBytes() const throw(); //!< bytes for objects
+                
+                size_t localMemory() const throw(); //!< allocated
+                
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const string     name;        //!< identifier
+                const type_spec &objectType;  //!< type_spec
+                const size_t     objectSize;  //!< bytes per object
+                
+               
             protected:
+                //! setup
                 explicit Field(const string    &id,
                                const type_spec &ts,
                                const size_t     bs);
+                
+                //! setup
                 explicit Field(const char      *id,
                                const type_spec &ts,
                                const size_t     bs);
                  
-                void  *workspace;
-                size_t allocated;
+                void  *workspace; //!< private bytes
+                size_t allocated; //!< private bytes
                 
-                void*  allocate(const size_t);
+                void*  allocate(const size_t); //!< acquire private bytes
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Field);
             };
         }
         
+        //----------------------------------------------------------------------
+        //
+        //! typed Filed base class
+        //
+        //----------------------------------------------------------------------
         template <typename T>
         class Field : public Kernel::Field
         {
         public:
-            Y_DECL_ARGS(T,type);
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            Y_DECL_ARGS(T,type); //!< aliases
             
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            //! cleanup
             inline virtual ~Field() throw() {}
             
             
             
         protected:
+            //! setup
             template <typename LABEL>
             inline explicit Field(const LABEL &id) :
             Kernel::Field(id,type_spec_of<T>(),sizeof(T))
