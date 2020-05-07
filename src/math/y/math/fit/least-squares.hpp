@@ -218,7 +218,7 @@ namespace upsylon {
                 }
 
 
-                bool          verbose;   //!< activate verbosity
+                bool           verbose;   //!< activate verbosity
                 const unit_t   pmin;     //!< min power value
                 const unit_t   pmax;     //!< max power value
                 const SmallVec vlam;     //!< precomputed lambdas
