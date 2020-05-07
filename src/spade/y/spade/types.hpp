@@ -153,6 +153,25 @@ namespace upsylon {
                 return C;
             }
             
+#define Y_SPADE_COORD_OP(NAME,OP)                     \
+template <typename COORD> static inline               \
+bool NAME(const COORD lhs, const COORD rhs) throw() { \
+for(unsigned dim=0;dim<Get<COORD>::Dimensions;++dim)  \
+{                                                     \
+if( Of(lhs,dim) OP Of(rhs,dim) ) continue;            \
+return false;                                         \
+}                                                     \
+return true;                                          \
+}
+            
+#define Y_SPADE_COORD_OPS() \
+Y_SPADE_COORD_OP(LT,<)      \
+Y_SPADE_COORD_OP(LEQ,<=)    \
+Y_SPADE_COORD_OP(GT,>)      \
+Y_SPADE_COORD_OP(GEQ,>=)
+
+            Y_SPADE_COORD_OPS()
+            
         private:
             //! random in [0:m]
             static Coord1D Natural1D(const Coord1D m, randomized::bits & ) throw();

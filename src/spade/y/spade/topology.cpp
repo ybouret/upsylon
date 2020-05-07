@@ -12,13 +12,13 @@ namespace upsylon {
 
             Topology:: ~Topology() throw()
             {
-                _bzset(cores);
+                _bzset(size);
             }
             
             Topology:: Topology(const size_t nc) :
-            cores(nc)
+            size(nc)
             {
-                if(cores<=0) throw exception("Spade::Topology(no cores)");
+                if(size<=0) throw exception("Spade::Topology(no cores)");
             }
             
         }
