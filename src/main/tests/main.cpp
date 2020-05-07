@@ -201,21 +201,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(sparse_array);
     Y_UTEST(sparse_matrix);
 
-    Y_UTEST(oxide);
-    Y_UTEST(oxide_fields);
-    Y_UTEST(oxide_io);
-    Y_UTEST(oxide_dct);
-    Y_UTEST(oxide_split);
-    Y_UTEST(oxide_max_splits);
-    Y_UTEST(oxide_ranks);
-    Y_UTEST(oxide_layouts);
-    Y_UTEST(oxide_wksp);
-    Y_UTEST(oxide_allw);
-    Y_UTEST(oxide_mpi);
-    Y_UTEST(oxide_vtk);
-    Y_UTEST(oxide_par);
-    Y_UTEST(oxide_grids);
-
     Y_UTEST(zfi);
     Y_UTEST(closest);
 

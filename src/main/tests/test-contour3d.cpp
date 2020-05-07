@@ -3,10 +3,11 @@
 #include "y/sequence/vector.hpp"
 #include "y/sort/unique.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/oxide/grid/rectilinear.hpp"
-#include "y/oxide/field3d.hpp"
+//#include "y/oxide/grid/rectilinear.hpp"
+//#include "y/oxide/field3d.hpp"
 #include "y/ios/ocstream.hpp"
 
+#if 0
 using namespace upsylon;
 using namespace geometry;
 using namespace Iso3D;
@@ -36,6 +37,7 @@ static inline Edge *getEdge( const array<Coordinate> &arr )
     }
 
 }
+#endif
 
 #include "y/counting/perm.hpp"
 
