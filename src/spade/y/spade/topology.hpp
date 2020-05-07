@@ -22,29 +22,29 @@ namespace upsylon {
                 static const unsigned Level1  = 1; //!< +X
                 static const unsigned Level2  = 0; //!< none
                 static const unsigned Level3  = 0; //!< none
-                static const unsigned Directions = Level1+Level2+Level3; //!< (3^1-1)/2
-                static const unsigned Number     = Directions<<1;        //!< 3^1-1
-                static const Coord1D  Probes[Directions];
+                static const unsigned Levels  = Level1+Level2+Level3;   //!< (3^DIM-1)/2
+                static const unsigned Number  = Levels<<1;              //!< neighbours
+                static const Coord1D  Probes[Levels];                   //!< unique probes
             };
             
             template <> struct Coordination<2>
             {
-                static const unsigned Level1     = 2; //!< +X,+Y
-                static const unsigned Level2     = 2; //!< +X+Y,+X-Y
-                static const unsigned Level3     = 0; //!< none
-                static const unsigned Directions = Level1+Level2+Level3; //!< (3^1-1)/2
-                static const unsigned Number     = Directions<<1;        //!< 3^1-1
-                static const Coord2D Probes[Directions];
+                static const unsigned Level1  = 2; //!< +X,+Y
+                static const unsigned Level2  = 2; //!< +X+Y,+X-Y
+                static const unsigned Level3  = 0; //!< none
+                static const unsigned Levels  = Level1+Level2+Level3;   //!< (3^DIM-1)/2
+                static const unsigned Number  = Levels<<1;              //!< neighbours
+                static const Coord2D  Probes[Levels];                   //!< unique probes
             };
             
             template <> struct Coordination<3>
             {
-                static const unsigned Level1     = 3;
-                static const unsigned Level2     = 6;
-                static const unsigned Level3     = 4;
-                static const unsigned Directions = Level1+Level2+Level3; //!< (3^1-1)/2
-                static const unsigned Number     = Directions<<1;        //!< 3^1-1
-                static const Coord3D Probes[Directions];
+                static const unsigned Level1  = 3; //!< +X,+Y
+                static const unsigned Level2  = 6; //!< ...
+                static const unsigned Level3  = 4; //!< ...
+                static const unsigned Levels  = Level1+Level2+Level3;   //!< (3^DIM-1)/2
+                static const unsigned Number  = Levels<<1;              //!< neighbours
+                static const Coord3D  Probes[Levels];                   //!< unique probes
             };
 
             //------------------------------------------------------------------
@@ -55,7 +55,13 @@ namespace upsylon {
             class Topology
             {
             public:
-               
+                //! direction for each way
+                enum Direction
+                {
+                    Forward, //!< forward in the direction
+                    Reverse  //!< reverse in the direction
+                };
+                
                 virtual ~Topology() throw();        //!< cleanup
                 const size_t size;                  //!< number of cores
                 
@@ -89,12 +95,12 @@ namespace upsylon {
             //------------------------------------------------------------------
             static  const unsigned                   Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
             typedef Kernel::Coordination<Dimensions> Coordination;                               //!< alias
-            static  const unsigned                   Neighbours = Coordination::Number;     //!< alias
-            static  const unsigned                   Directions = Coordination::Directions; //!< alias
-            typedef typename type_traits<COORD>::mutable_type coord;            //!< alias
-            typedef const coord                               const_coord;      //!< alias
-            typedef mloop<Coord1D,coord>                      Loop;             //!< loop over ranks if neccessary
-         
+            static  const unsigned                   Levels = Coordination::Levels; //!< alias
+            typedef typename type_traits<COORD>::mutable_type coord;                //!< alias
+            typedef const coord                               const_coord;          //!< alias
+            typedef typename Coord::Get<COORD>::Boolean       Boolean;              //!< alias
+            typedef mloop<Coord1D,coord>                      Loop;                 //!< loop over ranks if neccessary
+
             
             //------------------------------------------------------------------
             //
@@ -114,7 +120,8 @@ namespace upsylon {
             explicit Topology(const_coord mapping) :
             Kernel::Topology( Coord::Product(mapping) ),
             sizes(mapping),
-            pitch(1)
+            pitch(1),
+            parallel( Coord::ToParallel(sizes) )
             {
                 Coord1D       *p = (Coord1D *)&pitch;
                 const Coord1D *s = (const Coord1D *)&sizes;
@@ -160,21 +167,89 @@ namespace upsylon {
                 }
                 return rank;
             }
+           
+            //------------------------------------------------------------------
+            //
+            // findind ranks
+            //
+            //------------------------------------------------------------------
+           
+            inline coord getNeighbourRanks(const_coord     ranks,
+                                           const unsigned  level,
+                                           const Direction direction) const throw()
+            {
+                assert( Coord::LT(ranks,sizes) );
+                assert( Coord::GEQ(ranks,Coord::Zero<coord>()) );
+                assert(level<Levels);
+                
+                // get probe, with sign according to direction
+                coord probe = Coordination::Probes[level];
+                switch(direction)
+                {
+                    case Reverse: probe=-probe; break;
+                    case Forward: break;
+                }
+                
+                // build neighbour ranks
+                coord  where = ranks;
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    const Coord1D p = Coord::Of(probe,dim);
+                    const Coord1D localSize = Coord::Of(sizes,dim);
+                    const Coord1D localRank = Coord::Of(ranks,dim);
+                    switch(p)
+                    {
+                        case  1: Coord::Of(where,dim) = Next(localSize,localRank); break;
+                        case -1: Coord::Of(where,dim) = Prev(localSize,localRank); break;
+                        default: assert(0==p); break;
+                    }
+                }
+                return where;
+            }
+            
             
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
-            const_coord  sizes; //!< local sizes
-            const_coord  pitch; //!< pitch for ranks algebra
+            const_coord   sizes;    //!< local sizes
+            const_coord   pitch;    //!< pitch for ranks algebra
+            const Boolean parallel; //!< dimension wise parallel
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Topology);
         };
         
-        //extern template const Coord1D Topology<Coord1D>::Probes[Directions];
 
+        template <typename COORD>
+        class Hub
+        {
+        public:
+            typedef Topology<COORD>                     Topo;
+            static const unsigned Dimensions = Topo::Dimensions;
+            typedef typename Topo::coord                coord;
+            typedef typename Topo::const_coord          const_coord;
+            typedef typename Topo::Boolean              Boolean;
+            
+            const size_t  rank;
+            const_coord   ranks;
+            const Boolean bulk;
+            
+            explicit Hub(const size_t   r,
+                         const Topo    &topo,
+                         const Boolean &pbc) :
+            rank(r),
+            ranks( topo.getLocalRanks(rank) ),
+            bulk( Coord::False<Boolean>() )
+            {
+                
+            }
+            
+        private:
+            
+        };
+        
     }
     
 }

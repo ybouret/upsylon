@@ -10,6 +10,9 @@ namespace upsylon {
         
         const Coord1D Coord::__Zero[4] = { 0,0,0,0 };
         const Coord1D Coord::__Ones[4] = { 1,1,1,1 };
+        const bool    Coord::__OK[4] = { true,  true,  true,  true };
+        const bool    Coord::__NO[4] = { false, false, false, false };
+
 
         Coord1D Coord::Natural1D(const Coord1D m, randomized::bits &ran ) throw()
         {

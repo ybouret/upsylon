@@ -34,11 +34,11 @@ namespace upsylon {
                 return (++localRank>=localSize) ?  0 : localRank;
             }
             
-            const Coord1D Coordination<1>::Probes[Directions]= {
+            const Coord1D Coordination<1>::Probes[Levels]= {
                 1
             };
             
-            const Coord2D  Coordination<2>::Probes[Directions]= {
+            const Coord2D  Coordination<2>::Probes[Levels]= {
                 Coord2D(1,0),
                 Coord2D(0,1),
                 
@@ -46,7 +46,7 @@ namespace upsylon {
                 Coord2D(1,-1)
             };
             
-            const Coord3D Coordination<3>::Probes[Directions]= {
+            const Coord3D Coordination<3>::Probes[Levels]= {
                 Coord3D(1,0,0),
                 Coord3D(0,1,0),
                 Coord3D(0,0,1),
