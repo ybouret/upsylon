@@ -251,7 +251,7 @@ MACRO(TARGET_LINK_Y tgt)
 		ENDIF()
 		
 		IF( ${extra} STREQUAL "graphic" )
-			LIST(APPEND ylibs "y-tiff;y-jpeg;y-jbig;y-png;y-z")
+			LIST(APPEND ylibs "y-spade;y-tiff;y-jpeg;y-jbig;y-png;y-z")
 		ENDIF()
 		
 		IF( ${extra} STREQUAL "net" )

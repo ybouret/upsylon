@@ -177,11 +177,6 @@ ADD_TEST(mk:complex     test-main complex)
 ADD_TEST(mk:sobol       test-main sobol)
 ADD_TEST(mk:timings     test-main timings)
 
-SOURCE_GROUP(geom FILES test-contour2d.cpp test-contour3d.cpp test-closest.cpp)
-ADD_TEST(geom:contour2d test-main contour2d)
-ADD_TEST(geom:contour3d test-main contour3d)
-ADD_TEST(geom:closest   test-main closest)
-
 SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-mprm.cpp test-ilog.cpp 
 test-prime-factor.cpp test-prime-ratio.cpp test-mp-io.cpp test-mpn-perf.cpp) 
 ADD_TEST(mp:n         test-main mpn)

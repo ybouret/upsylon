@@ -40,12 +40,26 @@ namespace upsylon {
             //! cleanup
             inline virtual ~Field1D() throw() { clear(); }
             
-            //! setup with internal memoy
+            //! setup with internal memory
             template <typename LABEL> inline
             explicit Field1D(const LABEL      &id,
                              const LayoutType &L) :
             Field<T>(id),
             LayoutType(L),
+            addr(static_cast<mutable_type *>(this->allocate(sizeof(T)*items) )),
+            item(addr-lower),
+            built(0)
+            {
+                build();
+            }
+            
+            //! setup with internal memory, using coordinates
+            template <typename LABEL> inline
+            explicit Field1D(const LABEL &id,
+                             const_coord  lo,
+                             const_coord  up) :
+            Field<T>(id),
+            LayoutType(lo,up),
             addr(static_cast<mutable_type *>(this->allocate(sizeof(T)*items) )),
             item(addr-lower),
             built(0)

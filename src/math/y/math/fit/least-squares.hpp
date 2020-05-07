@@ -5,7 +5,6 @@
 
 #include "y/math/fit/frame.hpp"
 #include "y/math/kernel/lu.hpp"
-#include "y/oxide/field1d.hpp"
 #include "y/math/opt/bracket.hpp"
 #include "y/math/opt/minimize.hpp"
 
@@ -38,6 +37,8 @@ namespace upsylon {
                     return unit_t(numeric<T>::max_10_exp);
                 }
 
+               
+                
                 //! a starting value
                 static inline unit_t Initial() throw()
                 {
@@ -112,10 +113,10 @@ namespace upsylon {
                 typedef typename Type<T>::Matrix         Matrix;   //!< alias
                 typedef typename Type<T>::Vector         Vector;   //!< alias
                 typedef typename Type<T>::Function       Function; //!< alias
-                typedef          Oxide::Field1D<T>       Field;    //!< alias
                 typedef typename Frame<T>::Control       Control;  //!< alias
                 typedef typename Frame<T>::Controls      Controls; //!< alias
-
+                typedef vector<const T>                  SmallVec; //!< alias
+                
                 //--------------------------------------------------------------
                 //
                 // C++ ctor/dtor
@@ -125,10 +126,11 @@ namespace upsylon {
                 //! setup
                 inline explicit LeastSquares(const bool verb=false) :
                 verbose(verb),
-                lambdas("lambda",Algo<T>::MinPower(),Algo<T>::MaxPower()),
-                pmin(lambdas.lower),
-                pmax(lambdas.upper),
+                pmin(Algo<T>::MinPower()),
+                pmax(Algo<T>::MaxPower()),
+                vlam(1+pmax-pmin,0),
                 damp(1),
+                lambdas( &vlam.front() - pmin ),
                 p(0),
                 lambda(0),
                 alpha(),
@@ -216,11 +218,11 @@ namespace upsylon {
                 }
 
 
-                bool         verbose; //!< activate verbosity
-                const Field  lambdas; //!< precomputed lambdas
-                const unit_t pmin;    //!< min power value
-                const unit_t pmax;    //!< max power value
-                const T      damp;    //!< damp factor to slow done search, default=1
+                bool          verbose;   //!< activate verbosity
+                const unit_t   pmin;     //!< min power value
+                const unit_t   pmax;     //!< max power value
+                const SmallVec vlam;     //!< precomputed lambdas
+                const T        damp;     //!< damp factor to slow done search, default=1
 
                 //! set damping factor into [0:1]
                 inline void setDamp( const T dampValue ) throw()
@@ -230,6 +232,7 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LeastSquares);
+                const T *lambdas;
                 unit_t   p;
                 T        lambda;
                 Matrix   alpha;
@@ -273,7 +276,8 @@ namespace upsylon {
                 //______________________________________________________________
                 inline void initialize() throw()
                 {
-                    Field &lam = aliasing::_(lambdas);
+                    //Field &lam = aliasing::_(lambdas);
+                    T *lam = (T*)lambdas;
                     lam[ pmin ] = 0;
                     {
                         static const T tenth = T(0.1);

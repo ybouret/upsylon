@@ -80,12 +80,7 @@ namespace {
     template <typename T>
     void showLS( LeastSquares<T> &LS )
     {
-        std::cerr << "LS.lambdas=" << LS.lambdas << std::endl;
-        for(unit_t i=LS.lambdas.lower;i<=LS.lambdas.upper;++i)
-        {
-            std::cerr << LS.lambdas[i] << '/';
-        }
-        std::cerr << std::endl;
+        std::cerr << "LS.lambdas=" << LS.vlam << std::endl;;
     }
 
 }

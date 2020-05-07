@@ -2,7 +2,7 @@ PROJECT(y-graphic CXX)
 
 MESSAGE( STATUS "<Graphic>" )
 
-INCLUDE_DIRECTORIES(. ../main
+INCLUDE_DIRECTORIES(. ../main ../spade
 ../ext
 ../ext/y/tiff/libtiff
 ${CMAKE_CURRENT_BINARY_DIR}/../ext/y/tiff/libtiff)

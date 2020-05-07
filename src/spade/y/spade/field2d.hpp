@@ -52,12 +52,21 @@ namespace upsylon {
             rows(0),
             built(0)
             {
-                const size_t rowOffset = 0;
-                const size_t rowLength = width.y * sizeof(Row);
-                const size_t objOffset = memory::align(rowOffset+rowLength);
-                const size_t objLength = items*sizeof(T);
-                char        *p         = static_cast<char *>(this->allocate( memory::align(objLength+objOffset) ) );
-                build(p+rowOffset,p+objOffset);
+                create();
+            }
+            
+            //! setup with internal memory, using coords
+            template <typename LABEL> inline
+            explicit Field2D(const LABEL      &id,
+                             const_coord       lo,
+                             const_coord       hi) :
+            Field<T>(id),
+            LayoutType(lo,hi),
+            rowLayout(lower.x,upper.x),
+            rows(0),
+            built(0)
+            {
+                create();
             }
             
             //------------------------------------------------------------------
@@ -126,6 +135,16 @@ namespace upsylon {
                 {
                     self_destruct(rows[--built]);
                 }
+            }
+            
+            inline void create()
+            {
+                const size_t rowOffset = 0;
+                const size_t rowLength = width.y * sizeof(Row);
+                const size_t objOffset = memory::align(rowOffset+rowLength);
+                const size_t objLength = items*sizeof(T);
+                char        *p         = static_cast<char *>(this->allocate( memory::align(objLength+objOffset) ) );
+                build(p+rowOffset,p+objOffset);
             }
             
             inline void build(void *rowAddr, void *objAddr)

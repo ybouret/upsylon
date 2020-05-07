@@ -191,8 +191,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(timings);
     Y_UTEST(sobol);
     
-    Y_UTEST(contour2d);
-    Y_UTEST(contour3d);
 
     Y_UTEST(kr_bc);
     Y_UTEST(kr_sc);

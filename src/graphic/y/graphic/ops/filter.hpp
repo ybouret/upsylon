@@ -4,10 +4,11 @@
 #define Y_GRAPHIC_OPS_FILTER_INCLUDED 1
 
 #include "y/graphic/pixmap.hpp"
-#include "y/oxide/field2d.hpp"
+#include "y/spade/field2d.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/graphic/parallel/tiles.hpp"
 #include "y/ptr/intr.hpp"
+
 namespace upsylon {
 
     namespace Graphic {
@@ -124,7 +125,7 @@ namespace upsylon {
 
                 //! compile a field of values into a filter
                 template <typename T> inline
-                void compile_( const Oxide::Field2D<T> &field )
+                void compile_( const Spade::Field2D<T> &field )
                 {
                     assert( weights.size() <= 0 );
                     assert(field.items==weights.count);
@@ -154,14 +155,14 @@ namespace upsylon {
 
         //! a generic filter based on a field of values
         template <typename T>
-        class Filter :  public Oxide::Field2D<T>, public Kernel::Filter
+        class Filter :  public Spade::Field2D<T>, public Kernel::Filter
         {
         public:
             //! setup
             explicit Filter(const char            *id,
-                            const Oxide::Coord2D   lo,
-                            const Oxide::Coord2D   hi) :
-            Oxide::Field2D<T>(id,lo,hi),
+                            const Spade::Coord2D   lo,
+                            const Spade::Coord2D   hi) :
+            Spade::Field2D<T>(id,lo,hi),
             Kernel::Filter(this->items)
             {
             }
