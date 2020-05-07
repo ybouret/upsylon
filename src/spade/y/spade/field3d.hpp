@@ -136,8 +136,8 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            const SliceLayout sliceLayout;
-            const RowLayout   rowLayout;
+            const SliceLayout sliceLayout; //!< layout of a slice
+            const RowLayout   rowLayout;   //!< layout of a row
             
         private:
             Slice *slices;

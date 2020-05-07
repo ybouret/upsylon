@@ -36,9 +36,9 @@ namespace upsylon {
         class Coord
         {
         public:
-            static const  Coord1D __Zero[4]; //!< binary mapping of [0[,0[,0]]]
-            static const  Coord1D __Ones[4]; //!< binary mapping of [1[,1[,1]]]
-            static size_t         DispWidth; //!< display width per dimension
+            static const  Coord1D __Zero[4];    //!< binary mapping of [0[,0[,0]]]
+            static const  Coord1D __Ones[4];    //!< binary mapping of [1[,1[,1]]]
+            static size_t         DispWidth;    //!< display width per dimension
             
             //! get parameters...
             template <typename COORD>
@@ -135,7 +135,7 @@ namespace upsylon {
                 return ans;
             }
             
-            //! product of coordinates
+            //! product of coordinate
             static inline Coord1D Product(const Coord1D &C) throw() { return C; }
            
             //! product of coordinates
@@ -143,6 +143,16 @@ namespace upsylon {
             
             //! product of coordinates
             static inline Coord1D Product(const Coord3D &C) throw() { return C.prod(); }
+            
+            //! Norm1 of coordinate
+            static inline Coord1D Norm1(const Coord1D &C) throw() { return abs_of(C); }
+            
+            //! Norm1 of coordinates
+            static inline Coord1D Norm1(const Coord2D &C) throw() { return abs_of(C.x) + abs_of(C.y); }
+
+            //! Norm1 of coordinates
+            static inline Coord1D Norm1(const Coord3D &C) throw() { return abs_of(C.x) + abs_of(C.y) + abs_of(C.z); }
+
             
             //! parse a coordinate X[:Y[:Z]]
             template <typename COORD> static inline
@@ -153,6 +163,7 @@ namespace upsylon {
                 return C;
             }
             
+            //! operator implementation
 #define Y_SPADE_COORD_OP(NAME,OP)                     \
 template <typename COORD> static inline               \
 bool NAME(const COORD lhs, const COORD rhs) throw() { \
@@ -163,7 +174,7 @@ return false;                                         \
 }                                                     \
 return true;                                          \
 }
-            
+            //! operator implementations
 #define Y_SPADE_COORD_OPS() \
 Y_SPADE_COORD_OP(LT,<)      \
 Y_SPADE_COORD_OP(LEQ,<=)    \
