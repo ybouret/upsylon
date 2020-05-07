@@ -108,16 +108,16 @@ Y_UTEST(topology)
         std::cerr << "size=" << size << std::endl;
         for(Coord1D rank=0;rank<size;++rank)
         {
-            const Coord1D prev = Kernel::Topology::Prev(size,rank);
-            const Coord1D next = Kernel::Topology::Next(size,rank);
-            Y_ASSERT(prev>=0);
-            Y_ASSERT(prev<size);
-            Y_ASSERT(next>=0);
-            Y_ASSERT(next<size);
-            Y_ASSERT(rank==Kernel::Topology::Next(size,prev));
-            Y_ASSERT(rank==Kernel::Topology::Prev(size,next));
+            const Coord1D rev = Kernel::Topology::GetReverse(size,rank);
+            const Coord1D fwd = Kernel::Topology::GetForward(size,rank);
+            Y_ASSERT(rev>=0);
+            Y_ASSERT(rev<size);
+            Y_ASSERT(fwd>=0);
+            Y_ASSERT(fwd<size);
+            Y_ASSERT(rank==Kernel::Topology::GetForward(size,rev));
+            Y_ASSERT(rank==Kernel::Topology::GetReverse(size,fwd));
             
-            std::cerr << "\t" << prev << " <- " << rank << " -> " << next << std::endl;
+            std::cerr << "\t" << rev << " <- " << rank << " -> " << fwd << std::endl;
             
         }
     }

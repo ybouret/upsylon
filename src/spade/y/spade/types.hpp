@@ -38,8 +38,8 @@ namespace upsylon {
         public:
             static const  Coord1D __Zero[4];    //!< binary mapping of [0[,0[,0]]]
             static const  Coord1D __Ones[4];    //!< binary mapping of [1[,1[,1]]]
-            static const  bool    __OK[4];
-            static const  bool    __NO[4];
+            static const  bool    __OK[4];      //!< binary mapping of [true[,true[,true]]]
+            static const  bool    __NO[4];      //!< binary mapping of [false[,false[,false]]]
             static size_t         DispWidth;    //!< display width per dimension
             
             //! get parameters...
@@ -64,18 +64,19 @@ namespace upsylon {
                 return *(const COORD *) &__Ones[0];
             }
             
+            //! map to true
             template <typename BOOLEAN> static inline
             const BOOLEAN & True() throw()
             {
                 return *(const BOOLEAN *) &__OK[0];
             }
             
+            //! map to false
             template <typename BOOLEAN> static inline
             const BOOLEAN & False() throw()
             {
                 return *(const BOOLEAN *) &__NO[0];
             }
-            
             
             //! get coordinate[dim]
             template <typename COORD> static inline
@@ -165,13 +166,23 @@ namespace upsylon {
 
             //! Norm1 of coordinates
             static inline Coord1D Norm1(const Coord3D &C) throw() { return abs_of(C.x) + abs_of(C.y) + abs_of(C.z); }
-
+            
+            //! convert coordinate to boolean
             static inline Boolean1D ToBool(const Coord1D  C) throw() { return Boolean1D(C!=0); }
+
+            //! convert coordinate to boolean
             static inline Boolean2D ToBool(const Coord2D  C) throw() { return Boolean2D(C.x!=0,C.y!=0); }
+            
+            //! convert coordinate to boolean
             static inline Boolean3D ToBool(const Coord3D  C) throw() { return Boolean3D(C.x!=0,C.y!=0,C.z!=0); }
             
-            static inline Boolean1D ToParallel(const Coord1D  C) throw() { return Boolean1D(C>1);               }
+            //! convert sizes to parallel flag
+            static inline Boolean1D ToParallel(const Coord1D sizes) throw() { return Boolean1D(sizes>1);               }
+           
+            //! convert sizes to parallel flag
             static inline Boolean2D ToParallel(const Coord2D  C) throw() { return Boolean2D(C.x>1,C.y>1);       }
+            
+            //! convert sizes to parallel flag
             static inline Boolean3D ToParallel(const Coord3D  C) throw() { return Boolean3D(C.x>1,C.y>1,C.z>1); }
 
             

@@ -20,14 +20,14 @@ namespace upsylon {
                 if(size<=0) throw exception("Spade::Topology(no cores)");
             }
             
-            Coord1D Topology:: Prev(Coord1D localSize, Coord1D localRank) throw()
+            Coord1D Topology:: GetReverse(Coord1D localSize, Coord1D localRank) throw()
             {
                 assert(localRank>=0);
                 assert(localRank<localSize);
                 return (localRank>0) ? --localRank : --localSize;
             }
             
-            Coord1D Topology:: Next(Coord1D localSize, Coord1D localRank) throw()
+            Coord1D Topology:: GetForward(Coord1D localSize, Coord1D localRank) throw()
             {
                 assert(localRank>=0);
                 assert(localRank<localSize);
