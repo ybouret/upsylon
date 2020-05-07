@@ -15,10 +15,22 @@ namespace upsylon {
     
     namespace Spade
     {
-        typedef unit_t           Coord1D; //!< 1D coordinate
-        typedef point2d<Coord1D> Coord2D; //!< 2D coordinates
-        typedef point3d<Coord1D> Coord3D; //!< 3D coordinates
-        typedef counted_object   Object;  //!< alias
+        typedef unit_t           Coord1D;   //!< 1D coordinate
+        typedef point2d<Coord1D> Coord2D;   //!< 2D coordinates
+        typedef point3d<Coord1D> Coord3D;   //!< 3D coordinates
+        typedef counted_object   Object;    //!< alias
+        typedef bool             Boolean1D; //!< 1D flag
+        typedef point2d<bool>    Boolean2D; //!< 2D flag
+        typedef point3d<bool>    Boolean3D; //!< 3D flag
+        
+        template <typename COORD> struct BooleanFor; //!< choosing right boolean
+        //! Boolean in 1D
+        template <> struct BooleanFor<Coord1D> { typedef Boolean1D Type; /*!< alias */ };
+        //! Boolean in 2D
+        template <> struct BooleanFor<Coord2D> { typedef Boolean2D Type; /*!< alias */ };
+        //! Boolean in 3D
+        template <> struct BooleanFor<Coord3D> { typedef Boolean3D Type; /*!< alias */ };
+
         
         //! operations on coordinates
         class Coord
@@ -33,6 +45,7 @@ namespace upsylon {
             struct Get
             {
                 static const unsigned Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< Dimension(s)
+                typedef typename BooleanFor<COORD>::Type Boolean;                 //!< Boolean with same dimension
             };
             
             //! map to zero
