@@ -53,6 +53,9 @@ namespace upsylon {
             //------------------------------------------------------------------
             //
             //! base class for Topology computations
+            /**
+             answers to: who are my neighbours
+             */
             //
             //------------------------------------------------------------------
             class Topology
@@ -125,7 +128,7 @@ namespace upsylon {
             sizes(mapping),
             pitch(1),
             maxRanks( sizes - Coord::Ones<coord>() ),
-            parallel( Coord::ToParallel(sizes) )
+            parallel( Coord::ToParallel(sizes)     )
             {
                 Coord1D       *p = (Coord1D *)&pitch;
                 const Coord1D *s = (const Coord1D *)&sizes;
@@ -151,7 +154,7 @@ namespace upsylon {
                 {
                     const Coord1D den = Coord::Of(pitch,dim);
                     const Coord1D qot = rem / den;
-                    Coord::Of(q,dim) = qot;
+                    Coord::Of(q,dim)  = qot;
                     rem -= qot * den;
                 }
                 Coord::Of(q,0) = rem;
@@ -234,6 +237,8 @@ namespace upsylon {
 }
 
 #include "y/sequence/slots.hpp"
+#include "y/type/aliasing.hpp"
+
 namespace upsylon {
     
     namespace Spade
@@ -242,8 +247,10 @@ namespace upsylon {
         struct Connectivity
         {
             typedef Topology<COORD>            Topo;
+            static const unsigned Dimensions = Topo::Dimensions;
             typedef typename Topo::coord       coord;
             typedef typename Topo::const_coord const_coord;
+            typedef typename Topo::Boolean     Boolean;
             
             class Hub
             {
@@ -328,17 +335,44 @@ namespace upsylon {
             class Node : public Hub, public slots<Links>
             {
             public:
+                const Boolean head;
+                const Boolean tail;
+                const Boolean bulk;
+                
                 inline explicit Node(const_coord  localRanks,
                                      const Topo  &topo) :
                 Hub(localRanks,topo),
-                slots<Link>( Topo::Levels )
+                slots<Link>( Topo::Levels ),
+                bulk( Coord::False<Boolean>() )
                 {
+                    // get information on my position
+                    {
+                        bool *h = (bool *) &head;
+                        bool *t = (bool *) &tail;
+                        bool *b = (bool *) &bulk;
+                        for(unsigned dim=0;dim<Dimensions;++dim)
+                        {
+                            const Coord1D localRank = Coord::Of(this->ranks,dim);
+                            const bool    isHead    = h[dim] = (localRank == 0);
+                            const bool    isTail    = t[dim] = (localRank == Coord::Of(topo.maxRanks,dim) );
+                            b[dim] = (!isHead) && (!isTail);
+                        }
+                    }
+                    
+                    // now study the neighbourhood
                     for(unsigned level=0;level<Topo::Levels;++level)
                     {
+                        const_coord probe = Topo::Coordination::Probes[level];
+                        for(unsigned dim=0;dim<Dimensions;++dim)
+                        {
+                            
+                        }
+#if 0
                         const_coord fwd = getNeighbourRanks(this->ranks,level,Topo::Forward);
                         const_coord rev = getNeighbourRanks(this->ranks,level,Topo::Reverse);
                         Links       links(fwd,rev,topo);
                         this->push(links);
+#endif
                     }
                 }
                 
