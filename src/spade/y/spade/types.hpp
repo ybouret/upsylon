@@ -78,6 +78,22 @@ namespace upsylon {
                 return *(const BOOLEAN *) &__NO[0];
             }
             
+            //! bool extraction
+            template <typename BOOLEAN> static inline
+            bool &Flag(BOOLEAN &b, const unsigned dim) throw()
+            {
+                assert(sizeof(BOOLEAN)/sizeof(bool)<=dim);
+                return *(((bool *)&b)+dim);
+            }
+            
+            //! bool extraction
+            template <typename BOOLEAN> static inline
+            const bool &Flag(const BOOLEAN &b, const unsigned dim) throw()
+            {
+                assert(sizeof(BOOLEAN)/sizeof(bool)<=dim);
+                return *(((bool *)&b)+dim);
+            }
+            
             //! get coordinate[dim]
             template <typename COORD> static inline
             Coord1D & Of(COORD &C, const unsigned dim) throw()

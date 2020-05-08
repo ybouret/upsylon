@@ -72,10 +72,10 @@ namespace upsylon {
                 const size_t size;                  //!< number of cores
                 
                 //! reverse (previous) local rank w.r.t local size
-                static Coord1D GetReverse(Coord1D localSize, Coord1D localRank) throw();
+                static Coord1D Prev(Coord1D localSize, Coord1D localRank) throw();
                 
                 //! forward(next) local rank w.r.t. local size
-                static Coord1D GetForward(Coord1D localSize, Coord1D localRank) throw();
+                static Coord1D Next(Coord1D localSize, Coord1D localRank) throw();
                 
             protected:
                 explicit Topology(const size_t nc); //!< set size, with checking
@@ -207,8 +207,8 @@ namespace upsylon {
                     const Coord1D localRank = Coord::Of(ranks,dim);
                     switch(localScan)
                     {
-                        case  1: Coord::Of(where,dim) = GetForward(localSize,localRank); break;
-                        case -1: Coord::Of(where,dim) = GetReverse(localSize,localRank); break;
+                        case  1: Coord::Of(where,dim) = Next(localSize,localRank); break;
+                        case -1: Coord::Of(where,dim) = Prev(localSize,localRank); break;
                         default: assert(0==localScan); break;
                     }
                 }
@@ -226,153 +226,78 @@ namespace upsylon {
             const_coord   maxRanks; //!< sizes-1
             const Boolean parallel; //!< dimension wise parallel flag
             
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Topology);
-        };
-        
-        
-    }
-    
-}
-
-#include "y/sequence/slots.hpp"
-#include "y/type/aliasing.hpp"
-
-namespace upsylon {
-    
-    namespace Spade
-    {
-        template <typename COORD>
-        struct Connectivity
-        {
-            typedef Topology<COORD>            Topo;
-            static const unsigned Dimensions = Topo::Dimensions;
-            typedef typename Topo::coord       coord;
-            typedef typename Topo::const_coord const_coord;
-            typedef typename Topo::Boolean     Boolean;
-            
             class Hub
             {
             public:
-                inline explicit Hub(const_coord  localRanks,
-                             const Topo  &topo) throw():
-                ranks( localRanks ),
-                rank( topo.getGlobalRank(ranks) )
+                explicit Hub(const_coord     localRanks,
+                             const Topology &topology) throw() :
+                ranks(localRanks),
+                rank( topology.getGlobalRank(ranks) )
                 {
                 }
                 
-                inline virtual ~Hub() throw()
+                virtual ~Hub() throw()
                 {
                 }
-                
-                inline Hub(const Hub &hub) throw() :
-                ranks(hub.ranks),
-                rank(hub.rank)
-                {
-                }
-                
                 
                 const_coord  ranks;
                 const size_t rank;
                 
             private:
-                Y_DISABLE_ASSIGN(Hub);
+                Y_DISABLE_COPY_AND_ASSIGN(Hub);
             };
             
-            class Link : public Hub
-            {
-            public:
-                
-                inline explicit Link(const_coord  localRanks,
-                                     const Topo  &topo) : Hub(localRanks,topo)
-                {
-                }
-                
-                inline virtual ~Link() throw()
-                {
-                }
-                
-                inline Link( const Link &link) throw() : Hub(link)
-                {
-                }
-                
-                
-            private:
-                Y_DISABLE_ASSIGN(Link);
-            };
-            
-            class Links
-            {
-            public:
-                const Link forward;
-                const Link reverse;
-                
-                explicit Links(const_coord fwd,
-                               const_coord rev,
-                               const Topo &topo)  throw() :
-                forward(fwd,topo), reverse(rev,topo)
-                {
-                }
-                
-                virtual ~Links() throw()
-                {
-                    
-                }
-                
-                Links(const Links &other) throw() :
-                forward(other.forward), reverse(other.reverse)
-                {
-                }
-                
-                
-            private:
-                Y_DISABLE_ASSIGN(Links);
-            };
-            
-            
-            
-            class Node : public Hub, public slots<Links>
+            class Node : public Hub
             {
             public:
                 const Boolean head;
                 const Boolean tail;
                 const Boolean bulk;
                 
-                inline explicit Node(const_coord  localRanks,
-                                     const Topo  &topo) :
-                Hub(localRanks,topo),
-                slots<Link>( Topo::Levels ),
-                bulk( Coord::False<Boolean>() )
+                inline explicit Node(const_coord      localRanks,
+                                     const Topology  &topology) :
+                Hub(localRanks,topology),
+                head(Coord::False<Boolean>()),
+                tail(head),
+                bulk(tail)
                 {
                     // get information on my position
                     {
-                        bool *h = (bool *) &head;
-                        bool *t = (bool *) &tail;
-                        bool *b = (bool *) &bulk;
+                        bool          *h = (bool *) &head;
+                        bool          *t = (bool *) &tail;
+                        bool          *b = (bool *) &bulk;
+                        const Coord1D *m = (const Coord1D *) &topology.maxRanks;
                         for(unsigned dim=0;dim<Dimensions;++dim)
                         {
                             const Coord1D localRank = Coord::Of(this->ranks,dim);
                             const bool    isHead    = h[dim] = (localRank == 0);
-                            const bool    isTail    = t[dim] = (localRank == Coord::Of(topo.maxRanks,dim) );
+                            const bool    isTail    = t[dim] = (localRank == m[dim]);
                             b[dim] = (!isHead) && (!isTail);
                         }
                     }
                     
+                    const_coord &sizes = topology.sizes;
                     // now study the neighbourhood
-                    for(unsigned level=0;level<Topo::Levels;++level)
+                    for(unsigned level=0;level<Levels;++level)
                     {
-                        const_coord probe = Topo::Coordination::Probes[level];
+                        const_coord  probe  = Coordination::Probes[level];
+                        coord        target = this->ranks;
                         for(unsigned dim=0;dim<Dimensions;++dim)
                         {
-                            
+                            const Coord1D localSize = Coord::Of(sizes,dim);
+                            const Coord1D localRank = Coord::Of(this->ranks,dim);
+                            const Coord1D p = Coord::Of(probe,dim);
+                            switch (p) {
+                                case  1:
+                                    Coord::Of(target,dim) = Next(localSize,localRank);
+                                    break;
+                                case -1:
+                                    Coord::Of(target,dim) = Prev(localSize,localRank);
+                                    break;
+                                default: assert(0==p); break;
+                            }
                         }
-#if 0
-                        const_coord fwd = getNeighbourRanks(this->ranks,level,Topo::Forward);
-                        const_coord rev = getNeighbourRanks(this->ranks,level,Topo::Reverse);
-                        Links       links(fwd,rev,topo);
-                        this->push(links);
-#endif
+                        
                     }
                 }
                 
@@ -385,8 +310,9 @@ namespace upsylon {
             };
             
             
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Topology);
         };
-        
         
         
     }
