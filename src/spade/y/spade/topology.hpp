@@ -6,12 +6,37 @@
 #include "y/spade/types.hpp"
 #include "y/counting/mloop.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/sequence/slots.hpp"
+#include "y/core/inode.hpp"
 
 namespace upsylon {
     
     namespace Spade
     {
+        //! direction for each Level
+        enum Direction
+        {
+            Forward, //!< forward at a given level
+            Reverse  //!< reverse at a given level
+        };
         
+        //! connectivity with a link
+        struct Connect
+        {
+            //! the very mode :)
+            enum Mode
+            {
+                Zilch, //!< none, there is a wall
+                Local, //!< auto-connected
+                Async  //!< connected to another rank
+            };
+            
+            //! compute mode
+            static Mode        For(const bool exists, const size_t src, const size_t tgt) throw();
+            
+            //! return a human readable mode
+            static const char *Text(const Mode) throw();
+        };
         namespace Kernel
         {
             //! Number of neighbours=3^DIM-1
@@ -60,16 +85,22 @@ namespace upsylon {
             //------------------------------------------------------------------
             class Topology
             {
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
             public:
-                //! direction for each Level
-                enum Direction
-                {
-                    Forward, //!< forward at a given level
-                    Reverse  //!< reverse at a given level
-                };
-                
                 virtual ~Topology() throw();        //!< cleanup
-                const size_t size;                  //!< number of cores
+            protected:
+                explicit Topology(const size_t nc); //!< set size, with checking
+                
+            public:
+                //--------------------------------------------------------------
+                //
+                // methods
+                //
+                //--------------------------------------------------------------
                 
                 //! reverse (previous) local rank w.r.t local size
                 static Coord1D Prev(Coord1D localSize, Coord1D localRank) throw();
@@ -77,9 +108,13 @@ namespace upsylon {
                 //! forward(next) local rank w.r.t. local size
                 static Coord1D Next(Coord1D localSize, Coord1D localRank) throw();
                 
-            protected:
-                explicit Topology(const size_t nc); //!< set size, with checking
-                
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const size_t size;                  //!< number of cores
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Topology);
             };
@@ -119,6 +154,8 @@ namespace upsylon {
             {
                 _bzset(sizes);
                 _bzset(pitch);
+                _bzset(maxRanks);
+                _bzset(parallel);
             }
             
             
@@ -181,40 +218,50 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! rank for a level and a direction
-            inline coord getNeighbourRanks(const_coord     ranks,
-                                           const unsigned  level,
-                                           const Direction direction) const throw()
+            //! compute ranks and linked satus for some given ranks and probe
+            inline coord getProbeRanks(const_coord   &ranks,
+                                       const_coord    probe,
+                                       const Boolean &pbc,
+                                       bool          &linked) const throw()
             {
                 assert( Coord::LT(ranks,sizes) );
                 assert( Coord::GEQ(ranks,Coord::Zero<coord>()) );
-                assert(level<Levels);
-                
-                // get probe, with sign according to direction
-                coord probe = Coordination::Probes[level];
-                switch(direction)
-                {
-                    case Reverse: probe=-probe; break;
-                    case Forward: break;
-                }
-                
-                // build neighbour ranks
+                assert( Coord::Norm1(probe)>=1 );
+                assert( Coord::Norm1(probe)<=Dimensions);
+                assert(true==linked);
                 coord  where = ranks;
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
                     const Coord1D localScan = Coord::Of(probe,dim);
                     const Coord1D localSize = Coord::Of(sizes,dim);
                     const Coord1D localRank = Coord::Of(ranks,dim);
+                    const Coord1D localLast = Coord::Of(maxRanks,dim);
+                    const bool    wall      = !Coord::Flag(pbc,dim);
+
                     switch(localScan)
                     {
-                        case  1: Coord::Of(where,dim) = Next(localSize,localRank); break;
-                        case -1: Coord::Of(where,dim) = Prev(localSize,localRank); break;
+                        case  1:
+                            Coord::Of(where,dim) = Next(localSize,localRank);
+                            if( (localRank>=localLast) && wall )
+                            {
+                                linked = false;
+                            }
+                            break;
+                            
+                        case -1:
+                            Coord::Of(where,dim) = Prev(localSize,localRank);
+                            if( (localRank<=0) && wall )
+                            {
+                                linked = false;
+                            }
+                            break;
                         default: assert(0==localScan); break;
                     }
                 }
                 return where;
             }
             
+          
             
             //------------------------------------------------------------------
             //
@@ -226,87 +273,190 @@ namespace upsylon {
             const_coord   maxRanks; //!< sizes-1
             const Boolean parallel; //!< dimension wise parallel flag
             
+            //------------------------------------------------------------------
+            //
+            //! base class to build topology
+            //
+            //------------------------------------------------------------------
             class Hub
             {
             public:
-                explicit Hub(const_coord     localRanks,
-                             const Topology &topology) throw() :
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+                
+                //! setup
+                inline Hub(const_coord     localRanks,
+                           const Topology &topology) throw() :
                 ranks(localRanks),
                 rank( topology.getGlobalRank(ranks) )
                 {
                 }
                 
-                virtual ~Hub() throw()
+                //! cleanup
+                inline virtual ~Hub() throw()
                 {
                 }
                 
-                const_coord  ranks;
-                const size_t rank;
+                //! copy
+                inline Hub(const Hub &hub) throw() :
+                ranks(hub.ranks),
+                rank(hub.rank)
+                {
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const_coord  ranks; //!< local ranks
+                const size_t rank;  //!< global rank
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Hub);
+                Y_DISABLE_ASSIGN(Hub);
             };
             
-            class Node : public Hub
+            //------------------------------------------------------------------
+            //
+            //! a Link is a Hub with a connect mode
+            //
+            //------------------------------------------------------------------
+            class Link : public Hub
             {
             public:
-                const Boolean head;
-                const Boolean tail;
-                const Boolean bulk;
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
                 
-                inline explicit Node(const_coord      localRanks,
-                                     const Topology  &topology) :
+                //! setup
+                inline Link(const size_t    peerRank,
+                            const_coord    &localRanks,
+                            const Topology &topology,
+                            const bool      exists) throw() :
                 Hub(localRanks,topology),
-                head(Coord::False<Boolean>()),
-                tail(head),
-                bulk(tail)
+                conn( Connect::For(exists,peerRank,this->rank) )
                 {
-                    // get information on my position
-                    {
-                        bool          *h = (bool *) &head;
-                        bool          *t = (bool *) &tail;
-                        bool          *b = (bool *) &bulk;
-                        const Coord1D *m = (const Coord1D *) &topology.maxRanks;
-                        for(unsigned dim=0;dim<Dimensions;++dim)
-                        {
-                            const Coord1D localRank = Coord::Of(this->ranks,dim);
-                            const bool    isHead    = h[dim] = (localRank == 0);
-                            const bool    isTail    = t[dim] = (localRank == m[dim]);
-                            b[dim] = (!isHead) && (!isTail);
-                        }
-                    }
+                }
+                
+                //! copy
+                inline Link(const Link &link) throw() : Hub(link), conn(link.conn) { }
+                
+                //!cleanup
+                inline virtual ~Link() throw() { }
+                
+                //! display
+                friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
+                {
+                    Coord::Disp(os,link.ranks) << " (" << Connect::Text(link.conn) << ")";
+                    return os;
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const Connect::Mode conn; //!< connect mode
+
+            private:
+                Y_DISABLE_ASSIGN(Link);
+            };
+            
+            //------------------------------------------------------------------
+            //
+            //! Links describe two-ways connections
+            //
+            //------------------------------------------------------------------
+            class Links
+            {
+            public:
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+                
+                //! setup
+                inline Links(const Link &fwd, const Link &rev) throw() :
+                forward(fwd), reverse(rev)
+                {
                     
-                    const_coord &sizes = topology.sizes;
-                    // now study the neighbourhood
+                }
+                
+                //! copy
+                inline Links(const Links &other) throw() : forward(other.forward), reverse(other.reverse) {}
+                
+                //! cleanup
+                inline ~Links() throw() {}
+                
+                //! display
+                friend inline std::ostream & operator<<( std::ostream &os, const Links &links )
+                {
+                    os << "forward@" << links.forward << " | reverse@" << links.reverse;
+                    return os;
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const Link forward; //!< for forward wave
+                const Link reverse; //!< for reverse wave
+                
+            private:
+                Y_DISABLE_ASSIGN(Links);
+            };
+            
+            //------------------------------------------------------------------
+            //
+            //! a Node is an Hub with its Links
+            //
+            //------------------------------------------------------------------
+            class Node : public Hub, public slots<Links>
+            {
+            public:
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+               
+                //! setup
+                inline explicit Node(const_coord      localRanks,
+                                     const Topology  &topology,
+                                     const Boolean   &pbc) :
+                Hub(localRanks,topology),
+                slots<Links>(Levels)
+                {
+
+                    // scan the neighbourhood
                     for(unsigned level=0;level<Levels;++level)
                     {
-                        const_coord  probe  = Coordination::Probes[level];
-                        coord        target = this->ranks;
-                        for(unsigned dim=0;dim<Dimensions;++dim)
-                        {
-                            const Coord1D localSize = Coord::Of(sizes,dim);
-                            const Coord1D localRank = Coord::Of(this->ranks,dim);
-                            const Coord1D p = Coord::Of(probe,dim);
-                            switch (p) {
-                                case  1:
-                                    Coord::Of(target,dim) = Next(localSize,localRank);
-                                    break;
-                                case -1:
-                                    Coord::Of(target,dim) = Prev(localSize,localRank);
-                                    break;
-                                default: assert(0==p); break;
-                            }
-                        }
-                        
+                        const coord  probe   = Coordination::Probes[level];
+                        const Link   forward = getLink(topology,probe,pbc);
+                        const Link   reverse = getLink(topology,-probe,pbc);
+                        this->template build<const Link&,const Link&>(forward,reverse);
+                        Coord::Disp( std::cerr << "probe:",probe) << " : " << this->back() << std::endl;
                     }
                 }
                 
-                inline virtual ~Node() throw()
-                {
-                }
+                //! cleanup
+                inline virtual ~Node() throw() {}
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
+                inline Link getLink(const Topology &topology, const_coord probe, const Boolean &pbc) const throw()
+                {
+                    bool        exists = true;
+                    const_coord lranks = topology.getProbeRanks(this->ranks,probe,pbc,exists);
+                    return Link(this->rank, lranks, topology, exists);
+                }
             };
             
             

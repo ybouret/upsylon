@@ -5,6 +5,28 @@ namespace upsylon {
     
     namespace Spade
     {
+        Connect::Mode Connect::For(const bool exists, const size_t src, const size_t tgt) throw()
+        {
+            if(exists)
+            {
+                return (src==tgt) ? Local : Async;
+            }
+            else
+            {
+                return Zilch;
+            }
+        }
+
+        const char * Connect:: Text(const Mode m) throw()
+        {
+            switch (m) {
+                case Zilch: return "Zilch";
+                case Local: return "Local";
+                case Async: return "Async";
+            }
+            return "???";
+        }
+
         
         namespace Kernel
         {

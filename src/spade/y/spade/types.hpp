@@ -82,7 +82,7 @@ namespace upsylon {
             template <typename BOOLEAN> static inline
             bool &Flag(BOOLEAN &b, const unsigned dim) throw()
             {
-                assert(sizeof(BOOLEAN)/sizeof(bool)<=dim);
+                assert(dim<sizeof(BOOLEAN)/sizeof(bool));
                 return *(((bool *)&b)+dim);
             }
             
@@ -90,8 +90,8 @@ namespace upsylon {
             template <typename BOOLEAN> static inline
             const bool &Flag(const BOOLEAN &b, const unsigned dim) throw()
             {
-                assert(sizeof(BOOLEAN)/sizeof(bool)<=dim);
-                return *(((bool *)&b)+dim);
+                assert(dim<sizeof(BOOLEAN)/sizeof(bool));
+                return *(((const bool *)&b)+dim);
             }
             
             //! get coordinate[dim]

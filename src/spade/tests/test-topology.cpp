@@ -1,6 +1,7 @@
 #include "y/spade/topology.hpp"
 #include "y/utest/run.hpp"
 #include "y/core/ipower.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 using namespace Spade;
@@ -10,10 +11,11 @@ namespace {
     template <typename COORD>
     void doTest()
     {
-        typedef Topology<COORD>     Topo;
-        typedef typename Topo::Node Node;
-        typedef typename Topo::Loop Loop;
-        
+        typedef Topology<COORD>        Topo;
+        typedef typename Topo::Node    Node;
+        typedef typename Topo::Loop    Loop;
+        typedef typename Topo::Boolean Boolean;
+
         std::cerr << std::endl;
         std::cerr << "In " << Topo::Dimensions << "D" << std::endl;
 
@@ -34,21 +36,14 @@ namespace {
                 const COORD  ranks = topo.getLocalRanks(rank);
                 const size_t gRank = topo.getGlobalRank(ranks);
                 Y_ASSERT(gRank==rank);
-                for(unsigned level=0;level<Topo::Levels;++level)
-                {
-                    const COORD fwd = topo.getNeighbourRanks(ranks,level,Topo::Forward);
-                    const COORD rev = topo.getNeighbourRanks(ranks,level,Topo::Reverse);
-                    Y_ASSERT( Coord::GEQ(fwd,Coord::Zero<COORD>()));
-                    Y_ASSERT( Coord::GEQ(rev,Coord::Zero<COORD>()));
-                    Y_ASSERT( Coord::LT(fwd,topo.sizes));
-                    Y_ASSERT( Coord::LT(rev,topo.sizes));
-                }
             }
             std::cerr << "checking connectivity..." << std::endl;
+            Boolean pbc = Coord::False<Boolean>();
             for(size_t rank=0;rank<topo.size;++rank)
             {
                 const COORD  ranks = topo.getLocalRanks(rank);
-                const Node   node(ranks,topo);
+                std::cerr << "ranks=" << ranks << std::endl;
+                const Node   node(ranks,topo,pbc);
             }
         }
     }
@@ -105,6 +100,7 @@ namespace {
 
 Y_UTEST(topology)
 {
+    Coord::DispWidth = 2;
     std::cerr << std::endl;
     std::cerr << "Checking prev/next..." << std::endl;
     for(Coord1D size=1;size<=8;++size)
@@ -134,7 +130,13 @@ Y_UTEST(topology)
     doTest<Coord2D>();
     doTest<Coord3D>();
     
-   
+    Y_UTEST_SIZEOF(Topology<Coord1D>::Links);
+    Y_UTEST_SIZEOF(Topology<Coord2D>::Links);
+    Y_UTEST_SIZEOF(Topology<Coord3D>::Links);
+
+    Y_UTEST_SIZEOF(Topology<Coord1D>::Node);
+    Y_UTEST_SIZEOF(Topology<Coord2D>::Node);
+    Y_UTEST_SIZEOF(Topology<Coord3D>::Node);
 
     
 }
