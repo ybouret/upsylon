@@ -98,9 +98,11 @@ namespace upsylon {
     head(false),
     tail(false),
     bulk(0),
+    commTicks(),
     processorName(),
     nodeName(),
-    threadLevel(-1)
+    threadLevel(-1),
+    types()
     {
         //______________________________________________________________________
         //

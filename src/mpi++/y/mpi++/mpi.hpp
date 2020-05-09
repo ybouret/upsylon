@@ -61,10 +61,11 @@ namespace upsylon
         {
         public:
             const MPI_Datatype uuid;
-            data_type(const MPI_Datatype) throw();
+            const unsigned     size;
+            
+            data_type(const MPI_Datatype, const size_t) throw();
             data_type(const data_type &) throw();
             ~data_type() throw();
-            
         private:
             Y_DISABLE_ASSIGN(data_type);
         };
@@ -142,7 +143,7 @@ namespace upsylon
         comm_ticks    commTicks;     //!< tracking time
         const string  processorName; //!< the processor name
         const string  nodeName;      //!< size.rank
-        const int     threadLevel;
+        const int     threadLevel;   //!< current thread level
         
         //______________________________________________________________________
         //
@@ -151,15 +152,16 @@ namespace upsylon
         //
         //______________________________________________________________________
         
-        
         //______________________________________________________________________
         //
         //
         // higher level methods
         //
         //______________________________________________________________________
+        const data_type & data_type_for( const std::type_info & ) const;
         
-        
+        template <typename T> inline
+        const data_type & data_type_for() const { return data_type_for( typeid(T) ); }
         
         
     private:
@@ -167,11 +169,12 @@ namespace upsylon
         virtual ~mpi() throw();
         explicit mpi();
         friend class singleton<mpi>;
-        void finalize() throw();
+        void finalize() throw(); //!< MPI_Finalize()
+        void build_data_types(); //!< build the database of primary types
+
         
+        suffix_tree<data_type> types; //!< persistent database of types+sizes
         
-        suffix_tree<data_type> data_types;
-        void build_data_types();
         
     public:
         //______________________________________________________________________
