@@ -1,5 +1,6 @@
 #include "y/spade/topology.hpp"
 #include "y/exception.hpp"
+#include "y/parops.hpp"
 
 namespace upsylon {
     
@@ -44,16 +45,12 @@ namespace upsylon {
             
             Coord1D Topology:: Prev(Coord1D localSize, Coord1D localRank) throw()
             {
-                assert(localRank>=0);
-                assert(localRank<localSize);
-                return (localRank>0) ? --localRank : --localSize;
+                return parops::rank_prev(localSize,localRank);
             }
             
             Coord1D Topology:: Next(Coord1D localSize, Coord1D localRank) throw()
             {
-                assert(localRank>=0);
-                assert(localRank<localSize);
-                return (++localRank>=localSize) ?  0 : localRank;
+                return parops::rank_next(localSize,localRank);
             }
             
             const Coord1D Coordination<1>::Probes[Levels]= {

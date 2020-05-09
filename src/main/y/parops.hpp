@@ -27,37 +27,21 @@ namespace upsylon
             length = todo;
         }
         
-        //! next rank in one dimension
         template <typename T> static inline
-        T rank_next(const T size, T rank) throw()
+        T rank_next(T size, T rank) throw()
         {
             assert(size>0); assert(rank>=0); assert(rank<size);
-            if(++rank>=size) rank=0;
-            return rank;
+            return (++rank>=size) ? 0 : rank;
         }
         
-        //! set in place next rank
         template <typename T> static inline
-        void  set_rank_next(const T &size, T &rank ) throw()
-        {
-            rank = rank_next(size,rank);
-        }
-        
-        //! prev rank in one dimension
-        template <typename T> static inline
-        T rank_prev(const T size, T rank) throw()
+        T rank_prev(T size, T rank) throw()
         {
             assert(size>0); assert(rank>=0); assert(rank<size);
-            if(rank<=0) rank = size;
-            return --rank;
+            return (rank<=0) ? --size : --rank;
         }
         
-        //! set in place prev rank
-        template <typename T> static inline
-        void  set_rank_prev(const T &size, T &rank ) throw()
-        {
-            rank = rank_prev(size,rank);
-        }
+        
     };
 }
 

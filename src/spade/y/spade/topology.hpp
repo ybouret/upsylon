@@ -31,12 +31,14 @@ namespace upsylon {
                 Async  //!< connected to another rank
             };
             
-            //! compute mode
+            //! compute mode according to status
             static Mode        For(const bool exists, const size_t src, const size_t tgt) throw();
             
             //! return a human readable mode
             static const char *Text(const Mode) throw();
         };
+        
+        
         namespace Kernel
         {
             //! Number of neighbours=3^DIM-1
