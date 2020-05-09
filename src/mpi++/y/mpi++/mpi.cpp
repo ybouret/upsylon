@@ -2,10 +2,20 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/string/env.hpp"
+#include "y/parops.hpp"
 
 namespace upsylon {
     
+    int mpi:: nextRank() const throw()
+    {
+        return parops::rank_next(size,rank);
+    }
     
+    int mpi:: prevRank() const throw()
+    {
+        return parops::rank_prev(size,rank);
+    }
+
     namespace
     {
         int  *   __mpi_argc = 0;
@@ -51,10 +61,8 @@ namespace upsylon {
                 Y_MPI_CHOOSE(FUNNELED);
                 Y_MPI_CHOOSE(SERIALIZED);
                 Y_MPI_CHOOSE(MULTIPLE);
-
             }
-            __mpi_levl = MPI_THREAD_SINGLE;
-            
+            __mpi_levl = MPI_THREAD_SINGLE;            
         }
     CALL:
         __mpi_call = true;
@@ -74,6 +82,8 @@ namespace upsylon {
     void mpi:: finalize() throw()
     {
         (void)MPI_Finalize();
+        _bzset(size);
+        _bzset(rank);
         _bzset(threadLevel);
     }
     
@@ -81,21 +91,79 @@ namespace upsylon {
     
     
     mpi:: mpi() :
+    size(-1),
+    rank(-1),
+    last(-1),
+    parallel(false),
+    head(false),
+    tail(false),
+    bulk(0),
+    processorName(),
+    nodeName(),
     threadLevel(-1)
     {
         //______________________________________________________________________
         //
+        //
         // System level init
+        //
         //______________________________________________________________________
         if(!__mpi_call) throw upsylon::exception("please call mpi.init(...)");
         Y_MPI_CHECK(MPI_Init_thread(__mpi_argc,__mpi_argv,__mpi_levl, & aliasing::_(threadLevel)) );
         
         //______________________________________________________________________
         //
+        //
         // from now, finalize upon failure
+        //
         //______________________________________________________________________
         try
         {
+            
+            //__________________________________________________________________
+            //
+            // size and rank
+            //__________________________________________________________________
+            Y_MPI_CHECK(MPI_Comm_size(MPI_COMM_WORLD,&aliasing::_(size) ));
+            Y_MPI_CHECK(MPI_Comm_rank(MPI_COMM_WORLD,&aliasing::_(rank) ));
+            aliasing::_(last)     = size-1;
+            aliasing::_(parallel) = (size>1);
+            aliasing::_(head)     = (0==rank);
+            aliasing::_(tail)     = (last==rank);
+            aliasing::_(bulk)     = (!head) && (!tail);
+            
+            //__________________________________________________________________
+            //
+            // processor/node name
+            //__________________________________________________________________
+            {
+                char pname[MPI_MAX_PROCESSOR_NAME+1] = { 0 };
+                int  psize=0;
+                Y_MPI_CHECK(MPI_Get_processor_name(pname,&psize));
+                string tmp(pname,psize);
+                tmp.swap_with( aliasing::_(processorName) );
+            }
+            
+            {
+                int sz = 10; int tp = 1;
+                while(size>=sz)
+                {
+                    ++tp;
+                    sz *= 10;
+                }
+                const string fmt = vformat(".%%%dd.%%0%dd",tp,tp);
+                string tmp = processorName + vformat(*fmt,size,rank);
+                tmp.swap_with( aliasing::_(nodeName) );
+
+            }
+            
+            //__________________________________________________________________
+            //
+            // data_types
+            //__________________________________________________________________
+            build_data_types();
+            
+            
             
         }
         catch(...)

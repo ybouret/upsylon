@@ -4,9 +4,11 @@
 #ifndef Y_MPIXX_INCLUDED
 #define Y_MPIXX_INCLUDED 1
 
+#include "y/string.hpp"
 #include "y/exception.hpp"
 #include "y/concurrent/singleton.hpp"
-#include "y/object.hpp"
+#include "y/associative/suffix-tree.hpp"
+
 #include <cstdio>
 
 //! avoid C++ from OpenMPI
@@ -53,6 +55,53 @@ namespace upsylon
 
         //______________________________________________________________________
         //
+        //! wrapping MPI_Datatype
+        //______________________________________________________________________
+        class data_type
+        {
+        public:
+            const MPI_Datatype uuid;
+            data_type(const MPI_Datatype) throw();
+            data_type(const data_type &) throw();
+            ~data_type() throw();
+            
+        private:
+            Y_DISABLE_ASSIGN(data_type);
+        };
+        
+        //______________________________________________________________________
+        //
+        //! tracing comms
+        //______________________________________________________________________
+        class comm_ticks
+        {
+        public:
+            comm_ticks()  throw();
+            ~comm_ticks() throw();
+            uint64_t last;
+            uint64_t full;
+            void operator()(const uint64_t delta) throw(); //! full += (last=delta)
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(comm_ticks);
+        };
+        
+        //______________________________________________________________________
+        //
+        //! tracing calls
+        //______________________________________________________________________
+        class data_trace
+        {
+        public:
+            data_trace()  throw();
+            ~data_trace() throw();
+            MPI_Datatype type; //!< last type
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(data_trace);
+        };
+        
+        //______________________________________________________________________
+        //
         //
         // static methods
         //
@@ -68,20 +117,50 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        // methods
+        // helper methods
         //
         //______________________________________________________________________
         
-        //! return human readable thread level
-        const char *threadLevelText() const throw();
-
+       
+        const char *threadLevelText() const throw(); //!< return human readable thread level
+        int         nextRank() const throw();        //!< next rank
+        int         prevRank() const throw();        //!< prev rank
+        
         //______________________________________________________________________
         //
         //
         // members
         //
         //______________________________________________________________________
-        const int threadLevel;
+        const int     size;          //!< MPI_COMM_WORLD size
+        const int     rank;          //!< MPI_COMM_WORLD rank
+        const int     last;          //!< size-1
+        const bool    parallel;      //!< size>1
+        const bool    head;          //!< 0==rank
+        const bool    tail;          //!< last==rank
+        const bool    bulk;          //!< !head && !tail
+        comm_ticks    commTicks;     //!< tracking time
+        const string  processorName; //!< the processor name
+        const string  nodeName;      //!< size.rank
+        const int     threadLevel;
+        
+        //______________________________________________________________________
+        //
+        //
+        // MPI methods
+        //
+        //______________________________________________________________________
+        
+        
+        //______________________________________________________________________
+        //
+        //
+        // higher level methods
+        //
+        //______________________________________________________________________
+        
+        
+        
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mpi);
@@ -89,6 +168,10 @@ namespace upsylon
         explicit mpi();
         friend class singleton<mpi>;
         void finalize() throw();
+        
+        
+        suffix_tree<data_type> data_types;
+        void build_data_types();
         
     public:
         //______________________________________________________________________

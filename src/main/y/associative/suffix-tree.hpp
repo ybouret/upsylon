@@ -43,7 +43,7 @@ namespace upsylon {
                 explicit node_type(node_type *, const uint8_t) throw(); //!< setup
                 virtual ~node_type() throw();                           //!< cleanup
                 
-                void   trim()   throw(); //!< trim dead branches
+                void   trim()   throw();       //!< trim dead branches
                 size_t leaves() const throw(); //!< number of reachable leaves
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(node_type);
