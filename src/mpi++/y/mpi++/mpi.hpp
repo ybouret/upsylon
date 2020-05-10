@@ -81,30 +81,48 @@ namespace upsylon
         
         //______________________________________________________________________
         //
-        //! tracing comms
+        //! tracing
         //______________________________________________________________________
-        class comm_ticks
+        class comm_tracer
         {
         public:
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            comm_ticks()  throw(); //!< setup
-            ~comm_ticks() throw(); //!< cleanup
+            explicit comm_tracer() throw(); //!< setup
+            virtual ~comm_tracer() throw(); //!< cleanup
             
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
             void operator()(const uint64_t delta) throw(); //!< full += (last=delta)
-            
+            void reset() throw(); //!< last=full=0
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             uint64_t last;         //!< last ticks
             uint64_t full;         //!< cumulative ticks
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(comm_tracer);
+        };
+        
+        //______________________________________________________________________
+        //
+        //! tracing comms
+        //______________________________________________________________________
+        class comm_ticks : public comm_tracer
+        {
+        public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit comm_ticks()  throw(); //!< setup
+            virtual ~comm_ticks() throw(); //!< cleanup
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_ticks);
         };
@@ -113,15 +131,32 @@ namespace upsylon
         //
         //! tracing calls
         //______________________________________________________________________
-        class data_trace
+        class comm_data : public comm_tracer
         {
         public:
-            data_trace()  throw();
-            ~data_trace() throw();
+            explicit comm_data()  throw();
+            virtual ~comm_data() throw();
             MPI_Datatype type; //!< last type
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(data_trace);
+            Y_DISABLE_COPY_AND_ASSIGN(comm_data);
+        };
+        
+        class comm_info
+        {
+        public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            comm_info() throw();
+            ~comm_info() throw();
+            comm_ticks ticks;
+            comm_data  data;
+            void reset_all() throw();
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(comm_info);
         };
         
         //______________________________________________________________________
@@ -156,17 +191,18 @@ namespace upsylon
         // members
         //
         //______________________________________________________________________
-        const int     size;          //!< MPI_COMM_WORLD size
-        const int     rank;          //!< MPI_COMM_WORLD rank
-        const int     last;          //!< size-1
-        const bool    parallel;      //!< size>1
-        const bool    head;          //!< 0==rank
-        const bool    tail;          //!< last==rank
-        const bool    bulk;          //!< !head && !tail
-        comm_ticks    commTicks;     //!< tracking time
-        const string  processorName; //!< the processor name
-        const string  nodeName;      //!< size.rank
-        const int     threadLevel;   //!< current thread level
+        const int          size;          //!< MPI_COMM_WORLD size
+        const int          rank;          //!< MPI_COMM_WORLD rank
+        const int          last;          //!< size-1
+        const bool         parallel;      //!< size>1
+        const bool         head;          //!< 0==rank
+        const bool         tail;          //!< last==rank
+        const bool         bulk;          //!< !head && !tail
+        mutable comm_info  commSend;      //!< tracking time
+        mutable comm_info  commRecv;      //!< tracking time
+        const string       processorName; //!< the processor name
+        const string       nodeName;      //!< size.rank
+        const int          threadLevel;   //!< current thread level
         
         //______________________________________________________________________
         //
@@ -175,13 +211,41 @@ namespace upsylon
         //
         //______________________________________________________________________
         
-        //! MPI_Send
+        //! MPI_Send, update commSend.ticks only
         void Send(const void        *buffer,
                   const size_t       count,
                   const MPI_Datatype datatype,
                   const int          dest,
                   const int          tag,
                   const MPI_Comm     comm) const;
+        
+        
+        //! Send some data, commSend.data is updated
+        template <typename T> inline
+        void Send(const T       *buffer,
+                  const size_t   count,
+                  const int      dest,
+                  const int      tag = io_tag,
+                  const MPI_Comm comm = MPI_COMM_WORLD) const
+        {
+            static const data_type   & _        = data_type_for<T>();
+            static const MPI_Datatype  datatype = _.uuid;
+            static const size_t        datasize = _.size;
+            Send(buffer,count,datatype,dest,tag,comm);
+            commSend.data.type = datatype;
+            commSend.data( datasize*count );
+        }
+        
+        //! Send one datum
+        template <typename T>
+        void Send(const T        args,
+                  const int      dest,
+                  const int      tag = io_tag,
+                  const MPI_Comm comm = MPI_COMM_WORLD) const
+        {
+            Send(&args,1,dest,tag,comm);
+        }
+        
         
         //! MPI_Recv
         void Recv(void              *buffer,
@@ -191,6 +255,37 @@ namespace upsylon
                   const int          tag,
                   const MPI_Comm     comm,
                   MPI_Status        &status) const;
+       
+        
+        
+        //! Recv some data
+        template <typename T> inline
+        void Recv(T             *buffer,
+                  const size_t   count,
+                  const int      source,
+                  const int      tag = io_tag,
+                  const MPI_Comm comm = MPI_COMM_WORLD) const
+        {
+            static const data_type   & _        = data_type_for<T>();
+            static const MPI_Datatype  datatype = _.uuid;
+            static const size_t        datasize = _.size;
+            MPI_Status status;
+            Recv(buffer,count,datatype,source,tag,comm,status);
+            commRecv.data.type = datatype;
+            commRecv.data( datasize*count );
+        }
+        
+        //! Recv one datum
+        template <typename T>
+        T Recv(const int      source,
+               const int      tag = io_tag,
+               const MPI_Comm comm = MPI_COMM_WORLD) const
+        {
+            T ans(0);
+            Recv(&ans,1,source,tag,comm);
+            return ans;
+        }
+       
         
         //______________________________________________________________________
         //
@@ -228,7 +323,6 @@ namespace upsylon
         
         //! life-time of the singleton
         static const  at_exit::longevity life_time = memory::global::life_time - 4;
-        
     };
     
     //! MPI_Init

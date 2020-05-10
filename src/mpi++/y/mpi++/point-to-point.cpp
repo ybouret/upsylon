@@ -1,5 +1,5 @@
-
 #include "y/mpi++/mpi.hpp"
+#include "y/os/rt-clock.hpp"
 
 namespace upsylon {
     
@@ -15,7 +15,9 @@ namespace upsylon {
         {
             const int items = static_cast<int>(count);
             if(items<0) throw exception(MPI_ERR_COUNT, "mpi::Send(count overflow)");
+            const uint64_t mark = rt_clock::ticks();
             Y_MPI_CHECK(MPI_Send(buffer,items,datatype,dest,tag,comm));
+            commSend.ticks( rt_clock::ticks() - mark );
         }
         
     }
@@ -33,7 +35,9 @@ namespace upsylon {
         {
             const int items = static_cast<int>(count);
             if(items<0) throw exception(MPI_ERR_COUNT, "mpi::Recv(count overflow)");
+            const uint64_t mark = rt_clock::ticks();
             Y_MPI_CHECK(MPI_Recv(buffer,items,datatype,source,tag,comm,&status));
+            commRecv.ticks( rt_clock::ticks() - mark );
         }
     }
 }
