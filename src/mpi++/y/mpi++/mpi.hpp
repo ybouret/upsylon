@@ -238,13 +238,19 @@ namespace upsylon
         
         //! Send one datum
         template <typename T>
-        void Send(const T        args,
+        void Send(const T       &args,
                   const int      dest,
                   const int      tag = io_tag,
                   const MPI_Comm comm = MPI_COMM_WORLD) const
         {
             Send(&args,1,dest,tag,comm);
         }
+        
+        //! portable send size
+        void SendSize(const size_t   args,
+                      const int      dest,
+                      const int      tag = io_tag,
+                      const MPI_Comm comm = MPI_COMM_WORLD) const;
         
         
         //! MPI_Recv
@@ -286,6 +292,17 @@ namespace upsylon
             return ans;
         }
        
+        size_t RecvSize(const int      source,
+                        const int      tag = io_tag,
+                        const MPI_Comm comm = MPI_COMM_WORLD) const;
+        
+        //______________________________________________________________________
+        //
+        //
+        // MPI methods: collective
+        //
+        //______________________________________________________________________
+        void Barrier(const MPI_Comm comm = MPI_COMM_WORLD) const;
         
         //______________________________________________________________________
         //
@@ -300,6 +317,8 @@ namespace upsylon
         template <typename T> inline
         const data_type & data_type_for() const { return data_type_for( typeid(T) ); }
         
+        void Printf0(FILE *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
+        void Printf(FILE  *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mpi);
@@ -336,6 +355,43 @@ namespace upsylon
     
     //! MPI_Init using "MPI_THREAD_LEVEL" as env, default is single
 #define Y_MPI_ENV()  mpi & MPI = mpi::init( &argc, &argv,-1,true)
+    
+    template <>
+    inline void mpi::Send<string>(const string  &str,
+                                  const int      dest,
+                                  const int      tag,
+                                  const MPI_Comm comm) const
+    {
+        const size_t n = str.size();
+        if(n>0)
+        {
+            SendSize(n,dest,tag,comm);
+            Send(*str,n,dest,tag,comm);
+        }
+        else
+        {
+            static const uint8_t z=0;
+            Send(z,dest,tag,comm); //!< will trigger 0 size and no content
+        }
+    }
+    
+    template <>
+    inline string mpi::Recv<string>(const int      source,
+                                    const int      tag,
+                                    const MPI_Comm comm) const
+    {
+        const size_t n = RecvSize(source,tag,comm);
+        if(n>0)
+        {
+            string str(n,as_capacity,true);
+            Recv(*str,n,source,tag,comm);
+            return str;
+        }
+        else
+        {
+            return string();
+        }
+    }
     
 }
 

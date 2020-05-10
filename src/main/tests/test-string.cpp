@@ -148,7 +148,9 @@ Y_UTEST(string)
     Y_UTEST_SIZEOF(core::string<char>);
     Y_UTEST_SIZEOF(core::string<uint32_t>);
     Y_UTEST_SIZEOF(string);
-
+    
+    const string a = vformat("hello%cworld",0);
+    std::cerr << "a=" << a << std::endl;
 }
 Y_UTEST_DONE()
 

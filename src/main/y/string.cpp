@@ -30,7 +30,7 @@ namespace upsylon
 
             if( success )
             {
-                return string( buffer );
+                return string( buffer, result );
             }
             n <<= 1;
         }
