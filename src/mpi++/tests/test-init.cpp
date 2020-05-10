@@ -7,11 +7,7 @@ using namespace upsylon;
 Y_UTEST(init)
 {
     Y_MPI(SINGLE);
-#if 0
-    std::cerr << MPI.threadLevelText() << std::endl;
-    std::cerr << MPI.processorName << std::endl;
-    std::cerr << MPI.nodeName      << std::endl;
-#endif
+    
     
     MPI.Printf0(stderr, "ThreadLevel=%s\n",MPI.threadLevelText());
     

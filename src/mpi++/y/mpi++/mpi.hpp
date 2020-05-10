@@ -211,6 +211,11 @@ namespace upsylon
         //
         //______________________________________________________________________
         
+        //______________________________________________________________________
+        //
+        // Send
+        //______________________________________________________________________
+        
         //! MPI_Send, update commSend.ticks only
         void Send(const void        *buffer,
                   const size_t       count,
@@ -252,6 +257,11 @@ namespace upsylon
                       const int      tag = io_tag,
                       const MPI_Comm comm = MPI_COMM_WORLD) const;
         
+        
+        //______________________________________________________________________
+        //
+        // Recv
+        //______________________________________________________________________
         
         //! MPI_Recv
         void Recv(void              *buffer,
@@ -295,6 +305,23 @@ namespace upsylon
         size_t RecvSize(const int      source,
                         const int      tag = io_tag,
                         const MPI_Comm comm = MPI_COMM_WORLD) const;
+        
+        //______________________________________________________________________
+        //
+        // Sendrecv
+        //______________________________________________________________________
+        void Sendrecv(const void        *sendbuf,
+                      const size_t       sendcount,
+                      const MPI_Datatype sendtype,
+                      const int          dest,
+                      int                sendtag,
+                      void              *recvbuf,
+                      const size_t       recvcount,
+                      const MPI_Datatype recvtype,
+                      const int          source,
+                      const int          recvtag,
+                      const MPI_Comm     comm,
+                      MPI_Status         &status) const;
         
         //______________________________________________________________________
         //
@@ -356,42 +383,15 @@ namespace upsylon
     //! MPI_Init using "MPI_THREAD_LEVEL" as env, default is single
 #define Y_MPI_ENV()  mpi & MPI = mpi::init( &argc, &argv,-1,true)
     
-    template <>
-    inline void mpi::Send<string>(const string  &str,
-                                  const int      dest,
-                                  const int      tag,
-                                  const MPI_Comm comm) const
-    {
-        const size_t n = str.size();
-        if(n>0)
-        {
-            SendSize(n,dest,tag,comm);
-            Send(*str,n,dest,tag,comm);
-        }
-        else
-        {
-            static const uint8_t z=0;
-            Send(z,dest,tag,comm); //!< will trigger 0 size and no content
-        }
-    }
+    template <> void mpi::Send<string>(const string  &str,
+                                       const int      dest,
+                                       const int      tag,
+                                       const MPI_Comm comm) const;
     
-    template <>
-    inline string mpi::Recv<string>(const int      source,
-                                    const int      tag,
-                                    const MPI_Comm comm) const
-    {
-        const size_t n = RecvSize(source,tag,comm);
-        if(n>0)
-        {
-            string str(n,as_capacity,true);
-            Recv(*str,n,source,tag,comm);
-            return str;
-        }
-        else
-        {
-            return string();
-        }
-    }
+    
+    template <> string mpi::Recv<string>(const int      source,
+                                         const int      tag,
+                                         const MPI_Comm comm) const;
     
 }
 

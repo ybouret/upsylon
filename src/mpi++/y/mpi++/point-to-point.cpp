@@ -73,4 +73,21 @@ namespace upsylon {
             return 0;
         }
     }
+    
+    void mpi::Sendrecv(const void        *sendbuf,
+                       const size_t       sendcount,
+                       const MPI_Datatype sendtype,
+                       const int          dest,
+                       int                sendtag,
+                       void              *recvbuf,
+                       const size_t       recvcount,
+                       const MPI_Datatype recvtype,
+                       const int          source,
+                       const int          recvtag,
+                       const MPI_Comm     comm,
+                       MPI_Status         &status) const
+    {
+        
+    }
+    
 }
