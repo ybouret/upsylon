@@ -22,6 +22,7 @@ namespace upsylon
     mpi:: data_type:: ~data_type() throw()
     {
         aliasing::_(uuid) = MPI_DATATYPE_NULL;
+        aliasing::_(size) = 0;
     }
     
     template <typename T>
@@ -108,35 +109,42 @@ assert(sizeof(type) == data_type_for<type>().size);\
         __register<float>(types,MPI_FLOAT);
         __register<double>(types,MPI_DOUBLE);
         
-#define Y_MPI_CHK(type) assert( sizeof(type) == data_type_for<type>().size )
-        
-        Y_MPI_CHK(char);
-        Y_MPI_CHK(unsigned char);
-        Y_MPI_CHK(short);
-        Y_MPI_CHK(unsigned short);
-        Y_MPI_CHK(int);
-        Y_MPI_CHK(unsigned int);
-        Y_MPI_CHK(long);
-        Y_MPI_CHK(unsigned long);
-        Y_MPI_CHK(long long);
-        Y_MPI_CHK(unsigned long long);
-        
-        Y_MPI_CHK(float);
-        Y_MPI_CHK(double);
 
-        Y_MPI_CHK(int8_t);
-        Y_MPI_CHK(int16_t);
-        Y_MPI_CHK(int32_t);
-        Y_MPI_CHK(int64_t);
 
-        Y_MPI_CHK(uint8_t);
-        Y_MPI_CHK(uint16_t);
-        Y_MPI_CHK(uint32_t);
-        Y_MPI_CHK(uint64_t);
-        
         if(head)
         {
             types.get_root().graphViz("mpi-data-types.dot");
+
+#define Y_MPI_CHK(type) do {\
+assert( sizeof(type) == data_type_for<type>().size );\
+} while(false)
+            
+            Y_MPI_CHK(char);
+            Y_MPI_CHK(unsigned char);
+            Y_MPI_CHK(short);
+            Y_MPI_CHK(unsigned short);
+            Y_MPI_CHK(int);
+            Y_MPI_CHK(unsigned int);
+            Y_MPI_CHK(long);
+            Y_MPI_CHK(unsigned long);
+            Y_MPI_CHK(long long);
+            Y_MPI_CHK(unsigned long long);
+            
+            Y_MPI_CHK(float);
+            Y_MPI_CHK(double);
+            
+            Y_MPI_CHK(int8_t);
+            Y_MPI_CHK(int16_t);
+            Y_MPI_CHK(int32_t);
+            Y_MPI_CHK(int64_t);
+            
+            Y_MPI_CHK(uint8_t);
+            Y_MPI_CHK(uint16_t);
+            Y_MPI_CHK(uint32_t);
+            Y_MPI_CHK(uint64_t);
+            
+            Y_MPI_CHK(size_t);
+            Y_MPI_CHK(ptrdiff_t);
         }
     }
     

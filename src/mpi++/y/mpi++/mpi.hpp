@@ -52,20 +52,29 @@ namespace upsylon
             static const size_t alen = Y_MEMALIGN(elen);
             char string_[alen];
         };
-
+        
         //______________________________________________________________________
         //
-        //! wrapping MPI_Datatype
+        //! wrapping MPI_Datatype to build a persistent database
         //______________________________________________________________________
         class data_type
         {
         public:
-            const MPI_Datatype uuid;
-            const unsigned     size;
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            data_type(const MPI_Datatype, const size_t) throw(); //!< setup
+            data_type(const data_type &) throw();                //!< copy
+            ~data_type() throw();                                //!< cleanup
             
-            data_type(const MPI_Datatype, const size_t) throw();
-            data_type(const data_type &) throw();
-            ~data_type() throw();
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const MPI_Datatype uuid; //!< unique
+            const unsigned     size; //!< associated size
+            
         private:
             Y_DISABLE_ASSIGN(data_type);
         };
@@ -77,11 +86,25 @@ namespace upsylon
         class comm_ticks
         {
         public:
-            comm_ticks()  throw();
-            ~comm_ticks() throw();
-            uint64_t last;
-            uint64_t full;
-            void operator()(const uint64_t delta) throw(); //! full += (last=delta)
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            comm_ticks()  throw(); //!< setup
+            ~comm_ticks() throw(); //!< cleanup
+            
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void operator()(const uint64_t delta) throw(); //!< full += (last=delta)
+            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            uint64_t last;         //!< last ticks
+            uint64_t full;         //!< cumulative ticks
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_ticks);
         };
@@ -113,7 +136,7 @@ namespace upsylon
                           char ***   argv,
                           const int  requestedThreadLevel,
                           const bool fromEnvironment);
-       
+        
         
         //______________________________________________________________________
         //
@@ -122,7 +145,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         
-       
+        
         const char *threadLevelText() const throw(); //!< return human readable thread level
         int         nextRank() const throw();        //!< next rank
         int         prevRank() const throw();        //!< prev rank
@@ -148,9 +171,11 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        // MPI methods
+        // MPI methods: point to point
         //
         //______________________________________________________________________
+        
+        //! MPI_Send
         void Send(const void        *buffer,
                   const size_t       count,
                   const MPI_Datatype datatype,
@@ -158,14 +183,25 @@ namespace upsylon
                   const int          tag,
                   const MPI_Comm     comm) const;
         
+        //! MPI_Recv
+        void Recv(void              *buffer,
+                  const size_t       count,
+                  const MPI_Datatype datatype,
+                  const int          source,
+                  const int          tag,
+                  const MPI_Comm     comm,
+                  MPI_Status        &status) const;
+        
         //______________________________________________________________________
         //
         //
         // higher level methods
         //
         //______________________________________________________________________
+        //! convert type_info into a unique internal dta_type
         const data_type & data_type_for( const std::type_info & ) const;
         
+        //! wrapper to get a data_type
         template <typename T> inline
         const data_type & data_type_for() const { return data_type_for( typeid(T) ); }
         
@@ -177,7 +213,7 @@ namespace upsylon
         friend class singleton<mpi>;
         void finalize() throw(); //!< MPI_Finalize()
         void build_data_types(); //!< build the database of primary types
-
+        
         
         suffix_tree<data_type> types; //!< persistent database of types+sizes
         
@@ -203,8 +239,10 @@ namespace upsylon
      - MULTIPLE
      */
 #define Y_MPI(LEVEL) mpi & MPI = mpi::init( &argc, &argv, MPI_THREAD_##LEVEL, false)
+    
+    //! MPI_Init using "MPI_THREAD_LEVEL" as env, default is single
 #define Y_MPI_ENV()  mpi & MPI = mpi::init( &argc, &argv,-1,true)
-
+    
 }
 
 #endif
