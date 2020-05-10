@@ -151,6 +151,12 @@ namespace upsylon
         // MPI methods
         //
         //______________________________________________________________________
+        void Send(const void        *buffer,
+                  const size_t       count,
+                  const MPI_Datatype datatype,
+                  const int          dest,
+                  const int          tag,
+                  const MPI_Comm     comm) const;
         
         //______________________________________________________________________
         //

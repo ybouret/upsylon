@@ -27,6 +27,7 @@ namespace upsylon
             length = todo;
         }
         
+        //! get the next rank in 1D, MPI style
         template <typename T> static inline
         T rank_next(T size, T rank) throw()
         {
@@ -34,6 +35,7 @@ namespace upsylon
             return (++rank>=size) ? 0 : rank;
         }
         
+        //! get the previous rank in 1D, MPI style
         template <typename T> static inline
         T rank_prev(T size, T rank) throw()
         {
