@@ -113,7 +113,7 @@ assert(sizeof(type) == data_type_for<type>().size);\
 
         if(head)
         {
-            types.get_root().graphViz("mpi-data-types.dot");
+            //types.get_root().graphViz("mpi-data-types.dot");
 
 #define Y_MPI_CHK(type) do {\
 assert( sizeof(type) == data_type_for<type>().size );\

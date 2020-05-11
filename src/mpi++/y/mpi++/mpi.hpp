@@ -103,8 +103,8 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            uint64_t last;         //!< last ticks
-            uint64_t full;         //!< cumulative ticks
+            uint64_t last;         //!< last count
+            uint64_t full;         //!< cumulative count
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_tracer);
         };
@@ -121,7 +121,7 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             explicit comm_ticks()  throw(); //!< setup
-            virtual ~comm_ticks() throw(); //!< cleanup
+            virtual ~comm_ticks() throw();  //!< cleanup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_ticks);
@@ -142,19 +142,15 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(comm_data);
         };
         
+        //! full comm info
         class comm_info
         {
         public:
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            comm_info() throw();
-            ~comm_info() throw();
-            comm_ticks ticks;
-            comm_data  data;
-            void reset_all() throw();
-            
+            comm_info() throw();      //!< setup
+            ~comm_info() throw();     //!< cleanup
+            void reset_all() throw(); //!< reset all members
+            comm_ticks ticks;         //!< ticks
+            comm_data  data;          //!< data
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_info);
         };
@@ -298,12 +294,15 @@ namespace upsylon
             return ans;
         }
        
+        //! Recv a size, portable way
         size_t RecvSize(const int source) const;
         
         //______________________________________________________________________
         //
         // Sendrecv
         //______________________________________________________________________
+        
+        //! MPI_Sendrecv
         void Sendrecv(const void        *sendbuf,
                       const size_t       sendcount,
                       const MPI_Datatype sendtype,
@@ -316,12 +315,40 @@ namespace upsylon
                       const int          recvtag,
                       const MPI_Comm     comm,
                       MPI_Status         &status) const;
-        
+      
+        //! generic Sendrecv, with data count
         template <typename T,typename U> inline
-        void Sendrecv(const T     *sendbuff,
-                      const size_t sendcount)
+        void Sendrecv(const T     *sendbuf,
+                      const size_t sendcount,
+                      const int    dest,
+                      U           *recvbuf,
+                      const size_t recvcount,
+                      const int    source) const
         {
+            static const data_type   & s_info = data_type_for<T>();
+            static const MPI_Datatype  s_type = s_info.uuid;
+            static const size_t        s_size = s_info.size;
+            static const data_type   & r_info = data_type_for<U>();
+            static const MPI_Datatype  r_type = r_info.uuid;
+            static const size_t        r_size = r_info.size;
+            MPI_Status status;
+            Sendrecv(sendbuf, sendcount, s_type, dest, io_tag,
+                     recvbuf, recvcount, r_type, source, io_tag, MPI_COMM_WORLD, status);
+            commRecv.data.type = r_type; commRecv.data( r_size*recvcount );
+            commSend.data.type = s_type; commSend.data( s_size*sendcount );
         }
+        
+        //! Sendrecv 1 args
+        template <typename T, typename U> inline
+        U Sendrecv(const T &args, const int dest, const int source) const
+        {
+            U temp(0);
+            Sendrecv(&args,1,dest,&temp,1,source);
+            return temp;
+        }
+        
+        size_t SendrecvSizes(const size_t args,const int dest,const int source) const;
+        
         
         //______________________________________________________________________
         //
@@ -329,7 +356,8 @@ namespace upsylon
         // MPI methods: collective
         //
         //______________________________________________________________________
-        void Barrier(const MPI_Comm comm = MPI_COMM_WORLD) const;
+        //! MPI_Barrier(MPI_COMM_WORLD)
+        void Barrier() const;
         
         //______________________________________________________________________
         //
@@ -388,7 +416,8 @@ namespace upsylon
     
     
     template <> string mpi::Recv<string>(const int source) const;
-    
+ 
+    template <> string mpi::Sendrecv<string,string>(const string &str, const int dest, const int source) const;
 }
 
 #endif

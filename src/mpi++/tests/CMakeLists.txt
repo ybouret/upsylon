@@ -11,6 +11,7 @@ TARGET_LINK_LIBRARIES(test-mpi++ ${MPI_LIBRARIES} ${MPI_LINK_FLAGS})
 ENABLE_TESTING()
 Y_MPI(init      test-mpi++ init)
 Y_MPI(init_env  test-mpi++ init_env)
+Y_MPI(ring      test-mpi++ ring)
 
 ADD_CUSTOM_TARGET(utest-mpi++
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

@@ -3,6 +3,7 @@
 #include "y/os/rt-clock.hpp"
 #include "y/exceptions.hpp"
 #include "y/memory/buffers.hpp"
+#include <cstdarg>
 
 namespace upsylon {
     
