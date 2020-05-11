@@ -64,7 +64,7 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            data_type(const MPI_Datatype, const size_t) throw(); //!< setup
+            data_type(const MPI_Datatype, const unsigned) throw(); //!< setup
             data_type(const data_type &) throw();                //!< copy
             ~data_type() throw();                                //!< cleanup
             

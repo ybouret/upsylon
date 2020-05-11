@@ -7,7 +7,7 @@
 namespace upsylon
 {
     
-    mpi:: data_type:: data_type(const MPI_Datatype value, const size_t bytes) throw() :
+    mpi:: data_type:: data_type(const MPI_Datatype value, const unsigned bytes) throw() :
     uuid(value),
     size(bytes)
     {
