@@ -405,6 +405,93 @@ namespace upsylon
         //! Bcast sizes
         void BcastSize(size_t &args, const int root) const;
         
+        //! MPI_Reduce
+        void Reduce(const void*        send_data,
+                    void *             recv_data,
+                    const size_t       count,
+                    const MPI_Datatype datatype,
+                    const MPI_Op       op,
+                    const int          root,
+                    const MPI_Comm     comm) const;
+        
+        //! generic reduction
+        template <typename T> inline
+        void Reduce(const T     *sendbuffer,
+                    T           *recvbuffer,
+                    const size_t count,
+                    const MPI_Op op,
+                    const int    root) const
+        {
+            static const data_type   & _        = data_type_for<T>();
+            static const MPI_Datatype  datatype = _.uuid;
+            static const size_t        datasize = _.size;
+            Reduce(sendbuffer,recvbuffer,count,datatype,op,root,MPI_COMM_WORLD);
+            const uint64_t bytes = count * datasize;
+            commRecv.data.type = datatype; commRecv.data( bytes );
+            commSend.data.type = datatype; commSend.data( bytes );
+        }
+        
+        //! generic 1 datum reduction
+        template <typename T> inline
+        T Reduce(const T &args,const MPI_Op op, const int root) const
+        {
+            T ans(0);
+            Reduce(&args,&ans,1,op,root);
+            return ans;
+        }
+        
+        //! generic template reduction
+        template < template <class> class VERTEX, typename T> inline
+        VERTEX<T> Reduce2( const VERTEX<T> &vertex, const MPI_Op op, const int root) const
+        {
+            VERTEX<T> v;
+            Reduce((const T *)&vertex,(T *)&v,sizeof(VERTEX<T>)/sizeof(T),op,root);
+            return v;
+        }
+        
+        //! reduction
+        void Allreduce(const void*        send_data,
+                       void *             recv_data,
+                       const size_t       count,
+                       const MPI_Datatype datatype,
+                       const MPI_Op       op,
+                       const MPI_Comm     comm) const;
+        
+        //! generic all-reduction
+        template <typename T> inline
+        void Allreduce(const T     *sendbuffer,
+                       T           *recvbuffer,
+                       const size_t count,
+                       const MPI_Op op) const
+        {
+            static const data_type   & _        = data_type_for<T>();
+            static const MPI_Datatype  datatype = _.uuid;
+            static const size_t        datasize = _.size;
+            Allreduce(sendbuffer,recvbuffer,count,datatype,op,MPI_COMM_WORLD);
+            const uint64_t bytes = count * datasize;
+            commRecv.data.type = datatype; commRecv.data( bytes );
+            commSend.data.type = datatype; commSend.data( bytes );
+        }
+        
+        //! generic 1 datum all-reduction
+        template <typename T> inline
+        T Allreduce(const T &args,const MPI_Op op) const
+        {
+            T ans(0);
+            Allreduce(&args,&ans,1,op);
+            return ans;
+        }
+        
+        //! generic template reduction
+        template < template <class> class VERTEX, typename T> inline
+        VERTEX<T> Allreduce2( const VERTEX<T> &vertex, const MPI_Op op) const
+        {
+            VERTEX<T> v;
+            Allreduce((const T *)&vertex,(T *)&v,sizeof(VERTEX<T>)/sizeof(T),op);
+            return v;
+        }
+        
+        
         //______________________________________________________________________
         //
         //
