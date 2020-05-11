@@ -13,6 +13,7 @@ Y_MPI(init      test-mpi++ init)
 Y_MPI(init_env  test-mpi++ init_env)
 Y_MPI(ring      test-mpi++ ring)
 Y_MPI(coll      test-mpi++ coll)
+Y_MPI(xmpi      test-mpi++ xmpi)
 
 ADD_CUSTOM_TARGET(utest-mpi++
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
