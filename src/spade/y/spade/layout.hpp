@@ -57,6 +57,24 @@ namespace upsylon {
             pitch(Coord::Ones<COORD>())
             {
                 
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    Coord1D &w = aliasing::_( Coord::Of(width,dim) );
+                    Coord1D &l = aliasing::_( Coord::Of(lower,dim) );
+                    Coord1D &u = aliasing::_( Coord::Of(upper,dim) );
+                    if(u<l) cswap(l,u);
+                    w=1+u-l;
+                }
+                
+                aliasing::_(items) = Coord::Of(width,0);
+                for(unsigned dim=1,prv=0;dim<Dimensions;++dim,++prv)
+                {
+                    aliasing::_(items) *= Coord::Of(width,dim);
+                    aliasing::_( Coord::Of(pitch,dim) ) =
+                    Coord::Of(pitch,prv) * Coord::Of(width,prv);
+                }
+                
+#if 0
                 Coord1D *w = & Coord::Of( aliasing::_(width), 0);
                 {
                     Coord1D *l = & Coord::Of( aliasing::_(lower), 0);
@@ -78,6 +96,7 @@ namespace upsylon {
                     n *= w[dim];
                     p[dim] = p[prv] * w[prv];
                 }
+#endif
             }
             
             //! copy
