@@ -65,7 +65,7 @@ namespace upsylon {
                     {
                         Coord1D &L = l[dim];
                         Coord1D &U = u[dim];
-                        if(U<L) cswap(L,U); assert(l[dim]<=u[dim]);
+                        if(U<L) cswap(L,U);// assert(l[dim]<=u[dim]);
                         w[dim] = (U-L) + 1;
                     }
                 }
