@@ -215,7 +215,7 @@ namespace upsylon {
             {
                 coord length = width;
                 coord offset = lower;
-                for(size_t dim=0;dim<Dimensions;++dim)
+                for(unsigned dim=0;dim<Dimensions;++dim)
                 {
                     Split1D(Coord::Of(length,dim),
                             Coord::Of(offset,dim ),
