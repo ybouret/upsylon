@@ -141,11 +141,11 @@ namespace upsylon
 
     //! bytes for an unsigned type
     template <typename U>
-    inline size_t bytes_for(const U n) throw()
+    inline uint8_t bytes_for(const U n) throw()
     {
-        static const size_t max_bytes = sizeof(U);
+        static const uint8_t max_bytes = sizeof(U);
         U mask = static_cast<U>(0xff) << ( (max_bytes-1) * 8 );
-        for( size_t i=max_bytes;i>0;--i)
+        for( uint8_t i=max_bytes;i>0;--i)
         {
             if( (n&mask) != 0 )
             {
