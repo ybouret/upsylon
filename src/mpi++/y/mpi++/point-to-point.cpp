@@ -98,14 +98,17 @@ namespace upsylon {
         assert(source>=0);
         assert(source!=rank);
         assert(source<size);
+        const int      nsend = static_cast<int>(sendcount);
+        
+        const int      nrecv = static_cast<int>(recvcount);
         const uint64_t mark  = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Sendrecv(sendbuf,
-                                 sendcount,
+                                 nsend,
                                  sendtype,
                                  dest,
                                  sendtag,
                                  recvbuf,
-                                 recvcount,
+                                 nrecv,
                                  recvtype,
                                  source,
                                  recvtag,
