@@ -99,7 +99,18 @@ namespace upsylon {
         assert(source!=rank);
         assert(source<size);
         const uint64_t mark  = rt_clock::ticks();
-        Y_MPI_CHECK(MPI_Sendrecv(sendbuf, sendcount, sendtype, dest, sendtag, recvbuf, recvcount, recvtype, source, recvtag, comm, &status) );
+        Y_MPI_CHECK(MPI_Sendrecv(sendbuf,
+                                 sendcount,
+                                 sendtype,
+                                 dest,
+                                 sendtag,
+                                 recvbuf,
+                                 recvcount,
+                                 recvtype,
+                                 source,
+                                 recvtag,
+                                 comm,
+                                 &status) );
         const uint64_t delta = rt_clock::ticks()-mark;
         commRecv.ticks(delta);
         commSend.ticks(delta);
