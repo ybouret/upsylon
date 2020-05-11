@@ -102,7 +102,7 @@ namespace upsylon {
         const int      nsend = static_cast<int>(sendcount);  if(nsend<0) throw upsylon::exception("%ssendcount overflow",fn);
         const int      nrecv = static_cast<int>(recvcount);  if(nrecv<0) throw upsylon::exception("%srecvcount overflow",fn);
         const uint64_t mark  = rt_clock::ticks();
-        Y_MPI_CHECK(MPI_Sendrecv(sendbuf,
+        Y_MPI_CHECK(MPI_Sendrecv((void*)sendbuf,
                                  nsend,
                                  sendtype,
                                  dest,
