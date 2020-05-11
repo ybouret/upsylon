@@ -74,29 +74,6 @@ namespace upsylon {
                     Coord::Of(pitch,prv) * Coord::Of(width,prv);
                 }
                 
-#if 0
-                Coord1D *w = & Coord::Of( aliasing::_(width), 0);
-                {
-                    Coord1D *l = & Coord::Of( aliasing::_(lower), 0);
-                    Coord1D *u = & Coord::Of( aliasing::_(upper), 0);
-                    for(unsigned dim=0;dim<Dimensions;++dim)
-                    {
-                        Coord1D &L = l[dim];
-                        Coord1D &U = u[dim];
-                        if(U<L) cswap<Coord1D>(L,U);// assert(l[dim]<=u[dim]);
-                        w[dim] = (U-L) + 1;
-                    }
-                }
-                
-                Coord1D *p = & Coord::Of( aliasing::_(pitch), 0);
-                size_t  &n = aliasing::_(items); assert(0==items);
-                n    = w[0];
-                for(unsigned dim=1,prv=0;dim<Dimensions;++dim,++prv)
-                {
-                    n *= w[dim];
-                    p[dim] = p[prv] * w[prv];
-                }
-#endif
             }
             
             //! copy
