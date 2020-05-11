@@ -90,6 +90,7 @@ namespace upsylon {
                        const MPI_Comm     comm,
                        MPI_Status         &status) const
     {
+        static const char fn[] = "mpi::Sendrecv: ";
         assert( !( (0==sendbuf) && (sendcount>0)) );
         assert(dest>=0);
         assert(dest!=rank);
@@ -98,9 +99,8 @@ namespace upsylon {
         assert(source>=0);
         assert(source!=rank);
         assert(source<size);
-        const int      nsend = static_cast<int>(sendcount);
-        
-        const int      nrecv = static_cast<int>(recvcount);
+        const int      nsend = static_cast<int>(sendcount);  if(nsend<0) throw upsylon::exception("%ssendcount overflow",fn);
+        const int      nrecv = static_cast<int>(recvcount);  if(nrecv<0) throw upsylon::exception("%srecvcount overflow",fn);
         const uint64_t mark  = rt_clock::ticks();
         Y_MPI_CHECK(MPI_Sendrecv(sendbuf,
                                  nsend,
