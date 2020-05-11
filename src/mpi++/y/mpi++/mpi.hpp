@@ -379,6 +379,32 @@ namespace upsylon
         //! MPI_Barrier(MPI_COMM_WORLD)
         void Barrier() const;
         
+        //! MPI_Bcast
+        void Bcast(void *buffer, const size_t count, MPI_Datatype datatype, const int root, MPI_Comm comm) const;
+        
+        //! generic Bcast
+        template <typename T>
+        void Bcast(T *buffer, const size_t count, const int root) const
+        {
+            static const data_type   & _        = data_type_for<T>();
+            static const MPI_Datatype  datatype = _.uuid;
+            static const size_t        datasize = _.size;
+            Bcast(buffer,count,datatype,root,MPI_COMM_WORLD);
+            const uint64_t bytes = count * datasize;
+            commRecv.data.type = datatype; commRecv.data( bytes );
+            commSend.data.type = datatype; commSend.data( bytes );
+        }
+        
+        //! one datum Bcast
+        template <typename T>
+        void Bcast( T &args, const int root) const
+        {
+            Bcast( &args, 1, root );
+        }
+        
+        //! Bcast sizes
+        void BcastSize(size_t &args, const int root) const;
+        
         //______________________________________________________________________
         //
         //
@@ -441,8 +467,12 @@ namespace upsylon
     //! specialized string receiving
     template <> string mpi::Recv<string>(const int source) const;
  
-    //! specialize string sendrecv
+    //! specialized string sendrecv
     template <> string mpi::Exch<string>(const string &str, const int dest, const int source) const;
+
+    //! specialized string Bcast
+    template <> void mpi::Bcast<string>(string &str, const int root) const;
+
 }
 
 #endif

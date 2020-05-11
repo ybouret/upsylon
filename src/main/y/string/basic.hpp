@@ -125,10 +125,10 @@ maxi_ = items-1
             }
 
             //! set as empty
-            inline void clear() throw() { force(0); }
+            inline string & clear() throw() { force(0); return *this; }
 
             //! force size
-            inline void force( const size_t n ) throw()
+            inline string &force( const size_t n ) throw()
             {
                 Y_CORE_STRING_CHECK(*this);
                 while(size_>n)
@@ -136,8 +136,23 @@ maxi_ = items-1
                     addr_[--size_]=0;
                 }
                 Y_CORE_STRING_CHECK(*this);
+                return *this;
             }
 
+            //! adjust size. TODO: optimize...
+            string & adjust( const size_t n, const T pad )
+            {
+                while(size_>n)
+                {
+                    addr_[--size_]=0;
+                }
+                while(size_<n)
+                {
+                    add(&pad,1);
+                }
+                return *this;
+            }
+            
             //! default constructor
             inline string() : Y_CORE_STRING_CTOR(0)
             {
@@ -176,7 +191,7 @@ maxi_ = items-1
             }
 
             //! assignement
-            inline void assign(const char *s, const size_t n)
+            inline string &assign(const char *s, const size_t n)
             {
                 if(n<=maxi_)
                 {
@@ -193,10 +208,11 @@ maxi_ = items-1
                     string tmp(s,n);
                     swap_with(tmp);
                 }
+                return *this;
             }
 
             //! assignement of a C-string
-            inline string & operator=(const char *s)
+            inline string & operator=(const T *s)
             {
                 assign(s,length_of(s));
                 return *this;
