@@ -68,6 +68,7 @@ namespace upsylon {
 
             static inline void UpdateCode( Node *node ) throw()
             {
+                static const size_t one = 1;
                 assert(node);
                 Node *left = node->left;
                 if(left)
@@ -75,9 +76,9 @@ namespace upsylon {
                     Node *right = node->right;
                     assert(right);
                     const size_t nbit = node->bits;
-                    left->bits  = right->bits = nbit+1;
-                    left->code  = right->code = node->code;
-                    right->code |= (1<<nbit);
+                    left->bits        = right->bits = nbit+one;
+                    left->code        = right->code = node->code;
+                    right->code      |= (one<<nbit);
                     UpdateCode(left);
                     UpdateCode(right);
                 }
