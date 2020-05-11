@@ -10,6 +10,7 @@
 #include "y/associative/suffix-tree.hpp"
 
 #include <cstdio>
+#include <typeinfo>
 
 //! avoid C++ from OpenMPI
 #define OMPI_SKIP_MPICXX 1
