@@ -126,7 +126,7 @@ namespace upsylon {
         if(r_bytes>sizeof(size_t)) throw upsylon::exception("ExchSizes(too many bytes!)");
         const size_t  s_data  = swap_le_as(args);
         size_t        r_data  = 0;
-        Sendrecv((const char *)&s_data, s_bytes, dest, (char *)&r_data, r_bytes, source);
+        Exch<char>((const char *)&s_data, s_bytes, dest, (char *)&r_data, r_bytes, source);
         return swap_le_as(r_data);
     }
     
