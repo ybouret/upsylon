@@ -128,7 +128,7 @@ namespace upsylon {
         size_t N   = 0;
         for(size_t i=1;i<=m;++i)
         {
-            const unsigned value = now[i]; assert(value<=n); assert(value>=1);
+            const size_t value = now[i]; assert(value<=n); assert(value>=1);
             if(value<=1)
             {
                 ++N;
