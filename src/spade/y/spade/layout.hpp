@@ -124,7 +124,7 @@ namespace upsylon {
             //! test if a coordinate is inside
             inline bool has( const_coord C ) const throw()
             {
-                for(size_t dim=0;dim<Dimensions;++dim)
+                for(unsigned dim=0;dim<Dimensions;++dim)
                 {
                     const Coord1D l = Coord::Of(lower,dim);
                     const Coord1D u = Coord::Of(upper,dim);
