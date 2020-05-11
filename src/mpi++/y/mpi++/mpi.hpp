@@ -227,35 +227,35 @@ namespace upsylon
         
         //! Send some data, commSend.data is updated
         template <typename T> inline
-        void Send(const T       *buffer,
+        void Send(const T      *buffer,
                   const size_t   count,
-                  const int      dest,
-                  const int      tag = io_tag,
-                  const MPI_Comm comm = MPI_COMM_WORLD) const
+                  const int      dest) const
         {
             static const data_type   & _        = data_type_for<T>();
             static const MPI_Datatype  datatype = _.uuid;
             static const size_t        datasize = _.size;
-            Send(buffer,count,datatype,dest,tag,comm);
+            Send(buffer,count,datatype,dest,io_tag,MPI_COMM_WORLD);
             commSend.data.type = datatype;
             commSend.data( datasize*count );
         }
         
+        
+        
+        
         //! Send one datum
         template <typename T>
         void Send(const T       &args,
-                  const int      dest,
-                  const int      tag = io_tag,
-                  const MPI_Comm comm = MPI_COMM_WORLD) const
+                  const int      dest) const
         {
-            Send(&args,1,dest,tag,comm);
+            Send(&args,1,dest);
         }
+        
+        //! Send one datum
+        
         
         //! portable send size
         void SendSize(const size_t   args,
-                      const int      dest,
-                      const int      tag = io_tag,
-                      const MPI_Comm comm = MPI_COMM_WORLD) const;
+                      const int      dest) const;
         
         
         //______________________________________________________________________
@@ -278,33 +278,27 @@ namespace upsylon
         template <typename T> inline
         void Recv(T             *buffer,
                   const size_t   count,
-                  const int      source,
-                  const int      tag = io_tag,
-                  const MPI_Comm comm = MPI_COMM_WORLD) const
+                  const int      source) const
         {
             static const data_type   & _        = data_type_for<T>();
             static const MPI_Datatype  datatype = _.uuid;
             static const size_t        datasize = _.size;
             MPI_Status status;
-            Recv(buffer,count,datatype,source,tag,comm,status);
+            Recv(buffer,count,datatype,source,io_tag,MPI_COMM_WORLD,status);
             commRecv.data.type = datatype;
             commRecv.data( datasize*count );
         }
         
         //! Recv one datum
         template <typename T>
-        T Recv(const int      source,
-               const int      tag = io_tag,
-               const MPI_Comm comm = MPI_COMM_WORLD) const
+        T Recv(const int source) const
         {
             T ans(0);
-            Recv(&ans,1,source,tag,comm);
+            Recv(&ans,1,source);
             return ans;
         }
        
-        size_t RecvSize(const int      source,
-                        const int      tag = io_tag,
-                        const MPI_Comm comm = MPI_COMM_WORLD) const;
+        size_t RecvSize(const int source) const;
         
         //______________________________________________________________________
         //
@@ -322,6 +316,12 @@ namespace upsylon
                       const int          recvtag,
                       const MPI_Comm     comm,
                       MPI_Status         &status) const;
+        
+        template <typename T,typename U> inline
+        void Sendrecv(const T     *sendbuff,
+                      const size_t sendcount)
+        {
+        }
         
         //______________________________________________________________________
         //
@@ -384,14 +384,10 @@ namespace upsylon
 #define Y_MPI_ENV()  mpi & MPI = mpi::init( &argc, &argv,-1,true)
     
     template <> void mpi::Send<string>(const string  &str,
-                                       const int      dest,
-                                       const int      tag,
-                                       const MPI_Comm comm) const;
+                                        const int      dest) const;
     
     
-    template <> string mpi::Recv<string>(const int      source,
-                                         const int      tag,
-                                         const MPI_Comm comm) const;
+    template <> string mpi::Recv<string>(const int source) const;
     
 }
 

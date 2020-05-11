@@ -4,6 +4,8 @@
 
 using namespace upsylon;
 
+#define ITEMS 1000
+
 Y_UTEST(init)
 {
     Y_MPI(SINGLE);
@@ -14,9 +16,11 @@ Y_UTEST(init)
     if( MPI.parallel )
     {
         static const size_t sz[] = { 0x00, 0xab, 0xab00, 0xab0000, 0xab000000 };
-        
+        long         data[ITEMS];
         if(MPI.head)
         {
+            for(size_t i=0;i<ITEMS;++i) data[i] = alea.full<long>();
+            
             for(int rank=1;rank<MPI.size;++rank)
             {
                 const int r = MPI.Recv<int>(rank);
@@ -32,6 +36,14 @@ Y_UTEST(init)
                     MPI.Send(s,rank);
                     s << alea.range<char>('a','b');
                 }
+                MPI.Send(data,ITEMS,rank);
+                long wksp[ITEMS];
+                MPI.Recv(wksp,ITEMS,rank);
+                for(size_t i=0;i<ITEMS;++i)
+                {
+                    Y_ASSERT(wksp[i]==data[i]);
+                }
+                
             }
         }
         else
@@ -49,6 +61,9 @@ Y_UTEST(init)
                 const string s = MPI.Recv<string>(0);
                 Y_ASSERT(s.size()==l);
             }
+            long wksp[ITEMS] = { 0 };
+            MPI.Recv(wksp,ITEMS,0);
+            MPI.Send(wksp,ITEMS,0);
         }
     }
     else

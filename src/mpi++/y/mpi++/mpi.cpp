@@ -191,42 +191,7 @@ namespace upsylon {
         return "MPI_THREAD_UNKNOWN";
     }
   
-    template <>
-    void mpi::Send<string>(const string  &str,
-                                  const int      dest,
-                                  const int      tag,
-                                  const MPI_Comm comm) const
-    {
-        const size_t n = str.size();
-        if(n>0)
-        {
-            SendSize(n,dest,tag,comm);
-            Send(*str,n,dest,tag,comm);
-        }
-        else
-        {
-            static const uint8_t z=0;
-            Send(z,dest,tag,comm); //!< will trigger 0 size and no content
-        }
-    }
-    
-    template <>
-    string mpi::Recv<string>(const int      source,
-                             const int      tag,
-                             const MPI_Comm comm) const
-    {
-        const size_t n = RecvSize(source,tag,comm);
-        if(n>0)
-        {
-            string str(n,as_capacity,true);
-            Recv(*str,n,source,tag,comm);
-            return str;
-        }
-        else
-        {
-            return string();
-        }
-    }
+   
     
 }
 
