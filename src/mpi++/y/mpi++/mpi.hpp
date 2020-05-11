@@ -347,7 +347,27 @@ namespace upsylon
             return temp;
         }
         
-        size_t SendrecvSizes(const size_t args,const int dest,const int source) const;
+        //! exchanging same kind of data
+        template <typename T> inline
+        void Exch(const T     *sendbuf,
+                  const size_t sendcount,
+                  const int    dest,
+                  T           *recvbuf,
+                  const size_t recvcount,
+                  const int    source) const
+        {
+            Sendrecv<T,T>(sendbuf,sendcount,dest,recvbuf,recvcount,source);
+        }
+        
+        //! exchande 1 args
+        template <typename T> inline
+        T Exch(const T &args, const int dest, const int source) const
+        {
+            return Sendrecv<T,T>(args,dest,source);
+        }
+        
+        //! exchanging sizes
+        size_t ExchSizes(const size_t args,const int dest,const int source) const;
         
         
         //______________________________________________________________________
@@ -372,7 +392,10 @@ namespace upsylon
         template <typename T> inline
         const data_type & data_type_for() const { return data_type_for( typeid(T) ); }
         
+        //! print only on head node
         void Printf0(FILE *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
+        
+        //! print with node name
         void Printf(FILE  *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
         
     private:
@@ -411,13 +434,15 @@ namespace upsylon
     //! MPI_Init using "MPI_THREAD_LEVEL" as env, default is single
 #define Y_MPI_ENV()  mpi & MPI = mpi::init( &argc, &argv,-1,true)
     
+    //! specialized string sending
     template <> void mpi::Send<string>(const string  &str,
                                         const int      dest) const;
     
-    
+    //! specialized string receiving
     template <> string mpi::Recv<string>(const int source) const;
  
-    template <> string mpi::Sendrecv<string,string>(const string &str, const int dest, const int source) const;
+    //! specialize string sendrecv
+    template <> string mpi::Exch<string>(const string &str, const int dest, const int source) const;
 }
 
 #endif

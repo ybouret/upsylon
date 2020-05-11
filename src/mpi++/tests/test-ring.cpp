@@ -52,8 +52,8 @@ Y_UTEST(ring)
            
             for(size_t i=0;i<sizeof(sz)/sizeof(sz[0]);++i)
             {
-                Y_ASSERT(MPI.SendrecvSizes(sz[i], dst, src)==sz[i]);
-                Y_ASSERT(MPI.SendrecvSizes(sz[i], src, dst)==sz[i]);
+                Y_ASSERT(MPI.ExchSizes(sz[i], dst, src)==sz[i]);
+                Y_ASSERT(MPI.ExchSizes(sz[i], src, dst)==sz[i]);
             }
         }
         
@@ -61,12 +61,12 @@ Y_UTEST(ring)
             MPI.Printf0(stderr, "-- doRing/strings\n" );
             string s;
             {
-                const string r = MPI.Sendrecv<string,string>(s,dst,src);
+                const string r = MPI.Exch<string>(s,dst,src);
                 Y_ASSERT(r==s);
             }
             
             {
-                const string r = MPI.Sendrecv<string,string>(s,src,dst);
+                const string r = MPI.Exch<string>(s,src,dst);
                 Y_ASSERT(r==s);
             }
             
@@ -76,11 +76,11 @@ Y_UTEST(ring)
                 {
                     s << i;
                     {
-                        const string r = MPI.Sendrecv<string,string>(s,dst,src);
+                        const string r = MPI.Exch<string>(s,dst,src);
                         Y_ASSERT(r==s);
                     }
                     {
-                        const string r = MPI.Sendrecv<string,string>(s,src,dst);
+                        const string r = MPI.Exch<string>(s,src,dst);
                         Y_ASSERT(r==s);
                     }
                 }

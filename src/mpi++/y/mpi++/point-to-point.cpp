@@ -119,11 +119,11 @@ namespace upsylon {
         commSend.ticks(delta);
     }
     
-    size_t mpi:: SendrecvSizes(const size_t args,const int dest,const int source) const
+    size_t mpi:: ExchSizes(const size_t args,const int dest,const int source) const
     {
         const uint8_t s_bytes = bytes_for(args);
         const uint8_t r_bytes = Sendrecv<uint8_t,uint8_t>(s_bytes,dest,source);
-        if(r_bytes>sizeof(size_t)) throw upsylon::exception("SendrecvSizes(too many bytes!)");
+        if(r_bytes>sizeof(size_t)) throw upsylon::exception("ExchSizes(too many bytes!)");
         const size_t  s_data  = swap_le_as(args);
         size_t        r_data  = 0;
         Sendrecv((const char *)&s_data, s_bytes, dest, (char *)&r_data, r_bytes, source);
@@ -164,12 +164,12 @@ namespace upsylon {
     }
     
     template <>
-    string mpi::Sendrecv<string,string>(const string &str, const int dest, const int source) const
+    string mpi::Exch<string>(const string &str, const int dest, const int source) const
     {
         const size_t s_size = str.size();
-        const size_t r_size = SendrecvSizes(s_size,dest,source);
+        const size_t r_size = ExchSizes(s_size,dest,source);
         string       r(r_size,as_capacity,true);
-        Sendrecv<char,char>(*str,s_size,dest,*r,r_size,source);
+        Exch<char>(*str,s_size,dest,*r,r_size,source);
         return r;
     }
 
