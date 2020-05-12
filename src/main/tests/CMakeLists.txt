@@ -117,7 +117,7 @@ ADD_TEST(str:esma        test-main esma foo ${HERE}/words.db)
 SOURCE_GROUP(ios FILES test-ostreams.cpp test-istreams.cpp
 test-vfs.cpp test-dll.cpp test-tmpname.cpp test-local-file.cpp
 test-bin2dat.cpp
-test-disk-file.cpp test-disk-std.cpp test-serializer.cpp test-upack.cpp test-memory-streams.cpp
+test-disk-file.cpp test-disk-std.cpp test-serializer.cpp test-memory-streams.cpp
 test-cmd.cpp
 test-serialize-tools.cpp
 test-srz-io.cpp
@@ -135,7 +135,6 @@ ADD_TEST(ios:local-file  test-main local_file)
 ADD_TEST(ios:bin2dat     test-main bin2dat)
 ADD_TEST(ios:disk_file   test-main disk_file)
 ADD_TEST(ios:serializer  test-main serializer)
-ADD_TEST(ios:upack       test-main upack)
 ADD_TEST(ios:cmd         test-main cmd)
 ADD_TEST(ios:serialized  test-main serialize_tools)
 ADD_TEST(ios:srz_io      test-main srz_io)

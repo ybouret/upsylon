@@ -122,7 +122,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(ostreams);
     Y_UTEST(istreams);
     Y_UTEST(mstreams);
-    Y_UTEST(upack);
     Y_UTEST(upacker);
     Y_UTEST(cmd);
     Y_UTEST(md);
