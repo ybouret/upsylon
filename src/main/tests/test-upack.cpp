@@ -1,4 +1,3 @@
-#include "y/ios/osstream.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/ints.hpp"
 #include "y/string.hpp"

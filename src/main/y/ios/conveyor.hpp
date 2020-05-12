@@ -43,6 +43,7 @@ namespace upsylon {
             // non-virtual interface
             //__________________________________________________________________
            
+            //! copy a range of iterators
             template <typename TARGET_ITERATOR,typename SOURCE_ITERATOR> inline
             size_t copy_range( TARGET_ITERATOR target, SOURCE_ITERATOR source, size_t count) const
             {
@@ -56,6 +57,7 @@ namespace upsylon {
                 return num;
             }
             
+            //! copy matching sequences
             template <typename TARGET, typename SOURCE> inline
             size_t copy_block( TARGET &target, const SOURCE &source ) const
             {
@@ -65,6 +67,7 @@ namespace upsylon {
                 return copy_range(target.begin(),source.begin(),target.size());
             }
             
+            //! save a range of iterators
             template <typename SOURCE_ITERATOR> inline
             size_t save_range(ios::ostream &target, SOURCE_ITERATOR source, size_t count) const
             {
@@ -77,6 +80,7 @@ namespace upsylon {
                 return num;
             }
             
+            //! save a sequence
             template <typename SOURCE> inline
             size_t save_block(ios::ostream &target, const SOURCE &source ) const
             {
@@ -84,6 +88,7 @@ namespace upsylon {
                 return save_range(target,source.begin(),source.size());
             }
             
+            //! load a range of iterators
             template <typename TARGET_ITERATOR> inline
             size_t load_range(TARGET_ITERATOR target, ios::istream &source, size_t count) const
             {
@@ -96,6 +101,7 @@ namespace upsylon {
                 return num;
             }
             
+            //! load a sequence
             template <typename TARGET> inline
             size_t load_block( TARGET &target, ios::istream &source ) const
             {
