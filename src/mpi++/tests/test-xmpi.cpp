@@ -42,6 +42,17 @@ namespace
         }
     }
     
+    static inline void doBuffer(mpi &MPI)
+    {
+        XMPI::Buffer s,r;
+        
+        // star
+        if(MPI.head)
+        {
+            
+        }
+    }
+    
 }
 
 Y_UTEST(xmpi)
@@ -53,8 +64,7 @@ Y_UTEST(xmpi)
         doSequences<int>(MPI);
         doSequences<double>(MPI);
         doSequences<string>(MPI);
-
-        
+        doBuffer(MPI);
         MPI.Printf(stderr, "send: %lu | recv: %lu\n", (unsigned long) MPI.commSend.data.full, (unsigned long) MPI.commRecv.data.full );
     }
     

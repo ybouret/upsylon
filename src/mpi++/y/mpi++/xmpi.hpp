@@ -9,7 +9,7 @@
 #include "y/ios/ovstream.hpp"
 
 namespace upsylon {
- 
+    
     //! eXtended MPI functions
     struct XMPI
     {
@@ -46,8 +46,22 @@ namespace upsylon {
         
         typedef ios::ovstream Buffer; //!< alias
         
+        static void vSend(mpi                  &MPI,
+                          const Buffer         &sendBuffer,
+                          const int             dest,
+                          const comms::delivery delivery);
         
+        static void vRecv(mpi                  &MPI,
+                          Buffer               &recvBuffer,
+                          const int             source,
+                          const comms::delivery delivery);
         
+        static void vSendRecv(mpi                  &MPI,
+                              const Buffer         &sendBuffer,
+                              const int             dest,
+                              Buffer               &recvBuffer,
+                              const int             source,
+                              const comms::delivery delivery);
         
     };
     
