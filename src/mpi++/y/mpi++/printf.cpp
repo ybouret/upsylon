@@ -4,6 +4,7 @@
 #include "y/exceptions.hpp"
 #include "y/memory/buffers.hpp"
 #include <cstdarg>
+#include <cerrno>
 
 namespace upsylon {
     

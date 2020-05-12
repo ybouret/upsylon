@@ -44,7 +44,7 @@ namespace upsylon {
         }
         
         
-        typedef ios::ovstream Block; //!< alias
+        typedef ios::ovstream Buffer; //!< alias
         
         
         
