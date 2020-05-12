@@ -142,6 +142,9 @@ Y_UTEST(conveyors)
     doTest<mpz>( IO.query<mpz>(comms::homogeneous) );
     doTest<mpz>( IO.query<mpz>(comms::distributed) );
     
+    doTest<mpq>( IO.query<mpq>(comms::homogeneous) );
+    doTest<mpq>( IO.query<mpq>(comms::distributed) );
+    
     
 }
 Y_UTEST_DONE()
