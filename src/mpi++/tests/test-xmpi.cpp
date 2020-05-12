@@ -49,8 +49,30 @@ namespace
         // star
         if(MPI.head)
         {
-            
+            for(int rank=1;rank<MPI.size;++rank)
+            {
+                s.free();
+                for(size_t i=alea.leq(100);i>0;--i)
+                {
+                    s.push_back( alea.full<uint8_t>() );
+                }
+                XMPI::vSend(MPI, s, rank, upsylon::comms::flexible_block_size);
+                r.adjust(s.size(), 0);
+                XMPI::vRecv(MPI, r, rank, comms::computed_block_size);
+                for(size_t i=s.size();i>0;--i)
+                {
+                    Y_ASSERT(s[i]==r[i]);
+                }
+            }
         }
+        else
+        {
+            XMPI::vRecv(MPI, r, 0, comms::flexible_block_size);
+            XMPI::vSend(MPI, r, 0, comms::computed_block_size);
+        }
+        
+        //ring
+        
     }
     
 }
