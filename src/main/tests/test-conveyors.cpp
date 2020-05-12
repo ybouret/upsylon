@@ -12,6 +12,47 @@ using namespace upsylon;
 
 namespace {
     
+    template <typename T>
+    void doTest( const ios::conveyor &cnv )
+    {
+        std::cerr << "testing [" << cnv << "]" << std::endl;
+        vector<T>     source;
+        vector<T>     target;
+        ios::ovstream block;
+        const size_t  items = alea.leq(1024);
+        for(size_t i=0;i<items;++i)
+        {
+            // fill original
+            {
+                const T tmp = support::get<T>();
+                source.push_back(tmp);
+            }
+            
+            //fill with something else
+            {
+                const T tmp = support::get<T>();
+                target.push_back(tmp);
+            }
+            
+            // save original data into block
+            cnv.save(block,&source.back());
+        }
+        std::cerr << "\t#items=" << items << " -> #bytes=" << block.size() << std::endl;
+        std::cerr << "\tcopy..." << std::endl;
+        for(size_t i=1;i<=items;++i)
+        {
+            cnv.copy(&target[i], &source[i]);
+        }
+        std::cerr << "\tload..." << std::endl;
+        ios::imstream fp(block);
+        for(size_t i=1;i<=items;++i)
+        {
+            cnv.load(&target[i], fp);
+            Y_ASSERT(target[i]==source[i]);
+        }
+        
+    }
+    
 }
 
 
@@ -38,6 +79,16 @@ Y_UTEST(conveyors)
     
     IO.root().graphViz("convey.dot");
     
+   
+
+    IO.display();
+    IO.sort();
+    IO.display();
+    
+    IO.import();
+    IO.display();
+    //IO.root().graphViz("convey-all.dot");
+
     Y_UTEST_SIZEOF(ios::conveyor);
     Y_UTEST_SIZEOF(ios::primary_conveyor<char>);
     Y_UTEST_SIZEOF(ios::primary_conveyor<int>);
@@ -49,13 +100,22 @@ Y_UTEST(conveyors)
     Y_UTEST_SIZEOF(complex_float_conveyer);
     typedef ios::tuple_conveyor<point2d,double,ios::network_conveyor> point3d_double_conveyer;
     Y_UTEST_SIZEOF(point3d_double_conveyer);
-
-    IO.display();
-    IO.sort();
-    IO.display();
     
-    IO.import();
-    IO.display();
+    doTest<int>(    IO.query<int>(comms::homogeneous)    );
+    doTest<int>(    IO.query<int>(comms::distributed)    );
+    doTest<string>( IO.query<string>(comms::homogeneous) );
+    doTest<string>( IO.query<string>(comms::distributed) );
+    doTest< point2d<int>      >( IO.query<point2d,int>(comms::homogeneous) );
+    doTest< point2d<int>      >( IO.query<point2d,int>(comms::distributed) );
+
+    doTest< point3d<long long> >( IO.query<point3d,long long>(comms::homogeneous) );
+    doTest< point3d<long long> >( IO.query<point3d,long long>(comms::distributed) );
+
+    doTest<mpn>( IO.query<mpn>(comms::homogeneous) );
+    doTest<mpn>( IO.query<mpn>(comms::distributed) );
+
+    doTest<mpz>( IO.query<mpz>(comms::homogeneous) );
+    doTest<mpz>( IO.query<mpz>(comms::distributed) );
 
     
 }

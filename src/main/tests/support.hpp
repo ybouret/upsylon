@@ -138,6 +138,13 @@ namespace {
         return alea.on_circle< double,point2d >();
     }
 
+    
+    template <>
+    inline point2d<int> support:: get< point2d<int> >()
+    {
+        return point2d<int>( alea.full<int>(), alea.full<int>() );
+    }
+
     template <>
     inline point3d<float> support:: get< point3d<float> >()
     {
@@ -150,6 +157,11 @@ namespace {
         return alea.on_sphere< double,point3d >();
     }
 
+    template <>
+    inline point3d<long long> support:: get< point3d<long long> >()
+    {
+        return point3d<long long>( alea.full<long long>(), alea.full<long long>(), alea.full<long long>() );
+    }
     
 }
 
