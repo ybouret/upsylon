@@ -54,8 +54,8 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            typedef limited_conveyor_< CONVEYOR<T> > base_type; //!< alias
-            
+            typedef limited_conveyor_< CONVEYOR<T> > base_type;   //!< alias
+            static  const size_t block_size = BLOCKS * sizeof(T); //!< alias
             //__________________________________________________________________
             //
             // C++
@@ -69,7 +69,7 @@ namespace upsylon {
             //! setup
             inline explicit limited_conveyor(const std::type_info &_) throw() :
             base_type(),
-            conveyor(this->io.mode,this->io.topo,_,BLOCKS*sizeof(T))
+            conveyor(this->io.mode,this->io.topo,_,block_size)
             {
             }
             
@@ -79,7 +79,7 @@ namespace upsylon {
             //__________________________________________________________________
             
             //! copy BLOCKS types
-            inline virtual void copy(void *target, const void *source) const
+            inline virtual size_t copy(void *target, const void *source) const
             {
                 char       *p = static_cast<char *>(target);
                 const char *q = static_cast<const char *>(source);
@@ -89,6 +89,7 @@ namespace upsylon {
                     p += sizeof(T);
                     q += sizeof(T);
                 }
+                return block_size;
             }
             
             //! save BLOCKS types

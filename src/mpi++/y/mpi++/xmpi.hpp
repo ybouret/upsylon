@@ -5,12 +5,15 @@
 #define Y_XMPI_INCLUDED 1
 
 #include "y/mpi++/mpi.hpp"
+#include "y/ios/conveyor.hpp"
+#include "y/ios/ovstream.hpp"
 
 namespace upsylon {
  
     //! eXtended MPI functions
     struct XMPI
     {
+        //! Sending a range
         template <typename ITERATOR> static inline
         void Send(mpi &MPI,const int dest, ITERATOR curr, size_t n)
         {
@@ -21,12 +24,14 @@ namespace upsylon {
             }
         }
         
+        //! Sending a sequence
         template <typename SEQUENCE> static inline
         void Send(mpi &MPI,const int dest, const SEQUENCE &seq)
         {
             Send(MPI,dest,seq.begin(),seq.size());
         }
         
+        //! Receiving into a sequence
         template <typename SEQUENCE> static inline
         void Recv(mpi &MPI, const int from, SEQUENCE &seq )
         {
@@ -37,6 +42,12 @@ namespace upsylon {
                 seq.push_back(rcv);
             }
         }
+        
+        typedef ios::ovstream Block;
+        
+        
+        
+        
     };
     
 }

@@ -43,11 +43,12 @@ namespace upsylon {
             //__________________________________________________________________
             
             //! local copy by '='
-            inline virtual void copy(void *target, const void *source) const
+            inline virtual size_t copy(void *target, const void *source) const
             {
                 assert(target);
                 assert(source);
                 *static_cast<T*>( target ) = *static_cast<const T *>(source);
+                return sizeof(T);
             }
             
             //! serialize

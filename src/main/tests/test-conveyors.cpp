@@ -5,6 +5,7 @@
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/ios/tools/vizible.hpp"
+#include "y/sequence/list.hpp"
 
 #include "support.hpp"
 
@@ -18,8 +19,10 @@ namespace {
         std::cerr << "testing [" << cnv << "]" << std::endl;
         vector<T>     source;
         vector<T>     target;
+        list<T>       target2;
         ios::ovstream block;
         const size_t  items = alea.leq(1024);
+        size_t        total = 0;
         for(size_t i=0;i<items;++i)
         {
             // fill original
@@ -32,23 +35,45 @@ namespace {
             {
                 const T tmp = support::get<T>();
                 target.push_back(tmp);
+                target2.push_back(tmp);
             }
             
             // save original data into block
-            cnv.save(block,&source.back());
+            total += cnv.save(block,&source.back());
         }
         std::cerr << "\t#items=" << items << " -> #bytes=" << block.size() << std::endl;
-        std::cerr << "\tcopy..." << std::endl;
+        std::cerr << "\t"; Y_CHECK(total==block.size());
+        total = 0;
         for(size_t i=1;i<=items;++i)
         {
-            cnv.copy(&target[i], &source[i]);
+            total += cnv.copy(&target[i], &source[i]);
         }
-        std::cerr << "\tload..." << std::endl;
+        std::cerr << "\t"; Y_CHECK(total==sizeof(T)*source.size());
+        
+        {
         ios::imstream fp(block);
+        total = 0;
         for(size_t i=1;i<=items;++i)
         {
-            cnv.load(&target[i], fp);
+            total +=  cnv.load(&target[i], fp);
             Y_ASSERT(target[i]==source[i]);
+        }
+        }
+        
+        std::cerr << "\t"; Y_CHECK(total==block.size());
+        
+        cnv.copy_block(target2,source);
+        for(size_t i=1;i<=items;++i)
+        {
+            Y_ASSERT(target2[i]==source[i]);
+        }
+        block.free();
+        total = cnv.save_block(block,target2);
+        std::cerr << "\t"; Y_CHECK(total==block.size());
+        {
+            ios::imstream fp(block);
+            total = cnv.load_block(target,fp);
+            std::cerr << "\t"; Y_CHECK(total==block.size());
         }
         
     }
@@ -64,12 +89,12 @@ Y_UTEST(conveyors)
     const ios::conveyor &dcd = IO.query<double>(comms::distributed);
     const ios::conveyor &sch = IO.query<string>(comms::homogeneous);
     const ios::conveyor &scd = IO.query<string>(comms::distributed);
-
+    
     std::cerr << "dch=" << dch << std::endl;
     std::cerr << "dcd=" << dcd << std::endl;
     std::cerr << "sch=" << sch << std::endl;
     std::cerr << "scd=" << scd << std::endl;
-
+    
     const ios::conveyor &cplxf_h = IO.query<complex,float>(comms::homogeneous);
     const ios::conveyor &cplxd_d = IO.query<complex,double>(comms::distributed);
     std::cerr << "cplxf_h=" << cplxf_h << std::endl;
@@ -79,8 +104,8 @@ Y_UTEST(conveyors)
     
     IO.root().graphViz("convey.dot");
     
-   
-
+    
+    
     IO.display();
     IO.sort();
     IO.display();
@@ -88,7 +113,7 @@ Y_UTEST(conveyors)
     IO.import();
     IO.display();
     //IO.root().graphViz("convey-all.dot");
-
+    
     Y_UTEST_SIZEOF(ios::conveyor);
     Y_UTEST_SIZEOF(ios::primary_conveyor<char>);
     Y_UTEST_SIZEOF(ios::primary_conveyor<int>);
@@ -107,16 +132,16 @@ Y_UTEST(conveyors)
     doTest<string>( IO.query<string>(comms::distributed) );
     doTest< point2d<int>      >( IO.query<point2d,int>(comms::homogeneous) );
     doTest< point2d<int>      >( IO.query<point2d,int>(comms::distributed) );
-
+    
     doTest< point3d<long long> >( IO.query<point3d,long long>(comms::homogeneous) );
     doTest< point3d<long long> >( IO.query<point3d,long long>(comms::distributed) );
-
+    
     doTest<mpn>( IO.query<mpn>(comms::homogeneous) );
     doTest<mpn>( IO.query<mpn>(comms::distributed) );
-
+    
     doTest<mpz>( IO.query<mpz>(comms::homogeneous) );
     doTest<mpz>( IO.query<mpz>(comms::distributed) );
-
+    
     
 }
 Y_UTEST_DONE()

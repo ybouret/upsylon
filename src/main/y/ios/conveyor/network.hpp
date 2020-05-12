@@ -43,11 +43,12 @@ namespace upsylon {
             //
             // interface
             //__________________________________________________________________
-            inline virtual void copy(void *target, const void *source) const
+            inline virtual size_t copy(void *target, const void *source) const
             {
                 assert(target);
                 assert(source);
                 memcpy(target,source,sizeof(T));
+                return sizeof(T);
             }
             
             inline virtual size_t save(ios::ostream &target, const void *source) const

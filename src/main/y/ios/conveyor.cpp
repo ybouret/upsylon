@@ -39,8 +39,7 @@ namespace upsylon {
             << ":" << c.move << ">";
             return os;
         }
-
-
+        
     }
     
 }

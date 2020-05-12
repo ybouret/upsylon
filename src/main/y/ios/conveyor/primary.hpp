@@ -30,11 +30,12 @@ namespace upsylon {
             inline virtual ~primary_conveyor() throw() {}
             
             //! memory copy
-            inline virtual void copy(void *target, const void *source) const
+            inline virtual size_t copy(void *target, const void *source) const
             {
                 assert(target);
                 assert(source);
                 memcpy(target,source,sizeof(T));
+                return sizeof(T);
             }
            
             //! write bytes
