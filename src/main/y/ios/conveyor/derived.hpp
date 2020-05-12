@@ -5,6 +5,7 @@
 
 #include "y/ios/conveyor.hpp"
 #include "y/type/args.hpp"
+#include "y/type/spec.hpp"
 
 namespace upsylon {
     
