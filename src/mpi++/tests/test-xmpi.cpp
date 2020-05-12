@@ -72,6 +72,15 @@ namespace
         }
         
         //ring
+        s.free();
+        r.free();
+        const int next = MPI.nextRank();
+        const int prev = MPI.prevRank();
+        s.free();
+        for(size_t i=alea.leq(100);i>0;--i)
+        {
+            s.push_back( alea.full<uint8_t>() );
+        }
         
     }
     
