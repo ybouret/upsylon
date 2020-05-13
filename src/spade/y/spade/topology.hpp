@@ -13,14 +13,22 @@ namespace upsylon {
     
     namespace Spade
     {
+        //----------------------------------------------------------------------
+        //
         //! direction for each Level
+        //
+        //----------------------------------------------------------------------
         enum Direction
         {
             Forward, //!< forward at a given level
             Reverse  //!< reverse at a given level
         };
-        
+
+        //----------------------------------------------------------------------
+        //
         //! connectivity with a link
+        //
+        //----------------------------------------------------------------------
         struct Connect
         {
             //! the very mode :)
@@ -81,7 +89,7 @@ namespace upsylon {
             //
             //! base class for Topology computations
             /**
-             answers to: who are my neighbours
+             answers to: who are my neighbours ?
              */
             //
             //------------------------------------------------------------------
@@ -220,7 +228,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! compute ranks and linked satus for some given ranks and probe
+            //! compute probe ranks and linked satus for some given ranks and probe
             inline coord getProbeRanks(const_coord   &ranks,
                                        const_coord    probe,
                                        const Boolean &pbc,
@@ -277,7 +285,7 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            //! base class to build topology
+            //! base class to build topology : local and global rank(s)
             //
             //------------------------------------------------------------------
             class Hub
@@ -371,7 +379,7 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            //! Links describe two-ways connections
+            //! Links describe two-ways connections for a given Level
             //
             //------------------------------------------------------------------
             class Links
@@ -417,7 +425,7 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            //! a Node is an Hub with its Links
+            //! a Node is an Hub with its Links[Levels]
             //
             //------------------------------------------------------------------
             class Node : public Hub, public slots<Links>

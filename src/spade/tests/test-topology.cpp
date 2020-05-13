@@ -23,7 +23,8 @@ namespace {
         const COORD smax = Coord::Ld<COORD>(4);
         const COORD smin = Coord::Ones<COORD>();
         Loop        loop(smin,smax);
-        
+        Loop        lpbc(Coord::Zero<COORD>(),Coord::Ones<COORD>());
+
         const COORD &sizes = loop.value;
         for(loop.boot();loop.good();loop.next())
         {
@@ -38,12 +39,16 @@ namespace {
                 Y_ASSERT(gRank==rank);
             }
             std::cerr << "checking connectivity..." << std::endl;
-            Boolean pbc = Coord::False<Boolean>();
-            for(size_t rank=0;rank<topo.size;++rank)
+
+            for(lpbc.boot();lpbc.good();lpbc.next())
             {
-                const COORD  ranks = topo.getLocalRanks(rank);
-                std::cerr << "ranks=" << ranks << std::endl;
-                const Node   node(ranks,topo,pbc);
+                const Boolean pbc = Coord::ToBool( lpbc.value );
+                for(size_t rank=0;rank<topo.size;++rank)
+                {
+                    const COORD  ranks = topo.getLocalRanks(rank);
+                    std::cerr << "ranks=" << ranks << " / pbc=" << pbc <<  std::endl;
+                    const Node   node(ranks,topo,pbc);
+                }
             }
         }
     }
