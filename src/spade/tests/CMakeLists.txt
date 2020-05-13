@@ -12,6 +12,7 @@ ADD_TEST(layout    test-spade layout)
 ADD_TEST(partition test-spade partition)
 ADD_TEST(field     test-spade field)
 ADD_TEST(topology  test-spade topology)
+ADD_TEST(layouts   test-spade layouts)
 
 ADD_CUSTOM_TARGET(utest-spade
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
