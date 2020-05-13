@@ -93,9 +93,9 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
             public:
-                virtual ~Topology() throw();        //!< cleanup
+                virtual ~Topology() throw();     //!< cleanup
             protected:
-                explicit Topology(const size_t nc); //!< set size, with checking
+                explicit Topology(const size_t); //!< set size, with checking
                 
             public:
                 //--------------------------------------------------------------
@@ -115,7 +115,7 @@ namespace upsylon {
                 // members
                 //
                 //--------------------------------------------------------------
-                const size_t size;                  //!< number of cores
+                const size_t size; //!< number of cores
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Topology);
@@ -136,9 +136,9 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            static  const unsigned                   Dimensions = Coord::Get<COORD>::Dimensions; //!< alias
-            typedef Kernel::Coordination<Dimensions> Coordination;                               //!< alias
-            static  const unsigned                   Levels = Coordination::Levels; //!< alias
+            static  const unsigned Dimensions = Coord::Get<COORD>::Dimensions;      //!< alias
+            typedef Kernel::Coordination<Dimensions>          Coordination;         //!< alias
+            static  const unsigned Levels    =  Coordination::Levels;               //!< alias
             typedef typename type_traits<COORD>::mutable_type coord;                //!< alias
             typedef const coord                               const_coord;          //!< alias
             typedef typename Coord::Get<COORD>::Boolean       Boolean;              //!< alias
