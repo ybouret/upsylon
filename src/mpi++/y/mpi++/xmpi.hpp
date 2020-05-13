@@ -10,10 +10,25 @@
 
 namespace upsylon {
     
+    //--------------------------------------------------------------------------
+    //
     //! eXtended MPI functions
+    //
+    //--------------------------------------------------------------------------
     struct XMPI
     {
+        //______________________________________________________________________
+        //
+        //
+        // Send/Recv helpers
+        //
+        //______________________________________________________________________
+        
+        
+        //______________________________________________________________________
+        //
         //! Sending a range
+        //______________________________________________________________________
         template <typename ITERATOR> static inline
         void Send(mpi &MPI,const int dest, ITERATOR curr, size_t n)
         {
@@ -24,14 +39,20 @@ namespace upsylon {
             }
         }
         
+        //______________________________________________________________________
+        //
         //! Sending a sequence
+        //______________________________________________________________________
         template <typename SEQUENCE> static inline
         void Send(mpi &MPI,const int dest, const SEQUENCE &seq)
         {
             Send(MPI,dest,seq.begin(),seq.size());
         }
         
+        //______________________________________________________________________
+        //
         //! Receiving into a sequence
+        //______________________________________________________________________
         template <typename SEQUENCE> static inline
         void Recv(mpi &MPI, const int from, SEQUENCE &seq )
         {
@@ -44,22 +65,41 @@ namespace upsylon {
         }
         
         
-        typedef ios::ovstream Buffer; //!< alias
+        //______________________________________________________________________
+        //
+        //
+        // variadic blocks
+        //
+        //______________________________________________________________________
         
+        typedef ios::ovstream Block; //!< alias
+        
+        //______________________________________________________________________
+        //
+        //! Send with size information if delivery==flexible block size
+        //______________________________________________________________________
         static void vSend(mpi                  &MPI,
-                          const Buffer         &sendBuffer,
+                          const Block          &sendBuffer,
                           const int             dest,
                           const comms::delivery delivery);
         
+        //______________________________________________________________________
+        //
+        //! Recv with size adjustment if delivery==flexible block size
+        //______________________________________________________________________
         static void vRecv(mpi                  &MPI,
-                          Buffer               &recvBuffer,
+                          Block                &recvBuffer,
                           const int             source,
                           const comms::delivery delivery);
         
+        //______________________________________________________________________
+        //
+        //! Send.Recv with size adjustment if delivery==flexible block size
+        //______________________________________________________________________
         static void vSendRecv(mpi                  &MPI,
-                              const Buffer         &sendBuffer,
+                              const Block          &sendBuffer,
                               const int             dest,
-                              Buffer               &recvBuffer,
+                              Block                &recvBuffer,
                               const int             source,
                               const comms::delivery delivery);
         

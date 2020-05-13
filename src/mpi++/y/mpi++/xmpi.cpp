@@ -5,7 +5,7 @@
 namespace upsylon {
     
     void XMPI:: vSend(mpi                  &MPI,
-                      const Buffer         &sendBuffer,
+                      const Block          &sendBuffer,
                       const int             dest,
                       const comms::delivery delivery)
     {
@@ -19,7 +19,7 @@ namespace upsylon {
     }
     
     void XMPI:: vRecv(mpi                  &MPI,
-                      Buffer               &recvBuffer,
+                      Block                &recvBuffer,
                       const int             source,
                       const comms::delivery delivery)
     {
@@ -33,9 +33,9 @@ namespace upsylon {
     }
     
     void XMPI:: vSendRecv(mpi                  &MPI,
-                          const Buffer         &sendBuffer,
+                          const Block         &sendBuffer,
                           const int             dest,
-                          Buffer               &recvBuffer,
+                          Block                &recvBuffer,
                           const int             source,
                           const comms::delivery delivery)
     {

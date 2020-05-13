@@ -3,6 +3,8 @@
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
+#include "y/type/spec.hpp"
+
 using namespace  upsylon;
 
 namespace
@@ -10,6 +12,7 @@ namespace
     template <typename T>
     static inline void doSequences(mpi &MPI)
     {
+        MPI.Printf0(stderr, "-- sequence<%s>\n", *type_name_of<T>() );
         vector<T> V;
         list<T>   L;
         if(MPI.head)
@@ -44,9 +47,11 @@ namespace
     
     static inline void doBuffer(mpi &MPI)
     {
-        XMPI::Buffer s,r;
+        XMPI::Block s,r;
+        MPI.Printf0(stderr, "-- vBuffer\n");
         
         // star
+        MPI.Printf0(stderr, "--  -> star\n");
         if(MPI.head)
         {
             for(int rank=1;rank<MPI.size;++rank)
@@ -72,15 +77,26 @@ namespace
         }
         
         //ring
+        MPI.Printf0(stderr, "--  -> ring\n");
         s.free();
         r.free();
         const int next = MPI.nextRank();
         const int prev = MPI.prevRank();
+        
+        // first attempt: empty
+        XMPI::vSendRecv(MPI, s, next, r, prev, comms::flexible_block_size);
+        XMPI::vSendRecv(MPI, s, next, r, prev, comms::computed_block_size);
+
+        
         s.free();
         for(size_t i=alea.leq(100);i>0;--i)
         {
             s.push_back( alea.full<uint8_t>() );
         }
+        r.free();
+        XMPI::vSendRecv(MPI, s, next, r, prev, comms::flexible_block_size);
+        XMPI::vSendRecv(MPI, s, next, r, prev, comms::computed_block_size);
+        MPI.Printf(stderr,"s.size=%u|r.size=%u\n", unsigned(s.size()), unsigned(r.size()));
         
     }
     
