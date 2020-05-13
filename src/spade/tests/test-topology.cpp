@@ -18,7 +18,10 @@ namespace {
 
         std::cerr << std::endl;
         std::cerr << "In " << Topo::Dimensions << "D" << std::endl;
-
+        for(unsigned dim = 0; dim<Topo::Dimensions; ++dim )
+        {
+            Y_ASSERT(Coord::IsUnitVector(dim,Topo::Coordination::Probes[dim]));
+        }
         
         const COORD smax = Coord::Ld<COORD>(4);
         const COORD smin = Coord::Ones<COORD>();

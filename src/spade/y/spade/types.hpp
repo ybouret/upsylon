@@ -110,6 +110,22 @@ namespace upsylon {
                 return  *(( (const Coord1D *)&C ) + dim);
             }
             
+            template <typename COORD> static inline
+            bool IsUnitVector(const unsigned dim, const COORD &C) throw()
+            {
+                assert(dim<Get<COORD>::Dimensions);
+                for(unsigned d=0;d<dim;++d)
+                {
+                    if( 0 != Of(C,d) ) return false;
+                }
+                if( 1 != Of(C,dim) ) return false;
+                for(unsigned d=dim+1;d<Get<COORD>::Dimensions;++d)
+                {
+                    if( 0 != Of(C,d) ) return false;
+                }
+                return true;
+            }
+            
             //! load to same value
             template <typename COORD> static inline
             const COORD Ld(const Coord1D value) throw()

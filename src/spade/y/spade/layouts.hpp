@@ -21,11 +21,14 @@ namespace upsylon {
         class Layouts : public Topology<COORD>::Node
         {
         public:
+            static const unsigned Dimensions = Layout<COORD>::Dimensions;
             typedef typename Layout<COORD>::coord       coord;
             typedef typename Layout<COORD>::const_coord const_coord;
 
-            typedef typename Topology<COORD> ::Node            Node;
-            typedef typename Topology<COORD> ::Boolean         Boolean;
+            typedef typename Topology<COORD>::Node            Node;
+            typedef typename Topology<COORD>::Link            Link;
+            typedef typename Topology<COORD>::Links           Links;
+            typedef typename Topology<COORD>::Boolean         Boolean;
 
             const Layout<COORD> inner; //!< workspace
             const Layout<COORD> outer; //!< exchange zones
@@ -34,14 +37,41 @@ namespace upsylon {
             {
             }
 
-            inline explicit Layouts(const Layout<COORD>   &full,
-                                    const_coord            rnks,
-                                    const Topology<COORD> &topo,
-                                    const Boolean         &pbcs) :
-            Node(rnks,topo,pbcs),
-            inner(full.split(topo.sizes,this->ranks)),
+            inline explicit Layouts(const Layout<COORD>   &fullLayout,
+                                    const_coord            localRanks,
+                                    const Topology<COORD> &topology,
+                                    const Boolean         &boundaries,
+                                    const Coord1D          numGhosts) :
+            Node(localRanks,topology,boundaries),
+            inner(fullLayout.split(topology.sizes,this->ranks)),
             outer(inner)
             {
+                const Coord1D  ng   = abs_of(numGhosts);
+                const Node    &self = *this;
+                
+                // use Node information to expand inner in dimension levels
+                coord lower = inner.lower;
+                coord upper = inner.upper;
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    const Links &links = self[dim];
+                    switch(links.forward.comm)
+                    {
+                        case Connect::Zilch: break;
+                        case Connect::Async:
+                        case Connect::Local: Coord::Of(upper,dim) += ng;
+                    }
+                    
+                    switch(links.reverse.comm)
+                    {
+                        case Connect::Zilch: break;
+                        case Connect::Async:
+                        case Connect::Local: Coord::Of(upper,dim) -= ng;
+                    }
+                }
+                
+                // recompute outer
+                new (&outer) Layout<COORD>(lower,upper);
             }
             
 

@@ -445,6 +445,7 @@ namespace upsylon {
                 slots<Links>(Levels)
                 {
 
+                    
                     // scan the neighbourhood
                     for(unsigned level=0;level<Levels;++level)
                     {
