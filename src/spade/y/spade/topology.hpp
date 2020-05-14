@@ -46,7 +46,7 @@ namespace upsylon {
 #define Y_SPADE_CNX_FLAG(mode,shift) ( static_cast<Connect::Flag>(mode) << shift )
             
             //! convert to modes to a flag
-#define Y_SPADE_CNX(a,b) ( Y_SPADE_CNX_FLAG(a,8) |  Y_SPADE_CNX_FLAG(b,0) )
+#define Y_SPADE_CNX(a,b) ( Y_SPADE_CNX_FLAG(a,2) |  Y_SPADE_CNX_FLAG(b,0) )
             
             static const Flag FreeStanding = Y_SPADE_CNX(Zilch,Zilch); //!< no neighbour, walls in both direction
             static const Flag AutoExchange = Y_SPADE_CNX(Local,Local); //!< self neighbour, local pbc

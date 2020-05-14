@@ -106,6 +106,8 @@ namespace {
     
 }
 
+#define SHOW(VALUE) std::cerr << #VALUE << " = " << (VALUE) << std::endl
+
 Y_UTEST(topology)
 {
     Coord::DispWidth = 2;
@@ -146,7 +148,17 @@ Y_UTEST(topology)
     Y_UTEST_SIZEOF(Topology<Coord2D>::Node);
     Y_UTEST_SIZEOF(Topology<Coord3D>::Node);
 
+    SHOW( Connect::FreeStanding );
+    SHOW( Connect::AsyncReverse );
+    SHOW( Connect::AutoExchange );
+    SHOW( Connect::AsyncForward );
+    SHOW( Connect::AsyncTwoWays );
     
+    SHOW( Connect::AsyncReverse >> 1 );
+    SHOW( Connect::AutoExchange >> 1 );
+    SHOW( Connect::AsyncForward >> 1 );
+    SHOW( Connect::AsyncTwoWays >> 1 );
+
 }
 Y_UTEST_DONE()
 
