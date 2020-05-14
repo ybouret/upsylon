@@ -368,7 +368,7 @@ namespace upsylon {
                 //! display
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
-                    Coord::Disp(os,link.ranks) << " (" << Connect::Text(link.conn) << ")";
+                    Coord::Disp(os,link.ranks) << " (" << Connect::Text(link.connectMode) << ")";
                     return os;
                 }
                 
@@ -414,7 +414,7 @@ namespace upsylon {
                 //! display
                 friend inline std::ostream & operator<<( std::ostream &os, const Links &links )
                 {
-                    os << "forward@" << links.forward << " | reverse@" << links.reverse;
+                    os << "->@" << links.forward << " | <-@" << links.reverse;
                     return os;
                 }
                 
@@ -451,8 +451,6 @@ namespace upsylon {
                 Hub(localRanks,topology),
                 slots<Links>(Levels)
                 {
-
-                    
                     // scan the neighbourhood
                     for(unsigned level=0;level<Levels;++level)
                     {

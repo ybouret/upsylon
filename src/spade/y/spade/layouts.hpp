@@ -60,7 +60,7 @@ namespace upsylon {
                         case Connect::Zilch: break;
                         case Connect::Async:
                         case Connect::Local:
-                            std::cerr << "increase " << ng << " along " << links.forward.probe << std::endl;
+                            //std::cerr << "increase " << ng << " along " << links.forward.probe << std::endl;
                             Coord::Of(upper,dim) += ng;
                     }
                     
@@ -69,7 +69,7 @@ namespace upsylon {
                         case Connect::Zilch: break;
                         case Connect::Async:
                         case Connect::Local:
-                            std::cerr << "decrease " << ng << " along " << links.reverse.probe << std::endl;
+                            //std::cerr << "decrease " << ng << " along " << links.reverse.probe << std::endl;
                             Coord::Of(lower,dim) -= ng;
                     }
                 }
