@@ -70,7 +70,6 @@ namespace upsylon {
                 // use Node information to expand inner layout
                 //______________________________________________________________
 
-                std::cerr << "..build outer" << std::endl;
                 // initialize corners
                 coord lower = inner.lower;
                 coord upper = inner.upper;
@@ -103,13 +102,13 @@ namespace upsylon {
                 //
                 // compute associated exchange zones in each level
                 //______________________________________________________________
-                std::cerr << "..build zones" << std::endl;
                 for(unsigned level=0;level<Levels;++level)
                 {
                     const Links &links = self[level];
                     assert(links.forward.probe== Topology<COORD>::Coordination::Probes[level]);
                     assert(links.reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
-                    zonesFor(links.forward.probe,ng);
+                    
+                    
                 }
             }
 
@@ -128,30 +127,8 @@ namespace upsylon {
             inline void zonesFor(const_coord  &probe,
                                  const Coord1D ng) const
             {
-                assert(ng>=0);
-
-                coord iLower = inner.lower;
-                coord iUpper = inner.upper;
-
-                coord oLower = outer.lower;
-                coord oUpper = outer.upper;
-
-                for(unsigned dim=0;dim<Dimensions;++dim)
-                {
-                    const Coord1D p = Coord::Of(probe,dim);
-                    Coord1D      &iL = Coord::Of(iLower,dim);
-                    Coord1D      &iU = Coord::Of(iUpper,dim);
-
-                    switch(p)
-                    {
-                        case  1:
-                            break;
-                        case -1: break;
-                        default: assert(0==p); break;
-
-                    }
-                }
-
+                
+                
             }
         };
     }

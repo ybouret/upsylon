@@ -28,6 +28,34 @@ namespace upsylon {
             return "???";
         }
 
+#define Y_SPADE_CNX_(MODE) unsigned(MODE)
+#define Y_SPADE_CNX(A,B) ( (Y_SPADE_CNX_(A)<<8) | (Y_SPADE_CNX_(B)) )
+        
+        void   Connect:: Authorize(const unsigned level,
+                                   const Mode     fwd,
+                                   const Mode     rev)
+        {
+            const unsigned status = Y_SPADE_CNX(fwd,rev);
+            switch(status)
+            {
+                case Y_SPADE_CNX(Zilch,Zilch):
+                //case Y_SPADE_CNX(Zilch,Local):
+                case Y_SPADE_CNX(Zilch,Async):
+                    
+                //case Y_SPADE_CNX(Local,Zilch):
+                case Y_SPADE_CNX(Local,Local):
+                    
+                case Y_SPADE_CNX(Async,Zilch):
+                case Y_SPADE_CNX(Async,Async):
+                    return;
+                    
+                default:
+                    break;
+            }
+            
+            throw exception("Spade::Connect: Unauthorized forward=%s and reverse=%s @level=%u", Text(fwd), Text(rev), level);
+        }
+        
         
         namespace Kernel
         {

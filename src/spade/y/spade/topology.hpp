@@ -35,9 +35,9 @@ namespace upsylon {
             //! the very mode :)
             enum Mode
             {
-                Zilch, //!< none, there is a wall
-                Local, //!< auto-connected
-                Async  //!< connected to another rank
+                Zilch=0x00, //!< none, there is a wall
+                Local=0x01, //!< auto-connected
+                Async=0x02  //!< connected to another rank
             };
             
             //! compute mode according to status
@@ -45,6 +45,10 @@ namespace upsylon {
             
             //! return a human readable mode
             static const char *Text(const Mode) throw();
+            
+            //! check consistency
+            static void        Authorize(const unsigned level, const Mode fwd, const Mode rev);
+            
         };
         
         
@@ -399,8 +403,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 
                 //! setup
-                inline Links(const Link &fwd, const Link &rev) throw() :
-                forward(fwd), reverse(rev)
+                inline Links(const Link &fwd, const Link &rev) : forward(fwd), reverse(rev)
                 {
                     
                 }
@@ -457,6 +460,7 @@ namespace upsylon {
                         const coord  probe   = Coordination::Probes[level];
                         const Link   forward = getLink(topology,probe,pbc);
                         const Link   reverse = getLink(topology,-probe,pbc);
+                        Connect::Authorize(level,forward.connectMode,reverse.connectMode);
                         this->template build<const Link&,const Link&>(forward,reverse);
                     }
                 }
