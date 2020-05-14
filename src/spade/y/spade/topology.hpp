@@ -8,6 +8,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/core/inode.hpp"
+#include <iomanip>
 
 namespace upsylon {
     
@@ -357,9 +358,7 @@ namespace upsylon {
                 
                 //! copy
                 inline Link(const Link &link) throw() :
-                Hub(link),
-                connectMode(link.connectMode),
-                probe(link.probe)
+                Hub(link), connectMode(link.connectMode), probe(link.probe)
                 { }
                 
                 //!cleanup
@@ -368,7 +367,7 @@ namespace upsylon {
                 //! display
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
-                    Coord::Disp(os,link.ranks) << " (" << Connect::Text(link.connectMode) << ")";
+                    Coord::Disp(os,link.ranks)  << " (" << Connect::Text(link.connectMode) << "@" << link.rank << ")";
                     return os;
                 }
                 
