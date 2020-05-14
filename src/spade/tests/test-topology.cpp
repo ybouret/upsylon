@@ -62,7 +62,7 @@ namespace {
         typedef Topology<COORD>     Topo;
         std::cerr << "Probes " << Topo::Dimensions << "D" << std::endl;
         std::cerr << "\tLevels = " << Topo::Levels << std::endl;
-        Y_CHECK(Topo::Levels*2==ipower(3,Topo::Dimensions)-1);
+        Y_CHECK(Topo::Levels*2==ipower<unsigned>(3,Topo::Dimensions)-1);
         unsigned i=0;
         for(unsigned j=0;j<Topo::Coordination::Level1;++j,++i)
         {

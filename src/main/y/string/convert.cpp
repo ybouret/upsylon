@@ -339,11 +339,11 @@ namespace upsylon
             }
             if(exp_s>0)
             {
-                ip *= ipower(ten,exp_v);
+                ip *= ipower<T>(ten,exp_v);
             }
             else
             {
-                ip *= ipower(tenth,exp_v);
+                ip *= ipower<T>(tenth,exp_v);
             }
         }
         return s*ip;

@@ -1,5 +1,5 @@
 
-INCLUDE_DIRECTORIES(../../main/tests)
+INCLUDE_DIRECTORIES(../../math ../../main/tests)
 
 FILE(GLOB test_srcs test-*.cpp)
 ADD_EXECUTABLE(test-spade main.cpp ${test_srcs})
@@ -13,6 +13,7 @@ ADD_TEST(partition test-spade partition)
 ADD_TEST(field     test-spade field)
 ADD_TEST(topology  test-spade topology)
 ADD_TEST(layouts   test-spade layouts)
+ADD_TEST(polint    test-spade polint ${HERE}/topo.dat)
 
 ADD_CUSTOM_TARGET(utest-spade
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

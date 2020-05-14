@@ -4,26 +4,27 @@
 #ifndef Y_CORE_IPOWER_INCLUDED
 #define Y_CORE_IPOWER_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/type/traits.hpp"
 
 namespace upsylon {
 
     //! integer power
     template <typename T>
-    inline T   ipower( T x, size_t n) throw()
+    inline T   ipower( typename type_traits<T>::parameter_type _x, size_t n) throw()
     {
-        T ans(1);
+        T p(1);
+        T x(_x);
         while( n != 0 )
         {
             if( (n & 1) != 0)
             {
-                ans *= x;
-                if (n == 1) return ans;
+                p *= x;
+                if (n == 1) return p;
             }
             x *= x;
             n >>= 1;
         }
-        return ans;
+        return p;
     }
 
 

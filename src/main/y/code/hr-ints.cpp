@@ -25,7 +25,7 @@ namespace upsylon {
             // u=1024^j+r
             static const uint64_t k = 1024;
             size_t   j = 6;
-            uint64_t v = ipower(k,j);
+            uint64_t v = ipower<uint64_t>(k,j);
             while(v>u)
             {
                 --j;
