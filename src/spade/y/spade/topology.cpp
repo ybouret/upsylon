@@ -18,42 +18,59 @@ namespace upsylon {
             }
         }
 
-        const char * Connect:: Text(const Mode m) throw()
+#define Y_CNX_CASE_TEXT(ID) case ID : return #ID
+        
+        static const char Unknown[] = "???";
+        
+        const char * Connect:: ModeText(const Mode m) throw()
         {
-            switch (m) {
-                case Zilch: return "Zilch";
-                case Local: return "Local";
-                case Async: return "Async";
+            switch(m)
+            {
+                    Y_CNX_CASE_TEXT(Zilch);
+                    Y_CNX_CASE_TEXT(Local);
+                    Y_CNX_CASE_TEXT(Async);
             }
-            return "???";
+            return Unknown;
+        }
+        
+        const char * Connect:: FlagText(const Flag f) throw()
+        {
+            switch(f)
+            {
+                    Y_CNX_CASE_TEXT(FreeStanding);
+                    Y_CNX_CASE_TEXT(AutoExchange);
+                    Y_CNX_CASE_TEXT(AsyncTwoWays);
+                    Y_CNX_CASE_TEXT(AsyncForward);
+                    Y_CNX_CASE_TEXT(AsyncReverse);
+            }
+            return Unknown;
         }
 
-#define Y_SPADE_CNX_(MODE) unsigned(MODE)
-#define Y_SPADE_CNX(A,B) ( (Y_SPADE_CNX_(A)<<8) | (Y_SPADE_CNX_(B)) )
+        
+        bool  Connect::Authorized(const Mode fwd, const Mode rev) throw()
+        {
+            switch(Y_SPADE_CNX(fwd,rev))
+            {
+                case FreeStanding:
+                case AutoExchange:
+                case AsyncTwoWays:
+                case AsyncForward:
+                case AsyncReverse:
+                    return true;
+                    
+                default:
+                    break;
+            }
+            return false;
+        }
         
         void   Connect:: Authorize(const unsigned level,
                                    const Mode     fwd,
                                    const Mode     rev)
         {
-            const unsigned status = Y_SPADE_CNX(fwd,rev);
-            switch(status)
-            {
-                case Y_SPADE_CNX(Zilch,Zilch):
-                //case Y_SPADE_CNX(Zilch,Local):
-                case Y_SPADE_CNX(Zilch,Async):
-                    
-                //case Y_SPADE_CNX(Local,Zilch):
-                case Y_SPADE_CNX(Local,Local):
-                    
-                case Y_SPADE_CNX(Async,Zilch):
-                case Y_SPADE_CNX(Async,Async):
-                    return;
-                    
-                default:
-                    break;
-            }
             
-            throw exception("Spade::Connect: Unauthorized forward=%s and reverse=%s @level=%u", Text(fwd), Text(rev), level);
+            if(!Authorized(fwd,rev))
+                throw exception("Spade::Connect: Unauthorized forward=%s and reverse=%s @level=%u", ModeText(fwd), ModeText(rev), level);
         }
         
         

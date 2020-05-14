@@ -102,14 +102,8 @@ namespace upsylon {
                 //
                 // compute associated exchange zones in each level
                 //______________________________________________________________
-                for(unsigned level=0;level<Levels;++level)
-                {
-                    const Links &links = self[level];
-                    assert(links.forward.probe== Topology<COORD>::Coordination::Probes[level]);
-                    assert(links.reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
-                    
-                    
-                }
+                if(ng>0) createGhosts(ng);
+               
             }
 
 
@@ -124,11 +118,24 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Layouts);
-            inline void zonesFor(const_coord  &probe,
-                                 const Coord1D ng) const
+            inline void createGhosts(const Coord1D ng)
             {
-                
-                
+                assert(ng>0);
+                std::cerr << "create ghosts..." << std::endl;
+                const Node &self = *this;
+                for(unsigned level=0;level<Levels;++level)
+                {
+                    const Links &links = self[level];
+                    const Link  &forward = links.forward;
+                    const Link  &reverse = links.reverse;
+                    
+                    assert(forward.probe== Topology<COORD>::Coordination::Probes[level]);
+                    assert(reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
+                    assert(Connect::Authorized(forward.connectMode,reverse.connectMode));
+                    
+                    
+                    
+                }
             }
         };
     }

@@ -40,13 +40,33 @@ namespace upsylon {
                 Async=0x02  //!< connected to another rank
             };
             
+            typedef unsigned Flag; //!< alias
+            
+            //! convert Mode to shifted flag
+#define Y_SPADE_CNX_FLAG(mode,shift) ( static_cast<Connect::Flag>(mode) << shift )
+            
+            //! convert to modes to a flag
+#define Y_SPADE_CNX(a,b) ( Y_SPADE_CNX_FLAG(a,8) |  Y_SPADE_CNX_FLAG(b,0) )
+            
+            static const Flag FreeStanding = Y_SPADE_CNX(Zilch,Zilch); //!< no neighbour, walls in both direction
+            static const Flag AutoExchange = Y_SPADE_CNX(Local,Local); //!< self neighbour, local pbc
+            static const Flag AsyncTwoWays = Y_SPADE_CNX(Async,Async); //!< async in both direction
+            static const Flag AsyncForward = Y_SPADE_CNX(Async,Zilch); //!< async forward
+            static const Flag AsyncReverse = Y_SPADE_CNX(Zilch,Async); //!< async reverse
+
             //! compute mode according to status
             static Mode        For(const bool exists, const size_t src, const size_t tgt) throw();
             
             //! return a human readable mode
-            static const char *Text(const Mode) throw();
+            static const char *ModeText(const Mode) throw();
             
-            //! check consistency
+            //! return a humar readable flag
+            static const char *FlagText(const Flag) throw();
+            
+            //! check authorized configuration
+            static bool        Authorized(const Mode fwd, const Mode rev) throw();
+            
+            //! raise an exception if not authorized
             static void        Authorize(const unsigned level, const Mode fwd, const Mode rev);
             
         };
@@ -372,7 +392,7 @@ namespace upsylon {
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
                     Coord::Disp(os << '+',link.probe) << '=';
-                    Coord::Disp(os,link.ranks)  << " (" << Connect::Text(link.connectMode) << "@" << link.rank << ")";
+                    Coord::Disp(os,link.ranks)  << " (" << Connect::ModeText(link.connectMode) << "@" << link.rank << ")";
                     return os;
                 }
                 
@@ -403,13 +423,20 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 
                 //! setup
-                inline Links(const Link &fwd, const Link &rev) : forward(fwd), reverse(rev)
+                inline Links(const Link &fwd, const Link &rev) throw():
+                forward(fwd),
+                reverse(rev),
+                connect( Y_SPADE_CNX(fwd.connectMode,rev.connectMode) )
                 {
                     
                 }
                 
                 //! copy
-                inline Links(const Links &other) throw() : forward(other.forward), reverse(other.reverse) {}
+                inline Links(const Links &other) throw() :
+                forward(other.forward),
+                reverse(other.reverse),
+                connect(other.connect)
+                {}
                 
                 //! cleanup
                 inline ~Links() throw() {}
@@ -417,7 +444,7 @@ namespace upsylon {
                 //! display
                 friend inline std::ostream & operator<<( std::ostream &os, const Links &links )
                 {
-                    os << "->@" << links.forward << " | <-@" << links.reverse;
+                    os << "->@" << links.forward << " | <-@" << links.reverse << " [" << Connect::FlagText(links.connect) << "]";
                     return os;
                 }
                 
@@ -426,8 +453,9 @@ namespace upsylon {
                 // members
                 //
                 //--------------------------------------------------------------
-                const Link forward; //!< for forward wave
-                const Link reverse; //!< for reverse wave
+                const Link          forward; //!< for forward wave
+                const Link          reverse; //!< for reverse wave
+                const Connect::Flag connect; //!< connect class
                 
             private:
                 Y_DISABLE_ASSIGN(Links);
