@@ -268,6 +268,7 @@ namespace upsylon {
                     if(!possible) continue;
                     mappings.push_back( sizes );
                 }
+                _unique(mappings, Coord::Increasing<coord> );
                 return mappings.size();
             }
             

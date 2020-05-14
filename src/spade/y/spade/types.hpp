@@ -5,6 +5,7 @@
 
 #include "y/type/point3d.hpp"
 #include "y/strfwd.hpp"
+#include "y/comparison.hpp"
 
 namespace upsylon {
     
@@ -63,6 +64,22 @@ namespace upsylon {
             {
                 return *(const COORD *) &__Ones[0];
             }
+
+            //! lexicographic
+            template <typename COORD> static inline
+            int Increasing(const COORD &lhs, const COORD &rhs) throw()
+            {
+                return comparison::increasing_lexicographic( (const Coord1D *)&lhs, (const Coord1D *)&rhs, Get<COORD>::Dimensions );
+            }
+
+            //! lexicographic
+            template <typename COORD> static inline
+            int Decreasing(const COORD &lhs, const COORD &rhs) throw()
+            {
+                return comparison::decreasing_lexicographic( (const Coord1D *)&lhs, (const Coord1D *)&rhs, Get<COORD>::Dimensions );
+            }
+
+
             
             //! map to true
             template <typename BOOLEAN> static inline

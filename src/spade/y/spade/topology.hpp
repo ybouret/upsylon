@@ -367,6 +367,7 @@ namespace upsylon {
                 //! display
                 friend inline std::ostream & operator<<( std::ostream &os, const Link &link )
                 {
+                    Coord::Disp(os << '+',link.probe) << '=';
                     Coord::Disp(os,link.ranks)  << " (" << Connect::Text(link.connectMode) << "@" << link.rank << ")";
                     return os;
                 }
