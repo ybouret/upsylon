@@ -67,7 +67,7 @@ Y_UTEST(layouts)
     if(argc>3) cores      = string_convert::to<size_t>(argv[3],"cores");
 
     doTest<Coord1D>(layout,boundaries,cores);
-    return 0;
+    //return 0;
 
     doTest<Coord2D>(layout,boundaries,cores);
     return 0;

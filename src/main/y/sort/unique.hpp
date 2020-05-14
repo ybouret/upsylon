@@ -13,16 +13,16 @@ namespace upsylon {
     namespace core {
 
         //! sort an array and put multiple values at the end
-        template <typename T>
-        size_t __unique( array<T> &arr )
+        template <typename T, typename FUNC>
+        size_t __unique( array<T> &arr, FUNC &compare)
         {
-            hsort(arr,comparison::increasing<T>);
+            hsort(arr,compare);
             size_t n = arr.size();
             size_t i = 1;
             while(i<n)
             {
                 const size_t j   = i+1;
-                const int    cmp = comparison::increasing(arr[i],arr[j]);
+                const int    cmp = compare(arr[i],arr[j]);
                 assert(cmp<=0);
                 if(0==cmp)
                 {
@@ -43,10 +43,10 @@ namespace upsylon {
         }
 
         //! sort a list and put multiple values at the end
-        template <typename T>
-        size_t __unique( list<T> &L )
+        template <typename T, typename FUNC>
+        size_t __unique( list<T> &L, FUNC &compare)
         {
-            L.sort(comparison::increasing<T>);
+            L.sort(compare);
             typename list<T>::nodes_list nodes;
             L.__send_all(nodes);
             typename list<T>::nodes_list single,multiple;
@@ -59,7 +59,7 @@ namespace upsylon {
                 }
                 else
                 {
-                    const int cmp = comparison::increasing(single.tail->data,node->data);
+                    const int cmp = compare(single.tail->data,node->data);
                     assert(cmp<=0);
                     if(0==cmp)
                     {
@@ -80,18 +80,21 @@ namespace upsylon {
     }
 
     //! sort and keep unique value
-    template <typename SEQUENCE>
-    void unique( SEQUENCE &seq )
+    template <typename SEQUENCE, typename FUNC>
+    void _unique( SEQUENCE &seq, FUNC &compare )
     {
-        const size_t new_size = core::__unique(seq);
+        const size_t new_size = core::__unique(seq,compare);
         while(seq.size()>new_size)
         {
             seq.pop_back();
         }
     }
 
-
-
+    template <typename SEQUENCE>
+    void unique(SEQUENCE &seq)
+    {
+        _unique(seq, comparison::increasing<typename SEQUENCE::mutable_type> );
+    }
 
 }
 
