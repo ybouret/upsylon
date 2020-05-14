@@ -49,29 +49,33 @@ namespace upsylon {
                 const Coord1D  ng   = abs_of(numGhosts);
                 const Node    &self = *this;
                 
-                // use Node information to expand inner in dimension levels
+                // use Node information to expand inner layout
                 coord lower = inner.lower;
                 coord upper = inner.upper;
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
                     const Links &links = self[dim];
-                    switch(links.forward.comm)
+                    switch(links.forward.connectMode)
                     {
                         case Connect::Zilch: break;
                         case Connect::Async:
-                        case Connect::Local: Coord::Of(upper,dim) += ng;
+                        case Connect::Local:
+                            std::cerr << "increase " << ng << " along " << links.forward.probe << std::endl;
+                            Coord::Of(upper,dim) += ng;
                     }
                     
-                    switch(links.reverse.comm)
+                    switch(links.reverse.connectMode)
                     {
                         case Connect::Zilch: break;
                         case Connect::Async:
-                        case Connect::Local: Coord::Of(upper,dim) -= ng;
+                        case Connect::Local:
+                            std::cerr << "decrease " << ng << " along " << links.reverse.probe << std::endl;
+                            Coord::Of(lower,dim) -= ng;
                     }
                 }
                 
                 // recompute outer
-                new (&outer) Layout<COORD>(lower,upper);
+                new ((void*)&outer) Layout<COORD>(lower,upper);
             }
             
 

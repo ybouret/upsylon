@@ -345,16 +345,22 @@ namespace upsylon {
                 
                 //! setup
                 inline Link(const size_t    peerRank,
+                            const_coord    &peerProbe,
                             const_coord    &localRanks,
                             const Topology &topology,
                             const bool      exists) throw() :
                 Hub(localRanks,topology),
-                conn( Connect::For(exists,peerRank,this->rank) )
+                connectMode( Connect::For(exists,peerRank,this->rank) ),
+                probe(peerProbe)
                 {
                 }
                 
                 //! copy
-                inline Link(const Link &link) throw() : Hub(link), conn(link.conn) { }
+                inline Link(const Link &link) throw() :
+                Hub(link),
+                connectMode(link.connectMode),
+                probe(link.probe)
+                { }
                 
                 //!cleanup
                 inline virtual ~Link() throw() { }
@@ -371,7 +377,8 @@ namespace upsylon {
                 // members
                 //
                 //--------------------------------------------------------------
-                const Connect::Mode conn; //!< connect mode
+                const Connect::Mode connectMode; //!< connect mode
+                const_coord         probe;       //!< probe
 
             private:
                 Y_DISABLE_ASSIGN(Link);
@@ -449,11 +456,11 @@ namespace upsylon {
                     // scan the neighbourhood
                     for(unsigned level=0;level<Levels;++level)
                     {
+
                         const coord  probe   = Coordination::Probes[level];
                         const Link   forward = getLink(topology,probe,pbc);
                         const Link   reverse = getLink(topology,-probe,pbc);
                         this->template build<const Link&,const Link&>(forward,reverse);
-                        Coord::Disp( std::cerr << "probe:",probe) << " : " << this->back() << std::endl;
                     }
                 }
                 
@@ -462,11 +469,13 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
-                inline Link getLink(const Topology &topology, const_coord probe, const Boolean &pbc) const throw()
+                inline Link getLink(const Topology &topology,
+                                    const_coord     probe,
+                                    const Boolean  &pbc) const throw()
                 {
                     bool        exists = true;
                     const_coord lranks = topology.getProbeRanks(this->ranks,probe,pbc,exists);
-                    return Link(this->rank, lranks, topology, exists);
+                    return Link(this->rank,probe,lranks, topology, exists);
                 }
             };
             
