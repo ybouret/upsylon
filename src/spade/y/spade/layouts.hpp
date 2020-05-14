@@ -27,6 +27,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const unsigned Dimensions =               Layout<COORD>::Dimensions; //!< alias
+            static const unsigned Levels     =               Topology<COORD>::Levels;   //!< alias
             typedef typename      Layout<COORD>::coord       coord;                     //!< alias
             typedef typename      Layout<COORD>::const_coord const_coord;               //!< alias
             typedef typename      Topology<COORD>::Node      Node;                      //!< alias
@@ -68,8 +69,13 @@ namespace upsylon {
                 //
                 // use Node information to expand inner layout
                 //______________________________________________________________
+
+                std::cerr << "..build outer" << std::endl;
+                // initialize corners
                 coord lower = inner.lower;
                 coord upper = inner.upper;
+
+                // scan main levels (0..Dimensions-1)
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
                     const Links &links = self[dim];
@@ -92,6 +98,19 @@ namespace upsylon {
                 
                 // recompute outer
                 new ((void*)&outer) Layout<COORD>(lower,upper);
+
+                //______________________________________________________________
+                //
+                // compute associated exchange zones in each level
+                //______________________________________________________________
+                std::cerr << "..build zones" << std::endl;
+                for(unsigned level=0;level<Levels;++level)
+                {
+                    const Links &links = self[level];
+                    assert(links.forward.probe== Topology<COORD>::Coordination::Probes[level]);
+                    assert(links.reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
+
+                }
             }
 
 
