@@ -451,10 +451,9 @@ namespace upsylon {
                 Hub(localRanks,topology),
                 slots<Links>(Levels)
                 {
-                    // scan the neighbourhood
+                    // scan the neighbourhood in each level
                     for(unsigned level=0;level<Levels;++level)
                     {
-
                         const coord  probe   = Coordination::Probes[level];
                         const Link   forward = getLink(topology,probe,pbc);
                         const Link   reverse = getLink(topology,-probe,pbc);

@@ -90,6 +90,7 @@ namespace upsylon {
         }
     }
 
+    //! sort and keep unique value using default increasing function
     template <typename SEQUENCE>
     void unique(SEQUENCE &seq)
     {

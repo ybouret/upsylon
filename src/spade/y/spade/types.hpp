@@ -126,7 +126,8 @@ namespace upsylon {
                 assert(dim<Get<COORD>::Dimensions);
                 return  *(( (const Coord1D *)&C ) + dim);
             }
-            
+
+            //! check that coordinate is a unit vector
             template <typename COORD> static inline
             bool IsUnitVector(const unsigned dim, const COORD &C) throw()
             {

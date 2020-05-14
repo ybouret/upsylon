@@ -21,22 +21,37 @@ namespace upsylon {
         class Layouts : public Topology<COORD>::Node
         {
         public:
-            static const unsigned Dimensions = Layout<COORD>::Dimensions;
-            typedef typename Layout<COORD>::coord       coord;
-            typedef typename Layout<COORD>::const_coord const_coord;
+            //------------------------------------------------------------------
+            //
+            // Types and defintions
+            //
+            //------------------------------------------------------------------
+            static const unsigned Dimensions =               Layout<COORD>::Dimensions; //!< alias
+            typedef typename      Layout<COORD>::coord       coord;                     //!< alias
+            typedef typename      Layout<COORD>::const_coord const_coord;               //!< alias
+            typedef typename      Topology<COORD>::Node      Node;                      //!< alias
+            typedef typename      Topology<COORD>::Link      Link;                      //!< alias
+            typedef typename      Topology<COORD>::Links     Links;                     //!< alias
+            typedef typename      Topology<COORD>::Boolean   Boolean;                   //!< alias
 
-            typedef typename Topology<COORD>::Node            Node;
-            typedef typename Topology<COORD>::Link            Link;
-            typedef typename Topology<COORD>::Links           Links;
-            typedef typename Topology<COORD>::Boolean         Boolean;
 
-            const Layout<COORD> inner; //!< workspace
-            const Layout<COORD> outer; //!< exchange zones
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
 
-            inline virtual ~Layouts() throw()
-            {
-            }
+            //! cleanup
+            inline virtual ~Layouts() throw() {}
 
+            //! setup layouts
+            /**
+             \param fullLayout the original full layout
+             \param localRanks the local ranks in the topology
+             \param topology   the topology used to compute rank(s)
+             \param boundaries Periodic boundary condtions
+             \param numGhosts  number of ghosts
+             */
             inline explicit Layouts(const Layout<COORD>   &fullLayout,
                                     const_coord            localRanks,
                                     const Topology<COORD> &topology,
@@ -48,8 +63,11 @@ namespace upsylon {
             {
                 const Coord1D  ng   = abs_of(numGhosts);
                 const Node    &self = *this;
-                
+
+                //______________________________________________________________
+                //
                 // use Node information to expand inner layout
+                //______________________________________________________________
                 coord lower = inner.lower;
                 coord upper = inner.upper;
                 for(unsigned dim=0;dim<Dimensions;++dim)
@@ -60,7 +78,6 @@ namespace upsylon {
                         case Connect::Zilch: break;
                         case Connect::Async:
                         case Connect::Local:
-                            //std::cerr << "increase " << ng << " along " << links.forward.probe << std::endl;
                             Coord::Of(upper,dim) += ng;
                     }
                     
@@ -69,7 +86,6 @@ namespace upsylon {
                         case Connect::Zilch: break;
                         case Connect::Async:
                         case Connect::Local:
-                            //std::cerr << "decrease " << ng << " along " << links.reverse.probe << std::endl;
                             Coord::Of(lower,dim) -= ng;
                     }
                 }
@@ -77,7 +93,15 @@ namespace upsylon {
                 // recompute outer
                 new ((void*)&outer) Layout<COORD>(lower,upper);
             }
-            
+
+
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            const Layout<COORD> inner; //!< inner workspace
+            const Layout<COORD> outer; //!< contains exchange zones
 
 
         private:
