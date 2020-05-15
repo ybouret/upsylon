@@ -106,7 +106,6 @@ namespace {
     
 }
 
-#define SHOW(VALUE) std::cerr << #VALUE << " = " << (VALUE) << std::endl
 
 #include "y/ios/ocstream.hpp"
 
@@ -150,16 +149,14 @@ Y_UTEST(topology)
     Y_UTEST_SIZEOF(Topology<Coord2D>::Node);
     Y_UTEST_SIZEOF(Topology<Coord3D>::Node);
 
+#define SHOW(VALUE) std::cerr << #VALUE << " = " << (VALUE) << std::endl
+
     SHOW( Connect::FreeStanding );
     SHOW( Connect::AsyncReverse );
     SHOW( Connect::AutoExchange );
     SHOW( Connect::AsyncForward );
     SHOW( Connect::AsyncTwoWays );
-    
-    SHOW( Connect::AsyncReverse >> 1 );
-    SHOW( Connect::AutoExchange >> 1 );
-    SHOW( Connect::AsyncForward >> 1 );
-    SHOW( Connect::AsyncTwoWays >> 1 );
+
 
     {
         ios::ocstream fp("topo.dat");
@@ -169,7 +166,14 @@ Y_UTEST(topology)
         fp("%d %d\n",Connect::AsyncForward,y++);
         fp("%d %d\n",Connect::AsyncReverse,y++);
     }
+    
+#define SHOW_CLASS(VALUE) std::cerr << "CLASS_OF(" << #VALUE << ")=" << Y_SPADE_CLASS_OF(VALUE) << std::endl
 
+    SHOW_CLASS(Connect::AutoExchange);
+    SHOW_CLASS(Connect::AsyncTwoWays);
+    SHOW_CLASS(Connect::AsyncForward);
+    SHOW_CLASS(Connect::AsyncReverse);
+    
 }
 Y_UTEST_DONE()
 

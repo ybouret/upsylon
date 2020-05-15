@@ -15,7 +15,9 @@ using namespace math;
 
 Y_UTEST(polint)
 {
-    
+    MPN &mp = MPN::instance();
+    mp.createPrimes(100);
+    std::cerr << "mp.probe=" << mp.probe << std::endl;
     if(argc>1)
     {
         vector<mpq>  x;
@@ -51,23 +53,31 @@ Y_UTEST(polint)
                 m[i][j] = ipower<mpq>(x[i], j-1);
             }
         }
-        std::cerr << "m=" << m << std::endl;
+        //std::cerr << "m=" << m << std::endl;
         const mpq dm = determinant(m);
-        std::cerr << "dm=" << dm << std::endl;
+        //std::cerr << "dm=" << dm << std::endl;
         adjoint(am,m);
-        std::cerr << "am=" << am << std::endl;
+        //std::cerr << "am=" << am << std::endl;
         vector<mpq> coef(n,0);
         quark::mul(coef,am,y);
-        std::cerr << "coef=" << coef << std::endl;
+        //std::cerr << "coef=" << coef << std::endl;
 
-        vector<mpn> u(n+1,0);
+        vector<mpz> u(n+1,0);
         for(size_t i=n;i>0;--i)
         {
-            u[i] = coef[i].num.n;
+            u[i] = coef[i].num;
         }
-        u[n+1] = dm.num.n;
-        std::cerr << "u=" << u << std::endl;
-
+        u[n+1] = dm.num;
+        //std::cerr << "u=" << u << " = ";
+        const mpn g = MPN::instance().simplify(u);
+        //std::cerr << g << "*" << u << std::endl;
+        const mpz den = u.back();
+        u.pop_back();
+        std::cerr << "u=" << u << "/" << den << std::endl;
+        for(size_t i=1;i<=n;++i)
+        {
+            
+        }
         
     }
     

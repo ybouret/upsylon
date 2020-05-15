@@ -144,15 +144,31 @@ namespace upsylon
             typedef typename SEQUENCE::mutable_type type;
             const size_t size = seq.size();
             type         smax = 0;
+            
+            // find the smallest not zero item
             {
                 typename SEQUENCE::iterator it = seq.begin();
-                for(size_t i=size;i>0;--i,++it)
+                size_t                      i  = size;
+                for(;i>0;--i,++it)
                 {
                     const type temp = math::fabs_of(*it);
-                    if(temp>smax) smax = temp;
+                    if(temp>0)
+                    {
+                        smax = temp;
+                        break;
+                    }
+                }
+                for(;i>0;--i,++it)
+                {
+                    const type temp = math::fabs_of(*it);
+                    if(temp>0&&temp<smax)
+                    {
+                        smax = temp;
+                    }
                 }
             }
 
+            // check dividers: TODO optimize with list!
             mpn product = _1;
             for(mpn factor=_2;factor<=smax;factor = nextPrime(++factor) )
             {

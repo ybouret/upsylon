@@ -46,13 +46,16 @@ namespace upsylon {
 #define Y_SPADE_CNX_FLAG(mode,shift) ( static_cast<Connect::Flag>(mode) << shift )
             
             //! convert to modes to a flag
-#define Y_SPADE_CNX(a,b) ( Y_SPADE_CNX_FLAG(a,2) |  Y_SPADE_CNX_FLAG(b,0) )
+#define Y_SPADE_CNX(a,b) ( ( Y_SPADE_CNX_FLAG(a,2) |  Y_SPADE_CNX_FLAG(b,0) ) >> 1 )
             
             static const Flag FreeStanding = Y_SPADE_CNX(Zilch,Zilch); //!< no neighbour, walls in both direction
             static const Flag AutoExchange = Y_SPADE_CNX(Local,Local); //!< self neighbour, local pbc
             static const Flag AsyncTwoWays = Y_SPADE_CNX(Async,Async); //!< async in both direction
             static const Flag AsyncForward = Y_SPADE_CNX(Async,Zilch); //!< async forward
             static const Flag AsyncReverse = Y_SPADE_CNX(Zilch,Async); //!< async reverse
+
+            //! convert a positive flag to [0..3]
+#define Y_SPADE_CLASS_OF(X) (((( 29 - 3 * (X) ) * (X) - 84) * (X) + 76)/6)
 
             //! compute mode according to status
             static Mode        For(const bool exists, const size_t src, const size_t tgt) throw();
@@ -455,8 +458,8 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 const Link          forward; //!< for forward wave
                 const Link          reverse; //!< for reverse wave
-                const Connect::Flag connect; //!< connect class
-                
+                const Connect::Flag connect; //!< authorized connect class
+
             private:
                 Y_DISABLE_ASSIGN(Links);
             };
