@@ -4,7 +4,6 @@
 #define Y_SPADE_GHOST_INCLUDED 1
 
 #include "y/spade/types.hpp"
-#include "y/sequence/array.hpp"
 
 namespace upsylon {
 
@@ -13,34 +12,61 @@ namespace upsylon {
 
         namespace Kernel
         {
+            //------------------------------------------------------------------
+            //
+            //! a Ghost is an array of indices
+            //
+            //------------------------------------------------------------------
             class Ghost : public accessible<size_t>
             {
             public:
-                virtual ~Ghost() throw();
-                explicit Ghost(const size_t);
+                //--------------------------------------------------------------
+                //
+                // C++
+                //
+                //--------------------------------------------------------------
+                virtual ~Ghost() throw();     //!< cleanup
+                explicit Ghost(const size_t); //!< setup
 
-                virtual size_t         size()                   const throw();
-                virtual const size_t & operator[](const size_t) const throw();
+                //--------------------------------------------------------------
+                //
+                // methods
+                //
+                //--------------------------------------------------------------
+                virtual size_t         size()                   const throw(); //!< for accessible
+                virtual const size_t & operator[](const size_t) const throw(); //!< for accessible
 
             private:
-                size_t count_;
-                size_t bytes_;
+                size_t        count_;
+                size_t        bytes_;
             protected:
-                size_t       *indices;
-
+                size_t       *indices; //!< [1..items]
             public:
-                const size_t  items;
+                const size_t  items;   //!< sub layout items
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Ghost);
             };
         };
 
+        //------------------------------------------------------------------
+        //
+        //! a Ghost zone is an array of indices
+        //
+        //------------------------------------------------------------------
         class Ghost :  public Kernel::Ghost
         {
         public:
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+
+            //! cleanup
             virtual ~Ghost() throw();
 
+            //! setup from a zone in a full layout
             template <typename LAYOUT> inline
             Ghost(const LAYOUT &zone, const LAYOUT &full) :
             Kernel::Ghost(zone.items)

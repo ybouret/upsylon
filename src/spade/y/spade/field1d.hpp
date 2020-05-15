@@ -44,12 +44,9 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit Field1D(const LABEL      &id,
                              const LayoutType &L) :
-            Field<T>(id),
-            LayoutType(L),
-            addr(static_cast<mutable_type *>(this->allocate(sizeof(T)*items) )),
-            item(addr-lower),
-            built(0)
+            Field<T>(id), LayoutType(L), item(0), built(0)
             {
+                setup(this->allocate(sizeof(T)*items));
                 build();
             }
             
@@ -58,12 +55,9 @@ namespace upsylon {
             explicit Field1D(const LABEL &id,
                              const_coord  lo,
                              const_coord  up) :
-            Field<T>(id),
-            LayoutType(lo,up),
-            addr(static_cast<mutable_type *>(this->allocate(sizeof(T)*items) )),
-            item(addr-lower),
-            built(0)
+            Field<T>(id), LayoutType(lo,up), item(0), built(0)
             {
+                setup(this->allocate(sizeof(T)*items));
                 build();
             }
                         
@@ -90,26 +84,30 @@ namespace upsylon {
                 return item[i];
             }
             
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field1D);
-            mutable_type *addr;  //!< entry
             mutable_type *item;  //!< entry-lower
             size_t        built; //!< items
             
             friend class Field2D<T>;
-            
+
+            void setup(void *ptr)
+            {
+                assert(ptr);
+                this->addr = static_cast<mutable_type *>(ptr);
+                item       = this->addr-lower;
+            }
+
             //! data bytes >= items * sizeof(T)
             template <typename LABEL> inline
             explicit Field1D(const LABEL      &id,
                              const LayoutType &L,
                              void             *data) :
-            Field<T>(id),
-            LayoutType(L),
-            addr(static_cast<mutable_type *>(data) ),
-            item(addr-lower),
-            built(0)
+            Field<T>(id), LayoutType(L), item(0), built(0)
             {
+                setup(data);
                 build();
             }
             
@@ -117,8 +115,9 @@ namespace upsylon {
             {
                 while(built>0)
                 {
-                    self_destruct(addr[--built]);
+                    self_destruct(this->addr[--built]);
                 }
+                item=0;
             }
             
             inline void build()
@@ -126,7 +125,7 @@ namespace upsylon {
                 try {
                     while(built<items)
                     {
-                        new (addr+built) mutable_type();
+                        new (this->addr+built) mutable_type();
                         ++built;
                     }
                 }

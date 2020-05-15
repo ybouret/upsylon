@@ -41,8 +41,10 @@ namespace upsylon {
                 
                 size_t        objectBytes() const throw();    //!< bytes for objects
                 size_t        localMemory() const throw();    //!< allocated
+                double        virtualBits() const throw();    //!< allocated per used
+                size_t        objects() const throw();        //!< metrics().items
                 static string Suffix(const Coord1D c);        //!< "[c]"
-                
+
                 //--------------------------------------------------------------
                 //
                 // members
@@ -96,18 +98,40 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             //! cleanup
-            inline virtual ~Field() throw() {}
-            
-            
+            inline virtual ~Field() throw() { addr=0; }
+
+            //------------------------------------------------------------------
+            //
+            // non virtual interface
+            //
+            //------------------------------------------------------------------
+
+            //! direct access
+            inline type & operator()(const size_t indx) throw()
+            {
+                assert(addr);
+                assert(indx<metrics().items);
+                return addr[indx];
+            }
+
+            //! direct access, const
+            inline const_type & operator()(const size_t indx) const throw()
+            {
+                assert(addr);
+                assert(indx<metrics().items);
+                return addr[indx];
+            }
             
         protected:
             //! setup
             template <typename LABEL>
             inline explicit Field(const LABEL &id) :
-            Kernel::Field(id,type_spec_of<T>(),sizeof(T))
+            Kernel::Field(id,type_spec_of<T>(),sizeof(T)),
+            addr(0)
             {
             }
-            
+
+            mutable_type *addr; //!< address of first object
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field);

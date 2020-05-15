@@ -21,13 +21,13 @@ namespace {
         typedef typename FIELD::Loop         Loop;
         typedef typename FIELD::mutable_type type;
         
-        const coord      rng = 40 * Coord::Ones<coord>();
+        const coord      rng = 30 * Coord::Ones<coord>();
         const LayoutType L( Coord::Integer(rng,alea), Coord::Integer(rng,alea) );
         FIELD F(vformat("Field%uD<%s>",LayoutType::Dimensions, *type_name_of<type>()),L);
         std::cerr << F.name << " : " << F << std::endl;
         std::cerr << "\tlocalMemory=" << F.localMemory() << std::endl;
         std::cerr << "\tobjectBytes=" << F.objectBytes() << std::endl;
-        
+        std::cerr << "\tvirtualBits=" << F.virtualBits() << std::endl;
         std::cerr << "\tFill  Memory..." << std::endl;
         Loop         loop(F.lower,F.upper);
         vector<type> data(F.items,as_capacity);
@@ -35,13 +35,16 @@ namespace {
         {
             F[ loop.value ] = support::get<type>();
             data.push_back( F[loop.value] );
+            Y_ASSERT( F(loop.index-1) == data[loop.index] );
         }
         
         std::cerr << "\tCheck Memory..." << std::endl;
         const FIELD &G = F;
         for(loop.boot();loop.good();loop.next())
         {
-            Y_ASSERT( G[loop.value] == data[loop.index] );
+            Y_ASSERT( G[loop.value]   == data[loop.index] );
+            Y_ASSERT( G(loop.index-1) == data[loop.index] );
+            Y_ASSERT( G( G.indexOf(loop.value) ) == G(loop.index-1) );
         }
         
         

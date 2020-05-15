@@ -49,8 +49,7 @@ namespace upsylon {
             Field<T>(id),
             LayoutType(L),
             rowLayout(lower.x,upper.x),
-            rows(0),
-            built(0)
+            rows(0), built(0)
             {
                 create();
             }
@@ -63,8 +62,7 @@ namespace upsylon {
             Field<T>(id),
             LayoutType(lo,hi),
             rowLayout(lower.x,upper.x),
-            rows(0),
-            built(0)
+            rows(0), built(0)
             {
                 create();
             }
@@ -112,6 +110,7 @@ namespace upsylon {
                 return (*this)[c.y][c.x];
             }
             
+
             //------------------------------------------------------------------
             //
             // members
@@ -123,9 +122,8 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field2D);
             friend class Field3D<T>;
-            
-            Row     *rows;
-            size_t   built;
+            Row          *rows;
+            size_t        built;
             
             
             inline void clear() throw()
@@ -135,6 +133,7 @@ namespace upsylon {
                 {
                     self_destruct(rows[--built]);
                 }
+                rows=0;
             }
             
             inline void create()
@@ -155,7 +154,8 @@ namespace upsylon {
                     const size_t  nrow = size_t(width.y);
                     const size_t  skip = rowLayout.items;
                     rows               = static_cast<Row          *>(rowAddr);
-                    mutable_type *objs = static_cast<mutable_type *>(objAddr);
+                    this->addr         = static_cast<mutable_type *>(objAddr);
+                    mutable_type *objs = this->addr;
                     Coord1D       indx = lower.y;
                     while(built<nrow)
                     {

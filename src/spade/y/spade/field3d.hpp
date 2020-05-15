@@ -67,7 +67,7 @@ namespace upsylon {
                 slices                    = (Slice        *) &p[sliceOffset];
                 Row          *rows        = (Row          *) &p[rowOffset];
                 mutable_type *objs        = (mutable_type *) &p[objOffset];
-                
+                this->addr = objs;
                 try {
                     Coord1D indx = lower.z;
                     while(built<nslice)
@@ -129,7 +129,8 @@ namespace upsylon {
                 assert(this->has(c));
                 return (*this)[c.z][c.y][c.x];
             }
-            
+
+
             
             //------------------------------------------------------------------
             //
@@ -140,8 +141,8 @@ namespace upsylon {
             const RowLayout   rowLayout;   //!< layout of a row
             
         private:
-            Slice *slices;
-            size_t built;
+            Slice        *slices;
+            size_t        built;
             
             inline void clear() throw()
             {

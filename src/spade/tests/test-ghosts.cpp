@@ -1,4 +1,4 @@
-#include "y/spade/ghost.hpp"
+#include "y/spade/ghosts.hpp"
 #include "y/spade/layout.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
@@ -32,9 +32,10 @@ namespace {
                 Layout<COORD> sub( Coord::Within(lo,up,alea), Coord::Within(lo,up,alea) );
                 Y_ASSERT(L.contains(sub));
                 std::cerr << "|_" << sub << std::endl;
-                Ghost G(sub,L);
-                Y_ASSERT(sub.items==G.size());
+                Ghost g(sub,L);
+                Y_ASSERT(sub.items==g.size());
                 //std::cerr <<  G << std::endl;
+                Ghosts G(sub, sub, L);
             }
 
 

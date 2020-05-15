@@ -61,10 +61,23 @@ allocated(0)
             {
                 return allocated;
             }
-            
+
+            double Field:: virtualBits() const throw()
+            {
+                double ratio = double(localMemory()) / objectBytes();
+                ratio = floor(1000*ratio+0.5)/1000;
+                return ratio;
+            }
+
+
             string Field:: Suffix(const Coord1D c)
             {
                 return vformat("[%ld]", static_cast<long>(c) );
+            }
+
+            size_t Field:: objects() const throw()
+            {
+                return metrics().items;
             }
         }
     
