@@ -130,6 +130,41 @@ namespace upsylon
         bool locateNextPrime(mpn       &n) const; //!< using primes list
         bool isComputedPrime(const mpn &n) const; //!< in primes list
 
+        //----------------------------------------------------------------------
+        //
+        // simplification
+        //
+        //----------------------------------------------------------------------
+
+
+        //! simplify a sequence of mpn/mpz
+        template <typename SEQUENCE> inline
+        mpn simplify( SEQUENCE &seq ) const
+        {
+            typedef typename SEQUENCE::mutable_type type;
+            const size_t size = seq.size();
+            type         smax = 0;
+            {
+                typename SEQUENCE::iterator it = seq.begin();
+                for(size_t i=size;i>0;--i,++it)
+                {
+                    const type temp = math::fabs_of(*it);
+                    if(temp>smax) smax = temp;
+                }
+            }
+
+            mpn product = _1;
+            for(mpn factor=_2;factor<=smax;factor = nextPrime(++factor) )
+            {
+                while( AllDivisibleBy(factor,seq) )
+                {
+                    product *= factor;
+                    DivideAllBy(factor,seq);
+                }
+            }
+
+            return product;
+        }
 
     private:
         explicit MPN();
@@ -139,6 +174,43 @@ namespace upsylon
 
     public:
         static const at_exit::longevity life_time = mpl::manager::life_time - 1; //!< based on manager existence
+
+    private:
+        template <typename ITERATOR> inline static
+        bool AllDivisibleBy(const mpn &factor, ITERATOR curr, size_t count )
+        {
+            assert(factor.is_positive());
+            while(count-- > 0)
+            {
+                if( !((*curr).is_divisible_by(factor)) ) return false;
+                ++curr;
+            }
+            return true;
+        }
+
+        template <typename SEQUENCE> inline static
+        bool AllDivisibleBy(const mpn &factor, const SEQUENCE &seq )
+        {
+            return AllDivisibleBy(factor,seq.begin(),seq.size());
+        }
+
+        template <typename ITERATOR> inline static
+        void DivideAllBy(const mpn &factor, ITERATOR curr, size_t count )
+        {
+            assert(factor.is_positive());
+            while(count-- > 0)
+            {
+                *curr /= factor;
+                ++curr;
+            }
+        }
+
+        template <typename SEQUENCE> inline static
+        void DivideAllBy(const mpn &factor, SEQUENCE &seq)
+        {
+            DivideAllBy(factor,seq.begin(),seq.size());
+        }
+
     };
 
 

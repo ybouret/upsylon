@@ -108,6 +108,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(mprm1000);
     Y_UTEST(prime_factor);
     Y_UTEST(prime_ratio);
+    Y_UTEST(mp_simplify);
     Y_UTEST(ilog);
     Y_UTEST(mp_io);
     Y_UTEST(rsa);

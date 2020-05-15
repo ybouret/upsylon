@@ -175,7 +175,8 @@ ADD_TEST(mk:sobol       test-main sobol)
 ADD_TEST(mk:timings     test-main timings)
 
 SOURCE_GROUP(mp FILES test-mpn.cpp test-mpz.cpp test-mpq.cpp test-mprm.cpp test-ilog.cpp 
-test-prime-factor.cpp test-prime-ratio.cpp test-mp-io.cpp test-mpn-perf.cpp) 
+test-prime-factor.cpp test-prime-ratio.cpp test-mp-io.cpp test-mpn-perf.cpp
+test-mp-simplify.cpp) 
 ADD_TEST(mp:n         test-main mpn)
 ADD_TEST(mp:perf      test-main mpn_perf 0.01 1)
 ADD_TEST(mp:fact      test-main mpn_fact 1 0x0a 20 30 50)
@@ -187,6 +188,7 @@ ADD_TEST(mp:ilog      test-main ilog)
 ADD_TEST(mp:primes    test-main prime_factor 0 1 2 3 4 0x3E8 0x2711)
 ADD_TEST(mp:primesQ   test-main prime_ratio)
 ADD_TEST(mp:io        test-main mp_io)
+ADD_TEST(mp:simplify  test-main mp_simplify)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp)
 ADD_TEST(sort:network     test-main network_sort)

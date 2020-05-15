@@ -108,6 +108,8 @@ namespace {
 
 #define SHOW(VALUE) std::cerr << #VALUE << " = " << (VALUE) << std::endl
 
+#include "y/ios/ocstream.hpp"
+
 Y_UTEST(topology)
 {
     Coord::DispWidth = 2;
@@ -158,6 +160,15 @@ Y_UTEST(topology)
     SHOW( Connect::AutoExchange >> 1 );
     SHOW( Connect::AsyncForward >> 1 );
     SHOW( Connect::AsyncTwoWays >> 1 );
+
+    {
+        ios::ocstream fp("topo.dat");
+        int y=0;
+        fp("%d %d\n",Connect::AutoExchange,y++);
+        fp("%d %d\n",Connect::AsyncTwoWays,y++);
+        fp("%d %d\n",Connect::AsyncForward,y++);
+        fp("%d %d\n",Connect::AsyncReverse,y++);
+    }
 
 }
 Y_UTEST_DONE()
