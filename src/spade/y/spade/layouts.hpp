@@ -6,6 +6,7 @@
 
 #include "y/spade/layout.hpp"
 #include "y/spade/topology.hpp"
+#include "y/spade/ghosts.hpp"
 
 namespace upsylon {
 
@@ -102,7 +103,7 @@ namespace upsylon {
                 //
                 // compute associated exchange zones in each level
                 //______________________________________________________________
-                if(ng>0) createGhosts(ng);
+                if(ng>0) createAllGhosts(ng);
                
             }
 
@@ -118,14 +119,14 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Layouts);
-            inline void createGhosts(const Coord1D ng)
+            inline void createAllGhosts(const Coord1D ng)
             {
                 assert(ng>0);
                 std::cerr << "create ghosts..." << std::endl;
                 const Node &self = *this;
                 for(unsigned level=0;level<Levels;++level)
                 {
-                    const Links &links = self[level];
+                    const Links &links   = self[level];
                     const Link  &forward = links.forward;
                     const Link  &reverse = links.reverse;
                     
@@ -133,9 +134,41 @@ namespace upsylon {
                     assert(reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
                     assert(Connect::Authorized(forward.connectMode,reverse.connectMode));
                     
-                    
-                    
+                    switch(links.connect)
+                    {
+                        case Connect:: FreeStanding: break;
+                        case Connect:: AutoExchange:
+                            
+                            break;
+                        case Connect::AsyncTwoWays: break;
+                        case Connect::AsyncForward: break;
+                        case Connect::AsyncReverse: break;
+                        default:
+                            Connect::InvalidFlag(links.connect, Connect::Layouts);
+                            break;
+                    }
                 }
+            }
+            
+            Ghosts *createGhosts(const_coord &probe, const Coord1D ng)
+            {
+                // initialize
+                coord innerLo = inner.lower;
+                coord innerUp = inner.upper;
+                
+                coord outerLo = outer.lower;
+                coord outerUp = outer.upper;
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    const Coord1D p = Coord::Of(probe,dim);
+                    switch(p)
+                    {
+                        default:
+                            assert(0==probe);
+                            break;
+                    }
+                }
+                return 0;
             }
         };
     }

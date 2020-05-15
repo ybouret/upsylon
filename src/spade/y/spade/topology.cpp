@@ -73,6 +73,15 @@ namespace upsylon {
                 throw exception("Spade::Connect: Unauthorized forward=%s and reverse=%s @level=%u", ModeText(fwd), ModeText(rev), level);
         }
         
+        const char Connect:: TopologyNode[] = "Topology::Node";
+        const char Connect:: Layouts[]      = "Layouts";
+        
+        void Connect:: InvalidFlag(const Flag f,const char *where)
+        {
+            assert(where);
+            throw exception("Spade::Connect: InvalidFlag (%d) in <%s>", int(f), where);
+        }
+
         
         namespace Kernel
         {

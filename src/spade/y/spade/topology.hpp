@@ -8,6 +8,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/core/inode.hpp"
+#include "y/type/aliasing.hpp"
 #include <iomanip>
 
 namespace upsylon {
@@ -75,6 +76,11 @@ namespace upsylon {
             //! raise an exception if not authorized
             static void        Authorize(const unsigned level, const Mode fwd, const Mode rev);
             
+            //! raise an exception if invalid connect mode
+            static void InvalidFlag(const Flag f,const char *when);
+            
+            static const char TopologyNode[];
+            static const char Layouts[];
         };
         
         
@@ -466,6 +472,8 @@ namespace upsylon {
             private:
                 Y_DISABLE_ASSIGN(Links);
             };
+           
+#define Y_SPADE_TOPO_NODE_INCR(KIND) case Connect::KIND: ++ aliasing::_(num##KIND); break
             
             //------------------------------------------------------------------
             //
@@ -480,13 +488,17 @@ namespace upsylon {
                 // C++
                 //
                 //--------------------------------------------------------------
-               
                 //! setup
                 inline explicit Node(const_coord      localRanks,
                                      const Topology  &topology,
                                      const Boolean   &pbc) :
                 Hub(localRanks,topology),
-                slots<Links>(Levels)
+                slots<Links>(Levels),
+                numFreeStanding(0),
+                numAutoExchange(0),
+                numAsyncTwoWays(0),
+                numAsyncForward(0),
+                numAsyncReverse(0)
                 {
                     // scan the neighbourhood in each level
                     for(unsigned level=0;level<Levels;++level)
@@ -496,12 +508,36 @@ namespace upsylon {
                         const Link   reverse = getLink(topology,-probe,pbc);
                         Connect::Authorize(level,forward.connectMode,reverse.connectMode);
                         this->template build<const Link&,const Link&>(forward,reverse);
+                        const Connect::Flag connect = this->back().connect;
+                        switch( connect )
+                        {
+                                Y_SPADE_TOPO_NODE_INCR(FreeStanding);
+                                Y_SPADE_TOPO_NODE_INCR(AutoExchange);
+                                Y_SPADE_TOPO_NODE_INCR(AsyncTwoWays);
+                                Y_SPADE_TOPO_NODE_INCR(AsyncForward);
+                                Y_SPADE_TOPO_NODE_INCR(AsyncReverse);
+                            default:
+                                Connect::InvalidFlag(connect,Connect::TopologyNode);
+                                break;
+                        }
                     }
                 }
                 
                 //! cleanup
                 inline virtual ~Node() throw() {}
                 
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                
+                const size_t numFreeStanding; //!< info
+                const size_t numAutoExchange; //!< info
+                const size_t numAsyncTwoWays; //!< info
+                const size_t numAsyncForward; //!< info
+                const size_t numAsyncReverse; //!< info
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
                 inline Link getLink(const Topology &topology,

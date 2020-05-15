@@ -24,9 +24,6 @@ namespace {
             Layout<COORD> L(lo,up);
             std::cerr << "L=" << L << std::endl;
 
-
-
-
             for(int num=0;num<8;++num)
             {
                 Layout<COORD> sub( Coord::Within(lo,up,alea), Coord::Within(lo,up,alea) );
