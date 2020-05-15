@@ -4,44 +4,59 @@
 #define Y_SPADE_GHOST_INCLUDED 1
 
 #include "y/spade/types.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/ptr/arc.hpp"
+#include "y/sequence/array.hpp"
 
 namespace upsylon {
 
     namespace Spade
     {
 
-        typedef vector<const size_t> Indices;
-
-        namespace Kernel {
-
-            class Ghost : public Indices
+        namespace Kernel
+        {
+            class Ghost : public accessible<size_t>
             {
             public:
-                explicit Ghost() throw();
                 virtual ~Ghost() throw();
+                explicit Ghost(const size_t);
 
-                template <typename LAYOUT>
-                void assign(const LAYOUT &zone, const LAYOUT &full)
-                {
-                    assert( full.contains(zone) );
-                    typename LAYOUT::Loop loop(zone.lower,zone.upper);
-                    free();
-                    ensure(loop.count);
-                    for(loop.boot();loop.good();loop.next())
-                    {
-                        push_back_( full.indexOf( loop.value ) );
-                    }
-                }
+                virtual size_t         size()                   const throw();
+                virtual const size_t & operator[](const size_t) const throw();
 
+            private:
+                size_t count_;
+                size_t bytes_;
+            protected:
+                size_t       *indices;
+
+            public:
+                const size_t  items;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Ghost);
             };
+        };
 
-        }
+        class Ghost :  public Kernel::Ghost
+        {
+        public:
+            virtual ~Ghost() throw();
 
-        typedef arc_ptr<Kernel::Ghost> Ghost;
+            template <typename LAYOUT> inline
+            Ghost(const LAYOUT &zone, const LAYOUT &full) :
+            Kernel::Ghost(zone.items)
+            {
+                assert( full.contains(zone) );
+                typename LAYOUT::Loop loop(zone.lower,zone.upper);
+                for(loop.boot();loop.good();loop.next())
+                {
+                    indices[loop.index] = full.indexOf(loop.value);
+                }
+            }
+            
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Ghost);
+        };
 
 
 

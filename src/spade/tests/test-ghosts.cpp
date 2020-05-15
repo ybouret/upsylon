@@ -23,7 +23,7 @@ namespace {
 
             Layout<COORD> L(lo,up);
             std::cerr << "L=" << L << std::endl;
-            Ghost G = new Kernel::Ghost();
+
 
 
 
@@ -32,8 +32,8 @@ namespace {
                 Layout<COORD> sub( Coord::Within(lo,up,alea), Coord::Within(lo,up,alea) );
                 Y_ASSERT(L.contains(sub));
                 std::cerr << "|_" << sub << std::endl;
-                G->assign(sub,L);
-                Y_ASSERT(sub.items==G->size());
+                Ghost G(sub,L);
+                Y_ASSERT(sub.items==G.size());
                 //std::cerr <<  G << std::endl;
             }
 
