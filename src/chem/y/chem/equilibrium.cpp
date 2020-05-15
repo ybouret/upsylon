@@ -323,7 +323,7 @@ namespace upsylon
                 const double CC = C[id];
                 r_prod *= ipower<double>(CC,q);
 
-                double g=K*q*ipower(CC,q-1);
+                double g=K*q*ipower<double>(CC,q-1);
                 for(const Component *s=r_list.head;s;s=s->next)
                 {
                     if(s!=r)
@@ -341,7 +341,7 @@ namespace upsylon
                 const double CC = C[id];
                 p_prod *= ipower<double>(CC,nu);
 
-                double g = nu * ipower(CC,nu-1);
+                double g = nu * ipower<double>(CC,nu-1);
 
                 for(const Component *s=p_list.head;s;s=s->next)
                 {

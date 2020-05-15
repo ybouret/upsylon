@@ -23,7 +23,7 @@ namespace
         double ans = 0;
         for(size_t i=1;i<=param.size();++i)
         {
-            ans += ipower(x,i-1) * param[i];
+            ans += ipower<double>(x,i-1) * param[i];
         }
         return ans;
     }

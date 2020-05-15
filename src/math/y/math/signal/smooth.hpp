@@ -123,11 +123,11 @@ namespace upsylon
                     const point_type p = *it;
                     for(size_t j=1,jm=0;j<=nc;++j,++jm)
                     {
-                        const T xpjm = ipower(p.x,jm);
+                        const T xpjm = ipower<double>(p.x,jm);
                         a[j] += p.y * xpjm;
                         for(size_t k=j,km=jm;k<=nc;++k,++km)
                         {
-                            const T xpkm = ipower(p.x,km);
+                            const T xpkm = ipower<double>(p.x,km);
                             mu[j][k] += xpjm*xpkm;
                         }
                     }

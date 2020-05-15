@@ -19,7 +19,7 @@ namespace
         static inline double S_(unsigned k, const double y )
         {
             const   unsigned tkp1 = k+k+1;
-            return  2.0/tkp1 * ipower((y-1)/(y+1),tkp1);
+            return  2.0/tkp1 * ipower<double>((y-1)/(y+1),tkp1);
         }
 
         static inline double L_(unsigned k, const double y)
@@ -38,8 +38,8 @@ namespace
                          unsigned       &factor)
         {
             const double   ln2 = log(2.0);
-            const double   ip2 = ipower(2.0,nbits);
-            const unsigned fac = unsigned( ceil( ipower(2.0,nbits) * ln2 ) );
+            const double   ip2 = ipower<double>(2.0,nbits);
+            const unsigned fac = unsigned( ceil( ipower<double>(2.0,nbits) * ln2 ) );
             factor = fac;
             std::cerr << "Testing for " << fac << "/" << ip2 << std::endl;
             max_diff = 0;

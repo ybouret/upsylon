@@ -40,7 +40,7 @@ namespace upsylon {
                 Async=0x02  //!< connected to another rank
             };
             
-            typedef unsigned Flag; //!< alias
+            typedef int Flag; //!< alias
             
             //! convert Mode to shifted flag
 #define Y_SPADE_CNX_FLAG(mode,shift) ( static_cast<Connect::Flag>(mode) << shift )
