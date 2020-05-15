@@ -150,8 +150,10 @@ namespace upsylon {
                 }
             }
             
-            Ghosts *createGhosts(const_coord &probe, const Coord1D ng)
+            inline
+            Ghosts *createGhosts(const_coord &probe, const Coord1D ng) const
             {
+                assert(ng>0);
                 // initialize
                 coord innerLo = inner.lower;
                 coord innerUp = inner.upper;
@@ -163,6 +165,12 @@ namespace upsylon {
                     const Coord1D p = Coord::Of(probe,dim);
                     switch(p)
                     {
+                        case 1:
+                            break;
+                            
+                        case -1:
+                            break;
+                            
                         default:
                             assert(0==probe);
                             break;

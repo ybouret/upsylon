@@ -531,7 +531,6 @@ namespace upsylon {
                 // members
                 //
                 //--------------------------------------------------------------
-                
                 const size_t numFreeStanding; //!< info
                 const size_t numAutoExchange; //!< info
                 const size_t numAsyncTwoWays; //!< info
