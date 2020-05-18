@@ -32,7 +32,8 @@ namespace upsylon {
             typedef            Field2D<T>              Slice;       //!< alias
             typedef            Layout1D                RowLayout;   //!< alias
             typedef            Field1D<T>              Row;         //!< alias
-            
+            typedef            arc_ptr<Field3D>        Handle;      //!< alias
+
             //------------------------------------------------------------------
             //
             // C++
@@ -154,6 +155,35 @@ namespace upsylon {
             
             Y_DISABLE_COPY_AND_ASSIGN(Field3D);
         };
+     
+        
+        template <typename COORD> struct FieldFor;
+        
+        template <> struct FieldFor<Coord1D>
+        {
+            template <typename T> struct Of
+            {
+                typedef Field1D<T> Type;
+            };
+        };
+        
+        template <> struct FieldFor<Coord2D>
+        {
+            template <typename T> struct Of
+            {
+                typedef Field2D<T> Type;
+            };
+        };
+        
+        template <> struct FieldFor<Coord3D>
+        {
+            template <typename T> struct Of
+            {
+                typedef Field3D<T> Type;
+            };
+        };
+        
+        
         
     }
     

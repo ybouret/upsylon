@@ -88,7 +88,8 @@ namespace upsylon {
             autoExchange(this->numAutoExchange),
             asyncTwoWays(this->numAsyncTwoWays),
             asyncForward(this->numAsyncForward),
-            asyncReverse(this->numAsyncReverse)
+            asyncReverse(this->numAsyncReverse),
+            commScore(0)
             {
                 const Coord1D  ng   = abs_of(numGhosts);
                 const Node    &self = *this;
@@ -154,7 +155,8 @@ namespace upsylon {
             const slots<AsyncTwoWaysType> asyncTwoWays; //!< asyncTwoWays ghosts
             const slots<AsyncForwardType> asyncForward; //!< aysncForward ghosts
             const slots<AsyncReverseType> asyncReverse; //!< asyncReverse ghosts
-
+            const size_t                  commScore;    //!< items to comms...
+            
             //------------------------------------------------------------------
             //
             // helpers
@@ -213,6 +215,7 @@ namespace upsylon {
             inline void createAllSwaps(const Coord1D ng)
             {
                 assert(ng>0);
+                assert(0==commScore);
                 const Node &self = *this;
                 for(unsigned level=0;level<Levels;++level)
                 {
@@ -235,7 +238,6 @@ namespace upsylon {
                     // create swaps
                     //
                     //----------------------------------------------------------
-                    
                     switch(links.connect)
                     {
                         case Connect:: FreeStanding:
@@ -250,17 +252,20 @@ namespace upsylon {
                         case Connect:: AsyncTwoWays:{
                             const SwapHandle fwd = createSwap(forward, ng, level);
                             const SwapHandle rev = createSwap(reverse, ng, level);
-                             aliasing::_(asyncTwoWays).template build<const SwapHandle&, const SwapHandle&>(fwd,rev);
+                            aliasing::_(asyncTwoWays).template build<const SwapHandle&, const SwapHandle&>(fwd,rev);
+                            aliasing::_(commScore) += (fwd->innerGhost.items << 1);
                         } break;
                             
                         case Connect:: AsyncForward: {
                             const SwapHandle fwd = createSwap(forward, ng, level);
                              aliasing::_(asyncForward).template build<const SwapHandle&>(fwd);
+                            aliasing::_(commScore) += (fwd->innerGhost.items);
                         } break;
                             
                         case Connect:: AsyncReverse: {
                             const SwapHandle rev = createSwap(reverse, ng, level);
-                             aliasing::_(asyncReverse).template build<const SwapHandle&>(rev);
+                            aliasing::_(asyncReverse).template build<const SwapHandle&>(rev);
+                            aliasing::_(commScore) += (rev->innerGhost.items << 1);
                         } break;
                             
                         default:
@@ -272,7 +277,6 @@ namespace upsylon {
                 assert( asyncTwoWays.size() == this->numAsyncTwoWays );
                 assert( asyncForward.size() == this->numAsyncForward );
                 assert( asyncReverse.size() == this->numAsyncReverse );
-
             }
             
             inline

@@ -122,6 +122,8 @@ namespace upsylon {
                 return addr[indx];
             }
             
+           
+            
         protected:
             //! setup
             template <typename LABEL>

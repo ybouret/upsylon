@@ -4,6 +4,7 @@
 
 #include "y/spade/field.hpp"
 #include "y/spade/layout.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon {
     
@@ -30,7 +31,8 @@ namespace upsylon {
             typedef          Layout1D                LayoutType;  //!< alias
             typedef typename LayoutType::coord       coord;       //!< alias
             typedef typename LayoutType::const_coord const_coord; //!< alias
-
+            typedef arc_ptr<Field1D>                 Handle;      //!< alias
+            
             //------------------------------------------------------------------
             //
             // C++
@@ -83,6 +85,8 @@ namespace upsylon {
                 assert(this->has(i));
                 return item[i];
             }
+            
+            
             
 
             

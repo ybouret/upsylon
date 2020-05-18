@@ -32,6 +32,7 @@ namespace upsylon {
             typedef typename   LayoutType::const_coord const_coord; //!< alias
             typedef            Layout1D                RowLayout;   //!< alias
             typedef            Field1D<T>              Row;         //!< alias
+            typedef            arc_ptr<Field2D>        Handle;      //!< alias
             
             //------------------------------------------------------------------
             //

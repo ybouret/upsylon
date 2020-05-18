@@ -8,6 +8,7 @@ namespace upsylon {
     {
         namespace Kernel
         {
+#if 0
             Partition:: ~Partition() throw()
             {
                 _bzset(cores);
@@ -19,6 +20,7 @@ namespace upsylon {
                 if(nc<=0) throw exception("Spade::Partition(#cores<=0)");
             }
             
+#endif
         }
     }
     
