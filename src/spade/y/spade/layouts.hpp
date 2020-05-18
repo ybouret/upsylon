@@ -148,13 +148,66 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            const Layout<COORD>     inner;        //!< inner workspace
-            const Layout<COORD>     outer;        //!< contains exchange zones
-            slots<AutoExchangeType> autoExchange; //!< autoExchange ghosts
-            slots<AsyncTwoWaysType> asyncTwoWays; //!< asyncTwoWays ghosts
-            slots<AsyncForwardType> asyncForward; //!< aysncForward ghosts
-            slots<AsyncReverseType> asyncReverse; //!< asyncReverse ghosts
+            const Layout<COORD>           inner;        //!< inner workspace
+            const Layout<COORD>           outer;        //!< contains exchange zones
+            const slots<AutoExchangeType> autoExchange; //!< autoExchange ghosts
+            const slots<AsyncTwoWaysType> asyncTwoWays; //!< asyncTwoWays ghosts
+            const slots<AsyncForwardType> asyncForward; //!< aysncForward ghosts
+            const slots<AsyncReverseType> asyncReverse; //!< asyncReverse ghosts
 
+            //------------------------------------------------------------------
+            //
+            // helpers
+            //
+            //------------------------------------------------------------------
+            //! display info
+            inline void displaySwaps() const
+            {
+                std::cerr << "\t<Swaps>"  << std::endl;
+                if(this->numAutoExchange>0)
+                {
+                    std::cerr << "\t\t<AutoExchange #" << this->numAutoExchange << ">" << std::endl;
+                    for(size_t i=0;i<this->numAutoExchange;++i)
+                    {
+                        std::cerr << autoExchange[i] << std::endl;
+                    }
+                    std::cerr << "\t\t<AutoExchange/>" << std::endl;
+                }
+                
+                if(this->numAsyncTwoWays>0)
+                {
+                    std::cerr << "\t\t<AsyncTwoWays #" << this->numAsyncTwoWays << ">" << std::endl;
+                    for(size_t i=0;i<this->numAsyncTwoWays;++i)
+                    {
+                        std::cerr << asyncTwoWays[i] << std::endl;
+                    }
+                    std::cerr << "\t\t<AsyncTwoWays/>" << std::endl;
+                }
+                
+                if(this->numAsyncForward>0)
+                {
+                    std::cerr << "\t\t<AsyncForward #" << this->numAsyncForward << ">" << std::endl;
+                    for(size_t i=0;i<this->numAsyncForward;++i)
+                    {
+                        std::cerr << asyncForward[i] << std::endl;
+                    }
+                    std::cerr << "\t\t<AsyncForward/>" << std::endl;
+                }
+                
+                if(this->numAsyncReverse>0)
+                {
+                    std::cerr << "\t\t<AsyncReverse #" << this->numAsyncReverse << ">" << std::endl;
+                    for(size_t i=0;i<this->numAsyncReverse;++i)
+                    {
+                        std::cerr << asyncReverse[i] << std::endl;
+                    }
+                    std::cerr << "\t\t<AsyncReverse/>" << std::endl;
+                }
+                
+                
+                std::cerr << "\t<Swaps/>" << std::endl;
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Layouts);
             inline void createAllSwaps(const Coord1D ng)
@@ -229,8 +282,6 @@ namespace upsylon {
             {
                 assert(ng>0);
                 const Coord1D shift = ng-1;
-               
-                std::cerr << "..create swap " << link.modeText() <<  "->" << link.rank << std::endl;
                 
                 // initialize
                 coord send_lower = inner.lower;
@@ -238,6 +289,7 @@ namespace upsylon {
                 coord recv_lower = inner.lower;
                 coord recv_upper = inner.upper;
                 
+                // probe each direction
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
                     const Coord1D pr = Coord::Of(link.probe,dim);
@@ -247,13 +299,16 @@ namespace upsylon {
                     Coord1D      &ru = Coord::Of(recv_upper,dim);
                     switch(pr)
                     {
-                        case 1:
+                        case 1: //! increasing along direction
                             sl = su - shift;
                             rl = su+1;
                             ru = rl+shift;
                             break;
                             
-                        case -1:
+                        case -1: //! decreasing along direction
+                            su = sl + shift;
+                            ru = sl-1;
+                            rl = ru-shift;
                             break;
                             
                         default:

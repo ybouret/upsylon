@@ -93,11 +93,21 @@ namespace upsylon {
             forward(fwd),
             reverse(rev)
             {
-                assert(fwd->peer==rev->peer);
+                assert(forward->peer==reverse->peer);
+                assert(forward->innerGhost.items==reverse->outerGhost.items);
+                assert(forward->outerGhost.items==reverse->innerGhost.items);
             }
             
             const Swap forward; //!< forward swap
             const Swap reverse; //!< reverse swap
+            
+            //! display
+            friend inline std::ostream & operator<<( std::ostream &os, const AutoExchangeSwap &s)
+            {
+                os << "fwd.snd: " << s.forward->innerRange <<  " | rcv: " << s.reverse->outerRange << std::endl;
+                os << "rev.snd: " << s.reverse->innerRange <<  " | rcv: " << s.forward->innerRange;
+                return os;
+            }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AutoExchangeSwap);
@@ -124,11 +134,20 @@ namespace upsylon {
             forward(fwd),
             reverse(rev)
             {
-                assert(fwd->peer!=rev->peer);
+                assert(forward->innerGhost.items==reverse->outerGhost.items);
+                assert(forward->outerGhost.items==reverse->innerGhost.items);
             }
             
             const Swap forward; //!< forward swap
             const Swap reverse; //!< reverse swap
+            
+            //! display
+            friend inline std::ostream & operator<<( std::ostream &os, const AsyncTwoWaysSwap &s)
+            {
+                os << "fwd.snd: " << s.forward->innerRange <<  " | rcv: " << s.reverse->outerRange << std::endl;
+                os << "rev.snd: " << s.reverse->innerRange <<  " | rcv: " << s.forward->innerRange;
+                return os;
+            }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AsyncTwoWaysSwap);
@@ -157,6 +176,13 @@ namespace upsylon {
              
             const Swap forward; //!< forward only
             
+            //! display
+            friend inline std::ostream & operator<<( std::ostream &os, const AsyncForwardSwap &s)
+            {
+                os << "fwd.snd: " << s.forward->innerRange <<  " | rcv: " << s.forward->outerRange << std::endl;
+                return os;
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AsyncForwardSwap);
             
@@ -184,6 +210,13 @@ namespace upsylon {
             }
             
             const Swap reverse; //!< reverse only
+            
+            //! display
+            friend inline std::ostream & operator<<( std::ostream &os, const AsyncReverseSwap &s)
+            {
+                os << "rev.snd: " << s.reverse->innerRange <<  " | rcv: " << s.reverse->outerRange;
+                return os;
+            }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(AsyncReverseSwap);

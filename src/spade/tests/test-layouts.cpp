@@ -46,6 +46,7 @@ namespace {
                     const typename Topology<COORD>::Links &links = L[i];
                     std::cerr << "\t|_" << links << std::endl;
                 }
+                L.displaySwaps();
             }
         }
         
@@ -66,11 +67,12 @@ Y_UTEST(layouts)
     if(argc>2) boundaries = argv[2];
     if(argc>3) cores      = string_convert::to<size_t>(argv[3],"cores");
 
+    Coord::DispWidth = 3;
     doTest<Coord1D>(layout,boundaries,cores);
-    return 0;
+    //return 0;
 
     doTest<Coord2D>(layout,boundaries,cores);
-    return 0;
+    //return 0;
 
     doTest<Coord3D>(layout,boundaries,cores);
 
