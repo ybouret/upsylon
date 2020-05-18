@@ -150,7 +150,8 @@ namespace upsylon {
                     switch(links.connect)
                     {
                         case Connect:: FreeStanding: break;
-                        case Connect:: AutoExchange: break;
+                        case Connect:: AutoExchange: {
+                        } break;
                         case Connect:: AsyncTwoWays: break;
                         case Connect:: AsyncForward: break;
                         case Connect:: AsyncReverse: break;
@@ -162,31 +163,41 @@ namespace upsylon {
             }
             
             inline
-            Ghosts *createGhosts(const_coord &probe, const Coord1D ng) const
+            Ghosts *createGhosts(const_coord  &probe,
+                                 const Coord1D ng) const
             {
                 assert(ng>0);
+                const Coord1D shift = ng-1;
+               
                 // initialize
-                coord innerLo = inner.lower;
-                coord innerUp = inner.upper;
+                coord send_lower = inner.lower;
+                coord send_upper = inner.upper;
+                coord recv_lower = inner.lower;
+                coord recv_upper = inner.upper;
                 
-                coord outerLo = outer.lower;
-                coord outerUp = outer.upper;
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    const Coord1D p = Coord::Of(probe,dim);
-                    switch(p)
+                    const Coord1D pr = Coord::Of(probe,dim);
+                    Coord1D      &sl = Coord::Of(send_lower,dim);
+                    Coord1D      &su = Coord::Of(send_upper,dim);
+                    Coord1D      &rl = Coord::Of(recv_lower,dim);
+                    Coord1D      &ru = Coord::Of(recv_upper,dim);
+                    switch(pr)
                     {
                         case 1:
+                            sl = su - shift;
                             break;
                             
                         case -1:
                             break;
                             
                         default:
-                            assert(0==probe);
+                            assert(0==pr);
                             break;
                     }
                 }
+                
+                
                 return 0;
             }
         };

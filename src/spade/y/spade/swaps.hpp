@@ -11,6 +11,8 @@ namespace upsylon {
     
     namespace Spade
     {
+        
+        
         template <typename COORD>
         class Swaps : public Ghosts
         {
@@ -21,7 +23,6 @@ namespace upsylon {
             {
             }
             
-            template <typename LAYOUT> inline
             explicit Swaps(const LayoutType &sendLayout,
                            const LayoutType &recvLayout,
                            const LayoutType &fullLayout,
