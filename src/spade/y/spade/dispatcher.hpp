@@ -4,6 +4,8 @@
 #define Y_SPADE_DISPATCHER_INCLUDED 1
 
 #include "y/spade/layouts.hpp"
+#include "y/ios/conveyors.hpp"
+#include "y/ios/ovstream.hpp"
 
 namespace upsylon {
     
@@ -13,7 +15,9 @@ namespace upsylon {
         class Dispatcher
         {
         public:
-            explicit Dispatcher();
+            typedef ios::ovstream Block;
+            
+            explicit Dispatcher(const comms::topology where);
             virtual ~Dispatcher() throw();
             
             template <typename FIELD> inline
@@ -42,7 +46,28 @@ namespace upsylon {
             }
             
             
+            const comms::topology topology;
+            const comms::delivery delivery;
+            ios::conveyors       &IO;
             
+            void asyncInitialize(Block &block) throw();
+            
+            template <typename FIELD>
+            void asyncSave(Block       &block,
+                           const FIELD &field,
+                           const Ghost &ghost) const
+            {
+                static const ios::conveyor &io = IO.query< typename FIELD::mutable_type >(topology);
+                assert(io.topo==topology);
+                size_t n = ghost.items; assert(ghost.items==ghost.size());
+                while(n>0)
+                {
+                    typename FIELD::const_type &data = field( ghost[n] );
+                    io.save(block, &data);
+                    --n;
+                }
+                
+            }
             
             
         private:

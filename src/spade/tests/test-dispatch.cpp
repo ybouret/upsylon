@@ -25,7 +25,7 @@ namespace {
         const Layout<COORD> fullLayout(lower,upper);
         vector<COORD>       mappings;
         fullLayout.findMappings(mappings,cores);
-        Dispatcher          dispatch;
+        Dispatcher          dispatch(comms::homogeneous);
         
         std::cerr << "mappings=" << mappings << std::endl;
         for(size_t i=1;i<=mappings.size();++i)
