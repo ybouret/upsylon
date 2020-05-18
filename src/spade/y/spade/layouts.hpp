@@ -68,10 +68,14 @@ namespace upsylon {
 
                 //______________________________________________________________
                 //
+                //
                 // use Node information to expand inner layout
+                //
                 //______________________________________________________________
 
+                //--------------------------------------------------------------
                 // initialize corners
+                //--------------------------------------------------------------
                 coord lower = inner.lower;
                 coord upper = inner.upper;
 
@@ -96,12 +100,16 @@ namespace upsylon {
                     }
                 }
                 
+                //--------------------------------------------------------------
                 // recompute outer
+                //--------------------------------------------------------------
                 new ((void*)&outer) Layout<COORD>(lower,upper);
 
                 //______________________________________________________________
                 //
+                //
                 // compute associated exchange zones in each level
+                //
                 //______________________________________________________________
                 if(ng>0) createAllGhosts(ng);
                
@@ -122,10 +130,15 @@ namespace upsylon {
             inline void createAllGhosts(const Coord1D ng)
             {
                 assert(ng>0);
-                std::cerr << "create ghosts..." << std::endl;
                 const Node &self = *this;
                 for(unsigned level=0;level<Levels;++level)
                 {
+                    //----------------------------------------------------------
+                    //
+                    // check this level topology
+                    //
+                    //----------------------------------------------------------
+                    
                     const Links &links   = self[level];
                     const Link  &forward = links.forward;
                     const Link  &reverse = links.reverse;
@@ -137,12 +150,10 @@ namespace upsylon {
                     switch(links.connect)
                     {
                         case Connect:: FreeStanding: break;
-                        case Connect:: AutoExchange:
-                            
-                            break;
-                        case Connect::AsyncTwoWays: break;
-                        case Connect::AsyncForward: break;
-                        case Connect::AsyncReverse: break;
+                        case Connect:: AutoExchange: break;
+                        case Connect:: AsyncTwoWays: break;
+                        case Connect:: AsyncForward: break;
+                        case Connect:: AsyncReverse: break;
                         default:
                             Connect::InvalidFlag(links.connect, Connect::Layouts);
                             break;

@@ -1,5 +1,4 @@
-#include "y/spade/ghosts.hpp"
-#include "y/spade/layout.hpp"
+#include "y/spade/swaps.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 
