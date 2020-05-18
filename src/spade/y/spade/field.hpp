@@ -44,7 +44,7 @@ namespace upsylon {
                 double        virtualBits() const throw();    //!< allocated per used
                 size_t        objects() const throw();        //!< metrics().items
                 static string Suffix(const Coord1D c);        //!< "[c]"
-
+                
                 //--------------------------------------------------------------
                 //
                 // members
@@ -53,6 +53,7 @@ namespace upsylon {
                 const string     name;        //!< identifier
                 const type_spec &objectType;  //!< type_spec
                 const size_t     objectSize;  //!< bytes per object
+                
                 
                
             protected:
@@ -70,6 +71,9 @@ namespace upsylon {
                 size_t allocated; //!< private bytes
                 
                 void*  allocate(const size_t); //!< acquire private bytes
+                
+                virtual const void *getObjectAt(const Coord1D *) const throw() = 0;
+                //virtual const void *getObjectAt(const size_t   ) const throw() = 0;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Field);

@@ -41,7 +41,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! cleanup
-            inline virtual ~Field2D() throw() { rows += lower.y; clear(); }
+            inline virtual ~Field2D() throw() { row += lower.y; clear(); }
             
             //! setup with internal memory
             template <typename LABEL> inline
@@ -50,7 +50,7 @@ namespace upsylon {
             Field<T>(id),
             LayoutType(L),
             rowLayout(lower.x,upper.x),
-            rows(0), built(0)
+            row(0), built(0)
             {
                 create();
             }
@@ -63,7 +63,7 @@ namespace upsylon {
             Field<T>(id),
             LayoutType(lo,hi),
             rowLayout(lower.x,upper.x),
-            rows(0), built(0)
+            row(0), built(0)
             {
                 create();
             }
@@ -87,14 +87,14 @@ namespace upsylon {
             inline Row & operator[](const Coord1D j) throw()
             {
                 assert(j>=lower.y); assert(j<=upper.y);
-                return rows[j];
+                return row[j];
             }
             
             //! row access, const
             inline const Row & operator[](const Coord1D j) const throw()
             {
                 assert(j>=lower.y); assert(j<=upper.y);
-                return rows[j];
+                return row[j];
             }
             
             //! direct access
@@ -123,18 +123,18 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field2D);
             friend class Field3D<T>;
-            Row          *rows;
+            Row          *row;
             size_t        built;
             
             
             inline void clear() throw()
             {
-                assert(rows);
+                assert(row);
                 while(built>0)
                 {
-                    self_destruct(rows[--built]);
+                    self_destruct(row[--built]);
                 }
-                rows=0;
+                row=0;
             }
             
             inline void create()
@@ -154,19 +154,19 @@ namespace upsylon {
                 try {
                     const size_t  nrow = size_t(width.y);
                     const size_t  skip = rowLayout.items;
-                    rows               = static_cast<Row          *>(rowAddr);
+                    row                = static_cast<Row          *>(rowAddr);
                     this->addr         = static_cast<mutable_type *>(objAddr);
                     mutable_type *objs = this->addr;
                     Coord1D       indx = lower.y;
                     while(built<nrow)
                     {
                         const string id = this->name + Kernel::Field::Suffix(indx);
-                        new (rows+built) Row(id,rowLayout,objs);
+                        new (row+built) Row(id,rowLayout,objs);
                         ++built;
                         ++indx;
                         objs+=skip;
                     }
-                    rows -= lower.y;
+                    row  -= lower.y;
                 }
                 catch(...)
                 {
@@ -185,12 +185,19 @@ namespace upsylon {
             Field<T>(id),
             LayoutType(L),
             rowLayout(lower.x,upper.x),
-            rows(0),
+            row(0),
             built(0)
             {
                 build(rowAddr,objAddr);
             }
             
+            inline virtual const void *getObjectAt(const Coord1D *c) const throw()
+            {
+                assert(c);
+                const_coord C(c[0],c[1]);
+                assert(this->has(C));
+                return &row[C.y][C.x];
+            }
             
         };
         

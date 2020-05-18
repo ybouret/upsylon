@@ -154,6 +154,13 @@ namespace upsylon {
             }
             
             Y_DISABLE_COPY_AND_ASSIGN(Field3D);
+            inline virtual const void *getObjectAt(const Coord1D *c) const throw()
+            {
+                assert(c);
+                const_coord C(c[0],c[1],c[2]);
+                assert(this->has(C));
+                return &slices[C.z][C.y][C.x];
+            }
         };
      
         

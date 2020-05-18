@@ -4,7 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
-#include "y/spade/field3d.hpp"
+#include "y/spade/ops.hpp"
 
 using namespace upsylon;
 using namespace Spade;
@@ -25,6 +25,8 @@ namespace {
         const Layout<COORD> fullLayout(lower,upper);
         vector<COORD>       mappings;
         fullLayout.findMappings(mappings,cores);
+        Dispatcher          dispatch;
+        
         std::cerr << "mappings=" << mappings << std::endl;
         for(size_t i=1;i<=mappings.size();++i)
         {
@@ -34,19 +36,34 @@ namespace {
             typename Layout<COORD>::Loop loop( Coord::Zero<COORD>(), Coord::Ones<COORD>() );
             for(loop.boot();loop.good();loop.next())
             {
+                std::cerr << "\tpbcs=" << loop.value << std::endl;
                 const Partition<COORD> partition(fullLayout,
                                                  mapping,
                                                  loop.value,
                                                  ng);
                 const size_t        size = partition.size;
                 slots<iFieldHandle> iFields(size);
+                
+                // filling
                 for(size_t rank=0;rank<size;++rank)
                 {
                     const string name = vformat("iField#%u",unsigned(rank));
                     iFieldHandle F    = new iField(name,partition.parts[rank].outer);
                     iFields.push(F);
-                    //F->ld(*F,int(rank));
+                    Ops::Ld(*F,*F,int(rank));
                 }
+                
+                // transfer
+                for(size_t rank=0;rank<size;++rank)
+                {
+                    iField               &iF = *iFields[rank];
+                    const Layouts<COORD> &L  = partition.parts[rank];
+                    std::cerr << "\t\tautoExchange" << std::endl;
+                    dispatch.autoExchange(iF,L);
+                    
+                }
+                
+                
                 
             }
             
