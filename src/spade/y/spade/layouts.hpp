@@ -4,15 +4,29 @@
 #ifndef Y_SPADE_LAYOUTS_INCLUDED
 #define Y_SPADE_LAYOUTS_INCLUDED 1
 
-#include "y/spade/layout.hpp"
 #include "y/spade/topology.hpp"
-#include "y/spade/ghosts.hpp"
+#include "y/spade/swaps.hpp"
 
 namespace upsylon {
 
     namespace Spade
     {
-
+        
+        namespace Kernel {
+         
+            struct Layouts
+            {
+                enum GhostLocation
+                {
+                    InnerGhost,
+                    OuterGhost
+                };
+                static void TooManyGhosts(const Coord1D       ng,
+                                          const unsigned      level,
+                                          const GhostLocation where);
+            };
+        }
+        
         //----------------------------------------------------------------------
         //
         //! computing sub-layouts
@@ -35,7 +49,12 @@ namespace upsylon {
             typedef typename      Topology<COORD>::Link      Link;                      //!< alias
             typedef typename      Topology<COORD>::Links     Links;                     //!< alias
             typedef typename      Topology<COORD>::Boolean   Boolean;                   //!< alias
-
+            typedef typename      Kernel::Swap<COORD>        Swap;
+            typedef typename      Swap::HandleType           SwapHandle;
+            typedef               AutoExchangeSwap<COORD>    AutoExchangeType;
+            typedef               AsyncTwoWaysSwap<COORD>    AsyncTwoWaysType;
+            typedef               AsyncForwardSwap<COORD>    AsyncForwardType;
+            typedef               AsyncReverseSwap<COORD>    AsyncReverseType;
 
             //------------------------------------------------------------------
             //
@@ -61,7 +80,11 @@ namespace upsylon {
                                     const Coord1D          numGhosts) :
             Node(localRanks,topology,boundaries),
             inner(fullLayout.split(topology.sizes,this->ranks)),
-            outer(inner)
+            outer(inner),
+            autoExchange(this->numAutoExchange),
+            asyncTwoWays(this->numAsyncTwoWays),
+            asyncForward(this->numAsyncForward),
+            asyncReverse(this->numAsyncReverse)
             {
                 const Coord1D  ng   = abs_of(numGhosts);
                 const Node    &self = *this;
@@ -108,10 +131,10 @@ namespace upsylon {
                 //______________________________________________________________
                 //
                 //
-                // compute associated exchange zones in each level
+                // compute associated swap zones in each level
                 //
                 //______________________________________________________________
-                if(ng>0) createAllGhosts(ng);
+                if(ng>0) createAllSwaps(ng);
                
             }
 
@@ -121,13 +144,16 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            const Layout<COORD> inner; //!< inner workspace
-            const Layout<COORD> outer; //!< contains exchange zones
-
+            const Layout<COORD>     inner; //!< inner workspace
+            const Layout<COORD>     outer; //!< contains exchange zones
+            slots<AutoExchangeType> autoExchange;
+            slots<AsyncTwoWaysType> asyncTwoWays;
+            slots<AsyncForwardType> asyncForward;
+            slots<AsyncReverseType> asyncReverse;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Layouts);
-            inline void createAllGhosts(const Coord1D ng)
+            inline void createAllSwaps(const Coord1D ng)
             {
                 assert(ng>0);
                 const Node &self = *this;
@@ -147,28 +173,61 @@ namespace upsylon {
                     assert(reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
                     assert(Connect::Authorized(forward.connectMode,reverse.connectMode));
                     
+                    //----------------------------------------------------------
+                    //
+                    // create swaps
+                    //
+                    //----------------------------------------------------------
+                    
                     switch(links.connect)
                     {
-                        case Connect:: FreeStanding: break;
+                        case Connect:: FreeStanding:
+                            break;
+                            
                         case Connect:: AutoExchange: {
+                            const SwapHandle fwd = createSwap(forward, ng, level);
+                            const SwapHandle rev = createSwap(reverse, ng, level);
+                            aliasing::_(autoExchange).template build<const SwapHandle&, const SwapHandle&>(fwd,rev);
                         } break;
-                        case Connect:: AsyncTwoWays: break;
-                        case Connect:: AsyncForward: break;
-                        case Connect:: AsyncReverse: break;
+                            
+                        case Connect:: AsyncTwoWays:{
+                            const SwapHandle fwd = createSwap(forward, ng, level);
+                            const SwapHandle rev = createSwap(reverse, ng, level);
+                             aliasing::_(asyncTwoWays).template build<const SwapHandle&, const SwapHandle&>(fwd,rev);
+                        } break;
+                            
+                        case Connect:: AsyncForward: {
+                            const SwapHandle fwd = createSwap(forward, ng, level);
+                             aliasing::_(asyncForward).template build<const SwapHandle&>(fwd);
+                        } break;
+                            
+                        case Connect:: AsyncReverse: {
+                            const SwapHandle rev = createSwap(reverse, ng, level);
+                             aliasing::_(asyncReverse).template build<const SwapHandle&>(rev);
+                        } break;
+                            
                         default:
                             Connect::InvalidFlag(links.connect, Connect::Layouts);
                             break;
                     }
                 }
+                assert( autoExchange.size() == this->numAutoExchange );
+                assert( asyncTwoWays.size() == this->numAsyncTwoWays );
+                assert( asyncForward.size() == this->numAsyncForward );
+                assert( asyncReverse.size() == this->numAsyncReverse );
+
             }
             
             inline
-            Ghosts *createGhosts(const_coord  &probe,
-                                 const Coord1D ng) const
+            Swap *createSwap(const Link    &link,
+                             const Coord1D  ng,
+                             const unsigned level) const
             {
                 assert(ng>0);
                 const Coord1D shift = ng-1;
                
+                std::cerr << "..create swap " << link.modeText() <<  "->" << link.rank << std::endl;
+                
                 // initialize
                 coord send_lower = inner.lower;
                 coord send_upper = inner.upper;
@@ -177,7 +236,7 @@ namespace upsylon {
                 
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    const Coord1D pr = Coord::Of(probe,dim);
+                    const Coord1D pr = Coord::Of(link.probe,dim);
                     Coord1D      &sl = Coord::Of(send_lower,dim);
                     Coord1D      &su = Coord::Of(send_upper,dim);
                     Coord1D      &rl = Coord::Of(recv_lower,dim);
@@ -186,6 +245,8 @@ namespace upsylon {
                     {
                         case 1:
                             sl = su - shift;
+                            rl = su+1;
+                            ru = rl+shift;
                             break;
                             
                         case -1:
@@ -197,8 +258,14 @@ namespace upsylon {
                     }
                 }
                 
+                const Layout<COORD> innerRange(send_lower,send_upper);
+                const Layout<COORD> outerRange(recv_lower,recv_upper);
                 
-                return 0;
+                if(!outer.contains(innerRange)) Kernel::Layouts::TooManyGhosts(ng,level,Kernel::Layouts::InnerGhost);
+                if(!outer.contains(outerRange)) Kernel::Layouts::TooManyGhosts(ng,level,Kernel::Layouts::OuterGhost);
+
+                
+                return new Swap(innerRange,outerRange,outer,link.rank);
             }
         };
     }

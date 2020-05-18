@@ -408,6 +408,7 @@ namespace upsylon {
                     return os;
                 }
                 
+                
                 //--------------------------------------------------------------
                 //
                 // members
@@ -415,7 +416,17 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 const Connect::Mode connectMode; //!< connect mode
                 const_coord         probe;       //!< probe
-
+                
+                //--------------------------------------------------------------
+                //
+                // helpers
+                //
+                //--------------------------------------------------------------
+                inline const char *modeText() const throw()
+                {
+                    return Connect::ModeText(connectMode);
+                }
+                
             private:
                 Y_DISABLE_ASSIGN(Link);
             };
@@ -474,6 +485,7 @@ namespace upsylon {
             };
            
 #define Y_SPADE_TOPO_NODE_INCR(KIND) case Connect::KIND: ++ aliasing::_(num##KIND); break
+#define Y_SPADE_TOPO_NODE_DISP(KIND) std::cerr << "#" #KIND "=" << num##KIND << std::endl
             
             //------------------------------------------------------------------
             //
@@ -521,6 +533,14 @@ namespace upsylon {
                                 break;
                         }
                     }
+#if 0
+                    Y_SPADE_TOPO_NODE_DISP(FreeStanding);
+                    Y_SPADE_TOPO_NODE_DISP(AutoExchange);
+                    Y_SPADE_TOPO_NODE_DISP(AsyncTwoWays);
+                    Y_SPADE_TOPO_NODE_DISP(AsyncForward);
+                    Y_SPADE_TOPO_NODE_DISP(AsyncReverse);
+#endif
+                    assert(numFreeStanding+numAutoExchange+numAsyncTwoWays+numAsyncForward+numAsyncReverse==Levels);
                 }
                 
                 //! cleanup

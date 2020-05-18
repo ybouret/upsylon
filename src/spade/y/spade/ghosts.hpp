@@ -34,7 +34,7 @@ namespace upsylon {
             explicit Ghosts(const LAYOUT &sendLayout,
                             const LAYOUT &recvLayout,
                             const LAYOUT &fullLayout,
-                            const int     peerRank = 0 ) :
+                            const size_t  peerRank = 0 ) :
             peer(peerRank),
             innerGhost(sendLayout,fullLayout),
             outerGhost(recvLayout,fullLayout)
@@ -48,9 +48,9 @@ namespace upsylon {
             // member
             //
             //------------------------------------------------------------------
-            const int   peer;       //!< peer rank
-            const Ghost innerGhost; //!< to send
-            const Ghost outerGhost;  //!< to recv
+            const size_t peer;       //!< peer rank
+            const Ghost  innerGhost; //!< to send
+            const Ghost  outerGhost; //!< to recv
             
            
 
