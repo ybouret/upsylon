@@ -79,8 +79,8 @@ namespace upsylon {
             //! raise an exception if invalid connect mode
             static void InvalidFlag(const Flag f,const char *when);
             
-            static const char TopologyNode[];
-            static const char Layouts[];
+            static const char TopologyNode[]; //!< "Topology::Node"
+            static const char Layouts[];      //!< "Layouts"
         };
         
         
@@ -422,6 +422,7 @@ namespace upsylon {
                 // helpers
                 //
                 //--------------------------------------------------------------
+                //! return a human readable mode
                 inline const char *modeText() const throw()
                 {
                     return Connect::ModeText(connectMode);
@@ -467,7 +468,7 @@ namespace upsylon {
                 //! display
                 friend inline std::ostream & operator<<( std::ostream &os, const Links &links )
                 {
-                    os << "->@" << links.forward << " | <-@" << links.reverse << " [" << Connect::FlagText(links.connect) << "]";
+                    os << "->@" << links.forward << " | <-@" << links.reverse << " [" << links.connectText() << "]";
                     return os;
                 }
                 
@@ -479,12 +480,27 @@ namespace upsylon {
                 const Link          forward; //!< for forward wave
                 const Link          reverse; //!< for reverse wave
                 const Connect::Flag connect; //!< authorized connect class
-
+                
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                
+                //! return a human readable connect
+                inline const char *connectText() const throw()
+                {
+                    return Connect::FlagText(connect);
+                }
+                
             private:
                 Y_DISABLE_ASSIGN(Links);
             };
            
+            //! increase count of named connection flag
 #define Y_SPADE_TOPO_NODE_INCR(KIND) case Connect::KIND: ++ aliasing::_(num##KIND); break
+            
+            //! display number of named connection flag
 #define Y_SPADE_TOPO_NODE_DISP(KIND) std::cerr << "#" #KIND "=" << num##KIND << std::endl
             
             //------------------------------------------------------------------

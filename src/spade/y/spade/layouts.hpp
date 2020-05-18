@@ -14,13 +14,17 @@ namespace upsylon {
         
         namespace Kernel {
          
+            //! common for Spade::Layouts
             struct Layouts
             {
+                //! ghost info
                 enum GhostLocation
                 {
                     InnerGhost,
                     OuterGhost
                 };
+                
+                //! raise an exception on invalid ghosts
                 static void TooManyGhosts(const Coord1D       ng,
                                           const unsigned      level,
                                           const GhostLocation where);
@@ -49,12 +53,12 @@ namespace upsylon {
             typedef typename      Topology<COORD>::Link      Link;                      //!< alias
             typedef typename      Topology<COORD>::Links     Links;                     //!< alias
             typedef typename      Topology<COORD>::Boolean   Boolean;                   //!< alias
-            typedef typename      Kernel::Swap<COORD>        Swap;
-            typedef typename      Swap::HandleType           SwapHandle;
-            typedef               AutoExchangeSwap<COORD>    AutoExchangeType;
-            typedef               AsyncTwoWaysSwap<COORD>    AsyncTwoWaysType;
-            typedef               AsyncForwardSwap<COORD>    AsyncForwardType;
-            typedef               AsyncReverseSwap<COORD>    AsyncReverseType;
+            typedef typename      Kernel::Swap<COORD>        Swap;                      //!< alias
+            typedef typename      Swap::HandleType           SwapHandle;                //!< alias
+            typedef               AutoExchangeSwap<COORD>    AutoExchangeType;          //!< alias
+            typedef               AsyncTwoWaysSwap<COORD>    AsyncTwoWaysType;          //!< alias
+            typedef               AsyncForwardSwap<COORD>    AsyncForwardType;          //!< alias
+            typedef               AsyncReverseSwap<COORD>    AsyncReverseType;          //!< alias
 
             //------------------------------------------------------------------
             //
@@ -144,12 +148,12 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            const Layout<COORD>     inner; //!< inner workspace
-            const Layout<COORD>     outer; //!< contains exchange zones
-            slots<AutoExchangeType> autoExchange;
-            slots<AsyncTwoWaysType> asyncTwoWays;
-            slots<AsyncForwardType> asyncForward;
-            slots<AsyncReverseType> asyncReverse;
+            const Layout<COORD>     inner;        //!< inner workspace
+            const Layout<COORD>     outer;        //!< contains exchange zones
+            slots<AutoExchangeType> autoExchange; //!< autoExchange ghosts
+            slots<AsyncTwoWaysType> asyncTwoWays; //!< asyncTwoWays ghosts
+            slots<AsyncForwardType> asyncForward; //!< aysncForward ghosts
+            slots<AsyncReverseType> asyncReverse; //!< asyncReverse ghosts
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Layouts);
