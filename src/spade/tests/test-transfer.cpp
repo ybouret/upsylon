@@ -1,5 +1,5 @@
 
-#include "y/spade/network/dispatcher.hpp"
+#include "y/spade/network/transfer.hpp"
 #include "y/spade/layout/tessellation.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
@@ -16,8 +16,8 @@ namespace {
     void doTest( const string &layout, const size_t ghosts, const size_t cores )
     {
         
-        Dispatcher          dispatch(comms::homogeneous);
-        (void) dispatch.query<string>();
+        Transfer transfer(comms::homogeneous);
+        (void) transfer.query<string>();
         
         typedef typename FieldFor<COORD>::template Of<int>::Type    iField;
         typedef typename iField::Handle                             iFieldHandle;
@@ -63,7 +63,7 @@ namespace {
                         iFieldHandle F    = new iField(name,partition[rank].outer);
                         iFields.push(F);
                         Ops::Ld(*F,*F,int(rank));
-                        dispatch.activate(*F);
+                        transfer.activate(*F);
                         
                     }
                     
@@ -71,7 +71,7 @@ namespace {
                         const string name = vformat("sField#%u",unsigned(rank));
                         sFieldHandle F    = new sField(name,partition[rank].outer);
                         sFields.push(F);
-                        dispatch.activate(*F);
+                        transfer.activate(*F);
                         
                     }
                     
@@ -87,24 +87,24 @@ namespace {
                     fields << &sF;
                     
                     const Fragment<COORD> &L  = partition[rank];
-                    dispatch.localSwap(iF,L);
-                    dispatch.localSwap(sF,L);
-                    dispatch.localSwap(fields,L);
+                    transfer.localSwap(iF,L);
+                    transfer.localSwap(sF,L);
+                    transfer.localSwap(fields,L);
 
                     
-                    Dispatcher::Block block;
+                    Transfer::Block block;
                     
                     for(size_t i=0;i<L.numAsyncTwoWays;++i)
                     {
                         {
-                            dispatch.asyncInitialize(block);
+                            transfer.asyncInitialize(block);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
-                            dispatch.asyncSave(block,iF,xch.forward->innerGhost);
-                            dispatch.asyncSave(block,iF,xch.reverse->innerGhost);
+                            transfer.asyncSave(block,iF,xch.forward->innerGhost);
+                            transfer.asyncSave(block,iF,xch.reverse->innerGhost);
                             {
                                 ios::imstream source(block);
-                                dispatch.asyncLoad(iF,source,xch.reverse->outerGhost);
-                                dispatch.asyncLoad(iF,source,xch.forward->outerGhost);
+                                transfer.asyncLoad(iF,source,xch.reverse->outerGhost);
+                                transfer.asyncLoad(iF,source,xch.forward->outerGhost);
                             }
                             
                         }
@@ -112,26 +112,26 @@ namespace {
                         
                         
                         {
-                            dispatch.asyncInitialize(block);
+                            transfer.asyncInitialize(block);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
-                            dispatch.asyncSave(block,sF,xch.forward->innerGhost);
-                            dispatch.asyncSave(block,sF,xch.reverse->innerGhost);
+                            transfer.asyncSave(block,sF,xch.forward->innerGhost);
+                            transfer.asyncSave(block,sF,xch.reverse->innerGhost);
                             {
                                 ios::imstream source(block);
-                                dispatch.asyncLoad(sF,source,xch.reverse->outerGhost);
-                                dispatch.asyncLoad(sF,source,xch.forward->outerGhost);
+                                transfer.asyncLoad(sF,source,xch.reverse->outerGhost);
+                                transfer.asyncLoad(sF,source,xch.forward->outerGhost);
                             }
                         }
                         
                         {
-                            dispatch.asyncInitialize(block);
+                            transfer.asyncInitialize(block);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
-                            dispatch.asyncSave(block, fields, xch.forward->innerGhost );
-                            dispatch.asyncSave(block, fields, xch.reverse->innerGhost );
+                            transfer.asyncSave(block, fields, xch.forward->innerGhost );
+                            transfer.asyncSave(block, fields, xch.reverse->innerGhost );
                             {
                                 ios::imstream source(block);
-                                dispatch.asyncLoad(fields,source,xch.reverse->outerGhost);
-                                dispatch.asyncLoad(fields,source,xch.forward->outerGhost);
+                                transfer.asyncLoad(fields,source,xch.reverse->outerGhost);
+                                transfer.asyncLoad(fields,source,xch.forward->outerGhost);
                             }
                         }
                         
@@ -149,7 +149,7 @@ namespace {
 }
 
 
-Y_UTEST(dispatch)
+Y_UTEST(transfer)
 {
     string layout     = "10:10:10";
     size_t ghosts     = 1;

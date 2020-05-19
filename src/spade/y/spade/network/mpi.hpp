@@ -4,20 +4,20 @@
 #define Y_SPADE_MPI_INCLUDED 1
 
 #include "y/mpi++/xmpi.hpp"
-#include "y/spade/network/dispatcher.hpp"
+#include "y/spade/network/transfer.hpp"
 
 namespace upsylon {
 
     namespace Spade {
 
-        class ParallelDispatcher : public Dispatcher
+        class ParallelTransfer : public Transfer
         {
         public:
-            explicit ParallelDispatcher(const comms::topology);
-            virtual ~ParallelDispatcher() throw();
+            explicit ParallelTransfer(const comms::topology);
+            virtual ~ParallelTransfer() throw();
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(ParallelDispatcher);
+            Y_DISABLE_COPY_AND_ASSIGN(ParallelTransfer);
         };
 
     }

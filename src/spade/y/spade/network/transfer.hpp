@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_SPADE_DISPATCHER_INCLUDED
-#define Y_SPADE_DISPATCHER_INCLUDED 1
+#ifndef Y_SPADE_TRANSFER_INCLUDED
+#define Y_SPADE_TRANSFER_INCLUDED 1
 
 #include "y/spade/layout/fragment.hpp"
 #include "y/spade/fields.hpp"
@@ -13,14 +13,14 @@ namespace upsylon {
     namespace Spade
     {
         
-        class Dispatcher
+        class Transfer
         {
         public:
             typedef ios::ovstream      Block;
             typedef accessible<size_t> Indices;
             
-            explicit Dispatcher(const comms::topology where);
-            virtual ~Dispatcher() throw();
+            explicit Transfer(const comms::topology where);
+            virtual ~Transfer() throw();
             
             void     activate( Kernel::Field &F ) const;
             
@@ -55,7 +55,8 @@ namespace upsylon {
             
             
             const comms::topology topology;
-
+            const comms::delivery delivery;
+            ios::conveyors       &IO;
             
             
             void asyncInitialize(Block &block) throw();
@@ -89,20 +90,22 @@ namespace upsylon {
                            const Ghost   &ghost) const;
             
 
-            template <typename T>
+            template <typename T> inline
             const ios::conveyor & query()
             {
                 return IO.query<T>(topology);
             }
             
-            comms::delivery commsDelivery() const throw() { return delivery; }
+            template <template <typename> class TUPLE, typename T> inline
+            const ios::conveyor & query()
+            {
+                return IO.query<TUPLE,T>(topology);
+            }
             
-        protected:
-            const comms::delivery delivery;
-            ios::conveyors       &IO;
+          
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Dispatcher);
+            Y_DISABLE_COPY_AND_ASSIGN(Transfer);
             void updateDelivery(const ios::conveyor &) const throw();
         };
         

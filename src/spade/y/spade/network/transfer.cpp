@@ -1,16 +1,16 @@
-#include "y/spade/network/dispatcher.hpp"
+#include "y/spade/network/transfer.hpp"
 #include "y/type/spec.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
- 
+    
     namespace Spade {
         
-        Dispatcher:: ~Dispatcher() throw()
+        Transfer:: ~Transfer() throw()
         {
         }
         
-        Dispatcher:: Dispatcher( const comms::topology where) :
+        Transfer:: Transfer( const comms::topology where) :
         topology(where),
         delivery(comms::computed_block_size),
         IO( ios::conveyors::instance() )
@@ -18,13 +18,13 @@ namespace upsylon {
             IO.import(topology);
         }
         
-        void Dispatcher:: asyncInitialize(Block &block) throw()
+        void Transfer:: asyncInitialize(Block &block) throw()
         {
             block.free();
             aliasing::_(delivery) = comms::computed_block_size;
         }
-
-        void Dispatcher:: updateDelivery(const ios::conveyor &io) const throw()
+        
+        void Transfer:: updateDelivery(const ios::conveyor &io) const throw()
         {
             switch(io.mode)
             {
@@ -33,16 +33,16 @@ namespace upsylon {
             }
         }
         
-        void Dispatcher:: activate( Kernel::Field &F ) const
+        void Transfer:: activate( Kernel::Field &F ) const
         {
             F.io = IO.search(F.objectType,topology);
             const string &id = type_spec::declare(F.objectType).name();
             if(!F.io) throw exception("Spade::Field<%s> '%s': no register I/O", *id, *F.name);
         }
         
-        void Dispatcher:: asyncSave(Block               &block,
-                                    const Kernel::Field &field,
-                                    const Ghost         &ghost) const
+        void Transfer:: asyncSave(Block               &block,
+                                  const Kernel::Field &field,
+                                  const Ghost         &ghost) const
         {
             assert(field.io);
             const ios::conveyor &io = *field.io;
@@ -56,12 +56,12 @@ namespace upsylon {
             }
         }
         
-        void Dispatcher:: asyncSave(Block         &block,
-                                    Fields        &fields,
-                                    const Ghost   &ghost) const
+        void Transfer:: asyncSave(Block         &block,
+                                  Fields        &fields,
+                                  const Ghost   &ghost) const
         {
             const size_t f = fields.size();
-          
+            
             {
                 size_t j = f;
                 while(j>0)
@@ -87,10 +87,10 @@ namespace upsylon {
                 --n;
             }
         }
-
-        void Dispatcher:: asyncLoad(Kernel::Field &field,
-                                    ios::istream  &source,
-                                    const Ghost   &ghost) const
+        
+        void Transfer:: asyncLoad(Kernel::Field &field,
+                                  ios::istream  &source,
+                                  const Ghost   &ghost) const
         {
             assert(field.io);
             const ios::conveyor &io = *field.io;
@@ -102,9 +102,9 @@ namespace upsylon {
             }
         }
         
-        void Dispatcher:: asyncLoad(Fields        &fields,
-                                    ios::istream  &source,
-                                    const Ghost   &ghost) const
+        void Transfer:: asyncLoad(Fields        &fields,
+                                  ios::istream  &source,
+                                  const Ghost   &ghost) const
         {
             const size_t f = fields.size();
             size_t       n  = ghost.items;
@@ -124,11 +124,11 @@ namespace upsylon {
         }
         
         
-        void Dispatcher:: localSwap(Kernel::Field &field,
-                                    const Indices &innerFwd,
-                                    const Indices &outerFwd,
-                                    const Indices &innerRev,
-                                    const Indices &outerRev) const
+        void Transfer:: localSwap(Kernel::Field &field,
+                                  const Indices &innerFwd,
+                                  const Indices &outerFwd,
+                                  const Indices &innerRev,
+                                  const Indices &outerRev) const
         {
             assert(innerFwd.size() == outerFwd.size() );
             assert(innerFwd.size() == outerRev.size() );
@@ -145,11 +145,11 @@ namespace upsylon {
             }
         }
         
-        void Dispatcher:: localSwap(Fields        &fields,
-                                    const Indices &innerFwd,
-                                    const Indices &outerFwd,
-                                    const Indices &innerRev,
-                                    const Indices &outerRev) const
+        void Transfer:: localSwap(Fields        &fields,
+                                  const Indices &innerFwd,
+                                  const Indices &outerFwd,
+                                  const Indices &innerRev,
+                                  const Indices &outerRev) const
         {
             assert(innerFwd.size() == outerFwd.size() );
             assert(innerFwd.size() == outerRev.size() );
@@ -177,7 +177,7 @@ namespace upsylon {
             }
         }
         
-      
+        
         
     }
     
