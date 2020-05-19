@@ -1,9 +1,9 @@
 //! \file
 
-#ifndef Y_SPADE_PARTITION_INCLUDED
-#define Y_SPADE_PARTITION_INCLUDED 1
+#ifndef Y_SPADE_TESSELLATION_INCLUDED
+#define Y_SPADE_TESSELLATION_INCLUDED 1
 
-#include "y/spade/layouts.hpp"
+#include "y/spade/layout/fragment.hpp"
 
 namespace upsylon {
     
@@ -13,21 +13,21 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
-        //! partition of a full layout
+        //! tesselation of a full layout
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class Partition : public Topology<COORD>
+        class Tessellation : public Topology<COORD>
         {
         public:
             typedef Layout<COORD>                  LayoutType;
-            typedef Layouts<COORD>                 LayoutsType;
+            typedef Fragment<COORD>                FragmentType;
             typedef Topology<COORD>                TopologyType;
             typedef typename TopologyType::Boolean Boolean;
             
-            virtual ~Partition() throw() {}
+            virtual ~Tessellation() throw() {}
             
-            explicit Partition(const LayoutType & fullLayout,
+            explicit Tessellation(const LayoutType & fullLayout,
                                const COORD      & mapping,
                                const COORD      & boundaries,
                                const Coord1D      numGhosts) :
@@ -47,7 +47,7 @@ namespace upsylon {
                     const TopologyType &,
                     const Boolean      &,
                     const Coord1D      &>(fullLayout,localRanks,*this,pbcs,numGhosts);
-                    const LayoutsType &L = parts[rank];
+                    const FragmentType &L = parts[rank];
                     aliasing::_(maxItems) = max_of(maxItems,L.inner.items);
                     aliasing::_(maxComms) = max_of(maxComms,L.commScore);
                 }
@@ -58,19 +58,19 @@ namespace upsylon {
                 }
             }
 
-            inline const LayoutsType & operator[](const size_t rank) const throw()
+            inline const FragmentType & operator[](const size_t rank) const throw()
             {
                 assert(rank<this->size);
                 return parts[rank];
             }
 
-            const slots<LayoutsType> parts;
-            const size_t             minItems;
-            const size_t             maxItems;
-            const size_t             maxComms;
+            const slots<FragmentType> parts;
+            const size_t              minItems;
+            const size_t              maxItems;
+            const size_t              maxComms;
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Partition);
+            Y_DISABLE_COPY_AND_ASSIGN(Tessellation);
         };
     }
     

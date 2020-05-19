@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_SPADE_SWAPS_INCLUDED
-#define Y_SPADE_SWAPS_INCLUDED 1
+#ifndef Y_SPADE_LAYOUT_SWAPS_INCLUDED
+#define Y_SPADE_LAYOUT_SWAPS_INCLUDED 1
 
-#include "y/spade/ghosts.hpp"
+#include "y/spade/layout/ghosts.hpp"
 #include "y/spade/layout.hpp"
 #include "y/ptr/arc.hpp"
 

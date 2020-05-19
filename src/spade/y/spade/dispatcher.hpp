@@ -3,7 +3,7 @@
 #ifndef Y_SPADE_DISPATCHER_INCLUDED
 #define Y_SPADE_DISPATCHER_INCLUDED 1
 
-#include "y/spade/layouts.hpp"
+#include "y/spade/layout/fragment.hpp"
 #include "y/ios/conveyors.hpp"
 #include "y/ios/ovstream.hpp"
 
@@ -21,8 +21,8 @@ namespace upsylon {
             virtual ~Dispatcher() throw();
             
             template <typename FIELD> inline
-            void autoExchange(FIELD                                &F,
-                              const Layouts<typename FIELD::coord> &L) const
+            void autoExchange(FIELD                                 &F,
+                              const Fragment<typename FIELD::coord> &L) const
             {
                 assert(L.outer.isSameThan(F));
                 size_t n = L.autoExchange.size();

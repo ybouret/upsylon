@@ -1,5 +1,5 @@
 
-#include "y/spade/partition.hpp"
+#include "y/spade/layout/tessellation.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {

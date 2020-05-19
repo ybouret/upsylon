@@ -1,5 +1,5 @@
 
-#include "y/spade/layouts.hpp"
+#include "y/spade/layout/fragment.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -9,7 +9,7 @@ namespace upsylon {
         
         namespace Kernel {
           
-            void Layouts:: TooManyGhosts(const Coord1D       ng,
+            void Fragment:: TooManyGhosts(const Coord1D       ng,
                                          const unsigned      level,
                                          const GhostLocation where)
             {
@@ -20,7 +20,7 @@ namespace upsylon {
                     case InnerGhost: text="inner"; break;
                     case OuterGhost: text="outer"; break;
                 }
-                throw exception("Spade::Layouts(too many <%s> ghosts (%u) for probe level=%u)", text, int(ng), level);
+                throw exception("Spade::Fragment(too many <%s> ghosts (%u) for probe level=%u)", text, int(ng), level);
             }
         }
         

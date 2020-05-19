@@ -1,4 +1,4 @@
-#include "y/spade/swaps.hpp"
+#include "y/spade/layout/swaps.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 

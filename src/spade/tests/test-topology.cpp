@@ -1,4 +1,4 @@
-#include "y/spade/topology.hpp"
+#include "y/spade/layout/topology.hpp"
 #include "y/utest/run.hpp"
 #include "y/core/ipower.hpp"
 #include "y/utest/sizeof.hpp"

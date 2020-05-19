@@ -4,7 +4,7 @@
 #ifndef Y_SPADE_GHOSTS_INCLUDED
 #define Y_SPADE_GHOSTS_INCLUDED 1
 
-#include "y/spade/ghost.hpp"
+#include "y/spade/layout/ghost.hpp"
 #include "y/spade/layout.hpp"
 
 namespace upsylon {

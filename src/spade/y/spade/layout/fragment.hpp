@@ -1,11 +1,11 @@
 
 //! \file
 
-#ifndef Y_SPADE_LAYOUTS_INCLUDED
-#define Y_SPADE_LAYOUTS_INCLUDED 1
+#ifndef Y_SPADE_LAYOUT_FRAGMENT_INCLUDED
+#define Y_SPADE_LAYOUT_FRAGMENT_INCLUDED 1
 
-#include "y/spade/topology.hpp"
-#include "y/spade/swaps.hpp"
+#include "y/spade/layout/topology.hpp"
+#include "y/spade/layout/swaps.hpp"
 
 namespace upsylon {
 
@@ -14,8 +14,8 @@ namespace upsylon {
         
         namespace Kernel {
          
-            //! common for Spade::Layouts
-            struct Layouts
+            //! common for Spade::Fragment
+            struct Fragment
             {
                 //! ghost info
                 enum GhostLocation
@@ -37,7 +37,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class Layouts : public Topology<COORD>::Node
+        class Fragment : public Topology<COORD>::Node
         {
         public:
             //------------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace upsylon {
             //------------------------------------------------------------------
 
             //! cleanup
-            inline virtual ~Layouts() throw() {}
+            inline virtual ~Fragment() throw() {}
 
             //! setup layouts
             /**
@@ -77,7 +77,7 @@ namespace upsylon {
              \param boundaries Periodic boundary condtions
              \param numGhosts  number of ghosts
              */
-            inline explicit Layouts(const Layout<COORD>   &fullLayout,
+            inline explicit Fragment(const Layout<COORD>   &fullLayout,
                                     const_coord            localRanks,
                                     const Topology<COORD> &topology,
                                     const Boolean         &boundaries,
@@ -211,7 +211,7 @@ namespace upsylon {
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Layouts);
+            Y_DISABLE_COPY_AND_ASSIGN(Fragment);
             inline void createAllSwaps(const Coord1D ng)
             {
                 assert(ng>0);
@@ -324,8 +324,8 @@ namespace upsylon {
                 const Layout<COORD> innerRange(send_lower,send_upper);
                 const Layout<COORD> outerRange(recv_lower,recv_upper);
                 
-                if(!outer.contains(innerRange)) Kernel::Layouts::TooManyGhosts(ng,level,Kernel::Layouts::InnerGhost);
-                if(!outer.contains(outerRange)) Kernel::Layouts::TooManyGhosts(ng,level,Kernel::Layouts::OuterGhost);
+                if(!outer.contains(innerRange)) Kernel::Fragment::TooManyGhosts(ng,level,Kernel::Fragment::InnerGhost);
+                if(!outer.contains(outerRange)) Kernel::Fragment::TooManyGhosts(ng,level,Kernel::Fragment::OuterGhost);
 
                 
                 return new Swaps(innerRange,outerRange,outer,link.rank);

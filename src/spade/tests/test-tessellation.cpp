@@ -1,5 +1,5 @@
 
-#include "y/spade/partition.hpp"
+#include "y/spade/layout/tessellation.hpp"
 #include "y/spade/fields.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
@@ -43,12 +43,12 @@ namespace {
                 for( pbcs.boot(); pbcs.good(); pbcs.next() )
                 {
                     std::cerr << "\t\t\tpbcs=" << pbcs.value;
-                    Partition<COORD> partition(full,
-                                               mapping,
-                                               pbcs.value,
-                                               1);
-                    std::cerr << ": maxItems=" << partition.maxItems;
-                    std::cerr << ": maxComms=" << partition.maxComms;
+                    Tessellation<COORD> tess(full,
+                                             mapping,
+                                             pbcs.value,
+                                             1);
+                    std::cerr << ": maxItems=" << tess.maxItems;
+                    std::cerr << ": maxComms=" << tess.maxComms;
                     std::cerr << std::endl;
                    
                 }
@@ -62,7 +62,7 @@ namespace {
 
 #include "y/string/convert.hpp"
 
-Y_UTEST(partition)
+Y_UTEST(tessellation)
 {
     string args = "3:3:3";
     size_t cores = 4;

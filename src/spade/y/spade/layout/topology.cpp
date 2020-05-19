@@ -1,4 +1,4 @@
-#include "y/spade/topology.hpp"
+#include "y/spade/layout/topology.hpp"
 #include "y/exception.hpp"
 #include "y/parops.hpp"
 

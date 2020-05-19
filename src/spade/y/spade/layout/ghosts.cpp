@@ -1,5 +1,5 @@
 
-#include "y/spade/ghosts.hpp"
+#include "y/spade/layout/ghosts.hpp"
 
 namespace upsylon {
 

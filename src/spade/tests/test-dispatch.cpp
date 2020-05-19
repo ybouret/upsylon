@@ -1,6 +1,6 @@
 
 #include "y/spade/dispatcher.hpp"
-#include "y/spade/partition.hpp"
+#include "y/spade/layout/tessellation.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
@@ -37,10 +37,10 @@ namespace {
             for(loop.boot();loop.good();loop.next())
             {
                 std::cerr << "\tpbcs=" << loop.value << std::endl;
-                const Partition<COORD> partition(fullLayout,
-                                                 mapping,
-                                                 loop.value,
-                                                 ng);
+                const Tessellation<COORD> partition(fullLayout,
+                                                    mapping,
+                                                    loop.value,
+                                                    ng);
                 const size_t        size = partition.size;
                 slots<iFieldHandle> iFields(size);
                 
@@ -56,8 +56,8 @@ namespace {
                 // transfer
                 for(size_t rank=0;rank<size;++rank)
                 {
-                    iField               &iF = *iFields[rank];
-                    const Layouts<COORD> &L  = partition[rank];
+                    iField                &iF = *iFields[rank];
+                    const Fragment<COORD> &L  = partition[rank];
                     std::cerr << "\t\tautoExchange" << std::endl;
                     dispatch.autoExchange(iF,L);
                     

@@ -1,5 +1,5 @@
 
-#include "y/spade/layouts.hpp"
+#include "y/spade/layout/fragment.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
@@ -36,8 +36,8 @@ namespace {
 
             for(size_t rank=0;rank<topology.size;++rank)
             {
-                const COORD          ranks = topology.getLocalRanks(rank);
-                const Layouts<COORD> L(full, ranks, topology, pbcs, 1);
+                const COORD           ranks = topology.getLocalRanks(rank);
+                const Fragment<COORD> L(full, ranks, topology, pbcs, 1);
                 std::cerr << "\t@localRanks=" << L.ranks << " / globalRank=" << L.rank << std::endl;
                 std::cerr << "\t|_inner=" << L.inner << std::endl;
                 std::cerr << "\t|_outer=" << L.outer << std::endl;
@@ -57,7 +57,7 @@ namespace {
 
 #include "y/string/convert.hpp"
 
-Y_UTEST(layouts)
+Y_UTEST(fragment)
 {
     string layout     = "10:10:10";
     string boundaries = "0:0:0";

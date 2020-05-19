@@ -1,4 +1,4 @@
-#include "y/spade/ghost.hpp"
+#include "y/spade/layout/ghost.hpp"
 #include "y/type/block/zset.hpp"
 
 namespace upsylon {
