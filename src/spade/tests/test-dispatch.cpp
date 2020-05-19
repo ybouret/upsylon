@@ -1,5 +1,5 @@
 
-#include "y/spade/dispatcher.hpp"
+#include "y/spade/network/dispatcher.hpp"
 #include "y/spade/layout/tessellation.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"

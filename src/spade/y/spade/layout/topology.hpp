@@ -517,7 +517,7 @@ namespace upsylon {
                 //! setup
                 inline explicit Node(const_coord      localRanks,
                                      const Topology  &topology,
-                                     const Boolean   &pbc) :
+                                     const Boolean    pbc) :
                 Hub(localRanks,topology),
                 slots<Links>(Levels),
                 numFreeStanding(0),

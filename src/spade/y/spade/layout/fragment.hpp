@@ -80,9 +80,9 @@ namespace upsylon {
             inline explicit Fragment(const Layout<COORD>   &fullLayout,
                                     const_coord            localRanks,
                                     const Topology<COORD> &topology,
-                                    const Boolean         &boundaries,
+                                    const_coord           &boundaries,
                                     const Coord1D          numGhosts) :
-            Node(localRanks,topology,boundaries),
+            Node(localRanks,topology,Coord::ToBool(boundaries)),
             inner(fullLayout.split(topology.sizes,this->ranks)),
             outer(inner),
             autoExchange(this->numAutoExchange),

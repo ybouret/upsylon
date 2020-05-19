@@ -264,7 +264,11 @@ Y_SPADE_COORD_OP(GT,>)      \
 Y_SPADE_COORD_OP(GEQ,>=)
 
             Y_SPADE_COORD_OPS()
-            
+
+            static string ToString( const Coord1D );
+            static string ToString( const Coord2D );
+            static string ToString( const Coord3D );
+
         private:
             //! random in [0:m]
             static Coord1D Natural1D(const Coord1D m, randomized::bits & ) throw();

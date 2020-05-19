@@ -37,16 +37,15 @@ namespace upsylon {
             maxItems(0),
             maxComms(0)
             {
-                const Boolean pbcs = Coord::ToBool(boundaries);
-                for(size_t rank=0;rank<this->size;++rank)
+                 for(size_t rank=0;rank<this->size;++rank)
                 {
                     const COORD localRanks = this->getLocalRanks(rank);
                     aliasing::_(parts). template build<
                     const LayoutType   &,
                     const COORD        &,
                     const TopologyType &,
-                    const Boolean      &,
-                    const Coord1D      &>(fullLayout,localRanks,*this,pbcs,numGhosts);
+                    const COORD        &,
+                    const Coord1D      &>(fullLayout,localRanks,*this,boundaries,numGhosts);
                     const FragmentType &L = parts[rank];
                     aliasing::_(maxItems) = max_of(maxItems,L.inner.items);
                     aliasing::_(maxComms) = max_of(maxComms,L.commScore);

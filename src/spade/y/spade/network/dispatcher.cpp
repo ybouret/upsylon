@@ -1,4 +1,4 @@
-#include "y/spade/dispatcher.hpp"
+#include "y/spade/network/dispatcher.hpp"
 
 namespace upsylon {
  

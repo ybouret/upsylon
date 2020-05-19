@@ -29,7 +29,8 @@ namespace upsylon {
             return ran.range<Coord1D>(a,b);
         }
 
-        
+
+
         static inline void disp1(std::ostream &os, const Coord1D c,const size_t w)
         {
             const string s = vformat("%ld", static_cast<long>(c));
@@ -52,6 +53,29 @@ namespace upsylon {
             os << ']';
             return os;
         }
+
+        static inline string coord1(const Coord1D c)
+        {
+            string s = vformat("%ld", static_cast<long>(c));
+            for(size_t i=s.size();i<=Coord::DispWidth;++i) s << ' ';
+            return s;
+        }
+
+        string Coord:: ToString( const Coord1D C)
+        {
+            return coord1(C);
+        }
+
+        string Coord:: ToString(const Coord2D C)
+        {
+            return '[' + coord1(C.x) + ' ' + coord1(C.y) + ']' + '\'';
+        }
+
+        string Coord:: ToString(const Coord3D C)
+        {
+            return '[' + coord1(C.x) + ' ' + coord1(C.y) + ' ' + coord1(C.z) + ']' + '\'';
+        }
+
 
         void Coord::Parse(Coord1D       *c,
                           const unsigned dim,

@@ -15,10 +15,10 @@ namespace {
                 const size_t cores)
     {
         static const unsigned                      Dimensions = Coord::Get<COORD>::Dimensions;
-        typedef typename Topology<COORD>::Boolean  Boolean;
+        //typedef typename Topology<COORD>::Boolean  Boolean;
         const COORD   upper = Coord::Parse<COORD>(layout);
         const COORD   lower = Coord::Ones<COORD>();
-        const Boolean pbcs = Coord::ToBool(Coord::Parse<COORD>(boundaries));
+        const COORD   pbcs  = Coord::Parse<COORD>(boundaries);
         const Layout<COORD> full(lower,upper);
         std::cerr << std::endl;
         std::cerr << "-------- In " << Dimensions << "D --------" << std::endl;
