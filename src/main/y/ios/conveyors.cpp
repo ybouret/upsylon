@@ -64,7 +64,6 @@ namespace upsylon {
             {
                 const type_spec &ts = type_spec::declare(t);
                 throw exception("ios::conveyors(multiple type <%s>", *ts.name());
-                
             }
             return *c;
         }
@@ -87,7 +86,17 @@ namespace upsylon {
                 return NULL;
             }
         }
-        
+
+        const conveyor & conveyors:: get(const std::type_info &tid, const comms::topology topo ) const
+        {
+            const conveyor *pc = search(tid,topo);
+            if(!pc)
+            {
+                throw_missing_conveyor(tid);
+            }
+            return *pc;
+        }
+
         
         const vizible & conveyors:: root() const throw()
         {

@@ -37,8 +37,10 @@ namespace {
                 usrtext = Coord::ToString(loop.value);
                 MPI.Printf0(stderr, "      |_pbcs : %s\n",*usrtext);
                 const Fragment<COORD> fragment(full,localRanks,topology,loop.value,ghosts);
-                usrtext = fragment.inner.toString();
-                MPI.Printf(stderr," inner: %s\n", *usrtext );
+                const string istr = fragment.inner.toString();
+                const string ostr = fragment.outer.toString();
+                MPI.Printf(stderr," inner: %s | outer: %s\n", *istr, *ostr );
+                
             };
 
         }

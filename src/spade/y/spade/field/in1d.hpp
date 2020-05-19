@@ -140,7 +140,7 @@ namespace upsylon {
                 }
             }
             
-            inline virtual const void *getObjectAt(const Coord1D *c) const throw()
+            inline virtual const void *getObjectByCoord(const Coord1D *c) const throw()
             {
                 assert(c);
                 const_coord C = c[0];

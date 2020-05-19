@@ -82,20 +82,17 @@ namespace upsylon {
                 }
                 
             }
-            
+
+            const conveyor & get(const std::type_info &tid,
+                                 const comms::topology topo ) const;
+
             //! get a previously created conveyor
             template <typename T>
             const conveyor & get(const comms::topology topo) const
             {
                 // prepare typeid
                 typedef typename type_traits<T>::mutable_type type;
-                static  const std::type_info &tid = typeid(type);
-                const conveyor *pc = search(tid,topo);
-                if(!pc)
-                {
-                    throw_missing_conveyor(tid);
-                }
-                return *pc;
+                return get( typeid(type), topo);
             }
             
             //! get the internal root node, for graphviz

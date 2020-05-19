@@ -79,6 +79,17 @@ allocated(0)
             {
                 return metrics().items;
             }
+
+
+            const void * Field:: objectAt(const size_t indx) const throw()
+            {
+                return getObjectAt(indx);
+            }
+
+            void * Field:: objectAt(const size_t indx) throw()
+            {
+                return (void*) getObjectAt(indx);
+            }
         }
     
     }

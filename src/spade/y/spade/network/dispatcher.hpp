@@ -4,6 +4,7 @@
 #define Y_SPADE_DISPATCHER_INCLUDED 1
 
 #include "y/spade/layout/fragment.hpp"
+#include "y/spade/field.hpp"
 #include "y/ios/conveyors.hpp"
 #include "y/ios/ovstream.hpp"
 
@@ -51,19 +52,17 @@ namespace upsylon {
             
             void asyncInitialize(Block &block) throw();
             
-            template <typename FIELD>
-            void asyncSave(Block       &block,
-                           const FIELD &field,
-                           const Ghost &ghost) const
+            void asyncSave(Block               &block,
+                           const Kernel::Field &field,
+                           const Ghost         &ghost) const
             {
-                static const ios::conveyor &io = IO.query< typename FIELD::mutable_type >(topology); assert(io.topo==topology);
-                size_t                      n  = ghost.items; assert(ghost.items==ghost.size());
+                const ios::conveyor &io = IO.get(field.objectType.info,topology); assert(io.topo==topology);
+                size_t               n  = ghost.items; assert(ghost.items==ghost.size());
 
                 updateDelivery(io);
                 while(n>0)
                 {
-                    typename FIELD::const_type &data = field( ghost[n] );
-                    io.save(block, &data);
+                    io.save(block, field.objectAt( ghost[n] ) );
                     --n;
                 }
             }
