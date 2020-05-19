@@ -57,7 +57,7 @@ namespace upsylon {
                            const Ghost &ghost) const
             {
                 static const ios::conveyor &io = IO.query< typename FIELD::mutable_type >(topology); assert(io.topo==topology);
-                size_t                      n = ghost.items; assert(ghost.items==ghost.size());
+                size_t                      n  = ghost.items; assert(ghost.items==ghost.size());
 
                 updateDelivery(io);
                 while(n>0)

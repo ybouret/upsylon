@@ -15,9 +15,20 @@ SET( field_srcs ${field_decl} ${field_impl} )
 INSTALL( FILES ${field_decl} DESTINATION include/y/spade/field )
 SOURCE_GROUP(spade/field FILES ${field_srcs} )
 
+FILE( GLOB layout_decl y/spade/layout/*.hpp)
+FILE( GLOB layout_impl y/spade/layout/*.cpp)
+SET( layout_srcs ${layout_decl} ${layout_impl} )
+
+INSTALL( FILES ${layout_decl} DESTINATION include/y/spade/layout )
+SOURCE_GROUP(spade/layout FILES ${layout_srcs} )
+
 INCLUDE_DIRECTORIES(. ../main)
 
-ADD_LIBRARY( y-spade STATIC ${srcs} ${field_srcs}  )
+ADD_LIBRARY( y-spade STATIC 
+${srcs} 
+${field_srcs}
+${layout_srcs}
+)
 INSTALL( TARGETS y-spade ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)

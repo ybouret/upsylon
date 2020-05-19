@@ -3,7 +3,7 @@
 #ifndef Y_SPADE_LAYOUT_INCLUDED
 #define Y_SPADE_LAYOUT_INCLUDED 1
 
-#include "y/spade/layout-metrics.hpp"
+#include "y/spade/layout/metrics.hpp"
 #include "y/counting/mloop.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"

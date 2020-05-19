@@ -1,4 +1,4 @@
-#include "y/spade/layout-metrics.hpp"
+#include "y/spade/layout/metrics.hpp"
 #include "y/type/block/zset.hpp"
 
 namespace upsylon {

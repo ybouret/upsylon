@@ -3,7 +3,7 @@
 #ifndef Y_SPADE_FIELD_INCLUDED
 #define Y_SPADE_FIELD_INCLUDED 1
 
-#include "y/spade/layout-metrics.hpp"
+#include "y/spade/layout/metrics.hpp"
 #include "y/string.hpp"
 #include "y/type/spec.hpp"
 #include "y/container/const-field.hpp"
