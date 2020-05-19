@@ -5,6 +5,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
 #include "y/spade/field/ops.hpp"
+#include "y/ios/imstream.hpp"
 
 using namespace upsylon;
 using namespace Spade;
@@ -86,7 +87,6 @@ namespace {
                     fields << &sF;
                     
                     const Fragment<COORD> &L  = partition[rank];
-                    std::cerr << "\t\tautoExchange" << std::endl;
                     dispatch.localSwap(iF,L);
                     dispatch.localSwap(sF,L);
                     dispatch.localSwap(fields,L);
@@ -96,8 +96,44 @@ namespace {
                     
                     for(size_t i=0;i<L.numAsyncTwoWays;++i)
                     {
-                        dispatch.asyncInitialize(block);
-                        const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                        {
+                            dispatch.asyncInitialize(block);
+                            const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                            dispatch.asyncSave(block,iF,xch.forward->innerGhost);
+                            dispatch.asyncSave(block,iF,xch.reverse->innerGhost);
+                            {
+                                ios::imstream source(block);
+                                dispatch.asyncLoad(iF,source,xch.reverse->outerGhost);
+                                dispatch.asyncLoad(iF,source,xch.forward->outerGhost);
+                            }
+                            
+                        }
+                        
+                        
+                        
+                        {
+                            dispatch.asyncInitialize(block);
+                            const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                            dispatch.asyncSave(block,sF,xch.forward->innerGhost);
+                            dispatch.asyncSave(block,sF,xch.reverse->innerGhost);
+                            {
+                                ios::imstream source(block);
+                                dispatch.asyncLoad(sF,source,xch.reverse->outerGhost);
+                                dispatch.asyncLoad(sF,source,xch.forward->outerGhost);
+                            }
+                        }
+                        
+                        {
+                            dispatch.asyncInitialize(block);
+                            const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                            dispatch.asyncSave(block, fields, xch.forward->innerGhost );
+                            dispatch.asyncSave(block, fields, xch.reverse->innerGhost );
+                            {
+                                ios::imstream source(block);
+                                dispatch.asyncLoad(fields,source,xch.reverse->outerGhost);
+                                dispatch.asyncLoad(fields,source,xch.forward->outerGhost);
+                            }
+                        }
                         
                     }
                 }

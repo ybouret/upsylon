@@ -76,7 +76,15 @@ namespace upsylon {
                            const Kernel::Field &field,
                            const Ghost         &ghost) const;
             
+            void asyncSave(Block               &block,
+                           Fields              &fields,
+                           const Ghost         &ghost) const;
+            
             void asyncLoad(Kernel::Field &field,
+                           ios::istream  &source,
+                           const Ghost   &ghost) const;
+            
+            void asyncLoad(Fields        &fields,
                            ios::istream  &source,
                            const Ghost   &ghost) const;
             
@@ -86,6 +94,8 @@ namespace upsylon {
             {
                 return IO.query<T>(topology);
             }
+            
+            comms::delivery commsDelivery() const throw() { return delivery; }
             
         protected:
             const comms::delivery delivery;

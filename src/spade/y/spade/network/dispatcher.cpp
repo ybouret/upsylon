@@ -55,6 +55,38 @@ namespace upsylon {
                 --n;
             }
         }
+        
+        void Dispatcher:: asyncSave(Block         &block,
+                                    Fields        &fields,
+                                    const Ghost   &ghost) const
+        {
+            const size_t f = fields.size();
+          
+            {
+                size_t j = f;
+                while(j>0)
+                {
+                    assert( fields[j]->io );
+                    updateDelivery( *(fields[j]->io) );
+                    --j;
+                }
+            }
+            
+            size_t       n = ghost.items;
+            while(n>0)
+            {
+                const size_t i = ghost[n];
+                size_t       j = f;
+                while(j>0)
+                {
+                    const Kernel::Field &field = *fields[j]; assert(field.io);
+                    const ios::conveyor &io    = *field.io;
+                    io.save(block,field.objectAt(i));
+                    --j;
+                }
+                --n;
+            }
+        }
 
         void Dispatcher:: asyncLoad(Kernel::Field &field,
                                     ios::istream  &source,
@@ -69,6 +101,28 @@ namespace upsylon {
                 --n;
             }
         }
+        
+        void Dispatcher:: asyncLoad(Fields        &fields,
+                                    ios::istream  &source,
+                                    const Ghost   &ghost) const
+        {
+            const size_t f = fields.size();
+            size_t       n  = ghost.items;
+            while(n>0)
+            {
+                const size_t i = ghost[n];
+                size_t       j = f;
+                while(j>0)
+                {
+                    Kernel::Field       &field = *fields[j]; assert(field.io);
+                    const ios::conveyor &io    = *field.io;
+                    io.load(field.objectAt(i),source);
+                    --j;
+                }
+                --n;
+            }
+        }
+        
         
         void Dispatcher:: localSwap(Kernel::Field &field,
                                     const Indices &innerFwd,
