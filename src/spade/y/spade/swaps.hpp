@@ -20,7 +20,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             template <typename COORD>
-            class Swap : public Object, public Ghosts
+            class Swaps : public Object, public Ghosts
             {
             public:
                 //--------------------------------------------------------------
@@ -28,8 +28,8 @@ namespace upsylon {
                 // types and definition
                 //
                 //--------------------------------------------------------------
-                typedef Layout<COORD> LayoutType; //!< alias
-                typedef arc_ptr<Swap> HandleType; //!< alia
+                typedef Layout<COORD>  LayoutType; //!< alias
+                typedef arc_ptr<Swaps> HandleType; //!< alia
                 
                 //--------------------------------------------------------------
                 //
@@ -38,15 +38,15 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 
                 //! cleanup
-                inline virtual ~Swap() throw()
+                inline virtual ~Swaps() throw()
                 {
                 }
                 
                 //! setup from computed layouts and given peer
-                explicit Swap(const LayoutType &sendLayout,
-                              const LayoutType &recvLayout,
-                              const LayoutType &fullLayout,
-                              const size_t      peerRank) :
+                explicit Swaps(const LayoutType &sendLayout,
+                               const LayoutType &recvLayout,
+                               const LayoutType &fullLayout,
+                               const size_t      peerRank) :
                 Object(),
                 Ghosts(sendLayout,recvLayout,fullLayout,peerRank),
                 innerRange(sendLayout),
@@ -66,7 +66,7 @@ namespace upsylon {
                 const LayoutType outerRange; //!< for outerGhost/recv
                 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Swap);
+                Y_DISABLE_COPY_AND_ASSIGN(Swaps);
             };
             
         }
@@ -78,18 +78,18 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class AutoExchangeSwap
+        class AutoExchangeSwaps
         {
         public:
             //! alias
-            typedef typename Kernel::Swap<COORD>::HandleType Swap;
+            typedef typename Kernel::Swaps<COORD>::HandleType Swaps;
             
             //! cleanup
-            inline ~AutoExchangeSwap() throw() {}
+            inline ~AutoExchangeSwaps() throw() {}
             
             //! setup
-            inline  AutoExchangeSwap(const Swap &fwd,
-                                     const Swap &rev) throw() :
+            inline  AutoExchangeSwaps(const Swaps &fwd,
+                                      const Swaps &rev) throw() :
             forward(fwd),
             reverse(rev)
             {
@@ -98,11 +98,11 @@ namespace upsylon {
                 assert(forward->outerGhost.items==reverse->innerGhost.items);
             }
             
-            const Swap forward; //!< forward swap
-            const Swap reverse; //!< reverse swap
+            const Swaps forward; //!< forward swap
+            const Swaps reverse; //!< reverse swap
             
             //! display
-            friend inline std::ostream & operator<<( std::ostream &os, const AutoExchangeSwap &s)
+            friend inline std::ostream & operator<<( std::ostream &os, const AutoExchangeSwaps &s)
             {
                 os << "fwd.snd: " << s.forward->innerRange <<  " | rcv: " << s.reverse->outerRange << std::endl;
                 os << "rev.snd: " << s.reverse->innerRange <<  " | rcv: " << s.forward->innerRange;
@@ -110,7 +110,7 @@ namespace upsylon {
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(AutoExchangeSwap);
+            Y_DISABLE_COPY_AND_ASSIGN(AutoExchangeSwaps);
         };
         
         //----------------------------------------------------------------------
@@ -119,18 +119,18 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class AsyncTwoWaysSwap
+        class AsyncTwoWaysSwaps
         {
         public:
             //! alias
-            typedef typename Kernel::Swap<COORD>::HandleType Swap;
+            typedef typename Kernel::Swaps<COORD>::HandleType Swaps;
             
             //! cleanup
-            inline ~AsyncTwoWaysSwap() throw() {}
+            inline ~AsyncTwoWaysSwaps() throw() {}
             
             //! setup
-            inline  AsyncTwoWaysSwap(const Swap &fwd,
-                                     const Swap &rev) throw() :
+            inline  AsyncTwoWaysSwaps(const Swaps &fwd,
+                                      const Swaps &rev) throw() :
             forward(fwd),
             reverse(rev)
             {
@@ -138,11 +138,11 @@ namespace upsylon {
                 assert(forward->outerGhost.items==reverse->innerGhost.items);
             }
             
-            const Swap forward; //!< forward swap
-            const Swap reverse; //!< reverse swap
+            const Swaps forward; //!< forward swap
+            const Swaps reverse; //!< reverse swap
             
             //! display
-            friend inline std::ostream & operator<<( std::ostream &os, const AsyncTwoWaysSwap &s)
+            friend inline std::ostream & operator<<( std::ostream &os, const AsyncTwoWaysSwaps &s)
             {
                 os << "fwd.snd: " << s.forward->innerRange <<  " | rcv: " << s.reverse->outerRange << std::endl;
                 os << "rev.snd: " << s.reverse->innerRange <<  " | rcv: " << s.forward->innerRange;
@@ -150,7 +150,7 @@ namespace upsylon {
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(AsyncTwoWaysSwap);
+            Y_DISABLE_COPY_AND_ASSIGN(AsyncTwoWaysSwaps);
         };
         
         //----------------------------------------------------------------------
@@ -159,32 +159,32 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class AsyncForwardSwap
+        class AsyncForwardSwaps
         {
         public:
             //! alias
-            typedef typename Kernel::Swap<COORD>::HandleType Swap;
+            typedef typename Kernel::Swaps<COORD>::HandleType Swaps;
             
             //! cleanup
-            inline ~AsyncForwardSwap() throw() {}
+            inline ~AsyncForwardSwaps() throw() {}
             
             //! setup
-            inline  AsyncForwardSwap(const Swap &fwd) throw() :
+            inline  AsyncForwardSwaps(const Swaps &fwd) throw() :
             forward(fwd)
             {
             }
-             
-            const Swap forward; //!< forward only
+
+            const Swaps forward; //!< forward only
             
             //! display
-            friend inline std::ostream & operator<<( std::ostream &os, const AsyncForwardSwap &s)
+            friend inline std::ostream & operator<<( std::ostream &os, const AsyncForwardSwaps &s)
             {
                 os << "fwd.snd: " << s.forward->innerRange <<  " | rcv: " << s.forward->outerRange << std::endl;
                 return os;
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(AsyncForwardSwap);
+            Y_DISABLE_COPY_AND_ASSIGN(AsyncForwardSwaps);
             
         };
         
@@ -194,32 +194,32 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class AsyncReverseSwap
+        class AsyncReverseSwaps
         {
         public:
             //! alias
-            typedef typename Kernel::Swap<COORD>::HandleType Swap;
+            typedef typename Kernel::Swaps<COORD>::HandleType Swaps;
             
             //! cleanup
-            inline ~AsyncReverseSwap() throw() {}
+            inline ~AsyncReverseSwaps() throw() {}
             
             //! setup
-            inline  AsyncReverseSwap(const Swap &rev) throw() :
+            inline  AsyncReverseSwaps(const Swaps &rev) throw() :
             reverse(rev)
             {
             }
             
-            const Swap reverse; //!< reverse only
+            const Swaps reverse; //!< reverse only
             
             //! display
-            friend inline std::ostream & operator<<( std::ostream &os, const AsyncReverseSwap &s)
+            friend inline std::ostream & operator<<( std::ostream &os, const AsyncReverseSwaps &s)
             {
                 os << "rev.snd: " << s.reverse->innerRange <<  " | rcv: " << s.reverse->outerRange;
                 return os;
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(AsyncReverseSwap);
+            Y_DISABLE_COPY_AND_ASSIGN(AsyncReverseSwaps);
         };
         
         

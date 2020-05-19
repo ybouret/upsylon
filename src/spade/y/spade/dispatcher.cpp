@@ -21,6 +21,14 @@ namespace upsylon {
             aliasing::_(delivery) = comms::computed_block_size;
         }
 
+        void Dispatcher:: updateDelivery(const ios::conveyor &io) const throw()
+        {
+            switch(io.mode)
+            {
+                case comms::flexible_block_size: aliasing::_(delivery) = comms::flexible_block_size; break;
+                case comms::computed_block_size: break;
+            }
+        }
         
     }
     

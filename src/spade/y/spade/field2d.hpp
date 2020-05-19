@@ -11,7 +11,10 @@ namespace upsylon {
         
         //! forward declaration
         template <typename T> class Field3D;
-        
+
+        //! common constructor part
+#define Y_FIELD2D_CTOR()  rowLayout(lower.x,upper.x), row(0), built(0)
+
         //----------------------------------------------------------------------
         //
         //! 2D fields
@@ -47,10 +50,7 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit Field2D(const LABEL      &id,
                              const LayoutType &L) :
-            Field<T>(id),
-            LayoutType(L),
-            rowLayout(lower.x,upper.x),
-            row(0), built(0)
+            Field<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
             {
                 create();
             }
@@ -60,10 +60,7 @@ namespace upsylon {
             explicit Field2D(const LABEL      &id,
                              const_coord       lo,
                              const_coord       hi) :
-            Field<T>(id),
-            LayoutType(lo,hi),
-            rowLayout(lower.x,upper.x),
-            row(0), built(0)
+            Field<T>(id), LayoutType(lo,hi), Y_FIELD2D_CTOR()
             {
                 create();
             }
@@ -117,7 +114,6 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            
             const RowLayout rowLayout; //!< shared layout for all rows
             
         private:
@@ -126,7 +122,8 @@ namespace upsylon {
             Row          *row;
             size_t        built;
             
-            
+
+        private:
             inline void clear() throw()
             {
                 assert(row);
@@ -182,11 +179,7 @@ namespace upsylon {
                              const LayoutType &L,
                              void             *rowAddr,
                              void             *objAddr) :
-            Field<T>(id),
-            LayoutType(L),
-            rowLayout(lower.x,upper.x),
-            row(0),
-            built(0)
+            Field<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
             {
                 build(rowAddr,objAddr);
             }

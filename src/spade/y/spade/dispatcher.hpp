@@ -28,7 +28,7 @@ namespace upsylon {
                 size_t n = L.autoExchange.size();
                 while(n-- > 0 )
                 {
-                    const AutoExchangeSwap<typename FIELD::coord> &xch = L.autoExchange[n];
+                    const AutoExchangeSwaps<typename FIELD::coord> &xch = L.autoExchange[n];
                     assert(F.contains(xch.forward->innerRange));
                     assert(F.contains(xch.forward->outerRange));
                     assert(F.contains(xch.reverse->outerRange));
@@ -47,8 +47,7 @@ namespace upsylon {
             
             
             const comms::topology topology;
-            const comms::delivery delivery;
-            ios::conveyors       &IO;
+
             
             void asyncInitialize(Block &block) throw();
             
@@ -57,21 +56,27 @@ namespace upsylon {
                            const FIELD &field,
                            const Ghost &ghost) const
             {
-                static const ios::conveyor &io = IO.query< typename FIELD::mutable_type >(topology);
-                assert(io.topo==topology);
-                size_t n = ghost.items; assert(ghost.items==ghost.size());
+                static const ios::conveyor &io = IO.query< typename FIELD::mutable_type >(topology); assert(io.topo==topology);
+                size_t                      n = ghost.items; assert(ghost.items==ghost.size());
+
+                updateDelivery(io);
                 while(n>0)
                 {
                     typename FIELD::const_type &data = field( ghost[n] );
                     io.save(block, &data);
                     --n;
                 }
-                
             }
+
             
+
+        protected:
+            const comms::delivery delivery;
+            ios::conveyors       &IO;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dispatcher);
+            void updateDelivery(const ios::conveyor &) const throw();
         };
         
         

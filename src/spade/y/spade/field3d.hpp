@@ -4,7 +4,6 @@
 #define Y_SPADE_FIELD3D_INCLUDED 1
 
 #include "y/spade/field2d.hpp"
-#include "y/spade/layout.hpp"
 
 namespace upsylon {
     
@@ -41,7 +40,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! cleanup
-            inline virtual ~Field3D() throw() { slices += lower.z; clear(); }
+            inline virtual ~Field3D() throw() { slice += lower.z; clear(); }
             
             
             //! setup with internal memory
@@ -52,7 +51,7 @@ namespace upsylon {
             LayoutType(L),
             sliceLayout(lower.xy(),upper.xy()),
             rowLayout(lower.x,lower.y),
-            slices(0),
+            slice(0),
             built(0)
             {
                 const size_t nslice       = size_t(width.z);   // number of slices
@@ -65,7 +64,7 @@ namespace upsylon {
                 const size_t objOffset    = memory::align(rowOffset+rowLength);
                 const size_t objLength    = items * sizeof(T);
                 char         *p           = static_cast<char *>( this->allocate( memory::align(objOffset+objLength) ) );
-                slices                    = (Slice        *) &p[sliceOffset];
+                slice                     = (Slice        *) &p[sliceOffset];
                 Row          *rows        = (Row          *) &p[rowOffset];
                 mutable_type *objs        = (mutable_type *) &p[objOffset];
                 this->addr = objs;
@@ -74,7 +73,7 @@ namespace upsylon {
                     while(built<nslice)
                     {
                         const string sid = this->name + Kernel::Field::Suffix(indx);
-                        new (slices+built) Slice(sid,sliceLayout,rows,objs);
+                        new (slice+built) Slice(sid,sliceLayout,rows,objs);
                         rows += rps;
                         objs += ops;
                         ++built;
@@ -85,7 +84,7 @@ namespace upsylon {
                     clear();
                     throw;
                 }
-                slices -= lower.z;
+                slice -= lower.z;
             }
             
             //------------------------------------------------------------------
@@ -107,14 +106,14 @@ namespace upsylon {
             Slice & operator[](const Coord1D k) throw()
             {
                 assert(k>=lower.z); assert(k<=upper.z);
-                return slices[k];
+                return slice[k];
             }
             
             //! slice access, const
             const Slice & operator[](const Coord1D k) const throw()
             {
                 assert(k>=lower.z); assert(k<=upper.z);
-                return slices[k];
+                return slice[k];
             }
             
             //! type access
@@ -142,14 +141,14 @@ namespace upsylon {
             const RowLayout   rowLayout;   //!< layout of a row
             
         private:
-            Slice        *slices;
+            Slice        *slice;
             size_t        built;
             
             inline void clear() throw()
             {
                 while(built>0)
                 {
-                    self_destruct(slices[--built]);
+                    self_destruct(slice[--built]);
                 }
             }
             
@@ -159,7 +158,7 @@ namespace upsylon {
                 assert(c);
                 const_coord C(c[0],c[1],c[2]);
                 assert(this->has(C));
-                return &slices[C.z][C.y][C.x];
+                return &slice[C.z][C.y][C.x];
             }
         };
      

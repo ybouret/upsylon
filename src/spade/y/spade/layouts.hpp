@@ -53,12 +53,12 @@ namespace upsylon {
             typedef typename      Topology<COORD>::Link      Link;                      //!< alias
             typedef typename      Topology<COORD>::Links     Links;                     //!< alias
             typedef typename      Topology<COORD>::Boolean   Boolean;                   //!< alias
-            typedef typename      Kernel::Swap<COORD>        Swap;                      //!< alias
-            typedef typename      Swap::HandleType           SwapHandle;                //!< alias
-            typedef               AutoExchangeSwap<COORD>    AutoExchangeType;          //!< alias
-            typedef               AsyncTwoWaysSwap<COORD>    AsyncTwoWaysType;          //!< alias
-            typedef               AsyncForwardSwap<COORD>    AsyncForwardType;          //!< alias
-            typedef               AsyncReverseSwap<COORD>    AsyncReverseType;          //!< alias
+            typedef typename      Kernel::Swaps<COORD>       Swaps;                     //!< alias
+            typedef typename      Swaps::HandleType          HSwaps;                    //!< alias
+            typedef               AutoExchangeSwaps<COORD>   AutoExchangeType;          //!< alias
+            typedef               AsyncTwoWaysSwaps<COORD>   AsyncTwoWaysType;          //!< alias
+            typedef               AsyncForwardSwaps<COORD>   AsyncForwardType;          //!< alias
+            typedef               AsyncReverseSwaps<COORD>   AsyncReverseType;          //!< alias
 
             //------------------------------------------------------------------
             //
@@ -244,27 +244,27 @@ namespace upsylon {
                             break;
                             
                         case Connect:: AutoExchange: {
-                            const SwapHandle fwd = createSwap(forward, ng, level);
-                            const SwapHandle rev = createSwap(reverse, ng, level);
-                            aliasing::_(autoExchange).template build<const SwapHandle&, const SwapHandle&>(fwd,rev);
+                            const HSwaps fwd = createSwaps(forward, ng, level);
+                            const HSwaps rev = createSwaps(reverse, ng, level);
+                            aliasing::_(autoExchange).template build<const HSwaps&, const HSwaps&>(fwd,rev);
                         } break;
                             
                         case Connect:: AsyncTwoWays:{
-                            const SwapHandle fwd = createSwap(forward, ng, level);
-                            const SwapHandle rev = createSwap(reverse, ng, level);
-                            aliasing::_(asyncTwoWays).template build<const SwapHandle&, const SwapHandle&>(fwd,rev);
+                            const HSwaps fwd = createSwaps(forward, ng, level);
+                            const HSwaps rev = createSwaps(reverse, ng, level);
+                            aliasing::_(asyncTwoWays).template build<const HSwaps&, const HSwaps&>(fwd,rev);
                             aliasing::_(commScore) += (fwd->innerGhost.items << 1);
                         } break;
                             
                         case Connect:: AsyncForward: {
-                            const SwapHandle fwd = createSwap(forward, ng, level);
-                             aliasing::_(asyncForward).template build<const SwapHandle&>(fwd);
+                            const HSwaps fwd = createSwaps(forward, ng, level);
+                             aliasing::_(asyncForward).template build<const HSwaps&>(fwd);
                             aliasing::_(commScore) += (fwd->innerGhost.items);
                         } break;
                             
                         case Connect:: AsyncReverse: {
-                            const SwapHandle rev = createSwap(reverse, ng, level);
-                            aliasing::_(asyncReverse).template build<const SwapHandle&>(rev);
+                            const HSwaps rev = createSwaps(reverse, ng, level);
+                            aliasing::_(asyncReverse).template build<const HSwaps&>(rev);
                             aliasing::_(commScore) += (rev->innerGhost.items << 1);
                         } break;
                             
@@ -280,9 +280,9 @@ namespace upsylon {
             }
             
             inline
-            Swap *createSwap(const Link    &link,
-                             const Coord1D  ng,
-                             const unsigned level) const
+            Swaps *createSwaps(const Link    &link,
+                               const Coord1D  ng,
+                               const unsigned level) const
             {
                 assert(ng>0);
                 const Coord1D shift = ng-1;
@@ -328,7 +328,7 @@ namespace upsylon {
                 if(!outer.contains(outerRange)) Kernel::Layouts::TooManyGhosts(ng,level,Kernel::Layouts::OuterGhost);
 
                 
-                return new Swap(innerRange,outerRange,outer,link.rank);
+                return new Swaps(innerRange,outerRange,outer,link.rank);
             }
         };
     }
