@@ -337,8 +337,7 @@ namespace upsylon {
                 //! setup
                 inline Hub(const_coord     localRanks,
                            const Topology &topology) throw() :
-                ranks(localRanks),
-                rank( topology.getGlobalRank(ranks) )
+                ranks(localRanks), rank( topology.getGlobalRank(ranks) )
                 {
                 }
                 
@@ -349,8 +348,7 @@ namespace upsylon {
                 
                 //! copy
                 inline Hub(const Hub &hub) throw() :
-                ranks(hub.ranks),
-                rank(hub.rank)
+                ranks(hub.ranks), rank(hub.rank)
                 {
                 }
                 

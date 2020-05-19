@@ -16,7 +16,7 @@ namespace {
     {
         
         typedef typename FieldFor<COORD>::template Of<int>::Type iField;
-        typedef typename iField::Handle iFieldHandle;
+        typedef typename iField::Handle                          iFieldHandle;
         
         
         const COORD   lower = Coord::Ones<COORD>();
@@ -48,7 +48,7 @@ namespace {
                 for(size_t rank=0;rank<size;++rank)
                 {
                     const string name = vformat("iField#%u",unsigned(rank));
-                    iFieldHandle F    = new iField(name,partition.parts[rank].outer);
+                    iFieldHandle F    = new iField(name,partition[rank].outer);
                     iFields.push(F);
                     Ops::Ld(*F,*F,int(rank));
                 }
@@ -57,7 +57,7 @@ namespace {
                 for(size_t rank=0;rank<size;++rank)
                 {
                     iField               &iF = *iFields[rank];
-                    const Layouts<COORD> &L  = partition.parts[rank];
+                    const Layouts<COORD> &L  = partition[rank];
                     std::cerr << "\t\tautoExchange" << std::endl;
                     dispatch.autoExchange(iF,L);
                     

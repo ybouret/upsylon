@@ -57,7 +57,13 @@ namespace upsylon {
                     aliasing::_(minItems) = min_of(minItems,parts[rank].inner.items);
                 }
             }
-            
+
+            inline const LayoutsType & operator[](const size_t rank) const throw()
+            {
+                assert(rank<this->size);
+                return parts[rank];
+            }
+
             const slots<LayoutsType> parts;
             const size_t             minItems;
             const size_t             maxItems;
