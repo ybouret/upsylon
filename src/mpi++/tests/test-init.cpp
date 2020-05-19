@@ -6,6 +6,18 @@ using namespace upsylon;
 
 #define ITEMS 1000
 
+namespace {
+    
+    static inline
+    void DoSomethingWith( const mpi &MPI )
+    {
+        fflush(stderr);
+        std::cerr << "doing something sequential @" << MPI.nodeName << std::endl;
+        
+    }
+    
+}
+
 Y_UTEST(init)
 {
     Y_MPI(SINGLE);
@@ -70,10 +82,17 @@ Y_UTEST(init)
     {
         
     }
+  
+    
     MPI.Printf(stderr,"ThreadLevel=%s\n",MPI.threadLevelText());
     MPI.Printf(stderr, "send: %lu | recv: %lu\n",
                (unsigned long)MPI.commSend.data.full,
                (unsigned long)MPI.commRecv.data.full);
+    
+    
+    MPI.sequential(DoSomethingWith);
+    fflush(stderr);
+    Y_MPI_SEQUENTIAL( std::cerr << "Now Sequential @" << MPI.nodeName  << std::endl );
     
 }
 Y_UTEST_DONE()

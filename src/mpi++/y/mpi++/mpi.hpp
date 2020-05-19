@@ -512,8 +512,19 @@ namespace upsylon
         //! print with node name
         void Printf(FILE  *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
         
-        void sequential( void (*proc)(void *), void *args ) const;
+        typedef void (*sequentialProc)(const mpi &, void *);
+        void sequential(sequentialProc proc, void *args ) const;
         
+        template <typename FUNC> inline
+        void sequential( FUNC &code ) const
+        {
+            sequential( callSequential<FUNC>, (void *) &code );
+        }
+        
+        void recvACK(const int) const; //!< recv ACK from another
+        void recvSYN()          const; //!< from rank=0
+        void sendACK()          const; //!< to rank=0
+        void sendSYN(const int) const; //!< sedn SYN to another
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mpi);
@@ -522,10 +533,17 @@ namespace upsylon
         friend class singleton<mpi>;
         void finalize() throw(); //!< MPI_Finalize()
         void build_data_types(); //!< build the database of primary types
-        
+      
         
         suffix_tree<data_type> types; //!< persistent database of types+sizes
         
+        template <typename FUNC> static inline
+        void callSequential(const mpi &self, void *args)
+        {
+            assert(args);
+            FUNC &code = *(FUNC *)args;
+            code(self);
+        }
         
     public:
         //______________________________________________________________________
@@ -564,7 +582,10 @@ namespace upsylon
     //! specialized string Bcast
     template <> void mpi::Bcast<string>(string &str, const int root) const;
     
-    
+#define Y_MPI_SEQUENTIAL(CODE) do {\
+if(MPI.head) { do {CODE;} while(false); for(int r=1;r<MPI.size;++r) { MPI.sendSYN(r); MPI.recvACK(r); } }\
+else         { MPI.recvSYN(); do { CODE; } while(false); MPI.sendACK(); } } while(false)
+
 }
 
 #endif
