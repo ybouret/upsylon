@@ -3,7 +3,7 @@
 #ifndef Y_SPADE_FIELD3D_INCLUDED
 #define Y_SPADE_FIELD3D_INCLUDED 1
 
-#include "y/spade/field2d.hpp"
+#include "y/spade/field/in2d.hpp"
 
 namespace upsylon {
     
@@ -162,33 +162,7 @@ namespace upsylon {
             }
         };
      
-        
-        template <typename COORD> struct FieldFor;
-        
-        template <> struct FieldFor<Coord1D>
-        {
-            template <typename T> struct Of
-            {
-                typedef Field1D<T> Type;
-            };
-        };
-        
-        template <> struct FieldFor<Coord2D>
-        {
-            template <typename T> struct Of
-            {
-                typedef Field2D<T> Type;
-            };
-        };
-        
-        template <> struct FieldFor<Coord3D>
-        {
-            template <typename T> struct Of
-            {
-                typedef Field3D<T> Type;
-            };
-        };
-        
+      
         
         
     }

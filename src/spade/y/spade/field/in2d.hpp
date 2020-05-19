@@ -3,7 +3,7 @@
 #ifndef Y_SPADE_FIELD2D_INCLUDED
 #define Y_SPADE_FIELD2D_INCLUDED 1
 
-#include "y/spade/field1d.hpp"
+#include "y/spade/field/in1d.hpp"
 
 namespace upsylon {
     

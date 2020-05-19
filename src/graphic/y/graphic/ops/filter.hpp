@@ -4,7 +4,7 @@
 #define Y_GRAPHIC_OPS_FILTER_INCLUDED 1
 
 #include "y/graphic/pixmap.hpp"
-#include "y/spade/field2d.hpp"
+#include "y/spade/field/in2d.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/graphic/parallel/tiles.hpp"
 #include "y/ptr/intr.hpp"

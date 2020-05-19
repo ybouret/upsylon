@@ -1,6 +1,6 @@
 
 #include "y/spade/partition.hpp"
-#include "y/spade/field3d.hpp"
+#include "y/spade/fields.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/sequence/vector.hpp"
