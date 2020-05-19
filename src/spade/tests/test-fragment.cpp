@@ -69,11 +69,7 @@ Y_UTEST(fragment)
 
     Coord::DispWidth = 3;
     doTest<Coord1D>(layout,boundaries,cores);
-    //return 0;
-
     doTest<Coord2D>(layout,boundaries,cores);
-    //return 0;
-
     doTest<Coord3D>(layout,boundaries,cores);
 
 }

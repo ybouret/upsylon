@@ -36,7 +36,8 @@ namespace upsylon {
             };
         };
         
-
+        typedef arc_ptr<Kernel::Field>   FieldHandle;
+        typedef addressable<FieldHandle> Fields;
     }
 
 }

@@ -15,9 +15,15 @@ namespace {
     void doTest( const string &layout, const size_t ghosts, const size_t cores )
     {
         
-        typedef typename FieldFor<COORD>::template Of<int>::Type iField;
-        typedef typename iField::Handle                          iFieldHandle;
+        Dispatcher          dispatch(comms::homogeneous);
+        (void) dispatch.query<string>();
         
+        typedef typename FieldFor<COORD>::template Of<int>::Type    iField;
+        typedef typename iField::Handle                             iFieldHandle;
+        typedef typename FieldFor<COORD>::template Of<string>::Type sField;
+        typedef typename sField::Handle                             sFieldHandle;
+        
+    
         
         const COORD   lower = Coord::Ones<COORD>();
         const COORD   upper = Coord::Parse<COORD>(layout);
@@ -25,7 +31,6 @@ namespace {
         const Layout<COORD> fullLayout(lower,upper);
         vector<COORD>       mappings;
         fullLayout.findMappings(mappings,cores);
-        Dispatcher          dispatch(comms::homogeneous);
         
         std::cerr << "mappings=" << mappings << std::endl;
         for(size_t i=1;i<=mappings.size();++i)
@@ -43,24 +48,58 @@ namespace {
                                                     ng);
                 const size_t        size = partition.size;
                 slots<iFieldHandle> iFields(size);
+                slots<sFieldHandle> sFields(size);
+                
+                vector<FieldHandle> fields;
+                
                 
                 // filling
                 for(size_t rank=0;rank<size;++rank)
                 {
-                    const string name = vformat("iField#%u",unsigned(rank));
-                    iFieldHandle F    = new iField(name,partition[rank].outer);
-                    iFields.push(F);
-                    Ops::Ld(*F,*F,int(rank));
+                    fields.free();
+                    {
+                        const string name = vformat("iField#%u",unsigned(rank));
+                        iFieldHandle F    = new iField(name,partition[rank].outer);
+                        iFields.push(F);
+                        Ops::Ld(*F,*F,int(rank));
+                        dispatch.activate(*F);
+                        
+                    }
+                    
+                    {
+                        const string name = vformat("sField#%u",unsigned(rank));
+                        sFieldHandle F    = new sField(name,partition[rank].outer);
+                        sFields.push(F);
+                        dispatch.activate(*F);
+                        
+                    }
+                    
                 }
                 
                 // transfer
                 for(size_t rank=0;rank<size;++rank)
                 {
                     iField                &iF = *iFields[rank];
+                    sField                &sF = *sFields[rank];
+                    fields.free();
+                    fields << &iF;
+                    fields << &sF;
+                    
                     const Fragment<COORD> &L  = partition[rank];
                     std::cerr << "\t\tautoExchange" << std::endl;
-                    dispatch.autoExchange(iF,L);
+                    dispatch.localSwap(iF,L);
+                    dispatch.localSwap(sF,L);
+                    dispatch.localSwap(fields,L);
+
                     
+                    Dispatcher::Block block;
+                    
+                    for(size_t i=0;i<L.numAsyncTwoWays;++i)
+                    {
+                        dispatch.asyncInitialize(block);
+                        const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                        
+                    }
                 }
                 
                 

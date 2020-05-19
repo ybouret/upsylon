@@ -51,10 +51,10 @@ namespace upsylon {
 
         }
         
-        void  conveyors:: import()
+        void  conveyors:: import(const comms::topology topo)
         {
-            __ld(*this,comms::homogeneous);
-            __ld(*this,comms::distributed);
+            __ld(*this,topo);
+            //__ld(*this,comms::distributed);
             sort();
         }
         

@@ -4,11 +4,16 @@
 #define Y_SPADE_FIELD_INCLUDED 1
 
 #include "y/spade/layout/metrics.hpp"
-#include "y/string.hpp"
-#include "y/type/spec.hpp"
 #include "y/container/const-field.hpp"
+#include "y/string.hpp"
+#include <typeinfo>
 
 namespace upsylon {
+    
+    namespace ios
+    {
+        class conveyor;
+    }
     
     namespace Spade {
         
@@ -50,24 +55,24 @@ namespace upsylon {
                 // members
                 //
                 //--------------------------------------------------------------
-                const string     name;        //!< identifier
-                const type_spec &objectType;  //!< type_spec
-                const size_t     objectSize;  //!< bytes per object
-                
+                const string          name;        //!< identifier
+                const std::type_info &objectType;  //!< type_spec
+                const size_t          objectSize;  //!< bytes per object
+                const ios::conveyor  *io;          //!< optional I/O
 
                 const void *objectAt(const size_t indx) const throw();
                 void       *objectAt(const size_t indx)       throw();
 
             protected:
                 //! setup
-                explicit Field(const string    &id,
-                               const type_spec &ts,
-                               const size_t     bs);
+                explicit Field(const string         &id,
+                               const std::type_info &ts,
+                               const size_t          bs);
                 
                 //! setup
-                explicit Field(const char      *id,
-                               const type_spec &ts,
-                               const size_t     bs);
+                explicit Field(const char           *id,
+                               const std::type_info &ts,
+                               const size_t          bs);
                  
                 void  *workspace; //!< private bytes
                 size_t allocated; //!< private bytes
@@ -81,6 +86,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Field);
             };
         }
+        
         
         //----------------------------------------------------------------------
         //
@@ -134,7 +140,7 @@ namespace upsylon {
             //! setup
             template <typename LABEL>
             inline explicit Field(const LABEL &id) :
-            Kernel::Field(id,type_spec_of<T>(),sizeof(T)),
+            Kernel::Field(id,typeid(T),sizeof(T)),
             addr(0)
             {
             }

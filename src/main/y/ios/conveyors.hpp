@@ -34,6 +34,11 @@ namespace upsylon {
             // methods
             //__________________________________________________________________
             
+            //! search for a previously inserted type
+            const conveyor * search(const std::type_info &,
+                                    const comms::topology)   const throw();
+            
+            
             //! query/create conveyor for primary types or serialzable types
             template <typename T>
             const conveyor & query(const comms::topology where)
@@ -98,7 +103,7 @@ namespace upsylon {
             //! get the internal root node, for graphviz
             const vizible & root() const throw();
             
-            void  import();        //!< import useful types
+            void  import(const comms::topology); //!< import integral/tuple types
             void  sort();          //!< sort by names
             void  display() const; //!< display
             
@@ -111,7 +116,6 @@ namespace upsylon {
             void throw_missing_conveyor(const std::type_info &) const;
 
             const conveyor & insert(const std::type_info &, const comms::topology, const convoy &);
-            const conveyor * search(const std::type_info &, const comms::topology)   const throw();
 
             template <typename T>
             const conveyor * create(const comms::topology &where,

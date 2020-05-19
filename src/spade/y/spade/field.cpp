@@ -32,21 +32,22 @@ Object(),       \
 name(id),       \
 objectType(ts), \
 objectSize(bs), \
+io(NULL),       \
 workspace(0),   \
 allocated(0)
         
             
-            Field:: Field(const string    &id,
-                          const type_spec &ts,
-                          const size_t     bs) :
+            Field:: Field(const string         &id,
+                          const std::type_info &ts,
+                          const size_t          bs) :
             Y_SPADE_FIELD_CTOR()
             {
                 assert(bs>0);
             }
             
-            Field:: Field(const char      *id,
-                          const type_spec &ts,
-                          const size_t     bs) :
+            Field:: Field(const char           *id,
+                          const std::type_info &ts,
+                          const size_t          bs) :
             Y_SPADE_FIELD_CTOR()
             {
                 assert(bs>0);

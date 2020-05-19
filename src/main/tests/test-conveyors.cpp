@@ -110,7 +110,9 @@ Y_UTEST(conveyors)
     IO.sort();
     IO.display();
     
-    IO.import();
+    IO.import(comms::homogeneous);
+    IO.import(comms::distributed);
+
     IO.display();
     //IO.root().graphViz("convey-all.dot");
     

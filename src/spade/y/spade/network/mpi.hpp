@@ -6,11 +6,19 @@
 #include "y/mpi++/xmpi.hpp"
 #include "y/spade/network/dispatcher.hpp"
 
-namespace uspylon {
+namespace upsylon {
 
     namespace Spade {
 
-        
+        class ParallelDispatcher : public Dispatcher
+        {
+        public:
+            explicit ParallelDispatcher(const comms::topology);
+            virtual ~ParallelDispatcher() throw();
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ParallelDispatcher);
+        };
 
     }
 

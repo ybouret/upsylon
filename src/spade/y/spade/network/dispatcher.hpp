@@ -4,7 +4,7 @@
 #define Y_SPADE_DISPATCHER_INCLUDED 1
 
 #include "y/spade/layout/fragment.hpp"
-#include "y/spade/field.hpp"
+#include "y/spade/fields.hpp"
 #include "y/ios/conveyors.hpp"
 #include "y/ios/ovstream.hpp"
 
@@ -16,33 +16,40 @@ namespace upsylon {
         class Dispatcher
         {
         public:
-            typedef ios::ovstream Block;
+            typedef ios::ovstream      Block;
+            typedef accessible<size_t> Indices;
             
             explicit Dispatcher(const comms::topology where);
             virtual ~Dispatcher() throw();
             
-            template <typename FIELD> inline
-            void autoExchange(FIELD                                 &F,
-                              const Fragment<typename FIELD::coord> &L) const
+            void     activate( Kernel::Field &F ) const;
+            
+            
+            template <typename COORD>
+            void localSwap(Kernel::Field         &field,
+                           const Fragment<COORD> &fragment) const
             {
-                assert(L.outer.isSameThan(F));
-                size_t n = L.autoExchange.size();
+                size_t n = fragment.autoExchange.size();
                 while(n-- > 0 )
                 {
-                    const AutoExchangeSwaps<typename FIELD::coord> &xch = L.autoExchange[n];
-                    assert(F.contains(xch.forward->innerRange));
-                    assert(F.contains(xch.forward->outerRange));
-                    assert(F.contains(xch.reverse->outerRange));
-                    assert(F.contains(xch.reverse->innerRange));
-                    const accessible<size_t> & innerFwd = xch.forward->innerGhost;
-                    const accessible<size_t> & outerFwd = xch.forward->outerGhost;
-                    const accessible<size_t> & innerRev = xch.reverse->innerGhost;
-                    const accessible<size_t> & outerRev = xch.reverse->outerGhost;
-                    for(size_t i=innerFwd.size();i>0;--i)
-                    {
-                        F(outerFwd[i]) = F(innerRev[i]);
-                        F(outerRev[i]) = F(innerFwd[i]);
-                    }
+                    const AutoExchangeSwaps<COORD> &xch = fragment.autoExchange[n];
+                    const Ghosts                   &fwd = *(xch.forward);
+                    const Ghosts                   &rev = *(xch.reverse);
+                    localSwap(field,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
+                }
+            }
+            
+            template <typename COORD>
+            void localSwap(Fields                &fields,
+                           const Fragment<COORD> &fragment) const
+            {
+                size_t n = fragment.autoExchange.size();
+                while(n-- > 0 )
+                {
+                    const AutoExchangeSwaps<COORD> &xch = fragment.autoExchange[n];
+                    const Ghosts                   &fwd = *(xch.forward);
+                    const Ghosts                   &rev = *(xch.reverse);
+                    localSwap(fields,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
                 }
             }
             
@@ -50,25 +57,36 @@ namespace upsylon {
             const comms::topology topology;
 
             
+            
             void asyncInitialize(Block &block) throw();
+            
+            void localSwap(Kernel::Field &field,
+                           const Indices &innerFwd,
+                           const Indices &outerFwd,
+                           const Indices &innerRev,
+                           const Indices &outerRev) const;
+            
+            void localSwap(Fields        &fields,
+                           const Indices &innerFwd,
+                           const Indices &outerFwd,
+                           const Indices &innerRev,
+                           const Indices &outerRev) const;
             
             void asyncSave(Block               &block,
                            const Kernel::Field &field,
-                           const Ghost         &ghost) const
-            {
-                const ios::conveyor &io = IO.get(field.objectType.info,topology); assert(io.topo==topology);
-                size_t               n  = ghost.items; assert(ghost.items==ghost.size());
-
-                updateDelivery(io);
-                while(n>0)
-                {
-                    io.save(block, field.objectAt( ghost[n] ) );
-                    --n;
-                }
-            }
-
+                           const Ghost         &ghost) const;
+            
+            void asyncLoad(Kernel::Field &field,
+                           ios::istream  &source,
+                           const Ghost   &ghost) const;
             
 
+            template <typename T>
+            const ios::conveyor & query()
+            {
+                return IO.query<T>(topology);
+            }
+            
         protected:
             const comms::delivery delivery;
             ios::conveyors       &IO;
