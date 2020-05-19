@@ -512,6 +512,9 @@ namespace upsylon
         //! print with node name
         void Printf(FILE  *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
         
+        void sequential( void (*proc)(void *), void *args ) const;
+        
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mpi);
         virtual ~mpi() throw();
@@ -560,7 +563,8 @@ namespace upsylon
 
     //! specialized string Bcast
     template <> void mpi::Bcast<string>(string &str, const int root) const;
-
+    
+    
 }
 
 #endif

@@ -16,6 +16,8 @@ namespace upsylon {
             explicit ParallelTransfer(const comms::topology);
             virtual ~ParallelTransfer() throw();
             
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ParallelTransfer);
         };
