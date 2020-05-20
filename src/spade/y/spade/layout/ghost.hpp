@@ -10,6 +10,8 @@ namespace upsylon {
     namespace Spade
     {
 
+        typedef accessible<size_t> Indices; //!< alias
+
         namespace Kernel
         {
             //------------------------------------------------------------------
@@ -17,7 +19,7 @@ namespace upsylon {
             //! a Ghost is an array of indices
             //
             //------------------------------------------------------------------
-            class Ghost : public accessible<size_t>
+            class Ghost : public Indices
             {
             public:
                 //--------------------------------------------------------------

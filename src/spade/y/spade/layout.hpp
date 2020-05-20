@@ -8,7 +8,6 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/sort/unique.hpp"
-#include "y/string.hpp"
 
 namespace upsylon {
     
@@ -98,12 +97,7 @@ namespace upsylon {
                 Coord::Disp(os,n) << "}";
                 return os;
             }
-
-            inline string toString() const
-            {
-                return '{' + Coord::ToString(lower) + "->" + Coord::ToString(upper) + '}';
-            }
-
+            
             //------------------------------------------------------------------
             //
             // methods for algebra

@@ -10,13 +10,13 @@ namespace upsylon {
 
     namespace Spade {
 
+        //! handle multiple transfers
         class ParallelTransfer : public Transfer
         {
         public:
-            explicit ParallelTransfer(const comms::topology);
-            virtual ~ParallelTransfer() throw();
-            
-            
+            explicit ParallelTransfer(const comms::topology); //!< setup
+            virtual ~ParallelTransfer() throw();              //!< cleanup
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ParallelTransfer);

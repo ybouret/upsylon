@@ -265,9 +265,11 @@ Y_SPADE_COORD_OP(GEQ,>=)
 
             Y_SPADE_COORD_OPS()
 
-            static string ToString( const Coord1D );
+#if 0
+            static string ToString( const Coord1D );  
             static string ToString( const Coord2D );
             static string ToString( const Coord3D );
+#endif
 
         private:
             //! random in [0:m]

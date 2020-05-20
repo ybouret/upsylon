@@ -9,9 +9,15 @@ namespace upsylon {
  
     namespace Spade
     {
-     
+
+        //----------------------------------------------------------------------
+        //
+        //! operations on fields
+        //
+        //----------------------------------------------------------------------
         struct Ops
         {
+            //! load the same value on a sub-layout
             template <typename FIELD> static inline
             void Ld(FIELD                           &F,
                     const typename FIELD::LayoutType sub,

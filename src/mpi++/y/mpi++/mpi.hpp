@@ -512,9 +512,10 @@ namespace upsylon
         //! print with node name
         void Printf(FILE  *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
         
-        typedef void (*sequentialProc)(const mpi &, void *);
-        void sequential(sequentialProc proc, void *args ) const;
-        
+        typedef void (*sequentialProc)(const mpi &, void *);     //!< sequential,low-level procdure
+        void sequential(sequentialProc proc, void *args ) const; //!< ensure proc is executed in-order
+
+        //! sequential code wrapper to call 'code(MPI);'
         template <typename FUNC> inline
         void sequential( FUNC &code ) const
         {
@@ -581,8 +582,12 @@ namespace upsylon
 
     //! specialized string Bcast
     template <> void mpi::Bcast<string>(string &str, const int root) const;
-    
-#define Y_MPI_SEQUENTIAL(CODE) do {\
+
+    //! inline head-only code
+#define Y_MPI_HEAD(CODE) do { if(MPI.head) do { CODE; } while(false); } while(false)
+
+    //! inline in-order all nodes code
+#define Y_MPI_NODE(CODE) do {\
 if(MPI.head) { do {CODE;} while(false); for(int r=1;r<MPI.size;++r) { MPI.sendSYN(r); MPI.recvACK(r); } }\
 else         { MPI.recvSYN(); do { CODE; } while(false); MPI.sendACK(); } } while(false)
 

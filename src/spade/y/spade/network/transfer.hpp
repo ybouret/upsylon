@@ -12,12 +12,18 @@ namespace upsylon {
     
     namespace Spade
     {
+
         
+        //----------------------------------------------------------------------
+        //
+        //! tranfer of ghosts/swaps
+        //
+        //----------------------------------------------------------------------
         class Transfer
         {
         public:
             typedef ios::ovstream      Block;
-            typedef accessible<size_t> Indices;
+            typedef accessible<size_t> Indices;  
             
             explicit Transfer(const comms::topology where);
             virtual ~Transfer() throw();

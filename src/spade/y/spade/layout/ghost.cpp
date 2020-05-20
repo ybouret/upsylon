@@ -14,6 +14,7 @@ namespace upsylon {
             }
 
             Ghost:: Ghost( size_t n ) :
+            Indices(),
             count_(n),
             bytes_(0),
             indices( memory::global::instance().acquire_as<size_t>(count_,bytes_)-1 ),

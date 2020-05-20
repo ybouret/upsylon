@@ -26,20 +26,18 @@ namespace {
         for(size_t m=1;m<=mappings.size();++m)
         {
             const COORD &mapping = mappings[m];
-            string       usrtext = Coord::ToString(mapping);
-            MPI.Printf0(stderr, "using mapping: %s\n", *usrtext);
+            Y_MPI_HEAD( std::cerr << "using mapping: " << mapping << std::endl );
+
             const Topology<COORD> topology(mapping);
             const COORD           localRanks = topology.getLocalRanks(MPI.rank);
             typename Layout<COORD>::Loop loop( Coord::Zero<COORD>(), Coord::Ones<COORD>() );
 
             for(loop.boot();loop.good();loop.next())
             {
-                usrtext = Coord::ToString(loop.value);
-                MPI.Printf0(stderr, "      |_pbcs : %s\n",*usrtext);
+                Y_MPI_HEAD( std::cerr << "|_pbcs=" << loop.value << std::endl );
                 const Fragment<COORD> fragment(full,localRanks,topology,loop.value,ghosts);
-                const string istr = fragment.inner.toString();
-                const string ostr = fragment.outer.toString();
-                MPI.Printf(stderr," inner: %s | outer: %s\n", *istr, *ostr );
+                Y_MPI_NODE(std::cerr << " |_" << MPI.nodeName << std::endl;
+                           std::cerr << "  |_inner: " << fragment.inner << " | outer: " << fragment.outer << std::endl );
                 
             };
 
@@ -56,7 +54,7 @@ Y_UTEST(spade)
     string layout = "16:16:16";
     size_t ghosts = 1;
 
-    Coord::DispWidth = 3;
+    Coord::DispWidth = 2;
     doTest<Coord1D>(MPI,layout,ghosts);
     doTest<Coord2D>(MPI,layout,ghosts);
     doTest<Coord3D>(MPI,layout,ghosts);

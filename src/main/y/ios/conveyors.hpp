@@ -85,9 +85,9 @@ namespace upsylon {
                     const convoy      cnv = create_tuple<TUPLE,type>(topo,int2type<srz>());
                     return insert(tid,topo,cnv);
                 }
-                
             }
 
+            //! get conveyor by typeid
             const conveyor & get(const std::type_info &tid,
                                  const comms::topology topo ) const;
 

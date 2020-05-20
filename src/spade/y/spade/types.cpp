@@ -54,6 +54,7 @@ namespace upsylon {
             return os;
         }
 
+#if 0
         static inline string coord1(const Coord1D c)
         {
             string s = vformat("%ld", static_cast<long>(c));
@@ -75,7 +76,7 @@ namespace upsylon {
         {
             return '[' + coord1(C.x) + ' ' + coord1(C.y) + ' ' + coord1(C.z) + ']' + '\'';
         }
-
+#endif
 
         void Coord::Parse(Coord1D       *c,
                           const unsigned dim,
