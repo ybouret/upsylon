@@ -113,12 +113,14 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
 
-            //! clear sending block, set style=computed_block_size
-            void asyncInitialize(IOBlock &block) throw();
-
-            //! prepare block size according to style
-            void asyncAdjustment(IOBlock &recv, const IOBlock &send) const;
-
+            //! set style from field
+            void asyncStyle(const Kernel::Field &field)  throw();
+            
+            //! set style from fields
+            void asyncStyle(Fields              &fields) throw();
+            
+            void asyncMake(IOBlock &block, const Ghost &ghost) const;
+            
             //! save ghost of field into block
             void asyncSave(IOBlock             &block,
                            const Kernel::Field &field,
@@ -138,7 +140,12 @@ namespace upsylon {
             void asyncLoad(Fields        &fields,
                            ios::istream  &source,
                            const Ghost   &ghost) const;
-
+            
+            //! use internal imstream
+            void asyncLoad(Kernel::Field &field,
+                           const IOBlock &block,
+                           const Ghost   &ghost) const;
+            
 
             //------------------------------------------------------------------
             //
@@ -148,12 +155,12 @@ namespace upsylon {
 
             const comms::infrastructure infra; //!< global
             const comms::shipping_style style; //!< local, based on types
+            const size_t                chunk; //!< bytes per item
             ios::conveyors             &IO;    //!< shared database
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Transfer);
-            void updateStyleFrom(const ios::conveyor &) const throw();
         };
 
     }

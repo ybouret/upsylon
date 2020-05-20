@@ -13,35 +13,58 @@ namespace upsylon {
         Transfer:: Transfer( const comms::infrastructure where) :
         infra(where),
         style(comms::computed_block_size),
+        chunk(0),
         IO( ios::conveyors::instance() )
         {
             IO.import(infra);
         }
         
-        void Transfer:: asyncInitialize(IOBlock &block) throw()
+        void Transfer:: asyncStyle(const Kernel::Field &field) throw()
         {
-            block.free();
-            aliasing::_(style) = comms::computed_block_size;
+            assert(field.io);
+            switch( aliasing::_(style) = field.io->style )
+            {
+                case comms::flexible_block_size: aliasing::_(chunk) = 0; break;
+                case comms::computed_block_size: aliasing::_(chunk) = field.objectSize; break;
+            }
         }
+        
+        
 
-        void Transfer:: asyncAdjustment(IOBlock &recv, const IOBlock &send) const
+
+        
+        
+        void Transfer:: asyncStyle(Fields &fields) throw()
+        {
+            aliasing::_(style) = comms::computed_block_size;
+            aliasing::_(chunk) = 0;
+            for(size_t i=fields.size();i>0;--i)
+            {
+                const Kernel::Field &field = *fields[i];
+                assert(field.io);
+                switch(field.io->style)
+                {
+                    case comms::flexible_block_size:
+                        aliasing::_(style) = comms::flexible_block_size;
+                        aliasing::_(chunk) = 0;
+                        return;
+                        
+                    case comms::computed_block_size:
+                        aliasing::_(chunk) += field.objectSize;
+                        break;
+                }
+            }
+        }
+        
+        void Transfer:: asyncMake(IOBlock &block, const Ghost &ghost) const
         {
             switch(style)
             {
-                case comms::flexible_block_size: recv.free(); break;
-                case comms::computed_block_size: recv.adjust( send.size(), 0); break;
+                case comms::flexible_block_size: block.free(); break;
+                case comms::computed_block_size: block.adjust( ghost.items * chunk, 0); break;
             }
         }
-
         
-        void Transfer:: updateStyleFrom(const ios::conveyor &io) const throw()
-        {
-            switch(io.style)
-            {
-                case comms::flexible_block_size: aliasing::_(style) = comms::flexible_block_size; break;
-                case comms::computed_block_size: break;
-            }
-        }
         
         void Transfer:: activate( Kernel::Field &F ) const
         {
@@ -58,7 +81,6 @@ namespace upsylon {
             const ios::conveyor &io = *field.io;
             size_t               n  = ghost.items; assert(ghost.items==ghost.size());
             
-            updateStyleFrom(io);
             while(n>0)
             {
                 io.save(block, field.objectAt( ghost[n] ) );
@@ -71,17 +93,6 @@ namespace upsylon {
                                   const Ghost   &ghost) const
         {
             const size_t f = fields.size();
-            
-            {
-                size_t j = f;
-                while(j>0)
-                {
-                    assert( fields[j]->io );
-                    updateStyleFrom( *(fields[j]->io) );
-                    --j;
-                }
-            }
-            
             size_t       n = ghost.items;
             while(n>0)
             {

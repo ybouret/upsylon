@@ -28,7 +28,8 @@ namespace upsylon {
             
             const mpi &MPI; //!< MPI instance
 
-            //! forward waves
+            //! forward waves, after asyncStyle was called
+            // TODO: use GENERIC FIELD
             template <typename COORD>
             void forward(Fields                &fields,
                          const Fragment<COORD> &fragment,
@@ -38,9 +39,11 @@ namespace upsylon {
                 size_t iForward=0;
                 size_t iTwoWays=0;
                 size_t iReverse=0;
-                asyncInitialize(send);
+                
                 for(unsigned i=0;i<Fragment<COORD>::Levels;++i)
                 {
+                    send.free();
+                    
                     const typename Topology<COORD>::Links &links = fragment[i];
                     switch(links.connect)
                     {
@@ -48,9 +51,9 @@ namespace upsylon {
                             const AsyncTwoWaysSwaps<COORD> &xch = fragment.asyncTwoWays[iTwoWays++];
                             const Ghosts                   &fwd = *(xch.forward);
                             const Ghosts                   &rev = *(xch.reverse);
-
+                            
                             asyncSave(send,fields,fwd.innerGhost);
-                            asyncAdjustment(recv,send);
+                            asyncMake(recv,rev.outerGhost);
                             XMPI::vSendRecv(MPI,send,fwd.peer,recv,rev.peer,style);
                             ios::imstream source(recv);
                             asyncLoad(fields,source,rev.outerGhost);
@@ -66,6 +69,10 @@ namespace upsylon {
 
                         case Connect::AsyncReverse: {
                             const AsyncReverseSwaps<COORD> &xch = fragment.asyncReverse[iReverse++];
+                            const Ghosts                   &rev = *(xch.reverse);
+                            asyncMake(recv,rev.outerGhost);
+                            XMPI::vRecv(MPI,recv,rev.peer,style);
+                            
                         } break;
 
                         default:

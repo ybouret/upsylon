@@ -97,7 +97,7 @@ namespace {
                     for(size_t i=0;i<L.numAsyncTwoWays;++i)
                     {
                         {
-                            transfer.asyncInitialize(block);
+                            transfer.asyncStyle(iF);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
                             transfer.asyncSave(block,iF,xch.forward->innerGhost);
                             transfer.asyncSave(block,iF,xch.reverse->innerGhost);
@@ -112,7 +112,7 @@ namespace {
                         
                         
                         {
-                            transfer.asyncInitialize(block);
+                            transfer.asyncStyle(sF);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
                             transfer.asyncSave(block,sF,xch.forward->innerGhost);
                             transfer.asyncSave(block,sF,xch.reverse->innerGhost);
@@ -124,7 +124,7 @@ namespace {
                         }
                         
                         {
-                            transfer.asyncInitialize(block);
+                            transfer.asyncStyle(fields);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
                             transfer.asyncSave(block, fields, xch.forward->innerGhost );
                             transfer.asyncSave(block, fields, xch.reverse->innerGhost );
