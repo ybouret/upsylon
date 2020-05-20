@@ -36,12 +36,12 @@ namespace upsylon {
             
             //! search for a previously inserted type
             const conveyor * search(const std::type_info &,
-                                    const comms::topology)   const throw();
+                                    const comms::infrastructure)   const throw();
             
             
             //! query/create conveyor for primary types or serialzable types
             template <typename T>
-            const conveyor & query(const comms::topology where)
+            const conveyor & query(const comms::infrastructure where)
             {
                 Y_LOCK(access);
                 
@@ -66,19 +66,18 @@ namespace upsylon {
             //! query/create conveyor for tuple of types
             template <template <typename> class TUPLE,
             typename T>
-            const conveyor & query(const comms::topology topo)
+            const conveyor & query(const comms::infrastructure topo)
             {
                 Y_LOCK(access);
                 // prepare typeid
                 typedef typename type_traits<T>::mutable_type             type;
                 typedef typename type_traits< TUPLE<type> >::mutable_type tuple_type;
                 static  const    std::type_info &tid = typeid(tuple_type);
+
                 // look up
                 const conveyor *pc = search(tid,topo);
                 if( pc )
-                {
                     return *pc;
-                }
                 else
                 {
                     static const bool srz = Y_IS_SUPERSUBCLASS(serializable,type);
@@ -88,12 +87,12 @@ namespace upsylon {
             }
 
             //! get conveyor by typeid
-            const conveyor & get(const std::type_info &tid,
-                                 const comms::topology topo ) const;
+            const conveyor & get(const std::type_info       &tid,
+                                 const comms::infrastructure topo ) const;
 
             //! get a previously created conveyor
             template <typename T>
-            const conveyor & get(const comms::topology topo) const
+            const conveyor & get(const comms::infrastructure topo) const
             {
                 // prepare typeid
                 typedef typename type_traits<T>::mutable_type type;
@@ -103,22 +102,22 @@ namespace upsylon {
             //! get the internal root node, for graphviz
             const vizible & root() const throw();
             
-            void  import(const comms::topology); //!< import integral/tuple types
-            void  sort();          //!< sort by names
-            void  display() const; //!< display
+            void  import(const comms::infrastructure); //!< import integral/tuple types
+            void  sort();                              //!< sort by names
+            void  display() const;                     //!< display
             
         private:
             virtual ~conveyors() throw();
             explicit conveyors();
             Y_DISABLE_COPY_AND_ASSIGN(conveyors);
             friend class singleton<conveyors>;
-            void throw_invalid_topology() const;
-            void throw_missing_conveyor(const std::type_info &) const;
+            void throw_invalid_infra() const;
+            void throw_missing_class(const std::type_info &) const;
 
-            const conveyor & insert(const std::type_info &, const comms::topology, const convoy &);
+            const conveyor & insert(const std::type_info &, const comms::infrastructure, const convoy &);
 
             template <typename T>
-            const conveyor * create(const comms::topology &where,
+            const conveyor * create(const comms::infrastructure &where,
                                     int2type<false> )
             {
                 switch(where)
@@ -126,31 +125,31 @@ namespace upsylon {
                     case comms::homogeneous: return new primary_conveyor<T>();
                     case comms::distributed: return new network_conveyor<T>();
                 }
-                throw_invalid_topology();
+                throw_invalid_infra();
                 return NULL;
             }
             
             template <typename T>
-            const conveyor * create(const comms::topology &,int2type<true>)
+            const conveyor * create(const comms::infrastructure &,int2type<true>)
             {
                 return new derived_conveyor<T>();
             }
             
             template < template <typename> class TUPLE,typename T>
-            const conveyor * create_tuple(const comms::topology &where, int2type<false>)
+            const conveyor * create_tuple(const comms::infrastructure &where, int2type<false>)
             {
                 switch(where)
                 {
                     case comms::homogeneous: return new tuple_conveyor<TUPLE,T,primary_conveyor>();
                     case comms::distributed: return new tuple_conveyor<TUPLE,T,network_conveyor>();
                 }
-                throw_invalid_topology();
+                throw_invalid_infra();
                 return NULL;
             }
             
             template <template <typename> class TUPLE,
             typename T>
-            const conveyor * create_tuple(const comms::topology &,int2type<true>)
+            const conveyor * create_tuple(const comms::infrastructure &,int2type<true>)
             {
                 return new tuple_conveyor<TUPLE,T,derived_conveyor>();
             }

@@ -7,7 +7,7 @@ namespace upsylon {
     
     namespace ios
     {
-        static inline void __ld( conveyors &self, const comms::topology topo )
+        static inline void __ld( conveyors &self, const comms::infrastructure topo )
         {
             (void) self.query<uint8_t>(topo);
             (void) self.query<uint16_t>(topo);
@@ -51,10 +51,9 @@ namespace upsylon {
 
         }
         
-        void  conveyors:: import(const comms::topology topo)
+        void  conveyors:: import(const comms::infrastructure topo)
         {
             __ld(*this,topo);
-            //__ld(*this,comms::distributed);
             sort();
         }
         

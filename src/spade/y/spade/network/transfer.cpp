@@ -10,37 +10,47 @@ namespace upsylon {
         {
         }
         
-        Transfer:: Transfer( const comms::topology where) :
-        topology(where),
-        delivery(comms::computed_block_size),
+        Transfer:: Transfer( const comms::infrastructure where) :
+        infra(where),
+        style(comms::computed_block_size),
         IO( ios::conveyors::instance() )
         {
-            IO.import(topology);
+            IO.import(infra);
         }
         
-        void Transfer:: asyncInitialize(Block &block) throw()
+        void Transfer:: asyncInitialize(IOBlock &block) throw()
         {
             block.free();
-            aliasing::_(delivery) = comms::computed_block_size;
+            aliasing::_(style) = comms::computed_block_size;
         }
-        
-        void Transfer:: updateDelivery(const ios::conveyor &io) const throw()
+
+        void Transfer:: asyncAdjustment(IOBlock &recv, const IOBlock &send) const
         {
-            switch(io.mode)
+            switch(style)
             {
-                case comms::flexible_block_size: aliasing::_(delivery) = comms::flexible_block_size; break;
+                case comms::flexible_block_size: recv.free(); break;
+                case comms::computed_block_size: recv.adjust( send.size(), 0); break;
+            }
+        }
+
+        
+        void Transfer:: updateStyleFrom(const ios::conveyor &io) const throw()
+        {
+            switch(io.style)
+            {
+                case comms::flexible_block_size: aliasing::_(style) = comms::flexible_block_size; break;
                 case comms::computed_block_size: break;
             }
         }
         
         void Transfer:: activate( Kernel::Field &F ) const
         {
-            F.io = IO.search(F.objectType,topology);
+            F.io = IO.search(F.objectType,infra);
             const string &id = type_spec::declare(F.objectType).name();
             if(!F.io) throw exception("Spade::Field<%s> '%s': no register I/O", *id, *F.name);
         }
         
-        void Transfer:: asyncSave(Block               &block,
+        void Transfer:: asyncSave(IOBlock             &block,
                                   const Kernel::Field &field,
                                   const Ghost         &ghost) const
         {
@@ -48,7 +58,7 @@ namespace upsylon {
             const ios::conveyor &io = *field.io;
             size_t               n  = ghost.items; assert(ghost.items==ghost.size());
             
-            updateDelivery(io);
+            updateStyleFrom(io);
             while(n>0)
             {
                 io.save(block, field.objectAt( ghost[n] ) );
@@ -56,7 +66,7 @@ namespace upsylon {
             }
         }
         
-        void Transfer:: asyncSave(Block         &block,
+        void Transfer:: asyncSave(IOBlock       &block,
                                   Fields        &fields,
                                   const Ghost   &ghost) const
         {
@@ -67,7 +77,7 @@ namespace upsylon {
                 while(j>0)
                 {
                     assert( fields[j]->io );
-                    updateDelivery( *(fields[j]->io) );
+                    updateStyleFrom( *(fields[j]->io) );
                     --j;
                 }
             }
@@ -172,7 +182,6 @@ namespace upsylon {
                     io.copy( field.objectAt(outerRev_), field.objectAt(innerFwd_) );
                     --j;
                 }
-                
                 --n;
             }
         }

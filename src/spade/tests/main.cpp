@@ -11,5 +11,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(ghosts);
     Y_UTEST(tessellation);
     Y_UTEST(transfer);
+    Y_UTEST(workspace);
 }
 Y_UTEST_EXEC()

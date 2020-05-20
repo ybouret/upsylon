@@ -13,7 +13,7 @@ namespace upsylon {
     {
         
         namespace Kernel {
-         
+
             //! common for Spade::Fragment
             struct Fragment
             {
@@ -78,10 +78,10 @@ namespace upsylon {
              \param numGhosts  number of ghosts
              */
             inline explicit Fragment(const Layout<COORD>   &fullLayout,
-                                    const_coord            localRanks,
-                                    const Topology<COORD> &topology,
-                                    const_coord           &boundaries,
-                                    const Coord1D          numGhosts) :
+                                     const_coord            localRanks,
+                                     const Topology<COORD> &topology,
+                                     const_coord            boundaries,
+                                     const Coord1D          numGhosts) :
             Node(localRanks,topology,Coord::ToBool(boundaries)),
             inner(fullLayout.split(topology.sizes,this->ranks)),
             outer(inner),
@@ -140,7 +140,7 @@ namespace upsylon {
                 //
                 //______________________________________________________________
                 if(ng>0) createAllSwaps(ng);
-               
+
             }
 
 
@@ -258,7 +258,7 @@ namespace upsylon {
                             
                         case Connect:: AsyncForward: {
                             const HSwaps fwd = createSwaps(forward, ng, level);
-                             aliasing::_(asyncForward).template build<const HSwaps&>(fwd);
+                            aliasing::_(asyncForward).template build<const HSwaps&>(fwd);
                             aliasing::_(commScore) += (fwd->innerGhost.items);
                         } break;
                             

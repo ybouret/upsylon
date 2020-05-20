@@ -6,8 +6,7 @@ ADD_CUSTOM_TARGET(rmodule ALL
 COMMAND ${R} CMD SHLIB --preclean --clean ${HERE}/rmodule.cpp $<TARGET_FILE:y> ${R_STDCXX}
 WORKING_DIRECTORY ${HERE}
 SOURCES rmodule.cpp ../y/r++/r.hpp ${HERE}/rmodule.R ${HERE}/Makevars
-DEPENDS
-y
+DEPENDS y
 COMMENT "Building R module"
 )
 
@@ -20,7 +19,7 @@ ENDIF()
 
 IF(FALSE)
 ADD_CUSTOM_TARGET(utest-r++
-COMMAND ${R} --no-save --slave < ${HERE}/rmodule.R
+COMMAND ${R} -s --no-save --slave < ${HERE}/rmodule.R
 WORKING_DIRECTORY ${HERE}
 DEPENDS rmodule
 COMMENT "Testing R module")

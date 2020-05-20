@@ -92,7 +92,7 @@ namespace {
                     transfer.localSwap(fields,L);
 
                     
-                    Transfer::Block block;
+                    IOBlock block;
                     
                     for(size_t i=0;i<L.numAsyncTwoWays;++i)
                     {

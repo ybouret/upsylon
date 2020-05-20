@@ -113,14 +113,17 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const comms::delivery    mode; //!< [computed|flexible]_block_size
-            const comms::topology    topo; //!< [homogeneous|distributed]
-            const std::type_info    &uuid; //!< system type info
-            const size_t             move; //!< sizeof(T)
+            const comms::shipping_style    style; //!< [computed|flexible]_block_size
+            const comms::infrastructure    infra; //!< [homogeneous|distributed]
+            const std::type_info          &uuid; //!< system type info
+            const size_t                   move; //!< sizeof(T)
             
            
         protected:
-            explicit conveyor(const comms::delivery, const comms::topology, const std::type_info &, const size_t) throw(); //!< filled by derived class
+            explicit conveyor(const comms::shipping_style,
+                              const comms::infrastructure,
+                              const std::type_info &,
+                              const size_t) throw(); //!< filled by derived class
             void     missing_bytes() const; //!< raise exception
             
         private:

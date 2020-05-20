@@ -38,13 +38,13 @@ namespace upsylon {
         }
         
         
-        void conveyors:: throw_invalid_topology() const
+        void conveyors:: throw_invalid_infra() const
         {
-            throw exception("ios::conveyors: invalid topology");
+            throw exception("ios::conveyors: invalid infrastructure");
         }
         
         
-        void conveyors:: throw_missing_conveyor(const std::type_info &t) const
+        void conveyors:: throw_missing_class(const std::type_info &t) const
         {
             const type_spec &ts = type_spec::declare(t);
             throw exception("ios::conveyors(missing <%s>)", *ts.name() );
@@ -52,9 +52,9 @@ namespace upsylon {
             
 
         
-        const conveyor & conveyors:: insert(const std::type_info   &t,
-                                            const comms::topology   w,
-                                            const convoy           &c)
+        const conveyor & conveyors:: insert(const std::type_info         &t,
+                                            const comms::infrastructure   w,
+                                            const convoy                 &c)
         
         {
             static db_type &db   = __db();
@@ -70,8 +70,8 @@ namespace upsylon {
         
 
         
-        const conveyor * conveyors:: search(const std::type_info  &t,
-                                            const comms::topology  w) const throw()
+        const conveyor * conveyors:: search(const std::type_info        &t,
+                                            const comms::infrastructure  w) const throw()
         {
             Y_LOCK(access);
             static db_type &db   = __db();
@@ -87,12 +87,12 @@ namespace upsylon {
             }
         }
 
-        const conveyor & conveyors:: get(const std::type_info &tid, const comms::topology topo ) const
+        const conveyor & conveyors:: get(const std::type_info &tid, const comms::infrastructure topo ) const
         {
             const conveyor *pc = search(tid,topo);
             if(!pc)
             {
-                throw_missing_conveyor(tid);
+                throw_missing_class(tid);
             }
             return *pc;
         }

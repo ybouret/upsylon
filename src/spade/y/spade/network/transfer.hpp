@@ -13,7 +13,8 @@ namespace upsylon {
     namespace Spade
     {
 
-        
+        typedef ios::ovstream IOBlock; //!< alias
+
         //----------------------------------------------------------------------
         //
         //! tranfer of ghosts/swaps
@@ -24,18 +25,11 @@ namespace upsylon {
         public:
             //------------------------------------------------------------------
             //
-            // types and definitions
-            //
-            //------------------------------------------------------------------
-            typedef ios::ovstream      Block; //!< alias
-
-            //------------------------------------------------------------------
-            //
             // C++
             //
             //------------------------------------------------------------------
-            explicit Transfer(const comms::topology where); //!< initialize
-            virtual ~Transfer() throw();                    //!< cleanup
+            explicit Transfer(const comms::infrastructure where); //!< initialize
+            virtual ~Transfer() throw();                           //!< cleanup
 
             //------------------------------------------------------------------
             //
@@ -52,14 +46,14 @@ namespace upsylon {
             template <typename T> inline
             const ios::conveyor & query()
             {
-                return IO.query<T>(topology);
+                return IO.query<T>(infra);
             }
 
             //! query I/O for a tuple of type
             template <template <typename> class TUPLE, typename T> inline
             const ios::conveyor & query()
             {
-                return IO.query<TUPLE,T>(topology);
+                return IO.query<TUPLE,T>(infra);
             }
 
             //------------------------------------------------------------------
@@ -119,16 +113,19 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
 
-            //! clear block, set delivery=computed_block_size
-            void asyncInitialize(Block &block) throw();
+            //! clear sending block, set style=computed_block_size
+            void asyncInitialize(IOBlock &block) throw();
+
+            //! prepare block size according to style
+            void asyncAdjustment(IOBlock &recv, const IOBlock &send) const;
 
             //! save ghost of field into block
-            void asyncSave(Block               &block,
+            void asyncSave(IOBlock             &block,
                            const Kernel::Field &field,
                            const Ghost         &ghost) const;
 
             //! save ghost of fields into block
-            void asyncSave(Block               &block,
+            void asyncSave(IOBlock             &block,
                            Fields              &fields,
                            const Ghost         &ghost) const;
 
@@ -149,19 +146,19 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
 
-            const comms::topology topology; //!< global topology
-            const comms::delivery delivery; //!< local delivery, based on types
-            ios::conveyors       &IO;       //!< shared database
-          
-            
+            const comms::infrastructure infra; //!< global
+            const comms::shipping_style style; //!< local, based on types
+            ios::conveyors             &IO;    //!< shared database
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Transfer);
-            void updateDelivery(const ios::conveyor &) const throw();
+            void updateStyleFrom(const ios::conveyor &) const throw();
         };
-        
-        
+
     }
-    
+
+
 }
 
 

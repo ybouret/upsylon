@@ -31,7 +31,6 @@ namespace upsylon {
             //! cleanup
             inline virtual ~tuple_conveyor() throw() {}
             
-            
             //! setup
             inline explicit tuple_conveyor() throw() :
             limited_conveyor<sizeof( TUPLE<T> )/sizeof(T),T,CONVEYOR>(typeid( typename type_traits< TUPLE<T> >::mutable_type ) )

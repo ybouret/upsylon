@@ -12,12 +12,12 @@ namespace upsylon {
         {
         }
         
-        conveyor:: conveyor(const comms::delivery    way,
-                            const comms::topology    med,
-                            const std::type_info    &usr,
-                            const size_t             mov) throw() :
-        mode(way),
-        topo(med),
+        conveyor:: conveyor(const comms::shipping_style    s,
+                            const comms::infrastructure    i,
+                            const std::type_info          &usr,
+                            const size_t                   mov) throw() :
+        style(s),
+        infra(i),
         uuid(usr),
         move(mov)
         {
@@ -34,8 +34,8 @@ namespace upsylon {
             const type_spec &ts = type_spec::declare(c.uuid);
             os
             << "ios::conveyor<" << ts.name()
-            << ":" << comms::delivery_id(c.mode)
-            << ":" << comms::topology_id(c.topo)
+            << ":" << comms::shipping_style_id(c.style)
+            << ":" << comms::infrastructure_id(c.infra)
             << ":" << c.move << ">";
             return os;
         }

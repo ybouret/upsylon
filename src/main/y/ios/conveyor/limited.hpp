@@ -69,7 +69,7 @@ namespace upsylon {
             //! setup
             inline explicit limited_conveyor(const std::type_info &_) throw() :
             base_type(),
-            conveyor(this->io.mode,this->io.topo,_,block_size)
+            conveyor(this->io.style,this->io.infra,_,block_size)
             {
             }
             
@@ -81,7 +81,7 @@ namespace upsylon {
             //! copy BLOCKS types
             inline virtual size_t copy(void *target, const void *source) const
             {
-                char       *p = static_cast<char *>(target);
+                char       *p = static_cast<char       *>(target);
                 const char *q = static_cast<const char *>(source);
                 for(size_t i=BLOCKS;i>0;--i)
                 {

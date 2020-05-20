@@ -91,6 +91,11 @@ allocated(0)
             {
                 return (void*) getObjectAt(indx);
             }
+
+            const string & Field:: key() const throw()
+            {
+                return name;
+            }
         }
     
     }

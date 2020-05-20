@@ -30,7 +30,7 @@ namespace upsylon {
         //! Sending a range
         //______________________________________________________________________
         template <typename ITERATOR> static inline
-        void Send(mpi &MPI,const int dest, ITERATOR curr, size_t n)
+        void Send(const mpi &MPI,const int dest, ITERATOR curr, size_t n)
         {
             MPI.SendSize(n,dest);
             while(n-- > 0)
@@ -44,7 +44,7 @@ namespace upsylon {
         //! Sending a sequence
         //______________________________________________________________________
         template <typename SEQUENCE> static inline
-        void Send(mpi &MPI,const int dest, const SEQUENCE &seq)
+        void Send(const mpi &MPI,const int dest, const SEQUENCE &seq)
         {
             Send(MPI,dest,seq.begin(),seq.size());
         }
@@ -54,7 +54,7 @@ namespace upsylon {
         //! Receiving into a sequence
         //______________________________________________________________________
         template <typename SEQUENCE> static inline
-        void Recv(mpi &MPI, const int from, SEQUENCE &seq )
+        void Recv(const mpi &MPI, const int from, SEQUENCE &seq )
         {
             size_t n = MPI.RecvSize(from);
             while(n-- > 0)
@@ -78,30 +78,30 @@ namespace upsylon {
         //
         //! Send with size information if delivery==flexible block size
         //______________________________________________________________________
-        static void vSend(mpi                  &MPI,
-                          const Block          &sendBuffer,
-                          const int             dest,
-                          const comms::delivery delivery);
+        static void vSend(const mpi                  &MPI,
+                          const Block                &sendBuffer,
+                          const int                   dest,
+                          const comms::shipping_style style);
         
         //______________________________________________________________________
         //
         //! Recv with size adjustment if delivery==flexible block size
         //______________________________________________________________________
-        static void vRecv(mpi                  &MPI,
-                          Block                &recvBuffer,
-                          const int             source,
-                          const comms::delivery delivery);
+        static void vRecv(const mpi                  &MPI,
+                          Block                      &recvBuffer,
+                          const int                   source,
+                          const comms::shipping_style style);
         
         //______________________________________________________________________
         //
         //! Send.Recv with size adjustment if delivery==flexible block size
         //______________________________________________________________________
-        static void vSendRecv(mpi                  &MPI,
-                              const Block          &sendBuffer,
-                              const int             dest,
-                              Block                &recvBuffer,
-                              const int             source,
-                              const comms::delivery delivery);
+        static void vSendRecv(const mpi                  &MPI,
+                              const Block                &sendBuffer,
+                              const int                   dest,
+                              Block                      &recvBuffer,
+                              const int                   source,
+                              const comms::shipping_style style);
         
     };
     

@@ -2,7 +2,7 @@
 
 namespace upsylon {
     
-    const char * comms:: delivery_id(const delivery m) throw()
+    const char * comms:: shipping_style_id(const shipping_style m) throw()
     {
         switch (m) {
             case computed_block_size: return "constant_block_size";
@@ -11,7 +11,7 @@ namespace upsylon {
         return "?";
     }
     
-    const char * comms:: topology_id(const topology m) throw()
+    const char * comms:: infrastructure_id(const infrastructure m) throw()
     {
         switch (m) {
             case homogeneous: return "homogeneous";

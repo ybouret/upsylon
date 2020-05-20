@@ -51,7 +51,8 @@ namespace upsylon {
                 static string Suffix(const Coord1D c);              //!< "[c]"
                 const void   *objectAt(const size_t) const throw(); //!< address [0..items-1]
                 void         *objectAt(const size_t)       throw(); //!< address [0..items-1]
-
+                const string  &key()                 const throw(); //!< name
+                
                 //--------------------------------------------------------------
                 //
                 // members

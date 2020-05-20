@@ -4,6 +4,7 @@
 #define Y_SPADE_FIELDS_INCLUDED 1
 
 #include "y/spade/field/in3d.hpp"
+#include "y/ptr/intr.hpp"
 
 namespace upsylon {
 
@@ -42,8 +43,8 @@ namespace upsylon {
             };
         };
         
-        typedef arc_ptr<Kernel::Field>   FieldHandle; //!< low-level field pointer
-        typedef addressable<FieldHandle> Fields;      //!< collection of fields
+        typedef intr_ptr<string,Kernel::Field>   FieldHandle; //!< low-level field pointer
+        typedef addressable<FieldHandle>         Fields;      //!< collection of fields
     }
 
 }
