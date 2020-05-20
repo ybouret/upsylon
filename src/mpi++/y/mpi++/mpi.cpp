@@ -154,8 +154,8 @@ namespace upsylon {
                     ++tp;
                     sz *= 10;
                 }
-                const string fmt = vformat(".%%%dd.%%0%dd",tp,tp);
-                string tmp = processorName + vformat(*fmt,size,rank);
+                const string fmt = vformat("%%%dd.%%0%dd",tp,tp);
+                string       tmp = vformat(*fmt,size,rank);
                 tmp.swap_with( aliasing::_(nodeName) );
 
             }

@@ -22,8 +22,8 @@ Y_UTEST(init)
 {
     Y_MPI(SINGLE);
     
-    
-    MPI.Printf0(stderr, "ThreadLevel=%s\n",MPI.threadLevelText());
+    MPI.Printf0(stderr, "ProcessorName=<%s>\n", *MPI.processorName);
+    MPI.Printf0(stderr, "ThreadLevel  =<%s>\n", MPI.threadLevelText());
     
     if( MPI.parallel )
     {

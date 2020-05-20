@@ -18,7 +18,8 @@ namespace {
     {
 
         static const unsigned Dimensions = Coord::Get<COORD>::Dimensions;
-        MPI.Printf0(stderr, "-------- in %uD --------\n", Dimensions);
+        Y_MPI_HEAD(std::cerr << "In " << Dimensions << "D" << std::endl);
+
         const size_t cores = MPI.size;
         Layout<COORD>       full( Coord::Ones<COORD>(), Coord::Parse<COORD>(layout) );
         vector<COORD>       mappings;
@@ -37,7 +38,8 @@ namespace {
                 Y_MPI_HEAD( std::cerr << "|_pbcs=" << loop.value << std::endl );
                 const Fragment<COORD> fragment(full,localRanks,topology,loop.value,ghosts);
                 Y_MPI_NODE(std::cerr << " |_" << MPI.nodeName << std::endl;
-                           std::cerr << "  |_inner: " << fragment.inner << " | outer: " << fragment.outer << std::endl );
+                           std::cerr << "  |_inner: " << fragment.inner << std::endl;
+                           std::cerr << "  |_outer: " << fragment.outer << std::endl );
                 
             };
 
