@@ -20,53 +20,73 @@ namespace upsylon {
         class Tessellation : public Topology<COORD>
         {
         public:
-            typedef Layout<COORD>                  LayoutType;
-            typedef Fragment<COORD>                FragmentType;
-            typedef Topology<COORD>                TopologyType;
-            typedef typename TopologyType::Boolean Boolean;
-            
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            typedef Layout<COORD>   LayoutType;   //!< alias
+            typedef Fragment<COORD> FragmentType; //!< alias
+            typedef Topology<COORD> TopologyType; //!< alias
+
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+
+            //! cleanup
             virtual ~Tessellation() throw() {}
-            
+
+            //! initialize
             explicit Tessellation(const LayoutType & fullLayout,
-                               const COORD      & mapping,
-                               const COORD      & boundaries,
-                               const Coord1D      numGhosts) :
+                                  const COORD      & mapping,
+                                  const COORD      & boundaries,
+                                  const Coord1D      numGhosts) :
             TopologyType(mapping),
-            parts(this->size),
+            fragments(this->size),
             minItems(0),
             maxItems(0),
             maxComms(0)
             {
-                 for(size_t rank=0;rank<this->size;++rank)
+                //--------------------------------------------------------------
+                // build fragments and collect maxComms and maxItems
+                //--------------------------------------------------------------
+                for(size_t rank=0;rank<this->size;++rank)
                 {
                     const COORD localRanks = this->getLocalRanks(rank);
-                    aliasing::_(parts). template build<
+                    aliasing::_(fragments). template build<
                     const LayoutType   &,
                     const COORD        &,
                     const TopologyType &,
                     const COORD        &,
                     const Coord1D      &>(fullLayout,localRanks,*this,boundaries,numGhosts);
-                    const FragmentType &L = parts[rank];
+                    const FragmentType &L = fragments[rank];
                     aliasing::_(maxItems) = max_of(maxItems,L.inner.items);
                     aliasing::_(maxComms) = max_of(maxComms,L.commScore);
                 }
+
+                //--------------------------------------------------------------
+                // collect minItems
+                //--------------------------------------------------------------
                 aliasing::_(minItems) = maxItems;
                 for(size_t rank=0;rank<this->size;++rank)
                 {
-                    aliasing::_(minItems) = min_of(minItems,parts[rank].inner.items);
+                    aliasing::_(minItems) = min_of(minItems,fragments[rank].inner.items);
                 }
             }
 
+            //! acces fragment in [0..size-1]
             inline const FragmentType & operator[](const size_t rank) const throw()
             {
                 assert(rank<this->size);
-                return parts[rank];
+                return fragments[rank];
             }
 
-            const slots<FragmentType> parts;
-            const size_t              minItems;
-            const size_t              maxItems;
-            const size_t              maxComms;
+            const slots<FragmentType> fragments; //!< fragments of the tessellation
+            const size_t              minItems;  //!< min items to process in this tessellation
+            const size_t              maxItems;  //!< max items to process in this tesselation
+            const size_t              maxComms;  //!< max items for I/O in this tesselation
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tessellation);

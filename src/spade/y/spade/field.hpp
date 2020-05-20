@@ -44,12 +44,14 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 
-                size_t        objectBytes() const throw();    //!< bytes for objects
-                size_t        localMemory() const throw();    //!< allocated
-                double        virtualBits() const throw();    //!< allocated per used
-                size_t        objects() const throw();        //!< metrics().items
-                static string Suffix(const Coord1D c);        //!< "[c]"
-                
+                size_t        objectBytes() const throw();          //!< bytes for objects
+                size_t        localMemory() const throw();          //!< allocated
+                double        virtualBits() const throw();          //!< allocated per used
+                size_t        objects() const throw();              //!< metrics().items
+                static string Suffix(const Coord1D c);              //!< "[c]"
+                const void   *objectAt(const size_t) const throw(); //!< address [0..items-1]
+                void         *objectAt(const size_t)       throw(); //!< address [0..items-1]
+
                 //--------------------------------------------------------------
                 //
                 // members
@@ -60,8 +62,6 @@ namespace upsylon {
                 const size_t          objectSize;  //!< bytes per object
                 const ios::conveyor  *io;          //!< optional I/O
 
-                const void *objectAt(const size_t indx) const throw();
-                void       *objectAt(const size_t indx)       throw();
 
             protected:
                 //! setup
@@ -78,9 +78,12 @@ namespace upsylon {
                 size_t allocated; //!< private bytes
                 
                 void*  allocate(const size_t); //!< acquire private bytes
-                
+
+                //! get object by coordinate
                 virtual const void *getObjectByCoord(const Coord1D *) const throw() = 0;
-                virtual const void *getObjectAt(const size_t   ) const throw() = 0;
+
+                //! get object by index
+                virtual const void *getObjectAt(const size_t) const throw() = 0;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Field);

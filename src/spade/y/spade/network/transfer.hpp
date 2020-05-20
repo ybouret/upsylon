@@ -22,15 +22,53 @@ namespace upsylon {
         class Transfer
         {
         public:
-            typedef ios::ovstream      Block;
-            typedef accessible<size_t> Indices;  
-            
-            explicit Transfer(const comms::topology where);
-            virtual ~Transfer() throw();
-            
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            typedef ios::ovstream      Block; //!< alias
+
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            explicit Transfer(const comms::topology where); //!< initialize
+            virtual ~Transfer() throw();                    //!< cleanup
+
+            //------------------------------------------------------------------
+            //
+            // Managing types
+            //
+            //------------------------------------------------------------------
+
+
+            //! active a filed based on its objectType
             void     activate( Kernel::Field &F ) const;
-            
-            
+
+
+            //! query I/O for a given type
+            template <typename T> inline
+            const ios::conveyor & query()
+            {
+                return IO.query<T>(topology);
+            }
+
+            //! query I/O for a tuple of type
+            template <template <typename> class TUPLE, typename T> inline
+            const ios::conveyor & query()
+            {
+                return IO.query<TUPLE,T>(topology);
+            }
+
+            //------------------------------------------------------------------
+            //
+            // local I/O
+            //
+            //------------------------------------------------------------------
+
+            //! swap local ghosts of one field
             template <typename COORD>
             void localSwap(Kernel::Field         &field,
                            const Fragment<COORD> &fragment) const
@@ -44,7 +82,8 @@ namespace upsylon {
                     localSwap(field,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
                 }
             }
-            
+
+            //! swap local ghosts for all fields
             template <typename COORD>
             void localSwap(Fields                &fields,
                            const Fragment<COORD> &fragment) const
@@ -58,56 +97,61 @@ namespace upsylon {
                     localSwap(fields,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
                 }
             }
-            
-            
-            const comms::topology topology;
-            const comms::delivery delivery;
-            ios::conveyors       &IO;
-            
-            
-            void asyncInitialize(Block &block) throw();
-            
+
+            //! local swap between ghosts
             void localSwap(Kernel::Field &field,
                            const Indices &innerFwd,
                            const Indices &outerFwd,
                            const Indices &innerRev,
                            const Indices &outerRev) const;
-            
+
+            //! local swap between ghosts
             void localSwap(Fields        &fields,
                            const Indices &innerFwd,
                            const Indices &outerFwd,
                            const Indices &innerRev,
                            const Indices &outerRev) const;
-            
+
+
+            //------------------------------------------------------------------
+            //
+            // local I/O
+            //
+            //------------------------------------------------------------------
+
+            //! clear block, set delivery=computed_block_size
+            void asyncInitialize(Block &block) throw();
+
+            //! save ghost of field into block
             void asyncSave(Block               &block,
                            const Kernel::Field &field,
                            const Ghost         &ghost) const;
-            
+
+            //! save ghost of fields into block
             void asyncSave(Block               &block,
                            Fields              &fields,
                            const Ghost         &ghost) const;
-            
+
+            //! load ghost of fields into block
             void asyncLoad(Kernel::Field &field,
                            ios::istream  &source,
                            const Ghost   &ghost) const;
-            
+
+            //! load ghost of fields into block
             void asyncLoad(Fields        &fields,
                            ios::istream  &source,
                            const Ghost   &ghost) const;
-            
 
-            template <typename T> inline
-            const ios::conveyor & query()
-            {
-                return IO.query<T>(topology);
-            }
-            
-            template <template <typename> class TUPLE, typename T> inline
-            const ios::conveyor & query()
-            {
-                return IO.query<TUPLE,T>(topology);
-            }
-            
+
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+
+            const comms::topology topology; //!< global topology
+            const comms::delivery delivery; //!< local delivery, based on types
+            ios::conveyors       &IO;       //!< shared database
           
             
         private:
