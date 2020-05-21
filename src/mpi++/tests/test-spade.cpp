@@ -16,7 +16,7 @@ namespace {
                 const string &layout,
                 const size_t ghosts)
     {
-        //typedef typename FieldFor<COORD>::template Of<int>::Type    iField;
+        typedef typename FieldFor<COORD>::template Of<int>::Type    iField;
         //typedef typename FieldFor<COORD>::template Of<string>::Type sField;
         //typedef typename FieldFor<COORD>::template Of<double>::Type dField;
 
@@ -46,17 +46,23 @@ namespace {
                            std::cerr << "  |_inner: " << W.inner << std::endl;
                            std::cerr << "  |_outer: " << W.outer << std::endl );
 
-                W.template create<int>(    "I" );
+                iField &I = W.template create<int>(    "I" );
                 W.template create<double>( "D" );
                 W.template create<double>( "Dtmp", LocalField );
                 W.template create<string>( "S" );
                 
-                W.activateFor(sync);
-                sync.asyncSetup(W.fields);
+                FieldsIO  all = W.fields;
+                FieldsIO  sub;
+                sub << I;
                 
-                W.localSwap(sync);
+                W.activateFor(sync);
+                
+                sync.asyncSetup(all);
+                W.localSwap(all,sync);
+                W.localSwap(sub,sync);
+                
                 IOBlock send, recv;
-                sync.forward( aliasing::_(W.fields), W, send, recv);
+                sync.forward(all, W, send, recv);
             };
 
         }
@@ -65,13 +71,17 @@ namespace {
 
 }
 
+#include "y/string/convert.hpp"
+
 Y_UTEST(spade)
 {
 
     Y_MPI(SINGLE);
     string layout = "16:16:16";
     size_t ghosts = 1;
-
+    if(argc>1) layout = argv[1];
+    if(argc>2) ghosts = string_convert::to<size_t>(argv[2],"ghosts");
+    
     Coord::DispWidth = 2;
     doTest<Coord1D>(MPI,layout,ghosts);
     doTest<Coord2D>(MPI,layout,ghosts);
