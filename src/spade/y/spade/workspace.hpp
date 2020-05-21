@@ -60,12 +60,22 @@ namespace upsylon {
 
                 
             protected:
-                explicit Workspace(const unsigned) throw();     //!< setup
-                void add(const _Field &, const FieldClass cls); //!< register a field
+                explicit Workspace(const unsigned) throw();                     //!< setup
+                void add(const _Field &, const FieldClass cls);                //!< register a field
                 static size_t CheckRank(const size_t size, const size_t rank); //!< validate size/rank
                 
+                //! check that the mapping has the right size
+                template <typename COORD> static inline
+                const COORD &CheckMapping(const size_t size, const COORD &C)
+                {
+                    CheckMappingValue(size, Coord::Product(C) );
+                    return C;
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Workspace);
+                static void CheckMappingValue(const size_t size, const Coord1D prod);
+
             };
         }
 
@@ -81,7 +91,7 @@ namespace upsylon {
             // types and definition
             static const unsigned Dimensions = Fragment<COORD>::Dimensions; //!< Dimensions
             static const unsigned Levels     = Fragment<COORD>::Levels;     //!< Levels = (3^Dimensions-1)/2
-            typedef struct FieldFor<COORD> __Field; //!< Field type selector
+            typedef struct FieldFor<COORD> __Field;                         //!< Field type selector
 
             //! setup
             inline explicit Workspace(const Layout<COORD> &fullLayout,

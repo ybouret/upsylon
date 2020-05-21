@@ -75,33 +75,12 @@ namespace upsylon {
                 return rank;
             }
             
-#if 0
-            Field & Workspace:: operator[](const string &id)
+            void Workspace:: CheckMappingValue(const size_t size, const Coord1D prod)
             {
-                _Field *p = aliasing::_(fdb).search(id);
-                if(!p) throw exception("%sno['%s']",fn,*id);
-                return **p;
+                if( size_t(prod) != size ) throw exception("%sinvalid mapping for size=%lu", fn,(unsigned long)size);
             }
             
-            Field & Workspace:: operator[](const char *id)
-            {
-                const string _(id);
-                return (*this)[_];
-            }
             
-            const Field & Workspace:: operator[](const string &id) const
-            {
-                const _Field *p =  fdb.search(id);
-                if(!p) throw exception("%sno const ['%s']",fn,*id);
-                return **p;
-            }
-            
-            const Field & Workspace:: operator[](const char *id) const
-            {
-                const string _(id);
-                return (*this)[_];
-            }
-#endif
         }
 
         

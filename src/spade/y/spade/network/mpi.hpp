@@ -185,12 +185,14 @@ namespace upsylon {
                                    const COORD          boundaries,
                                    const Coord1D        numGhosts) :
             Workspace<COORD>(fullLayout,
-                             mapping,
+                             this->CheckMapping(MPI.size,mapping),
                              MPI.rank,
                              boundaries,
                              numGhosts),
             blocks( Workspace<COORD>::Levels )
             {
+                assert(size_t(MPI.size)==this->size);
+                assert(size_t(MPI.rank)==this->rank);
             }
             
             

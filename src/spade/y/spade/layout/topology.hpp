@@ -567,13 +567,13 @@ namespace upsylon {
                 // members
                 //
                 //--------------------------------------------------------------
-                const slots<Links> links;
-                const size_t numFreeStanding; //!< info
-                const size_t numAutoExchange; //!< info
-                const size_t numAsyncTwoWays; //!< info
-                const size_t numAsyncForward; //!< info
-                const size_t numAsyncReverse; //!< info
-                const size_t numAsync;        //!< info
+                const slots<Links> links;           //!< all possible links
+                const size_t       numFreeStanding; //!< info
+                const size_t       numAutoExchange; //!< info
+                const size_t       numAsyncTwoWays; //!< info
+                const size_t       numAsyncForward; //!< info
+                const size_t       numAsyncReverse; //!< info
+                const size_t       numAsync;        //!< info
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

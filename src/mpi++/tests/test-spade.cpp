@@ -41,7 +41,8 @@ namespace {
             {
                 // try every periodic boundary condition
                 Y_MPI_HEAD( std::cerr << "|_pbcs=" << loop.value << std::endl );
-                Workspace<COORD> W( full, mapping, MPI.rank, loop.value, ghosts);
+                //Workspace<COORD> W( full, mapping, MPI.rank, loop.value, ghosts);
+                Domain<COORD>    W(MPI,full,mapping,loop.value,ghosts);
                 Y_MPI_NODE(std::cerr << " |_" << MPI.nodeName << std::endl;
                            std::cerr << "  |_inner: " << W.inner << std::endl;
                            std::cerr << "  |_outer: " << W.outer << std::endl );
@@ -59,20 +60,19 @@ namespace {
                 W.localSwap(all,sync);
                 W.localSwap(sub,sync);
                 
-                IOBlocks blocks( W.Levels );
 
                 sync.asyncSetup(all); Y_ASSERT(sync.style==comms::flexible_block_size);
                 sync.localSwap(all,W);
-                sync.asyncSwap(all,W,blocks);
+                sync.asyncSwap(all,W,W.blocks);
 
                 sync.asyncSetup(I); Y_ASSERT(sync.style==comms::computed_block_size);
                 sync.localSwap(I,W);
-                sync.asyncSwap(I,W,blocks);
+                sync.asyncSwap(I,W,W.blocks);
 
 
                 sync.asyncSetup(S); Y_ASSERT(sync.style==comms::flexible_block_size);
                 sync.localSwap(S,W);
-                sync.asyncSwap(S,W,blocks);
+                sync.asyncSwap(S,W,W.blocks);
 
 
                 
@@ -80,12 +80,10 @@ namespace {
                 sync.asyncSetup(sub);
                 Y_ASSERT(sync.style==comms::computed_block_size);
                 Y_ASSERT(sync.chunk==sizeof(int)+sizeof(double));
-                sync.asyncSwap(sub, W, blocks);
-
-
-                
+                sync.localSwap(sub,W);
+                sync.asyncSwap(sub,W,W.blocks);
             };
-
+            Y_MPI_NODE(std::cerr << MPI.nodeName << " send: " << MPI.commSend.data.full << " | recv: " << MPI.commRecv.data.full << std::endl);
         }
 
     }
