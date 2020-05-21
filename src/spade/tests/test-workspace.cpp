@@ -48,7 +48,7 @@ namespace {
                 {
                     Workspace<COORD> W( fullLayout, mapping, rank, loop.value, ng);
                     Y_ASSERT(W.rank==rank);
-                    //Y_ASSERT(W.size==cores);
+                    Y_ASSERT(W.size==cores);
                     
                     iField &I = W.template create<int>( "I" );
                     sField &S = W.template create<string>( "S" );

@@ -92,8 +92,7 @@ namespace upsylon {
             commScore(0)
             {
                 const Coord1D  ng   = abs_of(numGhosts);
-                const Node    &self = *this;
-
+                
                 //______________________________________________________________
                 //
                 //
@@ -110,8 +109,8 @@ namespace upsylon {
                 // scan main levels (0..Dimensions-1)
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    const Links &links = self[dim];
-                    switch(links.forward.connectMode)
+                    const Links &l = this->links[dim];
+                    switch(l.forward.connectMode)
                     {
                         case Connect::Zilch: break;
                         case Connect::Async:
@@ -119,7 +118,7 @@ namespace upsylon {
                             Coord::Of(upper,dim) += ng;
                     }
                     
-                    switch(links.reverse.connectMode)
+                    switch(l.reverse.connectMode)
                     {
                         case Connect::Zilch: break;
                         case Connect::Async:
@@ -216,7 +215,6 @@ namespace upsylon {
             {
                 assert(ng>0);
                 assert(0==commScore);
-                const Node &self = *this;
                 for(unsigned level=0;level<Levels;++level)
                 {
                     //----------------------------------------------------------
@@ -225,9 +223,9 @@ namespace upsylon {
                     //
                     //----------------------------------------------------------
                     
-                    const Links &links   = self[level];
-                    const Link  &forward = links.forward;
-                    const Link  &reverse = links.reverse;
+                    const Links &l       = this->links[level];
+                    const Link  &forward = l.forward;
+                    const Link  &reverse = l.reverse;
                     
                     assert(forward.probe== Topology<COORD>::Coordination::Probes[level]);
                     assert(reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
@@ -238,7 +236,7 @@ namespace upsylon {
                     // create swaps
                     //
                     //----------------------------------------------------------
-                    switch(links.connect)
+                    switch(l.connect)
                     {
                         case Connect:: FreeStanding:
                             break;
@@ -269,7 +267,7 @@ namespace upsylon {
                         } break;
                             
                         default:
-                            Connect::InvalidFlag(links.connect, Connect::Layouts);
+                            Connect::InvalidFlag(l.connect, Connect::Layouts);
                             break;
                     }
                 }

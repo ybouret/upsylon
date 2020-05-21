@@ -92,7 +92,7 @@ namespace upsylon {
             Kernel::Workspace(Dimensions),
             Topology<COORD>(mapping),
             Fragment<COORD>(fullLayout,
-                            this->getLocalRanks( CheckRank(Topology<COORD>::size,globalRank) ),
+                            this->getLocalRanks( CheckRank(this->size,globalRank) ),
                             *this,
                             boundaries,
                             numGhosts)

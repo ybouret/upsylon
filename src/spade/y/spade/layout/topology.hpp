@@ -506,7 +506,7 @@ namespace upsylon {
             //! a Node is an Hub with its Links[Levels]
             //
             //------------------------------------------------------------------
-            class Node : public Hub, public slots<Links>
+            class Node : public Hub
             {
             public:
                 //--------------------------------------------------------------
@@ -519,7 +519,7 @@ namespace upsylon {
                                      const Topology  &topology,
                                      const Boolean    pbc) :
                 Hub(localRanks,topology),
-                slots<Links>(Levels),
+                links(Levels),
                 numFreeStanding(0),
                 numAutoExchange(0),
                 numAsyncTwoWays(0),
@@ -534,8 +534,8 @@ namespace upsylon {
                         const Link   forward = getLink(topology,probe,pbc);
                         const Link   reverse = getLink(topology,-probe,pbc);
                         Connect::Authorize(level,forward.connectMode,reverse.connectMode);
-                        this->template build<const Link&,const Link&>(forward,reverse);
-                        const Connect::Flag connect = this->back().connect;
+                        aliasing::_(links).template build<const Link&,const Link&>(forward,reverse);
+                        const Connect::Flag connect = links.back().connect;
                         switch( connect )
                         {
                                 Y_SPADE_TOPO_NODE_INCR(FreeStanding);
@@ -567,6 +567,7 @@ namespace upsylon {
                 // members
                 //
                 //--------------------------------------------------------------
+                const slots<Links> links;
                 const size_t numFreeStanding; //!< info
                 const size_t numAutoExchange; //!< info
                 const size_t numAsyncTwoWays; //!< info

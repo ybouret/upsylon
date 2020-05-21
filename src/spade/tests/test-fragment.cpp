@@ -41,9 +41,9 @@ namespace {
                 std::cerr << "\t@localRanks=" << L.ranks << " / globalRank=" << L.rank << std::endl;
                 std::cerr << "\t|_inner=" << L.inner << std::endl;
                 std::cerr << "\t|_outer=" << L.outer << std::endl;
-                for(size_t i=0;i<L.size();++i)
+                for(size_t i=0;i<L.links.size();++i)
                 {
-                    const typename Topology<COORD>::Links &links = L[i];
+                    const typename Topology<COORD>::Links &links = L.links[i];
                     std::cerr << "\t|_" << links << std::endl;
                 }
                 L.displaySwaps();
