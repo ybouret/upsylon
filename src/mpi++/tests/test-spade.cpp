@@ -52,7 +52,7 @@ namespace {
                 W.template create<string>( "S" );
                 
                 W.activateFor(sync);
-                sync.asyncStyle(W.fields);
+                sync.asyncSetup(W.fields);
                 
                 W.localSwap(sync);
                 IOBlock send, recv;

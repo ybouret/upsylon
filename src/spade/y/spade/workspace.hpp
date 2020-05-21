@@ -25,7 +25,21 @@ namespace upsylon {
 
 
         typedef set<string,_Field> FieldsDB; //!< store fields by name
-        typedef vector<_Field>     FieldsIO; //!< store fields
+        typedef vector<_Field>     FieldsIO_; //!< store fields
+        
+        class FieldsIO : public FieldsIO_
+        {
+        public:
+            explicit FieldsIO() throw();
+            explicit FieldsIO(const size_t n);
+            virtual ~FieldsIO() throw();
+            FieldsIO( const FieldsIO &);
+            FieldsIO & operator=( const FieldsIO &);
+            
+            void sort() throw();
+            FieldsIO & operator<<( Field &);
+            
+        };
         
         
         namespace Kernel
@@ -37,9 +51,9 @@ namespace upsylon {
 
                 virtual ~Workspace() throw(); //!< cleanup
 
-                const unsigned dimensions; //!< dimensions
-                const FieldsDB fdb;        //!< all fields
-                const FieldsIO fields;     //!< all async
+                const unsigned  dimensions; //!< dimensions
+                const FieldsDB  fdb;        //!< all fields
+                const FieldsIO_ fields;     //!< all async
 
                 bool owns(const _Field &) const throw();
                 bool ownsAll(const accessible<_Field> &) const throw();

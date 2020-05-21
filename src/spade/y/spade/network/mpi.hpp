@@ -5,7 +5,6 @@
 
 #include "y/mpi++/xmpi.hpp"
 #include "y/spade/workspace.hpp"
-#include "y/ios/imstream.hpp"
 
 namespace upsylon {
 
@@ -28,7 +27,10 @@ namespace upsylon {
             
             const mpi &MPI; //!< MPI instance
 
-            //! forward waves, after asyncStyle was called
+            //! forward waves, after asyncSetup was called
+            /**
+             send to forward, recv in reverse
+             */
             // TODO: use GENERIC FIELD
             template <typename COORD>
             void forward(addressable<_Field>   &fields,
@@ -55,8 +57,7 @@ namespace upsylon {
                             asyncSave(send,fields,fwd.innerGhost);
                             asyncMake(recv,rev.outerGhost);
                             XMPI::vSendRecv(MPI,send,fwd.peer,recv,rev.peer,style);
-                            ios::imstream source(recv);
-                            asyncLoad(fields,source,rev.outerGhost);
+                            asyncLoad(fields,recv,rev.outerGhost);
 
                         } break;
 

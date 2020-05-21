@@ -54,9 +54,54 @@ namespace upsylon {
                 return true;
             }
 
-
         }
 
+        
+    }
+    
+}
+
+#include "y/sort/heap.hpp"
+
+namespace upsylon {
+    
+    namespace Spade {
+        
+        FieldsIO:: FieldsIO() throw() : FieldsIO_() {}
+        
+        FieldsIO:: FieldsIO(const size_t n) : FieldsIO_(n,as_capacity) {}
+
+        
+        FieldsIO:: ~FieldsIO() throw() {}
+        
+        FieldsIO:: FieldsIO(const FieldsIO &other) : FieldsIO_(other) {}
+        
+        FieldsIO & FieldsIO:: operator=( const FieldsIO &other )
+        {
+            FieldsIO_ &self = *this;
+            self = other;
+            return *this;
+        }
+        
+        static inline int compareByName(const _Field &lhs, const _Field &rhs ) throw()
+        {
+            return string::compare(lhs->name, rhs->name);
+        }
+        
+        void FieldsIO:: sort() throw()
+        {
+            hsort(*this,compareByName);
+        }
+
+        FieldsIO & FieldsIO:: operator<<( Field &f )
+        {
+            if(f.refcount()<=0) throw exception("Spade::FieldsIO(field '%s' is not dynamic)", *f.name);
+            const _Field F = &f;
+            push_back(F);
+            return *this;
+        }
+
+        
     }
 }
 

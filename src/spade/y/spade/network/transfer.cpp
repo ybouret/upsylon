@@ -1,6 +1,7 @@
 #include "y/spade/network/transfer.hpp"
 #include "y/type/spec.hpp"
 #include "y/exception.hpp"
+#include "y/ios/imstream.hpp"
 
 namespace upsylon {
     
@@ -19,7 +20,7 @@ namespace upsylon {
             IO.import(infra);
         }
         
-        void Transfer:: asyncStyle(const Field &field) throw()
+        void Transfer:: asyncSetup(const Field &field) throw()
         {
             assert(field.io);
             switch( aliasing::_(style) = field.io->style )
@@ -34,7 +35,7 @@ namespace upsylon {
 
         
         
-        void Transfer:: asyncStyle(const accessible<_Field> &fields) throw()
+        void Transfer:: asyncSetup(const accessible<_Field> &fields) throw()
         {
             aliasing::_(style) = comms::computed_block_size;
             aliasing::_(chunk) = 0;
@@ -123,6 +124,14 @@ namespace upsylon {
             }
         }
         
+        void Transfer:: asyncLoad(Field         &field,
+                                  const IOBlock &block,
+                                  const Ghost   &ghost) const
+        {
+            ios::imstream source(block);
+            asyncLoad(field,source,ghost);
+        }
+        
         void Transfer:: asyncLoad(addressable<_Field> &fields,
                                   ios::istream        &source,
                                   const Ghost         &ghost) const
@@ -144,6 +153,13 @@ namespace upsylon {
             }
         }
         
+        void Transfer:: asyncLoad(addressable<_Field>  &fields,
+                                  const IOBlock        &block,
+                                  const Ghost          &ghost) const
+        {
+            ios::imstream source(block);
+            asyncLoad(fields,source,ghost);
+        }
         
         void Transfer:: localSwap(Field         &field,
                                   const Indices &innerFwd,

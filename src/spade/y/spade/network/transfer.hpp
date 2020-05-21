@@ -114,10 +114,10 @@ namespace upsylon {
             //------------------------------------------------------------------
 
             //! set style from field
-            void asyncStyle(const Field &field)  throw();
+            void asyncSetup(const Field &field)  throw();
             
             //! set style from fields
-            void asyncStyle(const accessible<_Field> &fields) throw();
+            void asyncSetup(const accessible<_Field> &fields) throw();
             
             //! prepare block from style and chunk
             void asyncMake(IOBlock &block, const Ghost &ghost) const;
@@ -147,6 +147,10 @@ namespace upsylon {
                            const IOBlock &block,
                            const Ghost   &ghost) const;
             
+            //! use internal imstream
+            void asyncLoad(addressable<_Field> &fields,
+                           const IOBlock       &block,
+                           const Ghost         &ghost) const;
 
             //------------------------------------------------------------------
             //
