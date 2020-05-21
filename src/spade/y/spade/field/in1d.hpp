@@ -19,7 +19,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename T>
-        class Field1D : public Field<T>, public Layout1D
+        class Field1D : public FieldOf<T>, public Layout1D
         {
         public:
             //------------------------------------------------------------------
@@ -46,7 +46,7 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit Field1D(const LABEL      &id,
                              const LayoutType &L) :
-            Field<T>(id), LayoutType(L), item(0), built(0)
+            FieldOf<T>(id), LayoutType(L), item(0), built(0)
             {
                 setup(this->allocate(sizeof(T)*items));
                 build();
@@ -57,7 +57,7 @@ namespace upsylon {
             explicit Field1D(const LABEL &id,
                              const_coord  lo,
                              const_coord  up) :
-            Field<T>(id), LayoutType(lo,up), item(0), built(0)
+            FieldOf<T>(id), LayoutType(lo,up), item(0), built(0)
             {
                 setup(this->allocate(sizeof(T)*items));
                 build();
@@ -109,7 +109,7 @@ namespace upsylon {
             explicit Field1D(const LABEL      &id,
                              const LayoutType &L,
                              void             *data) :
-            Field<T>(id), LayoutType(L), item(0), built(0)
+            FieldOf<T>(id), LayoutType(L), item(0), built(0)
             {
                 setup(data);
                 build();

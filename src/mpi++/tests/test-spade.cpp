@@ -51,7 +51,8 @@ namespace {
                 W.template create<double>( "Dtmp", LocalField );
                 W.template create<string>( "S" );
                 W.activateFor(sync);
-
+                
+                //sync.asyncStyle(W.fields);
                 W.localSwap(sync);
                 IOBlock send, recv;
                 sync.forward( aliasing::_(W.fields), W, send, recv);

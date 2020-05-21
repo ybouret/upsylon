@@ -15,7 +15,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename T>
-        class Field3D : public Field<T>, public Layout3D
+        class Field3D : public FieldOf<T>, public Layout3D
         {
         public:
             //------------------------------------------------------------------
@@ -47,7 +47,7 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit Field3D(const LABEL      &id,
                              const LayoutType &L) :
-            Field<T>(id),
+            FieldOf<T>(id),
             LayoutType(L),
             sliceLayout(lower.xy(),upper.xy()),
             rowLayout(lower.x,lower.y),
@@ -72,7 +72,7 @@ namespace upsylon {
                     Coord1D indx = lower.z;
                     while(built<nslice)
                     {
-                        const string sid = this->name + Kernel::Field::Suffix(indx);
+                        const string sid = this->name + Field::Suffix(indx);
                         new (slice+built) Slice(sid,sliceLayout,rows,objs);
                         rows += rps;
                         objs += ops;

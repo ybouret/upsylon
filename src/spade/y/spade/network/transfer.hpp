@@ -38,8 +38,8 @@ namespace upsylon {
             //------------------------------------------------------------------
 
 
-            //! active a filed based on its objectType
-            void     activate( Kernel::Field &F ) const;
+            //! active a field based on its objectType
+            void     activate(Field &F) const;
 
 
             //! query I/O for a given type
@@ -64,7 +64,7 @@ namespace upsylon {
 
             //! swap local ghosts of one field
             template <typename COORD>
-            void localSwap(Kernel::Field         &field,
+            void localSwap(Field                 &field,
                            const Fragment<COORD> &fragment) const
             {
                 size_t n = fragment.autoExchange.size();
@@ -93,7 +93,7 @@ namespace upsylon {
             }
 
             //! local swap between ghosts
-            void localSwap(Kernel::Field &field,
+            void localSwap(Field         &field,
                            const Indices &innerFwd,
                            const Indices &outerFwd,
                            const Indices &innerRev,
@@ -109,21 +109,22 @@ namespace upsylon {
 
             //------------------------------------------------------------------
             //
-            // local I/O
+            // local I/O for one field of some fields
             //
             //------------------------------------------------------------------
 
             //! set style from field
-            void asyncStyle(const Kernel::Field &field)  throw();
+            void asyncStyle(const Field &field)  throw();
             
             //! set style from fields
             void asyncStyle(Fields              &fields) throw();
             
+            //! prepare block from style and chunk
             void asyncMake(IOBlock &block, const Ghost &ghost) const;
             
             //! save ghost of field into block
             void asyncSave(IOBlock             &block,
-                           const Kernel::Field &field,
+                           const Field         &field,
                            const Ghost         &ghost) const;
 
             //! save ghost of fields into block
@@ -132,7 +133,7 @@ namespace upsylon {
                            const Ghost         &ghost) const;
 
             //! load ghost of fields into block
-            void asyncLoad(Kernel::Field &field,
+            void asyncLoad(Field         &field,
                            ios::istream  &source,
                            const Ghost   &ghost) const;
 
@@ -142,7 +143,7 @@ namespace upsylon {
                            const Ghost   &ghost) const;
             
             //! use internal imstream
-            void asyncLoad(Kernel::Field &field,
+            void asyncLoad(Field         &field,
                            const IOBlock &block,
                            const Ghost   &ghost) const;
             

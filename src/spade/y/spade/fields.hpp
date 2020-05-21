@@ -43,8 +43,8 @@ namespace upsylon {
             };
         };
         
-        typedef intr_ptr<string,Kernel::Field>   FieldHandle; //!< low-level field pointer
-        typedef addressable<FieldHandle>         Fields;      //!< collection of fields
+        typedef intr_ptr<string,Field>   FieldHandle; //!< low-level field pointer
+        typedef addressable<FieldHandle> Fields;
     }
 
 }

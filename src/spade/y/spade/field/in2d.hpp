@@ -21,7 +21,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename T>
-        class Field2D : public Field<T>, public Layout2D
+        class Field2D : public FieldOf<T>, public Layout2D
         {
         public:
             //------------------------------------------------------------------
@@ -50,7 +50,7 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit Field2D(const LABEL      &id,
                              const LayoutType &L) :
-            Field<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
+            FieldOf<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
             {
                 create();
             }
@@ -60,7 +60,7 @@ namespace upsylon {
             explicit Field2D(const LABEL      &id,
                              const_coord       lo,
                              const_coord       hi) :
-            Field<T>(id), LayoutType(lo,hi), Y_FIELD2D_CTOR()
+            FieldOf<T>(id), LayoutType(lo,hi), Y_FIELD2D_CTOR()
             {
                 create();
             }
@@ -157,7 +157,7 @@ namespace upsylon {
                     Coord1D       indx = lower.y;
                     while(built<nrow)
                     {
-                        const string id = this->name + Kernel::Field::Suffix(indx);
+                        const string id = this->name + Field::Suffix(indx);
                         new (row+built) Row(id,rowLayout,objs);
                         ++built;
                         ++indx;
@@ -179,7 +179,7 @@ namespace upsylon {
                              const LayoutType &L,
                              void             *rowAddr,
                              void             *objAddr) :
-            Field<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
+            FieldOf<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
             {
                 build(rowAddr,objAddr);
             }
