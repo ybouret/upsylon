@@ -22,23 +22,20 @@ namespace upsylon {
             LocalField  //!< helper field
         };
 
-
-
-        typedef set<string,_Field> FieldsDB; //!< store fields by name
-        typedef vector<_Field>     FieldsIO_; //!< store fields
+        typedef set<string,_Field> FieldsDB;  //!< store fields by name
+        typedef vector<_Field>     FieldsIO_; //!< base class to handle fields
         
+        //! Fields for I/O
         class FieldsIO : public FieldsIO_
         {
         public:
-            explicit FieldsIO() throw();
-            explicit FieldsIO(const size_t n);
-            virtual ~FieldsIO() throw();
-            FieldsIO( const FieldsIO &);
-            FieldsIO & operator=( const FieldsIO &);
-            
-            void sort() throw();
-            FieldsIO & operator<<( Field &);
-            
+            explicit FieldsIO() throw();             //!< setup
+            explicit FieldsIO(const size_t n);       //!< setup with memory
+            virtual ~FieldsIO() throw();             //!< cleanup
+            FieldsIO( const FieldsIO &);             //!< copy
+            FieldsIO & operator=( const FieldsIO &); //!< assign
+            void sort() throw();                     //!< sort by name
+            FieldsIO & operator<<( Field &);         //!< check dynamic
         };
         
         
@@ -55,9 +52,17 @@ namespace upsylon {
                 const FieldsDB  fdb;        //!< all fields
                 const FieldsIO  fields;     //!< all async
 
-                bool owns(const _Field &) const throw();
-                bool ownsAll(const accessible<_Field> &) const throw();
+                bool owns(const _Field &) const throw();                //!< check ownership
+                bool ownsAll(const accessible<_Field> &) const throw(); //!< check ownershipt
 
+                
+                Field       & operator[](const string &id);        //!< access
+                Field       & operator[](const char   *id);        //!< access
+
+                const Field & operator[](const string &id) const;  //!< access const
+                const Field & operator[](const char   *id) const;  //!< access const
+
+                
             protected:
                 explicit Workspace(const unsigned) throw();          //!< setup
                 void add(const _Field &, const FieldClass cls); //!< register a field
@@ -77,7 +82,8 @@ namespace upsylon {
         public:
 
             // types and definition
-            static const unsigned Dimensions = Fragment<COORD>::Dimensions; //!< Dimesions
+            static const unsigned Dimensions = Fragment<COORD>::Dimensions; //!< Dimensions
+            static const unsigned Levels     = Fragment<COORD>::Levels;     //!< Levels = (3^Dimensions-1)/2
             typedef struct FieldFor<COORD> __Field; //!< Field type selector
 
             //! setup

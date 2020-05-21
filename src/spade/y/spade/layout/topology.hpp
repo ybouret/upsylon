@@ -524,7 +524,8 @@ namespace upsylon {
                 numAutoExchange(0),
                 numAsyncTwoWays(0),
                 numAsyncForward(0),
-                numAsyncReverse(0)
+                numAsyncReverse(0),
+                numAsync(0)
                 {
                     // scan the neighbourhood in each level
                     for(unsigned level=0;level<Levels;++level)
@@ -547,6 +548,7 @@ namespace upsylon {
                                 break;
                         }
                     }
+                    aliasing::_(numAsync) = numAsyncTwoWays + numAsyncForward + numAsyncReverse;
 #if 0
                     Y_SPADE_TOPO_NODE_DISP(FreeStanding);
                     Y_SPADE_TOPO_NODE_DISP(AutoExchange);
@@ -570,7 +572,8 @@ namespace upsylon {
                 const size_t numAsyncTwoWays; //!< info
                 const size_t numAsyncForward; //!< info
                 const size_t numAsyncReverse; //!< info
-
+                const size_t numAsync;        //!< info
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
                 inline Link getLink(const Topology &topology,

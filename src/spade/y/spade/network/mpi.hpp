@@ -10,6 +10,10 @@ namespace upsylon {
 
     namespace Spade {
 
+        
+       
+        
+        
         //! handle multiple transfers
         class Synchronize : public Transfer
         {
@@ -35,18 +39,21 @@ namespace upsylon {
             template <typename COORD>
             void forward(addressable<_Field>   &fields,
                          const Fragment<COORD> &fragment,
-                         IOBlock               &send,
-                         IOBlock               &recv)
+                         IOBlocks              &blocks)
             {
+                assert(blocks.size() == 2*Fragment<COORD>::Levels);
+                
                 size_t iForward=0;
                 size_t iTwoWays=0;
                 size_t iReverse=0;
                 
-                for(unsigned i=0;i<Fragment<COORD>::Levels;++i)
+                for(unsigned i=0,j=0;i<Fragment<COORD>::Levels;++i)
                 {
-                    send.free();
-                    
+                    IOBlock                               &send  = blocks[j++];
+                    IOBlock                               &recv  = blocks[j++];
                     const typename Topology<COORD>::Links &links = fragment[i];
+                    
+                    send.free();
                     switch(links.connect)
                     {
                         case Connect::AsyncTwoWays: {
@@ -54,6 +61,7 @@ namespace upsylon {
                             const Ghosts                   &fwd = *(xch.forward);
                             const Ghosts                   &rev = *(xch.reverse);
                             
+                           
                             asyncSave(send,fields,fwd.innerGhost);
                             asyncMake(recv,rev.outerGhost);
                             XMPI::vSendRecv(MPI,send,fwd.peer,recv,rev.peer,style);

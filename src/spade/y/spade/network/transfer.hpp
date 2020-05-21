@@ -12,9 +12,24 @@ namespace upsylon {
     
     namespace Spade
     {
-
-        typedef ios::ovstream IOBlock; //!< alias
-
+        
+        typedef ios::ovstream  IOBlock;      //!< alias
+        typedef slots<IOBlock> IOBlocksType; //!< alias
+        
+        //! use as block cache
+        class IOBlocks : public IOBlocksType
+        {
+        public:
+            explicit IOBlocks(const size_t levels); //!< create two blocks per level
+            virtual ~IOBlocks() throw();            //!< cleanup
+        
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(IOBlocks);
+        };
+        
+        
+        
+        
         //----------------------------------------------------------------------
         //
         //! tranfer of ghosts/swaps
@@ -30,38 +45,38 @@ namespace upsylon {
             //------------------------------------------------------------------
             explicit Transfer(const comms::infrastructure where); //!< initialize
             virtual ~Transfer() throw();                           //!< cleanup
-
+            
             //------------------------------------------------------------------
             //
             // Managing types
             //
             //------------------------------------------------------------------
-
-
+            
+            
             //! active a field based on its objectType
             void     activate(Field &F) const;
-
-
+            
+            
             //! query I/O for a given type
             template <typename T> inline
             const ios::conveyor & query()
             {
                 return IO.query<T>(infra);
             }
-
+            
             //! query I/O for a tuple of type
             template <template <typename> class TUPLE, typename T> inline
             const ios::conveyor & query()
             {
                 return IO.query<TUPLE,T>(infra);
             }
-
+            
             //------------------------------------------------------------------
             //
             // local I/O
             //
             //------------------------------------------------------------------
-
+            
             //! swap local ghosts of one field
             template <typename COORD>
             void localSwap(Field                 &field,
@@ -76,7 +91,7 @@ namespace upsylon {
                     localSwap(field,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
                 }
             }
-
+            
             //! swap local ghosts for all fields
             template <typename COORD>
             void localSwap(addressable<_Field>   &fields,
@@ -91,28 +106,28 @@ namespace upsylon {
                     localSwap(fields,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
                 }
             }
-
+            
             //! local swap between ghosts
             void localSwap(Field         &field,
                            const Indices &innerFwd,
                            const Indices &outerFwd,
                            const Indices &innerRev,
                            const Indices &outerRev) const;
-
+            
             //! local swap between ghosts
             void localSwap(addressable<_Field> &fields,
                            const Indices       &innerFwd,
                            const Indices       &outerFwd,
                            const Indices       &innerRev,
                            const Indices       &outerRev) const;
-
-
+            
+            
             //------------------------------------------------------------------
             //
             // local I/O for one field of some fields
             //
             //------------------------------------------------------------------
-
+            
             //! set style from field
             void asyncSetup(const Field &field)  throw();
             
@@ -126,17 +141,17 @@ namespace upsylon {
             void asyncSave(IOBlock             &block,
                            const Field         &field,
                            const Ghost         &ghost) const;
-
+            
             //! save ghost of fields into block
             void asyncSave(IOBlock                  &block,
                            const accessible<_Field> &fields,
                            const Ghost              &ghost) const;
-
+            
             //! load ghost of fields into block
             void asyncLoad(Field         &field,
                            ios::istream  &source,
                            const Ghost   &ghost) const;
-
+            
             //! load ghost of fields into block
             void asyncLoad(addressable<_Field> &fields,
                            ios::istream        &source,
@@ -151,26 +166,26 @@ namespace upsylon {
             void asyncLoad(addressable<_Field> &fields,
                            const IOBlock       &block,
                            const Ghost         &ghost) const;
-
+            
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
-
+            
             const comms::infrastructure infra; //!< global
             const comms::shipping_style style; //!< local, based on types
             const size_t                chunk; //!< bytes per item
             ios::conveyors             &IO;    //!< shared database
-
-
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Transfer);
         };
-
+        
     }
-
-
+    
+    
 }
 
 

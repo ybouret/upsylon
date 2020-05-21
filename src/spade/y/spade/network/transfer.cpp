@@ -7,6 +7,20 @@ namespace upsylon {
     
     namespace Spade {
         
+        IOBlocks:: IOBlocks(const size_t levels) :
+        IOBlocksType(2*levels)
+        {
+            while( size() < count )
+            {
+                build();
+            }
+        }
+        
+        IOBlocks::~IOBlocks() throw()
+        {
+        }
+        
+        
         Transfer:: ~Transfer() throw()
         {
         }

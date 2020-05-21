@@ -53,16 +53,24 @@ namespace {
                 
                 FieldsIO  all = W.fields;
                 FieldsIO  sub;
-                sub << I;
+                sub << I << W["D"];
                 
                 W.activateFor(sync);
-                
-                sync.asyncSetup(all);
                 W.localSwap(all,sync);
                 W.localSwap(sub,sync);
                 
-                IOBlock send, recv;
-                sync.forward(all, W, send, recv);
+                IOBlocks blocks( W.Levels );
+
+                sync.asyncSetup(all); Y_ASSERT(sync.style==comms::flexible_block_size);
+
+                sync.forward(all, W, blocks);
+                
+                sync.asyncSetup(sub);
+                Y_ASSERT(sync.style==comms::computed_block_size);
+                Y_ASSERT(sync.chunk==sizeof(int)+sizeof(double));
+                sync.forward(sub, W, blocks);
+                
+                
             };
 
         }

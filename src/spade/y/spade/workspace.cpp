@@ -8,6 +8,8 @@ namespace upsylon {
 
         namespace Kernel
         {
+            static const char fn[] = "Spade::Workspace: ";
+            
             Workspace:: ~Workspace() throw()
             {
             }
@@ -26,7 +28,7 @@ namespace upsylon {
                 // into database
                 if(! aliasing::_(fdb).insert(P))
                 {
-                    throw exception("Spade::Workspace(multiple field '%s')", *id);
+                    throw exception("%sadd multiple field '%s'", fn,*id);
                 }
 
                 // put it in fields if necessary
@@ -52,6 +54,32 @@ namespace upsylon {
                     if( ! owns(F[i]) ) return false;
                 }
                 return true;
+            }
+
+            Field & Workspace:: operator[](const string &id)
+            {
+                _Field *p = aliasing::_(fdb).search(id);
+                if(!p) throw exception("%sno['%s']",fn,*id);
+                return **p;
+            }
+            
+            Field & Workspace:: operator[](const char *id)
+            {
+                const string _(id);
+                return (*this)[_];
+            }
+            
+            const Field & Workspace:: operator[](const string &id) const
+            {
+                const _Field *p =  fdb.search(id);
+                if(!p) throw exception("%sno const ['%s']",fn,*id);
+                return **p;
+            }
+            
+            const Field & Workspace:: operator[](const char *id) const
+            {
+                const string _(id);
+                return (*this)[_];
             }
 
         }
