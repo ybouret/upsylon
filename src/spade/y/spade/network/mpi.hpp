@@ -50,7 +50,7 @@ namespace upsylon {
                 {
                     IOBlock                               &send  = blocks[j++];
                     IOBlock                               &recv  = blocks[j++];
-                    const typename Topology<COORD>::Links &links = fragment[i];
+                    const typename Topology<COORD>::Links &links = fragment.links[i];
                     
                     send.free();
                     switch(links.connect)
@@ -109,7 +109,7 @@ namespace upsylon {
                 {
                     IOBlock                               &send  = blocks[j++];
                     IOBlock                               &recv  = blocks[j++];
-                    const typename Topology<COORD>::Links &links = fragment[i];
+                    const typename Topology<COORD>::Links &links = fragment.links[i];
                     
                     send.free();
                     switch(links.connect)
