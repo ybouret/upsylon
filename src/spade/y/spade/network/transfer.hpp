@@ -79,7 +79,7 @@ namespace upsylon {
 
             //! swap local ghosts for all fields
             template <typename COORD>
-            void localSwap(Fields                &fields,
+            void localSwap(addressable<_Field>   &fields,
                            const Fragment<COORD> &fragment) const
             {
                 size_t n = fragment.autoExchange.size();
@@ -100,11 +100,11 @@ namespace upsylon {
                            const Indices &outerRev) const;
 
             //! local swap between ghosts
-            void localSwap(Fields        &fields,
-                           const Indices &innerFwd,
-                           const Indices &outerFwd,
-                           const Indices &innerRev,
-                           const Indices &outerRev) const;
+            void localSwap(addressable<_Field> &fields,
+                           const Indices       &innerFwd,
+                           const Indices       &outerFwd,
+                           const Indices       &innerRev,
+                           const Indices       &outerRev) const;
 
 
             //------------------------------------------------------------------
@@ -117,7 +117,7 @@ namespace upsylon {
             void asyncStyle(const Field &field)  throw();
             
             //! set style from fields
-            void asyncStyle(Fields              &fields) throw();
+            void asyncStyle(const accessible<_Field> &fields) throw();
             
             //! prepare block from style and chunk
             void asyncMake(IOBlock &block, const Ghost &ghost) const;
@@ -128,9 +128,9 @@ namespace upsylon {
                            const Ghost         &ghost) const;
 
             //! save ghost of fields into block
-            void asyncSave(IOBlock             &block,
-                           Fields              &fields,
-                           const Ghost         &ghost) const;
+            void asyncSave(IOBlock                  &block,
+                           const accessible<_Field> &fields,
+                           const Ghost              &ghost) const;
 
             //! load ghost of fields into block
             void asyncLoad(Field         &field,
@@ -138,9 +138,9 @@ namespace upsylon {
                            const Ghost   &ghost) const;
 
             //! load ghost of fields into block
-            void asyncLoad(Fields        &fields,
-                           ios::istream  &source,
-                           const Ghost   &ghost) const;
+            void asyncLoad(addressable<_Field> &fields,
+                           ios::istream        &source,
+                           const Ghost         &ghost) const;
             
             //! use internal imstream
             void asyncLoad(Field         &field,

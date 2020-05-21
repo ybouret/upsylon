@@ -20,7 +20,7 @@ namespace upsylon {
             }
             
             
-            void Workspace:: add(const FieldHandle &P, const FieldClass cls )
+            void Workspace:: add(const _Field &P, const FieldClass cls )
             {
                 const string &id = P->name;
                 // into database
@@ -39,13 +39,13 @@ namespace upsylon {
                 }
             }
 
-            bool Workspace:: owns(const FieldHandle &F) const throw()
+            bool Workspace:: owns(const _Field &F) const throw()
             {
-                const FieldHandle *p = fdb.search(F->name);
+                const _Field *p = fdb.search(F->name);
                 return( NULL!=p) && (*p == F) ;
             }
 
-            bool Workspace:: ownsAll(Fields &F) const throw()
+            bool Workspace:: ownsAll(const accessible<_Field> &F) const throw()
             {
                 for(size_t i=F.size();i>0;--i)
                 {

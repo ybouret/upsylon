@@ -51,7 +51,7 @@ namespace {
                 slots<iFieldHandle> iFields(size);
                 slots<sFieldHandle> sFields(size);
                 
-                vector<FieldHandle> fields;
+                vector<_Field> fields;
                 
                 
                 // filling

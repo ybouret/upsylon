@@ -34,7 +34,7 @@ namespace upsylon {
 
         
         
-        void Transfer:: asyncStyle(Fields &fields) throw()
+        void Transfer:: asyncStyle(const accessible<_Field> &fields) throw()
         {
             aliasing::_(style) = comms::computed_block_size;
             aliasing::_(chunk) = 0;
@@ -88,9 +88,9 @@ namespace upsylon {
             }
         }
         
-        void Transfer:: asyncSave(IOBlock       &block,
-                                  Fields        &fields,
-                                  const Ghost   &ghost) const
+        void Transfer:: asyncSave(IOBlock                  &block,
+                                  const accessible<_Field> &fields,
+                                  const Ghost              &ghost) const
         {
             const size_t f = fields.size();
             size_t       n = ghost.items;
@@ -123,9 +123,9 @@ namespace upsylon {
             }
         }
         
-        void Transfer:: asyncLoad(Fields        &fields,
-                                  ios::istream  &source,
-                                  const Ghost   &ghost) const
+        void Transfer:: asyncLoad(addressable<_Field> &fields,
+                                  ios::istream        &source,
+                                  const Ghost         &ghost) const
         {
             const size_t f = fields.size();
             size_t       n  = ghost.items;
@@ -166,11 +166,11 @@ namespace upsylon {
             }
         }
         
-        void Transfer:: localSwap(Fields        &fields,
-                                  const Indices &innerFwd,
-                                  const Indices &outerFwd,
-                                  const Indices &innerRev,
-                                  const Indices &outerRev) const
+        void Transfer:: localSwap(addressable<_Field> &fields,
+                                  const Indices       &innerFwd,
+                                  const Indices       &outerFwd,
+                                  const Indices       &innerRev,
+                                  const Indices       &outerRev) const
         {
             assert(innerFwd.size() == outerFwd.size() );
             assert(innerFwd.size() == outerRev.size() );

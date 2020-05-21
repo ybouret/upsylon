@@ -31,7 +31,7 @@ namespace upsylon {
             //! forward waves, after asyncStyle was called
             // TODO: use GENERIC FIELD
             template <typename COORD>
-            void forward(Fields                &fields,
+            void forward(addressable<_Field>   &fields,
                          const Fragment<COORD> &fragment,
                          IOBlock               &send,
                          IOBlock               &recv)

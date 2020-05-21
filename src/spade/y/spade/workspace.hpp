@@ -24,9 +24,10 @@ namespace upsylon {
 
 
 
-        typedef set<string,FieldHandle> FieldsDataBase; //!< store fields by name
-        typedef vector<FieldHandle>     FieldsSequence; //!< store fields
-
+        typedef set<string,_Field> FieldsDB; //!< store fields by name
+        typedef vector<_Field>     FieldsIO; //!< store fields
+        
+        
         namespace Kernel
         {
             //! common Workspace stuff
@@ -36,16 +37,16 @@ namespace upsylon {
 
                 virtual ~Workspace() throw(); //!< cleanup
 
-                const unsigned       dimensions; //!< dimensions
-                const FieldsDataBase fdb;        //!< all fields
-                const FieldsSequence fields;     //!< all async
+                const unsigned dimensions; //!< dimensions
+                const FieldsDB fdb;        //!< all fields
+                const FieldsIO fields;     //!< all async
 
-                bool owns(const FieldHandle &) const throw();
-                bool ownsAll(Fields &) const throw();
+                bool owns(const _Field &) const throw();
+                bool ownsAll(const accessible<_Field> &) const throw();
 
             protected:
                 explicit Workspace(const unsigned) throw();          //!< setup
-                void add(const FieldHandle &, const FieldClass cls); //!< register a field
+                void add(const _Field &, const FieldClass cls); //!< register a field
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Workspace);
@@ -90,8 +91,8 @@ namespace upsylon {
             {
                 // create a field base on outer layout
                 typedef typename __Field:: template Of<T>::Type FieldType;
-                FieldType        *F = new FieldType(id,this->outer);
-                const FieldHandle P = F;
+                FieldType    *F = new FieldType(id,this->outer);
+                const _Field  P = F;
 
                 // insert into database/fields
                 add(P,cls);
@@ -118,8 +119,8 @@ namespace upsylon {
             }
 
             //! localSwap of someFields
-            inline void localSwap(Fields         &someFields,
-                                  const Transfer &transfer )
+            inline void localSwap(addressable<_Field> &someFields,
+                                  const Transfer      &transfer )
             {
                 assert(ownsAll(someFields));
                 transfer.localSwap(someFields,*this);
