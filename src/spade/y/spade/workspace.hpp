@@ -54,19 +54,16 @@ namespace upsylon {
 
                 bool owns(const _Field &) const throw();                //!< check ownership
                 bool ownsAll(const accessible<_Field> &) const throw(); //!< check ownershipt
-
                 
-                Field       & operator[](const string &id);        //!< access
-                Field       & operator[](const char   *id);        //!< access
-
-                const Field & operator[](const string &id) const;  //!< access const
-                const Field & operator[](const char   *id) const;  //!< access const
+                const Field & getField(const string &id) const; //!< get field by name
+                const Field & getField(const char   *id) const; //!< get field by name
 
                 
             protected:
-                explicit Workspace(const unsigned) throw();          //!< setup
+                explicit Workspace(const unsigned) throw();     //!< setup
                 void add(const _Field &, const FieldClass cls); //!< register a field
-
+                static size_t CheckRank(const size_t size, const size_t rank); //!< validate size/rank
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Workspace);
             };
@@ -95,7 +92,7 @@ namespace upsylon {
             Kernel::Workspace(Dimensions),
             Topology<COORD>(mapping),
             Fragment<COORD>(fullLayout,
-                            this->getLocalRanks(globalRank),
+                            this->getLocalRanks( CheckRank(Topology<COORD>::size,globalRank) ),
                             *this,
                             boundaries,
                             numGhosts)
@@ -105,6 +102,20 @@ namespace upsylon {
             //! cleanup
             inline virtual ~Workspace() throw() {}
 
+            //! get field by name
+            template <typename LABEL>
+            Field & operator[](const LABEL &id)
+            {
+                return (Field &)getField(id);
+            }
+            
+            //! get field by name
+            template <typename LABEL>
+            const Field & operator[](const LABEL &id) const
+            {
+                return getField(id);
+            }
+            
             //! create a new field
             template <typename T>
             typename __Field:: template Of<T>::Type & create(const string &id, const FieldClass cls=AsyncField)

@@ -56,6 +56,26 @@ namespace upsylon {
                 return true;
             }
 
+            const Field & Workspace:: getField(const string &id) const
+            {
+                const _Field *p =  fdb.search(id);
+                if(!p) throw exception("%sno const ['%s']",fn,*id);
+                return **p;
+            }
+            
+            const Field & Workspace:: getField(const char *id) const
+            {
+                const string _(id);
+                return getField(_);
+            }
+            
+            size_t Workspace:: CheckRank(const size_t size, const size_t rank)
+            {
+                if(rank>=size) throw exception("%srank=%lu>=size=%lu",fn,(unsigned long)size, (unsigned long)rank );
+                return rank;
+            }
+            
+#if 0
             Field & Workspace:: operator[](const string &id)
             {
                 _Field *p = aliasing::_(fdb).search(id);
@@ -81,7 +101,7 @@ namespace upsylon {
                 const string _(id);
                 return (*this)[_];
             }
-
+#endif
         }
 
         

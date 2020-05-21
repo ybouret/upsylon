@@ -78,23 +78,8 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! swap local ghosts of one field
-            template <typename COORD>
-            void localSwap(Field                 &field,
-                           const Fragment<COORD> &fragment) const
-            {
-                size_t n = fragment.autoExchange.size();
-                while(n-- > 0 )
-                {
-                    const AutoExchangeSwaps<COORD> &xch = fragment.autoExchange[n];
-                    const Ghosts                   &fwd = *(xch.forward);
-                    const Ghosts                   &rev = *(xch.reverse);
-                    localSwap(field,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
-                }
-            }
-            
-            //! swap local ghosts for all fields
-            template <typename COORD>
-            void localSwap(addressable<_Field>   &fields,
+            template <typename ONE_OR_MORE_FIELDS, typename COORD>
+            void localSwap(ONE_OR_MORE_FIELDS    &fields,
                            const Fragment<COORD> &fragment) const
             {
                 size_t n = fragment.autoExchange.size();
@@ -106,6 +91,7 @@ namespace upsylon {
                     localSwap(fields,fwd.innerGhost,fwd.outerGhost,rev.innerGhost,rev.outerGhost);
                 }
             }
+            
             
             //! local swap between ghosts
             void localSwap(Field         &field,

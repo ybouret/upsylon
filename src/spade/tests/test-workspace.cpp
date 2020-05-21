@@ -48,7 +48,8 @@ namespace {
                 {
                     Workspace<COORD> W( fullLayout, mapping, rank, loop.value, ng);
                     Y_ASSERT(W.rank==rank);
-
+                    //Y_ASSERT(W.size==cores);
+                    
                     iField &I = W.template create<int>( "I" );
                     sField &S = W.template create<string>( "S" );
                     dField &D = W.template create<double>( "D" );
@@ -56,7 +57,10 @@ namespace {
                     Y_ASSERT(I.items==W.outer.items);
                     Y_ASSERT(S.items==W.outer.items);
                     Y_ASSERT(D.items==W.outer.items);
-
+                    Y_ASSERT( &I == & W["I"] );
+                    
+                    
+                    
                     W.activateFor(transfer);
                     W.localSwap(transfer);
                 }

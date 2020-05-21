@@ -3,9 +3,10 @@
 #define Y_SEQUENCE_SLOTS_INCLUDED 1
 
 #include "y/dynamic.hpp"
- #include "y/type/args.hpp"
+#include "y/type/args.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/memory/global.hpp"
+#include "y/type/block/zset.hpp"
 #include <iostream>
 
 namespace upsylon {
@@ -163,7 +164,9 @@ namespace upsylon {
         {
             while(size_>0)
             {
-                self_destruct( addr[--size_] );
+                mutable_type  &zone = addr[--size_];
+                self_destruct( zone );
+                bzset(zone);
             }
             void *entry = addr;
             ALLOCATOR::location().release(entry,bytes);

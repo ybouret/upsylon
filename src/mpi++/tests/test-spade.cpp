@@ -17,7 +17,7 @@ namespace {
                 const size_t ghosts)
     {
         typedef typename FieldFor<COORD>::template Of<int>::Type    iField;
-        //typedef typename FieldFor<COORD>::template Of<string>::Type sField;
+        typedef typename FieldFor<COORD>::template Of<string>::Type sField;
         //typedef typename FieldFor<COORD>::template Of<double>::Type dField;
 
         static const unsigned Dimensions = Coord::Get<COORD>::Dimensions;
@@ -49,7 +49,7 @@ namespace {
                 iField &I = W.template create<int>(    "I" );
                 W.template create<double>( "D" );
                 W.template create<double>( "Dtmp", LocalField );
-                W.template create<string>( "S" );
+                sField &S = W.template create<string>( "S" );
                 
                 FieldsIO  all = W.fields;
                 FieldsIO  sub;
@@ -62,14 +62,27 @@ namespace {
                 IOBlocks blocks( W.Levels );
 
                 sync.asyncSetup(all); Y_ASSERT(sync.style==comms::flexible_block_size);
+                sync.localSwap(all,W);
+                sync.asyncSwap(all,W,blocks);
 
-                sync.forward(all, W, blocks);
+                sync.asyncSetup(I); Y_ASSERT(sync.style==comms::computed_block_size);
+                sync.localSwap(I,W);
+                sync.asyncSwap(I,W,blocks);
+
+
+                sync.asyncSetup(S); Y_ASSERT(sync.style==comms::flexible_block_size);
+                sync.localSwap(S,W);
+                sync.asyncSwap(S,W,blocks);
+
+
+                
                 
                 sync.asyncSetup(sub);
                 Y_ASSERT(sync.style==comms::computed_block_size);
                 Y_ASSERT(sync.chunk==sizeof(int)+sizeof(double));
-                sync.forward(sub, W, blocks);
-                
+                sync.asyncSwap(sub, W, blocks);
+
+
                 
             };
 
