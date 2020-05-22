@@ -30,6 +30,38 @@ namespace upsylon {
                     F[loop.value] = args;
                 }
             }
+
+            //! count the number of same values
+            template <typename FIELD> static inline
+            size_t CountSame(const FIELD                      &F,
+                             const typename FIELD::LayoutType sub,
+                             typename       FIELD::param_type args)
+            {
+                assert(F.contains(sub));
+                typename FIELD::LayoutType::Loop loop(sub.lower,sub.upper);
+                size_t ans = 0;
+                for(loop.boot();loop.good();loop.next())
+                {
+                    if(args==F[loop.value]) ++ans;
+                }
+                return ans;
+            }
+
+            //! count the number of different values
+            template <typename FIELD> static inline
+            size_t CountDiff(const FIELD                      &F,
+                             const typename FIELD::LayoutType sub,
+                             typename       FIELD::param_type args)
+            {
+                assert(F.contains(sub));
+                typename FIELD::LayoutType::Loop loop(sub.lower,sub.upper);
+                size_t ans = 0;
+                for(loop.boot();loop.good();loop.next())
+                {
+                    if(args!=F[loop.value]) ++ans;
+                }
+                return ans;
+            }
         };
         
         

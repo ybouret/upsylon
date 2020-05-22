@@ -2,6 +2,7 @@
 #include "y/spade/network/mpi.hpp"
 #include "y/spade/workspace.hpp"
 #include "y/spade/fields.hpp"
+#include "y/spade/field/ops.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
@@ -48,8 +49,9 @@ namespace {
                            std::cerr << "  |_outer: " << W.outer << std::endl );
 
                 iField &I = W.template create<int>(    "I" );
-                W.template create<double>( "D" );
-                W.template create<double>( "Dtmp", LocalField );
+                iField &J = W.template create<int>(    "J" );
+                (void)      W.template create<double>( "D" );
+                (void)      W.template create<double>( "Dtmp", LocalField );
                 sField &S = W.template create<string>( "S" );
                 
                 FieldsIO  all = W.fields;
@@ -74,9 +76,53 @@ namespace {
 
 
                 sync.asyncSetup(sub);
-                Y_ASSERT(sync.style==comms::computed_block_size);
-                Y_ASSERT(sync.chunk==sizeof(int)+sizeof(double));
+
                 W.exchange(sub,sync);
+
+                // check exchanges are OK!
+                sub.free();
+                sub << I << J;
+                sync.asyncSetup(sub);
+                Y_ASSERT(sync.style==comms::computed_block_size);
+                Y_ASSERT(sync.chunk==sizeof(int)+sizeof(int));
+
+                Ops::Ld(I,I,-1);
+                Ops::Ld(J,J, 2);
+                Ops::Ld(I,W.inner,MPI.rank);
+                Ops::Ld(J,W.inner,-MPI.rank);
+
+
+                W.exchange(sub,sync);
+
+
+                for(size_t i=0;i<W.numAutoExchange;++i)
+                {
+                    Y_ASSERT( !Ops::CountDiff(I,W.autoExchange[i].forward->outerRange,MPI.rank) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.autoExchange[i].reverse->outerRange,MPI.rank) );
+                    Y_ASSERT( !Ops::CountDiff(J,W.autoExchange[i].forward->outerRange,-MPI.rank) );
+                    Y_ASSERT( !Ops::CountDiff(J,W.autoExchange[i].reverse->outerRange,-MPI.rank) );
+                }
+
+                for(size_t i=0;i<W.numAsyncTwoWays;++i)
+                {
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].forward->outerRange,W.asyncTwoWays[i].forward->peer) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].reverse->outerRange,W.asyncTwoWays[i].reverse->peer) );
+                    Y_ASSERT( !Ops::CountDiff(J,W.asyncTwoWays[i].forward->outerRange,-W.asyncTwoWays[i].forward->peer) );
+                    Y_ASSERT( !Ops::CountDiff(J,W.asyncTwoWays[i].reverse->outerRange,-W.asyncTwoWays[i].reverse->peer) );
+                }
+
+                for(size_t i=0;i<W.numAsyncForward;++i)
+                {
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncForward[i].forward->outerRange, W.asyncForward[i].forward->peer) );
+                    Y_ASSERT( !Ops::CountDiff(J,W.asyncForward[i].forward->outerRange,-W.asyncForward[i].forward->peer) );
+                }
+
+                for(size_t i=0;i<W.numAsyncReverse;++i)
+                {
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncReverse[i].reverse->outerRange, W.asyncReverse[i].reverse->peer) );
+                    Y_ASSERT( !Ops::CountDiff(J,W.asyncReverse[i].reverse->outerRange,-W.asyncReverse[i].reverse->peer) );
+                }
+
             };
             Y_MPI_NODE(std::cerr << MPI.nodeName << " send: " << MPI.commSend.data.full << " | recv: " << MPI.commRecv.data.full << std::endl);
         }
