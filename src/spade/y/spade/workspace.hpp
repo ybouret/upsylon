@@ -52,6 +52,7 @@ namespace upsylon {
                 const FieldsDB  fdb;        //!< all fields
                 const FieldsIO  fields;     //!< all async
 
+                bool owns(const Field  &) const throw();                //!< check ownership
                 bool owns(const _Field &) const throw();                //!< check ownership
                 bool ownsAll(const accessible<_Field> &) const throw(); //!< check ownershipt
                 
@@ -79,7 +80,15 @@ namespace upsylon {
             };
         }
 
+        //----------------------------------------------------------------------
+        //
         //! workspace for fields
+        /**
+         compute local topology and fragment characteristics to
+         handle fields bases on this fragment of the full layout
+         */
+        //
+        //----------------------------------------------------------------------
         template <typename COORD>
         class Workspace :
         public Kernel::Workspace,
@@ -87,13 +96,29 @@ namespace upsylon {
         public Fragment<COORD>
         {
         public:
-
+            //------------------------------------------------------------------
+            //
             // types and definition
+            //
+            //------------------------------------------------------------------
             static const unsigned Dimensions = Fragment<COORD>::Dimensions; //!< Dimensions
             static const unsigned Levels     = Fragment<COORD>::Levels;     //!< Levels = (3^Dimensions-1)/2
             typedef struct FieldFor<COORD> __Field;                         //!< Field type selector
 
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+
             //! setup
+            /**
+             \param fullLayout the global layout
+             \param mapping    the mapping to split the layout => size=product(mapping)
+             \param globalRank the globalRank < size
+             \param boundaries the periodic boundary conditions
+             \param numGhosts  the size of the ghost zone
+             */
             inline explicit Workspace(const Layout<COORD> &fullLayout,
                                       const COORD          mapping,
                                       const size_t         globalRank,
@@ -112,15 +137,20 @@ namespace upsylon {
             //! cleanup
             inline virtual ~Workspace() throw() {}
 
+            //------------------------------------------------------------------
+            //
+            // fields creation and access
+            //
+            //------------------------------------------------------------------
             //! get field by name
-            template <typename LABEL>
+            template <typename LABEL> inline
             Field & operator[](const LABEL &id)
             {
                 return (Field &)getField(id);
             }
             
             //! get field by name
-            template <typename LABEL>
+            template <typename LABEL> inline
             const Field & operator[](const LABEL &id) const
             {
                 return getField(id);
@@ -149,13 +179,18 @@ namespace upsylon {
                 const string _(id); return create<T>(_,cls);
             }
 
+            //------------------------------------------------------------------
+            //
+            // sequential operation based on a transfer object
+            //
+            //------------------------------------------------------------------
 
             //! activate I/O for all async fields
-            inline void  activateFor( const Transfer &transfer )
+            inline void  setupWith( const Transfer &transfer )
             {
                 for(size_t i=fields.size();i>0;--i)
                 {
-                    transfer.activate( *aliasing::_(fields[i]) );
+                    transfer.setup( *aliasing::_(fields[i]) );
                 }
             }
 
@@ -165,6 +200,14 @@ namespace upsylon {
             {
                 assert(ownsAll(someFields));
                 transfer.localSwap(someFields,*this);
+            }
+
+            //! localSwap of one field
+            inline void localSwap(Field               &field,
+                                  const Transfer      &transfer)
+            {
+                assert(owns(field));
+                transfer.localSwap(field,*this);
             }
 
             //! localSwap of all fields

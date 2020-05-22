@@ -38,7 +38,7 @@ namespace upsylon {
             template <typename ONE_OR_MORE_FIELD,typename COORD> inline
             void forward(ONE_OR_MORE_FIELD     &fields,
                          const Fragment<COORD> &fragment,
-                         IOBlocks              &blocks)
+                         IOBlocks              &blocks) const
             {
                 assert(blocks.size() == 2*Fragment<COORD>::Levels);
                 
@@ -97,7 +97,7 @@ namespace upsylon {
             template <typename ONE_OR_MORE_FIELD,typename COORD> inline
             void reverse(ONE_OR_MORE_FIELD     &fields,
                          const Fragment<COORD> &fragment,
-                         IOBlocks              &blocks)
+                         IOBlocks              &blocks) const
             {
                 assert(blocks.size() == 2*Fragment<COORD>::Levels);
                 
@@ -154,7 +154,7 @@ namespace upsylon {
             template <typename ONE_OR_MORE_FIELD,typename COORD> inline
             void asyncSwap(ONE_OR_MORE_FIELD     &fields,
                            const Fragment<COORD> &fragment,
-                           IOBlocks              &blocks)
+                           IOBlocks              &blocks) const
             {
                 forward(fields,fragment,blocks);
                 reverse(fields,fragment,blocks);
@@ -168,6 +168,9 @@ namespace upsylon {
         //----------------------------------------------------------------------
         //
         //! Domain base on workspace
+        /**
+         use synchronize/transfer to prepare and exchange data
+         */
         //
         //----------------------------------------------------------------------
         template <typename COORD>
@@ -194,7 +197,27 @@ namespace upsylon {
                 assert(size_t(MPI.size)==this->size);
                 assert(size_t(MPI.rank)==this->rank);
             }
-            
+
+            //! full (blocking) exchange
+            /**
+             - a proper setupWith(sync) must be called before any exchange
+             - a sync.asyncSetup(fields) must be called if the fields are changing
+             - this could be used within a thread for compute/comm overlap
+             */
+            template <typename ONE_OR_MORE_FIELDS> inline
+            void exchange(ONE_OR_MORE_FIELDS &fields, const Synchronize &sync)
+            {
+                Workspace<COORD> &self = *this;
+                self.localSwap(fields,sync);
+                sync.asyncSwap(fields,*this,blocks);
+            }
+
+            //! exchange all async fields
+            void exchange(const Synchronize &sync)
+            {
+                exchange( aliasing::_(this->fields), sync );
+            }
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Domain);

@@ -32,7 +32,7 @@ namespace upsylon {
         
         //----------------------------------------------------------------------
         //
-        //! tranfer of ghosts/swaps
+        //! tranfer of ghosts/swaps, based on conveyors
         //
         //----------------------------------------------------------------------
         class Transfer
@@ -51,25 +51,18 @@ namespace upsylon {
             // Managing types
             //
             //------------------------------------------------------------------
-            
-            
+
             //! active a field based on its objectType
-            void     activate(Field &F) const;
+            void     setup(Field &F) const;
             
             
             //! query I/O for a given type
             template <typename T> inline
-            const ios::conveyor & query()
-            {
-                return IO.query<T>(infra);
-            }
+            const ios::conveyor & query() { return IO.query<T>(infra); }
             
             //! query I/O for a tuple of type
             template <template <typename> class TUPLE, typename T> inline
-            const ios::conveyor & query()
-            {
-                return IO.query<TUPLE,T>(infra);
-            }
+            const ios::conveyor & query() { return IO.query<TUPLE,T>(infra); }
             
             //------------------------------------------------------------------
             //
@@ -114,10 +107,10 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             
-            //! set style from field
+            //! set style and chunk from field
             void asyncSetup(const Field &field)  throw();
             
-            //! set style from fields
+            //! set style and chunk from fields
             void asyncSetup(const accessible<_Field> &fields) throw();
             
             //! prepare block from style and chunk

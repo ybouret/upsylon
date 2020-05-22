@@ -63,7 +63,7 @@ namespace {
                         iFieldHandle F    = new iField(name,partition[rank].outer);
                         iFields.push(F);
                         Ops::Ld(*F,*F,int(rank));
-                        transfer.activate(*F);
+                        transfer.setup(*F);
                         
                     }
                     
@@ -71,7 +71,7 @@ namespace {
                         const string name = vformat("sField#%u",unsigned(rank));
                         sFieldHandle F    = new sField(name,partition[rank].outer);
                         sFields.push(F);
-                        transfer.activate(*F);
+                        transfer.setup(*F);
                         
                     }
                     

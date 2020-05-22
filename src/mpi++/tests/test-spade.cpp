@@ -56,32 +56,27 @@ namespace {
                 FieldsIO  sub;
                 sub << I << W["D"];
                 
-                W.activateFor(sync);
+                W.setupWith(sync);
                 W.localSwap(all,sync);
                 W.localSwap(sub,sync);
                 
 
                 sync.asyncSetup(all); Y_ASSERT(sync.style==comms::flexible_block_size);
-                sync.localSwap(all,W);
-                sync.asyncSwap(all,W,W.blocks);
+                W.exchange(all,sync);
+
 
                 sync.asyncSetup(I); Y_ASSERT(sync.style==comms::computed_block_size);
-                sync.localSwap(I,W);
-                sync.asyncSwap(I,W,W.blocks);
+                W.exchange(I,sync);
 
 
                 sync.asyncSetup(S); Y_ASSERT(sync.style==comms::flexible_block_size);
-                sync.localSwap(S,W);
-                sync.asyncSwap(S,W,W.blocks);
+                W.exchange(S,sync);
 
 
-                
-                
                 sync.asyncSetup(sub);
                 Y_ASSERT(sync.style==comms::computed_block_size);
                 Y_ASSERT(sync.chunk==sizeof(int)+sizeof(double));
-                sync.localSwap(sub,W);
-                sync.asyncSwap(sub,W,W.blocks);
+                W.exchange(sub,sync);
             };
             Y_MPI_NODE(std::cerr << MPI.nodeName << " send: " << MPI.commSend.data.full << " | recv: " << MPI.commRecv.data.full << std::endl);
         }

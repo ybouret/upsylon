@@ -61,7 +61,7 @@ namespace {
                     
                     
                     
-                    W.activateFor(transfer);
+                    W.setupWith(transfer);
                     W.localSwap(transfer);
                 }
 

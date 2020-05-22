@@ -41,6 +41,12 @@ namespace upsylon {
                 }
             }
 
+            bool Workspace:: owns(const Field &F) const throw()
+            {
+                const _Field *p = fdb.search(F.name);
+                return( NULL!=p) && ( & **p == & F) ;
+            }
+
             bool Workspace:: owns(const _Field &F) const throw()
             {
                 const _Field *p = fdb.search(F->name);

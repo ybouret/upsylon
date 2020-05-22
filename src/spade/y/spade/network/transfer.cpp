@@ -81,7 +81,7 @@ namespace upsylon {
         }
         
         
-        void Transfer:: activate( Field &F ) const
+        void Transfer:: setup( Field &F ) const
         {
             F.io = IO.search(F.objectType,infra);
             const string &id = type_spec::declare(F.objectType).name();
