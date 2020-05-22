@@ -95,6 +95,17 @@ namespace upsylon {
         {
             return is( buff.ro(), buff.length() );
         }
+
+        string Token:: toString() const
+        {
+            string ans(size,as_capacity,false);
+            for( const Char *ch=head;ch;ch=ch->next)
+            {
+                ans << char(ch->code);
+            }
+            return ans;
+        }
+
     }
 }
 

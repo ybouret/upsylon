@@ -56,10 +56,11 @@ namespace upsylon {
             // helpers
             //
             //------------------------------------------------------------------
-            bool is(const void *, const size_t) const throw(); //!< check equality
-            bool is(const char *) const throw();               //!< check equality
-            bool is(const memory::ro_buffer &) const throw();  //!< check equality
-            
+            bool   is(const void *, const size_t) const throw(); //!< check equality
+            bool   is(const char *) const throw();               //!< check equality
+            bool   is(const memory::ro_buffer &) const throw();  //!< check equality
+            string toString() const;                             //!< content to string
+
         private:
             Y_DISABLE_ASSIGN(Token);
         
