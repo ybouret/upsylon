@@ -12,7 +12,8 @@ namespace {
     template <typename COORD> static inline
     void doTest(const string &layout,
                 const string &boundaries,
-                const size_t cores)
+                const size_t cores,
+                const size_t ghosts)
     {
         static const unsigned                      Dimensions = Coord::Get<COORD>::Dimensions;
         //typedef typename Topology<COORD>::Boolean  Boolean;
@@ -37,10 +38,13 @@ namespace {
             for(size_t rank=0;rank<topology.size;++rank)
             {
                 const COORD           ranks = topology.getLocalRanks(rank);
-                const Fragment<COORD> L(full, ranks, topology, pbcs, 1);
+                const Fragment<COORD> L(full, ranks, topology, pbcs, ghosts);
                 std::cerr << "\t@localRanks=" << L.ranks << " / globalRank=" << L.rank << std::endl;
-                std::cerr << "\t|_inner=" << L.inner << std::endl;
-                std::cerr << "\t|_outer=" << L.outer << std::endl;
+                std::cerr << "\t|_inner= " << L.inner << std::endl;
+                std::cerr << "\t|_outer= " << L.outer << std::endl;
+                std::cerr << "\t|__core= " << L._core << std::endl;
+
+                
                 for(size_t i=0;i<L.links.size();++i)
                 {
                     const typename Topology<COORD>::Links &links = L.links[i];
@@ -62,15 +66,18 @@ Y_UTEST(fragment)
     string layout     = "10:10:10";
     string boundaries = "0:0:0";
     size_t cores      = 4;
+    size_t ghosts     = 1;
 
+    Coord::DispWidth = 3;
     if(argc>1) layout     = argv[1];
     if(argc>2) boundaries = argv[2];
     if(argc>3) cores      = string_convert::to<size_t>(argv[3],"cores");
+    if(argc>4) ghosts     = string_convert::to<size_t>(argv[4],"ghosts");
 
-    Coord::DispWidth = 3;
-    doTest<Coord1D>(layout,boundaries,cores);
-    doTest<Coord2D>(layout,boundaries,cores);
-    doTest<Coord3D>(layout,boundaries,cores);
+    Coord::DispWidth = 2;
+    doTest<Coord1D>(layout,boundaries,cores,ghosts);
+    doTest<Coord2D>(layout,boundaries,cores,ghosts);
+    doTest<Coord3D>(layout,boundaries,cores,ghosts);
 
 }
 Y_UTEST_DONE()

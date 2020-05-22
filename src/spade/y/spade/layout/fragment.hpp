@@ -6,6 +6,7 @@
 
 #include "y/spade/layout/topology.hpp"
 #include "y/spade/layout/swaps.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
@@ -47,8 +48,9 @@ namespace upsylon {
             //------------------------------------------------------------------
             static const unsigned Dimensions =               Layout<COORD>::Dimensions; //!< alias
             static const unsigned Levels     =               Topology<COORD>::Levels;   //!< alias
-            typedef typename      Layout<COORD>::coord       coord;                     //!< alias
-            typedef typename      Layout<COORD>::const_coord const_coord;               //!< alias
+            typedef               Layout<COORD>              LayoutType;                //!< alias
+            typedef typename      LayoutType::coord          coord;                     //!< alias
+            typedef typename      LayoutType::const_coord    const_coord;               //!< alias
             typedef typename      Topology<COORD>::Node      Node;                      //!< alias
             typedef typename      Topology<COORD>::Link      Link;                      //!< alias
             typedef typename      Topology<COORD>::Links     Links;                     //!< alias
@@ -85,6 +87,7 @@ namespace upsylon {
             Node(localRanks,topology,Coord::ToBool(boundaries)),
             inner(fullLayout.split(topology.sizes,this->ranks)),
             outer(inner),
+            _core(0),
             autoExchange(this->numAutoExchange),
             asyncTwoWays(this->numAsyncTwoWays),
             asyncForward(this->numAsyncForward),
@@ -105,7 +108,10 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 coord lower = inner.lower;
                 coord upper = inner.upper;
-
+                
+                coord coreLower = lower;
+                coord coreUpper = upper;
+                
                 // scan main levels (0..Dimensions-1)
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
@@ -115,7 +121,8 @@ namespace upsylon {
                         case Connect::Zilch: break;
                         case Connect::Async:
                         case Connect::Local:
-                            Coord::Of(upper,dim) += ng;
+                            Coord::Of(upper,dim)     += ng;
+                            Coord::Of(coreUpper,dim) -= ng;
                     }
                     
                     switch(l.reverse.connectMode)
@@ -123,7 +130,8 @@ namespace upsylon {
                         case Connect::Zilch: break;
                         case Connect::Async:
                         case Connect::Local:
-                            Coord::Of(lower,dim) -= ng;
+                            Coord::Of(lower,dim)     -= ng;
+                            Coord::Of(coreLower,dim) += ng;
                     }
                 }
                 
@@ -131,7 +139,23 @@ namespace upsylon {
                 // recompute outer
                 //--------------------------------------------------------------
                 new ((void*)&outer) Layout<COORD>(lower,upper);
-
+                
+                //--------------------------------------------------------------
+                // compute _core
+                //--------------------------------------------------------------
+                {
+                    bool hasCore = true;
+                    for(unsigned dim=0;dim<Dimensions;++dim)
+                    {
+                        if( Coord::Of(coreLower,dim) > Coord::Of(coreUpper,dim) )
+                        {
+                            hasCore = false;
+                            break;
+                        }
+                    }
+                    if(hasCore) aliasing::_(_core) = new LayoutType(coreLower,coreUpper);
+                }
+                
                 //______________________________________________________________
                 //
                 //
@@ -148,8 +172,9 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            const Layout<COORD>           inner;        //!< inner workspace
-            const Layout<COORD>           outer;        //!< contains exchange zones
+            const LayoutType              inner;        //!< inner workspace
+            const LayoutType              outer;        //!< contains exchange zones
+            auto_ptr<const LayoutType>    _core;        //!< optional core zone
             const slots<AutoExchangeType> autoExchange; //!< autoExchange ghosts
             const slots<AsyncTwoWaysType> asyncTwoWays; //!< asyncTwoWays ghosts
             const slots<AsyncForwardType> asyncForward; //!< aysncForward ghosts

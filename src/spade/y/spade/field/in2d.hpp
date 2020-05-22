@@ -115,7 +115,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             const RowLayout rowLayout; //!< shared layout for all rows
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field2D);
             friend class Field3D<T>;
