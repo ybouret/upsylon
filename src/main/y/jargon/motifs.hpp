@@ -10,14 +10,18 @@ namespace upsylon {
 
     namespace Jargon {
 
-
-        class Motifs : public Motif
+        //! helper to match motifs in strings
+        class Motifs : public Motif, public Token
         {
         public:
-            Motifs(const string &);
-            Motifs(const char   *);
-            Motifs(const Motifs &) throw();
-            virtual ~Motifs() throw();
+            Motifs(const string &);         //!< setup by compiling regular expression
+            Motifs(const char   *);         //!< setup by compiling regular expression
+            virtual ~Motifs() throw();      //!< cleanup
+            Motifs(const Motifs &) throw(); //!< shared copy with empty token!
+            
+            const Token *exact_match(const string &); //!< this->matches_exactly(*this,str)
+            const Token *first_match(const string &); //!< this->matches_partly(*this,str)
+            
             
         private:
             Y_DISABLE_ASSIGN(Motifs);
