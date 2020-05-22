@@ -14,7 +14,7 @@ namespace {
         typedef Topology<COORD>        Topo;
         typedef typename Topo::Node    Node;
         typedef typename Topo::Loop    Loop;
-        typedef typename Topo::Boolean Boolean;
+        //typedef typename Topo::Boolean Boolean;
 
         std::cerr << std::endl;
         std::cerr << "In " << Topo::Dimensions << "D" << std::endl;
@@ -42,10 +42,10 @@ namespace {
                 Y_ASSERT(gRank==rank);
             }
             std::cerr << "checking connectivity..." << std::endl;
-
+            
+            const COORD &pbc = lpbc.value;
             for(lpbc.boot();lpbc.good();lpbc.next())
             {
-                const Boolean pbc = Coord::ToBool( lpbc.value );
                 for(size_t rank=0;rank<topo.size;++rank)
                 {
                     const COORD  ranks = topo.getLocalRanks(rank);

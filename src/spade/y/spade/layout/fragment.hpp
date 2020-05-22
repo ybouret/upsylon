@@ -54,7 +54,6 @@ namespace upsylon {
             typedef typename      Topology<COORD>::Node      Node;                      //!< alias
             typedef typename      Topology<COORD>::Link      Link;                      //!< alias
             typedef typename      Topology<COORD>::Links     Links;                     //!< alias
-            typedef typename      Topology<COORD>::Boolean   Boolean;                   //!< alias
             typedef typename      Kernel::Swaps<COORD>       Swaps;                     //!< alias
             typedef typename      Swaps::HandleType          HSwaps;                    //!< alias
             typedef               AutoExchangeSwaps<COORD>   AutoExchangeType;          //!< alias
@@ -84,7 +83,7 @@ namespace upsylon {
                                      const Topology<COORD> &topology,
                                      const_coord            boundaries,
                                      const Coord1D          numGhosts) :
-            Node(localRanks,topology,Coord::ToBool(boundaries)),
+            Node(localRanks,topology,boundaries),
             inner(fullLayout.split(topology.sizes,this->ranks)),
             outer(inner),
             _core(0),

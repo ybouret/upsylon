@@ -16,24 +16,22 @@ namespace upsylon {
     
     namespace Spade
     {
+        //----------------------------------------------------------------------
+        //
+        // Global types and definitions
+        //
+        //----------------------------------------------------------------------
+
         typedef unit_t           Coord1D;   //!< 1D coordinate
         typedef point2d<Coord1D> Coord2D;   //!< 2D coordinates
         typedef point3d<Coord1D> Coord3D;   //!< 3D coordinates
         typedef counted_object   Object;    //!< alias
-        typedef bool             Boolean1D; //!< 1D flag
-        typedef point2d<bool>    Boolean2D; //!< 2D flag
-        typedef point3d<bool>    Boolean3D; //!< 3D flag
         
-        template <typename COORD> struct BooleanFor; //!< choosing right boolean
-        //! Boolean in 1D
-        template <> struct BooleanFor<Coord1D> { typedef Boolean1D Type; /*!< alias */ };
-        //! Boolean in 2D
-        template <> struct BooleanFor<Coord2D> { typedef Boolean2D Type; /*!< alias */ };
-        //! Boolean in 3D
-        template <> struct BooleanFor<Coord3D> { typedef Boolean3D Type; /*!< alias */ };
-
-        
+        //----------------------------------------------------------------------
+        //
         //! operations on coordinates
+        //
+        //----------------------------------------------------------------------
         class Coord
         {
         public:
@@ -48,7 +46,6 @@ namespace upsylon {
             struct Get
             {
                 static const unsigned Dimensions = sizeof(COORD)/sizeof(Coord1D); //!< Dimension(s)
-                typedef typename BooleanFor<COORD>::Type Boolean;                 //!< Boolean with same dimension
             };
             
             //! map to zero
@@ -217,23 +214,29 @@ namespace upsylon {
             //! Norm1 of coordinates
             static inline Coord1D Norm1(const Coord3D &C) throw() { return abs_of(C.x) + abs_of(C.y) + abs_of(C.z); }
             
-            //! convert coordinate to boolean
-            static inline Boolean1D ToBool(const Coord1D  C) throw() { return Boolean1D(C!=0); }
-
-            //! convert coordinate to boolean
-            static inline Boolean2D ToBool(const Coord2D  C) throw() { return Boolean2D(C.x!=0,C.y!=0); }
+            //! sizes>1
+            template <typename COORD>
+            static inline COORD ToParallel(const COORD &sizes) throw()
+            {
+                COORD ans(0);
+                for(unsigned dim=0;dim<Get<COORD>::Dimensions;++dim)
+                {
+                    Of(ans,dim) = Of(sizes,dim) > 1;
+                }
+                return ans;
+            }
             
-            //! convert coordinate to boolean
-            static inline Boolean3D ToBool(const Coord3D  C) throw() { return Boolean3D(C.x!=0,C.y!=0,C.z!=0); }
-            
-            //! convert sizes to parallel flag
-            static inline Boolean1D ToParallel(const Coord1D sizes) throw() { return Boolean1D(sizes>1);               }
-           
-            //! convert sizes to parallel flag
-            static inline Boolean2D ToParallel(const Coord2D  C) throw() { return Boolean2D(C.x>1,C.y>1);       }
-            
-            //! convert sizes to parallel flag
-            static inline Boolean3D ToParallel(const Coord3D  C) throw() { return Boolean3D(C.x>1,C.y>1,C.z>1); }
+            //! value != 0
+            template <typename COORD>
+            static inline COORD ToBoolean(const COORD &value) throw()
+            {
+                COORD ans(0);
+                for(unsigned dim=0;dim<Get<COORD>::Dimensions;++dim)
+                {
+                    Of(ans,dim) = (Of(value,dim) != 0);
+                }
+                return ans;
+            }
 
             
             //! parse a coordinate X[:Y[:Z]]
@@ -265,11 +268,6 @@ Y_SPADE_COORD_OP(GEQ,>=)
 
             Y_SPADE_COORD_OPS()
 
-#if 0
-            static string ToString( const Coord1D );  
-            static string ToString( const Coord2D );
-            static string ToString( const Coord3D );
-#endif
 
         private:
             //! random in [0:m]

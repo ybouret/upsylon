@@ -186,7 +186,7 @@ namespace upsylon {
             static  const unsigned Levels    =  Coordination::Levels;               //!< alias
             typedef typename type_traits<COORD>::mutable_type coord;                //!< alias
             typedef const coord                               const_coord;          //!< alias
-            typedef typename Coord::Get<COORD>::Boolean       Boolean;              //!< alias
+            //typedef typename Coord::Get<COORD>::Boolean       Boolean;              //!< alias
             typedef mloop<Coord1D,coord>                      Loop;                 //!< loop over ranks if neccessary
             
             
@@ -268,7 +268,7 @@ namespace upsylon {
             //! compute probe ranks and linked satus for some given ranks and probe
             inline coord getProbeRanks(const_coord   &ranks,
                                        const_coord    probe,
-                                       const Boolean &pbc,
+                                       const_coord   &pbc,
                                        bool          &linked) const throw()
             {
                 assert( Coord::LT(ranks,sizes) );
@@ -283,7 +283,7 @@ namespace upsylon {
                     const Coord1D localSize = Coord::Of(sizes,dim);
                     const Coord1D localRank = Coord::Of(ranks,dim);
                     const Coord1D localLast = Coord::Of(maxRanks,dim);
-                    const bool    wall      = !Coord::Flag(pbc,dim);
+                    const bool    wall      = (0 == Coord::Of(pbc,dim));
 
                     switch(localScan)
                     {
@@ -318,7 +318,7 @@ namespace upsylon {
             const_coord   sizes;    //!< local sizes
             const_coord   pitch;    //!< pitch for ranks algebra
             const_coord   maxRanks; //!< sizes-1
-            const Boolean parallel; //!< dimension wise parallel flag
+            const_coord   parallel; //!< dimension wise parallel flag
             
             //------------------------------------------------------------------
             //
@@ -517,7 +517,7 @@ namespace upsylon {
                 //! setup
                 inline explicit Node(const_coord      localRanks,
                                      const Topology  &topology,
-                                     const Boolean    pbc) :
+                                     const_coord      pbc) :
                 Hub(localRanks,topology),
                 links(Levels),
                 numFreeStanding(0),
@@ -579,7 +579,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
                 inline Link getLink(const Topology &topology,
                                     const_coord     probe,
-                                    const Boolean  &pbc) const throw()
+                                    const_coord    &pbc) const throw()
                 {
                     bool        exists = true;
                     const_coord lranks = topology.getProbeRanks(this->ranks,probe,pbc,exists);
