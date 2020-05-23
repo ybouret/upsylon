@@ -9,6 +9,7 @@ ENABLE_TESTING()
 SOURCE_GROUP(mk FILES test-types.cpp test-adjoint.cpp test-cholesky.cpp
 test-diag-symm.cpp test-diag.cpp test-lu.cpp test-svd.cpp 
 test-tridiag.cpp test-cyclic.cpp test-sparse.cpp
+test-gram-schmidt.cpp
 )
 ADD_TEST(mk:types    test-m types)
 ADD_TEST(mk:adjoint  test-m adjoint)
@@ -20,6 +21,8 @@ ADD_TEST(mk:svd      test-m svd)
 ADD_TEST(mk:tridiag  test-m tridiag)
 ADD_TEST(mk:cyclic   test-m cyclic)
 ADD_TEST(mk:sparse   test-m sparse)
+ADD_TEST(mk:gram-schmidt test-m gram_schmidt)
+
 
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp

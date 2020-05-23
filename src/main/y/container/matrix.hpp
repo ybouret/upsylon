@@ -161,6 +161,25 @@ namespace upsylon
             os << ']';
             return os;
         }
+        
+        //! display for maxima
+        inline std::ostream & maxima(std::ostream &os)
+        {
+            os << "matrix(";
+            for(size_t i=1;i<=rows;++i)
+            {
+                const accessible<T> &R = (*this)[i];
+                os << '[';
+                for(size_t j=1;j<=cols;++j)
+                {
+                    os << R[j];
+                    if(j<cols) os << ',';
+                }
+                os << ']';
+                if(i<rows) os << ',';
+            }
+            return os << ")";
+        }
 
         //! copy
         inline matrix(const matrix &other) : Y_MATRIX_CTOR(other.rows,other.cols)

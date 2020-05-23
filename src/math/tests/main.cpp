@@ -15,6 +15,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(tridiag);
     Y_UTEST(cyclic);
     Y_UTEST(sparse);
+    Y_UTEST(gram_schmidt);
 
     Y_UTEST(ode);
     Y_UTEST(rk4);

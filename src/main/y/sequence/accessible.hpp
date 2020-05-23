@@ -37,6 +37,19 @@ namespace upsylon {
             return arr.display(os);
         }
 
+        //! maxima display
+        inline std::ostream & maxima( std::ostream &os ) const
+        {
+            const size_t sz = size();
+            os << "matrix(";
+            for(size_t i=1;i<=sz;++i)
+            {
+                os << '[' << (*this)[i] << ']';
+                if(i<sz) os << ',';
+            }
+            return os << ")";
+        }
+        
     protected:
         inline explicit accessible() throw() {}                 //!< setup
     private:
