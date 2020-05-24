@@ -8,10 +8,17 @@
 
 namespace upsylon {
     
+    namespace mpl
+    {
+        class rational;
+    }
+    
     namespace math {
      
+        //! Gram-Schmidt Ortho(normalisation)
         struct GramSchmidt
         {
+            //! build orthonormal family, no normalisation
             template <typename T> static inline
             bool Ortho( matrix<T> &a )
             {
@@ -38,6 +45,15 @@ namespace upsylon {
                 }
                 return true;
             }
+            
+            //! build ortho and convert to integer
+            /**
+             - orthonormalize
+             - convert to integer
+             - minimum of minus signs
+             - first not zero coordinate is positive
+             */
+            static bool OrthoSimple( matrix<mpl::rational> &a );
             
         };
     }
