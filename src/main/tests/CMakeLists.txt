@@ -124,7 +124,6 @@ test-srz-io.cpp
 test-upacker.cpp
 test-conveyor.cpp
 test-conveyors.cpp
-test-scribe.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams)
@@ -142,7 +141,6 @@ ADD_TEST(ios:srz_io      test-main srz_io)
 ADD_TEST(ios:upacker     test-main upacker)
 ADD_TEST(ios:conveyor    test-main conveyor)
 ADD_TEST(ios:conveyors   test-main conveyors)
-ADD_TEST(ios:scribe      test-main scribe)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp

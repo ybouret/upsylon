@@ -148,13 +148,6 @@ SET(ios_conveyor_srcs ${ios_conveyor_decl} ${ios_conveyor_code})
 SOURCE_GROUP( ios/conveyor FILES ${ios_conveyor_srcs} )
 INSTALL( FILES ${ios_conveyor_decl} DESTINATION include/y/ios/conveyor )
 
-FILE(GLOB ios_scribe_decl y/ios/scribe/*.hpp)
-FILE(GLOB ios_scribe_code y/ios/scribe/*.cpp)
-SET(ios_scribe_srcs ${ios_scribe_decl} ${ios_scribe_code})
-SOURCE_GROUP( ios/scribe FILES ${ios_scribe_srcs} )
-INSTALL( FILES ${ios_scribe_decl} DESTINATION include/y/ios/scribe )
-
-
 FILE(GLOB information_decl y/information/*.hpp)
 FILE(GLOB information_code y/information/*.cpp)
 SET(information_srcs ${information_decl} ${information_code})
@@ -382,7 +375,7 @@ ${ordered_srcs}
 ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
-${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} ${ios_scribe_srcs}
+${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
 ${information_srcs} 
 ${information_modulation_srcs} 
 ${information_translator_srcs} 

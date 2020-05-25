@@ -128,7 +128,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(md);
     Y_UTEST(conveyor);
     Y_UTEST(conveyors);
-    Y_UTEST(scribe);
 
     // assoc
     Y_UTEST(associative);
