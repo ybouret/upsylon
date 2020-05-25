@@ -10,9 +10,11 @@ namespace upsylon {
         {
         }
 
-        scribe:: scribe(const std::type_info &t) throw() :
-        info(t)
+        scribe:: scribe(const std::type_info &t, const size_t n) throw() :
+        info(t),
+        count(n)
         {
+            assert(n>0);
         }
 
 
