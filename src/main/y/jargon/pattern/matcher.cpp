@@ -1,42 +1,42 @@
 
-#include "y/jargon/motifs.hpp"
+#include "y/jargon/pattern/matcher.hpp"
 #include "y/jargon/pattern/regexp.hpp"
 
 namespace upsylon {
 
     namespace Jargon {
 
-        Motifs:: Motifs( const string &rx ) :
+        Matcher:: Matcher( const string &rx ) :
         Motif( RegularExpression::Compile(rx) ),
         Token()
         {
         }
 
-        Motifs:: Motifs( const char   *rx ) :
+        Matcher:: Matcher( const char   *rx ) :
         Motif( RegularExpression::Compile(rx) ),
         Token()
         {
         }
         
-        Motifs:: Motifs( const Motifs &other) throw():
+        Matcher:: Matcher( const Matcher &other) throw():
         Motif( other ),
         Token()
         {
         }
         
 
-        Motifs:: ~Motifs() throw()
+        Matcher:: ~Matcher() throw()
         {
             
         }
         
-        const Token * Motifs:: exact_match(const string &str)
+        const Token * Matcher:: exact_match(const string &str)
         {
             release();
             return (**this).matches_exactly(*this,str) ? this : 0;
         }
         
-        const Token * Motifs:: first_match(const string &str)
+        const Token * Matcher:: first_match(const string &str)
         {
             release();
             return (**this).matches_partly(*this,str) ? this : 0;
