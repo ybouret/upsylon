@@ -56,7 +56,7 @@ Y_UTEST(coll)
     double res   = MPI.Reduce(value,MPI_SUM, 0);
     MPI.Printf(stderr, "reduce0 #1: %g\n", res);
     
-    point2d<float> v2(MPI.rank,MPI.rank);
+    point2d<float> v2( float(MPI.rank), float(MPI.rank) );
     point2d<float> r2 = MPI.Reduce2(v2,MPI_SUM,0);
     MPI.Printf(stderr, "reduce0 #2: %g %g\n", r2.x, r2.y);
 
