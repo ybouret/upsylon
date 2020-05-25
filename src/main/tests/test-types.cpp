@@ -95,6 +95,7 @@ Y_UTEST(types)
     test_ints<int64_t>();
     test_ints<uint64_t>();
 
+    std::cerr << limit_of<int64_t>::minimum << std::endl;
 
     const uint32_t t1 = Y_FOURCC(1,2,3,4);
     const uint32_t t2 = Y_FOURCC(4,3,2,1);

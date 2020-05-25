@@ -101,7 +101,7 @@ Y_UTEST(mpz)
         Y_CHECK( z.cast_to<int32_t>() == limit_of<int32_t>::maximum);
     }
 
-    for(int iter=0;iter<10;++iter)
+    for(int iter=0;iter<1000000;++iter)
     {
         const int32_t I = alea.full<int32_t>();
         const mpz     Z = I;
@@ -111,16 +111,14 @@ Y_UTEST(mpz)
     }
 
     std::cerr << "|_64bits" << std::endl;
-#if 0
     {
         mpz z = limit_of<int64_t>::minimum;
-        //Y_CHECK( z.cast_to<int64_t>() == limit_of<int64_t>::minimum);
-        //z = limit_of<int64_t>::maximum;
-        //Y_CHECK( z.cast_to<int64_t>() == limit_of<int64_t>::maximum);
+        Y_CHECK( z.cast_to<int64_t>() == limit_of<int64_t>::minimum);
+        z = limit_of<int64_t>::maximum;
+        Y_CHECK( z.cast_to<int64_t>() == limit_of<int64_t>::maximum);
     }
-#endif
 
-    for(int iter=0;iter<10;++iter)
+    for(int iter=0;iter<1000000;++iter)
     {
         const int64_t I = alea.full<int64_t>();
         const mpz     Z = I;

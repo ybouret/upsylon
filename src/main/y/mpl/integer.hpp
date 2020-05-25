@@ -37,7 +37,7 @@ namespace upsylon
             virtual ~integer() throw();                        //!< destructor
             integer();                                         //!< zero constructor
             integer(const integer   &z);                       //!< copy constructor
-            integer(const integer_t &i);                       //!<  constructor from integral
+            integer(const integer_t  i);                       //!< constructor from integral
             integer(const natural   &u);                       //!< constructor from natural
             integer(const sign_type _s, const natural &u );    //!< create from a natural and a given sign
             integer(const size_t nbit, randomized::bits &gen); //!< random integer

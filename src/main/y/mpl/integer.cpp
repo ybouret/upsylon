@@ -66,7 +66,7 @@ namespace upsylon
 
         integer::  integer(const integer &z) : object(), number_type(), s(z.s), n(z.n) {}
 
-        integer::integer(const integer_t &i) : object(), number_type(), s( sign_ops::of(i) ), n( sign_ops::i2w(i) ) {}
+        integer::integer(const integer_t i) : object(), number_type(), s( sign_ops::of(i) ), n( sign_ops::i2w(i) ) {}
 
         integer:: integer(const natural &u) : object(), number_type(), s( sign_ops::of(u) ), n(u) {}
 
