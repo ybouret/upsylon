@@ -38,7 +38,7 @@ namespace {
     }
     
     template <typename T>
-    void doGSProj(const size_t maxDim=6)
+    void doGSQ(const size_t maxDim=6)
     {
         std::cerr << std::endl;
         std::cerr << "-------- Special GramSchmidt<" << type_name_of<T>() << ">" << std::endl;
@@ -65,6 +65,36 @@ namespace {
             }
         }
     }
+
+    template <typename T>
+    void doGSI(const size_t maxDim=6)
+    {
+        std::cerr << std::endl;
+        std::cerr << "-------- Integer GramSchmidt<" << type_name_of<T>() << ">" << std::endl;
+        for(size_t dim=1;dim<=maxDim;++dim)
+        {
+            std::cerr << "dim=" << dim << std::endl;
+            matrix<T> a(dim,dim);
+            a.diag(1,0);
+            quark::ld(a[1], 1);
+            std::cerr << "a=" << a << std::endl;
+            if(!GramSchmidt::iOrtho(a))
+            {
+                std::cerr << "failure" << std::endl;
+                continue;
+            }
+            std::cerr << "->" << a << std::endl;
+            for(size_t i=2;i<=a.rows;++i)
+            {
+                for(size_t k=1;k<i;++k)
+                {
+                    std::cerr << " " << quark::dot<T>::of(a[i],a[k]);
+                }
+                std::cerr << std::endl;
+            }
+        }
+    }
+
         
     
 }
@@ -78,8 +108,11 @@ Y_UTEST(gram_schmidt)
     doGS< complex<double> >();
     doGS< mpq >(4);
     
-    doGSProj<mpq>(6);
-    
+    doGSQ<mpq>(6);
+    doGSI<int16_t>(6);
+    doGSI<int32_t>(6);
+    doGSI<int64_t>(6);
+
 }
 Y_UTEST_DONE()
 

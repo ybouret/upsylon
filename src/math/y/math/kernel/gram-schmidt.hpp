@@ -71,9 +71,10 @@ namespace upsylon {
                 {
                     for(size_t j=cols;j>0;--j)
                     {
-                        
+                        a[i][j] = q[i][j].num.cast_to<T>();
                     }
                 }
+                return true;
             }
 
         };
