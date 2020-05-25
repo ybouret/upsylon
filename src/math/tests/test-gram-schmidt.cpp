@@ -49,7 +49,7 @@ namespace {
             a.diag(1,0);
             quark::ld(a[1], 1);
             std::cerr << "a=" << a << std::endl;
-            if(!GramSchmidt::Ortho(a))
+            if(!GramSchmidt::OrthoSimple(a))
             {
                 std::cerr << "failure" << std::endl;
                 continue;
@@ -71,13 +71,14 @@ namespace {
 
 Y_UTEST(gram_schmidt)
 {
+
     doGS<float>();
     doGS<double>();
     doGS< complex<float> >();
     doGS< complex<double> >();
     doGS< mpq >(4);
     
-    doGSProj<mpq>();
+    doGSProj<mpq>(6);
     
 }
 Y_UTEST_DONE()

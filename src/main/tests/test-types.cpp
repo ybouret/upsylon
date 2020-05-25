@@ -24,8 +24,14 @@ namespace {
     static inline void test_ints()
     {
         std::cerr << typeid(T).name() << std::endl;
-        std::cerr << "\tmin=" << limit_of<T>::minimum << std::endl;
-        std::cerr << "\tmax=" << limit_of<T>::maximum << std::endl;
+        static const T vmin = limit_of<T>::minimum;
+        static const T vmax = limit_of<T>::maximum;
+
+        if(sizeof(T)>1)
+        {
+            std::cerr << "\tmin=" << vmin << std::endl;
+            std::cerr << "\tmax=" << vmax << std::endl;
+        }
     }
 
     static inline void testFOURCC()
@@ -69,12 +75,27 @@ namespace {
 Y_UTEST(types)
 {
     test_select<double,int>();
+
     test_ints<short>();
     test_ints<unsigned short>();
     test_ints<int>();
     test_ints<unsigned int>();
     test_ints<long>();
     test_ints<unsigned long>();
+
+    test_ints<int8_t>();
+    test_ints<uint8_t>();
+
+    test_ints<int16_t>();
+    test_ints<uint16_t>();
+
+    test_ints<int32_t>();
+    test_ints<uint32_t>();
+
+    test_ints<int64_t>();
+    test_ints<uint64_t>();
+
+
     const uint32_t t1 = Y_FOURCC(1,2,3,4);
     const uint32_t t2 = Y_FOURCC(4,3,2,1);
     std::cerr << std::hex << t1 << " | " << t2 << std::endl;

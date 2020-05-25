@@ -1,10 +1,7 @@
-
-#include "y/mpl/rational.hpp"
 #include "y/math/kernel/gram-schmidt.hpp"
+
 namespace upsylon {
-    
-    
-    
+
     namespace math {
 
         bool GramSchmidt:: OrthoSimple( matrix<mpl::rational> &a )
@@ -42,19 +39,20 @@ namespace upsylon {
                 {
                     quark::neg(r);
                 }
-                
-#if 0
-                for(size_t j=1;j<=cols;++j)
+                else
                 {
-                    const mpl::sign_type &s = r[j].num.s;
-                    if(mpl::__zero==s) continue;
-                    if(mpl::__negative==s)
+                    for(size_t j=1;j<=cols;++j)
                     {
-                        quark::neg(r);
-                        break;
+                        const mpl::sign_type &s = r[j].num.s;
+                        if(mpl::__zero==s) continue;
+                        if(mpl::__negative==s)
+                        {
+                            quark::neg(r);
+                            break;
+                        }
                     }
                 }
-#endif
+
             }
             
             return true;

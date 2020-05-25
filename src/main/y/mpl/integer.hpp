@@ -181,7 +181,38 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
             virtual size_t      serialize( ios::ostream &fp ) const;  //!< s and n
             static const char   CLASS_NAME[];                         //!< "mpz"
             static integer      read( ios::istream &, size_t &shift, const char *which); //!< retrieve a serialized integer
-            
+
+            //__________________________________________________________________
+            //
+            // conversion
+            //__________________________________________________________________
+
+            //! conversion to int8_t, int16_t, int32_t, int64_t
+            template <typename T>
+            bool to(T &) const throw();
+
+
+            //! convert to integral type
+            template <typename T>
+            inline bool as(T &target) const throw()
+            {
+                typedef typename signed_int<sizeof(T)>::type itype;
+                return to<itype>( (itype&)target );
+            }
+
+            //! wrapper
+            template <typename T>
+            inline T cast_to(const char *when = 0) const
+            {
+                T ans(0);
+                if(!as<T>(ans))
+                {
+                    throw_cast_overflow(when);
+                }
+                return ans;
+            }
+
+
         private:
             static integer __add(const sign_type ls,
                                  const uint8_t  *l,
@@ -210,6 +241,8 @@ inline friend integer operator OP ( const natural  &lhs, const integer &rhs )  {
                                  const sign_type rs,
                                  const uint8_t  *r,
                                  const size_t    nr);
+
+            void throw_cast_overflow(const char *when) const;
         };
         
     }

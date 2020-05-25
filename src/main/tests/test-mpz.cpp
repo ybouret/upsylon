@@ -54,17 +54,81 @@ Y_UTEST(mpz)
         const mpz J   = j;   Y_ASSERT(J.lsi()==j);
         const mpz S   = I-J; Y_ASSERT(S.lsi()==d);
     }
+    std::cerr << std::endl;
+
     std::cerr << "-- mpz loop--" << std::endl;
     for(mpz i=10;i>=-10;i--)
     {
         std::cerr << i << '/';
     }
     std::cerr << std::endl;
+
     std::cerr << "-- mpz --loop" << std::endl;
     for(mpz i=10;i>=-10;--i)
     {
         std::cerr << i << '/';
     }
+    std::cerr << std::endl;
+
+    std::cerr << "-- conversion" << std::endl;
+
+    std::cerr << "|_8bits" << std::endl;
+    for(int i=limit_of<int8_t>::minimum;i<=limit_of<int8_t>::maximum;++i)
+    {
+        const int8_t I = int8_t(i);
+        const mpz    Z = I;
+        int8_t       J = 0;
+        if(!Z.to(J)) throw exception("cannot recover %d", i);
+        if(J!=I)     throw exception("found %d instead of %d",int(J),i);
+    }
+
+    std::cerr << "|_16bits" << std::endl;
+    for(int i=limit_of<int16_t>::minimum;i<=limit_of<int16_t>::maximum;++i)
+    {
+        const int16_t I = int16_t(i);
+        const mpz     Z = I;
+        int16_t       J = 0;
+        if(!Z.to(J)) throw exception("cannot recover %d", i);
+        if(J!=I)     throw exception("found %d instead of %d",int(J),i);
+    }
+
+    std::cerr << "|_32bits" << std::endl;
+
+    {
+        mpz z = limit_of<int32_t>::minimum;
+        Y_CHECK( z.cast_to<int32_t>() == limit_of<int32_t>::minimum);
+        z = limit_of<int32_t>::maximum;
+        Y_CHECK( z.cast_to<int32_t>() == limit_of<int32_t>::maximum);
+    }
+
+    for(int iter=0;iter<10;++iter)
+    {
+        const int32_t I = alea.full<int32_t>();
+        const mpz     Z = I;
+        int32_t       J = 0;
+        if(!Z.to(J)) throw exception("cannot recover %ld", long(I));
+        if(J!=I)     throw exception("found %ld instead of %ld",long(J),long(I));
+    }
+
+    std::cerr << "|_64bits" << std::endl;
+#if 0
+    {
+        mpz z = limit_of<int64_t>::minimum;
+        //Y_CHECK( z.cast_to<int64_t>() == limit_of<int64_t>::minimum);
+        //z = limit_of<int64_t>::maximum;
+        //Y_CHECK( z.cast_to<int64_t>() == limit_of<int64_t>::maximum);
+    }
+#endif
+
+    for(int iter=0;iter<10;++iter)
+    {
+        const int64_t I = alea.full<int64_t>();
+        const mpz     Z = I;
+        int64_t       J = 0;
+        if(!Z.to(J)) throw exception("cannot recover 64bits");
+        if(J!=I)     throw exception("mismatch for 64bits");
+    }
+
     std::cerr << std::endl;
 
     std::cerr << "-- mpz multiplication" << std::endl;
@@ -77,6 +141,7 @@ Y_UTEST(mpz)
         const mpz J   = j;   Y_ASSERT(J.lsi()==j);
         const mpz P   = I*J; Y_ASSERT(P.lsi()==p);
     }
+    std::cerr << std::endl;
 
     std::cerr << "-- mpz division" << std::endl;
     for(size_t iter=0;iter<ITER;++iter)
@@ -91,6 +156,7 @@ Y_UTEST(mpz)
         //std::cerr << "I=" << I << ", J=" << J << ", Q=" << Q << std::endl;
         Y_ASSERT(Q.lsi()==q);
     }
+    std::cerr << std::endl;
 
     std::cerr << "-- mpz square roots" << std::endl;
     std::cerr << "bits:";
@@ -104,6 +170,8 @@ Y_UTEST(mpz)
         Y_ASSERT(s.n==z.n);
     }
     std::cerr << std::endl;
-    
+
+
+
 }
 Y_UTEST_DONE()

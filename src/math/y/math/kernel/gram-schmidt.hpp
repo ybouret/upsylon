@@ -4,14 +4,10 @@
 #define Y_MKL_GRAM_SCHMIDT_INCLUDED 1
 
 #include "y/container/matrix.hpp"
+#include "y/mpl/rational.hpp"
 #include "y/math/kernel/quark.hpp"
 
 namespace upsylon {
-    
-    namespace mpl
-    {
-        class rational;
-    }
     
     namespace math {
      
@@ -53,8 +49,33 @@ namespace upsylon {
              - minimum of minus signs
              - first not zero coordinate is positive
              */
-            static bool OrthoSimple( matrix<mpl::rational> &a );
-            
+            static bool OrthoSimple( matrix<mpq> &a );
+
+
+            //! build ortho from integer matrix
+            template <typename T>
+            static bool iOrtho( matrix<T> &a )
+            {
+                const size_t rows = a.rows;
+                const size_t cols = a.cols;
+                matrix<mpq> q(rows,cols);
+                for(size_t i=rows;i>0;--i)
+                {
+                    for(size_t j=cols;j>0;--j)
+                    {
+                        q[i][j] = static_cast<mpl::integer_t>(a[i][j]);
+                    }
+                }
+                if(!OrthoSimple(q)) return false;
+                for(size_t i=rows;i>0;--i)
+                {
+                    for(size_t j=cols;j>0;--j)
+                    {
+                        
+                    }
+                }
+            }
+
         };
     }
 }

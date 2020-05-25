@@ -429,3 +429,81 @@ namespace upsylon {
         }
 }
 
+
+namespace upsylon {
+
+    namespace mpl {
+
+        template <typename ITYPE,typename UTYPE> static inline
+        bool __to( ITYPE &z, const integer &i ) throw()
+        {
+
+            static const UTYPE umax = static_cast<UTYPE>(  limit_of<ITYPE>::maximum    );
+            static const UTYPE umin = static_cast<UTYPE>(-(limit_of<ITYPE>::minimum+1) )+1;
+            //std::cerr << "umax=" << (unsigned long long)(umax) << ", umin=" << (unsigned long long)(umin) << std::endl;
+            UTYPE u = 0;
+            switch(i.s)
+            {
+                case __zero:     z=0; return true;
+                case __positive:
+                    if(!i.n.to(u) || u>umax)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        z = static_cast<ITYPE>(u);
+                        return true;
+                    }
+                case __negative:
+                {
+                    if(!i.n.to(u) || u>umin )
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        switch(u)
+                        {
+                            case umin: z = limit_of<ITYPE>::minimum; break;
+                            default  : z = -static_cast<ITYPE>(u);   break;
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false; //!< never get here
+
+        }
+
+        template <>
+        bool integer:: to<int8_t>(int8_t &z) const throw()
+        {
+            return __to<int8_t,uint8_t>(z,*this);
+        }
+
+        template <>
+        bool integer:: to<int16_t>(int16_t &z) const throw()
+        {
+            return __to<int16_t,uint16_t>(z,*this);
+
+        }
+
+        template <>
+        bool integer:: to<int32_t>(int32_t &z) const throw()
+        {
+            return __to<int32_t,uint32_t>(z,*this);
+        }
+
+        template <>
+        bool integer:: to<int64_t>(int64_t &z) const throw()
+        {
+            return __to<int64_t,uint64_t>(z,*this);
+        }
+
+        void integer:: throw_cast_overflow(const char *when) const
+        {
+            throw libc::exception( ERANGE, "mpz.cast overflow %s", (when ? when : "!") );
+        }
+    }
+}
