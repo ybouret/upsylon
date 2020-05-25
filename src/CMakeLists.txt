@@ -153,7 +153,7 @@ MESSAGE(STATUS "")
 ########################################################################
 
 ADD_CUSTOM_TARGET(core
-DEPENDS y y-jargon y-m y-chem y-net y-spade y-graphic
+DEPENDS test-main test-jargon test-m test-chem test-net test-spade test-graphic
 COMMENT "Built Core Libraries"
 )
 
