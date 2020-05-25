@@ -9,8 +9,8 @@ namespace upsylon {
 
     namespace ios {
 
-        class integral_scribe;
-    
+        class basic_scribe;
+        class tuple_scribe;
 
     }
 }
