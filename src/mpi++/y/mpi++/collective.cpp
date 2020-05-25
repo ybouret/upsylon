@@ -20,7 +20,7 @@ namespace upsylon {
         const int nbcast = static_cast<int>(count);
         if(nbcast<0) throw upsylon::exception( "mpi::Bcast(size overflow)");
         const uint64_t mark = rt_clock::ticks();
-        Y_MPI_CHECK(MPI_Bcast(buffer,count,datatype,root,comm));
+        Y_MPI_CHECK(MPI_Bcast(buffer,nbcast,datatype,root,comm));
         const uint64_t delta = rt_clock::ticks() - mark;
         commRecv.ticks(delta);
         commSend.ticks(delta);
