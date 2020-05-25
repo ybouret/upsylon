@@ -148,6 +148,12 @@ SET(ios_conveyor_srcs ${ios_conveyor_decl} ${ios_conveyor_code})
 SOURCE_GROUP( ios/conveyor FILES ${ios_conveyor_srcs} )
 INSTALL( FILES ${ios_conveyor_decl} DESTINATION include/y/ios/conveyor )
 
+FILE(GLOB ios_scribe_decl y/ios/scribe/*.hpp)
+FILE(GLOB ios_scribe_code y/ios/scribe/*.cpp)
+SET(ios_scribe_srcs ${ios_scribe_decl} ${ios_scribe_code})
+SOURCE_GROUP( ios/scribe FILES ${ios_scribe_srcs} )
+INSTALL( FILES ${ios_scribe_decl} DESTINATION include/y/ios/scribe )
+
 
 FILE(GLOB information_decl y/information/*.hpp)
 FILE(GLOB information_code y/information/*.cpp)
@@ -317,38 +323,6 @@ SET(counting_srcs ${counting_decl} ${counting_code})
 SOURCE_GROUP( counting FILES ${counting_srcs} )
 INSTALL( FILES ${counting_decl} DESTINATION include/y/counting )
 
-IF(FALSE)
-FILE(GLOB oxide_decl y/oxide/*.hpp)
-FILE(GLOB oxide_code y/oxide/*.cpp)
-SET(oxide_srcs ${oxide_decl} ${oxide_code})
-SOURCE_GROUP( oxide FILES ${oxide_srcs} )
-INSTALL( FILES ${oxide_decl} DESTINATION include/y/oxide )
-
-FILE(GLOB oxide_field_decl y/oxide/field/*.hpp)
-FILE(GLOB oxide_field_code y/oxide/field/*.cpp)
-SET(oxide_field_srcs ${oxide_field_decl} ${oxide_field_code})
-SOURCE_GROUP( oxide/field FILES ${oxide_field_srcs} )
-INSTALL( FILES ${oxide_field_decl} DESTINATION include/y/oxide/field )
-
-FILE(GLOB oxide_grid_decl y/oxide/grid/*.hpp)
-FILE(GLOB oxide_grid_code y/oxide/grid/*.cpp)
-SET(oxide_grid_srcs ${oxide_grid_decl} ${oxide_grid_code})
-SOURCE_GROUP( oxide/grid FILES ${oxide_grid_srcs} )
-INSTALL( FILES ${oxide_grid_decl} DESTINATION include/y/oxide/grid )
-
-
-FILE(GLOB oxide_algo_decl y/oxide/algo/*.hpp)
-FILE(GLOB oxide_algo_code y/oxide/algo/*.cpp)
-SET(oxide_algo_srcs ${oxide_algo_decl} ${oxide_algo_code})
-SOURCE_GROUP( oxide/algo FILES ${oxide_algo_srcs} )
-INSTALL( FILES ${oxide_algo_decl} DESTINATION include/y/oxide/algo )
-
-FILE(GLOB oxide_mpi_decl y/oxide/mpi/*.hpp)
-FILE(GLOB oxide_mpi_code y/oxide/mpi/*.cpp)
-SET(oxide_mpi_srcs ${oxide_mpi_decl} ${oxide_mpi_code})
-SOURCE_GROUP( oxide/mpi FILES ${oxide_mpi_srcs} )
-INSTALL( FILES ${oxide_mpi_decl} DESTINATION include/y/oxide/mpi )
-ENDIF()
 
 FILE(GLOB jargon_decl y/jargon/*.hpp)
 FILE(GLOB jargon_code y/jargon/*.cpp)
@@ -385,27 +359,7 @@ FILE(GLOB jargon_pattern_joker_code y/jargon/pattern/joker/*.cpp)
 SET(jargon_pattern_joker_srcs ${jargon_pattern_joker_decl} ${jargon_pattern_joker_code})
 SOURCE_GROUP( jargon/pattern/joker FILES ${jargon_pattern_joker_srcs} )
 INSTALL( FILES ${jargon_pattern_joker_decl} DESTINATION include/y/jargon/pattern/joker )
-
-IF(FALSE)
-FILE(GLOB jargon_lexical_decl y/jargon/lexical/*.hpp)
-FILE(GLOB jargon_lexical_code y/jargon/lexical/*.cpp)
-SET(jargon_lexical_srcs ${jargon_lexical_decl} ${jargon_lexical_code})
-SOURCE_GROUP( jargon/lexical FILES ${jargon_lexical_srcs} )
-INSTALL( FILES ${jargon_lexical_decl} DESTINATION include/y/jargon/lexical )
-
-FILE(GLOB jargon_lexical_event_decl y/jargon/lexical/event/*.hpp)
-FILE(GLOB jargon_lexical_event_code y/jargon/lexical/event/*.cpp)
-SET(jargon_lexical_event_srcs ${jargon_lexical_event_decl} ${jargon_lexical_event_code})
-SOURCE_GROUP( jargon/lexical/event FILES ${jargon_lexical_event_srcs} )
-INSTALL( FILES ${jargon_lexical_event_decl} DESTINATION include/y/jargon/lexical/event )
-
-FILE(GLOB jargon_lexical_plugin_decl y/jargon/lexical/plugin/*.hpp)
-FILE(GLOB jargon_lexical_plugin_code y/jargon/lexical/plugin/*.cpp)
-SET(jargon_lexical_plugin_srcs ${jargon_lexical_plugin_decl} ${jargon_lexical_plugin_code})
-SOURCE_GROUP( jargon/lexical/plugin FILES ${jargon_lexical_plugin_srcs} )
-INSTALL( FILES ${jargon_lexical_plugin_decl} DESTINATION include/y/jargon/lexical/plugin )
-ENDIF()
-
+ 
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -428,7 +382,7 @@ ${ordered_srcs}
 ${associative_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
-${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs}
+${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} ${ios_scribe_srcs}
 ${information_srcs} 
 ${information_modulation_srcs} 
 ${information_translator_srcs} 
