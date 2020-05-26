@@ -279,7 +279,8 @@ namespace upsylon {
         typedef Layout<Coord1D> Layout1D; //!< 1D Layout
         typedef Layout<Coord2D> Layout2D; //!< 2D Layout
         typedef Layout<Coord3D> Layout3D; //!< 3D Layout
-
+        
+        
     }
 }
 

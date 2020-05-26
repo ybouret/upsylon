@@ -25,6 +25,12 @@ SET( network_srcs ${network_decl} ${network_impl} )
 INSTALL( FILES ${network_decl} DESTINATION include/y/spade/network )
 SOURCE_GROUP(spade/network FILES ${network_srcs} )
 
+FILE( GLOB mesh_decl y/spade/mesh/*.hpp)
+FILE( GLOB mesh_impl y/spade/mesh/*.cpp)
+SET( mesh_srcs ${mesh_decl} ${mesh_impl} )
+INSTALL( FILES ${mesh_decl} DESTINATION include/y/spade/mesh )
+SOURCE_GROUP(spade/mesh FILES ${mesh_srcs} )
+
 
 INCLUDE_DIRECTORIES(. ../main)
 
@@ -33,6 +39,7 @@ ${srcs}
 ${field_srcs}
 ${layout_srcs}
 ${network_srcs}
+${mesh_srcs}
 )
 INSTALL( TARGETS y-spade ARCHIVE DESTINATION lib )
 
