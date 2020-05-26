@@ -11,15 +11,16 @@ Y_UTEST(matching)
     {
         Motif    p(  RegularExpression::Compile(argv[1]) );
         Token    token;
-        
+        list<Token> tokens;
         if(argc>2)
         {
             ios::icstream fp( argv[2] );
             string        line;
             while( fp.gets(line) )
             {
-                std::cerr << "exact:  ";
-                if(p->matches_exactly(token,line))
+                std::cerr << "'" << line << "'" << std::endl;
+                std::cerr << "\texact:  ";
+                if(p->exactly_matches_data(token,line))
                 {
                     std::cerr << token << std::endl;
                 }
@@ -27,8 +28,8 @@ Y_UTEST(matching)
                 {
                     std::cerr << "[NO]" << std::endl;
                 }
-                std::cerr << "partly: ";
-                if(p->matches_partly(token,line))
+                std::cerr << "\tpartly: ";
+                if(p->somehow_matches_data(token,line))
                 {
                    std::cerr << token << std::endl;
                 }
@@ -36,7 +37,13 @@ Y_UTEST(matching)
                 {
                     std::cerr << "[NO]" << std::endl;
                 }
-                
+                tokens.free();
+                std::cerr << "\tevery : ";
+                if(p->find_matches_of_data(tokens,line))
+                {
+                    std::cerr << tokens;
+                }
+                std::cerr << std::endl;
             }
         }
     }

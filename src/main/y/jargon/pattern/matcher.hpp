@@ -14,15 +14,40 @@ namespace upsylon {
         class Matcher : public Motif, public Token
         {
         public:
-            Matcher(const string &);         //!< setup by compiling regular expression
-            Matcher(const char   *);         //!< setup by compiling regular expression
-            virtual ~Matcher() throw();      //!< cleanup
-            Matcher(const Matcher &) throw(); //!< shared copy with empty token!
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            Matcher(const string &);                  //!< setup by compiling regular expression
+            Matcher(const char   *);                  //!< setup by compiling regular expression
+            virtual ~Matcher() throw();               //!< cleanup
+            Matcher(const Matcher &) throw();         //!< shared copy with empty token!
             
-            const Token *exact_match(const string &); //!< this->matches_exactly(*this,str)
-            const Token *first_match(const string &); //!< this->matches_partly(*this,str)
-            
-            
+
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+
+            //! exact match
+            template <typename CONTENT>
+            const Token *matches_exactly(const CONTENT &content)
+            {
+                release();
+                return (**this).exactly_matches_data(*this,content) ? this : 0;
+            }
+
+            //! partial match
+            template <typename CONTENT>
+            const Token *matches_somehow(const CONTENT &content)
+            {
+                release();
+                return (**this).somehow_matches_data(*this,content) ? this : 0;
+            }
+
+
         private:
             Y_DISABLE_ASSIGN(Matcher);
         };

@@ -74,13 +74,39 @@ namespace upsylon {
             void   test(Source &, Token &) const; //!< test pattern on all source, save content for re-use
             bool   checkIO()               const; //!< check serialization
             string toRegExp()              const; //!< use express()
-            
-            //! matching extacly
-            bool matches_exactly(Token &, const string &) const;
-            
-            //! matching partly
-            bool matches_partly(Token &, const string &) const;
-          
+
+
+
+            //! the module content must match exactly the pattern
+            bool   exactly_matches(Token &, Module *) const;
+
+            //! the module content posseses the pattern, find first occurence
+            bool   somehow_matches(Token &, Module *) const;
+
+            //! find all the occurences, return the count
+            size_t get_all_matches(sequence<Token> &, Module *) const;
+
+            //! helper for string/text
+            template <typename CONTENT> inline
+            bool exactly_matches_data(Token &token, const CONTENT &content) const
+            {
+                return exactly_matches(token, Module::OpenData(content) );
+            }
+
+            //! helper for string/text
+            template <typename CONTENT> inline
+            bool somehow_matches_data(Token &token, const CONTENT &content) const
+            {
+                return somehow_matches(token, Module::OpenData(content) );
+            }
+
+            template <typename CONTENT> inline
+            size_t find_matches_of_data(sequence<Token> &tokens, const CONTENT &content) const
+            {
+                return get_all_matches(tokens, Module::OpenData(content) );
+            }
+
+
             //------------------------------------------------------------------
             //
             // global static methods

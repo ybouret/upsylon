@@ -29,7 +29,8 @@ namespace upsylon {
         {
             
         }
-        
+
+#if 0
         const Token * Matcher:: exact_match(const string &str)
         {
             release();
@@ -41,7 +42,7 @@ namespace upsylon {
             release();
             return (**this).matches_partly(*this,str) ? this : 0;
         }
-        
+#endif
 
         
         
