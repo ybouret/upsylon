@@ -9,6 +9,7 @@ INSTALL( TARGETS y_pi_driver RUNTIME DESTINATION bin )
 FIND_PACKAGE(OpenMP)
 
 IF(OpenMP_C_FOUND)
+	MESSAGE( STATUS "OpenMP_C_LIBARIES=${OpenMP_C_LIBRARIES}" )
     ADD_EXECUTABLE(pi pi.c)
     TARGET_LINK_LIBRARIES(pi PUBLIC OpenMP::OpenMP_C)
 	
@@ -19,9 +20,9 @@ IF(OpenMP_C_FOUND)
     TARGET_LINK_LIBRARIES(pi-v2 PUBLIC OpenMP::OpenMP_C)
 
 IF(NOT MSVC)
-	target_link_libraries(pi    m)
-	target_link_libraries(pi-v2 m)
-	target_link_libraries(pi-ng m)
+	TARGET_LINK_LIBRARIES(pi    m)
+	TARGET_LINK_LIBRARIES(pi-v2 m)
+	TARGET_LINK_LIBRARIES(pi-ng m)
 ENDIF(NOT MSVC)
 
 ENDIF(OpenMP_C_FOUND)
