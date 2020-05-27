@@ -48,7 +48,7 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit Mesh(const LABEL   &id,
                           const unsigned dim) :
-            Mesh(id,Topology,dim)
+            Kernel::Mesh(id,Topology,dim)
             {
             }
             

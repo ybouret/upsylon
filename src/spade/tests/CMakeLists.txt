@@ -16,6 +16,7 @@ ADD_TEST(ghosts       test-spade ghosts)
 ADD_TEST(tessellation test-spade tessellation)
 ADD_TEST(transfer     test-spade transfer)
 ADD_TEST(workspace    test-spade workspace)
+ADD_TEST(mesh         test-spade mesh)
 
 ADD_CUSTOM_TARGET(utest-spade
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
