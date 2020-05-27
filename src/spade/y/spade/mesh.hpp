@@ -12,20 +12,23 @@ namespace upsylon {
 
         namespace Kernel
         {
+            //! base class for meshses
             class Mesh
             {
             public:
-                virtual ~Mesh() throw();
-                virtual const char *category() const throw() = 0;
+                virtual            ~Mesh()           throw();     //!< cleanup
+                virtual const char *category() const throw() = 0; //!< info
 
-                const string     name;       //!< identifier
-                const unsigned   topology;   //!< logical dimensions
-                const unsigned   dimensions; //!< physical dimensions
+                const string     name;            //!< identifier
+                const unsigned   topology;        //!< logical dimensions
+                const unsigned   space;           //!< physical dimensions
                 
-                static string    AxisTag(const unsigned );
+                static string    AxisTag(const unsigned); //!< build axis tag
 
             protected:
+                //! setup
                 explicit Mesh(const string &, const unsigned, const unsigned);
+                //! setup
                 explicit Mesh(const char   *, const unsigned, const unsigned);
 
             private:
@@ -34,18 +37,23 @@ namespace upsylon {
             };
         }
 
-        
+        //----------------------------------------------------------------------
+        //
+        //! base class for Mesh
+        //
+        //----------------------------------------------------------------------
         template <typename COORD>
         class Mesh : public Kernel::Mesh
         {
         public:
+            //! the topology is  the dimension of the required access coordinate
             static const unsigned Topology = Coord::Get<COORD>::Dimensions;
             
-            inline virtual ~Mesh() throw()
-            {}
-            
+            //! cleanup
+            inline virtual ~Mesh() throw(){}
             
         protected:
+            //! setup
             template <typename LABEL> inline
             explicit Mesh(const LABEL   &id,
                           const unsigned dim) :

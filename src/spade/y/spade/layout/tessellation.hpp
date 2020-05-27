@@ -13,15 +13,16 @@ namespace upsylon {
     {
         namespace Kernel
         {
+            //! common stuff for tessellations
             class Tessellation
             {
             public:
-                const unsigned dimensions;
-                virtual ~Tessellation() throw();
+                const unsigned dimensions;        //!< layout dimensions
+                virtual ~Tessellation() throw();  //!< cleanup
 
             protected:
-                explicit Tessellation(const unsigned) throw();
-                static void throwNoMapping(const unsigned dim);
+                explicit Tessellation(const unsigned) throw();  //!< setup
+                static void throwNoMapping(const unsigned dim); //!< no possible mapping excetpion
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Tessellation);
@@ -108,6 +109,7 @@ namespace upsylon {
             const size_t              maxItems;  //!< max items to process in this tesselation
             const size_t              maxComms;  //!< max items for I/O in this tesselation
 
+            //! optimized mapping
             static inline
             COORD Find(const Layout<COORD> &fullLayout,
                        const size_t         cores,
@@ -146,8 +148,9 @@ namespace upsylon {
                 {
                     tess.pop_back();
                 }
+                
                 //--------------------------------------------------------------
-                // sort by maxComms and keep smallest maxItems
+                // sort by maxComms and keep smallest maxComms
                 //--------------------------------------------------------------
                 hsort(tess,byIncreasingMaxComms);
                 while( tess.size() > 1 && tess.back()->maxComms>tess.front()->maxComms)

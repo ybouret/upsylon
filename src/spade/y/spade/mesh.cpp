@@ -16,12 +16,12 @@ namespace upsylon {
 
             void Mesh:: checkDims() const
             {
-                if(dimensions<=0)       throw exception("%snegative dimensions for %s",fn, *name);
+                if(space<=0)            throw exception("%snegative space for %s",fn, *name);
                 if(topology<=0)         throw exception("%snegative topology for %s",fn, *name);
-                if(topology>dimensions) throw exception("%stopology>dimensions for %s",fn, *name);
+                if(topology>space)      throw exception("%stopology>space for %s",fn, *name);
             }
 
-#define Y_SPADE_MESH_CTOR()   name(id),  topology(t), dimensions(d)
+#define Y_SPADE_MESH_CTOR()   name(id),  topology(t), space(d)
 
             Mesh:: Mesh(const string &id, const unsigned t, const unsigned d) :
             Y_SPADE_MESH_CTOR()

@@ -26,7 +26,7 @@ namespace upsylon {
         public:
             //------------------------------------------------------------------
             //
-            //types and definitions
+            // types and definitions
             //
             //------------------------------------------------------------------
             typedef core::list_of_cloneable<Pattern> List; //!< alias
@@ -100,6 +100,7 @@ namespace upsylon {
                 return somehow_matches(token, Module::OpenData(content) );
             }
 
+            //! helper for string/text
             template <typename CONTENT> inline
             size_t find_matches_of_data(sequence<Token> &tokens, const CONTENT &content) const
             {

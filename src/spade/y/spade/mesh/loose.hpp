@@ -9,20 +9,32 @@
 namespace upsylon {
 
     namespace Spade {
-
-        //! a loose mesh: topology==dimensions
-        template <typename COORD,typename T>
+        
+        //------------------------------------------------------------------
+        //
+        //! a loose mesh: topology<=space
+        //
+        //------------------------------------------------------------------
+        template <
+        typename COORD,
+        unsigned SPACE,
+        typename T>
         class LooseMesh : public Mesh<COORD>
         {
         public:
-            Y_DECL_ARGS(T,type);
-
-            typedef typename VertexFor<COORD>:: template Of<T>::Type Vertex;
-
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            Y_DECL_ARGS(T,type);                                            //!< aliases
+            typedef typename VertexIn<SPACE>:: template Of<mutable_type>::Type Vertex; //!< alias
+            static const size_t Space = SPACE;                              //!< alias
+            //! cleanup
             inline virtual ~LooseMesh() throw() {}
 
         protected:
-
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LooseMesh);

@@ -10,11 +10,11 @@ namespace upsylon {
 
     namespace Spade
     {
-        //! forward declaration for fields instanciations
-        template <typename COORD> struct VertexFor;
-
-        //! Vertex1D of some sort
-        template <> struct VertexFor<Coord1D>
+        //!   declaration for vertices, based on SPACE
+        template <unsigned SPACE> struct VertexIn; //!< according to space
+        
+        //! Vertex in 1D
+        template <> struct VertexIn<1>
         {
             //! compute type
             template <typename T> struct Of
@@ -22,9 +22,9 @@ namespace upsylon {
                 typedef T Type; //!< the vertex type
             };
         };
-
-        //! Vertex2D of some sort
-        template <> struct VertexFor<Coord2D>
+        
+        //! Vertex in 2D
+        template <> struct VertexIn<2>
         {
             //! compute type
             template <typename T> struct Of
@@ -32,9 +32,9 @@ namespace upsylon {
                 typedef point2d<T> Type; //!< the vertex type
             };
         };
-
-        //! Vertex3D of some sort
-        template <> struct VertexFor<Coord3D>
+        
+        //! Vertex in 3D
+        template <> struct VertexIn<3>
         {
             //! compute type
             template <typename T> struct Of
@@ -42,6 +42,17 @@ namespace upsylon {
                 typedef point3d<T> Type; //!< the vertex type
             };
         };
+        
+        //!   declaration for vertices, based on COORD
+        template <typename COORD> struct VertexFor
+        {
+            //! compute type
+            template <typename T> struct Of
+            {
+                typedef typename VertexIn<sizeof(COORD)/sizeof(Coord1D)>:: template Of<T>::Type Type; //!< alias
+            };
+        };
+
 
         
     }

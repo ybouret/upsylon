@@ -14,40 +14,58 @@ namespace upsylon {
 
         namespace Kernel {
 
+            //! common stuff for rectilinear meshes
             class Rectilinear
             {
             public:
-                static const char Category[];
-                virtual ~Rectilinear() throw();
-
-
+                static const char Category[];   //!< "rectilinear"
+                virtual ~Rectilinear() throw(); //!< cleanup
+                
             protected:
-                explicit Rectilinear() throw();
+                explicit Rectilinear() throw(); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Rectilinear);
             };
         }
 
+        //----------------------------------------------------------------------
+        //
+        //! rectilinear mesh
+        /**
+         - one 1D field per dimensions
+         - topology = space = Dimensions
+         */
+        //
+        //----------------------------------------------------------------------
         template <typename COORD, typename T>
-        class RectilinearMesh :
-        public Kernel::Rectilinear,
-        public DenseMesh<COORD,T>
+        class RectilinearMesh : public Kernel::Rectilinear, public DenseMesh<COORD,T>
         {
         public:
-            Y_DECL_ARGS(T,type);
-            typedef DenseMesh<COORD,T>        MeshType;
-            typedef Layout1D                  AxisLayout;
-            typedef Field1D<T>                Axis;
-            typedef VertexFor<COORD>          _VTX;
-            typedef typename _VTX:: template Of<T>::Type Vertex;
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            Y_DECL_ARGS(T,type);                          //!< alias
+            typedef DenseMesh<COORD,T>        MeshType;   //!< alias
+            typedef Layout1D                  AxisLayout; //!< alias
+            typedef Field1D<mutable_type>     Axis;       //!< alias
+            typedef typename MeshType::Vertex Vertex;     //!< alias
+            //! alias
             static  const unsigned            Dimensions = MeshType::Dimensions;
 
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            
+            //! cleanup
             inline virtual ~RectilinearMesh() throw()
-            {
-            }
+            {}
 
-
+            //! setup
             template <typename LABEL> inline
             explicit RectilinearMesh(const LABEL         &id,
                                      const Layout<COORD> &full) :
@@ -62,20 +80,31 @@ namespace upsylon {
                 }
             }
 
+            
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            
+            //! return category
             inline virtual const char *category() const throw() { return Category; }
 
+            //! axis access
             inline Axis & operator[](const unsigned dim) throw()
             {
                 assert(dim<Dimensions);
                 return axis[dim];
             }
             
+            //! axis acces, CONST
             inline const Axis & operator[](const unsigned dim) const throw()
             {
                 assert(dim<Dimensions);
                 return axis[dim];
             }
             
+            //! recompose vertex from coordinate
             inline Vertex operator()(const COORD C) const throw()
             {
                 Vertex        v(0);
@@ -85,6 +114,16 @@ namespace upsylon {
                     p[dim] = axis[dim][ Coord::Of(C,dim) ];
                 }
                 return v;
+            }
+            
+            //! set vertex at coordinate
+            inline void operator()(const COORD C, const Vertex v) throw()
+            {
+                const_type *p = (const_type *)&v;
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    axis[dim][ Coord::Of(C,dim) ] = v[dim];
+                }
             }
             
             

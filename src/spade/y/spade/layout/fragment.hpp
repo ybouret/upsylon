@@ -74,7 +74,7 @@ namespace upsylon {
             /**
              \param fullLayout the original full layout
              \param localRanks the local ranks in the topology
-             \param topology   the topology used to compute rank(s)
+             \param dispatch   the dispatch used to compute rank(s)
              \param boundaries Periodic boundary condtions
              \param numGhosts  number of ghosts
              */
