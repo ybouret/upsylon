@@ -4,7 +4,7 @@
 #ifndef Y_SPADE_LAYOUT_FRAGMENT_INCLUDED
 #define Y_SPADE_LAYOUT_FRAGMENT_INCLUDED 1
 
-#include "y/spade/layout/topology.hpp"
+#include "y/spade/layout/dispatch.hpp"
 #include "y/spade/layout/swaps.hpp"
 #include "y/ptr/auto.hpp"
 
@@ -38,7 +38,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class Fragment : public Topology<COORD>::Node
+        class Fragment : public Dispatch<COORD>::Node
         {
         public:
             //------------------------------------------------------------------
@@ -47,13 +47,13 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const unsigned Dimensions =               Layout<COORD>::Dimensions; //!< alias
-            static const unsigned Levels     =               Topology<COORD>::Levels;   //!< alias
+            static const unsigned Levels     =               Dispatch<COORD>::Levels;   //!< alias
             typedef               Layout<COORD>              LayoutType;                //!< alias
             typedef typename      LayoutType::coord          coord;                     //!< alias
             typedef typename      LayoutType::const_coord    const_coord;               //!< alias
-            typedef typename      Topology<COORD>::Node      Node;                      //!< alias
-            typedef typename      Topology<COORD>::Link      Link;                      //!< alias
-            typedef typename      Topology<COORD>::Links     Links;                     //!< alias
+            typedef typename      Dispatch<COORD>::Node      Node;                      //!< alias
+            typedef typename      Dispatch<COORD>::Link      Link;                      //!< alias
+            typedef typename      Dispatch<COORD>::Links     Links;                     //!< alias
             typedef typename      Kernel::Swaps<COORD>       Swaps;                     //!< alias
             typedef typename      Swaps::HandleType          HSwaps;                    //!< alias
             typedef               AutoExchangeSwaps<COORD>   AutoExchangeType;          //!< alias
@@ -80,11 +80,11 @@ namespace upsylon {
              */
             inline explicit Fragment(const Layout<COORD>   &fullLayout,
                                      const_coord            localRanks,
-                                     const Topology<COORD> &topology,
+                                     const Dispatch<COORD> &dispatch,
                                      const_coord            boundaries,
                                      const Coord1D          numGhosts) :
-            Node(localRanks,topology,boundaries),
-            inner(fullLayout.split(topology.sizes,this->ranks)),
+            Node(localRanks,dispatch,boundaries),
+            inner(fullLayout.split(dispatch.sizes,this->ranks)),
             outer(inner),
             _core(0),
             autoExchange(this->numAutoExchange),
@@ -251,8 +251,8 @@ namespace upsylon {
                     const Link  &forward = l.forward;
                     const Link  &reverse = l.reverse;
                     
-                    assert(forward.probe== Topology<COORD>::Coordination::Probes[level]);
-                    assert(reverse.probe==-Topology<COORD>::Coordination::Probes[level]);
+                    assert(forward.probe== Dispatch<COORD>::Coordination::Probes[level]);
+                    assert(reverse.probe==-Dispatch<COORD>::Coordination::Probes[level]);
                     assert(Connect::Authorized(forward.connectMode,reverse.connectMode));
                     
                     //----------------------------------------------------------

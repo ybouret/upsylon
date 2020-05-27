@@ -1,4 +1,4 @@
-#include "y/spade/layout/topology.hpp"
+#include "y/spade/layout/dispatch.hpp"
 #include "y/exception.hpp"
 #include "y/parops.hpp"
 
@@ -73,7 +73,7 @@ namespace upsylon {
                 throw exception("Spade::Connect: Unauthorized forward=%s and reverse=%s @level=%u", ModeText(fwd), ModeText(rev), level);
         }
         
-        const char Connect:: TopologyNode[] = "Topology::Node";
+        const char Connect:: DispatchNode[] = "Dispatch::Node";
         const char Connect:: Layouts[]      = "Layouts";
         
         void Connect:: InvalidFlag(const Flag f,const char *where)
@@ -86,23 +86,23 @@ namespace upsylon {
         namespace Kernel
         {
 
-            Topology:: ~Topology() throw()
+            Dispatch:: ~Dispatch() throw()
             {
                 _bzset(size);
             }
             
-            Topology:: Topology(const size_t nc) :
+            Dispatch:: Dispatch(const size_t nc) :
             size(nc)
             {
-                if(size<=0) throw exception("Spade::Topology(no cores)");
+                if(size<=0) throw exception("Spade::Dispatch(no cores)");
             }
             
-            Coord1D Topology:: Prev(Coord1D localSize, Coord1D localRank) throw()
+            Coord1D Dispatch:: Prev(Coord1D localSize, Coord1D localRank) throw()
             {
                 return parops::rank_prev(localSize,localRank);
             }
             
-            Coord1D Topology:: Next(Coord1D localSize, Coord1D localRank) throw()
+            Coord1D Dispatch:: Next(Coord1D localSize, Coord1D localRank) throw()
             {
                 return parops::rank_next(localSize,localRank);
             }

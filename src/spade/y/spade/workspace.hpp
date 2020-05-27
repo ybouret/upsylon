@@ -92,7 +92,7 @@ namespace upsylon {
         template <typename COORD>
         class Workspace :
         public Kernel::Workspace,
-        public Topology<COORD>,
+        public Dispatch<COORD>,
         public Fragment<COORD>
         {
         public:
@@ -125,7 +125,7 @@ namespace upsylon {
                                       const COORD          boundaries,
                                       const Coord1D        numGhosts) :
             Kernel::Workspace(Dimensions),
-            Topology<COORD>(mapping),
+            Dispatch<COORD>(mapping),
             Fragment<COORD>(fullLayout,
                             this->getLocalRanks( CheckRank(this->size,globalRank) ),
                             *this,

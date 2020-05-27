@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_SPADE_TOPOLOGY_INCLUDED
-#define Y_SPADE_TOPOLOGY_INCLUDED 1
+#ifndef Y_SPADE_DISPATCH_INCLUDED
+#define Y_SPADE_DISPATCH_INCLUDED 1
 
 #include "y/spade/types.hpp"
 #include "y/counting/mloop.hpp"
@@ -79,7 +79,7 @@ namespace upsylon {
             //! raise an exception if invalid connect mode
             static void InvalidFlag(const Flag f,const char *when);
             
-            static const char TopologyNode[]; //!< "Topology::Node"
+            static const char DispatchNode[]; //!< "Dispatch::Node"
             static const char Layouts[];      //!< "Layouts"
         };
         
@@ -124,13 +124,13 @@ namespace upsylon {
             
             //------------------------------------------------------------------
             //
-            //! base class for Topology computations
+            //! base class to dispatch computations
             /**
              answers to: who are my neighbours ?
              */
             //
             //------------------------------------------------------------------
-            class Topology
+            class Dispatch
             {
                 //--------------------------------------------------------------
                 //
@@ -138,9 +138,10 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
             public:
-                virtual ~Topology() throw();     //!< cleanup
+                virtual ~Dispatch() throw();     //!< cleanup
+
             protected:
-                explicit Topology(const size_t); //!< set size, with checking
+                explicit Dispatch(const size_t); //!< set size, with checking
                 
             public:
                 //--------------------------------------------------------------
@@ -163,7 +164,7 @@ namespace upsylon {
                 const size_t size; //!< number of cores
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Topology);
+                Y_DISABLE_COPY_AND_ASSIGN(Dispatch);
             };
         };
         
@@ -173,7 +174,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class Topology : public Kernel::Topology
+        class Dispatch : public Kernel::Dispatch
         {
         public:
             //------------------------------------------------------------------
@@ -186,7 +187,6 @@ namespace upsylon {
             static  const unsigned Levels    =  Coordination::Levels;               //!< alias
             typedef typename type_traits<COORD>::mutable_type coord;                //!< alias
             typedef const coord                               const_coord;          //!< alias
-            //typedef typename Coord::Get<COORD>::Boolean       Boolean;              //!< alias
             typedef mloop<Coord1D,coord>                      Loop;                 //!< loop over ranks if neccessary
             
             
@@ -197,7 +197,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! cleanup
-            inline virtual ~Topology() throw()
+            inline virtual ~Dispatch() throw()
             {
                 _bzset(sizes);
                 _bzset(pitch);
@@ -207,8 +207,8 @@ namespace upsylon {
             
             
             //! setup from a mapping
-            explicit Topology(const_coord mapping) :
-            Kernel::Topology( Coord::Product(mapping) ),
+            explicit Dispatch(const_coord mapping) :
+            Kernel::Dispatch( Coord::Product(mapping) ),
             sizes(mapping),
             pitch(1),
             maxRanks( sizes - Coord::Ones<coord>() ),
@@ -336,8 +336,8 @@ namespace upsylon {
                 
                 //! setup
                 inline Hub(const_coord     localRanks,
-                           const Topology &topology) throw() :
-                ranks(localRanks), rank( topology.getGlobalRank(ranks) )
+                           const Dispatch &dispatch) throw() :
+                ranks(localRanks), rank( dispatch.getGlobalRank(ranks) )
                 {
                 }
                 
@@ -382,9 +382,9 @@ namespace upsylon {
                 inline Link(const size_t    peerRank,
                             const_coord    &peerProbe,
                             const_coord    &localRanks,
-                            const Topology &topology,
+                            const Dispatch &dispatch,
                             const bool      exists) throw() :
-                Hub(localRanks,topology),
+                Hub(localRanks,dispatch),
                 connectMode( Connect::For(exists,peerRank,this->rank) ),
                 probe(peerProbe)
                 {
@@ -516,9 +516,9 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 //! setup
                 inline explicit Node(const_coord      localRanks,
-                                     const Topology  &topology,
+                                     const Dispatch  &dispatch,
                                      const_coord      pbc) :
-                Hub(localRanks,topology),
+                Hub(localRanks,dispatch),
                 links(Levels),
                 numFreeStanding(0),
                 numAutoExchange(0),
@@ -531,8 +531,8 @@ namespace upsylon {
                     for(unsigned level=0;level<Levels;++level)
                     {
                         const coord  probe   = Coordination::Probes[level];
-                        const Link   forward = getLink(topology,probe,pbc);
-                        const Link   reverse = getLink(topology,-probe,pbc);
+                        const Link   forward = getLink(dispatch,probe,pbc);
+                        const Link   reverse = getLink(dispatch,-probe,pbc);
                         Connect::Authorize(level,forward.connectMode,reverse.connectMode);
                         aliasing::_(links).template build<const Link&,const Link&>(forward,reverse);
                         const Connect::Flag connect = links.back().connect;
@@ -544,7 +544,7 @@ namespace upsylon {
                                 Y_SPADE_TOPO_NODE_INCR(AsyncForward);
                                 Y_SPADE_TOPO_NODE_INCR(AsyncReverse);
                             default:
-                                Connect::InvalidFlag(connect,Connect::TopologyNode);
+                                Connect::InvalidFlag(connect,Connect::DispatchNode);
                                 break;
                         }
                     }
@@ -577,19 +577,19 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
-                inline Link getLink(const Topology &topology,
+                inline Link getLink(const Dispatch &dispatch,
                                     const_coord     probe,
                                     const_coord    &pbc) const throw()
                 {
                     bool        exists = true;
-                    const_coord lranks = topology.getProbeRanks(this->ranks,probe,pbc,exists);
-                    return Link(this->rank,probe,lranks, topology, exists);
+                    const_coord lranks = dispatch.getProbeRanks(this->ranks,probe,pbc,exists);
+                    return Link(this->rank,probe,lranks, dispatch, exists);
                 }
             };
             
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Topology);
+            Y_DISABLE_COPY_AND_ASSIGN(Dispatch);
         };
         
         

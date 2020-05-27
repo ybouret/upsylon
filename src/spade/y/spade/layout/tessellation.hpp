@@ -17,7 +17,7 @@ namespace upsylon {
         //
         //----------------------------------------------------------------------
         template <typename COORD>
-        class Tessellation : public Topology<COORD>
+        class Tessellation : public Dispatch<COORD>
         {
         public:
             //------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             typedef Layout<COORD>   LayoutType;   //!< alias
             typedef Fragment<COORD> FragmentType; //!< alias
-            typedef Topology<COORD> TopologyType; //!< alias
+            typedef Dispatch<COORD> DispatchType; //!< alias
 
             //------------------------------------------------------------------
             //
@@ -43,7 +43,7 @@ namespace upsylon {
                                   const COORD      & mapping,
                                   const COORD      & boundaries,
                                   const Coord1D      numGhosts) :
-            TopologyType(mapping),
+            DispatchType(mapping),
             fragments(this->size),
             minItems(0),
             maxItems(0),
@@ -58,7 +58,7 @@ namespace upsylon {
                     aliasing::_(fragments). template build<
                     const LayoutType   &,
                     const COORD        &,
-                    const TopologyType &,
+                    const DispatchType &,
                     const COORD        &,
                     const Coord1D      &>(fullLayout,localRanks,*this,boundaries,numGhosts);
                     const FragmentType &L = fragments[rank];

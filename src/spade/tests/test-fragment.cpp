@@ -32,7 +32,7 @@ namespace {
         for(size_t m=1;m<=mappings.size();++m)
         {
             const COORD          &mapping = mappings[m];
-            const Topology<COORD> topology(mapping);
+            const Dispatch<COORD> topology(mapping);
             std::cerr << "mapping=" << mapping << ", pbcs=" << pbcs << std::endl;
 
             for(size_t rank=0;rank<topology.size;++rank)
@@ -47,7 +47,7 @@ namespace {
                 
                 for(size_t i=0;i<L.links.size();++i)
                 {
-                    const typename Topology<COORD>::Links &links = L.links[i];
+                    const typename Dispatch<COORD>::Links &links = L.links[i];
                     std::cerr << "\t|_" << links << std::endl;
                 }
                 L.displaySwaps();

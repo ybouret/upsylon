@@ -1,4 +1,4 @@
-#include "y/spade/layout/topology.hpp"
+#include "y/spade/layout/dispatch.hpp"
 #include "y/utest/run.hpp"
 #include "y/core/ipower.hpp"
 #include "y/utest/sizeof.hpp"
@@ -11,10 +11,9 @@ namespace {
     template <typename COORD>
     void doTest()
     {
-        typedef Topology<COORD>        Topo;
+        typedef Dispatch<COORD>        Topo;
         typedef typename Topo::Node    Node;
         typedef typename Topo::Loop    Loop;
-        //typedef typename Topo::Boolean Boolean;
 
         std::cerr << std::endl;
         std::cerr << "In " << Topo::Dimensions << "D" << std::endl;
@@ -59,7 +58,7 @@ namespace {
     template <typename COORD>
     void doProbes()
     {
-        typedef Topology<COORD>     Topo;
+        typedef Dispatch<COORD>     Topo;
         std::cerr << "Probes " << Topo::Dimensions << "D" << std::endl;
         std::cerr << "\tLevels = " << Topo::Levels << std::endl;
         Y_CHECK(Topo::Levels*2==ipower<unsigned>(3,Topo::Dimensions)-1);
@@ -109,7 +108,7 @@ namespace {
 
 #include "y/ios/ocstream.hpp"
 
-Y_UTEST(topology)
+Y_UTEST(dispatch)
 {
     Coord::DispWidth = 2;
     std::cerr << std::endl;
@@ -119,14 +118,14 @@ Y_UTEST(topology)
         std::cerr << "size=" << size << std::endl;
         for(Coord1D rank=0;rank<size;++rank)
         {
-            const Coord1D prev = Kernel::Topology::Prev(size,rank);
-            const Coord1D next = Kernel::Topology::Next(size,rank);
+            const Coord1D prev = Kernel::Dispatch::Prev(size,rank);
+            const Coord1D next = Kernel::Dispatch::Next(size,rank);
             Y_ASSERT(prev>=0);
             Y_ASSERT(prev<size);
             Y_ASSERT(next>=0);
             Y_ASSERT(next<size);
-            Y_ASSERT(rank==Kernel::Topology::Next(size,prev));
-            Y_ASSERT(rank==Kernel::Topology::Prev(size,next));
+            Y_ASSERT(rank==Kernel::Dispatch::Next(size,prev));
+            Y_ASSERT(rank==Kernel::Dispatch::Prev(size,next));
             
             std::cerr << "\t" << prev << " <- " << rank << " -> " << next << std::endl;
             
@@ -141,13 +140,13 @@ Y_UTEST(topology)
     doTest<Coord2D>();
     doTest<Coord3D>();
     
-    Y_UTEST_SIZEOF(Topology<Coord1D>::Links);
-    Y_UTEST_SIZEOF(Topology<Coord2D>::Links);
-    Y_UTEST_SIZEOF(Topology<Coord3D>::Links);
+    Y_UTEST_SIZEOF(Dispatch<Coord1D>::Links);
+    Y_UTEST_SIZEOF(Dispatch<Coord2D>::Links);
+    Y_UTEST_SIZEOF(Dispatch<Coord3D>::Links);
 
-    Y_UTEST_SIZEOF(Topology<Coord1D>::Node);
-    Y_UTEST_SIZEOF(Topology<Coord2D>::Node);
-    Y_UTEST_SIZEOF(Topology<Coord3D>::Node);
+    Y_UTEST_SIZEOF(Dispatch<Coord1D>::Node);
+    Y_UTEST_SIZEOF(Dispatch<Coord2D>::Node);
+    Y_UTEST_SIZEOF(Dispatch<Coord3D>::Node);
 
 #define SHOW(VALUE) std::cerr << #VALUE << " = " << (VALUE) << std::endl
 
