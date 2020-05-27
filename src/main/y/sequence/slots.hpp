@@ -64,10 +64,10 @@ namespace upsylon {
         //! dynamic interface: current built slots
         inline virtual size_t size()     const throw() { return size_; }
 
-        //! access
+        //! access in [0..size-1]
         inline   type       & operator[](size_t indx) throw()       { assert(indx<size_); assert(addr); return addr[indx]; }
 
-        //! access, CONST
+        //! access in [0..size-1], CONST
         inline   const_type & operator[](size_t indx) const throw() { assert(indx<size_); assert(addr); return addr[indx]; }
 
         //! push a new object using copy ctor

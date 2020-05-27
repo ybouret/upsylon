@@ -8,6 +8,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/sort/unique.hpp"
+#include "y/sort/sequence.hpp"
 
 namespace upsylon {
     
@@ -227,11 +228,11 @@ namespace upsylon {
                 up -= Coord::Ones<COORD>();
                 return Layout(offset,up);
             }
-            
-            //! find possible mappings
-            template <typename SEQUENCE>
-            inline size_t findMappings(SEQUENCE    &mappings,
-                                       const size_t cores) const
+
+            //! loop over possible mappings
+            inline size_t queryMappings(const size_t cores,
+                                        void       (*proc)(const_coord &,void*),
+                                        void        *args) const
             {
                 assert(cores>0);
                 //______________________________________________________________
@@ -241,8 +242,8 @@ namespace upsylon {
                 const Coord1D target = static_cast<Coord1D>(cores);
                 Loop          loop( Coord::Ones<coord>(), Coord::Ld<coord>(target));
                 const_coord  &sizes = loop.value;
-                mappings.free();
-                
+                size_t        count = 0;
+
                 //______________________________________________________________
                 //
                 // loop over theoretical mappings
@@ -265,17 +266,47 @@ namespace upsylon {
                         }
                     }
                     if(!possible) continue;
-                    mappings.push_back( sizes );
+                    //mappings.push_back( sizes );
+                    if(proc) (*proc)(sizes,args);
+                    ++count;
                 }
-                _unique(mappings, Coord::Increasing<coord> );
-                return mappings.size();
+                //_unique(mappings, Coord::Increasing<coord> );
+                return count;
             }
+
+            //! count all possible mappings
+            inline size_t countMappings(const size_t cores) const
+            {
+                return queryMappings(cores,0,0);
+            }
+
+            //! store all possible mappings
+            template <typename SEQUENCE>
+            inline size_t findMappings(SEQUENCE    &mappings,
+                                       const size_t cores) const
+            {
+                mappings.free();
+                const size_t count  = countMappings(cores);
+                mappings.ensure(count);
+                (void) queryMappings(cores,appendMappingTo<SEQUENCE>,&mappings);
+                assert(count==mappings.size());
+                sort_sequence(mappings,Coord::Increasing<coord>);
+                return count;
+            }
+
+
             
         private:
             Y_DISABLE_ASSIGN(Layout);
+            template <typename SEQUENCE>
+            static inline void appendMappingTo( const_coord &sizes, void *args)
+            {
+                assert(args);
+                static_cast<SEQUENCE*>(args)->push_back(sizes);
+            }
             
         };
-      
+
         typedef Layout<Coord1D> Layout1D; //!< 1D Layout
         typedef Layout<Coord2D> Layout2D; //!< 2D Layout
         typedef Layout<Coord3D> Layout3D; //!< 3D Layout
