@@ -82,6 +82,7 @@ namespace {
             {
                 std::cerr << "\t\t\tpbcs=" << pbcs.value << std::endl;
                 const COORD opt = Tessellation<COORD>::Find(full, cores, pbcs.value, numGhosts);
+                std::cerr << "\t\t\topt=" << opt << std::endl;
             }
         }
     }
