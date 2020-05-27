@@ -13,16 +13,18 @@ namespace upsylon {
         class Mesh
         {
         public:
-            const unsigned   dimensions;
             const string     name;
+            const unsigned   dimensions; //!< [1|2|3]
+            const unsigned   topology;   //!< topology<=dimension
             virtual ~Mesh() throw();
             
         protected:
-            explicit Mesh(const unsigned,const string &);
-            explicit Mesh(const unsigned,const char   *);
+            explicit Mesh(const string &, const unsigned, const unsigned);
+            explicit Mesh(const char   *, const unsigned, const unsigned);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Mesh);
+            void checkDims() const;
         };
         
         
@@ -37,6 +39,11 @@ namespace upsylon {
             
             
         protected:
+            template <typename LABEL> inline
+            explicit MeshOf(const LABEL &id, const unsigned topo) :
+            Mesh(id,Dimensions,topo)
+            {
+            }
             
             
         private:
