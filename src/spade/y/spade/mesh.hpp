@@ -21,7 +21,8 @@ namespace upsylon {
                 const string     name;       //!< identifier
                 const unsigned   topology;   //!< logical dimensions
                 const unsigned   dimensions; //!< physical dimensions
-
+                
+                static string    AxisTag(const unsigned );
 
             protected:
                 explicit Mesh(const string &, const unsigned, const unsigned);

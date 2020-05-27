@@ -34,6 +34,12 @@ namespace upsylon {
             {
                 checkDims();
             }
+            
+            string Mesh:: AxisTag(const unsigned d)
+            {
+                return vformat("#%u",d);
+            }
+
 
         }
         
