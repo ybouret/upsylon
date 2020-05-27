@@ -57,17 +57,7 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Mesh);
         };
 
-        template <typename COORD,typename T>
-        class DenseMesh :
-        public Mesh<COORD>, public Layout<COORD>
-        {
-        public:
-            static const unsigned Dimensions = Coord::Get<COORD>::Dimensions;
-            Y_DECL_ARGS(T,type);
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(DenseMesh);
-        };
+      
 
     }
     

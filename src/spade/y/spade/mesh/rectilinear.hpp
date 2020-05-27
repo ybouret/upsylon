@@ -3,19 +3,21 @@
 #ifndef Y_SPADE_MESH_RECTILINEAR_INCLUDED
 #define Y_SPADE_MESH_RECTILINEAR_INCLUDED 1
 
-#include "y/spade/mesh.hpp"
+#include "y/spade/mesh/dense.hpp"
 
 namespace upsylon {
     
     namespace Spade {
-        
-        template <typename COORD>
-        class RectilinearMesh :
-        public Mesh<COORD>
+
+
+
+        template <typename COORD, typename T>
+        class RectilinearMesh : public DenseMesh<COORD,T>
         {
         public:
-            typedef Mesh<COORD> MeshType;
-            typedef Layout1D    AxisLayout;
+            typedef DenseMesh<COORD,T> MeshType;
+            typedef Layout1D           AxisLayout;
+            static  const unsigned     Dimensions = MeshType::Dimensions;
 
             inline virtual ~RectilinearMesh() throw()
             {
@@ -25,7 +27,7 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit RectilinearMesh(const LABEL         &id,
                                      const Layout<COORD> &) :
-            MeshType(id,1)
+            MeshType(id)
             {
             }
 
