@@ -79,7 +79,7 @@ namespace upsylon {
             };
             create(emb,sizeof(emb)/sizeof(emb[0]));
             __frame -= 1;
-            build(rowAddr,objAddr);
+            build(slcAddr,rowAddr,objAddr);
         }
         
         //----------------------------------------------------------------------

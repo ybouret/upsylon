@@ -156,13 +156,9 @@ namespace upsylon {
             assert(slcAddr);
             assert(rowAddr);
             assert(objAddr);
-            mutable_type *objInit = objAddr;
-            row          *rowInit = rowAddr;
             __slice -= 1;
             build(rowAddr,objAddr);
             slcAddr += slices;
-            assert( objAddr - objInit == long(it3d)        );
-            assert( rowAddr - rowInit == long(slices*rows) );
         }
         
     };

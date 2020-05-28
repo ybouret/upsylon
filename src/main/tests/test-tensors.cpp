@@ -1,4 +1,4 @@
-#include "y/tensor/tensor3d.hpp"
+#include "y/tensor/tensor4d.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
@@ -71,7 +71,7 @@ namespace {
             
             
             {
-                tensor3d<T> t3( 1+alea.leq(30), 1+alea.leq(30), 1+alea.leq(30) );
+                tensor3d<T> t3( 1+alea.leq(20), 1+alea.leq(20), 1+alea.leq(20) );
                 std::cerr << "tensor3d<" << id << ">.bytes=" << t3.allocated() << std::endl;
                 collect.free();
                 
@@ -102,6 +102,50 @@ namespace {
                     }
                 }
             }
+            
+            
+            {
+                tensor4d<T> t4( 1+alea.leq(10), 1+alea.leq(10), 1+alea.leq(10), 1+alea.leq(10) );
+                std::cerr << "tensor4d<" << id << ">.bytes=" << t4.allocated() << std::endl;
+                collect.free();
+                
+                for(size_t l=1;l<=t4.frames;++l)
+                {
+                    for(size_t k=1;k<=t4.slices;++k)
+                    {
+                        for(size_t j=1;j<=t4.rows;++j)
+                        {
+                            for(size_t i=1;i<=t4.cols;++i)
+                            {
+                                const T tmp = support::get<T>();
+                                collect.push_back(tmp);
+                                t4[l][k][j][i] = tmp;
+                            }
+                        }
+                    }
+                }
+                
+                
+                const tensor4d<T> &k4 = t4;
+                for(size_t l=1;l<=t4.frames;++l)
+                {
+                    for(size_t k=1;k<=t4.slices;++k)
+                    {
+                        for(size_t j=1;j<=t4.rows;++j)
+                        {
+                            for(size_t i=1;i<=t4.cols;++i)
+                            {
+                                Y_ASSERT( collect.front() == k4[l][k][j][i] );
+                                collect.pop_front();
+                            }
+                        }
+                    }
+                }
+                
+            }
+            
+            
+            
         }
         
     }
@@ -115,7 +159,7 @@ Y_UTEST(tensors)
     doTest<uint8_t>();
     doTest<string>();
     doTest<mpn>();
-
+    
 }
 Y_UTEST_DONE()
 
