@@ -221,7 +221,7 @@ ADD_TEST(info:codecs       test-main codecs)
 SOURCE_GROUP(data FILES
 test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp 
 test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
-test-pq.cpp test-factory.cpp test-list.cpp )
+test-pq.cpp test-factory.cpp test-list.cpp test-tensors.cpp)
 
 ADD_TEST(data:matrix      test-main matrix)
 ADD_TEST(data:slots       test-main slots)
@@ -239,6 +239,7 @@ ADD_TEST(data:addressable test-main addressable)
 ADD_TEST(data:query       test-main query ${HERE}/words.db)
 ADD_TEST(data:pq          test-main pq)
 ADD_TEST(data:factory     test-main factory)
+ADD_TEST(data:tensors     test-main tensors)
 
 SOURCE_GROUP(associative FILES
 test-associative.cpp test-set.cpp test-map.cpp

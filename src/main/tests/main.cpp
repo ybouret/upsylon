@@ -201,6 +201,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(zfi);
     Y_UTEST(closest);
 
+    Y_UTEST(tensors);
    
 }
 Y_UTEST_EXEC()

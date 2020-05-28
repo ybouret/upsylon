@@ -352,7 +352,12 @@ FILE(GLOB jargon_pattern_joker_code y/jargon/pattern/joker/*.cpp)
 SET(jargon_pattern_joker_srcs ${jargon_pattern_joker_decl} ${jargon_pattern_joker_code})
 SOURCE_GROUP( jargon/pattern/joker FILES ${jargon_pattern_joker_srcs} )
 INSTALL( FILES ${jargon_pattern_joker_decl} DESTINATION include/y/jargon/pattern/joker )
- 
+
+FILE(GLOB tensor_decl y/tensor/*.hpp)
+FILE(GLOB tensor_code y/tensor/*.cpp)
+SET(tensor_srcs ${tensor_decl} ${tensor_code})
+SOURCE_GROUP( tensor FILES ${tensor_srcs} )
+INSTALL( FILES ${tensor_decl} DESTINATION include/y/tensor ) 
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -404,6 +409,7 @@ ${jargon_pattern_srcs}
 ${jargon_pattern_basic_srcs}
 ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
+${tensor_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
