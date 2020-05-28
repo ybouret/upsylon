@@ -7,18 +7,19 @@ namespace upsylon {
 
     namespace core
     {
-        void * tensor:: acquireMemory(size_t &n)
+        memory::allocator & tensor:: instance()
         {
             static memory::allocator &mgr = memory::global::instance();
-
-            return mgr.acquire(n);
+            return mgr;
         }
-
-        void   tensor:: releaseMemory(void *&p, size_t &n) throw()
+        
+        memory::allocator & tensor:: location() throw()
         {
             static memory::allocator &mgr = memory::global::location();
-            mgr.release(p,n);
+            return mgr;
         }
+        
+        
     }
 }
 

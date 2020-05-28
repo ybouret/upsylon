@@ -5,6 +5,7 @@
 #include "y/type/self-destruct.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/sequence/addressable.hpp"
+#include "y/memory/embed.hpp"
 
 namespace upsylon {
 
@@ -12,14 +13,8 @@ namespace upsylon {
     {
         struct tensor
         {
-            static void *acquireMemory(size_t &n);
-            static void  releaseMemory(void * &p, size_t &n) throw();
-            template <typename T>
-            static inline T *acquireMemoryFor(size_t &n)
-            {
-                n *= sizeof(T);
-                return static_cast<T*>( acquireMemory(n) );
-            }
+            static memory::allocator & instance();
+            static memory::allocator & location() throw();
         };
     }
 
@@ -36,11 +31,17 @@ namespace upsylon {
         //! setup
         inline tensor1d(const size_t n) :
         count(n),
-        bytes(count),
-        items(core::tensor::acquireMemoryFor<mutable_type>(bytes)),
-        built(0)
+        bytes(0),
+        items(0),
+        built(0),
+        where(0)
         {
-            build(items);
+            memory::embed emb[] =
+            {
+                memory::embed::as(items,count)
+            };
+            where = memory::embed::create(emb,sizeof(emb)/sizeof(emb[0]),core::tensor::instance(),bytes,NULL);
+            build(where);
         }
 
         inline virtual size_t       size()                  const throw() { return count; }
@@ -54,24 +55,23 @@ namespace upsylon {
         size_t        bytes; //!< private bytes
         mutable_type *items;
         size_t        built;
-
+        void         *where;
+        
         inline void cleanup() throw()
         {
             while(built>0)
             {
                 self_destruct( items[built--] );
             }
+            items = 0;
             if(bytes>0)
             {
-                ++items;
-                core::tensor::releaseMemory( *(void **)&items, bytes );
-                assert(0==items);
+                assert(where);
+                core::tensor::location().release(where,bytes);
+                assert(0==where);
                 assert(0==bytes);
             }
-            else
-            {
-                items = 0;
-            }
+            
             _bzset(count);
         }
 

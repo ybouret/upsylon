@@ -47,7 +47,7 @@ namespace upsylon
             static void *create_global(embed *emb, const size_t num, size_t &bytes, size_t *data=0);
 
             //! named constructor
-            template <typename T>
+            template <typename T> inline
             static embed as(T * &addr, const size_t size) throw() { return embed((void**)&addr,size*sizeof(T)); }
 
         private:
