@@ -17,9 +17,9 @@ namespace upsylon {
         class tensor3d : public tensor2d
         {
         public:
-            virtual ~tensor3d() throw(); //!< cleanup
-            const size_t slices;         //!< number of slices
-            const size_t it3d;           //!< rows*cols*slices = it2d*slices = items per frame
+            virtual ~tensor3d() throw();  //!< cleanup
+            const size_t slices;          //!< number of slices
+            const size_t items_per_frame; //!< rows*cols*slices = it2d*slices = items per frame
             
         protected:
             //! setup
@@ -71,7 +71,7 @@ namespace upsylon {
             memory::embed emb[] = {
                 memory::embed::as(__slice,slices),
                 memory::embed::as(rowAddr,slices*rows),
-                memory::embed::as(objAddr,it3d)
+                memory::embed::as(objAddr,items_per_frame)
             };
             create(emb,sizeof(emb)/sizeof(emb[0]));
             __slice -= 1;

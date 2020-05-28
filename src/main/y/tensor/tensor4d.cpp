@@ -12,7 +12,7 @@ namespace upsylon
         tensor4d:: ~tensor4d() throw()
         {
             _bzset(frames);
-            _bzset(it4d);
+            _bzset(items_per_view);
         }
         
         tensor4d:: tensor4d(const size_t r,
@@ -21,7 +21,7 @@ namespace upsylon
                             const size_t f) :
         tensor3d(r,c,s),
         frames(f),
-        it4d(it3d*f)
+        items_per_view(items_per_frame*frames)
         {
             if(frames<=0) throw exception("tensor4d #frames=0");
         }

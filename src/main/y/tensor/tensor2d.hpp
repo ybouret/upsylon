@@ -17,9 +17,9 @@ namespace upsylon {
         class tensor2d : public tensor1d
         {
         public:
-            virtual ~tensor2d() throw(); //!< cleanup
-            const size_t rows;           //!< number of rows
-            const size_t it2d;           //!< rows*cols = items per slice
+            virtual ~tensor2d() throw();  //!< cleanup
+            const size_t rows;            //!< number of rows
+            const size_t items_per_slice; //!< rows*cols = items per slice
             
         protected:
             //! setup
@@ -68,7 +68,7 @@ namespace upsylon {
             memory::embed emb[] =
             {
                 memory::embed::as(__row,rows),
-                memory::embed::as(objAddr,it2d)
+                memory::embed::as(objAddr,items_per_slice)
             };
             create(emb,sizeof(emb)/sizeof(emb[0]));
             __row -= 1;
@@ -104,7 +104,6 @@ namespace upsylon {
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(tensor2d);
-        
         row          *__row;
        
         

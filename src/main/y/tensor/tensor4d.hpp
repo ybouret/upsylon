@@ -20,7 +20,7 @@ namespace upsylon {
         public:
             virtual ~tensor4d() throw(); //!< cleanup
             const size_t frames;         //!< number of frames
-            const size_t it4d;           //!< it3d*frames = all items
+            const size_t items_per_view; //!< items_per_frame*frames = all items
             
         protected:
             //! setup
@@ -75,7 +75,7 @@ namespace upsylon {
                 memory::embed::as(__frame,frames),
                 memory::embed::as(slcAddr,slices*frames),
                 memory::embed::as(rowAddr,slices*rows*frames),
-                memory::embed::as(objAddr,it4d)
+                memory::embed::as(objAddr,items_per_view)
             };
             create(emb,sizeof(emb)/sizeof(emb[0]));
             __frame -= 1;

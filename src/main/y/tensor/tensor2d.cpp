@@ -10,13 +10,13 @@ namespace upsylon
         tensor2d:: ~tensor2d() throw()
         {
             _bzset(rows);
-            _bzset(it2d);
+            _bzset(items_per_slice);
         }
         
         tensor2d:: tensor2d(const size_t r, const size_t c) :
         tensor1d(c),
         rows(r),
-        it2d(rows*cols)
+        items_per_slice(rows*cols)
         {
             if(rows<=0) throw exception("tensor2d #rows=0");
         }
