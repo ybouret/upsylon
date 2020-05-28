@@ -53,6 +53,15 @@ namespace {
                 fill1D(arr[i]);
             }
         }
+        
+        template <typename ARRAY>
+        static inline void fill3D( ARRAY &arr )
+        {
+            for(size_t i=arr.slices;i>0;--i)
+            {
+                fill2D(arr[i]);
+            }
+        }
     };
 
     template <>

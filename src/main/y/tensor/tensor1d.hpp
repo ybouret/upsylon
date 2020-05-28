@@ -3,7 +3,6 @@
 #define Y_TENSOR1D_INCLUDED 1
 
 #include "y/type/self-destruct.hpp"
-#include "y/type/block/zset.hpp"
 #include "y/sequence/addressable.hpp"
 #include "y/memory/embed.hpp"
 
@@ -11,77 +10,112 @@ namespace upsylon {
 
     namespace core
     {
-        struct tensor
+        //----------------------------------------------------------------------
+        //
+        //! common stuff for tensor1d
+        //
+        //----------------------------------------------------------------------
+        class tensor1d
         {
-            static memory::allocator & instance();
-            static memory::allocator & location() throw();
+        public:
+            virtual ~tensor1d() throw(); //!< cleanup
+            const size_t cols;           //!< number of columns
+            
+            size_t allocated() const throw(); //!< private bytes
+            
+        protected:
+            explicit tensor1d(const size_t c); //!< setup
+            size_t   built;                    //!< shared construction level
+           
+            //! create and plug global private memory
+            void   create(memory::embed [],const size_t);
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(tensor1d);
+            size_t   bytes;
+            void    *where;
         };
     }
-
+ 
+    //! forward declaration
+    template <typename> class tensor2d;
+    
+    //--------------------------------------------------------------------------
+    //
+    //! tensor1d
+    //
+    //--------------------------------------------------------------------------
+    
     template <typename T>
-    class tensor1d : public addressable<T>
+    class tensor1d : public core::tensor1d, public addressable<T>
     {
     public:
-        Y_DECL_ARGS(T,type);
+        //----------------------------------------------------------------------
+        //
+        // types and definitions
+        //
+        //----------------------------------------------------------------------
+        Y_DECL_ARGS(T,type); //!< aliases
 
-
+        //----------------------------------------------------------------------
+        //
+        // C++
+        //
+        //----------------------------------------------------------------------
+        
         //! cleanup
         inline virtual ~tensor1d() throw() { cleanup(); }
 
         //! setup
         inline tensor1d(const size_t n) :
-        count(n),
-        bytes(0),
-        items(0),
-        built(0),
-        where(0)
+        core::tensor1d(n),
+        __col(0)
         {
             memory::embed emb[] =
             {
-                memory::embed::as(items,count)
+                memory::embed::as(__col,cols)
             };
-            where = memory::embed::create(emb,sizeof(emb)/sizeof(emb[0]),core::tensor::instance(),bytes,NULL);
-            build(where);
+            create(emb,sizeof(emb)/sizeof(emb[0]));
+            __col -= 1;
+            build();
         }
 
-        inline virtual size_t       size()                  const throw() { return count; }
-        inline virtual type       & operator[](size_t indx)       throw() { assert(indx>0); assert(indx<=count); return items[indx]; }
-        inline virtual const_type & operator[](size_t indx) const throw() { assert(indx>0); assert(indx<=count); return items[indx]; }
-
-        const size_t  count;
-
+        //----------------------------------------------------------------------
+        //
+        // addressable<T>
+        //
+        //----------------------------------------------------------------------
+        
+        //! cols
+        inline virtual size_t       size()                  const throw() { return cols; }
+        
+        //! access
+        inline virtual type       & operator[](size_t indx)       throw() { assert(indx>0); assert(indx<=cols); return __col[indx]; }
+        
+        //! access, const
+        inline virtual const_type & operator[](size_t indx) const throw() { assert(indx>0); assert(indx<=cols); return __col[indx]; }
+        
 
     private:
-        size_t        bytes; //!< private bytes
-        mutable_type *items;
-        size_t        built;
-        void         *where;
+        Y_DISABLE_COPY_AND_ASSIGN(tensor1d);
+        mutable_type *__col;
+      
         
         inline void cleanup() throw()
         {
             while(built>0)
             {
-                self_destruct( items[built--] );
+                self_destruct( __col[built--] );
             }
-            items = 0;
-            if(bytes>0)
-            {
-                assert(where);
-                core::tensor::location().release(where,bytes);
-                assert(0==where);
-                assert(0==bytes);
-            }
-            
-            _bzset(count);
+            __col = 0;
         }
 
-        void build(void *addr)
+        inline void build()
         {
-            assert(!(NULL==addr&&count>0));
-            mutable_type *base = static_cast<mutable_type*>(addr);
-            items              = base-1;
+            assert(__col);
+            mutable_type *base = __col+1;
             try {
-                while(built<count)
+                while(built<cols)
                 {
                     new (base+built) mutable_type();
                     ++built;
@@ -94,8 +128,14 @@ namespace upsylon {
             }
         }
 
+        friend class upsylon::tensor2d<T>;
+        inline tensor1d(const size_t n, void *data) :
+        core::tensor1d(n),
+        __col( static_cast<mutable_type *>(data)-1 )
+        {
+            build();
+        }
 
-        Y_DISABLE_COPY_AND_ASSIGN(tensor1d);
     };
     
 }
