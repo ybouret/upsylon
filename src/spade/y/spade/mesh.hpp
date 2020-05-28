@@ -19,7 +19,7 @@ namespace upsylon {
                 virtual            ~Mesh()           throw();     //!< cleanup
                 virtual const char *category() const throw() = 0; //!< info
 
-                const string     name;            //!< identifier
+                const string     label;           //!< identifier
                 const unsigned   topology;        //!< logical dimensions
                 const unsigned   space;           //!< physical dimensions
                 
@@ -47,7 +47,7 @@ namespace upsylon {
         {
         public:
             //! the topology is  the dimension of the required access coordinate
-            static const unsigned Topology = Coord::Get<COORD>::Dimensions;
+            static const unsigned Topology =  Layout<COORD>::Dimensions;
             
             //! cleanup
             inline virtual ~Mesh() throw(){}
@@ -55,9 +55,9 @@ namespace upsylon {
         protected:
             //! setup
             template <typename LABEL> inline
-            explicit Mesh(const LABEL   &id,
-                          const unsigned dim) :
-            Kernel::Mesh(id,Topology,dim)
+            explicit Mesh(const LABEL         &identifier,
+                          const unsigned       spatialDimensions) :
+            Kernel::Mesh(identifier,Topology,spatialDimensions)
             {
             }
             

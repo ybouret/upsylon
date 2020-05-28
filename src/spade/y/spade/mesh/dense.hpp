@@ -24,7 +24,7 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            static const unsigned Dimensions = Coord::Get<COORD>::Dimensions;           //!< alias
+            static const unsigned Space = Coord::Get<COORD>::Dimensions;                //!< alias
             Y_DECL_ARGS(T,type);                                                        //!< aliases
             typedef typename VertexFor<COORD>:: template Of<mutable_type>::Type Vertex; //!< alias
 
@@ -34,10 +34,10 @@ namespace upsylon {
         protected:
             //! setup
             template <typename LABEL>
-            inline explicit DenseMesh(const LABEL         &id,
-                                      const Layout<COORD> &full) :
-            Mesh<COORD>(id,Dimensions),
-            Layout<COORD>(full)
+            inline explicit DenseMesh(const LABEL         &identifier,
+                                      const Layout<COORD> &layout) :
+            Mesh<COORD>(identifier,Space),
+            Layout<COORD>(layout)
             {
             }
 
