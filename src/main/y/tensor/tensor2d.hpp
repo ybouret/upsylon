@@ -1,5 +1,5 @@
-
 //! file
+
 #ifndef Y_TENSOR2D_INCLUDED
 #define Y_TENSOR2D_INCLUDED 1
 
@@ -117,17 +117,18 @@ namespace upsylon {
             __row = 0;
         }
         
-        inline void build(mutable_type *data)
+        inline void build(mutable_type * &data)
         {
             assert(__row);
             assert(data);
             row          *r = __row+1;
             try {
+                std::cerr << "\t#rows=" << rows << std::endl;
                 while(built<rows)
                 {
+                    std::cerr << "\t\tnew row@" << r+built << ", data@" << data << std::endl;
                     new (r+built) row(cols,data);
                     ++built;
-                    data += cols;
                 }
             }
             catch(...)
@@ -138,17 +139,21 @@ namespace upsylon {
         }
         
         friend class upsylon::tensor3d<T>;
-        //! setup with other memory
+        
+        //! setup with other memory, shift memories
         inline explicit tensor2d(const size_t r,
                                  const size_t c,
-                                 row          *rowAddr,
-                                 mutable_type *objAddr) :
+                                 row          * &rowAddr,
+                                 mutable_type * &objAddr) :
         core::tensor2d(r,c), __row(rowAddr)
         {
             assert(rowAddr!=NULL);
             assert(objAddr!=NULL);
+            mutable_type *org = objAddr;
             __row -= 1;
             build(objAddr);
+            rowAddr += rows;
+            assert( objAddr-org == long(it2d) );
         }
         
     };

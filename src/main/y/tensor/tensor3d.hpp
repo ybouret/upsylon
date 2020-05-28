@@ -1,6 +1,5 @@
-
-
 //! file
+
 #ifndef Y_TENSOR3D_INCLUDED
 #define Y_TENSOR3D_INCLUDED 1
 
@@ -20,8 +19,8 @@ namespace upsylon {
         public:
             virtual ~tensor3d() throw(); //!< cleanup
             const size_t slices;         //!< number of slices
-            const size_t it3d;           //!< rows*cols*slices = items per frame
-       
+            const size_t it3d;           //!< rows*cols*slices = it2d*slices = items per frame
+            
         protected:
             //! setup
             explicit tensor3d(const size_t r, const size_t c, const size_t s);
@@ -52,7 +51,7 @@ namespace upsylon {
         Y_DECL_ARGS(T,type);                 //!< aliases
         typedef upsylon::tensor1d<T> row;    //!< alias
         typedef upsylon::tensor2d<T> slice;  //!< alias
-
+        
         //----------------------------------------------------------------------
         //
         // C++
@@ -84,7 +83,7 @@ namespace upsylon {
         // addressable<slice>
         //
         //----------------------------------------------------------------------
-      
+        
         //! access
         inline virtual slice & operator[](const size_t s) throw()
         {
@@ -106,7 +105,7 @@ namespace upsylon {
         {
             return slices;
         }
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(tensor3d);
         slice * __slice;
@@ -120,19 +119,21 @@ namespace upsylon {
             __slice = 0;
         }
         
-        inline void build(row *rowAddr, mutable_type *objAddr)
+        inline void build(row *          &rowAddr,
+                          mutable_type * &objAddr)
         {
-            try {
+            try
+            {
                 assert(rowAddr);
                 assert(objAddr);
                 assert(__slice);
                 slice *base = __slice+1;
+                std::cerr << "#slices=" << slices << std::endl;
                 while(built<slices)
                 {
+                    std::cerr << "\tnew slice@" << base+built << std::endl;
                     new (base+built) slice(rows,cols,rowAddr,objAddr);
                     ++built;
-                    rowAddr += rows;
-                    objAddr += it2d;
                 }
             }
             catch(...)
@@ -140,6 +141,30 @@ namespace upsylon {
                 cleanup();
                 throw;
             }
+        }
+        
+        friend class upsylon::tensor4d<T>;
+        
+        //! setup with other data
+        inline explicit tensor3d(const size_t r,
+                                 const size_t c,
+                                 const size_t s,
+                                 slice        * &slcAddr,
+                                 row          * &rowAddr,
+                                 mutable_type * &objAddr) :
+        core::tensor3d(r,c,s),
+        __slice(slcAddr)
+        {
+            assert(slcAddr);
+            assert(rowAddr);
+            assert(objAddr);
+            mutable_type *objInit = objAddr;
+            row          *rowInit = rowAddr;
+            __slice -= 1;
+            build(rowAddr,objAddr);
+            slcAddr += slices;
+            assert( objAddr - objInit == long(it3d)        );
+            assert( rowAddr - rowInit == long(slices*rows) );
         }
         
     };

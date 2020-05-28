@@ -1,4 +1,5 @@
 //! file
+
 #ifndef Y_TENSOR1D_INCLUDED
 #define Y_TENSOR1D_INCLUDED 1
 
@@ -129,11 +130,14 @@ namespace upsylon {
         }
 
         friend class upsylon::tensor2d<T>;
-        inline tensor1d(const size_t n, void *data) :
+        
+        //! build from other data, shift address
+        inline tensor1d(const size_t n, mutable_type * &data) :
         core::tensor1d(n),
-        __col( static_cast<mutable_type *>(data)-1 )
+        __col( data-1 )
         {
             build();
+            data += cols;
         }
 
     };
