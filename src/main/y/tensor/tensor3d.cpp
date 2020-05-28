@@ -17,7 +17,7 @@ namespace upsylon
         tensor3d:: tensor3d(const size_t r, const size_t c, const size_t s) :
         tensor2d(r,c),
         slices(s),
-        it3d(it2d*s)
+        it3d(it2d*slices)
         {
             if(slices<=0) throw exception("tensor3d #slices=0");
         }

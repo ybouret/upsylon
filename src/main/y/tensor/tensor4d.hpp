@@ -124,7 +124,7 @@ namespace upsylon {
             __frame = 0;
         }
         
-        inline void build(slice *slcAddr, row *rowAddr, mutable_type *objAddr)
+        inline void build(slice * &slcAddr, row * &rowAddr, mutable_type * &objAddr)
         {
             try {
                 assert(rowAddr);

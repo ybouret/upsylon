@@ -19,8 +19,7 @@ namespace {
         for(size_t iter=0;iter<10;++iter)
         {
             {
-                std::cerr << "1D..." << std::endl;
-                tensor1d<T> t1( 1+alea.leq(10) );
+                tensor1d<T> t1( 1+alea.leq(100) );
                 //support::fill1D(t1);
                 std::cerr << "tensor1d<" << id << ">.bytes=" << t1.allocated() << std::endl;
                 
@@ -42,29 +41,28 @@ namespace {
             }
             
             {
-                std::cerr << "2D..." << std::endl;
-                tensor2d<T> t2( 1+alea.leq(10), 1+alea.leq(10) );
-                //support::fill2D(t2);
+                tensor2d<T> t2( 1+alea.leq(100), 1+alea.leq(100) );
                 std::cerr << "tensor2d<" << id << ">.bytes=" << t2.allocated() << std::endl;
                 
                 collect.free();
-                for(size_t i=1;i<=t2.rows;++i)
+                for(size_t j=1;j<=t2.rows;++j)
                 {
-                    for(size_t j=1;j<=t2.cols;++j)
+                    for(size_t i=1;i<=t2.cols;++i)
                     {
                         const T tmp = support::get<T>();
                         collect.push_back(tmp);
-                        t2[i][j] = tmp;
+                        t2[j][i] = tmp;
                     }
                 }
                 
+                
                 const tensor2d<T> &k2 = t2;
                 
-                for(size_t i=1;i<=t2.rows;++i)
+                for(size_t j=1;j<=t2.rows;++j)
                 {
-                    for(size_t j=1;j<=t2.cols;++j)
+                    for(size_t i=1;i<=t2.cols;++i)
                     {
-                        Y_ASSERT( collect.front() == k2[i][j] );
+                        Y_ASSERT( collect.front() == k2[j][i] );
                         collect.pop_front();
                     }
                 }
@@ -73,52 +71,51 @@ namespace {
             
             
             {
-                std::cerr << "3D..." << std::endl;
-                tensor3d<T> t3( 1+alea.leq(10), 1+alea.leq(10), 1+alea.leq(10) );
+                tensor3d<T> t3( 1+alea.leq(30), 1+alea.leq(30), 1+alea.leq(30) );
                 std::cerr << "tensor3d<" << id << ">.bytes=" << t3.allocated() << std::endl;
-                std::cerr << "slices=" << t3.slices << std::endl;
                 collect.free();
-                for(size_t i=1;i<=t3.rows;++i)
+                
+                for(size_t k=1;k<=t3.slices;++k)
                 {
-                    for(size_t j=1;j<=t3.cols;++j)
+                    for(size_t j=1;j<=t3.rows;++j)
                     {
-                        for(size_t k=1;k<=t3.slices;++k)
+                        for(size_t i=1;i<=t3.cols;++i)
                         {
                             const T tmp = support::get<T>();
                             collect.push_back(tmp);
-                            t3[i][j][k] = tmp;
+                            t3[k][j][i] = tmp;
                         }
                     }
                 }
-                continue;
                 
                 const tensor3d<T> &k3 = t3;
-                for(size_t i=1;i<=t3.rows;++i)
+                for(size_t k=1;k<=t3.slices;++k)
                 {
-                    for(size_t j=1;j<=t3.cols;++j)
+                    for(size_t j=1;j<=t3.rows;++j)
                     {
-                        for(size_t k=1;k<=t3.slices;++k)
+                        for(size_t i=1;i<=t3.cols;++i)
                         {
-                            Y_ASSERT( collect.front() == k3[i][j][k] );
+                            Y_ASSERT( collect.front() == k3[k][j][i] );
                             collect.pop_front();
                         }
                         
                     }
                 }
             }
-            
         }
         
     }
+    
 }
+
 
 Y_UTEST(tensors)
 {
     doTest<int>();
     doTest<uint8_t>();
-    doTest<mpn>();
     doTest<string>();
-    
+    doTest<mpn>();
+
 }
 Y_UTEST_DONE()
 

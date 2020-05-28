@@ -122,11 +122,12 @@ namespace upsylon {
             assert(__row);
             assert(data);
             row          *r = __row+1;
-            try {
-                std::cerr << "\t#rows=" << rows << std::endl;
+            try
+            {
+                //std::cerr << "\t#rows=" << rows << std::endl;
                 while(built<rows)
                 {
-                    std::cerr << "\t\tnew row@" << r+built << ", data@" << data << std::endl;
+                    //std::cerr << "\t\tnew row@" << r+built << ", data@" << data << std::endl;
                     new (r+built) row(cols,data);
                     ++built;
                 }

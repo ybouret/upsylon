@@ -128,10 +128,8 @@ namespace upsylon {
                 assert(objAddr);
                 assert(__slice);
                 slice *base = __slice+1;
-                std::cerr << "#slices=" << slices << std::endl;
                 while(built<slices)
                 {
-                    std::cerr << "\tnew slice@" << base+built << std::endl;
                     new (base+built) slice(rows,cols,rowAddr,objAddr);
                     ++built;
                 }
