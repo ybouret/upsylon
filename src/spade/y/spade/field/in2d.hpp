@@ -44,7 +44,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! cleanup
-            inline virtual ~Field2D() throw() { row += lower.y; clear(); }
+            inline virtual ~Field2D() throw() { clear(); }
             
             //! setup with internal memory
             template <typename LABEL> inline
@@ -52,7 +52,7 @@ namespace upsylon {
                              const LayoutType &L) :
             FieldOf<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
             {
-                create();
+                standalone();
             }
             
             //! setup with internal memory, using coords
@@ -62,7 +62,7 @@ namespace upsylon {
                              const_coord       hi) :
             FieldOf<T>(id), LayoutType(lo,hi), Y_FIELD2D_CTOR()
             {
-                create();
+                standalone();
             }
             
             //------------------------------------------------------------------
@@ -124,9 +124,11 @@ namespace upsylon {
             
 
         private:
+            
             inline void clear() throw()
             {
                 assert(row);
+                row += lower.y;
                 while(built>0)
                 {
                     self_destruct(row[--built]);
@@ -134,36 +136,40 @@ namespace upsylon {
                 row=0;
             }
             
-            inline void create()
+            inline void standalone()
             {
-                const size_t rowOffset = 0;
-                const size_t rowLength = width.y * sizeof(Row);
-                const size_t objOffset = memory::align(rowOffset+rowLength);
-                const size_t objLength = items*sizeof(T);
-                char        *p         = static_cast<char *>(this->allocate( memory::align(objLength+objOffset) ) );
-                build(p+rowOffset,p+objOffset);
+                Row          *rowAddr = 0;
+                mutable_type *objAddr = 0;
+                memory::embed emb[] =
+                {
+                    memory::embed::as(rowAddr,width.y),
+                    memory::embed::as(objAddr,items)
+                };
+                this->allocate(emb,sizeof(emb)/sizeof(emb[0]));
+                build(rowAddr,objAddr);
             }
             
-            inline void build(void *rowAddr, void *objAddr)
+            inline void build(Row * &rowAddr, mutable_type * &objAddr)
             {
                 assert(rowAddr);
                 assert(objAddr);
-                try {
+                try
+                {
+                    // link
+                    row        = rowAddr - lower.y;
+                    this->addr = objAddr;
+
+                    // build
                     const size_t  nrow = size_t(width.y);
-                    const size_t  skip = rowLayout.items;
-                    row                = static_cast<Row          *>(rowAddr);
-                    this->addr         = static_cast<mutable_type *>(objAddr);
-                    mutable_type *objs = this->addr;
                     Coord1D       indx = lower.y;
                     while(built<nrow)
                     {
                         const string id = this->name + Field::Suffix(indx);
-                        new (row+built) Row(id,rowLayout,objs);
+                        new (rowAddr) Row(id,rowLayout,objAddr);
                         ++built;
                         ++indx;
-                        objs+=skip;
+                        ++rowAddr;
                     }
-                    row  -= lower.y;
                 }
                 catch(...)
                 {
@@ -177,8 +183,8 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit Field2D(const LABEL      &id,
                              const LayoutType &L,
-                             void             *rowAddr,
-                             void             *objAddr) :
+                             Row             * &rowAddr,
+                             mutable_type    * &objAddr) :
             FieldOf<T>(id), LayoutType(L), Y_FIELD2D_CTOR()
             {
                 build(rowAddr,objAddr);

@@ -5,6 +5,7 @@
 
 #include "y/spade/layout/metrics.hpp"
 #include "y/container/const-field.hpp"
+#include "y/memory/embed.hpp"
 #include "y/string.hpp"
 #include <typeinfo>
 
@@ -77,7 +78,9 @@ namespace upsylon {
             
             void  *workspace; //!< private bytes
             size_t allocated; //!< private bytes
-            
+
+            void   allocate(memory::embed emb[], const size_t num);
+
             void*  allocate(const size_t); //!< acquire private bytes
             
             //! get object by coordinate

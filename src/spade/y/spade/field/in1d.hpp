@@ -48,8 +48,7 @@ namespace upsylon {
                              const LayoutType &L) :
             FieldOf<T>(id), LayoutType(L), item(0), built(0)
             {
-                setup(this->allocate(sizeof(T)*items));
-                build();
+                standalone();
             }
             
             //! setup with internal memory, using coordinates
@@ -59,8 +58,7 @@ namespace upsylon {
                              const_coord  up) :
             FieldOf<T>(id), LayoutType(lo,up), item(0), built(0)
             {
-                setup(this->allocate(sizeof(T)*items));
-                build();
+                standalone();
             }
                         
             //------------------------------------------------------------------
@@ -97,35 +95,48 @@ namespace upsylon {
             
             friend class Field2D<T>;
 
-            void setup(void *ptr)
+
+            inline void standalone()
             {
-                assert(ptr);
-                this->addr = static_cast<mutable_type *>(ptr);
-                item       = this->addr-lower;
+                mutable_type  *data = 0;
+                memory::embed emb[] = {
+                    memory::embed::as(data,items)
+                };
+                this->allocate(emb,sizeof(emb)/sizeof(emb[0]));
+                build(data);
             }
+
 
             //! data bytes >= items * sizeof(T)
             template <typename LABEL> inline
             explicit Field1D(const LABEL      &id,
                              const LayoutType &L,
-                             void             *data) :
+                             mutable_type     * &data) :
             FieldOf<T>(id), LayoutType(L), item(0), built(0)
             {
-                setup(data);
-                build();
+                build(data);
             }
             
             inline void clear() throw()
             {
+                assert(this->addr);
+                assert(item);
                 while(built>0)
                 {
                     self_destruct(this->addr[--built]);
                 }
-                item=0;
+                item = 0;
             }
             
-            inline void build()
+            inline void build(mutable_type * &data)
             {
+                assert(data);
+                // link
+                this->addr = data;
+                item       = this->addr-lower;
+                data      += items;
+
+                // local build
                 try {
                     while(built<items)
                     {

@@ -22,7 +22,13 @@ namespace upsylon {
             static memory::allocator &mgr = memory::global::instance();
             return ( workspace = mgr.acquire( (allocated=request) ) );
         }
-        
+
+        void   Field:: allocate( memory::embed emb[], const size_t num )
+        {
+            static memory::allocator &mgr = memory::global::location();
+            assert(0==allocated);
+            workspace = memory::embed::create(emb, num,mgr,allocated);
+        }
         
 #define Y_SPADE_FIELD_CTOR()\
 Object(),       \
