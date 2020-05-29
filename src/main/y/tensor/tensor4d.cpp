@@ -1,5 +1,3 @@
-
-
 #include "y/tensor/tensor4d.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/exception.hpp"
@@ -11,7 +9,6 @@ namespace upsylon
         
         tensor4d:: ~tensor4d() throw()
         {
-            _bzset(frames);
             _bzset(items_per_view);
         }
         
@@ -20,10 +17,10 @@ namespace upsylon
                             const size_t s,
                             const size_t f) :
         tensor3d(r,c,s),
-        frames(f),
-        items_per_view(items_per_frame*frames)
+        items_per_view(items_per_frame*f)
         {
-            if(frames<=0) throw exception("tensor4d #frames=0");
+            if(f<=0) throw exception("tensor4d #frames=0");
+            record(f);
         }
         
         

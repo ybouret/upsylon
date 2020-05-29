@@ -18,9 +18,8 @@ namespace upsylon {
         {
         public:
             virtual ~tensor2d() throw();  //!< cleanup
-            const size_t rows;            //!< number of rows
             const size_t items_per_slice; //!< rows*cols = items per slice
-            
+
         protected:
             //! setup
             explicit tensor2d(const size_t r, const size_t c);

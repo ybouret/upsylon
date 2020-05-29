@@ -17,9 +17,8 @@ namespace upsylon {
         class tensor3d : public tensor2d
         {
         public:
-            virtual ~tensor3d() throw();  //!< cleanup
-            const size_t slices;          //!< number of slices
-            const size_t items_per_frame; //!< rows*cols*slices = it2d*slices = items per frame
+            virtual       ~tensor3d() throw();  //!< cleanup
+            const   size_t items_per_frame; //!< rows*cols*slices = it2d*slices = items per frame
             
         protected:
             //! setup

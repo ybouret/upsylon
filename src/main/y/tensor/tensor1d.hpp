@@ -3,38 +3,33 @@
 #ifndef Y_TENSOR1D_INCLUDED
 #define Y_TENSOR1D_INCLUDED 1
 
+#include "y/tensor/tensor.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/sequence/addressable.hpp"
-#include "y/memory/embed.hpp"
 
 namespace upsylon {
 
     namespace core
     {
+
         //----------------------------------------------------------------------
         //
         //! common stuff for tensor1d
         //
         //----------------------------------------------------------------------
-        class tensor1d
+        class tensor1d : public tensor
         {
         public:
-            virtual ~tensor1d() throw(); //!< cleanup
-            const size_t cols;           //!< number of columns
-            
-            size_t allocated() const throw(); //!< private bytes
-            
+            virtual ~tensor1d() throw();         //!< cleanup
+
         protected:
             explicit tensor1d(const size_t c); //!< setup
-            size_t   built;                    //!< shared construction level
-           
-            //! create and plug global private memory
-            void   create(memory::embed [],const size_t);
+
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tensor1d);
-            size_t   bytes;
-            void    *where;
+
         };
     }
  

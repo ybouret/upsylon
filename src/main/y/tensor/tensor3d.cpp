@@ -10,18 +10,17 @@ namespace upsylon
         
         tensor3d:: ~tensor3d() throw()
         {
-            _bzset(slices);
             _bzset(items_per_frame);
         }
         
         tensor3d:: tensor3d(const size_t r, const size_t c, const size_t s) :
         tensor2d(r,c),
-        slices(s),
-        items_per_frame(items_per_slice*slices)
+        items_per_frame(items_per_slice*s)
         {
-            if(slices<=0) throw exception("tensor3d #slices=0");
+            if(s<=0) throw exception("tensor3d #slices=0");
+            record(s);
         }
         
-        
+
     }
 }

@@ -19,7 +19,6 @@ namespace upsylon {
         {
         public:
             virtual ~tensor4d() throw(); //!< cleanup
-            const size_t frames;         //!< number of frames
             const size_t items_per_view; //!< items_per_frame*frames = all items
             
         protected:
