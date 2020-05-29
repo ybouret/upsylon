@@ -77,7 +77,7 @@ namespace upsylon {
                            const size_t          bs);
             
 
-
+            //! internal memory allocation
             void   allocate(memory::embed emb[], const size_t num);
 
             

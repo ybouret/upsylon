@@ -95,13 +95,11 @@ namespace upsylon {
             
             friend class Field2D<T>;
 
-
+            //! build as standalone
             inline void standalone()
             {
-                mutable_type  *data = 0;
-                memory::embed emb[] = {
-                    memory::embed::as(data,items)
-                };
+                mutable_type  *data  = 0;
+                memory::embed  emb[] = { memory::embed::as(data,items) };
                 this->allocate(emb,sizeof(emb)/sizeof(emb[0]));
                 build(data);
             }
