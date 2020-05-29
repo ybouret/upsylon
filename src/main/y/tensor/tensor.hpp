@@ -21,7 +21,7 @@ namespace upsylon {
             const   size_t *upper()      const throw(); //!< upper indices
             size_t          allocated()  const throw(); //!< private bytes
 
-            const size_t dimensions; //!< current dimension
+            const size_t    dimensions; //!< current dimension
 
 
         protected:
