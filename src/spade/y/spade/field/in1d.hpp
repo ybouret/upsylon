@@ -131,17 +131,23 @@ namespace upsylon {
             inline void build(mutable_type * &data)
             {
                 assert(data);
+                //______________________________________________________________
+                //
                 // link
+                //______________________________________________________________
                 this->addr = data;
                 item       = this->addr-lower;
-                data      += items;
 
+                //______________________________________________________________
+                //
                 // local build
+                //______________________________________________________________
                 try {
                     while(built<items)
                     {
-                        new (this->addr+built) mutable_type();
+                        new (data) mutable_type();
                         ++built;
+                        ++data;
                     }
                 }
                 catch(...)

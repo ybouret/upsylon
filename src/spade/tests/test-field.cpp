@@ -11,6 +11,8 @@ using namespace Spade;
 
 namespace {
 
+    static const Coord1D nmax[4] = { 0, 1000, 100, 22};
+
     template <typename FIELD>
     static inline void doTest()
     {
@@ -21,9 +23,11 @@ namespace {
         typedef typename FIELD::Loop         Loop;
         typedef typename FIELD::mutable_type type;
 
+        static const size_t dims = FIELD::Dimensions;
+
         for(size_t iter=0;iter<16;++iter)
         {
-            const coord      rng = 30 * Coord::Ones<coord>();
+            const coord      rng = nmax[dims] * Coord::Ones<coord>();
             const LayoutType L( Coord::Integer(rng,alea), Coord::Integer(rng,alea) );
             FIELD F(vformat("Field%uD<%s>",LayoutType::Dimensions, *type_name_of<type>()),L);
             std::cerr << F.name << " : " << F << std::endl;
@@ -48,6 +52,7 @@ namespace {
                 Y_ASSERT( G(loop.index-1) == data[loop.index] );
                 Y_ASSERT( G( G.indexOf(loop.value) ) == G(loop.index-1) );
             }
+            std::cerr << "\tDone..." << std::endl;
         }
         
     }
@@ -57,7 +62,6 @@ namespace {
     {
         doTest< Field1D<T> >();
         doTest< Field2D<T> >();
-        return;
         doTest< Field3D<T> >();
     }
     

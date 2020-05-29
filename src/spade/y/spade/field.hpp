@@ -76,12 +76,10 @@ namespace upsylon {
                            const std::type_info &ts,
                            const size_t          bs);
             
-            void  *workspace; //!< private bytes
-            size_t allocated; //!< private bytes
+
 
             void   allocate(memory::embed emb[], const size_t num);
 
-            void*  allocate(const size_t); //!< acquire private bytes
             
             //! get object by coordinate
             virtual const void *getObjectByCoord(const Coord1D *) const throw() = 0;
@@ -91,6 +89,8 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Field);
+            void  *workspace; //!< private bytes
+            size_t allocated; //!< private bytes
         };
         
         

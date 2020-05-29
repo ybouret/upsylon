@@ -15,14 +15,16 @@ namespace upsylon {
             assert(0==allocated);
             assert(0==workspace);
         }
-        
+
+#if 0
         void *  Field:: allocate(const size_t request)
         {
             assert(0==allocated);
             static memory::allocator &mgr = memory::global::instance();
             return ( workspace = mgr.acquire( (allocated=request) ) );
         }
-
+#endif
+        
         void   Field:: allocate( memory::embed emb[], const size_t num )
         {
             static memory::allocator &mgr = memory::global::location();

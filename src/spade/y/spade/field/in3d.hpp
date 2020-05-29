@@ -40,7 +40,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             
             //! cleanup
-            inline virtual ~Field3D() throw() { slice += lower.z; clear(); }
+            inline virtual ~Field3D() throw() { clear(); }
             
             
             //! setup with internal memory
@@ -54,29 +54,43 @@ namespace upsylon {
             slice(0),
             built(0)
             {
-                const size_t nslice       = size_t(width.z);   // number of slices
-                const size_t rps          = size_t(width.y);   // rows per slice
-                const size_t ops          = sliceLayout.items; // objects per slice
-                const size_t sliceOffset  = 0;
-                const size_t sliceLength  = nslice * sizeof(Slice);
-                const size_t rowOffset    = memory::align(sliceOffset+sliceLength);
-                const size_t rowLength    = nslice * rps * sizeof(Row);
-                const size_t objOffset    = memory::align(rowOffset+rowLength);
-                const size_t objLength    = items * sizeof(T);
-                char         *p           = static_cast<char *>( this->allocate( memory::align(objOffset+objLength) ) );
-                slice                     = (Slice        *) &p[sliceOffset];
-                Row          *rows        = (Row          *) &p[rowOffset];
-                mutable_type *objs        = (mutable_type *) &p[objOffset];
-                this->addr = objs;
-                try {
+                //______________________________________________________________
+                //
+                // acquire
+                //______________________________________________________________
+                Row          *rowAddr = 0;
+                mutable_type *objAddr = 0;
+                const size_t  nslice  = size_t(width.z);
+                memory::embed emb[] =
+                {
+                    memory::embed::as(slice,nslice),
+                    memory::embed::as(rowAddr,size_t(width.y)*nslice),
+                    memory::embed::as(objAddr,items)
+                };
+                this->allocate(emb,sizeof(emb)/sizeof(emb[0]));
+
+                //______________________________________________________________
+                //
+                // link
+                //______________________________________________________________
+                Slice *s    = slice;
+                slice      -= lower.z;
+                this->addr  = objAddr;
+
+                //______________________________________________________________
+                //
+                // build
+                //______________________________________________________________
+                try
+                {
                     Coord1D indx = lower.z;
                     while(built<nslice)
                     {
                         const string sid = this->name + Field::Suffix(indx);
-                        new (slice+built) Slice(sid,sliceLayout,rows,objs);
-                        rows += rps;
-                        objs += ops;
+                        new (s) Slice(sid,sliceLayout,rowAddr,objAddr);
+                        ++s;
                         ++built;
+                        ++indx;
                     }
                 }
                 catch(...)
@@ -84,7 +98,7 @@ namespace upsylon {
                     clear();
                     throw;
                 }
-                slice -= lower.z;
+                
             }
             
             //------------------------------------------------------------------
@@ -146,6 +160,8 @@ namespace upsylon {
             
             inline void clear() throw()
             {
+                assert(slice);
+                slice += lower.z;
                 while(built>0)
                 {
                     self_destruct(slice[--built]);
