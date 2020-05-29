@@ -133,8 +133,9 @@ namespace upsylon {
                 frame *base = __frame+1;
                 while(built<frames)
                 {
-                    new (base+built) frame(rows,cols,slices,slcAddr,rowAddr,objAddr);
+                    new (base) frame(rows,cols,slices,slcAddr,rowAddr,objAddr);
                     ++built;
+                    ++base;
                 }
             }
             catch(...)

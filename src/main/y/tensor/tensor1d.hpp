@@ -72,10 +72,7 @@ namespace upsylon {
         core::tensor1d(n),
         __col(0)
         {
-            memory::embed emb[] =
-            {
-                memory::embed::as(__col,cols)
-            };
+            memory::embed emb[] = { memory::embed::as(__col,cols) };
             create(emb,sizeof(emb)/sizeof(emb[0]));
             __col -= 1;
             build();
@@ -118,8 +115,9 @@ namespace upsylon {
             try {
                 while(built<cols)
                 {
-                    new (base+built) mutable_type();
+                    new (base) mutable_type();
                     ++built;
+                    ++base;
                 }
             }
             catch(...)

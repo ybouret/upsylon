@@ -120,13 +120,14 @@ namespace upsylon {
         {
             assert(__row);
             assert(data);
-            row          *r = __row+1;
+            row          *base = __row+1;
             try
             {
                 while(built<rows)
                 {
-                    new (r+built) row(cols,data);
+                    new (base) row(cols,data);
                     ++built;
+                    ++base;
                 }
             }
             catch(...)

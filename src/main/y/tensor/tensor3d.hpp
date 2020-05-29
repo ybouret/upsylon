@@ -68,7 +68,8 @@ namespace upsylon {
         {
             row          *rowAddr = 0;
             mutable_type *objAddr = 0;
-            memory::embed emb[] = {
+            memory::embed emb[] =
+            {
                 memory::embed::as(__slice,slices),
                 memory::embed::as(rowAddr,slices*rows),
                 memory::embed::as(objAddr,items_per_frame)
@@ -130,8 +131,9 @@ namespace upsylon {
                 slice *base = __slice+1;
                 while(built<slices)
                 {
-                    new (base+built) slice(rows,cols,rowAddr,objAddr);
+                    new (base) slice(rows,cols,rowAddr,objAddr);
                     ++built;
+                    ++base;
                 }
             }
             catch(...)
