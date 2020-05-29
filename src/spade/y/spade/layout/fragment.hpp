@@ -185,6 +185,13 @@ namespace upsylon {
             // helpers
             //
             //------------------------------------------------------------------
+
+            //! check compatible layout
+            inline bool matches( const LayoutType &L ) const throw()
+            {
+                return L.isSameThan(outer);
+            }
+
             //! display info
             inline void displaySwaps() const
             {

@@ -50,7 +50,10 @@ namespace upsylon {
             Y_DECL_ARGS(T,type);                         //!< aliases
             typedef DenseMesh<COORD,T>        MeshType;  //!< alias
             typedef typename MeshType::Vertex Vertex;    //!< alias
-            typedef typename FieldFor<COORD> :: template Of<mutable_type>::Type Axis; //!< alias
+            typedef typename FieldFor<COORD> ::
+            template Of<mutable_type>::Type   Axis;       //!< alias
+            typedef arc_ptr<Axis>             AxisHandle; //!< alias for dynamic axis
+
             //! alas
             static  const unsigned            Dimensions = MeshType::Dimensions;
 
@@ -74,8 +77,9 @@ namespace upsylon {
             {
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    const string axisLabel = id + this->AxisTag(dim);
-                    axis. template build<const string&,const Layout<COORD> &>(id,*this);
+                    const string     axisString = id + this->AxisTag(dim);
+                    const AxisHandle axisHandle = new Axis(axisString,*this);
+                    axis.push(axisHandle);
                 }
             }
 
@@ -92,14 +96,14 @@ namespace upsylon {
             inline Axis & operator[](const unsigned dim) throw()
             {
                 assert(dim<Dimensions);
-                return axis[dim];
+                return *axis[dim];
             }
             
             //! axis access, const
             inline const Axis & operator[](const unsigned dim) const throw()
             {
                 assert(dim<Dimensions);
-                return axis[dim];
+                return *axis[dim];
             }
             
             //! recompose vertex at coordinate
@@ -109,7 +113,7 @@ namespace upsylon {
                 mutable_type *p = (mutable_type *)&v;
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    p[dim] = axis[dim][C];
+                    p[dim] = (*axis[dim])[C];
                 }
                 return v;
             }
@@ -120,7 +124,7 @@ namespace upsylon {
                 const_type *p = (const_type *)&v;
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    axis[dim][ C ] = p[dim];
+                    (*axis[dim])[ C ] = p[dim];
                 }
             }
             
@@ -128,7 +132,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CurvilinearMesh);
-            slots<Axis> axis;
+            slots<AxisHandle> axis;
         };
 
     }
