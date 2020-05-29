@@ -28,13 +28,14 @@ counting(COUNT),               \
 accessible<T>(),              \
 dimensions(DIM),            \
 curr(0),                  \
-head(0),                \
-tail(0),              \
-quit(0),            \
-move(0),          \
-iter(0),        \
-wksp(0),      \
-wlen(0),    \
+item(0),                \
+head(0),               \
+tail(0),             \
+quit(0),           \
+move(0),         \
+iter(0),       \
+wksp(0),     \
+wlen(0),   \
 data(0)
 
         //! context for a multidimensional loop
@@ -76,7 +77,7 @@ data(0)
                 memset(wksp,0,wlen);
                 mem.release(wksp,wlen);
                 curr = 0;
-                head = tail = quit = 0;
+                item = head = tail = quit = 0;
                 move = 0; iter = 0;
             }
 
@@ -84,8 +85,11 @@ data(0)
             //! access [0..dimensions-1]
             inline virtual const_type & operator[](const size_t dim) const throw()
             {
-                assert(dim<dimensions);
-                return curr[dim];
+                //assert(dim<dimensions);
+                //return curr[dim];
+                assert(dim>0);
+                assert(dim<=dimensions);
+                return item[dim];
             }
 
             //! memory check
@@ -110,6 +114,7 @@ data(0)
             typedef void (*proc)(mutable_type &);
         protected:
             mutable_type *curr; //!< current indices
+            const_type   *item; //!< for accessible: curr-1
             const_type   *head; //!< head value: starting
             const_type   *tail; //!< tail value: finishing
             const_type   *quit; //!< value to quit local loop
@@ -188,6 +193,7 @@ data(0)
                         memory::embed::as<const proc>  (iter,dimensions)
                     };
                     wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), mem, wlen, &data);
+                    item = curr-1;
                 }
             }
 

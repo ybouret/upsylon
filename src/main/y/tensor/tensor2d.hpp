@@ -39,7 +39,8 @@ namespace upsylon {
     //--------------------------------------------------------------------------
     template <typename T>
     class tensor2d : public core::tensor2d,
-    public addressable< upsylon::tensor1d<T> >
+    public addressable< upsylon::tensor1d<T> >,
+    public core::addressableND<T>
     {
     public:
         //----------------------------------------------------------------------
@@ -150,6 +151,12 @@ namespace upsylon {
             __row -= 1;
             build(objAddr);
             rowAddr += rows;
+        }
+
+        inline virtual const_type & at( const accessible<size_t> &indices ) const throw()
+        {
+            assert(indices.size()==dimensions);
+            return (*this)[indices[2]][indices[1]];
         }
         
     };

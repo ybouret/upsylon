@@ -36,8 +36,10 @@ namespace upsylon {
     //
     //--------------------------------------------------------------------------
     template <typename T>
-    class tensor4d : public core::tensor4d,
-    public addressable< upsylon::tensor3d<T> >
+    class tensor4d :
+    public core::tensor4d,
+    public addressable< upsylon::tensor3d<T> >,
+    public core::addressableND<T>
     {
     public:
         //----------------------------------------------------------------------
@@ -142,6 +144,12 @@ namespace upsylon {
                 cleanup();
                 throw;
             }
+        }
+
+        inline virtual const_type & at( const accessible<size_t> &indices ) const throw()
+        {
+            assert(indices.size()==dimensions);
+            return (*this)[indices[4]][indices[3]][indices[2]][indices[1]];
         }
     };
     

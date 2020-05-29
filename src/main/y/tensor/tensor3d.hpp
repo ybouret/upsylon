@@ -39,7 +39,8 @@ namespace upsylon {
     //--------------------------------------------------------------------------
     template <typename T>
     class tensor3d : public core::tensor3d,
-    public addressable< upsylon::tensor2d<T> >
+    public addressable< upsylon::tensor2d<T> >,
+    public core::addressableND<T>
     {
     public:
         //----------------------------------------------------------------------
@@ -161,7 +162,12 @@ namespace upsylon {
             build(rowAddr,objAddr);
             slcAddr += slices;
         }
-        
+
+        inline virtual const_type & at( const accessible<size_t> &indices ) const throw()
+        {
+            assert(indices.size()==dimensions);
+            return (*this)[indices[3]][indices[2]][indices[1]];
+        }
     };
     
 }

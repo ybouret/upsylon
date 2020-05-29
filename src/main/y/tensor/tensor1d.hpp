@@ -31,11 +31,50 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(tensor1d);
 
         };
+
+        //----------------------------------------------------------------------
+        //
+        //! interface to use mloops
+        //
+        //----------------------------------------------------------------------
+        template <typename T>
+        class addressableND
+        {
+        public:
+            Y_DECL_ARGS(T,type); //!< aliases
+
+            //! cleanup
+            inline virtual ~addressableND() throw() {}
+
+            //! access
+            inline const_type & operator()( const accessible<size_t> & indices ) const throw()
+            {
+                return at(indices);
+            }
+
+            //! access, const
+            inline  type & operator()( const accessible<size_t> & indices ) throw()
+            {
+                return (type &)at(indices);
+            }
+
+
+        protected:
+            //! setup
+            inline explicit addressableND() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(addressableND);
+            virtual const_type & at( const accessible<size_t> &indices ) const throw() = 0;
+        };
+
     }
  
     //! forward declaration
     template <typename> class tensor2d;
-    
+
+
+
     //--------------------------------------------------------------------------
     //
     //! tensor1d
@@ -43,7 +82,7 @@ namespace upsylon {
     //--------------------------------------------------------------------------
     
     template <typename T>
-    class tensor1d : public core::tensor1d, public addressable<T>
+    class tensor1d : public core::tensor1d, public addressable<T>, public core::addressableND<T>
     {
     public:
         //----------------------------------------------------------------------
@@ -83,10 +122,10 @@ namespace upsylon {
         inline virtual size_t       size()                  const throw() { return cols; }
         
         //! access
-        inline virtual type       & operator[](size_t indx)       throw() { assert(indx>0); assert(indx<=cols); return __col[indx]; }
+        inline virtual type       & operator[](const size_t indx)       throw() { assert(indx>0); assert(indx<=cols); return __col[indx]; }
         
         //! access, const
-        inline virtual const_type & operator[](size_t indx) const throw() { assert(indx>0); assert(indx<=cols); return __col[indx]; }
+        inline virtual const_type & operator[](const size_t indx) const throw() { assert(indx>0); assert(indx<=cols); return __col[indx]; }
         
 
     private:
@@ -132,6 +171,13 @@ namespace upsylon {
             build();
             data += cols;
         }
+
+        inline virtual const_type & at( const accessible<size_t> &indices ) const throw()
+        {
+            assert(indices.size()==dimensions);
+            return (*this)[indices[1]];
+        }
+
 
     };
     
