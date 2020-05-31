@@ -62,6 +62,13 @@ namespace upsylon {
         {
             return OpenData(data,*data,data.size());
         }
+        
+        Module * Module:: OpenData(const char *data)
+        {
+            const string _(data);
+            return OpenData(_);
+        }
+
 
 
         void Module:: newLine() throw()
