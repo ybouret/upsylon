@@ -6,14 +6,14 @@ namespace upsylon {
 
     namespace Jargon {
 
-        Matcher:: Matcher( const string &rx ) :
-        Motif( RegularExpression::Compile(rx) ),
+        Matcher:: Matcher(const string &rx, const Dictionary *dict) :
+        Motif( RegularExpression::Compile(rx,dict) ),
         Token()
         {
         }
 
-        Matcher:: Matcher( const char   *rx ) :
-        Motif( RegularExpression::Compile(rx) ),
+        Matcher:: Matcher(const char   *rx, const Dictionary *dict) :
+        Motif( RegularExpression::Compile(rx,dict) ),
         Token()
         {
         }
@@ -30,19 +30,6 @@ namespace upsylon {
             
         }
 
-#if 0
-        const Token * Matcher:: exact_match(const string &str)
-        {
-            release();
-            return (**this).matches_exactly(*this,str) ? this : 0;
-        }
-        
-        const Token * Matcher:: first_match(const string &str)
-        {
-            release();
-            return (**this).matches_partly(*this,str) ? this : 0;
-        }
-#endif
 
         
         

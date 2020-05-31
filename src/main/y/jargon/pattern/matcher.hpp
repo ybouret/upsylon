@@ -10,6 +10,8 @@ namespace upsylon {
 
     namespace Jargon {
 
+        class Dictionary; //!< forward declcaration
+
         //! helper to match motif in strings
         class Matcher : public Motif, public Token
         {
@@ -19,8 +21,8 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-            Matcher(const string &);                  //!< setup by compiling regular expression
-            Matcher(const char   *);                  //!< setup by compiling regular expression
+            Matcher(const string &, const Dictionary * =NULL);                  //!< setup by compiling regular expression
+            Matcher(const char   *, const Dictionary * =NULL);                  //!< setup by compiling regular expression
             virtual ~Matcher() throw();               //!< cleanup
             Matcher(const Matcher &) throw();         //!< shared copy with empty token!
             
