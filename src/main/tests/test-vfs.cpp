@@ -62,6 +62,8 @@ Y_UTEST(vfs)
 }
 Y_UTEST_DONE()
 
+#include "y/fs/find.hpp"
+
 namespace
 {
     struct find_info
@@ -80,6 +82,16 @@ namespace
         {
             static_cast<find_info *>(args)->seq->push_back(ent.path);
         }
+        
+        void operator()( const vfs::entry &ent )
+        {
+            if(ent.is_regular())
+            {
+                ++count;
+                if(seq) seq->push_back(ent.path);
+            }
+            
+        }
 
     };
 }
@@ -92,14 +104,16 @@ Y_UTEST(find)
     {
         const string dirName = argv[1];
         find_info    info    = { 0, NULL };
-        fs.find(dirName, find_info::on_count, &info,-1);
+        
+        fs_find::in(fs,argv[1],info,-1);
         std::cerr << "count  = " << info.count << std::endl;
-
         list<string> l(info.count,as_capacity);
-        info.seq = &l;
-        fs.find(dirName, find_info::on_store, &info,-1);
+        info.count = 0;
+        info.seq   = &l;
+        fs_find::in(fs,argv[1],info,-1);
         std::cerr << "l.size = " << l.size() << std::endl;
 
+       
     }
 
 }

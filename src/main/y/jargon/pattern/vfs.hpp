@@ -5,10 +5,11 @@
 #define Y_JARGON_PATTERN_VFS_INCLUDED 1
 
 #include "y/jargon/pattern/matcher.hpp"
-#include "y/fs/vfs.hpp"
 
 namespace upsylon {
- 
+
+    class vfs;
+    
     namespace Jargon {
         
         //----------------------------------------------------------------------
@@ -38,14 +39,13 @@ namespace upsylon {
             //! copy
             VFS_Matcher(const VFS_Matcher &) throw();
             
-            //! try to match extension
-            bool matchExtensionOf(const vfs::entry &entry);
             
             //! find all extensions
-            size_t matchExtensions(sequence<string> *seq,
-                                   vfs              &fs,
-                                   const string     &dirName,
-                                   const int         maxDepth=-1);
+            size_t extensions(sequence<string> *seq,
+                              vfs              &fs,
+                              const string     &dirName,
+                              const int         maxDepth=-1);
+            
             
 
         private:

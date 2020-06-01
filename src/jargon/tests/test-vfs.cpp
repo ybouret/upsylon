@@ -15,13 +15,11 @@ Y_UTEST(vfs)
         if(argc>2)
         {
             vfs                   &fs   = local_fs::instance();
-            const size_t           count = matcher.matchExtensions(NULL, fs, argv[2]);
+            const size_t           count = matcher.extensions(NULL, fs, argv[2]);
             list<string>           matching(count,as_capacity);
-            Y_CHECK( count==matcher.matchExtensions(&matching,fs,argv[2]) );
+            Y_CHECK( count==matcher.extensions(&matching,fs,argv[2]) );
             std::cerr << matching << std::endl;
             std::cerr << "count=" << count << std::endl;
-            
-
         }
     }
 }

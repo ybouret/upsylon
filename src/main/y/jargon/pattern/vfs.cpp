@@ -1,5 +1,6 @@
 
 #include "y/jargon/pattern/vfs.hpp"
+#include "y/fs/find.hpp"
 
 namespace upsylon {
     
@@ -14,47 +15,37 @@ namespace upsylon {
         {
         }
         
-        bool VFS_Matcher:: matchExtensionOf(const vfs::entry &entry)
-        {
-            Module *module = Module::OpenData(entry.extension);
-            return (**this).exactly_matches(*this,module);
-        }
 
         namespace {
 
-            struct findInfo
+            struct findOps
             {
                 size_t            num;
                 sequence<string> *seq;
                 VFS_Matcher      *self;
-
-                void call( const vfs::entry &ent )
+                
+                
+                inline void operator()(const vfs::entry &ent)
                 {
                     assert(self);
-                    if(self->matchExtensionOf(ent))
+                    if( ent.is_regular() && self->matches_exactly(ent.extension))
                     {
                         ++num;
                         if(seq) seq->push_back(ent.path);
                     }
                 }
-
-                static void Call( const vfs::entry &ent, void *args )
-                {
-                    assert(args);
-                    static_cast<findInfo *>(args)->call(ent);
-                }
             };
 
         }
 
-        size_t VFS_Matcher:: matchExtensions(sequence<string> *seq,
-                                             vfs              &fs,
-                                             const string     &dirName,
-                                             const int         maxDepth)
+        size_t VFS_Matcher:: extensions(sequence<string> *seq,
+                                        vfs              &fs,
+                                        const string     &dirName,
+                                        const int         maxDepth)
         {
-            findInfo info = { 0, seq , this };
-            fs.find(dirName, findInfo::Call, &info, maxDepth);
-            return info.num;
+            findOps ops = { 0, seq , this };
+            fs_find::in(fs,dirName,ops,maxDepth);
+            return ops.num;
         }
     }
 }
