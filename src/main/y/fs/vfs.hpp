@@ -198,8 +198,15 @@ namespace upsylon {
         void find(const string &dirname,
                   find_proc      proc,
                   void          *args,
-                  const int     max_depth) const;
+                  const int      max_depth) const;
 
+        //! find wrapper
+        void find(const char   *dirname,
+                  find_proc      proc,
+                  void          *args,
+                  const int      max_depth) const;
+
+        //! find wrapper
         template <typename LABEL, typename FUNC> inline
         void find(const LABEL &dirName, FUNC &func, const int max_depth ) const
         {

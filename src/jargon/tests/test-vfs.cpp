@@ -20,20 +20,7 @@ Y_UTEST(vfs)
             Y_CHECK( count==matcher.matchExtensions(&matching,fs,argv[2]) );
             std::cerr << matching << std::endl;
             std::cerr << "count=" << count << std::endl;
-
-#if 0
-            auto_ptr<vfs::scanner> scan = fs.scan(argv[2]);
-            for(const vfs::entry *ep = scan->next(); ep; ep=scan->next() )
-            {
-                if(!ep->is_regular()) continue;
-                std::cerr << ep->path << std::endl;
-                if(matcher.matchExtensionOf(*ep))
-                {
-                    matching.push_back(ep->path);
-                }
-            }
-            std::cerr << "matching: " << matching << std::endl;
-#endif
+            
 
         }
     }

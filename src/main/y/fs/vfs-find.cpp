@@ -49,6 +49,15 @@ namespace upsylon {
 
     }
 
+    void vfs::find(const char   *dirname,
+                   find_proc     proc,
+                   void         *args,
+                   int           max_depth) const
+    {
+        const string _(dirname);
+        find(_,proc,args,max_depth);
+    }
+
     void vfs::find(const string &dirname,
                      find_proc     proc,
                      void         *args,
