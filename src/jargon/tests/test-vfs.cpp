@@ -15,8 +15,14 @@ Y_UTEST(vfs)
         if(argc>2)
         {
             vfs                   &fs   = local_fs::instance();
+            const size_t           count = matcher.matchExtensions(NULL, fs, argv[2]);
+            list<string>           matching(count,as_capacity);
+            Y_CHECK( count==matcher.matchExtensions(&matching,fs,argv[2]) );
+            std::cerr << matching << std::endl;
+            std::cerr << "count=" << count << std::endl;
+
+#if 0
             auto_ptr<vfs::scanner> scan = fs.scan(argv[2]);
-            list<string>           matching;
             for(const vfs::entry *ep = scan->next(); ep; ep=scan->next() )
             {
                 if(!ep->is_regular()) continue;
@@ -27,6 +33,8 @@ Y_UTEST(vfs)
                 }
             }
             std::cerr << "matching: " << matching << std::endl;
+#endif
+
         }
     }
 }

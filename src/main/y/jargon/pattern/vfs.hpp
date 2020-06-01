@@ -41,7 +41,13 @@ namespace upsylon {
             //! try to match extension
             bool matchExtensionOf(const vfs::entry &entry);
             
+            //! find all extensions
+            size_t matchExtensions(sequence<string> *seq,
+                                   vfs              &fs,
+                                   const string     &dirName,
+                                   const int         maxDepth=-1);
             
+
         private:
             Y_DISABLE_ASSIGN(VFS_Matcher);
         };
