@@ -92,8 +92,8 @@ Y_UTEST(init)
     
     MPI.sequential(DoSomethingWith);
     fflush(stderr);
-    Y_MPI_HEAD( std::cerr << "Will Execute Node Code" << std::endl );
-    Y_MPI_NODE( std::cerr << "Now Sequential @" << MPI.nodeName  << std::endl );
+    Y_MPI_HEAD( std::cerr << "Will Execute Node Code" << std::endl; std::cerr.flush() );
+    Y_MPI_NODE( std::cerr << "Now Sequential @" << MPI.nodeName  << std::endl; std::cerr.flush() );
     
 }
 Y_UTEST_DONE()
