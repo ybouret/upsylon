@@ -99,27 +99,6 @@ namespace upsylon {
         return get_attr_text(attr);
     }
 
-#if 0
-    void vfs:: foreach_in( const string &dirname,  vfs::entry::callback &on_entry ) const
-    {
-        scanner *scan = new_scanner( dirname );
-        try
-        {
-            const entry *ep = scan->next();
-            while( NULL != ep)
-            {
-                if( !on_entry( *ep ) ) return;
-                ep = scan->next();
-            }
-            delete scan;
-        }
-        catch(...)
-        {
-            delete scan;
-            throw;
-        }
-        
-    }
-#endif
+
 	
 }

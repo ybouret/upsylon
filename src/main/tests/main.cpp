@@ -152,6 +152,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(matrix);
     Y_UTEST(functor);
     Y_UTEST(vfs);
+    Y_UTEST(find);
     Y_UTEST(triplet);
     Y_UTEST(points);
     Y_UTEST(tuple);

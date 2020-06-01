@@ -12,6 +12,7 @@ namespace
     }
 
 }
+
 Y_UTEST(vfs)
 {
     vfs & fs = local_fs::instance();
@@ -19,7 +20,7 @@ Y_UTEST(vfs)
     if(argc>1)
     {
         std::cerr << "scanning '" << argv[1] << "'" << std::endl;
-        auto_ptr<vfs::scanner> scan = fs.new_scanner(argv[1]);
+        auto_ptr<vfs::scanner> scan = fs.scan(argv[1]);
         list<vfs::entry> entries;
         size_t           max_plen = 0;
         size_t           max_nlen = 0;
@@ -61,4 +62,46 @@ Y_UTEST(vfs)
 }
 Y_UTEST_DONE()
 
+namespace
+{
+    struct find_info
+    {
+        size_t            count;
+        sequence<string> *seq;
+
+
+
+        static inline void on_count(const vfs::entry &, void *args)
+        {
+            static_cast<find_info *>(args)->count++;
+        }
+
+        static inline void on_store(const vfs::entry &ent, void *args)
+        {
+            static_cast<find_info *>(args)->seq->push_back(ent.path);
+        }
+
+    };
+}
+
+Y_UTEST(find)
+{
+    vfs & fs = local_fs::instance();
+
+    if(argc>1)
+    {
+        const string dirName = argv[1];
+        find_info    info    = { 0, NULL };
+        fs.find(dirName, find_info::on_count, &info,-1);
+        std::cerr << "count  = " << info.count << std::endl;
+
+        list<string> l(info.count,as_capacity);
+        info.seq = &l;
+        fs.find(dirName, find_info::on_store, &info,-1);
+        std::cerr << "l.size = " << l.size() << std::endl;
+
+    }
+
+}
+Y_UTEST_DONE()
 

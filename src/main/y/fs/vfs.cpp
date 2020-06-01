@@ -40,17 +40,32 @@ namespace upsylon {
             this->create_dir( sub, true );
         }
     }
+
+    void vfs:: create_sub_dir( const char *dirName )
+    {
+        const string _(dirName);
+        create_sub_dir(_);
+    }
     
     bool vfs::is_reg( const string &path ) const throw() {
         bool link = false;
         return entry::is_reg == this->query_attribute( path, link );
     }
-    
+
+    bool vfs::is_reg( const char *path ) const throw() {
+        const string _(path); return is_reg(_);
+    }
+
+
     bool vfs::is_dir( const string &path ) const throw() {
         bool link = false;
         return entry::is_dir == this->query_attribute( path, link );
     }
-    
+
+    bool vfs::is_dir( const char *path ) const throw() {
+        const string _(path); return is_dir(_);
+    }
+
 
     namespace
         {
@@ -83,6 +98,11 @@ namespace upsylon {
         }
     }
 
+    void vfs::try_remove_file(const char *path) throw()
+    {
+        const string _(path);
+        try_remove_file(_);
+    }
 
 
     

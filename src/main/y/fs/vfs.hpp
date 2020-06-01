@@ -8,8 +8,8 @@
 #include "y/sequence/list.hpp"
 
 namespace upsylon {
-	
-	//! Virtual File System interface
+
+    //! Virtual File System interface
     class vfs : public object {
     public:
         virtual ~vfs() throw();
@@ -23,10 +23,10 @@ namespace upsylon {
         {
         public:
             typedef size_t attribute;          //!< attribute type
-            static const attribute no_ent = 0; //!< no entry
-            static const attribute is_reg = 1; //!< regular file
-            static const attribute is_dir = 2; //!< directory
-            static const attribute is_unk = 4; //!< unknown
+            static  const  attribute no_ent = 0; //!< no entry
+            static  const  attribute is_reg = 1; //!< regular file
+            static  const  attribute is_dir = 2; //!< directory
+            static  const  attribute is_unk = 4; //!< unknown
 
             //! convert attribute to human readable text
             static const char *get_attr_text(const attribute a) throw();
@@ -82,10 +82,10 @@ namespace upsylon {
             
         protected:
             //! common initializer
-            explicit scanner( const string &dirname, const vfs &owner );
+            explicit scanner(const string &dirname, const vfs &owner);
 
             //! make an entry in current with its name
-            const entry * make_entry( const char *entry_name );
+            const entry * make_entry(const char *entry_name);
             
             
         private:
@@ -99,37 +99,44 @@ namespace upsylon {
         // virtual interface
         //
         //==================================================================
+
         //! query attribute for path
-        virtual entry::attribute query_attribute( const string &path, bool &is_link ) const throw() = 0;
+        virtual entry::attribute query_attribute(const string &path, bool &is_link) const throw() = 0;
+
         //! create a directory
-        virtual void             create_dir(    const string &dirname, const bool allow_already_exists ) = 0;
+        virtual void             create_dir(const string &dirname, const bool allow_already_exists) = 0;
+
         //! remove a directory
-        virtual void             remove_dir(    const string &dirname  ) = 0 ;
+        virtual void             remove_dir(const string &dirname) = 0 ;
+
         //! remove a file
-        virtual void             remove_file(   const string &filename ) = 0;
+        virtual void             remove_file(const string &filename) = 0;
+
         //! create a scanner for a given directory
-        virtual scanner *        new_scanner(   const string &dirname ) const = 0;
+        virtual scanner *        new_scanner(const string &dirname) const = 0;
+
         //! get a regular file size
-        virtual uint64_t         get_file_size( const string &path ) const = 0;
+        virtual uint64_t         get_file_size(const string &path)  const = 0;
         
         //==================================================================
         //
         // non virtual interface
         //
         //==================================================================
-        scanner *scan( const string &dirname ) const; //!< wrapper
-        scanner *scan( const char   *dirname ) const; //!< wrapper
 
-        //! mkdir -p dirname
-        void         create_sub_dir( const string &dirname );
-        //! test if regilar file
-        bool         is_reg( const string &path ) const throw();
-        //! test if directory
-        bool         is_dir( const string &path ) const throw();
-        //! try to remove a file
-        void         try_remove_file( const string &path) throw();
-        //! get a not-used, temporary name
-        string       get_temporary_name(const size_t n=8) const;
+        scanner *scan(const string &dirname) const;             //!< new_scanner wrapper
+        scanner *scan(const char   *dirname) const;             //!< new_scanner wrapper
+        void     create_sub_dir(const string &dirname);         //!< mkdir -p dirname
+        void     create_sub_dir(const char *  dirname);         //!< mkdir -p dirname, wrapper
+        bool     is_reg(const string &path)  const throw();     //!< test if regular file
+        bool     is_reg(const char   *path)  const throw();     //!< test if regular file, wrapper
+        bool     is_dir(const string &path)  const throw();     //!< test if directory
+        bool     is_dir(const char   *path)  const throw();     //!< test if directory, wrapper
+        void     try_remove_file(const string &path) throw();   //!< try to remove a file
+        void     try_remove_file(const char   *path) throw();   //!< try to remove a file, wrapper
+        string   get_temporary_name(const size_t n=8) const;    //!< get a not-used, temporary name
+
+
 
         //! remove file matching filter in dirname
         /**
@@ -182,8 +189,23 @@ namespace upsylon {
         }
         
         //! remove files with given extension in dirname
-        void         remove_files_with_extension_in( const string &dirname, const string &extension);
-        
+        void         remove_files_with_extension_in(const string &dirname, const string &extension);
+
+        //! alias
+        typedef void (*find_proc)(const entry &, void *);
+
+        //! recursive find, with non-recursive algorithm
+        void find(const string &dirname,
+                  find_proc      proc,
+                  void          *args,
+                  const int     max_depth) const;
+
+        template <typename LABEL, typename FUNC> inline
+        void find(const LABEL &dirName, FUNC &func, const int max_depth ) const
+        {
+            find(dirName, calling<FUNC>, (void *) &func, max_depth );
+        }
+
         //==================================================================
         //
         // utilities
@@ -246,8 +268,15 @@ namespace upsylon {
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(vfs);
+        template <typename FUNC>
+        static inline bool calling(const entry &ent, void *args )
+        {
+            assert(args);
+            FUNC &func = *(FUNC *)args;
+            return func(ent);
+        }
     };
-	
+
 }
 
 #endif
