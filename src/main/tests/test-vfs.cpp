@@ -103,8 +103,9 @@ Y_UTEST(find)
     if(argc>1)
     {
         const string dirName = argv[1];
+
         find_info    info    = { 0, NULL };
-        
+
         if(!fs_find::in(fs,argv[1],info,-1))
         {
             throw exception("couldn't count");
@@ -119,7 +120,14 @@ Y_UTEST(find)
         }
         std::cerr << "l.size = " << l.size() << std::endl;
 
-       
+        l.free();
+
+        list<vfs::entry> el;
+        const size_t nTell = fs_find::tell(fs,argv[1],fs_find::accept_any, -1);
+        std::cerr << "nTell=" << nTell << std::endl;
+        const size_t nColl = fs_find::collect(el,fs, argv[1],fs_find::accept_any,-1);
+        Y_CHECK(nColl==nTell);
+        Y_CHECK(nColl==el.size());
     }
 
 }

@@ -144,21 +144,8 @@ namespace upsylon {
                     ACCEPT      &accept,
                     const int   max_depth)
         {
-            struct context
-            {
-                size_t  number;
-                ACCEPT *accept;
-                bool operator()(const vfs::entry &ent)
-                {
-                    assert(accept);
-                    if( (*accept)(ent) )
-                    {
-                        ++number;
-                    }
-                    return true;
-                }
-            };
-            context ctx = { 0, &accept };
+
+            tell_context<ACCEPT> ctx = { 0, &accept };
             if(!in(fs,dirname,ctx,max_depth)) return 0;
             return ctx.number;
         }
@@ -171,34 +158,50 @@ namespace upsylon {
                        ACCEPT               &accept,
                        const int             max_depth)
         {
-            struct context
-            {
-                size_t                number;
-                ACCEPT               *accept;
-                sequence<vfs::entry> *target;
 
-                bool operator()(const vfs::entry &ent)
-                {
-                    assert(accept);
-                    assert(target);
-                    if( (*accept)(ent) )
-                    {
-                        target->push_back(ent);
-                        ++number;
-                    }
-                    return true;
-                }
-            };
-            context ctx = { 0, &accept , &seq};
+            collect_context<ACCEPT> ctx = { 0, &accept , &seq};
             if(!in(fs,dirname,ctx,max_depth)) return 0;
             return ctx.number;
         }
 
+        //! true
+        static bool accept_any(const vfs::entry&) throw();
 
     private:
+        template <typename ACCEPT> struct tell_context
+        {
+            size_t  number;
+            ACCEPT *accept;
+            bool operator()(const vfs::entry &ent)
+            {
+                assert(accept);
+                if( (*accept)(ent) )
+                {
+                    ++number;
+                }
+                return true;
+            }
+        };
 
-        
-    };
+        template <typename ACCEPT> struct collect_context
+        {
+            size_t                number;
+            ACCEPT               *accept;
+            sequence<vfs::entry> *target;
+
+            bool operator()(const vfs::entry &ent)
+            {
+                assert(accept);
+                assert(target);
+                if( (*accept)(ent) )
+                {
+                    target->push_back(ent);
+                    ++number;
+                }
+                return true;
+            }
+        };
+     };
     
 }
 
