@@ -83,14 +83,14 @@ namespace
             static_cast<find_info *>(args)->seq->push_back(ent.path);
         }
         
-        void operator()( const vfs::entry &ent )
+        bool operator()( const vfs::entry &ent )
         {
             if(ent.is_regular())
             {
                 ++count;
                 if(seq) seq->push_back(ent.path);
             }
-            
+            return true;
         }
 
     };
@@ -105,12 +105,18 @@ Y_UTEST(find)
         const string dirName = argv[1];
         find_info    info    = { 0, NULL };
         
-        fs_find::in(fs,argv[1],info,-1);
+        if(!fs_find::in(fs,argv[1],info,-1))
+        {
+            throw exception("couldn't count");
+        }
         std::cerr << "count  = " << info.count << std::endl;
         list<string> l(info.count,as_capacity);
         info.count = 0;
         info.seq   = &l;
-        fs_find::in(fs,argv[1],info,-1);
+        if(!fs_find::in(fs,argv[1],info,-1))
+        {
+            throw exception("couldn't load");
+        }
         std::cerr << "l.size = " << l.size() << std::endl;
 
        

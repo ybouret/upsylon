@@ -1,6 +1,7 @@
 
 #include "y/jargon/pattern/vfs.hpp"
 #include "y/fs/find.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
     
@@ -25,7 +26,7 @@ namespace upsylon {
                 VFS_Matcher      *self;
                 
                 
-                inline void operator()(const vfs::entry &ent)
+                inline bool operator()(const vfs::entry &ent)
                 {
                     assert(self);
                     if( ent.is_regular() && self->matches_exactly(ent.extension))
@@ -33,6 +34,7 @@ namespace upsylon {
                         ++num;
                         if(seq) seq->push_back(ent.path);
                     }
+                    return true;
                 }
             };
 
@@ -44,7 +46,10 @@ namespace upsylon {
                                         const int         maxDepth)
         {
             findOps ops = { 0, seq , this };
-            fs_find::in(fs,dirName,ops,maxDepth);
+            if(!fs_find::in(fs,dirName,ops,maxDepth))
+            {
+                throw exception("failure in VFS_Matcher::extensions(%s)", *dirName);
+            }
             return ops.num;
         }
     }

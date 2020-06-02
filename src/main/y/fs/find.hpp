@@ -9,36 +9,76 @@
 #include "y/core/list.hpp"
 
 namespace upsylon {
-    
+
+    //--------------------------------------------------------------------------
+    //
+    //! File System find algorithm
+    //
+    //--------------------------------------------------------------------------
     struct fs_find
     {
+        //----------------------------------------------------------------------
+        //
+        //! look up directory: name+depth
+        //
+        //----------------------------------------------------------------------
         class look_up : public object, public inode<look_up>
         {
         public:
-            typedef core::list_of_cpp<look_up> list;
-            
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef core::list_of_cpp<look_up> list; //!< base type for list
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! generic build
             template <typename LABEL> inline
             explicit look_up(const LABEL &_dpath, const int  _depth) :
             dpath(_dpath),
             depth(_depth)
             {
             }
-            
+
+            //! cleanup
             virtual ~look_up() throw();
-            
-            const string dpath;
-            const int    depth;
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const string dpath; //!< directory path
+            const int    depth; //!< directory depth
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(look_up);
         };
-        
+
+        //----------------------------------------------------------------------
+        //
+        //! list of directories to scan
+        //
+        //----------------------------------------------------------------------
         class directories : public look_up::list
         {
         public:
-            explicit directories() throw();
-            virtual ~directories() throw();
-            
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit directories() throw(); //!< setup
+            virtual ~directories() throw(); //!< cleanup
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
+            //! add a new directory to scan
             template <typename LABEL> inline
             void add(const LABEL &dpath, const int depth)
             {
@@ -48,16 +88,30 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(directories);
         };
-        
+
+        //----------------------------------------------------------------------
+        //
+        //! non recursive algorithm
+        //
+        //----------------------------------------------------------------------
         template <typename LABEL, typename FUNC> static inline
-        void in(vfs         &fs,
+        bool in(vfs         &fs,
                 const LABEL &dirname,
                 FUNC        &func,
                 const int    max_depth)
         {
+            //__________________________________________________________________
+            //
+            // initialize
+            //__________________________________________________________________
             const bool  halt = (max_depth>=0);
             directories work;
             work.add(dirname,0);
+
+            //__________________________________________________________________
+            //
+            // loop
+            //__________________________________________________________________
             while(work.size>0)
             {
                 auto_ptr<look_up>      node  = work.pop_front();
@@ -72,7 +126,7 @@ namespace upsylon {
                     switch(ep->attr)
                     {
                         case vfs::entry::is_dir: if(go) work.add(ep->path,below); // FALLTHRU
-                        case vfs::entry::is_reg: func(*ep);
+                        case vfs::entry::is_reg: if( !func(*ep) ) return false;
                             break;
                         
                         default:
@@ -80,7 +134,69 @@ namespace upsylon {
                     }
                 }
             }
+            return true;
         }
+
+        //! tell how many entries would be accepted
+        template <typename LABEL, typename ACCEPT> static inline
+        size_t tell(vfs         &fs,
+                    const LABEL &dirname,
+                    ACCEPT      &accept,
+                    const int   max_depth)
+        {
+            struct context
+            {
+                size_t  number;
+                ACCEPT *accept;
+                bool operator()(const vfs::entry &ent)
+                {
+                    assert(accept);
+                    if( (*accept)(ent) )
+                    {
+                        ++number;
+                    }
+                    return true;
+                }
+            };
+            context ctx = { 0, &accept };
+            if(!in(fs,dirname,ctx,max_depth)) return 0;
+            return ctx.number;
+        }
+
+        //! push back accepted entries and return number of new entries
+        template <typename LABEL, typename ACCEPT> static inline
+        size_t collect(sequence<vfs::entry> &seq,
+                       vfs                  &fs,
+                       const LABEL          &dirname,
+                       ACCEPT               &accept,
+                       const int             max_depth)
+        {
+            struct context
+            {
+                size_t                number;
+                ACCEPT               *accept;
+                sequence<vfs::entry> *target;
+
+                bool operator()(const vfs::entry &ent)
+                {
+                    assert(accept);
+                    assert(target);
+                    if( (*accept)(ent) )
+                    {
+                        target->push_back(ent);
+                        ++number;
+                    }
+                    return true;
+                }
+            };
+            context ctx = { 0, &accept , &seq};
+            if(!in(fs,dirname,ctx,max_depth)) return 0;
+            return ctx.number;
+        }
+
+
+    private:
+
         
     };
     

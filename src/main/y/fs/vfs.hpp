@@ -3,26 +3,33 @@
 #define Y_VFS_INCLUDED
 
 #include "y/string.hpp"
-#include "y/functor.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/sequence/list.hpp"
 
 namespace upsylon {
-    
+
+    //==========================================================================
+    //
     //! Virtual File System interface
-    class vfs : public object {
+    //
+    //==========================================================================
+    class vfs : public object
+    {
     public:
-        virtual ~vfs() throw();
-        //======================================================================
+        //----------------------------------------------------------------------
         //
-        // entry API
+        //! entry API
         //
-        //======================================================================
-        //! one entry
+        //----------------------------------------------------------------------
         class entry : public object
         {
         public:
-            typedef size_t attribute;          //!< attribute type
+            //------------------------------------------------------------------
+            //
+            // types and definition
+            //
+            //------------------------------------------------------------------
+            typedef size_t attribute;            //!< attribute type
             static  const  attribute no_ent = 0; //!< no entry
             static  const  attribute is_reg = 1; //!< regular file
             static  const  attribute is_dir = 2; //!< directory
@@ -30,45 +37,53 @@ namespace upsylon {
             
             //! convert attribute to human readable text
             static const char *get_attr_text(const attribute a) throw();
+
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            explicit entry(const string &, const vfs &); //!< build entry
+            virtual ~entry() throw();                    //!< cleanup
+            entry(const entry &);                        //!< copy
             
-            //! build entry
-            explicit entry( const string &vfs_path, const vfs &vfs_from );
-            
-            //! destructor
-            virtual ~entry() throw();
-            
-            //! copy
-            entry( const entry &other );
-            
-            const string     path;      //!< full path
-            const char      *cstr;      //!< full path, low-level
-            const char      *base_name; //!< base name
-            const char      *extension; //!< extension, may be null
-            const bool       link;      //!< if recognized as symbolic link
-            const attribute  attr;      //!< the attribute
-            const char      *attr2text() const throw(); //!< the human readable attribute
-            
-            //! callback to act on entries
-            typedef functor<bool,TL1(const entry &)> callback;
-            
-            bool is_regular()   const throw(); //!< attr == is_reg
-            bool is_directory() const throw(); //!< attr == is_dir
-            bool has_extension( const string &ext ) const throw(); //!< extension!=NULL && extention == ext
-            bool has_extension( const char   *ext ) const throw(); //!< extension!=NULL && extention == ext
-            bool is_dot()  const throw();        //!< '.'
-            bool is_ddot() const throw();        //!< '..'
-            bool is_dot_or_ddot() const throw(); //!< '.' or '..'
-            bool is_subdir() const throw();      //!< a directory not '.' or '..'
+
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            const char *attr2text() const throw();                   //!< the human readable attribute
+            bool        is_regular()   const throw();                //!< attr == is_reg
+            bool        is_directory() const throw();                //!< attr == is_dir
+            bool        has_extension(const string &) const throw(); //!< extension!=NULL && extention == ext
+            bool        has_extension(const char   *) const throw(); //!< extension!=NULL && extention == ext
+            bool        is_dot()  const throw();                     //!< '.'
+            bool        is_ddot() const throw();                     //!< '..'
+            bool        is_dot_or_ddot() const throw();              //!< '.' or '..'
+            bool        is_subdir() const throw();                   //!< a directory not '.' or '..'
+
+            //------------------------------------------------------------------
+            //
+            // members
+            //
+            //------------------------------------------------------------------
+            const string     path;                      //!< full path
+            const char      *cstr;                      //!< full path, low-level
+            const char      *base_name;                 //!< base name
+            const char      *extension;                 //!< extension, may be null
+            const bool       link;                      //!< if recognized as symbolic link
+            const attribute  attr;                      //!< the attribute
+
         private:
             Y_DISABLE_ASSIGN(entry);
         };
         
-        //======================================================================
+        //----------------------------------------------------------------------
         //
-        // scanner API
-        //
-        //======================================================================
         //! scanning directory entries
+        //
+        //----------------------------------------------------------------------
         class scanner : public object
         {
         public:
@@ -250,7 +265,8 @@ namespace upsylon {
         static string  cpp_label_from(const string &name);  //!< C Pre Processor label
         static string  class_name_for(const string &name);  //!< acceptable class name
         static string  snake_to_camel(const string &name);  //!< some_name to SomeName
-        
+
+        virtual ~vfs() throw();
     protected:
         explicit vfs() throw();
         
