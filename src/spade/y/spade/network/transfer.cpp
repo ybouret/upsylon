@@ -76,7 +76,7 @@ namespace upsylon {
             switch(style)
             {
                 case comms::flexible_block_size: block.free(); break;
-                case comms::computed_block_size: block.adjust( ghost.items * chunk, 0); break;
+                case comms::computed_block_size: block.set_fast(ghost.items * chunk); break;
             }
         }
         
