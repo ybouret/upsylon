@@ -26,7 +26,7 @@ namespace upsylon {
         size_t size = recvBuffer.size();
         switch(style)
         {
-            case comms::flexible_block_size: recvBuffer.adjust( size = MPI.RecvSize(source), 0); /* FALLTHRU */
+            case comms::flexible_block_size: recvBuffer.set_fast( size = MPI.RecvSize(source) ); /* FALLTHRU */
             case comms::computed_block_size: assert(recvBuffer.size()==size); if(size>0) MPI.Recv(*recvBuffer,size,source); break;
                 
         }
@@ -43,7 +43,7 @@ namespace upsylon {
         size_t       recvSize = recvBuffer.size();
         switch(style)
         {
-            case comms::flexible_block_size: recvBuffer.adjust(recvSize = MPI.ExchSizes(sendSize,dest,source),0); /* FALLTHRU */
+            case comms::flexible_block_size: recvBuffer.set_fast(recvSize = MPI.ExchSizes(sendSize,dest,source) ); /* FALLTHRU */
             case comms::computed_block_size: assert(recvBuffer.size()==recvSize);MPI.Exch(*sendBuffer,sendSize, dest, *recvBuffer, recvSize, source); break;
         }
     }
