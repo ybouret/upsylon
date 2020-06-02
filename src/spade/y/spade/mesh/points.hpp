@@ -16,7 +16,7 @@ namespace upsylon {
             {
             public:
                 virtual ~PointMesh() throw(); //!< cleanup
-                static const char Category[]; //!< "points"
+                static const char Category[]; //!< "point"
                 
             protected:
                 explicit PointMesh() throw(); //!< setup

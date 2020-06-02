@@ -10,7 +10,7 @@ namespace upsylon {
             PointMesh::  PointMesh() throw() {}
             PointMesh:: ~PointMesh() throw() {}
 
-            const char PointMesh:: Category[] = "points";
+            const char PointMesh:: Category[] = "point";
         }
 
     }

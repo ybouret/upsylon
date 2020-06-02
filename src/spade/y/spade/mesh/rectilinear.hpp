@@ -69,8 +69,7 @@ namespace upsylon {
             template <typename LABEL> inline
             explicit RectilinearMesh(const LABEL         &id,
                                      const Layout<COORD> &full) :
-            MeshType(id,full),
-            axis( Dimensions )
+            MeshType(id,full), axis(Dimensions)
             {
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {

@@ -83,7 +83,7 @@ namespace upsylon {
         
         void Transfer:: setup( Field &F ) const
         {
-            F.io = IO.search(F.objectType,infra);
+            F.io             = IO.search(F.objectType,infra);
             const string &id = type_spec::declare(F.objectType).name();
             if(!F.io) throw exception("Spade::Field<%s> '%s': no register I/O", *id, *F.name);
         }
