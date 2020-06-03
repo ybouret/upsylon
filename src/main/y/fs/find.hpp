@@ -164,6 +164,20 @@ namespace upsylon {
             return ctx.number;
         }
 
+        //! push back accepted entries and return number of new entries
+        template <typename LABEL, typename ACCEPT> static inline
+        size_t collect(sequence<string    > &seq,
+                       vfs                  &fs,
+                       const LABEL          &dirname,
+                       ACCEPT               &accept,
+                       const int             max_depth)
+        {
+
+            collect_paths_context<ACCEPT> ctx = { 0, &accept , &seq};
+            if(!in(fs,dirname,ctx,max_depth)) return 0;
+            return ctx.number;
+        }
+
         //! true
         static bool accept_any(const vfs::entry&) throw();
 
@@ -196,6 +210,25 @@ namespace upsylon {
                 if( (*accept)(ent) )
                 {
                     target->push_back(ent);
+                    ++number;
+                }
+                return true;
+            }
+        };
+
+        template <typename ACCEPT> struct collect_paths_context
+        {
+            size_t                number;
+            ACCEPT               *accept;
+            sequence<string>     *target;
+
+            bool operator()(const vfs::entry &ent)
+            {
+                assert(accept);
+                assert(target);
+                if( (*accept)(ent) )
+                {
+                    target->push_back(ent.path);
                     ++number;
                 }
                 return true;
