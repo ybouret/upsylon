@@ -15,7 +15,14 @@ namespace {
     {
         const COORD         rng = 30 * Coord::Ones<COORD>();
         const Layout<COORD> L( Coord::Integer(rng,alea), Coord::Integer(rng,alea) );
-        
+
+        typedef typename DenseMesh<COORD,T>::Vertex Vertex;
+        typedef typename DenseMesh<COORD,T>::Box    Box;
+
+        Box box( support::get<Vertex>(), support::get<Vertex>() );
+
+        std::cerr << "box=" << box << std::endl;
+
         {
             RectilinearMesh<COORD,T> rmesh( "rmesh", L );
             std::cerr << rmesh.label << " : " << rmesh.category() << " : " << rmesh << std::endl;
@@ -38,6 +45,15 @@ namespace {
                     const Coord1D c = static_cast<Coord1D>(p[dim]);
                     Y_ASSERT(c==Coord::Of(C,dim));
                 }
+            }
+
+            if( rmesh.isThick() )
+            {
+                rmesh.mapRegular(box,L);
+            }
+            else
+            {
+                std::cerr << "!!! mesh is not thick !!!" << std::endl;
             }
         }
         

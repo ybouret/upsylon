@@ -145,7 +145,13 @@ namespace upsylon {
             {
                 return Coord::Within(lower,upper,ran);
             }
-            
+
+            //! test all witdh>1
+            inline bool isThick() const throw()
+            {
+                return _isThick( (const Coord1D *)&width );
+            }
+
             //------------------------------------------------------------------
             //
             // index<->coordinate conversion

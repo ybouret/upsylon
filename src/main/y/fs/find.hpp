@@ -164,7 +164,7 @@ namespace upsylon {
             return ctx.number;
         }
 
-        //! push back accepted entries and return number of new entries
+        //! push back accepted path and return number of new entries
         template <typename LABEL, typename ACCEPT> static inline
         size_t collect(sequence<string    > &seq,
                        vfs                  &fs,

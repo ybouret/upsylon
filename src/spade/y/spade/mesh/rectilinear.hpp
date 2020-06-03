@@ -6,7 +6,6 @@
 #include "y/spade/mesh/dense.hpp"
 #include "y/spade/field/in1d.hpp"
 #include "y/sequence/slots.hpp"
-#include "y/spade/vertices.hpp"
 
 namespace upsylon {
     
@@ -52,6 +51,8 @@ namespace upsylon {
             typedef Layout1D                  AxisLayout; //!< alias
             typedef Field1D<mutable_type>     Axis;       //!< alias
             typedef typename MeshType::Vertex Vertex;     //!< alias
+            typedef typename MeshType::Box    Box;        //!< alias
+
             //! alias
             static  const unsigned            Dimensions = MeshType::Dimensions;
 
@@ -124,8 +125,43 @@ namespace upsylon {
                     axis[dim][ Coord::Of(C,dim) ] = v[dim];
                 }
             }
-            
-            
+
+            //! mapping to a box on an original layout
+            inline void mapRegular(const Box           &box,
+                                   const Layout<COORD> &layout) throw()
+            {
+                assert(this->isThick());
+                const_type *l = box._lower();
+                const_type *u = box._upper();
+                const_type *w = box._width();
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    Axis          &a      = axis[dim];
+                    const Coord1D  thisL = a.lower;
+                    const Coord1D  thisU = a.upper;
+                    const Coord1D  fullL = Coord::Of(layout.lower,dim);
+                    const Coord1D  fullU = Coord::Of(layout.upper,dim);
+                    const Coord1D  fullW = Coord::Of(layout.width,dim);
+                    const Coord1D  den   = fullW-1; assert(den>0);
+                    const_type     L     = l[dim];
+                    const_type     W     = w[dim];
+                    const_type     U     = u[dim];
+                    for(Coord1D i=thisL;i<=thisU;++i)
+                    {
+                        a[i] = L + (W*(i-fullL))/den; // TODO: correct it...
+                    }
+
+                    if(a.has(fullL))
+                    {
+                        a[fullL] = L;
+                    }
+
+                    if(a.has(fullU))
+                    {
+                        a[fullU] = U;
+                    }
+                }
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RectilinearMesh);

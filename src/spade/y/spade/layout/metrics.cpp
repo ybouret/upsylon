@@ -24,7 +24,17 @@ namespace upsylon {
         {
         }
         
-        
+        bool LayoutMetrics:: _isThick(const Coord1D *w) const throw()
+        {
+            assert(w);
+            for(unsigned i=0;i<dimensions;++i)
+            {
+                assert(w[i]>0);
+                if(w[i]<=1) return false;
+            }
+            return true;
+        }
+
         
     }
 }

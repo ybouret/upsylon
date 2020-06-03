@@ -31,7 +31,10 @@ namespace upsylon {
            
             //! copy
             LayoutMetrics(const LayoutMetrics&) throw();
-            
+
+            //! true is all w[0..dimensions-1]>1
+            bool _isThick(const Coord1D *w) const throw();
+
         public:
             
             //------------------------------------------------------------------
