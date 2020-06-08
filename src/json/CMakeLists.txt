@@ -1,4 +1,5 @@
 PROJECT(json)
+MESSAGE( STATUS "<JSON>")
 
 
 FILE( GLOB decl y/json/*.hpp)
@@ -14,3 +15,7 @@ ADD_LIBRARY( y-json STATIC ${srcs}  )
 INSTALL( TARGETS y-json ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+SET(UTESTS "${UTESTS} utest-lang" PARENT_SCOPE)
+
+MESSAGE( STATUS "<JSON/>")
+MESSAGE(STATUS "")

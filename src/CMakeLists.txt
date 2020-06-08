@@ -164,7 +164,6 @@ COMMENT "Built Core Libraries"
 ##
 ##
 ########################################################################
-#SET(UTESTS  utest-main utest-m utest-chem utest-lang utest-net utest-ink)
 STRING( STRIP ${UTESTS} UTESTS)
 STRING( REPLACE " " ";" UTESTS ${UTESTS} )
 MESSAGE(STATUS "regression: <${UTESTS}>")
