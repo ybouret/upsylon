@@ -1,4 +1,7 @@
-PROJECT(jargon)
+PROJECT(jargon CXX)
+
+MESSAGE( STATUS "<Jargon>" )
+
 
 FILE( GLOB decl y/jargon/*.hpp)
 FILE( GLOB impl y/jargon/*.cpp)
@@ -77,3 +80,9 @@ ADD_LIBRARY( y-jargon STATIC
 INSTALL( TARGETS y-jargon ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)
+
+SET(UTESTS "${UTESTS} utest-jargon" PARENT_SCOPE)
+
+MESSAGE( STATUS "<Jargon/>" )
+MESSAGE(STATUS "")
+
