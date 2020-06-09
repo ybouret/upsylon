@@ -1,7 +1,7 @@
 //! \file
 
 #ifndef Y_MKL_FIT_POLY_INCLUDED
-#define Y_MKL_FIT_ADJUST_POLY_INCLUDED 1
+#define Y_MKL_FIT_POLY_INCLUDED 1
 
 #include "y/mkl/fit/share/common.hpp"
 #include "y/mkl/fit/sample.hpp"

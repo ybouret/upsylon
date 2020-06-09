@@ -824,12 +824,12 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = src/main/y \
-                         src/math/y \
+                         src/mkl/y \
                          src/jargon/y \
                          src/json/y \
                          src/graphic/y \
                          src/chem/y \
-			 src/spade/y \
+			             src/spade/y \
                          src/mpi++/y \
                          src/net/y \
                          src/lua++/y
