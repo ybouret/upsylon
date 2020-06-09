@@ -231,11 +231,11 @@ INSTALL( FILES ${mpl_rsa_decl} DESTINATION include/y/mpl/rsa )
 
 
 
-FILE(GLOB math_decl y/math/*.hpp)
-FILE(GLOB math_code y/math/*.cpp)
+FILE(GLOB math_decl y/mkl/*.hpp)
+FILE(GLOB math_code y/mkl/*.cpp)
 SET(math_srcs ${math_decl} ${math_code})
-SOURCE_GROUP( math FILES ${math_srcs} )
-INSTALL( FILES ${math_decl} DESTINATION include/y/math )
+SOURCE_GROUP( mkl FILES ${math_srcs} )
+INSTALL( FILES ${math_decl} DESTINATION include/y/mkl )
 
 
 FILE(GLOB functor_decl y/functor/*.hpp)

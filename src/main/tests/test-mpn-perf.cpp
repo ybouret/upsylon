@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/os/rt-clock.hpp"
 #include "y/sequence/vector.hpp"
-#include "../../math/y/math/stat/average.hpp"
+#include "../../mkl/y/mkl/stat/average.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
 

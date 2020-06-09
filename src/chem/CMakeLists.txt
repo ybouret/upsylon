@@ -1,7 +1,7 @@
 PROJECT(y-chem CXX)
 MESSAGE( STATUS "<CHEMical>" )
 
-INCLUDE_DIRECTORIES(. ../main ../math ../lua++ ../ext)
+INCLUDE_DIRECTORIES(. ../main ../mkl ../lua++ ../ext)
 
 FILE(GLOB main_decl y/chem/*.hpp)
 FILE(GLOB main_code y/chem/*.cpp)

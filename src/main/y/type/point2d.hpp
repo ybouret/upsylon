@@ -2,7 +2,7 @@
 #ifndef Y_POINT2D_INCLUDED
 #define Y_POINT2D_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/core/isqrt.hpp"
 
 namespace upsylon

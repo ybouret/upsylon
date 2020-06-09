@@ -2,7 +2,7 @@
 #ifndef Y_MATH_TIMINGS_INCLUDED
 #define Y_MATH_TIMINGS_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 
 namespace upsylon
 {

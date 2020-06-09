@@ -3,7 +3,7 @@
 #ifndef Y_MATH_STAT_AVERAGE_INCLUDED
 #define Y_MATH_STAT_AVERAGE_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/type/point2d.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"

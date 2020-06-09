@@ -1,4 +1,4 @@
-#include "y/math/triplet.hpp"
+#include "y/mkl/triplet.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 

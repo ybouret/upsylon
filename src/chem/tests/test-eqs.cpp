@@ -1,7 +1,7 @@
 #include "y/chem/equilibria.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/quark.hpp"
 
 using namespace upsylon;
 using namespace Chemical;

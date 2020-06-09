@@ -1,10 +1,10 @@
 
 #include "y/chem/equilibria.hpp"
 #include "y/sort/sorted-sum.hpp"
-#include "y/math/opt/bracket.hpp"
-#include "y/math/opt/minimize.hpp"
-#include "y/math/utils.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/opt/bracket.hpp"
+#include "y/mkl/opt/minimize.hpp"
+#include "y/mkl/utils.hpp"
+#include "y/mkl/kernel/quark.hpp"
 
 namespace upsylon
 {
