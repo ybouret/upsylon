@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_ODE_STIFF_DRIVER_RS_INCLUDED
-#define Y_ODE_STIFF_DRIVER_RS_INCLUDED 1
+#ifndef Y_MKL_ODE_STIFF_DRIVER_RS_INCLUDED
+#define Y_MKL_ODE_STIFF_DRIVER_RS_INCLUDED 1
 
-#include "y/math/ode/implicit/solver.hpp"
-#include "y/math/ode/implicit/shampine.hpp"
+#include "y/mkl/ode/implicit/solver.hpp"
+#include "y/mkl/ode/implicit/shampine.hpp"
 
 namespace upsylon
 {

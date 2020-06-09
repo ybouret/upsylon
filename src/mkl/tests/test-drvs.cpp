@@ -1,4 +1,4 @@
-#include "y/math/fcn/derivatives.hpp"
+#include "y/mkl/fcn/derivatives.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/sequence/vector.hpp"

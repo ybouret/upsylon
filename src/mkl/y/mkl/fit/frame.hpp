@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_FRAME_INCLUDED
-#define Y_MATH_ADJUST_FRAME_INCLUDED 1
+#ifndef Y_MKL_FIT_FRAME_INCLUDED
+#define Y_MKL_FIT_FRAME_INCLUDED 1
 
-#include "y/math/fit/sample.hpp"
+#include "y/mkl/fit/sample.hpp"
 
 namespace upsylon {
 

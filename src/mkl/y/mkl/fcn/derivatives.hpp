@@ -1,9 +1,9 @@
 
 //! \file
-#ifndef Y_MATH_FCN_DERIVATIVES_INCLUDED
-#define Y_MATH_FCN_DERIVATIVES_INCLUDED 1
+#ifndef Y_MKL_FCN_DERIVATIVES_INCLUDED
+#define Y_MKL_FCN_DERIVATIVES_INCLUDED 1
 
-#include "y/math/fcn/derivative.hpp"
+#include "y/mkl/fcn/derivative.hpp"
 
 namespace upsylon
 {

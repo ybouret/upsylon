@@ -4,8 +4,8 @@
 #ifndef Y_EUCLIDEAN_NODE_INCLUDED
 #define Y_EUCLIDEAN_NODE_INCLUDED 1
 
-#include "y/math/euclidean/point.hpp"
-#include "y/math/euclidean/basis.hpp"
+#include "y/mkl/euclidean/point.hpp"
+#include "y/mkl/euclidean/basis.hpp"
 
 namespace upsylon {
 

@@ -1,4 +1,4 @@
-#include "y/math/kernel/diagonalize.hpp"
+#include "y/mkl/kernel/diagonalize.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"

@@ -1,5 +1,5 @@
-#include "y/math/euclidean/arc/standard.hpp"
-#include "y/math/euclidean/arc/periodic.hpp"
+#include "y/mkl/euclidean/arc/standard.hpp"
+#include "y/mkl/euclidean/arc/periodic.hpp"
 #include "y/utest/run.hpp"
 #include "y/associative/set.hpp"
 #include "y/ios/ocstream.hpp"

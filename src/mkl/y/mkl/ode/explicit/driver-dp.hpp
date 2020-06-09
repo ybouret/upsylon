@@ -1,10 +1,10 @@
 //! \file
-#ifndef Y_MATH_ODE_EXPLICIT_DRIVER_DP_INCLUDED
-#define Y_MATH_ODE_EXPLICIT_DRIVER_DP_INCLUDED 1
+#ifndef Y_MKL_ODE_EXPLICIT_DRIVER_DP_INCLUDED
+#define Y_MKL_ODE_EXPLICIT_DRIVER_DP_INCLUDED 1
 
-#include "y/math/ode/explicit/solver.hpp"
-#include "y/math/ode/explicit/rk45.hpp"
-#include "y/math/ode/explicit/rkdp.hpp"
+#include "y/mkl/ode/explicit/solver.hpp"
+#include "y/mkl/ode/explicit/rk45.hpp"
+#include "y/mkl/ode/explicit/rkdp.hpp"
 
 namespace upsylon
 {

@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_MATH_ODE_RK4_INCLUDED
-#define Y_MATH_ODE_RK4_INCLUDED 1
+#ifndef Y_MKL_ODE_RK4_INCLUDED
+#define Y_MKL_ODE_RK4_INCLUDED 1
 
-#include "y/math/ode/types.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/ode/types.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include "y/core/loop.hpp"
 
 namespace upsylon

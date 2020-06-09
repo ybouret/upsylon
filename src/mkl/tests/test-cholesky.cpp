@@ -1,7 +1,7 @@
-#include "y/math/kernel/cholesky.hpp"
+#include "y/mkl/kernel/cholesky.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;

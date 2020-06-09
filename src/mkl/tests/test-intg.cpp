@@ -1,4 +1,4 @@
-#include "y/math/fcn/integrate.hpp"
+#include "y/mkl/fcn/integrate.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

@@ -1,5 +1,5 @@
 
-#include "y/math/signal/spline.hpp"
+#include "y/mkl/signal/spline.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/sequence/vector.hpp"

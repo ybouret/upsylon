@@ -1,11 +1,11 @@
 //! \file
-#ifndef Y_MATH_DIAGONALIZE_INCLUDED
-#define Y_MATH_DIAGONALIZE_INCLUDED 1
+#ifndef Y_MKL_DIAGONALIZE_INCLUDED
+#define Y_MKL_DIAGONALIZE_INCLUDED 1
 
 
-#include "y/math/utils.hpp"
-#include "y/math/kernel/svd.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/utils.hpp"
+#include "y/mkl/kernel/svd.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include "y/sort/heap.hpp"
 #include "y/sort/index.hpp"
 #include "y/comparison.hpp"

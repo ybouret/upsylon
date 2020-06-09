@@ -1,6 +1,6 @@
 
-#include "y/math/fit/share/gaussian.hpp"
-#include "y/math/fit/least-squares.hpp"
+#include "y/mkl/fit/share/gaussian.hpp"
+#include "y/mkl/fit/least-squares.hpp"
 #include "y/ios/ocstream.hpp"
 
 #include "y/utest/run.hpp"

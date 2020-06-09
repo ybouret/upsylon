@@ -1,11 +1,11 @@
 //! \file
-#ifndef Y_B_SPLINES_INCLUDED
-#define Y_B_SPLINES_INCLUDED 1
+#ifndef Y_MKL_B_SPLINES_INCLUDED
+#define Y_MKL_B_SPLINES_INCLUDED 1
 
 #include "y/sequence/vector.hpp"
 #include "y/type/utils.hpp"
-#include "y/math/fcn/derivative.hpp"
-#include "y/math/fcn/integrate.hpp"
+#include "y/mkl/fcn/derivative.hpp"
+#include "y/mkl/fcn/integrate.hpp"
 
 namespace upsylon
 {

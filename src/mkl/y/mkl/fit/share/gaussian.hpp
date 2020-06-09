@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_GAUSS_INCLUDED
-#define Y_MATH_ADJUST_GAUSS_INCLUDED 1
+#ifndef Y_MKL_FIT_GAUSS_INCLUDED
+#define Y_MKL_FIT_GAUSS_INCLUDED 1
 
-#include "y/math/fit/share/common.hpp"
+#include "y/mkl/fit/share/common.hpp"
 #include "y/type/aliasing.hpp"
 
 namespace upsylon {

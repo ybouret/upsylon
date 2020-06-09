@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_MATH_SIGNAL_LINEAR_INCLUDED
-#define Y_MATH_SIGNAL_LINEAR_INCLUDED 1
+#ifndef Y_MKL_SIGNAL_LINEAR_INCLUDED
+#define Y_MKL_SIGNAL_LINEAR_INCLUDED 1
 
 #include "y/container/sequence.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/type/cswap.hpp"
 
 namespace upsylon

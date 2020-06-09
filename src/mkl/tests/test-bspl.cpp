@@ -1,4 +1,4 @@
-#include "y/math/signal/b-splines.hpp"
+#include "y/mkl/signal/b-splines.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/point3d.hpp"
 #include "y/sequence/vector.hpp"

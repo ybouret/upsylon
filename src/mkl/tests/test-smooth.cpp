@@ -1,4 +1,4 @@
-#include "y/math/signal/smooth.hpp"
+#include "y/mkl/signal/smooth.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/sequence/vector.hpp"

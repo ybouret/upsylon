@@ -1,6 +1,6 @@
-#include "y/math/fit/sequential/explode.hpp"
-#include "y/math/fit/least-squares.hpp"
-#include "y/math/fit/samples.hpp"
+#include "y/mkl/fit/sequential/explode.hpp"
+#include "y/mkl/fit/least-squares.hpp"
+#include "y/mkl/fit/samples.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 

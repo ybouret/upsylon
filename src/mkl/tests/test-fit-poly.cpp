@@ -1,5 +1,5 @@
-#include "y/math/fit/share/polynomial.hpp"
-#include "y/math/fit/least-squares.hpp"
+#include "y/mkl/fit/share/polynomial.hpp"
+#include "y/mkl/fit/least-squares.hpp"
 #include <typeinfo>
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"

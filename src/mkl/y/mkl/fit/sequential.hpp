@@ -1,10 +1,10 @@
 //! \file
 
-#ifndef Y_MATH_ADJUST_SEQUENTIAL_INCLUDED
-#define Y_MATH_ADJUST_SEQUENTIAL_INCLUDED 1
+#ifndef Y_MKL_FIT_SEQUENTIAL_INCLUDED
+#define Y_MKL_FIT_SEQUENTIAL_INCLUDED 1
 
-#include "y/math/fit/types.hpp"
-#include "y/math/fit/variables.hpp"
+#include "y/mkl/fit/types.hpp"
+#include "y/mkl/fit/variables.hpp"
 #include "y/type/aliasing.hpp"
 
 namespace upsylon {

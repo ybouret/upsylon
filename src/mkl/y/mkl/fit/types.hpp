@@ -1,13 +1,13 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_TYPES_INCLUDED
-#define Y_MATH_ADJUST_TYPES_INCLUDED 1
+#ifndef Y_MKL_FIT_TYPES_INCLUDED
+#define Y_MKL_FIT_TYPES_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
+#include "y/mkl/fit/variables.hpp"
 #include "y/ptr/arr.hpp"
 #include "y/container/matrix.hpp"
-#include "y/math/fit/variables.hpp"
 
 namespace upsylon {
 

@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_ODE_STIFF_DRIVER_KR_INCLUDED
-#define Y_ODE_STIFF_DRIVER_KR_INCLUDED 1
+#ifndef Y_MKL_ODE_STIFF_DRIVER_KR_INCLUDED
+#define Y_MKL_ODE_STIFF_DRIVER_KR_INCLUDED 1
 
-#include "y/math/ode/implicit/solver.hpp"
-#include "y/math/ode/implicit/kaps-rentrop.hpp"
+#include "y/mkl/ode/implicit/solver.hpp"
+#include "y/mkl/ode/implicit/kaps-rentrop.hpp"
 
 namespace upsylon
 {

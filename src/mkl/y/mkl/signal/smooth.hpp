@@ -1,10 +1,10 @@
 
 //! \file
-#ifndef Y_MATH_SIGNAL_SMOOTH_INCLUDED
-#define Y_MATH_SIGNAL_SMOOTH_INCLUDED 1
+#ifndef Y_MKL_SIGNAL_SMOOTH_INCLUDED
+#define Y_MKL_SIGNAL_SMOOTH_INCLUDED 1
 
-#include "y/math/signal/extend.hpp"
-#include "y/math/kernel/lu.hpp"
+#include "y/mkl/signal/extend.hpp"
+#include "y/mkl/kernel/lu.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/exception.hpp"

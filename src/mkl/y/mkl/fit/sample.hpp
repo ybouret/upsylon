@@ -1,14 +1,14 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_SAMPLE_INCLUDED
-#define Y_MATH_ADJUST_SAMPLE_INCLUDED 1
+#ifndef Y_MKL_FIT_SAMPLE_INCLUDED
+#define Y_MKL_FIT_SAMPLE_INCLUDED 1
 
-#include "y/math/fit/sample/type.hpp"
+#include "y/mkl/fit/sample/type.hpp"
 #include "y/sort/index.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ostream.hpp"
-#include "y/math/stat/correlation.hpp"
+#include "y/mkl/stat/correlation.hpp"
 
 namespace upsylon {
 

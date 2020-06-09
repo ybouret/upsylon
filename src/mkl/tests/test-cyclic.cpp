@@ -1,8 +1,8 @@
 #include "y/mpl/rational.hpp"
-#include "y/math/kernel/cyclic.hpp"
+#include "y/mkl/kernel/cyclic.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include <typeinfo>
 
 using namespace upsylon;

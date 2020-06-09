@@ -1,6 +1,6 @@
 #include "y/utest/run.hpp"
-#include "y/math/ode/implicit/driver-rs.hpp"
-#include "y/math/ode/implicit/driver-kr.hpp"
+#include "y/mkl/ode/implicit/driver-rs.hpp"
+#include "y/mkl/ode/implicit/driver-kr.hpp"
 #include "y/sequence/vector.hpp"
 
 #include "y/ios/ocstream.hpp"

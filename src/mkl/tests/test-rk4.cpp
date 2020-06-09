@@ -1,5 +1,5 @@
 
-#include "y/math/ode/rk4.hpp"
+#include "y/mkl/ode/rk4.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/sequence/vector.hpp"

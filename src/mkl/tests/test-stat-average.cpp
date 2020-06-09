@@ -1,4 +1,4 @@
-#include "y/math/stat/average.hpp"
+#include "y/mkl/stat/average.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/list.hpp"

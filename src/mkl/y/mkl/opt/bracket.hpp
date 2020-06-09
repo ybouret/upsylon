@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_OPT_BRACKET_INCLUDED
-#define Y_OPT_BRACKET_INCLUDED 1
+#ifndef Y_MKL_OPT_BRACKET_INCLUDED
+#define Y_MKL_OPT_BRACKET_INCLUDED 1
 
-#include "y/math/triplet.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/triplet.hpp"
+#include "y/mkl/types.hpp"
 #include "y/type/cswap.hpp"
 #include <iostream>
 

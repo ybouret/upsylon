@@ -1,5 +1,5 @@
-#include "y/math/fcn/bessel.hpp"
-#include "y/math/fcn/functions.hpp"
+#include "y/mkl/fcn/bessel.hpp"
+#include "y/mkl/fcn/functions.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"

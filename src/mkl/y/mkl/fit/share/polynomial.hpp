@@ -1,12 +1,12 @@
 //! \file
 
-#ifndef Y_MATH_ADJUST_POLY_INCLUDED
-#define Y_MATH_ADJUST_POLY_INCLUDED 1
+#ifndef Y_MKL_FIT_POLY_INCLUDED
+#define Y_MKL_FIT_ADJUST_POLY_INCLUDED 1
 
-#include "y/math/fit/share/common.hpp"
-#include "y/math/fit/sample.hpp"
+#include "y/mkl/fit/share/common.hpp"
+#include "y/mkl/fit/sample.hpp"
 #include "y/core/ipower.hpp"
-#include "y/math/kernel/lu.hpp"
+#include "y/mkl/kernel/lu.hpp"
 
 namespace upsylon {
 

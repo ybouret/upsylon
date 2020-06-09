@@ -2,7 +2,7 @@
 #ifndef Y_MATH_FCN_DERIVATIVE_INCLUDED
 #define Y_MATH_FCN_DERIVATIVE_INCLUDED 1
 
-#include "y/math/timings.hpp"
+#include "y/mkl/timings.hpp"
 #include "y/container/matrix.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>

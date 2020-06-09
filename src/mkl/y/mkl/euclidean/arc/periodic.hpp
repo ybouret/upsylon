@@ -4,7 +4,7 @@
 #ifndef Y_EUCLIDEAN_ARC_PERIODIC_INCLUDED
 #define Y_EUCLIDEAN_ARC_PERIODIC_INCLUDED 1
 
-#include "y/math/euclidean/arc.hpp"
+#include "y/mkl/euclidean/arc.hpp"
 
 namespace upsylon {
 

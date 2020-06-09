@@ -1,4 +1,4 @@
-#include "y/math/stat/correlation.hpp"
+#include "y/mkl/stat/correlation.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

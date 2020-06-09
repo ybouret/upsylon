@@ -1,11 +1,11 @@
 
 
-#ifndef Y_MATH_ADJUST_SEQUENTIAL_EXPLODE_INCLUDED
-#define Y_MATH_ADJUST_SEQUENTIAL_EXPLIDE_INCLUDED 1
+#ifndef Y_MKL_ADJUST_SEQUENTIAL_EXPLODE_INCLUDED
+#define Y_MKL_ADJUST_SEQUENTIAL_EXPLIDE_INCLUDED 1
 
-#include "y/math/fit/sequential.hpp"
-#include "y/math/ode/explicit/scheme.hpp"
-#include "y/math/ode/explicit/driver-ck.hpp"
+#include "y/mkl/fit/sequential.hpp"
+#include "y/mkl/ode/explicit/scheme.hpp"
+#include "y/mkl/ode/explicit/driver-ck.hpp"
 
 namespace upsylon {
 

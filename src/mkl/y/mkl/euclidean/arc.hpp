@@ -3,7 +3,7 @@
 #ifndef Y_EUCLIDEAN_ARC_INCLUDED
 #define Y_EUCLIDEAN_ARC_INCLUDED 1
 
-#include "y/math/euclidean/segment.hpp"
+#include "y/mkl/euclidean/segment.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon {

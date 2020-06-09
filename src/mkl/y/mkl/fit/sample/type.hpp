@@ -1,11 +1,11 @@
 //! \file
 
-#ifndef Y_MATH_ADJUST_SAMPLE_TYPE_INCLUDED
-#define Y_MATH_ADJUST_SAMPLE_TYPE_INCLUDED 1
+#ifndef Y_MKL_FIT_SAMPLE_TYPE_INCLUDED
+#define Y_MKL_FIT_SAMPLE_TYPE_INCLUDED 1
 
-#include "y/math/fit/sample/info.hpp"
-#include "y/math/fit/sequential/function.hpp"
-#include "y/math/fit/sequential/gradient.hpp"
+#include "y/mkl/fit/sample/info.hpp"
+#include "y/mkl/fit/sequential/function.hpp"
+#include "y/mkl/fit/sequential/gradient.hpp"
 #include "y/ios/ostream.hpp"
 
 namespace upsylon {

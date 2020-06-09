@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_MATH_UTILS_INCLUDED
-#define Y_MATH_UTILS_INCLUDED 1
+#ifndef Y_MKL_UTILS_INCLUDED
+#define Y_MKL_UTILS_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/index.hpp"

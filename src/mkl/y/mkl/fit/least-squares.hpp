@@ -1,12 +1,12 @@
 //! \file
 
-#ifndef Y_ADJUST_LEAST_SQUARES_INCLUDED
-#define Y_ADJUST_LEAST_SQUARES_INCLUDED 1
+#ifndef Y_MKL_FIT_LEAST_SQUARES_INCLUDED
+#define Y_MKL_FIT_LEAST_SQUARES_INCLUDED 1
 
-#include "y/math/fit/frame.hpp"
-#include "y/math/kernel/lu.hpp"
-#include "y/math/opt/bracket.hpp"
-#include "y/math/opt/minimize.hpp"
+#include "y/mkl/fit/frame.hpp"
+#include "y/mkl/kernel/lu.hpp"
+#include "y/mkl/opt/bracket.hpp"
+#include "y/mkl/opt/minimize.hpp"
 
 namespace upsylon {
     

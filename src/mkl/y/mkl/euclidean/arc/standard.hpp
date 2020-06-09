@@ -3,7 +3,7 @@
 #ifndef Y_EUCLIDEAN_ARC_STANDARD_INCLUDED
 #define Y_EUCLIDEAN_ARC_STANDARD_INCLUDED 1
 
-#include "y/math/euclidean/arc.hpp"
+#include "y/mkl/euclidean/arc.hpp"
 
 namespace upsylon {
 

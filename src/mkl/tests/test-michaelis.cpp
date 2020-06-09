@@ -1,5 +1,5 @@
 #include "y/utest/run.hpp"
-#include "y/math/ode/explicit/driver-ck.hpp"
+#include "y/mkl/ode/explicit/driver-ck.hpp"
 
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"

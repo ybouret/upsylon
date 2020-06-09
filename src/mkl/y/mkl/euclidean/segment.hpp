@@ -2,7 +2,7 @@
 #ifndef Y_EUCLIDEAN_SEGMENT_INCLUDED
 #define Y_EUCLIDEAN_SEGMENT_INCLUDED 1
 
-#include "y/math/euclidean/node.hpp"
+#include "y/mkl/euclidean/node.hpp"
 
 namespace upsylon {
 

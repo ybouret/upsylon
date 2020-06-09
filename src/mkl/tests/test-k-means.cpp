@@ -1,4 +1,4 @@
-#include "y/math/stat/k-means.hpp"
+#include "y/mkl/stat/k-means.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/memory/pooled.hpp"

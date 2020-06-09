@@ -1,4 +1,4 @@
-#include "y/math/signal/linear.hpp"
+#include "y/mkl/signal/linear.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/sequence/vector.hpp"

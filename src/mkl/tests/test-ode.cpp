@@ -1,4 +1,4 @@
-#include "y/math/ode/solver-data.hpp"
+#include "y/mkl/ode/solver-data.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

@@ -1,6 +1,6 @@
-#include "y/math/fit/least-squares.hpp"
-#include "y/math/fit/samples.hpp"
-#include "y/math/fit/sample/load.hpp"
+#include "y/mkl/fit/least-squares.hpp"
+#include "y/mkl/fit/samples.hpp"
+#include "y/mkl/fit/sample/load.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/memory/pooled.hpp"
