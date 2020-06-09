@@ -105,21 +105,21 @@ namespace {
 
                 for(size_t i=0;i<W.numAsyncTwoWays;++i)
                 {
-                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].forward->outerRange,int(W.asyncTwoWays[i].forward->peer)) );
-                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].reverse->outerRange,int(W.asyncTwoWays[i].reverse->peer)) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].forward->outerRange, int(W.asyncTwoWays[i].forward->peer)) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].reverse->outerRange, int(W.asyncTwoWays[i].reverse->peer)) );
                     Y_ASSERT( !Ops::CountDiff(J,W.asyncTwoWays[i].forward->outerRange,-int(W.asyncTwoWays[i].forward->peer) ) );
                     Y_ASSERT( !Ops::CountDiff(J,W.asyncTwoWays[i].reverse->outerRange,-int(W.asyncTwoWays[i].reverse->peer) ) );
                 }
 
                 for(size_t i=0;i<W.numAsyncForward;++i)
                 {
-                    Y_ASSERT( !Ops::CountDiff(I,W.asyncForward[i].forward->outerRange, W.asyncForward[i].forward->peer) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncForward[i].forward->outerRange, int(W.asyncForward[i].forward->peer)) );
                     Y_ASSERT( !Ops::CountDiff(J,W.asyncForward[i].forward->outerRange,-int(W.asyncForward[i].forward->peer)) );
                 }
 
                 for(size_t i=0;i<W.numAsyncReverse;++i)
                 {
-                    Y_ASSERT( !Ops::CountDiff(I,W.asyncReverse[i].reverse->outerRange, W.asyncReverse[i].reverse->peer) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncReverse[i].reverse->outerRange, int(W.asyncReverse[i].reverse->peer)) );
                     Y_ASSERT( !Ops::CountDiff(J,W.asyncReverse[i].reverse->outerRange,-int(W.asyncReverse[i].reverse->peer)) );
                 }
 
