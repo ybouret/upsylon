@@ -127,7 +127,7 @@ namespace upsylon
         static inline type det( const point3d &lhs, const point3d &rhs ) throw()
         {
             const point3d tmp = cross(lhs,rhs);
-            return math::sqrt_of(tmp.norm2());
+            return mkl::sqrt_of(tmp.norm2());
         }
         
         //! foreign points ops

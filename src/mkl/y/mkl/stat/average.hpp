@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_MATH_STAT_AVERAGE_INCLUDED
-#define Y_MATH_STAT_AVERAGE_INCLUDED 1
+#ifndef Y_MKL_STAT_AVERAGE_INCLUDED
+#define Y_MKL_STAT_AVERAGE_INCLUDED 1
 
 #include "y/mkl/types.hpp"
 #include "y/type/point2d.hpp"
@@ -10,10 +10,9 @@
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
 
         namespace kernel {
 

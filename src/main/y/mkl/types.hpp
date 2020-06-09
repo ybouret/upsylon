@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_MATH_TYPES_INCLUDED
-#define Y_MATH_TYPES_INCLUDED 1
+#ifndef Y_MKL_TYPES_INCLUDED
+#define Y_MKL_TYPES_INCLUDED 1
 
 #include "y/type/complex.hpp"
 #include "y/type/utils.hpp"
@@ -8,34 +8,30 @@
 #include "y/sequence/array.hpp"
 #include <cmath>
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+
         //! corresponding real type
-        template <typename T>
-        struct real_for
+        template <typename T> struct real_for
         {
             typedef T type; //!< type itself
         };
         
         //! specialized for complex<float>
-        template <>
-        struct real_for< complex<float> >
+        template <> struct real_for< complex<float> >
         {
             typedef float type; //!< float
         };
         
         //! specialized for complex<double>
-        template <>
-        struct real_for< complex<double> >
+        template <> struct real_for< complex<double> >
         {
             typedef double type; //!< double
         };
         
         //! numeric definitions
-        template <typename T>
-        struct numeric
+        template <typename T> struct numeric
         {
             static const T      minimum;    //!< minimum representable value
             static const T      maximum;    //!< maximum representable value
@@ -190,7 +186,7 @@ namespace upsylon
 
 //! prototype for a class
 #define Y_MATH_EXTERN__(TYPE,NAME) \
-extern template const TYPE upsylon::math::numeric<TYPE>::NAME
+extern template const TYPE upsylon::mkl::numeric<TYPE>::NAME
 
 //! prototypes for float and double
 #define Y_MATH_EXTERN(NAME)   \
@@ -205,9 +201,9 @@ Y_MATH_EXTERN(two_pi);     //!< extern
 Y_MATH_EXTERN(half_pi);    //!< extern
 Y_MATH_EXTERN(min_exp);    //!< extern
 Y_MATH_EXTERN(max_exp);    //!< extern
-//Y_MATH_EXTERN(dig);        //!< extern
-//Y_MATH_EXTERN(min_10_exp); //!< extern
-//Y_MATH_EXTERN(max_10_exp); //!< extern
+                           //Y_MATH_EXTERN(dig);        //!< extern
+                           //Y_MATH_EXTERN(min_10_exp); //!< extern
+                           //Y_MATH_EXTERN(max_10_exp); //!< extern
 Y_MATH_EXTERN(ftol);       //!< extern
 Y_MATH_EXTERN(sqrt_ftol);  //!< extern
 Y_MATH_EXTERN(tiny);       //!< extern

@@ -11,7 +11,7 @@ Y_UTEST(timings)
     size_t every = 0;
 
     std::cerr << "t_run=" << t_run << ", dt=" << dt << ", save=" << save << std::endl;
-    const size_t iters = math::timings::setup(t_run, dt, save, every);
+    const size_t iters = mkl::timings::setup(t_run, dt, save, every);
     std::cerr << "iters=" << iters << ", t_run=" << t_run << ", save=" << save << ", every=" << every << ", dt=" << dt << std::endl;
 }
 Y_UTEST_DONE()

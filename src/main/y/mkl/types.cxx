@@ -5,7 +5,7 @@
 
 namespace upsylon
 {
-	namespace math
+	namespace mkl
 	{
         template <> const real_t numeric<real_t>::minimum      = REAL_MIN;
         template <> const real_t numeric<real_t>::epsilon      = REAL_EPSILON;
@@ -68,7 +68,7 @@ namespace upsylon
 
 	}
 
-    template <> math::real_t xnumeric<math::real_t>::abs_minimum() { return math::numeric<math::real_t>::minimum; }
+    template <> mkl::real_t xnumeric<mkl::real_t>::abs_minimum() { return mkl::numeric<mkl::real_t>::minimum; }
 
 
 }

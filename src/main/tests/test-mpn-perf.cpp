@@ -137,7 +137,7 @@ namespace
             speeds.push_back_(speed);
             std::cerr << "\tspeed = " <<  speed << " MOps" << std::endl;
         }
-        const double ave = math::average_of(speeds,&sig);
+        const double ave = mkl::average_of(speeds,&sig);
         std::cerr << "<" << op.name << "> = " << ave << " +/- " << sig << " MOps" << std::endl;
         return ave;
     }
