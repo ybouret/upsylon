@@ -6,12 +6,12 @@
 #include "y/mkl/ode/explicit/rk45.hpp"
 #include "y/mkl/ode/explicit/rkdp.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
+            
             //! Assemble a driver for Dormand-Prince
             template <typename T>
             struct DriverDP

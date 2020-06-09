@@ -7,11 +7,10 @@
 #include "y/exceptions.hpp"
 #include <cerrno>
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
+    namespace mkl {
+        
         //! step size reduction control
 #define Y_MATH_DRVS_CTRL 1.414213
 

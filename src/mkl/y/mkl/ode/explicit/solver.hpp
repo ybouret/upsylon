@@ -6,12 +6,12 @@
 #include "y/mkl/ode/solver-data.hpp"
 #include "y/ptr/arc.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
+            
             //! explicit solver interface
             /**
              needs to be prepared before integration.

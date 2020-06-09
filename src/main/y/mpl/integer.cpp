@@ -341,7 +341,7 @@ namespace upsylon
 
 namespace upsylon
 {
-    namespace math
+    namespace mkl
     {
         mpz sqrt_of(const mpz &z)
         {

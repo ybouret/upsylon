@@ -2,7 +2,7 @@
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         bool GramSchmidt:: OrthoSimple( matrix<mpl::rational> &a )
         {

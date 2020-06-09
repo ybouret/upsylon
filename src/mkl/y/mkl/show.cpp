@@ -2,7 +2,7 @@
 
 namespace upsylon {
     
-    namespace math
+    namespace mkl
     {
 
 #define SHOW(T,NAME) std::cerr << "numeric<" #T ">::" #NAME "=" << numeric<T>::NAME << std::endl

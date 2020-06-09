@@ -4,13 +4,11 @@
 
 #include "y/mkl/ode/types.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
-        namespace ODE
-        {
+    namespace mkl {
+
+        namespace ODE {
 
             //! common data for solvers
             template <typename T>

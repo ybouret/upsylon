@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_MKL_ADJUST_VARIABLES_INCLUDED
-#define Y_MKL_ADJUST_VARIABLES_INCLUDED 1
+#ifndef Y_MKL_FIT_VARIABLES_INCLUDED
+#define Y_MKL_FIT_VARIABLES_INCLUDED 1
 
 #include "y/mkl/fit/variable.hpp"
 #include "y/mkl/kernel/errors.hpp"
@@ -12,7 +12,7 @@
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         namespace Fit {
 

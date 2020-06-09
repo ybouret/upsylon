@@ -5,13 +5,11 @@
 
 #include "y/mkl/ode/explicit/step.hpp"
 
-namespace upsylon
-{
-	namespace math
-	{
+namespace upsylon {
+
+	namespace mkl {
 		
-		namespace ODE
-		{
+		namespace ODE {
             
             
             //! Runge-Kutta Cash-Karp 4/5 step

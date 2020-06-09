@@ -9,7 +9,7 @@
 
 namespace upsylon {
     
-    namespace math {
+    namespace mkl {
      
         //! Gram-Schmidt Ortho(normalisation)
         struct GramSchmidt

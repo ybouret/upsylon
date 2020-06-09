@@ -4,12 +4,12 @@
 
 #include "y/mkl/ode/explicit/controler.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
+
             //! Runge-Kutta 4/5 controller
             template <typename T>
 			class RK45 : public ExplicitControler<T>

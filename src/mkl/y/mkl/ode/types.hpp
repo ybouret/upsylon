@@ -7,13 +7,12 @@
 #include "y/sequence/arrays.hpp"
 #include "y/mkl/types.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
-        namespace ODE
-        {
+    namespace mkl {
+
+        namespace ODE {
+
             typedef memory::global memory_type; //!< memory for arrays
 
             //! proxy for types definition
@@ -31,7 +30,6 @@ namespace upsylon
             };
 
         }
-
     }
 }
 

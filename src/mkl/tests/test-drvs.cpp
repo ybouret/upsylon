@@ -5,7 +5,7 @@
 #include "y/core/ipower.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 
 namespace
 {

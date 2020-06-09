@@ -2,10 +2,10 @@
 #include "y/exception.hpp"
 
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+        
         const unsigned zfind::__z;
         const unsigned zfind::__n;
         const unsigned zfind::__p;

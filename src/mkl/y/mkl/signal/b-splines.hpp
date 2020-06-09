@@ -7,10 +7,10 @@
 #include "y/mkl/fcn/derivative.hpp"
 #include "y/mkl/fcn/integrate.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+        
         //______________________________________________________________________
         //
         //! Return a point on the cubic b-splines: x=0: begin, x=1: end

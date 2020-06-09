@@ -2,12 +2,11 @@
 #include "y/mkl/ode/explicit/solver.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
             
             template <>
             ExplicitSolver<real_t>:: ~ExplicitSolver() throw() {}

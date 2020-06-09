@@ -8,10 +8,10 @@
 #include "y/exceptions.hpp"
 #include <cerrno>
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+        
         //! tridiagonal info
         class tridiag_info
         {

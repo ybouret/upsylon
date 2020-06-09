@@ -7,10 +7,10 @@
 #include "y/type/cswap.hpp"
 #include <iostream>
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+        
         //! bracketing method
         struct bracket
         {

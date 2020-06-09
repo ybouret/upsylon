@@ -5,12 +5,11 @@
 #include "y/mkl/ode/implicit/solver.hpp"
 #include "y/mkl/ode/implicit/shampine.hpp"
 
-namespace upsylon
-{
-    namespace math 
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
 
             //! Rosenbrock Shampine stiff integrator
             template <typename T>

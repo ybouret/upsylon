@@ -4,12 +4,12 @@
 
 #include "y/mkl/ode/explicit/step.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
+
             //! adaptive controler
             /**
              needs to be prepared before integration

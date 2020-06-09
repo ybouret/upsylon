@@ -1,14 +1,13 @@
 //! \file
-#ifndef Y_MATH_FCN_BESSEL_INCLUDED
-#define Y_MATH_FCN_BESSEL_INCLUDED 1
+#ifndef Y_MKL_FCN_BESSEL_INCLUDED
+#define Y_MKL_FCN_BESSEL_INCLUDED 1
 
 #include "y/os/platform.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
     
-    namespace math
-    {
+    namespace mkl {
+        
         //! Bessel functions
         template <typename T>
         struct bessel

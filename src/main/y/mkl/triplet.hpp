@@ -1,15 +1,15 @@
 //! \file
-#ifndef Y_MATH_TRIPLET_INCLUDED
-#define Y_MATH_TRIPLET_INCLUDED 1
+#ifndef Y_MKL_TRIPLET_INCLUDED
+#define Y_MKL_TRIPLET_INCLUDED 1
 
 #include "y/sort/network/sort3.hpp"
 #include "y/comparison.hpp"
 #include <iostream>
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+
         //! triplet of POD to bracket values
         template <typename T>
         struct triplet

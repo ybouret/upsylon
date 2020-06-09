@@ -6,7 +6,7 @@
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         //! computing some erros
         struct errors

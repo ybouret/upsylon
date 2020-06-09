@@ -1,13 +1,13 @@
 //! \file
 
-#ifndef Y_MKL_ADJUST_VARIABLE_GLOBAL_INCLUDED
-#define Y_MKL_ADJUST_VARIABLE_GLOBAL_INCLUDED 1
+#ifndef Y_MKL_FIT_VARIABLE_GLOBAL_INCLUDED
+#define Y_MKL_FIT_VARIABLE_GLOBAL_INCLUDED 1
 
 #include "y/mkl/fit/variable.hpp"
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         namespace Fit {
 

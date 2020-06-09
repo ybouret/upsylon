@@ -6,10 +6,9 @@
 #include "y/mkl/types.hpp"
 #include <iostream>
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
 
         //! function to minimize
         struct minimize

@@ -3,12 +3,11 @@
 #include "y/mkl/types.hpp"
 #include "y/exceptions.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
             
             template <>
             ImplicitSolver<real_t>:: ~ImplicitSolver() throw()

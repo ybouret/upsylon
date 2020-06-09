@@ -4,13 +4,11 @@
 
 #include "y/mkl/ode/types.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
         
-        namespace ODE
-        {
+        namespace ODE {
 
             //! memory and method for one step
             template <typename T>

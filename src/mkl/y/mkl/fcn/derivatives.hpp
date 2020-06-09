@@ -5,11 +5,9 @@
 
 #include "y/mkl/fcn/derivative.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
+    namespace mkl {
 
         //! wrapper for derivatives computation
         template <typename T>

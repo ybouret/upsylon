@@ -1,13 +1,12 @@
 #include "y/mkl/ztype.hpp"
 #include "y/mkl/ode/explicit/rkdp.hpp"
 
-namespace upsylon
-{
-	namespace math
-	{
+namespace upsylon {
+
+	namespace mkl 	{
         
-		namespace ODE
-		{
+		namespace ODE {
+            
 			template <>
 			RKDP<real_t>:: ~RKDP() throw()
 			{

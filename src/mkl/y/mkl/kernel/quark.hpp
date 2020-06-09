@@ -11,7 +11,7 @@
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
 #include "quark/v1/def.hpp"
 

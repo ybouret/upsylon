@@ -1,9 +1,8 @@
 #include "y/mkl/signal/arc.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
 
         template <>
         void arc::save_real<float>(ios::ostream &fp, const float &x)

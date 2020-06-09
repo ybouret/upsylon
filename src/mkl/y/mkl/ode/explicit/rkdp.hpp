@@ -2,16 +2,13 @@
 #ifndef Y_MKL_ODE_EXPLICIT_RKDP_INCLUDED
 #define Y_MKL_ODE_EXPLICIT_RKDP_INCLUDED 1
 
-
 #include "y/mkl/ode/explicit/step.hpp"
 
-namespace upsylon
-{
-	namespace math
-	{
+namespace upsylon {
+
+	namespace mkl 	{
 		
-		namespace ODE
-		{
+		namespace ODE {
 			
 			//! Runge-Kutta Dormand-Prince 4/5 step
 			template <typename T>

@@ -9,11 +9,9 @@
 #include "y/ios/ostream.hpp"
 #include "y/mkl/fcn/integrate.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
+    namespace mkl {
 
         //! build arc from points
         struct arc

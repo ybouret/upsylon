@@ -151,7 +151,7 @@ namespace upsylon
                 size_t                      i  = size;
                 for(;i>0;--i,++it)
                 {
-                    const type temp = math::fabs_of(*it);
+                    const type temp = mkl::fabs_of(*it);
                     if(temp>0)
                     {
                         smax = temp;
@@ -160,7 +160,7 @@ namespace upsylon
                 }
                 for(;i>0;--i,++it)
                 {
-                    const type temp = math::fabs_of(*it);
+                    const type temp = mkl::fabs_of(*it);
                     if(temp>0&&temp<smax)
                     {
                         smax = temp;

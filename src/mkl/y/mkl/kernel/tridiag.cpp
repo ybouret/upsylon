@@ -1,10 +1,10 @@
 #include "y/mkl/kernel/tridiag.hpp"
 
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+
         tridiag_info:: ~tridiag_info() throw()
         {
         }
@@ -15,5 +15,4 @@ namespace upsylon
         }
 
     }
-
 }

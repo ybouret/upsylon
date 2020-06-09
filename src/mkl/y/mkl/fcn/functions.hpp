@@ -1,15 +1,14 @@
 //! \file
-#ifndef Y_FCN_FUNCTIONS_INCLUDED
-#define Y_FCN_FUNCTIONS_INCLUDED 1
+#ifndef Y_MKL_FCN_FUNCTIONS_INCLUDED
+#define Y_MKL_FCN_FUNCTIONS_INCLUDED 1
 
 #include "y/mkl/types.hpp"
 
 namespace upsylon {
 
-	namespace math {
+	namespace mkl {
 
-       
-		float  qerfc( float  X ) throw(); //!< erfc
+        float  qerfc( float  X ) throw(); //!< erfc
 		double qerfc( double X ) throw(); //!< erfc
 
 		float  qerf( float  X ) throw(); //!< erf

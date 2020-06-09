@@ -4,7 +4,7 @@
 
 namespace upsylon
 {
-    namespace math
+    namespace mkl
     {
         ////////////////////////////////////////////////////////////////////////
         template <>

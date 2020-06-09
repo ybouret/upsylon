@@ -5,11 +5,10 @@
 #include "y/container/matrix.hpp"
 #include "y/mkl/types.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
     
-    namespace math
-    {
+    namespace mkl {
+        
         //! diagonalisation of symmetric matrices
         struct diag_symm
         {

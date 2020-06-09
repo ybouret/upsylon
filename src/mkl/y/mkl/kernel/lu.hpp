@@ -6,10 +6,9 @@
 #include "y/container/matrix.hpp"
 #include "y/type/xnumeric.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
 
         //! LU decomposition and application
         struct LU

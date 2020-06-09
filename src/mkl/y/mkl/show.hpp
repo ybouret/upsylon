@@ -6,14 +6,15 @@
 
 namespace upsylon {
 
-    namespace math
-    {
+    namespace mkl {
+
         //! display data
         struct show
         {
             //! on std::cerr
             static void info();
         };
+        
     }
 }
 

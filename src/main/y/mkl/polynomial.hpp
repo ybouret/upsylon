@@ -4,11 +4,10 @@
 
 #include "y/sequence/array.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
+    namespace mkl {
+
         //! polynomial ops
         struct polynomial
         {

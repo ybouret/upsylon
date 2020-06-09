@@ -2,13 +2,11 @@
 #include "y/mkl/ode/explicit/step.hpp"
 
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
         
-        namespace ODE
-        {
+        namespace ODE {
             
             
             template <> ExplicitStep<real_t>:: ~ExplicitStep() throw() {}

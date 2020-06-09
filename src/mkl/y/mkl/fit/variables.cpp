@@ -8,7 +8,7 @@
 
 namespace upsylon {
     
-    namespace math {
+    namespace mkl {
         
         namespace Fit  {
 
@@ -316,9 +316,10 @@ namespace upsylon {
 }
 
 #include "y/container/query.hpp"
+
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         namespace Fit {
 

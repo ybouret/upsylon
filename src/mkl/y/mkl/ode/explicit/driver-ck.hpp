@@ -6,12 +6,12 @@
 #include "y/mkl/ode/explicit/rk45.hpp"
 #include "y/mkl/ode/explicit/rkck.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
+
             //! Assemble a driver for Cash-Karp
             template <typename T>
             struct DriverCK
@@ -24,6 +24,7 @@ namespace upsylon
                     return new Type();
                 }
             };
+            
         }
     }
 }

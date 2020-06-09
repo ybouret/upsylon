@@ -5,10 +5,9 @@
 #include "y/mkl/types.hpp"
 #include "y/mkl/triplet.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
 
         //! finding zero
         class zfind

@@ -9,7 +9,7 @@
 
 namespace upsylon {
 	
-	namespace math {
+	namespace mkl {
 		
 		real_t qerfc( real_t x) throw()
         {

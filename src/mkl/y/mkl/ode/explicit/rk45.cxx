@@ -5,12 +5,12 @@
 #include "y/exceptions.hpp"
 #include <cerrno>
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
+            
             template <> RK45<real_t>:: ~RK45() throw() {}
             
             template <> RK45<real_t>:: RK45() :

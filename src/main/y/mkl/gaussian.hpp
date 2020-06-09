@@ -4,10 +4,10 @@
 
 #include "y/mkl/types.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
+        
         //! gaussian computaiton
         template <typename T>
         class gaussian

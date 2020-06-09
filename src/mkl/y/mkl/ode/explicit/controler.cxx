@@ -1,12 +1,11 @@
 #include "y/mkl/ztype.hpp"
 #include "y/mkl/ode/explicit/controler.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
             
             template <>
             ExplicitControler<real_t>:: ~ExplicitControler() throw() {}

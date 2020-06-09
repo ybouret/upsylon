@@ -19,12 +19,12 @@ Y_UTEST(extend)
     X << 0;
     Y << cos(X.back())-0.1;
 
-    X << math::numeric<double>::two_pi;
+    X << mkl::numeric<double>::two_pi;
     Y << cos(X.back())-0.1;
 
     for(size_t i=1+alea.leq(20);i>0;--i)
     {
-        X << math::numeric<double>::two_pi * alea.to<double>();
+        X << mkl::numeric<double>::two_pi * alea.to<double>();
         Y << cos(X.back())-0.1;
     }
 

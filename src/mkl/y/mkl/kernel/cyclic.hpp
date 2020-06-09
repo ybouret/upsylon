@@ -5,10 +5,9 @@
 #include "y/mkl/kernel/tridiag.hpp"
 #include "y/mkl/kernel/lu.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
 
         //! 3-cyclic system, using Woodbury
         template <typename T>

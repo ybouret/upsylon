@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_MATH_INTEGRATE_INCLUDED
-#define Y_MATH_INTEGRATE_INCLUDED 1
+#ifndef Y_MKL_INTEGRATE_INCLUDED
+#define Y_MKL_INTEGRATE_INCLUDED 1
 
 #include "y/mkl/types.hpp"
 #include "y/core/pool.hpp"
@@ -8,10 +8,9 @@
 #include "y/sort/merge.hpp"
 #include <cstdlib>
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace mkl {
 
         //! functions for integration
         struct integrate

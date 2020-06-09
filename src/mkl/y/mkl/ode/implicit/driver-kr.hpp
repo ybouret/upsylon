@@ -5,12 +5,11 @@
 #include "y/mkl/ode/implicit/solver.hpp"
 #include "y/mkl/ode/implicit/kaps-rentrop.hpp"
 
-namespace upsylon
-{
-    namespace math 
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
             
             //! Rosenbrock Kaps-Rentrop stiff integrator
             template <typename T>

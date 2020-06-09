@@ -5,7 +5,7 @@
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         namespace Fit {
 

@@ -2,12 +2,12 @@
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace mkl {
+
+        namespace ODE {
+            
             template <> STIFF_STEP<real_t>:: STIFF_STEP()
             {
             }
