@@ -6,12 +6,12 @@
 #include "y/mkl/kernel/quark.hpp"
 #include "y/core/loop.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+    
+    namespace mkl {
+        
+        namespace ODE {
+            
             //! RK4 integrator
             template <typename T>
             class RK4 : public Field<T>::Arrays

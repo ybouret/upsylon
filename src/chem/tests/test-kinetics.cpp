@@ -9,7 +9,8 @@ using namespace Chemical;
 
 
 namespace {
-    using namespace math;
+    
+    using namespace mkl;
 
     class Schema
     {

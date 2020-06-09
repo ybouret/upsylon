@@ -6,7 +6,7 @@
 #include "y/string/convert.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 
 Y_UTEST(smooth)
 {

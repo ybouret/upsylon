@@ -162,7 +162,7 @@ Y_UTEST(mpz)
     {
         const mpz z( 10 + alea.leq(80), alea);
         const mpz z2 = mpz::square_of(z);
-        const mpz s  = math::sqrt_of(z2);
+        const mpz s  = mkl::sqrt_of(z2);
         std::cerr << z2.n.bits() << "/";
         //std::cerr << z << "->" << z2 << "->" << s << std::endl;
         Y_ASSERT(s.n==z.n);

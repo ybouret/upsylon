@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_EUCLIDEAN_BASIS_INCLUDED
-#define Y_EUCLIDEAN_BASIS_INCLUDED 1
+#ifndef Y_MKL_EUCLIDEAN_BASIS_INCLUDED
+#define Y_MKL_EUCLIDEAN_BASIS_INCLUDED 1
 
 #include "y/type/point3d.hpp"
 #include "y/type/args.hpp"
@@ -8,7 +8,7 @@
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         namespace Euclidean {
 

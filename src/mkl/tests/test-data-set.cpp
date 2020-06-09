@@ -6,7 +6,7 @@
 #include "y/sequence/list.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 
 namespace
 {

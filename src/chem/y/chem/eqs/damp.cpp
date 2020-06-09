@@ -8,7 +8,7 @@ namespace upsylon
 {
     namespace Chemical
     {
-        using namespace math;
+        using namespace mkl;
 
         bool Equilibria:: damp(array<double> &delta, const array<double> &C)
         {

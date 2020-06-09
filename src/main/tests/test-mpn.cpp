@@ -424,7 +424,7 @@ Y_UTEST(mpn)
     {
         const mpn n( 10 + alea.leq(80), alea );
         const mpn n2 = mpn::square_of(n);
-        const mpn s  = math::sqrt_of(n2);
+        const mpn s  = mkl::sqrt_of(n2);
         std::cerr << n2.bits() << "/";
         Y_ASSERT(s==n);
     }

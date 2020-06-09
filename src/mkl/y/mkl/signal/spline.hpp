@@ -1,18 +1,17 @@
 //! \file
-#ifndef Y_MATH_SIGNAL_SPLINE_INCLUDED
-#define Y_MATH_SIGNAL_SPLINE_INCLUDED 1
+#ifndef Y_MKL_SIGNAL_SPLINE_INCLUDED
+#define Y_MKL_SIGNAL_SPLINE_INCLUDED 1
 
 #include "y/sequence/vector.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-
+namespace upsylon {
+    
+    namespace mkl {
+        
         //! spline operations
         struct spline
         {
-
+            
             //! compute array of second derivatives assuming ordered X
             template <typename T> static inline
             void compute(array<T>       &y2,
@@ -28,19 +27,19 @@ namespace upsylon
                 static const T one   = T(1);
                 static const T two   = T(2);
                 static const T six   = T(6);
-
+                
                 assert(x.size()>1);
                 assert(x.size()==y.size());
                 assert(x.size()==y2.size());
                 const size_t   n=x.size();
-
+                
                 //______________________________________________________________
                 //
                 // prepare boundary conditions
                 //______________________________________________________________
                 const size_t     nm1 = n-1;
                 vector<T>        u(nm1);
-
+                
                 if(lower_natural)
                 {
                     y2[1]=u[1]=0;
@@ -50,14 +49,14 @@ namespace upsylon
                     y2[1] = -half;
                     u[1]=(three/(x[2]-x[1]))*((y[2]-y[1])/(x[2]-x[1])-lower_slope);
                 }
-
+                
                 T qn=0,un=0;
                 if(!upper_natural)
                 {
                     qn = half;
                     un = (three/(x[n]-x[n-1]))*(upper_slope-(y[n]-y[n-1])/(x[n]-x[n-1]));
                 }
-
+                
                 //______________________________________________________________
                 //
                 //  loop forward
@@ -70,7 +69,7 @@ namespace upsylon
                     const T tmp = (y[ip]-y[i])/(x[ip]-x[i]) - (y[i]-y[im])/(x[i]-x[im]);
                     u[i]=(six*tmp/(x[ip]-x[im])-sig*u[im])/p;
                 }
-
+                
                 //______________________________________________________________
                 //
                 // loop backwards
@@ -81,14 +80,14 @@ namespace upsylon
                     y2[k]=y2[k]*y2[kp]+u[k];
                 }
             }
-
-
-            //! evaluate spline 
+            
+            
+            //! evaluate spline
             template <typename T> static inline
             T eval(const T x, const array<T> &X, const array<T> &Y, const array<T> &Y2)
             {
                 static const T six   = T(6);
-
+                
                 if(x<=X[1])
                     return Y[1];
                 else
@@ -129,11 +128,11 @@ namespace upsylon
                     }
                 }
             }
-
+            
         };
-
+        
     }
-
+    
 }
 
 #endif

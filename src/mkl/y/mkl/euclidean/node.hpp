@@ -1,15 +1,15 @@
 
 //!\file
 
-#ifndef Y_EUCLIDEAN_NODE_INCLUDED
-#define Y_EUCLIDEAN_NODE_INCLUDED 1
+#ifndef Y_MKL_EUCLIDEAN_NODE_INCLUDED
+#define Y_MKL_EUCLIDEAN_NODE_INCLUDED 1
 
 #include "y/mkl/euclidean/point.hpp"
 #include "y/mkl/euclidean/basis.hpp"
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         namespace Euclidean {
 

@@ -1,14 +1,12 @@
 //! \file
-#ifndef Y_MATH_TRIGCONV_INCLUDED
-#define Y_MATH_TRIGCONV_INCLUDED
+#ifndef Y_MKL_TRIGCONV_INCLUDED
+#define Y_MKL_TRIGCONV_INCLUDED
 
 #include "y/math/types.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
+    namespace mkl {
 
         //! radians to degrees conversion
         template <typename T>

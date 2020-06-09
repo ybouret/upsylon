@@ -11,10 +11,9 @@
 #include "y/comparison.hpp"
 #include "y/memory/pooled.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
 
 
         //! base class for data_set

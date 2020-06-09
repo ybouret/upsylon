@@ -8,7 +8,7 @@
 #include "y/mkl/timings.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 
 namespace
 {
@@ -83,7 +83,7 @@ Y_UTEST(types)
         std::cerr << "#ker=" << i << " => " << V << std::endl;
     }
     
-    math::show::info();
+    mkl::show::info();
 
     std::cerr << timings::round_floor(0.12) << std::endl;
     std::cerr << timings::round_ceil(0.12)  << std::endl;

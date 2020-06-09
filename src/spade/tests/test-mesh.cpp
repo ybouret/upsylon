@@ -78,7 +78,7 @@ namespace {
                 const typename CurvilinearMesh<COORD,T>::Vertex delta = v-cmesh(C);
                 for(unsigned dim=0;dim<cmesh.Dimensions;++dim)
                 {
-                    Y_ASSERT( math::fabs_of( *((const T *)&delta+dim) ) <= 0);
+                    Y_ASSERT( mkl::fabs_of( *((const T *)&delta+dim) ) <= 0);
                 }
             }
         }

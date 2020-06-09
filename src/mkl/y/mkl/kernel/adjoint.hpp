@@ -5,10 +5,10 @@
 
 #include "y/mkl/kernel/determinant.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
+        
         //! compute adjoint matrix, transpose of comatrix
         /**
          possible to use and integer type source matrix and a field target matrix

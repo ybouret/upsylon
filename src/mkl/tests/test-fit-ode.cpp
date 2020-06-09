@@ -5,7 +5,7 @@
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 using namespace Fit;
 
 namespace {

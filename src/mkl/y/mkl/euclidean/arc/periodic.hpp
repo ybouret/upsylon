@@ -1,14 +1,14 @@
 
 
 //! \file
-#ifndef Y_EUCLIDEAN_ARC_PERIODIC_INCLUDED
-#define Y_EUCLIDEAN_ARC_PERIODIC_INCLUDED 1
+#ifndef Y_MKL_EUCLIDEAN_ARC_PERIODIC_INCLUDED
+#define Y_MKL_EUCLIDEAN_ARC_PERIODIC_INCLUDED 1
 
 #include "y/mkl/euclidean/arc.hpp"
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
         namespace Euclidean {
 

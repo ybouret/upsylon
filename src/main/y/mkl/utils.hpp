@@ -8,11 +8,10 @@
 #include "y/sort/index.hpp"
 #include "y/sort/heap.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
     
-    namespace math
-    {
+    namespace mkl {
+        
         //! find with return type T
         template <typename T>
         struct __find

@@ -2,13 +2,14 @@
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
+using namespace mkl;
 
 namespace {
 
     template <typename T> static inline
     void doCorr()
     {
-        math::correlation<T> corr;
+        correlation<T> corr;
 
         for(size_t i=2+alea.leq(100);i>0;--i)
         {

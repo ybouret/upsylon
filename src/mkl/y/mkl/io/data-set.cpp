@@ -1,9 +1,9 @@
 #include "y/mkl/io/data-set.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
+        
         data_set_:: ~data_set_() throw()
         {
 

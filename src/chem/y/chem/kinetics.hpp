@@ -11,14 +11,14 @@ namespace upsylon
     namespace Chemical
     {
 
-        typedef math::ODE::Field<double>::Equation Kinetics; //!< alias
-        typedef math::ODE::DriverCK<double>::Type  Driver;   //!< alias
+        typedef mkl::ODE::Field<double>::Equation Kinetics; //!< alias
+        typedef mkl::ODE::DriverCK<double>::Type  Driver;   //!< alias
 
         //! differential kinetics integration with damping
         class Integrator : public Driver
         {
         public:
-            typedef math::ODE::Field<double>::Callback  Callback; //!< alias
+            typedef mkl::ODE::Field<double>::Callback  Callback; //!< alias
 
             explicit Integrator();         //!< initialize
             virtual ~Integrator() throw(); //!< destructor

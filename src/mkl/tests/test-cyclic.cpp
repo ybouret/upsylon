@@ -6,7 +6,7 @@
 #include <typeinfo>
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 
 template <typename T>
 static inline void do_cyclic(const size_t nmax=10, const size_t niter=4)

@@ -6,7 +6,7 @@
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
-
+using namespace mkl;;
 
 Y_UTEST(spline)
 {
@@ -31,11 +31,11 @@ Y_UTEST(spline)
     vector<double> Y2b(Y.size());
     vector<double> Y2c(Y.size());
 
-    math::spline::compute<double>(Y2n, X, Y, true, 0,             true, 0);
-    math::spline::compute<double>(Y2l, X, Y, false,cos(X.front()),true, 0);
-    math::spline::compute<double>(Y2u, X, Y, true, 0,             false,cos(X.back()) );
-    math::spline::compute<double>(Y2b, X, Y, false,cos(X.front()),false,cos(X.back()));
-    math::spline::compute<double>(Y2b, X, Y, false,0,false,0);
+    spline::compute<double>(Y2n, X, Y, true, 0,             true, 0);
+    spline::compute<double>(Y2l, X, Y, false,cos(X.front()),true, 0);
+    spline::compute<double>(Y2u, X, Y, true, 0,             false,cos(X.back()) );
+    spline::compute<double>(Y2b, X, Y, false,cos(X.front()),false,cos(X.back()));
+    spline::compute<double>(Y2b, X, Y, false,0,false,0);
 
 
 
@@ -45,11 +45,11 @@ Y_UTEST(spline)
         for(double x=X.front()-0.5;x<=X.back()+0.5;x+=0.001)
         {
             fp("%g %g %g %g %g %g\n",x,
-               math::spline::eval(x,X,Y,Y2n),
-               math::spline::eval(x,X,Y,Y2l),
-               math::spline::eval(x,X,Y,Y2u),
-               math::spline::eval(x,X,Y,Y2b),
-               math::spline::eval(x,X,Y,Y2c)
+               spline::eval(x,X,Y,Y2n),
+               spline::eval(x,X,Y,Y2l),
+               spline::eval(x,X,Y,Y2u),
+               spline::eval(x,X,Y,Y2b),
+               spline::eval(x,X,Y,Y2c)
                );
         }
     }

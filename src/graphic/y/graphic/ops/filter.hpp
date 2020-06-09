@@ -134,7 +134,7 @@ namespace upsylon {
                         for(unit_t x=field.lower.x;x<=field.upper.x;++x)
                         {
                             const float w = static_cast<float>( field[y][x] );
-                            if( math::fabs_of(w) > 0 )
+                            if( mkl::fabs_of(w) > 0 )
                             {
                                 weights.build<float,unit_t,unit_t>(w,x,y);
                             }

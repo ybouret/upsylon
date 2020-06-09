@@ -5,6 +5,7 @@
 
 
 using namespace upsylon;
+using namespace mkl;
 
 namespace {
 
@@ -20,13 +21,13 @@ namespace {
         }
 
         T adv1 = 0;
-        T med1 = math::median_of(X,&adv1);
+        T med1 = median_of(X,&adv1);
         T adv2 = 0;
-        T med2 = math::median_for(X,&adv2);
+        T med2 = median_for(X,&adv2);
         std::cerr << "med1=" << med1 << ", adv1=" << adv1 << std::endl;
         std::cerr << "med2=" << med2 << ", adv2=" << adv2 << std::endl;
-        Y_ASSERT( math::fabs_of(med1-med2) <= 0 );
-        Y_ASSERT( math::fabs_of(adv1-adv2) <= 0 );
+        Y_ASSERT( fabs_of(med1-med2) <= 0 );
+        Y_ASSERT( fabs_of(adv1-adv2) <= 0 );
 
     }
 

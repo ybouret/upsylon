@@ -4,6 +4,7 @@
 #include "y/sequence/list.hpp"
 
 using namespace upsylon;
+using namespace mkl;
 
 namespace {
 
@@ -19,14 +20,14 @@ namespace {
         }
 
         T sig1 = 0;
-        T ave1 = math::average_of(X,&sig1);
+        T ave1 = average_of(X,&sig1);
         T sig2 = 0;
-        T ave2 = math::average_for(X,&sig2);
+        T ave2 = average_for(X,&sig2);
         std::cerr << "ave1=" << ave1 << ", sig1=" << sig1 << std::endl;
         std::cerr << "ave2=" << ave2 << ", sig2=" << sig2 << std::endl;
 
-        Y_ASSERT(math::fabs_of(ave1-ave2)<=0);
-        Y_ASSERT(math::fabs_of(sig1-sig2)<=0);
+        Y_ASSERT(fabs_of(ave1-ave2)<=0);
+        Y_ASSERT(fabs_of(sig1-sig2)<=0);
 
 
 

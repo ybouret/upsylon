@@ -12,10 +12,9 @@
 #include "y/associative/map.hpp"
 #include "y/core/ipower.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
 
         //! filtering by local Savistky-Golay
         template <typename T>

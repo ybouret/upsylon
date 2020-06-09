@@ -12,7 +12,7 @@
 
 namespace upsylon {
 
-    namespace math {
+    namespace mkl {
 
 
         //! compute Pearson's correlation coefficient

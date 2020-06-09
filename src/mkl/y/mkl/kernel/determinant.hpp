@@ -4,10 +4,9 @@
 
 #include "y/mkl/kernel/lu.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
 
         //! compute determinant, with LU decomposition of a
         /**

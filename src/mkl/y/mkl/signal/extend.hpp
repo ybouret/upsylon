@@ -1,14 +1,14 @@
 //! \file
-#ifndef Y_MATH_SIGNAL_EXTEND_INCLUDED
-#define Y_MATH_SIGNAL_EXTEND_INCLUDED 1
+#ifndef Y_MKL_SIGNAL_EXTEND_INCLUDED
+#define Y_MKL_SIGNAL_EXTEND_INCLUDED 1
 
 #include "y/sequence/array.hpp"
 #include "y/type/point2d.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
+        
         //! how to extend data
         enum extend_boundary
         {

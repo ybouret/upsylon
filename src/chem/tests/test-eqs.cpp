@@ -96,7 +96,7 @@ Y_UTEST(cs)
         {
             const accessible<double> &grad  = cs.Phi[i];
             const accessible<int>    &nu    = cs.Nu[i];
-            const double              delta = math::quark::dot<double>::of(grad,nu);
+            const double              delta = mkl::quark::dot<double>::of(grad,nu);
             Y_ASSERT(delta<=0);
         }
         bool success = true;

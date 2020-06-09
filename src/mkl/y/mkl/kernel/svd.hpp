@@ -1,15 +1,15 @@
 //! \file
-#ifndef Y_SVD_INCLUDED
-#define Y_SVD_INCLUDED 1
+#ifndef Y_MKL_SVD_INCLUDED
+#define Y_MKL_SVD_INCLUDED 1
 
 #include "y/container/matrix.hpp"
 #include "y/mkl/types.hpp"
 #include "y/sequence/vector.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
+        
         //! singular value decomposition code
         struct svd
         {

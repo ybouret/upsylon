@@ -9,7 +9,7 @@
 #include "y/type/spec.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 
 namespace {
 

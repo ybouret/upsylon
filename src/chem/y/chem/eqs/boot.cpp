@@ -7,7 +7,7 @@
 
 namespace upsylon
 {
-    using namespace math;
+    using namespace mkl;
 
     namespace Chemical
     {

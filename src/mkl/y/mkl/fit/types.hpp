@@ -10,13 +10,13 @@
 #include "y/container/matrix.hpp"
 
 namespace upsylon {
-
-    namespace math {
-
+    
+    namespace mkl {
+        
         namespace Fit {
-
-
-
+            
+            
+            
             //==================================================================
             //
             //
@@ -27,10 +27,10 @@ namespace upsylon {
             typedef vector<size_t>         Indices;    //!< global vector of indeices
             typedef memory::pooled         Allocator;  //!< memory for Variables-sized container
             typedef vector<bool,Allocator> bVector;    //!< a vector or boolean
-
+            
             //! C++ fit function arguments
 #define Y_ADJUST_FUNCTION_ARGS TL3(T,const accessible<T> &,const Variables&)
-
+            
             
             //==================================================================
             //
@@ -62,13 +62,13 @@ namespace upsylon {
                     }
                 }
                 
-
+                
             };
-
+            
         }
-
+        
     }
-
+    
 }
 
 

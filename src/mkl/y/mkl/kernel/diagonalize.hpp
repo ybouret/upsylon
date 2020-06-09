@@ -11,10 +11,9 @@
 #include "y/comparison.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+    
+    namespace mkl {
         
         //! routines to diagonalize a real matrix
         struct diagonalize
@@ -150,7 +149,7 @@ namespace upsylon
                 
                 static const unsigned MAX_ITS =100; //!< maximum number of cycles
                 static const unsigned SCALING = 10; //!< scaling every cycle
-                //! find the eigen values
+                                                    //! find the eigen values
                 /**
                  \param a  a real matrix reduced to its Hessenberg form: destructed !
                  \param wr an array that will be filled with the real parts
@@ -419,13 +418,13 @@ namespace upsylon
                         }
                         nz = __find<T>::truncate(W);
                         indexing::make(J, __compare_fabs<T>, W);
-
+                        
                         if(nz>0)
                         {
                             break;
                         }
                         
-
+                        
                         //------------------------------------------------------
                         // inverse power using the smallest singular value
                         //------------------------------------------------------

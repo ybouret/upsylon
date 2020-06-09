@@ -6,11 +6,10 @@
 #include "y/mkl/types.hpp"
 #include "y/type/cswap.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-
+namespace upsylon {
+    
+    namespace mkl {
+        
         //! linear operations
         struct linear
         {
@@ -57,7 +56,7 @@ namespace upsylon
                     }
                 }
             }
-
+            
             //! find intercepting values
             template <typename T> static inline
             void zfind( sequence<T> &xx, const T yy, const accessible<double> &X, const accessible<double> &Y)
@@ -85,9 +84,9 @@ namespace upsylon
                     }
                 }
             }
-
+            
         };
-
+        
     }
 }
 

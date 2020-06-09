@@ -10,7 +10,7 @@
 #include "y/type/binary.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 
 namespace {
 

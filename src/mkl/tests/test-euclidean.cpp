@@ -7,7 +7,7 @@
 #include "y/mkl/fcn/integrate.hpp"
 
 using namespace upsylon;
-using namespace math;
+using namespace mkl;
 using namespace Euclidean;
 
 

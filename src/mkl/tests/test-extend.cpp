@@ -9,7 +9,7 @@
 #include "y/comparison.hpp"
 
 using namespace upsylon;
-
+using namespace mkl;
 
 Y_UTEST(extend)
 {
@@ -42,10 +42,10 @@ Y_UTEST(extend)
         const unit_t  ilo = -2*unit_t(X.size());
         const unit_t  ihi = -ilo;
         ios::ocstream fp("xtend.dat");
-        math::extend<double>  xconstant(X,Y,math::extend_constant,math::extend_constant);
-        math::extend<double>  xeven(X,Y,math::extend_even,math::extend_even);
-        math::extend<double>  xodd(X,Y,math::extend_odd,math::extend_odd);
-        math::extend<double>  xcyclic(X,Y,math::extend_cyclic,math::extend_cyclic);
+        extend<double>  xconstant(X,Y,extend_constant, extend_constant);
+        extend<double>  xeven(    X,Y,extend_even,     extend_even);
+        extend<double>  xodd(     X,Y,extend_odd,      extend_odd);
+        extend<double>  xcyclic(  X,Y,extend_cyclic,   extend_cyclic);
 
         {
             ios::ocstream fp("xconst.dat");

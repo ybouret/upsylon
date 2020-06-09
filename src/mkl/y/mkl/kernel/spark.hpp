@@ -1,21 +1,18 @@
 //! \file
 
-#ifndef Y_MATH_KERNEL_SPARK_INCLUDED
-#define Y_MATH_KERNEL_SPARK_INCLUDED 1
+#ifndef Y_MKL_KERNEL_SPARK_INCLUDED
+#define Y_MKL_KERNEL_SPARK_INCLUDED 1
 
 #include "y/sparse/matrix.hpp"
 #include "y/sparse/array.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
 
-    namespace math
-    {
+    namespace mkl {
 
         //! SPArse Reusable Kernel
         struct spark
         {
-
 
             //! a = b;
             template <typename T, typename U> static inline
