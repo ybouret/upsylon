@@ -4,7 +4,7 @@
 #include "y/associative/set.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
-#include "y/math/fcn/integrate.hpp"
+#include "y/mkl/fcn/integrate.hpp"
 
 using namespace upsylon;
 using namespace math;

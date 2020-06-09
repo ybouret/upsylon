@@ -1,11 +1,11 @@
-#include "y/math/utils.hpp"
-#include "y/math/show.hpp"
+#include "y/mkl/utils.hpp"
+#include "y/mkl/show.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
-#include "y/math/gaussian.hpp"
-#include "y/math/timings.hpp"
+#include "y/mkl/gaussian.hpp"
+#include "y/mkl/timings.hpp"
 
 using namespace upsylon;
 using namespace math;

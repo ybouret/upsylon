@@ -1,9 +1,9 @@
-#include "y/math/kernel/svd.hpp"
+#include "y/mkl/kernel/svd.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
-#include "y/math/utils.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/utils.hpp"
+#include "y/mkl/kernel/quark.hpp"
 
 using namespace upsylon;
 using namespace math;

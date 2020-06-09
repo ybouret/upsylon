@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_MATH_STAT_CORRELATION_INCLUDED
-#define Y_MATH_STAT_CORRELATION_INCLUDED 1
+#ifndef Y_MKL_STAT_CORRELATION_INCLUDED
+#define Y_MKL_STAT_CORRELATION_INCLUDED 1
 
 #include "y/mkl/types.hpp"
 #include "y/type/point2d.hpp"

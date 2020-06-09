@@ -1,4 +1,4 @@
-#include "y/math/stat/median.hpp"
+#include "y/mkl/stat/median.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/sequence/list.hpp"

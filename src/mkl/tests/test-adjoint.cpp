@@ -1,6 +1,6 @@
 #include "support.hpp"
-#include "y/math/kernel/adjoint.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/adjoint.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

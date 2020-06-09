@@ -1,9 +1,9 @@
 #include "y/mpl/rational.hpp"
-#include "y/math/kernel/tridiag.hpp"
+#include "y/mkl/kernel/tridiag.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include "y/type/spec.hpp"
 
 using namespace upsylon;

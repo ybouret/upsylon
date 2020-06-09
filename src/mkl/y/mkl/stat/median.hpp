@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_MATH_STAT_MEDIAN_INCLUDED
-#define Y_MATH_STAT_MEDIAN_INCLUDED 1
+#ifndef Y_MKL_STAT_MEDIAN_INCLUDED
+#define Y_MKL_STAT_MEDIAN_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/comparison.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/heap.hpp"
