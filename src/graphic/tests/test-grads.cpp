@@ -61,7 +61,7 @@ namespace {
             ios::ocstream fp(saveName);
             for(size_t i=0;i<Histogram::BINS;++i)
             {
-                fp("%u %u\n", unsigned(i), unsigned(edges.hist[i]) );
+                fp("%u %u\n", unsigned(i), unsigned(edges.hist[uint8_t(i)]) );
             }
         }
 

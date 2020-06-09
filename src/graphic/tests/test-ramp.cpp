@@ -16,7 +16,7 @@ using namespace Graphic;
 
 namespace {
 
-    void saveRamp( const char *name,
+    void saveRamp(const char *name,
                   Ramp  &ramp )
     {
         Image &IMG = Image::instance();
@@ -32,7 +32,7 @@ namespace {
         {
             for(unit_t i=0;i<pxm->w;++i)
             {
-                pxm[j][i] = ramp(i*j,0,pxm->items);
+                pxm[j][i] = ramp( float(i*j),float(0),float(pxm->items));
             }
         }
 
