@@ -105,8 +105,8 @@ namespace {
 
                 for(size_t i=0;i<W.numAsyncTwoWays;++i)
                 {
-                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].forward->outerRange,W.asyncTwoWays[i].forward->peer) );
-                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].reverse->outerRange,W.asyncTwoWays[i].reverse->peer) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].forward->outerRange,int(W.asyncTwoWays[i].forward->peer)) );
+                    Y_ASSERT( !Ops::CountDiff(I,W.asyncTwoWays[i].reverse->outerRange,int(W.asyncTwoWays[i].reverse->peer)) );
                     Y_ASSERT( !Ops::CountDiff(J,W.asyncTwoWays[i].forward->outerRange,-int(W.asyncTwoWays[i].forward->peer) ) );
                     Y_ASSERT( !Ops::CountDiff(J,W.asyncTwoWays[i].reverse->outerRange,-int(W.asyncTwoWays[i].reverse->peer) ) );
                 }
