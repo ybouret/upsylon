@@ -1,9 +1,9 @@
 
 //! \file
-#ifndef Y_MATH_ODE_EXPLICIT_SCHEME_INCLUDED
-#define Y_MATH_ODE_EXPLICIT_SCHEME_INCLUDED 1
+#ifndef Y_MKL_ODE_EXPLICIT_SCHEME_INCLUDED
+#define Y_MKL_ODE_EXPLICIT_SCHEME_INCLUDED 1
 
-#include "y/math/ode/scheme.hpp"
+#include "y/mkl/ode/scheme.hpp"
 
 namespace upsylon {
 

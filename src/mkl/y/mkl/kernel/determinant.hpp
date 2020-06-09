@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_MATH_DETERMINANT_INCLUDED
-#define Y_MATH_DETERMINANT_INCLUDED 1
+#ifndef Y_MKL_DETERMINANT_INCLUDED
+#define Y_MKL_DETERMINANT_INCLUDED 1
 
-#include "y/math/kernel/lu.hpp"
+#include "y/mkl/kernel/lu.hpp"
 
 namespace upsylon
 {

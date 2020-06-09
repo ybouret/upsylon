@@ -1,11 +1,11 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_SAMPLE_LOAD_INCLUDED
-#define Y_MATH_ADJUST_SAMPLE_LOAD_INCLUDED 1
+#ifndef Y_MKL_FIT_SAMPLE_LOAD_INCLUDED
+#define Y_MKL_FIT_SAMPLE_LOAD_INCLUDED 1
 
-#include "y/math/fit/sample.hpp"
-#include "y/math/io/data-set.hpp"
+#include "y/mkl/fit/sample.hpp"
+#include "y/mkl/io/data-set.hpp"
 #include "y/ios/icstream.hpp"
 
 namespace upsylon {

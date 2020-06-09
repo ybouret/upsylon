@@ -1,6 +1,6 @@
 #include "support.hpp"
 
-#include "y/math/kernel/gram-schmidt.hpp"
+#include "y/mkl/kernel/gram-schmidt.hpp"
 #include "y/type/spec.hpp"
 #include "y/utest/run.hpp"
 

@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_MATH_DIAG_SYMM_INCLUDED
-#define Y_MATH_DIAG_SYMM_INCLUDED 1
+#ifndef Y_MKL_DIAG_SYMM_INCLUDED
+#define Y_MKL_DIAG_SYMM_INCLUDED 1
 
 #include "y/container/matrix.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 
 namespace upsylon
 {

@@ -1,9 +1,9 @@
 //! \file
 
-#ifndef Y_MATH_ADJUST_SEQUENTIAL_FUNCTION_INCLUDED
-#define Y_MATH_ADJUST_SEQUENTIAL_FUNCTION_INCLUDED 1
+#ifndef Y_MKL_FIT_SEQUENTIAL_FUNCTION_INCLUDED
+#define Y_MKL_FIT_SEQUENTIAL_FUNCTION_INCLUDED 1
 
-#include "y/math/fit/sequential.hpp"
+#include "y/mkl/fit/sequential.hpp"
 
 namespace upsylon {
 

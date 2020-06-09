@@ -3,7 +3,7 @@
 #define Y_SVD_INCLUDED 1
 
 #include "y/container/matrix.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon

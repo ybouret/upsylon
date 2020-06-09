@@ -1,9 +1,9 @@
 
 //! \file
-#ifndef Y_MATH_ADJOINT_INCLUDED
-#define Y_MATH_ADJOINT_INCLUDED 1
+#ifndef Y_MKL_ADJOINT_INCLUDED
+#define Y_MKL_ADJOINT_INCLUDED 1
 
-#include "y/math/kernel/determinant.hpp"
+#include "y/mkl/kernel/determinant.hpp"
 
 namespace upsylon
 {

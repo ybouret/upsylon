@@ -1,9 +1,9 @@
 #include "support.hpp"
-#include "y/math/kernel/lu.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/lu.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/math/utils.hpp"
+#include "y/mkl/utils.hpp"
 #include "y/type/spec.hpp"
 
 using namespace upsylon;

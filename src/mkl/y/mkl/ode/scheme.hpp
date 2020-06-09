@@ -1,10 +1,10 @@
 //! \file
 
-#ifndef Y_MATH_ODE_SCHEME_INCLUDED
-#define Y_MATH_ODE_SCHEME_INCLUDED 1
+#ifndef Y_MKL_ODE_SCHEME_INCLUDED
+#define Y_MKL_ODE_SCHEME_INCLUDED 1
 
-#include "y/math/ode/types.hpp"
-#include "y/math/fit/variables.hpp"
+#include "y/mkl/ode/types.hpp"
+#include "y/mkl/fit/variables.hpp"
 
 namespace upsylon {
 
