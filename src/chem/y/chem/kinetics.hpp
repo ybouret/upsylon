@@ -4,7 +4,7 @@
 #define Y_CHEM_KINETICS_INCLUDED 1
 
 #include "y/chem/equilibria.hpp"
-#include "y/math/ode/explicit/driver-ck.hpp"
+#include "y/mkl/ode/explicit/driver-ck.hpp"
 
 namespace upsylon
 {

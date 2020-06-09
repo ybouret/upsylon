@@ -1,7 +1,7 @@
 #include "y/utest/run.hpp"
 #include "canvas.h"
 #include "y/ptr/auto.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 
 using namespace upsylon;
 using namespace FLTK;

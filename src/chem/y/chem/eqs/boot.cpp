@@ -1,8 +1,8 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
-#include "y/math/kernel/quark.hpp"
-#include "y/math/kernel/adjoint.hpp"
-#include "y/math/utils.hpp"
+#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/kernel/adjoint.hpp"
+#include "y/mkl/utils.hpp"
 #include "y/sort/sorted-sum.hpp"
 
 namespace upsylon

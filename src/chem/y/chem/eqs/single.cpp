@@ -1,6 +1,6 @@
 #include "y/chem/equilibria.hpp"
-#include "y/math/kernel/quark.hpp"
-#include "y/math/fcn/zfind.hpp"
+#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/fcn/zfind.hpp"
 
 namespace upsylon
 {

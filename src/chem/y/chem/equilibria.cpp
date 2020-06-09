@@ -1,7 +1,7 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
-#include "y/math/kernel/quark.hpp"
-#include "y/math/kernel/determinant.hpp"
+#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/kernel/determinant.hpp"
 #include "y/sort/heap.hpp"
 
 namespace upsylon

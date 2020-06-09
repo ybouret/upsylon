@@ -1,8 +1,8 @@
 
 
 #include "y/chem/equilibria.hpp"
-#include "y/math/kernel/quark.hpp"
-#include "y/math/kernel/lu.hpp"
+#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/kernel/lu.hpp"
 
 namespace upsylon
 {

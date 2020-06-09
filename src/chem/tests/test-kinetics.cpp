@@ -1,6 +1,6 @@
 #include "y/chem/kinetics.hpp"
 #include "y/chem/lua/io.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/quark.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 
