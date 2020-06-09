@@ -2,7 +2,7 @@
 #ifndef Y_MATH_INTEGRATE_INCLUDED
 #define Y_MATH_INTEGRATE_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/core/pool.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/sort/merge.hpp"

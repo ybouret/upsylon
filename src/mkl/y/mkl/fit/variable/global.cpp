@@ -1,5 +1,5 @@
 
-#include "y/math/fit/variable/global.hpp"
+#include "y/mkl/fit/variable/global.hpp"
 
 namespace upsylon {
 

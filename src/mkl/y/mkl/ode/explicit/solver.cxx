@@ -1,5 +1,5 @@
-#include "y/math/ztype.hpp"
-#include "y/math/ode/explicit/solver.hpp"
+#include "y/mkl/ztype.hpp"
+#include "y/mkl/ode/explicit/solver.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon

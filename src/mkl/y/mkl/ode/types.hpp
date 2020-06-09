@@ -1,11 +1,11 @@
 //! \file
-#ifndef Y_MATH_ODE_TYPES_INCLUDED
-#define Y_MATH_ODE_TYPES_INCLUDED 1
+#ifndef Y_MKL_ODE_TYPES_INCLUDED
+#define Y_MKL_ODE_TYPES_INCLUDED 1
 
 #include "y/functor.hpp"
 #include "y/container/matrix.hpp"
 #include "y/sequence/arrays.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 
 namespace upsylon
 {

@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_MATH_ODE_SOLVER_DATA_INCLUDED
-#define Y_MATH_ODE_SOLVER_DATA_INCLUDED 1
+#ifndef Y_MKL_ODE_SOLVER_DATA_INCLUDED
+#define Y_MKL_ODE_SOLVER_DATA_INCLUDED 1
 
-#include "y/math/ode/types.hpp"
+#include "y/mkl/ode/types.hpp"
 
 namespace upsylon
 {

@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_MATH_KERNEL_CYCLIC_INCLUDED
-#define Y_MATH_KERNEL_CYCLIC_INCLUDED 1
+#ifndef Y_MKL_KERNEL_CYCLIC_INCLUDED
+#define Y_MKL_KERNEL_CYCLIC_INCLUDED 1
 
-#include "y/math/kernel/tridiag.hpp"
-#include "y/math/kernel/lu.hpp"
+#include "y/mkl/kernel/tridiag.hpp"
+#include "y/mkl/kernel/lu.hpp"
 
 namespace upsylon
 {

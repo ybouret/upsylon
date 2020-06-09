@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_MATH_SHOW_INCLUDED
-#define Y_MATH_SHOW_INCLUDED 1
+#ifndef Y_MKL_SHOW_INCLUDED
+#define Y_MKL_SHOW_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 
 namespace upsylon {
 

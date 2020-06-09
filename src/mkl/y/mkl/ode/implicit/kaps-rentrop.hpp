@@ -1,16 +1,15 @@
 //! \file
-#ifndef Y_ODE_KAPS_RENTROP_INCLUDED
-#define Y_ODE_KAPS_RENTROP_INCLUDED 1
+#ifndef Y_MKL_ODE_KAPS_RENTROP_INCLUDED
+#define Y_MKL_ODE_KAPS_RENTROP_INCLUDED 1
 
-#include "y/math/ode/implicit/rosenbrock.hpp"
+#include "y/mkl/ode/implicit/rosenbrock.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace math {
         
-        namespace ODE
-        {
+        namespace ODE {
+            
             //! Kaps-Rentrop method
             template <typename T>
             class KapsRentrop : public Rosenbrock<T>

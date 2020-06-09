@@ -1,9 +1,9 @@
 //! \file
 
-#ifndef Y_MATH_ADJUST_VARIABLE_LINKED_INCLUDED
-#define Y_MATH_ADJUST_VARIABLE_LINKED_INCLUDED 1
+#ifndef Y_MKL_ADJUST_VARIABLE_LINKED_INCLUDED
+#define Y_MKL_ADJUST_VARIABLE_LINKED_INCLUDED 1
 
-#include "y/math/fit/variable.hpp"
+#include "y/mkl/fit/variable.hpp"
 
 namespace upsylon {
 

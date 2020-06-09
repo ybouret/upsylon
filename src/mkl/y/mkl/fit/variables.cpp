@@ -1,7 +1,7 @@
 
-#include "y/math/fit/variables.hpp"
-#include "y/math/fit/variable/global.hpp"
-#include "y/math/fit/variable/linked.hpp"
+#include "y/mkl/fit/variables.hpp"
+#include "y/mkl/fit/variable/global.hpp"
+#include "y/mkl/fit/variable/linked.hpp"
 
 #include "y/exception.hpp"
 #include "y/type/aliasing.hpp"

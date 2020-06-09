@@ -1,13 +1,11 @@
-#include "y/math/ztype.hpp"
-#include "y/math/ode/implicit/rosenbrock.hpp"
+#include "y/mkl/ztype.hpp"
+#include "y/mkl/ode/implicit/rosenbrock.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace math {
         
-        namespace ODE
-        {
+        namespace ODE {
 
             template <>
             Rosenbrock<real_t>:: ~Rosenbrock() throw() {}

@@ -1,9 +1,9 @@
 //! \file
 
-#ifndef Y_MATH_SAMPLE_INFO_INCLUDED
-#define Y_MATH_SAMPLE_INFO_INCLUDED 1
+#ifndef Y_MKL_SAMPLE_INFO_INCLUDED
+#define Y_MKL_SAMPLE_INFO_INCLUDED 1
 
-#include "y/math/fit/variables.hpp"
+#include "y/mkl/fit/variables.hpp"
 
 namespace upsylon  {
 

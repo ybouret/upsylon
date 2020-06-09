@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_MATH_ODE_EXPLICIT_SOLVER_INCLUDED
-#define Y_MATH_ODE_EXPLICIT_SOLVER_INCLUDED 1
+#ifndef Y_MKL_ODE_EXPLICIT_SOLVER_INCLUDED
+#define Y_MKL_ODE_EXPLICIT_SOLVER_INCLUDED 1
 
-#include "y/math/ode/explicit/controler.hpp"
-#include "y/math/ode/solver-data.hpp"
+#include "y/mkl/ode/explicit/controler.hpp"
+#include "y/mkl/ode/solver-data.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon

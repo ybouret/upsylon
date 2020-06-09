@@ -1,4 +1,4 @@
-#include "y/math/kernel/tridiag.hpp"
+#include "y/mkl/kernel/tridiag.hpp"
 
 
 namespace upsylon

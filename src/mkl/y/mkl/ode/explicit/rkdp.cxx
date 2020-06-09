@@ -1,5 +1,5 @@
-#include "y/math/ztype.hpp"
-#include "y/math/ode/explicit/rkdp.hpp"
+#include "y/mkl/ztype.hpp"
+#include "y/mkl/ode/explicit/rkdp.hpp"
 
 namespace upsylon
 {

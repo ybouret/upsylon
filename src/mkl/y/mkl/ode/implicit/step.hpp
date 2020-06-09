@@ -1,16 +1,15 @@
 //! \file
-#ifndef Y_ODE_IMPLICIT_STEP_INCLUDED
-#define Y_ODE_IMPLICIT_STEP_INCLUDED 1
+#ifndef Y_MKL_ODE_IMPLICIT_STEP_INCLUDED
+#define Y_MKL_ODE_IMPLICIT_STEP_INCLUDED 1
 
-#include "y/math/ode/types.hpp"
+#include "y/mkl/ode/types.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
+namespace upsylon {
+
+    namespace math {
         
-        namespace ODE
-        {
+        namespace ODE {
+            
             //! implicit step definition
             template <typename T>
             class ImplicitStep : public Field<T>::Arrays

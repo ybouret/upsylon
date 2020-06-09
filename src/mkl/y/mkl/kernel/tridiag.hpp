@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_MATH_KERNEL_TRIDIAG_INCLUDED
-#define Y_MATH_KERNEL_TRIDIAG_INCLUDED 1
+#ifndef Y_MKL_KERNEL_TRIDIAG_INCLUDED
+#define Y_MKL_KERNEL_TRIDIAG_INCLUDED 1
 
 #include "y/sequence/arrays.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/type/xnumeric.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>

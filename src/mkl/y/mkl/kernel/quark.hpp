@@ -3,7 +3,7 @@
 #ifndef Y_MK_QUARK_INCLUDED
 #define Y_MK_QUARK_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/type/auto-cast.hpp"
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/container/matrix.hpp"

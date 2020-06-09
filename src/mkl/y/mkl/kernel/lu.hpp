@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_MATH_LU_INCLUDED
-#define Y_MATH_LU_INCLUDED 1
+#ifndef Y_MKL_LU_INCLUDED
+#define Y_MKL_LU_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/container/matrix.hpp"
 #include "y/type/xnumeric.hpp"
 

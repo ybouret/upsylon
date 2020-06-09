@@ -1,16 +1,15 @@
 //! \file
-#ifndef Y_STIFF_SOLVER_INCLUDED
-#define Y_STIFF_SOLVER_INCLUDED 1
+#ifndef Y_MKL_STIFF_SOLVER_INCLUDED
+#define Y_MKL_STIFF_SOLVER_INCLUDED 1
 
-#include "y/math/ode/implicit/step.hpp"
-#include "y/math/ode/solver-data.hpp"
+#include "y/mkl/ode/implicit/step.hpp"
+#include "y/mkl/ode/solver-data.hpp"
 
-namespace upsylon
-{
-    namespace math
-    {
-        namespace ODE
-        {
+namespace upsylon {
+
+    namespace math {
+
+        namespace ODE {
             
             //! solver interface
             template <typename T>

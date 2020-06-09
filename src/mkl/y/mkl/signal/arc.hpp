@@ -1,13 +1,13 @@
 //! \file
-#ifndef Y_MATH_ARC_INCLUDED
-#define Y_MATH_ARC_INCLUDED 1
+#ifndef Y_MKL_ARC_INCLUDED
+#define Y_MKL_ARC_INCLUDED 1
 
 #include "y/sequence/vector.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 #include "y/type/point3d.hpp"
-#include "y/math/kernel/cyclic.hpp"
+#include "y/mkl/kernel/cyclic.hpp"
 #include "y/ios/ostream.hpp"
-#include "y/math/fcn/integrate.hpp"
+#include "y/mkl/fcn/integrate.hpp"
 
 namespace upsylon
 {

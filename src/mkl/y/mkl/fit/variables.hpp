@@ -1,13 +1,14 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_VARIABLES_INCLUDED
-#define Y_MATH_ADJUST_VARIABLES_INCLUDED 1
+#ifndef Y_MKL_ADJUST_VARIABLES_INCLUDED
+#define Y_MKL_ADJUST_VARIABLES_INCLUDED 1
 
-#include "y/math/fit/variable.hpp"
-#include "y/string/display.hpp"
-#include "y/math/kernel/errors.hpp"
+#include "y/mkl/fit/variable.hpp"
+#include "y/mkl/kernel/errors.hpp"
+
 #include "y/string/tokenizer.hpp"
+#include "y/string/display.hpp"
 
 namespace upsylon {
 

@@ -1,4 +1,4 @@
-#include "y/math/fit/variable.hpp"
+#include "y/mkl/fit/variable.hpp"
 #include "y/exceptions.hpp"
 
 #include <cerrno>

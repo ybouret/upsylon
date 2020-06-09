@@ -1,4 +1,4 @@
-#include "y/math/fit/variable/linked.hpp"
+#include "y/mkl/fit/variable/linked.hpp"
 
 namespace upsylon {
 

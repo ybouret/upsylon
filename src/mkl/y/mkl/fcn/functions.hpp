@@ -2,7 +2,7 @@
 #ifndef Y_FCN_FUNCTIONS_INCLUDED
 #define Y_FCN_FUNCTIONS_INCLUDED 1
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
 
 namespace upsylon {
 

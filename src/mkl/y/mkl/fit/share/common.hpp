@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_MATH_ADJUST_COMMON_INCLUDED
-#define Y_MATH_ADJUST_COMMON_INCLUDED 1
+#ifndef Y_MKL_ADJUST_COMMON_INCLUDED
+#define Y_MKL_ADJUST_COMMON_INCLUDED 1
 
-#include "y/math/fit/variables.hpp"
+#include "y/mkl/fit/variables.hpp"
 
 namespace upsylon {
 

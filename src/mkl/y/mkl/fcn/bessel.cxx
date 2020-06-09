@@ -1,6 +1,6 @@
-#include "y/math/ztype.hpp"
-#include "y/math/fcn/bessel.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/ztype.hpp"
+#include "y/mkl/fcn/bessel.hpp"
+#include "y/mkl/types.hpp"
 
 namespace upsylon
 {

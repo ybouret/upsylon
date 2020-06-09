@@ -1,5 +1,5 @@
-#include "y/math/ztype.hpp"
-#include "y/math/ode/explicit/step.hpp"
+#include "y/mkl/ztype.hpp"
+#include "y/mkl/ode/explicit/step.hpp"
 
 
 namespace upsylon
@@ -13,8 +13,7 @@ namespace upsylon
             
             template <> ExplicitStep<real_t>:: ~ExplicitStep() throw() {}
             
-            template <>
-            ExplicitStep<real_t> :: ExplicitStep( size_t na ) :
+            template <> ExplicitStep<real_t> :: ExplicitStep(size_t na) :
             Field<real_t>::Arrays(na)
             {
             }

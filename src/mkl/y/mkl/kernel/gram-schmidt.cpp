@@ -1,4 +1,4 @@
-#include "y/math/kernel/gram-schmidt.hpp"
+#include "y/mkl/kernel/gram-schmidt.hpp"
 
 namespace upsylon {
 

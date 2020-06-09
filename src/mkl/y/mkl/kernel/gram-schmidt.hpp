@@ -5,7 +5,7 @@
 
 #include "y/container/matrix.hpp"
 #include "y/mpl/rational.hpp"
-#include "y/math/kernel/quark.hpp"
+#include "y/mkl/kernel/quark.hpp"
 
 namespace upsylon {
     

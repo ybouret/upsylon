@@ -1,7 +1,7 @@
-#include "y/math/show.hpp"
+#include "y/mkl/show.hpp"
 
-namespace upsylon
-{
+namespace upsylon {
+    
     namespace math
     {
 

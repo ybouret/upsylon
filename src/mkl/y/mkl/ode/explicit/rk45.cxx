@@ -1,6 +1,6 @@
-#include "y/math/ztype.hpp"
-#include "y/math/ode/explicit/rk45.hpp"
-#include "y/math/types.hpp"
+#include "y/mkl/ztype.hpp"
+#include "y/mkl/ode/explicit/rk45.hpp"
+#include "y/mkl/types.hpp"
 #include "y/type/utils.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
