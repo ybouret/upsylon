@@ -62,7 +62,7 @@ namespace upsylon {
                             
                             asyncSave(send,fields,fwd.innerGhost);
                             asyncMake(recv,rev.outerGhost);
-                            XMPI::vSendRecv(MPI,send,fwd.peer,recv,rev.peer,style);
+                            XMPI::vSendRecv(MPI,send,int(fwd.peer),recv,int(rev.peer),style);
                             asyncLoad(fields,recv,rev.outerGhost);
 
                         } break;
@@ -71,14 +71,14 @@ namespace upsylon {
                             const AsyncForwardSwaps<COORD> &xch = fragment.asyncForward[iForward++];
                             const Ghosts                   &fwd = *(xch.forward);
                             asyncSave(send,fields,fwd.innerGhost);
-                            XMPI::vSend(MPI,send,fwd.peer,style);
+                            XMPI::vSend(MPI,send,int(fwd.peer),style);
                         } break;
 
                         case Connect::AsyncReverse: {
                             const AsyncReverseSwaps<COORD> &xch = fragment.asyncReverse[iReverse++];
                             const Ghosts                   &rev = *(xch.reverse);
                             asyncMake(recv,rev.outerGhost);
-                            XMPI::vRecv(MPI,recv,rev.peer,style);
+                            XMPI::vRecv(MPI,recv,int(rev.peer),style);
                             asyncLoad(fields,recv,rev.outerGhost);
                             
                         } break;
@@ -121,7 +121,7 @@ namespace upsylon {
                             
                             asyncSave(send,fields,rev.innerGhost);
                             asyncMake(recv,fwd.outerGhost);
-                            XMPI::vSendRecv(MPI,send,rev.peer,recv,fwd.peer,style);
+                            XMPI::vSendRecv(MPI,send,int(rev.peer),recv,int(fwd.peer),style);
                             asyncLoad(fields,recv,fwd.outerGhost);
                             
                         } break;
