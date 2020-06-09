@@ -131,7 +131,7 @@ namespace upsylon {
                             const Ghosts                   &fwd = *(xch.forward);
                             
                             asyncMake(recv,fwd.outerGhost);
-                            XMPI::vRecv(MPI,recv,fwd.peer,style);
+                            XMPI::vRecv(MPI,recv,int(fwd.peer),style);
                             asyncLoad(fields,recv,fwd.outerGhost);
                         } break;
                             
@@ -139,7 +139,7 @@ namespace upsylon {
                             const AsyncReverseSwaps<COORD> &xch = fragment.asyncReverse[iReverse++];
                             const Ghosts                   &rev = *(xch.reverse);
                             asyncSave(send,fields,rev.innerGhost);
-                            XMPI::vSend(MPI,send,rev.peer,style);
+                            XMPI::vSend(MPI,send,int(rev.peer),style);
                         } break;
                             
                         default:
