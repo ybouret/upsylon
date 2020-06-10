@@ -42,6 +42,11 @@ Y_UTEST(vtk)
     doVTK< complex<float> >();
     doVTK< complex<double> >();
 
+    doVTK< point2d<float> >();
+    doVTK< point2d<double> >();
+
+    doVTK< point3d<float> >();
+    doVTK< point3d<double> >();
 
 }
 Y_UTEST_DONE()

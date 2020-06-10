@@ -12,8 +12,11 @@ namespace upsylon {
 
         namespace VTK {
 
-            Format:: Format(const unsigned n) throw() : components(n)
+            Format:: Format(const unsigned n) throw() : components(n),
+            isScalar(1==components),
+            isVector(!isScalar)
             {
+                assert(components>0);
             }
 
             Format:: ~Format() throw()
@@ -21,6 +24,7 @@ namespace upsylon {
                 _bzset(components);
             }
 
+            
 
             PrimaryFormat:: PrimaryFormat(const char  *fmt) :
             Format(1),
@@ -108,6 +112,11 @@ if(!fdb.insert_by(tk,F)) throw exception("%sunexpected failure for <%s>",fn,*tt.
                 Y_SPADE_VTK_TUPLE(complex,float);
                 Y_SPADE_VTK_TUPLE(complex,double);
 
+                Y_SPADE_VTK_TUPLE(point2d,float);
+                Y_SPADE_VTK_TUPLE(point3d,float);
+
+                Y_SPADE_VTK_TUPLE(point2d,double);
+                Y_SPADE_VTK_TUPLE(point3d,double);
 
             }
 

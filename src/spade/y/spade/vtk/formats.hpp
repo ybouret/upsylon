@@ -20,6 +20,8 @@ namespace upsylon {
                 virtual ~Format() throw();
 
                 const unsigned components;
+                const bool     isScalar;
+                const bool     isVector;
                 virtual ios::ostream & write(ios::ostream &, const void *) const = 0;
 
             protected:
