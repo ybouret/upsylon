@@ -27,15 +27,15 @@ ADD_TEST(mkl:gram-schmidt test-mkl gram_schmidt)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
 test-ode-expl.cpp test-ode-impl.cpp)
-ADD_TEST(ode:michaelis   test-m michaelis)
-ADD_TEST(ode:types       test-m ode)
-ADD_TEST(ode:rk4         test-m rk4)
-ADD_TEST(ode:expl        test-m ode_expl)
-ADD_TEST(ode:impl        test-m ode_impl)
+ADD_TEST(ode:michaelis   test-mkl michaelis)
+ADD_TEST(ode:types       test-mkl ode)
+ADD_TEST(ode:rk4         test-mkl rk4)
+ADD_TEST(ode:expl        test-mkl ode_expl)
+ADD_TEST(ode:impl        test-mkl ode_impl)
 
 SOURCE_GROUP(opt FILES test-bracket.cpp test-min.cpp)
-ADD_TEST(opt:bracket     test-m bracket)
-ADD_TEST(opt:minimize    test-m min)
+ADD_TEST(opt:bracket     test-mkl bracket)
+ADD_TEST(opt:minimize    test-mkl min)
 
 SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zfind.cpp)
 ADD_TEST(fcn:drvs    test-mkl drvs)

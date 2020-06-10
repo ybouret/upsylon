@@ -31,6 +31,11 @@ SET( mesh_srcs ${mesh_decl} ${mesh_impl} )
 INSTALL( FILES ${mesh_decl} DESTINATION include/y/spade/mesh )
 SOURCE_GROUP(spade/mesh FILES ${mesh_srcs} )
 
+FILE( GLOB vtk_decl y/spade/vtk/*.hpp)
+FILE( GLOB vtk_impl y/spade/vtk/*.cpp)
+SET( vtk_srcs ${vtk_decl} ${vtk_impl} )
+INSTALL( FILES ${vtk_decl} DESTINATION include/y/spade/vtk )
+SOURCE_GROUP(spade/vtk FILES ${vtk_srcs} )
 
 INCLUDE_DIRECTORIES(. ../main)
 
@@ -40,6 +45,7 @@ ${field_srcs}
 ${layout_srcs}
 ${network_srcs}
 ${mesh_srcs}
+${vtk_srcs}
 )
 INSTALL( TARGETS y-spade ARCHIVE DESTINATION lib )
 
