@@ -25,7 +25,7 @@ namespace upsylon
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual job_uuid   enqueue( const job_type &job )                      = 0; //!< enqueue a job
+            virtual job_uuid   enqueue(const job_type &job)                        = 0; //!< enqueue a job
             virtual void       flush()  throw()                                    = 0; //!< wait for all enqueued jobs to complete
             virtual executor & engine() throw()                                    = 0; //!< get underlying engine
             virtual void       process(array<job_uuid> &, const array<job_type> &) = 0; //!< for batch processing
