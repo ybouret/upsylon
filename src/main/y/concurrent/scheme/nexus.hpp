@@ -1,24 +1,36 @@
 //! \file
 
-#ifndef Y_CONCURRENT_DISPATCHER_INCLUDED
-#define Y_CONCURRENT_DISPATCHER_INCLUDED 1
+#ifndef Y_CONCURRENT_NEXUS_INCLUDED
+#define Y_CONCURRENT_NEXUS_INCLUDED 1
 
 #include "y/concurrent/scheme/server.hpp"
 #include "y/concurrent/threads.hpp"
 #include "y/core/list.hpp"
 #include "y/core/pool.hpp"
 
-namespace upsylon
-{
-    namespace concurrent
-    {
-        //! MP jobs server
-        class dispatcher : public server
+namespace upsylon {
+
+    namespace concurrent {
+
+        //----------------------------------------------------------------------
+        //
+        //! a nexus is a parallel job server
+        //
+        //----------------------------------------------------------------------
+        class nexus : public server
         {
         public:
-            class jpool;
-            
+            //------------------------------------------------------------------
+            //
+            // types and definitions
+            //
+            //------------------------------------------------------------------
+            class jpool; //!< forward declaration for friendship
+
+            //__________________________________________________________________
+            //
             //! internal node to hold a job
+            //__________________________________________________________________
             class jnode
             {
             public:
@@ -35,13 +47,16 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(jnode);
                 jnode *destruct() throw();
                 friend class jpool;
-                friend class dispatcher;
+                friend class nexus;
             };
 
             typedef core::list_of<jnode> jlist;      //!< alias
             typedef core::pool_of<jnode> jpool_type; //!< alias
 
+            //__________________________________________________________________
+            //
             //! pool to manage valid and invalid nodes
+            //__________________________________________________________________
             class jpool : public jpool_type
             {
             public:
@@ -56,24 +71,35 @@ namespace upsylon
                 static jnode *checked( jnode *j ) throw();
             };
 
+            //------------------------------------------------------------------
+            //
+            // C++
+            //
+            //------------------------------------------------------------------
+            explicit nexus(const bool v= false);    //!< initialize
+            virtual ~nexus() throw();               //!< destruct, all pending jobs are removed
 
-            explicit dispatcher( const bool v = false ); //!< initialize
-            virtual ~dispatcher() throw();               //!< destruct, all pending jobs are removed
-
-            void remove_pending() throw(); //!< remove all pending jobs
-            void reserve_jobs( size_t n ); //!< memory to reserve for some jobs
-
-
-            virtual job_uuid   enqueue( const job_type &job );                      //!< enqueue a job
+            //------------------------------------------------------------------
+            //
+            // virtual interface
+            //
+            //------------------------------------------------------------------
+            virtual job_uuid   enqueue(const job_type &job);                        //!< enqueue a job
             virtual void       flush()  throw();                                    //!< wait for all enqueued jobs
             virtual executor & engine() throw();                                    //!< implementation
             virtual void       process(array<job_uuid> &, const array<job_type> &); //!< batch
 
-            //! compute efficiency from threads
-            double efficiency( const double speed_up ) const;
+            //------------------------------------------------------------------
+            //
+            // methods
+            //
+            //------------------------------------------------------------------
+            void   remove_pending() throw();                 //!< remove all pending jobs
+            void   reserve_jobs(size_t);                     //!< memory to reserve for some jobs
+            double efficiency(const double speed_up) const;  //!< compute efficiency from threads
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(dispatcher);
+            Y_DISABLE_COPY_AND_ASSIGN(nexus);
             jlist     pending; //!< pending jobs
             jlist     current; //!< currently processed jobs
             jpool     aborted; //!< jobs that raised an exception

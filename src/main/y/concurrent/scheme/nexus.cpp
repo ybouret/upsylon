@@ -1,25 +1,26 @@
 
-#include "y/concurrent/scheme/dispatcher.hpp"
+#include "y/concurrent/scheme/nexus.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {
     namespace concurrent
     {
 
-        dispatcher:: jnode:: ~jnode() throw()
+        nexus:: jnode:: ~jnode() throw()
         {
         }
 
-        dispatcher:: jnode:: jnode( const job_uuid u, const job_type &J ) :
+        nexus:: jnode:: jnode( const job_uuid u, const job_type &J ) :
         next(0), prev(0), uuid(u), call(J), valid(1)
         {
         }
 
-        dispatcher::jnode * dispatcher::jnode:: destruct() throw()
+        nexus::jnode * nexus::jnode:: destruct() throw()
         {
             self_destruct(call);
-            (job_uuid&)uuid = 0;
-            (int     &)valid = 0;
+            _bzset(uuid);
+            _bzset(valid);
             return this;
         }
         
@@ -31,18 +32,18 @@ namespace upsylon
 {
     namespace concurrent
     {
-        dispatcher:: jpool:: jpool() throw()  : jpool_type()
+        nexus:: jpool:: jpool() throw()  : jpool_type()
         {
             assert(!head);
             assert(0==size);
         }
 
-        dispatcher:: jpool::  ~jpool() throw()
+        nexus:: jpool::  ~jpool() throw()
         {
             clear();
         }
 
-        dispatcher::jnode * dispatcher:: jpool:: fetch()
+        nexus::jnode * nexus:: jpool:: fetch()
         {
             if(size)
             {
@@ -54,7 +55,7 @@ namespace upsylon
             }
         }
 
-        void dispatcher:: jpool:: clear() throw()
+        void nexus:: jpool:: clear() throw()
         {
             while(size)
             {
@@ -64,14 +65,14 @@ namespace upsylon
             }
         }
 
-        void dispatcher:: jpool:: gc() throw()
+        void nexus:: jpool:: gc() throw()
         {
             for( jnode *j = head; j; j=checked(j)->next)
                 ;
         }
 
 
-        dispatcher::jnode * dispatcher:: jpool:: checked( jnode *j ) throw()
+        nexus::jnode * nexus:: jpool:: checked( jnode *j ) throw()
         {
             assert(j);
             return (j->valid) ? j->destruct() : j;
@@ -88,7 +89,7 @@ namespace upsylon
 
 
 
-        dispatcher:: dispatcher(const bool v) :
+        nexus:: nexus(const bool v) :
         pending(),
         current(),
         aborted(),
@@ -120,13 +121,13 @@ namespace upsylon
             }
         }
 
-        executor & dispatcher:: engine() throw()
+        executor & nexus:: engine() throw()
         {
             return workers;
         }
 
 
-        void dispatcher:: remove_pending() throw()
+        void nexus:: remove_pending() throw()
         {
             Y_LOCK(access);
             while( pending.size )
@@ -139,10 +140,10 @@ namespace upsylon
             }
         }
 
-        void dispatcher:: reserve_jobs( size_t n )
+        void nexus:: reserve_jobs( size_t n )
         {
             Y_LOCK(access);
-            while(n-->0)
+            while(n-- > 0)
             {
                 storage.store( object::acquire1<jnode>() );
                 assert(storage.head);
@@ -150,15 +151,15 @@ namespace upsylon
             }
         }
 
-        double dispatcher:: efficiency( const double speed_up ) const
+        double nexus:: efficiency( const double speed_up ) const
         {
             return workers[0].efficiency(speed_up);
         }
 
 
-      
 
-        job_uuid dispatcher:: enqueue( const job_type &job )
+
+        job_uuid nexus:: enqueue( const job_type &job )
         {
             Y_LOCK(access);
             jnode *j = storage.fetch();
@@ -172,13 +173,13 @@ namespace upsylon
             }
             catch(...)
             {
-                (int&)(j->valid)=0; // mark as not constructed in any case
+                _bzset(j->valid); // mark as not constructed in any case
                 storage.store(j);
                 throw;
             }
         }
 
-        void dispatcher:: process(array<job_uuid> &uuids, const array<job_type> &batch)
+        void nexus:: process(array<job_uuid> &uuids, const array<job_type> &batch)
         {
             assert(uuids.size()==batch.size());
             Y_LOCK(access);
@@ -191,11 +192,10 @@ namespace upsylon
                     new (j) jnode( (uuids[i]=uuid) ,batch[i]);
                     ++uuid;
                     pending.push_back(j);
-
                 }
                 catch(...)
                 {
-                    (int&)(j->valid)=0; // mark as not constructed in any case
+                    _bzset(j->valid); // mark as not constructed in any case
                     storage.store(j);
                     throw;
                 }
@@ -204,7 +204,7 @@ namespace upsylon
         }
 
 
-        void dispatcher:: flush() throw()
+        void nexus:: flush() throw()
         {
             //__________________________________________________________________
             //
@@ -237,17 +237,16 @@ namespace upsylon
             access.unlock();
         }
 
-        void dispatcher:: start(void     *addr,
-                                parallel &context,
-                                lockable &)
+        void nexus:: start(void     *addr,
+                           parallel &context,
+                           lockable &)
         {
             assert(addr);
-            dispatcher &self = *static_cast<dispatcher *>(addr);
-            self.loop(context);
+            static_cast<nexus *>(addr)->loop(context);
         }
 
 
-        dispatcher:: ~dispatcher() throw()
+        nexus:: ~nexus() throw()
         {
             //__________________________________________________________________
             //
@@ -305,7 +304,7 @@ namespace upsylon
 
         }
 
-        void dispatcher:: loop(parallel &context)
+        void nexus:: loop(parallel &context)
         {
             //==================================================================
             //

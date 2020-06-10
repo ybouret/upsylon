@@ -1,4 +1,4 @@
-#include "y/concurrent/scheme/dispatcher.hpp"
+#include "y/concurrent/scheme/nexus.hpp"
 #include "y/utest/run.hpp"
 #include "y/os/wtime.hpp"
 
@@ -55,10 +55,10 @@ namespace {
 
 Y_UTEST(server)
 {
-    std::cerr << "sizeof(job_type)           =" << sizeof(concurrent::job_type) << std::endl;
-    std::cerr << "sizeof(dispatcher::jnode)  =" << sizeof(concurrent::dispatcher::jnode) << std::endl;
+    std::cerr << "sizeof(job_type)      =" << sizeof(concurrent::job_type) << std::endl;
+    std::cerr << "sizeof(nexus::jnode)  =" << sizeof(concurrent::nexus::jnode) << std::endl;
 
-    concurrent::dispatcher srv(true);
+    concurrent::nexus srv(true);
 
     wtime chrono;
     dummy d(7,chrono);
@@ -175,7 +175,7 @@ Y_UTEST(servpi)
     target.ld(0);
     std::cerr << "<PAR>" << std::endl;
     {
-        concurrent::dispatcher srv(false);
+        concurrent::nexus srv(false);
         chrono.start();
         srv.process(uuids,batch);
         srv.flush();
