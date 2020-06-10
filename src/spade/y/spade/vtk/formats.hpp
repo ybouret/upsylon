@@ -13,47 +13,70 @@ namespace upsylon {
 
         namespace VTK {
 
+            //------------------------------------------------------------------
+            //
+            //! base class to write some formatted data
+            //
+            //------------------------------------------------------------------
             class Format : public Object
             {
             public:
-                typedef arc_ptr<Format> Handle;
-                virtual ~Format() throw();
+                typedef arc_ptr<Format> Handle; //!< alias
+                virtual ~Format() throw();      //!< cleanup
 
-                const unsigned components;
-                const bool     isScalar;
-                const bool     isVector;
+                //! write formatted data to an output stream
                 virtual ios::ostream & write(ios::ostream &, const void *) const = 0;
 
+                const unsigned components; //!< >=1
+                const bool     isScalar;   //!< components=1
+                const bool     isVector;   //!< components>1
+
             protected:
+                //! setup info
                 explicit Format(const unsigned) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Format);
             };
 
+            //------------------------------------------------------------------
+            //
+            //! base class for primary types
+            //
+            //------------------------------------------------------------------
             class PrimaryFormat : public Format
             {
             public:
-                typedef arc_ptr<PrimaryFormat> Handle;
-                explicit PrimaryFormat(const char *);
-                virtual ~PrimaryFormat() throw();
+                typedef arc_ptr<PrimaryFormat> Handle; //!< alias
 
-                const string format;
+                explicit PrimaryFormat(const char *);  //!< Format(1), setup format
+                virtual ~PrimaryFormat() throw();      //!< cleanup
+                const string format;                   //!< C-style format
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PrimaryFormat);
             };
 
+            //------------------------------------------------------------------
+            //
+            //! a collection of DIM primary types
+            //
+            //------------------------------------------------------------------
             template <typename T, const unsigned DIM>
             class LimitedFormat : public Format
             {
             public:
-                const PrimaryFormat &F;
+                const PrimaryFormat &F; //!< how to write one item
 
-                inline virtual ~LimitedFormat() throw()
-                {
-                }
+                //! cleanup
+                inline virtual ~LimitedFormat() throw() {}
 
+            protected:
+                //! setup
+                inline explicit LimitedFormat(const PrimaryFormat &f) : Format(DIM), F(f) { }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(LimitedFormat);
                 inline virtual ios::ostream & write(ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
@@ -65,25 +88,22 @@ namespace upsylon {
                     }
                     return fp;
                 }
-
-            protected:
-                inline explicit LimitedFormat(const PrimaryFormat &f) :
-                Format(DIM),
-                F(f)
-                {
-                }
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(LimitedFormat);
             };
 
+
+            //------------------------------------------------------------------
+            //
+            //! write a tuple
+            //
+            //------------------------------------------------------------------
             template <template <typename> class TUPLE,typename T>
             class TupleFormat : public LimitedFormat<T,sizeof(TUPLE<T>)/sizeof(T)>
             {
             public:
+                //! setup
                 inline explicit TupleFormat(const PrimaryFormat &f) : LimitedFormat<T,sizeof(TUPLE<T>)/sizeof(T)>(f) {}
 
+                //! cleanup
                 inline virtual ~TupleFormat() throw() {}
 
             private:
@@ -91,18 +111,29 @@ namespace upsylon {
             };
 
 
-
+            //------------------------------------------------------------------
+            //
+            //! database of formats
+            //
+            //------------------------------------------------------------------
             class Formats : public singleton<Formats>
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                static const at_exit::longevity life_time = 0; //!< for singleton
 
-                suffix_tree<Format::Handle>        fdb;
-                suffix_tree<PrimaryFormat::Handle> pdb;
-                
-                static const at_exit::longevity life_time = 0;
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
 
+                //! format string for primary types
                 string & formatString(const std::type_info &tid) const;
 
+                //! format string for primary types, wrapper
                 template <typename T> inline
                 string & formatString() const
                 {
@@ -110,8 +141,10 @@ namespace upsylon {
                     return formatString(tid);
                 }
 
+                //! get a registered format
                 const Format & get(const std::type_info &tid) const;
 
+                //! get a registered format, wrapper
                 template <typename T> inline
                 const Format & get() const
                 {
@@ -119,6 +152,7 @@ namespace upsylon {
                     return get(tid);
                 }
 
+                //! high level write
                 template <typename T> inline
                 ios::ostream & write(ios::ostream &fp, const T &args) const
                 {
@@ -126,7 +160,12 @@ namespace upsylon {
                     return fmt.write(fp,&args);
                 }
 
-
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const suffix_tree<Format::Handle>        fdb; //!< database of generic formats
+                const suffix_tree<PrimaryFormat::Handle> pdb; //!< database of primary formats
 
             private:
                 explicit Formats();

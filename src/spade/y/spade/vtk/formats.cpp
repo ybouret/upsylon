@@ -70,7 +70,7 @@ const type_spec & t = type_spec_of<TYPE>(); \
 const be_key      k = t;                    \
 if(!pdb.search_by(k)) {                     \
 const PrimaryFormat::Handle p = new _Format<TYPE,CAST>(FMT);\
-if(!pdb.insert_by(k,p)) throw exception("%sunexpected failure for <%s>",fn,*t.name());\
+if(!aliasing::_(pdb).insert_by(k,p)) throw exception("%sunexpected failure for <%s>",fn,*t.name());\
 }\
 } while(false)
 
@@ -82,7 +82,7 @@ if(!ppF) throw exception("%sno primary format for <%s>",fn,*t.name());\
 const Format::Handle F = new TupleFormat<TUPLE,TYPE>(**ppF);          \
 const type_spec  &tt   = type_spec_of< TUPLE<TYPE> >();               \
 const be_key      tk   = tt;\
-if(!fdb.insert_by(tk,F)) throw exception("%sunexpected failure for <%s>",fn,*tt.name());\
+if(!aliasing::_(fdb).insert_by(tk,F)) throw exception("%sunexpected failure for <%s>",fn,*tt.name());\
 } while(false)
 
             static const char fn[] = "VTK::Formats: ";
@@ -104,6 +104,8 @@ if(!fdb.insert_by(tk,F)) throw exception("%sunexpected failure for <%s>",fn,*tt.
                 Y_SPADE_VTK(uint16_t, unsigned long, "%lu");
                 Y_SPADE_VTK(uint32_t, unsigned long, "%lu");
                 
+                Y_SPADE_VTK(size_t, unsigned long, "%lu");
+                Y_SPADE_VTK(unit_t, long,          "%ld");
 
 
                 Y_SPADE_VTK(float,float,"%.15g");
