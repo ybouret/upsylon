@@ -117,7 +117,7 @@ namespace upsylon
 
             if(verbose)
             {
-                std::cerr << "|_[nexus.prepared]" << std::endl;
+                std::cerr << "[nexus.prepared]" << std::endl;
             }
         }
 
@@ -179,11 +179,14 @@ namespace upsylon
             }
         }
 
-        void nexus:: process(array<job_uuid> &uuids, const array<job_type> &batch)
+        void nexus:: process(job_uuids       &uuids,
+                             const job_batch &batch)
         {
             assert(uuids.size()==batch.size());
             Y_LOCK(access);
             const size_t n = batch.size();
+            
+            for(size_t i=n;i>0;--i) uuids[i] = 0;
             for(size_t i=1;i<=n;++i)
             {
                 jnode *j = storage.fetch();
@@ -213,7 +216,7 @@ namespace upsylon
             access.lock();
             if(verbose)
             {
-                std::cerr << "|_[nexus.flush request with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
+                std::cerr << "[nexus.flush request with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
             }
 
             if(pending.size>0||current.size>0)
@@ -231,7 +234,7 @@ namespace upsylon
                 //______________________________________________________________
                 if(verbose)
                 {
-                    std::cerr << "|_[nexus.flush achieved with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
+                    std::cerr << "[nexus.flush achieved with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
                 }
             }
             access.unlock();
@@ -261,7 +264,7 @@ namespace upsylon
             stopping=true;
             if(verbose)
             {
-                std::cerr << "|_[nexus.quit: remaining #jobs=" << pending.size  << "]" << std::endl;
+                std::cerr << "[nexus.quit: remaining #jobs=" << pending.size  << "]" << std::endl;
             }
 
             //__________________________________________________________________
@@ -316,14 +319,14 @@ namespace upsylon
             access.lock();
             if(verbose)
             {
-                std::cerr << "|_[nexus.loop@" << context.label << "]" << std::endl;
+                std::cerr << "[nexus.loop@" << context.label << "]" << std::endl;
             }
             const size_t count = workers.num_threads();
             assert(prepared<count);
             ++prepared;
             if(verbose&&prepared>=count)
             {
-                std::cerr << "|_[nexus.synchronized]" << std::endl;
+                std::cerr << "[nexus.synchronized]" << std::endl;
             }
 
 
@@ -349,7 +352,7 @@ namespace upsylon
             //------------------------------------------------------------------
             if(stopping)
             {
-                if(verbose) { std::cerr << "|_[nexus.done@" << context.label << "]" << std::endl; }
+                if(verbose) { std::cerr << "[nexus.done@" << context.label << "]" << std::endl; }
                 assert(prepared>0);
                 --prepared;
                 access.unlock();
@@ -372,7 +375,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 jnode *j = pending.pop_front();
                 current.push_back(j);
-                if(verbose) { std::cerr << "|_[nexus.call@"<< context.label << ": job#" << j->uuid << "]" << std::endl; }
+                if(verbose) { std::cerr << "[nexus.call@"<< context.label << ": job#" << j->uuid << "]" << std::endl; }
 
                 //______________________________________________________________
                 //

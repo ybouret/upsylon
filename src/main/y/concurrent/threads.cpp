@@ -23,6 +23,7 @@ namespace upsylon
         }
 
         size_t     threads:: num_threads() const throw() { return engines.size(); }
+
         parallel & threads:: get_context(const size_t context_index) throw()
         {
             return engines[context_index];
@@ -68,7 +69,8 @@ namespace upsylon
             //
             // threads setup
             //__________________________________________________________________
-            // place leading threads
+
+            // place leading thread
             if(verbose)
             {
                 std::cerr << "[threads.init.affinity] main@cpu" << topology->core_index_of(0) << std::endl;

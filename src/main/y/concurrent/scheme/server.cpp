@@ -41,14 +41,13 @@ namespace upsylon
             return impl;
         }
 
-        void sequential_server:: process(array<job_uuid> &uuids, const array<job_type> &batch)
+        void sequential_server:: process(job_uuids       &uuids,
+                                         const job_batch &batch)
         {
             assert(uuids.size()==batch.size());
-            uuids.ld(0);
-            for(size_t i=1;i<=batch.size();++i)
-            {
-                uuids[i] = enqueue(batch[i]);
-            }
+            const size_t n = uuids.size();
+            for(size_t i=n;i>0;--i)  uuids[i] = 0;
+            for(size_t i=1;i<=n;++i) uuids[i] = enqueue(batch[i]);
         }
 
     }

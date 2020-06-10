@@ -4,7 +4,7 @@
 
 #include "y/concurrent/executor.hpp"
 #include "y/functor.hpp"
-#include "y/sequence/array.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
@@ -13,6 +13,8 @@ namespace upsylon
 
         typedef functor<void,TL2(parallel&,lockable&)> job_type; //!< a functor holds the job to do
         typedef size_t                                 job_uuid; //!< unique ID>0 to look for task completion
+        typedef addressable<job_uuid>                  job_uuids; //!< r/w job uuid collection
+        typedef accessible<job_type>                   job_batch; //!< r/o jobs
 
         //! jobs server interface
         class server
@@ -25,10 +27,10 @@ namespace upsylon
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual job_uuid   enqueue(const job_type &job)                        = 0; //!< enqueue a job
-            virtual void       flush()  throw()                                    = 0; //!< wait for all enqueued jobs to complete
-            virtual executor & engine() throw()                                    = 0; //!< get underlying engine
-            virtual void       process(array<job_uuid> &, const array<job_type> &) = 0; //!< for batch processing
+            virtual job_uuid   enqueue(const job_type &job)            = 0; //!< enqueue a job
+            virtual void       flush()  throw()                        = 0; //!< wait for all enqueued jobs to complete
+            virtual executor & engine() throw()                        = 0; //!< get underlying engine
+            virtual void       process(job_uuids &, const job_batch &) = 0; //!< for batch processing
 
             //------------------------------------------------------------------
             //
@@ -68,10 +70,10 @@ namespace upsylon
             explicit sequential_server() throw(); //!< initialize
             virtual ~sequential_server() throw(); //!< destructor
 
-            virtual job_uuid   enqueue( const job_type &job );                      //!< execute
-            virtual void       flush() throw();                                     //!< do nothing
-            virtual executor & engine() throw();                                    //!< implementation
-            virtual void       process(array<job_uuid> &, const array<job_type> &); //!< batch
+            virtual job_uuid   enqueue(const job_type &);               //!< execute
+            virtual void       flush() throw();                         //!< do nothing
+            virtual executor & engine() throw();                        //!< implementation
+            virtual void       process(job_uuids &, const job_batch &); //!< batch
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(sequential_server);

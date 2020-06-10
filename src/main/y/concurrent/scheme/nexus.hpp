@@ -84,10 +84,10 @@ namespace upsylon {
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual job_uuid   enqueue(const job_type &job);                        //!< enqueue a job
-            virtual void       flush()  throw();                                    //!< wait for all enqueued jobs
-            virtual executor & engine() throw();                                    //!< implementation
-            virtual void       process(array<job_uuid> &, const array<job_type> &); //!< batch
+            virtual job_uuid   enqueue(const job_type &);                     //!< enqueue a job
+            virtual void       flush()  throw();                              //!< wait for all enqueued jobs
+            virtual executor & engine() throw();                              //!< implementation
+            virtual void       process(job_uuids &uuids, const job_batch &);  //!< batch
 
             //------------------------------------------------------------------
             //
