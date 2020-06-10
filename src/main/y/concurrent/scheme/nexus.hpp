@@ -29,7 +29,7 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            //! internal node to hold a job
+            //! reusable internal node to hold a job
             //__________________________________________________________________
             class jnode
             {

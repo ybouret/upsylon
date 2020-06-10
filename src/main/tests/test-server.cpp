@@ -37,8 +37,8 @@ namespace {
             {
                 Y_LOCK(access);
                 ++data;
-                std::cerr << "@thread#" << context.rank << ", data=" << data <<  std::endl;
-                std::cerr << "waiting..." << std::endl;
+                std::cerr << "\t@thread#" << context.rank << ", data=" << data <<  std::endl;
+                std::cerr << "\twaiting..." << std::endl;
                 dt += alea.to<double>()*0.1;
             }
             rtc.sleep(dt);

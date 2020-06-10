@@ -11,7 +11,7 @@ namespace upsylon
         {
         }
 
-        nexus:: jnode:: jnode( const job_uuid u, const job_type &J ) :
+        nexus:: jnode:: jnode(const job_uuid u, const job_type &J) :
         next(0), prev(0), uuid(u), call(J), valid(1)
         {
         }
@@ -117,7 +117,7 @@ namespace upsylon
 
             if(verbose)
             {
-                std::cerr << "|_[dispatcher.prepared]" << std::endl;
+                std::cerr << "|_[nexus.prepared]" << std::endl;
             }
         }
 
@@ -213,7 +213,7 @@ namespace upsylon
             access.lock();
             if(verbose)
             {
-                std::cerr << "|_[dispatcher.flush request with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
+                std::cerr << "|_[nexus.flush request with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
             }
 
             if(pending.size>0||current.size>0)
@@ -231,7 +231,7 @@ namespace upsylon
                 //______________________________________________________________
                 if(verbose)
                 {
-                    std::cerr << "|_[dispatcher.flush achived with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
+                    std::cerr << "|_[nexus.flush achieved with stopping=<" << (stopping?"true":"false") << ">]" << std::endl;
                 }
             }
             access.unlock();
@@ -261,7 +261,7 @@ namespace upsylon
             stopping=true;
             if(verbose)
             {
-                std::cerr << "|_[dispatcher.quit: remaining #jobs=" << pending.size  << "]" << std::endl;
+                std::cerr << "|_[nexus.quit: remaining #jobs=" << pending.size  << "]" << std::endl;
             }
 
             //__________________________________________________________________
@@ -316,14 +316,14 @@ namespace upsylon
             access.lock();
             if(verbose)
             {
-                std::cerr << "|_[dispatcher.loop@" << context.label << "]" << std::endl;
+                std::cerr << "|_[nexus.loop@" << context.label << "]" << std::endl;
             }
             const size_t count = workers.num_threads();
             assert(prepared<count);
             ++prepared;
             if(verbose&&prepared>=count)
             {
-                std::cerr << "|_[dispatcher.synchronized]" << std::endl;
+                std::cerr << "|_[nexus.synchronized]" << std::endl;
             }
 
 
@@ -349,7 +349,7 @@ namespace upsylon
             //------------------------------------------------------------------
             if(stopping)
             {
-                if(verbose) { std::cerr << "|_[dispatcher.done@" << context.label << "]" << std::endl; }
+                if(verbose) { std::cerr << "|_[nexus.done@" << context.label << "]" << std::endl; }
                 assert(prepared>0);
                 --prepared;
                 access.unlock();
@@ -372,7 +372,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 jnode *j = pending.pop_front();
                 current.push_back(j);
-                if(verbose) { std::cerr << "|_[dispatcher.call@"<< context.label << ": job#" << j->uuid << "]" << std::endl; }
+                if(verbose) { std::cerr << "|_[nexus.call@"<< context.label << ": job#" << j->uuid << "]" << std::endl; }
 
                 //______________________________________________________________
                 //
