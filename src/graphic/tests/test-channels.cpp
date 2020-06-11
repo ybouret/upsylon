@@ -103,7 +103,7 @@ Y_UTEST(channels)
         for(size_t i=0;i<par->number();++i)
         {
             parallel &ctx = par->engine()[i];
-            ctx.build<Rand>().reset(i);
+            ctx.build<Rand>().reset( uint32_t(i) );
         }
 
         Ops::RunWithContext(tiles, fStack[0], fStack[0], fMove );
