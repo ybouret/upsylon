@@ -18,11 +18,11 @@ namespace upsylon {
             //! base class to write some formatted data
             //
             //------------------------------------------------------------------
-            class Format : public Object
+            class Writer : public Object
             {
             public:
-                typedef arc_ptr<Format> Handle; //!< alias
-                virtual ~Format() throw();      //!< cleanup
+                typedef arc_ptr<Writer> Handle; //!< alias
+                virtual ~Writer() throw();      //!< cleanup
 
                 //! write formatted data to an output stream
                 virtual ios::ostream & write(ios::ostream &, const void *) const = 0;
@@ -33,56 +33,56 @@ namespace upsylon {
 
             protected:
                 //! setup info
-                explicit Format(const unsigned) throw();
+                explicit Writer(const unsigned) throw();
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Format);
+                Y_DISABLE_COPY_AND_ASSIGN(Writer);
             };
 
             //------------------------------------------------------------------
             //
-            //! base class for primary types
+            //! base class for native types
             //
             //------------------------------------------------------------------
-            class PrimaryFormat : public Format
+            class NativeWriter : public Writer
             {
             public:
-                typedef arc_ptr<PrimaryFormat> Handle; //!< alias
+                typedef arc_ptr<NativeWriter> Handle; //!< alias
 
-                explicit PrimaryFormat(const char *);  //!< Format(1), setup format
-                virtual ~PrimaryFormat() throw();      //!< cleanup
+                explicit NativeWriter(const char *);  //!< Format(1), setup format
+                virtual ~NativeWriter() throw();      //!< cleanup
                 const string format;                   //!< C-style format
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(PrimaryFormat);
+                Y_DISABLE_COPY_AND_ASSIGN(NativeWriter);
             };
 
             //------------------------------------------------------------------
             //
-            //! a collection of DIM primary types
+            //! a repeat of COUNT native types
             //
             //------------------------------------------------------------------
-            template <typename T, const unsigned DIM>
-            class LimitedFormat : public Format
+            template <typename T, const unsigned COUNT>
+            class RepeatWriter : public Writer
             {
             public:
-                const PrimaryFormat &F; //!< how to write one item
+                const NativeWriter &F; //!< how to write one item
 
                 //! cleanup
-                inline virtual ~LimitedFormat() throw() {}
+                inline virtual ~RepeatWriter() throw() {}
 
             protected:
                 //! setup
-                inline explicit LimitedFormat(const PrimaryFormat &f) : Format(DIM), F(f) { }
+                inline explicit RepeatWriter(const NativeWriter &f) : Writer(COUNT), F(f) { }
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(LimitedFormat);
+                Y_DISABLE_COPY_AND_ASSIGN(RepeatWriter);
                 inline virtual ios::ostream & write(ios::ostream &fp, const void *addr) const
                 {
                     assert(addr);
                     const T *p = static_cast<const T *>(addr);
                     F.write(fp,&p[0]);
-                    for(size_t dim=1;dim<DIM;++dim)
+                    for(size_t dim=1;dim<COUNT;++dim)
                     {
                         F.write(fp<<' ',&p[dim]);
                     }
@@ -97,26 +97,26 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             template <template <typename> class TUPLE,typename T>
-            class TupleFormat : public LimitedFormat<T,sizeof(TUPLE<T>)/sizeof(T)>
+            class TupleWriter : public RepeatWriter<T,sizeof(TUPLE<T>)/sizeof(T)>
             {
             public:
                 //! setup
-                inline explicit TupleFormat(const PrimaryFormat &f) : LimitedFormat<T,sizeof(TUPLE<T>)/sizeof(T)>(f) {}
+                inline explicit TupleWriter(const NativeWriter &f) : RepeatWriter<T,sizeof(TUPLE<T>)/sizeof(T)>(f) {}
 
                 //! cleanup
-                inline virtual ~TupleFormat() throw() {}
+                inline virtual ~TupleWriter() throw() {}
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(TupleFormat);
+                Y_DISABLE_COPY_AND_ASSIGN(TupleWriter);
             };
 
 
             //------------------------------------------------------------------
             //
-            //! database of formats
+            //! database of writers
             //
             //------------------------------------------------------------------
-            class Formats : public singleton<Formats>
+            class Writers : public singleton<Writers>
             {
             public:
                 //______________________________________________________________
@@ -142,11 +142,11 @@ namespace upsylon {
                 }
 
                 //! get a registered format
-                const Format & get(const std::type_info &tid) const;
+                const Writer & get(const std::type_info &tid) const;
 
                 //! get a registered format, wrapper
                 template <typename T> inline
-                const Format & get() const
+                const Writer & get() const
                 {
                     static const std::type_info &tid = typeid(T);
                     return get(tid);
@@ -156,7 +156,7 @@ namespace upsylon {
                 template <typename T> inline
                 ios::ostream & write(ios::ostream &fp, const T &args) const
                 {
-                    static const Format &fmt = get<T>();
+                    static const Writer &fmt = get<T>();
                     return fmt.write(fp,&args);
                 }
 
@@ -164,14 +164,14 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-                const suffix_tree<Format::Handle>        fdb; //!< database of generic formats
-                const suffix_tree<PrimaryFormat::Handle> pdb; //!< database of primary formats
+                const suffix_tree<Writer::Handle>       wdb; //!< database of generic formats
+                const suffix_tree<NativeWriter::Handle> ndb; //!< database of primary formats
 
             private:
-                explicit Formats();
-                virtual ~Formats() throw();
-                friend class singleton<Formats>;
-                Y_DISABLE_COPY_AND_ASSIGN(Formats);
+                explicit Writers();
+                virtual ~Writers() throw();
+                friend class singleton<Writers>;
+                Y_DISABLE_COPY_AND_ASSIGN(Writers);
             };
 
         }

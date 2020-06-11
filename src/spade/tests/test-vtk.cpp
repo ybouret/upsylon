@@ -1,4 +1,4 @@
-#include "y/spade/vtk/formats.hpp"
+#include "y/spade/vtk/writers.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
@@ -11,7 +11,7 @@ using namespace Spade;
 template <typename T>
 void doVTK()
 {
-    VTK::Formats &fmt = VTK::Formats::instance();
+    VTK::Writers &fmt = VTK::Writers::instance();
     ios::ocstream fp(ios::cstderr);
 
     std::cerr << type_name_of<T>() << std::endl;
@@ -27,10 +27,10 @@ void doVTK()
 
 Y_UTEST(vtk)
 {
-    VTK::Formats &fmt = VTK::Formats::instance();
+    VTK::Writers &fmt = VTK::Writers::instance();
 
-    std::cerr << "#primary=" << fmt.pdb.entries() << std::endl;
-    std::cerr << "#formats=" << fmt.fdb.entries() << std::endl;
+    std::cerr << "#native=" << fmt.ndb.entries() << std::endl;
+    std::cerr << "#other =" << fmt.wdb.entries() << std::endl;
 
     std::cerr << "for int   : " << fmt.formatString<int>() << std::endl;
     std::cerr << "for float : " << fmt.formatString<float>() << std::endl;
