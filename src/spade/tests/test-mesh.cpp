@@ -47,13 +47,14 @@ namespace {
                 }
             }
 
+            std::cerr <<"\tmapping to regular box..." << std::endl;
             if( rmesh.isThick() )
             {
                 rmesh.mapRegular(box,L);
             }
             else
             {
-                std::cerr << "!!! mesh is not thick !!!" << std::endl;
+                std::cerr << "!!! rmesh is not thick !!!" << std::endl;
             }
         }
         
@@ -81,6 +82,17 @@ namespace {
                     Y_ASSERT( mkl::fabs_of( *((const T *)&delta+dim) ) <= 0);
                 }
             }
+
+            std::cerr <<"\tmapping to regular box..." << std::endl;
+            if( cmesh.isThick() )
+            {
+                cmesh.mapRegular(box,L);
+            }
+            else
+            {
+                std::cerr << "!!! cmesh is not thick !!!" << std::endl;
+            }
+
         }
 
 

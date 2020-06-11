@@ -269,6 +269,11 @@ data(0)
             this->boot();
         }
 
+        //! access
+        inline const_coord & operator*() const throw()
+        {
+            return value;
+        }
 
 
     private:

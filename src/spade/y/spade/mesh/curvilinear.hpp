@@ -7,6 +7,7 @@
 #include "y/spade/mesh/dense.hpp"
 #include "y/spade/fields.hpp"
 #include "y/sequence/slots.hpp"
+#include "y/spade/box.hpp"
 
 namespace upsylon {
     
@@ -50,6 +51,8 @@ namespace upsylon {
             Y_DECL_ARGS(T,type);                         //!< aliases
             typedef DenseMesh<COORD,T>        MeshType;  //!< alias
             typedef typename MeshType::Vertex Vertex;    //!< alias
+            typedef typename MeshType::Box    Box;       //!< alias
+
             typedef typename FieldFor<COORD> ::
             template Of<mutable_type>::Type   Axis;       //!< alias
             typedef arc_ptr<Axis>             AxisHandle; //!< alias for dynamic axis
@@ -127,7 +130,30 @@ namespace upsylon {
                     (*axis[dim])[ C ] = p[dim];
                 }
             }
-            
+
+            //! mapping to a box on an original layout
+            inline void mapRegular(const Box           &box,
+                                   const Layout<COORD> &layout)
+            {
+                assert(this->isThick());
+                CurvilinearMesh &            self = *this;
+                typename Layout<COORD>::Loop loop(this->lower,this->upper);
+                Vertex                       v;
+                const COORD                 &i  = loop.value;
+                const_type                  *l  = box._lower();
+                const_type                  *w  = box._width();
+                mutable_type                *p  = (mutable_type *)&v;
+                const COORD                  d  = layout.width - Coord::Ones<COORD>();
+                for(loop.boot();loop.good();loop.next())
+                {
+                    const COORD j = i - layout.lower;
+                    for(unsigned dim=0;dim<Dimensions;++dim)
+                    {
+                        p[dim] = l[dim] + (Coord::Of(j,dim) * w[dim])/Coord::Of(d,dim);
+                    }
+                    self(i,v);
+                }
+            }
             
             
         private:
