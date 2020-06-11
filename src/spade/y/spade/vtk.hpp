@@ -37,18 +37,31 @@ namespace upsylon {
             class Writer : public Object
             {
             public:
-                virtual ~Writer() throw();
-                const unsigned components;
-
+                //--------------------------------------------------------------
+                //
+                // virtual interface
+                //
+                //--------------------------------------------------------------
+                virtual ~Writer() throw(); //!< cleanup
+                
+                //! write a given object
                 virtual ios::ostream & write(ios::ostream &, const void *) const = 0;
+               
+                //--------------------------------------------------------------
+                //
+                // members
+                //
+                //--------------------------------------------------------------
+                const unsigned components; //!< number of native components
 
             protected:
-                explicit Writer(const unsigned) throw();
+                explicit Writer(const unsigned) throw(); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Writer);
             };
-
+            
+            //! alias to use in database
             typedef arc_ptr<Writer> IWriter;
 
             //------------------------------------------------------------------
@@ -59,15 +72,17 @@ namespace upsylon {
             class Native : public Writer
             {
             public:
-                virtual ~Native() throw();
-                string   format;
+                virtual ~Native() throw(); //!< cleanup
+                string   format;           //!< C-style string format
 
             protected:
-                explicit Native(const char *);
+                explicit Native(const char *); //!< setup Writer(1) and format
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Native);
             };
+            
+            //! alias to use in database
             typedef arc_ptr<Native> INative;
 
             //------------------------------------------------------------------
@@ -79,15 +94,15 @@ namespace upsylon {
             class Tuples : public Writer
             {
             public:
+                //! global definition
                 static const size_t COMPONENTS = sizeof(TUPLE<T>)/sizeof(T);
 
+                //! cleanup
                 inline virtual ~Tuples() throw() {}
-
+                
+                //! setup from a Native reference
                 inline explicit Tuples(const Native &nativeRef) :
-                Writer(COMPONENTS), native(nativeRef)
-                {
-                }
-
+                Writer(COMPONENTS), native(nativeRef) {}
 
             private:
                 const Native &native;
@@ -104,8 +119,19 @@ namespace upsylon {
                 }
             };
 
+            //------------------------------------------------------------------
+            //
+            //
+            // accessing writer and data formatting
+            //
+            //
+            //------------------------------------------------------------------
+
+            
+            //! get matching native writer
             const Native & getNative(const std::type_info &) const;
 
+            //! get matching native writer
             template <typename T> inline
             const Native  &getNative() const
             {
@@ -113,8 +139,10 @@ namespace upsylon {
                 return _;
             }
 
+            //! get native or defined writer
             const Writer & getWriter(const std::type_info &) const;
 
+            //! get native or defined writer
             template <typename T> inline
             const Writer  &getWriter() const
             {
@@ -122,8 +150,9 @@ namespace upsylon {
                 return _;
             }
 
+            //! write formatted output of registered type
             template <typename T> inline
-            ios::ostream & operator()(ios::ostream &fp, const T &args ) const
+            ios::ostream & operator()(ios::ostream &fp, const T &args) const
             {
                 static const Writer &_ = getWriter<T>();
                 return _.write(fp,&args);
