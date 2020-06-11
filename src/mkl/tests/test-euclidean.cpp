@@ -187,9 +187,9 @@ namespace {
             save_c(per_pfx,pa);
 
 
-            save_classes(std_pfx,sa,np);
-            save_classes(std_pfx,sa,np);
-            save_classes(std_pfx,sa,np);
+            save_classes(std_pfx,sa,type(np));
+            save_classes(std_pfx,sa,type(np));
+            save_classes(std_pfx,sa,type(np));
 
             save_classes(per_pfx,pa,np+1);
             save_classes(per_pfx,pa,np+1);
