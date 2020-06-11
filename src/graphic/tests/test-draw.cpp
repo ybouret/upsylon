@@ -95,7 +95,7 @@ Y_UTEST(draw)
         const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
         const rgba   C   = NamedColors::GetRGBA(idx);
         const float  f   = Convert::Get<float,rgba>(C);
-        const uint8_t alpha = alea.leq(255);
+        const uint8_t alpha = uint8_t(alea.leq(255));
 
         Draw::Line(img4, x0, y0, x1, y1, C, alpha);
         Draw::Line(imgf, x0, y0, x1, y1, f, alpha);
@@ -125,7 +125,7 @@ Y_UTEST(draw)
         const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
         const rgba   C   = NamedColors::GetRGBA(idx);
         const float  f   = Convert::Get<float,rgba>(C);
-        const uint8_t alpha = alea.leq(255);
+        const uint8_t alpha = uint8_t(alea.leq(255));
 
         Draw::Circle(img4, x0, y0, r, C, alpha);
         Draw::Circle(imgf, x0, y0, r, f, alpha);
@@ -156,7 +156,7 @@ Y_UTEST(draw)
         const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
         const rgba   C   = NamedColors::GetRGBA(idx);
         const float  f   = Convert::Get<float,rgba>(C);
-        const uint8_t alpha = alea.leq(255);
+        const uint8_t alpha = uint8_t(alea.leq(255));
 
         Draw::Disk(img4, x0, y0, r, C,alpha);
         Draw::Disk(imgf, x0, y0, r, f,alpha);
@@ -189,7 +189,7 @@ Y_UTEST(draw)
         const size_t idx = 1+alea.lt( Y_NAMED_COLORS );
         const rgba   C   = NamedColors::GetRGBA(idx);
         const float  f   = Convert::Get<float,rgba>(C);
-        const uint8_t alpha = alea.leq(255);
+        const uint8_t alpha = uint8_t(alea.leq(255));
 
         Draw::Fill(img4, x0, y0, x1, y1, C, alpha);
         Draw::Fill(imgf, x0, y0, x1, y1, f, alpha);
