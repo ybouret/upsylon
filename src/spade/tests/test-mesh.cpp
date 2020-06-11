@@ -121,8 +121,31 @@ namespace {
         }
     }
 
+    template <typename T> static inline
+    void doTest3D()
+    {
+        typedef point3d<T>       Vertex;
+        typedef Kernel::Box<T,3> Box;
+
+        const Layout3D L( Coord3D(0,0,-10), Coord3D(9,19,10) );
+
+        Box box( support::get<Vertex>(), support::get<Vertex>() );
+
+        std::cerr << "box=" << box << std::endl;
+
+        CurvilinearMesh<Coord3D,T> cmesh( "cmesh3d", L );
+
+        cmesh.mapRegular(box,L);
+
+        cmesh.mapTorus(4,0.5);
+
+
+
+    }
 
 }
+
+#include "y/ios/ocstream.hpp"
 
 Y_UTEST(mesh)
 {
@@ -152,6 +175,30 @@ Y_UTEST(mesh)
     doTest2<Coord2D,3,double>();
 
     std::cerr << std::endl;
+
+    std::cerr << "-- Specific" << std::endl;
+    doTest3D<float>();
+    doTest3D<double>();
+    std::cerr << std::endl;
+
+    {
+        ios::ocstream fp("disk.dat");
+        const size_t nt = 10;
+        const size_t nr = 10;
+        const double dTheta = mkl::numeric<double>::two_pi / nt;
+        const double radius = alea.to<double>();
+        for(size_t t=0;t<nt;++t)
+        {
+            const double theta = dTheta * t;
+            for(size_t r=1;r<=nr;++r)
+            {
+                const double rr = sqrt( radius*radius*r );
+                const double x  = rr * cos(theta);
+                const double y  = rr * sin(theta);
+                fp("%g %g\n",x,y);
+            }
+        }
+    }
 
 
 }

@@ -1,4 +1,4 @@
-#include "y/spade/vtk/writers.hpp"
+#include "y/spade/vtk.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
@@ -11,7 +11,7 @@ using namespace Spade;
 template <typename T>
 void doVTK()
 {
-    VTK::Writers &fmt = VTK::Writers::instance();
+    vtk &VTK = vtk::instance();
     ios::ocstream fp(ios::cstderr);
 
     std::cerr << type_name_of<T>() << std::endl;
@@ -19,7 +19,7 @@ void doVTK()
     for(size_t i=1+alea.leq(10);i>0;--i)
     {
         const T tmp = support::get<T>();
-        fmt.write(fp << '\t', tmp) << '\n';
+        VTK(fp << '\t', tmp) << '\n';
     }
 
     std::cerr << std::endl;
@@ -27,6 +27,7 @@ void doVTK()
 
 Y_UTEST(vtk)
 {
+#if 0
     VTK::Writers &fmt = VTK::Writers::instance();
 
     std::cerr << "#native=" << fmt.ndb.entries() << std::endl;
@@ -34,6 +35,10 @@ Y_UTEST(vtk)
 
     std::cerr << "for int   : " << fmt.formatString<int>() << std::endl;
     std::cerr << "for float : " << fmt.formatString<float>() << std::endl;
+#endif
+
+    vtk &VTK = vtk::instance();
+
 
     doVTK<short>();
     doVTK<unsigned short>();
@@ -47,6 +52,10 @@ Y_UTEST(vtk)
 
     doVTK< point3d<float> >();
     doVTK< point3d<double> >();
+
+    std::cerr << "format for int:   " << VTK.getNative<int>().format   << std::endl;
+    std::cerr << "format for float: " << VTK.getNative<float>().format << std::endl;
+
 
 }
 Y_UTEST_DONE()
