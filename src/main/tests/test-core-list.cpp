@@ -13,7 +13,7 @@ namespace {
     public:
         dummy *next;
         dummy *prev;
-        int    data;
+        size_t data;
 
         inline dummy() throw() : next(0), prev(0), data( alea.leq(100) ) {
 
