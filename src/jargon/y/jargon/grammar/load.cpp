@@ -23,7 +23,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             size_t        nr = 0;
-            const  string id = string::read(input,nr,ax); read+=nr;
+            const  string id = string::read(input,nr,ax); read += int(nr);
            
             
             //------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             size_t nch = 0;
             if( !input.query_upack(nch,nr)) throw exception("%s.%s(missing #chars for <%s>) in %s",**title,fn,*id,**(where.tag));
-            read += nr;
+            read += int(nr);
             
             while(nch-- > 0 )
             {
