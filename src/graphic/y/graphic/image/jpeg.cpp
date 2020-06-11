@@ -241,8 +241,8 @@ namespace upsylon {
             jpeg_stdio_dest(&cinfo,*fp);
 
 
-            cinfo.image_width      = bmp.w;     /* image width and height, in pixels */
-            cinfo.image_height     = bmp.h;
+            cinfo.image_width      = JDIMENSION(bmp.w);       /* image width and height, in pixels */
+            cinfo.image_height     = JDIMENSION(bmp.h);
             cinfo.input_components = 3;            /* # of color components per pixel */
             cinfo.in_color_space   = JCS_RGB;     /* colorspace of input image */
 
@@ -253,7 +253,7 @@ namespace upsylon {
             jpeg_set_defaults(&cinfo);
 
             //int quality = 70;
-            int quality = Image::Options::Get<unit_t>(params,"quality",70);
+            int quality = int(Image::Options::Get<unit_t>(params,"quality",70));
             /* Now you can set any non-default parameters you wish to.
              * Here we just illustrate the use of quality (quantization table) scaling:
              */
