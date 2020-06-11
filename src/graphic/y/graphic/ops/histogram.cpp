@@ -91,7 +91,7 @@ namespace upsylon {
                     break;
                 }
 
-                sumB += (float) (t * n);
+                sumB +=  (t * n);
 
                 const double mB = double(sumB) / wB;          // Mean Background
                 const double mF = double(sum - sumB) / wF;    // Mean Foreground
@@ -143,7 +143,7 @@ namespace upsylon {
                 double m1 = 0;
                 for(size_t i=ini;i<=end;++i)
                 {
-                    const double ni = bin[i];
+                    const double ni = double(bin[i]);
                     n  += ni;
                     m1 += i*ni;
                 }
