@@ -32,13 +32,13 @@ Y_UTEST(stack)
     {
         for(size_t iter=0;iter<4;++iter)
         {
-            const unit_t x     = alea.range<unit_t>(0,w);
-            const unit_t y     = alea.range<unit_t>(0,h);
-            const unit_t r     = alea.leq(100);
-            const size_t idx   = 1+alea.lt( Y_NAMED_COLORS );
-            const rgb    C     = NamedColors::GetRGBA(idx);
-            const float  f     = Convert::Get<float,rgb>(C);
-            const unit_t alpha = alea.range<uint8_t>(10,255);
+            const unit_t  x     = alea.range<unit_t>(0,w);
+            const unit_t  y     = alea.range<unit_t>(0,h);
+            const unit_t  r     = alea.leq(100);
+            const size_t  idx   = 1+alea.lt( Y_NAMED_COLORS );
+            const rgb     C     = NamedColors::GetRGBA(idx);
+            const float   f     = Convert::Get<float,rgb>(C);
+            const uint8_t alpha = alea.range<uint8_t>(10,255);
 
             Draw::Disk( rgbs[i], x, y, r, C, alpha);
             Draw::Disk( pxms[i], x, y, r, f, alpha);

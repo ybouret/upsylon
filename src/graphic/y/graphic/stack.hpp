@@ -112,7 +112,7 @@ namespace upsylon {
                 {
                     O_TIFF        tiff(fileName,append);
                     TIFF_Format::Compile(raster,*self[i], proc);
-                    tiff.WriteRGBAImage(raster, w, h,i);
+                    tiff.WriteRGBAImage(raster, int(w), int(h), i);
                     append = true;
                  }
             }
