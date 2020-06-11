@@ -33,7 +33,7 @@ namespace upsylon {
                 //! will sort by smaller score
                 int operator()( const Cores &lhs, const Cores &rhs ) throw()
                 {
-                    return score(lhs)-score(rhs);
+                    return int(score(lhs)-score(rhs));
                 }
 
             };
