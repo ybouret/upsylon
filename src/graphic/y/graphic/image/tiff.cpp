@@ -104,7 +104,7 @@ namespace upsylon
             Compile(raster,bmp, proc);
             
             // call library
-            tiff.WriteRGBAImage(raster, bmp.w, bmp.h, 0);
+            tiff.WriteRGBAImage(raster, int(bmp.w), int(bmp.h), 0);
 
             (void) options;
 

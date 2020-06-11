@@ -266,9 +266,9 @@ namespace upsylon {
             //
             // parse options
             //__________________________________________________________________
-            const bool   use_alpha    = Image::Options::Flag(options, "alpha");
-            const unit_t num_channels = use_alpha ? 4 : 3;
-            const size_t zlevel       = Image::Options::Get<size_t>(options,6);
+            const bool     use_alpha    = Image::Options::Flag(options, "alpha");
+            const unit_t   num_channels = use_alpha ? 4 : 3;
+            const int      zlevel       = unsigned(Image::Options::Get<size_t>(options,6));
             if(zlevel>=10) throw exception("%sinvalid z=%u",fn, unsigned(zlevel));
 
             //__________________________________________________________________
@@ -307,8 +307,8 @@ namespace upsylon {
                 throw exception("%s(header error)",fn);
             }
 
-            const unit_t width  = bmp.w;
-            const unit_t height = bmp.h;
+            const uint32_t width  = uint32_t(bmp.w);
+            const uint32_t height = uint32_t(bmp.h);
             png_set_IHDR(png_ptr, info_ptr,
                          width,
                          height,

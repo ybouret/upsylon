@@ -201,9 +201,9 @@ namespace upsylon
             TIFFSetField(out, TIFFTAG_IMAGEWIDTH,  w);
             TIFFSetField(out, TIFFTAG_IMAGELENGTH, h);
 
-            const size_t usr_scanline = samples_per_pixel * w;
-            const size_t out_scanline = TIFFScanlineSize(out);
-            const size_t buf_scanline = max_of(usr_scanline,out_scanline);
+            const int    usr_scanline = samples_per_pixel * w;
+            const int    out_scanline = TIFFScanlineSize(out);
+            const int    buf_scanline = max_of(usr_scanline,out_scanline);
 
             // We set the strip size of the file to be size of one row of pixels
             TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out,usr_scanline) );
