@@ -346,11 +346,11 @@ namespace upsylon {
             unit_t       y     = height;
             const unit_t depth = bmp.depth;
 
-            for(unit_t j=0;j<height;++j)
+            for(uint32_t j=0;j<height;++j)
             {
                 const uint8_t *p = (const uint8_t *)(bmp.getLine(--y));
                 png_byte      *q = mem.rows[j];
-                for(unit_t i=0;i<width;++i, p+=depth, q += num_channels)
+                for(uint32_t i=0;i<width;++i, p+=depth, q += num_channels)
                 {
                     const rgba C = proc(p);
                     q[0] = C.r;
