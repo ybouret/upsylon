@@ -25,7 +25,38 @@ namespace upsylon {
         vtk:: ~vtk() throw()
         {
         }
-        
+
+        void vtk:: writeHeader(ios::ostream & fp,
+                               const unsigned major,
+                               const unsigned minor) const
+        {
+            fp << "# vtk DataFile Version ";
+            fp("%u.%u\n",major,minor);
+        }
+
+        void vtk:: writeTitle(ios::ostream &fp,
+                              const string &title) const
+        {
+            for(size_t i=0;i<title.size();++i)
+            {
+                char C = title[i];
+                switch(C)
+                {
+                    case '\n':
+                    case '\r':
+                        C = '_';
+                        break;
+
+                    default:
+                        break;
+                }
+                fp << C;
+            }
+            fp << '\n';
+            fp << "ASCII\n";
+        }
+
+
     }
 
 }

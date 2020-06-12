@@ -193,7 +193,22 @@ namespace upsylon {
                 record(typeid( TUPLE<T> ),w);
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // writing vtk files
+            //
+            //
+            //------------------------------------------------------------------
 
+            //! write header
+            void writeHeader(ios::ostream  & fp,
+                             const unsigned  major=3,
+                             const unsigned  minor=0) const;
+
+            //! write title
+            void writeTitle(ios::ostream &fp,
+                            const string &title) const;
 
         private:
             explicit vtk();
