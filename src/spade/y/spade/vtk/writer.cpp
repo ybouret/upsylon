@@ -9,16 +9,8 @@ namespace upsylon {
 
     namespace Spade {
 
-        vtk::Writer:: Writer(const unsigned dim) throw() :
-        components(dim)
-        {
-            assert(components>0);
-        }
-
-        vtk::Writer:: ~Writer() throw()
-        {
-            _bzset(components);
-        }
+        vtk::Writer::  Writer() throw() {}
+        vtk::Writer:: ~Writer() throw() {}
 
         static const char fn[] = "vtk::Writers: ";
 
@@ -27,13 +19,8 @@ namespace upsylon {
             class mpnWriter : public vtk::Writer
             {
             public:
-                inline explicit mpnWriter() throw() : vtk::Writer(1)
-                {
-                }
-
-                inline virtual ~mpnWriter() throw()
-                {
-                }
+                inline explicit mpnWriter() throw() : vtk::Writer() {}
+                inline virtual ~mpnWriter() throw() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(mpnWriter);
@@ -45,18 +32,17 @@ namespace upsylon {
                     (void)fp.write_block(s);
                     return fp;
                 }
+
+                inline virtual unsigned    components() const throw() { return 1; }
+                inline virtual const char *dataType()   const throw() { return vtk::TypeInt; }
+
             };
 
             class mpzWriter : public vtk::Writer
             {
             public:
-                inline explicit mpzWriter() throw() : vtk::Writer(1)
-                {
-                }
-
-                inline virtual ~mpzWriter() throw()
-                {
-                }
+                inline explicit mpzWriter() throw() : vtk::Writer() {}
+                inline virtual ~mpzWriter() throw() {}
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(mpzWriter);
@@ -68,12 +54,14 @@ namespace upsylon {
                     (void)fp.write_block(s);
                     return fp;
                 }
+                inline virtual unsigned    components() const throw() { return 1; }
+                inline virtual const char *dataType()   const throw() { return vtk::TypeInt; }
             };
 
             class mpqWriter : public vtk::Writer
             {
             public:
-                inline explicit mpqWriter( const vtk::Writer &w ) throw() : vtk::Writer(1), dWriter(w)
+                inline explicit mpqWriter( const vtk::Writer &w ) throw() : vtk::Writer(), dWriter(w)
                 {
                 }
 
@@ -92,6 +80,8 @@ namespace upsylon {
                     const double q = static_cast<const mpq *>(addr)->to_real();
                     return dWriter.write(fp,&q);
                 }
+                inline virtual unsigned    components() const throw() { return 1; }
+                inline virtual const char *dataType()   const throw() { return vtk::TypeFloat; }
             };
 
         }

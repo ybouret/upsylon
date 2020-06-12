@@ -9,14 +9,12 @@ namespace upsylon {
 
     namespace Spade {
 
-        vtk::Native:: Native(const char *fmt) :
-        Writer(1),
-        format(fmt)
-        {
-        }
+        vtk::Native::  Native(const char *fmt) : Writer(), format(fmt) { }
+        vtk::Native:: ~Native() throw() {}
 
-        vtk::Native:: ~Native() throw()
+        unsigned vtk::Native:: components() const throw()
         {
+            return 1;
         }
 
         namespace {
@@ -25,6 +23,8 @@ namespace upsylon {
             class _Native : public vtk::Native
             {
             public:
+                static const bool  is_real  = type_traits<TYPE>::is_std_real;
+
                 inline explicit _Native(const char *fmt) : vtk::Native(fmt) {}
                 inline virtual ~_Native() throw() {}
 
@@ -38,6 +38,13 @@ namespace upsylon {
                     fp(*format,value);
                     return fp;
                 }
+
+                inline virtual const char *dataType() const throw()
+                {
+                    static const char * _ = is_real ? vtk::TypeFloat : vtk::TypeInt;
+                    return _;
+                }
+
             };
 
 #define Y_VTK_NATIVE(TYPE,CAST,FMT) do {       \
@@ -49,7 +56,8 @@ if(!natives.insert_by(k,w)) \
 throw exception("%sunexpected failure for <%s>",fn, *t.name());\
 }\
 } while(false)
-
+            
+#define Y_VTK_NATIVE_AUTO(TYPE,FMT) Y_VTK_NATIVE(TYPE,TYPE,FMT)
             
         }
 
@@ -61,11 +69,11 @@ throw exception("%sunexpected failure for <%s>",fn, *t.name());\
 
             Y_VTK_NATIVE(short,long, "%ld" );
             Y_VTK_NATIVE(int,  long, "%ld" );
-            Y_VTK_NATIVE(long, long, "%ld" );
+            Y_VTK_NATIVE_AUTO(long, "%ld" );
 
             Y_VTK_NATIVE(unsigned short,unsigned long, "%lu" );
             Y_VTK_NATIVE(unsigned int,  unsigned long, "%lu" );
-            Y_VTK_NATIVE(unsigned long, unsigned long, "%lu" );
+            Y_VTK_NATIVE_AUTO(unsigned long, "%lu" );
 
             Y_VTK_NATIVE(int16_t,long, "%ld" );
             Y_VTK_NATIVE(int32_t,long, "%ld" );
@@ -77,8 +85,8 @@ throw exception("%sunexpected failure for <%s>",fn, *t.name());\
             Y_VTK_NATIVE(size_t,unsigned long, "%lu" );
 
 
-            Y_VTK_NATIVE(float,float,"%.15g");
-            Y_VTK_NATIVE(double,double,"%.15g");
+            Y_VTK_NATIVE_AUTO(float,"%.15g");
+            Y_VTK_NATIVE_AUTO(double,"%.15g");
 
 
         }

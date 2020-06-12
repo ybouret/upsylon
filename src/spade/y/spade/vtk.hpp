@@ -36,6 +36,8 @@ namespace upsylon {
             static const char   _COORDINATES[]; //!< "_COORDINATES"
             static const char   POINTS[];       //!< "POINTS"
             static const size_t Repeat[4];      //!< [0,4,2,1] to validate ParaView
+            static const char   TypeFloat[];    //!< "float"
+            static const char   TypeInt[];      //!< "int"
 
             //------------------------------------------------------------------
             //
@@ -58,20 +60,13 @@ namespace upsylon {
                 // virtual interface
                 //
                 //--------------------------------------------------------------
-                virtual ~Writer() throw(); //!< cleanup
-                
-                //! write a given object
-                virtual ios::ostream & write(ios::ostream &, const void *) const = 0;
-               
-                //--------------------------------------------------------------
-                //
-                // members
-                //
-                //--------------------------------------------------------------
-                const unsigned components; //!< number of native components
+                virtual               ~Writer()                                  throw();     //!< cleanup
+                virtual ios::ostream & write(ios::ostream &, const void *) const         = 0; //!< write a given object
+                virtual unsigned       components()                        const throw() = 0; //!< number of components
+                virtual const char    *dataType()                          const throw() = 0; //!< vtk data type
 
             protected:
-                explicit Writer(const unsigned) throw(); //!< setup
+                explicit Writer() throw(); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Writer);
@@ -90,6 +85,8 @@ namespace upsylon {
             public:
                 virtual ~Native() throw(); //!< cleanup
                 string   format;           //!< C-style string format
+
+                virtual unsigned components() const throw(); //!< 1
 
             protected:
                 explicit Native(const char *); //!< setup Writer(1) and format
@@ -111,17 +108,22 @@ namespace upsylon {
             {
             public:
                 //! global definition
-                static const size_t COMPONENTS = sizeof(TUPLE<T>)/sizeof(T);
+                static const unsigned COMPONENTS = sizeof(TUPLE<T>)/sizeof(T);
 
                 //! cleanup
                 inline virtual ~Tuples() throw() {}
                 
                 //! setup from a Native reference
                 inline explicit Tuples(const Writer &itemWriter) :
-                Writer(COMPONENTS), writer(itemWriter) {}
+                Writer(),
+                writer(itemWriter),
+                allComponents(COMPONENTS*writer.components())
+                {}
 
             private:
-                const Writer &writer;
+                const Writer  &writer;
+                const unsigned allComponents;
+
                 Y_DISABLE_COPY_AND_ASSIGN(Tuples);
                 inline virtual ios::ostream & write(ios::ostream &fp, const void *addr) const
                 {
@@ -133,6 +135,8 @@ namespace upsylon {
                     }
                     return fp;
                 }
+                inline virtual unsigned    components() const throw() { return allComponents;     }
+                inline virtual const char *dataType()   const throw() { return writer.dataType(); }
             };
 
             //------------------------------------------------------------------
@@ -210,6 +214,33 @@ namespace upsylon {
             void writeTitle(ios::ostream &fp,
                             const string &title) const;
 
+            //! write layout as structured points, no physical data
+            /**
+             data are expanded to work with ParaView
+             */
+            template <typename COORD> inline
+            void writeLayout( ios::ostream &fp, const Layout<COORD> &L ) const
+            {
+                structuredPoints_(fp, Layout<COORD>::Dimensions, (const Coord1D *)&L.width, (const Coord1D *)&L.lower );
+            }
+
+            //! write layout as structured points, no physical data
+            /**
+             write global POINT_DATA for this layout, expanded for ParaView
+             */
+            void writePointData(ios::ostream        &fp,
+                                const LayoutMetrics &L ) const;
+
+
+
+            //! write as VTK dimensions with padding for Paraview
+            template <typename COORD> inline
+            ios::ostream & writeDimensions( ios::ostream &fp, const COORD &width) const
+            {
+                return composeAs3D(fp << DIMENSIONS << ' ', & Coord::Of(width,0), Coord::Get<COORD>::Dimensions, 2);
+            }
+
+
         private:
             explicit vtk();
             virtual ~vtk() throw();
@@ -221,6 +252,22 @@ namespace upsylon {
 
             void registerNatives();
             void registerWriters();
+
+            //! write structured points
+            void structuredPoints_(ios::ostream  &fp, const unsigned dimensions, const Coord1D *width, const Coord1D *lower) const;
+
+            //! make a 3D vector from data
+            ios::ostream &  composeAs3D(ios::ostream  &fp, const Coord1D *v, const unsigned dimensions, const Coord1D pad) const;
+
+            //! write type as scalar at address
+            void writeScalar(ios::ostream &fp, const Writer &W, const void *) const;
+
+            //! write type as vector at address
+            void writeVector(ios::ostream &fp, const Writer &W, const void *) const;
+
+            //! prepare lookup table
+            const Writer & revealField( ios::ostream &fp, const Field  &F ) const;
+
         };
 
     }
