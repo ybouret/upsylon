@@ -263,7 +263,7 @@ namespace upsylon {
                 {
                     for(loop.boot();loop.good();loop.next())
                     {
-                        (*this.*write1)(fp,writer, & F(*loop) );
+                        (*this.*write1)(fp,writer, & F[*loop] );
                     }
                 }
             }

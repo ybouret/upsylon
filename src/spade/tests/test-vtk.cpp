@@ -47,6 +47,44 @@ namespace {
         std::cerr << "Layout: " << L << std::endl;
         VTK.writeLayout(fp,L);
 
+        VTK.writePointData(fp,L);
+
+        typedef typename FieldFor<COORD>:: template Of<int>::    Type iField;
+        typedef typename FieldFor<COORD>:: template Of<float>::  Type fField;
+        typedef typename FieldFor<COORD>:: template Of<double>:: Type dField;
+
+        iField I("I",L);
+        {
+            typename iField::Loop loop(I.lower,I.upper);
+            for(loop.boot();loop.good();loop.next())
+            {
+                I[ *loop ] = int( loop.index );
+            }
+        }
+
+        fField F("F",L);
+        {
+            typename fField::Loop loop(F.lower,F.upper);
+            for(loop.boot();loop.good();loop.next())
+            {
+                F[ *loop ] = alea.to<float>();
+            }
+        }
+
+        dField D("D",L);
+        {
+            typename dField::Loop loop(F.lower,F.upper);
+            for(loop.boot();loop.good();loop.next())
+            {
+                D[ *loop ] = alea.to<double>();
+            }
+        }
+
+
+        VTK.writeField(fp,I,L);
+        VTK.writeField(fp,F,L);
+        VTK.writeField(fp,D,L);
+
         std::cerr << std::endl;
 
     }

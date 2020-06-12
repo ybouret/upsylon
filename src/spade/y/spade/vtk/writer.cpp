@@ -12,6 +12,12 @@ namespace upsylon {
         vtk::Writer::  Writer() throw() {}
         vtk::Writer:: ~Writer() throw() {}
 
+        bool vtk::Writer:: isScalar() const throw()
+        {
+            return 1 == components();
+        }
+
+
         static const char fn[] = "vtk::Writers: ";
 
         namespace {
