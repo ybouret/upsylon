@@ -27,16 +27,7 @@ void doVTK()
 
 Y_UTEST(vtk)
 {
-#if 0
-    VTK::Writers &fmt = VTK::Writers::instance();
-
-    std::cerr << "#native=" << fmt.ndb.entries() << std::endl;
-    std::cerr << "#other =" << fmt.wdb.entries() << std::endl;
-
-    std::cerr << "for int   : " << fmt.formatString<int>() << std::endl;
-    std::cerr << "for float : " << fmt.formatString<float>() << std::endl;
-#endif
-
+    
     vtk &VTK = vtk::instance();
 
 
