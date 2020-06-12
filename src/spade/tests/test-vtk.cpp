@@ -15,6 +15,9 @@ void doVTK()
     ios::ocstream fp(ios::cstderr);
 
     std::cerr << type_name_of<T>() << std::endl;
+    const vtk::Writer &w = VTK.getWriter<T>();
+    std::cerr << "|_type: '" << w.dataType() << "'" << std::endl;
+    std::cerr << "|_comp: " << w.components() << std::endl;
 
     for(size_t i=1+alea.leq(10);i>0;--i)
     {
@@ -50,9 +53,7 @@ Y_UTEST(vtk)
     std::cerr << "format for int:   " << VTK.getNative<int>().format   << std::endl;
     std::cerr << "format for float: " << VTK.getNative<float>().format << std::endl;
 
-    std::cerr << "tl_index float:  " << tl::index_of<tl::std_reals_list,float>::value  << std::endl;
-    std::cerr << "tl_index double: " << tl::index_of<tl::std_reals_list,double>::value << std::endl;
-
+    
 
 }
 Y_UTEST_DONE()
