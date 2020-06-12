@@ -605,7 +605,7 @@ Y_CORE_STRING_CMP(>)
                 inline bool operator()(const T c) const throw()
                 {
                     assert(!(0==buffer&&buflen>0));
-                    for(size_t i=buflen;i>0;--i)
+                    for(size_t i=0;i<buflen;++i)
                     {
                         if(c==buffer[i]) return true;
                     }

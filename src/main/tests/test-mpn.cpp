@@ -406,7 +406,7 @@ Y_UTEST(mpn)
     for(size_t iter=0;iter<ITERS_SMALL;++iter)
     {
         const size_t ns=1+alea.leq(30);
-        string  d;
+        string       d;
         std::cerr << std::dec;
         for(size_t i=0;i<ns;++i)
         {
@@ -415,6 +415,10 @@ Y_UTEST(mpn)
         std::cerr << std::dec << "d=" << d << std::endl;
         const mpn n = mpn::dec(d);
         std::cerr << std::dec << "n=" << n << std::endl;
+        d.skip_with('0');
+        const string D = n.to_decimal();
+        std::cerr << "D=" << D << "/" << d << std::endl;
+        Y_ASSERT(D==d);
     }
 
     std::cerr << "-- square root" << std::endl;

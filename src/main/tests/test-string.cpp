@@ -151,6 +151,13 @@ Y_UTEST(string)
     
     const string a = vformat("hello%cworld",0);
     std::cerr << "a=" << a << std::endl;
+    
+    {
+        string s = "aabcd";
+        s.skip_with('a');
+        std::cerr << s << std::endl;
+    }
+    
 }
 Y_UTEST_DONE()
 

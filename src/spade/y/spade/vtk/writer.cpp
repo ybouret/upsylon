@@ -16,8 +16,7 @@ namespace upsylon {
         {
             return 1 == components();
         }
-
-
+        
         static const char fn[] = "vtk::Writers: ";
 
         namespace {
@@ -35,7 +34,7 @@ namespace upsylon {
                 {
                     assert(addr);
                     const string s = static_cast<const mpn *>(addr)->to_decimal();
-                    (void)fp.write_block(s);
+                    fp << s;
                     return fp;
                 }
 
@@ -57,7 +56,7 @@ namespace upsylon {
                 {
                     assert(addr);
                     const string s = static_cast<const mpz *>(addr)->to_decimal();
-                    (void)fp.write_block(s);
+                    fp << s;
                     return fp;
                 }
                 inline virtual unsigned    components() const throw() { return 1; }
@@ -108,14 +107,12 @@ namespace upsylon {
             record<mpn>(new mpnWriter());
             record<mpz>(new mpzWriter());
             record<mpq>(new mpqWriter( getNative<double>()));
-
-
         }
 
 
         const vtk::Writer & vtk::getWriter(const std::type_info &tid) const
         {
-            const type_spec &t = type_spec_for(tid);
+            const type_spec &t = type_spec_for(tid); //std::cerr << "getWriter<" << t.name() << ">" << std::endl;
             const be_key     k = t;
             const INative   *n = natives.search_by(k);
             if(n)

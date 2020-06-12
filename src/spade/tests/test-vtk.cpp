@@ -21,7 +21,7 @@ namespace {
         std::cerr << "|_type: '" << w.dataType() << "'" << std::endl;
         std::cerr << "|_comp: " << w.components() << std::endl;
 
-        for(size_t i=1+alea.leq(10);i>0;--i)
+        for(size_t i=5+alea.leq(30);i>0;--i)
         {
             const T tmp = support::get<T>();
             VTK(fp << '\t', tmp) << '\n';
@@ -33,6 +33,7 @@ namespace {
     template <typename COORD> static inline
     void doSave()
     {
+        Coord::DispWidth = 2;
         static const Coord1D r[] = { 10, 20 , 30 };
 
         vtk &VTK = vtk::instance();
@@ -68,6 +69,10 @@ namespace {
             for(loop.boot();loop.good();loop.next())
             {
                 I[ *loop ] = int( loop.index );
+                if(2==dims)
+                {
+                    std::cerr << "@" << *loop << " : " << I[*loop] << std::endl;
+                }
             }
         }
 
@@ -137,6 +142,7 @@ Y_UTEST(vtk)
     doVTK<float>();
     doVTK<double>();
     doVTK< complex<float> >();
+    
     doVTK< complex<double> >();
 
     doVTK< point2d<float> >();
@@ -144,10 +150,11 @@ Y_UTEST(vtk)
 
     doVTK< point3d<float> >();
     doVTK< point3d<double> >();
+    
     doVTK<mpn>();
     doVTK<mpz>();
     doVTK<mpq>();
-
+    
     std::cerr << "format for int:   " << VTK.getNative<int>().format   << std::endl;
     std::cerr << "format for float: " << VTK.getNative<float>().format << std::endl;
 
@@ -158,7 +165,6 @@ Y_UTEST(vtk)
     doSave<Coord1D>();
     doSave<Coord2D>();
     doSave<Coord3D>();
-
     
 
 }
