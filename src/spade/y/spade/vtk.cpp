@@ -6,16 +6,16 @@ namespace upsylon {
     namespace Spade
     {
 
-        const char   vtk::DATASET[]      = "DATASET";
-        const char   vtk::DIMENSIONS[]   = "DIMENSIONS";
-        const char   vtk::ORIGIN[]       = "ORIGIN";
-        const char   vtk::SPACING[]      = "SPACING";
-        const char   vtk::_COORDINATES[] = "_COORDINATES";
-        const char   vtk::POINTS[]       = "POINTS";
-        const size_t vtk::Repeat[4]      = { 0, 4, 2, 1 };
-        const char   vtk::TypeFloat[]    = "float";
-        const char   vtk::TypeInt[]      = "int";
-        const char   vtk::TypeDouble[]   = "double";
+        const char     vtk::DATASET[]      = "DATASET";
+        const char     vtk::DIMENSIONS[]   = "DIMENSIONS";
+        const char     vtk::ORIGIN[]       = "ORIGIN";
+        const char     vtk::SPACING[]      = "SPACING";
+        const char     vtk::_COORDINATES[] = "_COORDINATES";
+        const char     vtk::POINTS[]       = "POINTS";
+        const unsigned vtk::Repeat[4]      = { 0, 4, 2, 1 };
+        const char     vtk::TypeFloat[]    = "float";
+        const char     vtk::TypeInt[]      = "int";
+        const char     vtk::TypeDouble[]   = "double";
 
         vtk:: vtk() :
         natives(),

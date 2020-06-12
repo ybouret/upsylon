@@ -37,6 +37,12 @@ SET( vtk_srcs ${vtk_decl} ${vtk_impl} )
 INSTALL( FILES ${vtk_decl} DESTINATION include/y/spade/vtk )
 SOURCE_GROUP(spade/vtk FILES ${vtk_srcs} )
 
+FILE( GLOB algo_decl y/spade/algo/*.hpp)
+FILE( GLOB algo_impl y/spade/algo/*.cpp)
+SET( algo_srcs ${algo_decl} ${algo_impl} )
+INSTALL( FILES ${algo_decl} DESTINATION include/y/spade/algo )
+SOURCE_GROUP(spade/algo FILES ${algo_srcs} )
+
 INCLUDE_DIRECTORIES(. ../main)
 
 ADD_LIBRARY( y-spade STATIC 
@@ -46,6 +52,7 @@ ${layout_srcs}
 ${network_srcs}
 ${mesh_srcs}
 ${vtk_srcs}
+${algo_srcs}
 )
 INSTALL( TARGETS y-spade ARCHIVE DESTINATION lib )
 

@@ -33,6 +33,7 @@ Y_UTEST(vtk)
     
     vtk &VTK = vtk::instance();
 
+    std::cerr << "-- Testing Writers" << std::endl;
 
     doVTK<short>();
     doVTK<unsigned short>();
@@ -52,6 +53,9 @@ Y_UTEST(vtk)
 
     std::cerr << "format for int:   " << VTK.getNative<int>().format   << std::endl;
     std::cerr << "format for float: " << VTK.getNative<float>().format << std::endl;
+
+    std::cerr << "-- Testing VTK files" << std::endl;
+    
 
     
 

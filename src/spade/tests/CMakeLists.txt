@@ -18,6 +18,7 @@ ADD_TEST(transfer     test-spade transfer)
 ADD_TEST(workspace    test-spade workspace)
 ADD_TEST(mesh         test-spade mesh)
 ADD_TEST(vtk          test-spade vtk)
+ADD_TEST(dct          test-spade dct)
 
 ADD_CUSTOM_TARGET(utest-spade
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

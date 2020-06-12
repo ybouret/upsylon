@@ -29,16 +29,16 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const at_exit::longevity life_time = 0; //!< for singleton
-            static const char   DATASET[];      //!< "DATASET"
-            static const char   DIMENSIONS[];   //!< "DIMENSIONS"
-            static const char   ORIGIN[];       //!< "ORIGIN"
-            static const char   SPACING[];      //!< "SPACING"
-            static const char   _COORDINATES[]; //!< "_COORDINATES"
-            static const char   POINTS[];       //!< "POINTS"
-            static const size_t Repeat[4];      //!< [0,4,2,1] to validate ParaView
-            static const char   TypeFloat[];    //!< "float"
-            static const char   TypeDouble[];   //!< "double"
-            static const char   TypeInt[];      //!< "int"
+            static const char     DATASET[];      //!< "DATASET"
+            static const char     DIMENSIONS[];   //!< "DIMENSIONS"
+            static const char     ORIGIN[];       //!< "ORIGIN"
+            static const char     SPACING[];      //!< "SPACING"
+            static const char     _COORDINATES[]; //!< "_COORDINATES"
+            static const char     POINTS[];       //!< "POINTS"
+            static const unsigned Repeat[4];      //!< [0,4,2,1] to validate ParaView
+            static const char     TypeFloat[];    //!< "float"
+            static const char     TypeDouble[];   //!< "double"
+            static const char     TypeInt[];      //!< "int"
 
             //------------------------------------------------------------------
             //
@@ -65,6 +65,13 @@ namespace upsylon {
                 virtual ios::ostream & write(ios::ostream &, const void *) const         = 0; //!< write a given object
                 virtual unsigned       components()                        const throw() = 0; //!< number of components
                 virtual const char    *dataType()                          const throw() = 0; //!< vtk data type
+
+                //--------------------------------------------------------------
+                //
+                // non-virtual interface
+                //
+                //--------------------------------------------------------------
+                bool isScalar() const throw();
 
             protected:
                 explicit Writer() throw(); //!< setup
@@ -215,6 +222,10 @@ namespace upsylon {
             void writeTitle(ios::ostream &fp,
                             const string &title) const;
 
+            //! write title, wrapper
+            void writeTitle(ios::ostream &fp,
+                            const char   *title) const;
+
             //! write layout as structured points, no physical data
             /**
              data are expanded to work with ParaView
@@ -230,18 +241,33 @@ namespace upsylon {
              write global POINT_DATA for this layout, expanded for ParaView
              */
             void writePointData(ios::ostream        &fp,
-                                const LayoutMetrics &L ) const;
+                                const LayoutMetrics &L) const;
 
 
 
-            //! write as VTK dimensions with padding for Paraview
-            template <typename COORD> inline
-            ios::ostream & writeDimensions( ios::ostream &fp, const COORD &width) const
+            //! write a field with repeats to be usable by ParaView
+            template <typename FIELD,typename LAYOUT> inline
+            void writeField(ios::ostream &fp,
+                            const FIELD  &F,
+                            const LAYOUT &L) const
             {
-                return composeAs3D(fp << DIMENSIONS << ' ', & Coord::Of(width,0), Coord::Get<COORD>::Dimensions, 2);
+                // local type
+                typedef void (vtk::*method)( ios::ostream &, const Writer &, const void *) const;
+                const Writer &writer = revealField(fp,F);
+                method        write1 = ( writer.isScalar() ) ?  & vtk::writeScalar : & vtk::writeVector;
+                const size_t  repeat = Repeat[ LAYOUT::Dimensions ];
+
+                // loop over layout
+                typename LAYOUT::Loop loop(L.lower,L.upper);
+                for(unsigned r=0;r<repeat;++r)
+                {
+                    for(loop.boot();loop.good();loop.next())
+                    {
+                        (*this.*write1)(fp,writer, & F(*loop) );
+                    }
+                }
             }
-
-
+            
         private:
             explicit vtk();
             virtual ~vtk() throw();
@@ -254,8 +280,15 @@ namespace upsylon {
             void registerNatives();
             void registerWriters();
 
+            //! write as VTK dimensions with padding for Paraview
+            template <typename COORD> inline
+            ios::ostream & writeDimensions(ios::ostream &fp, const COORD &width) const
+            {
+                return composeAs3D(fp << DIMENSIONS << ' ', & Coord::Of(width,0), Coord::Get<COORD>::Dimensions, 2);
+            }
+
             //! write structured points
-            void structuredPoints_(ios::ostream  &fp, const unsigned dimensions, const Coord1D *width, const Coord1D *lower) const;
+            void structuredPoints_(ios::ostream &fp, const unsigned dimensions, const Coord1D *width, const Coord1D *lower) const;
 
             //! make a 3D vector from data
             ios::ostream &  composeAs3D(ios::ostream  &fp, const Coord1D *v, const unsigned dimensions, const Coord1D pad) const;

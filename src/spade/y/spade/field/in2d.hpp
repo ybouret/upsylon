@@ -64,7 +64,18 @@ namespace upsylon {
             {
                 standalone();
             }
-            
+
+            //! setup with internal memory, using sizes
+            template <typename LABEL> inline
+            explicit Field2D(const LABEL      &id,
+                             const Coord1D     W,
+                             const Coord1D     H) :
+            FieldOf<T>(id), LayoutType(coord(0,0),coord(W-1,H-1)), Y_FIELD2D_CTOR()
+            {
+                standalone();
+            }
+
+
             //------------------------------------------------------------------
             //
             // virtual interface

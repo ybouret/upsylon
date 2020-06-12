@@ -13,5 +13,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(workspace);
     Y_UTEST(mesh);
     Y_UTEST(vtk);
+    Y_UTEST(dct);
 }
 Y_UTEST_EXEC()
