@@ -50,11 +50,15 @@ throw exception("%sunexpected failure for <%s>",fn, *t.name());\
 }\
 } while(false)
 
+            
         }
 
         static const char fn[] = "vtk::Natives: ";
         void vtk:: registerNatives()
         {
+            Y_VTK_NATIVE(unsigned char,unsigned long, "%lu");
+            Y_VTK_NATIVE(uint8_t,unsigned long, "%lu");
+
             Y_VTK_NATIVE(short,long, "%ld" );
             Y_VTK_NATIVE(int,  long, "%ld" );
             Y_VTK_NATIVE(long, long, "%ld" );

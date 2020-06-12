@@ -117,19 +117,19 @@ namespace upsylon {
                 inline virtual ~Tuples() throw() {}
                 
                 //! setup from a Native reference
-                inline explicit Tuples(const Native &nativeRef) :
-                Writer(COMPONENTS), native(nativeRef) {}
+                inline explicit Tuples(const Writer &itemWriter) :
+                Writer(COMPONENTS), writer(itemWriter) {}
 
             private:
-                const Native &native;
+                const Writer &writer;
                 Y_DISABLE_COPY_AND_ASSIGN(Tuples);
                 inline virtual ios::ostream & write(ios::ostream &fp, const void *addr) const
                 {
                     const T *p = static_cast<const T *>(addr);
-                    native.write(fp,&p[0]);
+                    writer.write(fp,&p[0]);
                     for(unsigned c=1;c<COMPONENTS;++c)
                     {
-                        native.write(fp<<' ', &p[c]);
+                        writer.write(fp<<' ', &p[c]);
                     }
                     return fp;
                 }
@@ -173,7 +173,27 @@ namespace upsylon {
                 static const Writer &_ = getWriter<T>();
                 return _.write(fp,&args);
             }
-            
+
+            //! record a new writer
+            void record( const std::type_info &tid, const IWriter &w );
+
+            //! record a new writer
+            template <typename T> inline
+            void record(Writer *W)
+            {
+                const IWriter w = W;
+                record(typeid(T),w);
+            }
+
+            //! record for a tuple
+            template <template <typename> class TUPLE, typename T>
+            void tuples()
+            {
+                const IWriter w = new Tuples<TUPLE,T>( getWriter<T>() );
+                record(typeid( TUPLE<T> ),w);
+            }
+
+
 
         private:
             explicit vtk();

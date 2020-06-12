@@ -43,6 +43,9 @@ Y_UTEST(vtk)
 
     doVTK< point3d<float> >();
     doVTK< point3d<double> >();
+    doVTK<mpn>();
+    doVTK<mpz>();
+    doVTK<mpq>();
 
     std::cerr << "format for int:   " << VTK.getNative<int>().format   << std::endl;
     std::cerr << "format for float: " << VTK.getNative<float>().format << std::endl;

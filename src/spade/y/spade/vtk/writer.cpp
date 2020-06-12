@@ -3,6 +3,7 @@
 #include "y/type/spec.hpp"
 #include "y/associative/be-key.hpp"
 #include "y/exception.hpp"
+#include "y/mpl/rational.hpp"
 
 namespace upsylon {
 
@@ -19,26 +20,99 @@ namespace upsylon {
             _bzset(components);
         }
 
-#define Y_VTK_TUPLES(TUPLE,TYPE) do {                             \
-const IWriter    w = new Tuples<TUPLE,TYPE>( getNative<TYPE>() ); \
-const type_spec &t = type_spec_of< TUPLE<TYPE> >();               \
-const be_key     k =  t;                                          \
-if(!writers.insert_by(k,w))                                       \
-throw exception("%sfailure to insert <%s>", fn, *t.name());       \
-} while(false)
-
         static const char fn[] = "vtk::Writers: ";
+
+        namespace {
+
+            class mpnWriter : public vtk::Writer
+            {
+            public:
+                inline explicit mpnWriter() throw() : vtk::Writer(1)
+                {
+                }
+
+                inline virtual ~mpnWriter() throw()
+                {
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(mpnWriter);
+                inline virtual
+                ios::ostream & write( ios::ostream &fp, const void *addr ) const
+                {
+                    assert(addr);
+                    const string s = static_cast<const mpn *>(addr)->to_decimal();
+                    (void)fp.write_block(s);
+                    return fp;
+                }
+            };
+
+            class mpzWriter : public vtk::Writer
+            {
+            public:
+                inline explicit mpzWriter() throw() : vtk::Writer(1)
+                {
+                }
+
+                inline virtual ~mpzWriter() throw()
+                {
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(mpzWriter);
+                inline virtual
+                ios::ostream & write( ios::ostream &fp, const void *addr ) const
+                {
+                    assert(addr);
+                    const string s = static_cast<const mpz *>(addr)->to_decimal();
+                    (void)fp.write_block(s);
+                    return fp;
+                }
+            };
+
+            class mpqWriter : public vtk::Writer
+            {
+            public:
+                inline explicit mpqWriter( const vtk::Writer &w ) throw() : vtk::Writer(1), dWriter(w)
+                {
+                }
+
+                inline virtual ~mpqWriter() throw()
+                {
+                }
+
+                const vtk::Writer &dWriter;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(mpqWriter);
+                inline virtual
+                ios::ostream & write( ios::ostream &fp, const void *addr ) const
+                {
+                    assert(addr);
+                    const double q = static_cast<const mpq *>(addr)->to_real();
+                    return dWriter.write(fp,&q);
+                }
+            };
+
+        }
+        
 
         void vtk:: registerWriters()
         {
-            Y_VTK_TUPLES(complex,float);
-            Y_VTK_TUPLES(complex,double);
+            tuples<complex,float>();
+            tuples<complex,double>();
 
-            Y_VTK_TUPLES(point2d,float);
-            Y_VTK_TUPLES(point3d,float);
+            tuples<point2d,float>();
+            tuples<point3d,float>();
 
-            Y_VTK_TUPLES(point2d,double);
-            Y_VTK_TUPLES(point3d,double);
+            tuples<point2d,double>();
+            tuples<point3d,double>();
+
+
+            record<mpn>(new mpnWriter());
+            record<mpz>(new mpzWriter());
+            record<mpq>(new mpqWriter( getNative<double>()));
+
 
         }
 
@@ -62,6 +136,17 @@ throw exception("%sfailure to insert <%s>", fn, *t.name());       \
                 return **w;
             }
         }
+
+        void vtk:: record(const std::type_info &tid, const IWriter &w)
+        {
+            const type_spec &t = type_spec_for(tid);
+            const be_key     k = t;
+            if( !writers.insert_by(k,w) )
+            {
+                throw exception("%smultiple <%s>", fn, *t.name());
+            }
+        }
+
     }
 
 }
