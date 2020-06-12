@@ -15,6 +15,7 @@ namespace upsylon {
         const size_t vtk::Repeat[4]      = { 0, 4, 2, 1 };
         const char   vtk::TypeFloat[]    = "float";
         const char   vtk::TypeInt[]      = "int";
+        const char   vtk::TypeDouble[]   = "double";
 
         vtk:: vtk() :
         natives(),

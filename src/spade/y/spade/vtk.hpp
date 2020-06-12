@@ -37,6 +37,7 @@ namespace upsylon {
             static const char   POINTS[];       //!< "POINTS"
             static const size_t Repeat[4];      //!< [0,4,2,1] to validate ParaView
             static const char   TypeFloat[];    //!< "float"
+            static const char   TypeDouble[];   //!< "double"
             static const char   TypeInt[];      //!< "int"
 
             //------------------------------------------------------------------

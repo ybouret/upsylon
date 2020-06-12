@@ -50,6 +50,9 @@ Y_UTEST(vtk)
     std::cerr << "format for int:   " << VTK.getNative<int>().format   << std::endl;
     std::cerr << "format for float: " << VTK.getNative<float>().format << std::endl;
 
+    std::cerr << "tl_index float:  " << tl::index_of<tl::std_reals_list,float>::value  << std::endl;
+    std::cerr << "tl_index double: " << tl::index_of<tl::std_reals_list,double>::value << std::endl;
+
 
 }
 Y_UTEST_DONE()

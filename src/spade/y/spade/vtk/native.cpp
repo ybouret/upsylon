@@ -23,7 +23,6 @@ namespace upsylon {
             class _Native : public vtk::Native
             {
             public:
-                static const bool  is_real  = type_traits<TYPE>::is_std_real;
 
                 inline explicit _Native(const char *fmt) : vtk::Native(fmt) {}
                 inline virtual ~_Native() throw() {}
@@ -39,9 +38,24 @@ namespace upsylon {
                     return fp;
                 }
 
+                inline static const char *DataType()   throw()
+                {
+                    static const int IsFloat  = tl::index_of<tl::std_reals_list,float>::value;
+                    static const int IsDouble = tl::index_of<tl::std_reals_list,double>::value;
+                    static const int myIndex  = tl::index_of<tl::std_reals_list,TYPE>::value;
+                    
+                    switch( myIndex )
+                    {
+                        case IsFloat:  return vtk::TypeFloat;
+                        case IsDouble: return vtk::TypeDouble;
+                        default: break;
+                    }
+                    return vtk::TypeInt;
+                }
+
                 inline virtual const char *dataType() const throw()
                 {
-                    static const char * _ = is_real ? vtk::TypeFloat : vtk::TypeInt;
+                    static const char * _ = DataType();
                     return _;
                 }
 
