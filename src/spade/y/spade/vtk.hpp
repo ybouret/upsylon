@@ -12,7 +12,11 @@ namespace upsylon {
         //----------------------------------------------------------------------
         //
         //
-        //! vtk API
+        //! vtk API to write fields
+        /**
+         - for 1D field, expanded x2 x2 => 4 times
+         - for 2D field, expanded x2    => 2 times
+         */
         //
         //
         //----------------------------------------------------------------------
@@ -25,6 +29,13 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             static const at_exit::longevity life_time = 0; //!< for singleton
+            static const char   DATASET[];      //!< "DATASET"
+            static const char   DIMENSIONS[];   //!< "DIMENSIONS"
+            static const char   ORIGIN[];       //!< "ORIGIN"
+            static const char   SPACING[];      //!< "SPACING"
+            static const char   _COORDINATES[]; //!< "_COORDINATES"
+            static const char   POINTS[];       //!< "POINTS"
+            static const size_t Repeat[4];      //!< [0,4,2,1] to validate ParaView
 
             //------------------------------------------------------------------
             //
