@@ -81,7 +81,7 @@ namespace upsylon {
                     return dWriter.write(fp,&q);
                 }
                 inline virtual unsigned    components() const throw() { return 1; }
-                inline virtual const char *dataType()   const throw() { return vtk::TypeFloat; }
+                inline virtual const char *dataType()   const throw() { return vtk::TypeDouble; }
             };
 
         }
