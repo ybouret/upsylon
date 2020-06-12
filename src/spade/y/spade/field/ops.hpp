@@ -62,6 +62,65 @@ namespace upsylon {
                 }
                 return ans;
             }
+
+            //! Minimal value on a sub layout
+            template <typename FIELD> static inline
+            typename FIELD::mutable_type Min(const FIELD                      &F,
+                                             const typename FIELD::LayoutType sub)
+            {
+                assert(F.contains(sub));
+                typename FIELD::LayoutType::Loop loop(sub.lower,sub.upper); loop.boot();
+                typename FIELD::mutable_type     vmin = F[*loop];
+                for(loop.next();loop.good();loop.next())
+                {
+                    typename FIELD::const_type &temp = F[*loop];
+                    if(temp<vmin) vmin = temp;
+                }
+                return vmin;
+            }
+
+            //! Maximal value on a sub layout
+            template <typename FIELD> static inline
+            typename FIELD::mutable_type Max(const FIELD                      &F,
+                                             const typename FIELD::LayoutType sub)
+            {
+                assert(F.contains(sub));
+                typename FIELD::LayoutType::Loop loop(sub.lower,sub.upper); loop.boot();
+                typename FIELD::mutable_type     vmax = F[*loop];
+                for(loop.next();loop.good();loop.next())
+                {
+                    typename FIELD::const_type &temp = F[*loop];
+                    if(temp>vmax) vmax = temp;
+                }
+                return vmax;
+            }
+
+            //! Min/Max values on a sub layout
+            template <typename FIELD> static inline
+            void MinMax(typename FIELD::mutable_type     &vmin,
+                        typename FIELD::mutable_type     &vmax,
+                        const FIELD                      &F,
+                        const typename FIELD::LayoutType sub)
+            {
+                assert(F.contains(sub));
+                typename FIELD::LayoutType::Loop loop(sub.lower,sub.upper);
+                loop.boot();
+                vmax = vmin = F[*loop];
+                for(loop.next();loop.good();loop.next())
+                {
+                    typename FIELD::const_type &temp = F[*loop];
+                    if(temp>vmax)
+                    {
+                        vmax = temp;
+                    }
+                    else if(temp<vmin)
+                    {
+                        vmin = temp;
+                    }
+
+                }
+            }
+
         };
         
         

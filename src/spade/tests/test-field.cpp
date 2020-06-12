@@ -1,5 +1,6 @@
 
 #include "y/spade/fields.hpp"
+#include "y/spade/field/ops.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/type/spec.hpp"
@@ -52,6 +53,17 @@ namespace {
                 Y_ASSERT( G(loop.index-1) == data[loop.index] );
                 Y_ASSERT( G( G.indexOf(loop.value) ) == G(loop.index-1) );
             }
+
+            type vmin = Ops::Min(G,G);
+            type vmax = Ops::Max(G,G);
+            std::cerr << "\tMin... {" << vmin << "}" << std::endl;
+            std::cerr << "\tMax... {" << vmax << "}" << std::endl;
+            type vmin2 = vmax;
+            type vmax2 = vmin;
+            Ops::MinMax(vmin2,vmax2,G,G);
+            std::cerr << "\tMin... {" << vmin2 << "}" << std::endl;
+            std::cerr << "\tMax... {" << vmax2 << "}" << std::endl;
+
             std::cerr << "\tDone..." << std::endl;
         }
         

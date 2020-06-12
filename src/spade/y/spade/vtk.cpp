@@ -59,6 +59,12 @@ namespace upsylon {
             fp << "ASCII\n";
         }
 
+        void vtk:: writeTitle(ios::ostream &fp,
+                              const char   *title) const
+        {
+            const string _(title);
+            return writeTitle(fp,_);
+        }
 
         ios::ostream & vtk:: composeAs3D(ios::ostream  &fp,
                                          const Coord1D   *v,
