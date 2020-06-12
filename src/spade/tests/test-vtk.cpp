@@ -1,4 +1,5 @@
 #include "y/spade/vtk.hpp"
+#include "y/spade/vertices.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
@@ -53,6 +54,14 @@ namespace {
         typedef typename FieldFor<COORD>:: template Of<float>::  Type fField;
         typedef typename FieldFor<COORD>:: template Of<double>:: Type dField;
 
+        typedef typename VertexFor<COORD>:: template Of<float>::  Type vf_t;
+        typedef typename VertexFor<COORD>:: template Of<double>:: Type vd_t;
+
+        typedef typename FieldFor<COORD>:: template Of<vf_t>:: Type vField;
+        typedef typename FieldFor<COORD>:: template Of<vd_t>:: Type uField;
+
+
+
         iField I("I",L);
         {
             typename iField::Loop loop(I.lower,I.upper);
@@ -80,10 +89,30 @@ namespace {
             }
         }
 
+        vField V("V",L);
+        {
+            typename vField::Loop loop(L.lower,L.upper);
+            for(loop.boot();loop.good();loop.next())
+            {
+                V[ *loop ] = alea.to<float>() * support::get<vf_t>();
+            }
+        }
+
+        uField U("U",L);
+        {
+            typename uField::Loop loop(L.lower,L.upper);
+            for(loop.boot();loop.good();loop.next())
+            {
+                U[ *loop ] = alea.to<double>() * support::get<vd_t>();
+            }
+        }
+
 
         VTK.writeField(fp,I,L);
         VTK.writeField(fp,F,L);
         VTK.writeField(fp,D,L);
+        VTK.writeField(fp,V,L);
+        VTK.writeField(fp,U,L);
 
         std::cerr << std::endl;
 
