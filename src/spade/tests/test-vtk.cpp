@@ -37,6 +37,7 @@ namespace {
         vtk &VTK = vtk::instance();
 
         const unsigned dims = Coord::Get<COORD>::Dimensions;
+        std::cerr << "VTK" << dims << "D" << std::endl;
         const string   fn   = vformat("in%ud.vtk",dims);
         ios::ocstream  fp(fn);
         VTK.writeHeader(fp);
@@ -45,6 +46,9 @@ namespace {
         const Layout<COORD> L( Coord::Ones<COORD>(), *(COORD *) &r[0] );
         std::cerr << "Layout: " << L << std::endl;
         VTK.writeLayout(fp,L);
+
+        std::cerr << std::endl;
+
     }
 
 
