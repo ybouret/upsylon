@@ -140,6 +140,10 @@ namespace {
             }
             Vertex G = pmesh.barycenter();
             std::cerr << "\tbar : " << G << std::endl;
+            T      R = pmesh.Rg(G);
+            std::cerr << "\tbar : " << G << std::endl;
+            std::cerr << "\tRg  : " << R << std::endl;
+
         }
     }
 

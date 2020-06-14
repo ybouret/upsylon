@@ -1,4 +1,4 @@
-#include "y/type/point3d.hpp"
+#include "y/type/points.hpp"
 #include "y/type/point1d.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -66,6 +66,9 @@ namespace {
         
         P /= support::get<T>();
         P  = P1/support::get<T>();
+        
+        __point::norm2( support::get<T>() );
+        
     }
 
 }

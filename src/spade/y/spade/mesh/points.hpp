@@ -108,6 +108,24 @@ namespace upsylon {
                 return G;
             }
             
+            //! radius
+            inline mutable_type Rg(Vertex &bar) const
+            {
+                const PointMesh &self = *this;
+                Loop             loop(self.lower,self.upper);
+                
+                bar = barycenter();
+                mutable_type r2 = 0;
+                for(loop.boot();loop.good();loop.next())
+                {
+                    const Vertex delta = self[*loop] - bar;
+                    r2 += __point::norm2(delta);
+                }
+                r2 /= self.items;
+                return mkl::sqrt_of(r2);
+            }
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PointMesh);
         };

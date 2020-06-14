@@ -5,6 +5,7 @@
 #define Y_SPADE_VERTICES_INCLUDED 1
 
 #include "y/spade/types.hpp"
+#include "y/type/points.hpp"
 
 namespace upsylon {
 

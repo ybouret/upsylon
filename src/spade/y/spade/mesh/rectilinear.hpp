@@ -208,11 +208,7 @@ namespace upsylon {
                 for(loop.boot();loop.good();loop.next())
                 {
                     const Vertex delta = self(*loop) - bar;
-                    const_type  *d     = (const type *) &delta;
-                    for(unsigned dim=0;dim<Dimensions;++dim)
-                    {
-                        r2 += square_of(d[dim]);
-                    }
+                    r2 += __point::norm2(delta);
                 }
                 r2 /= self.items;
                 return mkl::sqrt_of(r2);
