@@ -102,6 +102,9 @@ namespace upsylon {
 
             tuples<point2d,double>();
             tuples<point3d,double>();
+            
+            tuples<point2d,unit_t>();
+            tuples<point3d,unit_t>();
 
 
             record<mpn>(new mpnWriter());

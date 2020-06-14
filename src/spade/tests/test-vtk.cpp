@@ -35,20 +35,40 @@ namespace {
     {
         Coord::DispWidth = 2;
         static const Coord1D r[] = { 10, 20 , 30 };
-
+        static const float   vlo[] = { -1, -1, -1 };
+        static const float   vup[] = {  1,  1,  1 };
+        
         vtk &VTK = vtk::instance();
 
         const unsigned dims = Coord::Get<COORD>::Dimensions;
         std::cerr << "VTK" << dims << "D" << std::endl;
         const string   fn   = vformat("in%ud.vtk",dims);
         ios::ocstream  fp(fn);
+       
+        const string   rn  = vformat("r%ud.vtk",dims);
+        ios::ocstream  rp(rn);
+
         VTK.writeHeader(fp);
         VTK.writeTitle(fp,fn);
 
+        VTK.writeHeader(rp);
+        VTK.writeTitle(rp,rn);
+
+        
         const Layout<COORD> L( Coord::Ones<COORD>(), *(COORD *) &r[0] );
+        
         std::cerr << "Layout: " << L << std::endl;
         VTK.writeLayout(fp,L);
-
+        
+        RectilinearMesh<COORD,float> rmesh("rmesh",L);
+        typedef typename  RectilinearMesh<COORD,float>::Vertex rvtx;
+        typedef typename  RectilinearMesh<COORD,float>::Box    rbox;
+        
+        rbox box( *(rvtx *) &vlo[0], *(rvtx *)&vup );
+        std::cerr << "box=" << box << std::endl;
+        rmesh.mapRegular(box,rmesh);
+        VTK.writeMesh(rp,rmesh);
+        
         VTK.writePointData(fp,L);
 
         typedef typename FieldFor<COORD>:: template Of<int>::    Type iField;
@@ -71,7 +91,7 @@ namespace {
                 I[ *loop ] = int( loop.index );
                 if(2==dims)
                 {
-                    std::cerr << "@" << *loop << " : " << I[*loop] << std::endl;
+                   // std::cerr << "@" << *loop << " : " << I[*loop] << std::endl;
                 }
             }
         }

@@ -16,7 +16,8 @@ namespace upsylon {
         const char     vtk::TypeFloat[]    = "float";
         const char     vtk::TypeInt[]      = "int";
         const char     vtk::TypeDouble[]   = "double";
-
+        const char     vtk::RECTILINEAR_GRID[] = "RECTILINEAR_GRID";
+        
         vtk:: vtk() :
         natives(),
         writers()
