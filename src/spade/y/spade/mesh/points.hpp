@@ -104,7 +104,7 @@ namespace upsylon {
                 {
                     G += self[ *loop ];
                 }
-                G /= self.items;
+                G /= mutable_type(self.items);
                 return G;
             }
             

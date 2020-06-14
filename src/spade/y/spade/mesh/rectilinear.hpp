@@ -210,7 +210,7 @@ namespace upsylon {
                     const Vertex delta = self(*loop) - bar;
                     r2 += __point::norm2(delta);
                 }
-                r2 /= self.items;
+                r2 /= mutable_type(self.items);
                 return mkl::sqrt_of(r2);
                 
             }
