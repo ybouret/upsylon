@@ -2,7 +2,8 @@
 #ifndef Y_SPADE_VTK_INCLUDED
 #define Y_SPADE_VTK_INCLUDED 1
 
-#include "y/spade/fields.hpp"
+#include "y/spade/mesh/rectilinear.hpp"
+#include "y/spade/mesh/curvilinear.hpp"
 #include "y/associative/suffix-tree.hpp"
 
 namespace upsylon {
