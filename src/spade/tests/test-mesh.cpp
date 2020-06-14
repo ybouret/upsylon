@@ -89,6 +89,8 @@ namespace {
             if( cmesh.isThick() )
             {
                 cmesh.mapRegular(box,L);
+                Box B = cmesh.aabb();
+                std::cerr << "\taabb: " << B << std::endl;
             }
             else
             {

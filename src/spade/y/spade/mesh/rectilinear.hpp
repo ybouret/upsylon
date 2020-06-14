@@ -173,7 +173,8 @@ namespace upsylon {
                 type  *u = (type *) &up;
                 for(unsigned dim=0;dim<Dimensions;++dim)
                 {
-                    Ops::MinMax(l[dim], u[dim], axis[dim], axis[dim] );
+                    const Axis &_ = axis[dim];
+                    Ops::MinMax(l[dim],u[dim],_,_);
                 }
                 return Box(lo,up);
             }

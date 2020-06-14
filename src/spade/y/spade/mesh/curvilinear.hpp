@@ -5,7 +5,7 @@
 #define Y_SPADE_MESH_CURVILINEAR_INCLUDED 1
 
 #include "y/spade/mesh/dense.hpp"
-#include "y/spade/fields.hpp"
+#include "y/spade/field/ops.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/spade/box.hpp"
 #include "y/mkl/types.hpp"
@@ -160,7 +160,20 @@ namespace upsylon {
             }
             
             
-            
+            //! get the Axis Aligned Bounding Box
+            inline Box aabb() const
+            {
+                Vertex lo(0);
+                Vertex up(0);
+                type  *l = (type *) &lo;
+                type  *u = (type *) &up;
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    const Axis &A = *axis[dim];
+                    Ops::MinMax(l[dim], u[dim],A,A);
+                }
+                return Box(lo,up);
+            }
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(CurvilinearMesh);
