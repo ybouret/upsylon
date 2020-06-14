@@ -192,7 +192,7 @@ namespace upsylon {
                     {
                         g += a[i];
                     }
-                    g/=a.width;
+                    g/= mutable_type(a.width);
                 }
                 return *(Vertex *)&bar[0];
             }

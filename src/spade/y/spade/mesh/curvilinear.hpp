@@ -188,7 +188,7 @@ namespace upsylon {
                     const Vertex v = self(*loop);
                     bar += v;
                 }
-                bar /= self.items;
+                bar /= mutable_type(self.items);
                 return bar;
             }
             
