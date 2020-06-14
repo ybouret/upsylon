@@ -42,9 +42,12 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            typedef LooseMesh<COORD,SPACE,T>    MeshType; //!< alias
-            typedef typename MeshType::Vertex   Vertex;   //!< alias
-            typedef typename MeshType::Vertices Vertices; //!< alias
+            typedef LooseMesh<COORD,SPACE,T>     MeshType; //!< alias
+            typedef typename MeshType::Vertex    Vertex;   //!< alias
+            typedef typename MeshType::Vertices  Vertices; //!< alias
+            typedef typename MeshType::Box       Box;      //!< alias
+            typedef typename Layout<COORD>::Loop Loop;     //!< alias
+            Y_DECL_ARGS(T,type);                           //!< aliases
 
             //------------------------------------------------------------------
             //
@@ -66,7 +69,30 @@ namespace upsylon {
 
             virtual const char *category() const throw() { return Category; }
 
+            //! get the Axis Aligned Bounding Box
+            inline Box aabb() const
+            {
+                const PointMesh &self = *this;
+                Loop             loop(self.lower,self.upper); loop.boot();
+                Vertex           lo = self[ *loop ];
+                Vertex           up = lo;
+                mutable_type    *l = (mutable_type *)&lo;
+                mutable_type    *u = (mutable_type *)&up;
 
+                for( loop.next(); loop.good(); loop.next() )
+                {
+                    const Vertex temp = self[ *loop ];
+                    const_type  *v    = (const_type *) &temp;
+                    for(unsigned dim=0;dim<SPACE;++dim)
+                    {
+                        const_type value = v[dim];
+                        l[dim] = min_of(l[dim],value);
+                        u[dim] = max_of(u[dim],value);
+                    }
+                }
+                return Box(lo,up);
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PointMesh);
         };

@@ -7,6 +7,7 @@
 #include "y/spade/mesh.hpp"
 #include "y/spade/fields.hpp"
 #include "y/spade/vertices.hpp"
+#include "y/spade/box.hpp"
 
 namespace upsylon {
 
@@ -42,6 +43,7 @@ namespace upsylon {
             typedef typename Kernel::Loose<COORD,SPACE,T>::Vertices Vertices; //!< alias
             typedef typename Kernel::Loose<COORD,SPACE,T>::Vertex   Vertex;   //!< alias
             static  const    size_t Space =                         SPACE;    //!< alias
+            typedef Kernel::Box<T,Space>                            Box;      //!< alias
 
             //! cleanup
             inline virtual ~LooseMesh() throw() {}

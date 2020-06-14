@@ -80,6 +80,20 @@ namespace upsylon {
                     os << "((" << box.lower << "->" << box.upper << ":|" << box.width << "|=" << box.space << "))";
                     return os;
                 }
+                
+                //! check vertex inside
+                inline bool has( const Vertex &vtx ) const throw()
+                {
+                    const_type *l = _lower();
+                    const_type *u = _upper();
+                    const_type *v = (const_type *)&vtx;
+                    for(unsigned dim=0;dim<DIMS;++dim)
+                    {
+                        const_type value = v[dim];
+                        if(value<l[dim]||value>u[dim]) return false;
+                    }
+                    return true;
+                }
 
             private:
                 Y_DISABLE_ASSIGN(Box);

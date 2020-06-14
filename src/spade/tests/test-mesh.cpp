@@ -130,7 +130,14 @@ namespace {
                 const Vertex v = support::get<Vertex>();
                 pmesh[C] = v;
             }
-
+            
+            typedef typename PointMesh<COORD,SPACE,T>::Box Box;
+            Box aabb = pmesh.aabb();
+            std::cerr << "\taabb: " << aabb << std::endl;
+            for( loop.boot(); loop.good(); loop.next() )
+            {
+                Y_ASSERT(aabb.has( pmesh[*loop] ));
+            }
         }
     }
 
