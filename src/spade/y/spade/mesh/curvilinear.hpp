@@ -60,7 +60,7 @@ namespace upsylon {
             typedef typename FieldFor<COORD> ::
             template Of<mutable_type>::Type      Axis;       //!< alias
             typedef arc_ptr<Axis>                AxisHandle; //!< alias for dynamic axis
-            typedef typename Layout<COORD>::Loop Loop;
+            typedef typename Layout<COORD>::Loop Loop;       //!< alias for loops
 
             
             //! alias

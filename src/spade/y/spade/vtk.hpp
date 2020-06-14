@@ -71,7 +71,7 @@ namespace upsylon {
                 // non-virtual interface
                 //
                 //--------------------------------------------------------------
-                bool isScalar() const throw();
+                bool isScalar() const throw(); //!< components() == 1
 
             protected:
                 explicit Writer() throw(); //!< setup

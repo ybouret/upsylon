@@ -53,7 +53,7 @@ namespace upsylon {
             typedef Field1D<mutable_type>        Axis;       //!< alias
             typedef typename MeshType::Vertex    Vertex;     //!< alias
             typedef typename MeshType::Box       Box;        //!< alias
-            typedef typename Layout<COORD>::Loop Loop;
+            typedef typename Layout<COORD>::Loop Loop;       //!< alias
             
             //! alias
             static  const unsigned            Dimensions = MeshType::Dimensions;
