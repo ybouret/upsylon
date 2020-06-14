@@ -138,6 +138,8 @@ namespace {
             {
                 Y_ASSERT(aabb.has( pmesh[*loop] ));
             }
+            Vertex G = pmesh.barycenter();
+            std::cerr << "\tbar : " << G << std::endl;
         }
     }
 

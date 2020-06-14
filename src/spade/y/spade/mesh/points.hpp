@@ -93,6 +93,21 @@ namespace upsylon {
                 return Box(lo,up);
             }
             
+            //! get the barycenter
+            inline Vertex barycenter() const
+            {
+                const PointMesh &self = *this;
+                Loop             loop(self.lower,self.upper); loop.boot();
+                
+                Vertex G(0);
+                for( loop.next(); loop.good(); loop.next() )
+                {
+                    G += self[ *loop ];
+                }
+                G /= self.items;
+                return G;
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PointMesh);
         };
