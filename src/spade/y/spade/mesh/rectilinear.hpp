@@ -47,13 +47,14 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            Y_DECL_ARGS(T,type);                          //!< alias
-            typedef DenseMesh<COORD,T>        MeshType;   //!< alias
-            typedef Layout1D                  AxisLayout; //!< alias
-            typedef Field1D<mutable_type>     Axis;       //!< alias
-            typedef typename MeshType::Vertex Vertex;     //!< alias
-            typedef typename MeshType::Box    Box;        //!< alias
-
+            Y_DECL_ARGS(T,type);                             //!< alias
+            typedef DenseMesh<COORD,T>           MeshType;   //!< alias
+            typedef Layout1D                     AxisLayout; //!< alias
+            typedef Field1D<mutable_type>        Axis;       //!< alias
+            typedef typename MeshType::Vertex    Vertex;     //!< alias
+            typedef typename MeshType::Box       Box;        //!< alias
+            typedef typename Layout<COORD>::Loop Loop;
+            
             //! alias
             static  const unsigned            Dimensions = MeshType::Dimensions;
 
@@ -179,6 +180,46 @@ namespace upsylon {
                 return Box(lo,up);
             }
 
+            //! compute barycenter
+            inline Vertex barycenter() const
+            {
+                mutable_type bar[4] = { 0,0,0,0 };
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    const Axis   &a = axis[dim];
+                    mutable_type &g = bar[dim];
+                    for(Coord1D i=a.lower;i<=a.upper;++i)
+                    {
+                        g += a[i];
+                    }
+                    g/=a.width;
+                }
+                return *(Vertex *)&bar[0];
+            }
+            
+            //! radius
+            inline mutable_type Rg(Vertex &bar) const
+            {
+                const RectilinearMesh &self = *this;
+                Loop                   loop(self.lower,self.upper);
+                
+                bar = barycenter();
+                mutable_type r2 = 0;
+                for(loop.boot();loop.good();loop.next())
+                {
+                    const Vertex delta = self(*loop) - bar;
+                    const_type  *d     = (const type *) &delta;
+                    for(unsigned dim=0;dim<Dimensions;++dim)
+                    {
+                        r2 += square_of(d[dim]);
+                    }
+                }
+                r2 /= self.items;
+                return mkl::sqrt_of(r2);
+                
+            }
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(RectilinearMesh);
             slots<Axis> axis;

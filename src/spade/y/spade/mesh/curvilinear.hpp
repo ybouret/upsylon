@@ -52,16 +52,18 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            Y_DECL_ARGS(T,type);                         //!< aliases
-            typedef DenseMesh<COORD,T>        MeshType;  //!< alias
-            typedef typename MeshType::Vertex Vertex;    //!< alias
-            typedef typename MeshType::Box    Box;       //!< alias
+            Y_DECL_ARGS(T,type);                            //!< aliases
+            typedef DenseMesh<COORD,T>           MeshType;  //!< alias
+            typedef typename MeshType::Vertex    Vertex;    //!< alias
+            typedef typename MeshType::Box       Box;       //!< alias
 
             typedef typename FieldFor<COORD> ::
-            template Of<mutable_type>::Type   Axis;       //!< alias
-            typedef arc_ptr<Axis>             AxisHandle; //!< alias for dynamic axis
+            template Of<mutable_type>::Type      Axis;       //!< alias
+            typedef arc_ptr<Axis>                AxisHandle; //!< alias for dynamic axis
+            typedef typename Layout<COORD>::Loop Loop;
 
-            //! alas
+            
+            //! alias
             static  const unsigned            Dimensions = MeshType::Dimensions;
 
             //------------------------------------------------------------------
@@ -140,14 +142,14 @@ namespace upsylon {
                                    const Layout<COORD> &layout)
             {
                 assert(this->isThick());
-                CurvilinearMesh &            self = *this;
-                typename Layout<COORD>::Loop loop(this->lower,this->upper);
-                Vertex                       v;
-                const COORD                 &i  = loop.value;
-                const_type                  *l  = box._lower();
-                const_type                  *w  = box._width();
-                mutable_type                *p  = (mutable_type *)&v;
-                const COORD                  d  = layout.width - Coord::Ones<COORD>();
+                CurvilinearMesh & self = *this;
+                Loop              loop(self.lower,self.upper);
+                Vertex            v;
+                const COORD      &i  = loop.value;
+                const_type       *l  = box._lower();
+                const_type       *w  = box._width();
+                mutable_type     *p  = (mutable_type *)&v;
+                const COORD       d  = layout.width - Coord::Ones<COORD>();
                 for(loop.boot();loop.good();loop.next())
                 {
                     const COORD j = i - layout.lower;
@@ -173,6 +175,42 @@ namespace upsylon {
                     Ops::MinMax(l[dim], u[dim],A,A);
                 }
                 return Box(lo,up);
+            }
+            
+            //! compute barycenter
+            inline Vertex barycenter() const
+            {
+                const CurvilinearMesh &self = *this;
+                Loop                   loop(self.lower,self.upper);
+                Vertex bar(0);
+                for(loop.boot();loop.good();loop.next())
+                {
+                    const Vertex v = self(*loop);
+                    bar += v;
+                }
+                bar /= self.items;
+                return bar;
+            }
+            
+            //! radius
+            inline mutable_type Rg(Vertex &bar) const
+            {
+                const CurvilinearMesh &self = *this;
+                Loop                   loop(self.lower,self.upper);
+                
+                bar = barycenter();
+                mutable_type r2 = 0;
+                for(loop.boot();loop.good();loop.next())
+                {
+                    const Vertex delta = self(*loop) - bar;
+                    const_type  *d     = (const type *) &delta;
+                    for(unsigned dim=0;dim<Dimensions;++dim)
+                    {
+                        r2 += square_of(d[dim]);
+                    }
+                }
+                r2 /= self.items;
+                return mkl::sqrt_of(r2);
             }
             
         private:

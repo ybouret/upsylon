@@ -51,8 +51,12 @@ namespace {
             if( rmesh.isThick() )
             {
                 rmesh.mapRegular(box,L);
-                Box B = rmesh.aabb();
+                Box    B = rmesh.aabb();
+                Vertex G(0);
+                T      R = rmesh.Rg(G);
                 std::cerr << "\taabb: " << B << std::endl;
+                std::cerr << "\tbar : " << G << std::endl;
+                std::cerr << "\tRg  : " << R << std::endl;
             }
             else
             {
@@ -89,8 +93,13 @@ namespace {
             if( cmesh.isThick() )
             {
                 cmesh.mapRegular(box,L);
-                Box B = cmesh.aabb();
+                Box    B = cmesh.aabb();
+                Vertex G(0);
+                T      R = cmesh.Rg(G);
                 std::cerr << "\taabb: " << B << std::endl;
+                std::cerr << "\tbar : " << G << std::endl;
+                std::cerr << "\tRg  : " << R << std::endl;
+              
             }
             else
             {
