@@ -26,10 +26,8 @@ namespace {
 
         }
 
-        dummy *clone() const
-        {
-           return new dummy(*this);
-        }
+        inline dummy *clone() const { return new dummy(*this); }
+        
 
     private:
         Y_DISABLE_ASSIGN(dummy);

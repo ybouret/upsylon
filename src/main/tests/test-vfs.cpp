@@ -72,7 +72,7 @@ namespace
         sequence<string> *seq;
 
 
-
+#if 0
         static inline void on_count(const vfs::entry &, void *args)
         {
             static_cast<find_info *>(args)->count++;
@@ -82,7 +82,7 @@ namespace
         {
             static_cast<find_info *>(args)->seq->push_back(ent.path);
         }
-        
+#endif
         bool operator()( const vfs::entry &ent )
         {
             if(ent.is_regular())

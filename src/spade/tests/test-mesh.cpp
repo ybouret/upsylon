@@ -51,6 +51,8 @@ namespace {
             if( rmesh.isThick() )
             {
                 rmesh.mapRegular(box,L);
+                Box B = rmesh.aabb();
+                std::cerr << "\taabb: " << B << std::endl;
             }
             else
             {
@@ -137,8 +139,7 @@ namespace {
 
         cmesh.mapRegular(box,L);
 
-        cmesh.mapTorus(4,0.5);
-
+        
 
 
     }

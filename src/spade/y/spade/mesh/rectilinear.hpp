@@ -5,6 +5,7 @@
 
 #include "y/spade/mesh/dense.hpp"
 #include "y/spade/field/in1d.hpp"
+#include "y/spade/field/ops.hpp"
 #include "y/sequence/slots.hpp"
 
 namespace upsylon {
@@ -161,6 +162,20 @@ namespace upsylon {
                         a[fullU] = U;
                     }
                 }
+            }
+            
+            //! get the Axis Aligned Bounding Box
+            inline Box aabb() const
+            {
+                Vertex lo(0);
+                Vertex up(0);
+                type  *l = (type *) &lo;
+                type  *u = (type *) &up;
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    Ops::MinMax(l[dim], u[dim], axis[dim], axis[dim] );
+                }
+                return Box(lo,up);
             }
 
         private:

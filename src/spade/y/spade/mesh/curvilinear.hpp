@@ -158,27 +158,8 @@ namespace upsylon {
                     self(i,v);
                 }
             }
-
-            //! mapping to a 3D torus
-            void mapTorus(const_type rOut, const_type rIn )
-            {
-                //static const_type two_pi = mkl::numeric<T>::two_pi;
-                assert(this->isThick());
-                CurvilinearMesh &self = *this;
-                self.CheckTorus(rOut,rIn);
-
-#if 0
-                // first coordinate: describe out
-                const_type dThetaOut = two_pi / this->width.x;
-                for(Coord1D i=this->lower.x;i<=this->upper.x;++i)
-                {
-                    const_type thetaOut = ( (i-this->lower.x) * dThetaOut );
-                    const_type x        = rOut * mkl::cos_of( thetaOut );
-                    const_type y        = rOut * mkl::sin_of( thetaOut );
-                }
-#endif
-
-            }
+            
+            
             
             
         private:
