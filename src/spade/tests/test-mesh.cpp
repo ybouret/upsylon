@@ -54,9 +54,10 @@ namespace {
                 Box    B = rmesh.aabb();
                 Vertex G(0);
                 T      R = rmesh.Rg(G);
-                std::cerr << "\taabb: " << B << std::endl;
-                std::cerr << "\tbar : " << G << std::endl;
-                std::cerr << "\tRg  : " << R << std::endl;
+                std::cerr << "\taabb  : " << B << std::endl;
+                std::cerr << "\tbar   : " << G << std::endl;
+                std::cerr << "\tRg    : " << R << std::endl;
+                std::cerr << "\tscale : " << rmesh.scaling() << std::endl;
             }
             else
             {

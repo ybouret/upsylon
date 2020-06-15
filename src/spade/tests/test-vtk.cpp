@@ -70,6 +70,7 @@ namespace {
         VTK.writeMesh(rp,rmesh);
         
         VTK.writePointData(fp,L);
+        VTK.writePointData(rp,L);
 
         typedef typename FieldFor<COORD>:: template Of<int>::    Type iField;
         typedef typename FieldFor<COORD>:: template Of<float>::  Type fField;
@@ -138,6 +139,12 @@ namespace {
         VTK.writeField(fp,D,L);
         VTK.writeField(fp,V,L);
         VTK.writeField(fp,U,L);
+        
+        VTK.writeField(rp,I,L);
+        VTK.writeField(rp,F,L);
+        VTK.writeField(rp,D,L);
+        VTK.writeField(rp,V,L);
+        VTK.writeField(rp,U,L);
 
         std::cerr << std::endl;
 

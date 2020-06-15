@@ -197,7 +197,28 @@ namespace upsylon {
                 return *(Vertex *)&bar[0];
             }
             
-            //! radius
+            //! get scaling for each axis
+            inline Vertex scaling() const
+            {
+                mutable_type factor[4] = { 0,0,0,0 };
+                for(unsigned dim=0;dim<Dimensions;++dim)
+                {
+                    const Axis    &a = axis[dim];
+                    const_type     n = type(a.width-1);
+                    if(n>0)
+                    {
+                        mutable_type &s = factor[dim];
+                        for(Coord1D i=a.lower;i<a.upper;++i)
+                        {
+                            s += mkl::fabs_of(a[i+1] - a[i]);
+                        }
+                        s/=n;
+                    }
+                }
+                return *(Vertex *)&factor[0];
+            }
+            
+            //! get gyration radius
             inline mutable_type Rg(Vertex &bar) const
             {
                 const RectilinearMesh &self = *this;

@@ -277,37 +277,41 @@ namespace upsylon {
             //
             //
             //------------------------------------------------------------------
+            
+            //! write 1D mesh, using [automatic] scaling for 2D and 3D
             template <typename T> inline
             void writeMesh(ios::ostream                     &fp,
                            const RectilinearMesh<Coord1D,T> &mesh,
-                           T                                 scale=0) const
+                           T                                 scaling=0) const
             {
                 static const Writer &tw = getWriter<T>();
                 const  vtk          &self = *this;
-                if(scale<=0)
+                if(scaling<=0)
                 {
-                    scale=1;
+                    scaling=mesh.scaling();
                 }
                 fp << DATASET << ' ' << RECTILINEAR_GRID << '\n';
                 fp << DIMENSIONS << ' '; self(fp,mesh.width) << " 2 2\n";
                 fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width) << ' ' << tw.dataType() << '\n';
                 writeAxis1D(fp,mesh[0]);
                 fp << 'Y' << _COORDINATES << " 2 " << tw.dataType() << '\n';
-                self(fp << "0 ",scale) << '\n';
+                self(fp << "0 ",scaling) << '\n';
                 fp << 'Z' << _COORDINATES << " 2 " << tw.dataType() << '\n';
-                self(fp << "0 ",scale) << '\n';
+                self(fp << "0 ",scaling) << '\n';
             }
             
+            //! write 2D mesh, using [automatic] scaling for 3D
             template <typename T> inline
             void writeMesh(ios::ostream                     &fp,
                            const RectilinearMesh<Coord2D,T> &mesh,
-                           T                                 scale=0) const
+                           T                                 scaling=0) const
             {
                 static const Writer &tw = getWriter<T>();
                 const  vtk          &self = *this;
-                if(scale<=0)
+                if(scaling<=0)
                 {
-                    scale=1;
+                    const point2d<T> vscale = mesh.scaling();
+                    scaling = vscale.norm2();
                 }
                 fp << DATASET << ' ' << RECTILINEAR_GRID << '\n';
                 fp << DIMENSIONS << ' '; self(fp,mesh.width) << " 2\n";
@@ -316,9 +320,10 @@ namespace upsylon {
                 fp << 'Y' << _COORDINATES << ' '; self(fp,mesh.width.y) << ' ' << tw.dataType() << '\n';
                 writeAxis1D(fp,mesh[1]);
                 fp << 'Z' << _COORDINATES << " 2 " << tw.dataType() << '\n';
-                self(fp << "0 ",scale) << '\n';
+                self(fp << "0 ",scaling) << '\n';
             }
             
+            //! write 3D mesh
             template <typename T> inline
             void writeMesh(ios::ostream                     &fp,
                            const RectilinearMesh<Coord3D,T> &mesh) const
