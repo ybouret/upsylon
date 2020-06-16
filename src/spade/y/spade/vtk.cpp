@@ -17,8 +17,10 @@ namespace upsylon {
         const char     vtk::TypeInt[]          = "int";
         const char     vtk::TypeDouble[]       = "double";
         const char     vtk::RECTILINEAR_GRID[] = "RECTILINEAR_GRID";
-        const char     vtk::TwoByTwo[]         = " 2 2";
-        const char     vtk::Two[]              = " 2 ";
+        const char     vtk::STRUCTURED_GRID[]  = "STRUCTURED_GRID";
+        const char     vtk::TwoByTwoEndl[]     = " 2 2\n";
+        const char     vtk::TwoSkip[]          = " 2 ";
+        const char     vtk::TwoEndl[]          = " 2\n";
 
         vtk:: vtk() :
         natives(),

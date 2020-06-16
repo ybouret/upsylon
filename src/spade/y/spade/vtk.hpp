@@ -37,12 +37,14 @@ namespace upsylon {
             static const char     _COORDINATES[];     //!< "_COORDINATES"
             static const char     POINTS[];           //!< "POINTS"
             static const char     RECTILINEAR_GRID[]; //!< "RECTILINEAR_GRID"
+            static const char     STRUCTURED_GRID[];  //!< "STRUCTURED_GRID"
             static const unsigned Repeat[4];          //!< [0,4,2,1] to validate ParaView
             static const char     TypeFloat[];        //!< "float"
             static const char     TypeDouble[];       //!< "double"
             static const char     TypeInt[];          //!< "int"
-            static const char     TwoByTwo[];         //!< " 2 2"
-            static const char     Two[];              //!< " 2 "
+            static const char     TwoByTwoEndl[];     //!< " 2 2\n"
+            static const char     TwoSkip[];          //!< " 2 "
+            static const char     TwoEndl[];          //!< " 2\n";
 
             //------------------------------------------------------------------
             //
@@ -311,15 +313,15 @@ namespace upsylon {
                 //
                 // expanded dimensions
                 //______________________________________________________________
-                fp << DIMENSIONS << ' '; self(fp,mesh.width) << TwoByTwo << '\n';
+                fp << DIMENSIONS << ' '; self(fp,mesh.width) << TwoByTwoEndl;
 
                 //______________________________________________________________
                 //
                 // Axis
                 //______________________________________________________________
                 fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width) << ' ' <<  dataType << '\n'; writeAxis1D(fp,mesh[0]);
-                fp << 'Y' << _COORDINATES << Two << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
-                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
+                fp << 'Y' << _COORDINATES << TwoSkip << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
+                fp << 'Z' << _COORDINATES << TwoSkip << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
 
             }
             
@@ -351,7 +353,7 @@ namespace upsylon {
                 //
                 // expanded dimensions
                 //______________________________________________________________
-                fp << DIMENSIONS << ' '; self(fp,mesh.width) << " 2\n";
+                fp << DIMENSIONS << ' '; self(fp,mesh.width) << TwoEndl;
 
                 //______________________________________________________________
                 //
@@ -359,7 +361,7 @@ namespace upsylon {
                 //______________________________________________________________
                 fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width.x) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[0]);
                 fp << 'Y' << _COORDINATES << ' '; self(fp,mesh.width.y) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[1]);
-                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
+                fp << 'Z' << _COORDINATES << TwoSkip << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
             }
             
             //! write 3D mesh
@@ -403,7 +405,129 @@ namespace upsylon {
             //
             //
             //------------------------------------------------------------------
-            
+
+            //! write 1D mesh
+            template <typename T> inline
+            void writeMesh(ios::ostream                     &fp,
+                           const CurvilinearMesh<Coord1D,T> &mesh) const
+            {
+                //______________________________________________________________
+                //
+                // setup
+                //______________________________________________________________
+                static const Writer &tw       = getWriter<T>();
+                const        vtk    &self     = *this;
+                const  char         *dataType = tw.dataType();
+                const  Coord1D       points   = Repeat[1] * mesh.items;
+                //______________________________________________________________
+                //
+                // set rectilinear
+                //______________________________________________________________
+                fp << DATASET << ' ' << STRUCTURED_GRID << '\n';
+
+                //______________________________________________________________
+                //
+                // dimensions
+                //______________________________________________________________
+                fp << DIMENSIONS << ' '; self(fp,mesh.width) << TwoByTwoEndl;
+
+                //______________________________________________________________
+                //
+                // points
+                //______________________________________________________________
+                fp << POINTS << ' '; self(fp,points) << ' ' << dataType << '\n';
+
+#if 0
+                Layout3D::Loop loop(mesh.lower,mesh.upper);
+                for(loop.boot();loop.good();loop.next())
+                {
+                    self(fp,mesh( *loop )) << '\n';
+                }
+#endif
+
+            }
+
+
+            //! write 2D mesh
+            template <typename T> inline
+            void writeMesh(ios::ostream                     &fp,
+                           const CurvilinearMesh<Coord2D,T> &mesh) const
+            {
+                //______________________________________________________________
+                //
+                // setup
+                //______________________________________________________________
+                static const Writer &tw       = getWriter<T>();
+                const        vtk    &self     = *this;
+                const  char         *dataType = tw.dataType();
+                const  Coord1D       points   = Repeat[2] * mesh.items;
+
+                //______________________________________________________________
+                //
+                // set rectilinear
+                //______________________________________________________________
+                fp << DATASET << ' ' << STRUCTURED_GRID << '\n';
+
+                //______________________________________________________________
+                //
+                // dimensions
+                //______________________________________________________________
+                fp << DIMENSIONS << ' '; self(fp,mesh.width) << TwoEndl;
+
+                //______________________________________________________________
+                //
+                // points
+                //______________________________________________________________
+                fp << POINTS << ' '; self(fp,points) << ' ' << dataType << '\n';
+
+#if 0
+                Layout3D::Loop loop(mesh.lower,mesh.upper);
+                for(loop.boot();loop.good();loop.next())
+                {
+                    self(fp,mesh( *loop )) << '\n';
+                }
+#endif
+
+            }
+
+            //! write 3D mesh
+            template <typename T> inline
+            void writeMesh(ios::ostream                     &fp,
+                           const CurvilinearMesh<Coord3D,T> &mesh) const
+            {
+                //______________________________________________________________
+                //
+                // setup
+                //______________________________________________________________
+                static const Writer &tw       = getWriter<T>();
+                const        vtk    &self     = *this;
+                const  char         *dataType = tw.dataType();
+                //______________________________________________________________
+                //
+                // set rectilinear
+                //______________________________________________________________
+                fp << DATASET << ' ' << STRUCTURED_GRID << '\n';
+
+                //______________________________________________________________
+                //
+                // dimensions
+                //______________________________________________________________
+                fp << DIMENSIONS << ' '; self(fp,mesh.width) << '\n';
+
+                //______________________________________________________________
+                //
+                // points
+                //______________________________________________________________
+                fp << POINTS << ' '; self(fp,mesh.items) << ' ' << dataType << '\n';
+
+                Layout3D::Loop loop(mesh.lower,mesh.upper);
+                for(loop.boot();loop.good();loop.next())
+                {
+                    self(fp,mesh( *loop )) << '\n';
+                }
+
+            }
+
         private:
             explicit vtk();
             virtual ~vtk() throw();

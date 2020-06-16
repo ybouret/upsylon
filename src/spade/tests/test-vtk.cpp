@@ -35,18 +35,22 @@ namespace {
     {
         Coord::DispWidth = 2;
         static const Coord1D r[] = { 10, 20 , 30 };
-        static const float   vlo[] = { -1, -1, -1 };
-        static const float   vup[] = {  1,  1,  1 };
+
         
         vtk &VTK = vtk::instance();
 
         const unsigned dims = Coord::Get<COORD>::Dimensions;
         std::cerr << "VTK" << dims << "D" << std::endl;
+
         const string   fn   = vformat("in%ud.vtk",dims);
         ios::ocstream  fp(fn);
        
         const string   rn  = vformat("r%ud.vtk",dims);
         ios::ocstream  rp(rn);
+
+        const string   cn  = vformat("c%ud.vtk",dims);
+        ios::ocstream  cp(cn);
+
 
         VTK.writeHeader(fp);
         VTK.writeTitle(fp,fn);
@@ -54,6 +58,8 @@ namespace {
         VTK.writeHeader(rp);
         VTK.writeTitle(rp,rn);
 
+        VTK.writeHeader(cp);
+        VTK.writeTitle(cp,cn);
         
         const Layout<COORD> L( Coord::Ones<COORD>(), *(COORD *) &r[0] );
         
@@ -63,14 +69,33 @@ namespace {
         RectilinearMesh<COORD,float> rmesh("rmesh",L);
         typedef typename  RectilinearMesh<COORD,float>::Vertex rvtx;
         typedef typename  RectilinearMesh<COORD,float>::Box    rbox;
-        
-        rbox box( *(rvtx *) &vlo[0], *(rvtx *)&vup );
-        std::cerr << "box=" << box << std::endl;
-        rmesh.mapRegular(box,rmesh);
+
+        {
+            static const float   vlo[] = { -1, -1, -1 };
+            static const float   vup[] = {  1,  1,  1 };
+            rbox box( *(rvtx *) &vlo[0], *(rvtx *)&vup );
+            std::cerr << "rbox=" << box << std::endl;
+            rmesh.mapRegular(box,rmesh);
+        }
         VTK.writeMesh(rp,rmesh);
-        
+
+        CurvilinearMesh<COORD,double> cmesh("cmesh",L);
+        typedef typename  CurvilinearMesh<COORD,double>::Vertex cvtx;
+        typedef typename  CurvilinearMesh<COORD,double>::Box    cbox;
+
+        {
+            static const double   vlo[] = { -1, -1, -1 };
+            static const double   vup[] = {  1,  1,  1 };
+            cbox box( *(cvtx *) &vlo[0], *(cvtx *)&vup );
+            std::cerr << "cbox=" << box << std::endl;
+            cmesh.mapRegular(box,cmesh);
+        }
+        VTK.writeMesh(cp,cmesh);
+
+
         VTK.writePointData(fp,L);
         VTK.writePointData(rp,L);
+        VTK.writePointData(cp,L);
 
         typedef typename FieldFor<COORD>:: template Of<int>::    Type iField;
         typedef typename FieldFor<COORD>:: template Of<float>::  Type fField;
