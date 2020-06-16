@@ -218,12 +218,20 @@ Y_UTEST(vtk)
 
     std::cerr << "-- Testing VTK files" << std::endl;
     
-
-
     doSave<Coord1D>();
     doSave<Coord2D>();
     doSave<Coord3D>();
     
+    {
+        const Layout2D                  L( Coord2D(1,1), Coord2D(10,20) );
+        CurvilinearMesh<Coord2D,double> cmesh("cmesh",L);
+        cmesh.mapAnnulus(1,2);
+        ios::ocstream fp("annulus.vtk");
+        VTK.writeHeader(fp);
+        VTK.writeTitle(fp,"annulus");
+        VTK.writeMesh(fp,cmesh);
 
+    }
+    
 }
 Y_UTEST_DONE()

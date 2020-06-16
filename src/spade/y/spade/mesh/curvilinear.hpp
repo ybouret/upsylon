@@ -137,6 +137,13 @@ namespace upsylon {
                 }
             }
 
+            //------------------------------------------------------------------
+            //
+            // mapping
+            //
+            //------------------------------------------------------------------
+            
+            
             //! mapping to a box on an original layout
             inline void mapRegular(const Box           &box,
                                    const Layout<COORD> &layout)
@@ -161,6 +168,39 @@ namespace upsylon {
                 }
             }
             
+            //! map a coordinate to annulus
+            inline void mapAnnulus(const_type R1, const_type R2)
+            {
+                static const_type two_pi = mkl::numeric<mutable_type>::two_pi;
+                assert(R2>R1);
+                assert(this->lower.x<this->upper.x);
+                const_type        delta  = R2-R1;
+                const_type        delta2 = delta*delta;
+                CurvilinearMesh & self   = *this;
+                const COORD       lo     = self.lower;
+                const COORD       up     = self.upper;
+                Axis             &X      = self[0];
+                Axis             &Y      = self[1];
+                for(Coord1D i=lo.x;i<=up.x;++i)
+                {
+                    const_type r = R1 + mkl::sqrt_of( (i-lo.x) * delta2 / (up.x-lo.x) );
+                    for(Coord1D j=lo.y;j<=up.y;++j)
+                    {
+                        const_type theta = (j-lo.y) * two_pi / (1+up.y-lo.y);
+                        const_type x     = r * mkl::cos_of(theta);
+                        const_type y     = r * mkl::sin_of(theta);
+                        X[j][i] = x;
+                        Y[j][i] = y;
+                    }
+                }
+                
+            }
+            
+            //------------------------------------------------------------------
+            //
+            // properties
+            //
+            //------------------------------------------------------------------
             
             //! get the Axis Aligned Bounding Box
             inline Box aabb() const
@@ -192,7 +232,7 @@ namespace upsylon {
                 return bar;
             }
             
-            //! radius
+            //! gyration radius
             inline mutable_type Rg(Vertex &bar) const
             {
                 const CurvilinearMesh &self = *this;
