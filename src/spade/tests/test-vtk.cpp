@@ -171,6 +171,12 @@ namespace {
         VTK.writeField(rp,V,L);
         VTK.writeField(rp,U,L);
 
+        VTK.writeField(cp,I,L);
+        VTK.writeField(cp,F,L);
+        VTK.writeField(cp,D,L);
+        VTK.writeField(cp,V,L);
+        VTK.writeField(cp,U,L);
+
         std::cerr << std::endl;
 
     }
