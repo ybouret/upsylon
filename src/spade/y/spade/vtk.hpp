@@ -409,7 +409,8 @@ namespace upsylon {
             //! write 1D mesh
             template <typename T> inline
             void writeMesh(ios::ostream                     &fp,
-                           const CurvilinearMesh<Coord1D,T> &mesh) const
+                           const CurvilinearMesh<Coord1D,T> &mesh,
+                           T                                 scaling=0) const
             {
                 //______________________________________________________________
                 //
@@ -419,6 +420,10 @@ namespace upsylon {
                 const        vtk    &self     = *this;
                 const  char         *dataType = tw.dataType();
                 const  Coord1D       points   = Repeat[1] * mesh.items;
+                if(scaling<=0)
+                {
+                    scaling = 1;
+                }
                 //______________________________________________________________
                 //
                 // set rectilinear
@@ -437,13 +442,22 @@ namespace upsylon {
                 //______________________________________________________________
                 fp << POINTS << ' '; self(fp,points) << ' ' << dataType << '\n';
 
-#if 0
-                Layout3D::Loop loop(mesh.lower,mesh.upper);
-                for(loop.boot();loop.good();loop.next())
+                const typename CurvilinearMesh<Coord1D,T>::Axis &X = mesh[0];
+                const T        delta[2] = {0,scaling};
+                for(unsigned k=0;k<2;++k)
                 {
-                    self(fp,mesh( *loop )) << '\n';
+                    const T z = delta[k];
+                    for(unsigned j=0;j<2;++j)
+                    {
+                        const T y = delta[j];
+                        for(Coord1D i=mesh.lower;i<=mesh.upper;++i)
+                        {
+                            const point3d<T> pos( X[i], y, z );
+                            self(fp,pos) << '\n';
+                        }
+                    }
                 }
-#endif
+
 
             }
 
@@ -451,7 +465,8 @@ namespace upsylon {
             //! write 2D mesh
             template <typename T> inline
             void writeMesh(ios::ostream                     &fp,
-                           const CurvilinearMesh<Coord2D,T> &mesh) const
+                           const CurvilinearMesh<Coord2D,T> &mesh,
+                           T                                 scaling=0) const
             {
                 //______________________________________________________________
                 //
@@ -461,7 +476,12 @@ namespace upsylon {
                 const        vtk    &self     = *this;
                 const  char         *dataType = tw.dataType();
                 const  Coord1D       points   = Repeat[2] * mesh.items;
-
+                if(scaling<=0)
+                {
+                    //const point2d<T> vscale = mesh.scaling();
+                    //scaling = vscale.norm2();
+                    scaling = 1;
+                }
                 //______________________________________________________________
                 //
                 // set rectilinear
@@ -480,14 +500,18 @@ namespace upsylon {
                 //______________________________________________________________
                 fp << POINTS << ' '; self(fp,points) << ' ' << dataType << '\n';
 
-#if 0
-                Layout3D::Loop loop(mesh.lower,mesh.upper);
-                for(loop.boot();loop.good();loop.next())
+                Layout2D::Loop loop(mesh.lower,mesh.upper);
+                const T        Z[2] = { 0, scaling };
+                for(unsigned slice=0;slice<2;++slice)
                 {
-                    self(fp,mesh( *loop )) << '\n';
+                    const T z=Z[slice];
+                    for(loop.boot();loop.good();loop.next())
+                    {
+                        const point2d<T> v2d = mesh( *loop );
+                        const point3d<T> v3d(v2d.x,v2d.y,z);
+                        self(fp,v3d) << '\n';
+                    }
                 }
-#endif
-
             }
 
             //! write 3D mesh
