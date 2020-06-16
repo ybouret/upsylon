@@ -41,7 +41,9 @@ namespace upsylon {
             static const char     TypeFloat[];        //!< "float"
             static const char     TypeDouble[];       //!< "double"
             static const char     TypeInt[];          //!< "int"
-            
+            static const char     TwoByTwo[];         //!< " 2 2"
+            static const char     Two[];              //!< " 2 "
+
             //------------------------------------------------------------------
             //
             //
@@ -165,8 +167,7 @@ namespace upsylon {
             template <typename T> inline
             const Native  &getNative() const
             {
-                static const Native &_ = getNative(typeid(T));
-                return _;
+                static const Native &_ = getNative(typeid(T)); return _;
             }
             
             //! get native or defined writer
@@ -176,8 +177,7 @@ namespace upsylon {
             template <typename T> inline
             const Writer  &getWriter() const
             {
-                static const Writer &_ = getWriter(typeid(T));
-                return _;
+                static const Writer &_ = getWriter(typeid(T)); return _;
             }
             
             //! write formatted output of registered type
@@ -195,8 +195,7 @@ namespace upsylon {
             template <typename T> inline
             void record(Writer *W)
             {
-                const IWriter w = W;
-                record(typeid(T),w);
+                const IWriter w = W; record(typeid(T),w);
             }
             
             //! record for a tuple
@@ -253,13 +252,19 @@ namespace upsylon {
                             const FIELD  &F,
                             const LAYOUT &L) const
             {
+                //______________________________________________________________
+                //
                 // local type
+                //______________________________________________________________
                 typedef void (vtk::*method)( ios::ostream &, const Writer &, const void *) const;
                 const Writer &writer = revealField(fp,F);
                 method        write1 = ( writer.isScalar() ) ?  & vtk::writeScalar : & vtk::writeVector;
                 const size_t  repeat = Repeat[ LAYOUT::Dimensions ];
-                
+
+                //______________________________________________________________
+                //
                 // loop over layout
+                //______________________________________________________________
                 typename LAYOUT::Loop loop(L.lower,L.upper);
                 for(unsigned r=0;r<repeat;++r)
                 {
@@ -273,7 +278,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             //
             //
-            // for Meshes
+            // write RectilinearMesh
             //
             //
             //------------------------------------------------------------------
@@ -284,20 +289,38 @@ namespace upsylon {
                            const RectilinearMesh<Coord1D,T> &mesh,
                            T                                 scaling=0) const
             {
-                static const Writer &tw = getWriter<T>();
-                const  vtk          &self = *this;
+                //______________________________________________________________
+                //
+                // setup
+                //______________________________________________________________
+                static const Writer &tw       = getWriter<T>();
+                const        vtk    &self     = *this;
+                const  char         *dataType = tw.dataType();
                 if(scaling<=0)
                 {
                     scaling=mesh.scaling();
                 }
+
+                //______________________________________________________________
+                //
+                // set rectilinear
+                //______________________________________________________________
                 fp << DATASET << ' ' << RECTILINEAR_GRID << '\n';
-                fp << DIMENSIONS << ' '; self(fp,mesh.width) << " 2 2\n";
-                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width) << ' ' << tw.dataType() << '\n';
-                writeAxis1D(fp,mesh[0]);
-                fp << 'Y' << _COORDINATES << " 2 " << tw.dataType() << '\n';
-                self(fp << "0 ",scaling) << '\n';
-                fp << 'Z' << _COORDINATES << " 2 " << tw.dataType() << '\n';
-                self(fp << "0 ",scaling) << '\n';
+
+                //______________________________________________________________
+                //
+                // expanded dimensions
+                //______________________________________________________________
+                fp << DIMENSIONS << ' '; self(fp,mesh.width) << TwoByTwo << '\n';
+
+                //______________________________________________________________
+                //
+                // Axis
+                //______________________________________________________________
+                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width) << ' ' <<  dataType << '\n';writeAxis1D(fp,mesh[0]);
+                fp << 'Y' << _COORDINATES << Two << dataType << '\n'; self(fp << '0' << ' ',scaling) << '\n';
+                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(fp << '0' << ' ',scaling) << '\n';
+
             }
             
             //! write 2D mesh, using [automatic] scaling for 3D
@@ -306,21 +329,37 @@ namespace upsylon {
                            const RectilinearMesh<Coord2D,T> &mesh,
                            T                                 scaling=0) const
             {
-                static const Writer &tw = getWriter<T>();
-                const  vtk          &self = *this;
+                //______________________________________________________________
+                //
+                // setup
+                //______________________________________________________________
+                static const Writer &tw       = getWriter<T>();
+                const        vtk    &self     = *this;
+                const  char         *dataType = tw.dataType();
                 if(scaling<=0)
                 {
                     const point2d<T> vscale = mesh.scaling();
                     scaling = vscale.norm2();
                 }
+                //______________________________________________________________
+                //
+                // set rectilinear
+                //______________________________________________________________
                 fp << DATASET << ' ' << RECTILINEAR_GRID << '\n';
+
+                //______________________________________________________________
+                //
+                // expanded dimensions
+                //______________________________________________________________
                 fp << DIMENSIONS << ' '; self(fp,mesh.width) << " 2\n";
-                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width.x) << ' ' << tw.dataType() << '\n';
-                writeAxis1D(fp,mesh[0]);
-                fp << 'Y' << _COORDINATES << ' '; self(fp,mesh.width.y) << ' ' << tw.dataType() << '\n';
-                writeAxis1D(fp,mesh[1]);
-                fp << 'Z' << _COORDINATES << " 2 " << tw.dataType() << '\n';
-                self(fp << "0 ",scaling) << '\n';
+
+                //______________________________________________________________
+                //
+                // Axis
+                //______________________________________________________________
+                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width.x) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[0]);
+                fp << 'Y' << _COORDINATES << ' '; self(fp,mesh.width.y) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[1]);
+                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(fp << '0' << ' ',scaling) << '\n';
             }
             
             //! write 3D mesh
@@ -328,18 +367,42 @@ namespace upsylon {
             void writeMesh(ios::ostream                     &fp,
                            const RectilinearMesh<Coord3D,T> &mesh) const
             {
-                static const Writer &tw = getWriter<T>();
-                const  vtk          &self = *this;
+                //______________________________________________________________
+                //
+                // setup
+                //______________________________________________________________
+                static const Writer &tw       = getWriter<T>();
+                const        vtk    &self     = *this;
+                const  char         *dataType = tw.dataType();
+
+                //______________________________________________________________
+                //
+                // set rectilinear
+                //______________________________________________________________
                 fp << DATASET << ' ' << RECTILINEAR_GRID << '\n';
-                fp << DIMENSIONS << ' '; self(fp,mesh.width) << "\n";
-                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width.x) << ' ' << tw.dataType() << '\n';
-                writeAxis1D(fp,mesh[0]);
-                fp << 'Y' << _COORDINATES << ' '; self(fp,mesh.width.y) << ' ' << tw.dataType() << '\n';
-                writeAxis1D(fp,mesh[1]);
-                fp << 'Z' << _COORDINATES << ' '; self(fp,mesh.width.z) << ' ' << tw.dataType() << '\n';
-                writeAxis1D(fp,mesh[2]);
+
+                //______________________________________________________________
+                //
+                // dimensions
+                //______________________________________________________________
+                fp << DIMENSIONS << ' '; self(fp,mesh.width) << '\n';
+
+                //______________________________________________________________
+                //
+                // Axis
+                //______________________________________________________________
+                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width.x) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[0]);
+                fp << 'Y' << _COORDINATES << ' '; self(fp,mesh.width.y) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[1]);
+                fp << 'Z' << _COORDINATES << ' '; self(fp,mesh.width.z) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[2]);
             }
-            
+
+            //------------------------------------------------------------------
+            //
+            //
+            // write CurviLinearMesh
+            //
+            //
+            //------------------------------------------------------------------
             
         private:
             explicit vtk();
