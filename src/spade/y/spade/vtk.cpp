@@ -145,6 +145,11 @@ namespace upsylon {
             }
             fp << '\n';
         }
+
+        ios::ostream & vtk:: WriteZeroPrefix( ios::ostream &fp )
+        {
+            return fp << '0' << ' ';
+        }
     }
 
 }

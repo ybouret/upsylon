@@ -317,9 +317,9 @@ namespace upsylon {
                 //
                 // Axis
                 //______________________________________________________________
-                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width) << ' ' <<  dataType << '\n';writeAxis1D(fp,mesh[0]);
-                fp << 'Y' << _COORDINATES << Two << dataType << '\n'; self(fp << '0' << ' ',scaling) << '\n';
-                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(fp << '0' << ' ',scaling) << '\n';
+                fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width) << ' ' <<  dataType << '\n'; writeAxis1D(fp,mesh[0]);
+                fp << 'Y' << _COORDINATES << Two << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
+                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
 
             }
             
@@ -359,7 +359,7 @@ namespace upsylon {
                 //______________________________________________________________
                 fp << 'X' << _COORDINATES << ' '; self(fp,mesh.width.x) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[0]);
                 fp << 'Y' << _COORDINATES << ' '; self(fp,mesh.width.y) << ' ' << dataType << '\n'; writeAxis1D(fp,mesh[1]);
-                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(fp << '0' << ' ',scaling) << '\n';
+                fp << 'Z' << _COORDINATES << Two << dataType << '\n'; self(WriteZeroPrefix(fp),scaling) << '\n';
             }
             
             //! write 3D mesh
@@ -437,7 +437,8 @@ namespace upsylon {
             
             //! prepare lookup table
             const Writer & revealField( ios::ostream &fp, const Field  &F ) const;
-            
+
+            //! write all coordinates
             template <typename T> inline
             void writeAxis1D( ios::ostream &fp, const Field1D<T> &a ) const
             {
@@ -446,8 +447,10 @@ namespace upsylon {
                 {
                     self(fp,a[i]) << '\n';
                 }
-                
             }
+
+            //! fp << '0' << ' '
+            static ios::ostream & WriteZeroPrefix(ios::ostream &fp);
             
         };
         
