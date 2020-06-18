@@ -79,7 +79,7 @@ __FILL(); __MPV2(NAME);   \
         for(size_t iter=0;iter<16;++iter)
         {
             //const size_t n = 1000 + alea.leq(1000);
-            const size_t n = 10 + alea.leq(10);
+            const size_t n = 100 + alea.leq(100);
 
             vector<T>    t(n,zt);
             vector<T>    tb(n,zt);
