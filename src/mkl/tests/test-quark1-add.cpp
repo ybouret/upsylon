@@ -119,6 +119,7 @@ Y_UTEST(quark1_add)
 {
     concurrent::simd loop;
     std::cerr << "With #Threads=" << loop.number() << std::endl;
+    doOPS<double,double,double>( &loop );
     doOPS<float,float,float>( &loop );
     doOPS<float,int,float>( &loop );
     //doOPS<mpz,int,mpz>(NULL);
