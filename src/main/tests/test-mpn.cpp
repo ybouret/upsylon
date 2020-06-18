@@ -416,6 +416,7 @@ Y_UTEST(mpn)
         const mpn n = mpn::dec(d);
         std::cerr << std::dec << "n=" << n << std::endl;
         d.skip_with('0');
+        if(d.size()<=0) d='0';
         const string D = n.to_decimal();
         std::cerr << "D=" << D << "/" << d << std::endl;
         Y_ASSERT(D==d);
