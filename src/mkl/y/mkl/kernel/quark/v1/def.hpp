@@ -85,7 +85,7 @@ RHS    *rhs;                                                                \
 Y_QUARK_TASK_IMPL()                                                         \
 TARGET                      & tgt = *task.tgt;                               \
 LHS                         & lhs = *task.lhs;                               \
-typename TARGET::const_type & x   = *task.x;                                 \
+typename TARGET::const_type   x   = *task.x;                                 \
 RHS                         & rhs = *task.rhs;                               \
 Y_QUARK_LOOP_PAR(tgt.size(),METHOD);                                        \
 Y_QUARK_TASK_DATA()                                                         \
