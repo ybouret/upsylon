@@ -19,6 +19,11 @@ namespace {
         //std::cerr << "\tCheck " << typeid(ARRAY).name() << std::endl;
         for(size_t i=arr.size();i>0;--i)
         {
+            if( ! (__mod2( arr[i] - brr[i] ) <= 0) )
+            {
+                std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
+                throw exception("check failure");
+            }
             Y_ASSERT( __mod2( arr[i] - brr[i] ) <= 0 );
         }
     }
@@ -55,9 +60,7 @@ if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb); }\
 std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,x,u);\
-std::cerr << "t  = " << t << std::endl;\
-if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
-std::cerr << "tb = " << tb << std::endl;\
+ if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
 check1D(t,tb); }\
 } while(false)
 
@@ -78,8 +81,8 @@ __FILL(); __MPV2(NAME);   \
         const V zv = 0;
         for(size_t iter=0;iter<16;++iter)
         {
-            //const size_t n = 1000 + alea.leq(1000);
-            const size_t n = 100 + alea.leq(100);
+            const size_t n = 1000 + alea.leq(1000);
+            //const size_t n = 100 + alea.leq(100);
 
             vector<T>    t(n,zt);
             vector<T>    tb(n,zt);
