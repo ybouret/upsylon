@@ -28,11 +28,13 @@ support::fill1D(u);\
 support::fill1D(v)
 
 #define __OPV1(NAME) do {\
+std::cerr << "|_" << #NAME << "_V1" << std::endl;\
 support::reset1D(t); quark::NAME(t,u,v);\
 if(loop) { support::reset1D(tb); quark::NAME(tb,u,v,*loop); check1D(t,tb); }\
 } while(false)
 
 #define __OPV2(NAME) do {\
+std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 support::reset1D(t); quark::NAME(t,u);\
 if(loop) { support::reset1D(tb); quark::NAME(tb,u,*loop); check1D(t,tb); }\
 } while(false)
@@ -43,12 +45,14 @@ __FILL(); __OPV2(NAME); \
 } while(false)
 
 #define __MPV1(NAME) do {\
+std::cerr << "|_" << #NAME << "_V1" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,u,x,v);\
 if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb); }\
 } while(false)
 
 #define __MPV2(NAME) do {\
+std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,x,u);\
 if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop); check1D(t,tb); }\
@@ -77,9 +81,7 @@ __FILL(); __MPV2(NAME);   \
             vector<U>    u(n,zu);
             vector<V>    v(n,zv);
 
-            std::cerr << "|_add    " << n << std::endl;
             __PROC(add);
-            std::cerr << "|_muladd " << std::endl;
             __MPROC(muladd);
             
             //__PROC(sub); __MPROC(mulsub);
