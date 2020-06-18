@@ -104,7 +104,7 @@ __FILL(); __MPV1(NAME);   \
             vector<U>    u(n,zu);
             vector<V>    v(n,zv);
 
-            __PROC(add); //__MPROC(muladd);
+            __PROC(add); __MPROC(muladd);
             __PROC(sub); __MPROC(mulsub);
             __PROC(subp);
 
