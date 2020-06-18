@@ -7,12 +7,23 @@
 #include "support.hpp"
 #include "y/memory/pooled.hpp"
 #include "y/type/spec.hpp"
+#include "y/code/utils.hpp"
 
 using namespace upsylon;
 using namespace mkl;
 
 namespace {
 
+    template <typename T>
+    static inline void displayBin(const T &args)
+    {
+        const uint8_t *p = (const uint8_t *)&args;
+        std::cerr << "0x";
+        for(size_t i=0;i<sizeof(T);++i)
+        {
+            std::cerr << hexadecimal::lowercase[p[i]];
+        }
+    }
     template <typename ARRAY>
     static inline void check1D( const ARRAY &arr, const ARRAY &brr )
     {
@@ -22,6 +33,7 @@ namespace {
             if( ! (__mod2( arr[i] - brr[i] ) <= 0) )
             {
                 std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
+                displayBin(arr[i]); std::cerr << " | ";   displayBin(brr[i]); std::cerr << std::endl;
                 throw exception("check failure");
             }
             Y_ASSERT( __mod2( arr[i] - brr[i] ) <= 0 );
