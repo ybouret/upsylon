@@ -83,7 +83,7 @@ check1D(t,tb); }\
 __FILL(); __MPV1(NAME);   \
 } while(false)
 
-//__FILL(); __MPV2(NAME);   
+//__FILL(); __MPV2(NAME);
 
     template <typename T,
     typename U,
@@ -120,6 +120,7 @@ __FILL(); __MPV1(NAME);   \
 Y_UTEST(quark1_add)
 {
     concurrent::simd loop;
+    std::cerr << "With #Threads=" << loop.number() << std::endl;
     doOPS<float,float,float>( &loop );
     doOPS<float,int,float>( &loop );
     //doOPS<mpz,int,mpz>(NULL);
