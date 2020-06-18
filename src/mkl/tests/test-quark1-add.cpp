@@ -30,13 +30,15 @@ namespace {
         //std::cerr << "\tCheck " << typeid(ARRAY).name() << std::endl;
         for(size_t i=arr.size();i>0;--i)
         {
-            if( ! (__mod2( arr[i] - brr[i] ) <= 0) )
+            typename ARRAY::const_type d2 = __mod2( arr[i] - brr[i] );
+            if( ! (d2<=0) )
             {
                 std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
                 displayBin(arr[i]); std::cerr << " | ";   displayBin(brr[i]); std::cerr << std::endl;
+                std::cerr << "d2=" << d2 << std::endl;
                 throw exception("check failure");
             }
-            Y_ASSERT( __mod2( arr[i] - brr[i] ) <= 0 );
+            //Y_ASSERT( __mod2( arr[i] - brr[i] ) <= 0 );
         }
     }
 
@@ -72,7 +74,7 @@ if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb); }\
 std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,x,u);\
- if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
+if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
 check1D(t,tb); }\
 } while(false)
 
