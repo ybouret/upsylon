@@ -55,7 +55,10 @@ if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb); }\
 std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,x,u);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop); check1D(t,tb); }\
+std::cerr << "t  = " << t << std::endl;\
+if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
+std::cerr << "tb = " << tb << std::endl;\
+check1D(t,tb); }\
 } while(false)
 
 
@@ -75,7 +78,9 @@ __FILL(); __MPV2(NAME);   \
         const V zv = 0;
         for(size_t iter=0;iter<16;++iter)
         {
-            const size_t n = 1000 + alea.leq(1000);
+            //const size_t n = 1000 + alea.leq(1000);
+            const size_t n = 10 + alea.leq(10);
+
             vector<T>    t(n,zt);
             vector<T>    tb(n,zt);
             vector<U>    u(n,zu);
@@ -99,7 +104,7 @@ Y_UTEST(quark1_add)
     concurrent::simd loop;
     doOPS<float,float,float>( &loop );
     doOPS<float,int,float>( &loop );
-    doOPS<mpz,int,mpz>(NULL);
+    //doOPS<mpz,int,mpz>(NULL);
 
 }
 Y_UTEST_DONE()
