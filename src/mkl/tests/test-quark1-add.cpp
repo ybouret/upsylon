@@ -77,9 +77,11 @@ __FILL(); __MPV2(NAME);   \
             vector<U>    u(n,zu);
             vector<V>    v(n,zv);
 
-            std::cerr << "|_add " << n << std::endl;
+            std::cerr << "|_add    " << n << std::endl;
             __PROC(add);
-            //__MPROC(muladd);
+            std::cerr << "|_muladd " << std::endl;
+            __MPROC(muladd);
+            
             //__PROC(sub); __MPROC(mulsub);
             //__PROC(subp);
 
