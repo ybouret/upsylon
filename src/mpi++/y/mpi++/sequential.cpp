@@ -11,6 +11,19 @@ namespace upsylon
         static const char ACK = 2;
     }
 
+    void mpi:: flush( const ios::cstdout_t & ) const throw()
+    {
+        if(stdout) fflush(stdout);
+        try { std::cout.flush(); } catch(...) {}
+    }
+
+    void mpi:: flush( const ios::cstderr_t & ) const throw()
+    {
+        if(stderr) fflush(stderr);
+        try { std::cerr.flush(); } catch(...) {}
+    }
+
+
     void mpi::recvACK(const int r) const
     {
         if(ACK!=Recv<char>(r)) throw upsylon::exception("%sno ACK from rank=%d",fn,r);

@@ -8,9 +8,11 @@
 #include "y/exception.hpp"
 #include "y/concurrent/singleton.hpp"
 #include "y/associative/suffix-tree.hpp"
+#include "y/ios/cfile.hpp"
 
 #include <cstdio>
 #include <typeinfo>
+
 
 //! avoid C++ from OpenMPI
 #define OMPI_SKIP_MPICXX 1
@@ -527,7 +529,10 @@ namespace upsylon
         void recvSYN()          const; //!< from rank=0
         void sendACK()          const; //!< to rank=0
         void sendSYN(const int) const; //!< sedn SYN to another
-        
+
+        void flush( const ios::cstdout_t & ) const throw(); //!< flush stdout and std::cout
+        void flush( const ios::cstderr_t & ) const throw(); //!< flush stderr and std::cerr
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mpi);
         virtual ~mpi() throw();
