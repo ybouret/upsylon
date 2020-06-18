@@ -100,6 +100,7 @@ namespace upsylon
             //__________________________________________________________________
             void operator()(const uint64_t delta) throw(); //!< full += (last=delta)
             void reset() throw(); //!< last=full=0
+
             //__________________________________________________________________
             //
             // members
@@ -147,7 +148,7 @@ namespace upsylon
         class comm_info
         {
         public:
-            comm_info() throw();      //!< setup
+            comm_info()  throw();     //!< setup
             ~comm_info() throw();     //!< cleanup
             void reset_all() throw(); //!< reset all members
             comm_ticks ticks;         //!< ticks

@@ -57,7 +57,7 @@ namespace upsylon
         size_t      *base; //! [0..k-1]
         Y_DISABLE_ASSIGN(combination);
         virtual void onBoot()  throw(); //!< initialize first combination
-        virtual void onNext()   throw(); //!< update to next one
+        virtual void onNext()  throw(); //!< update to next one
 
     };
 }
