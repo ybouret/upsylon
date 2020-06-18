@@ -56,8 +56,8 @@ if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop); check1D(t,tb); }\
 
 
 #define __MPROC(NAME) do {\
-__FILL(); __MPV1(NAME); \
-__FILL(); __MPV2(NAME); \
+__FILL(); __MPV1(NAME);   \
+__FILL(); __MPV2(NAME);   \
 } while(false)
 
     template <typename T,
@@ -72,14 +72,16 @@ __FILL(); __MPV2(NAME); \
         for(size_t iter=0;iter<16;++iter)
         {
             const size_t n = 1000 + alea.leq(1000);
-            vector<T> t(n,zt);
-            vector<T> tb(n,zt);
-            vector<U> u(n,zu);
-            vector<V> v(n,zv);
+            vector<T>    t(n,zt);
+            vector<T>    tb(n,zt);
+            vector<U>    u(n,zu);
+            vector<V>    v(n,zv);
 
-            __PROC(add); __MPROC(muladd);
-            __PROC(sub); __MPROC(mulsub);
-            __PROC(subp);
+            std::cerr << "|_add " << n << std::endl;
+            __PROC(add);
+            //__MPROC(muladd);
+            //__PROC(sub); __MPROC(mulsub);
+            //__PROC(subp);
 
         }
         std::cerr << "<OPS/>" << std::endl;
