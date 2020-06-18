@@ -81,9 +81,9 @@ check1D(t,tb); }\
 
 #define __MPROC(NAME) do {\
 __FILL(); __MPV1(NAME);   \
+__FILL(); __MPV2(NAME);   \
 } while(false)
 
-//__FILL(); __MPV2(NAME);
 
     template <typename T,
     typename U,
