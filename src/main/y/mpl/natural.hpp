@@ -247,7 +247,6 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             Y_MPN_WRAP(*,__mul)
             static natural square_of(const natural &n ); //!< fast square
-            static natural lmul(const natural &lhs,const natural &rhs); //!< long multiplication
 
             //__________________________________________________________________
             //
@@ -382,10 +381,7 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
 
             static natural __mul(const uint8_t *l, const size_t nl,
                                  const uint8_t *r, const size_t nr);
-
-            static natural __lmul(const uint8_t *l, const size_t nl,
-                                  const uint8_t *r, const size_t nr);
-
+            
             static natural __div(const uint8_t *num, const size_t nn,
                                  const uint8_t *den, const size_t nd);
 

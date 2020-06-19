@@ -7,7 +7,7 @@ Y_UTEST(mp_mul)
 {
     const mpn lhs=10;
     const mpn rhs=20;
-    const mpn p  = mpn::lmul(lhs,rhs);
+    const mpn p  = lhs*rhs;
     std::cerr << lhs << "*" << rhs << "=" << p << std::endl;
 }
 Y_UTEST_DONE()
