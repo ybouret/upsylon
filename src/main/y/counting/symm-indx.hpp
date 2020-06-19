@@ -16,7 +16,7 @@ namespace upsylon {
         const T s_arg = ((k-1)<<3)+1;   i = (isqrt::of(s_arg)+1)>>1;
         const T i_off = ( i*(i-1) )>>1; j = k-i_off;
     }
-
+    
 }
 
 
