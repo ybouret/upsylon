@@ -151,6 +151,7 @@ Y_UTEST(permuter)
     }
 
     doPerm<uint16_t>(n,m);
+    doPerm<int16_t>(n,m);
 
 }
 Y_UTEST_DONE()

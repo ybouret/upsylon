@@ -39,8 +39,7 @@ namespace upsylon {
             //! cleanup
             virtual ~permuter() throw();
             
-            //! display
-            virtual std::ostream &show(std::ostream &os) const;
+
             
 
             //! count and set weak if a repetition is detected
@@ -140,6 +139,13 @@ wlen(0)
             release();
         }
 
+        //! display
+        inline virtual std::ostream &show(std::ostream &os) const
+        {
+            const accessible<T> &self = *this;
+            return os << self;
+        }
+
         //----------------------------------------------------------------------
         //
         // accessible interface
@@ -236,7 +242,6 @@ wlen(0)
                         if(num>1)
                         {
                             reps.push_back( new repeat(num) );
-                            //reps << num;
                         }
                     }
                 }

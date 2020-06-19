@@ -1,10 +1,11 @@
 #include "y/counting/mloop.hpp"
 #include "y/counting/comb.hpp"
 #include "y/counting/perm.hpp"
+#include "y/counting/permuter.hpp"
 #include "y/counting/symm-pair.hpp"
 #include "y/type/point3d.hpp"
-
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 
@@ -44,10 +45,25 @@ Y_UTEST(counting)
         permutation perm(4);
         infoOn(perm);
     }
+
     {
         std::cerr << "symm" << std::endl;
         symm_pair symm(6);
         infoOn(symm);
+    }
+
+    {
+        const size_t n = 1+alea.leq(5);
+        vector<int>  I(n,as_capacity);
+        for(size_t i=n;i>0;--i)
+        {
+            const int tmp = int(alea.leq(n));
+            I << tmp;
+        }
+        std::cerr << "I=" << I << std::endl;
+        permuter<int> Perm(I);
+        infoOn(Perm);
+
     }
     
 }
