@@ -42,10 +42,11 @@ namespace upsylon
         //
         // methods
         //______________________________________________________________________
-        virtual       ~counting()    throw();     //!< cleanup
-        bool           good()  const throw();     //!< index<=count after a start()
-        void           boot();                    //!< set index to 1 and call onBoot()
-        void           next();                    //!< update index and call   onNext() if valid
+        virtual              ~counting()    throw();          //!< cleanup
+        bool                  good()  const throw();          //!< index<=count after a start()
+        void                  boot();                         //!< set index to 1 and call onBoot()
+        void                  next();                         //!< update index and call   onNext() if valid
+        virtual std::ostream &show(std::ostream &) const = 0; //!< display C++ style
 
         //______________________________________________________________________
         //
@@ -58,11 +59,16 @@ namespace upsylon
         //
         // static methods/helpers
         //______________________________________________________________________
-        static size_t              chkdim(const size_t);                          //!< check dimension>0
-        static memory::allocator & mem_instance();                                //!< internal allocator instance
-        static memory::allocator & mem_location() throw();                        //!< internal allocator location
-        static size_t *            acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)
-        static void                release_(size_t *&wksp,size_t &bytes) throw(); //!< release workspace
+        static size_t               chkdim(const size_t);                          //!< check dimension>0
+        static memory::allocator &  mem_instance();                                //!< internal allocator instance
+        static memory::allocator &  mem_location() throw();                        //!< internal allocator location
+        static size_t *             acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)
+        static void                 release_(size_t *&wksp,size_t &bytes) throw(); //!< release workspace
+        //! generic display
+        inline friend std::ostream &operator<<(std::ostream &os, const counting &cnt)
+        {
+            return cnt.show(os);
+        }
         
     protected:
         explicit       counting(const size_t   n) throw();                   //!< setup count=n, index=0
@@ -80,9 +86,8 @@ namespace upsylon
         
     private:
         Y_DISABLE_ASSIGN(counting);
-        virtual void onBoot() = 0; //!< initialize first objects
-        virtual void onNext() = 0; //!< update next objects, index<=count
-
+        virtual void          onBoot() = 0; //!< initialize first objects
+        virtual void          onNext() = 0; //!< update next objects, index<=count
     };
 
 };

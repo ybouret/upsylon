@@ -122,12 +122,11 @@ data(0)
                 check_contents(mloop_::identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
             }
 
-            //! display indices
-            inline friend std::ostream & operator<<( std::ostream &os, const mloop &l )
+            //! show
+            virtual std::ostream & show( std::ostream &os ) const
             {
-                return display_int::to(os<< '{',l.curr,l.dimensions,mloop_::separators) << '}';
+                return display_int::to(os<< '{',curr,dimensions,mloop_::separators) << '}';
             }
-
 
 
         private:

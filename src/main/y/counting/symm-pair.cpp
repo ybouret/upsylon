@@ -28,23 +28,55 @@ namespace upsylon {
 
     symm_pair:: ~symm_pair() throw()
     {
-        _bzset(n);
+        _bzset(dimension);
     }
 
     symm_pair:: symm_pair(const size_t dim) :
     counting( compute(dim,with_sz) ),
-    n(dim),
-    i(0),
-    j(0)
+    dimension(dim),
+    lower(0),
+    upper(0)
     {
         boot();
     }
 
+    symm_pair:: symm_pair(const symm_pair &other) throw() :
+    collection(),
+    counting( other ),
+    accessible<size_t>(),
+    dimension(other.dimension),
+    lower(other.lower),
+    upper(other.upper)
+    {
+        
+    }
+    
+    std::ostream & symm_pair:: show(std::ostream &os) const
+    {
+        return counting::display(os, getArr(), 2);
+    }
+    
+    size_t symm_pair:: size() const throw() { return 2; }
+   
+    const size_t * symm_pair:: getArr() const throw()
+    {
+        const size_t *p = &lower;
+        return (--p);
+    }
+    
+    const size_t & symm_pair:: operator[](const size_t i) const throw()
+    {
+        assert(i>=1);
+        assert(i<=2);
+        return *( getArr()+i );
+    }
+    
     void symm_pair:: update() throw()
     {
-        symm_indx(aliasing::_(i), aliasing::_(j),index);
+        symm_indx(aliasing::_(upper),aliasing::_(lower),index);
     }
 
+    
     void symm_pair:: onBoot() throw()
     {
         assert(1==index);

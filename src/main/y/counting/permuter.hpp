@@ -39,6 +39,10 @@ namespace upsylon {
             //! cleanup
             virtual ~permuter() throw();
             
+            //! display
+            virtual std::ostream &show(std::ostream &os) const;
+            
+
             //! count and set weak if a repetition is detected
             mpl::natural count_with(const repeats &, const upsylon::counting::with_mp_t &) const;
           

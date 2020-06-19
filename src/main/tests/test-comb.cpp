@@ -22,7 +22,7 @@ Y_UTEST(comb)
 
             for( comb.boot(); comb.good(); comb.next() )
             {
-                std::cerr << "\t" << comb;
+                std::cerr << "\t" << (counting &)comb;
                 std::cerr << " (";
                 for(size_t i=0;i<k;++i)
                 {

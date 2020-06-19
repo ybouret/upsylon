@@ -64,7 +64,7 @@ namespace
         std::cerr << "<" << loop.lower << "->" << loop.upper << ">" << std::endl;
         for( loop.boot(); loop.good(); loop.next() )
         {
-            std::cerr << "\t@" << loop.index << " : " << loop.value << " <= " << loop << std::endl;
+            std::cerr << "\t@" << loop.index << " : " << loop.value << " <= " << (counting &)loop << std::endl;
             loops.push_back_(loop);
         }
         std::cerr << "<" << loop.lower << "->" << loop.upper << "/>" << std::endl;

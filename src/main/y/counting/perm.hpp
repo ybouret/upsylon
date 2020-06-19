@@ -46,11 +46,9 @@ namespace upsylon {
         //! and access, C-style
         const size_t & operator()(const size_t indx) const throw();
 
-
-        //! display
-        inline friend std::ostream & operator<<(std::ostream &os, const permutation &p)
-        { return counting::display(os,p.perm,p.n); }
-
+        //! show state
+        virtual std::ostream & show(std::ostream &os) const;
+        
         //______________________________________________________________________
         //
         // internal counting

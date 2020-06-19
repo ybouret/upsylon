@@ -49,6 +49,11 @@ namespace upsylon {
         _bzset(k);
     }
 
+    std::ostream & combination:: show(std::ostream &os) const
+    {
+        return counting::display(os,comb,k);
+    }
+    
     void combination:: onBoot() throw()
     {
         assert(1==index);

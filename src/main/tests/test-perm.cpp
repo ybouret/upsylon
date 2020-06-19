@@ -76,7 +76,7 @@ Y_UTEST(perm)
         std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
         for( perm.boot(); perm.good(); perm.next() )
         {
-            std::cerr << "\t" << perm;
+            std::cerr << "\t" << (counting &)perm;
             std::cerr << " (";
             for(size_t i=0;i<n;++i) std::cerr << ' ' << perm(i) ;
             std::cerr << " )" << std::endl;
@@ -117,7 +117,7 @@ namespace {
         
         permuter<T> perm( data );
         std::cerr << "data  = " << data << std::endl;
-        std::cerr << "perm  = " << perm << std::endl;
+        std::cerr << "perm  = " << (counting &)perm << std::endl;
         std::cerr << "count = " << perm.count << "/" << countMax << std::endl;
         
         for( perm.boot(); perm.good(); perm.next() )

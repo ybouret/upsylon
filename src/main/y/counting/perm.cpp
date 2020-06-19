@@ -60,7 +60,11 @@ namespace upsylon
 
     size_t permutation:: size() const throw() { return n; }
 
-
+    std::ostream & permutation:: show(std::ostream &os) const
+    {
+        return counting::display(os,perm,n);
+    }
+    
     void permutation:: onBoot() throw()
     {
         assert(1==index);

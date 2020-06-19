@@ -170,7 +170,7 @@ Y_UTEST(bell)
         }
         std::cerr << std::endl;
     }
-    std::cerr << "\ti32=" << i32 << std::endl;
-    std::cerr << "\ti64=" << i64 << std::endl;
+    std::cerr << "\ti32max=" << i32 << std::endl;
+    std::cerr << "\ti64max=" << i64 << std::endl;
 }
 Y_UTEST_DONE()

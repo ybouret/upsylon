@@ -38,7 +38,9 @@ namespace upsylon
         //! copy full state
         combination(const combination &other);
 
-
+        //! show state
+        virtual std::ostream & show(std::ostream &os) const;
+        
         //______________________________________________________________________
         //
         // accessible interface
@@ -60,10 +62,7 @@ namespace upsylon
 
         //! compute the integral number of combinations, with size check
         static size_t       compute(const size_t N, const size_t K, const with_sz_t &);
-
-        //! display
-        friend std::ostream & operator<<(std::ostream &os, const combination &c) { return counting::display(os,c.comb,c.k); }
-
+        
         //! check consistency
         static void memchk(const combination &lhs, const combination &rhs);
 
