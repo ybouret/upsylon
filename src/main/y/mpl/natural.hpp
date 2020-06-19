@@ -106,7 +106,7 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
             natural(size_t, const as_capacity_t &);                       //!< a zero with any memory
             virtual ~natural() throw();                                   //!< release memory
             natural(const natural &other);                                //!< copy
-            natural(word_t w);                                            //!<setup from a word_type
+            natural(word_t w);                                            //!< setup from a word_type
             natural(const void  *buffer, size_t buflen);                  //!< copy from raw memory
             natural & operator=(const natural &);                         //!< assign
             natural & operator=(const word_t   );                         //!< assign from word_type
@@ -246,7 +246,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //
             //__________________________________________________________________
             Y_MPN_WRAP(*,__mul)
-            static natural square_of( const natural &n ); //!< fast square
+            static natural square_of(const natural &n ); //!< fast square
+            static natural lmul(const natural &lhs,const natural &rhs); //!< long multiplication
 
             //__________________________________________________________________
             //
@@ -381,6 +382,9 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
 
             static natural __mul(const uint8_t *l, const size_t nl,
                                  const uint8_t *r, const size_t nr);
+
+            static natural __lmul(const uint8_t *l, const size_t nl,
+                                  const uint8_t *r, const size_t nr);
 
             static natural __div(const uint8_t *num, const size_t nn,
                                  const uint8_t *den, const size_t nd);

@@ -100,7 +100,7 @@ namespace upsylon
         }
 
         
-        natural:: natural( const void  *buffer, size_t buflen) : Y_MPN_CTOR(buflen,buflen)
+        natural:: natural(const void  *buffer, size_t buflen) : Y_MPN_CTOR(buflen,buflen)
         {
             assert(bytes==buflen);
             memcpy(byte,buffer,buflen);
