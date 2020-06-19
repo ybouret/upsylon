@@ -49,11 +49,13 @@ Y_UTEST(dancing)
 
     std::cerr << "#amount=" << dance.amount      << std::endl;
     std::cerr << "#cycles=" << dance.frames.size << std::endl;
+    std::cerr << "workGroupMax= " << dance.wg_max << std::endl;
+    std::cerr << "workGroupMin= " << dance.wg_min << std::endl;
 
     for(size_t wg = dance.wg_max; wg>=dance.wg_min; --wg )
     {
         const dancing::frame *ini =0, *end=0;
-        const size_t num = dance.find(wg, ini, end);
+        const size_t          num = dance.find(wg, ini, end);
         std::cerr << "#workgroups=" << wg << " : " << num << std::endl;
     }
 

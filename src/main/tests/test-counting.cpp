@@ -63,7 +63,6 @@ Y_UTEST(counting)
         std::cerr << "I=" << I << std::endl;
         permuter<int> Perm(I);
         infoOn(Perm);
-
     }
     
 }

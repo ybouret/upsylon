@@ -4,15 +4,15 @@
 
 namespace upsylon
 {
-    dancing:: guest:: guest(const size_t i) throw() :  object(), label(i), next(0), prev(0) {}
-    dancing::guest:: ~guest() throw() {}
+    dancing:: guest::  guest(const size_t i) throw() :  object(), inode<guest>(), label(i) {}
+    dancing:: guest:: ~guest()               throw() {}
 }
 
 #include <iostream>
 
 namespace upsylon
 {
-    dancing:: group::  group() throw() : object(), guests(), next(0), prev(0) {}
+    dancing:: group::  group() throw() : object(), guests(), inode<group>() {}
     dancing:: group:: ~group() throw() {}
 
     bool dancing:: group:: has_guest_with_label( const size_t label ) const throw()
@@ -57,11 +57,13 @@ namespace upsylon
 namespace upsylon
 {
     dancing:: frame:: frame(const size_t wgs) throw() :
+    inode<frame>(),
     workgroup_size(wgs),
     workgroups(0),
-    extraneous(0),
-    next(0), prev(0)
-    {}
+    extraneous(0)
+    {
+    }
+
 
     dancing:: frame:: ~frame() throw()
     {
