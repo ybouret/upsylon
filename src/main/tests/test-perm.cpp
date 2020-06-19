@@ -149,12 +149,8 @@ Y_UTEST(permuter)
     {
         m = string_convert::to<size_t>(argv[2],"m");
     }
-    
-    
-    doPerm<uint16_t>(n,m);
-    
 
-    
-    
+    doPerm<uint16_t>(n,m);
+
 }
 Y_UTEST_DONE()
