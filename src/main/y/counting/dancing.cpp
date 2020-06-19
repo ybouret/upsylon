@@ -1,6 +1,6 @@
 #include "y/counting/dancing.hpp"
 #include "y/counting/comb.hpp"
-
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -89,7 +89,7 @@ namespace upsylon
         for(const group *grp=head;grp;grp=grp->next)
         {
             assert(workgroup_size==grp->size);
-            ++(size_t&)workgroups;
+            ++ aliasing::_(workgroups);
         }
 
         // check singles
@@ -109,7 +109,7 @@ namespace upsylon
                 if(!has_label)
                 {
                     singles.push_back( group::single(label) );
-                    ++(size_t&)extraneous;
+                    ++aliasing::_(extraneous);
                 }
             }
             merge_back(singles);
@@ -176,7 +176,7 @@ namespace upsylon
         groups G;
         {
             combination  comb(n,k);
-            (size_t &) amount = comb.count;
+            aliasing::_(amount) = comb.count;
             for(comb.boot(); comb.good(); comb.next())
             {
                 G.push_back( new_group_from(comb) );
@@ -223,8 +223,8 @@ namespace upsylon
             merging<frame>::sort(configs, compare_cfg, NULL);
         }
         
-        (size_t&)wg_max = frames.head->workgroups;
-        (size_t&)wg_min = frames.tail->workgroups;
+        aliasing::_(wg_max) = frames.head->workgroups;
+        aliasing::_(wg_min) = frames.tail->workgroups;
 
     }
 

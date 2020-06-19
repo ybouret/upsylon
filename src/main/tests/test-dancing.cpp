@@ -11,6 +11,7 @@ namespace  {
         for(size_t k=1; k<=n; ++k)
         {
             dancing dance(n,k);
+            std::cerr << k << ':' << dance.frames.size << '/';
             for(size_t wg = dance.wg_max; wg>=dance.wg_min; --wg )
             {
                 const dancing::frame *ini =0, *end=0;
@@ -33,6 +34,7 @@ namespace  {
 
             }
         }
+        std::cerr << std::endl;
     }
 }
 
