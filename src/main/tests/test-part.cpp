@@ -22,8 +22,6 @@ namespace {
 
 Y_UTEST(part)
 {
-
-
     size_t nmax = 5;
     if( argc > 1 )
     {

@@ -9,39 +9,68 @@
 namespace upsylon {
     
 
-    //! permutations
+    //--------------------------------------------------------------------------
+    //
+    //! C/C++ style permutation
+    //
+    //--------------------------------------------------------------------------
     class permutation : public counting, public accessible<size_t>
     {
     public:
-        typedef size_t     type;          //!< alias for atom::
-        typedef type       mutable_type;  //!< alias for atom::
-        typedef const type const_type;    //!< alias for atom::
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        typedef size_t     type;          //!< alias
+        typedef type       mutable_type;  //!< alias
+        typedef const type const_type;    //!< alias
 
+        //______________________________________________________________________
+        //
+        // C++ and definitions
+        //______________________________________________________________________
         explicit permutation(const size_t N);  //!< setup
         virtual ~permutation() throw();        //!< cleanup
         permutation(const permutation &other); //!< copy
-        
-        const size_t  n; //!< n
 
-        static mpl::natural compute(const size_t N, const with_mp_t &); //!< multi-precision count
-        static size_t       compute(const size_t N, const with_sz_t &); //!< check overflow
-        
-        
+        //______________________________________________________________________
+        //
+        // accessible interface
+        //______________________________________________________________________
+        //! access, C++ style
+        virtual const size_t & operator[](const size_t indx) const throw();
+
+        //! size=n
+        virtual size_t size() const throw();
+
+        //! and access, C-style
+        const size_t & operator()(const size_t indx) const throw();
+
+
         //! display
         inline friend std::ostream & operator<<(std::ostream &os, const permutation &p)
         { return counting::display(os,p.perm,p.n); }
-        
+
+        //______________________________________________________________________
+        //
+        // internal counting
+        //______________________________________________________________________
+        static mpl::natural compute(const size_t N, const with_mp_t &); //!< multi-precision count
+        static size_t       compute(const size_t N, const with_sz_t &); //!< check overflow
+
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        const size_t  n; //!< maximum index
+
+        //______________________________________________________________________
+        //
+        // helpers
+        //______________________________________________________________________
+
         //! check
         static void memchk(const permutation &lhs, const permutation &rhs);
-        
-        //! access, C++ style
-        virtual const size_t & operator[](const size_t indx) const throw();
-        
-        //! access, C-style
-        const size_t & operator()(const size_t indx) const throw();
-
-        //! size=n
-        virtual size_t size() const throw();  
 
         //! C-style computation
         template <typename T>
@@ -56,7 +85,7 @@ namespace upsylon {
             }
         }
 
-        //! C++ style
+        //! C++ style computation
         template <typename T,typename U>
         void make( addressable<T> &target, const accessible<U> &source ) const
         {

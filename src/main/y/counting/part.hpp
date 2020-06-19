@@ -9,28 +9,55 @@
 
 namespace upsylon {
 
-    
-    //! iterate on possible decomposition of a given integer
+    //--------------------------------------------------------------------------
+    //
+    //! iterate on possible decomposition(s) of a given integer
+    //
+    //--------------------------------------------------------------------------
     class integer_partition : public accessible<size_t>
     {
     public:
-        
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
         explicit integer_partition(const size_t n); //!< setup n>0
         virtual ~integer_partition() throw();       //!< cleanup
 
-        const size_t n; //!< integer to part...
-        const size_t m; //!< current size
+        //______________________________________________________________________
+        //
+        // accessible interface
+        //______________________________________________________________________
+        virtual size_t         size()             const throw(); //!< m
+        virtual const size_t & operator[](size_t) const;         //!< [1..m]
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
         bool                   build_next() throw(); //!< compute next partition
         void                   initialize() throw(); //!< restart with singulet
         size_t                 outcomes()   throw(); //!< number of possible outcomes
-
+        
         mpn                    configs( const counting::with_mp_t &) const;   //!< number of configurations for this outcome
         size_t                 configs( const counting::with_sz_t &) const;   //!< with overflow check
 
-        virtual size_t         size()             const throw(); //!< m
-        virtual const size_t & operator[](size_t) const;         //!< [1..m]
-        static        size_t   outcomes(const size_t n);         //!< compute number of outcomes for a given size
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        const size_t n; //!< integer to part...
+        const size_t m; //!< current size
+
+
+        //______________________________________________________________________
+        //
+        // helpers
+        //______________________________________________________________________
+
+        //! compute number of outcomes for a given size
+        static size_t outcomes(const size_t n);
 
         //! compute the Bell's number
         template <typename T> static inline

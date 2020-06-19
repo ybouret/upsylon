@@ -8,13 +8,26 @@
 
 namespace upsylon
 {
-    //! C++ style permutation
+    //--------------------------------------------------------------------------
+    //
+    //! C/C++ style combination
+    //
+    //--------------------------------------------------------------------------
     class combination : public counting, public accessible<size_t>
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         typedef size_t     type;          //!< alias for atom::
         typedef type       mutable_type;  //!< alias for atom::
         typedef const type const_type;    //!< alias for atom::
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
 
         //! initialize state
         explicit combination(const size_t N, const size_t K);
@@ -25,30 +38,41 @@ namespace upsylon
         //! copy full state
         combination(const combination &other);
 
-        const size_t n;       //!< maximum value
-        const size_t k;       //!< number of chosen values
-     
 
+        //______________________________________________________________________
+        //
+        // accessible interface
+        //______________________________________________________________________
+        //! access C++ style
+        virtual const size_t & operator[](const size_t j) const throw();
+        //! size=k
+        virtual size_t size() const throw();
+
+        //! and access C-style
+        const size_t & operator()(const size_t j) const throw();
+
+        //______________________________________________________________________
+        //
+        // internal counting
+        //______________________________________________________________________
         //! compute the number of combinations using mpn
         static mpl::natural compute(const size_t N, const size_t K, const with_mp_t &);
 
         //! compute the integral number of combinations, with size check
-        static size_t      compute(const size_t N, const size_t K, const with_sz_t &);
-        
-        //! access C++ style
-        virtual const size_t & operator[](const size_t j) const throw();
-
-        //! access C  style
-        const size_t & operator()(const size_t j) const throw();
+        static size_t       compute(const size_t N, const size_t K, const with_sz_t &);
 
         //! display
-        inline friend std::ostream & operator<<(std::ostream &os, const combination &c) { return counting::display(os,c.comb,c.k); }
+        friend std::ostream & operator<<(std::ostream &os, const combination &c) { return counting::display(os,c.comb,c.k); }
 
         //! check consistency
         static void memchk(const combination &lhs, const combination &rhs);
 
-        //! size=k
-        virtual size_t size() const throw();
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        const size_t n;       //!< maximum value
+        const size_t k;       //!< number of chosen values
 
     private:
         const size_t nmk;  //!< n-k

@@ -21,28 +21,44 @@ namespace upsylon
     //--------------------------------------------------------------------------
     //
     //! base class for counting objects
+    /** upon creation counting objects should be ready to go
+     */
     //
     //--------------------------------------------------------------------------
     class counting
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         typedef type2type<mpl::natural> with_mp_t; //!< to use multiple precision
         typedef type2type<size_t>       with_sz_t; //!< to use integral size
         static  const with_mp_t         with_mp;   //!< alias
         static  const with_sz_t         with_sz;   //!< alias
 
-        const size_t index; //!< index in 1..count
-        const size_t count; //!< number of possible objects
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
         virtual       ~counting()    throw();     //!< cleanup
         bool           good()  const throw();     //!< index<=count after a start()
         void           boot();                    //!< set index to 1 and call onBoot()
         void           next();                    //!< update index and call   onNext() if valid
 
-        //! check dimension>0
-        static size_t chkdim(const size_t);
-        
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        const size_t index; //!< index in 1..count
+        const size_t count; //!< number of possible objects
 
+        //______________________________________________________________________
+        //
+        // static methods/helpers
+        //______________________________________________________________________
+        static size_t              chkdim(const size_t);                          //!< check dimension>0
         static memory::allocator & mem_instance();                                //!< internal allocator instance
         static memory::allocator & mem_location() throw();                        //!< internal allocator location
         static size_t *            acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)
@@ -53,7 +69,7 @@ namespace upsylon
         explicit       counting(const counting &) throw();                   //!< copy
 
         //! display arr[1..num]
-        static std::ostream &display( std::ostream &, const size_t *arr, const size_t num );
+        static std::ostream &display(std::ostream &, const size_t *arr, const size_t num );
 
         //! check status
         static

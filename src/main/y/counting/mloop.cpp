@@ -4,8 +4,8 @@ namespace upsylon
 {
     namespace core
     {
-        const char mloop_:: fn[]   = "mloop: ";
-        const char mloop_:: sep[2] = { ',', 0 };
+        const char mloop_:: identifier[]   = "mloop: ";
+        const char mloop_:: separators[2] = { ',', 0 };
 
     }
 }

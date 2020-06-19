@@ -88,10 +88,7 @@ namespace upsylon {
         assert(j<k);
         return base[j];
     }
-
-
-
-
+    
 }
 
 #include "y/mpl/rational.hpp"

@@ -15,11 +15,13 @@ namespace upsylon
 
     namespace core
     {
+        //----------------------------------------------------------------------
         //! auxiliary stuff for mloop
+        //----------------------------------------------------------------------
         struct mloop_
         {
-            static const char fn[];   //!< "mloop: "
-            static const char sep[2]; //!< ',', '\0'
+            static const char identifier[];  //!< "mloop: "
+            static const char separators[2]; //!< ',', '\0'
         };
 
         //! constructor setup
@@ -38,14 +40,24 @@ wksp(0),     \
 wlen(0),   \
 data(0)
 
+        //----------------------------------------------------------------------
+        //
         //! context for a multidimensional loop
+        //
+        //----------------------------------------------------------------------
         template <typename T>
         class mloop : public counting, public accessible<T>
         {
         public:
+            //------------------------------------------------------------------
+            // types and definitions
+            //------------------------------------------------------------------
             Y_DECL_ARGS(T,type);      //!< alias
             const size_t dimensions;  //!< number of dimensions to loop over
 
+            //------------------------------------------------------------------
+            // C++
+            //------------------------------------------------------------------
             //! setup with dimensions and boundaries
             inline explicit mloop(const size_t dim,
                                   const_type  *ini,
@@ -82,8 +94,10 @@ data(0)
                 move = 0; iter = 0;
             }
 
-
-            //! access [0..dimensions-1]
+            //------------------------------------------------------------------
+            // accessible interface
+            //------------------------------------------------------------------
+            //! access [1..dimensions]
             inline virtual const_type & operator[](const size_t dim) const throw()
             {
                 //assert(dim<dimensions);
@@ -93,23 +107,28 @@ data(0)
                 return item[dim];
             }
 
+            //! size=dimensions
+            inline virtual size_t size() const throw() { return dimensions; }
+
+            //------------------------------------------------------------------
+            // helpers
+            //------------------------------------------------------------------
             //! memory check
             inline static void memchk(const mloop &lhs, const mloop &rhs)
             {
                 assert(lhs.dimensions==rhs.dimensions);
                 assert(lhs.count==rhs.count);
                 assert(lhs.data==rhs.data);
-                check_contents(mloop_::fn, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
+                check_contents(mloop_::identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
             }
 
             //! display indices
             inline friend std::ostream & operator<<( std::ostream &os, const mloop &l )
             {
-                return display_int::to(os<< '{',l.curr,l.dimensions,mloop_::sep) << '}';
+                return display_int::to(os<< '{',l.curr,l.dimensions,mloop_::separators) << '}';
             }
 
-            //! size=dimensions
-            inline virtual size_t size() const throw() { return dimensions; }
+
 
         private:
             typedef void (*proc)(mutable_type &);
@@ -236,14 +255,29 @@ data(0)
 
     }
 
-    //! embedding mloop
+    //--------------------------------------------------------------------------
+    //
+    //! embedding mloop with a vector type
+    //
+    //--------------------------------------------------------------------------
     template <typename T, typename COORD>
     class mloop : public core::mloop<T>
     {
     public:
+        //----------------------------------------------------------------------
+        //
+        // types and definitions
+        //
+        //----------------------------------------------------------------------
         Y_DECL_ARGS(T,type);                                            //!< alias
         typedef typename type_traits<COORD>::mutable_type coord;        //!< alias
         typedef const coord                               const_coord;  //!< alias
+
+        //----------------------------------------------------------------------
+        //
+        // C++
+        //
+        //----------------------------------------------------------------------
 
         //! setup
         inline explicit mloop( const_coord &ini, const_coord &end ) :
@@ -259,23 +293,32 @@ data(0)
         //! cleanup
         inline virtual ~mloop() throw() {}
 
-        const_coord &value; //!< apparent value
-        const_coord &lower; //!< apparent lower bound
-        const_coord &upper; //!< apparent upper bound
-
-        //! reset/start a loop
+        //----------------------------------------------------------------------
+        //
+        // methods
+        //
+        //----------------------------------------------------------------------
+        //! reset/start a loop with different coordinates
         inline void reset(const_coord &ini, const_coord &end)
         {
             this->setup( (const type *)&ini, (const type *)&end );
             this->boot();
         }
 
-        //! access
+        //! access value
         inline const_coord & operator*() const throw()
         {
             return value;
         }
 
+        //----------------------------------------------------------------------
+        //
+        // members
+        //
+        //----------------------------------------------------------------------
+        const_coord &value; //!< apparent value
+        const_coord &lower; //!< apparent lower bound
+        const_coord &upper; //!< apparent upper bound
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mloop);
