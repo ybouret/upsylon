@@ -18,7 +18,11 @@ namespace upsylon
         class allocator;
     }
 
+    //--------------------------------------------------------------------------
+    //
     //! base class for counting objects
+    //
+    //--------------------------------------------------------------------------
     class counting
     {
     public:
@@ -32,8 +36,8 @@ namespace upsylon
 
         virtual       ~counting()    throw();     //!< cleanup
         bool           good()  const throw();     //!< index<=count after a start()
-        void           boot();                    //!< set index to 1 and call start_()
-        void           next();                    //!< update index and call next_() if valid
+        void           boot();                    //!< set index to 1 and call onBoot()
+        void           next();                    //!< update index and call   onNext() if valid
 
         //! check dimension>0
         static size_t chkdim(const size_t);
@@ -45,15 +49,11 @@ namespace upsylon
         static void                release_(size_t *&wksp,size_t &bytes) throw(); //!< release workspace
         
     protected:
-
         explicit       counting(const size_t   n) throw();                   //!< setup count=n, index=0
         explicit       counting(const counting &) throw();                   //!< copy
 
         //! display arr[1..num]
         static std::ostream &display( std::ostream &, const size_t *arr, const size_t num );
-
-
-
 
         //! check status
         static

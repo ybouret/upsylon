@@ -18,8 +18,6 @@ Y_UTEST(counting)
 
         std::cerr << "loop: from " << loop.lower << " to " << loop.upper << " : " << loop.count << std::endl;
         std::cerr << "      curr:" << *loop << " @index=" << loop.index << std::endl;
-        loop.boot();
-        std::cerr << "      curr:" << *loop << " @index=" << loop.index << std::endl;
     }
 
     {
