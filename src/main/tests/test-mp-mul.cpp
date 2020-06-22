@@ -6,8 +6,10 @@ using namespace upsylon;
 Y_UTEST(mp_mul)
 {
     
+    std::cerr << "bits=";
     for(size_t bits=0;bits<=256;++bits)
     {
+        std::cerr << bits  << '/';
         for(size_t iter=0;iter<8;++iter)
         {
             const mpn a = mpn(bits,alea);
@@ -22,6 +24,7 @@ Y_UTEST(mp_mul)
             }
         }
     }
+    std::cerr << std::endl;
 }
 Y_UTEST_DONE()
 
