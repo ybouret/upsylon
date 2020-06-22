@@ -247,7 +247,13 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             //__________________________________________________________________
             Y_MPN_WRAP(*,__mul)
             static natural square_of(const natural &n ); //!< fast square
-
+            static void    __smul(uint8_t       *b,
+                                  size_t        &m,
+                                  const uint8_t *a,
+                                  const size_t   n,
+                                  const uint8_t  x) throw();
+            static natural short_mul(const natural &lhs, const uint8_t x);
+            
             //__________________________________________________________________
             //
             //
