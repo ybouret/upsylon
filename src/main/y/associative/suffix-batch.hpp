@@ -90,21 +90,21 @@ namespace upsylon {
         //! remove
         inline virtual bool remove(param_key_type key) throw()
         {
-            static const int2type<ro_buffer_key> kind;
+            static const int2type<ro_buffer_key> kind = {};
             return this->remove_by(__addr_of(key,kind),__size_of(key,kind));
         }
         
         //! search, const
         inline virtual const_type * search(param_key_type key) const throw()
         {
-            static const int2type<ro_buffer_key> kind;
+            static const int2type<ro_buffer_key> kind = {};
             return this->search_by(__addr_of(key,kind), __size_of(key,kind) );
         }
         
         //! search
         inline virtual type * search(param_key_type key) throw()
         {
-            static const int2type<ro_buffer_key> kind;
+            static const int2type<ro_buffer_key> kind = {};
             return (type *)(this->search_by(__addr_of(key,kind), __size_of(key,kind) ));
         }
         
@@ -116,7 +116,7 @@ namespace upsylon {
         //! insert using key as path
         inline virtual bool insert(param_type args)
         {
-            static const int2type<ro_buffer_key> kind;
+            static const int2type<ro_buffer_key> kind = {};
             const_key_type & key = args.key();
             return this->insert_by(__addr_of(key,kind),__size_of(key,kind),args);
         }
