@@ -1,8 +1,10 @@
 #include "y/mpl/mpn.hpp"
 #include "y/exception.hpp"
+#include "y/mpl/memory.hpp"
 
 namespace upsylon
 {
+    const at_exit::longevity MPN::life_time = mpl::manager::life_time - 1;
 
     MPN:: PrimeInfo:: ~PrimeInfo() throw()
     {
@@ -329,6 +331,7 @@ mpn p=n; if(p.is_even()) ++p; assert(p.is_odd()); while( !METHOD(p) ) p += _2; r
 
 #include "y/ios/ostream.hpp"
 #include "y/string.hpp"
+#include "y/randomized/bits.hpp"
 
 namespace upsylon
 {

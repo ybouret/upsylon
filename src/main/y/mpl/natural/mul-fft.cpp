@@ -1,5 +1,6 @@
 
 #include "y/mpl/natural.hpp"
+#include "y/mpl/memory.hpp"
 #include "y/fft/fft.hpp"
 
 namespace upsylon

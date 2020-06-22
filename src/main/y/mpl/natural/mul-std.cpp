@@ -1,5 +1,6 @@
 
 #include "y/mpl/natural.hpp"
+#include <cstring>
 
 namespace upsylon {
     

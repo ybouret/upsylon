@@ -54,6 +54,7 @@ namespace upsylon
 
 #include "y/type/aliasing.hpp"
 #include "y/type/cswap.hpp"
+#include "y/randomized/bits.hpp"
 
 namespace upsylon
 {

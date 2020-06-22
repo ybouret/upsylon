@@ -4,6 +4,7 @@
 #include "y/type/utils.hpp"
 
 #include <cerrno>
+#include <cstring>
 
 namespace upsylon
 {
