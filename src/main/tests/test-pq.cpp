@@ -39,7 +39,8 @@ namespace {
         {
             const T &lhs = * core::prio_queue<T>::extract(slot, size, compare);
             const T &rhs = *pq.extract();
-            std::cerr << "  " <<  lhs << " / " << rhs << "\t"; Y_CHECK(lhs==rhs);
+            std::cerr << "  " <<  lhs << " / " << rhs << std::endl;
+            Y_CHECK(lhs==rhs);
         }
 
     }
