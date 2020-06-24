@@ -13,8 +13,8 @@ namespace upsylon
     class uuid : public counted_object, public memory::ro_buffer
     {
     public:
-        static const size_t BITS = 128;       //!< bits
-        static const size_t BYTES = BITS>>3;  //!< bytes
+        static const size_t BITS  = 128;       //!< bits
+        static const size_t BYTES = BITS>>3;   //!< bytes
 
         virtual ~uuid() throw();                    //!< destructor
         explicit uuid();                            //!< build from crypto bits

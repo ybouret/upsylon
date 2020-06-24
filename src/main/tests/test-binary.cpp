@@ -12,7 +12,13 @@ Y_UTEST(binary)
     std::cerr << "g=" << g << std::endl;
 
     Y_CHECK(f==g);
-    
+
+    double F = 1.0;
+    double G = 1.0;
+    std::cerr << binary<double>(F) << std::endl;
+    std::cerr << binary<double>(G) << std::endl;
+
+
 }
 Y_UTEST_DONE()
 

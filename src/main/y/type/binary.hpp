@@ -7,7 +7,11 @@
 
 namespace upsylon {
 
-    //! base class for binary copy of types
+    //--------------------------------------------------------------------------
+    //
+    //! base class for binary copy of (persistent) types
+    //
+    //--------------------------------------------------------------------------
     class binary_
     {
     public:
@@ -16,7 +20,7 @@ namespace upsylon {
 
         virtual ~binary_() throw(); //!< cleanup
 
-        friend std::ostream & operator<<( std::ostream &, const binary_ &);         //!< display
+        friend std::ostream & operator<<(std::ostream  &, const binary_ &);         //!< display
         friend bool           operator==(const binary_ &, const binary_ &) throw(); //!< test equality
         friend bool           operator!=(const binary_ &, const binary_ &) throw(); //!< test difference
 
@@ -31,7 +35,11 @@ namespace upsylon {
 
     };
 
+    //--------------------------------------------------------------------------
+    //
     //! derived classes for binary content
+    //
+    //--------------------------------------------------------------------------
     template <typename T>
     class binary : public binary_
     {

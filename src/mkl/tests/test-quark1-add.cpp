@@ -8,25 +8,19 @@
 #include "y/memory/pooled.hpp"
 #include "y/type/spec.hpp"
 #include "y/code/utils.hpp"
+#include "y/type/binary.hpp"
 
 using namespace upsylon;
 using namespace mkl;
 
 namespace {
+    
 
-    template <typename T>
-    static inline void displayBin(const T &args)
-    {
-        const uint8_t *p = (const uint8_t *)&args;
-        std::cerr << "0x";
-        for(size_t i=0;i<sizeof(T);++i)
-        {
-            std::cerr << hexadecimal::lowercase[p[i]];
-        }
-    }
     template <typename ARRAY>
     static inline void check1D( const ARRAY &arr, const ARRAY &brr )
     {
+        typedef binary<typename ARRAY::mutable_type> Binary;
+
         //std::cerr << "\tCheck " << typeid(ARRAY).name() << std::endl;
         for(size_t i=arr.size();i>0;--i)
         {
@@ -34,7 +28,8 @@ namespace {
             if( ! (d2<=0) )
             {
                 std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
-                displayBin(arr[i]); std::cerr << " | ";   displayBin(brr[i]); std::cerr << std::endl;
+                // displayBin(arr[i]); std::cerr << " | ";   displayBin(brr[i]); std::cerr << std::endl;
+                std::cerr << Binary(arr[i]) << " | " << Binary(brr[i]) << std::endl;
                 std::cerr << "d2=" << d2 << std::endl;
                 throw exception("check failure");
             }
