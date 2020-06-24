@@ -8,6 +8,7 @@
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/container/matrix.hpp"
 #include "y/core/loop.hpp"
+#include "y/type/binary.hpp"
 
 namespace upsylon {
 
@@ -15,10 +16,14 @@ namespace upsylon {
 
 #include "quark/v1/def.hpp"
 
-
+        //______________________________________________________________________
+        //
         //! Quick Universal Algebraic Reusable Kernel
-        struct quark {
+        //
+        //______________________________________________________________________
 
+        struct quark {
+            
 #include "quark/v1/ld.hpp"
 #include "quark/v1/set.hpp"
 #include "quark/v1/neg.hpp"
