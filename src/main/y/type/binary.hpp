@@ -83,6 +83,7 @@ namespace upsylon {
     private:
         const uint8_t data[sizeof(T)];
      };
+    
 
 }
 
