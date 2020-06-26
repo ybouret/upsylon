@@ -68,7 +68,6 @@ if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb); }\
 #define __MPV2(NAME) do {\
 std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 const T x = support::get<T>();\
-std::cerr << " |_x=" << x << ":" << binary<T>(x) << std::endl;\
 support::reset1D(t); quark::NAME(t,x,u);\
 if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
 check1D(t,tb); }\
