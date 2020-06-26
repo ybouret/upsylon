@@ -67,6 +67,12 @@ namespace upsylon {
             return *static_cast<const T*>( anonymous(arr) );
         }
 
+        //! out of reach type
+        template <typename T> static inline
+        T & oor( T &args ) throw()
+        {
+            return *static_cast<T*>(anonymous(&args));
+        }
 
         //! get previous object
         template <typename T> static inline

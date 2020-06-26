@@ -29,7 +29,7 @@ template <typename TARGET, typename SOURCE> static inline
 void muladd(TARGET &target, typename TARGET::param_type x, SOURCE &source)
 {
     //std::cerr << "quark.muladd.seq x=" << x << ":" << binary<typename TARGET::mutable_type>(x) << std::endl;
-    muladd(target,target,x,source);
+    muladd(target,aliasing::oor(target),x,source);
 }
 
 //! target += x*source, parallel
@@ -37,7 +37,7 @@ template <typename TARGET, typename SOURCE> static inline
 void muladd(TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop)
 {
     //std::cerr << "quark.muladd.par x=" << x << ":" << binary<typename TARGET::mutable_type>(x) << std::endl;
-    muladd(target,target,x,source,loop);
+    muladd(target,aliasing::oor(target),x,source,loop);
 }
 
 
