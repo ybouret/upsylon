@@ -93,6 +93,19 @@ namespace {
 
 
 
+            // muladd
+            support::reset1D(seq);
+            support::reset1D(par);
+            const T x = support::get<T>();
+            quark::muladd(seq,u,x,v);
+            if(loop)
+            {
+                quark::muladd(par,u,x,v,*loop);
+                std::cerr << "x=" << x << " (" << binfmt(x) << ")" << std::endl;
+                check1D("muladd", seq, par, u, v);
+            }
+
+
 #if 0
             vector<T>    t(n,zt);
             vector<T>    tb(n,zt);
