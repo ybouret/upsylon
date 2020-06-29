@@ -18,6 +18,7 @@ Y_UTEST(binary)
     std::cerr << binary<double>(F) << std::endl;
     std::cerr << binary<double>(G) << std::endl;
 
+    std::cerr << binfmt(F) << std::endl;
 
 }
 Y_UTEST_DONE()

@@ -20,7 +20,8 @@ void add(TARGET &target, SOURCE &source, concurrent::for_each &loop)
 }
 
 //! muladd operation with casts
-#define Y_QUARK_muladd(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) + x * Y_QUARK_CAST(TARGET,RHS,rhs[I])
+#define Y_QUARK_muladd(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) + x * Y_QUARK_CAST(TARGET,RHS,rhs[I]); \
+std::cerr << binfmt(lhs[I]) << "+" << binfmt(x) << "*" << binfmt(rhs[I]) << std::endl
 Y_QUARK_IMPL3(muladd)
 #undef Y_QUARK_muladd
 

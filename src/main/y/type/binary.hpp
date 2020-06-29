@@ -83,8 +83,12 @@ namespace upsylon {
     private:
         const uint8_t data[sizeof(T)];
      };
-    
 
+    template <typename T> inline
+    binary<T> binfmt(const T &args) throw()
+    {
+        return binary<T>(args);
+    }
 }
 
 #endif
