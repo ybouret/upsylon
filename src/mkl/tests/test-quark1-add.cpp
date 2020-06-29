@@ -16,71 +16,28 @@ using namespace mkl;
 namespace {
     
 
-    template <typename ARRAY,
-    typename ARRAY2>
-    static inline void check1D(const ARRAY  &arr,
-                               const ARRAY  &brr,
-                               const ARRAY2 &v)
+
+
+    template <typename TARGET, typename LHS, typename RHS>
+    static inline
+    void check1D(const char   *name,
+                 const TARGET &seq, const TARGET &par,
+                 const LHS    &lhs, const RHS    &rhs)
     {
-
-        //std::cerr << "\tCheck " << typeid(ARRAY).name() << std::endl;
-        for(size_t i=arr.size();i>0;--i)
+        const size_t n = seq.size();
+        for(size_t i=1;i<=seq.size();++i)
         {
-            typename ARRAY::const_type d2 = __mod2( arr[i] - brr[i] );
-            if( ! (d2<=0) )
+            if(__mod2(seq[i]-par[i])>0)
             {
-                std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
-                std::cerr << binfmt(arr[i]) << " | " << binfmt(brr[i]) << std::endl;
-                std::cerr << "v = " << v[i] << ":" << binfmt(v[i]) << std::endl;
-                std::cerr << "d2=" << d2 << std::endl;
-                throw exception("check failure");
+                std::cerr << name << "@" << i << "/" << n << ":" << std::endl;
+                std::cerr << "lhs=" << lhs[i] << " (" << binfmt(lhs[i]) << ") rhs=" << rhs[i] << " (" << binfmt(rhs[i]) << ")" << std::endl;
+                std::cerr << "seq=" << seq[i] << " (" << binfmt(seq[i]) << ") par=" << par[i] << " (" << binfmt(par[i]) << ")" << std::endl;
+                throw exception("error in %s", name);
             }
-            //Y_ASSERT( __mod2( arr[i] - brr[i] ) <= 0 );
+
         }
+
     }
-
-#define __FILL() \
-support::fill1D(u);\
-support::fill1D(v)
-
-#define __OPV1(NAME) do {\
-std::cerr << "|_" << #NAME << "_V1" << std::endl;\
-support::reset1D(t); quark::NAME(t,u,v);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,u,v,*loop); check1D(t,tb,v); }\
-} while(false)
-
-#define __OPV2(NAME) do {\
-std::cerr << "|_" << #NAME << "_V2" << std::endl;\
-support::reset1D(t); quark::NAME(t,u);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,u,*loop); check1D(t,tb,v); }\
-} while(false)
-
-#define __PROC(NAME) do {\
-__FILL(); __OPV1(NAME); \
-__FILL(); __OPV2(NAME); \
-} while(false)
-
-#define __MPV1(NAME) do {\
-std::cerr << "|_" << #NAME << "_V1" << std::endl;\
-const T x = support::get<T>();\
-support::reset1D(t); quark::NAME(t,u,x,v);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb,v); }\
-} while(false)
-
-#define __MPV2(NAME) do {\
-std::cerr << "|_" << #NAME << "_V2" << std::endl;\
-const T x = support::get<T>();\
-support::reset1D(t); quark::NAME(t,x,u);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
-check1D(t,tb,u); }\
-} while(false)
-
-
-#define __MPROC(NAME) do {\
-__FILL(); __MPV1(NAME);   \
-__FILL(); __MPV2(NAME);   \
-} while(false)
-
 
     template <typename T,
     typename U,
@@ -96,6 +53,47 @@ __FILL(); __MPV2(NAME);   \
             const size_t n = 1000 + alea.leq(1000);
             //const size_t n = 100 + alea.leq(100);
 
+            vector<T>    seq(n,zt);
+            vector<T>    par(n,zt);
+
+
+            vector<U>    u(n,zu); support::fill1D(u);
+            vector<V>    v(n,zv); support::fill1D(v);
+
+
+            // add
+            support::reset1D(seq);
+            support::reset1D(par);
+            quark::add(seq,u,v);
+            if(loop)
+            {
+                quark::add(par,u,v,*loop);
+                check1D("add", seq, par, u, v);
+            }
+
+            // sub
+            support::reset1D(seq);
+            support::reset1D(par);
+            quark::sub(seq,u,v);
+            if(loop)
+            {
+                quark::sub(par,u,v,*loop);
+                check1D("sub", seq, par, u, v);
+            }
+
+            // subp
+            support::reset1D(seq);
+            support::reset1D(par);
+            quark::subp(seq,u,v);
+            if(loop)
+            {
+                quark::subp(par,u,v,*loop);
+                check1D("subp", seq, par, u, v);
+            }
+
+
+
+#if 0
             vector<T>    t(n,zt);
             vector<T>    tb(n,zt);
             vector<U>    u(n,zu);
@@ -104,6 +102,7 @@ __FILL(); __MPV2(NAME);   \
             __PROC(add); __MPROC(muladd);
             __PROC(sub); __MPROC(mulsub);
             __PROC(subp);
+#endif
 
         }
         std::cerr << "<OPS/>" << std::endl;
@@ -119,7 +118,7 @@ Y_UTEST(quark1_add)
     doOPS<double,double,double>( &loop );
     doOPS<float,float,float>( &loop );
     doOPS<float,int,float>( &loop );
-    //doOPS<mpz,int,mpz>(NULL);
+    doOPS<mpz,int,mpz>(NULL);
 
 }
 Y_UTEST_DONE()
