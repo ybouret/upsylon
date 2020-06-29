@@ -1,7 +1,12 @@
 //! \file
 
+#define Y_FOR_LOOP(N,FUNC,SHIFT) do {              \
+for(size_t j=N,i=SHIFT;j>0;--j,++i) { FUNC(i); }   \
+} while(false)
+
 //! LOOP wrapper
-#define Y_QUARK_LOOP(N,FUNC,OFFSET) Y_LOOP_FUNC(N,Y_QUARK_##FUNC,OFFSET)
+//#define Y_QUARK_LOOP(N,FUNC,OFFSET) Y_LOOP_FUNC(N,Y_QUARK_##FUNC,OFFSET)
+#define Y_QUARK_LOOP(N,FUNC,OFFSET) Y_FOR_LOOP(N,Y_QUARK_##FUNC,OFFSET)
 
 //! SEQUENTIAL LOOP wrapper
 #define Y_QUARK_LOOP_SEQ(N,FUNC)    Y_QUARK_LOOP(N,FUNC,1)
