@@ -21,7 +21,7 @@ void add(TARGET &target, SOURCE &source, concurrent::for_each &loop)
 
 //! muladd operation with casts
 #define Y_QUARK_muladd(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) + x * Y_QUARK_CAST(TARGET,RHS,rhs[I]); \
-std::cerr << binfmt(lhs[I]) << "+" << binfmt(x) << "*" << binfmt(rhs[I]) << std::endl
+std::cerr << "@" << I << ":" << binfmt(lhs[I]) << "+" << binfmt(x) << "*" << binfmt(rhs[I]) << std::endl
 Y_QUARK_IMPL3(muladd)
 #undef Y_QUARK_muladd
 
@@ -29,6 +29,7 @@ Y_QUARK_IMPL3(muladd)
 template <typename TARGET, typename SOURCE> static inline
 void muladd(TARGET &target, typename TARGET::param_type x, SOURCE &source)
 {
+    std::cerr << "\t[[ muladd seq ]]" << std::endl;
     muladd(target,target,x,source);
 }
 
@@ -36,6 +37,7 @@ void muladd(TARGET &target, typename TARGET::param_type x, SOURCE &source)
 template <typename TARGET, typename SOURCE> static inline
 void muladd(TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop)
 {
+    std::cerr << "\t[[ muladd par ]]" << std::endl;
     muladd(target,target,x,source,loop);
 }
 
