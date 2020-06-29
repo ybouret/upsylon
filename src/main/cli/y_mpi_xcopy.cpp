@@ -9,7 +9,6 @@
 
 using namespace upsylon;
 
-static inline bool is_blank( const int C ) throw() { return C == ' ' || C == '\t' ; }
 
 Y_PROGRAM_START()
 {
@@ -29,7 +28,7 @@ Y_PROGRAM_START()
             if( line.size() <= 0 ) continue;
             if( line[0] == '#' )   continue;
             tokenizer<char> tkn(line);
-            if( tkn.next(is_blank) )
+            if( tkn.next_with(" \t") )
             {
                 const string id( tkn.token(), tkn.units() );
                 hosts.push_back(id);

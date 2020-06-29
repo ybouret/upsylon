@@ -88,8 +88,9 @@ LHS                         & lhs = *task.lhs;                              \
 typename TARGET::const_type   x   = *task.x;                                \
 RHS                         & rhs = *task.rhs;                              \
 Y_QUARK_LOOP_PAR(tgt.size(),METHOD);                                        \
-{ Y_LOCK(access);  std::cerr << "@" << ctx.size << "." << ctx.rank << ":\t" << binary<typename TARGET::mutable_type>(x) << " :" << offset << "+" << length << std::endl;  }\
 Y_QUARK_TASK_DATA()                                                         \
 &tgt, &lhs, &x, &rhs                                                        \
 Y_QUARK_TASK_EXEC(loop);                                                    \
 }
+
+//{ Y_LOCK(access);  std::cerr << "@" << ctx.size << "." << ctx.rank << ":\t" << binary<typename TARGET::mutable_type>(x) << " :" << offset << "+" << length << std::endl;  }
