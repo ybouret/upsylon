@@ -40,19 +40,22 @@ void subp(TARGET &target, SOURCE &source, concurrent::for_each &loop)
 
 
 //! mul sub with casts
-#define Y_QUARK_mulsub(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) - x * Y_QUARK_CAST(TARGET,RHS,rhs[I])
+#define Y_QUARK_mulsub(I) tgt[I] = Y_QUARK_CAST(TARGET,LHS,lhs[I]) - x * Y_QUARK_CAST(TARGET,RHS,rhs[I]);\
+std::cerr << "@" << I << ":" << binfmt(lhs[I]) << "+" << binfmt(x) << "*" << binfmt(rhs[I]) << " -> " << binfmt(tgt[I]) << std::endl
 Y_QUARK_IMPL3(mulsub)
 #undef Y_QUARK_mulsub
 
 template  <typename TARGET, typename SOURCE> static inline
 void mulsub(TARGET &target, typename TARGET::param_type x, SOURCE &source)
 {
+    std::cerr << "\t[[ mulsub seq ]]" << std::endl;
     mulsub(target,target,x,source);
 }
 
 template  <typename TARGET, typename SOURCE> static inline
 void mulsub(TARGET &target, typename TARGET::param_type x, SOURCE &source, concurrent::for_each &loop)
 {
+    std::cerr << "\t[[ mulsub par ]]" << std::endl;
     mulsub(target,target,x,source,loop);
 }
 
