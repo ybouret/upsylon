@@ -19,7 +19,6 @@ namespace {
     template <typename ARRAY>
     static inline void check1D( const ARRAY &arr, const ARRAY &brr )
     {
-        typedef binary<typename ARRAY::mutable_type> Binary;
 
         //std::cerr << "\tCheck " << typeid(ARRAY).name() << std::endl;
         for(size_t i=arr.size();i>0;--i)
@@ -29,7 +28,7 @@ namespace {
             {
                 std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
                 // displayBin(arr[i]); std::cerr << " | ";   displayBin(brr[i]); std::cerr << std::endl;
-                std::cerr << Binary(arr[i]) << " | " << Binary(brr[i]) << std::endl;
+                std::cerr << binfmt(arr[i]) << " | " << binfmt(brr[i]) << std::endl;
                 std::cerr << "d2=" << d2 << std::endl;
                 throw exception("check failure");
             }
