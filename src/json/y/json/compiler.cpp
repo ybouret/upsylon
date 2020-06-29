@@ -42,11 +42,16 @@ namespace upsylon {
         terminalHash( Y_MPERF_FOR(tkw) ),
         internalHash( Y_MPERF_FOR(ikw) )
         {
-            
+            //__________________________________________________________________
+            //
             // top level: array|object
+            //__________________________________________________________________
             Alternate &json   = alt("JSON");
-            
+
+            //__________________________________________________________________
+            //
             // shared terminals
+            //__________________________________________________________________
             Axiom     &COMA   = mark(',');
             Axiom    &STRING  = plug(Lexical::jString::Type, "string");
             {
@@ -73,8 +78,8 @@ namespace upsylon {
                 }
                 
                 {
-                    Axiom &LBRACE = mark('{');
-                    Axiom &RBRACE = mark('}');
+                    Axiom &LBRACE  = mark('{');
+                    Axiom &RBRACE  = mark('}');
                     Axiom &ZOBJECT = ( agg("empty object") << LBRACE << RBRACE );
                     Axiom &PAIR    = ( agg("pair")    << STRING << mark(':') << VALUE );
                     Axiom &OBJECT  = ( agg("object")  << LBRACE
@@ -88,16 +93,24 @@ namespace upsylon {
                 }
             }
             
-            
+            //__________________________________________________________________
+            //
             // lexical rules
+            //__________________________________________________________________
             endl("endl",  "[:endl:]");
             drop("blank", "[:blank:]");
-            
+
+            //__________________________________________________________________
+            //
             // error on any invalid starting token
+            //__________________________________________________________________
             grab(Lexical::Error::Type, "JSON Error" );
-            
+
+            //__________________________________________________________________
+            //
+            // compile all this
+            //__________________________________________________________________
             compile();
-            
         }
         
         Compiler:: ~Compiler() throw()
