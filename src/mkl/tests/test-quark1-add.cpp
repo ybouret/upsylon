@@ -31,7 +31,7 @@ namespace {
             {
                 std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
                 std::cerr << binfmt(arr[i]) << " | " << binfmt(brr[i]) << std::endl;
-                std::cerr << "v = " << v << ":" << binfmt(v[i]) << std::endl;
+                std::cerr << "v = " << v[i] << ":" << binfmt(v[i]) << std::endl;
                 std::cerr << "d2=" << d2 << std::endl;
                 throw exception("check failure");
             }
@@ -72,7 +72,7 @@ std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,x,u);\
 if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
-check1D(t,tb,v); }\
+check1D(t,tb,u); }\
 } while(false)
 
 
