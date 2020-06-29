@@ -16,10 +16,10 @@ using namespace mkl;
 namespace {
     
 
-    template <typename ARRAY, typename T, typename ARRAY2>
-    static inline void check1D(const ARRAY &arr,
-                               const ARRAY &brr,
-                               const T      x,
+    template <typename ARRAY,
+    typename ARRAY2>
+    static inline void check1D(const ARRAY  &arr,
+                               const ARRAY  &brr,
                                const ARRAY2 &v)
     {
 
@@ -31,7 +31,6 @@ namespace {
             {
                 std::cerr << "Mismatch #" << i  << "/" << arr.size() << " : " << arr[i] << " | " << brr[i] << std::endl;
                 std::cerr << binfmt(arr[i]) << " | " << binfmt(brr[i]) << std::endl;
-                std::cerr << "x = " << x << ":" << binfmt(x)    << std::endl;
                 std::cerr << "v = " << v << ":" << binfmt(v[i]) << std::endl;
                 std::cerr << "d2=" << d2 << std::endl;
                 throw exception("check failure");
@@ -47,13 +46,13 @@ support::fill1D(v)
 #define __OPV1(NAME) do {\
 std::cerr << "|_" << #NAME << "_V1" << std::endl;\
 support::reset1D(t); quark::NAME(t,u,v);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,u,v,*loop); check1D(t,tb,u,v); }\
+if(loop) { support::reset1D(tb); quark::NAME(tb,u,v,*loop); check1D(t,tb,v); }\
 } while(false)
 
 #define __OPV2(NAME) do {\
 std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 support::reset1D(t); quark::NAME(t,u);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,u,*loop); check1D(t,tb,u,v); }\
+if(loop) { support::reset1D(tb); quark::NAME(tb,u,*loop); check1D(t,tb,v); }\
 } while(false)
 
 #define __PROC(NAME) do {\
@@ -65,7 +64,7 @@ __FILL(); __OPV2(NAME); \
 std::cerr << "|_" << #NAME << "_V1" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,u,x,v);\
-if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb,u,v); }\
+if(loop) { support::reset1D(tb); quark::NAME(tb,u,x,v,*loop); check1D(t,tb,v); }\
 } while(false)
 
 #define __MPV2(NAME) do {\
@@ -73,7 +72,7 @@ std::cerr << "|_" << #NAME << "_V2" << std::endl;\
 const T x = support::get<T>();\
 support::reset1D(t); quark::NAME(t,x,u);\
 if(loop) { support::reset1D(tb); quark::NAME(tb,x,u,*loop);\
-check1D(t,tb,u,v); }\
+check1D(t,tb,v); }\
 } while(false)
 
 
