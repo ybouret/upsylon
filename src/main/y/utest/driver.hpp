@@ -11,14 +11,24 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
     //! class to handle unit tests
+    //
+    //__________________________________________________________________________
     struct utest
     {
-        
+
+        //______________________________________________________________________
+        //
         //! external function to call
         typedef int (*func_type)( int argc, char **argv );
-        
+        //______________________________________________________________________
+
+        //______________________________________________________________________
+        //
         //! named function
+        //______________________________________________________________________
         class proc_type
         {
         public:
@@ -56,7 +66,10 @@ namespace upsylon
             }
         };
 
+        //______________________________________________________________________
+        //
         //! a suite of possible tests
+        //______________________________________________________________________
         template <size_t N>
         class suite
         {
@@ -64,7 +77,10 @@ namespace upsylon
             inline  suite() throw() : reg_(), num_(0) {}
             inline ~suite() throw() {}
 
+            //__________________________________________________________________
+            //
             //! append a new test, then sort by name
+            //__________________________________________________________________
             inline void operator()( func_type func, const char *name ) throw()
             {
                 assert( 0 != func );
@@ -86,13 +102,16 @@ namespace upsylon
                 qsort(reg_,num_,sizeof(proc_type),proc_type::compare);
             }
 
+            //__________________________________________________________________
+            //
             //! called from main, execute a given test
+            //__________________________________________________________________
             inline int operator()(int argc, char **argv)
             {
                 if( argc <= 1)
                 {
                     std::cerr << "List of #Tests=" << num_ << " in " << argv[0] << std::endl;
-                    for( size_t i=0; i < num_; ++i )
+                    for( size_t i=0;i<num_;++i)
                     {
                         std::cout << "--  " << reg_[i].name << std::endl;
                     }
@@ -106,6 +125,22 @@ namespace upsylon
                     if( !proc )
                     {
                         std::cerr << "-- I don't know how to '" << name << "'" << std::endl;
+                        bool first = true;
+                        for(size_t i=0;i<num_;++i)
+                        {
+                            const char *guess = reg_[i].name;
+                            const char *match = strstr(guess,name);
+                            if(match)
+                            {
+                                if(first)
+                                {
+                                    std::cerr << "-- But...I know how to :" << std::endl;
+                                    first = false;
+                                }
+                                std::cerr << "\t" << guess << std::endl;
+                            }
+
+                        }
                         return -1;
                     }
                     try
