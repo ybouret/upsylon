@@ -20,3 +20,4 @@ ADD_CUSTOM_TARGET(utest-mpi++
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>
 DEPENDS test-mpi++)
 
+INSTALL( TARGETS test-mpi++ RUNTIME DESTINATION var )

@@ -13,3 +13,4 @@ ${matte_SOURCES}
 TARGET_LINK_Y( test-fltk fltk)
 TARGET_LINK_FLTK( test-fltk )
 
+INSTALL( TARGETS test-fltk RUNTIME DESTINATION var )

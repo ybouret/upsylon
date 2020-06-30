@@ -295,3 +295,6 @@ ADD_TEST(counting:symm     test-main symm_pair)
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)
+
+INSTALL( TARGETS test-main RUNTIME DESTINATION var )
+

@@ -90,3 +90,6 @@ ADD_TEST(quark3    test-mkl quark3)
 ADD_CUSTOM_TARGET(utest-mkl
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-mkl)
+
+INSTALL( TARGETS test-mkl RUNTIME DESTINATION var )
+

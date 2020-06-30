@@ -35,3 +35,5 @@ ADD_TEST(Draw     test-graphic draw)
 ADD_CUSTOM_TARGET(utest-graphic
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-graphic)
+
+INSTALL( TARGETS test-graphic RUNTIME DESTINATION var )
