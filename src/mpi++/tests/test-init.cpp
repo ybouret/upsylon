@@ -11,10 +11,9 @@ namespace {
     static inline
     void DoSomethingWith( const mpi &MPI )
     {
-        fflush(stderr);
-        std::cerr.flush();
+        MPI.flush(ios::cstderr);
         std::cerr << "doing something sequential @" << MPI.nodeName << std::endl;
-        
+        MPI.flush(ios::cstderr);        
     }
     
 }
