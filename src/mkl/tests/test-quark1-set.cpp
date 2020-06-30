@@ -32,7 +32,9 @@ namespace {
     template <typename T>
     void doSET(concurrent::simd *loop)
     {
-        std::cerr << "<SET " << typeid(T).name() << ">" << std::endl;
+        static const size_t nn[] = {1,2,3,4,8,10,20,30,100,1000};
+
+        std::cerr << "<SET " << type_name_of<T>() << " >" << std::endl;
 
         concurrent::sequential_for seq;
 
@@ -40,8 +42,9 @@ namespace {
         point3d<T> p3;
 
         const T z(0);
-        for(size_t n=1;n<=32;++n)
+        for(size_t i=0;i<sizeof(nn)/sizeof(nn[0]);++i)
         {
+            const size_t n = nn[i];
             vector<T>                vg(n,z);
             vector<T,memory::pooled> vp(n,z);
             list<T>                  l(n,z);
@@ -118,10 +121,10 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
     template <typename T, typename U>
     static inline void doSET2(concurrent::simd *loop)
     {
-        std::cerr << "<SET/MULSET " << typeid(T).name() << " <-- " << typeid(U).name() << ">" << std::endl;
-        const U zu = 0;
-        const T zt = 0;
-        const size_t n = 10 + alea.leq(1000);
+        std::cerr << "<SET/MULSET " << type_name_of<T>() << " <-- " <<  type_name_of<U>() << ">" << std::endl;
+        const U      zu = 0;
+        const T      zt = 0;
+        const size_t n  = 1000 + alea.leq(1000);
         vector<T> t(n,zt);
         vector<U> u(n,zu);
         std::cerr << "\t[SEQUENTIAL]" << std::endl;
