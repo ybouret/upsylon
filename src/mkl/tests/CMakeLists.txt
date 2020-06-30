@@ -79,11 +79,11 @@ test-quark1-neg.cpp
 test-quark2.cpp
 test-quark3.cpp
 )
-ADD_TEST(quark:ld  test-mkl quark1_ld)
-ADD_TEST(quark:set test-mkl quark1_set)
-ADD_TEST(quark:add test-mkl quark1_add)
-ADD_TEST(quark:dot test-mkl quark1_dot)
-ADD_TEST(quark:neg test-mkl quark1_neg)
+ADD_TEST(quark1:ld  test-mkl quark1_ld)
+ADD_TEST(quark1:set test-mkl quark1_set)
+ADD_TEST(quark1:add test-mkl quark1_add)
+ADD_TEST(quark1:dot test-mkl quark1_dot)
+ADD_TEST(quark1:neg test-mkl quark1_neg)
 ADD_TEST(quark2    test-mkl quark2)
 ADD_TEST(quark3    test-mkl quark3)
 

@@ -36,7 +36,7 @@ namespace {
 
         const T zt = 0;
         const U zu = 0;
-        for(size_t n=1;n<=1024*16;n <<= 1)
+        for(size_t n=1;n<=1024*128;n <<= 1)
         {
             vector<T> t(n,zt), tt(n,zt);
             vector<U> u(n,zu);
