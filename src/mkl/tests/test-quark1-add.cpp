@@ -50,7 +50,7 @@ namespace {
         const V zv = 0;
         for(size_t iter=0;iter<16;++iter)
         {
-            const size_t n = 1000 + alea.leq(1000);
+            const size_t n = 2000 + alea.leq(2000);
 
             vector<T>    seq(n,zt);
             vector<T>    par(n,zt);
@@ -59,6 +59,7 @@ namespace {
             vector<U>    u(n,zu); support::fill1D(u);
             vector<V>    v(n,zv); support::fill1D(v);
 
+            std::cerr << "#" << n << "\t";
 
 
             // add
@@ -97,7 +98,7 @@ namespace {
 
 
             // muladd
-            std::cerr << "[muladd V1]";
+            std::cerr << "[muladd1]";
             support::reset1D(seq);
             support::reset1D(par);
             {
@@ -112,7 +113,7 @@ namespace {
             }
 
             // muladd
-            std::cerr << "[muladd V2]";
+            std::cerr << "[muladd2]";
             support::reset1D(seq);
             support::reset1D(par);
             {
