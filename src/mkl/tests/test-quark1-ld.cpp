@@ -23,7 +23,7 @@ namespace {
     template <typename ARRAY>
     static inline void check1D( const ARRAY &arr, typename ARRAY::const_type &value )
     {
-        std::cerr << "\tCheck " << typeid(ARRAY).name() << std::endl;
+        std::cerr << "\tCheck for " << type_name_of<ARRAY>() << std::endl;
         for(size_t i=arr.size();i>0;--i)
         {
             Y_ASSERT( __mod2( arr[i] - value ) <= 0 );
