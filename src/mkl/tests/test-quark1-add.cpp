@@ -51,7 +51,6 @@ namespace {
         for(size_t iter=0;iter<16;++iter)
         {
             const size_t n = 1000 + alea.leq(1000);
-            //const size_t n = 100 + alea.leq(100);
 
             vector<T>    seq(n,zt);
             vector<T>    par(n,zt);
@@ -61,7 +60,9 @@ namespace {
             vector<V>    v(n,zv); support::fill1D(v);
 
 
+
             // add
+            std::cerr << "[add]";
             support::reset1D(seq);
             support::reset1D(par);
             quark::add(seq,u,v);
@@ -72,6 +73,7 @@ namespace {
             }
 
             // sub
+            std::cerr << "[sub]";
             support::reset1D(seq);
             support::reset1D(par);
             quark::sub(seq,u,v);
@@ -82,6 +84,7 @@ namespace {
             }
 
             // subp
+            std::cerr << "[subp]";
             support::reset1D(seq);
             support::reset1D(par);
             quark::subp(seq,u,v);
@@ -94,6 +97,7 @@ namespace {
 
 
             // muladd
+            std::cerr << "[muladd V1]";
             support::reset1D(seq);
             support::reset1D(par);
             {
@@ -102,12 +106,13 @@ namespace {
                 if(loop)
                 {
                     quark::muladd(par,u,x,v,*loop);
-                    std::cerr << "x=" << x << " (" << binfmt(x) << ")" << std::endl;
+                    std::cerr << "x=" << x << "(" << binfmt(x) << ")";
                     check1D("muladd_V1", seq, par, u, v);
                 }
             }
 
             // muladd
+            std::cerr << "[muladd V2]";
             support::reset1D(seq);
             support::reset1D(par);
             {
@@ -116,10 +121,12 @@ namespace {
                 if(loop)
                 {
                     quark::muladd(par,x,v,*loop);
-                    std::cerr << "x=" << x << " (" << binfmt(x) << ")" << std::endl;
+                    std::cerr << "x=" << x << "(" << binfmt(x) << ")";
                     check1D("muladd_V2", seq, par, u, v);
                 }
             }
+
+            std::cerr << std::endl;
 
 
 
