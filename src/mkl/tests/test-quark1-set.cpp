@@ -87,8 +87,8 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
             const T uu = auto_cast<T,U>::_(u[i]);
             if( __mod2(tt-uu) > 0)
             {
-                const binary<T> lhs = tt;
-                const binary<T> rhs = uu;
+                const binary_format<T> lhs = tt;
+                const binary_format<T> rhs = uu;
                 if( lhs != rhs ) throw exception("checkCast/SET Failure");
             }
         }
@@ -104,8 +104,8 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
             const T uu =  x * auto_cast<T,U>::_(u[i]);
             if( __mod2(tt-uu) > 0)
             {
-                const binary<T> lhs = tt;
-                const binary<T> rhs = uu;
+                const binary_format<T> lhs = tt;
+                const binary_format<T> rhs = uu;
                 if( lhs != rhs )
                 {
                     throw exception("checkCast/MULSET Failure");

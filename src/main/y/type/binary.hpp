@@ -12,28 +12,29 @@ namespace upsylon {
     //! base class for binary copy of (persistent) types
     //
     //--------------------------------------------------------------------------
-    class binary_
+    class binary_format_
     {
     public:
         const size_t   size; //!< internal size
         const uint8_t *byte; //!< internal bytes
 
-        virtual ~binary_() throw(); //!< cleanup
+        virtual ~binary_format_() throw(); //!< cleanup
 
-        friend std::ostream & operator<<(std::ostream  &, const binary_ &);         //!< display
-        friend bool           operator==(const binary_ &, const binary_ &) throw(); //!< test equality
-        friend bool           operator!=(const binary_ &, const binary_ &) throw(); //!< test difference
+        friend std::ostream & operator<<(std::ostream  &, const binary_format_ &);         //!< display
+        friend bool           operator==(const binary_format_ &, const binary_format_ &) throw(); //!< test equality
+        friend bool           operator!=(const binary_format_ &, const binary_format_ &) throw(); //!< test difference
 
 
     protected:
-        explicit binary_( const size_t n, const uint8_t *p) throw(); //!< setup
-        void     fill_with( const void *p ) throw();                 //!< fill with data
+        explicit binary_format_(const size_t n, const uint8_t *p) throw(); //!< setup
+        void     fill_with(const void *p) throw();                 //!< fill with data
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(binary_);
+        Y_DISABLE_COPY_AND_ASSIGN(binary_format_);
 
 
     };
+
 
     //--------------------------------------------------------------------------
     //
@@ -41,30 +42,30 @@ namespace upsylon {
     //
     //--------------------------------------------------------------------------
     template <typename T>
-    class binary : public binary_
+    class binary_format : public binary_format_
     {
     public:
         Y_DECL_ARGS(T,type); //!< aliases
 
         //! setup
-        inline binary( param_type args ) throw() :
-        binary_( sizeof(data), data ), data()
+        inline binary_format( param_type args ) throw() :
+        binary_format_( sizeof(data), data ), data()
         {
             fill_with( &args );
         }
 
         //! cleanup
-        inline virtual ~binary() throw() {}
+        inline virtual ~binary_format() throw() {}
 
         //! copy
-        inline binary( const binary &other ) throw() :
-        binary_( sizeof(data), data ), data()
+        inline binary_format( const binary_format &other ) throw() :
+        binary_format_( sizeof(data), data ), data()
         {
             fill_with( other.data );
         }
 
         //! assign
-        inline binary & operator=( const binary &other ) throw()
+        inline binary_format & operator=( const binary_format &other ) throw()
         {
             if( this != &other )
             {
@@ -74,7 +75,7 @@ namespace upsylon {
         }
 
         //! assign other data
-        inline binary & operator=( param_type args ) throw()
+        inline binary_format & operator=( param_type args ) throw()
         {
             fill_with( &args );
             return *this;
@@ -82,13 +83,13 @@ namespace upsylon {
 
     private:
         const uint8_t data[sizeof(T)];
-     };
+    };
 
     //! to be used as iomanip
     template <typename T> inline
-    binary<T> binfmt(const T &args) throw()
+    binary_format<T> binary(const T &args) throw()
     {
-        return binary<T>(args);
+        return binary_format<T>(args);
     }
 }
 

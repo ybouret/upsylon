@@ -5,20 +5,22 @@ using namespace upsylon;
 
 Y_UTEST(binary)
 {
-    binary<float> f = 2;
-    binary<float> g = 2;
+    float f = 2;
+    float g = 2;
 
-    std::cerr << "f=" << f << std::endl;
-    std::cerr << "g=" << g << std::endl;
+    std::cerr << "f=" << binary(f) << std::endl;
+    std::cerr << "g=" << binary(g) << std::endl;
 
-    Y_CHECK(f==g);
+
 
     double F = 1.0;
     double G = 1.0;
-    std::cerr << binary<double>(F) << std::endl;
-    std::cerr << binary<double>(G) << std::endl;
+    std::cerr << binary(F) << std::endl;
+    std::cerr << binary(G) << std::endl;
+    Y_CHECK(f==g);
+    Y_CHECK(F==G);
 
-    std::cerr << binfmt(F) << std::endl;
+
 
 }
 Y_UTEST_DONE()

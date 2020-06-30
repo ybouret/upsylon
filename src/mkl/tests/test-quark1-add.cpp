@@ -30,8 +30,8 @@ namespace {
             if(__mod2(seq[i]-par[i])>0)
             {
                 std::cerr << name << "@" << i << "/" << n << ":" << std::endl;
-                std::cerr << "lhs=" << lhs[i] << " (" << binfmt(lhs[i]) << ") rhs=" << rhs[i] << " (" << binfmt(rhs[i]) << ")" << std::endl;
-                std::cerr << "seq=" << seq[i] << " (" << binfmt(seq[i]) << ") par=" << par[i] << " (" << binfmt(par[i]) << ")" << std::endl;
+                std::cerr << "lhs=" << lhs[i] << " (" << binary(lhs[i]) << ") rhs=" << rhs[i] << " (" << binary(rhs[i]) << ")" << std::endl;
+                std::cerr << "seq=" << seq[i] << " (" << binary(seq[i]) << ") par=" << par[i] << " (" << binary(par[i]) << ")" << std::endl;
                 throw exception("error in %s", name);
             }
 
@@ -107,7 +107,7 @@ namespace {
                 if(loop)
                 {
                     quark::muladd(par,u,x,v,*loop);
-                    std::cerr << "x=" << x << "(" << binfmt(x) << ")";
+                    std::cerr << "x=" << x << "(" << binary(x) << ")";
                     check1D("muladd_V1", seq, par, u, v);
                 }
             }
@@ -122,7 +122,7 @@ namespace {
                 if(loop)
                 {
                     quark::muladd(par,x,v,*loop);
-                    std::cerr << "x=" << x << "(" << binfmt(x) << ")";
+                    std::cerr << "x=" << x << "(" << binary(x) << ")";
                     check1D("muladd_V2", seq, par, u, v);
                 }
             }

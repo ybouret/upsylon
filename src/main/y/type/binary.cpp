@@ -5,13 +5,13 @@
 
 namespace upsylon {
 
-    binary_:: ~binary_() throw()
+    binary_format_:: ~binary_format_() throw()
     {
         memset((void*)byte,0,size);
         _bzset(size);
     }
 
-    binary_:: binary_( const size_t n, const uint8_t *p) throw() :
+    binary_format_:: binary_format_( const size_t n, const uint8_t *p) throw() :
     size(n),
     byte(p)
     {
@@ -19,13 +19,13 @@ namespace upsylon {
         assert(p!=NULL);
     }
 
-    void binary_:: fill_with(const void *p) throw()
+    void binary_format_:: fill_with(const void *p) throw()
     {
         assert(p!=NULL);
         memcpy((void*)byte,p,size);
     }
 
-    bool operator==(const binary_ &lhs, const binary_ &rhs) throw()
+    bool operator==(const binary_format_ &lhs, const binary_format_ &rhs) throw()
     {
         if(lhs.size!=rhs.size)
         {
@@ -42,7 +42,7 @@ namespace upsylon {
         }
     }
 
-    bool operator!=(const binary_ &lhs, const binary_ &rhs) throw()
+    bool operator!=(const binary_format_ &lhs, const binary_format_ &rhs) throw()
     {
         return ! (lhs==rhs);
     }
@@ -54,7 +54,7 @@ namespace upsylon {
 
 namespace upsylon {
 
-    std::ostream & operator<<( std::ostream &os, const binary_ &b)
+    std::ostream & operator<<( std::ostream &os, const binary_format_ &b)
     {
         for(size_t i=0;i<b.size;++i)
         {
