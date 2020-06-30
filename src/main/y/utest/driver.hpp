@@ -32,28 +32,35 @@ namespace upsylon
         class proc_type
         {
         public:
-            func_type   func; //!< the function address
-            const char *name; //!< the function's name by user
-            
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
             //! default constructor, set to empty
-            inline  proc_type() : func(0), name(0) {}
+            inline  proc_type() throw() : func(0), name(0) {}
             
             //! default destructor
             inline ~proc_type() throw() { func=0; name=0; }
             
             //! direct constructor
-            inline  proc_type( func_type f, const char *n) throw() : func(f), name(n) {}
+            inline  proc_type(func_type f, const char *n) throw() : func(f), name(n) {}
             
             //! copy constructor
-            inline  proc_type( const proc_type &other ) throw() : func(other.func), name(other.name) {}
+            inline  proc_type(const proc_type &other) throw() : func(other.func), name(other.name) {}
             
             //! assignment
-            inline  proc_type & operator=( const proc_type &other ) throw()
+            inline  proc_type & operator=(const proc_type &other) throw()
             {
                 func = other.func;
                 name = other.name;
                 return *this;
             }
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
 
             //! libc style compare by name
             static int compare( const void *lhs, const void *rhs ) throw()
@@ -64,6 +71,13 @@ namespace upsylon
                 assert( NULL != R->name );
                 return strcmp( L->name, R->name );
             }
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            func_type   func; //!< the function address
+            const char *name; //!< the function's name by user
         };
 
         //______________________________________________________________________
@@ -81,7 +95,7 @@ namespace upsylon
             //
             //! append a new test, then sort by name
             //__________________________________________________________________
-            inline void operator()( func_type func, const char *name ) throw()
+            inline void operator()(func_type func, const char *name) throw()
             {
                 assert( 0 != func );
                 assert( 0 != name );
@@ -91,7 +105,7 @@ namespace upsylon
                     exit(-1);
                 }
 
-                if( search( name ) )
+                if( search(name) )
                 {
                     std::cerr << "Already got test '" << name << "'" << std::endl;
                     exit(-1);
