@@ -84,6 +84,7 @@ namespace upsylon {
         const uint8_t data[sizeof(T)];
      };
 
+    //! to be used as iomanip
     template <typename T> inline
     binary<T> binfmt(const T &args) throw()
     {
