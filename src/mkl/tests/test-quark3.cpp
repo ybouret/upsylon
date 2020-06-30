@@ -15,13 +15,19 @@ using namespace mkl;
 namespace {
 
     template <typename T>
-    static inline void check( const matrix<T> &lhs, const matrix<T> &rhs )
+    static inline void check(const char      *name,
+                             const matrix<T> &lhs,
+                             const matrix<T> &rhs )
     {
         for(size_t r=lhs.rows;r>0;--r)
         {
             for(size_t c=lhs.cols;c>0;--c)
             {
-                Y_ASSERT( __mod2( lhs[r][c] - rhs[r][c] ) <= 0 );
+                if( __mod2( lhs[r][c] - rhs[r][c] ) > 0 )
+                {
+                    std::cerr << "[error for <" << type_name_of<T>() << "> '" << name << "']" << std::endl;
+                    throw exception("%s",name);
+                }
             }
         }
     }
@@ -71,25 +77,25 @@ namespace {
                         if(loop)
                         {
                             quark::mmul(AA, B, C, *loop);
-                            check(A,AA);
+                            check("mmul",A,AA);
                         }
 
                         support::fill2D(A);
-                        AA = A; check(A,AA);
+                        AA = A; check("=",A,AA);
                         quark::mmul_add(A,B,C);
                         if( loop )
                         {
                             quark::mmul_add(AA, B, C, *loop);
-                            check(A,AA);
+                            check("mmul_add",A,AA);
                         }
 
                         support::fill2D(A);
-                        AA = A; check(A,AA);
+                        AA = A; check("=",A,AA);
                         quark::mmul_sub(A,B,C);
                         if( loop )
                         {
                             quark::mmul_sub(AA, B, C, *loop);
-                            check(A,AA);
+                            check("mmul_sub",A,AA);
                         }
                     }
 
@@ -102,25 +108,25 @@ namespace {
                         if(loop)
                         {
                             quark::mmul_rtrn(AA, B, C, *loop);
-                            check(A,AA);
+                            check("mmul_rtrn",A,AA);
                         }
 
                         support::fill2D(A);
-                        AA = A; check(A,AA);
+                        AA = A; check("=",A,AA);
                         quark::mmul_add_rtrn(A,B,C);
                         if( loop )
                         {
                             quark::mmul_add_rtrn(AA, B, C, *loop);
-                            check(A,AA);
+                            check("mmul_add_rtrn",A,AA);
                         }
 
                         support::fill2D(A);
-                        AA = A; check(A,AA);
+                        AA = A; check("=",A,AA);
                         quark::mmul_sub_rtrn(A,B,C);
                         if( loop )
                         {
                             quark::mmul_sub_rtrn(AA, B, C, *loop);
-                            check(A,AA);
+                            check("mmul_sub_rtrn",A,AA);
                         }
                     }
 
