@@ -2,9 +2,7 @@
 #ifndef Y_MATRIX_INCLUDED
 #define Y_MATRIX_INCLUDED 1
 
-#include "y/sequence/array.hpp"
-#include "y/ptr/counted.hpp"
-#include "y/type/block/swap.hpp"
+#include "y/container/matrix_.hpp"
 #include "y/type/self-destruct.hpp"
 #include <cstdlib>
 
@@ -25,73 +23,9 @@ namespace upsylon
 
     //__________________________________________________________________________
     //
-    //
-    //! data for matrix layout, whith enough space for algebra
-    //
-    //__________________________________________________________________________
-    class matrix_data : public counted_object
-    {
-    public:
-        //______________________________________________________________________
-        //
-        // types and definitions
-        //______________________________________________________________________
-        typedef lightweight_array<size_t> indices_type; //!< alias
-
-        //______________________________________________________________________
-        //
-        // C++
-        //______________________________________________________________________
-        virtual ~matrix_data() throw(); //!< destructor
-
-        //______________________________________________________________________
-        //
-        // Methods
-        //______________________________________________________________________
-
-        //! item = (r-1)*cols+(c-1) in [0:items-1]
-        void get_item(const size_t item, size_t &r, size_t &c) const throw();
-
-        //! test dimensions
-        bool same_size_than(const matrix_data &) const throw();
-
-        //______________________________________________________________________
-        //
-        // Members
-        //______________________________________________________________________
-        const size_t rows;            //!< number of rows
-        const size_t cols;            //!< number of columns
-        const size_t items;           //!< rows*cols
-        const bool   is_square;       //!< rows==cols
-        const size_t largest;         //!< max_of(cols,rows)
-        const size_t total_items;     //!< items+2*largest
-        const size_t data_offset;     //!< 0
-        const size_t data_length;     //!< total_items*item_size
-        const size_t rows_offset;     //!< |data_offset+data_length|
-        const size_t rows_length;     //!< rows * sizeof( lightweight_array<...> )
-        const size_t indx_offset;     //!< |rows_offset+rows_length|
-        const size_t indx_length;     //!< largest * sizeof(size_t)
-        const size_t allocated;       //!< |indx_offset+indx_length|
-        indices_type r_indices;       //!< size() = rows
-        indices_type c_indices;       //!< size() = cols
-
-    protected:
-
-        explicit matrix_data(const size_t nr,
-                             const size_t nc,
-                             const size_t item_size);    //!< constructor
-        void     hook() throw();                         //!< reset arrays
-        void     exchange( matrix_data &other ) throw(); //!< full exchange
-        void *   workspace;                              //!< where all memory is
-
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(matrix_data);
-        void __free() throw();
-    };
-
-
     //! constructor helper
-#define Y_MATRIX_CTOR(NR,NC) object(), matrix_data(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
+    //__________________________________________________________________________
+#define Y_MATRIX_CTOR(NR,NC) object(), matrix_(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
 
     //__________________________________________________________________________
     //
@@ -100,7 +34,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename T>
-    class matrix : public matrix_data
+    class matrix : public matrix_
     {
     public:
         //______________________________________________________________________
