@@ -23,9 +23,12 @@ namespace {
         {
             for(size_t c=lhs.cols;c>0;--c)
             {
-                if( __mod2( lhs[r][c] - rhs[r][c] ) > 0 )
+                const T &L = lhs[r][c];
+                const T &R = rhs[r][c];
+                if( __mod2(L-R) > 0 )
                 {
                     std::cerr << "[error for <" << type_name_of<T>() << "> '" << name << "']" << std::endl;
+                    std::cerr << "L=" << L << "(" << binary(L) << "), R=" << R << "(" << binary(R) << ")" << std::endl;
                     throw exception("%s",name);
                 }
             }
