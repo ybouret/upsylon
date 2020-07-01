@@ -43,7 +43,7 @@ namespace {
         typedef typename quark::mmod2<T>::real_type real_type;
         std::cerr << "\treal_type=" << type_name_of<real_type>() << std::endl;
 
-        const size_t iter = (loop?64:1);
+        const size_t iter = (loop?1024:1);
         for(size_t it=0;it<iter;++it)
         {
             matrix<T> A(1+alea.leq(w),1+alea.leq(w));
@@ -87,87 +87,89 @@ namespace {
     {
         std::cerr << "<MMUL " << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<V>() << ">" << std::endl;
 
-        for(size_t r=1;r<=16;r += 1+alea.leq(4))
+        for(size_t iter=0;iter<2;++iter)
         {
-            std::cerr << "#rows=" << r << std::endl;
-            for(size_t c=1;c<=16;c+=1+alea.leq(4))
+            for(size_t r=1;r<=16;r += 1+alea.leq(4))
             {
-                std::cerr << "    #cols=" << c << "\t[";
-                matrix<T> A(r,c);
-                matrix<T> AA(r,c);
-
-                for(size_t k=1;k<=24;k += 1+alea.leq(4) )
+                std::cerr << "#rows=" << r << std::endl;
+                for(size_t c=1;c<=16;c+=1+alea.leq(4))
                 {
-                    (std::cerr << k << "/").flush();
+                    std::cerr << "    #cols=" << c << "\t[";
+                    matrix<T> A(r,c);
+                    matrix<T> AA(r,c);
+
+                    for(size_t k=1;k<=24;k += 1+alea.leq(4) )
                     {
-                        matrix<U> B(r,k);
-                        matrix<V> C(k,c);
-                        support::fill2D(B);
-                        support::fill2D(C);
-                        quark::mmul(A, B, C);
-                        if(loop)
+                        (std::cerr << k << "/").flush();
                         {
-                            quark::mmul(AA, B, C, *loop);
-                            check("mmul",A,AA);
+                            matrix<U> B(r,k);
+                            matrix<V> C(k,c);
+                            support::fill2D(B);
+                            support::fill2D(C);
+                            quark::mmul(A, B, C);
+                            if(loop)
+                            {
+                                quark::mmul(AA, B, C, *loop);
+                                check("mmul",A,AA);
+                            }
+
+                            support::fill2D(A);
+                            AA = A; check("=",A,AA);
+                            quark::mmul_add(A,B,C);
+                            if( loop )
+                            {
+                                quark::mmul_add(AA, B, C, *loop);
+                                check("mmul_add",A,AA);
+                            }
+
+                            support::fill2D(A);
+                            AA = A; check("=",A,AA);
+                            quark::mmul_sub(A,B,C);
+                            if( loop )
+                            {
+                                quark::mmul_sub(AA, B, C, *loop);
+                                check("mmul_sub",A,AA);
+                            }
                         }
 
-                        support::fill2D(A);
-                        AA = A; check("=",A,AA);
-                        quark::mmul_add(A,B,C);
-                        if( loop )
                         {
-                            quark::mmul_add(AA, B, C, *loop);
-                            check("mmul_add",A,AA);
-                        }
-
-                        support::fill2D(A);
-                        AA = A; check("=",A,AA);
-                        quark::mmul_sub(A,B,C);
-                        if( loop )
-                        {
-                            quark::mmul_sub(AA, B, C, *loop);
-                            check("mmul_sub",A,AA);
-                        }
-                    }
-
-                    {
-                        matrix<U> B(r,k);
-                        matrix<V> C(c,k);
-                        support::fill2D(B);
-                        support::fill2D(C);
-                        quark::mmul_rtrn(A, B, C);
-                        if(loop)
-                        {
-                            quark::mmul_rtrn(AA, B, C, *loop);
-                            check("mmul_rtrn",A,AA);
-                        }
+                            matrix<U> B(r,k);
+                            matrix<V> C(c,k);
+                            support::fill2D(B);
+                            support::fill2D(C);
+                            quark::mmul_rtrn(A, B, C);
+                            if(loop)
+                            {
+                                quark::mmul_rtrn(AA, B, C, *loop);
+                                check("mmul_rtrn",A,AA);
+                            }
 
 #if 0
-                        support::fill2D(A);
-                        AA = A; check("=",A,AA);
-                        quark::mmul_add_rtrn(A,B,C);
-                        if( loop )
-                        {
-                            quark::mmul_add_rtrn(AA, B, C, *loop);
-                            check("mmul_add_rtrn",A,AA);
-                        }
+                            support::fill2D(A);
+                            AA = A; check("=",A,AA);
+                            quark::mmul_add_rtrn(A,B,C);
+                            if( loop )
+                            {
+                                quark::mmul_add_rtrn(AA, B, C, *loop);
+                                check("mmul_add_rtrn",A,AA);
+                            }
 
-                        support::fill2D(A);
-                        AA = A; check("=",A,AA);
-                        quark::mmul_sub_rtrn(A,B,C);
-                        if( loop )
-                        {
-                            quark::mmul_sub_rtrn(AA, B, C, *loop);
-                            check("mmul_sub_rtrn",A,AA);
-                        }
+                            support::fill2D(A);
+                            AA = A; check("=",A,AA);
+                            quark::mmul_sub_rtrn(A,B,C);
+                            if( loop )
+                            {
+                                quark::mmul_sub_rtrn(AA, B, C, *loop);
+                                check("mmul_sub_rtrn",A,AA);
+                            }
 #endif
+                        }
+
+
+
                     }
-
-
-
+                    std::cerr << "]" << std::endl;
                 }
-                std::cerr << "]" << std::endl;
-
             }
         }
     }
@@ -181,8 +183,6 @@ Y_UTEST(quark3)
     doMOD2<double>( &loop );
     doMOD2<mpz>   ( NULL  );
     doMOD2<mpq>   ( NULL, 8 );
-
-    return 0;
 
     doMMUL<float,float,float>( &loop );
     doMMUL<double,int,int>   ( &loop );
