@@ -47,7 +47,13 @@ namespace {
         matrix<T> B(A.rows,A.cols);
         support::fill2D(A);
         B.assign(A);
-        
+        for(size_t r=1;r<=A.rows;++r)
+        {
+            for(size_t c=1;c<=A.cols;++c)
+            {
+                Y_ASSERT( __mod2(A[r][c]-B[r][c]) <= 0 );
+            }
+        }
         Y_ASSERT( __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(B) ) <= 0 );
         Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
         if( loop )
