@@ -40,11 +40,14 @@ namespace {
     void doMOD2(concurrent::for_each *loop, const size_t w=100)
     {
         std::cerr << "<MMOD2 " << type_name_of<T>() <<  ">" << std::endl;
+        typedef typename quark::mmod2<T>::real_type real_type;
+        std::cerr << "\treal_type=" << type_name_of<real_type>() << std::endl;
+
         matrix<T> A(1+alea.leq(w),1+alea.leq(w));
         matrix<T> B(A.rows,A.cols);
         support::fill2D(A);
         B.assign(A);
-
+        
         Y_ASSERT( __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(B) ) <= 0 );
         Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
         if( loop )

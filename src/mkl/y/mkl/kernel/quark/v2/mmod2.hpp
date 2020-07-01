@@ -42,6 +42,7 @@ struct mmod2
     real_type of(const matrix<T> &A)
     {
         typename matrix<T>::const_row arr = A.as_array();
+        assert(A.cols*A.rows==arr.size());
         return mod2<T>::of(arr);
     }
 
@@ -50,6 +51,7 @@ struct mmod2
     real_type of(const matrix<T> &A, concurrent::for_each &loop)
     {
         typename matrix<T>::const_row arr = A.as_array();
+        assert(A.cols*A.rows==arr.size());
         return mod2<T>::of(arr,loop);
     }
 
