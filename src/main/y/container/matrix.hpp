@@ -36,7 +36,7 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
-        typedef lightweight_array<size_t> indices_type;
+        typedef lightweight_array<size_t> indices_type; //!< alias
 
         //______________________________________________________________________
         //

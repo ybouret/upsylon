@@ -103,10 +103,9 @@ namespace upsylon
     void matrix_data:: get_item( const size_t item, size_t &r, size_t &c) const throw()
     {
         assert(item<items);
-        const standard<size_t>::div_type d = standard<size_t>::api::div_call(item,cols);
-        //const ldiv_t d = ldiv(long(item),long(cols));
-        r=d.quot+1; assert(r>0); assert(r<=rows);
-        c=d.rem +1; assert(c>0); assert(c<=cols);
+        standard<size_t>::div_type d = standard<size_t>::api::div_call(item,cols);
+        r=++d.quot; assert(r>0); assert(r<=rows);
+        c=++d.rem;  assert(c>0); assert(c<=cols);
         assert((r-1)*cols+(c-1)==item);
     }
 

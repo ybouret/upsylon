@@ -23,10 +23,19 @@ Y_UTEST(standard)
         typedef standard<int> istd;
         const istd::div_type l = istd::api::div_call(5,4);
         std::cerr << "l.quot=" << l.quot << ", l.rem=" << l.rem << std::endl;
-        
-
     }
 
+    {
+        typedef standard<long> istd;
+        const istd::div_type l = istd::api::div_call(5,4);
+        std::cerr << "l.quot=" << l.quot << ", l.rem=" << l.rem << std::endl;
+    }
+
+    {
+        typedef standard<long long> istd;
+        const istd::div_type l = istd::api::div_call(5,4);
+        std::cerr << "l.quot=" << l.quot << ", l.rem=" << l.rem << std::endl;
+    }
 
 }
 Y_UTEST_DONE()
