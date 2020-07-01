@@ -43,31 +43,35 @@ namespace {
         typedef typename quark::mmod2<T>::real_type real_type;
         std::cerr << "\treal_type=" << type_name_of<real_type>() << std::endl;
 
-        matrix<T> A(1+alea.leq(w),1+alea.leq(w));
-        matrix<T> B(A.rows,A.cols);
-        support::fill2D(A);
-        B.assign(A);
-        for(size_t r=1;r<=A.rows;++r)
+        const size_t iter = (loop?16:1);
+        for(size_t it=0;it<iter;++it)
         {
-            for(size_t c=1;c<=A.cols;++c)
+            matrix<T> A(1+alea.leq(w),1+alea.leq(w));
+            matrix<T> B(A.rows,A.cols);
+            support::fill2D(A);
+            B.assign(A);
+            for(size_t r=1;r<=A.rows;++r)
             {
-                Y_ASSERT( __mod2(A[r][c]-B[r][c]) <= 0 );
+                for(size_t c=1;c<=A.cols;++c)
+                {
+                    Y_ASSERT( __mod2(A[r][c]-B[r][c]) <= 0 );
+                }
             }
-        }
-        const real_type mod2A = quark::mmod2<T>::of(A);
-        const real_type mod2B = quark::mmod2<T>::of(B);
-        if(loop)
-        {
-            std::cerr << "mod2A=" << mod2A << "("<< binary(mod2A) << ")" << std::endl;
-            std::cerr << "mod2B=" << mod2B << "("<< binary(mod2B) << ")" << std::endl;
-        }
+            const real_type mod2A = quark::mmod2<T>::of(A);
+            const real_type mod2B = quark::mmod2<T>::of(B);
+            if(loop)
+            {
+                std::cerr << "mod2A=" << mod2A << "("<< binary(mod2A) << ")" << std::endl;
+                std::cerr << "mod2B=" << mod2B << "("<< binary(mod2B) << ")" << std::endl;
+            }
 
-        Y_ASSERT( fabs_of( mod2A - mod2B ) <= 0 );
-        Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
-        if( loop )
-        {
-            std::cerr << "approx: " << __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(A,*loop) ) << std::endl;
-            Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B,*loop) ) <= 0 );
+            Y_ASSERT( fabs_of( mod2A - mod2B ) <= 0 );
+            Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
+            if( loop )
+            {
+                std::cerr << "approx: " << __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(A,*loop) ) << std::endl;
+                Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B,*loop) ) <= 0 );
+            }
         }
     }
 
@@ -170,7 +174,9 @@ Y_UTEST(quark3)
     doMOD2<float> ( &loop );
     doMOD2<double>( &loop );
     doMOD2<mpz>   ( NULL  );
-    doMOD2<mpq>   ( NULL, 10 );
+    doMOD2<mpq>   ( NULL, 8 );
+
+    return 0;
 
     doMMUL<float,float,float>( &loop );
     doMMUL<double,int,int>   ( &loop );
