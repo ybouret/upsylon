@@ -54,7 +54,15 @@ namespace {
                 Y_ASSERT( __mod2(A[r][c]-B[r][c]) <= 0 );
             }
         }
-        Y_ASSERT( __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(B) ) <= 0 );
+        const real_type mod2A = quark::mmod2<T>::of(A);
+        const real_type mod2B = quark::mmod2<T>::of(B);
+        if(loop)
+        {
+            std::cerr << "mod2A=" << mod2A << "("<< binary(mod2A) << ")" << std::endl;
+            std::cerr << "mod2B=" << mod2B << "("<< binary(mod2B) << ")" << std::endl;
+        }
+
+        Y_ASSERT( fabs_of( mod2A - mod2B ) <= 0 );
         Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
         if( loop )
         {
