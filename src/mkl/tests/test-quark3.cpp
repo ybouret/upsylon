@@ -25,10 +25,11 @@ namespace {
             {
                 const T &L = lhs[r][c];
                 const T &R = rhs[r][c];
-                if( __mod2(L-R) > 0 )
+                const T  delta = L-R;
+                if( __mod2(delta) > 0 )
                 {
                     std::cerr << "[error for <" << type_name_of<T>() << "> '" << name << "']" << std::endl;
-                    std::cerr << "L=" << L << "(" << binary(L) << "), R=" << R << "(" << binary(R) << ")" << std::endl;
+                    std::cerr << "L=" << L << "(" << binary(L) << "), R=" << R << "(" << binary(R) << ")" << ", delta=" << delta << "(" << binary(delta) << ")" << std::endl;
                     throw exception("%s",name);
                 }
             }
