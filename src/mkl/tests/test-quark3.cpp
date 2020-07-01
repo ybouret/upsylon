@@ -62,16 +62,21 @@ namespace {
             const real_type mod2B = quark::mmod2<T>::of(B);
             if(loop)
             {
-                std::cerr << "mod2A=" << mod2A << "("<< binary(mod2A) << ")" << std::endl;
-                std::cerr << "mod2B=" << mod2B << "("<< binary(mod2B) << ")" << std::endl;
+                std::cerr << "mod2Aseq = " << mod2A << "("<< binary(mod2A) << ")" << std::endl;
+                std::cerr << "mod2Bseq = " << mod2B << "("<< binary(mod2B) << ")" << std::endl;
             }
 
             Y_ASSERT( fabs_of( mod2A - mod2B ) <= 0 );
             Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
             if( loop )
             {
-                std::cerr << "approx: " << __mod2( quark::mmod2<T>::of(A) - quark::mmod2<T>::of(A,*loop) ) << std::endl;
-                Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B,*loop) ) <= 0 );
+                // summation is not in order guaranteed
+                const real_type mod2A_par = quark::mmod2<T>::of(A,*loop);
+                std::cerr << "mod2Apar = " << mod2A_par << "("<< binary(mod2A_par) << ")" << std::endl;
+                std::cerr << "approx: " << fabs_of( mod2A - mod2A_par ) << std::endl;
+
+                // term wise shoul be 0
+                Y_ASSERT( fabs_of( quark::mmod2<T>::of(A,B,*loop) ) <= 0 );
             }
         }
     }
