@@ -4,6 +4,8 @@
 #include "y/type/utils.hpp"
 #include "y/type/cswap.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/type/aliasing.hpp"
+#include "y/type/standard.hpp"
 
 #include <cerrno>
 
@@ -13,7 +15,7 @@ namespace upsylon
     
     void matrix_data:: __kill() throw()
     {
-        memory::global::location().release(workspace,(size_t&)allocated);
+        memory::global::location().release(workspace,aliasing::_(allocated));
     }
 
     matrix_data:: ~matrix_data() throw()
@@ -48,10 +50,10 @@ namespace upsylon
     rows_length( rows * sizeof( lightweight_array<int> ) ),
     indx_offset( memory::align(rows_offset+rows_length)  ),
     indx_length( sizeof(size_t) * largest                ),
-    allocated( memory::align(indx_offset+indx_length)    ),
+    allocated(   memory::align(indx_offset+indx_length)  ),
     r_indices(),
     c_indices(),
-    workspace( memory::global::instance().acquire((size_t&)allocated) )
+    workspace( memory::global::instance().acquire( aliasing::_(allocated) ) )
     {
         assert(item_size>0);
         // sanity check
@@ -62,7 +64,6 @@ namespace upsylon
         }
 
         hook();
-
     }
 
     void matrix_data:: hook() throw()
@@ -102,7 +103,8 @@ namespace upsylon
     void matrix_data:: get_item( const size_t item, size_t &r, size_t &c) const throw()
     {
         assert(item<items);
-        const ldiv_t d = ldiv(long(item),long(cols));
+        const standard<size_t>::div_type d = standard<size_t>::api::div_call(item,cols);
+        //const ldiv_t d = ldiv(long(item),long(cols));
         r=d.quot+1; assert(r>0); assert(r<=rows);
         c=d.rem +1; assert(c>0); assert(c<=cols);
         assert((r-1)*cols+(c-1)==item);

@@ -67,8 +67,8 @@ namespace upsylon
         const size_t total_items;     //!< items+2*largest
         const size_t data_offset;     //!< 0
         const size_t data_length;     //!< total_items*item_size
-        const size_t rows_offset;     //!< |data_offset+indx_offsest|
-        const size_t rows_length;     //!< rows * sizeof( lightweigt_array<...> )
+        const size_t rows_offset;     //!< |data_offset+data_length|
+        const size_t rows_length;     //!< rows * sizeof( lightweight_array<...> )
         const size_t indx_offset;     //!< |rows_offset+rows_length|
         const size_t indx_length;     //!< largest * sizeof(size_t)
         const size_t allocated;       //!< |indx_offset+indx_length|
@@ -103,10 +103,18 @@ namespace upsylon
     class matrix : public matrix_data
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         Y_DECL_ARGS(T,type);                             //!< alias
         typedef lightweight_array<type>       row;       //!< internal row type
         typedef lightweight_array<const_type> const_row; //!< internal row type
 
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
 
         //! default constructor
         inline matrix(const size_t nr, const size_t nc) : Y_MATRIX_CTOR(nr,nc)
@@ -117,89 +125,11 @@ namespace upsylon
         //! zero matrix needs no memory
         inline matrix() throw() : Y_MATRIX_CTOR(0,0) {}
 
-        //! release memory
-        inline void release() throw()
-        {
-            matrix empty;
-            swap_with(empty);
-        }
-
-
-        //! temporary array of all items
-        inline row as_array() throw()
-        {
-            if(items>0)
-            {
-                matrix &self = *this;
-                return row(&self[1][1],items);
-            }
-            else
-            {
-                return row(0,0);
-            }
-        }
-
-        //! temporary array of all items
-        inline const_row as_array() const throw()
-        {
-            if(items>0)
-            {
-                const matrix &self = *this;
-                return const_row(&self[1][1],items);
-            }
-            else
-            {
-                return const_row(0,0);
-            }
-        }
-
-
-        //! row access, use array for contiguous access
-        inline array<type>  & operator[](const size_t r) throw()             { assert(r>0); assert(r<=rows); return row_ptr[r]; }
-
-        //! row access, use array for contiguous access
-        inline const array<type>  & operator[](const size_t r) const throw() { assert(r>0); assert(r<=rows); return row_ptr[r]; }
 
         //! destructor
         inline virtual ~matrix() throw()
         {
             __clear(total_items);
-        }
-
-        //! display Octave/Julia style
-        inline friend std::ostream & operator<<( std::ostream &os, const matrix &m )
-        {
-            os << '[';
-            for(size_t r=1;r<=m.rows;++r)
-            {
-                const accessible<T> &R = m[r];
-                for(size_t c=1;c<=m.cols;++c)
-                {
-                    os << R[c]; if(c<m.cols) os << ' ';
-                }
-                if(r<m.rows) os << ';';
-            }
-            os << ']';
-            return os;
-        }
-        
-        //! display for maxima
-        inline std::ostream & maxima(std::ostream &os)
-        {
-            os << "matrix(";
-            for(size_t i=1;i<=rows;++i)
-            {
-                const accessible<T> &R = (*this)[i];
-                os << '[';
-                for(size_t j=1;j<=cols;++j)
-                {
-                    os << R[j];
-                    if(j<cols) os << ',';
-                }
-                os << ']';
-                if(i<rows) os << ',';
-            }
-            return os << ")";
         }
 
         //! copy
@@ -246,6 +176,93 @@ namespace upsylon
                 throw;
             }
         }
+
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
+        //! release memory
+        inline void release() throw()
+        {
+            matrix    empty;
+            swap_with(empty);
+        }
+
+
+        //! temporary array of all items
+        inline row as_array() throw()
+        {
+            if(items>0)
+            {
+                matrix &self = *this;
+                return row(&self[1][1],items);
+            }
+            else
+            {
+                return row(0,0);
+            }
+        }
+
+        //! temporary array of all items
+        inline const_row as_array() const throw()
+        {
+            if(items>0)
+            {
+                const matrix &self = *this;
+                return const_row(&self[1][1],items);
+            }
+            else
+            {
+                return const_row(0,0);
+            }
+        }
+
+
+        //! row access, use array for contiguous access
+        inline array<type>        & operator[](const size_t r) throw()       { assert(r>0); assert(r<=rows); return row_ptr[r]; }
+
+        //! row access, use array for contiguous access
+        inline const array<type>  & operator[](const size_t r) const throw() { assert(r>0); assert(r<=rows); return row_ptr[r]; }
+
+
+        //! display Octave/Julia style
+        inline friend std::ostream & operator<<( std::ostream &os, const matrix &m )
+        {
+            os << '[';
+            for(size_t r=1;r<=m.rows;++r)
+            {
+                const accessible<T> &R = m[r];
+                for(size_t c=1;c<=m.cols;++c)
+                {
+                    os << R[c]; if(c<m.cols) os << ' ';
+                }
+                if(r<m.rows) os << ';';
+            }
+            os << ']';
+            return os;
+        }
+        
+        //! display for maxima
+        inline std::ostream & maxima(std::ostream &os)
+        {
+            os << "matrix(";
+            for(size_t i=1;i<=rows;++i)
+            {
+                const accessible<T> &R = (*this)[i];
+                os << '[';
+                for(size_t j=1;j<=cols;++j)
+                {
+                    os << R[j];
+                    if(j<cols) os << ',';
+                }
+                os << ']';
+                if(i<rows) os << ',';
+            }
+            return os << ")";
+        }
+
+
 
 
         //! swap and link everything
@@ -331,7 +348,7 @@ namespace upsylon
             }
         }
 
-        //! take the opposite when possible value
+        //! take the opposite (when possible) value
         inline void neg() throw()
         {
             mutable_type *p = memory::io::cast<T>(workspace,data_offset);
@@ -365,7 +382,7 @@ namespace upsylon
             const_type  zero(0);
             for(size_t r=rows;r>0;)
             {
-                array<type> &R = self[r];
+                addressable<type> &R = self[r];
                 for(size_t c=cols;c>r;--c)
                 {
                     R[c] = zero;
@@ -478,9 +495,6 @@ namespace upsylon
             swap_cols(i,j);
         }
 
-        //! mod2 for one row
-
-
     private:
         row *row_ptr; //! [1..rows]
 
@@ -551,8 +565,8 @@ namespace upsylon
     public:
         mutable row r_aux1;  //!< size() = rows
         mutable row c_aux1;  //!< size() = cols
-        row r_aux2;          //!< size() = rows
-        row c_aux2;          //!< size() = cols
+        row         r_aux2;  //!< size() = rows
+        row         c_aux2;  //!< size() = cols
     };
 
 }

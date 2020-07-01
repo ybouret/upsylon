@@ -145,7 +145,7 @@ namespace upsylon {
         }
         else
         {
-            typedef standard<unit_t> ustd;
+            typedef core::standard<unit_t> ustd;
 
             for(size_t j=1;j<k;++j)
             {
