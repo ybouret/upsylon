@@ -43,13 +43,14 @@ namespace {
         typedef typename quark::mmod2<T>::real_type real_type;
         std::cerr << "\treal_type=" << type_name_of<real_type>() << std::endl;
 
-        const size_t iter = (loop?16:1);
+        const size_t iter = (loop?64:1);
         for(size_t it=0;it<iter;++it)
         {
             matrix<T> A(1+alea.leq(w),1+alea.leq(w));
             matrix<T> B(A.rows,A.cols);
             support::fill2D(A);
             B.assign(A);
+            std::cerr << "\t[" << A.rows << "x" << A.cols << "]" << std::endl;
             for(size_t r=1;r<=A.rows;++r)
             {
                 for(size_t c=1;c<=A.cols;++c)
