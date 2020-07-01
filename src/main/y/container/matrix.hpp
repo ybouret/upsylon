@@ -86,7 +86,7 @@ namespace upsylon
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(matrix_data);
-        void __kill() throw();
+        void __free() throw();
     };
 
 
@@ -129,7 +129,7 @@ namespace upsylon
         //! destructor
         inline virtual ~matrix() throw()
         {
-            __clear(total_items);
+            destroy(total_items);
         }
 
         //! copy
@@ -150,7 +150,7 @@ namespace upsylon
             }
             catch(...)
             {
-                __clear(total_items);
+                destroy(total_items);
                 throw;
             }
         }
@@ -172,7 +172,7 @@ namespace upsylon
             }
             catch(...)
             {
-                __clear(total_items);
+                destroy(total_items);
                 throw;
             }
         }
@@ -183,11 +183,7 @@ namespace upsylon
         //______________________________________________________________________
 
         //! release memory
-        inline void release() throw()
-        {
-            matrix    empty;
-            swap_with(empty);
-        }
+        inline void release() throw() { matrix _; swap_with(_); }
 
 
         //! temporary array of all items
@@ -498,6 +494,7 @@ namespace upsylon
     private:
         row *row_ptr; //! [1..rows]
 
+        //! initialize memory and set every item to default contructor
         inline void initialize()
         {
             setup();
@@ -534,7 +531,8 @@ namespace upsylon
             --row_ptr;
         }
 
-        inline void __clear(size_t count) throw()
+        //! destroy allocated objects
+        inline void destroy(size_t count) throw()
         {
             mutable_type *entry = memory::io::cast<mutable_type>(workspace,data_offset);
             while(count-- > 0)
@@ -558,7 +556,7 @@ namespace upsylon
             }
             catch(...)
             {
-                __clear(count);
+                destroy(count);
                 throw;
             }
         }

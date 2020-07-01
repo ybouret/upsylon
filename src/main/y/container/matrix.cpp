@@ -13,14 +13,14 @@ namespace upsylon
 {
     const matrix_transpose_t matrix_transpose = {};
     
-    void matrix_data:: __kill() throw()
+    void matrix_data:: __free() throw()
     {
         memory::global::location().release(workspace,aliasing::_(allocated));
     }
 
     matrix_data:: ~matrix_data() throw()
     {
-        __kill();
+        __free();
         _bzset(rows);
         _bzset(cols);
         _bzset(items);
@@ -59,10 +59,11 @@ namespace upsylon
         // sanity check
         if( (nr>0&&nc==0) || (nc>0&&nr==0) )
         {
-            __kill();
+            __free();
             throw libc::exception(EDOM,"matrix invalid dimensions rows=%u,cols=%u", unsigned(rows), unsigned(cols));
         }
 
+        // hook data
         hook();
     }
 
