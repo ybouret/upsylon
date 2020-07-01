@@ -75,7 +75,7 @@ namespace {
                 std::cerr << "mod2Apar = " << mod2A_par << "("<< binary(mod2A_par) << ")" << std::endl;
                 std::cerr << "approx: " << fabs_of( mod2A - mod2A_par ) << std::endl;
 
-                // term wise shoul be 0
+                // term wise should be 0
                 Y_ASSERT( fabs_of( quark::mmod2<T>::of(A,B,*loop) ) <= 0 );
             }
         }

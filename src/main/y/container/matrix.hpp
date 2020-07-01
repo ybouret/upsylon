@@ -11,15 +11,54 @@
 namespace upsylon
 {
 
+    //__________________________________________________________________________
+    //
     //! special for transposition
+    //__________________________________________________________________________
     struct matrix_transpose_t {};
+
+    //__________________________________________________________________________
+    //
     //! helper for transposition
+    //__________________________________________________________________________
     extern const matrix_transpose_t matrix_transpose;
 
-    //! data for matrix layout, whith enough space for alebra
+    //__________________________________________________________________________
+    //
+    //
+    //! data for matrix layout, whith enough space for algebra
+    //
+    //__________________________________________________________________________
     class matrix_data : public counted_object
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        typedef lightweight_array<size_t> indices_type;
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        virtual ~matrix_data() throw(); //!< destructor
+
+        //______________________________________________________________________
+        //
+        // Methods
+        //______________________________________________________________________
+
+        //! item = (r-1)*cols+(c-1) in [0:items-1]
+        void get_item(const size_t item, size_t &r, size_t &c) const throw();
+
+        //! test dimensions
+        bool same_size_than(const matrix_data &) const throw();
+
+        //______________________________________________________________________
+        //
+        // Members
+        //______________________________________________________________________
         const size_t rows;            //!< number of rows
         const size_t cols;            //!< number of columns
         const size_t items;           //!< rows*cols
@@ -33,36 +72,17 @@ namespace upsylon
         const size_t indx_offset;     //!< |rows_offset+rows_length|
         const size_t indx_length;     //!< largest * sizeof(size_t)
         const size_t allocated;       //!< |indx_offset+indx_length|
+        indices_type r_indices;       //!< size() = rows
+        indices_type c_indices;       //!< size() = cols
 
-        lightweight_array<size_t> r_indices; //!< size() = rows
-        lightweight_array<size_t> c_indices; //!< size() = cols
-
-        //! destructor
-        virtual ~matrix_data() throw();
-        
-        //! item = (r-1)*cols+(c-1) in [0:items-1]
-        inline void get_item( const size_t item, size_t &r, size_t &c) const
-        {
-            assert(item<items);
-            const ldiv_t d = ldiv(long(item),long(cols));
-            r=d.quot+1; assert(r>0); assert(r<=rows);
-            c=d.rem +1; assert(c>0); assert(c<=cols);
-            assert((r-1)*cols+(c-1)==item);
-        }
-
-        //! test dimensions
-        inline bool same_size_than( const matrix_data &other ) throw()
-        {
-            return (rows==other.rows) && (cols==other.cols);
-        }
-        
     protected:
-        void  *workspace; //!< where all memory is
-        //!constructor
-        explicit matrix_data(const size_t nr, const size_t nc, const size_t item_size);
 
-        void   hook() throw(); //!< reset arrays
-        void   exchange( matrix_data &other ) throw(); //!< full exchange
+        explicit matrix_data(const size_t nr,
+                             const size_t nc,
+                             const size_t item_size);    //!< constructor
+        void     hook() throw();                         //!< reset arrays
+        void     exchange( matrix_data &other ) throw(); //!< full exchange
+        void *   workspace;                              //!< where all memory is
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(matrix_data);
@@ -73,7 +93,12 @@ namespace upsylon
     //! constructor helper
 #define Y_MATRIX_CTOR(NR,NC) object(), matrix_data(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
 
+    //__________________________________________________________________________
+    //
+    //
     //! versatile matrix
+    //
+    //__________________________________________________________________________
     template <typename T>
     class matrix : public matrix_data
     {
@@ -90,10 +115,7 @@ namespace upsylon
         }
 
         //! zero matrix needs no memory
-        inline matrix() throw() : Y_MATRIX_CTOR(0,0)
-        {
-
-        }
+        inline matrix() throw() : Y_MATRIX_CTOR(0,0) {}
 
         //! release memory
         inline void release() throw()
@@ -132,7 +154,6 @@ namespace upsylon
         }
 
 
-        
         //! row access, use array for contiguous access
         inline array<type>  & operator[](const size_t r) throw()             { assert(r>0); assert(r<=rows); return row_ptr[r]; }
 
@@ -228,7 +249,7 @@ namespace upsylon
 
 
         //! swap and link everything
-        inline void swap_with( matrix &other ) throw()
+        inline void swap_with(matrix &other) throw()
         {
             exchange(other);
             setup();
@@ -237,7 +258,7 @@ namespace upsylon
 
         //! manual assignment
         template <typename U>
-        inline void assign( const matrix<U> &other )
+        inline void assign(const matrix<U> &other)
         {
             assert( same_size_than(other) );
             for(size_t i=rows;i>0;--i)

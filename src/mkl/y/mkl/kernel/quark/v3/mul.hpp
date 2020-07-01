@@ -54,6 +54,10 @@ Y_QUARK_MMUL_SUM(A[r][c],OP); }                                     \
 Y_QUARK_MMUL_PAR_LEAVE();                                           \
 }
 
+//______________________________________________________________________________
+//
+//! MMUL code
+//______________________________________________________________________________
 #define Y_QUARK_MMUL(METHOD,OP) Y_QUARK_MMUL_SEQ(METHOD,OP) Y_QUARK_MMUL_PAR(METHOD,OP)
 
 Y_QUARK_MMUL(mmul,=)

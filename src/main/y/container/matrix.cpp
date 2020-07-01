@@ -69,8 +69,8 @@ namespace upsylon
     {
         // hook indices
         size_t *ipos = memory::io::cast<size_t>(workspace,indx_offset);
-        new ( &r_indices ) lightweight_array<size_t>(ipos,rows);
-        new ( &c_indices ) lightweight_array<size_t>(ipos,cols);
+        new ( &r_indices ) indices_type(ipos,rows);
+        new ( &c_indices ) indices_type(ipos,cols);
     }
 
 #define _XCH(FIELD) _cswap(FIELD,other.FIELD)
@@ -97,6 +97,20 @@ namespace upsylon
         other.hook();
         assert( r_indices.size() == rows );
         assert( c_indices.size() == cols );
+    }
+
+    void matrix_data:: get_item( const size_t item, size_t &r, size_t &c) const throw()
+    {
+        assert(item<items);
+        const ldiv_t d = ldiv(long(item),long(cols));
+        r=d.quot+1; assert(r>0); assert(r<=rows);
+        c=d.rem +1; assert(c>0); assert(c<=cols);
+        assert((r-1)*cols+(c-1)==item);
+    }
+
+    bool matrix_data:: same_size_than( const matrix_data &other ) const throw()
+    {
+        return (rows==other.rows) && (cols==other.cols);
     }
 
 }
