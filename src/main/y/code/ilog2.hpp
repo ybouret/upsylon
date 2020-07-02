@@ -24,7 +24,11 @@ namespace upsylon
     //! sizeof=64
     template <> struct ilog2<64>  { enum { value = 6  }; };
     //! sizeof=128
-    template <> struct ilog2<128> { enum { value = 7  }; }; 
+    template <> struct ilog2<128> { enum { value = 7  }; };
+    //! sizeof=256
+    template <> struct ilog2<256> { enum { value = 8  }; };
+    //! sizeof=512
+    template <> struct ilog2<512> { enum { value = 9  }; };
 
     //! proxy to get ilog2 using the type size
     template <typename T>

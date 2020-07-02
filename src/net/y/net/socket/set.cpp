@@ -31,9 +31,9 @@ namespace upsylon
         workspace( memory::global::instance().acquire( (size_t&)allocated) ),
         sock( memory::io::cast<socket_type>(workspace,0) ),
         ufd(  memory::io::cast<fd_set>(workspace,capacity*sizeof(socket_type) ) ),
-        wfd(  memory::io::cast<fd_set>(ufd, Y_MEMALIGN(sizeof(fd_set)) ) ),
-        rfd(  memory::io::cast<fd_set>(wfd, Y_MEMALIGN(sizeof(fd_set)) ) ),
-        xfd(  memory::io::cast<fd_set>(rfd, Y_MEMALIGN(sizeof(fd_set)) ) )
+        wfd(  memory::io::cast<fd_set>(ufd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) ),
+        rfd(  memory::io::cast<fd_set>(wfd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) ),
+        xfd(  memory::io::cast<fd_set>(rfd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) )
         {
 
 #if !defined(NDEBUG)

@@ -16,7 +16,7 @@ namespace upsylon
 
         size_t carver:: compute_chunk_size(const size_t user_chunk_size) throw()
         {
-            size_t cs = Y_MEMALIGN(user_chunk_size);
+            size_t cs = Y_MEMORY_ALIGN(user_chunk_size);
             if(cs<=slice::small_size) cs = slice::small_size;
             return next_power_of_two(cs);
         }

@@ -52,7 +52,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(exception);
             static const size_t elen = MPI_MAX_ERROR_STRING + 1;
-            static const size_t alen = Y_MEMALIGN(elen);
+            static const size_t alen = Y_MEMORY_ALIGN(elen);
             char string_[alen];
         };
         

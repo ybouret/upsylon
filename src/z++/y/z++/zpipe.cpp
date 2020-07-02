@@ -44,7 +44,7 @@ namespace upsylon
         }
 		
         zpipe:: zpipe(const size_t chunk_size ) :
-		CHUNK( Y_MEMALIGN(chunk_size) ),
+		CHUNK( Y_MEMORY_ALIGN(chunk_size) ),
 		wksp_( CHUNK << 1 ),
 		in(  *wksp_      ),
 		out( in + CHUNK  ),

@@ -22,7 +22,7 @@ namespace upsylon
             //----------------------------------------------------------------------
             // local memory
             //----------------------------------------------------------------------
-            char wksp[ Y_MEMALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
+            char wksp[ Y_MEMORY_ALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
             T   &rra = * memory::io::__force<T>( &wksp[0] );
             
             //----------------------------------------------------------------------
@@ -118,10 +118,10 @@ namespace upsylon
         //----------------------------------------------------------------------
         //-- local memory
         //----------------------------------------------------------------------
-        char wksp[ Y_MEMALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
+        char wksp[ Y_MEMORY_ALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
         T   &rra = * memory::io::__force<T>(&wksp[0]);
 
-        char wksp2[ Y_MEMALIGN(sizeof(U)) ]; assert(sizeof(wksp2)>=sizeof(U));
+        char wksp2[ Y_MEMORY_ALIGN(sizeof(U)) ]; assert(sizeof(wksp2)>=sizeof(U));
         U   &rrb  = * memory::io::__force<U>(&wksp2[0]);
 
         //----------------------------------------------------------------------
