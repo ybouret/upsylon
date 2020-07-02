@@ -103,10 +103,11 @@ namespace upsylon
 
     void matrix_:: get_item( const size_t item, size_t &r, size_t &c) const throw()
     {
+        static const standard<size_t>::api::div_proc div_call = standard<size_t>::api::div_call;
         assert(item<items);
-        standard<size_t>::div_type d = standard<size_t>::api::div_call(item,cols);
-        r=++d.quot; assert(r>0); assert(r<=rows);
-        c=++d.rem;  assert(c>0); assert(c<=cols);
+        standard<size_t>::div_type d = div_call(item,cols);
+        r=static_cast<size_t>(++d.quot); assert(r>0); assert(r<=rows);
+        c=static_cast<size_t>(++d.rem);  assert(c>0); assert(c<=cols);
         assert((r-1)*cols+(c-1)==item);
     }
 
