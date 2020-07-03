@@ -1,7 +1,7 @@
 
 #include "y/memory/embed.hpp"
-#include "y/code/round.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/code/round.hpp"
 
 namespace upsylon
 {
@@ -12,18 +12,16 @@ namespace upsylon
         }
 
         embed:: embed(void **pp, const size_t nb) throw() :
-        length( nb ),
-        offset( 0  ),
+        params(0,nb),
         ppHead( pp )
         {
             assert( ppHead );
             assert( NULL == *ppHead );
-            assert( length>0 );
+            assert( params.length>0 );
         }
 
         embed:: embed( const embed &other ) throw() :
-        length( other.length ),
-        offset( other.offset ),
+        params( other.params ),
         ppHead( other.ppHead )
         {
         }
@@ -37,32 +35,38 @@ namespace upsylon
             assert( emb != NULL );
             assert( num >  0    );
 
+            //------------------------------------------------------------------
             // compute structure
+            //------------------------------------------------------------------
             bytes         = 0;
             for(size_t i=0;i<num;++i)
             {
-                embed &em = emb[i];
-                aliasing::_(em.offset) = bytes;
-                const size_t alen = memory::align(em.length);
-                bytes += alen;
-                //std::cerr << "emb: @" << em.offset << "+" << alen << "/" << em.length << " -> " << bytes << std::endl;
+                const marker &mk        = emb[i].params;
+                aliasing::_(mk.offset)  = bytes;
+                bytes                  += memory::align(mk.length);
             }
 
+            //------------------------------------------------------------------
             // allocated memory
+            //------------------------------------------------------------------
             if(data) *data = bytes;
             void     *addr = mem.acquire(bytes);
 
-            //link
+            //------------------------------------------------------------------
+            // link
+            //------------------------------------------------------------------
             {
                 char *p = static_cast<char *>(addr);
                 for(size_t i=0;i<num;++i)
                 {
                     embed &em    = emb[i];
-                    *(em.ppHead) = &p[ em.offset ];
+                    *(em.ppHead) = &p[ em.params.offset ];
                 }
             }
 
+            //------------------------------------------------------------------
             // done
+            //------------------------------------------------------------------
             return addr;
         }
     }

@@ -3,6 +3,7 @@
 #define Y_MEMORY_EMBED_INCLUDED 1
 
 #include "y/memory/allocator.hpp"
+#include "y/memory/marker.hpp"
 
 namespace upsylon
 {
@@ -25,8 +26,7 @@ namespace upsylon
             //! no throw copy for sequence
             embed(const embed &other ) throw();
 
-            const size_t length; //!< user's required bytes
-            const size_t offset; //!< initialized to 0, then computed
+            const marker params; //!< initialized to (0,length)
             void       **ppHead; //!< pointer to address
 
             //! acquire memory and dispatch chunks
@@ -35,7 +35,7 @@ namespace upsylon
              \param num   number of fields
              \param mem   memory allocator
              \param bytes allocated data
-             \param data  effective space used by objects
+             \param data  effective space used by objects, *data <= bytes
              */
             static void *create(embed             *emb,
                                 const size_t       num,

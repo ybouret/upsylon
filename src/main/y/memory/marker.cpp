@@ -19,7 +19,7 @@ namespace upsylon {
 
         marker:: marker(const size_t _off, const size_t _len) throw() : offset(_off), length(_len) {}
 
-
+        marker:: marker(const size_t _len) throw() : offset(0), length(_len) {}
     }
 }
 

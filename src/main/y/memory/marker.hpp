@@ -9,19 +9,25 @@ namespace upsylon {
 
     namespace memory {
 
+        //______________________________________________________________________
+        //
+        //! offset+length marker, with some algebra
+        //______________________________________________________________________
         class marker
         {
         public:
-            size_t offset;
-            size_t length;
+            size_t offset; //!< the offset
+            size_t length; //!< the lenght
 
-            marker() throw();
-            ~marker() throw();
-            marker(const marker&) throw();
-            marker & operator=(const marker &) throw();
-            marker(const size_t,const size_t) throw();
-            marker(const marker &, const size_t t) throw(); //!< automatic offset
+            marker()                               throw(); //!< offset=0,length=0
+            ~marker()                              throw(); //!< cleanup
+            marker(const marker&)                  throw(); //!< copy
+            marker & operator=(const marker &)     throw(); //!< assign
+            marker(const size_t)                   throw(); //!< 0,length
+            marker(const size_t,const size_t)      throw(); //!< offset,length
+            marker(const marker &, const size_t t) throw(); //!< automatic offset from other marker,length
 
+            //!
             template <typename T>
             marker & split(const T size, const T rank) throw()
             {
