@@ -6,6 +6,7 @@
 #include "y/type/ints.hpp"
 #include "y/memory/io.hpp"
 #include "y/memory/ownership.hpp"
+#include "y/type/aliasing.hpp"
 #include <iostream>
 
 namespace upsylon

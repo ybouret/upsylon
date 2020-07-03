@@ -52,10 +52,9 @@ namespace upsylon {
         const bool   is_square;       //!< rows==cols
         const size_t largest;         //!< max_of(cols,rows)
         const size_t total_items;     //!< items+2*largest
-        const marker _data;            //!< 0,total_items*item_size
-        const marker _rows;            //!< _data+rows*sizeof(lightweight_array<...>) 
-        const size_t indx_offset;     //!< |rows_offset+rows_length|
-        const size_t indx_length;     //!< largest * sizeof(size_t)
+        const marker _data;           //!< 0,total_items*item_size
+        const marker _rows;           //!< _data+rows*sizeof(lightweight_array<...>)
+        const marker _indx;           //!< _indx+ largest*sizeof(size_t)
         const size_t allocated;       //!< |indx_offset+indx_length|
         indices_type r_indices;       //!< size() = rows
         indices_type c_indices;       //!< size() = cols

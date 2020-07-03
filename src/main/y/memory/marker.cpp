@@ -29,8 +29,13 @@ namespace upsylon {
 
     namespace memory {
 
+        size_t marker:: next_offset() const throw()
+        {
+            return align(offset+length);
+        }
+
         marker:: marker(const marker &origin, const size_t delta ) throw() :
-        offset( align( origin.offset+origin.length) ),
+        offset( origin.next_offset() ),
         length( delta )
         {
         }

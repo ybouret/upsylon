@@ -25,8 +25,6 @@ namespace upsylon
         _bzset(is_square);
         _bzset(largest);
         _bzset(total_items);
-        _bzset(indx_offset);
-        _bzset(indx_length);
     }
 
 
@@ -39,11 +37,8 @@ namespace upsylon
     total_items(items+2*largest),
     _data(0,total_items*item_size),
     _rows(_data,rows * sizeof( lightweight_array<int> ) ),
-    //rows_offset( memory::align(data.offset+data.length)  ),
-    //rows_length( rows * sizeof( lightweight_array<int> ) ),
-    indx_offset( memory::align(_rows.offset+_rows.length)  ),
-    indx_length( sizeof(size_t) * largest                ),
-    allocated(   memory::align(indx_offset+indx_length)  ),
+    _indx(_rows,sizeof(size_t) * largest ),
+    allocated(   _indx.next_offset() ),
     r_indices(),
     c_indices(),
     workspace( memory::global::instance().acquire( aliasing::_(allocated) ) )
@@ -63,7 +58,7 @@ namespace upsylon
     void matrix_:: hook() throw()
     {
         // hook indices
-        size_t *ipos = memory::io::cast<size_t>(workspace,indx_offset);
+        size_t *ipos = memory::io::cast<size_t>(workspace,_indx.offset);
         new ( &r_indices ) indices_type(ipos,rows);
         new ( &c_indices ) indices_type(ipos,cols);
     }
@@ -81,8 +76,7 @@ namespace upsylon
         _XCH(total_items);
         _XCH(_data);
         _XCH(_rows);
-        _XCH(indx_offset);
-        _XCH(indx_length);
+        _XCH(_indx);
         _XCH(allocated);
         _XCH(workspace);
 
