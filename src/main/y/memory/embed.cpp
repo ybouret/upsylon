@@ -60,6 +60,7 @@ namespace upsylon
                 for(size_t i=0;i<num;++i)
                 {
                     embed &em    = emb[i];
+                    assert(0==(em.params.offset%Y_MEMORY_ALIGNED));
                     *(em.ppHead) = &p[ em.params.offset ];
                 }
             }

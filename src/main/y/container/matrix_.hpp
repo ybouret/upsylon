@@ -5,6 +5,7 @@
 
 #include "y/ptr/counted.hpp"
 #include "y/sequence/array.hpp"
+#include "y/memory/marker.hpp"
 
 namespace upsylon {
 
@@ -22,7 +23,8 @@ namespace upsylon {
         // types and definitions
         //______________________________________________________________________
         typedef lightweight_array<size_t> indices_type; //!< alias
-
+        typedef memory::marker            marker;       //!< alias
+        
         //______________________________________________________________________
         //
         // C++
@@ -50,8 +52,9 @@ namespace upsylon {
         const bool   is_square;       //!< rows==cols
         const size_t largest;         //!< max_of(cols,rows)
         const size_t total_items;     //!< items+2*largest
-        const size_t data_offset;     //!< 0
-        const size_t data_length;     //!< total_items*item_size
+        const marker data;            //!< 0,total_items*item_size
+        //const size_t data_offset;     //!< 0
+        //const size_t data_length;     //!< total_items*item_size
         const size_t rows_offset;     //!< |data_offset+data_length|
         const size_t rows_length;     //!< rows * sizeof( lightweight_array<...> )
         const size_t indx_offset;     //!< |rows_offset+rows_length|

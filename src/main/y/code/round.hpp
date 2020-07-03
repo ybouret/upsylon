@@ -46,8 +46,11 @@
 //! 512 bytes | 4096 bits
 #define Y_ROUND512(N)  Y_ROUND_LN2(9,N)
 
+//! memory alignment bytes
+#define Y_MEMORY_ALIGNED 16
+
 //! internal memory alignment
-#define Y_MEMORY_ALIGN(N)  Y_ROUND16(N)
+#define Y_MEMORY_ALIGN(N)  Y_ROUND_LN2(ilog2<Y_MEMORY_ALIGNED>::value,N)
 
 //! number of uint64_t to hold N
 #define Y_U64_FOR_SIZE(N) ( Y_ROUND8(N) >> 3 )
