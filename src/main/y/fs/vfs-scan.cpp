@@ -6,7 +6,6 @@
 
 namespace upsylon
 {
-	
     
     vfs:: scanner:: ~scanner() throw()
     {
@@ -21,20 +20,18 @@ namespace upsylon
         vfs::as_directory( aliasing::_(folder) );
     }
     
-    
-    
     const vfs::entry * vfs:: scanner:: make_entry(const char *entry_name)
     {
         assert( length_of(entry_name)>0 );
         
         string      full_path = folder + entry_name;
         vfs::as_directory( full_path ).trim( 1 );
-
+        
         current = new vfs::entry(full_path,fs);
         return & *current;
         //data.build<vfs::entry,string,vfs>(full_path,fs);
         //return & data.as<vfs::entry>();
     }
-   
-	
+    
+    
 }
