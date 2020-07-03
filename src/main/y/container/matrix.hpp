@@ -71,8 +71,8 @@ namespace upsylon
         {
             initialize();
             assert(items==other.items);
-            mutable_type *target = memory::io::cast<mutable_type>(workspace,data.offset);
-            const_type   *source = memory::io::cast<mutable_type>(other.workspace,other.data.offset);
+            mutable_type *target = memory::io::cast<mutable_type>(workspace,_data.offset);
+            const_type   *source = memory::io::cast<mutable_type>(other.workspace,other._data.offset);
             size_t        count  = 0;
             try
             {
@@ -271,7 +271,7 @@ namespace upsylon
         //! load value
         inline void ld( param_type value )
         {
-            mutable_type *p = memory::io::cast<T>(workspace,data.offset);
+            mutable_type *p = memory::io::cast<T>(workspace,_data.offset);
             for(size_t i=0;i<items;++i)
             {
                 p[i] = value;
@@ -281,7 +281,7 @@ namespace upsylon
         //! take the opposite (when possible) value
         inline void neg() throw()
         {
-            mutable_type *p = memory::io::cast<T>(workspace,data.offset);
+            mutable_type *p = memory::io::cast<T>(workspace,_data.offset);
             for(size_t i=0;i<items;++i)
             {
                 p[i] = -p[i];
@@ -454,9 +454,9 @@ namespace upsylon
             //
             // prepare rows
             //__________________________________________________________________
-            row_ptr = memory::io::cast<row>(workspace,rows_offset);
+            row_ptr = memory::io::cast<row>(workspace,_rows.offset);
             {
-                mutable_type *p = memory::io::cast<mutable_type>(workspace,data.offset);
+                mutable_type *p = memory::io::cast<mutable_type>(workspace,_data.offset);
                 for(size_t r=0;r<rows;++r,p+=cols)
                 {
                     new (row_ptr+r) row(p,cols);
@@ -468,7 +468,7 @@ namespace upsylon
         //! destroy allocated objects
         inline void destroy(size_t count) throw()
         {
-            mutable_type *entry = memory::io::cast<mutable_type>(workspace,data.offset);
+            mutable_type *entry = memory::io::cast<mutable_type>(workspace,_data.offset);
             while(count-- > 0)
             {
                 self_destruct(entry[count]);
@@ -479,7 +479,7 @@ namespace upsylon
         inline void init0()
         {
             size_t        count = 0;
-            mutable_type *entry = memory::io::cast<mutable_type>(workspace,data.offset);
+            mutable_type *entry = memory::io::cast<mutable_type>(workspace,_data.offset);
             try
             {
                 while(count<total_items)

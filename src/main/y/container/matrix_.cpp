@@ -25,8 +25,6 @@ namespace upsylon
         _bzset(is_square);
         _bzset(largest);
         _bzset(total_items);
-        _bzset(rows_offset);
-        _bzset(rows_length);
         _bzset(indx_offset);
         _bzset(indx_length);
     }
@@ -39,10 +37,11 @@ namespace upsylon
     is_square(rows==cols),
     largest(max_of(rows,cols)),
     total_items(items+2*largest),
-    data(0,total_items*item_size),
-    rows_offset( memory::align(data.offset+data.length)  ),
-    rows_length( rows * sizeof( lightweight_array<int> ) ),
-    indx_offset( memory::align(rows_offset+rows_length)  ),
+    _data(0,total_items*item_size),
+    _rows(_data,rows * sizeof( lightweight_array<int> ) ),
+    //rows_offset( memory::align(data.offset+data.length)  ),
+    //rows_length( rows * sizeof( lightweight_array<int> ) ),
+    indx_offset( memory::align(_rows.offset+_rows.length)  ),
     indx_length( sizeof(size_t) * largest                ),
     allocated(   memory::align(indx_offset+indx_length)  ),
     r_indices(),
@@ -80,9 +79,8 @@ namespace upsylon
         _XCH(is_square);
         _XCH(largest);
         _XCH(total_items);
-        _XCH(data);
-        _XCH(rows_offset);
-        _XCH(rows_length);
+        _XCH(_data);
+        _XCH(_rows);
         _XCH(indx_offset);
         _XCH(indx_length);
         _XCH(allocated);
