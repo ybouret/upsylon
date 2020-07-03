@@ -36,7 +36,7 @@ namespace upsylon
             const word_type  provided_number; //!< initial count
 
             //! destructor
-            inline ~__chunk() throw(){}
+            inline ~__chunk() throw() {}
             
             //! compute parameters and format data
             /**
@@ -65,9 +65,9 @@ namespace upsylon
                 // use data to compute parameters
                 //______________________________________________________________
                 const size_t aligned_block_size = Y_ALIGN_FOR_ITEM(word_type,block_size);  // align the block size on the word_type
-                (size_t &)   words_increment    = aligned_block_size/sizeof(word_type);    // how many words do we need to cover block_size
+                aliasing::_(words_increment)    = aligned_block_size/sizeof(word_type);    // how many words do we need to cover block_size
                 const size_t blocks_in_data     = chunk_size/aligned_block_size;           // maximum unconstrained blocks in chunk_data
-                (word_type &)provided_number    = still_available = static_cast<word_type>( (blocks_in_data<max_blocks) ? blocks_in_data : max_blocks );
+                aliasing::_(provided_number)    = still_available = static_cast<word_type>( (blocks_in_data<max_blocks) ? blocks_in_data : max_blocks );
 
                 //______________________________________________________________
                 //
