@@ -1,4 +1,5 @@
 #include "y/fs/vfs.hpp"
+#include "y/type/aliasing.hpp"
 
 #include <cstring>
 #include <new>
@@ -17,7 +18,7 @@ namespace upsylon
     folder( dirname ),
     current(0)
     {
-        vfs::as_directory((string&)folder);
+        vfs::as_directory( aliasing::_(folder) );
     }
     
     

@@ -1,4 +1,6 @@
 #include "y/hashing/hash-mac.hpp"
+#include "y/type/block/zset.hpp"
+
 #include <cstring>
 
 namespace upsylon
@@ -8,9 +10,9 @@ namespace upsylon
 	{
 		
 		hash_mac:: ~hash_mac() throw()
-		{
-            (size_t&)L = 0;
-            (size_t&)B = 0;
+        {
+            _bzset(L);
+            _bzset(B);
 		}
 		
 		hash_mac:: hash_mac( function &H, const memory::ro_buffer &key ) :

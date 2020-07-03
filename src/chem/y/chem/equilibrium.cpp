@@ -240,8 +240,8 @@ namespace upsylon
 
                 if(divider>1)
                 {
-                    (bool  &)rescale = true;
-                    (double&)kpower  = 1.0/divider;
+                    aliasing::_(rescale) = true;
+                    aliasing::_(kpower)  = 1.0/divider;
                 }
             }
 

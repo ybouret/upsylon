@@ -5,6 +5,7 @@
 
 #include "y/associative/hash-container.hpp"
 #include "y/associative/catalog.hpp"
+#include "y/type/block/zset.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -34,7 +35,7 @@ namespace upsylon
                 assert(NULL==next);
                 assert(NULL==prev);
                 meta = NULL;
-                (size_t&)hkey = 0;
+                _bzset(hkey);
             }
 
             //! constructor

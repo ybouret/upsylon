@@ -1,5 +1,6 @@
 #include "y/hashing/rmd.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -31,7 +32,7 @@ namespace upsylon
         
         void rmd:: reset() throw()
         {
-            (size_t&)length = nx = nb = 0;
+            aliasing::_(length) = nx = nb = 0;
 
         }
         
@@ -40,7 +41,7 @@ namespace upsylon
         {
             assert(nb<4);
             assert(nx<16);
-            ++((size_t&)length);
+            ++aliasing::_(length);
             B[nb++] = b;
             if(nb>=4)
             {

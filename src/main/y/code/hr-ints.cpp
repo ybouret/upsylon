@@ -3,16 +3,18 @@
 #include "y/type/utils.hpp"
 #include "y/core/ipower.hpp"
 #include "y/string.hpp"
+#include "y/type/block/zset.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
-
+    
     static const char rx[] = { 'b', 'k', 'M', 'G', 'T', 'E', 'Z' };
-
+    
     human_readable:: human_readable( int64_t i ) throw() :
     value(0),
     radix(rx[0])
     {
-
+        
         if(i!=0)
         {
             uint64_t u = i;
@@ -31,31 +33,30 @@ namespace upsylon {
                 --j;
                 v >>= 10;
             }
-            //std::cerr << "u=" << u <<  ", v=" << v << ", j=" << j << std::endl;
-            (double &)value = s*(double(u)/double(v));
-            (char   &)radix = rx[j];
+            aliasing::_(value) = s*(double(u)/double(v));
+            aliasing::_(radix) = rx[j];
         }
     }
-
+    
     human_readable:: human_readable( const human_readable &hr ) throw() :
     value(hr.value),
     radix(hr.radix)
     {
     }
-
+    
     human_readable:: ~human_readable() throw()
     {
-        (double&)value = 0;
-        (char  &)radix = 0;
+        _bzset(value);
+        _bzset(radix);
     }
-
+    
     human_readable & human_readable:: operator=( const human_readable &hr ) throw()
     {
-        (double &)value = hr.value;
-        (char   &)radix = hr.radix;
+        aliasing::_(value) = hr.value;
+        aliasing::_(radix) = hr.radix;
         return *this;
     }
-
+    
     std::ostream & operator<<( std::ostream &os, const human_readable &hr)
     {
         const string value = vformat( "%8.2f", hr.value );

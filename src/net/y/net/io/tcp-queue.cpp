@@ -1,5 +1,6 @@
 #include "y/net/io/tcp-queue.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {
@@ -36,12 +37,10 @@ namespace upsylon
                 static const network &nw = network::location();
                 nw.release_byte_node( bytes.pop_back() );
             }
-
-
-
+            
             memset(buffer,0,allocated);
             memory::pooled::location().release_bytes(buffer,allocated);
-            (size_t&)block_size=0;
+            _bzset(block_size);
         }
 
         void tcp_queue:: clear() throw()

@@ -1,4 +1,5 @@
 #include "y/fltk/axis.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -15,21 +16,21 @@ namespace upsylon
         
         void Axis:: set_min( double amin ) 
         {
-            (double&)vmin   = amin;
-            (double&)length = vmax - vmin;
+            aliasing::_(vmin)   = amin;
+            aliasing::_(length) = vmax - vmin;
         }
         
         void Axis:: set_max(double amax)
         {
-            (double&)vmax   = amax;
-            (double&)length = vmax - vmin;
+            aliasing::_(vmax)   = amax;
+            aliasing::_(length) = vmax - vmin;
         }
         
         void Axis:: set_range(double amin, double amax)
         {
-            (double&)vmin   = amin;
-            (double&)vmax   = amax;
-            (double&)length = vmax - vmin;
+            aliasing::_(vmin)   = amin;
+            aliasing::_(vmax)   = amax;
+            aliasing::_(length) = vmax - vmin;
         }
 
         void Axis:: autoscaleX( const Curve &C, const double extra )

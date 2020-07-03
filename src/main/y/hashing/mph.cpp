@@ -87,6 +87,7 @@ namespace upsylon
 
 #include <iostream>
 #include "y/ios/imstream.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {
@@ -97,7 +98,7 @@ namespace upsylon
             assert(root);
             delete root;
             root=0;
-            (size_t&)entries=0;
+            _bzset(entries);
         }
 
         mperf:: mperf() :

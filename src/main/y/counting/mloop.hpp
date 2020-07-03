@@ -7,6 +7,7 @@
 #include "y/type/args.hpp"
 #include "y/memory/embed.hpp"
 #include "y/type/ints-display.hpp"
+#include "y/type/aliasing.hpp"
 #include <iostream>
 #include <cstring>
 
@@ -223,7 +224,7 @@ data(0)
             //! prepare loop parameters
             inline void setup(const_type *ini, const_type *end)
             {
-                size_t &num = (size_t&)count;
+                size_t &num = aliasing::_(count);
                 num = 1;
                 for(size_t i=0;i<dimensions;++i)
                 {

@@ -138,7 +138,7 @@ namespace upsylon
                 {
                     assert( ALLOCATOR::exists() );
                     would_kill();
-                    ALLOCATOR::location().release(data,(size_t&)size);
+                    ALLOCATOR::location().release(data,aliasing::_(size));
                 }
             }
 

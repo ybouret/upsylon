@@ -157,7 +157,7 @@ namespace upsylon {
                     next->prev = node;
                     node->next = next;
                     node->prev = prev;
-                    ++(size_t&)(chunks.size);
+                    ++aliasing::_(chunks.size);
                     return;
                 }
                 next=prev;

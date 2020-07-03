@@ -1,5 +1,6 @@
 #include "y/fs/disk/buffer.hpp"
 #include "y/code/round.hpp"
+#include "y/type/block/zset.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -9,7 +10,7 @@ namespace upsylon
 
         disk_buffer_:: ~disk_buffer_() throw()
         {
-            (size_t&)bytes = 0;
+            _bzset(bytes);
         }
 
         disk_buffer_:: disk_buffer_() throw() :

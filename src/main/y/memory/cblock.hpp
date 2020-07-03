@@ -4,6 +4,7 @@
 
 #include "y/memory/global.hpp"
 #include "y/type/args.hpp"
+#include "y/type/aliasing.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -27,7 +28,8 @@ namespace upsylon
             inline explicit cblock_of(const size_t n) :
             size(n),
             bytes(0),
-            wksp( ALLOCATOR::instance().template acquire_as<mutable_type>((size_t&)size,(size_t&)bytes)),
+            wksp( ALLOCATOR::instance().
+                 template acquire_as<mutable_type>(aliasing::_(size),aliasing::_(bytes))),
             data(wksp)
             {
             }
@@ -36,7 +38,8 @@ namespace upsylon
             inline virtual ~cblock_of() throw()
             {
                 clear();
-                ALLOCATOR::location().template release_as<mutable_type>(wksp,(size_t&)size,(size_t&)bytes);
+                ALLOCATOR::location().
+                template release_as<mutable_type>(wksp,aliasing::_(size),aliasing::_(bytes));
                 data = 0;
             }
 

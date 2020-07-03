@@ -6,6 +6,7 @@
 #include "y/type/args.hpp"
 #include "y/code/round.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/aliasing.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -49,7 +50,7 @@ namespace upsylon
             {
                 assert(size<capacity);
                 new ( &addr[OFFSET+size] ) mutable_type(args);
-                ++(size_t&)size;
+                ++aliasing::_(size);
             }
             
             //! access
@@ -74,7 +75,7 @@ namespace upsylon
                 mutable_type *temp = io::__force<mutable_type>(wksp);
                 while(size>0)
                 {
-                    self_destruct( temp[--(size_t&)size ] );
+                    self_destruct( temp[--aliasing::_(size) ] );
                 }
                 clr();
             }

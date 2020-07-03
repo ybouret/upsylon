@@ -2,6 +2,7 @@
 #include "y/net/socket/set.hpp"
 #include "y/core/locate.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/type/aliasing.hpp"
 
 #if defined(Y_BSD)
 #include <sys/select.h>
@@ -17,7 +18,7 @@ namespace upsylon
     {
         socket_set:: ~socket_set() throw()
         {
-            memory::global::location().release(workspace,(size_t&)allocated);
+            memory::global::location().release(workspace,aliasing::_(allocated));
         }
 
         void socket_set:: free() throw()
@@ -29,7 +30,7 @@ namespace upsylon
         socket_set:: socket_set():
         size(0),
         allocated( capacity * sizeof(socket_type) + 4 * memory::align(sizeof(fd_set))  ),
-        workspace( memory::global::instance().acquire( (size_t&)allocated) ),
+        workspace( memory::global::instance().acquire( aliasing::_(allocated)) ),
         sock( memory::io::cast<socket_type>(workspace,0) ),
         ufd(  memory::io::cast<fd_set>(workspace,capacity*sizeof(socket_type) ) ),
         wfd(  memory::io::cast<fd_set>(ufd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) ),
@@ -131,7 +132,7 @@ namespace upsylon
                 throw upsylon::exception("%s(multiple high-level descriptor)",fn);
             }
             socket_type *target = sock+idx;
-            size_t      &length = (size_t&)size;
+            size_t      &length = aliasing::_(size);
             memmove(target+1,target,( (length++) - idx )*sizeof(socket_type));
             *target = lhs;
             FD_SET(lhs,ufd);
@@ -152,7 +153,7 @@ namespace upsylon
             {
                 assert(size>0);
                 socket_type *target = sock+idx;
-                size_t      &length = (size_t&)size;
+                size_t      &length = aliasing::_(size);
                 memmove(target,target+1,( (--length)-idx ) * sizeof(socket_type) );
             }
             assert( !core::locate(lhs,sock,size,__compare_socks, idx) );
