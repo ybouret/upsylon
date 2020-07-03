@@ -1,6 +1,8 @@
 
 #include "y/ios/omstream.hpp"
 #include "y/exception.hpp"
+#include "y/type/block/zset.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -9,9 +11,9 @@ namespace upsylon
 
         omstream:: ~omstream() throw()
         {
-            (size_t &)space = 0;
-            (size_t &)count = 0;
-            entry           = 0;
+            _bzset(space);
+            _bzset(count);
+            _bzset(entry);
         }
 
         omstream:: omstream( void *addr, const size_t size ) throw() :
@@ -34,7 +36,7 @@ namespace upsylon
         void omstream:: write( char C )
         {
             if(count>=space) throw exception("ios::omstream(count>space=%u)", unsigned(space));
-            entry[( (size_t &)count )++] = C;
+            entry[ aliasing::_(count )++ ] = C;
         }
 
         void omstream:: flush() {}

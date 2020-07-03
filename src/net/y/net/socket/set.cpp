@@ -1,6 +1,7 @@
 
 #include "y/net/socket/set.hpp"
 #include "y/core/locate.hpp"
+#include "y/type/block/zset.hpp"
 
 #if defined(Y_BSD)
 #include <sys/select.h>
@@ -21,7 +22,7 @@ namespace upsylon
 
         void socket_set:: free() throw()
         {
-            (size_t &)size = 0;
+            _bzset(size);
             memset(workspace,0,allocated);
         }
 

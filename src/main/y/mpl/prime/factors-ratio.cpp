@@ -2,6 +2,8 @@
 #include "y/mpl/prime/factors-ratio.hpp"
 #include "y/mpl/mpn.hpp"
 #include "y/exceptions.hpp"
+#include "y/type/aliasing.hpp"
+
 #include <cerrno>
 
 namespace upsylon
@@ -124,8 +126,8 @@ namespace upsylon
             //------------------------------------------------------------------
             // get N and D
             //------------------------------------------------------------------
-            prime_factors &N = (prime_factors &)num;
-            prime_factors &D = (prime_factors &)den;
+            prime_factors &N = aliasing::_(num);
+            prime_factors &D = aliasing::_(den);
 
             if( N.is_zero() )
             {
@@ -196,8 +198,8 @@ namespace upsylon
                         if(ppfd)
                         {
                             const prime_factor &fd = **ppfd;
-                            size_t             &nx = (size_t &)(fn.n);
-                            size_t             &dx = (size_t &)(fd.n);
+                            size_t             &nx = aliasing::_(fn.n);
+                            size_t             &dx = aliasing::_(fd.n);
                             if(nx<dx)
                             {
                                 bad_num.push_back(p);

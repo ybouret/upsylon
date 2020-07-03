@@ -82,8 +82,8 @@ namespace upsylon
 
         void Equilibria:: release_all() throw()
         {
-            (size_t &)N = 0;
-            (size_t &)M = 0;
+            _bzset(N);
+            _bzset(M);
             sorted.release();
             xi.    release();
             nu2.   release();
@@ -121,8 +121,8 @@ namespace upsylon
                 // initialize
                 //______________________________________________________________
                 release_all();
-                size_t &n = (size_t &)N;
-                size_t &m = (size_t &)M;
+                size_t &n = aliasing::_(N);
+                size_t &m = aliasing::_(M);
                 n = this->size();
                 m = lib.size();
                 if(M<=0)

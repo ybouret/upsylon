@@ -4,6 +4,7 @@
 #define Y_FS_DISK_BUFFER_INCLUDED 1
 
 #include "y/fs/disk/file.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -45,9 +46,9 @@ namespace upsylon
             //! acquire memory
             inline explicit disk_buffer(const size_t n) : disk_buffer_()
             {
-                allocated       = check(n);
-                entry           = ALLOCATOR::instance().acquire_bytes(allocated);
-                (size_t &)bytes = n;
+                allocated          = check(n);
+                entry              = ALLOCATOR::instance().acquire_bytes(allocated);
+                aliasing::_(bytes) = n;
             }
 
         private:

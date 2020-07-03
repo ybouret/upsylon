@@ -1,5 +1,6 @@
 #include "y/sparse/matrix.hpp"
 #include "y/exception.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {
@@ -8,8 +9,8 @@ namespace upsylon
     {
         matrix_key:: ~matrix_key() throw()
         {
-            (size_t &)r = 0;
-            (size_t &)c = 0;
+            _bzset(r);
+            _bzset(c);
         }
 
         matrix_key:: matrix_key( const size_t R, const size_t C ) throw() :
@@ -78,9 +79,9 @@ namespace upsylon
     {
         matrix_info:: ~matrix_info() throw()
         {
-            (size_t&)rows = 0;
-            (size_t&)cols = 0;
-            (size_t&)count = 0;
+            _bzset(rows);
+            _bzset(cols);
+            _bzset(count);
         }
 
         static const char fn[] = "sparse_matrix: ";

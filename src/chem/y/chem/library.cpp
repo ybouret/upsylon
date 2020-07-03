@@ -9,19 +9,19 @@ namespace upsylon
     namespace Chemical
     {
         Library:: ~Library() throw() {}
-
+        
         Library:: Library(size_t n) :
         Object(),
         LibraryType(n,as_capacity),
         protonID("H+")
         {
         }
-
+        
         Library:: Library(const Library &other) :
         collection(), Object(), LibraryType(other), protonID(other.protonID)
         {
         }
-
+        
         Species & Library:: operator()(const string &name, const int z)
         {
             Species::Pointer p = new Species(name,z,size()+1);
@@ -32,18 +32,18 @@ namespace upsylon
             update();
             return *p;
         }
-
+        
         void Library:: update() throw()
         {
             size_t indx = 0;
             for(iterator i=begin();i!=end();++i)
             {
                 Species &sp = (**i);
-                (size_t &)(sp.indx) = ++indx;
+                aliasing::_(sp.indx) = ++indx;
             }
         }
-
-
+        
+        
         size_t Library:: max_name_length() const throw()
         {
             size_t ans = 0;
@@ -54,7 +54,7 @@ namespace upsylon
             }
             return ans;
         }
-
+        
         Species & Library:: operator[](const string &id) const
         {
             const Species::Pointer *pp = search(id);
@@ -62,12 +62,12 @@ namespace upsylon
             Species::Pointer q = *pp;
             return *q;
         }
-
+        
         Species & Library:: operator[](const char   *id ) const
         {
             const string _ = id; return (*this)[_];
         }
-
+        
         ios::ostream & Library:: header( ios::ostream &fp ) const
         {
             for(const_iterator i=begin();i!=end();++i)
@@ -77,7 +77,7 @@ namespace upsylon
             }
             return fp;
         }
-
+        
         ios::ostream & Library:: xprint( ios::ostream &fp, const array<double> &C ) const
         {
             const size_t M = this->size();
@@ -87,13 +87,13 @@ namespace upsylon
             }
             return fp;
         }
-
-
+        
+        
         double  Library:: pH( const array<double> &a ) const
         {
             const Species::Pointer *pp = search(protonID);
             return (pp) ? -log10( a[ (**pp).indx ] ) : -1.0;
         }
-
+        
     }
 }

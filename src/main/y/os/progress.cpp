@@ -1,6 +1,8 @@
 
 #include "y/os/progress.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/aliasing.hpp"
+#include "y/type/block/zset.hpp"
 #include <cmath>
 #include <cstring>
 #include <cstdio>
@@ -24,18 +26,18 @@ namespace upsylon
     {
         mark=0;
         bips=0;
-        (double&)percent = 0;
-        (double&)done    = 0;
-        (double&)left    = 0;
+        _bzset(percent);
+        _bzset(done);
+        _bzset(left);
     }
 
     void progress:: start() throw()
     {
         mark             = ticks();
         bips             = 0;
-        (double&)percent = 0;
-        (double&)done    = 0;
-        (double&)left    = max_seconds;
+        _bzset(percent);
+        _bzset(done);
+        aliasing::_(left) = max_seconds;
     }
 
     uint64_t progress:: count() const
@@ -45,19 +47,19 @@ namespace upsylon
 
     void progress:: update( double ratio)
     {
-        ratio            = clamp<double>(0,ratio,1);
-        (double&)percent = floor( ratio * 10000.0 + 0.5 ) / 100.0;
+        ratio                = clamp<double>(0,ratio,1);
+        aliasing::_(percent) = floor( ratio * 10000.0 + 0.5 ) / 100.0;
         if(ratio<=0)
         {
-            (double&)done = 0;
-            (double&)left = max_seconds;
+            aliasing::_(done) = 0;
+            aliasing::_(left) = max_seconds;
         }
         else
         {
             bips  = ticks() - mark;
-            rt_clock &self = *this;
-            (double &)done = self(bips);
-            (double &)left = (1.0-ratio)/ratio * done;
+            rt_clock   &self  = *this;
+            aliasing::_(done) = self(bips);
+            aliasing::_(left) = (1.0-ratio)/ratio * done;
         }
     }
 

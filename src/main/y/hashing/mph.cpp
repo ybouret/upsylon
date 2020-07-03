@@ -2,6 +2,7 @@
 #include "y/exception.hpp"
 #include "y/sort/merge.hpp"
 #include "y/comparison.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -184,7 +185,7 @@ namespace upsylon
                 {
                     curr->chld.push_back(new node_type(code));
                     curr = curr->chld.tail;
-                    ++(size_t &)nodes;
+                    ++ aliasing::_(nodes);
                 }
             }
 
@@ -198,8 +199,7 @@ namespace upsylon
             if(curr->hash>=0)
                 throw exception("mperf: multiple keys for required h=%d!",h);
             (int &)(curr->hash) = h;
-            ++(size_t &)entries;
-
+            ++aliasing::_(entries);
         }
 
 
@@ -208,8 +208,8 @@ namespace upsylon
             assert(root);
             root->chld.release();
             root->freq=1;
-            (size_t&)nodes=1;
-            (size_t&)entries =0;
+            aliasing::_(nodes)   = 1;
+            aliasing::_(entries) = 0;
         }
 
     }
