@@ -83,12 +83,24 @@ namespace upsylon
                 return ( (X<=0) ? T(0) : ( full<T>() % X ) );
             }
 
-            //! random value in integral range
+            //! random value in integral range using double cast
             template <typename T> inline
             T range(const T a, const T b) throw()
             {
                 const double r = floor( 0.5 + (to<double>() * (double(b)-double(a))) );
                 return a + T(r);
+            }
+
+            //! random value by rejection
+            template <typename T> inline
+            T narrow(const T a, const T b) throw()
+            {
+                assert(a<=b);
+                while(true)
+                {
+                    const T tmp = full<T>();
+                    if(a<=tmp&&tmp<=b) return tmp;
+                }
             }
 
             //! 0..n-1

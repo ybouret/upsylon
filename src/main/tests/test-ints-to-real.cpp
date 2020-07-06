@@ -76,10 +76,15 @@ static inline void i_display(int i)
 
 template <typename T> static inline void display_i2r()
 {
+    typedef typename kernel::i2r<T>::itype itype;
+
     std::cerr << "i2r<" << type_name_of<T>() << ">" << std::endl;
-    std::cerr << "|_integer : <" << type_name_of< typename kernel::i2r<T>::itype >() << ">" << std::endl;
+    std::cerr << "|_integer : <" << type_name_of<itype>() << ">" << std::endl;
     std::cerr << "|_mantissa: " << kernel::i2r<T>::info_type::mantissa << std::endl;
+    std::cerr << "|_minimum : " << kernel::i2r<T>::minimum  << std::endl;
     std::cerr << "|_maximum : " << kernel::i2r<T>::maximum  << std::endl;
+
+
 
     std::cerr << std::endl;
 }

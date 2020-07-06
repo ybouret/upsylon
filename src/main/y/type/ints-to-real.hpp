@@ -40,7 +40,8 @@ namespace upsylon {
             typedef i2r_info<T>               info_type;
             typedef typename info_type::itype itype;
             static  const itype __one__ = 1;
-            static  const itype maximum = (__one__<<info_type::mantissa)+__one__;
+            static  const itype minimum = -(__one__<<info_type::mantissa);
+            static  const itype maximum = (-minimum)+1;
         };
         
     }
