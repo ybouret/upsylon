@@ -74,6 +74,14 @@ static inline void i_display(int i)
     std::cerr << std::endl;
 }
 
+template <typename T, typename I> static inline
+bool check_i2r( const I value ) throw()
+{
+    const T r = static_cast<T>(value);
+    const I i = static_cast<I>(r);
+    return value == i;
+}
+
 template <typename T> static inline void display_i2r()
 {
     typedef typename kernel::i2r<T>::itype itype;
@@ -84,7 +92,15 @@ template <typename T> static inline void display_i2r()
     std::cerr << "|_minimum : " << kernel::i2r<T>::minimum  << std::endl;
     std::cerr << "|_maximum : " << kernel::i2r<T>::maximum  << std::endl;
 
+    Y_CHECK( (check_i2r<T,itype>(kernel::i2r<T>::minimum)) );
+    Y_CHECK( (check_i2r<T,itype>(kernel::i2r<T>::minimum)) );
 
+    std::cerr << "CHECK inside..." << std::endl;
+    for(size_t iter=0;iter<1000000;++iter)
+    {
+        const itype tmp = alea.narrow(kernel::i2r<T>::minimum, kernel::i2r<T>::maximum);
+        Y_ASSERT( (check_i2r<T,itype>(tmp)) );
+    }
 
     std::cerr << std::endl;
 }
