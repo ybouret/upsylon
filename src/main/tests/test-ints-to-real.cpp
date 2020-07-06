@@ -98,9 +98,26 @@ Y_UTEST(i2r)
     
     const uint64_t uf = find_i2r<float>(0);
     std::cerr << "i2r<float>  = " << uf << ", bits=" <<   bits_for(uf) << std::endl;
-    
+    {
+        const int64_t  x = -int64_t(uf);
+        std::cerr << "\tsigned : " << x << std::endl;
+        const float    m  = static_cast<float>(x);
+        std::cerr << "\tminus  : " << m << std::endl;
+        const int64_t  r = static_cast<int64_t>(m);
+        std::cerr << "\tback   : " << r << std::endl;
+    }
+
     const uint64_t ud = find_i2r<double>( (uint64_t(1) << 53) - 10000000 );
     std::cerr << "i2r<double> = " << ud << ", bits=" << bits_for(ud) << std::endl;
+    {
+        const int64_t  x = -int64_t(ud);
+        std::cerr << "\tsigned : " << x << std::endl;
+        const float    m  = static_cast<float>(x);
+        std::cerr << "\tminus  : " << m << std::endl;
+        const int64_t  r = static_cast<int64_t>(m);
+        std::cerr << "\tback   : " << r << std::endl;
+    }
+
 
     for(int i=-5;i<=5;++i)
     {
