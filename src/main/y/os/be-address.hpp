@@ -8,8 +8,14 @@
 
 namespace upsylon {
     
-    
+    //__________________________________________________________________________
+    //
+    //
     //! Big Endian address
+    /**
+     useful in suffix-tree to minimize the number of nodes
+     */
+    //__________________________________________________________________________
     class BEaddress
     {
     public:

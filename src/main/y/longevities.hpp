@@ -7,7 +7,12 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
     //! table of global longevities
+    //
+    //__________________________________________________________________________
     struct longevity_for
     {
         typedef at_exit::longevity type;                              //!< alias

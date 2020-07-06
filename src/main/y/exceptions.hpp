@@ -9,7 +9,7 @@ namespace upsylon
 
 	namespace libc
     {
-
+        
         //! wrapper for libc errors
 		class exception : public upsylon::exception
 		{

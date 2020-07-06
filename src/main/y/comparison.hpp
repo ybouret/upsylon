@@ -7,19 +7,41 @@
 namespace upsylon
 {
 
+    //__________________________________________________________________________
+    //
+    //
     //! handle some comparison function
+    //
+    //__________________________________________________________________________
     class comparison
     {
     public:
+
+        //______________________________________________________________________
+        //
+        //! named result
+        //______________________________________________________________________
+        enum result
+        {
+            eq, //!< ==
+            lt, //!< <
+            gt  //!< '>'
+        };
+        //______________________________________________________________________
+        //
         //! increasing lexicographic comparison any block sizes
+        //______________________________________________________________________
         template <typename T> static inline
         int lexicographic(const T *sa, const size_t na,
                           const T *sb, const size_t nb) throw()
         {
             return ( (na<=nb) ? __lexicographic<T>(sa,na,sb,nb) : - __lexicographic<T>(sb,nb,sa,na) );
         }
-        
+
+        //______________________________________________________________________
+        //
         //! increasing lexicographic comparison of same block sizes
+        //______________________________________________________________________
         template <typename T> static inline
         int increasing_lexicographic(const T *a, const T *b, size_t n) throw()
         {
@@ -45,21 +67,30 @@ namespace upsylon
             }
             return 0; // the same!
         }
-        
+
+        //______________________________________________________________________
+        //
         //! decreasing lexicographic comparison of same block sizes
+        //______________________________________________________________________
         template <typename T> static inline
         int decreasing_lexicographic(const T *a, const T *b, size_t n) throw()
         {
             return increasing_lexicographic(b,a,n);
         }
-        
+
+        //______________________________________________________________________
+        //
         //! convert signed value
+        //______________________________________________________________________
         static int normalize(const int ans) throw()
         {
             return (ans < 0) ? -1 : ( (0<ans) ? 1 : 0 );
         }
 
+        //______________________________________________________________________
+        //
         //! check same comparison signed
+        //______________________________________________________________________
         static int are_same_results(const int a, const int b) throw()
         {
             switch( normalize(a) )
@@ -73,7 +104,10 @@ namespace upsylon
             return (0==normalize(b));
         }
 
+        //______________________________________________________________________
+        //
         //! compare by increasing value
+        //______________________________________________________________________
         template <typename T> static inline
         int increasing(const T &lhs, const T &rhs) throw()
         {
@@ -91,7 +125,10 @@ namespace upsylon
             }
         }
 
+        //______________________________________________________________________
+        //
         //! C-style
+        //______________________________________________________________________
         template <typename T> static inline
         int __increasing(const void *L, const void *R) throw()
         {
@@ -102,7 +139,10 @@ namespace upsylon
         }
 
 
+        //______________________________________________________________________
+        //
         //! compare by decreasing value
+        //______________________________________________________________________
         template <typename T> static inline
         int decreasing(const T &lhs, const T &rhs) throw()
         {
@@ -120,7 +160,10 @@ namespace upsylon
             }
         }
 
+        //______________________________________________________________________
+        //
         //! comparison by decreasing absolute value
+        //______________________________________________________________________
         template <typename T> static inline
         int decreasing_abs(const T &lhs, const T &rhs)
         {

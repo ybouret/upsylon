@@ -168,7 +168,7 @@ namespace
 }
 
 
-#include "y/os/confirm.hpp"
+//#include "y/os/confirm.hpp"
 
 Y_UTEST(sequence)
 {

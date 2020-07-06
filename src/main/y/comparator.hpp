@@ -8,8 +8,12 @@
 
 namespace upsylon
 {
-
+    //__________________________________________________________________________
+    //
+    //
     //! prototype comparator
+    //
+    //__________________________________________________________________________
     template <typename T>
     class comparator
     {
@@ -24,8 +28,13 @@ namespace upsylon
     private:
         Y_DISABLE_COPY_AND_ASSIGN(comparator);
     };
-    
+
+    //__________________________________________________________________________
+    //
+    //
     //! implementation: increasing
+    //
+    //__________________________________________________________________________
     template <typename T>
     class increasing_comparator : public comparator<T>
     {
@@ -42,8 +51,13 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(increasing_comparator);
 
     };
-    
+
+    //__________________________________________________________________________
+    //
+    //
     //! implementation: decreasing
+    //
+    //__________________________________________________________________________
     template <typename T>
     class decreasing_comparator : public comparator<T>
     {

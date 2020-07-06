@@ -8,12 +8,15 @@
 
 namespace upsylon
 {
-    
+
+    //__________________________________________________________________________
+    //
     //! functor
     /**
      - R is the return type
      - TLIST is the parameters type list
      */
+    //__________________________________________________________________________
     template <typename R, class TLIST>
     class functor : public core::callable<R,TLIST>
     {

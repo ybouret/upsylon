@@ -6,17 +6,20 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
     //! common functions for dynamic collection and capacity()
+    //
+    //__________________________________________________________________________
     class dynamic : public virtual collection
     {
     public:
-        //! destructor
-        virtual ~dynamic() throw();
-
         //______________________________________________________________________
         //
         // virtual interface
         //______________________________________________________________________
+        virtual       ~dynamic()        throw();     //!< cleanup
         virtual size_t capacity() const throw() = 0; //!< maximum available objects
 
         //______________________________________________________________________
@@ -34,8 +37,7 @@ namespace upsylon
         inline bool has_space() const throw()  { return size()<capacity();  }
 
     protected:
-        //! constructor
-        explicit dynamic() throw();
+        explicit dynamic() throw();//!< constructor
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(dynamic);
