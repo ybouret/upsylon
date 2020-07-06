@@ -98,6 +98,27 @@ namespace upsylon {
                 return static_cast<TARGET>( source );
             }
 
+            //------------------------------------------------------------------
+            //
+            //  SIGNED TARGET <- SIGNED SOURCE
+            //
+            //------------------------------------------------------------------
+
+
+            //------------------------------------------------------------------
+            // |_sizeof(SOURCE)<=sizeof(TARGET)
+            //------------------------------------------------------------------
+            static inline
+            TARGET convert(const SOURCE &source,
+                           int2type<true>,         // SIGNED_TARGET
+                           int2type<true>,         // SIGNED_SOURCE
+                           int2type<false>         // LARGER_SOURCE
+            )
+            {
+                //if(source<0) _i2i::negative_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
+                return static_cast<TARGET>( source );
+            }
+
         };
 
     }

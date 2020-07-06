@@ -84,22 +84,28 @@ bool check_i2r( const I value ) throw()
 
 template <typename T> static inline void display_i2r()
 {
-    typedef typename kernel::i2r<T>::itype itype;
+    typedef typename  i2r<T>::itype itype;
 
     std::cerr << "i2r<" << type_name_of<T>() << ">" << std::endl;
     std::cerr << "|_integer : <" << type_name_of<itype>() << ">" << std::endl;
-    std::cerr << "|_mantissa: " << kernel::i2r<T>::info_type::mantissa << std::endl;
-    std::cerr << "|_minimum : " << kernel::i2r<T>::minimum  << std::endl;
-    std::cerr << "|_maximum : " << kernel::i2r<T>::maximum  << std::endl;
+    std::cerr << "|_mantissa: " <<  i2r<T>::info_type::mantissa << std::endl;
+    std::cerr << "|_minimum : " <<  i2r<T>::minimum  << std::endl;
+    std::cerr << "|_maximum : " <<  i2r<T>::maximum  << std::endl;
 
-    Y_CHECK( (check_i2r<T,itype>(kernel::i2r<T>::minimum)) );
-    Y_CHECK( (check_i2r<T,itype>(kernel::i2r<T>::minimum)) );
+    Y_CHECK( (check_i2r<T,itype>(i2r<T>::minimum)) );
+    Y_CHECK( (check_i2r<T,itype>(i2r<T>::minimum)) );
 
     std::cerr << "CHECK inside..." << std::endl;
     for(size_t iter=0;iter<100000;++iter)
     {
-        const itype tmp = alea.narrow(kernel::i2r<T>::minimum, kernel::i2r<T>::maximum);
+        const itype tmp = alea.narrow(i2r<T>::minimum,i2r<T>::maximum);
         Y_ASSERT( (check_i2r<T,itype>(tmp)) );
+    }
+
+    for(int32_t i=-65536; i<= 65536; ++i)
+    {
+        const T tmp = i2r<T>::_(i);
+        Y_ASSERT( static_cast<int32_t>(tmp) == i );
     }
 
     std::cerr << std::endl;
