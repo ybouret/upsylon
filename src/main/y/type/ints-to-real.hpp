@@ -19,9 +19,9 @@ namespace upsylon {
         //______________________________________________________________________
         struct i2r_common
         {
-            static const unsigned radix = FLT_RADIX;
-            static void check();
-            static void out_of_range();
+            static const unsigned radix = FLT_RADIX; //!< radix
+            static void check();                     //!< check radix==2
+            static void out_of_range();              //!< for type conversion
         };
 
         //______________________________________________________________________
@@ -41,8 +41,8 @@ namespace upsylon {
         template <>
         struct i2r_info<float>
         {
-            typedef int32_t       itype;
-            static const unsigned mantissa = FLT_MANT_DIG;
+            typedef int32_t       itype;                   //!< matching size
+            static const unsigned mantissa = FLT_MANT_DIG; //!< float mantissa
         };
 
         //______________________________________________________________________
@@ -54,8 +54,8 @@ namespace upsylon {
         template <>
         struct i2r_info<double>
         {
-            typedef int64_t       itype;
-            static const unsigned mantissa = DBL_MANT_DIG;
+            typedef int64_t       itype;                   //!< matching size
+            static const unsigned mantissa = DBL_MANT_DIG; //!< double mantissa
         };
 
 
@@ -75,11 +75,11 @@ namespace upsylon {
         //
         //! types and definition
         //______________________________________________________________________
-        typedef kernel::i2r_info<T>       info_type;
-        typedef typename info_type::itype itype;
-        static  const itype __one__ = 1;
-        static  const itype maximum = (__one__<<info_type::mantissa);
-        static  const itype minimum = -maximum;
+        typedef kernel::i2r_info<T>       info_type;                  //!< fetch corresponding info
+        typedef typename info_type::itype itype;                      //!< and integer type
+        static  const itype __one__ = 1;                              //!< alias
+        static  const itype maximum = (__one__<<info_type::mantissa); //!< alias
+        static  const itype minimum = -maximum;                       //!< alias
 
         //______________________________________________________________________
         //
@@ -91,7 +91,7 @@ namespace upsylon {
             const itype i = i2i<itype,V>(value);
             if(i<minimum||maximum<i) kernel::i2r_common::out_of_range();
             const T     r = static_cast<T>(i);
-
+            assert( static_cast<itype>(r) == i );
             return r;
         }
 
