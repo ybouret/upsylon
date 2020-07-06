@@ -96,7 +96,7 @@ template <typename T> static inline void display_i2r()
     Y_CHECK( (check_i2r<T,itype>(kernel::i2r<T>::minimum)) );
 
     std::cerr << "CHECK inside..." << std::endl;
-    for(size_t iter=0;iter<1000000;++iter)
+    for(size_t iter=0;iter<100000;++iter)
     {
         const itype tmp = alea.narrow(kernel::i2r<T>::minimum, kernel::i2r<T>::maximum);
         Y_ASSERT( (check_i2r<T,itype>(tmp)) );
