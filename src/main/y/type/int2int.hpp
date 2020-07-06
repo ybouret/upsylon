@@ -115,9 +115,26 @@ namespace upsylon {
                            int2type<false>         // LARGER_SOURCE
             )
             {
-                //if(source<0) _i2i::negative_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
                 return static_cast<TARGET>( source );
             }
+
+            //------------------------------------------------------------------
+            // |_sizeof(SOURCE)>sizeof(TARGET)
+            //------------------------------------------------------------------
+            static inline
+            TARGET convert(const SOURCE &source,
+                           int2type<true>,         // SIGNED_TARGET
+                           int2type<true>,         // SIGNED_SOURCE
+                           int2type<true>          // LARGER_SOURCE
+            )
+            {
+                static const SOURCE source_max = static_cast<SOURCE>( limit_of<TARGET>::maximum );
+                static const SOURCE source_min = static_cast<SOURCE>( limit_of<TARGET>::minimum );
+                if(source<source_min||source>source_max) _i2i:: overflow_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
+                return static_cast<TARGET>( source );
+            }
+
+
 
         };
 

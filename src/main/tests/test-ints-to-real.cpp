@@ -102,7 +102,7 @@ template <typename T> static inline void display_i2r()
         Y_ASSERT( (check_i2r<T,itype>(tmp)) );
     }
 
-    for(int32_t i=-65536; i<= 65536; ++i)
+    for(int i=-65536; i<= 65536; ++i)
     {
         const T tmp = i2r<T>::_(i);
         Y_ASSERT( static_cast<int32_t>(tmp) == i );
