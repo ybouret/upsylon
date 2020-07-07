@@ -94,7 +94,7 @@ namespace upsylon
         //! virtual size
         inline size_t size() const throw() { return size_; }
 
-        //! sort keys by increasing ordere
+        //! sort keys by increasing order
         inline void update()
         {
             items.sort_keys( comparison::increasing<size_t> );

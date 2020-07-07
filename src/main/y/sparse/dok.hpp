@@ -108,6 +108,10 @@ namespace upsylon
         public dok_base
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             Y_DECL_ARGS(T,type);                                           //!< alias
             Y_DECL_ARGS(KEY,key_type);                                     //!< alias
             typedef dok_item<KEY,T>                        item_type;      //!< alias
@@ -115,6 +119,11 @@ namespace upsylon
             typedef set<KEY,item_ptr,KEY_HASHER,ALLOCATOR> self_type;      //!< alias
             typedef typename self_type::iterator           iterator;       //!< alias
             typedef typename self_type::const_iterator     const_iterator; //!< alias
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
 
             //! initalize with empty memory
             inline explicit dok() throw() : self_type(), dok_base()   {  }
