@@ -32,6 +32,16 @@ namespace
         u.ld(x);
         std::cerr << "x=" << x << std::endl;
         std::cerr << "u=" << u << std::endl;
+        Y_CHECK(x.diff2(u)<=0);
+        for(size_t i=1;i<=3;++i)
+        {
+            u[i] = support::get<T>();
+        }
+        x.ld(u);
+        std::cerr << "x=" << x << std::endl;
+        std::cerr << "u=" << u << std::endl;
+        Y_CHECK(x.diff2(u)<=0);
+
     }
 }
 
