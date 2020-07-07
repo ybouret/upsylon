@@ -43,3 +43,18 @@ namespace upsylon {
     }
 
 }
+
+#include <iostream>
+
+namespace upsylon {
+
+    namespace memory {
+
+        std::ostream & operator<<(std::ostream &os, const marker &m)
+        {
+            os << "[@" << m.offset << "+" << m.length << "]";
+            return os;
+        }
+    }
+}
+

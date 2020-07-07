@@ -4,6 +4,7 @@
 #define Y_MEMORY_MARKER_INCLUDED 1
 
 #include "y/parops.hpp"
+#include <iosfwd>
 
 namespace upsylon {
 
@@ -35,6 +36,8 @@ namespace upsylon {
                 parops::split_any(length, offset, size, rank);
                 return *this;
             }
+
+            friend std::ostream & operator<<(std::ostream &, const marker &);
 
         };
 
