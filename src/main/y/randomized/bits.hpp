@@ -57,7 +57,7 @@ namespace upsylon
             T partial(size_t nbits) throw()
             {
                 T ans(0);
-                while(nbits-->0)
+                while(nbits-- > 0)
                 {
                     (ans <<= 1);
                     if(choice())
@@ -87,8 +87,10 @@ namespace upsylon
             template <typename T> inline
             T range(const T a, const T b) throw()
             {
-                const double r = floor( 0.5 + (to<double>() * (double(b)-double(a))) );
-                return a + T(r);
+                const double alpha = to<double>();
+                const double beta  = 1.0 - alpha;
+                const double r     = floor(0.5+alpha*double(a)+beta*double(b));
+                return static_cast<T>(r);
             }
 
             //! random value by rejection

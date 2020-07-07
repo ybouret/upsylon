@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/type/utils.hpp"
+#include "y/mkl/triplet.hpp"
 
 using namespace upsylon;
 
@@ -31,10 +32,24 @@ namespace
         std::cerr << "\t|_average=" << ave << ", stddev=" << sig << std::endl;
     }
 
+    template <typename T> static inline
+    void check_range( randomized::bits &ran )
+    {
+        for(size_t iter=0;iter<10000;++iter)
+        {
+            mkl::triplet<T> t = { ran.full<T>(), 0, ran.full<T>() };
+            cswap_increasing(t.a,t.c); assert(t.a<=t.c);
+            t.b = ran.range(t.a, t.c);
+            //std::cerr << "t=" << t << std::endl;
+            Y_ASSERT(t.is_increasing());
+        }
+    }
+
+
     static inline void check_bits( randomized::bits &ran )
     {
         std::cerr << "Checking Bits..." << std::endl;
-        const size_t ITER=10000;
+        const size_t ITER=16000;
         vector<double> rd(ITER,as_capacity);
         vector<float>  rf(ITER,as_capacity);
         vector<double> sd(ITER,as_capacity);
@@ -52,17 +67,21 @@ namespace
         check(sf);
         vector<uint16_t> arr(5);
         ran.fill(*arr, arr.size() * sizeof(uint16_t) );
-        std::cerr << "arr=" << arr << std::endl;
+        std::cerr << "\tarr=" << arr << std::endl;
+        std::cerr << "\tranges..." << std::endl;
+        check_range<int>(ran);
+        check_range<uint32_t>(ran);
     }
 }
 
 Y_UTEST(bits)
 {
-    Y_CHECK(randomized::Marsaglia::test());
+    const bool Marsaglia_is_OK =randomized::Marsaglia::test();
+    Y_CHECK(Marsaglia_is_OK);
 
-    randomized::cstdbits ran;
-    randomized::ISAAC<4> isaac4;
-    randomized::ISAAC<8> isaac8;
+    randomized::cstdbits         ran;
+    randomized::ISAAC<4>         isaac4;
+    randomized::ISAAC<8>         isaac8;
     randomized::mersenne_twister mt;
 
     check_bits(ran);

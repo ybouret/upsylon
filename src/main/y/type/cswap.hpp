@@ -7,7 +7,7 @@ namespace upsylon
 {
     //! C-style swap
     template <typename T>
-    inline void cswap( T &a, T &b )
+    inline void cswap(T &a, T &b)
     {
         const T tmp(a);
         a=b;
@@ -16,7 +16,7 @@ namespace upsylon
 
     //! C-style forced swap, DANGEROUS
     template <typename T>
-    inline void _cswap( const T &a, const T &b )
+    inline void _cswap(const T &a, const T &b)
     {
         const T tmp(a);
         (T&)a=b;
@@ -45,6 +45,20 @@ namespace upsylon
         {
             cswap(*(p++), *(--q));
         }
+    }
+
+    //! assert increasing
+    template <typename T>
+    void cswap_increasing(T &a, T &b)
+    {
+        if(b<a) cswap(a,b); assert(a<=b);
+    }
+
+    //! assert decreasing
+    template <typename T>
+    void cwap_decreasing(T &a, T &b)
+    {
+        if(a<b) cswap(a,b); assert(b<=a);
     }
 
 }
