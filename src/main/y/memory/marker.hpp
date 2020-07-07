@@ -37,6 +37,7 @@ namespace upsylon {
                 return *this;
             }
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const marker &);
 
         };

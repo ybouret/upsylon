@@ -163,6 +163,22 @@ wlen(0)
             return target[index];
         }
 
+        //! C-style copy current content
+        inline void apply(mutable_type *dest) const throw()
+        {
+            assert(dest);
+            for(size_t i=1;i<=dims;++i)
+            {
+                *(dest++) = target[i];
+            }
+        }
+
+        //! C++-style copy current content
+        inline void apply( addressable<T> &dest ) const throw()
+        {
+            for(size_t i=dims;i>0;--i) dest[i] = target[i];
+        }
+
         //----------------------------------------------------------------------
         //
         // specific methods
