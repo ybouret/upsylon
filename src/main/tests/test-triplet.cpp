@@ -20,6 +20,18 @@ namespace
         y.co_sort(x);
         std::cerr << "y_co_srt=" << y << std::endl;
         std::cerr << "x_co_srt=" << x << std::endl;
+
+        for(size_t i=1;i<=3;++i)
+        {
+            std::cerr << "x[" << i << "]=" << x[i] << std::endl;
+        }
+
+        std::cerr << "size=" << x.size() << std::endl;
+
+        triplet<T> u;
+        u.ld(x);
+        std::cerr << "x=" << x << std::endl;
+        std::cerr << "u=" << u << std::endl;
     }
 }
 
