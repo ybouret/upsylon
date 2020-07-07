@@ -185,6 +185,7 @@ Y_UTEST(quark3)
     doMOD2<mpz>   ( NULL  );
     doMOD2<mpq>   ( NULL, 8 );
 
+    doMMUL<double,double,double>( &loop );
     doMMUL<float,float,float>( &loop );
     doMMUL<double,int,int>   ( &loop );
     doMMUL<mpz,int,short>    ( NULL  );
