@@ -11,11 +11,16 @@ namespace upsylon
 
     namespace sparse
     {
+        //______________________________________________________________________
+        //
+        //
         //! info for a sparse array
+        //
+        //______________________________________________________________________
         class array_info
         {
         public:
-            virtual ~array_info() throw(); //!< cleanup
+            virtual ~array_info() throw();                 //!< cleanup
 
         protected:
             explicit array_info(const size_t n);           //!< initialize virtual size
@@ -28,8 +33,12 @@ namespace upsylon
         };
     }
 
-
+    //__________________________________________________________________________
+    //
+    //
     //! sparse array implementation
+    //
+    //__________________________________________________________________________
     template <
     typename T,
     typename ALLOCATOR  = memory::global
@@ -37,26 +46,35 @@ namespace upsylon
     class sparse_array : public sparse::array_info, public const_field<T>
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         Y_DECL_ARGS(T,type);                                               //!< aliases
         typedef sparse::dok<size_t,T,key_dumper,ALLOCATOR> dok_type;       //!< alias
         typedef typename dok_type::iterator                iterator;       //!< alias
         typedef typename dok_type::const_iterator          const_iterator; //!< alias
         typedef typename dok_type::item_type               item_type;      //!< alias
         typedef typename dok_type::item_ptr                item_ptr;       //!< alias
-        
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
         //! destructor
         inline virtual ~sparse_array() throw(){}
 
 
         //! initialize with a virtual size
         inline explicit sparse_array(const size_t n=0) :
-        sparse::array_info(n),
-        const_field<T>(),
-        items(),
-        core(items)
+        sparse::array_info(n), const_field<T>(), items(), core(items)
         {
         }
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
         //! set virtual size
         void set_size( const size_t n)
         {
@@ -159,7 +177,7 @@ namespace upsylon
         inline const_iterator end()   const throw() { return items.end();   } //!< forward iterator end, const
 
         //! no throw swap
-        inline void swap_with( sparse_array &other ) throw()
+        inline void swap_with(sparse_array &other) throw()
         {
             if( this != &other)
             {

@@ -10,30 +10,43 @@ namespace upsylon
 
     namespace sparse
     {
-        //! dictionary of key item
+        //______________________________________________________________________
+        //
+        //
+        //! dictionary of key/item
+        //
+        //______________________________________________________________________
         template <typename KEY,
         typename T>
         class dok_item : public counted_object
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             Y_DECL_ARGS(T,type);                    //!< alias
             Y_DECL_ARGS(KEY,key_type);              //!< alias
             typedef intr_ptr<KEY,dok_item> pointer; //!< alias
 
-            const_key_type __key; //!< unique key
-            type           value; //!< associated value
 
-            inline type       & operator*() throw()       { return value; } //!< content
-            inline const_type & operator*() const throw() { return value; } //!< content, const
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             //! initialize
             inline explicit dok_item(param_key_type k, param_type v) :
             __key(k), value(v) { }
 
-            //! desctructor
+            //! destructor
             inline virtual ~dok_item() throw() {}
 
-            //! key() API
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            //! key() for pointer/table
             inline const_key_type & key() const throw() { return __key; }
 
             //! display
@@ -43,11 +56,29 @@ namespace upsylon
                 return os;
             }
 
+            //! content
+            inline type       & operator*() throw()       { return value; }
+
+            //! content, const
+            inline const_type & operator*() const throw() { return value; }
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const_key_type __key; //!< unique key
+            type           value; //!< associated value
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dok_item);
         };
 
+        //______________________________________________________________________
+        //
+        //
         //! base class for dictionary of keys
+        //
+        //______________________________________________________________________
         class dok_base
         {
         public:
@@ -61,8 +92,12 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(dok_base);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
         //! dictionary of keys = set of items
+        //
+        //______________________________________________________________________
         template <
         typename KEY,
         typename T,
@@ -98,7 +133,7 @@ namespace upsylon
             }
 
             //! hard copy
-            inline explicit dok( const dok &other) : collection(), self_type(other.size(),as_capacity), dok_base()
+            inline explicit dok(const dok &other) : collection(), self_type(other.size(),as_capacity), dok_base()
             {
                 for( const_iterator i = other.begin(); i != other.end(); ++i )
                 {

@@ -21,14 +21,23 @@ namespace upsylon
     class hash_container : public BASE_TYPE
     {
     public:
-        Y_DECL_ARGS(T,type);       //!< alias
-        Y_DECL_ARGS(KEY,key_type); //!< alias
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        Y_DECL_ARGS(T,type);                                 //!< aliases
+        Y_DECL_ARGS(KEY,key_type);                           //!< aliases
         typedef core::hash_table<NODE,ALLOCATOR> table_type; //!< internal table
         typedef typename table_type::slot_type   slot_type;  //!< slot of data
         typedef typename table_type::meta_node   meta_node;  //!< meta node
         typedef typename table_type::meta_list   meta_list;  //!< meta node
         typedef BASE_TYPE                        base_type;  //!< alias
-        
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+
         //! destructor
         inline virtual ~hash_container() throw() {}
 
@@ -37,6 +46,22 @@ namespace upsylon
 
         //! constructor with capacity
         inline explicit hash_container(const size_t n, const as_capacity_t &) :  base_type(), table(n), hash() {}
+
+        //! copy
+        inline hash_container(const hash_container &other) : collection(), base_type(), table(other.table), hash() {}
+
+        //! assign by duplication
+        inline hash_container & operator=( const hash_container &other )
+        {
+            table_type tmp( other.table );
+            table.swap_with(tmp);
+            return *this;
+        }
+
+        //______________________________________________________________________
+        //
+        // container interface
+        //______________________________________________________________________
 
         //! container interface: size
         inline virtual size_t size() const throw() { return table.chain.size; }
@@ -58,23 +83,18 @@ namespace upsylon
             tmp.swap_with(table);
         }
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
         //! swap tables, no throw
-        inline void swap_table_with( hash_container &other ) throw()
+        inline void swap_table_with(hash_container &other) throw()
         {
             table.swap_with(other.table);
         }
 
-        //! copy
-        inline hash_container(const hash_container &other) : collection(), base_type(), table(other.table), hash() {}
-
-        //! assign by duplication
-        inline hash_container & operator=( const hash_container &other )
-        {
-            table_type tmp( other.table );
-            table.swap_with(tmp);
-            return *this;
-        }
-
+        
         //! search
         inline virtual type *search( param_key_type k ) throw()
         {
