@@ -144,6 +144,7 @@ namespace {
                                 check("mmul_rtrn",A,AA);
                             }
 
+#if 0
                             support::fill2D(A);
                             AA = A; check("=",A,AA);
                             quark::mmul_add_rtrn(A,B,C);
@@ -153,7 +154,6 @@ namespace {
                                 check("mmul_add_rtrn",A,AA);
                             }
 
-#if 0
                             support::fill2D(A);
                             AA = A; check("=",A,AA);
                             quark::mmul_sub_rtrn(A,B,C);
