@@ -23,4 +23,5 @@ Y_QUARK_TASK_EXEC(loop)
 
 //! parallel code helper for matrices : OFFSET to row/col
 #define Y_QUARK_MMUL_RC(OFFSET) \
-size_t r=0,c=0; A.get_item(OFFSET, r, c)
+size_t r=0,c=0;                 \
+A.get_item(OFFSET,r,c)
