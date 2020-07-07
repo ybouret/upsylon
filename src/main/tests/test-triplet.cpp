@@ -51,6 +51,7 @@ namespace
 Y_UTEST(triplet)
 {
     do_test<int>();
+    do_test<int64_t>();
     do_test<float>();
     do_test<double>();
 
