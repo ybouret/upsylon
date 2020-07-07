@@ -2,7 +2,6 @@
 #include "y/counting/permuter.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
-#include "y/associative/suffix-store.hpp"
 
 using namespace upsylon;
 
