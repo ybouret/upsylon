@@ -7,6 +7,7 @@
 #include "y/spade/fields.hpp"
 #include "y/ios/conveyors.hpp"
 #include "y/ios/ovstream.hpp"
+#include "y/ios/imstream.hpp"
 
 namespace upsylon {
     
@@ -22,7 +23,7 @@ namespace upsylon {
         public:
             explicit IOBlocks(const size_t levels); //!< create two blocks per level
             virtual ~IOBlocks() throw();            //!< cleanup
-        
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(IOBlocks);
         };
@@ -75,6 +76,7 @@ namespace upsylon {
             void localSwap(ONE_OR_MORE_FIELDS    &fields,
                            const Fragment<COORD> &fragment) const
             {
+                //std::cerr << "#localSwaps=" <<fragment.autoExchange.size() << std::endl;
                 size_t n = fragment.autoExchange.size();
                 while(n-- > 0 )
                 {
@@ -115,7 +117,7 @@ namespace upsylon {
             
             //! prepare block from style and chunk
             void asyncMake(IOBlock &block, const Ghost &ghost) const;
-            
+
             //! save ghost of field into block
             void asyncSave(IOBlock             &block,
                            const Field         &field,
@@ -161,12 +163,13 @@ namespace upsylon {
             // helpers
             //
             //------------------------------------------------------------------
+
             //! save sub-layout 'bulk' of field into 'block', using 'loop'
             template <typename FIELD>
-            inline void bulkSave(IOBlock                          &block,
-                                 const FIELD                      &field,
-                                 const typename FIELD::LayoutType &bulk,
-                                 typename       FIELD::Loop       &loop)
+            inline void asyncBulkSave(IOBlock                          &block,
+                                      const FIELD                      &field,
+                                      const typename FIELD::LayoutType &bulk,
+                                      typename       FIELD::Loop       &loop)
             {
                 assert(field.contains(bulk));
                 assert(field.io);
@@ -179,10 +182,10 @@ namespace upsylon {
 
             //! load sub-layout 'bulk' of field from 'block', using 'loop'
             template <typename FIELD>
-            inline void bulkLoad(FIELD                            &field,
-                                 ios::istream                     &source,
-                                 const typename FIELD::LayoutType &bulk,
-                                 typename       FIELD::Loop       &loop)
+            inline void asyncBulkLoad(FIELD                            &field,
+                                      ios::istream                     &source,
+                                      const typename FIELD::LayoutType &bulk,
+                                      typename       FIELD::Loop       &loop)
             {
                 assert(field.contains(bulk));
                 assert(field.io);
@@ -191,6 +194,17 @@ namespace upsylon {
                 {
                     io.load(&field[*loop],source);
                 }
+            }
+
+            //! load sub-layout 'bulk' of field from 'block', using 'loop'
+            template <typename FIELD>
+            inline void asyncBulkLoad(FIELD                            &field,
+                                      const IOBlock                    &block,
+                                      const typename FIELD::LayoutType &bulk,
+                                      typename       FIELD::Loop       &loop)
+            {
+                ios::imstream source(block);
+                asyncBulkLoad(field,source,bulk,loop);
             }
 
 

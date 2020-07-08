@@ -34,7 +34,9 @@ namespace {
         fullLayout.findMappings(mappings,cores);
 
         iField iFull("iFull",fullLayout);
+        sField sFull("sFull",fullLayout);
         transfer.setup(iFull);
+        transfer.setup(sFull);
 
         std::cerr << "mappings=" << mappings << std::endl;
         for(size_t i=1;i<=mappings.size();++i)
@@ -80,9 +82,20 @@ namespace {
                             sFieldHandle F    = new sField(name,partition[rank].outer);
                             sFields.push(F);
                             transfer.setup(*F);
+                            std::cerr << name  << ":" << *F << "/" << fullLayout << std::endl;
+                            //Ops::Ld(*F,*F,name);
+                            for( loop.reset(F->lower,F->upper); loop.good(); loop.next() )
+                            {
+                                Y_ASSERT(F->has(*loop));
+                                //string &tmp = (*F)[ *loop ]; tmp = name;
+                            }
                         }
-
+                        std::cerr << "Loaded..." << std::endl;
                     }
+
+                    Y_ASSERT(iFields.size()==size);
+                    Y_ASSERT(sFields.size()==size);
+
 
                     // transfer ghosts
                     for(size_t rank=0;rank<size;++rank)
@@ -100,7 +113,7 @@ namespace {
 
 
                         IOBlock block;
-
+                        std::cerr << "#numAsyncTwoWays=" << L.numAsyncTwoWays << std::endl;
                         for(size_t i=0;i<L.numAsyncTwoWays;++i)
                         {
                             {
@@ -148,25 +161,34 @@ namespace {
                         }
                     }
 
-                    // tranfer bulk
-                    typename iField::Loop loop;
-                    for(size_t rank=0;rank<size;++rank)
+                    if(false)
                     {
-                        iField                &iF = *iFields[rank];
-                        sField                &sF = *sFields[rank];
-                        fields.free();
-                        fields << &iF;
-                        fields << &sF;
-
-                        const Fragment<COORD> &frag  = partition[rank];
-                        const Layout<COORD>   &bulk  = frag.inner;
+                        // tranfer bulk
+                        typename iField::Loop loop;
+                        for(size_t rank=0;rank<size;++rank)
                         {
-                            IOBlock block;
-                            transfer.bulkSave(block,iF,bulk,loop);
-                            ios::imstream source(block);
-                            transfer.bulkLoad(iFull,source,bulk,loop);
+                            iField                &iF = *iFields[rank];
+                            sField                &sF = *sFields[rank];
+                            fields.free();
+                            fields << &iF;
+                            fields << &sF;
+
+                            const Fragment<COORD> &frag  = partition[rank];
+                            const Layout<COORD>   &bulk  = frag.inner;
+                            {
+                                IOBlock block;
+                                transfer.asyncSetup(iF);
+                                transfer.asyncBulkSave(block,iF,bulk,loop);
+                                transfer.asyncBulkLoad(iFull,block,bulk,loop);
+                            }
+
+                            {
+                                IOBlock block;
+                                transfer.asyncSetup(sF);
+                                transfer.asyncBulkSave(block,sF,bulk,loop);
+                                transfer.asyncBulkLoad(sFull,block,bulk,loop);
+                            }
                         }
-                        
                     }
                 }
 
@@ -194,7 +216,7 @@ Y_UTEST(transfer)
 
     doTest<Coord1D>(layout,ghosts,cores);
     doTest<Coord2D>(layout,ghosts,cores);
-    doTest<Coord3D>(layout,ghosts,cores);
+    //doTest<Coord3D>(layout,ghosts,cores);
 
 }
 Y_UTEST_DONE()

@@ -1,7 +1,6 @@
 #include "y/spade/network/transfer.hpp"
 #include "y/type/spec.hpp"
 #include "y/exception.hpp"
-#include "y/ios/imstream.hpp"
 
 namespace upsylon {
     
