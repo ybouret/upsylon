@@ -46,60 +46,58 @@ Task task = {
 #define Y_QUARK_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::mutable_type,typename SOURCE::mutable_type>::_(VALUE))
 
 //! binary methods
-#define Y_QUARK_IMPL2(METHOD) \
-template <typename TARGET, typename LHS, typename RHS> static inline          \
-void METHOD( TARGET &tgt, LHS &lhs, RHS &rhs ) {                              \
-assert(tgt.size()<=lhs.size());                                               \
-assert(tgt.size()<=rhs.size());                                               \
-Y_QUARK_LOOP_SEQ(tgt.size(),METHOD);                                          \
-}                                                                             \
-template <typename TARGET, typename LHS, typename RHS> static inline          \
-void METHOD( TARGET &tgt, LHS &lhs, RHS &rhs, concurrent::for_each &loop ) {  \
-assert(tgt.size()<=lhs.size());                                               \
-assert(tgt.size()<=rhs.size());                                               \
-Y_QUARK_TASK_DECL()                                                           \
-TARGET *tgt;                                                                  \
-LHS    *lhs;                                                                  \
-RHS    *rhs;                                                                  \
-Y_QUARK_TASK_IMPL()                                                           \
-TARGET &tgt   = *task.tgt;                                                    \
-LHS    &lhs   = *task.lhs;                                                    \
-RHS    &rhs   = *task.rhs;                                                    \
-Y_QUARK_LOOP_PAR(tgt.size(),METHOD);                                          \
-Y_QUARK_TASK_DATA()                                                           \
-&tgt, &lhs, &rhs                                                              \
-Y_QUARK_TASK_EXEC(loop);                                                      \
-}
+#define Y_QUARK_IMPL2(METHOD)                                                     \
+/**/template <typename TARGET, typename LHS, typename RHS> static inline          \
+/**/void METHOD( TARGET &tgt, LHS &lhs, RHS &rhs ) {                              \
+/**/    assert(tgt.size()<=lhs.size());                                           \
+/**/    assert(tgt.size()<=rhs.size());                                           \
+/**/    Y_QUARK_LOOP_SEQ(tgt.size(),METHOD);                                      \
+/**/}                                                                             \
+/**/template <typename TARGET, typename LHS, typename RHS> static inline          \
+/**/void METHOD( TARGET &tgt, LHS &lhs, RHS &rhs, concurrent::for_each &loop ) {  \
+/**/    assert(tgt.size()<=lhs.size());                                           \
+/**/    assert(tgt.size()<=rhs.size());                                           \
+/**/    Y_QUARK_TASK_DECL()                                                       \
+/**/        TARGET *tgt;                                                          \
+/**/        LHS    *lhs;                                                          \
+/**/        RHS    *rhs;                                                          \
+/**/    Y_QUARK_TASK_IMPL()                                                       \
+/**/        TARGET &tgt   = *task.tgt;                                            \
+/**/        LHS    &lhs   = *task.lhs;                                            \
+/**/        RHS    &rhs   = *task.rhs;                                            \
+/**/    Y_QUARK_LOOP_PAR(tgt.size(),METHOD);                                      \
+/**/    Y_QUARK_TASK_DATA()                                                       \
+/**/        &tgt, &lhs, &rhs                                                      \
+/**/    Y_QUARK_TASK_EXEC(loop);                                                  \
+/**/}
 
 
 //! ternary methods
 #define Y_QUARK_IMPL3(METHOD) \
-template <typename TARGET, typename LHS, typename RHS> static inline        \
-void METHOD( TARGET &tgt,                                                   \
-LHS &lhs, typename TARGET::param_type x, RHS &rhs ) {                       \
-assert(tgt.size()<=lhs.size());                                             \
-assert(tgt.size()<=rhs.size());                                             \
-Y_QUARK_LOOP(tgt.size(),METHOD,1);                                          \
-}                                                                           \
-template <typename TARGET, typename LHS, typename RHS> static inline        \
-void METHOD( TARGET &tgt, LHS &lhs, typename TARGET::param_type x, RHS &rhs,\
-concurrent::for_each &loop ) {                                              \
-assert(tgt.size()<=lhs.size());                                             \
-assert(tgt.size()<=rhs.size());                                             \
-Y_QUARK_TASK_DECL()                                                         \
-TARGET *tgt;                                                                \
-LHS    *lhs;                                                                \
-typename TARGET::const_type *x;                                             \
-RHS    *rhs;                                                                \
-Y_QUARK_TASK_IMPL()                                                         \
-TARGET                      & tgt = *task.tgt;                              \
-LHS                         & lhs = *task.lhs;                              \
-typename TARGET::const_type   x   = *task.x;                                \
-RHS                         & rhs = *task.rhs;                              \
-Y_QUARK_LOOP_PAR(tgt.size(),METHOD);                                        \
-Y_QUARK_TASK_DATA()                                                         \
-&tgt, &lhs, &x, &rhs                                                        \
-Y_QUARK_TASK_EXEC(loop);                                                    \
-}
-
-//{ Y_LOCK(access);  std::cerr << "@" << ctx.size << "." << ctx.rank << ":\t" << binary<typename TARGET::mutable_type>(x) << " :" << offset << "+" << length << std::endl;  }
+/**/template <typename TARGET, typename LHS, typename RHS> static inline        \
+/**/void METHOD(TARGET &tgt,                                                    \
+/**/LHS &lhs, typename TARGET::param_type x, RHS &rhs ) {                       \
+/**/    assert(tgt.size()<=lhs.size());                                         \
+/**/    assert(tgt.size()<=rhs.size());                                         \
+/**/    Y_QUARK_LOOP(tgt.size(),METHOD,1);                                      \
+/**/}                                                                           \
+/**/template <typename TARGET, typename LHS, typename RHS> static inline        \
+/**/void METHOD( TARGET &tgt, LHS &lhs, typename TARGET::param_type x, RHS &rhs,\
+/**/concurrent::for_each &loop ) {                                              \
+/**/    assert(tgt.size()<=lhs.size());                                         \
+/**/    assert(tgt.size()<=rhs.size());                                         \
+/**/    Y_QUARK_TASK_DECL()                                                     \
+/**/        TARGET                      *tgt;                                   \
+/**/        LHS                         *lhs;                                   \
+/**/        typename TARGET::const_type *x;                                     \
+/**/        RHS                         *rhs;                                   \
+/**/    Y_QUARK_TASK_IMPL()                                                     \
+/**/        TARGET                      & tgt = *task.tgt;                      \
+/**/        LHS                         & lhs = *task.lhs;                      \
+/**/        typename TARGET::const_type   x   = *task.x;                        \
+/**/        RHS                         & rhs = *task.rhs;                      \
+/**/    Y_QUARK_LOOP_PAR(tgt.size(),METHOD);                                    \
+/**/    Y_QUARK_TASK_DATA()                                                     \
+/**/        &tgt, &lhs, &x, &rhs                                                \
+/**/    Y_QUARK_TASK_EXEC(loop);                                                \
+/**/}
