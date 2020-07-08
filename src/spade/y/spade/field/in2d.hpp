@@ -36,7 +36,8 @@ namespace upsylon {
             typedef            Layout1D                RowLayout;   //!< alias
             typedef            Field1D<T>              Row;         //!< alias
             typedef            arc_ptr<Field2D>        Handle;      //!< alias
-            
+            typedef typename   LayoutType::Loop        Loop;        //!< alias
+
             //------------------------------------------------------------------
             //
             // C++

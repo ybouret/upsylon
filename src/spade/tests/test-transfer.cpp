@@ -11,7 +11,7 @@ using namespace upsylon;
 using namespace Spade;
 
 namespace {
- 
+
     template <typename COORD> static inline
     void doTest( const string &layout, const size_t ghosts, const size_t cores )
     {
@@ -24,7 +24,7 @@ namespace {
         typedef typename FieldFor<COORD>::template Of<string>::Type sField;
         typedef typename sField::Handle                             sFieldHandle;
         
-    
+
         
         const COORD   lower = Coord::Ones<COORD>();
         const COORD   upper = Coord::Parse<COORD>(layout);
@@ -32,7 +32,10 @@ namespace {
         const Layout<COORD> fullLayout(lower,upper);
         vector<COORD>       mappings;
         fullLayout.findMappings(mappings,cores);
-        
+
+        iField iFull("iFull",fullLayout);
+        transfer.setup(iFull);
+
         std::cerr << "mappings=" << mappings << std::endl;
         for(size_t i=1;i<=mappings.size();++i)
         {
@@ -48,106 +51,130 @@ namespace {
                                                     loop.value,
                                                     ng);
                 const size_t        size = partition.size;
-                slots<iFieldHandle> iFields(size);
-                slots<sFieldHandle> sFields(size);
-                
                 vector<_Field> fields;
-                
-                
-                // filling
-                for(size_t rank=0;rank<size;++rank)
-                {
-                    fields.free();
-                    {
-                        const string name = vformat("iField#%u",unsigned(rank));
-                        iFieldHandle F    = new iField(name,partition[rank].outer);
-                        iFields.push(F);
-                        Ops::Ld(*F,*F,int(rank));
-                        transfer.setup(*F);
-                        
-                    }
-                    
-                    {
-                        const string name = vformat("sField#%u",unsigned(rank));
-                        sFieldHandle F    = new sField(name,partition[rank].outer);
-                        sFields.push(F);
-                        transfer.setup(*F);
-                        
-                    }
-                    
-                }
-                
-                // transfer
-                for(size_t rank=0;rank<size;++rank)
-                {
-                    iField                &iF = *iFields[rank];
-                    sField                &sF = *sFields[rank];
-                    fields.free();
-                    fields << &iF;
-                    fields << &sF;
-                    
-                    const Fragment<COORD> &L  = partition[rank];
-                    transfer.localSwap(iF,L);
-                    transfer.localSwap(sF,L);
-                    transfer.localSwap(fields,L);
 
-                    
-                    IOBlock block;
-                    
-                    for(size_t i=0;i<L.numAsyncTwoWays;++i)
+                //--------------------------------------------------------------
+                // using ghosts
+                //--------------------------------------------------------------
+                {
+                    slots<iFieldHandle> iFields(size);
+                    slots<sFieldHandle> sFields(size);
+
+
+
+                    // filling
+                    for(size_t rank=0;rank<size;++rank)
                     {
+                        fields.free();
                         {
-                            transfer.asyncSetup(iF);
-                            Y_ASSERT(transfer.style==comms::computed_block_size);
-                            const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
-                            transfer.asyncSave(block,iF,xch.forward->innerGhost);
-                            transfer.asyncSave(block,iF,xch.reverse->innerGhost);
-                            {
-                                ios::imstream source(block);
-                                transfer.asyncLoad(iF,source,xch.reverse->outerGhost);
-                                transfer.asyncLoad(iF,source,xch.forward->outerGhost);
-                            }
-                            
+                            const string name = vformat("iField#%u",unsigned(rank));
+                            iFieldHandle F    = new iField(name,partition[rank].outer);
+                            iFields.push(F);
+                            Ops::Ld(*F,*F,int(rank));
+                            transfer.setup(*F);
+
                         }
-                        
-                        
-                        
+
                         {
-                            transfer.asyncSetup(sF);
-                            Y_ASSERT(transfer.style==comms::flexible_block_size);
-                            const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
-                            transfer.asyncSave(block,sF,xch.forward->innerGhost);
-                            transfer.asyncSave(block,sF,xch.reverse->innerGhost);
-                            {
-                                ios::imstream source(block);
-                                transfer.asyncLoad(sF,source,xch.reverse->outerGhost);
-                                transfer.asyncLoad(sF,source,xch.forward->outerGhost);
-                            }
+                            const string name = vformat("sField#%u",unsigned(rank));
+                            sFieldHandle F    = new sField(name,partition[rank].outer);
+                            sFields.push(F);
+                            transfer.setup(*F);
                         }
-                        
+
+                    }
+
+                    // transfer ghosts
+                    for(size_t rank=0;rank<size;++rank)
+                    {
+                        iField                &iF = *iFields[rank];
+                        sField                &sF = *sFields[rank];
+                        fields.free();
+                        fields << &iF;
+                        fields << &sF;
+
+                        const Fragment<COORD> &L  = partition[rank];
+                        transfer.localSwap(iF,L);
+                        transfer.localSwap(sF,L);
+                        transfer.localSwap(fields,L);
+
+
+                        IOBlock block;
+
+                        for(size_t i=0;i<L.numAsyncTwoWays;++i)
                         {
-                            transfer.asyncSetup(fields);
-                            Y_ASSERT(transfer.style==comms::flexible_block_size);
-                            const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
-                            transfer.asyncSave(block, fields, xch.forward->innerGhost );
-                            transfer.asyncSave(block, fields, xch.reverse->innerGhost );
                             {
-                                ios::imstream source(block);
-                                transfer.asyncLoad(fields,source,xch.reverse->outerGhost);
-                                transfer.asyncLoad(fields,source,xch.forward->outerGhost);
+                                transfer.asyncSetup(iF);
+                                Y_ASSERT(transfer.style==comms::computed_block_size);
+                                const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                                transfer.asyncSave(block,iF,xch.forward->innerGhost);
+                                transfer.asyncSave(block,iF,xch.reverse->innerGhost);
+                                {
+                                    ios::imstream source(block);
+                                    transfer.asyncLoad(iF,source,xch.reverse->outerGhost);
+                                    transfer.asyncLoad(iF,source,xch.forward->outerGhost);
+                                }
+
                             }
+
+
+
+                            {
+                                transfer.asyncSetup(sF);
+                                Y_ASSERT(transfer.style==comms::flexible_block_size);
+                                const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                                transfer.asyncSave(block,sF,xch.forward->innerGhost);
+                                transfer.asyncSave(block,sF,xch.reverse->innerGhost);
+                                {
+                                    ios::imstream source(block);
+                                    transfer.asyncLoad(sF,source,xch.reverse->outerGhost);
+                                    transfer.asyncLoad(sF,source,xch.forward->outerGhost);
+                                }
+                            }
+
+                            {
+                                transfer.asyncSetup(fields);
+                                Y_ASSERT(transfer.style==comms::flexible_block_size);
+                                const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
+                                transfer.asyncSave(block, fields, xch.forward->innerGhost );
+                                transfer.asyncSave(block, fields, xch.reverse->innerGhost );
+                                {
+                                    ios::imstream source(block);
+                                    transfer.asyncLoad(fields,source,xch.reverse->outerGhost);
+                                    transfer.asyncLoad(fields,source,xch.forward->outerGhost);
+                                }
+                            }
+
                         }
-                        
+                    }
+
+                    // tranfer bulk
+                    typename iField::Loop loop;
+                    for(size_t rank=0;rank<size;++rank)
+                    {
+                        iField                &iF = *iFields[rank];
+                        sField                &sF = *sFields[rank];
+                        fields.free();
+                        fields << &iF;
+                        fields << &sF;
+
+                        const Fragment<COORD> &frag  = partition[rank];
+                        const Layout<COORD>   &bulk  = frag.inner;
+                        IOBlock block;
+                        transfer.bulkSave(block,iF,bulk,loop);
+                        ios::imstream source(block);
+                        transfer.bulkLoad(iFull,source,bulk,loop);
                     }
                 }
-                
-                
-                
+
+
             }
             
         }
         
     }
+
+
     
 }
 
@@ -156,7 +183,7 @@ Y_UTEST(transfer)
 {
     string layout     = "10:10:10";
     size_t ghosts     = 1;
-    size_t cores      = 1;
+    size_t cores      = 2;
     
     if(argc>1) layout = argv[1];
     if(argc>2) ghosts = string_convert::to<size_t>(argv[2],"ghosts");
@@ -165,6 +192,7 @@ Y_UTEST(transfer)
     doTest<Coord1D>(layout,ghosts,cores);
     doTest<Coord2D>(layout,ghosts,cores);
     doTest<Coord3D>(layout,ghosts,cores);
+
 }
 Y_UTEST_DONE()
 

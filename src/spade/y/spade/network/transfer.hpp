@@ -44,7 +44,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             explicit Transfer(const comms::infrastructure where); //!< initialize
-            virtual ~Transfer() throw();                           //!< cleanup
+            virtual ~Transfer() throw();                          //!< cleanup
             
             //------------------------------------------------------------------
             //
@@ -151,12 +151,50 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            
             const comms::infrastructure infra; //!< global
             const comms::shipping_style style; //!< local, based on types
             const size_t                chunk; //!< bytes per item
             ios::conveyors             &IO;    //!< shared database
-            
+
+            //------------------------------------------------------------------
+            //
+            // helpers
+            //
+            //------------------------------------------------------------------
+            //! save sub-layout 'bulk' of field into 'block', using 'loop'
+            template <typename FIELD>
+            inline void bulkSave(IOBlock                          &block,
+                                 const FIELD                      &field,
+                                 const typename FIELD::LayoutType &bulk,
+                                 typename       FIELD::Loop       &loop)
+            {
+                assert(field.contains(bulk));
+                assert(field.io);
+                const ios::conveyor &io = *field.io;
+                for(loop.reset(bulk.lower,bulk.upper);loop.good();loop.next())
+                {
+                    io.save(block,&field[*loop]);
+                }
+            }
+
+            //! load sub-layout 'bulk' of field from 'block', using 'loop'
+            template <typename FIELD>
+            inline void bulkLoad(FIELD                            &field,
+                                 ios::istream                     &source,
+                                 const typename FIELD::LayoutType &bulk,
+                                 typename       FIELD::Loop       &loop)
+            {
+                assert(field.contains(bulk));
+                assert(field.io);
+                const ios::conveyor &io = *field.io;
+                for(loop.reset(bulk.lower,bulk.upper);loop.good();loop.next())
+                {
+                    io.load(&field[*loop],source);
+                }
+            }
+
+
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Transfer);

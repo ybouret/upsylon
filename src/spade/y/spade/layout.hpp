@@ -30,9 +30,23 @@ namespace upsylon {
             //------------------------------------------------------------------
             typedef typename type_traits<COORD>::mutable_type   coord;         //!< alias
             typedef const coord                                 const_coord;   //!< alias
-            typedef mloop<Coord1D,coord>                        Loop;          //!< loop over sub layout
+            typedef mloop<Coord1D,coord>                        LoopType;      //!< loop over sub layout
             static const unsigned Dimensions = Coord::Get<COORD>::Dimensions;  //!< Dimension(s)
-            
+
+            //! built-in loop
+            class Loop : public LoopType
+            {
+            public:
+                //! cleanup
+                inline virtual ~Loop() throw() {}
+                //! default constructor
+                inline explicit Loop() : LoopType( Coord::Zero<coord>(), Coord::Zero<coord>() ) {}
+                //! forwarding constructor
+                inline explicit Loop(const_coord &lo, const coord &hi) : LoopType(lo,hi) {}
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Loop);
+            };
+
             //------------------------------------------------------------------
             //
             // C++
