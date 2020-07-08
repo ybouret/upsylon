@@ -160,10 +160,13 @@ namespace {
 
                         const Fragment<COORD> &frag  = partition[rank];
                         const Layout<COORD>   &bulk  = frag.inner;
-                        IOBlock block;
-                        transfer.bulkSave(block,iF,bulk,loop);
-                        ios::imstream source(block);
-                        transfer.bulkLoad(iFull,source,bulk,loop);
+                        {
+                            IOBlock block;
+                            transfer.bulkSave(block,iF,bulk,loop);
+                            ios::imstream source(block);
+                            transfer.bulkLoad(iFull,source,bulk,loop);
+                        }
+                        
                     }
                 }
 
