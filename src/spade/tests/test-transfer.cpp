@@ -80,22 +80,20 @@ namespace {
                         
                         sFields.push(F);
                         transfer.setup(f);
-                        typename Layout<COORD>::Loop it(f.lower,f.upper);
-                        std::cerr << "\t" << name  << ":" << f << "/" << fullLayout << std::endl;
-                        //Ops::Ld(*F,*F,name);
-                        for( it.boot(); it.good(); it.next() )
-                        {
-                            Y_ASSERT(F->has(*it));
-                            //string &tmp = (*F)[ *loop ]; tmp = name;
-                        }
+                        std::cerr << "\t" << name  << ":" << f << std::endl;
+                        Ops::Ld(f,f,name);
+                        
                     }
                 }
                 
                 Y_ASSERT(iFields.size()==size);
                 Y_ASSERT(sFields.size()==size);
-                continue;
                 
+                //--------------------------------------------------------------
                 // transfer ghosts
+                //--------------------------------------------------------------
+                std::cerr << "\ttransfer ghosts" << std::endl;
+                IOBlock block;
                 for(size_t rank=0;rank<size;++rank)
                 {
                     iField                &iF = *iFields[rank];
@@ -110,10 +108,11 @@ namespace {
                     transfer.localSwap(fields,L);
                     
                     
-                    IOBlock block;
                     for(size_t i=0;i<L.asyncTwoWays.size();++i)
                     {
+                        
                         {
+                            block.free();
                             transfer.asyncSetup(iF);
                             Y_ASSERT(transfer.style==comms::computed_block_size);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
@@ -127,9 +126,8 @@ namespace {
                             
                         }
                         
-                        
-                        
                         {
+                            block.free();
                             transfer.asyncSetup(sF);
                             Y_ASSERT(transfer.style==comms::flexible_block_size);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
@@ -143,6 +141,7 @@ namespace {
                         }
                         
                         {
+                            block.free();
                             transfer.asyncSetup(fields);
                             Y_ASSERT(transfer.style==comms::flexible_block_size);
                             const AsyncTwoWaysSwaps<COORD> &xch = L.asyncTwoWays[i];
@@ -158,10 +157,10 @@ namespace {
                     }
                 }
                 
-                if(false)
+                std::cerr << "\ttransfer bulks" << std::endl;
                 {
                     // tranfer bulk
-                    typename iField::Loop loop;
+                    typename iField::Loop it;
                     for(size_t rank=0;rank<size;++rank)
                     {
                         iField                &iF = *iFields[rank];
@@ -173,17 +172,17 @@ namespace {
                         const Fragment<COORD> &frag  = partition[rank];
                         const Layout<COORD>   &bulk  = frag.inner;
                         {
-                            IOBlock block;
+                            block.free();
                             transfer.asyncSetup(iF);
-                            transfer.asyncBulkSave(block,iF,bulk,loop);
-                            transfer.asyncBulkLoad(iFull,block,bulk,loop);
+                            transfer.asyncBulkSave(block,iF,bulk,it);
+                            transfer.asyncBulkLoad(iFull,block,bulk,it);
                         }
                         
                         {
-                            IOBlock block;
+                            block.free();
                             transfer.asyncSetup(sF);
-                            transfer.asyncBulkSave(block,sF,bulk,loop);
-                            transfer.asyncBulkLoad(sFull,block,bulk,loop);
+                            transfer.asyncBulkSave(block,sF,bulk,it);
+                            transfer.asyncBulkLoad(sFull,block,bulk,it);
                         }
                     }
                 }
@@ -205,17 +204,24 @@ namespace {
 
 Y_UTEST(transfer)
 {
+    Coord::DispWidth  = 2;
     string layout     = "10:10:10";
-    size_t cores      = 2;
-    size_t ghosts     = 1;
+    size_t cores      = 4;
+    size_t ghosts     = 2;
     
     if(argc>1) layout = argv[1];
     if(argc>2) cores  = string_convert::to<size_t>(argv[2],"cores");
     if(argc>3) ghosts = string_convert::to<size_t>(argv[3],"ghosts");
     
-    doTest<Coord1D>(layout,ghosts,cores);
-    //doTest<Coord2D>(layout,ghosts,cores);
-    //doTest<Coord3D>(layout,ghosts,cores);
+    for(size_t nc=1;nc<=cores;++nc)
+    {
+        for(size_t ng=0;ng<=ghosts;++ng)
+        {
+            doTest<Coord1D>(layout,ng,nc);
+            doTest<Coord2D>(layout,ng,nc);
+            doTest<Coord3D>(layout,ng,nc);
+        }
+    }
     
 }
 Y_UTEST_DONE()
