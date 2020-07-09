@@ -22,6 +22,14 @@ namespace upsylon {
                 }
                 throw exception("Spade::Fragment(too many <%s> ghosts (%u) for probe level=%u)", text, int(ng), level);
             }
+            
+#define Y_SPADE_FRAG_IMPL(ID) const char Fragment:: ID[] = #ID
+            
+            Y_SPADE_FRAG_IMPL(autoExchange);
+            Y_SPADE_FRAG_IMPL(asyncTwoWays);
+            Y_SPADE_FRAG_IMPL(asyncForward);
+            Y_SPADE_FRAG_IMPL(asyncReverse);
+
         }
         
     }

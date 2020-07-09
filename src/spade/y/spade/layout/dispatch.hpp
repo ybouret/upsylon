@@ -342,9 +342,7 @@ namespace upsylon {
                 }
                 
                 //! cleanup
-                inline virtual ~Hub() throw()
-                {
-                }
+                inline virtual ~Hub() throw() {}
                 
                 //! copy
                 inline Hub(const Hub &hub) throw() :
@@ -504,6 +502,10 @@ namespace upsylon {
             //------------------------------------------------------------------
             //
             //! a Node is an Hub with its Links[Levels]
+            /**
+             this describe the possiblity to have ghosts, indenpently of the
+             number of ghosts that would be chosen.
+             */
             //
             //------------------------------------------------------------------
             class Node : public Hub

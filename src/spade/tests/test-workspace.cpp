@@ -75,12 +75,12 @@ namespace {
 Y_UTEST(workspace)
 {
     string layout     = "10:10:10";
-    size_t ghosts     = 1;
     size_t cores      = 2;
+    size_t ghosts     = 1;
 
     if(argc>1) layout = argv[1];
-    if(argc>2) ghosts = string_convert::to<size_t>(argv[2],"ghosts");
-    if(argc>3) cores  = string_convert::to<size_t>(argv[3],"cores");
+    if(argc>2) cores  = string_convert::to<size_t>(argv[2],"cores");
+    if(argc>2) ghosts = string_convert::to<size_t>(argv[3],"ghosts");
 
     doTest<Coord1D>(layout,ghosts,cores);
     doTest<Coord2D>(layout,ghosts,cores);
