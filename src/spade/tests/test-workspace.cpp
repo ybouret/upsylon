@@ -9,6 +9,7 @@
 #include "y/string/convert.hpp"
 #include "y/spade/field/ops.hpp"
 #include "y/ios/imstream.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 using namespace Spade;
@@ -58,8 +59,14 @@ namespace {
                     Y_ASSERT(S.items==W.outer.items);
                     Y_ASSERT(D.items==W.outer.items);
                     Y_ASSERT( &I == & W["I"] );
+                    typename Layout<COORD>::Loop it(W.outer.lower,W.outer.upper);
                     
-                    
+                    for( it.boot(); it.good(); it.next() )
+                    {
+                        I[ *it ] = support::get<int>();
+                        S[ *it ] = support::get<string>();
+                        D[ *it ] = support::get<double>();
+                    }
                     
                     W.setupWith(transfer);
                     W.localSwap(transfer);
@@ -75,7 +82,7 @@ namespace {
 Y_UTEST(workspace)
 {
     string layout     = "10:10:10";
-    size_t cores      = 2;
+    size_t cores      = 4;
     size_t ghosts     = 1;
 
     if(argc>1) layout = argv[1];

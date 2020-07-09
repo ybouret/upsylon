@@ -6,6 +6,7 @@
 #include "y/string/convert.hpp"
 #include "y/spade/field/ops.hpp"
 #include "y/ios/imstream.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 using namespace Spade;
@@ -82,7 +83,15 @@ namespace {
                         transfer.setup(f);
                         std::cerr << "\t" << name  << ":" << f << std::endl;
                         Ops::Ld(f,f,name);
-                        
+                    }
+                    
+                    typename Layout<COORD>::Loop it(partition[rank].outer.lower,partition[rank].outer.upper);
+
+                    for( it.boot(); it.good(); it.next() )
+                    {
+                        (*iFields.back())[ *it ] = support::get<int>();
+                        (*sFields.back())[ *it ] = support::get<string>();
+                        //D[ *it ] = support::get<double>();
                     }
                 }
                 
