@@ -4,36 +4,28 @@
 
 using namespace upsylon;
 
-namespace
-{
-    static inline
-    void display_groove(   memory::groove &g )
-    {
-        std::cerr << "g.bytes=" << g.bytes << " @" << type_name_for( g.tid() ) << std::endl;
-    }
-}
 
 Y_UTEST(groove)
 {
 
     {
         memory::groove g;
-        display_groove(g);
+        std::cerr << g << std::endl;
         for(size_t iter=0;iter<1000;++iter)
         {
             g.prepare( alea.leq(32) );
         }
-        display_groove(g);
+        std::cerr << g << std::endl;
     }
 
     {
         memory::groove g;
-        g.make<string>();   display_groove(g);
-        g.make<float>();    display_groove(g);
-        g.release();        display_groove(g);
-        g.make<double>();   display_groove(g);
+        g.make<string>();   std::cerr << g << std::endl;
+        g.make<float>();    std::cerr << g << std::endl;
+        g.release();        std::cerr << g << std::endl;
+        g.make<double>();   std::cerr << g << std::endl;
         const string hello = "world";
-        g.make(hello); display_groove(g);
+        g.make(hello);      std::cerr << g << std::endl;
         std::cerr << g.as<string>() << std::endl;
     }
     std::cerr << "sizeof(groove)=" << sizeof(memory::groove) << std::endl;

@@ -76,11 +76,14 @@ namespace upsylon {
 
         void groove:: prepare(const size_t n)
         {
-            if(n>bytes)
+            if(n!=bytes)
             {
                 release();
-                address = object:: operator new(n);
-                aliasing::_(bytes) = n;
+                if(n>0)
+                {
+                    address = object:: operator new(n);
+                    aliasing::_(bytes) = n;
+                }
             }
             else
             {
@@ -150,9 +153,17 @@ namespace upsylon {
             }
         }
 
+#define Y_MEM_GROOVE(TYPE) do { \
+if(typeid(TYPE) == tid ) { os << ':' << g.as<TYPE>(); } } while(false)
+
         std::ostream & operator<<(std::ostream &os, const groove &g)
         {
-            os << '(' << g.bytes << "@" << type_name_for( g.tid() ) << ')';
+            const std::type_info &tid = g.tid();
+            os << '(' << g.bytes << "@" << type_name_for(tid);
+            Y_MEM_GROOVE(float);
+            Y_MEM_GROOVE(double);
+            Y_MEM_GROOVE(string);
+            os << ')';
             return os;
         }
 

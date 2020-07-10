@@ -15,7 +15,7 @@ namespace upsylon {
         //______________________________________________________________________
         //
         //
-        //! handle user's memory, designed for one object
+        //! handle user's memory, designed for one (small) object
         //
         //______________________________________________________________________
         class groove
@@ -26,7 +26,7 @@ namespace upsylon {
             // C++
             //__________________________________________________________________
             ~groove() throw(); //!< release all
-            groove() throw(); //!< empty groove
+            groove()  throw(); //!< empty groove
 
             //__________________________________________________________________
             //
@@ -34,7 +34,7 @@ namespace upsylon {
             //__________________________________________________________________
             void dismiss() throw(); //!< destroy, zero, preserve bytes
             void release() throw(); //!< destroy, zero, discard  bytes
-            void prepare(size_t n); //!< n>bytes: release and allocate | n<=bytes: dismiss only
+            void prepare(size_t n); //!< make n bytes
 
             //__________________________________________________________________
             //
@@ -67,6 +67,12 @@ namespace upsylon {
                 setup<T>();
             }
 
+            //__________________________________________________________________
+            //
+            // access methods
+            //__________________________________________________________________
+
+            //! direct cast
             template <typename T>
             T & get() throw()
             {
@@ -74,6 +80,7 @@ namespace upsylon {
                 return *static_cast<T*>(address);
             }
 
+            //! direct cast, const
             template <typename T>
             const T & get() const throw()
             {
@@ -81,6 +88,7 @@ namespace upsylon {
                 return *static_cast<const T*>(address);
             }
 
+            //! cast with type checking
             template <typename T>
             T & as()
             {
@@ -89,6 +97,7 @@ namespace upsylon {
                 return get<T>();
             }
 
+            //! cast with type checking, const
             template <typename T>
             const T & as() const 
             {
@@ -97,8 +106,10 @@ namespace upsylon {
                 return get<T>();
             }
 
+            //! type checking, raise exception on error
             void check_type( const std::type_info & ) const;
 
+            //! output, mostly for debug
             friend std::ostream & operator<<(std::ostream &, const groove&);
 
             //__________________________________________________________________
