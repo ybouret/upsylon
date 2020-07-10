@@ -1,5 +1,6 @@
 
 #include "y/concurrent/executor.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -37,8 +38,8 @@ namespace upsylon
         const parallel & executor:: operator[](const size_t context_index) const throw()
         {
             assert(context_index<num_threads());
-            executor &self = (executor &) *this;
-            return self.get_context(context_index);
+            executor &self = aliasing::_( *this );
+            return    self.get_context(context_index);
         }
 
 
