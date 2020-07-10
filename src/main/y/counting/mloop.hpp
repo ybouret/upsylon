@@ -17,28 +17,54 @@ namespace upsylon
     namespace core
     {
         //----------------------------------------------------------------------
+        //
         //! auxiliary stuff for mloop
+        //
         //----------------------------------------------------------------------
-        struct mloop_
+        class mloop_ : public counting
         {
+        public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const char identifier[];  //!< "mloop: "
             static const char separators[2]; //!< ',', '\0'
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const size_t dimensions; //!< dimensions to loop over
+            const bool   secured;    //!< no reset  but for first and last index
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~mloop_() throw();                            //!< cleanup
+        protected:                                                //
+            explicit mloop_(const size_t,const bool)     throw(); //!< set checked dimensions
+            explicit mloop_(const mloop_ &)              throw(); //!< copy
+            void     overrule()                          const;   //!< check current can be changed
+
+
+        private:
+            Y_DISABLE_ASSIGN(mloop_);
         };
 
         //! constructor setup
-#define Y_MLOOP_CTOR(COUNT,DIM) \
-counting(COUNT),               \
-accessible<T>(),              \
-dimensions(DIM),            \
-curr(0),                  \
-item(0),                \
-head(0),               \
-tail(0),             \
-quit(0),           \
-move(0),         \
-iter(0),       \
-wksp(0),     \
-wlen(0),   \
+#define Y_MLOOP_CTOR( )         \
+accessible<T>(),                \
+curr(0),                        \
+item(0),                        \
+head(0),                        \
+tail(0),                        \
+quit(0),                        \
+move(0),                        \
+iter(0),                        \
+wksp(0),                        \
+wlen(0),                        \
 data(0)
 
         //----------------------------------------------------------------------
@@ -47,14 +73,13 @@ data(0)
         //
         //----------------------------------------------------------------------
         template <typename T>
-        class mloop : public counting, public accessible<T>
+        class mloop : public mloop_,  public accessible<T>
         {
         public:
             //------------------------------------------------------------------
             // types and definitions
             //------------------------------------------------------------------
             Y_DECL_ARGS(T,type);      //!< alias
-            const size_t dimensions;  //!< number of dimensions to loop over
 
             //------------------------------------------------------------------
             // C++
@@ -62,8 +87,10 @@ data(0)
             //! setup with dimensions and boundaries
             inline explicit mloop(const size_t dim,
                                   const_type  *ini,
-                                  const_type  *end) :
-            Y_MLOOP_CTOR(0,chkdim(dim))
+                                  const_type  *end,
+                                  const bool   safe=true) :
+            mloop_(chkdim(dim),safe),
+            Y_MLOOP_CTOR()
             {
                 assert(ini);
                 assert(end);
@@ -74,7 +101,8 @@ data(0)
 
             //! hard copy
             inline mloop( const mloop &other ) : collection(),
-            Y_MLOOP_CTOR(other,other.dimensions)
+            mloop_(other),
+            Y_MLOOP_CTOR()
             {
                 setup_memory();
                 assert(count==other.count);
@@ -120,13 +148,13 @@ data(0)
                 assert(lhs.dimensions==rhs.dimensions);
                 assert(lhs.count==rhs.count);
                 assert(lhs.data==rhs.data);
-                check_contents(mloop_::identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
+                check_contents(identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
             }
 
             //! show
             virtual std::ostream & show( std::ostream &os ) const
             {
-                return display_int::to(os<< '{',curr,dimensions,mloop_::separators) << '}';
+                return display_int::to(os<< '{',curr,dimensions,separators) << '}';
             }
 
 
@@ -301,6 +329,7 @@ data(0)
         //! reset/start a loop with different coordinates
         inline void reset(const_coord &ini, const_coord &end)
         {
+            this->overrule();
             this->setup( (const type *)&ini, (const type *)&end );
             this->boot();
         }
