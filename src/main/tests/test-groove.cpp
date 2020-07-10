@@ -43,6 +43,12 @@ Y_UTEST(groove)
     G.make<int,float,double>();
     std::cerr << G << std::endl;
 
+    G.as<int>(1)    = -1;
+    G.as<float>(2)  = 1.0f;
+    G.as<double>(3) = 3.14;
+    
+    std::cerr << G << std::endl;
+
 
 
 }

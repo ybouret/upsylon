@@ -160,9 +160,16 @@ if(typeid(TYPE) == tid ) { os << ':' << g.as<TYPE>(); } } while(false)
         {
             const std::type_info &tid = g.tid();
             os << '(' << g.bytes << "@" << type_name_for(tid);
+
             Y_MEM_GROOVE(float);
             Y_MEM_GROOVE(double);
             Y_MEM_GROOVE(string);
+            Y_MEM_GROOVE(int16_t);
+            Y_MEM_GROOVE(int32_t);
+            Y_MEM_GROOVE(int64_t);
+            Y_MEM_GROOVE(uint16_t);
+            Y_MEM_GROOVE(uint32_t);
+            Y_MEM_GROOVE(uint64_t);
             os << ')';
             return os;
         }
