@@ -421,6 +421,8 @@ namespace upsylon {
         TS(point3d<float>);
         TS(point3d<double>);
         TS(point3d<unit_t>);
+
+        TS(null_type);
     }
 
 }

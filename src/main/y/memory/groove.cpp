@@ -90,8 +90,6 @@ namespace upsylon {
 
 
         groove:: groove() throw() :
-        object(),
-        inode<groove>(),
         bytes(0),
         address(0),
         destroy(0),
@@ -100,16 +98,37 @@ namespace upsylon {
 
         }
 
-        groove:: groove(size_t n) :
-        object(),
-        inode<groove>(),
-        bytes(n),
-        address( (bytes>0) ? object:: operator new(bytes) : 0),
-        destroy(0),
-        type_id(0)
-        {
+        
 
+        bool groove:: cpp() const throw()
+        {
+            if(type_id)
+            {
+                assert(destroy);
+                return true;
+            }
+            else
+            {
+                assert(0==destroy);
+                return false;
+            }
         }
+
+        const std::type_info & groove:: tid() const throw()
+        {
+            if(type_id)
+            {
+                assert(destroy);
+                return *type_id;
+            }
+            else
+            {
+                assert(0==destroy);
+                return typeid(null_type);
+            }
+        }
+
+
 
 
     }
