@@ -66,9 +66,11 @@ namespace {
                 //--------------------------------------------------------------
                 for(size_t rank=0;rank<size;++rank)
                 {
+                    const Layout<COORD> &outer = partition[rank].outer;
+
                     {
                         const string name = vformat("iField#%u",unsigned(rank));
-                        iFieldHandle F    = new iField(name,partition[rank].outer);
+                        iFieldHandle F    = new iField(name,outer);
                         iFields.push(F);
                         Ops::Ld(*F,*F,int(rank));
                         transfer.setup(*F);
@@ -76,7 +78,7 @@ namespace {
                     
                     {
                         const string name = vformat("sField#%u",unsigned(rank));
-                        sFieldHandle F    = new sField(name,partition[rank].outer);
+                        sFieldHandle F    = new sField(name,outer);
                         sField      &f    = *F;
                         
                         sFields.push(F);
@@ -85,13 +87,12 @@ namespace {
                         Ops::Ld(f,f,name);
                     }
                     
-                    typename Layout<COORD>::Loop it(partition[rank].outer.lower,partition[rank].outer.upper);
+                    typename Layout<COORD>::Loop it(outer.lower,outer.upper);
 
                     for( it.boot(); it.good(); it.next() )
                     {
                         (*iFields.back())[ *it ] = support::get<int>();
                         (*sFields.back())[ *it ] = support::get<string>();
-                        //D[ *it ] = support::get<double>();
                     }
                 }
                 
