@@ -25,8 +25,8 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-            virtual ~groove() throw(); //!< release all
-            explicit groove() throw(); //!< empty groove
+            ~groove() throw(); //!< release all
+            groove() throw(); //!< empty groove
 
             //__________________________________________________________________
             //
@@ -39,6 +39,11 @@ namespace upsylon {
             bool                  cpp() const throw(); //!< if C++
             const std::type_info &tid() const throw(); //!< typeid or null_type
 
+            //! clear memory for type
+            template <typename T> void acquire_for() { acquire(sizeof(T)); }
+
+            //! clear memory for type
+            template <typename T> void acquire_for(const size_t n) { assert(n>0); acquire(sizeof(T)*n); }
 
             //__________________________________________________________________
             //
@@ -62,7 +67,38 @@ namespace upsylon {
                 new (address) T(args);
                 setup<T>();
             }
-            
+
+            template <typename T>
+            T & get() throw()
+            {
+                assert(bytes>=sizeof(T));
+                return *static_cast<T*>(address);
+            }
+
+            template <typename T>
+            const T & get() const throw()
+            {
+                assert(bytes>=sizeof(T));
+                return *static_cast<const T*>(address);
+            }
+
+            template <typename T>
+            T & as() throw()
+            {
+                assert(type_id);
+                assert(*type_id==typeid(T));
+                return get<T>();
+            }
+
+            template <typename T>
+            const T & as() const throw()
+            {
+                assert(type_id);
+                assert(*type_id==typeid(T));
+                return get<T>();
+            }
+
+
             //__________________________________________________________________
             //
             // members
@@ -93,27 +129,7 @@ namespace upsylon {
             }
         };
 
-        //______________________________________________________________________
-        //
-        //
-        //! multiple grooves
-        //
-        //______________________________________________________________________
-        class grooves
-        {
-        public:
-            explicit grooves() throw();
-            virtual ~grooves() throw();
-
-            virtual size_t size() const throw();
-
-            void           free() throw();
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(grooves);
-            groove *grv;
-            size_t  num;
-        };
+       
 
 
     }

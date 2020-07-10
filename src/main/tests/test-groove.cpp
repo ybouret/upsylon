@@ -1,4 +1,4 @@
-#include "y/memory/groove.hpp"
+#include "y/memory/grooves.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 
@@ -32,9 +32,18 @@ Y_UTEST(groove)
         g.make<float>();    display_groove(g);
         g.release();        display_groove(g);
         g.make<double>();   display_groove(g);
-
+        const string hello = "world";
+        g.make(hello); display_groove(g);
+        std::cerr << g.as<string>() << std::endl;
     }
     std::cerr << "sizeof(groove)=" << sizeof(memory::groove) << std::endl;
+
+    memory::grooves G;
+    G.acquire(4);
+    G.make<float>(2);
+    std::cerr << "#grooves=" << G.size() << std::endl;
+
+
 }
 Y_UTEST_DONE()
 
