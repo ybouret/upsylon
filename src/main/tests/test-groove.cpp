@@ -21,7 +21,7 @@ Y_UTEST(groove)
         display_groove(g);
         for(size_t iter=0;iter<1000;++iter)
         {
-            g.acquire( alea.leq(32) );
+            g.prepare( alea.leq(32) );
         }
         display_groove(g);
     }
@@ -42,6 +42,15 @@ Y_UTEST(groove)
     G.acquire(4);
     G.make<float>(2);
     std::cerr << "#grooves=" << G.size() << std::endl;
+    std::cerr << G << std::endl;
+    G.dismiss();
+    std::cerr << G << std::endl;
+    G.make<double,string>();
+    std::cerr << G << std::endl;
+
+    G.make<int,float,double>();
+    std::cerr << G << std::endl;
+
 
 
 }

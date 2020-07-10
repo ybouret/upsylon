@@ -1,6 +1,7 @@
 
 #include "y/memory/grooves.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/object.hpp"
 #include <cstring>
 
 namespace upsylon {
@@ -34,13 +35,12 @@ namespace upsylon {
         {
         }
 
-
-        void grooves:: free() throw()
+        void grooves:: dismiss() throw()
         {
             size_t i=num;
             while(i-- > 0 )
             {
-                grv[i].free();
+                grv[i].dismiss();
             }
         }
 
@@ -53,12 +53,15 @@ namespace upsylon {
         {
             if(grv)
             {
-                free();
-                assert(num);
-                object:: operator delete(grv,num*sizeof(groove));
-                itm=0;
+                const size_t len = num * sizeof(groove);
+                while(num>0)
+                {
+                    self_destruct( grv[--num] );
+                }
+                assert(num<=0);
+                object:: operator delete(grv,len);
                 grv=0;
-                num=0;
+                itm=0;
             }
         }
 
@@ -68,14 +71,36 @@ namespace upsylon {
             {
                 release();
                 grv = static_cast<groove *>(object:: operator new(n*sizeof(groove)));
+                do {
+                    size_t i=0;
+                    while(i<num) {
+                        new (grv+i) groove();
+                        ++i;
+                    }
+                }
+                while(false);
                 num = n;
                 itm = grv-1;
             }
             else
             {
-                free();
+                dismiss();
             }
             
+        }
+
+        groove       & grooves:: operator[](const size_t indx)       throw()
+        {
+            assert(indx>0);
+            assert(indx<=size());
+            return itm[indx];
+        }
+
+        const groove & grooves:: operator[](const size_t indx) const throw()
+        {
+            assert(indx>0);
+            assert(indx<=size());
+            return itm[indx];
         }
 
     }

@@ -4,9 +4,9 @@
 #define Y_MEMORY_GROOVE_INCLUDED 1
 
 #include "y/type/args.hpp"
-#include "y/object.hpp"
 #include "y/type/self-destruct.hpp"
 #include <typeinfo>
+#include <iosfwd>
 
 namespace upsylon {
 
@@ -32,10 +32,14 @@ namespace upsylon {
             //
             // management methods
             //__________________________________________________________________
-            void free()    throw(); //!< destroy and zero, keep allocated
-            void release() throw(); //!< destroy and zero, free allocated
-            void acquire(size_t n); //!< destroy and zero, check memory
+            void dismiss() throw(); //!< destroy, zero, preserve bytes
+            void release() throw(); //!< destroy, zero, discard  bytes
+            void prepare(size_t n); //!< n>bytes: release and allocate | n<=bytes: dismiss only
 
+            //__________________________________________________________________
+            //
+            // context methods
+            //__________________________________________________________________
             bool                  cpp() const throw(); //!< if C++
             const std::type_info &tid() const throw(); //!< typeid or null_type
 
@@ -49,7 +53,7 @@ namespace upsylon {
             template <typename T> inline
             void make()
             {
-                acquire(sizeof(T));
+                prepare(sizeof(T));
                 new (address) T();
                 setup<T>();
             }
@@ -58,7 +62,7 @@ namespace upsylon {
             template <typename T> inline
             void make(const T &args)
             {
-                acquire(sizeof(T));
+                prepare(sizeof(T));
                 new (address) T(args);
                 setup<T>();
             }
@@ -78,21 +82,24 @@ namespace upsylon {
             }
 
             template <typename T>
-            T & as() throw()
+            T & as()
             {
-                assert(type_id);
-                assert(*type_id==typeid(T));
+                static const std::type_info &against = typeid(T);
+                check_type(against);
                 return get<T>();
             }
 
             template <typename T>
-            const T & as() const throw()
+            const T & as() const 
             {
-                assert(type_id);
-                assert(*type_id==typeid(T));
+                static const std::type_info &against = typeid(T);
+                check_type(against);
                 return get<T>();
             }
 
+            void check_type( const std::type_info & ) const;
+
+            friend std::ostream & operator<<(std::ostream &, const groove&);
 
             //__________________________________________________________________
             //

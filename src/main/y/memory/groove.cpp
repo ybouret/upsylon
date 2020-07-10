@@ -1,12 +1,12 @@
 #include "y/memory/groove.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/object.hpp"
+#include "y/exception.hpp"
 #include <cstring>
 
 namespace upsylon {
 
     namespace memory {
-
-
 
         groove:: ~groove() throw()
         {
@@ -45,7 +45,7 @@ namespace upsylon {
             assert(0==type_id);
         }
 
-        void groove:: free() throw()
+        void groove:: dismiss() throw()
         {
             if(bytes)
             {
@@ -74,7 +74,7 @@ namespace upsylon {
             assert(0==type_id);
         }
 
-        void groove:: acquire(const size_t n)
+        void groove:: prepare(const size_t n)
         {
             if(n>bytes)
             {
@@ -84,7 +84,7 @@ namespace upsylon {
             }
             else
             {
-                free();
+                dismiss();
             }
         }
 
@@ -128,6 +128,33 @@ namespace upsylon {
             }
         }
 
+    }
+
+}
+
+#include "y/type/spec.hpp"
+#include <iostream>
+
+namespace upsylon {
+
+    namespace memory {
+
+        void groove:: check_type( const std::type_info &against ) const
+        {
+            const std::type_info &self = tid();
+            if( self != against )
+            {
+                const char *me = *type_name_for(self);
+                const char *it = *type_name_for(against);
+                throw exception("groove types mismatch <%s> instead of <%s>",it,me);
+            }
+        }
+
+        std::ostream & operator<<(std::ostream &os, const groove &g)
+        {
+            os << '(' << g.bytes << "@" << type_name_for( g.tid() ) << ')';
+            return os;
+        }
 
 
 
