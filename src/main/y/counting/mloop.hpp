@@ -67,11 +67,12 @@ wksp(0),                        \
 wlen(0),                        \
 data(0)
 
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
+        //
         //
         //! context for a multidimensional loop
         //
-        //----------------------------------------------------------------------
+        //______________________________________________________________________
         template <typename T>
         class mloop : public mloop_,  public accessible<T>
         {
@@ -92,8 +93,7 @@ data(0)
             mloop_(chkdim(dim),safe),
             Y_MLOOP_CTOR()
             {
-                assert(ini);
-                assert(end);
+                assert(ini); assert(end);
                 setup_memory();
                 setup(ini,end);
                 boot();
@@ -129,8 +129,6 @@ data(0)
             //! access [1..dimensions]
             inline virtual const_type & operator[](const size_t dim) const throw()
             {
-                //assert(dim<dimensions);
-                //return curr[dim];
                 assert(dim>0);
                 assert(dim<=dimensions);
                 return item[dim];
@@ -157,6 +155,11 @@ data(0)
                 return display_int::to(os<< '{',curr,dimensions,separators) << '}';
             }
 
+            //! workspace memory
+            inline size_t workspace() const throw() { return wlen; }
+
+            //! used data
+            inline size_t allocated() const throw() { return data; }
 
         private:
             typedef void (*proc)(mutable_type &);
@@ -175,6 +178,10 @@ data(0)
             Y_DISABLE_ASSIGN(mloop);
 
 
+            //__________________________________________________________________
+            //
+            //! prepare loop
+            //__________________________________________________________________
             virtual void onBoot() throw()
             {
                 assert(1==index);
@@ -184,12 +191,20 @@ data(0)
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! next indices
+            //__________________________________________________________________
             virtual void onNext() throw()
             {
                 assert(index<=count);
                 recursive_update(0);
             }
 
+            //__________________________________________________________________
+            //
+            //! find an index to move
+            //__________________________________________________________________
             void recursive_update( const size_t odim ) throw()
             {
                 assert(odim<dimensions);
@@ -220,13 +235,20 @@ data(0)
 
             }
 
+            //__________________________________________________________________
+            //
+            //! next dimension to probe
+            //__________________________________________________________________
             inline size_t next_dim(size_t dim) const throw()
             {
                 return (++dim>=dimensions) ? 0 : dim;
             }
 
 
-
+            //__________________________________________________________________
+            //
+            //! allocated all embedded memory
+            //__________________________________________________________________
             inline void setup_memory()
             {
                 static memory::allocator &mem = mem_instance();
@@ -250,7 +272,7 @@ data(0)
 
         protected:
             //! prepare loop parameters
-            inline void setup(const_type *ini, const_type *end)
+            inline void setup(const_type *ini, const_type *end) throw()
             {
                 size_t &num = aliasing::_(count);
                 num = 1;

@@ -1,6 +1,7 @@
 #include "y/counting/mloop.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 
@@ -11,17 +12,16 @@ namespace
     {
         assert(lo.size()==dim);
         assert(hi.size()==dim);
-        std::cerr << "Create MLoop..." << std::endl;
+        std::cerr << "Create MLoop<" << type_name_of<T>() << ">" << std::endl;
         core::mloop<T> loop(dim,*lo,*hi);
-
+        std::cerr << "\tallocated=" << loop.allocated() << " / workspace=" << loop.workspace() << std::endl;
         vector< core::mloop<T> > loops(loop.count,as_capacity);
 
         for( loop.boot(); loop.good(); loop.next() )
         {
             loops.push_back_(loop);
-            //std::cerr << "loop@" << loop.index << ": " << loop << std::endl;
         }
-        std::cerr << "checking..." << std::endl;
+        std::cerr << "\tchecking..." << std::endl;
         for(size_t i=1;i<=loops.size();++i)
         {
             Y_ASSERT(i==loops[i].index);
@@ -125,6 +125,8 @@ Y_UTEST(mloops)
         loop.reset(end,ini);
         doLoop(loop);
     }
+
+    
 
 }
 Y_UTEST_DONE()
