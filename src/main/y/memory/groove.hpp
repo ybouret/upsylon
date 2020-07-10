@@ -21,6 +21,8 @@ namespace upsylon {
         class groove
         {
         public:
+            typedef void (*destructor)(void*);
+
             //__________________________________________________________________
             //
             // C++
@@ -51,7 +53,6 @@ namespace upsylon {
                 return bytes >= sizeof(T);
             }
 
-
             //__________________________________________________________________
             //
             // building methods
@@ -59,21 +60,37 @@ namespace upsylon {
 
             //! make with default constructor
             template <typename T> inline
-            void make()
+            T & make()
             {
                 prepare(sizeof(T));
-                new (address) T();
-                setup<T>();
+                return ops<T>::make(address,destroy,type_id);
             }
 
             //! make with copy constructor
             template <typename T> inline
-            void make(const T &args)
+            T & make(typename type_traits<T>::parameter_type args)
             {
                 prepare(sizeof(T));
-                new (address) T(args);
-                setup<T>();
+                return ops<T>::template make<T>(address,destroy,type_id,args);
             }
+
+             //! build from one args
+            template <typename T, typename U> inline
+            T & build(typename type_traits<U>::parameter_type argU)
+            {
+                prepare(sizeof(T));
+                return ops<T>::template make<U>(address,destroy,type_id,argU);
+            }
+
+            //! build from two args
+            template <typename T, typename U, typename V> inline
+            T & build(typename type_traits<U>::parameter_type argU,
+                      typename type_traits<V>::parameter_type argV)
+            {
+                prepare(sizeof(T));
+                return ops<T>::template make<U,V>(address,destroy,type_id,argU,argV);
+            }
+
 
             //__________________________________________________________________
             //
@@ -124,31 +141,81 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const size_t    bytes; //!< maximum usable bytes
-
-        protected:
-            void                  *address;          //!< address of data
-            void                 (*destroy)(void *); //!< destructor if C++
-            const std::type_info  *type_id;          //!< type_id    if C++
-
+            const size_t    bytes;                   //!< maximum usable bytes
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(groove);
-            template <typename T> static inline
-            void __destroy(void *addr) throw()
-            {
-                assert(addr);
-                self_destruct( *static_cast<T*>(addr) );
-            }
 
-            template <typename T> void setup() throw()
+            void                  *address;          //!< address of data
+            destructor             destroy;          //!< destructor if C++
+            const std::type_info  *type_id;          //!< type_id    if C++
+
+
+            template <typename T>
+            class ops
             {
-                assert(0==destroy);
-                assert(0==type_id);
-                type_id = &typeid(T);
-                destroy = __destroy<T>;
-            }
+            public:
+                Y_DECL_ARGS(T,type);
+
+                static inline type & make(void                   *addr,
+                                          destructor             &dtor,
+                                          const std::type_info * &tinf)
+                {
+
+                    assert(addr!=NULL); assert(NULL==dtor); assert(NULL==tinf);
+                    new (addr) mutable_type();
+                    return setup(addr,dtor,tinf);
+                }
+
+                template <typename U>
+                static inline type & make(void                                   *addr,
+                                          destructor                             &dtor,
+                                          const std::type_info *                 &tinf,
+                                          typename type_traits<U>::parameter_type argU)
+                {
+                    assert(addr!=NULL); assert(NULL==dtor); assert(NULL==tinf);
+                    new (addr) mutable_type(argU);
+                    return setup(addr,dtor,tinf);
+                }
+
+                template <typename U,typename V>
+                static inline type & make(void                                   *addr,
+                                          destructor                             &dtor,
+                                          const std::type_info *                 &tinf,
+                                          typename type_traits<U>::parameter_type argU,
+                                          typename type_traits<V>::parameter_type argV)
+                {
+                    assert(addr!=NULL); assert(NULL==dtor); assert(NULL==tinf);
+                    new (addr) mutable_type(argU,argV);
+                    return setup(addr,dtor,tinf);
+                }
+
+            private:
+                static inline type & setup(void                   *addr,
+                                           destructor             &dtor,
+                                           const std::type_info * &tinf) throw()
+                {
+                    static const std::type_info * __type_id = & typeid(mutable_type);
+                    dtor = __destroy;
+                    tinf = __type_id;
+                    return *static_cast<type*>(addr);
+                }
+
+                static inline const std::type_info * __type_id() throw()
+                {
+                    return & typeid(mutable_type);
+                }
+
+                static inline void                   __destroy(void *addr) throw()
+                {
+                    assert(addr);
+                    self_destruct( *static_cast<mutable_type *>(addr) );
+                }
+
+            };
+
         };
+
 
        
 

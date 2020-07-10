@@ -4,6 +4,23 @@
 
 using namespace upsylon;
 
+namespace {
+
+    template <typename U,typename V>
+    class Zap1
+    {
+    public:
+        const U u;
+        const V v;
+        Zap1(const U &argU, const V &argV) : u(argU), v(argV) {}
+        ~Zap1() throw() {}
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Zap1);
+    };
+
+}
 
 Y_UTEST(groove)
 {
@@ -25,8 +42,16 @@ Y_UTEST(groove)
         g.release();        std::cerr << g << std::endl;
         g.make<double>();   std::cerr << g << std::endl;
         const string hello = "world";
-        g.make(hello);      std::cerr << g << std::endl;
+        g.make<string>(hello);      std::cerr << g << std::endl;
         std::cerr << g.as<string>() << std::endl;
+        g.make<const string>(hello); std::cerr << g << std::endl;
+        std::cerr << g.as<string>() << std::endl;
+
+        g.build<string,const char *>( "toto" );
+        std::cerr << g << std::endl;
+        g.build< Zap1<int,short>, int, short >(3,4);
+        std::cerr << g << std::endl;
+
     }
     std::cerr << "sizeof(groove)=" << sizeof(memory::groove) << std::endl;
 
@@ -48,6 +73,9 @@ Y_UTEST(groove)
     G.as<double>(3) = 3.14;
     
     std::cerr << G << std::endl;
+    std::cerr << G[1].as<int>() << std::endl;
+    std::cerr << G[2].as<float>() << std::endl;
+    std::cerr << G[3].as<double>() << std::endl;
 
 
 

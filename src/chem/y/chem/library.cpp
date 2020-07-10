@@ -1,6 +1,7 @@
 
 #include "y/chem/library.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 #include <cmath>
 

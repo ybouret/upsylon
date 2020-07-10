@@ -3,8 +3,9 @@
 #define Y_PARALLEL_INCLUDED 1
 
 #include "y/object.hpp"
-#include "y/memory/xslot.hpp"
 #include "y/parops.hpp"
+#include "y/memory/grooves.hpp"
+#include "y/memory/xslot.hpp"
 
 namespace upsylon
 {
@@ -14,8 +15,9 @@ namespace upsylon
     //! alias for base type
     //
     //__________________________________________________________________________
-    typedef memory::xslot<memory::global> parallel_cache;
+    typedef memory::xslot<> parallel_cache;
     
+
     //__________________________________________________________________________
     //
     //

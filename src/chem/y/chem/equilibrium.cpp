@@ -2,6 +2,7 @@
 #include "y/chem/equilibrium.hpp"
 #include "y/exception.hpp"
 #include "y/sort/merge.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
