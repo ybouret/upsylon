@@ -28,6 +28,10 @@ namespace {
         Layout<COORD>       full( Coord::Ones<COORD>(), Coord::Parse<COORD>(layout) );
         vector<COORD>       mappings;
         full.findMappings(mappings,cores);
+
+        iField iFull("iFull",full);
+        Ops::Ld(iFull,iFull,-1);
+        
         for(size_t m=1;m<=mappings.size();++m)
         {
             const COORD &mapping = mappings[m];
@@ -41,12 +45,13 @@ namespace {
             for(loop.boot();loop.good();loop.next())
             {
                 // try every periodic boundary condition
-                Y_MPI_HEAD( std::cerr << "|_pbcs=" << loop.value << std::endl );
-                //Workspace<COORD> W( full, mapping, MPI.rank, loop.value, ghosts);
+                Y_MPI_HEAD( (std::cerr.flush() << "|_pbcs=" << loop.value << std::endl).flush() );
                 Domain<COORD>    W(MPI,full,mapping,loop.value,ghosts);
-                Y_MPI_NODE(std::cerr << " |_" << MPI.nodeName << std::endl;
+                Y_MPI_NODE(std::cerr.flush();
+                           std::cerr << " |_" << MPI.nodeName << std::endl;
                            std::cerr << "  |_inner: " << W.inner << std::endl;
-                           std::cerr << "  |_outer: " << W.outer << std::endl );
+                           std::cerr << "  |_outer: " << W.outer << std::endl;
+                           std::cerr.flush());
 
                 iField &I = W.template create<int>(    "I" );
                 iField &J = W.template create<int>(    "J" );
@@ -146,11 +151,6 @@ Y_UTEST(spade)
     doTest<Coord1D>(MPI,layout,ghosts);
     doTest<Coord2D>(MPI,layout,ghosts);
     doTest<Coord3D>(MPI,layout,ghosts);
-
-
-
-
-
 }
 Y_UTEST_DONE()
 

@@ -82,7 +82,7 @@ namespace upsylon {
              \param localRanks the local ranks in the topology
              \param dispatch   the dispatch used to compute rank(s)
              \param boundaries Periodic boundary condtions
-             \param numGhosts  number of ghosts
+             \param userGhosts Number of ghosts required by user
              */
             inline explicit Fragment(const Layout<COORD>   &fullLayout,
                                      const_coord            localRanks,
