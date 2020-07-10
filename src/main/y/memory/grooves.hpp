@@ -4,7 +4,7 @@
 #ifndef Y_MEMORY_GROOVES_INCLUDED
 #define Y_MEMORY_GROOVES_INCLUDED 1
 
-#include "y/collection.hpp"
+#include "y/sequence/accessible.hpp"
 #include "y/memory/groove.hpp"
 
 namespace upsylon {
@@ -41,6 +41,7 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(grooves);
+            groove *itm;
             groove *grv;
             size_t  num;
         };

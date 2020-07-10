@@ -23,10 +23,12 @@ namespace upsylon {
             else
             {
                 assert(0==grv);
+                assert(0==itm);
             }
         }
 
         grooves:: grooves() throw() :
+        itm(0),
         grv(0),
         num(0)
         {
@@ -54,6 +56,7 @@ namespace upsylon {
                 free();
                 assert(num);
                 object:: operator delete(grv,num*sizeof(groove));
+                itm=0;
                 grv=0;
                 num=0;
             }
@@ -66,6 +69,7 @@ namespace upsylon {
                 release();
                 grv = static_cast<groove *>(object:: operator new(n*sizeof(groove)));
                 num = n;
+                itm = grv-1;
             }
             else
             {
