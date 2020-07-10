@@ -15,7 +15,7 @@ namespace upsylon {
         //______________________________________________________________________
         //
         //
-        //! handle user's memory
+        //! handle user's memory, designed for one object
         //
         //______________________________________________________________________
         class groove
@@ -39,11 +39,6 @@ namespace upsylon {
             bool                  cpp() const throw(); //!< if C++
             const std::type_info &tid() const throw(); //!< typeid or null_type
 
-            //! clear memory for type
-            template <typename T> void acquire_for() { acquire(sizeof(T)); }
-
-            //! clear memory for type
-            template <typename T> void acquire_for(const size_t n) { assert(n>0); acquire(sizeof(T)*n); }
 
             //__________________________________________________________________
             //
