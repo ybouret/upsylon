@@ -117,6 +117,16 @@ namespace upsylon {
             }
         }
 
+        bool groove:: is0() const throw()
+        {
+            const uint8_t *u = static_cast<uint8_t *>(address);
+            for(size_t i=0;i<bytes;++i)
+            {
+                if(u[i]>0) return false;
+            }
+            return true;
+        }
+
         const std::type_info & groove:: tid() const throw()
         {
             if(type_id)

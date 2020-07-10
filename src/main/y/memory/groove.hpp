@@ -42,6 +42,14 @@ namespace upsylon {
             //__________________________________________________________________
             bool                  cpp() const throw(); //!< if C++
             const std::type_info &tid() const throw(); //!< typeid or null_type
+            bool                  is0() const throw(); //!< all zero
+
+            //! bytes >= sizeof(T)
+            template <typename T> inline
+            bool may_hold() const throw()
+            {
+                return bytes >= sizeof(T);
+            }
 
 
             //__________________________________________________________________
@@ -76,7 +84,7 @@ namespace upsylon {
             template <typename T>
             T & get() throw()
             {
-                assert(bytes>=sizeof(T));
+                assert(may_hold<T>());
                 return *static_cast<T*>(address);
             }
 
@@ -84,7 +92,7 @@ namespace upsylon {
             template <typename T>
             const T & get() const throw()
             {
-                assert(bytes>=sizeof(T));
+                assert(may_hold<T>());
                 return *static_cast<const T*>(address);
             }
 
