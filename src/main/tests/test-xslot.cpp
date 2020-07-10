@@ -62,6 +62,9 @@ Y_UTEST(xslot)
     xpooled0.acquire(21);  display_xs( xpooled0  ); Y_ASSERT( xpooled0.size >= 21);
     xpooled1.acquire(43);  display_xs( xpooled1  ); Y_ASSERT( xpooled1.size >= 43);
 
+    
+
+
     std::cerr << "build string..." << std::endl;
     xdefault0.build<string>(); Y_ASSERT(xdefault0.has_bytes_for<string>());
     xdefault1.build<string>(); Y_ASSERT(xdefault1.has_bytes_for<string>());

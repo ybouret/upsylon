@@ -161,14 +161,14 @@ namespace upsylon
             //! get POD
             template <typename T> inline T & get() throw()
             {
-                assert(size>=sizeof(T));
+                assert(has_bytes_for<T>());
                 return *static_cast<T*>(data);
             }
 
             //! get POD, const
             template <typename T> inline const T & get() const throw()
             {
-                assert(size>=sizeof(T));
+                assert(has_bytes_for<T>());
                 return *static_cast<T*>(data);
             }
 
