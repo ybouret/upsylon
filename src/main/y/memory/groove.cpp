@@ -132,6 +132,8 @@ namespace upsylon {
             memset((void*)entry,0,owned);
         }
 
+        static const char cls[] = "memory::groove";
+
         void groove:: acquire(const storage::model which,const size_t n)
         {
             if(n==bytes&&which==model)
@@ -146,7 +148,7 @@ namespace upsylon {
                     switch(which)
                     {
                         case storage::unused:
-                            throw libc::exception(EINVAL,"memory::groove:acquire(%lu,%s)", (unsigned long)n, storage::text(which));
+                            throw libc::exception(EINVAL,"%s.acquire(%lu>0,%s)",cls,(unsigned long)n, storage::text(which));
 
                         case storage::shared:
                             entry              = object:: operator new(n);
@@ -195,5 +197,10 @@ namespace upsylon {
             return os;
         }
 
+        void groove:: check_same_than( const std::type_info &tid ) const
+        {
+            if(!label)        throw libc::exception(EINVAL,"%s: flat memory for <%s>",cls, *type_name_for(tid) );
+            if(*label != tid) throw libc::exception(EINVAL,"%s: required <%s> instead of <%s>",cls,*type_name_for(tid),*type_name_for( *label ));
+        }
     }
 }

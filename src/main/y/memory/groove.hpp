@@ -123,6 +123,42 @@ namespace upsylon {
                 return get<T>();
             }
 
+            //! [0..count-1] access
+            template <typename T>
+            inline T & get(size_t indx) throw()
+            {
+                assert(bytes>=(indx+1)*sizeof(T));assert(entry!=NULL);
+                T *p = (T *)entry;
+                return p[indx];
+            }
+
+            //! [0..count-1] access, const
+            template <typename T>
+            inline const T & get(size_t indx) const throw()
+            {
+                assert(bytes>=(indx+1)*sizeof(T));assert(entry!=NULL);
+                T *p = (T *)entry;
+                return p[indx];
+            }
+
+            //! [0..count-1] access with type checking
+            template <typename T>
+            inline T &as(const size_t indx)
+            {
+                check_same_than( typeid(T) );
+                return get<T>(indx);
+            }
+
+            //! [0..count-1] access with type checking
+            template <typename T>
+            inline const T &as(const size_t indx) const
+            {
+                check_same_than( typeid(T) );
+                return get<T>(indx);
+            }
+
+
+
 
             //__________________________________________________________________
             //
