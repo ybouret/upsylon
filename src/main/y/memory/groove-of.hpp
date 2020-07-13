@@ -32,10 +32,21 @@ namespace upsylon {
             //! setup from a groove that shouldn't change
             inline explicit groove_of(groove &target) throw() :
             host( target ),
-            shift( ( (mutable_type *)(target.entry) ) -1 )
+            shift( get_shift_from(host) )
             {
                 assert( target.label && typeid(type)==(*target.label) );
             }
+
+            //! setup by redefining the groove
+            inline explicit groove_of(groove                      &target,
+                                      const memory::storage::model model,
+                                      const size_t                 count) :
+            host(target.make<type>(model,count)),
+            shift( get_shift_from(host) )
+            {
+
+            }
+
 
             inline virtual ~groove_of() throw()
             {
@@ -73,6 +84,10 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(groove_of);
             groove       &host;
             mutable_type *shift;
+            static inline mutable_type *get_shift_from(groove &target) throw()
+            {
+                return ( (mutable_type *)(target.entry) ) -1;
+            }
         };
 
     }

@@ -53,37 +53,42 @@ namespace upsylon {
 
             //! make n default objects
             template <typename T> inline
-            void make(const storage::model which, const size_t n)
+            groove &make(const storage::model which, const size_t n)
             {
                 ops<T>:: make(which,*this,n);
+                return *this;
             }
 
             //! make one default object
             template <typename T> inline
-            void make(const storage::model which)
+            groove &make(const storage::model which)
             {
                 ops<T>:: make(which,*this,1);
+                return *this;
             }
 
             //! build n objects with same parameter
             template <typename T,typename U> inline
-            void build(const storage::model which, const size_t n, typename type_traits<U>::parameter_type argU)
+            groove &build(const storage::model which, const size_t n, typename type_traits<U>::parameter_type argU)
             {
-                    ops<T>:: template make(which,*this,n,argU);
+                ops<T>:: template make(which,*this,n,argU);
+                return *this;
             }
 
             //! build one object with one parameter
             template <typename T, typename U> inline
-            void build(const storage::model which,const typename type_traits<U>::parameter_type argU)
+            groove & build(const storage::model which,const typename type_traits<U>::parameter_type argU)
             {
                 ops<T>:: template make(which,*this,1,argU);
+                return *this;
             }
 
             //! copy
             template <typename T>
-            void copy(const storage::model which, typename type_traits<T>::parameter_type args)
+            groove & copy(const storage::model which, typename type_traits<T>::parameter_type args)
             {
                 ops<T>:: template make(which,*this,1,args);
+                return *this;
             }
 
             //__________________________________________________________________

@@ -183,6 +183,14 @@ Y_UTEST(groove)
             std::cerr << G << std::endl;
         }
 
+        {
+            memory::groove_of<mpn> G(g,memory::storage::global,9);
+            std::cerr << "size=" << G.size() << std::endl;
+            std::cerr << G << std::endl;
+            support::fill1D(G);
+            std::cerr << G << std::endl;
+        }
+
     }
 
 
