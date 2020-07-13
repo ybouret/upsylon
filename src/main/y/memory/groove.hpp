@@ -89,6 +89,43 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
+            // access
+            //__________________________________________________________________
+            //! flat memory access
+            template <typename T>
+            inline T & get() throw()
+            {
+                assert(bytes>=sizeof(T));assert(entry!=NULL);
+                return *(T*)entry;
+            }
+
+            //! flat memory access
+            template <typename T>
+            inline const T & get() const throw()
+            {
+                assert(bytes>=sizeof(T));assert(entry!=NULL);
+                return *(const T*)entry;
+            }
+
+            //! access first entry with type checking
+            template <typename T>
+            inline T &as()
+            {
+                check_same_than( typeid(T) );
+                return get<T>();
+            }
+
+            //! access first entry with type checking
+            template <typename T>
+            inline const T &as() const
+            {
+                check_same_than( typeid(T) );
+                return get<T>();
+            }
+
+
+            //__________________________________________________________________
+            //
             // members
             //__________________________________________________________________
             // flat memory
@@ -105,6 +142,7 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(groove);
+            void check_same_than(const std::type_info &) const;
 
             //__________________________________________________________________
             //
