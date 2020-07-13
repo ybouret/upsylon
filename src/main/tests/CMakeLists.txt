@@ -79,7 +79,10 @@ ADD_TEST(core:binary      test-main binary)
 ADD_TEST(core:metaloop    test-main metaloop)
 
 SOURCE_GROUP(mem FILES test-chunk.cpp test-arena.cpp test-alloc.cpp test-blocks.cpp test-slab.cpp test-object.cpp test-slice.cpp test-embed.cpp
-test-carver.cpp test-pooled.cpp test-buffers.cpp test-xslot.cpp test-nugget.cpp test-vein.cpp test-dyadic.cpp test-ptr.cpp test-release.cpp test-static-slots.cpp test-memory-marker.cpp)
+test-carver.cpp test-pooled.cpp test-buffers.cpp test-xslot.cpp test-nugget.cpp test-vein.cpp test-dyadic.cpp test-ptr.cpp test-release.cpp 
+test-static-slots.cpp 
+test-memory-marker.cpp
+test-memory-groove.cpp)
 ADD_TEST(mem:chunk       test-main chunk)
 ADD_TEST(mem:arena       test-main arena)
 ADD_TEST(mem:alloc       test-main alloc)
