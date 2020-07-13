@@ -1,4 +1,5 @@
 #include "y/memory/grooves.hpp"
+#include "y/memory/groove-of.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/type/spec.hpp"
@@ -142,15 +143,45 @@ Y_UTEST(groove)
             doTests(g,n);
         }
 
+        std::cerr << std::endl;
+
+        std::cerr << "Test copy..." << std::endl;
         g.copy<float>(memory::storage::shared,1.0f);
         std::cerr << g << std::endl;
+        std::cerr << std::endl;
     }
 
     {
         std::cerr << "Testing grooves..." << std::endl;
         memory::grooves G;
         doTests(G);
+        std::cerr << std::endl;
+    }
 
+    {
+        std::cerr << "Testing groove_of" << std::endl;
+        memory::groove g;
+        {
+            g.make<float>(memory::storage::pooled,7);
+            std::cerr << "g=" << g << std::endl;
+
+            memory::groove_of<float> G(g);
+            std::cerr << "size=" << G.size() << std::endl;
+            std::cerr << G << std::endl;
+            support::fill1D(G);
+            std::cerr << G << std::endl;
+        }
+
+        {
+            g.make<string>(memory::storage::pooled,3);
+            std::cerr << "g=" << g << std::endl;
+
+            memory::groove_of<string> G(g);
+            std::cerr << "size=" << G.size() << std::endl;
+            std::cerr << G << std::endl;
+            support::fill1D(G);
+            std::cerr << G << std::endl;
+        }
 
     }
 
