@@ -191,6 +191,16 @@ Y_UTEST(groove)
             std::cerr << G << std::endl;
         }
 
+        std::cerr << std::endl;
+    }
+
+    {
+        std::cerr << "Testing as cache..." << std::endl;
+        memory::grooves cache(memory::storage::pooled);
+        cache.make(1);
+        memory::groove_of<float> arr( *cache, memory::storage::pooled, 6 );
+        support::fill1D(arr);
+        std::cerr << "arr=" << arr << std::endl;
     }
 
 

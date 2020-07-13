@@ -94,6 +94,18 @@ namespace upsylon {
             shift = 0;
         }
 
+        groove       & grooves:: operator*()       throw()
+        {
+            assert(front.count>0);
+            return front.get<groove>();
+        }
+
+        const groove & grooves:: operator*() const throw()
+        {
+            assert(front.count>0);
+            return front.get<groove>();
+        }
+
     }
 
 }
