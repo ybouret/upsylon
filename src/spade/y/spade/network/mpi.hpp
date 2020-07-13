@@ -177,8 +177,11 @@ namespace upsylon {
         class Domain : public Workspace<COORD>
         {
         public:
-            IOBlocks blocks; //!< memory for async
-            
+            typedef FieldFor<COORD> FieldClass; //!< for templates
+
+            IOBlocks                     blocks; //!< memory for async
+            typename Layout<COORD>::Loop loop;   //!< memory for bulk loop
+
             inline virtual ~Domain() throw() {} //!< cleanup
             
             //! setup
@@ -192,7 +195,8 @@ namespace upsylon {
                              MPI.rank,
                              boundaries,
                              numGhosts),
-            blocks( Workspace<COORD>::Levels )
+            blocks( Workspace<COORD>::Levels ),
+            loop(this->inner.lower,this->inner.upper)
             {
                 assert(size_t(MPI.size)==this->size);
                 assert(size_t(MPI.rank)==this->rank);
@@ -218,6 +222,7 @@ namespace upsylon {
                 exchange( aliasing::_(this->fields), sync );
             }
 
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Domain);
