@@ -17,14 +17,19 @@ namespace {
         g.make<T>(memory::storage::global,n); std::cerr << ' ' << g;
         std::cerr << std::endl;
 
-        const T tmp = support::get<T>();
-        std::cerr << "\tmake<" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
+        {
+            const T tmp = support::get<T>();
+            std::cerr << "\tbuild<" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
 
-        g.build<T,T>(memory::storage::shared,n,tmp); std::cerr << ' ' << g;
-        g.build<T,T>(memory::storage::pooled,n,tmp); std::cerr << ' ' << g;
-        g.build<T,T>(memory::storage::global,n,tmp); std::cerr << ' ' << g;
+            g.build<T,T>(memory::storage::shared,n,tmp); std::cerr << ' ' << g;
+            g.build<T,T>(memory::storage::pooled,n,tmp); std::cerr << ' ' << g;
+            g.build<T,T>(memory::storage::global,n,tmp); std::cerr << ' ' << g;
 
-        std::cerr << std::endl;
+            std::cerr << std::endl;
+        }
+
+
+
     }
 
     static inline void doTests( memory::groove &g, const size_t n )
@@ -67,7 +72,8 @@ Y_UTEST(groove)
         doTests(g,n);
     }
 
-
+    g.copy<float>(memory::storage::shared,1.0f);
+    std::cerr << g << std::endl;
 
 }
 Y_UTEST_DONE()

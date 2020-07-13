@@ -38,7 +38,7 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // methods
+            // management methods
             //__________________________________________________________________
             void                   free()    throw();       //!< return to flat memory
             void                   release() throw();       //!< free and release memory
@@ -47,31 +47,45 @@ namespace upsylon {
             void                   acquire(const storage::model which, const size_t n);
             friend std::ostream & operator<<(std::ostream &, const groove &);
 
+            //__________________________________________________________________
+            //
+            // build methods
+            //__________________________________________________________________
 
+            //! make n default objects
             template <typename T> inline
             void make(const storage::model which, const size_t n)
             {
                 ops<T>:: make(which,*this,n);
             }
 
+            //! make one default object
             template <typename T> inline
             void make(const storage::model which)
             {
                 ops<T>:: make(which,*this,1);
             }
 
+            //! build n objects with same parameter
             template <typename T,typename U> inline
             void build(const storage::model which, const size_t n, typename type_traits<U>::parameter_type argU)
             {
                     ops<T>:: template make(which,*this,n,argU);
             }
 
+            //! build one object with one parameter
             template <typename T, typename U> inline
             void build(const storage::model which,const typename type_traits<U>::parameter_type argU)
             {
                 ops<T>:: template make(which,*this,1,argU);
             }
 
+            //! copy
+            template <typename T>
+            void copy(const storage::model which, typename type_traits<T>::parameter_type args)
+            {
+                ops<T>:: template make(which,*this,1,args);
+            }
 
             //__________________________________________________________________
             //
