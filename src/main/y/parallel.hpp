@@ -4,7 +4,6 @@
 
 #include "y/object.hpp"
 #include "y/parops.hpp"
-#include "y/memory/grooves.hpp"
 #include "y/memory/xslot.hpp"
 
 namespace upsylon
