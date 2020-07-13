@@ -22,7 +22,7 @@ namespace upsylon {
             //
             // types
             //__________________________________________________________________
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type); //!< aliases
 
             //__________________________________________________________________
             //
@@ -47,10 +47,8 @@ namespace upsylon {
 
             }
 
-
-            inline virtual ~groove_of() throw()
-            {
-            }
+            //! cleanup
+            inline virtual ~groove_of() throw() {}
 
             //__________________________________________________________________
             //
