@@ -44,19 +44,32 @@ namespace upsylon {
             void                   release() throw();       //!< free and release memory
             const std::type_info & type_id() const throw(); //!< from user or null_type
 
-            void                   acquire(const size_t n, const storage::model which);
+            void                   acquire(const storage::model which, const size_t n);
             friend std::ostream & operator<<(std::ostream &, const groove &);
 
+
             template <typename T> inline
-            T &make(const storage::model which)
+            void make(const storage::model which, const size_t n)
             {
-                return *ops<T>:: make(*this,1,which);
+                ops<T>:: make(which,*this,n);
             }
 
             template <typename T> inline
-            void make(const size_t n, const storage::model which)
+            void make(const storage::model which)
             {
-                (void) ops<T>:: make(*this,n,which);
+                ops<T>:: make(which,*this,1);
+            }
+
+            template <typename T,typename U> inline
+            void build(const storage::model which, const size_t n, typename type_traits<U>::parameter_type argU)
+            {
+                    ops<T>:: template make(which,*this,n,argU);
+            }
+
+            template <typename T, typename U> inline
+            void build(const storage::model which,const typename type_traits<U>::parameter_type argU)
+            {
+                ops<T>:: template make(which,*this,1,argU);
             }
 
 
@@ -78,26 +91,50 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(groove);
-            template <typename T>
-            struct ops
+
+            //__________________________________________________________________
+            //
+            // internal templated operations
+            //
+            template <typename T> struct ops
             {
                 Y_DECL_ARGS(T,type);
 
-                static inline mutable_type *make(groove              &target,
-                                                 const size_t         count,
-                                                 const storage::model which)
+                static inline void make(const storage::model which,
+                                        groove              &target,
+                                        const size_t         count)
                 {
-                    target.acquire(count*sizeof(type),which);
+                    target.acquire(which,count*sizeof(type));
                     mutable_type *addr = (mutable_type *)(target.entry);
                     if(count>0)
                     {
                         build(addr,count);
-                        aliasing::_(target.count) = count;
-                        aliasing::_(target.width) = sizeof(type);
-                        aliasing::_(target.clear) = destruct;
-                        target.label              = &typeid(mutable_type);
+                        setup(target,count);
                     }
-                    return addr;
+                }
+
+                template <typename U>
+                static inline void make(const storage::model  which,
+                                        groove               &target,
+                                        const size_t          count,
+                                        const U              &argU)
+                {
+                    target.acquire(which,count*sizeof(type));
+                    mutable_type *addr = (mutable_type *)(target.entry);
+                    if(count>0)
+                    {
+                        build<U>(addr,count,argU);
+                        setup(target,count);
+                    }
+                }
+
+
+                static inline void setup(groove &target,const size_t count) throw()
+                {
+                    aliasing::_(target.count) = count;
+                    aliasing::_(target.width) = sizeof(type);
+                    aliasing::_(target.clear) = destruct;
+                    target.label              = &typeid(mutable_type);
                 }
 
                 static inline void build(mutable_type *addr, const size_t count)
@@ -112,17 +149,32 @@ namespace upsylon {
                     }
                     catch(...)
                     {
-                        suppress(addr,built);
+                        suppr(addr,built);
                         throw;
                     }
                 }
 
-                static inline void suppress(mutable_type *addr, size_t built ) throw()
+                template <typename U>
+                static inline void build(mutable_type *addr, const size_t count, const U &argU)
                 {
-                    while(built>0)
-                    {
-                        self_destruct( addr[--built] );
+                    size_t built=0;
+                    try {
+                        while(built<count)
+                        {
+                            new (addr+built) mutable_type(argU);
+                            ++built;
+                        }
                     }
+                    catch(...)
+                    {
+                        suppr(addr,built);
+                        throw;
+                    }
+                }
+
+                static inline void suppr(mutable_type *addr, size_t built ) throw()
+                {
+                    while(built>0) self_destruct( addr[--built] );
                 }
 
                 static inline void destruct(void *addr) throw()
@@ -131,6 +183,8 @@ namespace upsylon {
                     self_destruct( *static_cast<mutable_type*>(addr) );
                 }
             };
+            //__________________________________________________________________
+
 
         };
 

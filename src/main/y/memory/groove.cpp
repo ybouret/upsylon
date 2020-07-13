@@ -132,7 +132,7 @@ namespace upsylon {
             memset((void*)entry,0,owned);
         }
 
-        void groove:: acquire(const size_t n, const storage::model which)
+        void groove:: acquire(const storage::model which,const size_t n)
         {
             if(n==bytes&&which==model)
             {

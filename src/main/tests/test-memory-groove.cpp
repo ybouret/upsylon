@@ -11,11 +11,18 @@ namespace {
     template <typename T>
     static inline void doTest( memory::groove &g, const size_t n )
     {
-        std::cerr << "\tmake<" << type_name_of<T>() << ">(" << n << "):";
-        g.make<T>(n,memory::storage::shared); std::cerr << ' ' << g;
-        g.make<T>(n,memory::storage::pooled); std::cerr << ' ' << g;
-        g.make<T>(n,memory::storage::global); std::cerr << ' ' << g;
+        std::cerr << "\tmake<" << type_name_of<T>() << ">[" << n << "]:";
+        g.make<T>(memory::storage::shared,n); std::cerr << ' ' << g;
+        g.make<T>(memory::storage::pooled,n); std::cerr << ' ' << g;
+        g.make<T>(memory::storage::global,n); std::cerr << ' ' << g;
+        std::cerr << std::endl;
 
+        const T tmp = support::get<T>();
+        std::cerr << "\tmake<" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
+
+        g.build<T,T>(memory::storage::shared,n,tmp); std::cerr << ' ' << g;
+        g.build<T,T>(memory::storage::pooled,n,tmp); std::cerr << ' ' << g;
+        g.build<T,T>(memory::storage::global,n,tmp); std::cerr << ' ' << g;
 
         std::cerr << std::endl;
     }
@@ -46,9 +53,9 @@ Y_UTEST(groove)
     for(size_t n=1;n<=32;++n)
     {
         std::cerr << '\t';
-        g.acquire(n,memory::storage::shared); std::cerr << g << ' ';
-        g.acquire(n,memory::storage::pooled); std::cerr << g << ' ';
-        g.acquire(n,memory::storage::global); std::cerr << g << ' ';
+        g.acquire(memory::storage::shared,n); std::cerr << g << ' ';
+        g.acquire(memory::storage::pooled,n); std::cerr << g << ' ';
+        g.acquire(memory::storage::global,n); std::cerr << g << ' ';
         std::cerr << std::endl;
     }
 
