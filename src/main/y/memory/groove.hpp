@@ -17,7 +17,7 @@ namespace upsylon {
         //______________________________________________________________________
         //
         //
-        //! flexible cache for one or more object of same type
+        //! flexible cache for one or more objects of SAME type
         //
         //______________________________________________________________________
         class groove
@@ -40,12 +40,11 @@ namespace upsylon {
             //
             // management methods
             //__________________________________________________________________
-            void                   free()    throw();       //!< return to flat memory
-            void                   release() throw();       //!< free and release memory
-            const std::type_info & type_id() const throw(); //!< from user or null_type
-
-            void                   acquire(const storage::model which, const size_t n);
-            friend std::ostream & operator<<(std::ostream &, const groove &);
+            void                   free()    throw();                           //!< return to flat memory
+            void                   release() throw();                           //!< free and release memory
+            const std::type_info & type_id() const throw();                     //!< from user or null_type
+            void                   acquire(const storage::model, const size_t); //!< acquire zeroed bytes for a given model
+            friend std::ostream & operator<<(std::ostream &, const groove &);   //!< display info
 
             //__________________________________________________________________
             //
@@ -89,7 +88,7 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // access
+            // access methods
             //__________________________________________________________________
             //! flat memory access
             template <typename T>

@@ -1,4 +1,4 @@
-#include "y/memory/groove.hpp"
+#include "y/memory/grooves.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/type/spec.hpp"
@@ -64,6 +64,51 @@ namespace {
         doTest<string>(g,n);
         doTest<mpn>(g,n);
     }
+
+    static inline memory::storage::model alea_storage()
+    {
+        static const memory::storage::model m[3] = { memory::storage::shared, memory::storage::pooled, memory::storage::global };
+        return m[ alea.leq(2) ];
+    }
+
+    static inline void doTest(memory::grooves                   &G,
+                              const size_t                 n,
+                              const memory::storage::model m)
+    {
+        G.release();
+        G.update(m);
+        G.make(n);
+        for(size_t i=1;i<=n;++i)
+        {
+            memory::groove &g = G[i];
+            Y_ASSERT(g.bytes<=0);
+            const size_t    j = alea.leq(8);
+            switch( alea.range(1,4) )
+            {
+                case 1: g.make<int32_t>( alea_storage(), j); break;
+                case 2: g.make<double>(  alea_storage(), j); break;
+                case 3: g.make<string>(  alea_storage(), j); break;
+                case 4: g.make<mpn>(     alea_storage(), j); break;
+                default:
+                    break;
+            }
+        }
+        std::cerr << ' ' << G;
+    }
+
+    static inline void doTests( memory::grooves &G )
+    {
+        for(size_t n=0;n<=4;++n)
+        {
+            std::cerr << "grooves[" << n << "]=";
+            doTest(G,n,memory::storage::shared);
+            doTest(G,n,memory::storage::pooled);
+            doTest(G,n,memory::storage::global);
+            std::cerr << std::endl;
+        }
+
+    }
+
 }
 
 Y_UTEST(groove)
@@ -77,27 +122,38 @@ Y_UTEST(groove)
     
     Y_UTEST_SIZEOF(memory::groove);
 
-    memory::groove g; std::cerr << g << std::endl;
-
-    for(size_t n=1;n<=32;++n)
     {
-        std::cerr << '\t';
-        g.acquire(memory::storage::shared,n); std::cerr << g << ' ';
-        g.acquire(memory::storage::pooled,n); std::cerr << g << ' ';
-        g.acquire(memory::storage::global,n); std::cerr << g << ' ';
+        memory::groove g; std::cerr << g << std::endl;
+
+        for(size_t n=1;n<=32;++n)
+        {
+            std::cerr << '\t';
+            g.acquire(memory::storage::shared,n); std::cerr << g << ' ';
+            g.acquire(memory::storage::pooled,n); std::cerr << g << ' ';
+            g.acquire(memory::storage::global,n); std::cerr << g << ' ';
+            std::cerr << std::endl;
+        }
+
+        g.release(); std::cerr << g << std::endl;
         std::cerr << std::endl;
+
+        for(size_t n=0;n<=32;++n)
+        {
+            doTests(g,n);
+        }
+
+        g.copy<float>(memory::storage::shared,1.0f);
+        std::cerr << g << std::endl;
     }
 
-    g.release(); std::cerr << g << std::endl;
-    std::cerr << std::endl;
-    
-    for(size_t n=0;n<=32;++n)
     {
-        doTests(g,n);
+        std::cerr << "Testing grooves..." << std::endl;
+        memory::grooves G;
+        doTests(G);
+
+
     }
 
-    g.copy<float>(memory::storage::shared,1.0f);
-    std::cerr << g << std::endl;
 
 }
 Y_UTEST_DONE()
