@@ -185,14 +185,12 @@ namespace upsylon {
         std::ostream & operator<<(std::ostream &os, const groove &g)
         {
             os << '(';
-            os << g.bytes << '/' << g.owned;
+            os << g.bytes << '/' << g.owned << ':';
+            os << '<' << type_name_for( g.type_id() ) << '>';
             if(g.count>0)
             {
-                os << ':' << g.count << 'x';
+                os << 'x' << g.count;
             }
-            
-            os << '<' << type_name_for( g.type_id() ) << '>';
-
             os << ')';
             return os;
         }

@@ -48,10 +48,17 @@ namespace upsylon {
             friend std::ostream & operator<<(std::ostream &, const groove &);
 
             template <typename T> inline
-            void make(const storage::model which)
+            T &make(const storage::model which)
             {
-                ops<T>:: make(*this,1,which);
+                return *ops<T>:: make(*this,1,which);
             }
+
+            template <typename T> inline
+            void make(const size_t n, const storage::model which)
+            {
+                (void) ops<T>:: make(*this,n,which);
+            }
+
 
             //__________________________________________________________________
             //
@@ -76,22 +83,24 @@ namespace upsylon {
             {
                 Y_DECL_ARGS(T,type);
 
-                mutable_type *make(groove              &target,
-                                   const size_t         count,
-                                   const storage::model which)
+                static inline mutable_type *make(groove              &target,
+                                                 const size_t         count,
+                                                 const storage::model which)
                 {
                     target.acquire(count*sizeof(type),which);
+                    mutable_type *addr = (mutable_type *)(target.entry);
                     if(count>0)
                     {
-                        build( (mutable_type *)(target.entry), count);
+                        build(addr,count);
                         aliasing::_(target.count) = count;
                         aliasing::_(target.width) = sizeof(type);
                         aliasing::_(target.clear) = destruct;
                         target.label              = &typeid(mutable_type);
                     }
+                    return addr;
                 }
 
-                inline void build(mutable_type *addr, const size_t count)
+                static inline void build(mutable_type *addr, const size_t count)
                 {
                     size_t built=0;
                     try {
@@ -108,7 +117,7 @@ namespace upsylon {
                     }
                 }
 
-                inline void suppress(mutable_type *addr, size_t built ) throw()
+                static inline void suppress(mutable_type *addr, size_t built ) throw()
                 {
                     while(built>0)
                     {
