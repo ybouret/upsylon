@@ -53,6 +53,7 @@ namespace upsylon
 
 #include <iostream>
 #include "y/type/aliasing.hpp"
+#include "y/parops.hpp"
 
 namespace upsylon
 {
@@ -83,6 +84,17 @@ namespace upsylon
             --aliasing::_(index);
             throw;
         }
+    }
+
+    size_t counting:: boot(const size_t global_size,
+                           const size_t global_rank)
+    {
+        boot();
+        size_t length = count;
+        size_t offset = 1;
+        parops::split_any(length,offset,global_size,global_rank);
+        while(offset-- > 1) next();
+        return length;
     }
 
 }

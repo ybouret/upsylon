@@ -48,6 +48,10 @@ namespace upsylon
         void                  next();                         //!< update index and call   onNext() if valid
         virtual std::ostream &show(std::ostream &) const = 0; //!< display C++ style
 
+        //! boot and forward, return remaining
+        size_t                boot(const size_t global_size,
+                                   const size_t global_rank);
+
         //______________________________________________________________________
         //
         // members

@@ -39,9 +39,7 @@ namespace upsylon {
             //! cleanup
             virtual ~permuter() throw();
             
-
             
-
             //! count and set weak if a repetition is detected
             mpl::natural count_with(const repeats &, const upsylon::counting::with_mp_t &) const;
           
@@ -122,6 +120,7 @@ wlen(0)
             setup_memory();
             copy_content(seq);
             build_extent();
+            aliasing::_(index)=1;
         }
         
         //! full setup from a C-buffer of objects
@@ -130,6 +129,7 @@ wlen(0)
             setup_memory();
             copy_content(buffer,buflen);
             build_extent();
+            aliasing::_(index)=1;
         }
         
         
@@ -331,6 +331,7 @@ wlen(0)
         
         inline virtual void onBoot()
         {
+            assert(1==index);
             initialize();
         }
         

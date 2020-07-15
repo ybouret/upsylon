@@ -13,12 +13,46 @@ namespace {
  
     static inline void infoOn(counting &loop)
     {
+        Y_CHECK(1==loop.index);
         std::cerr << "index=" << loop.index << "/count=" << loop.count << std::endl;
         std::cerr << loop << std::endl;
+
+        bool has_endl = false;
         for(loop.boot();loop.good();loop.next())
         {
-            std::cerr << "\t" << loop << " @" << loop.index << std::endl;
+            std::cerr << ' ' << loop << " @" << loop.index;
+            if(!(loop.index%4))
+            {
+                std::cerr << std::endl;
+                has_endl = true;
+            }
+            else
+            {
+                has_endl = false;
+            }
         }
+        if(!has_endl) std::cerr << std::endl;
+
+        for(size_t size=1;size<=4;++size)
+        {
+            std::cerr << "#" << size;
+            for(size_t rank=0;rank<size;++rank)
+            {
+                size_t todo = loop.boot(size,rank);
+                std::cerr << " " << size << "." << rank << ":@" << loop.index << "+" << todo;
+                std::cerr << '[';
+                while(todo>0)
+                {
+                    Y_ASSERT(loop.good());
+                    --todo;
+                    loop.next();
+                    std::cerr << '.';
+                }
+                std::cerr << ']';
+            }
+            std::cerr << std::endl;
+        }
+
     }
     
 }
