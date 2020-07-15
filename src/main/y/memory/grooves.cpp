@@ -37,6 +37,13 @@ namespace upsylon {
             return front;
         }
 
+        groove & grooves:: create1()
+        {
+            make(1);
+            return front.as<groove>();
+        }
+
+
         size_t grooves:: size() const throw()
         {
             return front.count;
@@ -58,9 +65,9 @@ namespace upsylon {
             return shift[indx];
         }
 
-        void grooves:: update(const storage::model m)
+        void grooves:: upgrade(const storage::model m)
         {
-            static const char fn[] = "memory::grooves.update";
+            static const char fn[] = "memory::grooves.upgrade";
 
             if( size()>0 )            throw exception("%s(in use)",fn);
             if( storage::unused == m) throw libc::exception(EINVAL,"%s('%s')",fn,storage::text(m));
@@ -110,6 +117,18 @@ namespace upsylon {
             assert(front.count>0);
             return front.get<groove>();
         }
+
+        void grooves:: ready_(const storage::model which, const size_t sz[], const size_t ns)
+        {
+            assert(sz);
+            assert(ns);
+            make(ns);
+            for(size_t i=0;i<ns;++i)
+            {
+                front.as<groove>(i).acquire(which,sz[i]);
+            }
+        }
+
 
     }
 

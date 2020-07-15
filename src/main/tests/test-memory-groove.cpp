@@ -77,7 +77,7 @@ namespace {
                               const memory::storage::model m)
     {
         G.release();
-        G.update(m);
+        G.upgrade(m);
         G.make(n);
         for(size_t i=1;i<=n;++i)
         {

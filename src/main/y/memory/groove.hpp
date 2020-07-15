@@ -48,7 +48,10 @@ namespace upsylon {
             bool                   is_cplusplus() const throw();                //!< handling object ?
             bool                   is_zeroed()    const throw();                //!< all bytes are zero ?
             const char *           model_text()   const throw();                //!< storage::text(model)
-            
+            template <typename T> inline
+            bool                   has_bytes_for() const throw() { return bytes>=sizeof(T); }
+            void                   check_same_than(const std::type_info &) const;
+
             //__________________________________________________________________
             //
             // build methods
@@ -111,7 +114,7 @@ namespace upsylon {
             template <typename T>
             inline T & get() throw()
             {
-                assert(bytes>=sizeof(T));assert(entry!=NULL);
+                assert(has_bytes_for<T>());assert(entry!=NULL);
                 return *(T*)entry;
             }
 
@@ -119,7 +122,7 @@ namespace upsylon {
             template <typename T>
             inline const T & get() const throw()
             {
-                assert(bytes>=sizeof(T));assert(entry!=NULL);
+                assert(has_bytes_for<T>());assert(entry!=NULL);
                 return *(const T*)entry;
             }
 
@@ -194,7 +197,6 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(groove);
-            void check_same_than(const std::type_info &) const;
 
             //__________________________________________________________________
             //

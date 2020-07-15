@@ -28,7 +28,7 @@ struct mod2
     {
         
         concurrent::executor &par = loop.engine();
-        par.acquire_for<mutable_type>();
+        par.shape<mutable_type>(model);
 
         Y_QUARK_TASK_DECL()
         LHS *lhs;
@@ -36,8 +36,9 @@ struct mod2
         mutable_type ans = 0;
         LHS         &lhs = *task.lhs;
         Y_QUARK_LOOP_PAR(lhs.size(),mod2);
-        assert( 0 == ctx.get<mutable_type>() );
-        ctx.get<mutable_type>() = ans;
+        memory::groove &cache = *ctx;
+        assert( 0 == cache.get<mutable_type>() );
+        cache.get<mutable_type>() = ans;
         Y_QUARK_TASK_DATA()
         &lhs
         Y_QUARK_TASK_EXEC(loop);
@@ -61,7 +62,7 @@ struct mod2
         assert(lhs.size()<=rhs.size());
 
         concurrent::executor &par = loop.engine();
-        par.acquire_for<mutable_type>();
+        par.shape<mutable_type>(model);
 
         Y_QUARK_TASK_DECL()
         LHS *lhs;
@@ -71,8 +72,9 @@ struct mod2
         LHS         &lhs = *task.lhs;
         RHS         &rhs = *task.rhs;
         Y_QUARK_LOOP_PAR(lhs.size(),mod2delta);
-        assert( 0 == ctx.get<mutable_type>() );
-        ctx.get<mutable_type>() = ans;
+        memory::groove &cache = *ctx;
+        assert( 0 == cache.get<mutable_type>() );
+        cache.get<mutable_type>() = ans;
         Y_QUARK_TASK_DATA()
         &lhs, &rhs
         Y_QUARK_TASK_EXEC(loop);

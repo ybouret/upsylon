@@ -23,6 +23,7 @@ namespace upsylon {
         //______________________________________________________________________
 
         struct quark {
+            static const memory::storage::model model = memory::storage::shared;
             
 #include "quark/v1/ld.hpp"
 #include "quark/v1/set.hpp"

@@ -9,6 +9,28 @@ namespace upsylon
         executor:: ~executor() throw() {}
         executor::  executor() throw() {}
 
+        void executor:: free() throw()
+        {
+            executor &self = *this;
+            size_t    i    = num_threads();
+            while(i-- > 0)
+            {
+                self[i].free();
+            }
+        }
+
+        void executor:: release() throw()
+        {
+            executor &self = *this;
+            size_t    i    = num_threads();
+            while(i-- > 0)
+            {
+                self[i].release();
+            }
+        }
+        
+
+#if 0
         void executor:: acquire_all(const size_t n)
         {
             executor    &self = *this;
@@ -28,6 +50,7 @@ namespace upsylon
                 self[i].free();
             }
         }
+#endif
 
         parallel & executor:: operator[](const size_t context_index) throw()
         {

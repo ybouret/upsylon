@@ -27,12 +27,12 @@ namespace upsylon
             virtual  ~executor() throw();
 
             //! run a kernel with data, presenting a context and a shared access
-            virtual void       run( kernel, void * ) = 0;
+            virtual void       run(kernel, void *) = 0;
 
             //! number of underlying threads
             virtual size_t     num_threads()   const throw() = 0;
 
-            //! access to individual context
+            //! access to individual context in [0..num_threads-1]
             virtual parallel & get_context(const size_t indx) throw() = 0;
 
             //__________________________________________________________________
@@ -41,98 +41,121 @@ namespace upsylon
             // non-virtual interface
             //
             //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            // access to context
+            //__________________________________________________________________
+
+
             //! access to individual context
             parallel & operator[](const size_t) throw();
 
             //! access to individual context, CONST
             const parallel & operator[](const size_t) const throw();
 
-            //! allocate memory per context
-            void acquire_all(const size_t n);
 
-            //! free all memory per context
-            void free_all() throw();
+            //__________________________________________________________________
+            //
+            // memory management
+            //__________________________________________________________________
 
-            //! allocate memory per context
+            //! free per engine
+            void free() throw();
+
+            //! release per engine
+            void release() throw();
+
+            //! reserve space for T for each engine
             template <typename T>
-            void acquire_for() { acquire_all( sizeof(T) ); }
+            void ready(const memory::storage::model which)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self[i].ready<T>(which);
+                }
+            }
+
+            //! reserve space for n times T for each engine
+            template <typename T>
+            void ready(const memory::storage::model which, const size_t n)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self[i].ready<T>(which,n);
+                }
+            }
+
+            //! build one T for each engine
+            template <typename T>
+            void shape(const memory::storage::model which)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self[i].shape<T>(which);
+                }
+            }
+
+            //! build n times  T for each engine
+            template <typename T>
+            void shape(const memory::storage::model which, const size_t n)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self[i].shape<T>(which,n);
+                }
+            }
+
+            //! build one T for each engine from parameter
+            template <typename T, typename U>
+            void build(const memory::storage::model which, const typename type_traits<U>::parameter_type argU)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self[i].build<T,U>(which,argU);
+                }
+            }
+
+            //! build one T for each engine from parameter, n times
+            template <typename T, typename U>
+            void build(const memory::storage::model which, const size_t n, const typename type_traits<U>::parameter_type argU)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self[i].build<T,U>(which,n,argU);
+                }
+            }
 
             //! sum of local stored type
+            /**
+             assuming first item in cache is T
+             */
             template <typename T> inline
             T sum() const
             {
                 const executor &self = *this;
                 T               ans(0);
                 size_t          i    = num_threads();
-                while(i-->0)
+                while(i-- > 0)
                 {
-                    ans +=  self[i].get<T>();
+                    const memory::groove &g = *self[i];
+                    ans += g.get<T>();
                 }
                 return ans;
             }
-
-            //! zero argument build data for each context
-            template <typename T>
-            inline void build()
-            {
-                executor    &self = *this;
-                const size_t n    = num_threads();
-                try
-                {
-                    for(size_t i=0;i<n;++i)
-                    {
-                        self[i].build<T>();
-                    }
-                }
-                catch(...)
-                {
-                    free_all();
-                    throw;
-                }
-            }
-
-            //! zero argument build data for each context
-            template <typename T>
-            inline void build_from( typename type_traits<T>::parameter_type arg )
-            {
-                executor    &self = *this;
-                const size_t n    = num_threads();
-                try
-                {
-                    for(size_t i=0;i<n;++i)
-                    {
-                        self[i].build_from<T>(arg);
-                    }
-                }
-                catch(...)
-                {
-                    free_all();
-                    throw;
-                }
-            }
-
-            //! build with one argument
-            template <typename T,typename U> inline
-            void build( typename type_traits<U>::parameter_type u )
-            {
-                executor    &self = *this;
-                const size_t n    = num_threads();
-                try
-                {
-                    for(size_t i=0;i<n;++i)
-                    {
-                        self[i].build<T,U>(u);
-                    }
-                }
-                catch(...)
-                {
-                    free_all();
-                    throw;
-                }
-            }
-
-
-
+            
         protected:
             //! constructor
             explicit  executor() throw();

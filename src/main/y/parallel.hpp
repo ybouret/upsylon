@@ -5,7 +5,7 @@
 #include "y/object.hpp"
 #include "y/parops.hpp"
 #include "y/memory/xslot.hpp"
-#include "y/memory/groove.hpp"
+#include "y/memory/grooves.hpp"
 
 namespace upsylon
 {
@@ -15,8 +15,8 @@ namespace upsylon
     //! alias for base type
     //
     //__________________________________________________________________________
-    typedef memory::xslot<> parallel_cache;
-    
+    //typedef memory::xslot<> parallel_cache;
+    typedef memory::grooves   parallel_cache;
 
     //__________________________________________________________________________
     //
