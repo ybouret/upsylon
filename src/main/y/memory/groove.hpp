@@ -53,7 +53,7 @@ namespace upsylon {
 
             //! make n default objects
             template <typename T> inline
-            groove &make(const storage::model which, const size_t n)
+            groove & make(const storage::model which, const size_t n)
             {
                 ops<T>:: make(which,*this,n);
                 return *this;
@@ -66,6 +66,15 @@ namespace upsylon {
                 ops<T>:: make(which,*this,1);
                 return *this;
             }
+
+            //! make one default object, returned
+            template <typename T> inline
+            T & single(const storage::model which)
+            {
+                ops<T>:: make(which,*this,1);
+                return *(T*)entry;
+            }
+            
 
             //! build n objects with same parameter
             template <typename T,typename U> inline

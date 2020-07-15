@@ -39,7 +39,7 @@ namespace upsylon
         const size_t size;     //!< the family size
         const size_t rank;     //!<  0..size-1
         const size_t indx;     //!<  1..size
-        const char   label[8]; //!< size.rank
+        const char   label[8]; //!< size.rank or "too big"
         
         //! get the work portion according to rank/size
         template <typename T>
