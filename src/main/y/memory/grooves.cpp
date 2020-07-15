@@ -32,6 +32,11 @@ namespace upsylon {
         }
 
 
+        const groove & grooves:: self() const throw()
+        {
+            return front;
+        }
+
         size_t grooves:: size() const throw()
         {
             return front.count;

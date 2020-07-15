@@ -45,6 +45,8 @@ namespace upsylon {
             const std::type_info & type_id() const throw();                     //!< from user or null_type
             void                   acquire(const storage::model, const size_t); //!< acquire zeroed bytes for a given model
             friend std::ostream & operator<<(std::ostream &, const groove &);   //!< display info
+            bool                   is_cplusplus() const throw();                //!< handling object ?
+            bool                   is_zeroed()    const throw();                //!< all bytes are zero ?
 
             //__________________________________________________________________
             //

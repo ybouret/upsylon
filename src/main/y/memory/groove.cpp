@@ -174,6 +174,34 @@ namespace upsylon {
             }
         }
 
+        bool groove:: is_cplusplus() const throw()
+        {
+            if(label)
+            {
+                assert(clear);
+                assert(width);
+                assert(count);
+                return true;
+            }
+            else
+            {
+                assert(!clear);
+                assert(!width);
+                assert(!count);
+                return false;
+            }
+        }
+
+        bool groove:: is_zeroed() const throw()
+        {
+            const unsigned char *p = static_cast<const unsigned char*>(entry);
+            for(size_t i=0;i<bytes;++i)
+            {
+                if(p[i]>0) return false;
+            }
+            return true;
+        }
+
 
     }
 }
