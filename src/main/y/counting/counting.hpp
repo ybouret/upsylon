@@ -21,7 +21,7 @@ namespace upsylon
     //--------------------------------------------------------------------------
     //
     //! base class for counting objects
-    /** upon creation counting objects should be ready to go
+    /** upon creation counting objects should be ready to go!
      */
     //
     //--------------------------------------------------------------------------

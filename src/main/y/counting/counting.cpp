@@ -1,7 +1,7 @@
 
 #include "y/counting/counting.hpp"
 #include "y/type/block/zset.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -26,15 +26,7 @@ namespace upsylon
         return (index<=count);
     }
 
-    memory::allocator & counting:: mem_instance()
-    {
-        return memory::pooled::instance();
-    }
-
-    memory::allocator & counting:: mem_location() throw()
-    {
-        return memory::pooled::location();
-    }
+   
 
 
     size_t * counting:: acquire_( size_t &bytes )
