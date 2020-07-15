@@ -47,7 +47,7 @@ namespace upsylon {
             void update(const storage::model);        //!< update with a valid model on a releases state
             groove       & operator*()       throw(); //!< get first groove for size()>0
             const groove & operator*() const throw(); //!< get first groove for size()>0
-            const groove & self() const throw();      //!< for information
+            const groove & handler() const throw();   //!< for information
 
             //__________________________________________________________________
             //

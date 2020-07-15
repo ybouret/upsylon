@@ -32,7 +32,7 @@ namespace upsylon {
         }
 
 
-        const groove & grooves:: self() const throw()
+        const groove & grooves:: handler() const throw()
         {
             return front;
         }

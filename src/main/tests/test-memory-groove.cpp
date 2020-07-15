@@ -201,6 +201,8 @@ Y_UTEST(groove)
         memory::groove_of<float> arr( *cache, memory::storage::pooled, 6 );
         support::fill1D(arr);
         std::cerr << "arr=" << arr << std::endl;
+        std::cerr << "handler.bytes=" << cache.handler().bytes << std::endl;
+        std::cerr << "handler.model=" << cache.handler().model_text() << std::endl;
     }
 
 

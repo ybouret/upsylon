@@ -202,6 +202,10 @@ namespace upsylon {
             return true;
         }
 
+        const char * groove:: model_text()   const throw()
+        {
+            return storage::text(model);
+        }
 
     }
 }

@@ -47,7 +47,8 @@ namespace upsylon {
             friend std::ostream & operator<<(std::ostream &, const groove &);   //!< display info
             bool                   is_cplusplus() const throw();                //!< handling object ?
             bool                   is_zeroed()    const throw();                //!< all bytes are zero ?
-
+            const char *           model_text()   const throw();                //!< storage::text(model)
+            
             //__________________________________________________________________
             //
             // build methods
