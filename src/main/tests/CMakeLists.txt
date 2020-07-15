@@ -274,7 +274,7 @@ ADD_TEST(sparse:matrix test-main sparse_matrix)
 
 SOURCE_GROUP(counting FILES
  test-comb.cpp
- test-perm.cpp test-anagram.cpp
+ test-perm.cpp test-anagram.cpp test-perm-par.cpp
  test-mloop.cpp 
 test-dancing.cpp 
 test-scrabble.cpp 
@@ -285,6 +285,7 @@ test-symm-pair.cpp
 )
 ADD_TEST(counting:comb     test-main comb 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 ADD_TEST(counting:perm     test-main perm 1 2 3 4 5 6 7)
+ADD_TEST(counting:perm_par test-main perm_par)
 ADD_TEST(counting:anagram  test-main anagram yannb)
 ADD_TEST(counting:anagram  test-main permuter)
 ADD_TEST(counting:mloops   test-main mloops)
