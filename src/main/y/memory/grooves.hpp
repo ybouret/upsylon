@@ -44,7 +44,7 @@ namespace upsylon {
             void make(const size_t n);                //!< ensure exactly n clean grooves
             void free() throw();                      //!< free content, keep clean grooves
             void release() throw();                   //!< release all memory
-            void update(const storage::model);        //!< update with a valid model on a releases state
+            void update(const storage::model);        //!< update with a valid model on a released state
             groove       & operator*()       throw(); //!< get first groove for size()>0
             const groove & operator*() const throw(); //!< get first groove for size()>0
             const groove & handler() const throw();   //!< for information
