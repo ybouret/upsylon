@@ -40,15 +40,15 @@ namespace {
             {
                 size_t todo = loop.boot(size,rank);
                 std::cerr << " " << size << "." << rank << ":@" << loop.index << "+" << todo;
-                std::cerr << '[';
+                //std::cerr << '[';
                 while(todo>0)
                 {
                     Y_ASSERT(loop.good());
                     --todo;
                     loop.next();
-                    std::cerr << '.';
+                    //std::cerr << '.';
                 }
-                std::cerr << ']';
+                //std::cerr << ']';
             }
             std::cerr << std::endl;
         }
@@ -76,13 +76,13 @@ Y_UTEST(counting)
     
     {
         std::cerr << "perm" << std::endl;
-        permutation perm(4);
+        permutation perm(6);
         infoOn(perm);
     }
 
     {
         std::cerr << "symm" << std::endl;
-        symm_pair symm(6);
+        symm_pair symm(8);
         infoOn(symm);
     }
 
