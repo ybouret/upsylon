@@ -203,7 +203,14 @@ wlen(0)
         {
             kstore.cache.release();
         }
-        
+
+        //! reserve extra
+        inline void extra(const size_t n)
+        {
+            kstore.reserve(n);
+        }
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(permuter);
         mutable_type       *target;
