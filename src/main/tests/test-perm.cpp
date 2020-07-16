@@ -99,8 +99,7 @@ Y_UTEST_DONE()
 
 #include "y/counting/permuter.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/counting/mloop.hpp"
-#include "y/sort/heap.hpp"
+#include "y/counting/part.hpp"
 
 namespace {
  
@@ -141,41 +140,51 @@ namespace {
     void doPermMemory(const size_t n)
     {
         std::cerr << "-- dims=" << n << std::endl;
-        const string  fn = vformat("mperm%u.dat",unsigned(n));
-        ios::ocstream fp(fn);
-        const T lo=1;
-        const T hi=n;
-        vector<T>            ini(n,lo);
-        vector<T>            end(n,hi);
-        core::mloop<T>       loop(n,*ini,*end);
-        const accessible<T> &data = loop;
-        vector<size_t> counts;
+        integer_partition pb(n);
+        std::cerr << "|_" << pb.outcomes() << " outcomes" << std::endl;
+        pb.initialize();
+        vector<T> data(n,as_capacity);
+        vector<size_t> count;
         vector<size_t> nodes;
-        size_t max_nodes = 0;
-        for( loop.boot(); loop.good(); loop.next() )
+        do
         {
-            //std::cerr << "testing with " << data << std::endl;
+            data.free();
+            const accessible<size_t> &part = pb;
+            std::cerr << " |_using " << part << " => ";
+            const size_t m = part.size();
+            for(size_t j=1;j<=m;++j)
+            {
+                for(size_t k=part[j];k>0;--k)
+                {
+                    data.push_back( T(j) );
+                }
+            }
+            Y_ASSERT(data.size()==n);
+            std::cerr << data;
             permuter<T> P(data);
-            //std::cerr << "|_count  =" << P.count << "/" << permutation::compute(n,counting::with_mp) << std::endl;
-            //std::cerr << "|_classes=" << P.classes << "/" << P.dims <<  std::endl;
+            Y_ASSERT(P.classes==part.size());
+            std::cerr << " => #count=" << P.count;
             for( P.boot(); P.good(); P.next() )
             {
 
             }
-            //std::cerr << "|_nodes=" << P.required_nodes() << std::endl;
-            counts.push_back(P.count);
-            nodes.push_back(P.required_nodes());
-            if(nodes.back()>max_nodes)
-            {
-                max_nodes = nodes.back();
-            }
+            const size_t xnodes = P.required_nodes();
+            std::cerr << " => #nodes= " << xnodes;
+            std::cerr << std::endl;
+            count.push_back(P.count);
+            nodes.push_back(xnodes);
         }
-        hsort(counts,nodes, comparison::increasing<size_t> );
-        for(size_t i=1;i<=counts.size();++i)
+        while( pb.build_next() );
+        hsort(count, nodes, comparison::increasing<size_t> );
+
+        const string fn = vformat("mperm%u.dat", unsigned(n));
+        ios::ocstream fp(fn);
+        permutation   p(n);
+        const double den = double(p.count);
+        for(size_t i=1;i<=count.size();++i)
         {
-            fp("%lu %lu\n", (unsigned long) counts[i], (unsigned long) nodes[i] );
+            fp("%g %g\n", double(count[i])/den, double(nodes[i])/den );
         }
-        std::cerr << "max_nodes=" << max_nodes << std::endl;
 
     }
     
