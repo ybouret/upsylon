@@ -53,7 +53,7 @@ namespace upsylon {
                 memset(&opt,0,sizeof(info));
                 if(lhs.size>0&&rhs.size>0)
                 {
-                    loop.engine().ready<info>(memory::storage::shared);
+                    loop.engine().acquire<info>(memory::storage::shared);
 
                     struct Task
                     {
@@ -68,7 +68,7 @@ namespace upsylon {
                             const list_type &L    = *task.L;
                             const list_type &R    = *task.R;
                             PROC            &H    = *task.H;
-                            info            &I    = (*ctx).get<info>();
+                            info            &I    = ctx.cache.get<info>();
 
                             I.l = NULL;
                             I.r = NULL;
@@ -107,7 +107,7 @@ namespace upsylon {
                     size_t       i = 0;
                     for(i=0;i<n;++i)
                     {
-                        info &I = (*E[i]).get<info>();
+                        info &I = E(i).get<info>();
                         if(I.l)
                         {
                             assert(I.r!=0);
@@ -119,7 +119,7 @@ namespace upsylon {
 
                     for(++i;i<n;++i)
                     {
-                        info &I = (*E[i]).get<info>();
+                        info &I = E(i).get<info>();
                         if(I.l)
                         {
                             assert(I.r!=0);

@@ -18,13 +18,16 @@ namespace upsylon {
 
         //______________________________________________________________________
         //
+        //
         //! Quick Universal Algebraic Reusable Kernel
         //
         //______________________________________________________________________
 
         struct quark {
+
+            //! internal memory management: small objects
             static const memory::storage::model model = memory::storage::shared;
-            
+
 #include "quark/v1/ld.hpp"
 #include "quark/v1/set.hpp"
 #include "quark/v1/neg.hpp"

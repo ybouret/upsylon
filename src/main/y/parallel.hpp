@@ -5,18 +5,11 @@
 #include "y/object.hpp"
 #include "y/parops.hpp"
 #include "y/memory/xslot.hpp"
-#include "y/memory/grooves.hpp"
+#include "y/memory/groove.hpp"
 
 namespace upsylon
 {
-    //__________________________________________________________________________
-    //
-    //
-    //! alias for base type
-    //
-    //__________________________________________________________________________
-    //typedef memory::xslot<> parallel_cache;
-    typedef memory::grooves   parallel_cache;
+
 
     //__________________________________________________________________________
     //
@@ -24,37 +17,49 @@ namespace upsylon
     //! information and operation for parallelism
     //
     //__________________________________________________________________________
-    class parallel : public parallel_cache
+    class parallel
     {
     public:
-        
-        //! destructor
-        virtual ~parallel() throw();
+        //______________________________________________________________________
+        //
+        // types and definition
+        //______________________________________________________________________
+        typedef memory::groove cache_type; //!< cache for extra data
 
-        //! sequential
-        explicit parallel() throw();
 
-        //! parallel
-        explicit parallel(const size_t sz, const size_t rk) throw();
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        virtual ~parallel() throw();                                 //!< destructor
+        explicit parallel() throw();                                 //!< sequential setup
+        explicit parallel(const size_t sz, const size_t rk) throw(); //!< parallel
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+        double efficiency(const double speed_up) const;//!< compute efficiency, two significative figures
+        cache_type       & operator*()       throw();  //!< cache content
+        const cache_type & operator*() const throw();  //!< cache content, const
+
+        //! get the work portion according to rank/size
+        template <typename T> inline
+        void split(T &length, T &offset) const throw()
+        {
+            parops::split_any(length,offset,size,rank);
+        }
+
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        cache_type   cache;    //!< local cache
         const size_t size;     //!< the family size
         const size_t rank;     //!<  0..size-1
         const size_t indx;     //!<  1..size
         const char   label[8]; //!< size.rank or "too big"
         
-        //! get the work portion according to rank/size
-        template <typename T>
-        inline void split(T &length, T &offset) const throw()
-        {
-            parops::split_any(length,offset,size,rank);
-        }
-
-
-        //! compute efficiency, two significative figures
-        double efficiency(const double speed_up) const;
-
-      
-
     private:
         Y_DISABLE_COPY_AND_ASSIGN(parallel);
         void __format() throw();

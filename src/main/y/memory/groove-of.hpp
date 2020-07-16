@@ -5,6 +5,7 @@
 #define Y_MEMORY_GROOVE_OF_INCLUDED 1
 
 #include "y/memory/groove.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon {
 
@@ -41,7 +42,7 @@ namespace upsylon {
             inline explicit groove_of(groove                      &target,
                                       const memory::storage::model model,
                                       const size_t                 count) :
-            host(target.make<type>(model,count)),
+            host(target.vmake<type>(model,count)),
             shift( get_shift_from(host) )
             {
 

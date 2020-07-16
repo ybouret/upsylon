@@ -48,22 +48,18 @@ namespace upsylon {
             bool                   is_cplusplus() const throw();                //!< handling object ?
             bool                   is_zeroed()    const throw();                //!< all bytes are zero ?
             const char *           model_text()   const throw();                //!< storage::text(model)
+
+            //! check enough (flat) memory
             template <typename T> inline
             bool                   has_bytes_for() const throw() { return bytes>=sizeof(T); }
-            void                   check_same_than(const std::type_info &) const;
+
+            //! check types validity
+            bool                   is_built_from(const std::type_info &) const throw();
 
             //__________________________________________________________________
             //
-            // build methods
+            // build methods for one object
             //__________________________________________________________________
-
-            //! make n default objects
-            template <typename T> inline
-            groove & make(const storage::model which, const size_t n)
-            {
-                ops<T>:: make(which,*this,n);
-                return *this;
-            }
 
             //! make one default object
             template <typename T> inline
@@ -73,32 +69,15 @@ namespace upsylon {
                 return *this;
             }
 
-            //! make one default object, returned
-            template <typename T> inline
-            T & single(const storage::model which)
-            {
-                ops<T>:: make(which,*this,1);
-                return *(T*)entry;
-            }
-            
-
-            //! build n objects with same parameter
-            template <typename T,typename U> inline
-            groove &build(const storage::model which, const size_t n, typename type_traits<U>::parameter_type argU)
-            {
-                ops<T>:: template make(which,*this,n,argU);
-                return *this;
-            }
-
             //! build one object with one parameter
             template <typename T, typename U> inline
-            groove & build(const storage::model which,const typename type_traits<U>::parameter_type argU)
+            groove & make(const storage::model which, typename type_traits<U>::parameter_type argU)
             {
                 ops<T>:: template make(which,*this,1,argU);
                 return *this;
             }
 
-            //! copy
+            //! copy<T> = make<T,T>
             template <typename T>
             groove & copy(const storage::model which, typename type_traits<T>::parameter_type args)
             {
@@ -106,11 +85,58 @@ namespace upsylon {
                 return *this;
             }
 
+            //! single object with default constructor
+            template <typename T> inline
+            T & solo(const storage::model which)
+            {
+                return make<T>(which).template get<T>();
+            }
+
+            //! single object with constructor
+            template <typename T, typename U> inline
+            T & solo(const storage::model which, typename type_traits<U>::parameter_type argU)
+            {
+                return make<T,U>(which,argU). template get<T>();
+            }
+
+
+            //__________________________________________________________________
+            //
+            // build methods for multiple objects
+            //__________________________________________________________________
+
+            //! make n default objects
+            template <typename T> inline
+            groove &vmake(const storage::model which, const size_t n)
+            {
+                ops<T>:: make(which,*this,n);
+                return *this;
+            }
+
+
+            //! build n objects with same parameter
+            template <typename T,typename U> inline
+            groove &vmake(const storage::model which, const size_t n, typename type_traits<U>::parameter_type argU)
+            {
+                ops<T>:: template make(which,*this,n,argU);
+                return *this;
+            }
+
+
+            //! vcopy<T> = vmake<T,T>
+            template <typename T>
+            groove & vcopy(const storage::model which, const size_t n, typename type_traits<T>::parameter_type args)
+            {
+                ops<T>:: template make(which,*this,n,args);
+                return *this;
+            }
+
+
             //__________________________________________________________________
             //
             // access methods
             //__________________________________________________________________
-            //! flat memory access
+            //!   memory access
             template <typename T>
             inline T & get() throw()
             {
@@ -118,28 +144,12 @@ namespace upsylon {
                 return *(T*)entry;
             }
 
-            //! flat memory access
+            //!   memory access
             template <typename T>
             inline const T & get() const throw()
             {
                 assert(has_bytes_for<T>());assert(entry!=NULL);
                 return *(const T*)entry;
-            }
-
-            //! access first entry with type checking
-            template <typename T>
-            inline T &as()
-            {
-                check_same_than( typeid(T) );
-                return get<T>();
-            }
-
-            //! access first entry with type checking
-            template <typename T>
-            inline const T &as() const
-            {
-                check_same_than( typeid(T) );
-                return get<T>();
             }
 
             //! [0..count-1] access
@@ -159,23 +169,6 @@ namespace upsylon {
                 T *p = (T *)entry;
                 return p[indx];
             }
-
-            //! [0..count-1] access with type checking
-            template <typename T>
-            inline T &as(const size_t indx)
-            {
-                check_same_than( typeid(T) );
-                return get<T>(indx);
-            }
-
-            //! [0..count-1] access with type checking
-            template <typename T>
-            inline const T &as(const size_t indx) const
-            {
-                check_same_than( typeid(T) );
-                return get<T>(indx);
-            }
-
 
 
 
@@ -211,6 +204,7 @@ namespace upsylon {
                                         const size_t         count)
                 {
                     target.acquire(which,count*sizeof(type));
+                    assert(target.is_zeroed());
                     mutable_type *addr = (mutable_type *)(target.entry);
                     if(count>0)
                     {
@@ -226,6 +220,7 @@ namespace upsylon {
                                         const U              &argU)
                 {
                     target.acquire(which,count*sizeof(type));
+                    assert(target.is_zeroed());
                     mutable_type *addr = (mutable_type *)(target.entry);
                     if(count>0)
                     {

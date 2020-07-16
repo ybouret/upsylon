@@ -229,10 +229,12 @@ namespace upsylon {
             return os;
         }
 
-        void groove:: check_same_than( const std::type_info &tid ) const
+        bool groove:: is_built_from( const std::type_info &tid ) const throw()
         {
-            if(!label)        throw libc::exception(EINVAL,"%s: flat memory for <%s>",cls, *type_name_for(tid) );
-            if(*label != tid) throw libc::exception(EINVAL,"%s: required <%s> instead of <%s>",cls,*type_name_for(tid),*type_name_for( *label ));
+            if(!label) return false;
+            assert(entry);
+            assert(bytes);
+            return *label == tid;
         }
     }
 }

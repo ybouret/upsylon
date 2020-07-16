@@ -26,7 +26,7 @@ struct dot
         assert(lhs.size()<=rhs.size());
         
         concurrent::executor &par = loop.engine();
-        par.shape<mutable_type>(model);
+        par.make<mutable_type>(model);
 
         Y_QUARK_TASK_DECL()
         LHS *lhs;
@@ -36,9 +36,8 @@ struct dot
         LHS         &lhs = *task.lhs;
         RHS         &rhs = *task.rhs;
         Y_QUARK_LOOP_PAR(lhs.size(),dot);
-        memory::groove &cache = (*ctx);
-        assert( 0 == cache.get<mutable_type>() );
-        cache.get<mutable_type>() = ans;
+        assert( 0 == (*ctx).get<mutable_type>() );
+        (*ctx).get<mutable_type>() = ans;
         Y_QUARK_TASK_DATA()
         &lhs, &rhs
         Y_QUARK_TASK_EXEC(loop);

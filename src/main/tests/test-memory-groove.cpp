@@ -1,4 +1,4 @@
-#include "y/memory/grooves.hpp"
+#include "y/memory/groove.hpp"
 #include "y/memory/groove-of.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -15,17 +15,18 @@ namespace {
         const memory::groove &f = g;
         if(g.count>0)
         {
-            T       &first       = g.as<T>();
-            const T &const_first = f.as<T>();
+            Y_ASSERT(g.is_built_from( typeid(T) ));
+            T       &first       = g.get<T>();
+            const T &const_first = f.get<T>();
 
             for(size_t i=0;i<g.count;++i)
             {
-                Y_ASSERT( aliasing::anonymous( & g.as<T>(i) ) == aliasing::anonymous( & g.get<T>(i) ) );
-                Y_ASSERT( aliasing::anonymous( & f.as<T>(i) ) == aliasing::anonymous( & f.get<T>(i) ) );
-
+                Y_ASSERT( aliasing::anonymous( & g.get<T>(i) ) );
+                Y_ASSERT( aliasing::anonymous( & f.get<T>(i) ) );
             }
 
             g.free();
+            Y_ASSERT(!g.is_built_from(typeid(T)));
             Y_ASSERT(g.count<=0);
             Y_ASSERT(g.label==0);
             Y_ASSERT( & g.get<T>() == &first );
@@ -36,19 +37,40 @@ namespace {
     template <typename T>
     static inline void doTest( memory::groove &g, const size_t n )
     {
-        std::cerr << "\tmake<" << type_name_of<T>() << ">[" << n << "]:";
-        g.make<T>(memory::storage::shared,n); std::cerr << ' ' << g; doTestOf<T>(g);
-        g.make<T>(memory::storage::pooled,n); std::cerr << ' ' << g; doTestOf<T>(g);
-        g.make<T>(memory::storage::global,n); std::cerr << ' ' << g; doTestOf<T>(g);
+        if(1==n)
+        {
+            std::cerr << "\tmake <" << type_name_of<T>() << ">[" << n << "]:";
+            g.make<T>(memory::storage::shared);std::cerr << ' ' << g; doTestOf<T>(g);
+            g.make<T>(memory::storage::pooled);std::cerr << ' ' << g; doTestOf<T>(g);
+            g.make<T>(memory::storage::global);std::cerr << ' ' << g; doTestOf<T>(g);
+            {
+                const T tmp = support::get<T>();
+                std::cerr << "\tmake <" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
+                g.make<T,T>(memory::storage::shared,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+                g.make<T,T>(memory::storage::pooled,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+                g.make<T,T>(memory::storage::global,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+
+                std::cerr << "\tcopy <" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
+                g.copy<T>(memory::storage::shared,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+                g.copy<T>(memory::storage::pooled,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+                g.copy<T>(memory::storage::global,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+            }
+            std::cerr << std::endl;
+        }
+
+        std::cerr << "\tvmake<" << type_name_of<T>() << ">[" << n << "]:";
+        g.vmake<T>(memory::storage::shared,n); std::cerr << ' ' << g; doTestOf<T>(g);
+        g.vmake<T>(memory::storage::pooled,n); std::cerr << ' ' << g; doTestOf<T>(g);
+        g.vmake<T>(memory::storage::global,n); std::cerr << ' ' << g; doTestOf<T>(g);
         std::cerr << std::endl;
 
         {
             const T tmp = support::get<T>();
-            std::cerr << "\tbuild<" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
+            std::cerr << "\tvmake<" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
 
-            g.build<T,T>(memory::storage::shared,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
-            g.build<T,T>(memory::storage::pooled,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
-            g.build<T,T>(memory::storage::global,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+            g.vmake<T,T>(memory::storage::shared,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+            g.vmake<T,T>(memory::storage::pooled,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+            g.vmake<T,T>(memory::storage::global,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
 
             std::cerr << std::endl;
         }
@@ -66,49 +88,7 @@ namespace {
         doTest<mpn>(g,n);
     }
 
-    static inline memory::storage::model alea_storage()
-    {
-        static const memory::storage::model m[3] = { memory::storage::shared, memory::storage::pooled, memory::storage::global };
-        return m[ alea.leq(2) ];
-    }
-
-    static inline void doTest(memory::grooves                   &G,
-                              const size_t                 n,
-                              const memory::storage::model m)
-    {
-        G.release();
-        G.upgrade(m);
-        G.make(n);
-        for(size_t i=1;i<=n;++i)
-        {
-            memory::groove &g = G[i];
-            Y_ASSERT(g.bytes<=0);
-            const size_t    j = alea.leq(8);
-            switch( alea.range(1,4) )
-            {
-                case 1: g.make<int32_t>( alea_storage(), j); break;
-                case 2: g.make<double>(  alea_storage(), j); break;
-                case 3: g.make<string>(  alea_storage(), j); break;
-                case 4: g.make<mpn>(     alea_storage(), j); break;
-                default:
-                    break;
-            }
-        }
-        std::cerr << ' ' << G;
-    }
-
-    static inline void doTests( memory::grooves &G )
-    {
-        for(size_t n=0;n<=4;++n)
-        {
-            std::cerr << "grooves[" << n << "]=";
-            doTest(G,n,memory::storage::shared);
-            doTest(G,n,memory::storage::pooled);
-            doTest(G,n,memory::storage::global);
-            std::cerr << std::endl;
-        }
-
-    }
+    
 
 }
 
@@ -151,18 +131,13 @@ Y_UTEST(groove)
         std::cerr << std::endl;
     }
 
-    {
-        std::cerr << "Testing grooves..." << std::endl;
-        memory::grooves G;
-        doTests(G);
-        std::cerr << std::endl;
-    }
+    
 
     {
         std::cerr << "Testing groove_of" << std::endl;
         memory::groove g;
         {
-            g.make<float>(memory::storage::pooled,7);
+            g.vmake<float>(memory::storage::pooled,7);
             std::cerr << "g=" << g << std::endl;
 
             memory::groove_of<float> G(g);
@@ -173,7 +148,7 @@ Y_UTEST(groove)
         }
 
         {
-            g.make<string>(memory::storage::pooled,3);
+            g.vmake<string>(memory::storage::pooled,3);
             std::cerr << "g=" << g << std::endl;
 
             memory::groove_of<string> G(g);
@@ -194,16 +169,7 @@ Y_UTEST(groove)
         std::cerr << std::endl;
     }
 
-    {
-        std::cerr << "Testing as simple cache..." << std::endl;
-        memory::grooves cache(memory::storage::pooled);
-        cache.make(1);
-        memory::groove_of<float> arr( *cache, memory::storage::pooled, 6 );
-        support::fill1D(arr);
-        std::cerr << "arr=" << arr << std::endl;
-        std::cerr << "handler.bytes=" << cache.handler().bytes << std::endl;
-        std::cerr << "handler.model=" << cache.handler().model_text() << std::endl;
-    }
+
 
 
 }

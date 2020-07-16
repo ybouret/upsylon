@@ -15,7 +15,7 @@ namespace upsylon
             size_t    i    = num_threads();
             while(i-- > 0)
             {
-                self[i].free();
+                self(i).free();
             }
         }
 
@@ -25,32 +25,22 @@ namespace upsylon
             size_t    i    = num_threads();
             while(i-- > 0)
             {
-                self[i].release();
+                self(i).release();
             }
+        }
+
+        parallel::cache_type & executor:: operator()(const size_t context_index) throw()
+        {
+            assert(context_index<num_threads());
+            return get_context(context_index).cache;
+        }
+
+        const parallel::cache_type & executor:: operator()(const size_t context_index) const throw()
+        {
+            assert(context_index<num_threads());
+            return aliasing::_( *this ).get_context(context_index).cache;
         }
         
-
-#if 0
-        void executor:: acquire_all(const size_t n)
-        {
-            executor    &self = *this;
-            const size_t nthr = num_threads();
-            for(size_t i=0;i<nthr;++i)
-            {
-                self[i].acquire(n);
-            }
-        }
-
-        void executor:: free_all() throw()
-        {
-            executor &self = *this;
-            size_t    i    = num_threads();
-            while(i-->0)
-            {
-                self[i].free();
-            }
-        }
-#endif
 
         parallel & executor:: operator[](const size_t context_index) throw()
         {
