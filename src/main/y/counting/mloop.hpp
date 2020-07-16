@@ -21,7 +21,7 @@ namespace upsylon
         //! auxiliary stuff for mloop
         //
         //----------------------------------------------------------------------
-        class mloop_ : public counting
+        class mloop_ : public upsylon::counting
         {
         public:
             //__________________________________________________________________
@@ -115,7 +115,7 @@ data(0)
             //! cleanup
             inline virtual ~mloop() throw()
             {
-                static memory::allocator &mem = mem_location();
+                static memory::allocator &mem = upsylon::counting::mem_location();
                 memset(wksp,0,wlen);
                 mem.release(wksp,wlen);
                 curr = 0;
@@ -251,7 +251,7 @@ data(0)
             //__________________________________________________________________
             inline void setup_memory()
             {
-                static memory::allocator &mem = mem_instance();
+                static memory::allocator &mem = this->mem_instance();
                 {
                     memory::embed emb[] =
                     {
@@ -274,7 +274,7 @@ data(0)
             //! prepare loop parameters
             inline void setup(const_type *ini, const_type *end) throw()
             {
-                size_t &num = aliasing::_(count);
+                size_t &num = aliasing::_(this->count);
                 num = 1;
                 for(size_t i=0;i<dimensions;++i)
                 {

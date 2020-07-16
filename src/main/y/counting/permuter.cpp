@@ -21,6 +21,7 @@ namespace upsylon {
         upsylon::counting(0),
         dims(n),
         weak(false),
+        classes(0),
         perm(0)
         {
             if(dims<=0) throw libc::exception(ERANGE,"%s has no dimension",fn);

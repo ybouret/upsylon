@@ -148,6 +148,20 @@ namespace upsylon
                 }
             }
 
+            //! make one T for each engine from parameters
+            template <typename T, typename U, typename V>
+            void make(const memory::storage::model                  which,
+                      const typename type_traits<U>::parameter_type argU,
+                      const typename type_traits<V>::parameter_type argV)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self(i).make<T,U,V>(which,argU,argV);
+                }
+            }
+
             //__________________________________________________________________
             //
             // making multiple objects

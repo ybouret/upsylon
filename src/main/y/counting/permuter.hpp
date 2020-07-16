@@ -51,8 +51,9 @@ namespace upsylon {
             // members
             //
             //------------------------------------------------------------------
-            const size_t dims; //!< 1..dims objects
-            const bool   weak; //!< weak if there are some repeats
+            const size_t dims;     //!< 1..dims objects
+            const bool   weak;    //!< weak if there are some repeats
+            const size_t classes; //!< number of classes
             
         protected:
             //! setup, just check that dims=n>0
@@ -259,6 +260,7 @@ wlen(0)
                         {
                             reps.push_back( new repeat(num) );
                         }
+                        ++aliasing::_(classes);
                     }
                 }
 

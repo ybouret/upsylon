@@ -77,6 +77,17 @@ namespace upsylon {
                 return *this;
             }
 
+            //! build one object with two parameters
+            template <typename T, typename U, typename V> inline
+            groove & make(const storage::model                    which,
+                          typename type_traits<U>::parameter_type argU,
+                          typename type_traits<V>::parameter_type argV)
+            {
+                ops<T>:: template make(which,*this,1,argU,argV);
+                return *this;
+            }
+
+
             //! copy<T> = make<T,T>
             template <typename T>
             groove & copy(const storage::model which, typename type_traits<T>::parameter_type args)
@@ -229,6 +240,23 @@ namespace upsylon {
                     }
                 }
 
+                template <typename U, typename V>
+                static inline void make(const storage::model  which,
+                                        groove               &target,
+                                        const size_t          count,
+                                        const U              &argU,
+                                        const V              &argV)
+                {
+                    target.acquire(which,count*sizeof(type));
+                    assert(target.is_zeroed());
+                    mutable_type *addr = (mutable_type *)(target.entry);
+                    if(count>0)
+                    {
+                        build<U,V>(addr,count,argU,argV);
+                        setup(target,count);
+                    }
+                }
+
 
                 static inline void setup(groove &target,const size_t count) throw()
                 {
@@ -263,6 +291,24 @@ namespace upsylon {
                         while(built<count)
                         {
                             new (addr+built) mutable_type(argU);
+                            ++built;
+                        }
+                    }
+                    catch(...)
+                    {
+                        suppr(addr,built);
+                        throw;
+                    }
+                }
+
+                template <typename U, typename V>
+                static inline void build(mutable_type *addr, const size_t count, const U &argU, const V &argV)
+                {
+                    size_t built=0;
+                    try {
+                        while(built<count)
+                        {
+                            new (addr+built) mutable_type(argU,argV);
                             ++built;
                         }
                     }

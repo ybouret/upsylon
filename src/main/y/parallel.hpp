@@ -39,9 +39,9 @@ namespace upsylon
         //
         // methods
         //______________________________________________________________________
-        double efficiency(const double speed_up) const;//!< compute efficiency, two significative figures
-        cache_type       & operator*()       throw();  //!< cache content
-        const cache_type & operator*() const throw();  //!< cache content, const
+        double efficiency(const double speed_up) const; //!< compute efficiency, two significative figures
+        cache_type       & operator*()       throw();   //!< cache access
+        const cache_type & operator*() const throw();   //!< cache access, const
 
         //! get the work portion according to rank/size
         template <typename T> inline
@@ -49,6 +49,13 @@ namespace upsylon
         {
             parops::split_any(length,offset,size,rank);
         }
+
+        //! forwarding call
+        template <typename T> T &       get()       throw() { return cache.get<T>(); }
+
+        //! forwarding call, const
+        template <typename T> const T & get() const throw() { return cache.get<T>(); }
+
 
         //______________________________________________________________________
         //
