@@ -164,10 +164,7 @@ namespace {
             permuter<T> P(data);
             Y_ASSERT(P.classes==part.size());
             std::cerr << " => #count=" << P.count;
-            for( P.boot(); P.good(); P.next() )
-            {
-
-            }
+            P.unwind();
             const size_t xnodes = P.required_nodes();
             std::cerr << " => #nodes= " << xnodes;
             std::cerr << std::endl;
@@ -177,7 +174,7 @@ namespace {
         while( pb.build_next() );
         hsort(count, nodes, comparison::increasing<size_t> );
 
-        const string fn = vformat("mperm%u.dat", unsigned(n));
+        const string  fn = vformat("mperm%u.dat", unsigned(n));
         ios::ocstream fp(fn);
         permutation   p(n);
         const double den = double(p.count);

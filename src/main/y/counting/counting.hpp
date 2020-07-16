@@ -52,6 +52,9 @@ namespace upsylon
         size_t                boot(const size_t global_size,
                                    const size_t global_rank);
 
+        //! make a full loop
+        void unwind();
+
         //______________________________________________________________________
         //
         // members

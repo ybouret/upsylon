@@ -97,6 +97,14 @@ namespace upsylon
         return length;
     }
 
+    void counting:: unwind()
+    {
+        for( boot(); good(); next() )
+        {
+            
+        }
+    }
+
 }
 
 #include "y/exception.hpp"
