@@ -21,9 +21,9 @@ namespace upsylon {
         //______________________________________________________________________
         virtual       ~suffix_stem() throw();          //!< cleanup
         virtual void   free()             throw() = 0; //!< reset, keep memory
-        virtual void   free_cache()       throw() = 0;
-        virtual void   grow_cache(size_t)         = 0;
-        virtual size_t cache_size() const throw() = 0;
+        virtual void   free_cache()       throw() = 0; //!< remove excess memory
+        virtual void   grow_cache(size_t)         = 0; //!< expand excess memory
+        virtual size_t cache_size() const throw() = 0; //!< return size of cache
 
 
         //______________________________________________________________________

@@ -70,7 +70,7 @@ namespace upsylon
             {
                 //______________________________________________________________
                 //
-                // ubbound state
+                // unbound state
                 //______________________________________________________________
                 rdf->seek(pos,from_set);
                 return update(rdf.get(curr,buf->bytes));

@@ -56,7 +56,9 @@ namespace upsylon
         //! forwarding call, const
         template <typename T> const T & get() const throw() { return cache.get<T>(); }
 
-
+        //! get system ticks, thread-safe
+        uint64_t     ticks(lockable &) const throw();
+        
         //______________________________________________________________________
         //
         // members
@@ -65,10 +67,9 @@ namespace upsylon
         const size_t size;     //!< the family size
         const size_t rank;     //!<  0..size-1
         const size_t indx;     //!<  1..size
-        uint64_t     mark;     //!<
+        uint64_t     mark;     //!< internal mark for optional thread performance
         const char   label[8]; //!< size.rank or "too big"
 
-        uint64_t     ticks(lockable &) const throw();
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(parallel);

@@ -90,7 +90,7 @@ namespace upsylon {
             destruct();
         }
 
-        //! copy
+        //! copy by recursive duplication
         inline suffix_store(const suffix_store &other) :
         root( create_node(0) ),
         cache()
@@ -262,6 +262,7 @@ namespace upsylon {
             }
         }
 
+        //! in depth recursive comparision
         static inline bool compare(const node_type *lhs,
                                    const node_type *rhs)
         {
