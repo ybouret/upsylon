@@ -65,8 +65,11 @@ namespace upsylon
         const size_t size;     //!< the family size
         const size_t rank;     //!<  0..size-1
         const size_t indx;     //!<  1..size
+        uint64_t     mark;     //!<
         const char   label[8]; //!< size.rank or "too big"
-        
+
+        uint64_t     ticks(lockable &) const throw();
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(parallel);
         void __format() throw();

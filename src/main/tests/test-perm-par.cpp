@@ -6,6 +6,7 @@
 
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/os/wtime.hpp"
 
 #include <iomanip>
 
@@ -34,12 +35,15 @@ namespace {
             nodes = P.required_nodes();
         }
 
+        std::cerr << "#permutations=" << count << std::endl;
+        
         for(size_t i=0;i<nt;++i)
         {
             parallel::cache_type &cache = ex(i); Y_ASSERT(cache.is_built_from<perm_type>());
             perm_type &p = ex(i).get<perm_type>();
             p.extra(nodes);
             Y_ASSERT(p.required_nodes() == nodes);
+            ex[i].mark = 0;
         }
 
         target.make(count*width,0);
@@ -61,9 +65,10 @@ namespace {
                 
 
                 assert( s.size() == p.size() );
-                size_t       n   = p.boot(ctx.size,ctx.rank);
-                const size_t w   = s.size();
-                char        *q   = &a[1+ (p.index-1) * w];
+                const uint64_t t0  = ctx.ticks(access);
+                size_t         n   = p.boot(ctx.size,ctx.rank);
+                const size_t   w   = s.size();
+                char          *q   = &a[1+ (p.index-1) * w];
 
                 while(n-- > 0)
                 {
@@ -72,13 +77,25 @@ namespace {
                     q += w;
                     p.next();
                 }
+                ctx.mark += ctx.ticks(access) - t0;
             }
 
         };
 
         task todo = { &source, &target };
-        double speed = 0;
-        Y_TIMINGS(speed,1, loop.run( task::run, &todo ));
+        double speed  = 0;
+        size_t cycles = 0;
+        Y_TIMINGS_(speed,2, loop.run( task::run, &todo ),cycles);
+        std::cerr << "#cycles=" << cycles << std::endl;
+
+        wtime chrono;
+
+        for(size_t i=0;i<nt;++i)
+        {
+            const double workTime = chrono(ex[i].mark);
+            const double workRate = double(cycles)/workTime;
+            std::cerr << "\t\t#thread" << i << " : " << workRate << " cycles/s" << std::endl;
+        }
         return speed;
 
     }

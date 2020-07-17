@@ -9,11 +9,11 @@ namespace upsylon
     parallel:: ~parallel() throw() { }
 
     parallel:: parallel() throw() :
-    cache(),size(1),rank(0),indx(1),label()
+    cache(),size(1),rank(0),indx(1),mark(0),label()
     { __format(); }
 
     parallel:: parallel(const size_t sz, const size_t rk) throw() :
-    cache(), size(sz),rank(rk),indx(rk+1),label()
+    cache(), size(sz),rank(rk),indx(rk+1),mark(0),label()
     {
         assert(size>0); assert(rank<size);
         __format();
@@ -64,5 +64,18 @@ namespace upsylon
             snprintf(s,sizeof(label),fmt,unsigned(size),unsigned(rank));
         }
     }
-    
+
+}
+
+#include "y/os/rt-clock.hpp"
+
+namespace upsylon
+{
+    uint64_t parallel:: ticks(lockable &access) const throw()
+    {
+        Y_LOCK(access);
+        return rt_clock::ticks();
+    }
+
+
 }
