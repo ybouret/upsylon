@@ -15,8 +15,21 @@ namespace upsylon {
     class suffix_stem
     {
     public:
+        //______________________________________________________________________
+        //
+        // interface
+        //______________________________________________________________________
         virtual     ~suffix_stem() throw();     //!< cleanup
         virtual void free()        throw() = 0; //!< reset, keep memory
+        virtual void trim()        throw() = 0; //!< trim excess node
+        virtual void reserve(size_t)       = 0; //!< pre-allocate node
+
+        //______________________________________________________________________
+        //
+        // common data
+        //______________________________________________________________________
+        const size_t nodes; //!< number of nodes into tree, >=1
+
 
     protected:
         explicit suffix_stem() throw(); //!< setup

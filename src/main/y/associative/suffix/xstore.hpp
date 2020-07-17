@@ -5,6 +5,7 @@
 #define Y_SUFFIX_XSTORE_INCLUDED 1
 
 #include "y/associative/suffix/store-look-up.hpp"
+#include "y/associative/suffix/stem.hpp"
 #include "y/core/pool.hpp"
 #include "y/type/args.hpp"
 #include "y/object.hpp"
@@ -12,17 +13,32 @@
 
 namespace upsylon {
     
-    //! fast suffix store to keep track of keys
+    //__________________________________________________________________________
+    //
+    //
+    //! optimized suffix store to keep track of keys
+    /**
+     keys are sequences of T
+     */
+    //
+    //__________________________________________________________________________
     template <typename T>
-    class suffix_xstore
+    class suffix_xstore : public suffix_stem
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         Y_DECL_ARGS(T,type);                            //!< aliases
         class node_type;                                //!< forward declaration
         typedef core::list_of_cpp<node_type> node_list; //!< list of tree nodes
         typedef core::pool_of_cpp<node_type> node_pool; //!< pool of tree nodes
 
+        //______________________________________________________________________
+        //
         //! tree node
+        //______________________________________________________________________
         class node_type : public object
         {
         public:
@@ -56,20 +72,15 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
         };
 
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
         //! setup
         inline explicit suffix_xstore() :
         root( new node_type(0,0) ),
-        cache(),
-        nodes(1)
+        cache()
         {
-        }
-
-        //! free all sub-nodes
-        void free() throw()
-        {
-            root->free_into(cache);
-            root->used = false;
-            root->freq = 0;
             aliasing::_(nodes) = 1;
         }
 
@@ -81,6 +92,35 @@ namespace upsylon {
             aliasing::_(nodes) = 0;
         }
 
+        //______________________________________________________________________
+        //
+        // stem inferface
+        //______________________________________________________________________
+        //! free all sub-nodes
+        inline virtual void free() throw()
+        {
+            root->free_into(cache);
+            root->used = false;
+            root->freq = 0;
+            aliasing::_(nodes) = 1;
+        }
+
+        //! pre-allocate some nodes
+        inline virtual void reserve(size_t n)
+        {
+            while( n-- > 0 ) cache.store( new node_type(0,0) );
+        }
+
+        //! trim cache
+        inline virtual void trim() throw()
+        {
+            cache.release();
+        }
+
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
         //! generic insertion following and iterator
         template <typename ITERATOR>
         bool insert(ITERATOR     path_iter,
@@ -163,11 +203,7 @@ namespace upsylon {
         }
 
         
-        //! pre-allocate some nodes
-        inline void reserve(size_t n)
-        {
-            while( n-- > 0 ) cache.store( new node_type(0,0) );
-        }
+
         
 
     private:
@@ -193,7 +229,6 @@ namespace upsylon {
 
     public:
         node_pool    cache; //!< cache of unused nodes
-        const size_t nodes; //!< number of nodes into tree
     };
 
 }
