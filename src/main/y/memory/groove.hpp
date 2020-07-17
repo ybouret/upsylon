@@ -56,6 +56,10 @@ namespace upsylon {
             //! check types validity
             bool                   is_built_from(const std::type_info &) const throw();
 
+            //! wrapper
+            template <typename T> inline
+            bool is_built_from() const throw() { return is_built_from( typeid(T) ); }
+
             //__________________________________________________________________
             //
             // build methods for one object

@@ -73,13 +73,6 @@ namespace upsylon {
         {
             throw exception("%s unexpected invalid first key!",fn);
         }
-
-#if 0
-        std::ostream & permuter:: show(std::ostream &os) const
-        {
-            return counting::display(os,perm,dims);
-        }
-#endif
         
     }
 

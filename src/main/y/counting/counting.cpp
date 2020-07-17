@@ -100,9 +100,7 @@ namespace upsylon
     void counting:: unwind()
     {
         for( boot(); good(); next() )
-        {
-            
-        }
+            ;
     }
 
 }

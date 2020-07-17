@@ -38,8 +38,7 @@ namespace upsylon {
 
             //! cleanup
             virtual ~permuter() throw();
-            
-            
+
             //! count and set weak if a repetition is detected
             mpl::natural count_with(const repeats &, const upsylon::counting::with_mp_t &) const;
           
@@ -93,7 +92,7 @@ wlen(0)
     
     
     //--------------------------------------------------------------------------
-    //! permuter of integral type
+    //! permuter of integral types
     /**
      produce all the distinct permutations of given objects
      */
@@ -187,7 +186,7 @@ wlen(0)
         //----------------------------------------------------------------------
 
         //! return internal store
-        inline const suffix_store<type> & store() const throw()
+        inline const store_type & store() const throw()
         {
             return kstore;
         }
@@ -337,32 +336,24 @@ wlen(0)
                 invalid_first_key();
             }
         }
-        
-        inline virtual void onBoot()
-        {
-            assert(1==index);
-            initialize();
-        }
-        
+
+        //! re-initialize
+        inline virtual void onBoot() { assert(1==index); initialize(); }
+
+        //! generate next permutation and the config
         inline void next_config() throw()
         {
             next_perm();
-            for(size_t k=dims;k>0;--k)
-            {
-                target[k] = source[ perm[k] ];
-            }
+            for(size_t k=dims;k>0;--k) target[k] = source[ perm[k] ];
         }
-        
+
+        //! update to next config
         virtual void onNext()
         {
             assert(index<=count);
             if(weak)
             {
-                do
-                {
-                    next_config();
-                }
-                while( !kstore.insert(target,dims) );
+                do next_config(); while( !kstore.insert(target,dims) );
             }
             else
             {
