@@ -112,6 +112,12 @@ SET(associative_srcs ${associative_decl} ${associative_code})
 SOURCE_GROUP( associative FILES ${associative_srcs} )
 INSTALL( FILES ${associative_decl} DESTINATION include/y/associative )
 
+FILE(GLOB associative_suffix_decl   y/associative/suffix/*.hpp)
+FILE(GLOB associative_suffix_code y/associative/suffix/*.cpp)
+SET(associative_suffix_srcs ${associative_suffix_decl} ${associative_suffix_code})
+SOURCE_GROUP( associative/suffix FILES ${associative_suffix_srcs} )
+INSTALL( FILES ${associative_suffix_decl} DESTINATION include/y/associative/suffix )
+
 FILE(GLOB hashing_decl y/hashing/*.hpp)
 FILE(GLOB hashing_code y/hashing/*.cpp)
 SET(hashing_srcs ${hashing_decl} ${hashing_code})
@@ -377,7 +383,7 @@ ${iterate_srcs}
 ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
-${associative_srcs}
+${associative_srcs} ${associative_suffix_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 

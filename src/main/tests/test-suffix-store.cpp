@@ -143,13 +143,17 @@ namespace {
 #include "y/string/tokenizer.hpp"
 Y_UTEST(store_perf)
 {
+    //! maximal number of keys
     size_t n = 2;
     if(argc>1)
     {
         n = string_convert::to<size_t>(argv[1],"n");
     }
+
+    //! key length+range
     const char *ks = "255";
     if( argc > 2 ) ks = argv[2];
+
     vector<uint8_t> r;
     {
         const string   rs = ks;
@@ -180,7 +184,7 @@ Y_UTEST(store_perf)
     {
         for(size_t ntry=0;ntry<16;++ntry)
         {
-            const size_t num = 3;
+            const size_t num = r.size();
             key_type     key(num,0);
             Y_ASSERT(num==key.size());
             for(size_t j=1;j<=num;++j)
