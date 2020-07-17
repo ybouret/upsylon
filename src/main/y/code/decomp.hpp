@@ -3,7 +3,6 @@
 #ifndef Y_CODE_DECOMP_INCLUDED
 #define Y_CODE_DECOMP_INCLUDED 1
 
-#include "y/core/inode.hpp"
 #include "y/type/args.hpp"
 #include "y/object.hpp"
 #include "y/sort/merge.hpp"
@@ -28,18 +27,21 @@ namespace upsylon {
         //
         //! node of points
         //______________________________________________________________________
-        class pnode : public object, public inode< pnode >
+        class pnode : public object
         {
         public:
 
             //! setup
             inline explicit pnode(param_type X, param_type Y) :
+			next(0), prev(0),
             x(X), y(Y), d(x<=y?y-x:x-y)
             {}
 
             //! cleanup
             inline virtual ~pnode() throw() {}
 
+			pnode     *next;
+			pnode     *prev;
             const_type x; //!< x<=y
             const_type y; //!< x<=y
             const_type d; //!< |x-y|

@@ -13,8 +13,8 @@ bool test_i2r( const uint64_t u );
 template <>
 inline bool test_i2r<float>( const uint64_t u )
 {
-    const float    f = u;
-    const uint64_t n = f;
+    const float    f = float(u);
+    const uint64_t n = uint64_t(f);
     if(u!=n)
     {
         std::cerr << u << "->" << f << "->" << n << std::endl;
@@ -25,8 +25,8 @@ inline bool test_i2r<float>( const uint64_t u )
 template <>
 inline bool test_i2r<double>( const uint64_t u )
 {
-    const double    f = u;
-    const uint64_t  n = f;
+    const double    f = double(u);
+    const uint64_t  n = uint64_t(f);
     if(u!=n)
     {
         std::cerr << u << "->" << f << "->" << n << std::endl;
