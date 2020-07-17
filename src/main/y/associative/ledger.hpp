@@ -3,7 +3,7 @@
 #ifndef Y_LEDGER_INCLUDED
 #define Y_LEDGER_INCLUDED 1
 
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/suffix/tree.hpp"
 #include "y/os/be-address.hpp"
 
 namespace upsylon {

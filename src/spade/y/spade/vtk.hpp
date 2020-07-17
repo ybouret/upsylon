@@ -4,7 +4,7 @@
 
 #include "y/spade/mesh/rectilinear.hpp"
 #include "y/spade/mesh/curvilinear.hpp"
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/suffix/tree.hpp"
 
 namespace upsylon {
     

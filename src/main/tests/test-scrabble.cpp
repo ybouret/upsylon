@@ -5,7 +5,7 @@
 #include "y/string/display.hpp"
 
 #include "y/ordered/sorted-vector.hpp"
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/suffix/tree.hpp"
 #include "y/ios/icstream.hpp"
 
 using namespace upsylon;

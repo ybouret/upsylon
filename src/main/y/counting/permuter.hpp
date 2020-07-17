@@ -78,7 +78,7 @@ namespace upsylon {
 #include "y/memory/allocator.hpp"
 #include "y/memory/embed.hpp"
 #include "y/sequence/array.hpp"
-#include "y/associative/suffix-store.hpp"
+#include "y/associative/suffix/store.hpp"
 
 namespace upsylon {
     

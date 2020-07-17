@@ -1,5 +1,5 @@
 #include "y/jargon/pattern/posix.hpp"
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/suffix/tree.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {

@@ -3,7 +3,7 @@
 #define Y_JARGON_LEXICAL_ANALYZER_INCLUDED 1
 
 #include "y/jargon/lexical/plugin.hpp"
-#include "y/associative/suffix-batch.hpp"
+#include "y/associative/suffix/batch.hpp"
 #include "y/jargon/pattern/dictionary.hpp"
 
 namespace upsylon {

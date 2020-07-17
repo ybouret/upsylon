@@ -1,4 +1,4 @@
-#include "y/associative/suffix-batch.hpp"
+#include "y/associative/suffix/batch.hpp"
 #include "y/associative/set.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/intr.hpp"

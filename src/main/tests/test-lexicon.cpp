@@ -1,5 +1,5 @@
 #include "y/associative/map.hpp"
-#include "y/associative/suffix-table.hpp"
+#include "y/associative/suffix/table.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
 #include "y/type/spec.hpp"

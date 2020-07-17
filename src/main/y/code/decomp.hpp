@@ -40,11 +40,11 @@ namespace upsylon {
             //! cleanup
             inline virtual ~pnode() throw() {}
 
-			pnode     *next;
-			pnode     *prev;
-            const_type x; //!< x<=y
-            const_type y; //!< x<=y
-            const_type d; //!< |x-y|
+			pnode     *next; //!< for list
+			pnode     *prev; //!< for list
+            const_type x;    //!< x<=y
+            const_type y;    //!< x<=y
+            const_type d;    //!< |x-y|
 
             //! increasing indicator
             static inline int compare(const pnode *lhs, const pnode *rhs, void *)

@@ -4,7 +4,7 @@
 #ifndef Y_SUFFIX_STORE_INCLUDED
 #define Y_SUFFIX_STORE_INCLUDED 1
 
-#include "y/associative/suffix-store-look-up.hpp"
+#include "y/associative/suffix/store-look-up.hpp"
 #include "y/core/pool.hpp"
 #include "y/type/args.hpp"
 #include "y/object.hpp"

@@ -1,5 +1,5 @@
-#include "y/associative/suffix-store.hpp"
-#include "y/associative/suffix-xstore.hpp"
+#include "y/associative/suffix/store.hpp"
+#include "y/associative/suffix/xstore.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/ios/icstream.hpp"

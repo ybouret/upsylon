@@ -1,4 +1,4 @@
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/suffix/tree.hpp"
 #include "y/exception.hpp"
 #include "y/comparison.hpp"
 

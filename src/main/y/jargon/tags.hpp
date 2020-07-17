@@ -4,7 +4,7 @@
 #define Y_JARGON_TAGS_INCLUDED 1
 
 #include "y/jargon/types.hpp"
-#include "y/associative/suffix-tree.hpp"
+#include "y/associative/suffix/tree.hpp"
 
 namespace upsylon {
 

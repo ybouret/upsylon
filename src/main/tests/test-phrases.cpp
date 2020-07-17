@@ -3,7 +3,7 @@
 #include "y/counting/part.hpp"
 #include "y/counting/permuter.hpp"
 #include "y/ios/icstream.hpp"
-#include "y/associative/suffix-table.hpp"
+#include "y/associative/suffix/table.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
