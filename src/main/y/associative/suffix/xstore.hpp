@@ -78,7 +78,7 @@ namespace upsylon {
         //______________________________________________________________________
         //! setup
         inline explicit suffix_xstore() :
-        root( new node_type(0,0) ),
+        root( create_node(0,0) ),
         cache()
         {
             aliasing::_(nodes) = 1;
@@ -106,15 +106,21 @@ namespace upsylon {
         }
 
         //! pre-allocate some nodes
-        inline virtual void reserve(size_t n)
+        inline virtual void grow_cache(size_t n)
         {
-            while( n-- > 0 ) cache.store( new node_type(0,0) );
+            while( n-- > 0 ) cache.store( create_node(0,0) );
         }
 
         //! trim cache
-        inline virtual void trim() throw()
+        inline virtual void free_cache() throw()
         {
             cache.release();
+        }
+
+        //! cached nodes
+        inline virtual size_t cache_size() const throw()
+        {
+            return cache.size;
         }
 
         //______________________________________________________________________
@@ -210,7 +216,14 @@ namespace upsylon {
         Y_DISABLE_COPY_AND_ASSIGN(suffix_xstore);
         node_type *root;
 
-        inline node_type *query_node(node_type *from, const_type code )
+        inline node_type *create_node(node_type *from, const_type code)
+        {
+            node_type *node = new node_type(from,code);
+            ++created;
+            return node;
+        }
+
+        inline node_type *query_node(node_type *from, const_type code)
         {
             if(cache.size>0)
             {
@@ -223,7 +236,7 @@ namespace upsylon {
             }
             else
             {
-                return new node_type(from,code);
+                return create_node(from,code);
             }
         }
 

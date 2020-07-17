@@ -17,19 +17,28 @@ namespace upsylon {
     public:
         //______________________________________________________________________
         //
-        // interface
+        // virtual interface
         //______________________________________________________________________
-        virtual     ~suffix_stem() throw();     //!< cleanup
-        virtual void free()        throw() = 0; //!< reset, keep memory
-        virtual void trim()        throw() = 0; //!< trim excess node
-        virtual void reserve(size_t)       = 0; //!< pre-allocate node
+        virtual       ~suffix_stem() throw();          //!< cleanup
+        virtual void   free()             throw() = 0; //!< reset, keep memory
+        virtual void   free_cache()       throw() = 0;
+        virtual void   grow_cache(size_t)         = 0;
+        virtual size_t cache_size() const throw() = 0;
+
+
+        //______________________________________________________________________
+        //
+        // non-virtual interface
+        //______________________________________________________________________
+        void   release()  throw();       //!< free and free_cache
+        size_t required() const throw(); //!< nodes+cache.size-1 so far
 
         //______________________________________________________________________
         //
         // common data
         //______________________________________________________________________
-        const size_t nodes; //!< number of nodes into tree, >=1
-
+        const   size_t  nodes;   //!< number of nodes into tree, >=1
+        mutable size_t  created; //!< cumulative number of created nodes, mostly for debug
 
     protected:
         explicit suffix_stem() throw(); //!< setup

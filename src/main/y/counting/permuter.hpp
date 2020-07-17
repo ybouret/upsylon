@@ -41,7 +41,7 @@ namespace upsylon {
 
             //! count and set weak if a repetition is detected
             mpl::natural count_with(const repeats &, const upsylon::counting::with_mp_t &) const;
-          
+
             //! converting from mp version
             size_t       count_with(const repeats &, const upsylon::counting::with_sz_t &) const;
 
@@ -57,7 +57,10 @@ namespace upsylon {
         protected:
             //! setup, just check that dims=n>0
             explicit permuter(const size_t n);
-            
+
+            //! copy parameters
+            explicit permuter(const permuter &other) throw();
+
             size_t      *perm; //!< user's set perm [1...dims]
             
             void init_perm() throw();       //!< reset perm
@@ -65,7 +68,7 @@ namespace upsylon {
             void invalid_first_key() const; //!< shouldn't happen
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(permuter);
+            Y_DISABLE_ASSIGN(permuter);
         };
     }
     
@@ -84,9 +87,10 @@ namespace upsylon {
     //! setup permuter for N items
 #define Y_PERMUTER_CTOR(N) \
 core::permuter(N),         \
+store(),                   \
 target(0),                 \
 source(0),                 \
-kstore(),                  \
+__next(0),                 \
 wksp(0),                   \
 wlen(0)
     
@@ -106,8 +110,9 @@ wlen(0)
         // types and definitions
         //
         //----------------------------------------------------------------------
-        Y_DECL_ARGS(T,type);                    //!< aliases
-        typedef suffix_store<type> store_type;  //!< alias
+        Y_DECL_ARGS(T,type);                       //!< aliases
+        typedef suffix_store<type> store_type;     //!< alias
+        typedef void (permuter::*next_proc)(void); //!< alias
 
         //----------------------------------------------------------------------
         //
@@ -131,7 +136,42 @@ wlen(0)
             build_extent();
             aliasing::_(index)=1;
         }
-        
+
+        //! setup from another
+        inline permuter(const permuter &other) :
+        collection(),
+        core::permuter(other),
+        accessible<T>(),
+        store(),
+        target(0),
+        source(0),
+        __next(other.__next),
+        wksp(0),
+        wlen(0)
+        {
+            setup_memory();
+            for(size_t i=dims;i>0;--i)
+            {
+                //target[i] = other.target[i];
+                source[i] = other.source[i];
+                //perm[i]   = other.perm[i];
+            }
+            boot();
+            while(index<other.index)
+            {
+                next();
+            }
+            assert(index==other.index);
+            assert(count==other.count);
+#ifndef NDEBUG
+            for(size_t i=dims;i>0;--i)
+            {
+                assert(perm[i]==other.perm[i]);
+            }
+#endif
+        }
+
+
         
         //! cleanup
         inline virtual ~permuter() throw()
@@ -179,42 +219,19 @@ wlen(0)
             for(size_t i=dims;i>0;--i) dest[i] = target[i];
         }
 
+
         //----------------------------------------------------------------------
         //
-        // specific methods
+        // members
         //
         //----------------------------------------------------------------------
-
-        //! return internal store
-        inline const store_type & store() const throw()
-        {
-            return kstore;
-        }
-        
-        //! return required nodes so far
-        inline size_t required_nodes() const throw()
-        {
-            return kstore.nodes + kstore.cache.size - 1;
-        }
-        
-        //! cleanup cache
-        inline void trim() throw()
-        {
-            kstore.cache.release();
-        }
-
-        //! reserve extra
-        inline void extra(const size_t n)
-        {
-            kstore.reserve(n);
-        }
-
+        store_type          store; //!< key store, shouldn't be touched during loop
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(permuter);
+        Y_DISABLE_ASSIGN(permuter);
         mutable_type       *target;
         mutable_type       *source;
-        store_type          kstore;
+        next_proc           __next;
         void               *wksp;
         size_t              wlen;
         
@@ -275,7 +292,7 @@ wlen(0)
                 // computing effective number of permutations
                 //______________________________________________________________
                 aliasing::_(count) = count_with(reps,counting::with_sz);
-                
+                __next = weak ? & permuter<T>::next_config_weak : & permuter<T>::next_config;
             }
             catch(...)
             {
@@ -291,7 +308,7 @@ wlen(0)
             {
                 source[i] = seq[i];
             }
-          
+
         }
         
         inline void copy_content( const_type *buffer, const size_t buflen )
@@ -325,13 +342,13 @@ wlen(0)
         inline void initialize()
         {
             init_perm();
-            kstore.free();
+            store.free();
             for(size_t k=dims;k>0;--k)
             {
                 assert(k==perm[k]);
                 target[k] = source[k];
             }
-            if( weak && !kstore.insert(target,dims) )
+            if( weak && !store.insert(target,dims) )
             {
                 invalid_first_key();
             }
@@ -347,18 +364,19 @@ wlen(0)
             for(size_t k=dims;k>0;--k) target[k] = source[ perm[k] ];
         }
 
+        //! generate next NEW permutation
+        inline void next_config_weak()
+        {
+            do next_config(); while( !store.insert(target,dims) );
+        }
+
+
         //! update to next config
         virtual void onNext()
         {
             assert(index<=count);
-            if(weak)
-            {
-                do next_config(); while( !kstore.insert(target,dims) );
-            }
-            else
-            {
-                next_config();
-            }
+            assert(__next!=NULL);
+            (this->*__next)();
         }
         
         

@@ -18,7 +18,7 @@ namespace upsylon {
     //
     //! fast suffix store to keep track of keys
     /**
-     keys are sequences of T
+     keys are sequences of integral type T
      */
     //
     //__________________________________________________________________________
@@ -38,7 +38,7 @@ namespace upsylon {
         //______________________________________________________________________
         //
         //! tree node
-        //__________________________________________________________________________
+        //______________________________________________________________________
         class node_type : public object
         {
         public:
@@ -77,7 +77,7 @@ namespace upsylon {
         
         //! setup
         inline explicit suffix_store() :
-        root( new node_type(0) ),
+        root( create_node(0) ),
         cache()
         {
             aliasing::_(nodes) = 1;
@@ -86,9 +86,24 @@ namespace upsylon {
         //! cleanup
         inline virtual ~suffix_store() throw()
         {
-            delete root;
-            root = 0;
-            aliasing::_(nodes) = 0;
+            destruct();
+        }
+
+        //! copy
+        inline suffix_store(const suffix_store &other) :
+        root( create_node(0) ),
+        cache()
+        {
+            aliasing::_(nodes) = 1;
+            try {
+                const node_type *curr = other.root;
+                exit(1);
+            }
+            catch(...)
+            {
+                destruct();
+                throw;
+            }
         }
 
         //______________________________________________________________________
@@ -103,17 +118,24 @@ namespace upsylon {
         }
 
         //! pre-allocate some nodes
-        inline virtual void reserve(size_t n)
+        inline virtual void grow_cache(size_t n)
         {
-            while( n-- > 0 ) cache.store( new node_type(0) );
+            while( n-- > 0 ) cache.store( create_node(0) );
         }
 
         //! trim cache
-        inline virtual void trim() throw()
+        inline virtual void free_cache() throw()
         {
             cache.release();
         }
-        
+
+        //! cached nodes
+        inline virtual size_t cache_size() const throw()
+        {
+            return cache.size;
+        }
+
+
         //______________________________________________________________________
         //
         // methods
@@ -185,21 +207,35 @@ namespace upsylon {
         
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(suffix_store);
+        Y_DISABLE_ASSIGN(suffix_store);
         node_type *root;
 
-        inline node_type *query_node( const_type code )
+        inline void destruct() throw()
+        {
+            delete root;
+            root = 0;
+            aliasing::_(nodes) = created = 0;
+        }
+
+        inline node_type *create_node(const_type code)
+        {
+            node_type *node = new node_type(code);
+            ++created;
+            return node;
+        }
+
+        inline node_type *query_node(const_type code)
         {
             if(cache.size>0)
             {
-                node_type *node = cache.query();
+                node_type *node         = cache.query();
                 aliasing::_(node->code) = code;
                 node->used              = false;
                 return node;
             }
             else
             {
-                return new node_type(code);
+                return create_node(code);
             }
         }
 

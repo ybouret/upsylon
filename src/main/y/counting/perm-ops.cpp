@@ -5,7 +5,7 @@ namespace upsylon {
 
     namespace core {
 
-       
+
 
 
         namespace {
@@ -33,7 +33,7 @@ namespace upsylon {
                     {
                         --k;
                     }
-                    cswap(p[i], p[k]);
+                    cswap(p[i],p[k]);
                 }
 
                 //------------------------------------------------------------------
@@ -42,7 +42,7 @@ namespace upsylon {
                 const size_t jmax=(n+i)>>1;
                 for(size_t k=0,j= ++i; j <= jmax; ++j, ++k)
                 {
-                    cswap(p[j], p[n-k]);
+                    cswap(p[j],p[n-k]);
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace upsylon {
         }
 
         bool permutation:: next(size_t      *p,
-                            const size_t n) throw()
+                                const size_t n) throw()
         {
             assert(p!=NULL);
             assert(n>0);

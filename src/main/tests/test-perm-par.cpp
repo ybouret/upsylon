@@ -26,23 +26,25 @@ namespace {
 
         size_t count = 0;
         size_t nodes = 0;
+        size_t created = 0;
         size_t width = source.size();
 
         {
             perm_type P(*source,width);
             P.unwind();
-            count = P.count;
-            nodes = P.required_nodes();
+            count   = P.count;
+            nodes   = P.store.required();
+            created = P.store.created;
         }
 
-        std::cerr << "#permutations=" << count << std::endl;
+        std::cerr << "#permutations=" << count << ", nodes=" << nodes << ", created=" << created << std::endl;
         
         for(size_t i=0;i<nt;++i)
         {
             parallel::cache_type &cache = ex(i); Y_ASSERT(cache.is_built_from<perm_type>());
             perm_type &p = ex(i).get<perm_type>();
-            p.extra(nodes);
-            Y_ASSERT(p.required_nodes() == nodes);
+            p.store.grow_cache(nodes);
+            Y_ASSERT(p.store.required() == nodes);
             ex[i].mark = 0;
         }
 
@@ -69,7 +71,7 @@ namespace {
                 size_t         n   = p.boot(ctx.size,ctx.rank);
                 const size_t   w   = s.size();
                 char          *q   = &a[1+ (p.index-1) * w];
-
+                p.store.created = 0;
                 while(n-- > 0)
                 {
                     assert(p.good());
@@ -77,6 +79,7 @@ namespace {
                     q += w;
                     p.next();
                 }
+                assert(p.store.created<=0);
                 ctx.mark += ctx.ticks(access) - t0;
             }
 

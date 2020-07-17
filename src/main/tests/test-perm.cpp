@@ -102,7 +102,7 @@ Y_UTEST_DONE()
 #include "y/counting/part.hpp"
 
 namespace {
- 
+
     template <typename T>
     void doPerm(const size_t n, const size_t m)
     {
@@ -124,14 +124,27 @@ namespace {
         for( perm.boot(); perm.good(); perm.next() )
         {
         }
-        std::cerr << "required nodes: " << perm.required_nodes() << std::endl;
-        perm.trim();
-        std::cerr << "              : " << perm.required_nodes() << std::endl;
+        std::cerr << "required nodes: " << perm.store.required() << std::endl;
+        perm.store.free_cache();
+        std::cerr << "              : " << perm.store.required() << std::endl;
         perm.boot();
-        std::cerr << "              : " << perm.required_nodes() << std::endl;
+        std::cerr << "              : " << perm.store.required() << std::endl;
 
-        const double ratio = double(perm.required_nodes()) / perm.count;
+        const double ratio = double(perm.store.required()) / perm.count;
         std::cerr << "ratio: " << ratio << std::endl;
+        std::cerr << "copy..." << std::endl;
+        for(size_t iter=0;iter<8;++iter)
+        {
+            perm.boot();
+            for(size_t i=alea.leq(perm.count);i>0;--i)
+            {
+                perm.next();
+            }
+            permuter<T> temp(perm);
+            std::cerr << "\t" << (counting &)temp << "/" << (counting &)perm << std::endl;
+        }
+
+
 
     }
 
@@ -165,8 +178,9 @@ namespace {
             Y_ASSERT(P.classes==part.size());
             std::cerr << " => #count=" << P.count;
             P.unwind();
-            const size_t xnodes = P.required_nodes();
-            std::cerr << " => #nodes= " << xnodes;
+            const size_t xnodes = P.store.required();
+            std::cerr << " => #nodes="   << xnodes;
+            std::cerr << " => #created=" << P.store.created;
             std::cerr << std::endl;
             count.push_back(P.count);
             nodes.push_back(xnodes);

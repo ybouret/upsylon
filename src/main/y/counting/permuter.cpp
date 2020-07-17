@@ -27,6 +27,16 @@ namespace upsylon {
             if(dims<=0) throw libc::exception(ERANGE,"%s has no dimension",fn);
         }
 
+        permuter:: permuter(const permuter &other) throw() :
+        upsylon::counting(other),
+        dims(other.dims),
+        weak(other.weak),
+        classes(other.classes),
+        perm(0)
+        {
+
+        }
+
         mpn permuter:: count_with(const repeats &reps, const upsylon::counting::with_mp_t &) const
         {
             aliasing::_(weak) = false;
