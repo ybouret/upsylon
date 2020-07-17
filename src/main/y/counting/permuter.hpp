@@ -142,33 +142,24 @@ wlen(0)
         collection(),
         core::permuter(other),
         accessible<T>(),
-        store(),
+        store(other.store),
         target(0),
         source(0),
         __next(other.__next),
         wksp(0),
         wlen(0)
         {
+            assert(index==other.index);
+            assert(count==other.count);
+
             setup_memory();
             for(size_t i=dims;i>0;--i)
             {
-                //target[i] = other.target[i];
+                target[i] = other.target[i];
                 source[i] = other.source[i];
-                //perm[i]   = other.perm[i];
+                perm[i]   = other.perm[i];
             }
-            boot();
-            while(index<other.index)
-            {
-                next();
-            }
-            assert(index==other.index);
-            assert(count==other.count);
-#ifndef NDEBUG
-            for(size_t i=dims;i>0;--i)
-            {
-                assert(perm[i]==other.perm[i]);
-            }
-#endif
+            assert(has_same_state_than(other));
         }
 
 
@@ -203,6 +194,12 @@ wlen(0)
             return target[index];
         }
 
+        //----------------------------------------------------------------------
+        //
+        // accessible interface
+        //
+        //----------------------------------------------------------------------
+
         //! C-style copy current content
         inline void apply(mutable_type *dest) const throw()
         {
@@ -219,6 +216,23 @@ wlen(0)
             for(size_t i=dims;i>0;--i) dest[i] = target[i];
         }
 
+        //! check state
+        inline bool has_same_state_than( const permuter &other ) const
+        {
+            if(dims==other.dims&&count==other.count&&index==other.index)
+            {
+                for(size_t i=dims;i>0;--i)
+                {
+                    if( perm[i] != other.perm[i] ) return false;
+                }
+                assert( store.is_same_than(other.store) );
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         //----------------------------------------------------------------------
         //

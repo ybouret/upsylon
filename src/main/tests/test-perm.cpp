@@ -141,7 +141,18 @@ namespace {
                 perm.next();
             }
             permuter<T> temp(perm);
-            std::cerr << "\t" << (counting &)temp << "/" << (counting &)perm << std::endl;
+            //std::cerr << "\t" << (counting &)temp << "/" << (counting &)perm << std::endl;
+            Y_CHECK(temp.has_same_state_than(perm));
+            while( perm.good() )
+            {
+                Y_ASSERT( temp.good() );
+
+                Y_ASSERT(temp.has_same_state_than(perm));
+
+                perm.next();
+                temp.next();
+
+            }
         }
 
 

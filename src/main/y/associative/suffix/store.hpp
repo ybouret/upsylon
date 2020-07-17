@@ -11,6 +11,7 @@
 #include "y/object.hpp"
 #include "y/type/aliasing.hpp"
 
+
 namespace upsylon {
 
     //__________________________________________________________________________
@@ -96,8 +97,8 @@ namespace upsylon {
         {
             aliasing::_(nodes) = 1;
             try {
-                const node_type *curr = other.root;
-                exit(1);
+                duplicate(root,other.root);
+                assert(is_same_than(other));
             }
             catch(...)
             {
@@ -204,7 +205,13 @@ namespace upsylon {
             return
             core::suffix_store::look_up<mutable_type,ITERATOR,node_type>(root,path_iter,path_size);
         }
-        
+
+        //! comparison
+        inline bool is_same_than( const suffix_store &other ) const
+        {
+            return compare(root,other.root);
+        }
+
 
     private:
         Y_DISABLE_ASSIGN(suffix_store);
@@ -238,6 +245,45 @@ namespace upsylon {
                 return create_node(code);
             }
         }
+
+        //! recursive duplication
+        inline void duplicate(node_type       *target,
+                              const node_type *source)
+        {
+            assert(0==cache_size());
+            aliasing::_(target->code) = source->code;
+            target->used              = source->used;
+
+            node_list   &sub          = target->chld;
+            for(const node_type *ch=source->chld.head;ch;ch=ch->next)
+            {
+                duplicate(sub.push_back( create_node(ch->code) ),ch);
+                ++aliasing::_(nodes);
+            }
+        }
+
+        static inline bool compare(const node_type *lhs,
+                                   const node_type *rhs)
+        {
+            if(lhs->code==rhs->code && lhs->used==rhs->used && lhs->chld.size == rhs->chld.size )
+            {
+                for(const node_type
+                    *lsub = lhs->chld.head,
+                    *rsub = rhs->chld.head;
+                    lsub;
+                    lsub=lsub->next,
+                    rsub=rsub->next)
+                {
+                    if(!compare(lsub,rsub)) return false;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
     public:
         node_pool    cache; //!< cache of unused nodes

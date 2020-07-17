@@ -8,6 +8,15 @@
 
 using namespace upsylon;
 
+namespace {
+    template <typename STORE>
+    static inline void copyStore( const STORE &source )
+    {
+        STORE target(source);
+        Y_CHECK(target.nodes==source.nodes);
+    }
+}
+
 Y_UTEST(store)
 {
     if(true)
@@ -69,10 +78,11 @@ Y_UTEST(store)
             Y_ASSERT( s16.has(k,n) ); Y_ASSERT( x16.has(k,n) );
             Y_ASSERT( s32.has(k,n) ); Y_ASSERT( x32.has(k,n) );
             Y_ASSERT( s64.has(k,n) ); Y_ASSERT( x64.has(k,n) );
-
         }
         
     }
+
+
     
     std::cerr << "-- memory stats" << std::endl;
     std::cerr << "#bytes  = " << total    << std::endl;
@@ -86,7 +96,12 @@ Y_UTEST(store)
     std::cerr << "        = " << x16.nodes << " -> " << x16.nodes * sizeof(suffix_xstore<uint16_t>::node_type) <<std::endl;
     std::cerr << "        = " << x32.nodes << " -> " << x32.nodes * sizeof(suffix_xstore<uint32_t>::node_type) <<std::endl;
     std::cerr << "        = " << x64.nodes << " -> " << x64.nodes * sizeof(suffix_xstore<uint64_t>::node_type) <<std::endl;
-    
+
+    copyStore(s8);
+    copyStore(s16);
+    copyStore(s32);
+    copyStore(s64);
+
     
 }
 Y_UTEST_DONE()
@@ -170,7 +185,7 @@ Y_UTEST(store_perf)
     }
     std::cerr << "#r=" << r.size() << std::endl;
     
-   
+
     vector<key_type>                       ok(n,as_capacity);
     vector<key_type>                       no;
     
@@ -189,7 +204,7 @@ Y_UTEST(store_perf)
             Y_ASSERT(num==key.size());
             for(size_t j=1;j<=num;++j)
             {
-                 key[j] = alea.range<uint8_t>(0,r[j]);
+                key[j] = alea.range<uint8_t>(0,r[j]);
             }
             
             const uint8_t *k = *key;
