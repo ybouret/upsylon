@@ -20,7 +20,7 @@ namespace upsylon {
     //__________________________________________________________________________
     struct suffix_xstore_
     {
-        static const char className[];
+        static const char className[]; //!< "suffix_xstore"
     };
 
     //__________________________________________________________________________

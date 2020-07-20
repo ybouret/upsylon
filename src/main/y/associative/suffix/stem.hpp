@@ -44,9 +44,11 @@ namespace upsylon {
     protected:
         explicit suffix_stem() throw(); //!< setup
 
-        static const char used[]; //!< "used"
-        static const char code[]; //!< "code"
+        static const char used[];     //!< "used"
+        static const char code[];     //!< "code"
         static const char branches[]; //!< "branches"
+
+        //! exception raising for loading
         void throw_missing(const char *field) const;
 
 

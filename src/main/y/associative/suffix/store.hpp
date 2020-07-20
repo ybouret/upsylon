@@ -21,7 +21,7 @@ namespace upsylon {
     //__________________________________________________________________________
     struct suffix_store_
     {
-        static const char className[];
+        static const char className[]; //!< "suffix_store"
     };
 
     //__________________________________________________________________________
@@ -159,6 +159,8 @@ namespace upsylon {
         //
         // loading
         //______________________________________________________________________
+
+        //! free and load serialized tree
         size_t load( ios::istream &fp )
         {
             free();
