@@ -100,6 +100,9 @@ Y_UTEST_DONE()
 #include "y/counting/permuter.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/counting/part.hpp"
+#include "y/ios/ovstream.hpp"
+#include "y/ios/imstream.hpp"
+#include "y/container/task.hpp"
 
 namespace {
 
@@ -117,10 +120,18 @@ namespace {
         }
         
         permuter<T> perm( data );
+        Y_ASSERT( data.size() == perm.size() );
+        Y_ASSERT( data.size() == perm.dims );
+        Y_ASSERT( data.size() == perm.current.size() );
+
         std::cerr << "data  = " << data << std::endl;
         std::cerr << "perm  = " << (counting &)perm << std::endl;
+        std::cerr << "curr  = " << perm.current     << std::endl;
         std::cerr << "count = " << perm.count << "/" << countMax << std::endl;
-        
+
+        perm.next();
+        std::cerr << "perm1 = " << (counting &)perm << std::endl;
+        std::cerr << "curr1 = " << perm.current     << std::endl;
         perm.unwind();
 
         std::cerr << "required nodes: " << perm.store.required() << std::endl;
@@ -179,8 +190,32 @@ namespace {
             std::cerr << "]" << std::endl;
         }
 
+        std::cerr << "checking I/O" << std::endl;
+        {
+            ios::ovstream dest;
+            permuter<T>   temp(data);
+            for( perm.boot(); perm.good(); perm.next() )
+            {
+                dest.free();
+                const size_t nw = perm.save(dest);
+                ios::imstream from(dest);
+                const size_t nr = temp.load(from);
+                Y_ASSERT(nw==nr);
+                Y_ASSERT(temp.has_same_state_than(perm));
+            }
+        }
 
+        std::cerr << "checking frames" << std::endl;
+        {
+            vector<size_t> frames;
+            for(perm.boot(); perm.good(); perm.next())
+            {
+                frames.put( &perm.current[1], perm.size() );
+            }
+            Y_CHECK( frames.size() == perm.count * perm.dims );
+        }
 
+        std::cerr << std::endl;
     }
 
 

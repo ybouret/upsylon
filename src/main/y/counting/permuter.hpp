@@ -10,6 +10,9 @@
 #include "y/core/list.hpp"
 #include "y/core/node.hpp"
 
+#include "y/associative/suffix/stem.hpp"
+#include "y/sequence/array.hpp"
+
 namespace upsylon {
     
     namespace core {
@@ -29,6 +32,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             typedef core::cpp_node_of<size_t> repeat;  //!< multiple number count
             typedef core::list_of_cpp<repeat> repeats; //!< repeats decomposition
+            typedef lightweight_array<size_t> indices;
 
             //------------------------------------------------------------------
             //
@@ -45,14 +49,16 @@ namespace upsylon {
             //! converting from mp version
             size_t       count_with(const repeats &, const upsylon::counting::with_sz_t &) const;
 
+
             //------------------------------------------------------------------
             //
             // members
             //
             //------------------------------------------------------------------
-            const size_t dims;     //!< 1..dims objects
-            const bool   weak;    //!< weak if there are some repeats
-            const size_t classes; //!< number of classes
+            const size_t   dims;    //!< 1..dims objects
+            const bool     weak;    //!< weak if there are some repeats
+            const size_t   classes; //!< number of classes
+            const indices  current; //!< permutation [1..dims], C++ style
             
         protected:
             //! setup, just check that dims=n>0
@@ -62,11 +68,18 @@ namespace upsylon {
             explicit permuter(const permuter &other) throw();
 
             size_t      *perm; //!< user's set perm [1...dims]
-            
+
+            void init_once() throw();       //!< setup current
             void init_perm() throw();       //!< reset perm
             void next_perm() throw();       //!< compute valid next permutation
             void invalid_first_key() const; //!< shouldn't happen
-            
+
+            //! save the full state configuration perm+stem
+            size_t save_state(ios::ostream &, const suffix_stem &) const;
+
+            //! load only the permutation part
+            size_t load_perm(ios::istream &);
+
         private:
             Y_DISABLE_ASSIGN(permuter);
         };
@@ -79,7 +92,6 @@ namespace upsylon {
 #include "y/comparison.hpp"
 #include "y/memory/allocator.hpp"
 #include "y/memory/embed.hpp"
-#include "y/sequence/array.hpp"
 #include "y/associative/suffix/store.hpp"
 
 namespace upsylon {
@@ -233,6 +245,26 @@ wlen(0)
             }
         }
 
+        //! save state=perm+tree
+        inline size_t save(ios::ostream &fp) const
+        {
+            return save_state(fp,store);
+        }
+
+        //! load state=tree+perm
+        inline size_t load(ios::istream &fp)
+        {
+            try {
+                const size_t ans = load_perm(fp);
+                return ans + store.load(fp);
+            }
+            catch(...)
+            {
+                boot();
+                throw;
+            }
+        }
+
         //----------------------------------------------------------------------
         //
         // members
@@ -349,6 +381,7 @@ wlen(0)
             --target;
             --source;
             --perm;
+            init_once();
         }
         
         // make default permutation and target=source
