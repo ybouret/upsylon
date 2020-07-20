@@ -4,15 +4,24 @@
 #ifndef Y_SUFFIX_STORE_INCLUDED
 #define Y_SUFFIX_STORE_INCLUDED 1
 
-#include "y/associative/suffix/store-look-up.hpp"
 #include "y/associative/suffix/stem.hpp"
+#include "y/associative/suffix/store-look-up.hpp"
 #include "y/core/pool.hpp"
 #include "y/type/args.hpp"
 #include "y/object.hpp"
 #include "y/type/aliasing.hpp"
-
+#include "y/ios/ostream.hpp"
 
 namespace upsylon {
+
+    //__________________________________________________________________________
+    //
+    //! common stuff
+    //__________________________________________________________________________
+    struct suffix_store_
+    {
+        static const char className[];
+    };
 
     //__________________________________________________________________________
     //
@@ -67,6 +76,24 @@ namespace upsylon {
                 }
             }
 
+            //! write as binary, return written bytes
+            inline size_t save( ios::ostream &fp ) const
+            {
+                // write status
+                fp.write( used ? 1 : 0 );
+
+                // write code
+                size_t written = 1 + fp.write_nbo(code);
+
+                // write child(ren)
+                written += fp.write_upack(chld.size);
+                for(const node_type *node=chld.head;node;node=node->next)
+                {
+                    written += node->save(fp);
+                }
+                return written;
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
         };
@@ -105,6 +132,24 @@ namespace upsylon {
                 destruct();
                 throw;
             }
+        }
+
+        //______________________________________________________________________
+        //
+        // serializable
+        //______________________________________________________________________
+        
+        //! className
+        inline virtual const char *className() const throw()
+        {
+            return suffix_store_::className;
+        }
+
+        //! serialize
+        inline virtual size_t serialize(ios::ostream &fp) const
+        {
+            assert(root);
+            return root->save(fp);
         }
 
         //______________________________________________________________________

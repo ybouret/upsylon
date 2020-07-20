@@ -121,9 +121,8 @@ namespace {
         std::cerr << "perm  = " << (counting &)perm << std::endl;
         std::cerr << "count = " << perm.count << "/" << countMax << std::endl;
         
-        for( perm.boot(); perm.good(); perm.next() )
-        {
-        }
+        perm.unwind();
+
         std::cerr << "required nodes: " << perm.store.required() << std::endl;
         perm.store.free_cache();
         std::cerr << "              : " << perm.store.required() << std::endl;
@@ -132,27 +131,52 @@ namespace {
 
         const double ratio = double(perm.store.required()) / perm.count;
         std::cerr << "ratio: " << ratio << std::endl;
-        std::cerr << "copy..." << std::endl;
-        for(size_t iter=0;iter<8;++iter)
+        std::cerr << "check copy consistency" << std::endl;
+
+        if(n<=6)
         {
-            perm.boot();
-            for(size_t i=alea.leq(perm.count);i>0;--i)
+            for(size_t steps=1;steps<=perm.count;++steps)
             {
-                perm.next();
-            }
-            permuter<T> temp(perm);
-            //std::cerr << "\t" << (counting &)temp << "/" << (counting &)perm << std::endl;
-            Y_CHECK(temp.has_same_state_than(perm));
-            while( perm.good() )
-            {
-                Y_ASSERT( temp.good() );
-
+                perm.boot();
+                for(size_t i=0;i<steps;++i)
+                {
+                    assert(perm.good());
+                    perm.next();
+                }
+                permuter<T> temp(perm);
                 Y_ASSERT(temp.has_same_state_than(perm));
-
-                perm.next();
-                temp.next();
-
+                while( perm.good() )
+                {
+                    Y_ASSERT(temp.good());
+                    Y_ASSERT(temp.has_same_state_than(perm));
+                    perm.next();
+                    temp.next();
+                }
             }
+        }
+        else
+        {
+            std::cerr << "[";
+            for(size_t iter=0;iter<4;++iter)
+            {
+                std::cerr << ".";
+                std::cerr.flush();
+                perm.boot();
+                for(size_t i=alea.leq(perm.count);i>0;--i)
+                {
+                    perm.next();
+                }
+                permuter<T> temp(perm);
+                Y_ASSERT(temp.has_same_state_than(perm));
+                while( perm.good() )
+                {
+                    Y_ASSERT( temp.good() );
+                    Y_ASSERT(temp.has_same_state_than(perm));
+                    perm.next();
+                    temp.next();
+                }
+            }
+            std::cerr << "]" << std::endl;
         }
 
 

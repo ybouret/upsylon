@@ -2,7 +2,7 @@
 #ifndef Y_FILE_ASSOCIATIVE_SUFFIX_STEM_INCLUDED
 #define Y_FILE_ASSOCIATIVE_SUFFIX_STEM_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/ios/serializable.hpp"
 
 namespace upsylon {
 
@@ -12,7 +12,7 @@ namespace upsylon {
     //! base class for suffix-(x)store
     //
     //__________________________________________________________________________
-    class suffix_stem
+    class suffix_stem : public ios::serializable
     {
     public:
         //______________________________________________________________________

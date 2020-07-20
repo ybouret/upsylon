@@ -12,7 +12,17 @@
 #include "y/type/aliasing.hpp"
 
 namespace upsylon {
-    
+
+
+    //__________________________________________________________________________
+    //
+    //! common stuff
+    //__________________________________________________________________________
+    struct suffix_xstore_
+    {
+        static const char className[];
+    };
+
     //__________________________________________________________________________
     //
     //
@@ -91,6 +101,24 @@ namespace upsylon {
             root = 0;
             aliasing::_(nodes) = 0;
         }
+
+        //______________________________________________________________________
+        //
+        // serializable
+        //______________________________________________________________________
+        //! className
+        inline virtual const char *className() const throw()
+        {
+            return suffix_xstore_::className;
+        }
+
+        //! save
+        inline virtual size_t serialize(ios::ostream &) const
+        {
+
+            return 0;
+        }
+
 
         //______________________________________________________________________
         //

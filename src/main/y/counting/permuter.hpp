@@ -225,8 +225,7 @@ wlen(0)
                 {
                     if( perm[i] != other.perm[i] ) return false;
                 }
-                assert( store.is_same_than(other.store) );
-                return true;
+                return store.is_same_than(other.store);
             }
             else
             {
