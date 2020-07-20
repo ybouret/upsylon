@@ -32,7 +32,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             typedef core::cpp_node_of<size_t> repeat;  //!< multiple number count
             typedef core::list_of_cpp<repeat> repeats; //!< repeats decomposition
-            typedef lightweight_array<size_t> indices;
+            typedef lightweight_array<size_t> indices; //!< wrapper to get accessible internal permutation
 
             //------------------------------------------------------------------
             //

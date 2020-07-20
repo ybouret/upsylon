@@ -104,7 +104,7 @@ namespace upsylon {
         
         Y_DISABLE_ASSIGN(permutation);
         virtual void onBoot() throw(); //!< index=1, perm=[1..n]
-        virtual void onNext()  throw(); //!< find next one
+        virtual void onNext() throw(); //!< find next one
     };
     
     

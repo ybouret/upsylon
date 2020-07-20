@@ -213,7 +213,18 @@ namespace {
                 frames.put( &perm.current[1], perm.size() );
             }
             Y_CHECK( frames.size() == perm.count * perm.dims );
+
+            const size_t *q = *frames;
+            for(perm.boot(); perm.good(); perm.next())
+            {
+                for(size_t i=1;i<=perm.dims;++i)
+                {
+                    Y_ASSERT(perm.current[i]==*(q++));
+                }
+            }
+
         }
+
 
         std::cerr << std::endl;
     }
