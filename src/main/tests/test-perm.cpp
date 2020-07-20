@@ -307,3 +307,17 @@ Y_UTEST(permuter)
 
 }
 Y_UTEST_DONE()
+
+
+#include "y/counting/permutations.hpp"
+
+Y_UTEST(permutations)
+{
+    size_t       group[3] = { 1,2,3 };
+    permutations perms;
+
+    perms.setup(group,sizeof(group)/sizeof(group[0]));
+
+}
+Y_UTEST_DONE()
+
