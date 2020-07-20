@@ -61,8 +61,8 @@ namespace upsylon {
         const mpn    mp_count = num/den;
 
         aliasing::_(count) = mp_count.cast_to<size_t>(fn);
-        std::cerr << "count=" << count << "/" << num << std::endl;
-        std::cerr << "size =" << n  << std::endl;
+        std::cerr << "count = " << count << "/" << num << std::endl;
+        std::cerr << "size  = " << n  << std::endl;
         if(n>255) throw libc::exception(EDOM,"too many permutations");
 
         //----------------------------------------------------------------------
@@ -129,13 +129,13 @@ namespace upsylon {
     void permutations:: next_perm() throw()
     {
         assert(index<=count);
-        size_t ns = shift[index]; assert(ns>0);
+        permutation &self = *perm;
+        size_t       ns    = shift[index]; assert(ns>0);
         while(ns-- > 0)
         {
-            assert(perm->good());
-            perm->next();
+            assert(self.good());
+            self.next();
         }
-        std::cerr << (counting&) *perm << std::endl;
     }
 
 }

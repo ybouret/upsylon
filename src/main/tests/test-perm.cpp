@@ -313,19 +313,21 @@ Y_UTEST_DONE()
 
 Y_UTEST(permutations)
 {
-    vector<size_t>         groups;
-    permutations_of<int>   perms;
 
-    groups << 1 << 2 << 3; //<< 1;
-    perms.setup(groups);
-
-    perms.boot();
-    std::cerr << "perms.index=" << perms.index << std::endl;
-    std::cerr << "perm=" << (counting&)(*perms) << std::endl;
-
-    for( perms.good(); perms.good(); perms.next() )
+    string data = "abcde";
+    if(argc>1)
     {
-        ;
+        data=argv[1];
+    }
+    
+    if(data.size()>0)
+    {
+        permutations_of<char>   perms(*data,data.length());
+        
+        for( perms.boot(); perms.good(); perms.next() )
+        {
+            std::cerr << "perm=" << (counting&)(*perms) << " => " << (accessible<char>&)perms << std::endl;
+        }
     }
 
 }
