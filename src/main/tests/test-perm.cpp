@@ -313,10 +313,20 @@ Y_UTEST_DONE()
 
 Y_UTEST(permutations)
 {
-    size_t       group[3] = { 1,2,3 };
-    permutations perms;
+    vector<size_t>         groups;
+    permutations_of<int>   perms;
 
-    perms.setup(group,sizeof(group)/sizeof(group[0]));
+    groups << 1 << 2 << 3; //<< 1;
+    perms.setup(groups);
+
+    perms.boot();
+    std::cerr << "perms.index=" << perms.index << std::endl;
+    std::cerr << "perm=" << (counting&)(*perms) << std::endl;
+
+    for( perms.good(); perms.good(); perms.next() )
+    {
+        ;
+    }
 
 }
 Y_UTEST_DONE()
