@@ -11,6 +11,7 @@
 #include "y/object.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
 
 namespace upsylon {
 
@@ -94,6 +95,7 @@ namespace upsylon {
                 return written;
             }
 
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(node_type);
         };
@@ -119,6 +121,7 @@ namespace upsylon {
 
         //! copy by recursive duplication
         inline suffix_store(const suffix_store &other) :
+        suffix_stem(),
         root( create_node(0) ),
         cache()
         {
@@ -150,6 +153,25 @@ namespace upsylon {
         {
             assert(root);
             return root->save(fp);
+        }
+
+        //______________________________________________________________________
+        //
+        // loading
+        //______________________________________________________________________
+        size_t load( ios::istream &fp )
+        {
+            free();
+            try {
+                assert(root);
+                assert(0==root->chld.size);
+                return load_node(root,fp);
+            }
+            catch(...)
+            {
+                free();
+                throw;
+            }
         }
 
         //______________________________________________________________________
@@ -254,7 +276,15 @@ namespace upsylon {
         //! comparison
         inline bool is_same_than( const suffix_store &other ) const
         {
-            return compare(root,other.root);
+            if(compare(root,other.root))
+            {
+                assert(nodes==other.nodes);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
 
@@ -330,6 +360,42 @@ namespace upsylon {
             }
         }
 
+        //! recursive loading
+        inline size_t load_node( node_type *node, ios::istream &fp)
+        {
+            assert(node);
+            assert(0==node->chld.size);
+            size_t ans = 0;
+
+            {
+                char   flag  = -1;
+                size_t shift = 0;
+                if(!fp.query_nbo(flag,shift)) throw_missing(used);
+                ans += shift;
+                node->used = (flag!=0);
+            }
+
+            {
+                size_t shift = 0;
+                if(!fp.query_nbo(aliasing::_(node->code),shift)) throw_missing(code);
+                ans += shift;
+            }
+
+            size_t nsub = 0;
+            {
+                size_t shift    = 0;
+                if(!fp.query_upack(nsub,shift)) throw_missing(branches);
+                ans += shift;
+            }
+
+            while(nsub-- > 0 )
+            {
+                ans += load_node(node->chld.push_back( query_node(0) ),fp);
+                ++aliasing::_(nodes);
+            }
+
+            return ans;
+        }
 
     public:
         node_pool    cache; //!< cache of unused nodes

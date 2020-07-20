@@ -40,9 +40,16 @@ namespace upsylon {
         const   size_t  nodes;   //!< number of nodes into tree, >=1
         mutable size_t  created; //!< cumulative number of created nodes, mostly for debug
 
+
     protected:
         explicit suffix_stem() throw(); //!< setup
-        
+
+        static const char used[]; //!< "used"
+        static const char code[]; //!< "code"
+        static const char branches[]; //!< "branches"
+        void throw_missing(const char *field) const;
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_stem);
     };

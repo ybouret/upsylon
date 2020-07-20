@@ -1,5 +1,6 @@
 
 #include "y/associative/suffix/stem.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -25,5 +26,15 @@ namespace upsylon {
         return nodes+cache_size()-1;
     }
 
+
+    void suffix_stem::  throw_missing(const char *field) const
+    {
+        assert(field);
+        throw exception("%s: missing '%s'", className(), field);
+    }
+
+    const char suffix_stem:: used[] = "used";
+    const char suffix_stem:: code[] = "code";
+    const char suffix_stem:: branches[] = "branches";
 }
 

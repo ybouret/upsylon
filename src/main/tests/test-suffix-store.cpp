@@ -19,11 +19,22 @@ namespace {
         std::cerr << "with type=<" << name << "> and #nodes=" << source.nodes << std::endl;
         STORE target(source);
         Y_CHECK(target.nodes==source.nodes);
+        Y_CHECK(target.is_same_than(source));
         const string fn = "store_"+name+".dat";
+        size_t       nw = 0;
         {
             ios::ocstream fp(fn);
-            const size_t  nw = source.serialize(fp);
-            std::cerr << "#written in " << fn << " : " << nw << std::endl;
+            nw = source.serialize(fp);
+            std::cerr << "\t#written in " << fn << " : " << nw << std::endl;
+
+        }
+        {
+            ios::icstream fp(fn);
+            const size_t nr = target.load(fp);
+            std::cerr << "\t#read from  " << fn  << " : " << nr << std::endl;
+            Y_CHECK(nw==nr);
+            Y_CHECK(target.nodes==source.nodes);
+            Y_CHECK(target.is_same_than(source));
         }
 
     }
