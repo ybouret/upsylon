@@ -3,8 +3,10 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 
@@ -12,8 +14,18 @@ namespace {
     template <typename STORE>
     static inline void copyStore( const STORE &source )
     {
+        typedef typename STORE::type type;
+        const string &name = type_name_of<type>();
+        std::cerr << "with type=<" << name << "> and #nodes=" << source.nodes << std::endl;
         STORE target(source);
         Y_CHECK(target.nodes==source.nodes);
+        const string fn = "store_"+name+".dat";
+        {
+            ios::ocstream fp(fn);
+            const size_t  nw = source.serialize(fp);
+            std::cerr << "#written in " << fn << " : " << nw << std::endl;
+        }
+
     }
 }
 
@@ -87,12 +99,12 @@ Y_UTEST(store)
     std::cerr << "-- memory stats" << std::endl;
     std::cerr << "#bytes  = " << total    << std::endl;
     
-    std::cerr << "#nodes  = " << s8.nodes  << " -> " <<  s8.nodes * sizeof(suffix_store<uint8_t>::node_type) << std::endl;
+    std::cerr << "#nodes  = " << s8.nodes  << " -> " <<  s8.nodes * sizeof(suffix_store<uint8_t>::node_type)  << std::endl;
     std::cerr << "        = " << s16.nodes << " -> " << s16.nodes * sizeof(suffix_store<uint16_t>::node_type) <<std::endl;
     std::cerr << "        = " << s32.nodes << " -> " << s32.nodes * sizeof(suffix_store<uint32_t>::node_type) <<std::endl;
     std::cerr << "        = " << s64.nodes << " -> " << s64.nodes * sizeof(suffix_store<uint64_t>::node_type) <<std::endl;
     
-    std::cerr << "#xnodes = " << x8.nodes  << " -> " <<  x8.nodes * sizeof(suffix_xstore<uint8_t>::node_type) << std::endl;
+    std::cerr << "#xnodes = " << x8.nodes  << " -> " <<  x8.nodes * sizeof(suffix_xstore<uint8_t>::node_type)  << std::endl;
     std::cerr << "        = " << x16.nodes << " -> " << x16.nodes * sizeof(suffix_xstore<uint16_t>::node_type) <<std::endl;
     std::cerr << "        = " << x32.nodes << " -> " << x32.nodes * sizeof(suffix_xstore<uint32_t>::node_type) <<std::endl;
     std::cerr << "        = " << x64.nodes << " -> " << x64.nodes * sizeof(suffix_xstore<uint64_t>::node_type) <<std::endl;
