@@ -9,65 +9,99 @@
 #include "y/sort/heap.hpp"
 #include "y/memory/embed.hpp"
 #include "y/comparison.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
 
+    //__________________________________________________________________________
+    //
+    //
+    //! base class for permutations with repetitions
+    //
+    //__________________________________________________________________________
     class permutations : public counting
     {
     public:
-        typedef size_t  shift_t;
-        typedef uint8_t probe_t;
-        
-        virtual ~permutations() throw();
+        //______________________________________________________________________
+        //
+        //! types and definitions
+        //______________________________________________________________________
+        typedef size_t  shift_t; //!< encoding shifts format
+        typedef uint8_t probe_t; //!< internal base type for probing combinations
 
-        
-
-        void     setup(const accessible<size_t> &groups);
-
-        const permutation & operator*() const throw();
+        //______________________________________________________________________
+        //
+        //! methods
+        //______________________________________________________________________
+        virtual ~permutations() throw(); //!< cleanup
+        const permutation & operator*() const throw(); //!< current internal permutation
 
     protected:
-        explicit permutations() throw();
-        void init_perm() throw();
-        void next_perm() throw();
+        explicit permutations() throw(); //!< initialize
+        void     next_perm()    throw(); //!< next valid permutation
+
+        //! setup from data decomposition in groups
+        /**
+         sum(groups)=dims, and factorial(dims)
+         is reduced by the repetitions
+         */
+        void     setup(const accessible<size_t> &groups);
+
         const size_t                dims;  //!< perm->size()
-        auto_ptr<permutation>       perm;  //!< sub-permutations
-        const shift_t              *shift; //!<
+        auto_ptr<permutation>       perm;  //!< internal permutations
+        const shift_t              *shift; //!< shift to next valid permutation
         const size_t                bytes; //!< for shift
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(permutations);
         void cleanup() throw();
-
-
     };
 
+    //! inline initializers
 #define Y_PERMUTATIONS_CTOR() \
-target(0), source(0), groups(0), entry(0), length(0)
+target(0), source(0), groups(0), entry(0), space(0)
 
+    //__________________________________________________________________________
+    //
+    //
     //! permutations of integral types
+    //
+    //__________________________________________________________________________
     template <typename T>
     class permutations_of : public permutations, public accessible<T>
     {
     public:
+        //______________________________________________________________________
+        //
+        //! types and definitions
+        //______________________________________________________________________
         Y_DECL_ARGS(T,type);
 
+        //______________________________________________________________________
+        //
+        //! C++
+        //______________________________________________________________________
+
+        //! destructor
         inline virtual ~permutations_of() throw()
         {
             static memory::allocator &mgr = counting::mem_location();
             target = 0;
             source = 0;
             groups = 0;
-            mgr.release(entry,length);
+            mgr.release(entry,space);
         }
 
+        //! construct with some data[1..size]
         inline explicit permutations_of(const accessible<T> &data) :
         permutations(), Y_PERMUTATIONS_CTOR()
         {
             initialize_with(data);
+            aliasing::_(index) = 1;
         }
 
+        //! construct with some buffer[0..buflen-1], buflen>0
         inline explicit permutations_of(const_type *buffer, const size_t buflen) :
         permutations(), Y_PERMUTATIONS_CTOR()
         {
@@ -75,15 +109,29 @@ target(0), source(0), groups(0), entry(0), length(0)
             assert(buflen>0);
             const lightweight_array<mutable_type> data( (mutable_type*)buffer,buflen);
             initialize_with(data);
+            aliasing::_(index) = 1;
         }
 
+        //______________________________________________________________________
+        //
+        //! counting interface
+        //______________________________________________________________________
+
+        //! display current permutation
         inline virtual std::ostream &show(std::ostream &os) const
         {
-            return os;
+            return perm->show(os);
         }
 
+        //______________________________________________________________________
+        //
+        //! accesible interface
+        //______________________________________________________________________
+
+        //! size=dims
         inline virtual size_t size() const throw() { return dims; }
 
+        //! access in 1..dims
         inline const_type & operator[](const size_t indx) const throw()
         {
             assert(indx>=1);
@@ -91,27 +139,25 @@ target(0), source(0), groups(0), entry(0), length(0)
             return target[indx];
         }
 
-        
 
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(permutations_of);
-        mutable_type *target;
-        mutable_type *source;
-        size_t       *groups;
-        void         *entry;
-        size_t        length;
+        mutable_type *target; //!< current data
+        mutable_type *source; //!< original data, sorted
+        size_t       *groups; //!< decomposition of original data
+        void         *entry;  //!< memory entry
+        size_t        space;  //!< memory space
 
-        inline void setup_memory_for(const accessible<T> &data)
+        inline void setup_memory_for(const size_t n)
         {
-            const size_t n = data.size();
+            assert(n>0);
             memory::embed emb[] = {
                 memory::embed::as(target,n),
                 memory::embed::as(source,n),
                 memory::embed::as(groups,n)
             };
-            entry = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), counting::mem_instance(), length);
-
+            entry = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), counting::mem_instance(), space);
         }
 
         inline void initialize_with(const accessible<T> &data)
@@ -121,8 +167,8 @@ target(0), source(0), groups(0), entry(0), length(0)
             //------------------------------------------------------------------
             // setup memory
             //------------------------------------------------------------------
-            setup_memory_for(data);
             const size_t n = data.size();
+            setup_memory_for(n);
 
             //------------------------------------------------------------------
             // initialize source
@@ -168,10 +214,6 @@ target(0), source(0), groups(0), entry(0), length(0)
                 const lightweight_array<size_t> grp(groups,g);
                 setup(grp);
             }
-
-
-
-
 
         }
 
