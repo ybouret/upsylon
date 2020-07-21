@@ -50,6 +50,7 @@ namespace upsylon
             --i;
             addr[i] = other.addr[i];
         }
+        assert( are_equal(*this,other) );
     }
 
     permutation:: ~permutation() throw()
@@ -70,9 +71,7 @@ namespace upsylon
         assert(1==index);
         core::counting::init(perm,n,addr);
     }
-
-   
-
+    
     void permutation:: onNext()  throw()
     {
         assert(index<=count);
@@ -108,5 +107,19 @@ assert(addr[indx]<n)
         Y_CHECK_PERM_C_INDX();
         return addr[indx];
     }
+
+    bool permutation:: are_equal(const permutation &lhs, const permutation &rhs) throw()
+    {
+        if( lhs.size() != rhs.size() ) return false;
+        if( lhs.count  != rhs.count  ) return false;
+        if( lhs.index  != rhs.index  ) return false;
+        for(size_t i=lhs.size();i>0;--i)
+        {
+            if( lhs.perm[i] != rhs.perm[i] ) return false;
+            assert( lhs.addr[i-1] == rhs.addr[i-1] );
+        }
+        return true;
+    }
+
 
 }

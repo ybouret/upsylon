@@ -71,8 +71,8 @@ namespace upsylon {
         static void memchk(const permutation &lhs, const permutation &rhs);
 
         //! C-style computation
-        template <typename T>
-        void apply(T *target, const T *source) const throw()
+        template <typename T, typename U>
+        void apply(T *target, const U *source) const throw()
         {
             assert(NULL!=target);
             assert(NULL!=source);
@@ -96,6 +96,8 @@ namespace upsylon {
             }
         }
 
+        //! check
+        static bool are_equal(const permutation &lhs, const permutation &rhs) throw();
 
     private:
         size_t       wlen;

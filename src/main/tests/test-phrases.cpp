@@ -1,7 +1,7 @@
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "y/counting/part.hpp"
-#include "y/counting/permuter.hpp"
+#include "y/counting/permutations.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/associative/suffix/table.hpp"
 #include "y/sequence/vector.hpp"
@@ -20,7 +20,7 @@ Y_UTEST(phrases)
     {
         const string                alphabet = argv[1];
         const size_t                letters  = alphabet.size();
-        permuter<char>              perm( *alphabet, alphabet.size() );
+        permutations_of<char>       perm( *alphabet, alphabet.size() );
         integer_partition           part(letters);
 
         std::cerr << "#permutation : " << perm.count      << std::endl;
@@ -45,7 +45,7 @@ Y_UTEST(phrases)
             //std::cerr << "-- with: <" << part << "> => ";
             
             //! prepare all possible arrangements
-            permuter<size_t> arrangement( part );
+            permutations_of<size_t> arrangement( part );
             //std::cerr << " #arrangement=" << arrangement.count << std::endl;
             
             for( arrangement.boot(); arrangement.good(); arrangement.next() )
@@ -106,9 +106,6 @@ Y_UTEST(phrases)
 
         } while(part.build_next());
         std::cerr << "#phrases=" << total << std::endl;
-        
-        
-        
 
     }
 }

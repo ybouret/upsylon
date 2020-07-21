@@ -96,7 +96,8 @@ target(0), source(0), groups(0), entry(0), space(0)
         }
 
         //! construct with some data[1..size]
-        inline explicit permutations_of(const accessible<T> &data) :
+        template <typename U>
+        inline explicit permutations_of(const accessible<U> &data) :
         permutations(), Y_PERMUTATIONS_CTOR()
         {
             initialize_with(data);
@@ -104,14 +105,39 @@ target(0), source(0), groups(0), entry(0), space(0)
         }
 
         //! construct with some buffer[0..buflen-1], buflen>0
-        inline explicit permutations_of(const_type *buffer, const size_t buflen) :
+        template <typename U>
+        inline explicit permutations_of(const U *buffer, const size_t buflen) :
         permutations(), Y_PERMUTATIONS_CTOR()
         {
             assert(buffer);
             assert(buflen>0);
-            const lightweight_array<mutable_type> data( (mutable_type*)buffer,buflen);
+            const lightweight_array<U> data( (U*)buffer,buflen);
             initialize_with(data);
             aliasing::_(index) = 1;
+        }
+
+        //! copy
+        template <typename U>
+        inline permutations_of(const permutations_of<U> &other) :
+        permutations(other), Y_PERMUTATIONS_CTOR()
+        {
+            setup_memory_for(dims);
+            --target;
+            --source;
+            --groups;
+            other.copy_content(target,source,groups,dims);
+            assert( has_same_state_than(other) );
+        }
+
+        //! full check
+        template <typename U>
+        inline bool has_same_state_than(const permutations_of<U> &rhs) const throw()
+        {
+            const permutations_of<T> &lhs = *this;
+            if(lhs.size() != rhs.size() ) return false;
+            if(lhs.count  != rhs.count  ) return false;
+            if(lhs.index  != rhs.index  ) return false;
+            return permutation::are_equal(*lhs,*rhs);
         }
 
         //______________________________________________________________________
@@ -141,10 +167,24 @@ target(0), source(0), groups(0), entry(0), space(0)
             return target[indx];
         }
 
-
+        //! used to cross-initialize
+        template <typename U>
+        void copy_content(U * __target, U *__source, size_t * __groups, const size_t items) const throw()
+        {
+            assert(items==dims);
+            assert(__target);
+            assert(__source);
+            assert(__groups);
+            for(size_t i=items;i>0;--i)
+            {
+                __target[i] = static_cast<const U>(target[i]);
+                __source[i] = static_cast<const U>(source[i]);
+                __groups[i] = groups[i];
+            }
+        }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(permutations_of);
+        Y_DISABLE_ASSIGN(permutations_of);
         mutable_type *target; //!< current data
         mutable_type *source; //!< original data, sorted
         size_t       *groups; //!< decomposition of original data
@@ -154,7 +194,8 @@ target(0), source(0), groups(0), entry(0), space(0)
         inline void setup_memory_for(const size_t n)
         {
             assert(n>0);
-            memory::embed emb[] = {
+            memory::embed emb[] =
+            {
                 memory::embed::as(target,n),
                 memory::embed::as(source,n),
                 memory::embed::as(groups,n)
@@ -162,7 +203,8 @@ target(0), source(0), groups(0), entry(0), space(0)
             entry = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), counting::mem_instance(), space);
         }
 
-        inline void initialize_with(const accessible<T> &data)
+        template <typename U>
+        inline void initialize_with(const accessible<U> &data)
         {
             assert(data.size()>0);
 

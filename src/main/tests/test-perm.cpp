@@ -323,10 +323,14 @@ Y_UTEST(permutations)
     if(data.size()>0)
     {
         permutations_of<char>   perms(*data,data.length());
+        permutations_of<int>    iperm(*data,data.length());
+        permutations_of<long>   lperm( iperm );
         
         for( perms.boot(); perms.good(); perms.next() )
         {
             std::cerr << "perm=" << (counting&)(*perms) << " => " << (accessible<char>&)perms << std::endl;
+            const permutations_of<int64_t> uperm( perms );
+            Y_ASSERT(perms.has_same_state_than(uperm));
         }
     }
 
