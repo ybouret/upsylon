@@ -99,6 +99,9 @@ namespace upsylon {
         //! check
         static bool are_equal(const permutation &lhs, const permutation &rhs) throw();
 
+        //! re-assign compatible state
+        void reload( const permutation &p ) throw();
+
     private:
         size_t       wlen;
         size_t      *perm; //!< [1:n]

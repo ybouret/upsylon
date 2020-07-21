@@ -20,7 +20,7 @@ Y_UTEST(phrases)
     {
         const string                alphabet = argv[1];
         const size_t                letters  = alphabet.size();
-        permutations_of<char>       perm( *alphabet, alphabet.size() );
+        permutations<char>          perm( *alphabet, alphabet.size() );
         integer_partition           part(letters);
 
         std::cerr << "#permutation : " << perm.count      << std::endl;
@@ -45,7 +45,7 @@ Y_UTEST(phrases)
             //std::cerr << "-- with: <" << part << "> => ";
             
             //! prepare all possible arrangements
-            permutations_of<size_t> arrangement( part );
+            permutations<size_t> arrangement( part );
             //std::cerr << " #arrangement=" << arrangement.count << std::endl;
             
             for( arrangement.boot(); arrangement.good(); arrangement.next() )

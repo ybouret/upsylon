@@ -1,5 +1,4 @@
 
-#include "y/counting/permuter.hpp"
 #include "y/concurrent/scheme/simd.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timings.hpp"
@@ -7,6 +6,7 @@
 #include "y/string.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/os/wtime.hpp"
+#include "y/counting/permutations.hpp"
 
 #include <iomanip>
 
@@ -19,88 +19,62 @@ namespace {
                   const string         &source,
                   vector<char>         &target)
     {
-        typedef permuter<char> perm_type;
-        concurrent::executor  &ex = loop.engine();
-        const size_t           nt = ex.num_threads();
-        ex.make<perm_type, const char *, size_t >(memory::storage::global,*source,source.length());
+        typedef permutations<char> perm_type;
 
-        size_t count = 0;
-        size_t nodes = 0;
-        size_t created = 0;
-        size_t width = source.size();
+        const size_t          dims = source.size();
+        const perm_type       perm(*source,dims);
+        concurrent::executor &cpu = loop.engine();
 
+        target.make( perm.count * dims,0 );
+        cpu.vcopy<perm_type>( memory::storage::global, 2, perm );
+
+        for(size_t i=0;i<cpu.num_threads();++i)
         {
-            perm_type P(*source,width);
-            P.unwind();
-            count   = P.count;
-            nodes   = P.store.required();
-            created = P.store.created;
-        }
-
-        std::cerr << "#permutations=" << count << ", nodes=" << nodes << ", created=" << created << std::endl;
-        
-        for(size_t i=0;i<nt;++i)
-        {
-            parallel::cache_type &cache = ex(i); Y_ASSERT(cache.is_built_from<perm_type>());
-            perm_type &p = ex(i).get<perm_type>();
-            p.store.grow_cache(nodes);
-            Y_ASSERT(p.store.required() == nodes);
-            ex[i].mark = 0;
-        }
-
-        target.make(count*width,0);
-
+            parallel  & ctx = cpu[i];
+            perm_type & primary = ctx.get<perm_type>(0);
+            perm_type & replica = ctx.get<perm_type>(1);
+            Y_ASSERT(primary.has_same_state_than(perm));
+            Y_ASSERT(replica.has_same_state_than(perm));
+            ctx.mark = primary.boot_mark(ctx.size,ctx.rank);
+         }
 
         struct task
         {
-            const string        *s;
-            addressable<char>   *a;
-
-            static inline void run(void *args, parallel &ctx, lockable &access)
+            vector<char> *frames;
+            static inline void run( void *args, parallel &ctx, lockable &access ) throw()
             {
-                (void) access;
+                (void)access;
+                task            &self    = *(task *)args;
+                const perm_type &primary = ctx.get<perm_type>(0);
+                perm_type       &replica = ctx.get<perm_type>(1);
+                vector<char>    &frames  = *self.frames;
 
-                task                &t = *static_cast<task *>(args);
-                perm_type           &p = ctx.get<perm_type>();
-                const string        &s = *t.s;
-                addressable<char>   &a = *t.a;
-                
+                replica.reload(primary);
 
-                assert( s.size() == p.size() );
-                const uint64_t t0  = ctx.ticks(access);
-                size_t         n   = p.boot(ctx.size,ctx.rank);
-                const size_t   w   = s.size();
-                char          *q   = &a[1+ (p.index-1) * w];
-                p.store.created = 0;
-                while(n-- > 0)
+                size_t length = ctx.mark.length;
+                size_t offset = ctx.mark.offset;
+
+                const size_t  width  = primary.size();
+                size_t        j      = 1+(offset-1)*width;
+
+                while( length-- > 0 )
                 {
-                    assert(p.good());
-                    p.apply(q);
-                    q += w;
-                    p.next();
+                    assert(replica.index==offset);
+                    assert(replica.good());
+                    for(size_t i=1;i<=width;++i)
+                    {
+                        frames[j++] = replica[i];
+                    }
+                    replica.next();
+                    ++offset;
                 }
-                assert(p.store.created<=0);
-                ctx.mark += ctx.ticks(access) - t0;
             }
-
         };
 
-        task todo = { &source, &target };
-        double speed  = 0;
-        size_t cycles = 0;
-        Y_TIMINGS_(speed,2, loop.run( task::run, &todo ),cycles);
-        std::cerr << "#cycles=" << cycles << std::endl;
-
-        wtime chrono;
-
-        for(size_t i=0;i<nt;++i)
-        {
-            const double workTime = chrono(ex[i].mark);
-            const double workRate = double(cycles)/workTime;
-            std::cerr << "\t\t#thread" << i << " : " << workRate << " cycles/s" << std::endl;
-        }
+        task todo = { &target };
+        double speed = 0;
+        Y_TIMINGS(speed,1,loop.run( task::run, &todo));
         return speed;
-
     }
 
 
@@ -117,16 +91,24 @@ Y_UTEST(perm_par)
     {
         source = argv[1];
     }
-    vector<char> target_par;
-    vector<char> target_seq;
     std::cerr << "sequential:" << std::endl;
+    vector<char> target_seq;
     const double seq_speed = doPerm(seq,source,target_seq);
-    std::cerr << seq_speed << std::endl;
+    std::cerr << "seq_speed=" << seq_speed << std::endl;
 
-    std::cerr << "parallel:" << std::endl;
+    vector<char> target_par;
     const double par_speed = doPerm(par,source,target_par);
-    std::cerr << par_speed << std::endl;
+    std::cerr << "par_speed=" << par_speed << std::endl;
 
+    std::cerr << "efficiency=" << par.engine()[0].efficiency(par_speed/seq_speed) << '%' << std::endl;
+
+    Y_CHECK(target_seq.size()==target_par.size());
+    bool identical = true;
+    for(size_t i=target_seq.size();i>0;--i)
+    {
+        Y_ASSERT(target_par[i]==target_seq[i]);
+    }
+    Y_CHECK(identical);
 
 }
 Y_UTEST_DONE()

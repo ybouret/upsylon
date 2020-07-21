@@ -1,5 +1,4 @@
-#include "y/counting/perm.hpp"
-#include "y/counting/permuter.hpp"
+#include "y/counting/permutations.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 
@@ -12,7 +11,7 @@ Y_UTEST(anagram)
         const string       org = argv[1];
         const size_t       num = org.length();
         string             ana(num,as_capacity,true);
-        permuter<char>     perm(*org,num);
+        permutations<char> perm(*org,num);
         permutation        theo(num);
 
         std::cerr << "#perm = " << perm.count << " / #theo = " << theo.count << std::endl;

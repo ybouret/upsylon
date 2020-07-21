@@ -20,7 +20,7 @@ namespace upsylon {
     //! base class for permutations with repetitions
     //
     //__________________________________________________________________________
-    class permutations : public counting
+    class permutations_ : public counting
     {
     public:
         //______________________________________________________________________
@@ -34,12 +34,12 @@ namespace upsylon {
         //
         //! methods
         //______________________________________________________________________
-        virtual ~permutations() throw();               //!< cleanup
+        virtual ~permutations_() throw();               //!< cleanup
         const permutation & operator*() const throw(); //!< current internal permutation
 
     protected:
-        explicit permutations() throw();               //!< initialize
-        explicit permutations(const permutations &);   //!< copy
+        explicit permutations_() throw();               //!< initialize
+        explicit permutations_(const permutations_ &);   //!< copy
         void     next_perm()    throw();               //!< next valid permutation
 
         //! setup from data decomposition in groups
@@ -55,14 +55,14 @@ namespace upsylon {
         const size_t                bytes; //!< for shift
 
     private:
-        Y_DISABLE_ASSIGN(permutations);
+        Y_DISABLE_ASSIGN(permutations_);
         void cleanup() throw();
         void acquire_shift();
     };
 
     //! inline initializers
 #define Y_PERMUTATIONS_CTOR() \
-target(0), source(0), groups(0), entry(0), space(0)
+accessible<T>(), target(0), source(0), groups(0), entry(0), space(0)
 
     //__________________________________________________________________________
     //
@@ -71,7 +71,7 @@ target(0), source(0), groups(0), entry(0), space(0)
     //
     //__________________________________________________________________________
     template <typename T>
-    class permutations_of : public permutations, public accessible<T>
+    class permutations : public permutations_, public accessible<T>
     {
     public:
         //______________________________________________________________________
@@ -86,7 +86,7 @@ target(0), source(0), groups(0), entry(0), space(0)
         //______________________________________________________________________
 
         //! destructor
-        inline virtual ~permutations_of() throw()
+        inline virtual ~permutations() throw()
         {
             static memory::allocator &mgr = counting::mem_location();
             target = 0;
@@ -97,8 +97,8 @@ target(0), source(0), groups(0), entry(0), space(0)
 
         //! construct with some data[1..size]
         template <typename U>
-        inline explicit permutations_of(const accessible<U> &data) :
-        permutations(), Y_PERMUTATIONS_CTOR()
+        inline explicit permutations(const accessible<U> &data) :
+        permutations_(), Y_PERMUTATIONS_CTOR()
         {
             initialize_with(data);
             aliasing::_(index) = 1;
@@ -106,8 +106,8 @@ target(0), source(0), groups(0), entry(0), space(0)
 
         //! construct with some buffer[0..buflen-1], buflen>0
         template <typename U>
-        inline explicit permutations_of(const U *buffer, const size_t buflen) :
-        permutations(), Y_PERMUTATIONS_CTOR()
+        inline explicit permutations(const U *buffer, const size_t buflen) :
+        permutations_(), Y_PERMUTATIONS_CTOR()
         {
             assert(buffer);
             assert(buflen>0);
@@ -116,10 +116,10 @@ target(0), source(0), groups(0), entry(0), space(0)
             aliasing::_(index) = 1;
         }
 
-        //! copy
+        //! templated copy
         template <typename U>
-        inline permutations_of(const permutations_of<U> &other) :
-        permutations(other), Y_PERMUTATIONS_CTOR()
+        inline permutations(const permutations<U> &other) :
+        permutations_(other), Y_PERMUTATIONS_CTOR()
         {
             setup_memory_for(dims);
             --target;
@@ -129,11 +129,25 @@ target(0), source(0), groups(0), entry(0), space(0)
             assert( has_same_state_than(other) );
         }
 
+        //! default copy
+        inline permutations(const permutations &other ) :
+        collection(),
+        permutations_(other), Y_PERMUTATIONS_CTOR()
+        {
+            setup_memory_for(dims);
+            --target;
+            --source;
+            --groups;
+            other.copy_content(target,source,groups,dims);
+            assert( has_same_state_than(other) );
+        }
+
+
         //! full check
         template <typename U>
-        inline bool has_same_state_than(const permutations_of<U> &rhs) const throw()
+        inline bool has_same_state_than(const permutations<U> &rhs) const throw()
         {
-            const permutations_of<T> &lhs = *this;
+            const permutations<T> &lhs = *this;
             if(lhs.size() != rhs.size() ) return false;
             if(lhs.count  != rhs.count  ) return false;
             if(lhs.index  != rhs.index  ) return false;
@@ -167,9 +181,14 @@ target(0), source(0), groups(0), entry(0), space(0)
             return target[indx];
         }
 
+        //______________________________________________________________________
+        //
+        //! helpers
+        //______________________________________________________________________
+
         //! used to cross-initialize
         template <typename U>
-        void copy_content(U * __target, U *__source, size_t * __groups, const size_t items) const throw()
+        inline void copy_content(U * __target, U *__source, size_t * __groups, const size_t items) const throw()
         {
             assert(items==dims);
             assert(__target);
@@ -183,8 +202,33 @@ target(0), source(0), groups(0), entry(0), space(0)
             }
         }
 
+        //! C-style copy
+        template <typename U>
+        inline void apply(U *buffer) const throw()
+        {
+            assert(buffer);
+            for(size_t i=0,j=1;i<dims;++i,++j)
+            {
+                buffer[i] = static_cast<U>( target[j] );
+            }
+        }
+
+        //! reloading
+        template <typename U>
+        inline void reload( const permutations<U> &other ) throw()
+        {
+            assert(count==other.count);
+            assert(size()==other.size());
+            perm->reload(*other);
+            aliasing::_(index) = other.index;
+            if(perm->good())
+            {
+                update();
+            }
+        }
+
     private:
-        Y_DISABLE_ASSIGN(permutations_of);
+        Y_DISABLE_ASSIGN(permutations);
         mutable_type *target; //!< current data
         mutable_type *source; //!< original data, sorted
         size_t       *groups; //!< decomposition of original data

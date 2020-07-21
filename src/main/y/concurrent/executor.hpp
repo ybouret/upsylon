@@ -148,6 +148,7 @@ namespace upsylon
                 }
             }
 
+
             //! make one T for each engine from parameters
             template <typename T, typename U, typename V>
             void make(const memory::storage::model                  which,
@@ -192,6 +193,36 @@ namespace upsylon
                     self(i).vmake<T,U>(which,n,argU);
                 }
             }
+
+            //__________________________________________________________________
+            //
+            // copy objects
+            //__________________________________________________________________
+
+            //! copy objects
+            template <typename T>
+            void copy(const memory::storage::model which, const typename type_traits<T>::parameter_type args)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self(i).copy<T>(which,args);
+                }
+            }
+
+            //! copy objects
+            template <typename T>
+            void vcopy(const memory::storage::model which, const size_t n, const typename type_traits<T>::parameter_type args)
+            {
+                executor     &self = *this;
+                const size_t  nthr = num_threads();
+                for(size_t i=0;i<nthr;++i)
+                {
+                    self(i).vcopy<T>(which,n,args);
+                }
+            }
+
 
             //__________________________________________________________________
             //

@@ -1,7 +1,6 @@
 #include "y/counting/mloop.hpp"
 #include "y/counting/comb.hpp"
 #include "y/counting/perm.hpp"
-#include "y/counting/permuter.hpp"
 #include "y/counting/permutations.hpp"
 #include "y/counting/symm-pair.hpp"
 #include "y/type/point3d.hpp"
@@ -87,18 +86,6 @@ Y_UTEST(counting)
         infoOn(symm);
     }
 
-    {
-        const size_t n = 1+alea.leq(5);
-        vector<int>  I(n,as_capacity);
-        for(size_t i=n;i>0;--i)
-        {
-            const int tmp = int(alea.leq(n));
-            I << tmp;
-        }
-        std::cerr << "I=" << I << std::endl;
-        permuter<int> Perm(I);
-        infoOn(Perm);
-    }
 
     {
         const size_t n = 1+alea.leq(5);
@@ -109,7 +96,7 @@ Y_UTEST(counting)
             I << tmp;
         }
         std::cerr << "I=" << I << std::endl;
-        permutations_of<int> Perm(I);
+        permutations<int> Perm(I);
         infoOn(Perm);
     }
     

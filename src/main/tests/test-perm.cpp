@@ -1,6 +1,5 @@
 
-#include "y/counting/permuter.hpp"
-#include "y/counting/perm.hpp"
+#include "y/counting/permutations.hpp"
 #include "y/counting/perm-ops.hpp"
 #include "y/counting/ops.hpp"
 #include "y/utest/run.hpp"
@@ -71,240 +70,43 @@ Y_UTEST(perm)
         const size_t n =  string_convert::to<size_t>(argv[iarg]);
         
         permutation         perm(n);
-        vector<permutation> Perm( perm.count, as_capacity );
-        
-        std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
-        for( perm.boot(); perm.good(); perm.next() )
         {
-            std::cerr << "\t" << (counting &)perm;
-            std::cerr << " (";
-            for(size_t i=0;i<n;++i) std::cerr << ' ' << perm(i) ;
-            std::cerr << " )" << std::endl;
-            Perm.push_back_(perm);
-        }
-        std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
-        std::cerr << "checking..." << std::endl;
-        for(size_t i=1;i<=Perm.size();++i)
-        {
-            for(size_t j=i;j<=Perm.size();++j)
-            {
-                permutation::memchk(Perm[i],Perm[j]);
-            }
-        }
-    }
-    
-}
-Y_UTEST_DONE()
+            vector<permutation> Perm( perm.count, as_capacity );
 
-
-#include "y/counting/permuter.hpp"
-#include "y/ios/ocstream.hpp"
-#include "y/counting/part.hpp"
-#include "y/ios/ovstream.hpp"
-#include "y/ios/imstream.hpp"
-#include "y/container/task.hpp"
-
-namespace {
-
-    template <typename T>
-    void doPerm(const size_t n, const size_t m)
-    {
-        const mpn    countMaxMP = mpn::factorial(n);
-        const size_t countMax   = countMaxMP.cast_to<size_t>();
-        std::cerr << "countMax=" << countMax << std::endl;
-        
-        vector<T> data(n,0);
-        for(size_t i=1;i<=n;++i)
-        {
-            data[i] = T( alea.leq(m) );
-        }
-        
-        permuter<T> perm( data );
-        Y_ASSERT( data.size() == perm.size() );
-        Y_ASSERT( data.size() == perm.dims );
-        Y_ASSERT( data.size() == perm.current.size() );
-
-        std::cerr << "data  = " << data << std::endl;
-        std::cerr << "perm  = " << (counting &)perm << std::endl;
-        std::cerr << "curr  = " << perm.current     << std::endl;
-        std::cerr << "count = " << perm.count << "/" << countMax << std::endl;
-
-        perm.next();
-        std::cerr << "perm1 = " << (counting &)perm << std::endl;
-        std::cerr << "curr1 = " << perm.current     << std::endl;
-        perm.unwind();
-
-        std::cerr << "required nodes: " << perm.store.required() << std::endl;
-        perm.store.free_cache();
-        std::cerr << "              : " << perm.store.required() << std::endl;
-        perm.boot();
-        std::cerr << "              : " << perm.store.required() << std::endl;
-
-        const double ratio = double(perm.store.required()) / perm.count;
-        std::cerr << "ratio: " << ratio << std::endl;
-        std::cerr << "check copy consistency" << std::endl;
-
-        if(n<=6)
-        {
-            for(size_t steps=1;steps<=perm.count;++steps)
-            {
-                perm.boot();
-                for(size_t i=0;i<steps;++i)
-                {
-                    assert(perm.good());
-                    perm.next();
-                }
-                permuter<T> temp(perm);
-                Y_ASSERT(temp.has_same_state_than(perm));
-                while( perm.good() )
-                {
-                    Y_ASSERT(temp.good());
-                    Y_ASSERT(temp.has_same_state_than(perm));
-                    perm.next();
-                    temp.next();
-                }
-            }
-        }
-        else
-        {
-            std::cerr << "[";
-            for(size_t iter=0;iter<4;++iter)
-            {
-                std::cerr << ".";
-                std::cerr.flush();
-                perm.boot();
-                for(size_t i=alea.leq(perm.count);i>0;--i)
-                {
-                    perm.next();
-                }
-                permuter<T> temp(perm);
-                Y_ASSERT(temp.has_same_state_than(perm));
-                while( perm.good() )
-                {
-                    Y_ASSERT( temp.good() );
-                    Y_ASSERT(temp.has_same_state_than(perm));
-                    perm.next();
-                    temp.next();
-                }
-            }
-            std::cerr << "]" << std::endl;
-        }
-
-        std::cerr << "checking I/O" << std::endl;
-        {
-            ios::ovstream dest;
-            permuter<T>   temp(data);
+            std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
             for( perm.boot(); perm.good(); perm.next() )
             {
-                dest.free();
-                const size_t nw = perm.save(dest);
-                ios::imstream from(dest);
-                const size_t nr = temp.load(from);
-                Y_ASSERT(nw==nr);
-                Y_ASSERT(temp.has_same_state_than(perm));
+                std::cerr << "\t" << (counting &)perm;
+                std::cerr << " (";
+                for(size_t i=0;i<n;++i) std::cerr << ' ' << perm(i) ;
+                std::cerr << " )" << std::endl;
+                Perm.push_back_(perm);
             }
-        }
-
-        std::cerr << "checking frames" << std::endl;
-        {
-            vector<size_t> frames;
-            for(perm.boot(); perm.good(); perm.next())
+            std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
+            std::cerr << "checking generated.." << std::endl;
+            for(size_t i=1;i<=Perm.size();++i)
             {
-                frames.put( &perm.current[1], perm.size() );
-            }
-            Y_CHECK( frames.size() == perm.count * perm.dims );
-
-            const size_t *q = *frames;
-            for(perm.boot(); perm.good(); perm.next())
-            {
-                for(size_t i=1;i<=perm.dims;++i)
+                for(size_t j=i;j<=Perm.size();++j)
                 {
-                    Y_ASSERT(perm.current[i]==*(q++));
+                    permutation::memchk(Perm[i],Perm[j]);
                 }
             }
-
         }
 
-
-        std::cerr << std::endl;
-    }
-
-
-    template <typename T>
-    void doPermMemory(const size_t n)
-    {
-        std::cerr << "-- dims=" << n << std::endl;
-        integer_partition pb(n);
-        std::cerr << "|_" << pb.outcomes() << " outcomes" << std::endl;
-        pb.initialize();
-        vector<T> data(n,as_capacity);
-        vector<size_t> count;
-        vector<size_t> nodes;
-        do
+        std::cerr << "checking reload..." << std::endl;
         {
-            data.free();
-            const accessible<size_t> &part = pb;
-            std::cerr << " |_using " << part << " => ";
-            const size_t m = part.size();
-            for(size_t j=1;j<=m;++j)
+            permutation temp(n);
+            for(perm.boot();perm.good();perm.next())
             {
-                for(size_t k=part[j];k>0;--k)
-                {
-                    data.push_back( T(j) );
-                }
+                temp.reload(perm);
+                Y_ASSERT( permutation::are_equal(temp,perm) );
+                permutation::memchk(temp,perm);
             }
-            Y_ASSERT(data.size()==n);
-            std::cerr << data;
-            permuter<T> P(data);
-            Y_ASSERT(P.classes==part.size());
-            std::cerr << " => #count=" << P.count;
-            P.unwind();
-            const size_t xnodes = P.store.required();
-            std::cerr << " => #nodes="   << xnodes;
-            std::cerr << " => #created=" << P.store.created;
-            std::cerr << std::endl;
-            count.push_back(P.count);
-            nodes.push_back(xnodes);
         }
-        while( pb.build_next() );
-        hsort(count, nodes, comparison::increasing<size_t> );
 
-        const string  fn = vformat("mperm%u.dat", unsigned(n));
-        ios::ocstream fp(fn);
-        permutation   p(n);
-        const double den = double(p.count);
-        for(size_t i=1;i<=count.size();++i)
-        {
-            fp("%g %g\n", double(count[i])/den, double(nodes[i])/den );
-        }
 
     }
     
-}
-
-Y_UTEST(permuter)
-{
-    size_t n = 5;
-    if(argc>1)
-    {
-        n = string_convert::to<size_t>(argv[1],"n");
-    }
-    
-    size_t m=10;
-    if(argc>2)
-    {
-        m = string_convert::to<size_t>(argv[2],"m");
-    }
-
-    doPerm<uint16_t>(n,m);
-    doPerm<int16_t>(n,m);
-
-    for(size_t i=1;i<=n;++i)
-    {
-        doPermMemory<int>(i);
-    }
-
-
 }
 Y_UTEST_DONE()
 
@@ -319,20 +121,22 @@ Y_UTEST(permutations)
     {
         data=argv[1];
     }
-    
+
     if(data.size()>0)
     {
-        permutations_of<char>   perms(*data,data.length());
-        permutations_of<int>    iperm(*data,data.length());
-        permutations_of<long>   lperm( iperm );
-        
+        permutations<char>   perms(*data,data.length());
+        permutations<int>    iperm(*data,data.length());
+        permutations<long>   lperm( iperm );
+
         for( perms.boot(); perms.good(); perms.next() )
         {
             std::cerr << "perm=" << (counting&)(*perms) << " => " << (accessible<char>&)perms << std::endl;
-            const permutations_of<int64_t> uperm( perms );
+            const permutations<int64_t> uperm( perms );
             Y_ASSERT(perms.has_same_state_than(uperm));
         }
     }
+
+    
 
 }
 Y_UTEST_DONE()

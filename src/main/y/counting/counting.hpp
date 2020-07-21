@@ -2,7 +2,7 @@
 #ifndef Y_COUNTING_INCLUDED
 #define Y_COUNTING_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/memory/marker.hpp"
 #include <iosfwd>
 
 namespace upsylon
@@ -52,6 +52,10 @@ namespace upsylon
         size_t                boot(const size_t global_size,
                                    const size_t global_rank);
 
+        //! boot and forward, return marker
+        memory::marker boot_mark(const size_t global_size,
+                                 const size_t global_rank);
+
         //! make a full loop
         void unwind();
         
@@ -62,6 +66,7 @@ namespace upsylon
         //______________________________________________________________________
         const size_t index; //!< index in 1..count
         const size_t count; //!< number of possible objects
+        
 
         //______________________________________________________________________
         //
@@ -72,7 +77,7 @@ namespace upsylon
         static memory::allocator &  mem_location() throw();                        //!< internal allocator location
         static size_t *             acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)
         static void                 release_(size_t *&wksp,size_t &bytes) throw(); //!< release workspace
-        //! generic display
+                                                                                   //! generic display
         inline friend std::ostream &operator<<(std::ostream &os, const counting &cnt)
         {
             return cnt.show(os);

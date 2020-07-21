@@ -51,15 +51,14 @@ Y_UTEST_INIT(256)
     Y_UTEST(mloops);
     Y_UTEST(comb);
     Y_UTEST(perm);
-    Y_UTEST(permuter);
     Y_UTEST(perm_par);
+    Y_UTEST(permutations);
     Y_UTEST(part);
     Y_UTEST(bell);
     Y_UTEST(anagram);
     Y_UTEST(counting);
     Y_UTEST(symm_pair);
-    Y_UTEST(permutations);
-    
+
     Y_UTEST(dancing);
     Y_UTEST(scrabble);
     Y_UTEST(phrases);

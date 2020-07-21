@@ -4,6 +4,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/counting/perm-ops.hpp"
 #include "y/counting/ops.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -120,6 +121,21 @@ assert(addr[indx]<n)
         }
         return true;
     }
+
+    void permutation:: reload( const permutation &p ) throw()
+    {
+        assert( this != &p );
+        assert(size()==p.size());
+        assert(count==p.count);
+        aliasing::_(index) = p.index;
+        for(size_t i=0,j=1;i<n;++i,++j)
+        {
+            addr[i] = p.addr[i];
+            perm[j] = p.perm[j];
+        }
+        assert( are_equal(*this,p) );
+    }
+
 
 
 }

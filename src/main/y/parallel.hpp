@@ -4,8 +4,8 @@
 
 #include "y/object.hpp"
 #include "y/parops.hpp"
-#include "y/memory/xslot.hpp"
 #include "y/memory/groove.hpp"
+#include "y/memory/marker.hpp"
 
 namespace upsylon
 {
@@ -53,22 +53,31 @@ namespace upsylon
         //! forwarding call
         template <typename T> T &       get()       throw() { return cache.get<T>(); }
 
+        //! forwarding call
+        template <typename T> T &       get(const size_t indx)       throw() { return cache.get<T>(indx); }
+
         //! forwarding call, const
         template <typename T> const T & get() const throw() { return cache.get<T>(); }
 
+        //! forwarding call, const
+        template <typename T> const T & get(const size_t indx) const throw() { return cache.get<T>(indx); }
+        
         //! get system ticks, thread-safe
         uint64_t     ticks(lockable &) const throw();
-        
+
+        //! store internal parameters
+        void mark_split(const size_t length, const size_t offset) throw();
+
         //______________________________________________________________________
         //
         // members
         //______________________________________________________________________
-        cache_type   cache;    //!< local cache
-        const size_t size;     //!< the family size
-        const size_t rank;     //!<  0..size-1
-        const size_t indx;     //!<  1..size
-        uint64_t     mark;     //!< internal mark for optional thread performance
-        const char   label[8]; //!< size.rank or "too big"
+        cache_type     cache;    //!< local cache
+        const size_t   size;     //!< the family size
+        const size_t   rank;     //!<  0..size-1
+        const size_t   indx;     //!<  1..size
+        memory::marker mark;     //!< internal mark for optional offset/length storage
+        const char     label[8]; //!< size.rank or "too big"
 
 
     private:

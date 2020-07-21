@@ -9,12 +9,12 @@
 
 namespace upsylon {
 
-    permutations:: ~permutations() throw()
+    permutations_:: ~permutations_() throw()
     {
         cleanup();
     }
 
-    permutations:: permutations() throw():
+    permutations_:: permutations_() throw():
     counting(0),
     dims(0),
     perm(0),
@@ -22,7 +22,7 @@ namespace upsylon {
     bytes(0)
     {}
 
-    permutations:: permutations(const permutations &other) :
+    permutations_:: permutations_(const permutations_ &other) :
     counting(other),
     dims(other.dims),
     perm( new permutation( *other.perm) ),
@@ -33,7 +33,7 @@ namespace upsylon {
         for(size_t i=count;i>0;--i) aliasing::_(shift[i]) = other.shift[i];
     }
 
-    void permutations:: acquire_shift()
+    void permutations_:: acquire_shift()
     {
         assert(bytes>0);
         assert(0==shift);
@@ -41,14 +41,14 @@ namespace upsylon {
         --shift;
     }
 
-    const permutation & permutations:: operator*() const throw()
+    const permutation & permutations_:: operator*() const throw()
     {
         assert(perm.is_valid());
         return *perm;
     }
 
 
-    void permutations:: cleanup() throw()
+    void permutations_:: cleanup() throw()
     {
         if(shift)
         {
@@ -58,7 +58,7 @@ namespace upsylon {
         aliasing::_(dims) = 0;
     }
 
-    void permutations:: setup(const accessible<size_t> &groups)
+    void permutations_:: setup(const accessible<size_t> &groups)
     {
         static const char fn[] = "permutations::setup";
         assert(groups.size()>0);
@@ -145,7 +145,7 @@ namespace upsylon {
 
     
 
-    void permutations:: next_perm() throw()
+    void permutations_:: next_perm() throw()
     {
         assert(index<=count);
         permutation &self = *perm;

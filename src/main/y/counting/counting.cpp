@@ -97,6 +97,13 @@ namespace upsylon
         return length;
     }
 
+    memory::marker counting:: boot_mark(const size_t global_size,
+                                        const size_t global_rank)
+    {
+        const size_t length = boot(global_size,global_rank);
+        return memory::marker(index,length);
+    }
+
     void counting:: unwind()
     {
         for( boot(); good(); next() )
