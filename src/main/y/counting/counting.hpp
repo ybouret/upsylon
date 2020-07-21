@@ -86,16 +86,27 @@ namespace upsylon
             return cnt.show(os);
         }
 
-        //! templated filling of FRAME (a.k.a matrix<T> or field2D<T>)
-        template <typename FRAME>
-        void fillFrame( FRAME &  ) throw()
+        //! fill a compatible config (a.k.a addressable<type>)
+        template <typename COUNTING, typename CONFIG>
+        static inline void fill_space( CONFIG &config, COUNTING &self ) throw()
         {
-            //typedef typename FRAME::type type;
-            for( boot(); good(); next() )
+            for(size_t i=self.space;i>0;--i)
             {
-                //fillConfig(frame[index]);
+                config[i] = self[i];
             }
         }
+
+        //! fill a compatible frame (a.k.a matrix<type>, field2D<type>)
+        template <typename COUNTING, typename FRAME>
+        static inline void fill_frame( FRAME &frame, COUNTING &self ) throw()
+        {
+            for( self.boot(); self.good(); self.next() )
+            {
+                fill_space( frame[self.index], self );
+            }
+        }
+
+
 
         
     protected:
@@ -116,6 +127,7 @@ namespace upsylon
         Y_DISABLE_ASSIGN(counting);
         virtual void          onBoot() = 0; //!< initialize first objects
         virtual void          onNext() = 0; //!< update next objects, index<=count
+
 
 
     };

@@ -15,6 +15,9 @@ namespace upsylon {
     class symm_pair : public counting, public accessible<size_t>
     {
     public:
+        typedef size_t      type;          //!< alias
+        typedef type        mutable_type;  //!< alias
+        typedef const type  const_type;    //!< alias
         static const size_t extent = 2; //!< space/size
         
         //----------------------------------------------------------------------

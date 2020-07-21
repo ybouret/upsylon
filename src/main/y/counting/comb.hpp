@@ -20,9 +20,9 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
-        typedef size_t     type;          //!< alias for atom::
-        typedef type       mutable_type;  //!< alias for atom::
-        typedef const type const_type;    //!< alias for atom::
+        typedef size_t     type;          //!< alias
+        typedef type       mutable_type;  //!< alias
+        typedef const type const_type;    //!< alias  
 
         //______________________________________________________________________
         //

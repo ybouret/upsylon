@@ -6,6 +6,7 @@
 #include "y/type/point3d.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/container/matrix.hpp"
 
 using namespace upsylon;
 
@@ -14,7 +15,7 @@ namespace {
     static inline void infoOn(counting &loop)
     {
         Y_CHECK(1==loop.index);
-        std::cerr << "index=" << loop.index << "/count=" << loop.count << std::endl;
+        std::cerr << "index=" << loop.index << "/count=" << loop.count << "/space=" << loop.space << std::endl;
         std::cerr << loop << std::endl;
 
         bool has_endl = false;
@@ -54,6 +55,15 @@ namespace {
         }
 
     }
+
+    template <typename COUNTING> static inline
+    void fill_all( COUNTING &self )
+    {
+        matrix<typename COUNTING::type> frame( self.count, self.space );
+        counting::fill_frame(frame,self);
+        std::cerr << frame << std::endl;
+        std::cerr << std::endl;
+    }
     
 }
 
@@ -66,24 +76,28 @@ Y_UTEST(counting)
         const point3d<int> up(3,4,5);
         mloop< int,point3d<int> > loop(lo,up);
         infoOn(loop);
+        fill_all(loop);
     }
 
     {
         combination comb(7,2);
         std::cerr << "comb" << std::endl;
         infoOn(comb);
+        fill_all(comb);
     }
     
     {
         std::cerr << "perm" << std::endl;
         permutation perm(6);
         infoOn(perm);
+        fill_all(perm);
     }
 
     {
         std::cerr << "symm" << std::endl;
         symm_pair symm(8);
         infoOn(symm);
+        fill_all(symm);
     }
 
 
@@ -98,6 +112,7 @@ Y_UTEST(counting)
         std::cerr << "I=" << I << std::endl;
         permutations<int> Perm(I);
         infoOn(Perm);
+        fill_all(Perm);
     }
     
 }
