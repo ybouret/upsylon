@@ -34,12 +34,13 @@ namespace upsylon {
         //
         //! methods
         //______________________________________________________________________
-        virtual ~permutations() throw(); //!< cleanup
+        virtual ~permutations() throw();               //!< cleanup
         const permutation & operator*() const throw(); //!< current internal permutation
 
     protected:
-        explicit permutations() throw(); //!< initialize
-        void     next_perm()    throw(); //!< next valid permutation
+        explicit permutations() throw();               //!< initialize
+        explicit permutations(const permutations &);   //!< copy
+        void     next_perm()    throw();               //!< next valid permutation
 
         //! setup from data decomposition in groups
         /**
@@ -54,8 +55,9 @@ namespace upsylon {
         const size_t                bytes; //!< for shift
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(permutations);
+        Y_DISABLE_ASSIGN(permutations);
         void cleanup() throw();
+        void acquire_shift();
     };
 
     //! inline initializers

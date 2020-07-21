@@ -22,6 +22,25 @@ namespace upsylon {
     bytes(0)
     {}
 
+    permutations:: permutations(const permutations &other) :
+    counting(other),
+    dims(other.dims),
+    perm( new permutation( *other.perm) ),
+    shift(0),
+    bytes(other.bytes)
+    {
+        acquire_shift();
+        for(size_t i=count;i>0;--i) aliasing::_(shift[i]) = other.shift[i];
+    }
+
+    void permutations:: acquire_shift()
+    {
+        assert(bytes>0);
+        assert(0==shift);
+        shift = static_cast<shift_t*>(memory::global::instance().acquire( aliasing::_(bytes) ));
+        --shift;
+    }
+
     const permutation & permutations:: operator*() const throw()
     {
         assert(perm.is_valid());
@@ -69,8 +88,8 @@ namespace upsylon {
         // prepare base permutation and sample data
         //----------------------------------------------------------------------
         perm  = new permutation( aliasing::_(dims) = n );assert( perm->good() );
-        shift = static_cast<shift_t*>(memory::global::instance().acquire(aliasing::_(bytes) = count * sizeof(shift_t)));
-        --shift;
+        aliasing::_(bytes) = count * sizeof(shift_t);
+        acquire_shift();
         try
         {
             vector<probe_t,memory::pooled> source(n,0);
