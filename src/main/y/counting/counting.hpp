@@ -77,7 +77,8 @@ namespace upsylon
         static memory::allocator &  mem_location() throw();                        //!< internal allocator location
         static size_t *             acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)
         static void                 release_(size_t *&wksp,size_t &bytes) throw(); //!< release workspace
-                                                                                   //! generic display
+
+        //! generic display
         inline friend std::ostream &operator<<(std::ostream &os, const counting &cnt)
         {
             return cnt.show(os);
