@@ -151,7 +151,7 @@ namespace upsylon
     dancing::group * new_group_from( const combination &comb )
     {
         auto_ptr<dancing::group> grp = new dancing::group();
-        for(size_t i=comb.k;i>0;--i)
+        for(size_t i=comb.space;i>0;--i)
         {
             grp->push_front( new dancing::guest( comb[i] ) );
         }

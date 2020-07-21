@@ -26,7 +26,7 @@ namespace upsylon
     }
 
     permutation:: permutation( const size_t N ) :
-    counting( compute(N,with_sz) ),
+    counting( compute(N,with_sz), N ),
     accessible<size_t>(),
     n( N ),
     wlen( 2*n * sizeof(size_t) ),

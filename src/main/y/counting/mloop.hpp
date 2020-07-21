@@ -143,7 +143,7 @@ data(0)
             //! memory check
             inline static void memchk(const mloop &lhs, const mloop &rhs)
             {
-                assert(lhs.space==rhs.dimensions);
+                assert(lhs.space==rhs.space);
                 assert(lhs.count==rhs.count);
                 assert(lhs.data==rhs.data);
                 check_contents(identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
@@ -152,7 +152,7 @@ data(0)
             //! show
             virtual std::ostream & show( std::ostream &os ) const
             {
-                return display_int::to(os<< '{',curr,dimensions,separators) << '}';
+                return display_int::to(os<< '{',curr,space,separators) << '}';
             }
 
             //! workspace memory
@@ -185,7 +185,7 @@ data(0)
             virtual void onBoot() throw()
             {
                 assert(1==index);
-                for(size_t i=0;i<dimensions;++i)
+                for(size_t i=0;i<space;++i)
                 {
                     curr[i] = head[i];
                 }
@@ -207,7 +207,7 @@ data(0)
             //__________________________________________________________________
             void recursive_update( const size_t odim ) throw()
             {
-                assert(odim<dimensions);
+                assert(odim<space);
                 size_t idim = odim;
             FIND_DOF:
                 if(move[idim])
@@ -241,7 +241,7 @@ data(0)
             //__________________________________________________________________
             inline size_t next_dim(size_t dim) const throw()
             {
-                return (++dim>=dimensions) ? 0 : dim;
+                return (++dim>=space) ? 0 : dim;
             }
 
 
@@ -255,12 +255,12 @@ data(0)
                 {
                     memory::embed emb[] =
                     {
-                        memory::embed::as<mutable_type>(curr,dimensions),
-                        memory::embed::as<const_type>  (head,dimensions),
-                        memory::embed::as<const_type>  (tail,dimensions),
-                        memory::embed::as<const_type>  (quit,dimensions),
-                        memory::embed::as<const bool>  (move,dimensions),
-                        memory::embed::as<const proc>  (iter,dimensions)
+                        memory::embed::as<mutable_type>(curr,space),
+                        memory::embed::as<const_type>  (head,space),
+                        memory::embed::as<const_type>  (tail,space),
+                        memory::embed::as<const_type>  (quit,space),
+                        memory::embed::as<const bool>  (move,space),
+                        memory::embed::as<const proc>  (iter,space)
                     };
                     wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), mem, wlen, &data);
                     item = curr-1;
@@ -276,7 +276,7 @@ data(0)
             {
                 size_t &num = aliasing::_(this->count);
                 num = 1;
-                for(size_t i=0;i<dimensions;++i)
+                for(size_t i=0;i<space;++i)
                 {
                     const_type         lo      = ini[i];
                     const_type         up      = end[i];

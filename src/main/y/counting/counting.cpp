@@ -6,12 +6,15 @@
 
 namespace upsylon
 {
-    counting:: counting(const size_t n, const size_t s) throw() : index(0), count(n), space(s) {}
+    counting:: counting(const size_t n, const size_t s) throw() : index(0), count(n), space(s)
+    {
+    }
 
     counting:: ~counting() throw()
     {
         _bzset(index);
         _bzset(count);
+        _bzset(space);
     }
 
     counting:: counting( const counting &other) throw() :

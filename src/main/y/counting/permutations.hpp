@@ -49,7 +49,6 @@ namespace upsylon {
          */
         void     setup(const accessible<size_t> &groups);
 
-        const size_t                dims;  //!< perm->size()
         auto_ptr<permutation>       perm;  //!< internal permutations
         const shift_t              *shift; //!< shift to next valid permutation
         const size_t                bytes; //!< for shift
@@ -121,11 +120,11 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         inline permutations(const permutations<U> &other) :
         permutations_(other), Y_PERMUTATIONS_CTOR()
         {
-            setup_memory_for(dims);
+            setup_memory_for(space);
             --target;
             --source;
             --groups;
-            other.copy_content(target,source,groups,dims);
+            other.copy_content(target,source,groups,space);
             assert( has_same_state_than(other) );
         }
 
@@ -134,11 +133,11 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         collection(),
         permutations_(other), Y_PERMUTATIONS_CTOR()
         {
-            setup_memory_for(dims);
+            setup_memory_for(space);
             --target;
             --source;
             --groups;
-            other.copy_content(target,source,groups,dims);
+            other.copy_content(target,source,groups,space);
             assert( has_same_state_than(other) );
         }
 
@@ -170,14 +169,14 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         //! accesible interface
         //______________________________________________________________________
 
-        //! size=dims
-        inline virtual size_t size() const throw() { return dims; }
+        //! size=space
+        inline virtual size_t size() const throw() { return space; }
 
         //! access in 1..dims
         inline const_type & operator[](const size_t indx) const throw()
         {
             assert(indx>=1);
-            assert(indx<=dims);
+            assert(indx<=space);
             return target[indx];
         }
 
@@ -190,7 +189,7 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         template <typename U>
         inline void copy_content(U * __target, U *__source, size_t * __groups, const size_t items) const throw()
         {
-            assert(items==dims);
+            assert(items==space);
             assert(__target);
             assert(__source);
             assert(__groups);
@@ -207,7 +206,7 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         inline void apply(U *buffer) const throw()
         {
             assert(buffer);
-            for(size_t i=0,j=1;i<dims;++i,++j)
+            for(size_t i=0,j=1;i<space;++i,++j)
             {
                 buffer[i] = static_cast<U>( target[j] );
             }
@@ -309,7 +308,7 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         {
             assert(perm->good());
             const accessible<size_t> &self = *perm;
-            for(size_t i=dims;i>0;--i) target[i] = source[ self[i] ];
+            for(size_t i=space;i>0;--i) target[i] = source[ self[i] ];
         }
 
         inline virtual void onBoot()

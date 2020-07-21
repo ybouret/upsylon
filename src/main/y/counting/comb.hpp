@@ -47,7 +47,8 @@ namespace upsylon
         //______________________________________________________________________
         //! access C++ style
         virtual const size_t & operator[](const size_t j) const throw();
-        //! size=k
+
+        //! size=k=space
         virtual size_t size() const throw();
 
         //! and access C-style
@@ -70,8 +71,8 @@ namespace upsylon
         //
         // members
         //______________________________________________________________________
-        const size_t n;       //!< maximum value
-        const size_t k;       //!< number of chosen values
+        const size_t n;       //!< maximum value, k=space
+        //const size_t k;       //!< number of chosen values
 
     private:
         const size_t nmk;  //!< n-k

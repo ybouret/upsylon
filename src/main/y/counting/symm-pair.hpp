@@ -15,6 +15,8 @@ namespace upsylon {
     class symm_pair : public counting, public accessible<size_t>
     {
     public:
+        static const size_t extent = 2; //!< space/size
+        
         //----------------------------------------------------------------------
         // C++
         //----------------------------------------------------------------------

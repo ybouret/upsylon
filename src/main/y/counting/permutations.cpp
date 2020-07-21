@@ -15,8 +15,7 @@ namespace upsylon {
     }
 
     permutations_:: permutations_() throw():
-    counting(0),
-    dims(0),
+    counting(0,0),
     perm(0),
     shift(0),
     bytes(0)
@@ -24,7 +23,6 @@ namespace upsylon {
 
     permutations_:: permutations_(const permutations_ &other) :
     counting(other),
-    dims(other.dims),
     perm( new permutation( *other.perm) ),
     shift(0),
     bytes(other.bytes)
@@ -55,7 +53,6 @@ namespace upsylon {
             assert(bytes);
             memory::global::location().release( *(void **)& ++shift, aliasing::_(bytes) );
         }
-        aliasing::_(dims) = 0;
     }
 
     void permutations_:: setup(const accessible<size_t> &groups)
@@ -87,7 +84,7 @@ namespace upsylon {
         //----------------------------------------------------------------------
         // prepare base permutation and sample data
         //----------------------------------------------------------------------
-        perm  = new permutation( aliasing::_(dims) = n );assert( perm->good() );
+        perm  = new permutation( aliasing::_(space) = n );assert( perm->good() );
         aliasing::_(bytes) = count * sizeof(shift_t);
         acquire_shift();
         try

@@ -6,14 +6,14 @@
 namespace upsylon {
 
     combination:: combination(const size_t N, const size_t K) :
-    counting( compute(N,K,with_sz) ),
+    counting( compute(N,K,with_sz), K ),
     accessible<size_t>(),
     n(N),
-    k(K),
-    nmk(n-k),
-    wlen( (k * sizeof(size_t)) << 1 ),
+    //k(K),
+    nmk(n-space),
+    wlen( (space * sizeof(size_t)) << 1 ),
     comb( acquire_(wlen) ),
-    base( comb+k )
+    base( comb+space )
     {
         ++base;
         boot();
@@ -24,14 +24,14 @@ namespace upsylon {
     counting(other),
     accessible<size_t>(),
     n(other.n),
-    k(other.k),
+    //k(other.k),
     nmk(other.nmk),
-    wlen( (k * sizeof(size_t) ) << 1 ),
+    wlen( (space * sizeof(size_t) ) << 1 ),
     comb(  acquire_(wlen) ),
-    base( comb+k )
+    base( comb+space )
     {
         ++base;
-        for(size_t i=k;i>0;)
+        for(size_t i=space;i>0;)
         {
             comb[i] = other.comb[i];
             --i;
@@ -40,24 +40,23 @@ namespace upsylon {
     }
     
 
-    size_t combination:: size() const throw() { return k; }
+    size_t combination:: size() const throw() { return space; }
 
     combination:: ~combination() throw()
     {
         release_(comb,wlen);
         _bzset(n);
-        _bzset(k);
     }
 
     std::ostream & combination:: show(std::ostream &os) const
     {
-        return counting::display(os,comb,k);
+        return counting::display(os,comb,space);
     }
     
     void combination:: onBoot() throw()
     {
         assert(1==index);
-        core::counting::init(comb, k, base);
+        core::counting::init(comb,space,base);
     }
 
     
@@ -65,7 +64,7 @@ namespace upsylon {
     {
         assert(index<=count);
         
-        size_t i=k;
+        size_t i=space;
         ++comb[i];
         while( comb[i]>nmk+i )
         {
@@ -73,24 +72,24 @@ namespace upsylon {
             ++comb[i];
         }
 
-        for(++i;i<=k;++i)
+        for(++i;i<=space;++i)
         {
             comb[i] = comb[i-1]+1;
         }
 
-        core::counting::to_C(base,comb,k);
+        core::counting::to_C(base,comb,space);
     }
 
     const size_t & combination:: operator[](const size_t j) const throw()
     {
         assert(j>=1);
-        assert(j<=k);
+        assert(j<=space);
         return comb[j];
     }
 
     const size_t & combination:: operator()(const size_t j) const throw()
     {
-        assert(j<k);
+        assert(j<space);
         return base[j];
     }
     
@@ -108,7 +107,7 @@ namespace upsylon
     {
 
         assert(lhs.n==rhs.n);
-        assert(lhs.k==rhs.k);
+        assert(lhs.space==rhs.space);
         assert(lhs.count==rhs.count);
         assert(lhs.nmk==rhs.nmk);
 
@@ -116,7 +115,7 @@ namespace upsylon
                        fn,
                        lhs, &lhs.comb[1],
                        rhs, &rhs.comb[1],
-                       2*lhs.k * sizeof(size_t)
+                       2*lhs.space * sizeof(size_t)
                        );
     }
 

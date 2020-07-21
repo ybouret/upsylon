@@ -32,7 +32,7 @@ namespace upsylon {
     }
 
     symm_pair:: symm_pair(const size_t w) :
-    counting( compute(w,with_sz) ),
+    counting( compute(w,with_sz), extent ),
     width(w),
     lower(0),
     upper(0)
@@ -56,7 +56,7 @@ namespace upsylon {
         return counting::display(os, getArr(), 2);
     }
     
-    size_t symm_pair:: size() const throw() { return 2; }
+    size_t symm_pair:: size() const throw() { return extent; }
    
     const size_t * symm_pair:: getArr() const throw()
     {
