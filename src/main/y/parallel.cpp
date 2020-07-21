@@ -9,25 +9,17 @@ namespace upsylon
     parallel:: ~parallel() throw() { }
 
     parallel:: parallel() throw() :
-    cache(),size(1),rank(0),indx(1),mark(),label()
+    L1(), L2(), size(1),rank(0),indx(1),label()
     { __format(); }
 
     parallel:: parallel(const size_t sz, const size_t rk) throw() :
-    cache(), size(sz),rank(rk),indx(rk+1),mark(),label()
+    L1(), L2(), size(sz),rank(rk),indx(rk+1),label()
     {
         assert(size>0); assert(rank<size);
         __format();
     }
 
-    parallel::cache_type & parallel::operator*() throw()
-    {
-        return cache;
-    }
-
-    const parallel::cache_type & parallel::operator*() const throw()
-    {
-        return cache;
-    }
+    
 
     double parallel:: efficiency(const double speed_up) const
     {
@@ -37,7 +29,7 @@ namespace upsylon
         }
         else
         {
-            return floor(10000.0*(speed_up-1.0)/(size-1))/100.0;
+            return floor(10000.0*(speed_up-1.0)/(size-1)+0.5)/100.0;
         }
     }
 
@@ -65,11 +57,7 @@ namespace upsylon
         }
     }
 
-    void parallel:: mark_split(const size_t length, const size_t offset) throw()
-    {
-        split(mark.length=length,mark.offset=offset);
-    }
-
+    
 
 }
 

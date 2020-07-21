@@ -70,7 +70,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // access to cache(s)
+            // access to L1 cache(s)
             //__________________________________________________________________
 
             //! access to individual cache
@@ -84,10 +84,10 @@ namespace upsylon
             // cleaning memory management
             //__________________________________________________________________
 
-            //! free per engine
+            //! free L1 cache per engine
             void free() throw();
 
-            //! release per engine
+            //! release L1 cache per engine
             void release() throw();
 
             //__________________________________________________________________
@@ -95,7 +95,7 @@ namespace upsylon
             // acquire flat memory
             //__________________________________________________________________
 
-            //! acquire space for T for each engine
+            //! acquire L1 space for T for each engine
             template <typename T>
             void acquire(const memory::storage::model which)
             {
@@ -107,7 +107,7 @@ namespace upsylon
                 }
             }
 
-            //! reserve space for n times T for each engine
+            //! reserve L1 space for n times T for each engine
             template <typename T>
             void acquire(const memory::storage::model which, const size_t n)
             {
@@ -121,7 +121,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // making one object
+            // making one object in L1 cache
             //__________________________________________________________________
 
             //! build one T for each engine with default constructor
@@ -165,7 +165,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // making multiple objects
+            // making multiple objects in L1 cache, for use with groove_of
             //__________________________________________________________________
 
             //! build n times  T for each engine with default constructor
@@ -196,10 +196,10 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // copy objects
+            // copy objects in L1 cache
             //__________________________________________________________________
 
-            //! copy objects
+            //! copy one object
             template <typename T>
             void copy(const memory::storage::model which, const typename type_traits<T>::parameter_type args)
             {
@@ -211,7 +211,7 @@ namespace upsylon
                 }
             }
 
-            //! copy objects
+            //! repeat n copies
             template <typename T>
             void vcopy(const memory::storage::model which, const size_t n, const typename type_traits<T>::parameter_type args)
             {

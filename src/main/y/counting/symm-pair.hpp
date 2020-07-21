@@ -18,7 +18,7 @@ namespace upsylon {
         //----------------------------------------------------------------------
         // C++
         //----------------------------------------------------------------------
-        explicit symm_pair(const size_t dim);             //!< setup with dimension>0
+        explicit symm_pair(const size_t w);               //!< setup with width>0
         explicit symm_pair(const symm_pair&) throw();     //!< hard copy
         virtual ~symm_pair() throw();                     //!< cleanup
         virtual  std::ostream &show(std::ostream&) const; //!< display
@@ -32,9 +32,9 @@ namespace upsylon {
         //----------------------------------------------------------------------
         // members
         //----------------------------------------------------------------------
-        const size_t dimension; //!< symmetric pair among [dimension:dimension]
-        const size_t lower;     //!< 1<=lower<=upper<=n
-        const size_t upper;     //!< 1<=lower<=upper<=n
+        const size_t width; //!< symmetric pair among [width:width]
+        const size_t lower; //!< 1<=lower<=upper<=n
+        const size_t upper; //!< 1<=lower<=upper<=n
         
         //----------------------------------------------------------------------
         // helpers

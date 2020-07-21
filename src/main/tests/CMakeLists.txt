@@ -273,9 +273,9 @@ ADD_TEST(sparse:array  test-main sparse_array)
 ADD_TEST(sparse:matrix test-main sparse_matrix)
 
 SOURCE_GROUP(counting FILES
- test-comb.cpp
- test-perm.cpp test-anagram.cpp test-perm-par.cpp
- test-mloop.cpp 
+test-comb.cpp
+test-perm.cpp test-anagram.cpp test-perm-par.cpp
+test-mloop.cpp
 test-dancing.cpp 
 test-scrabble.cpp 
 test-phrases.cpp 

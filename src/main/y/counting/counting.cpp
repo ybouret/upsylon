@@ -6,7 +6,7 @@
 
 namespace upsylon
 {
-    counting:: counting(const size_t n) throw() : index(0), count(n) {}
+    counting:: counting(const size_t n, const size_t s) throw() : index(0), count(n), space(s) {}
 
     counting:: ~counting() throw()
     {
@@ -16,7 +16,8 @@ namespace upsylon
 
     counting:: counting( const counting &other) throw() :
     index( other.index ),
-    count( other.count )
+    count( other.count ),
+    space( other.space )
     {
     }
     
@@ -97,13 +98,7 @@ namespace upsylon
         return length;
     }
 
-    memory::marker counting:: boot_mark(const size_t global_size,
-                                        const size_t global_rank)
-    {
-        const size_t length = boot(global_size,global_rank);
-        return memory::marker(index,length);
-    }
-
+    
     void counting:: unwind()
     {
         for( boot(); good(); next() )

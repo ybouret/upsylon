@@ -36,8 +36,8 @@ struct mod2
         mutable_type ans = 0;
         LHS         &lhs = *task.lhs;
         Y_QUARK_LOOP_PAR(lhs.size(),mod2);
-        assert( 0 == (*ctx).get<mutable_type>() );
-        (*ctx).get<mutable_type>() = ans;
+        assert( 0 == ctx.get<mutable_type>() );
+        ctx.get<mutable_type>() = ans;
         Y_QUARK_TASK_DATA()
         &lhs
         Y_QUARK_TASK_EXEC(loop);
@@ -71,8 +71,8 @@ struct mod2
         LHS         &lhs = *task.lhs;
         RHS         &rhs = *task.rhs;
         Y_QUARK_LOOP_PAR(lhs.size(),mod2delta);
-        assert( 0 == (*ctx).get<mutable_type>() );
-        (*ctx).get<mutable_type>() = ans;
+        assert( 0 == ctx.get<mutable_type>() );
+        ctx.get<mutable_type>() = ans;
         Y_QUARK_TASK_DATA()
         &lhs, &rhs
         Y_QUARK_TASK_EXEC(loop);

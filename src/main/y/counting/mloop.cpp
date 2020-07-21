@@ -16,7 +16,7 @@ namespace upsylon
 
         mloop_:: mloop_(const size_t dims,
                         const bool   safe) throw():
-        counting(0),
+        counting(0,dims),
         dimensions(dims),
         secured(safe)
         {

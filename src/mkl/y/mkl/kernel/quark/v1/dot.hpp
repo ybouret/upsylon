@@ -36,8 +36,8 @@ struct dot
         LHS         &lhs = *task.lhs;
         RHS         &rhs = *task.rhs;
         Y_QUARK_LOOP_PAR(lhs.size(),dot);
-        assert( 0 == (*ctx).get<mutable_type>() );
-        (*ctx).get<mutable_type>() = ans;
+        assert( 0 == ctx.get<mutable_type>() );
+        ctx.get<mutable_type>() = ans;
         Y_QUARK_TASK_DATA()
         &lhs, &rhs
         Y_QUARK_TASK_EXEC(loop);

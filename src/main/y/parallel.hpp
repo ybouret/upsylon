@@ -25,7 +25,7 @@ namespace upsylon
         // types and definition
         //______________________________________________________________________
         typedef memory::groove cache_type; //!< cache for extra data
-
+        static const memory::storage::model L2model = memory::storage::shared; //!< inner cache
 
         //______________________________________________________________________
         //
@@ -40,8 +40,6 @@ namespace upsylon
         // methods
         //______________________________________________________________________
         double efficiency(const double speed_up) const; //!< compute efficiency, two significative figures
-        cache_type       & operator*()       throw();   //!< cache access
-        const cache_type & operator*() const throw();   //!< cache access, const
 
         //! get the work portion according to rank/size
         template <typename T> inline
@@ -50,35 +48,73 @@ namespace upsylon
             parops::split_any(length,offset,size,rank);
         }
 
-        //! forwarding call
-        template <typename T> T &       get()       throw() { return cache.get<T>(); }
-
-        //! forwarding call
-        template <typename T> T &       get(const size_t indx)       throw() { return cache.get<T>(indx); }
-
-        //! forwarding call, const
-        template <typename T> const T & get() const throw() { return cache.get<T>(); }
-
-        //! forwarding call, const
-        template <typename T> const T & get(const size_t indx) const throw() { return cache.get<T>(indx); }
-        
         //! get system ticks, thread-safe
         uint64_t     ticks(lockable &) const throw();
 
-        //! store internal parameters
-        void mark_split(const size_t length, const size_t offset) throw();
+        //______________________________________________________________________
+        //
+        // L1 cache
+        //______________________________________________________________________
 
+        //! forwarding call to L1 cache
+        template <typename T> T &       get()       throw() { return L1.get<T>(); }
+
+        //! forwarding call to L1 cache
+        template <typename T> T &       get(const size_t indx)       throw() { return L1.get<T>(indx); }
+
+        //! forwarding call to L1 cache, const
+        template <typename T> const T & get() const throw() { return L1.get<T>(); }
+
+        //! forwarding call to L1 cache, const
+        template <typename T> const T & get(const size_t indx) const throw() { return L1.get<T>(indx); }
+
+
+        //______________________________________________________________________
+        //
+        // L2 cache
+        //______________________________________________________________________
+
+
+        //! forwarding call to L2 cache
+        template <typename T> T &       aux()       throw() { return L2.get<T>(); }
+
+        //! forwarding call to L2 cache
+        template <typename T> T &       aux(const size_t indx)       throw() { return L2.get<T>(indx); }
+
+        //! forwarding call to L2 cache, const
+        template <typename T> const T & aux() const throw() { return L2.get<T>(); }
+
+        //! forwarding call to L2 cache, const
+        template <typename T> const T & aux(const size_t indx) const throw() { return L2.get<T>(indx); }
+
+        //! L2 solo with default constructor
+        template <typename T> inline
+        T & mk()
+        {
+            return L2.solo<T>(L2model);
+        }
+
+        //! L2 solo with args
+        template <typename T, typename U> inline
+        T & mk( typename type_traits<U>::parameter_type args)
+        {
+            return L2.solo<T,U>(L2model,args);
+        }
+
+
+
+        
         //______________________________________________________________________
         //
         // members
         //______________________________________________________________________
-        cache_type     cache;    //!< local cache
+        cache_type     L1;       //!< primary   cache for outer computations
+        cache_type     L2;       //!< secondary cache for inner computations
         const size_t   size;     //!< the family size
-        const size_t   rank;     //!<  0..size-1
-        const size_t   indx;     //!<  1..size
-        memory::marker mark;     //!< internal mark for optional offset/length storage
+        const size_t   rank;     //!< 0..size-1
+        const size_t   indx;     //!< 1..size
         const char     label[8]; //!< size.rank or "too big"
-
+        
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(parallel);

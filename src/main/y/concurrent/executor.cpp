@@ -32,13 +32,13 @@ namespace upsylon
         parallel::cache_type & executor:: operator()(const size_t context_index) throw()
         {
             assert(context_index<num_threads());
-            return get_context(context_index).cache;
+            return get_context(context_index).L1;
         }
 
         const parallel::cache_type & executor:: operator()(const size_t context_index) const throw()
         {
             assert(context_index<num_threads());
-            return aliasing::_( *this ).get_context(context_index).cache;
+            return aliasing::_( *this ).get_context(context_index).L1;
         }
         
 

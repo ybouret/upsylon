@@ -68,7 +68,7 @@ namespace upsylon {
                             const list_type &L    = *task.L;
                             const list_type &R    = *task.R;
                             PROC            &H    = *task.H;
-                            info            &I    = ctx.cache.get<info>();
+                            info            &I    = ctx.get<info>();
 
                             I.l = NULL;
                             I.r = NULL;

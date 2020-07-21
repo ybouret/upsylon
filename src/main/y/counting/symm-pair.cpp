@@ -11,7 +11,7 @@ namespace upsylon {
 
     mpn symm_pair::compute(const size_t n, const with_mp_t &)
     {
-        if(n<=0) throw exception("%snull dimension",fn);
+        if(n<=0) throw exception("%snull width",fn);
         const mpn _n0  = n;
         const mpn _n1  = n+1;
         mpn       prod = _n0*_n1;
@@ -22,18 +22,18 @@ namespace upsylon {
     {
         const mpn mp_count  = compute(n,with_mp);
         size_t    res = 0;
-        if( !mp_count.as(res) ) throw exception("%soverflow for n=%lu",fn,static_cast<unsigned long>(n));
+        if( !mp_count.as(res) ) throw exception("%soverflow for %lu",fn,static_cast<unsigned long>(n));
         return res;
     }
 
     symm_pair:: ~symm_pair() throw()
     {
-        _bzset(dimension);
+        _bzset(width);
     }
 
-    symm_pair:: symm_pair(const size_t dim) :
-    counting( compute(dim,with_sz) ),
-    dimension(dim),
+    symm_pair:: symm_pair(const size_t w) :
+    counting( compute(w,with_sz) ),
+    width(w),
     lower(0),
     upper(0)
     {
@@ -44,7 +44,7 @@ namespace upsylon {
     collection(),
     counting( other ),
     accessible<size_t>(),
-    dimension(other.dimension),
+    width(other.width),
     lower(other.lower),
     upper(other.upper)
     {

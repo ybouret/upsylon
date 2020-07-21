@@ -35,7 +35,6 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const size_t dimensions; //!< dimensions to loop over
             const bool   secured;    //!< no reset  but for first and last index
 
             //__________________________________________________________________
@@ -43,6 +42,7 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             virtual ~mloop_() throw();                            //!< cleanup
+
         protected:                                                //
             explicit mloop_(const size_t,const bool)     throw(); //!< set checked dimensions
             explicit mloop_(const mloop_ &)              throw(); //!< copy
@@ -130,12 +130,12 @@ data(0)
             inline virtual const_type & operator[](const size_t dim) const throw()
             {
                 assert(dim>0);
-                assert(dim<=dimensions);
+                assert(dim<=space);
                 return item[dim];
             }
 
             //! size=dimensions
-            inline virtual size_t size() const throw() { return dimensions; }
+            inline virtual size_t size() const throw() { return space; }
 
             //------------------------------------------------------------------
             // helpers
@@ -143,7 +143,7 @@ data(0)
             //! memory check
             inline static void memchk(const mloop &lhs, const mloop &rhs)
             {
-                assert(lhs.dimensions==rhs.dimensions);
+                assert(lhs.space==rhs.dimensions);
                 assert(lhs.count==rhs.count);
                 assert(lhs.data==rhs.data);
                 check_contents(identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );

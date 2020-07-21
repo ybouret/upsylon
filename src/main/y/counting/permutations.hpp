@@ -62,7 +62,7 @@ namespace upsylon {
 
     //! inline initializers
 #define Y_PERMUTATIONS_CTOR() \
-accessible<T>(), target(0), source(0), groups(0), entry(0), space(0)
+accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
 
     //__________________________________________________________________________
     //
@@ -92,7 +92,7 @@ accessible<T>(), target(0), source(0), groups(0), entry(0), space(0)
             target = 0;
             source = 0;
             groups = 0;
-            mgr.release(entry,space);
+            mgr.release(wksp,wlen);
         }
 
         //! construct with some data[1..size]
@@ -232,8 +232,8 @@ accessible<T>(), target(0), source(0), groups(0), entry(0), space(0)
         mutable_type *target; //!< current data
         mutable_type *source; //!< original data, sorted
         size_t       *groups; //!< decomposition of original data
-        void         *entry;  //!< memory entry
-        size_t        space;  //!< memory space
+        void         *wksp;  //!< memory entry
+        size_t        wlen;  //!< memory space
 
         inline void setup_memory_for(const size_t n)
         {
@@ -244,7 +244,7 @@ accessible<T>(), target(0), source(0), groups(0), entry(0), space(0)
                 memory::embed::as(source,n),
                 memory::embed::as(groups,n)
             };
-            entry = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), counting::mem_instance(), space);
+            wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), counting::mem_instance(), wlen);
         }
 
         template <typename U>

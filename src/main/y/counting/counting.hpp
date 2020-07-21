@@ -2,7 +2,7 @@
 #ifndef Y_COUNTING_INCLUDED
 #define Y_COUNTING_INCLUDED 1
 
-#include "y/memory/marker.hpp"
+#include "y/os/platform.hpp"
 #include <iosfwd>
 
 namespace upsylon
@@ -47,14 +47,16 @@ namespace upsylon
         void                  boot();                         //!< set index to 1 and call onBoot()
         void                  next();                         //!< update index and call   onNext() if valid
         virtual std::ostream &show(std::ostream &) const = 0; //!< display C++ style
+        //virtual size_t        dimensions() const throw() = 0; //!< dimension of generated space
 
-        //! boot and forward, return remaining
+        //! boot and forward, return remaining objects
+        /**
+         the index is updated is there is some work to do,
+         otherwise it remains at 1
+         */
         size_t                boot(const size_t global_size,
                                    const size_t global_rank);
 
-        //! boot and forward, return marker
-        memory::marker boot_mark(const size_t global_size,
-                                 const size_t global_rank);
 
         //! make a full loop
         void unwind();
@@ -65,8 +67,8 @@ namespace upsylon
         // members
         //______________________________________________________________________
         const size_t index; //!< index in 1..count
-        const size_t count; //!< number of possible objects
-        
+        const size_t count; //!< number of possible configurations
+        const size_t space; //!< dimensions of a configuration
 
         //______________________________________________________________________
         //
@@ -83,9 +85,21 @@ namespace upsylon
         {
             return cnt.show(os);
         }
+
+        //! templated filling of FRAME (a.k.a matrix<T> or field2D<T>)
+        template <typename FRAME>
+        void fillFrame( FRAME &  ) throw()
+        {
+            //typedef typename FRAME::type type;
+            for( boot(); good(); next() )
+            {
+                //fillConfig(frame[index]);
+            }
+        }
+
         
     protected:
-        explicit       counting(const size_t   n) throw();                   //!< setup count=n, index=0
+        explicit       counting(const size_t   n, const size_t s) throw();   //!< setup count=n, index=0, space=s
         explicit       counting(const counting &) throw();                   //!< copy
 
         //! display arr[1..num]
@@ -102,6 +116,8 @@ namespace upsylon
         Y_DISABLE_ASSIGN(counting);
         virtual void          onBoot() = 0; //!< initialize first objects
         virtual void          onNext() = 0; //!< update next objects, index<=count
+
+
     };
 
 };

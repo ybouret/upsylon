@@ -35,7 +35,8 @@ namespace {
             perm_type & replica = ctx.get<perm_type>(1);
             Y_ASSERT(primary.has_same_state_than(perm));
             Y_ASSERT(replica.has_same_state_than(perm));
-            ctx.mark = primary.boot_mark(ctx.size,ctx.rank);
+            const size_t length = primary.boot(ctx.size,ctx.rank);
+            ctx.mk<size_t>() = length;
          }
 
         struct task
@@ -51,8 +52,8 @@ namespace {
 
                 replica.reload(primary);
 
-                size_t length = ctx.mark.length;
-                size_t offset = ctx.mark.offset;
+                size_t length = ctx.aux<size_t>();
+                size_t offset = replica.index;
 
                 const size_t  width  = primary.size();
                 size_t        j      = 1+(offset-1)*width;
@@ -103,12 +104,12 @@ Y_UTEST(perm_par)
     std::cerr << "efficiency=" << par.engine()[0].efficiency(par_speed/seq_speed) << '%' << std::endl;
 
     Y_CHECK(target_seq.size()==target_par.size());
-    bool identical = true;
+    bool identical_targets= true;
     for(size_t i=target_seq.size();i>0;--i)
     {
         Y_ASSERT(target_par[i]==target_seq[i]);
     }
-    Y_CHECK(identical);
+    Y_CHECK(identical_targets);
 
 }
 Y_UTEST_DONE()
