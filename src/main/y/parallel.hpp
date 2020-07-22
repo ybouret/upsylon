@@ -69,39 +69,6 @@ namespace upsylon
         template <typename T> const T & get(const size_t indx) const throw() { return L1.get<T>(indx); }
 
 
-        //______________________________________________________________________
-        //
-        // L2 cache
-        //______________________________________________________________________
-
-
-        //! forwarding call to L2 cache
-        template <typename T> T &       aux()       throw() { return L2.get<T>(); }
-
-        //! forwarding call to L2 cache
-        template <typename T> T &       aux(const size_t indx)       throw() { return L2.get<T>(indx); }
-
-        //! forwarding call to L2 cache, const
-        template <typename T> const T & aux() const throw() { return L2.get<T>(); }
-
-        //! forwarding call to L2 cache, const
-        template <typename T> const T & aux(const size_t indx) const throw() { return L2.get<T>(indx); }
-
-        //! L2 solo with default constructor
-        template <typename T> inline
-        T & mk()
-        {
-            return L2.solo<T>(L2model);
-        }
-
-        //! L2 solo with args
-        template <typename T, typename U> inline
-        T & mk( typename type_traits<U>::parameter_type args)
-        {
-            return L2.solo<T,U>(L2model,args);
-        }
-
-
 
         
         //______________________________________________________________________
@@ -109,7 +76,6 @@ namespace upsylon
         // members
         //______________________________________________________________________
         cache_type     L1;       //!< primary   cache for outer computations
-        cache_type     L2;       //!< secondary cache for inner computations
         const size_t   size;     //!< the family size
         const size_t   rank;     //!< 0..size-1
         const size_t   indx;     //!< 1..size

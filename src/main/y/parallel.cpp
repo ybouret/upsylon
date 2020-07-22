@@ -9,11 +9,11 @@ namespace upsylon
     parallel:: ~parallel() throw() { }
 
     parallel:: parallel() throw() :
-    L1(), L2(), size(1),rank(0),indx(1),label()
+    L1(), size(1),rank(0),indx(1),label()
     { __format(); }
 
     parallel:: parallel(const size_t sz, const size_t rk) throw() :
-    L1(), L2(), size(sz),rank(rk),indx(rk+1),label()
+    L1(), size(sz),rank(rk),indx(rk+1),label()
     {
         assert(size>0); assert(rank<size);
         __format();
