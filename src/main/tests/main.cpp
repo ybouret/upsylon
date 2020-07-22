@@ -57,11 +57,11 @@ Y_UTEST_INIT(256)
     Y_UTEST(anagram);
     Y_UTEST(counting);
     Y_UTEST(symm_pair);
-
     Y_UTEST(dancing);
     Y_UTEST(scrabble);
     Y_UTEST(phrases);
     Y_UTEST(metaloop);
+    Y_UTEST(counting_perf);
 
     Y_UTEST(embed);
     Y_UTEST(hr_ints);

@@ -282,6 +282,7 @@ test-phrases.cpp
 test-part.cpp
 test-counting.cpp
 test-symm-pair.cpp
+test-counting-perf.cpp
 )
 ADD_TEST(counting:comb     test-main comb 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 ADD_TEST(counting:perm     test-main perm 1 2 3 4 5 6 7)
@@ -295,7 +296,8 @@ ADD_TEST(counting:part     test-main part)
 ADD_TEST(counting:bell     test-main bell)
 ADD_TEST(counting:check    test-main counting)
 ADD_TEST(counting:symm     test-main symm_pair)
-
+ADD_TEST(counting:meta     test-main metaloop)
+ADD_TEST(counting:perf     test-main counting_perf)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

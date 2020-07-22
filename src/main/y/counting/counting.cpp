@@ -136,3 +136,17 @@ namespace upsylon
 
 
 }
+
+#include "y/utest/timings.hpp"
+
+namespace upsylon {
+
+    double counting:: loops_per_second(const double duration)
+    {
+        double speed = 0;
+        unwind();
+        Y_TIMINGS(speed,duration,boot();while(good()) next());
+        return speed;
+    }
+
+}

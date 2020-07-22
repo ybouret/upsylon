@@ -59,7 +59,9 @@ namespace upsylon
 
         //! finish loop...
         void unwind();
-        
+
+        //! performance
+        double loops_per_second(const double duration=1);
 
         //______________________________________________________________________
         //

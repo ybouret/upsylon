@@ -61,7 +61,6 @@ namespace upsylon {
     void combination:: onNext() throw()
     {
         assert(index<=count);
-        
         size_t i=space;
         ++comb[i];
         while( comb[i]>nmk+i )
@@ -70,11 +69,20 @@ namespace upsylon {
             ++comb[i];
         }
 
+#if 0
         for(++i;i<=space;++i)
         {
             comb[i] = comb[i-1]+1;
         }
-
+#else
+        {
+            size_t j=i;
+            for(++i;i<=space;++i,++j)
+            {
+                comb[i] = comb[j]+1;
+            }
+        }
+#endif
         core::counting::to_C(base,comb,space);
     }
 
