@@ -2,13 +2,23 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/standard.hpp"
 #include "y/type/cswap.hpp"
-#include "y/exception.hpp"
+#include "y/exceptions.hpp"
 #include "y/counting/comb.hpp"
+
+#include <cerrno>
 
 namespace upsylon {
 
+    static const char fn[] = "integer_partition: ";
+
+    static inline size_t check_valid( const size_t value )
+    {
+        if(value<=0) throw libc::exception(EDOM, "%s: not for zero", fn);
+        return value;
+    }
+
     integer_partition:: integer_partition(const size_t value) :
-    n( counting::chkdim(value) ),
+    n( check_valid(value) ),
     m(1),
     now(0),
     tmp(0),
@@ -94,7 +104,7 @@ namespace upsylon {
                     for(size_t j=2;j<=rep;++j)
                     {
                         const mpn J = j;
-                        if( !nconf.is_divisible_by(J) ) throw exception("integer_partition::configs(***corrupted***)");
+                        if( !nconf.is_divisible_by(J) ) throw exception("%sconfigs(***corrupted***)",fn);
                         nconf /= J;
                     }
                 }
@@ -107,7 +117,7 @@ namespace upsylon {
     {
         size_t     ans = 0;
         const  mpn nc  = configs(counting::with_mp);
-        if(!nc.as(ans)) throw exception("integer_partion::configurations overflow");
+        if(!nc.as(ans)) throw exception("%sconfigurations overflow",fn);
         return ans;
     }
 

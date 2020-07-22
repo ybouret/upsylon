@@ -104,23 +104,16 @@ namespace upsylon
     
     void counting:: unwind()
     {
-        for( boot(); good(); next() )
-            ;
+        while( good() ) next();
     }
-
 }
 
-#include "y/exceptions.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
 
-    size_t counting:: chkdim(const size_t dim)
-    {
-        if(dim<=0) throw libc::exception(EINVAL,"counting: zero dimension!!!");
-        return dim;
-    }
-
+    
     void counting:: check_contents(const char     *id,
                                    const counting &lhs, const void *l,
                                    const counting &rhs, const void *r,

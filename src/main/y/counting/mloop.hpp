@@ -44,9 +44,9 @@ namespace upsylon
             virtual ~mloop_() throw();                            //!< cleanup
 
         protected:
-            explicit mloop_(const size_t,const bool)     throw(); //!< set checked dimensions
-            explicit mloop_(const mloop_ &)              throw(); //!< copy
-            void     overrule()                          const;   //!< check if current can be changed
+            explicit mloop_(const size_t,const bool); //!< set checked dimensions
+            explicit mloop_(const mloop_ &)  throw(); //!< copy
+            void     overrule()                const;   //!< check if current can be changed
 
 
         private:
@@ -89,7 +89,7 @@ wlen(0)
                                   const_type  *ini,
                                   const_type  *end,
                                   const bool   safe=true) :
-            mloop_(chkdim(dim),safe),
+            mloop_(dim,safe),
             Y_MLOOP_CTOR()
             {
                 assert(ini); assert(end);

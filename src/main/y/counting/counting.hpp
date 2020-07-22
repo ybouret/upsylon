@@ -57,7 +57,7 @@ namespace upsylon
                                    const size_t global_rank);
 
 
-        //! make a full loop
+        //! finish loop...
         void unwind();
         
 
@@ -73,7 +73,6 @@ namespace upsylon
         //
         // static methods/helpers
         //______________________________________________________________________
-        static size_t               chkdim(const size_t);                          //!< check dimension>0
         static memory::allocator &  mem_instance();                                //!< internal allocator instance
         static memory::allocator &  mem_location() throw();                        //!< internal allocator location
         static size_t *             acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)

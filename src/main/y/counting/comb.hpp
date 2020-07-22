@@ -29,7 +29,7 @@ namespace upsylon
         // C++
         //______________________________________________________________________
 
-        //! initialize state
+        //! initialize state, space=K
         explicit combination(const size_t N, const size_t K);
 
         //! cleanup

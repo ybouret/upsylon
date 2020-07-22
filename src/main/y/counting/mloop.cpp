@@ -13,9 +13,15 @@ namespace upsylon
         {
         }
 
+        static inline size_t check_loop( const size_t dims )
+        {
+            if(dims<=0) throw exception("%sno dimension", mloop_::identifier );
+            return dims;
+        }
+
         mloop_:: mloop_(const size_t dims,
-                        const bool   safe) throw():
-        counting(0,dims),
+                        const bool   safe):
+        counting(0,check_loop(dims)),
         secured(safe)
         {
         }
