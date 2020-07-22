@@ -51,7 +51,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(mloops);
     Y_UTEST(comb);
     Y_UTEST(perm);
-    Y_UTEST(perm_par);
     Y_UTEST(permutations);
     Y_UTEST(part);
     Y_UTEST(bell);
