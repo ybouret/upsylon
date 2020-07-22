@@ -53,6 +53,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(perm);
     Y_UTEST(permutations);
     Y_UTEST(part);
+    Y_UTEST(parts);
     Y_UTEST(bell);
     Y_UTEST(anagram);
     Y_UTEST(counting);

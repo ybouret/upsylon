@@ -112,7 +112,28 @@ Y_UTEST_DONE()
 
 
 #include "y/counting/permutations.hpp"
-#include "y/counting/part.hpp"
+#include "y/counting/parts.hpp"
+
+namespace {
+
+    template <typename T>
+    static inline void create_data( sequence<T> &data, T start, const accessible<size_t> &groups )
+    {
+        data.free();
+        for(size_t i=groups.size();i>0;--i)
+        {
+            const size_t group = groups[i];
+            for(size_t j=group;j>0;--j)
+            {
+                data.push_back(start);
+            }
+            ++start;
+        }
+    }
+
+}
+
+#include "y/sort/unique.hpp"
 
 Y_UTEST(permutations)
 {
@@ -123,27 +144,54 @@ Y_UTEST(permutations)
         data=argv[1];
     }
 
+
+
+    for(size_t n=1;n<=data.size();++n)
+    {
+        permutation        _perm(n);
+        integer_partitions parts(n);
+        std::cerr << "Testing all permutations with [" << n << "] items, #parts=" << parts.count << std::endl;
+        Y_ASSERT(parts.good());
+        vector<uint32_t> data;
+        vector<size_t>   divs;
+        for(;parts.good();parts.next())
+        {
+            create_data<uint32_t>(data,0,*parts);
+            permutations<uint32_t> perms(data);
+            const size_t           d =_perm.count / perms.count;
+            std::cerr << *parts << " => sample=" << data << " => +" << perms.count << " => " << _perm.count << " /= " <<  d << std::endl;
+
+            divs << d;
+
+            // checking sample is ok
+            for(size_t iter=0;iter<8;++iter)
+            {
+                create_data<uint32_t>(data,alea.full<uint32_t>(),*parts);
+                alea.shuffle( &data[1], data.size() );
+                const permutations<uint32_t> temp( data );
+                Y_ASSERT(temp.count==perms.count);
+            }
+
+
+        }
+        unique(divs);
+        std::cerr << "divs=" << divs << " #" << divs.size() << std::endl;
+        std::cerr << std::endl;
+    }
+
     if(data.size()>0)
     {
         permutations<char>   perms(*data,data.length());
         permutations<int>    iperm(*data,data.length());
         permutations<long>   lperm( iperm );
-
+        std::cerr << "for " << data << " => " << perms.count << std::endl;
         for( perms.boot(); perms.good(); perms.next() )
         {
-            std::cerr << "perm=" << (counting&)(*perms) << " => " << (accessible<char>&)perms << std::endl;
+            std::cerr << "perm=" << (counting&)(*perms) << " => " << (accessible<char>&)perms << "  \r";
             const permutations<int64_t> uperm( perms );
             Y_ASSERT(perms.has_same_state_than(uperm));
         }
-    }
-
-    for(size_t n=1;n<=5;++n)
-    {
-        std::cerr << "Testing all permutations with [" << n << "] items" << std::endl;
-        integer_partition part(n);
-        const size_t      outcomes=part.outcomes();
-        std::cerr << "#outcomes=" << outcomes << std::endl;
-        
+        std::cerr << std::endl;
     }
 
 

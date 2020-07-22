@@ -81,8 +81,7 @@ namespace upsylon {
         size_t  wlen; //!< private bytes
     };
 
-
-
+  
 
 
 

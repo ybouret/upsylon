@@ -7,12 +7,6 @@
 
 using namespace upsylon;
 
-namespace {
-
-
-
-
-}
 
 #include "y/string/convert.hpp"
 #include "y/ios/ocstream.hpp"
@@ -106,6 +100,47 @@ Y_UTEST(part)
 
 }
 Y_UTEST_DONE()
+
+#include "y/counting/parts.hpp"
+
+Y_UTEST(parts)
+{
+    size_t nmax = 5;
+    if( argc > 1 )
+    {
+        nmax = string_convert::to<size_t>(argv[1],"n");
+    }
+
+    for(size_t n=1;n<=nmax;++n)
+    {
+        integer_partitions parts(n);
+        std::cerr << "[" << n << "] #" << parts.count << std::endl;
+
+        bool ret = false;
+        for( parts.boot(); parts.good(); parts.next() )
+        {
+
+            std::cerr << parts;
+            if( (parts.index%4) == 0 )
+            {
+                ret = true;
+                std::cerr << std::endl;
+            }
+            else
+            {
+                ret=false;
+                std::cerr << " ";
+            }
+        }
+        if(!ret)
+        std::cerr << std::endl;
+    }
+
+
+}
+Y_UTEST_DONE()
+
+
 
 Y_UTEST(bell)
 {
