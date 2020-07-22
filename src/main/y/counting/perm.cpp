@@ -28,10 +28,9 @@ namespace upsylon
     permutation:: permutation( const size_t N ) :
     counting( compute(N,with_sz), N ),
     accessible<size_t>(),
-    n( N ),
-    wlen( 2*n * sizeof(size_t) ),
+    wlen( 2*space* sizeof(size_t) ),
     perm( acquire_(wlen)       ),
-    addr(perm+n+1)
+    addr(perm+space+1)
     {
         boot();
     }
@@ -40,12 +39,11 @@ namespace upsylon
     collection(),
     counting(other),
     accessible<size_t>(),
-    n(other.n),
-    wlen( 2*n * sizeof(size_t)),
+    wlen( 2*space* sizeof(size_t)),
     perm( acquire_(wlen)     ),
-    addr(perm+n+1)
+    addr(perm+space+1)
     {
-        for(size_t i=n;i>0;)
+        for(size_t i=space;i>0;)
         {
             perm[i] = other.perm[i];
             --i;
@@ -57,41 +55,40 @@ namespace upsylon
     permutation:: ~permutation() throw()
     {
         release_(perm,wlen);
-        _bzset(n);
     }
 
-    size_t permutation:: size() const throw() { return n; }
+    size_t permutation:: size() const throw() { return space; }
 
     std::ostream & permutation:: show(std::ostream &os) const
     {
-        return counting::display(os,perm,n);
+        return counting::display(os,perm,space);
     }
     
     void permutation:: onBoot() throw()
     {
         assert(1==index);
-        core::counting::init(perm,n,addr);
+        core::counting::init(perm,space,addr);
     }
     
     void permutation:: onNext()  throw()
     {
         assert(index<=count);
-        core::permutation::_nxt(perm,n);
-        core::counting::to_C(addr,perm,n);
+        core::permutation::_nxt(perm,space);
+        core::counting::to_C(addr,perm,space);
     }
 
     void permutation:: memchk(const permutation &lhs, const permutation &rhs)
     {
-        assert(lhs.n==rhs.n);
+        assert(lhs.space==rhs.space);
         assert(lhs.count==rhs.count);
-        check_contents(fn, lhs, &lhs.perm[1], rhs, &rhs.perm[1], lhs.n * sizeof(size_t));
+        check_contents(fn, lhs, &lhs.perm[1], rhs, &rhs.perm[1], lhs.space * sizeof(size_t));
     }
     
-#define Y_CHECK_PERM_CXX_INDX() \
-assert(indx>0);                 \
-assert(indx<=n);                \
-assert(perm[indx]>0);           \
-assert(perm[indx]<=n)
+#define Y_CHECK_PERM_CXX_INDX()     \
+assert(indx>0);                     \
+assert(indx<=space);                \
+assert(perm[indx]>0);               \
+assert(perm[indx]<=space)
     
     const size_t & permutation:: operator[](const size_t indx) const throw()
     {
@@ -100,8 +97,8 @@ assert(perm[indx]<=n)
     }
     
 #define Y_CHECK_PERM_C_INDX() \
-assert(indx<n);               \
-assert(addr[indx]<n)
+assert(indx<space);           \
+assert(addr[indx]<space)
     
     const size_t & permutation:: operator()(const size_t indx) const throw()
     {
@@ -128,7 +125,7 @@ assert(addr[indx]<n)
         assert(size()==p.size());
         assert(count==p.count);
         aliasing::_(index) = p.index;
-        for(size_t i=0,j=1;i<n;++i,++j)
+        for(size_t i=0,j=1;i<space;++i,++j)
         {
             addr[i] = p.addr[i];
             perm[j] = p.perm[j];

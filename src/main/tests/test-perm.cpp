@@ -112,11 +112,12 @@ Y_UTEST_DONE()
 
 
 #include "y/counting/permutations.hpp"
+#include "y/counting/part.hpp"
 
 Y_UTEST(permutations)
 {
 
-    string data = "abcde";
+    string data = "abc";
     if(argc>1)
     {
         data=argv[1];
@@ -136,8 +137,17 @@ Y_UTEST(permutations)
         }
     }
 
-    
+    for(size_t n=1;n<=5;++n)
+    {
+        std::cerr << "Testing all permutations with [" << n << "] items" << std::endl;
+        integer_partition part(n);
+        const size_t      outcomes=part.outcomes();
+        std::cerr << "#outcomes=" << outcomes << std::endl;
+        
+    }
+
 
 }
 Y_UTEST_DONE()
+
 

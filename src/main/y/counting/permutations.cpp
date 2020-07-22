@@ -61,11 +61,13 @@ namespace upsylon {
         assert(groups.size()>0);
 
         //----------------------------------------------------------------------
+        //
         // compute metrics
+        //
         //----------------------------------------------------------------------
         const size_t  g   = groups.size();
-        size_t        n   = 0; //!< will be dimensions
-        mpn           den = 1; //!< denominator
+        size_t        n   = 0;              //!< will be the space
+        mpn           den = 1;              //!< denominator
         for(size_t i=g;i>0;--i)
         {
             assert(groups[i]>0);
@@ -77,12 +79,12 @@ namespace upsylon {
         const mpn    mp_count = num/den;
 
         aliasing::_(count) = mp_count.cast_to<size_t>(fn);
-        std::cerr << "count = " << count << "/" << num << std::endl;
-        std::cerr << "size  = " << n  << std::endl;
         if(n>255) throw libc::exception(EDOM,"too many permutations");
 
         //----------------------------------------------------------------------
+        //
         // prepare base permutation and sample data
+        //
         //----------------------------------------------------------------------
         perm  = new permutation( aliasing::_(space) = n );assert( perm->good() );
         aliasing::_(bytes) = count * sizeof(shift_t);
@@ -108,20 +110,27 @@ namespace upsylon {
             }
             const probe_t        *key = &target[1];
             {
+                //--------------------------------------------------------------
+                // initialize store
+                //--------------------------------------------------------------
                 suffix_store<probe_t> store;
-                if(!store.insert(key,n))
-                {
-                    throw libc::exception(EINVAL,"%s: unexpected first sample insertion failure",fn);
-                }
-                permutation &p = aliasing::_(*perm);
-                size_t ok   = 1;
-                size_t last = 1;
+                if(!store.insert(key,n)) throw libc::exception(EINVAL,"%s: unexpected first sample insertion failure",fn);
+
+                //--------------------------------------------------------------
+                // loop over permutations
+                //--------------------------------------------------------------
+                permutation &p    = aliasing::_(*perm);
+                size_t       ok   = 1;
+                size_t       last = 1;
                 for(;p.good();p.next())
                 {
                     p.make(target,source);
 
-                    if(store.insert(key,n) )
+                    if(store.insert(key,n))
                     {
+                        //------------------------------------------------------
+                        // a new key
+                        //------------------------------------------------------
                         const size_t curr  = p.index;
                         const size_t delta = curr-last;
                         last = curr;
@@ -146,7 +155,7 @@ namespace upsylon {
     {
         assert(index<=count);
         permutation &self = *perm;
-        size_t       ns    = shift[index]; assert(ns>0);
+        size_t       ns   = shift[index]; assert(ns>0);
         while(ns-- > 0)
         {
             assert(self.good());

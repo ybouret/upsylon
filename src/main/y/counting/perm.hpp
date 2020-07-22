@@ -40,7 +40,7 @@ namespace upsylon {
         //! access, C++ style
         virtual const size_t & operator[](const size_t indx) const throw();
 
-        //! size=n
+        //! size=space=n
         virtual size_t size() const throw();
 
         //! and access, C-style
@@ -55,12 +55,7 @@ namespace upsylon {
         //______________________________________________________________________
         static mpl::natural compute(const size_t N, const with_mp_t &); //!< multi-precision count
         static size_t       compute(const size_t N, const with_sz_t &); //!< check overflow
-
-        //______________________________________________________________________
-        //
-        // members
-        //______________________________________________________________________
-        const size_t  n; //!< maximum index
+        
 
         //______________________________________________________________________
         //
@@ -77,7 +72,7 @@ namespace upsylon {
             assert(NULL!=target);
             assert(NULL!=source);
             const permutation &self = *this;
-            for(size_t i=0;i<n;++i)
+            for(size_t i=0;i<space;++i)
             {
                 target[i] = source[ self(i) ];
             }
@@ -87,10 +82,10 @@ namespace upsylon {
         template <typename T,typename U>
         void make( addressable<T> &target, const accessible<U> &source ) const
         {
-            assert( this->size()  == target.size() );
-            assert( target.size() == source.size() );
+            assert( this->size() <= target.size() );
+            assert( this->size() <= source.size() );
             const accessible<size_t> &self = *this;
-            for(size_t i=n;i>0;--i)
+            for(size_t i=space;i>0;--i)
             {
                 target[i] = source[ self[i] ];
             }
