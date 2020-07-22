@@ -43,11 +43,10 @@ namespace upsylon
         // methods
         //______________________________________________________________________
         virtual              ~counting()    throw();          //!< cleanup
-        bool                  good()  const throw();          //!< index<=count after a start()
+        bool                  good()  const throw();          //!< index<=count after a boot()
         void                  boot();                         //!< set index to 1 and call onBoot()
         void                  next();                         //!< update index and call   onNext() if valid
         virtual std::ostream &show(std::ostream &) const = 0; //!< display C++ style
-        //virtual size_t        dimensions() const throw() = 0; //!< dimension of generated space
 
         //! boot and forward, return remaining objects
         /**
@@ -105,9 +104,6 @@ namespace upsylon
                 fill_space( frame[self.index], self );
             }
         }
-
-
-
         
     protected:
         explicit       counting(const size_t   n, const size_t s) throw();   //!< setup count=n, index=0, space=s

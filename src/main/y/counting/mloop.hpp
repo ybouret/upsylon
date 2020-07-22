@@ -43,10 +43,10 @@ namespace upsylon
             //__________________________________________________________________
             virtual ~mloop_() throw();                            //!< cleanup
 
-        protected:                                                //
+        protected:
             explicit mloop_(const size_t,const bool)     throw(); //!< set checked dimensions
             explicit mloop_(const mloop_ &)              throw(); //!< copy
-            void     overrule()                          const;   //!< check current can be changed
+            void     overrule()                          const;   //!< check if current can be changed
 
 
         private:
@@ -64,8 +64,7 @@ quit(0),                        \
 move(0),                        \
 iter(0),                        \
 wksp(0),                        \
-wlen(0),                        \
-data(0)
+wlen(0)
 
         //______________________________________________________________________
         //
@@ -107,8 +106,7 @@ data(0)
                 setup_memory();
                 assert(count==other.count);
                 assert(index==other.index);
-                assert(data==other.data);
-                memcpy(wksp,other.wksp,data);
+                memcpy(wksp,other.wksp,wlen);
             }
 
 
@@ -126,7 +124,7 @@ data(0)
             //------------------------------------------------------------------
             // accessible interface
             //------------------------------------------------------------------
-            //! access [1..dimensions]
+            //! access [1..space]
             inline virtual const_type & operator[](const size_t dim) const throw()
             {
                 assert(dim>0);
@@ -145,8 +143,7 @@ data(0)
             {
                 assert(lhs.space==rhs.space);
                 assert(lhs.count==rhs.count);
-                assert(lhs.data==rhs.data);
-                check_contents(identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.data );
+                check_contents(identifier, lhs, lhs.wksp, rhs, rhs.wksp, lhs.wlen );
             }
 
             //! show
@@ -155,17 +152,12 @@ data(0)
                 return display_int::to(os<< '{',curr,space,separators) << '}';
             }
 
-            //! workspace memory
-            inline size_t workspace() const throw() { return wlen; }
-
-            //! used data
-            inline size_t allocated() const throw() { return data; }
 
         private:
             typedef void (*proc)(mutable_type &);
         protected:
             mutable_type *curr; //!< current indices
-            const_type   *item; //!< for accessible: curr-1
+            const_type   *item; //!< for accessible<T>: curr-1
             const_type   *head; //!< head value: starting
             const_type   *tail; //!< tail value: finishing
             const_type   *quit; //!< value to quit local loop
@@ -174,7 +166,6 @@ data(0)
             const proc   *iter; //!< incr/decr
             void         *wksp; //!< internal data
             size_t        wlen; //!< allocated memory
-            size_t        data; //!< effective data size
             Y_DISABLE_ASSIGN(mloop);
 
 
@@ -213,7 +204,7 @@ data(0)
                 if(move[idim])
                 {
                     //----------------------------------------------------------
-                    // looping on movable coors
+                    // looping on movable coords
                     //----------------------------------------------------------
                     mutable_type &value = curr[idim];
                     iter[idim](value);
@@ -262,7 +253,7 @@ data(0)
                         memory::embed::as<const bool>  (move,space),
                         memory::embed::as<const proc>  (iter,space)
                     };
-                    wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), mem, wlen, &data);
+                    wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), mem, wlen, NULL);
                     item = curr-1;
                 }
             }

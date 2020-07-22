@@ -14,7 +14,6 @@ namespace
         assert(hi.size()==dim);
         std::cerr << "Create MLoop<" << type_name_of<T>() << ">" << std::endl;
         core::mloop<T> loop(dim,*lo,*hi);
-        std::cerr << "\tallocated=" << loop.allocated() << " / workspace=" << loop.workspace() << std::endl;
         vector< core::mloop<T> > loops(loop.count,as_capacity);
 
         for( loop.boot(); loop.good(); loop.next() )

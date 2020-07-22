@@ -110,14 +110,14 @@ namespace upsylon
 
 }
 
-#include "y/exception.hpp"
+#include "y/exceptions.hpp"
 
 namespace upsylon
 {
 
     size_t counting:: chkdim(const size_t dim)
     {
-        if(dim<=0) throw exception("counting: zero dimension!!!");
+        if(dim<=0) throw libc::exception(EINVAL,"counting: zero dimension!!!");
         return dim;
     }
 
