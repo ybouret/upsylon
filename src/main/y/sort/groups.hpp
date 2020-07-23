@@ -28,7 +28,6 @@ namespace upsylon
             return guess(g,seq.begin(),seq.end());
         }
         
-    private:
         //! build groups from a set of INCREASING values
         template <typename ITERATOR> static inline
         void guess(sequence<size_t> &g, ITERATOR curr, const ITERATOR last)
