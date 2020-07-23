@@ -6,17 +6,21 @@ namespace upsylon {
 
     suffix_stem:: suffix_stem() throw() :
     nodes(0),
-    created(0)
+    created(0),
+    entries(0)
     {
     }
 
     suffix_stem:: ~suffix_stem() throw()
     {
+        assert(0==entries);
+        assert(0==nodes);
+        created = 0;
     }
     
     void suffix_stem:: release() throw()
     {
-        free();
+        free(); assert(0==entries);
         free_cache();
     }
 

@@ -184,7 +184,8 @@ namespace upsylon {
         inline virtual void free() throw()
         {
             root->free_into(cache);
-            aliasing::_(nodes) = 1;
+            aliasing::_(nodes)   = 1;
+            aliasing::_(entries) = 0;
         }
 
         //! pre-allocate some nodes
@@ -262,6 +263,7 @@ namespace upsylon {
             else
             {
                 curr->used = true;
+                ++aliasing::_(entries);
                 return true;
             }
         }
@@ -298,7 +300,9 @@ namespace upsylon {
         {
             delete root;
             root = 0;
-            aliasing::_(nodes) = created = 0;
+            aliasing::_(nodes)   = 0;
+            aliasing::_(entries) = 0;
+
         }
 
         inline node_type *create_node(const_type code)

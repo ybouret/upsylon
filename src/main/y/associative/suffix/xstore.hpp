@@ -99,7 +99,8 @@ namespace upsylon {
         {
             delete root;
             root = 0;
-            aliasing::_(nodes) = 0;
+            aliasing::_(nodes)   = 0;
+            aliasing::_(entries) = 0;
         }
 
         //______________________________________________________________________
@@ -130,7 +131,8 @@ namespace upsylon {
             root->free_into(cache);
             root->used = false;
             root->freq = 0;
-            aliasing::_(nodes) = 1;
+            aliasing::_(nodes)   = 1;
+            aliasing::_(entries) = 0;
         }
 
         //! pre-allocate some nodes
@@ -223,6 +225,7 @@ namespace upsylon {
                     }
                     curr = curr->root;
                 }
+                ++aliasing::_(entries);
                 return true;
             }
         }

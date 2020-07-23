@@ -72,7 +72,21 @@ namespace upsylon
         // members
         //______________________________________________________________________
         const size_t n;       //!< maximum value, k=space
-        //const size_t k;       //!< number of chosen values
+
+        //! C-style apply
+        /**
+         \param target[0..space-1]
+         \param source[0..n-1]
+         */
+        template <typename T, typename U> inline
+        void apply(T *target, const U *source)
+        {
+            assert(target);
+            assert(source);
+            for(size_t i=0;i<space;++i) target[i] = source[ base[i] ];
+        }
+
+
 
     private:
         const size_t nmk;  //!< n-k
