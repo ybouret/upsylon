@@ -63,6 +63,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(phrases);
     Y_UTEST(metaloop);
     Y_UTEST(counting_perf);
+    Y_UTEST(drawers);
+
 
     Y_UTEST(embed);
     Y_UTEST(hr_ints);
