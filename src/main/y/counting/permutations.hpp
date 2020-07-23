@@ -51,8 +51,8 @@ namespace upsylon {
 
     protected:
         explicit permutations_() throw();               //!< initialize
-        explicit permutations_(const permutations_ &);   //!< copy
-        void     next_perm()    throw();               //!< next valid permutation
+        explicit permutations_(const permutations_ &);  //!< copy
+        void     next_perm()    throw();                //!< next valid permutation using shift table
 
         //! setup from data decomposition in groups
         /**
