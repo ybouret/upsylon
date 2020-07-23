@@ -7,16 +7,32 @@
 
 namespace upsylon
 {
-    namespace core
+
+    //! finding classes from sequences
+    struct find_classes
     {
+        //! count classes on a SORTED sequence
+        template <typename SEQUENCE> static inline
+        size_t of_pre_sorted(const SEQUENCE &seq)
+        {
+            return  guess(seq.begin(),seq.end());
+        }
+
+        //! sort and count classes
+        template <typename SEQUENCE> static inline
+        size_t by_sorting_of( SEQUENCE &seq )
+        {
+            sort_sequence(seq,comparison::increasing<typename SEQUENCE::type>);
+            return guess(seq.begin(),seq.end());
+        }
 
         //! count classes on a SORTED range
         /**
          assume that the range is sorted and that
          the content of the iterator has a '!=' operator
          */
-        template <typename ITERATOR>
-        size_t __classes( ITERATOR curr, const ITERATOR last )
+        template <typename ITERATOR> static inline
+        size_t guess( ITERATOR curr, const ITERATOR last )
         {
             if( curr != last )
             {
@@ -39,22 +55,11 @@ namespace upsylon
                 return 0;
             }
         }
-    }
 
-    //! count classes on a SORTED sequence
-    template <typename SEQUENCE>
-    size_t classes( const SEQUENCE &seq )
-    {
-        return core::__classes(seq.begin(),seq.end());
-    }
+    };
 
-    //! sort and count classes
-    template <typename SEQUENCE>
-    size_t sort_classes( SEQUENCE &seq )
-    {
-        sort_sequence(seq,comparison::increasing<typename SEQUENCE::type>);
-        return classes(seq);
-    }
+
+
 
 }
 

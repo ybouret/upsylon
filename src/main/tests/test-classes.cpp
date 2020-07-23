@@ -12,12 +12,12 @@ namespace
     void count_classes( SEQUENCE &seq )
     {
         sort_sequence(seq, comparison::increasing<typename SEQUENCE::type> );
-        const size_t nci = classes(seq);
+        const size_t nci = find_classes::of_pre_sorted(seq);
         std::cerr << "seq=" << seq << std::endl;
         std::cerr << "#cls=" << nci << "/" << seq.size() << std::endl;
 
         sort_sequence(seq, comparison::decreasing<typename SEQUENCE::type> );
-        const size_t ncd = classes(seq);
+        const size_t ncd = find_classes::of_pre_sorted(seq);
         std::cerr << "seq=" << seq << std::endl;
         std::cerr << "#cls=" << ncd << "/" << seq.size() << std::endl;
         Y_CHECK(nci==ncd);

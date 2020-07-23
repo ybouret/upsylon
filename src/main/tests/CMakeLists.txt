@@ -201,13 +201,14 @@ ADD_TEST(mp:io        test-main mp_io)
 ADD_TEST(mp:simplify  test-main mp_simplify)
 ADD_TEST(mp:mul       test-main mp_mul)
 
-SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp)
+SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp)
 ADD_TEST(sort:network     test-main network_sort)
 ADD_TEST(sort:sort        test-main sort)
 ADD_TEST(sort:unique      test-main unique)
 ADD_TEST(sort:maintain    test-main maintain)
 ADD_TEST(sort:locate      test-main locate)
 ADD_TEST(sort:classes     test-main classes)
+ADD_TEST(sort:groups      test-main groups)
 ADD_TEST(sort:blk         test-main blk)
 
 

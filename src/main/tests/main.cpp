@@ -155,7 +155,9 @@ Y_UTEST_INIT(256)
     Y_UTEST(unique);
     Y_UTEST(classes);
     Y_UTEST(maintain);
-   
+    Y_UTEST(groups);
+    
+
     Y_UTEST(query);
     
     Y_UTEST(matrix);

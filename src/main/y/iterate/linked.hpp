@@ -132,6 +132,12 @@ namespace upsylon
                 return lhs.node != rhs.node;
             }
 
+            //! testing for loops
+            inline friend bool operator==( const linked &lhs, const linked &rhs ) throw()
+            {
+                return lhs.node == rhs.node;
+            }
+
             //! content
             inline type & operator*() throw()
             {

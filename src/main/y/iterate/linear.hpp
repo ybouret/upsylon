@@ -36,6 +36,12 @@ namespace upsylon
                 return lhs.addr != rhs.addr;
             }
 
+            //! check equal
+            inline friend bool operator==( const linear &lhs, const linear &rhs ) throw()
+            {
+                return lhs.addr == rhs.addr;
+            }
+
             //! pre-increment
             inline linear & operator++() throw()
             {

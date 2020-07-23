@@ -44,7 +44,7 @@ namespace
             db.push_back_( k );
         }
         //std::cerr << "| counting classes" << std::endl;
-        const size_t ncls = sort_classes(db);
+        const size_t ncls = find_classes::by_sorting_of(db);
         //std::cerr << "| |_#class   = " << ncls << std::endl;
         std::cerr << "| |_collide = " << nk-ncls << std::endl;
 
