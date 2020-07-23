@@ -12,6 +12,15 @@ namespace upsylon {
         aliasing::_(index) = 1;
     }
 
+    integer_partitions:: integer_partitions(const integer_partitions &other) :
+    counting( other ),
+    part( other.part )
+    {
+        assert(count==other.count);
+        assert(index==other.index);
+        
+    }
+
     integer_partitions:: ~integer_partitions() throw()
     {
     }

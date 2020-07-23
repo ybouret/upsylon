@@ -15,9 +15,10 @@ namespace upsylon {
     class integer_partitions : public counting
     {
     public:
-        explicit integer_partitions(const size_t n); //!< initialize
-        virtual ~integer_partitions() throw();       //!< cleanup
-
+        explicit integer_partitions(const size_t n);    //!< initialize
+        virtual ~integer_partitions() throw();          //!< cleanup
+        integer_partitions(const integer_partitions &); //!< copy
+        
         //! output internal state
         virtual std::ostream & show(std::ostream &) const;
 
@@ -25,7 +26,7 @@ namespace upsylon {
         const accessible<size_t> & operator*() const throw();
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(integer_partitions);
+        Y_DISABLE_ASSIGN(integer_partitions);
         integer_partition part;
         virtual void onBoot() throw();
         virtual void onNext();

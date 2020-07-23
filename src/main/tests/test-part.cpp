@@ -149,6 +149,9 @@ Y_UTEST(parts)
                 ret=false;
                 std::cerr << " ";
             }
+            integer_partitions temp(parts);
+            Y_ASSERT(temp.index==parts.index);
+            Y_ASSERT(temp.count==parts.count);
         }
         if(!ret)
         std::cerr << std::endl;
