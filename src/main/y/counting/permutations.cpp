@@ -55,6 +55,28 @@ namespace upsylon {
         }
     }
 
+    mpl::natural permutations_:: compute(size_t &sum, const accessible<size_t> &groups, const with_mp_t &)
+    {
+        assert(0==sum);
+        mpn den = 1;
+        for(size_t i=groups.size();i>0;--i)
+        {
+            const size_t m = groups[i];
+            const mpn    f = mpn::factorial(m);
+            sum += m;
+            den *= f;
+        }
+        const mpn num = mpn::factorial(sum); assert(num.is_divisible_by(den));
+        return num/den;
+    }
+
+    size_t permutations_::compute(size_t &sum,const accessible<size_t> &groups, const with_sz_t &)
+    {
+        const mpn ans = compute(sum,groups,with_mp);
+        return ans.cast_to<size_t>("permutations::compute");
+    }
+
+
     void permutations_:: setup(const accessible<size_t> &groups)
     {
         static const char fn[] = "permutations::setup";
@@ -65,38 +87,25 @@ namespace upsylon {
         // compute metrics
         //
         //----------------------------------------------------------------------
-        const size_t  g   = groups.size();
-        size_t        n   = 0;              //!< will be the space
-        mpn           den = 1;              //!< denominator
-        for(size_t i=g;i>0;--i)
-        {
-            assert(groups[i]>0);
-            const size_t m = groups[i];
-            n += m;
-            den *= mpn::factorial(m);
-        }
-        const mpn    num      = mpn::factorial(n); assert(num.is_divisible_by(den));
-        const mpn    mp_count = num/den;
-
-        aliasing::_(count) = mp_count.cast_to<size_t>(fn);
-        if(n>255) throw libc::exception(EDOM,"too many permutations");
+        aliasing::_(count) = compute(aliasing::_(space),groups,with_sz);
+        if(space>255) throw libc::exception(EDOM,"too many permutations");
 
         //----------------------------------------------------------------------
         //
         // prepare base permutation and sample data
         //
         //----------------------------------------------------------------------
-        perm  = new permutation( aliasing::_(space) = n );assert( perm->good() );
+        perm  = new permutation( aliasing::_(space) );assert( perm->good() );
         aliasing::_(bytes) = count * sizeof(shift_t);
         acquire_shift();
         try
         {
-            vector<probe_t,memory::pooled> source(n,0);
-            vector<probe_t,memory::pooled> target(n,0);
+            vector<probe_t,memory::pooled> source(space,0);
+            vector<probe_t,memory::pooled> target(space,0);
             {
                 probe_t value = 0;
                 size_t  i     = 1;
-                for(size_t j=g;j>0;--j)
+                for(size_t j=groups.size();j>0;--j)
                 {
                     for(size_t k=groups[j];k>0;--k)
                     {
@@ -105,7 +114,7 @@ namespace upsylon {
                     }
                     ++value;
                 }
-                assert(i==n+1);
+                assert(i==space+1);
                 assert(size_t(value)==groups.size());
             }
             const probe_t        *key = &target[1];
@@ -114,7 +123,7 @@ namespace upsylon {
                 // initialize store
                 //--------------------------------------------------------------
                 suffix_store<probe_t> store;
-                if(!store.insert(key,n)) throw libc::exception(EINVAL,"%s: unexpected first sample insertion failure",fn);
+                if(!store.insert(key,space)) throw libc::exception(EINVAL,"%s: unexpected first sample insertion failure",fn);
 
                 //--------------------------------------------------------------
                 // loop over permutations
@@ -126,7 +135,7 @@ namespace upsylon {
                 {
                     p.make(target,source);
 
-                    if(store.insert(key,n))
+                    if(store.insert(key,space))
                     {
                         //------------------------------------------------------
                         // a new key

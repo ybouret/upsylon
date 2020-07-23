@@ -13,6 +13,7 @@
 
 namespace upsylon {
 
+    
 
     //__________________________________________________________________________
     //
@@ -25,17 +26,28 @@ namespace upsylon {
     public:
         //______________________________________________________________________
         //
-        //! types and definitions
+        // types and definitions
         //______________________________________________________________________
         typedef size_t  shift_t; //!< encoding shifts format
         typedef uint8_t probe_t; //!< internal base type for probing combinations
 
         //______________________________________________________________________
         //
-        //! methods
+        // methods
         //______________________________________________________________________
         virtual ~permutations_() throw();               //!< cleanup
         const permutation & operator*() const throw(); //!< current internal permutation
+
+        //______________________________________________________________________
+        //
+        // helpers
+        //______________________________________________________________________
+
+        //! compute number of distinct permutations based on groups description
+        static mpl::natural compute(size_t &sum, const accessible<size_t> &groups, const with_mp_t &);
+
+        //! compute number of distinct permutations based on groups description
+        static size_t       compute(size_t &sum,const accessible<size_t> &groups, const with_sz_t &);
 
     protected:
         explicit permutations_() throw();               //!< initialize
