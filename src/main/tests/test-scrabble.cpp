@@ -16,6 +16,7 @@ static inline bool WS(const int C) throw() { return C == ' ' || C == '\t' || C =
 
 Y_UTEST(scrabble)
 {
+#if 1
     if(argc>1)
     {
 
@@ -98,6 +99,7 @@ Y_UTEST(scrabble)
             }
         }
     }
+#endif
 }
 Y_UTEST_DONE()
 

@@ -47,8 +47,10 @@ Y_UTEST(part)
             const mpn nc = pb.configs( counting::with_mp );
             std::cerr << " +" << nc << std::endl;
             mpBell += nc;
-            const size_t sz =pb.configs(counting::with_sz);
+            const size_t sz = pb.configs(counting::with_sz);
             szBell += sz;
+
+
 
             permutation          perm( pb.size() );
             hashing::sha1        H;

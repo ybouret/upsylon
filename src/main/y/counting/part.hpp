@@ -39,8 +39,13 @@ namespace upsylon {
         bool                   build_next() throw(); //!< compute next partition
         void                   initialize() throw(); //!< restart with singulet
         size_t                 outcomes()   throw(); //!< number of possible outcomes
-        
-        mpn                    configs( const counting::with_mp_t &) const;   //!< number of configurations for this outcome
+
+        //! number of configurations for this outcome
+        /**
+         The number of combinations without repetitions
+         [4 1 1] => [4 1 1], [1 4 1], [ 1 1 4]
+         */
+        mpn                    configs( const counting::with_mp_t &) const;
         size_t                 configs( const counting::with_sz_t &) const;   //!< with overflow check
 
         //______________________________________________________________________
