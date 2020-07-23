@@ -69,7 +69,7 @@ namespace upsylon
         //______________________________________________________________________
         const size_t index; //!< index in 1..count
         const size_t count; //!< number of possible configurations
-        const size_t space; //!< dimensions of a configuration
+        const size_t space; //!< dimensions of a configuration, 0 if variable
 
         //______________________________________________________________________
         //
