@@ -28,9 +28,9 @@ Y_UTEST(part)
     vector<key_t> keys;
     vector<vec_t> vecs;
 
-    for(size_t n=nmax;n<=nmax;++n)
+    for(size_t n=1;n<=nmax;++n)
     {
-        integer_partition pb(n);
+        integer_partition  pb(n);
         const size_t       ns = pb.outcomes();
         std::cerr << "<" << n << "> can be summed in " << ns << " outcomes" << std::endl;
 
@@ -94,6 +94,24 @@ Y_UTEST(part)
         std::cerr << "#mpBell   = " << mpBell << std::endl;
         std::cerr << "#szBell   = " << szBell << std::endl;
     }
+
+    std::cerr << "Checking copy : [";
+    for(size_t n=1;n<=nmax;++n)
+    {
+        integer_partition  part(n);
+        do {
+            integer_partition temp(part);
+            Y_ASSERT(temp.size()==part.size());
+            for(size_t j=temp.size();j>0;--j)
+            {
+                Y_ASSERT(temp[j]==part[j]);
+            }
+            while( temp.build_next() )
+                ;
+        } while(part.build_next());
+        std::cerr << '.';
+    }
+    std::cerr << "]" << std::endl;
 
 
 

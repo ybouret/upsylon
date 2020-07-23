@@ -22,9 +22,9 @@ namespace upsylon {
         //
         // C++
         //______________________________________________________________________
-        explicit integer_partition(const size_t n); //!< setup n>0
-        virtual ~integer_partition() throw();       //!< cleanup
-
+        explicit integer_partition(const size_t n);   //!< setup n>0
+        virtual ~integer_partition() throw();         //!< cleanup
+        integer_partition(const integer_partition &); //!< copy
         //______________________________________________________________________
         //
         // accessible interface
@@ -48,7 +48,7 @@ namespace upsylon {
         // members
         //______________________________________________________________________
         const size_t n; //!< integer to part...
-        const size_t m; //!< current size
+        const size_t m; //!< current outcome size
 
 
         //______________________________________________________________________
@@ -74,7 +74,7 @@ namespace upsylon {
         }
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(integer_partition);
+        Y_DISABLE_ASSIGN(integer_partition);
 
         size_t *now;  //!< 1..n   max
         size_t *tmp;  //!< 1..n   max

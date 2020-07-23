@@ -30,6 +30,24 @@ namespace upsylon {
 
     }
 
+    integer_partition:: integer_partition(const integer_partition &other) :
+    n(other.n),
+    m(other.m),
+    now(0),
+    tmp(0),
+    wlen(2*n*sizeof(size_t))
+    {
+        now    = counting::acquire_(wlen);
+        tmp    = now + n;
+        for(size_t i=m;i>0;--i)
+        {
+            now[i] = other.now[i];
+            tmp[i] = other.tmp[i];
+        }
+    }
+
+
+
 
     void integer_partition:: initialize() throw()
     {
@@ -72,10 +90,13 @@ namespace upsylon {
     mpn integer_partition:: configs(const counting::with_mp_t &) const
     {
         const accessible<size_t> &self = *this;
+        assert(m==self.size());
         assert(m>0);
         assert(m<=n);
-        mpn nconf = 1;
 
+
+#if 1
+        mpn nconf = 1;
 
         // compute all possible choices
         for(size_t i=1, remaining=n;i<=m;++i)
@@ -111,6 +132,7 @@ namespace upsylon {
             }
         }
         return nconf;
+#endif
     }
 
     size_t integer_partition:: configs(const counting::with_sz_t &)    const

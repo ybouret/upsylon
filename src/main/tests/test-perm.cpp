@@ -185,6 +185,7 @@ Y_UTEST(permutations)
         permutations<int>    iperm(*data,data.length());
         permutations<long>   lperm( iperm );
         std::cerr << "for " << data << " => " << perms.count << std::endl;
+        std::cerr << "ini " << (accessible<char>&)perms << std::endl;
         for( perms.boot(); perms.good(); perms.next() )
         {
             std::cerr << "perm=" << (counting&)(*perms) << " => " << (accessible<char>&)perms << "  \r";

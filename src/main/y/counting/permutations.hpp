@@ -141,9 +141,8 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         }
 
         //! default copy
-        inline permutations(const permutations &other ) :
-        collection(),
-        permutations_(other), Y_PERMUTATIONS_CTOR()
+        inline permutations(const permutations &other) :
+        collection(), permutations_(other), Y_PERMUTATIONS_CTOR()
         {
             setup_memory_for(space);
             --target;
@@ -279,8 +278,8 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
                 {
                     source[i] = data[i];
                 }
-                // decreasing sort
-                hsort(src,comparison::decreasing<mutable_type> );
+                // local sort
+                hsort(src,comparison::increasing<mutable_type> );
             }
 
             //------------------------------------------------------------------
@@ -302,7 +301,7 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
                 {
                     const_type & t = source[i];
                     size_t       j = i-1;
-                    while(j>0&&source[j]<=t)
+                    while(j>0&&t<=source[j])
                     {
                         --j;
                     }
@@ -316,6 +315,7 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
 
         }
 
+        //! update target from current configuration
         void update() throw()
         {
             assert(perm->good());
