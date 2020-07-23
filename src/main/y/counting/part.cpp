@@ -31,6 +31,8 @@ namespace upsylon {
     }
 
     integer_partition:: integer_partition(const integer_partition &other) :
+    collection(),
+    accessible<size_t>(),
     n(other.n),
     m(other.m),
     now(0),
