@@ -75,6 +75,12 @@ __ctrl(0)
                     setup();
                 }
 
+                //! access current state
+                const accessible<T> & operator*() const throw()
+                {
+                    return fields;
+                }
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ExplODE);
