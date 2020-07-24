@@ -232,8 +232,8 @@ namespace upsylon {
         
         //! check if present
         template <typename ITERATOR> inline
-        bool has(ITERATOR     path_iter,
-                 size_t       path_size) const throw()
+        bool has(ITERATOR path_iter,
+                 size_t   path_size) const throw()
         {
             return
             core::suffix_store::look_up<mutable_type,ITERATOR,node_type>(root,path_iter,path_size);

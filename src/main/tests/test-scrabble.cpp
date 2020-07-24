@@ -23,47 +23,49 @@ Y_UTEST(scrabble)
     {
         const string       input = argv[1];
         const size_t       width = input.size();
-        string             reading(width,as_capacity,true);
+
+        typedef list<string> Words;
 
         // initialize
-        vector< list<string> > output(width,as_capacity);
+        vector<Words> output(width,as_capacity);
         {
-            const list<string> empty;
+            const Words empty;
             for(size_t i=width;i>0;--i) output.push_back_(empty);
         }
 
-        // loop
+        suffix_store<char> db;
+
+        // loop over word sizes
+        size_t total = 0;
+        for(size_t w=2;w<=width;++w)
         {
-            suffix_store<char> db;
-            permutations<char> outer(*input,width);
-            for( outer.boot(); outer.good(); outer.next() )
+            std::cerr << "[" << w << "] : ";
+            Words      &words = output[w];
+            combination comb(width,w);
+            string      draw(w,as_capacity,true);
+            for(comb.boot();comb.good();comb.next())
             {
-                outer.apply(*reading);
-                for(size_t w=1;w<=width;++w)
+                // make a draw
+                comb.apply(*draw,*input);
+                string guess(w,as_capacity,true);
+
+                // check permutations
+                permutations<char> perm(*draw,w);
+                for(perm.boot();perm.good();perm.next())
                 {
-                    combination comb(width,w);
-                    string      word(w,as_capacity,true);
-                    for(comb.boot();comb.good();comb.next())
+                    perm.apply(*guess);
+                    if( db.insert(*guess,w) )
                     {
-                        comb.apply(*word,*reading);
-                        if( db.insert(*word,w) )
-                        {
-                            output[w] << word;
-                        }
+                        words << guess;
+                        ++total;
                     }
                 }
             }
+            std::cerr << words.size() << std::endl;
+            std::cerr << words << std::endl;
         }
+        std::cerr << "total=" << total << std::endl;
 
-        size_t total = 0;
-        for(size_t w=1;w<=width;++w)
-        {
-            list<string> &L = output[w];
-            std::cerr << "[" << w << "] : " << L.size() << std::endl;
-            std::cerr << L << std::endl;
-            total += L.size();
-        }
-        std::cerr << "total: " << total << std::endl;
 
 
         if(argc>2)
@@ -93,7 +95,7 @@ Y_UTEST(scrabble)
             for(size_t w=1;w<=width;++w)
             {
                 const list<string> &L = output[w];
-                std::cerr << "[" << w << "] : " << L.size() << std::endl;
+                std::cerr << "[" << w << "] : " ;
                 for( list<string>::const_iterator i=L.begin();i!=L.end();++i)
                 {
                     const string &word = *i; assert(word.size()==w);
