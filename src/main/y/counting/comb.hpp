@@ -76,7 +76,7 @@ namespace upsylon
         //! C-style apply
         /**
          \param target [0..space-1]
-         \param source  [0..n-1]
+         \param source [0..n-1]
          */
         template <typename T, typename U> inline
         void apply(T *target, const U *source)

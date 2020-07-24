@@ -133,7 +133,7 @@ test-conveyor.cpp
 test-conveyors.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
-ADD_TEST(ios:istreams    test-main istreams)
+ADD_TEST(ios:istreams    test-main istreams ${HERE}/words.db)
 ADD_TEST(ios:mstreams    test-main mstreams)
 ADD_TEST(ios:vfs         test-main vfs .)
 ADD_TEST(ios:find        test-main find)

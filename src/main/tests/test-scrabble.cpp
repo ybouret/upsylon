@@ -30,7 +30,7 @@ Y_UTEST(scrabble)
         vector<Words> output(width,as_capacity);
         {
             const Words empty;
-            for(size_t i=width;i>0;--i) output.push_back_(empty);
+            output.adjust(width,empty);
         }
 
         suffix_store<char> db;

@@ -19,9 +19,20 @@ namespace upsylon
     public           chainable<T>
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         Y_DECL_ARGS(T,type); //!< aliases
+
+
         //! destructor
         inline virtual ~sequence() throw() {}
+
+        //______________________________________________________________________
+        //
+        // interface
+        //______________________________________________________________________
 
         //! push an object at the back of the sequence
         virtual void push_back( param_type ) = 0;
@@ -47,14 +58,18 @@ namespace upsylon
         //! remove first item
         virtual void pop_front() throw() = 0;
 
-        //! syntactic helper
-        inline sequence & operator<<( param_type args ) { push_back(args); return *this; }
+
         
         //! adjust size, pad if not enough
-        virtual void adjust( const size_t n, param_type pad ) = 0;
+        virtual void adjust(const size_t n, param_type pad) = 0;
+
+        //______________________________________________________________________
+        //
+        // chainable interface
+        //______________________________________________________________________
 
         //! default put: use push_back
-        virtual size_t put( const T *addr, const size_t numObjects)
+        virtual size_t put(const T *addr, const size_t numObjects)
         {
             assert(!(addr==0&&numObjects>0));
             size_t i = 0;
@@ -72,9 +87,15 @@ namespace upsylon
             }
         }
 
-      
-        
-        
+        //______________________________________________________________________
+        //
+        // non-virtual interface
+        //______________________________________________________________________
+
+        //! syntactic helper
+        inline sequence & operator<<(param_type args) { push_back(args); return *this; }
+
+
     protected:
         //! constructor
         explicit sequence() throw() : container() {}
