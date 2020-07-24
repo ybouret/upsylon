@@ -28,9 +28,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(disk_istream);
             readable_disk_file rdf;    //!< handle to the file
-            offset_t           count;   //!< number of read bytes
-            const offset_t     limit;   //!< limit of read bytes
-            const bool         bound;   //!< limit>=0
+            offset_t           count;  //!< number of read bytes
+            const offset_t     limit;  //!< limit of read bytes
+            const bool         bound;  //!< limit>=0
             
             void push1(); //!< try to make some space to store something
             bool load();  //!< read data from file

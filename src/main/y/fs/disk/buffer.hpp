@@ -11,7 +11,12 @@ namespace upsylon
     namespace ios
     {
 
+        //______________________________________________________________________
+        //
+        //
         //! interface for a disk buffer
+        //
+        //______________________________________________________________________
         class disk_buffer_ : public counted_object
         {
         public:
@@ -19,7 +24,6 @@ namespace upsylon
             uint8_t      *entry;                   //!< first byte address
             const size_t  bytes;                   //!< effective size
             void          clear() throw();         //!< zero the block
-
         protected:                                 //|
             explicit      disk_buffer_() throw();  //!< constructor
             size_t        allocated;               //!< from allocator
@@ -28,10 +32,18 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(disk_buffer_);
         };
 
+        //______________________________________________________________________
+        //
         //! dynamic shared disk buffer
+        //______________________________________________________________________
         typedef arc_ptr<disk_buffer_> shared_disk_buffer;
 
+        //______________________________________________________________________
+        //
+        //
         //! memory dependent implementation
+        //
+        //______________________________________________________________________
         template <typename ALLOCATOR = memory::global >
         class disk_buffer : public disk_buffer_
         {
@@ -39,15 +51,17 @@ namespace upsylon
             //! release memory
             inline virtual ~disk_buffer() throw()
             {
+                static memory::allocator &mgr = ALLOCATOR::location();
                 clear();
-                ALLOCATOR::location().release_bytes(entry,allocated);
+                mgr.release_bytes(entry,allocated);
             }
 
             //! acquire memory
             inline explicit disk_buffer(const size_t n) : disk_buffer_()
             {
+                static memory::allocator &mgr = ALLOCATOR::instance();
                 allocated          = check(n);
-                entry              = ALLOCATOR::instance().acquire_bytes(allocated);
+                entry              = mgr.acquire_bytes(allocated);
                 aliasing::_(bytes) = n;
             }
 
@@ -55,8 +69,12 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(disk_buffer);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
         //! base class for a disk strean
+        //
+        //______________________________________________________________________
         class disk_stream
         {
         public:
