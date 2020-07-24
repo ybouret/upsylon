@@ -43,7 +43,6 @@ namespace upsylon {
         //! number of configurations for this outcome
         /**
          The number of combinations without repetitions
-         [4 1 1] => [4 1 1], [1 4 1], [ 1 1 4]
          */
         mpn                    configs( const counting::with_mp_t &) const;
         size_t                 configs( const counting::with_sz_t &) const;   //!< with overflow check

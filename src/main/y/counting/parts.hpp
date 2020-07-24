@@ -24,7 +24,7 @@ namespace upsylon {
 
         //! get internal state
         const accessible<size_t> & operator*() const throw();
-
+        
     private:
         Y_DISABLE_ASSIGN(integer_partitions);
         integer_partition part;
