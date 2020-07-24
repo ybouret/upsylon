@@ -250,7 +250,6 @@ namespace upsylon {
         inline node_type *create_node(node_type *from, const_type code)
         {
             node_type *node = new node_type(from,code);
-            ++created;
             return node;
         }
 

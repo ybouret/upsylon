@@ -6,7 +6,6 @@ namespace upsylon {
 
     suffix_stem:: suffix_stem() throw() :
     nodes(0),
-    created(0),
     entries(0)
     {
     }
@@ -15,8 +14,7 @@ namespace upsylon {
     {
         assert(0==entries);
         assert(0==nodes);
-        created = 0;
-    }
+     }
     
     void suffix_stem:: release() throw()
     {
@@ -37,8 +35,8 @@ namespace upsylon {
         throw exception("%s: missing '%s'", className(), field);
     }
 
-    const char suffix_stem:: used[] = "used";
-    const char suffix_stem:: code[] = "code";
+    const char suffix_stem:: used[]     = "used";
+    const char suffix_stem:: code[]     = "code";
     const char suffix_stem:: branches[] = "branches";
 }
 

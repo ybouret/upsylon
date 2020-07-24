@@ -38,9 +38,8 @@ namespace upsylon {
         // common data
         //______________________________________________________________________
         const   size_t  nodes;   //!< number of nodes into tree, >=1
-        mutable size_t  created; //!< cumulative number of created nodes, mostly for debug
         const   size_t  entries; //!< current number of entries
-
+        
     protected:
         explicit suffix_stem() throw(); //!< setup
 

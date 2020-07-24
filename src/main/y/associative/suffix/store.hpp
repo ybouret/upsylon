@@ -8,10 +8,10 @@
 #include "y/associative/suffix/store-look-up.hpp"
 #include "y/core/pool.hpp"
 #include "y/type/args.hpp"
-#include "y/object.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
+#include "y/object.hpp"
 
 namespace upsylon {
 
@@ -308,7 +308,6 @@ namespace upsylon {
         inline node_type *create_node(const_type code)
         {
             node_type *node = new node_type(code);
-            ++created;
             return node;
         }
 
