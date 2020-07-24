@@ -43,7 +43,7 @@ namespace upsylon {
             static inline
             bool run( FUNC &F, triplet<T> &x, triplet<T> &f )
             {
-                T w = fabs_of( x.c-x.a);
+                T w = fabs_of(x.c-x.a);
                 while(true)
                 {
                     f.b = F( (x.b = T(0.5)*(x.a+x.c) ) );
