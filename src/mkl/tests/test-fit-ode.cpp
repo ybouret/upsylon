@@ -42,7 +42,7 @@ namespace {
                              const T               ,
                              const accessible<T>  &Y,
                              const accessible<T>  &aorg,
-                             const Variables      &vars)
+                             const Variables      &vars) const
         {
             Y_ASSERT( dimensions() == dYdt.size() );
             Y_ASSERT( dimensions() ==    Y.size() );

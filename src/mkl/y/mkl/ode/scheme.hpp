@@ -50,7 +50,7 @@ namespace upsylon {
                                      const T               x,
                                      const accessible<T>  &Y,
                                      const accessible<T>  &aorg,
-                                     const Variables      &vars) = 0;
+                                     const Variables      &vars) const = 0;
 
 
                 //! initial time step
