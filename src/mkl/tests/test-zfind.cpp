@@ -37,16 +37,20 @@ Y_UTEST(zfind)
 }
 Y_UTEST_DONE()
 
-#include "y/mkl/fcn/lfind.hpp"
+#include <iomanip>
+
 namespace {
 
     template <typename T>
     void test_lfind()
     {
-        static const T      ff[] = { T(-0.1), T(0), T(0.1) };
+
+        static const T      ff[] = { T(-0.1), T(0.0), T(0.1) };
         static const size_t nn = sizeof(ff)/sizeof(ff[0]);
         triplet<T> x;
         triplet<T> f;
+
+        std::cerr << std::setprecision(3);
 
         for(size_t i=0;i<nn;++i)
         {
@@ -56,21 +60,40 @@ namespace {
                 f.c = ff[j];
                 x.a = alea.symm<T>();
                 x.c = alea.symm<T>();
+                f.b = 0;
+                std::cerr << "f:" << f << "\t";
                 if(f.a*f.c<=0)
                 {
-                    Y_CHECK(zfind::linear(x,f));
+                    std::cerr << "+";
+                    Y_ASSERT(zfind::linear(x,f));
                 }
+                else
+                {
+                    std::cerr << "-";
+                }
+                std::cerr << std::endl;
             }
         }
-        return;
-        
-        for(size_t iter=1000;iter>0;--iter)
+
+        for(size_t iter=1024*16;iter>0;--iter)
         {
             x.a = alea.symm<T>();
             x.c = alea.symm<T>();
 
             f.a = alea.symm<T>();
             f.c = alea.symm<T>();
+
+            if( alea.to<double>() > 0.85 )
+            {
+                if( alea.choice() )
+                {
+                    f.a=0;
+                }
+                else
+                {
+                    f.b=0;
+                }
+            }
 
             if(f.a*f.c<=0)
             {
