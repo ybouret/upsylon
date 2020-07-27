@@ -1,0 +1,34 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+
+%%  
+ 
+\begin{document}
+
+We have a continuous function $f(x)$ on $[a;b]$ such that:
+ $$f(a)f(c)<0.$$
+We define $h(x)=f(x)P(x)$ that linearizes $f$ on the interval, namely:
+$$b=\frac{a+c}{2},\;\;h(b) = \frac{h(a)+h(c)}{2}.$$
+Then an approximation of $x_z$ such that $f(x_z)=0$ if the linear interpolation to $0$
+of $h$ on $[a;b]$.\\
+We use Ridder's idea to define:
+$$P(x)=e^{\alpha(x-a)},$$
+leading to:
+$$
+	2f(b)e^{(b-a)} = f(a) + f(c)e^{(c-a)}
+$$
+and using:
+$$
+	Q = e^{(b-a)}
+$$
+we need to solve:
+$$
+	2f(b)Q = f(a) + f(c) Q^2.
+$$
+\end{document}
