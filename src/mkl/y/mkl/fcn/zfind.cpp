@@ -23,7 +23,19 @@ namespace upsylon {
 
             return "unknown";
         }
-        
+
+        int zfind:: __sign_to_int(const unsigned s)
+        {
+            switch(s)
+            {
+                case __z: return 0;
+                case __p: return 1;
+                case __n: return -1;
+                default: break;
+            }
+            throw libc::exception(EINVAL,"zfind::__sign_to_int");
+        }
+
         void zfind:: throw_not_bracketed()
         {
              throw libc::exception(EDOM,"zfind: zero is not bracketed");

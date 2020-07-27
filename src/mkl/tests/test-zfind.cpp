@@ -1,4 +1,5 @@
 #include "y/mkl/fcn/zfind.hpp"
+#include "y/mkl/fcn/functions.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -6,24 +7,46 @@ using namespace mkl;
 
 namespace
 {
-    static inline
-    double F( double x )
+    template <typename T>
+    struct Call
     {
-        return 0.1+cos( x*x );
-    }
+        unsigned calls;
+        inline T operator()(const T x)
+        {
+            ++calls;
+            return T(0.1)+cos_of(x*x);
+        }
+    };
+
+    template <typename T>
+    struct iQerf
+    {
+        unsigned calls;
+        inline T operator()(const T x)
+        {
+            ++calls;
+            return qerf(x);
+        }
+    };
+
 }
 
 Y_UTEST(zfind)
 {
-    std::cerr << "bissection: " << std::endl;
+    Call<double> F;
+
+
+    std::cerr << "bisection: " << std::endl;
     {
         triplet<double> x = {0, -1, 2};
         triplet<double> f = {F(x.a),-1,F(x.c)};
         std::cerr << "x=" << x << std::endl;
         std::cerr << "f=" << f << std::endl;
-        if(zfind::run(F,x,f))
+        F.calls = 0;
+        if(zfind::bisection(F,x,f))
         {
             std::cerr << "F(" << x.b << ")=" << f.b << std::endl;
+            std::cerr << "|_#calls=" << F.calls << std::endl;
         }
         else
         {
@@ -35,24 +58,47 @@ Y_UTEST(zfind)
         std::cerr << "x2=" << x2 << std::endl;
     }
 
-    std::cerr << "quad:" << std::endl;
+
+    std::cerr << "ridder:" << std::endl;
     {
         triplet<double> x = {0, -1, 2};
         triplet<double> f = {F(x.a),-1,F(x.c)};
         std::cerr << "x=" << x << std::endl;
         std::cerr << "f=" << f << std::endl;
-        if( zfind::quad(F, x, f) )
+        F.calls = 0;
+        if( zfind::ridder(F, x, f) )
         {
             std::cerr << "F(" << x.b << ")=" << f.b << std::endl;
-
+            std::cerr << "|_#calls=" << F.calls << std::endl;
         }
         else
         {
             std::cerr << "couldn't find zero" << std::endl;
 
         }
-
     }
+
+#if 1
+    if(true)
+    {
+        iQerf<float> Z;
+        Z.calls = 0;
+        for(float y=-0.9;y<=0.9;y+=0.1)
+        {
+            const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::with_bisection);
+            std::cerr << "iqerf(" << y << ")="  << x << std::endl;
+        }
+        std::cerr << "#calls=" << Z.calls << std::endl;
+
+        Z.calls = 0;
+        for(float y=-0.9;y<=0.9;y+=0.1)
+        {
+            const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::with_ridder);
+            std::cerr << "iqerf(" << y << ")="  << x << std::endl;
+        }
+        std::cerr << "#calls=" << Z.calls << std::endl;
+    }
+#endif
 
 }
 Y_UTEST_DONE()
