@@ -126,7 +126,7 @@ namespace upsylon {
             template <
             typename T,
             typename FUNC>
-            struct __call
+            struct local_call
             {
                 T     value; //!< the value to find
                 FUNC *pfunc; //!< function
@@ -139,12 +139,12 @@ namespace upsylon {
                 }
             };
             
-             //! return x such that F(x) approx value
+            //! return x such that F(x) approx value
             template <typename T,typename FUNC> static inline
             T get( const T value, FUNC &F, const T a, const T b)
             {
-                __call<T,FUNC> Z = { value, &F };
-                return get<T, __call<T,FUNC> >(Z,a,b);
+                local_call<T,FUNC> Z = { value, &F };
+                return get(Z,a,b);
             }
 
             //! find zero for a linear part
@@ -163,7 +163,7 @@ namespace upsylon {
 
                 switch(who)
                 {
-                    case _zz: f.b=0; x.b=(x.a+x.c)/2; break;
+                    case _zz: f.b=0; x.b=T(0.5)*(x.a+x.c); break;
 
                     case _zp:
                     case _zn: f.b=f.a=0; x.b=x.a; break;
@@ -182,10 +182,10 @@ namespace upsylon {
                         break;
                         
                     default:
-                        return false;
+                        return false; //! not bracketed
                 }
                 assert(x.is_increasing());
-
+                assert(abs_of(f.b)<=0);
                 if(xch)
                 {
                     cswap(x.a,x.c);
@@ -194,6 +194,57 @@ namespace upsylon {
                 return true;
             }
 
+            template <typename T,typename FUNC>
+            static inline
+            bool quad( FUNC &F, triplet<T> &x, triplet<T> &f )
+            {
+                static const T half(0.5);
+                T w = fabs_of(x.c-x.a);
+                while(true)
+                {
+                    const unsigned sfa = __sign(f.a);
+                    const unsigned sfc = __sign(f.c);
+                    const unsigned who = (sfa<<8) | sfc;
+
+                    switch(who)
+                    {
+                        case _zz:
+                            x.b=(x.a+x.c)*half;
+                            f.b=0;
+                            return true;
+
+                        case _zn:
+                        case _zp:
+                            x.b = x.a;
+                            f.b = f.a = 0;
+                            return true;
+
+                        case _nz:
+                        case _np:
+                            x.b = x.c;
+                            f.b = f.c = 0;
+                            return true;
+
+                        case _np:
+                        case _pn: {
+                            const T den = sqrt_of( square_of( f.b = F( x.b=half*(x.a+x.c) ) ) - (f.a*f.c) );
+                            const T num = f.b;
+
+                        } break;
+
+                        case _pn:
+
+                            break;
+
+                        default:
+                            return false;
+                    }
+
+                    break;
+                }
+
+                return false;
+            }
 
         };
 

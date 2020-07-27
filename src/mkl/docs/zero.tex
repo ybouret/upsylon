@@ -10,25 +10,68 @@
 %%  
  
 \begin{document}
-
-We have a continuous function $f(x)$ on $[a;b]$ such that:
+We have a continuous function $f(x)$ on $[a;c]$ such that:
  $$f(a)f(c)<0.$$
-We define $h(x)=f(x)P(x)$ that linearizes $f$ on the interval, namely:
-$$b=\frac{a+c}{2},\;\;h(b) = \frac{h(a)+h(c)}{2}.$$
-Then an approximation of $x_z$ such that $f(x_z)=0$ if the linear interpolation to $0$
-of $h$ on $[a;b]$.\\
-We use Ridder's idea to define:
-$$P(x)=e^{\alpha(x-a)},$$
+Let us define:
+$$
+	b = \dfrac{a+b}{2}
+$$
+We define $h(x)=f(x)e^{\alpha(x-b)}$ that linearizes $f$ on the interval.
+$$
+\left\lbrace
+\begin{array}{rcl}
+	h(a) & = & f(a)e^{\alpha(a-b)}\\
+	h(b) & = & f(b)\\
+	h(c) & = & f(c) e^{\alpha(c-b)}\\
+	h(b) & = & \dfrac{h(a)+h(b)}{2}\\
+\end{array}
+\right.
+$$
+We define
+$$
+Q = e^{\alpha\frac{c-a}{2}}
+$$
+to get
+$$	
+\left\lbrace
+\begin{array}{rcl}
+	h(a) & = & f(a)/Q\\
+ 	h(c) & = & f(c)Q\\
+\end{array}
+\right.
+$$
+We need to solve:
+$$
+	2f(b) = f(a)/Q+f(c)Q \;\; \Leftrightarrow \;\; f(c)Q^2 - 2 f(b) Q + f(a) = 0
+$$
+We find:
+$$
+	\Delta' = f(b)^2 - f(a)f(b), \;\; Q = \dfrac{f(b)+\epsilon_c \sqrt{\Delta'}}{f(c)} = \dfrac{f(a)}{f(b)-\epsilon_c \sqrt{\Delta'}}
+$$
+so that
+$$
+\left\lbrace
+\begin{array}{rcl}
+	f(a)/Q & = & f(b) - \epsilon_c \sqrt{\Delta'}\\
+	f(c) Q & = & f(b) + \epsilon_c \sqrt{\Delta'}\\
+\end{array}
+\right.
+$$
+Since the three $h$ values are aligned with $h(a)h(c)=f(a)f(b)$, we express the secant value from $b$:
+$$
+	h(x) \simeq h(b) + \dfrac{x-b}{a-b} \left( h(a) - h(b) \right)
+$$
 leading to:
 $$
-	2f(b)e^{(b-a)} = f(a) + f(c)e^{(c-a)}
+\left\lbrace
+\begin{array}{rcl}
+	x' & = & b - (a-b) \dfrac{h(b)}{h(a)-h(b)} \\
+	\\
+	& = & b + \dfrac{w}{2} \dfrac{f(b)}{\frac{f(a)}{Q}-f(b)}\\
+	\\
+	& = & b - \dfrac{w}{2} \dfrac{\epsilon_c f(b)}{\sqrt{\Delta'}}\\
+\end{array}
+\right.
 $$
-and using:
-$$
-	Q = e^{(b-a)}
-$$
-we need to solve:
-$$
-	2f(b)Q = f(a) + f(c) Q^2.
-$$
+
 \end{document}
