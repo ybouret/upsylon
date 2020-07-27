@@ -86,10 +86,10 @@ namespace upsylon {
             //__________________________________________________________________
             enum algorithm
             {
-                with_bisection,
-                with_ridder
+                bisection,
+                ridder
             };
-            static const algorithm default_algorithm = with_bisection;
+            static const algorithm default_algorithm = ridder;
 
 
             //! find zero with precomputed triplets at 'a' and 'c'
@@ -101,51 +101,38 @@ namespace upsylon {
              */
             template <typename T,typename FUNC>
             static inline
-            bool bisection( FUNC &F, triplet<T> &x, triplet<T> &f )
+            bool _bisection( FUNC &F, triplet<T> &x, triplet<T> &f )
             {
                 static const T half(0.5);
-                T w = fabs_of(x.c-x.a);
-                const unsigned    s_a = __sign(f.a);
-                const unsigned    s_c = __sign(f.c);
+                const unsigned    s_a   = __sign(f.a); if(__z==s_a) Y_ZFIND_EARLY_RETURN(x.a);
+                const unsigned    s_c   = __sign(f.c); if(__z==s_c) Y_ZFIND_EARLY_RETURN(x.c);
+                if(s_a==s_c) return false;
+
+                T                 width = fabs_of(x.c-x.a);
                 while(true)
                 {
-                    const unsigned s_b    = __sign( f.b = F( (x.b = half*(x.a+x.c) ) ) );
-                    const unsigned ab     = __sign_prod(s_a,s_b);
-                    const unsigned bc     = __sign_prod(s_b,s_c);
-                    const unsigned status = (ab<<8) | bc;
-
-                    switch(status)
+                    const unsigned s_b = __sign( f.b = F( (x.b = half*(x.a+x.c) ) ) );
+                    if(__z==s_b)
                     {
-                        case _zz: // => f.b = 0
-                            if(__sign(f.b)!=__z) return false; // bad bracket
-                            Y_ZFIND_EARLY_RETURN(x.b);
-
-                        case _zn: /* FALLTHRU */
-                        case _zp: // => f.a = 0
-                            Y_ZFIND_EARLY_RETURN(x.a);
-
-                        case _nz: /* FALLTHRU */
-                        case _pz: // => f.c = 0
-                            Y_ZFIND_EARLY_RETURN(x.c);
-
-
-                        case _np: // f.b same sign than f.c
-                            x.c = x.b;
-                            f.c = f.b;
-                            break;
-
-                        case _pn: // f.b same sign than f.a
-                            x.a = x.b;
-                            f.a = f.b;
-                            break;
-
-                        default:
-                            return false;
+                        // early return at x.b
+                        Y_ZFIND_EARLY_RETURN(x.b);
                     }
-
+                    else if(s_a==s_b)
+                    {
+                        // same sign than a
+                        x.a = x.b;
+                        f.a = f.b;
+                    }
+                    else
+                    {
+                        // same sign than c
+                        assert(s_c==s_b);
+                        x.c = x.b;
+                        f.c = f.b;
+                    }
                     const T new_w = fabs_of(x.c-x.a);
-                    if(new_w>=w) return true;
-                    w = new_w;
+                    if(new_w>=width) return true;
+                    width = new_w;
                 }
             }
 
@@ -158,12 +145,12 @@ namespace upsylon {
              \param f an initialized triple f(x.a)*f(x.c)<=0
              */
             template <typename T,typename FUNC> static inline
-            bool ridder( FUNC &F, triplet<T> &x, triplet<T> &f )
+            bool _ridder( FUNC &F, triplet<T> &x, triplet<T> &f )
             {
                 static const T half(0.5);
 
                 //--------------------------------------------------------------
-                // initialize triplet and width
+                // initialize triplets and width
                 //--------------------------------------------------------------
                 if(x.c<x.a)
                 {
@@ -173,15 +160,14 @@ namespace upsylon {
                 triplet<unsigned> s ={ __sign(f.a), 0, __sign(f.c) };
                 if(__z==s.a) Y_ZFIND_EARLY_RETURN(x.a);
                 if(__z==s.c) Y_ZFIND_EARLY_RETURN(x.c);
-                if(s.a==s.c) return false;
-                T width = x.c-x.a; assert(width>=0);
-                T den   = DeltaPrime(F,x,f);
+                if(s.a==s.c) return false;    assert(f.a*f.c<=0);
+                T width = x.c-x.a;            assert(width>=0);
+                T den   = DeltaPrime(F,x,f);  assert(x.is_increasing());
                 if( __z == (s.b=__sign(f.b)) ) Y_ZFIND_EARLY_RETURN(x.b);
                 
                 //--------------------------------------------------------------
                 // loop, with defined values
                 //--------------------------------------------------------------
-                size_t iter=0;
                 while(true)
                 {
                     assert(__z!=s.a);
@@ -306,7 +292,7 @@ namespace upsylon {
 
                             //--------------------------------------------------
                             //
-                            // same boundary signs => bad bracket
+                            // same boundary signs => bad bracket!
                             //
                             //--------------------------------------------------
                         default:
@@ -324,7 +310,7 @@ namespace upsylon {
 
             }
 
-                
+
 
         private:
 
@@ -338,7 +324,6 @@ namespace upsylon {
                 assert(f.a*f.c<=0);
                 x.b = half*(x.a+x.c); assert( x.is_increasing() );
                 f.b = F(x.b);
-
                 return sqrt_of( square_of(f.b) - (f.a*f.c) );
             }
 
@@ -356,8 +341,8 @@ namespace upsylon {
                 bool ans = false;
                 switch(algo)
                 {
-                    case with_bisection: ans = bisection(F,x,f); break;
-                    case with_ridder:    ans = ridder(F,x,f); break;
+                    case bisection: ans = _bisection(F,x,f); break;
+                    case ridder:    ans = _ridder(F,x,f); break;
 
                 }
                 if(!ans) throw_not_bracketed();

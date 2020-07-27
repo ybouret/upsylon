@@ -43,7 +43,7 @@ Y_UTEST(zfind)
         std::cerr << "x=" << x << std::endl;
         std::cerr << "f=" << f << std::endl;
         F.calls = 0;
-        if(zfind::bisection(F,x,f))
+        if(zfind::_bisection(F,x,f))
         {
             std::cerr << "F(" << x.b << ")=" << f.b << std::endl;
             std::cerr << "|_#calls=" << F.calls << std::endl;
@@ -66,7 +66,7 @@ Y_UTEST(zfind)
         std::cerr << "x=" << x << std::endl;
         std::cerr << "f=" << f << std::endl;
         F.calls = 0;
-        if( zfind::ridder(F, x, f) )
+        if( zfind::_ridder(F, x, f) )
         {
             std::cerr << "F(" << x.b << ")=" << f.b << std::endl;
             std::cerr << "|_#calls=" << F.calls << std::endl;
@@ -85,7 +85,7 @@ Y_UTEST(zfind)
         Z.calls = 0;
         for(float y=-0.9;y<=0.9;y+=0.1)
         {
-            const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::with_bisection);
+            const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::bisection);
             std::cerr << "iqerf(" << y << ")="  << x << std::endl;
         }
         std::cerr << "#calls=" << Z.calls << std::endl;
@@ -93,7 +93,7 @@ Y_UTEST(zfind)
         Z.calls = 0;
         for(float y=-0.9;y<=0.9;y+=0.1)
         {
-            const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::with_ridder);
+            const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::ridder);
             std::cerr << "iqerf(" << y << ")="  << x << std::endl;
         }
         std::cerr << "#calls=" << Z.calls << std::endl;

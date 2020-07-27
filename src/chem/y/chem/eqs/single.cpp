@@ -111,7 +111,7 @@ namespace upsylon
             assert( die("never get here") );
         FIND:
             //std::cerr << "xx=" << xx << ", FF=" << FF << std::endl;
-            if( zfind::run(F,xx,FF) )
+            if( zfind::_ridder(F,xx,FF) )
             {
                 //std::cerr << "|_success" << std::endl;
                 F(xx.b);

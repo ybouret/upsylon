@@ -56,7 +56,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            if(!zfind::bisection(zqerf,x,f))
+            if(!zfind::_bisection(zqerf,x,f))
             {
                 throw exception("iqerf didn't converge!!!");
             }
@@ -92,7 +92,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            if(!zfind::bisection(zqerfc,x,f))
+            if(!zfind::_bisection(zqerfc,x,f))
             {
                 throw exception("iqerfc didn't converge!!!");
             }
