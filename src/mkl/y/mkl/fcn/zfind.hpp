@@ -194,12 +194,19 @@ namespace upsylon {
                 return true;
             }
 
+
             template <typename T,typename FUNC>
             static inline
             bool quad( FUNC &F, triplet<T> &x, triplet<T> &f )
             {
                 static const T half(0.5);
-                T w = fabs_of(x.c-x.a);
+                // initialize
+                if(x.c<x.a)
+                {
+                    cswap(x.c,x.a);
+                    cswap(f.c,f.a);
+                }
+                T width = x.c-x.a; assert(width>=0);
                 while(true)
                 {
                     const unsigned sfa = __sign(f.a);
@@ -209,42 +216,77 @@ namespace upsylon {
                     switch(who)
                     {
                         case _zz:
-                            x.b=(x.a+x.c)*half;
+                            x.b=(x.a+x.c)*half; assert( x.is_increasing() );
                             f.b=0;
                             return true;
 
                         case _zn:
                         case _zp:
-                            x.b = x.a;
-                            f.b = f.a = 0;
+                            x.ld(x.a);
+                            f.ld(f.a);
                             return true;
 
                         case _nz:
-                        case _np:
-                            x.b = x.c;
-                            f.b = f.c = 0;
+                        case _pz:
+                            x.ld(x.c);
+                            f.ld(f.c);
                             return true;
 
-                        case _np:
-                        case _pn: {
-                            const T den = sqrt_of( square_of( f.b = F( x.b=half*(x.a+x.c) ) ) - (f.a*f.c) );
-                            const T num = f.b;
-
+                        case _np: {
+                            // f.a <0, f.c>0, sign(f.c)=1
+                            const T den = DeltaPrime(F,x,f); assert(x.is_increasing());
+                            const T num = -f.b;
+                            const T x_z = clamp(x.a,x.b+width*half*(num*den),x.c);
+                            const T f_z = F(x_z);
+                            // replace boundary of the same sign
+                            switch( __sign(f_z) )
+                            {
+                                case __z: x.ld(x_z); f.ld(f_z); return true;
+                                case __p: x.c= x_z;  f.c= f_z;  break;
+                                case __n: x.a= x_z;  f.a= x_z;  break;
+                            }
                         } break;
 
-                        case _pn:
-
-                            break;
+                        case _pn: {
+                            //! fa>0, f.c<0, sign(f.c)=-1
+                            const T den = DeltaPrime(F,x,f);
+                            const T num = f.b;
+                            const T x_z = clamp(x.a,x.b+width*half*(num*den),x.c);
+                            const T f_z = F(x_z);
+                            // replace boundary of the same sign
+                            switch( __sign(f_z) )
+                            {
+                                case __z: x.ld(x_z); f.ld(f_z); return true;
+                                case __n: x.c= x_z;  f.c= f_z;  break;
+                                case __p: x.a= x_z;  f.a= x_z;  break;
+                            }
+                        } break;
 
                         default:
                             return false;
                     }
 
-                    break;
+                    assert( x.is_ordered() );
+                    std::cerr << "\tx=" << x << std::endl;
+                    std::cerr << "\tf=" << f << std::endl;
+                    const T new_width = x.c-x.a;
+                    if(new_width>=width)
+                    {
+                        return true;
+                    }
+                    width = new_width;
                 }
-
-                return false;
             }
+
+        private:
+            template <typename T,typename FUNC> static inline
+            T DeltaPrime( FUNC &F, triplet<T> &x, triplet<T> &f )
+            {
+                return sqrt_of( square_of( f.b = F( x.b=T(0.5)*(x.a+x.c) ) ) - (f.a*f.c) );
+            }
+
+
+
 
         };
 

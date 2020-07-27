@@ -15,6 +15,7 @@ namespace
 
 Y_UTEST(zfind)
 {
+    std::cerr << "bissection: " << std::endl;
     {
         triplet<double> x = {0, -1, 2};
         triplet<double> f = {F(x.a),-1,F(x.c)};
@@ -32,8 +33,27 @@ Y_UTEST(zfind)
         std::cerr << "x1=" << x1 << std::endl;
         const double x2 = zfind::get(0.12,F,0.0,2.0);
         std::cerr << "x2=" << x2 << std::endl;
+    }
+
+    std::cerr << "quad:" << std::endl;
+    {
+        triplet<double> x = {0, -1, 2};
+        triplet<double> f = {F(x.a),-1,F(x.c)};
+        std::cerr << "x=" << x << std::endl;
+        std::cerr << "f=" << f << std::endl;
+        if( zfind::quad(F, x, f) )
+        {
+            std::cerr << "F(" << x.b << ")=" << f.b << std::endl;
+
+        }
+        else
+        {
+            std::cerr << "couldn't find zero" << std::endl;
+
+        }
 
     }
+
 }
 Y_UTEST_DONE()
 

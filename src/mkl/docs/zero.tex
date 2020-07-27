@@ -65,7 +65,7 @@ leading to:
 $$
 \left\lbrace
 \begin{array}{rcl}
-	x' & = & b - (a-b) \dfrac{h(b)}{h(a)-h(b)} \\
+	x_z & = & b - (a-b) \dfrac{h(b)}{h(a)-h(b)} \\
 	\\
 	& = & b + \dfrac{w}{2} \dfrac{f(b)}{\frac{f(a)}{Q}-f(b)}\\
 	\\
@@ -73,5 +73,24 @@ $$
 \end{array}
 \right.
 $$
+
+Since the three $h$ values are aligned with $h(a)h(c)=f(a)f(b)$, we express the secant value from $b$:
+$$
+	h(x) \simeq h(b) + \dfrac{x-b}{c-b} \left( h(c) - h(b) \right)
+$$
+leading to:
+$$
+\left\lbrace
+\begin{array}{rcl}
+	x_z' & = & b - (c-b) \dfrac{h(b)}{h(c)-h(b)} \\
+	\\
+	& = & b  - \dfrac{w}{2} \dfrac{f(b)}{f(c)Q-f(b)}\\
+	\\
+	& = & b - \dfrac{w}{2} \dfrac{\epsilon_c f(b)}{\sqrt{\Delta'}}\\
+	& = & x_z\\
+\end{array}
+\right.
+$$
+Then we take a second evaluation of $f(x_z)$ to keep the bracketing pattern.
 
 \end{document}
