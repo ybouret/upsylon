@@ -4,15 +4,25 @@
 
 #include "y/mkl/types.hpp"
 #include "y/mkl/triplet.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon {
 
     namespace mkl {
 
-        //! finding zero
+        //______________________________________________________________________
+        //
+        //
+        //! finding zero routines
+        //
+        //______________________________________________________________________
         class zfind
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const unsigned __z  = 0x00; //!< zero
             static const unsigned __p  = 0x01; //!< positive
             static const unsigned __n  = 0x02; //!< negative
@@ -39,14 +49,21 @@ namespace upsylon {
             }
 
             //! find zero with precomputed triplets at 'a' and 'c'
+            /**
+             bisection with all possible outcomes study.
+             \param F a callable type
+             \param x an initialized triplet with a and b
+             \param f an initialized triple f(x.a)*f(x,b)<=0
+             */
             template <typename T,typename FUNC>
             static inline
             bool run( FUNC &F, triplet<T> &x, triplet<T> &f )
             {
+                static const T half(0.5);
                 T w = fabs_of(x.c-x.a);
                 while(true)
                 {
-                    f.b = F( (x.b = T(0.5)*(x.a+x.c) ) );
+                    f.b = F( (x.b = half*(x.a+x.c) ) );
                     const unsigned ab     = __sign( f.a*f.b );
                     const unsigned bc     = __sign( f.b*f.c );
                     const unsigned status = (ab<<8) | bc;
@@ -57,6 +74,7 @@ namespace upsylon {
                             x.ld(x.b);
                             f.ld(f.b);
                             return true;
+                            
                         case _zn: /* FALLTHRU */
                         case _zp: // => f.a = 0
                             x.ld(x.a);
@@ -89,7 +107,22 @@ namespace upsylon {
                 }
             }
 
-            //! wrapper
+
+
+            //! throw exception on error
+            static void throw_not_bracketed();
+
+            //! return x such that F(x) approx 0
+            template <typename T,typename FUNC> static inline
+            T get( FUNC &F, const T a, const T b)
+            {
+                triplet<T> x = { a,0,b };
+                triplet<T> f = { F(x.a), 0, F(x.c) };
+                if(!run(F,x,f)) throw_not_bracketed();
+                return x.b;
+            }
+
+            //! wrapper to find F(x) = value
             template <
             typename T,
             typename FUNC>
@@ -105,26 +138,60 @@ namespace upsylon {
                     return (*pfunc)(x)-value;
                 }
             };
-
-            //! throw exception on error
-            static void throw_not_bracketed();
-
-            //! return x such that F(x) approx 0
+            
+             //! return x such that F(x) approx value
             template <typename T,typename FUNC> static inline
-            T run1( FUNC &F, const T a, const T b)
-            {
-                triplet<T> x = { a,0,b };
-                triplet<T> f = { F(x.a), 0, F(x.c) };
-                if(!run(F,x,f)) throw_not_bracketed();
-                return x.b;
-            }
-
-            //! return x such that F(x) approx value
-            template <typename T,typename FUNC> static inline
-            T run2( const T value, FUNC &F, const T a, const T b)
+            T get( const T value, FUNC &F, const T a, const T b)
             {
                 __call<T,FUNC> Z = { value, &F };
-                return run1<T, __call<T,FUNC> >(Z,a,b);
+                return get<T, __call<T,FUNC> >(Z,a,b);
+            }
+
+            //! find zero for a linear part
+            /**
+             - compute x.b such that 0=f.a+(x.b-x.a)/(x.c-x.a)*(f.c-f.a)
+             - return true if that's possible
+             */
+            template <typename T> static inline
+            bool linear(triplet<T> &x, triplet<T> &f) throw()
+            {
+                const bool     xch = (x.c<x.a);       if(xch) { cswap(x.a,x.c); cswap(f.a,f.c); }
+                const unsigned s_a = __sign(f.a);
+                const unsigned s_c = __sign(f.c);
+                const unsigned who = (s_a<<8) | s_c;
+                assert(x.a<=x.c);
+
+                switch(who)
+                {
+                    case _zz: f.b=0; x.b=(x.a+x.c)/2; break;
+
+                    case _zp:
+                    case _zn: f.b=f.a=0; x.b=x.a; break;
+
+                    case _pz:
+                    case _nz: f.b=f.c=0; x.b=x.c; break;
+
+                    case _np: assert(f.a<0); assert(0<f.c);
+                        f.b = 0;
+                        x.b = clamp(x.a,x.a + (-f.a)/(f.c-f.a) * (x.c-x.a), x.c);
+                        break;
+
+                    case _pn: assert(0<f.a);assert(f.c<0);
+                        f.b = 0;
+                        x.b = clamp(x.a,x.a + (f.a)/(f.a-f.c) * (x.c-x.a), x.c);
+                        break;
+                        
+                    default:
+                        return false;
+                }
+                assert(x.is_increasing());
+
+                if(xch)
+                {
+                    cswap(x.a,x.c);
+                    cswap(f.a,f.c);
+                }
+                return true;
             }
 
 
