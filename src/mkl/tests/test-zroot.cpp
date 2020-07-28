@@ -28,6 +28,12 @@ namespace {
         Y_CHECK(proc(F,x,f));
         std::cerr << "x=" << x.b << std::endl;
         std::cerr << "|_calls=" << F.calls << std::endl;
+
+        F.calls = 0;
+        std::cerr << "x=" << proc.run(proc,F,2,2.5) << std::endl;
+        std::cerr << "|_calls=" << F.calls << std::endl;
+
+
     }
 }
 Y_UTEST(zroot)

@@ -2,7 +2,7 @@
 //! \file
 
 #ifndef Y_MKL_ROOT_BISECTION_INCLUDED
-#define Y_MKL_ROOT_BISECTION_INCLUDED
+#define Y_MKL_ROOT_BISECTION_INCLUDED 1
 
 #include "y/mkl/root/zfind.hpp"
 

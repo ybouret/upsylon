@@ -3,7 +3,7 @@
 //! \file
 
 #ifndef Y_MKL_ROOT_SECANT_INCLUDED
-#define Y_MKL_ROOT_SECANT_INCLUDED
+#define Y_MKL_ROOT_SECANT_INCLUDED 1
 
 #include "y/mkl/root/zfind.hpp"
 #include "y/type/cswap.hpp"

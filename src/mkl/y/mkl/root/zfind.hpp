@@ -55,6 +55,7 @@ namespace upsylon {
 
         protected:
             explicit zfind() throw();  //!< setup
+            void     error_not_bracketed() const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zfind);
@@ -146,6 +147,14 @@ namespace upsylon {
             //__________________________________________________________________
             mutable_type  toto; //!< convergence criterion
 
+            template <typename PROC, typename FUNC>
+            mutable_type run(PROC &proc, FUNC &F, param_type a, param_type c)
+            {
+                triplet_type x = { a, 0, c };
+                triplet_type f = { F(x.a), 0, F(x.c) };
+                if(!proc(F,x,f)) error_not_bracketed();
+                return x.b;
+            }
             
 
         protected:
