@@ -39,7 +39,7 @@ namespace upsylon {
             //
             //------------------------------------------------------------------
             const uint8_t code; //!< the matching code
-            
+
             
         protected:
             explicit Single(const uint8_t) throw(); //!< setup

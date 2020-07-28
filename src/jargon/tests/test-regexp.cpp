@@ -72,6 +72,11 @@ Y_UTEST(regexp)
         const string      exp2 = q->toRegExp();
         std::cerr << "exp2        : \"" << exp2 << "\"" << std::endl;
 
+        {
+            auto_ptr<Pattern> ign = p->ignore_case();
+            ign->graphViz("igncase.dot");
+        }
+
         Y_ASSERT(exp2 == expr);
         if(argc>2)
         {

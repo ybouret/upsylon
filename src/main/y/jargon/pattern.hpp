@@ -71,10 +71,11 @@ namespace upsylon {
             }
             
             
-            void   test(Source &, Token &) const; //!< test pattern on all source, save content for re-use
-            bool   checkIO()               const; //!< check serialization
-            string toRegExp()              const; //!< use express()
-
+            void     test(Source &, Token &) const; //!< test pattern on all source, save content for re-use
+            bool     checkIO()               const; //!< check serialization
+            string   toRegExp()              const; //!< use express()
+            void     updateEntropy() const throw(); //!< update current entropy
+            Pattern *ignore_case()   const;         //!< produce a case insensitive pattern
 
 
             //! the module content must match exactly the pattern
@@ -116,7 +117,7 @@ namespace upsylon {
             static Pattern *Load(ios::istream&);                    //!< load from previously serialized patterns
             static Pattern *Optimize( Pattern *p ) throw();         //!< optimize
             static void     Express(ios::ostream &, const uint8_t); //!< code to compilable regexp
-            
+
             //------------------------------------------------------------------
             //
             // common members
@@ -126,8 +127,8 @@ namespace upsylon {
             void          *self;    //!< pointer to derived class
             const double   entropy; //!< entropy, if necessary
             
-            void updateEntropy() const throw(); //!< update current entropy
-            
+
+
         protected:
             explicit Pattern(const uint32_t) throw(); //!< setup uuid, self=0
             explicit Pattern(const Pattern&) throw(); //!< setup uuid, self=0
