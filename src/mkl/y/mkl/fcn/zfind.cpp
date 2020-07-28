@@ -24,6 +24,7 @@ namespace upsylon {
             return "unknown";
         }
 
+#if 0
         int zfind:: __sign_to_int(const unsigned s)
         {
             switch(s)
@@ -35,11 +36,13 @@ namespace upsylon {
             }
             throw libc::exception(EINVAL,"zfind::__sign_to_int");
         }
+#endif
 
         void zfind:: throw_not_bracketed()
         {
              throw libc::exception(EDOM,"zfind: zero is not bracketed");
         }
+
     }
 }
 

@@ -52,10 +52,34 @@ Y_UTEST(zfind)
         {
             std::cerr << "couldn't find zero" << std::endl;
         }
-        const double x1 = zfind::get(F,0.0,2.0);
-        std::cerr << "x1=" << x1 << std::endl;
-        const double x2 = zfind::get(0.12,F,0.0,2.0);
+        const double x2 = zfind::get(0.12,F,0.0,2.0,zfind::ridder);
         std::cerr << "x2=" << x2 << std::endl;
+        std::cerr << "F2=" << F(x2) << std::endl;
+        
+        std::cerr << "Testing..." << std::endl;
+        size_t bis_calls = 0;
+        size_t rid_calls = 0;
+        for(size_t iter=0;iter<20;++iter)
+        {
+            x.a = 5*alea.symm<double>();
+            f.a = F(x.a);
+            x.c = x.a;
+            while( (f.c=F( x.c += 0.01* alea.to<double>() )) * f.a > 0 )
+                ;
+            if( alea.choice() )
+            {
+                cswap(x.a,x.c);
+                cswap(f.a,f.c);
+            }
+            
+            triplet<double> xx = { x.a, 0, x.c };
+            triplet<double> ff = { f.a, 0, f.c };
+            //std::cerr << "@" << xx << " : " << ff << std::endl;
+            F.calls = 0; Y_ASSERT( zfind::_bisection(F,x,f) ); bis_calls += F.calls;
+            F.calls = 0; Y_ASSERT( zfind::_ridder(F,xx,ff) );  rid_calls += F.calls;
+            std::cerr << x.b << " " << xx.b << " -> " << fabs_of(x.b-xx.b) << std::endl;
+        }
+        std::cerr << "\t " << bis_calls << " " << rid_calls << std::endl;
     }
 
 
@@ -83,7 +107,7 @@ Y_UTEST(zfind)
     {
         iQerf<float> Z;
         Z.calls = 0;
-        for(float y=-0.9;y<=0.9;y+=0.1)
+        for(float y=-0.9;y<=0.9;y+=0.2)
         {
             const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::bisection);
             std::cerr << "iqerf(" << y << ")="  << x << std::endl;
@@ -91,7 +115,7 @@ Y_UTEST(zfind)
         std::cerr << "#calls=" << Z.calls << std::endl;
 
         Z.calls = 0;
-        for(float y=-0.9;y<=0.9;y+=0.1)
+        for(float y=-0.9;y<=0.9;y+=0.2)
         {
             const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::ridder);
             std::cerr << "iqerf(" << y << ")="  << x << std::endl;

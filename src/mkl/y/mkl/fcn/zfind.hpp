@@ -10,8 +10,14 @@ namespace upsylon {
 
     namespace mkl {
 
+        //! early return at X
 #define Y_ZFIND_EARLY_RETURN(X) do { x.ld(X); f.ld(0); return true; } while(false)
 
+        
+        
+        //! setup triplet F from X and FUNC
+#define Y_ZFIND_SETUP(FUNC,X,F) do { F.a = FUNC(X.a); F.b=0; F.c = FUNC(X.c); } while(false)
+        
         //______________________________________________________________________
         //
         //
@@ -41,8 +47,30 @@ namespace upsylon {
 
             static const unsigned _pp  = (__p<<8)|__p; //!< positive|positive
             static const unsigned _nn  = (__n<<8)|__n; //!< positive|positive
-
-
+            
+            enum algorithm
+            {
+                bisection,
+                ridder
+            };
+            
+            //! wrapper to find F(x) = value
+            template <
+            typename T,
+            typename FUNC>
+            struct local_call
+            {
+                T     value; //!< the value to find
+                FUNC *pfunc; //!< function
+                
+                //! call wrapping
+                inline T operator()(const T x)
+                {
+                    assert(pfunc);
+                    return (*pfunc)(x)-value;
+                }
+            };
+            
             //__________________________________________________________________
             //
             // helpers methods
@@ -57,58 +85,25 @@ namespace upsylon {
             {
                 return (x<0) ? __n : ( (0<x) ? __p : __z);
             }
-
-            //! get the sign product
-            static inline unsigned __sign_prod(const unsigned lhs, const unsigned rhs) throw()
-            {
-                switch( (lhs<<8) | rhs )
-                {
-                    case _pp:
-                    case _nn:
-                        return __p;
-
-                    case _pn:
-                    case _np:
-                        return __n;
-
-                    default:
-                        break;
-                }
-                return __z;
-            }
-
-            //! convert to integer
-            static int __sign_to_int(const unsigned s);
-
-            //__________________________________________________________________
-            //
-            // algorithm methods
-            //__________________________________________________________________
-            enum algorithm
-            {
-                bisection,
-                ridder
-            };
-            static const algorithm default_algorithm = ridder;
-
+            
 
             //! find zero with precomputed triplets at 'a' and 'c'
             /**
-             bisection with all possible outcomes study.
+             bisection with all possible outcomes study,
+             keeping the same sign bracketing all along
              \param F a callable type
              \param x an initialized triplet with a and b
              \param f an initialized triple f(x.a)*f(x.c)<=0
              */
             template <typename T,typename FUNC>
             static inline
-            bool _bisection( FUNC &F, triplet<T> &x, triplet<T> &f )
+            bool _bisection(FUNC &F, triplet<T> &x, triplet<T> &f)
             {
                 static const T half(0.5);
-                const unsigned    s_a   = __sign(f.a); if(__z==s_a) Y_ZFIND_EARLY_RETURN(x.a);
-                const unsigned    s_c   = __sign(f.c); if(__z==s_c) Y_ZFIND_EARLY_RETURN(x.c);
-                if(s_a==s_c) return false;
-
-                T                 width = fabs_of(x.c-x.a);
+                const unsigned s_a   = __sign(f.a); if(__z==s_a) Y_ZFIND_EARLY_RETURN(x.a);
+                const unsigned s_c   = __sign(f.c); if(__z==s_c) Y_ZFIND_EARLY_RETURN(x.c);
+                if(s_a==s_c) return false; // not bracketed
+                T              width = fabs_of(x.c-x.a);
                 while(true)
                 {
                     const unsigned s_b = __sign( f.b = F( (x.b = half*(x.a+x.c) ) ) );
@@ -136,7 +131,6 @@ namespace upsylon {
                 }
             }
 
-
             //! find zero with precomputed triplets at 'a' and 'c'
             /**
              almost quadratic method with Rider's approach
@@ -160,7 +154,7 @@ namespace upsylon {
                 triplet<unsigned> s ={ __sign(f.a), 0, __sign(f.c) };
                 if(__z==s.a) Y_ZFIND_EARLY_RETURN(x.a);
                 if(__z==s.c) Y_ZFIND_EARLY_RETURN(x.c);
-                if(s.a==s.c) return false;    assert(f.a*f.c<=0);
+                if(s.a==s.c) return false;    assert(f.a*f.c<=0); // must be bracketed
                 T width = x.c-x.a;            assert(width>=0);
                 T den   = DeltaPrime(F,x,f);  assert(x.is_increasing());
                 if( __z == (s.b=__sign(f.b)) ) Y_ZFIND_EARLY_RETURN(x.b);
@@ -170,9 +164,12 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 while(true)
                 {
+                    // sanity check
                     assert(__z!=s.a);
                     assert(__z!=s.c);
                     assert(__z!=s.b);
+                    
+                    // compute factor according to the sign of f.c
                     const T factor = (__p==s.c) ? (width*half) : -(width*half);
                     switch( (s.a<<8) | s.c )
                     {
@@ -191,10 +188,7 @@ namespace upsylon {
                             const T        x_z = clamp(x.a,x.b - factor*(f.b)/den,x.c);
                             const T        f_z = F(x_z);
                             const unsigned s_z = __sign(f_z);
-                            if(__z==s_z) {
-                                //std::cerr << "z early return..." << std::endl;
-                                Y_ZFIND_EARLY_RETURN(x_z);
-                            }
+                            if(__z==s_z) Y_ZFIND_EARLY_RETURN(x_z);
 
                             //__________________________________________________
                             //
@@ -218,6 +212,7 @@ namespace upsylon {
                             assert(ss[0]!=__z);
                             assert(ss[1]!=__z);
                             assert(ss[2]!=__z);
+                            assert(ss[3]!=__z);
 
 #if 0
                             std::cerr << "iter=" << ++iter << std::endl;
@@ -228,7 +223,7 @@ namespace upsylon {
 #endif
                             //__________________________________________________
                             //
-                            // look for the smallest of 3 bracketing intervals
+                            // look for the first bracketing interval
                             //__________________________________________________
                             T      w = -1;
                             size_t j =  0;
@@ -243,6 +238,10 @@ namespace upsylon {
                             }
                             assert(w>=0);
 
+                            //__________________________________________________
+                            //
+                            // study next bracketing intervals
+                            //__________________________________________________
                             for(size_t i=j+1;i<3;++i)
                             {
                                 if(ss[i+1]!=ss[i])
@@ -265,7 +264,11 @@ namespace upsylon {
                             x.a = xx[j]; x.c = xx[jp];
                             f.a = ff[j]; f.c = ff[jp];
                             s.a = ss[j]; s.c = ss[jp];
-
+                            
+                            //__________________________________________________
+                            //
+                            // update midpoint
+                            //__________________________________________________
                             den = DeltaPrime(F,x,f); assert(x.is_increasing());
 
                             //__________________________________________________
@@ -287,6 +290,11 @@ namespace upsylon {
                                 f.ld(f.b);
                                 return true;
                             }
+                            
+                            //__________________________________________________
+                            //
+                            // update width for next cycle
+                            //__________________________________________________
                             width = w;
                         } break;
 
@@ -313,8 +321,6 @@ namespace upsylon {
 
 
         private:
-
-
             //! compute x.b and f.b and associated discriminant
             template <typename T,typename FUNC> static inline
             T DeltaPrime( FUNC &F, triplet<T> &x, triplet<T> &f )
@@ -334,10 +340,10 @@ namespace upsylon {
 
             template <typename T,typename FUNC>
             static inline
-            T get( FUNC &F, const T a, const T c, const algorithm algo = default_algorithm)
+            T get( FUNC &F, const T a, const T c, const algorithm algo)
             {
                 triplet<T> x = { a,0, c };
-                triplet<T> f = { F(x.a), 9, F(x.c) };
+                triplet<T> f = { F(x.a), 0, F(x.c) };
                 bool ans = false;
                 switch(algo)
                 {
@@ -348,32 +354,16 @@ namespace upsylon {
                 if(!ans) throw_not_bracketed();
                 return x.b;
             }
-
-            //! wrapper to find F(x) = value
-            template <
-            typename T,
-            typename FUNC>
-            struct local_call
-            {
-                T     value; //!< the value to find
-                FUNC *pfunc; //!< function
-
-                //! call wrapping
-                inline T operator()(const T x)
-                {
-                    assert(pfunc);
-                    return (*pfunc)(x)-value;
-                }
-            };
+ 
 
             //! return x such that F(x) approx value
             template <typename T,typename FUNC> static inline
-            T get(const T value, FUNC &F, const T a, const T c, const algorithm algo = default_algorithm)
+            T get(const T value, FUNC &F, const T a, const T c, const algorithm algo)
             {
                 local_call<T,FUNC> Z = { value, &F };
                 return get(Z,a,c,algo);
             }
-
+            
             //! find zero for a linear part
             /**
              - compute x.b such that 0=f.a+(x.b-x.a)/(x.c-x.a)*(f.c-f.a)
