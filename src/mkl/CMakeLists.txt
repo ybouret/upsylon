@@ -47,6 +47,12 @@ SET(fcn_srcs ${fcn_decl} ${fcn_code})
 SOURCE_GROUP( fcn FILES ${fcn_srcs} )
 INSTALL( FILES ${fcn_decl} DESTINATION include/y/mkl/fcn )
 
+FILE(GLOB root_decl y/mkl/root/*.hpp)
+FILE(GLOB root_code y/mkl/root/*.cpp)
+SET(root_srcs ${root_decl} ${root_code})
+SOURCE_GROUP( root FILES ${root_srcs} )
+INSTALL( FILES ${root_decl} DESTINATION include/y/mkl/root )
+
 FILE(GLOB ode_decl y/mkl/ode/*.hpp)
 FILE(GLOB ode_code y/mkl/ode/*.cpp)
 SET(ode_srcs ${ode_decl} ${ode_code})
@@ -131,6 +137,7 @@ ${kernel_srcs}
 ${kernel_quark_v1_srcs} ${kernel_quark_v2_srcs} ${kernel_quark_v3_srcs}
 ${io_srcs}
 ${fcn_srcs}
+${root_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
 ${opt_srcs}
 ${signal_srcs}
