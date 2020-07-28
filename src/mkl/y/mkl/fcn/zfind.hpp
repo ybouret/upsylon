@@ -51,7 +51,8 @@ namespace upsylon {
             enum algorithm
             {
                 bisection,
-                ridder
+                ridder,
+                secant
             };
             
             //! wrapper to find F(x) = value
@@ -107,6 +108,59 @@ namespace upsylon {
                 while(true)
                 {
                     const unsigned s_b = __sign( f.b = F( (x.b = half*(x.a+x.c) ) ) );
+                    if(__z==s_b)
+                    {
+                        // early return at x.b
+                        Y_ZFIND_EARLY_RETURN(x.b);
+                    }
+                    else if(s_a==s_b)
+                    {
+                        // same sign than a
+                        x.a = x.b;
+                        f.a = f.b;
+                    }
+                    else
+                    {
+                        // same sign than c
+                        assert(s_c==s_b);
+                        x.c = x.b;
+                        f.c = f.b;
+                    }
+                    const T new_w = fabs_of(x.c-x.a);
+                    if(new_w>=width) return true;
+                    width = new_w;
+                }
+            }
+            
+            //! find zero with precomputed triplets at 'a' and 'c'
+            /**
+             almost quadratic method with Rider's approach
+             \param F a callable type
+             \param x an initialized triplet with a and b
+             \param f an initialized triple f(x.a)*f(x.c)<=0
+             */
+            template <typename T,typename FUNC> static inline
+            bool _secant( FUNC &F, triplet<T> &x, triplet<T> &f )
+            {
+                //--------------------------------------------------------------
+                // initialize triplets and width
+                //--------------------------------------------------------------
+                if(x.c<x.a)
+                {
+                    cswap(x.c,x.a);
+                    cswap(f.c,f.a);
+                }
+                const unsigned s_a = __sign(f.a); if(__z==s_a) Y_ZFIND_EARLY_RETURN(x.a);
+                const unsigned s_c = __sign(f.c); if(__z==s_c) Y_ZFIND_EARLY_RETURN(x.c);
+                if(s_a==s_c) return false;    assert(f.a*f.c<=0); // must be bracketed
+                T width = x.c-x.a;            assert(width>=0);
+                
+                while(true)
+                {
+                    // sanity check
+                    x.b = clamp(x.a,x.a - f.a/(f.c-f.a) * width,x.c);
+                    f.b = F(x.b);
+                    const unsigned s_b = __sign(f.b);
                     if(__z==s_b)
                     {
                         // early return at x.b
@@ -348,8 +402,8 @@ namespace upsylon {
                 switch(algo)
                 {
                     case bisection: ans = _bisection(F,x,f); break;
-                    case ridder:    ans = _ridder(F,x,f); break;
-
+                    case ridder:    ans = _ridder(F,x,f);    break;
+                    case secant:    ans = _secant(F,x,f);    break;
                 }
                 if(!ans) throw_not_bracketed();
                 return x.b;

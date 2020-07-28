@@ -59,7 +59,8 @@ Y_UTEST(zfind)
         std::cerr << "Testing..." << std::endl;
         size_t bis_calls = 0;
         size_t rid_calls = 0;
-        for(size_t iter=0;iter<20;++iter)
+        size_t sec_calls = 0;
+        for(size_t iter=0;iter<32;++iter)
         {
             x.a = 5*alea.symm<double>();
             f.a = F(x.a);
@@ -72,14 +73,18 @@ Y_UTEST(zfind)
                 cswap(f.a,f.c);
             }
             
-            triplet<double> xx = { x.a, 0, x.c };
-            triplet<double> ff = { f.a, 0, f.c };
+            triplet<double> xx  = { x.a, 0, x.c };
+            triplet<double> ff  = { f.a, 0, f.c };
+            triplet<double> xxx = { x.a, 0, x.c };
+            triplet<double> fff = { f.a, 0, f.c };
             //std::cerr << "@" << xx << " : " << ff << std::endl;
-            F.calls = 0; Y_ASSERT( zfind::_bisection(F,x,f) ); bis_calls += F.calls;
-            F.calls = 0; Y_ASSERT( zfind::_ridder(F,xx,ff) );  rid_calls += F.calls;
-            std::cerr << x.b << " " << xx.b << " -> " << fabs_of(x.b-xx.b) << std::endl;
+            F.calls = 0; Y_ASSERT( zfind::_bisection(F,x,f)  );  bis_calls += F.calls;
+            F.calls = 0; Y_ASSERT( zfind::_ridder(F,xx,ff)   );  rid_calls += F.calls;
+            F.calls = 0; Y_ASSERT( zfind::_secant(F,xxx,fff) );  sec_calls += F.calls;
+
+            std::cerr << x.b << " " << xx.b << " " << xxx.b << " -> " << fabs_of(x.b-xx.b) << " " << fabs_of(x.b-xxx.b) << std::endl;
         }
-        std::cerr << "\t " << bis_calls << " " << rid_calls << std::endl;
+        std::cerr << "\t bis:" << bis_calls << " rid:" << rid_calls << " sec:" << sec_calls << std::endl;
     }
 
 
@@ -107,20 +112,34 @@ Y_UTEST(zfind)
     {
         iQerf<float> Z;
         Z.calls = 0;
-        for(float y=-0.9;y<=0.9;y+=0.2)
+        for(float y=-0.9;y<=0.9;y+=0.1)
         {
             const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::bisection);
-            std::cerr << "iqerf(" << y << ")="  << x << std::endl;
+            std::cerr << "/" << x;
         }
-        std::cerr << "#calls=" << Z.calls << std::endl;
+        std::cerr << std::endl;
+        std::cerr << "bisection #calls=" << Z.calls << std::endl;
 
         Z.calls = 0;
-        for(float y=-0.9;y<=0.9;y+=0.2)
+        for(float y=-0.9;y<=0.9;y+=0.1)
         {
             const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::ridder);
-            std::cerr << "iqerf(" << y << ")="  << x << std::endl;
+            std::cerr << "/" << x;
         }
-        std::cerr << "#calls=" << Z.calls << std::endl;
+        std::cerr << std::endl;
+        std::cerr << "Ridder #calls=" << Z.calls << std::endl;
+        
+        
+        Z.calls = 0;
+        for(float y=-0.9;y<=0.9;y+=0.1)
+        {
+            const float x = zfind::get(y, Z, -10.0f, 10.0f, zfind::secant);
+            std::cerr << "/" << x;
+        }
+        std::cerr << std::endl;
+        std::cerr << "Secant #calls=" << Z.calls << std::endl;
+        
+        
     }
 #endif
 
