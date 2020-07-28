@@ -37,11 +37,12 @@ SOURCE_GROUP(opt FILES test-bracket.cpp test-min.cpp)
 ADD_TEST(opt:bracket     test-mkl bracket)
 ADD_TEST(opt:minimize    test-mkl min)
 
-SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zfind.cpp)
+SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zfind.cpp test-zroot.cpp)
 ADD_TEST(fcn:drvs    test-mkl drvs)
 ADD_TEST(fcn:intg    test-mkl intg)
 ADD_TEST(fcn:func    test-mkl functions)
 ADD_TEST(fcn:zfind   test-mkl zfind)
+ADD_TEST(fcn:zroot   test-mkl zroot)
 
 SOURCE_GROUP(sig FILES test-bspl.cpp test-extend.cpp test-linear.cpp test-smooth.cpp test-spline.cpp)
 ADD_TEST(sig:linear      test-mkl linear)
