@@ -120,6 +120,8 @@ namespace upsylon {
                             case is_positive: return failure;
                             case is_negative: return success;
                         }
+                        // never get here
+                        break;
 
                     case is_negative:
                         switch(s_c)
@@ -128,6 +130,8 @@ namespace upsylon {
                             case is_positive: return success;
                             case is_negative: return failure;
                         }
+                        // never get here
+                        break;
                 }
                 // never get here...
                 return failure;
