@@ -48,11 +48,12 @@ namespace upsylon {
             static const unsigned _pp  = (__p<<8)|__p; //!< positive|positive
             static const unsigned _nn  = (__n<<8)|__n; //!< positive|positive
             
+            //! kind of algorithm
             enum algorithm
             {
-                bisection,
-                ridder,
-                secant
+                secant,     //!< using the secant/false position method
+                ridder,     //!< using the Ridder's method
+                bisection   //!< using the bisection method
             };
             
             //! wrapper to find F(x) = value
@@ -392,6 +393,7 @@ namespace upsylon {
             static void throw_not_bracketed();
 
 
+            //! wrapper to find zero of a callable object
             template <typename T,typename FUNC>
             static inline
             T get( FUNC &F, const T a, const T c, const algorithm algo)
