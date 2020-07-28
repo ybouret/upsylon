@@ -30,7 +30,13 @@ namespace upsylon {
             
         }
 
-
+        void Matcher:: ignore_case()
+        {
+            Motif  target = (**this).ignore_case();
+            Motif &source = *this;
+            source = target;
+        }
+        
         
         
 

@@ -32,6 +32,7 @@ namespace upsylon {
             // methods
             //
             //------------------------------------------------------------------
+            void ignore_case(); //!< one way ignore case
 
             //! exact match
             template <typename CONTENT>
