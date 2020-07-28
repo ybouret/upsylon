@@ -98,6 +98,11 @@ namespace upsylon {
                 return false;
             }
 
+            template <typename FUNC>
+            mutable_type operator()(FUNC &F, param_type a, param_type c)
+            {
+                return this->run(*this,F,a,c);
+            }
 
 
         private:

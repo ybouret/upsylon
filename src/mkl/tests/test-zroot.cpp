@@ -30,7 +30,7 @@ namespace {
         std::cerr << "|_calls=" << F.calls << std::endl;
 
         F.calls = 0;
-        std::cerr << "x=" << proc.run(proc,F,2,2.5) << std::endl;
+        std::cerr << "x=" << proc(F,2,2.5) << std::endl;
         std::cerr << "|_calls=" << F.calls << std::endl;
 
 
