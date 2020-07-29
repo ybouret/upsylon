@@ -10,7 +10,7 @@ namespace upsylon {
         namespace {
 
             static inline
-            Pattern *__ignore_case(Logical *target, const Logical *source )
+            Pattern *new_ignore_case(Logical *target, const Logical *source )
             {
                 auto_ptr<Pattern> guard(target);
                 for(const Pattern *p = source->head; p; p=p->next)
@@ -26,13 +26,14 @@ namespace upsylon {
             static const uint8_t A = 'A';
             static const uint8_t Z = 'Z';
 
-            static inline bool __has_case(const uint8_t code )
+            static inline
+            bool __has_case(const uint8_t code )
             {
                 return (code>=a&&code<=z) || (code>=A&&code<=Z);
             }
 
             static inline
-            void __ignore_case(const uint8_t code, Logical &target )
+            void add_ignore_case(const uint8_t code, Logical &target )
             {
 
                 if(code>=a&&code<=z)
@@ -72,7 +73,7 @@ namespace upsylon {
                     {
                         auto_ptr<Logical> p = OR::Create();
                         Logical          &l = *p;
-                        __ignore_case(ch,l);
+                        add_ignore_case(ch,l);
                         PairwiseMerge(l);
                         return Optimize( p.yield() );
                     }
@@ -87,7 +88,7 @@ namespace upsylon {
                     {
                         auto_ptr<Logical> p = NONE::Create();
                         Logical          &l = *p;
-                        __ignore_case(ch,l);
+                        add_ignore_case(ch,l);
                         PairwiseMerge(l);
                         return Optimize( p.yield() );
                     }
@@ -97,14 +98,15 @@ namespace upsylon {
 
                 case Range::UUID: {
                     auto_ptr<Logical> p = OR::Create();
+                    Logical          &l = *p;
                     const Range      *r = static_cast<const Range *>(self);
                     const int         lo = r->lower;
                     const int         up = r->upper;
                     for(int ch=lo;ch<=up;++ch)
                     {
-                        __ignore_case(ch,*p);
+                        add_ignore_case(ch,l);
                     }
-                    PairwiseMerge(*p);
+                    PairwiseMerge(l);
                     return Optimize(p.yield());
                 }
                     //----------------------------------------------------------
@@ -112,7 +114,7 @@ namespace upsylon {
                     // logical
                     //
                     //----------------------------------------------------------
-#define Y_JARGON_IGNORE_CASE(TYPE)  case TYPE::  UUID: return Optimize( __ignore_case( TYPE::Create(), static_cast<const TYPE *>(self) ) )
+#define Y_JARGON_IGNORE_CASE(TYPE)  case TYPE::  UUID: return Optimize( new_ignore_case( TYPE::Create(), static_cast<const TYPE *>(self) ) )
 
                     Y_JARGON_IGNORE_CASE(AND);
                     Y_JARGON_IGNORE_CASE(OR);
