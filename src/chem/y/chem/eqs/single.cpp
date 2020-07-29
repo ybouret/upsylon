@@ -1,6 +1,6 @@
 #include "y/chem/equilibria.hpp"
 #include "y/mkl/kernel/quark.hpp"
-#include "y/mkl/fcn/zfind.hpp"
+#include "y/mkl/root/bisection.hpp"
 
 namespace upsylon
 {
@@ -34,6 +34,7 @@ namespace upsylon
 
         bool Equilibria::solveSingle(const size_t iEq, array<double> &C)
         {
+            bisection<double> solve;
             //__________________________________________________________________
             //
             // initialize data and function to be zeroed
@@ -111,7 +112,7 @@ namespace upsylon
             assert( die("never get here") );
         FIND:
             //std::cerr << "xx=" << xx << ", FF=" << FF << std::endl;
-            if( zfind::_ridder(F,xx,FF) )
+            if( solve(F,xx,FF) )
             {
                 //std::cerr << "|_success" << std::endl;
                 F(xx.b);

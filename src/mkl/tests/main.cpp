@@ -6,9 +6,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(LU);
     Y_UTEST(data_set);
     Y_UTEST(drvs);
-    Y_UTEST(zfind);
     Y_UTEST(zroot);
-    Y_UTEST(lfind);
     Y_UTEST(adjoint);
     Y_UTEST(diag_symm);
     Y_UTEST(svd);

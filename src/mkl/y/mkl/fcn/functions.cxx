@@ -2,7 +2,7 @@
 #include "y/mkl/ztype.hpp"
 #include "y/type/utils.hpp"
 #include "y/exceptions.hpp"
-#include "y/mkl/fcn/zfind.hpp"
+#include "y/mkl/root/secant.hpp"
 
 
 #include <cerrno>
@@ -56,7 +56,8 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            if(!zfind::_bisection(zqerf,x,f))
+            secant<real_t> solve;
+            if(!solve(zqerf,x,f))
             {
                 throw exception("iqerf didn't converge!!!");
             }
@@ -92,7 +93,8 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            if(!zfind::_bisection(zqerfc,x,f))
+            secant<real_t> solve;
+            if(!solve(zqerfc,x,f))
             {
                 throw exception("iqerfc didn't converge!!!");
             }
