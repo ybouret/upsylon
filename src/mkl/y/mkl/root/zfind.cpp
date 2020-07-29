@@ -16,7 +16,7 @@ namespace upsylon {
         
         void zfind:: error_not_bracketed() const
         {
-            throw libc::exception( EDOM, "zfind: zero is not bracketed" );
+            throw libc::exception( EDOM, "%s(zero is not bracketed)", method() );
         }
 
     }

@@ -27,9 +27,9 @@ namespace upsylon {
             //! named sign
             enum sign_type
             {
-                is_negative=-1, //!< f<0
-                is_zero    =0,  //!< f==0
-                is_positive=1   //!< f>0
+                negative=-1, //!< f<0
+                __zero__=0,  //!< f==0
+                positive=1   //!< f>0
             };
 
             //! setup result
@@ -42,10 +42,12 @@ namespace upsylon {
 
             //! generic sign computation
             template <typename T> static inline
-            sign_type sign_of( const T x ) throw()
+            sign_type __sign( const T x ) throw()
             {
-                return (x<0) ? is_negative : ( (0<x) ? is_positive : is_zero );
+                return (x<0) ? negative : ( (0<x) ? positive : __zero__ );
             }
+
+
 
             //__________________________________________________________________
             //
@@ -53,14 +55,27 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~zfind() throw();  //!< cleanup
 
+            //__________________________________________________________________
+            //
+            // inteface
+            //__________________________________________________________________
+            //! name of the method
+            virtual const char *method() const throw() = 0;
+
         protected:
-            explicit zfind() throw();  //!< setup
-            void     error_not_bracketed() const;
+            explicit zfind() throw();             //!< setup
+            void     error_not_bracketed() const; //!< raise exception
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zfind);
         };
 
+        //! complete the API with simpler calls
+#define Y_ZROOT_API() \
+/**/ template <typename FUNC> mutable_type operator()(FUNC &F, param_type a, param_type c)\
+/**/ { return this->run(*this,F,a,c); }\
+/**/ template <typename FUNC> mutable_type operator()(param_type y, FUNC &F, param_type a, param_type c)\
+/**/ { return this->run(*this,y,F,a,c); }
 
         //______________________________________________________________________
         //
@@ -79,6 +94,20 @@ namespace upsylon {
             Y_DECL_ARGS(T,type);                        //!< aliases
             typedef triplet<mutable_type> triplet_type; //!< alias
 
+            //! helper to get F(x)=value
+            template <typename FUNC>
+            struct zcall
+            {
+                mutable_type value; //!< looked for
+                FUNC        *pfunc; //!< function address
+
+                //! wrapper call
+                inline mutable_type operator()(param_type x)
+                {
+                    assert(pfunc);
+                    return (*pfunc)(x)-value;
+                }
+            };
 
             //__________________________________________________________________
             //
@@ -100,35 +129,35 @@ namespace upsylon {
                               triplet_type &x,
                               triplet_type &f)
             {
-                s_a = sign_of(f.a);
-                s_c = sign_of(f.c);
+                s_a = __sign(f.a);
+                s_c = __sign(f.c);
                 switch(s_a)
                 {
-                    case is_zero:
+                    case __zero__:
                         switch(s_c)
                         {
-                            case is_zero: return failure;
+                            case __zero__: return failure;
                             default     : break;
                         }
                         exactly(x.a, x, f);
                         return early_return;
 
-                    case is_positive:
+                    case positive:
                         switch(s_c)
                         {
-                            case is_zero:     exactly(x.c, x, f); return early_return;
-                            case is_positive: return failure;
-                            case is_negative: return success;
+                            case __zero__: exactly(x.c, x, f); return early_return;
+                            case positive: return failure;
+                            case negative: return success;
                         }
                         // never get here
                         break;
 
-                    case is_negative:
+                    case negative:
                         switch(s_c)
                         {
-                            case is_zero:     exactly(x.c, x, f); return early_return;
-                            case is_positive: return success;
-                            case is_negative: return failure;
+                            case __zero__: exactly(x.c, x, f); return early_return;
+                            case positive: return success;
+                            case negative: return failure;
                         }
                         // never get here
                         break;
@@ -149,20 +178,29 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            mutable_type  toto; //!< convergence criterion
+            mutable_type  todo; //!< convergence criterion
 
+            //! proc(F,[a,0,c],[F(a),0,F(c)])
             template <typename PROC, typename FUNC>
             mutable_type run(PROC &proc, FUNC &F, param_type a, param_type c)
             {
-                triplet_type x = { a, 0, c };
+                triplet_type x = { a,      0, c      };
                 triplet_type f = { F(x.a), 0, F(x.c) };
                 if(!proc(F,x,f)) error_not_bracketed();
                 return x.b;
             }
-            
+
+            //! proc(F-y,[a,0,c],[F(a)-y,0,F(c)-y])
+            template <typename PROC, typename FUNC>
+            mutable_type run(PROC &proc, param_type y, FUNC &F, param_type a, param_type c)
+            {
+                zcall<FUNC>  G = { y, &F };
+                return run(proc,G,a,c);
+            }
+
 
         protected:
-            inline explicit zroot() throw() : zfind(), toto(0) {}
+            inline explicit zroot() throw() : zfind(), todo(0) {}
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zroot);

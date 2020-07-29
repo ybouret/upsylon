@@ -10,6 +10,15 @@ namespace upsylon {
 
     namespace mkl {
 
+        namespace kernel {
+
+            //! common content
+            struct bisection {
+                static const char name[]; //!< "bisection"
+            };
+        }
+
+
         //______________________________________________________________________
         //
         //
@@ -38,6 +47,9 @@ namespace upsylon {
             //! setup
             inline explicit bisection() : zroot<T>() {}
 
+            //! name
+            inline virtual const char * method() const throw() { return kernel::bisection::name; }
+            
             //__________________________________________________________________
             //
             // methods
@@ -49,23 +61,23 @@ namespace upsylon {
             {
                 static const_type half(0.5);
 
-                zfind::sign_type s_a = zfind::is_zero;
-                zfind::sign_type s_c = zfind::is_zero;
+                zfind::sign_type s_a = zfind::__zero__;
+                zfind::sign_type s_c = zfind::__zero__;
                 switch(this->setup(s_a,s_c,x,f))
                 {
                     case zfind::success:      break;
                     case zfind::failure:      return false;
                     case zfind::early_return: return true;
                 }
-                assert(s_a!=zfind::is_zero);
-                assert(s_c!=zfind::is_zero);
+                assert(s_a!=zfind::__zero__);
+                assert(s_c!=zfind::__zero__);
                 assert(s_a!=s_c);
 
                 mutable_type width = fabs_of(x.c-x.a);
                 while(true)
                 {
-                    const zfind::sign_type s_b = zfind::sign_of( f.b = F( x.b=half*(x.a+x.c) ) );
-                    if( zfind::is_zero == s_b)
+                    const zfind::sign_type s_b = zfind::__sign( f.b = F( x.b=half*(x.a+x.c) ) );
+                    if( zfind::__zero__ == s_b)
                     {
                         this->exactly(x.b,x,f); return true;
                     }
@@ -93,11 +105,7 @@ namespace upsylon {
                 return false;
             }
 
-            template <typename FUNC>
-            mutable_type operator()(FUNC &F, param_type a, param_type c)
-            {
-                return this->run(*this,F,a,c);
-            }
+            Y_ZROOT_API()
 
 
         private:

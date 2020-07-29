@@ -1,5 +1,6 @@
 #include "y/mkl/root/bisection.hpp"
 #include "y/mkl/root/secant.hpp"
+#include "y/mkl/root/ridder.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -18,9 +19,9 @@ namespace {
     };
 
     template <typename PROC>
-    void doTestZ( PROC &proc, const char *which )
+    void doTestZ( PROC &proc )
     {
-        std::cerr << "<" << which << ">" << std::endl;
+        std::cerr << "<" << proc.method() << ">" << std::endl;
         Call F;
         triplet<double>   x = {0,0,2};
         triplet<double>   f = {F(x.a),-1,F(x.c)};
@@ -33,19 +34,31 @@ namespace {
         std::cerr << "x=" << proc(F,2,2.5) << std::endl;
         std::cerr << "|_calls=" << F.calls << std::endl;
 
+        F.calls = 0;
+        std::cerr << "x=" << proc(0.15,F,0,2) << std::endl;
+        std::cerr << "|_calls=" << F.calls << std::endl;
+        std::cerr << "<" << proc.method() << "/>" << std::endl;
+        std::cerr << std::endl;
 
+        std::cerr << "<" << proc.method() << "/>" << std::endl;
+        std::cerr << std::endl;
     }
 }
 Y_UTEST(zroot)
 {
     {
         bisection<double> bis;
-        doTestZ(bis,"bisection");
+        doTestZ(bis);
     }
 
     {
         secant<double> sec;
-        doTestZ(sec,"secant");
+        doTestZ(sec);
+    }
+
+    {
+        ridder<double> sec;
+        doTestZ(sec);
     }
 
 

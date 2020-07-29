@@ -12,6 +12,14 @@ namespace upsylon {
 
     namespace mkl {
 
+        namespace kernel {
+
+            //! common content
+            struct secant {
+                static const char name[]; //!< "secant"
+            };
+        }
+
         //______________________________________________________________________
         //
         //
@@ -40,6 +48,9 @@ namespace upsylon {
             //! setup
             inline explicit secant() : zroot<T>() {}
 
+            //! name
+            inline virtual const char * method() const throw() { return kernel::secant::name; }
+
             //__________________________________________________________________
             //
             // methods
@@ -49,28 +60,30 @@ namespace upsylon {
             template <typename FUNC> inline
             bool operator()( FUNC &F, triplet_type &x, triplet_type &f )
             {
+                // reordering for clamping
                 if(x.c<x.a)
                 {
                     cswap(x.a,x.c);
                     cswap(f.a,f.c);
                 }
-                zfind::sign_type s_a = zfind::is_zero;
-                zfind::sign_type s_c = zfind::is_zero;
+                // setup
+                zfind::sign_type s_a = zfind::__zero__;
+                zfind::sign_type s_c = zfind::__zero__;
                 switch(this->setup(s_a,s_c,x,f))
                 {
                     case zfind::success:      break;
                     case zfind::failure:      return false;
                     case zfind::early_return: return true;
                 }
-                assert(s_a!=zfind::is_zero);
-                assert(s_c!=zfind::is_zero);
+                assert(s_a!=zfind::__zero__);
+                assert(s_c!=zfind::__zero__);
                 assert(s_a!=s_c);
                 mutable_type width = x.c - x.a;
                 while(true)
                 {
                     x.b = clamp(x.a,x.a-f.a/(f.c-f.a)*width,x.c);
-                    const zfind::sign_type s_b = zfind::sign_of( f.b = F(x.b) );
-                    if( zfind::is_zero == s_b)
+                    const zfind::sign_type s_b = zfind::__sign( f.b = F(x.b) );
+                    if( zfind::__zero__ == s_b)
                     {
                         this->exactly(x.b,x,f); return true;
                     }
@@ -98,11 +111,8 @@ namespace upsylon {
                 return false;
             }
 
-            template <typename FUNC>
-            mutable_type operator()(FUNC &F, param_type a, param_type c)
-            {
-                return this->run(*this,F,a,c);
-            }
+            Y_ZROOT_API()
+
 
 
         private:
