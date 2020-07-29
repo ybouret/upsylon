@@ -75,7 +75,7 @@ namespace upsylon {
             bool     checkIO()               const; //!< check serialization
             string   toRegExp()              const; //!< use express()
             void     updateEntropy() const throw(); //!< update current entropy
-            Pattern *ignore_case()   const;         //!< produce a case insensitive pattern
+            Pattern *ignore_case()           const; //!< produce a case insensitive pattern
 
 
             //! the module content must match exactly the pattern

@@ -9,7 +9,7 @@ namespace upsylon {
 
 
         static inline
-        Pattern *_ignore_case(Logical *target, const Logical *source )
+        Pattern *__ignore_case(Logical *target, const Logical *source )
         {
             auto_ptr<Pattern> guard(target);
             for(const Pattern *p = source->head; p; p=p->next)
@@ -19,6 +19,13 @@ namespace upsylon {
             return  guard.yield();
         }
 
+
+        static inline
+        void __ignore_case(const uint8_t code, Logical &target )
+        {
+            target.add( tolower(code) );
+            target.add( toupper(code) );
+        }
 
         Pattern *Pattern:: ignore_case() const
         {
@@ -35,8 +42,7 @@ namespace upsylon {
                 case Single::UUID: {
                     auto_ptr<Logical> p = OR::Create();
                     const Single     *s = static_cast<const Single *>(self);
-                    p->add( tolower(s->code) );
-                    p->add( toupper(s->code) );
+                    __ignore_case(s->code,*p);
                     PairwiseMerge(*p);
                     return Optimize( p.yield() );
                 }
@@ -44,8 +50,7 @@ namespace upsylon {
                 case Excluded::UUID: {
                     auto_ptr<Logical> p = NONE::Create();
                     const Single     *s = static_cast<const Single *>(self);
-                    p->add( tolower(s->code) );
-                    p->add( toupper(s->code) );
+                    __ignore_case(s->code,*p);
                     PairwiseMerge(*p);
                     return Optimize( p.yield() );
                 }
@@ -57,8 +62,7 @@ namespace upsylon {
                     const int         up = r->upper;
                     for(int ch=lo;ch<=up;++ch)
                     {
-                        p->add( tolower(ch) );
-                        p->add( toupper(ch) );
+                        __ignore_case(ch,*p);
                     }
                     PairwiseMerge(*p);
                     return Optimize(p.yield());
@@ -66,10 +70,14 @@ namespace upsylon {
                     //----------------------------------------------------------
                     //
                     // logical
+                    //
                     //----------------------------------------------------------
-                case AND::  UUID: return Optimize( _ignore_case( AND::Create(), static_cast<const AND *>(self) ) );
-                case OR::   UUID: return Optimize( _ignore_case( OR::Create(),   static_cast<const OR *>(self) ) );
-                case NONE:: UUID: return Optimize( _ignore_case( NONE::Create(), static_cast<const NONE *>(self) ) );
+#define Y_JARGON_IGNORE_CASE(TYPE)  case TYPE::  UUID: return Optimize( __ignore_case( TYPE::Create(), static_cast<const TYPE *>(self) ) )
+
+                    Y_JARGON_IGNORE_CASE(AND);
+                    Y_JARGON_IGNORE_CASE(OR);
+                    Y_JARGON_IGNORE_CASE(NONE);
+
 
                     //----------------------------------------------------------
                     //
