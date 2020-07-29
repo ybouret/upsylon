@@ -43,8 +43,6 @@ namespace upsylon {
             {
                 target.add(code);
             }
-
-            
         }
 
         Pattern *Pattern:: ignore_case() const
