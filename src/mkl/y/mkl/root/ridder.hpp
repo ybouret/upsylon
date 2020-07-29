@@ -67,7 +67,8 @@ namespace upsylon {
                     cswap(x.a,x.c);
                     cswap(f.a,f.c);
                 }
-                // setup
+
+                // first setup
                 sign_type s_a = zfind::__zero__;
                 sign_type s_c = zfind::__zero__;
                 switch(this->setup(s_a,s_c,x,f))
@@ -79,8 +80,11 @@ namespace upsylon {
                 assert(s_a!=zfind::__zero__);
                 assert(s_c!=zfind::__zero__);
                 assert(s_a!=s_c);
+
+                // initialize width
                 mutable_type width = x.c - x.a;
 
+                // loop
                 while(true)
                 {
                     // sanity check
@@ -142,7 +146,7 @@ namespace upsylon {
                             assert(zfind::__zero__!=ss[3]);
 
                             // find the first alternating interval
-                            size_t       j=0;
+                            size_t       j= 0;
                             mutable_type w=-1;
                             for(size_t i=0;i<3;++i)
                             {
@@ -168,10 +172,9 @@ namespace upsylon {
                                     }
                                 }
                             }
-                            //std::cerr << "@" << j << ": w=" << w << std::endl;
-                            const size_t jp = j+1;
 
                             // update status
+                            const size_t jp = j+1;
                             x.a = xx[j];  f.a = ff[j];  s_a = ss[j];
                             x.c = xx[jp]; f.c = ff[jp]; s_c = ss[jp];
                             if(fabs_of(f.a)<fabs_of(f.c))
