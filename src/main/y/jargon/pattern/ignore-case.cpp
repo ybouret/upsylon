@@ -23,8 +23,28 @@ namespace upsylon {
         static inline
         void __ignore_case(const uint8_t code, Logical &target )
         {
-            target.add( tolower(code) );
-            target.add( toupper(code) );
+            static const uint8_t a = 'a';
+            static const uint8_t z = 'z';
+
+            static const uint8_t A = 'A';
+            static const uint8_t Z = 'Z';
+
+            if(code>=a&&code<=z)
+            {
+                target.add(code);
+                target.add(A+(code-a));
+            }
+            else if(code>=A&&code<=Z)
+            {
+                target.add(code);
+                target.add(a+(code-A));
+            }
+            else
+            {
+                target.add(code);
+            }
+
+            
         }
 
         Pattern *Pattern:: ignore_case() const
