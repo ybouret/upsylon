@@ -7,42 +7,50 @@ namespace upsylon {
 
     namespace Jargon {
 
+        namespace {
 
-        static inline
-        Pattern *__ignore_case(Logical *target, const Logical *source )
-        {
-            auto_ptr<Pattern> guard(target);
-            for(const Pattern *p = source->head; p; p=p->next)
+            static inline
+            Pattern *__ignore_case(Logical *target, const Logical *source )
             {
-                target->push_back( p->ignore_case() );
+                auto_ptr<Pattern> guard(target);
+                for(const Pattern *p = source->head; p; p=p->next)
+                {
+                    target->push_back( p->ignore_case() );
+                }
+                return  guard.yield();
             }
-            return  guard.yield();
-        }
 
-
-        static inline
-        void __ignore_case(const uint8_t code, Logical &target )
-        {
             static const uint8_t a = 'a';
             static const uint8_t z = 'z';
 
             static const uint8_t A = 'A';
             static const uint8_t Z = 'Z';
 
-            if(code>=a&&code<=z)
+            static inline bool __has_case(const uint8_t code )
             {
-                target.add(code);
-                target.add(A+(code-a));
+                return (code>=a&&code<=z) || (code>=A&&code<=Z);
             }
-            else if(code>=A&&code<=Z)
+
+            static inline
+            void __ignore_case(const uint8_t code, Logical &target )
             {
-                target.add(code);
-                target.add(a+(code-A));
+
+                if(code>=a&&code<=z)
+                {
+                    target.add(code);
+                    target.add(A+(code-a));
+                }
+                else if(code>=A&&code<=Z)
+                {
+                    target.add(code);
+                    target.add(a+(code-A));
+                }
+                else
+                {
+                    target.add(code);
+                }
             }
-            else
-            {
-                target.add(code);
-            }
+
         }
 
         Pattern *Pattern:: ignore_case() const
@@ -58,19 +66,33 @@ namespace upsylon {
                     return clone();
 
                 case Single::UUID: {
-                    auto_ptr<Logical> p = OR::Create();
                     const Single     *s = static_cast<const Single *>(self);
-                    __ignore_case(s->code,*p);
-                    PairwiseMerge(*p);
-                    return Optimize( p.yield() );
+                    const uint8_t     ch = s->code;
+                    if(__has_case(ch))
+                    {
+                        auto_ptr<Logical> p = OR::Create();
+                        Logical          &l = *p;
+                        __ignore_case(ch,l);
+                        PairwiseMerge(l);
+                        return Optimize( p.yield() );
+                    }
+                    else
+                        return clone();
                 }
 
                 case Excluded::UUID: {
-                    auto_ptr<Logical> p = NONE::Create();
                     const Single     *s = static_cast<const Single *>(self);
-                    __ignore_case(s->code,*p);
-                    PairwiseMerge(*p);
-                    return Optimize( p.yield() );
+                    const uint8_t     ch = s->code;
+                    if(__has_case(ch))
+                    {
+                        auto_ptr<Logical> p = NONE::Create();
+                        Logical          &l = *p;
+                        __ignore_case(ch,l);
+                        PairwiseMerge(l);
+                        return Optimize( p.yield() );
+                    }
+                    else
+                        return clone();
                 }
 
                 case Range::UUID: {
