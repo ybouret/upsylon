@@ -37,8 +37,6 @@ namespace {
         F.calls = 0;
         std::cerr << "x=" << proc(0.15,F,0,2) << std::endl;
         std::cerr << "|_calls=" << F.calls << std::endl;
-        std::cerr << "<" << proc.method() << "/>" << std::endl;
-        std::cerr << std::endl;
 
         std::cerr << "<" << proc.method() << "/>" << std::endl;
         std::cerr << std::endl;

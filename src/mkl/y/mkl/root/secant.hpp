@@ -108,7 +108,6 @@ namespace upsylon {
                         width = new_width;
                     }
                 }
-                return false;
             }
 
             Y_ZROOT_API()
