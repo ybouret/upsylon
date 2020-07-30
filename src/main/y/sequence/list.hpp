@@ -95,6 +95,18 @@ namespace upsylon {
             return *this;
         }
 
+        //! access operator
+        inline nodes_list & operator*() throw()
+        {
+            return nodes;
+        }
+
+        //! access operator, const
+        inline const nodes_list & operator*() const throw()
+        {
+            return nodes;
+        }
+
         //! dynamic interface: size()
         inline virtual size_t size()     const throw() { return nodes.size; }
         //! dynamic inteface: capacity()

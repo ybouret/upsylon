@@ -23,7 +23,6 @@ namespace upsylon {
             };
             static const size_t block_size = sizeof(block);
             static const size_t block_iln2 = ilog2<block_size>::value;
-            static const size_t block_left = 2; //!< for splitting
             static const size_t min_blocks = 3;
             static const size_t small_size = min_blocks * block_size;
             static const size_t min_size_t = small_size / sizeof(size_t);
@@ -36,10 +35,13 @@ namespace upsylon {
             block *entry; //!< entry block
             block *guard; //!< final block
             
-            void *acquire(size_t &n) throw();
+            void           *acquire(size_t &n) throw();
+            static section *release(void *addr, size_t &n) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(section);
+            bool check_block(const block *blk) const;
+            bool check() const;
         };
 
     }

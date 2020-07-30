@@ -183,8 +183,7 @@ Y_UTEST(sequence)
     do_test< list<uint16_t> >();
     do_test< list<string> >();
     
-    return 0;
-
+    
     {
         vector<uint16_t,memory::global> cvg(1,as_capacity); std::cerr << "cvg.capacity=" << cvg.capacity() << std::endl;
         vector<uint16_t,memory::pooled> cvp(1,as_capacity); std::cerr << "cvp.capacity=" << cvp.capacity() << std::endl;
@@ -202,6 +201,20 @@ Y_UTEST(sequence)
     do_test< vector<string,memory::pooled>   >();
 
     std::cerr << "sizeof(ligthweight_array)=" << sizeof(lightweight_array<int>) << std::endl;
+
+    {
+        list<string> L;
+        for(size_t i=4+alea.leq(4);i>0;--i)
+        {
+            const string s = support::get<string>();
+            L.push_back(s);
+        }
+        std::cerr << "L=" << L << std::endl;
+        alea.shuffle( *L );
+        std::cerr << "L=" << L << std::endl;
+
+    }
+
 }
 Y_UTEST_DONE()
 
