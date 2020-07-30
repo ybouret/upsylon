@@ -73,7 +73,7 @@ Y_UTEST(regexp)
         std::cerr << "exp2        : \"" << exp2 << "\"" << std::endl;
 
         {
-            auto_ptr<Pattern> ign = p->ignore_case();
+            auto_ptr<Pattern> ign = p->ignoreCase();
             ign->graphViz("igncase.dot");
         }
 

@@ -15,7 +15,7 @@ namespace upsylon {
                 auto_ptr<Pattern> guard(target);
                 for(const Pattern *p = source->head; p; p=p->next)
                 {
-                    target->push_back( p->ignore_case() );
+                    target->push_back( p->ignoreCase() );
                 }
                 return  guard.yield();
             }
@@ -27,7 +27,7 @@ namespace upsylon {
             static const uint8_t Z = 'Z';
 
             static inline
-            bool __has_case(const uint8_t code )
+            bool hasCase(const uint8_t code )
             {
                 return (code>=a&&code<=z) || (code>=A&&code<=Z);
             }
@@ -63,7 +63,7 @@ namespace upsylon {
 
         }
 
-        Pattern *Pattern:: ignore_case() const
+        Pattern *Pattern:: ignoreCase() const
         {
             switch(uuid)
             {
@@ -77,13 +77,13 @@ namespace upsylon {
                 case Single::UUID: {
                     const Single     *s  = static_cast<const Single *>(self);
                     const uint8_t     c = s->code;
-                    return (__has_case(c)) ? new_ignore_case(OR::Create(),c) : clone();
+                    return hasCase(c) ? new_ignore_case(OR::Create(),c) : clone();
                 }
 
                 case Excluded::UUID: {
                     const Single     *s = static_cast<const Single *>(self);
                     const uint8_t     c = s->code;
-                    return (__has_case(c)) ? new_ignore_case(NONE::Create(),c) : clone();
+                    return hasCase(c) ? new_ignore_case(NONE::Create(),c) : clone();
                 }
 
                 case Range::UUID: {
@@ -116,14 +116,14 @@ namespace upsylon {
                     // joker
                     //
                     //----------------------------------------------------------
-                case Optional::  UUID: return Optional::Create( static_cast<Optional *>(self)->motif->ignore_case() );
+                case Optional::  UUID: return Optional::Create( static_cast<Optional *>(self)->motif->ignoreCase() );
                 case Repeating:: UUID: {
                     const Repeating *p = static_cast<Repeating *>(self);
-                    return Repeating::Create(p->motif->ignore_case(), p->minimalCount);
+                    return Repeating::Create(p->motif->ignoreCase(), p->minimalCount);
                 }
                 case Counting:: UUID: {
                     const  Counting *p = static_cast<Counting *>(self);
-                    return Counting::Create(p->motif->ignore_case(), p->minimalCount, p->maximalCount);
+                    return Counting::Create(p->motif->ignoreCase(), p->minimalCount, p->maximalCount);
                 }
 
                 default:

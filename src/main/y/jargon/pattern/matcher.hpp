@@ -32,22 +32,22 @@ namespace upsylon {
             // methods
             //
             //------------------------------------------------------------------
-            void ignore_case(); //!< one way ignore case
+            void ignoreCase(); //!< one way ignore case
 
             //! exact match
             template <typename CONTENT>
-            const Token *matches_exactly(const CONTENT &content)
+            const Token *matchesExactly(const CONTENT &content)
             {
                 release();
-                return (**this).exactly_matches_data(*this,content) ? this : 0;
+                return (**this).exactlyMatchesData(*this,content) ? this : 0;
             }
 
             //! partial match
             template <typename CONTENT>
-            const Token *matches_somehow(const CONTENT &content)
+            const Token *matchesSomehow(const CONTENT &content)
             {
                 release();
-                return (**this).somehow_matches_data(*this,content) ? this : 0;
+                return (**this).somehowMatchesData(*this,content) ? this : 0;
             }
 
 

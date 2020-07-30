@@ -29,7 +29,7 @@ namespace upsylon {
                 inline bool operator()(const vfs::entry &ent)
                 {
                     assert(self);
-                    if( ent.is_regular() && self->matches_exactly(ent.extension))
+                    if( ent.is_regular() && self->matchesExactly(ent.extension))
                     {
                         ++num;
                         if(seq) seq->push_back(ent.path);

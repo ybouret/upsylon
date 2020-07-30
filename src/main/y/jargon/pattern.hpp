@@ -75,37 +75,33 @@ namespace upsylon {
             bool     checkIO()               const; //!< check serialization
             string   toRegExp()              const; //!< use express()
             void     updateEntropy() const throw(); //!< update current entropy
-            Pattern *ignore_case()           const; //!< produce a case insensitive pattern
+            Pattern *ignoreCase()            const; //!< clone a case insensitive pattern
 
 
-            //! the module content must match exactly the pattern
-            bool   exactly_matches(Token &, Module *) const;
 
-            //! the module content posseses the pattern, find first occurence
-            bool   somehow_matches(Token &, Module *) const;
-
-            //! find all the occurences, return the count
-            size_t get_all_matches(sequence<Token> &, Module *) const;
+            bool   exactlyMatches(Token &, Module *) const;          //!< the module content must match exactly the pattern
+            bool   somehowMatches(Token &, Module *) const;          //!< find first occurence within the module content
+            size_t findAllMatches(sequence<Token> &, Module *) const;//! find all the occurences
 
             //! helper for string/text
             template <typename CONTENT> inline
-            bool exactly_matches_data(Token &token, const CONTENT &content) const
+            bool exactlyMatchesData(Token &token, const CONTENT &content) const
             {
-                return exactly_matches(token, Module::OpenData(content) );
+                return exactlyMatches(token,Module::OpenData(content));
             }
 
             //! helper for string/text
             template <typename CONTENT> inline
-            bool somehow_matches_data(Token &token, const CONTENT &content) const
+            bool somehowMatchesData(Token &token, const CONTENT &content) const
             {
-                return somehow_matches(token, Module::OpenData(content) );
+                return somehowMatches(token,Module::OpenData(content));
             }
 
             //! helper for string/text
             template <typename CONTENT> inline
-            size_t find_matches_of_data(sequence<Token> &tokens, const CONTENT &content) const
+            size_t findMatchesOfData(sequence<Token> &tokens, const CONTENT &content) const
             {
-                return get_all_matches(tokens, Module::OpenData(content) );
+                return findAllMatches(tokens,Module::OpenData(content));
             }
 
 

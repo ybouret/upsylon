@@ -19,7 +19,7 @@ Y_PROGRAM_START()
         string            line;
         while( input.gets(line) )
         {
-            if( keep.matches_somehow(line) )
+            if( keep.matchesSomehow(line) )
             {
                 output << line << '\n';
             }

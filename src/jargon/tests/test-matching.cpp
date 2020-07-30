@@ -20,7 +20,7 @@ Y_UTEST(matching)
             {
                 std::cerr << "'" << line << "'" << std::endl;
                 std::cerr << "\texact:  ";
-                if(p->exactly_matches_data(token,line))
+                if(p->exactlyMatchesData(token,line))
                 {
                     std::cerr << token << std::endl;
                 }
@@ -29,7 +29,7 @@ Y_UTEST(matching)
                     std::cerr << "[NO]" << std::endl;
                 }
                 std::cerr << "\tpartly: ";
-                if(p->somehow_matches_data(token,line))
+                if(p->somehowMatchesData(token,line))
                 {
                    std::cerr << token << std::endl;
                 }
@@ -39,7 +39,7 @@ Y_UTEST(matching)
                 }
                 tokens.free();
                 std::cerr << "\tevery : ";
-                if(p->find_matches_of_data(tokens,line))
+                if(p->findMatchesOfData(tokens,line))
                 {
                     std::cerr << tokens;
                 }
