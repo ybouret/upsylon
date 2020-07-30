@@ -23,6 +23,9 @@ namespace upsylon {
         //! set variable wrapper
         static void set( const char *name, const string &value);
 
+        //! set variable wrapper
+        static void set( const char *name, const char *value);
+
 
         //! got over all environment variables
         static void get( void (*proc)( const string &name, const string &value, void *), void *args );
@@ -40,6 +43,12 @@ namespace upsylon {
         {
             const string _(name); return check<T>(value,_);
         }
+
+        //! true: defined and ok | false: not defined or no
+        static bool flag(const string &name);
+
+        //! wrapper
+        static bool flag(const char   *name);
 
     };
 

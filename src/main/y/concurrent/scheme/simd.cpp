@@ -6,9 +6,9 @@ namespace upsylon
     namespace concurrent
     {
 
-        simd:: simd(const bool v) :
+        simd:: simd() :
         for_each(),
-        workers(v),
+        workers(),
         access( workers.access ),
         done(false),
         ready(0),

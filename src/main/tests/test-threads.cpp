@@ -38,6 +38,7 @@ namespace
 }
             
 #include <cstring>
+#include "y/string/env.hpp"
 
 Y_UTEST(threads)
 {
@@ -48,7 +49,9 @@ Y_UTEST(threads)
     {
         run = false;
     }
-    concurrent::threads engine(true);
+
+    environment::set(Y_THREADS_VERBOSITY, "1");
+    concurrent::threads engine;
 
     if(run)
     {

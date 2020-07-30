@@ -13,8 +13,9 @@ namespace upsylon
         class simd :  public for_each
         {
         public:
-            //! construct threads with(out) verbosity flag
-            explicit simd(const bool v=false);
+            //! construct threads
+            explicit simd();
+            
             //! destructor
             virtual ~simd() throw();
 

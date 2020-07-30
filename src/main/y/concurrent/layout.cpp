@@ -16,14 +16,13 @@ namespace upsylon
 
         layout:: layout(const size_t num_procs,
                         const size_t num_cores,
-                        const size_t starting) :
+                        const size_t starting) throw():
         object(),
-        procs( max_of<size_t>(1,num_procs)      ),
-        cores( clamp<size_t>(1,num_cores,procs) ),
-        shift( min_of<size_t>(starting,procs-1) ),
-        width( min_of<size_t>( cores, procs-shift) )
+        procs( max_of<size_t>(1,num_procs)       ),
+        cores( clamp<size_t>(1,num_cores,procs)  ),
+        shift( min_of<size_t>(starting,procs-1)  ),
+        width( min_of<size_t>(cores,procs-shift) )
         {
-            //std::cerr << "layout: using #core=" << cores << "/" << procs << ", starting@" << shift << "=>width=" << width << std::endl;
         }
 
         layout:: layout(const layout &other) throw() :
@@ -65,6 +64,12 @@ namespace upsylon
             {
                 return new layout(num_procs,num_procs,0);
             }
+        }
+
+        layout * layout:: create(const size_t replica,
+                                 const size_t primary)
+        {
+            return new layout( hardware::nprocs(), replica, primary);
         }
 
     }

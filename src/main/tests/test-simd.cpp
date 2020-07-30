@@ -44,6 +44,7 @@ namespace
 
 #include "y/memory/cblock.hpp"
 #include "y/os/wtime.hpp"
+#include "y/string/env.hpp"
 
 Y_UTEST(simd)
 {
@@ -57,14 +58,16 @@ Y_UTEST(simd)
         blk.data, n
     };
 
+    environment::set(Y_THREADS_VERBOSITY,"1");
+
     {
         std::cerr << "-- testing no ops simd" << std::endl;
-        concurrent::simd par0(true);
+        concurrent::simd par0;
     }
 
     {
         std::cerr << "-- testing ops" << std::endl;
-        concurrent::simd par1(true);
+        concurrent::simd par1;
         for(size_t iter=0;iter<8;++iter)
         {
             std::cerr << "\t-- loop " << iter << std::endl;
@@ -75,8 +78,9 @@ Y_UTEST(simd)
     
 #if 1
     std::cerr << "-- testing parallelization" << std::endl;
+    environment::set(Y_THREADS_VERBOSITY,"0");
     double           par_speed = 0;
-    concurrent::simd par(false);
+    concurrent::simd par;
     //par.engine().acquire_all(12);
     {
         wtime  chrono;

@@ -52,13 +52,16 @@ namespace {
 }
 
 
+#include "y/string/env.hpp"
 
 Y_UTEST(server)
 {
     std::cerr << "sizeof(job_type)      =" << sizeof(concurrent::job_type) << std::endl;
     std::cerr << "sizeof(nexus::jnode)  =" << sizeof(concurrent::nexus::jnode) << std::endl;
 
-    concurrent::nexus srv(true);
+    environment::set(Y_THREADS_VERBOSITY, "1");
+    
+    concurrent::nexus srv;
 
     wtime chrono;
     dummy d(7,chrono);
@@ -175,7 +178,7 @@ Y_UTEST(servpi)
     target.ld(0);
     std::cerr << "<PAR>" << std::endl;
     {
-        concurrent::nexus srv(false);
+        concurrent::nexus srv;
         chrono.start();
         srv.process(uuids,batch);
         srv.flush();

@@ -12,7 +12,9 @@
 namespace upsylon {
 
     namespace concurrent {
-        
+
+#define Y_THREADS_VERBOSITY "Y_THREADS_VERBOSITY"
+
         typedef auto_ptr<const layout>       __topology;  //!< topology for threads
         typedef slots<thread,memory::global> __threads;   //!< memory for threads
 
@@ -29,8 +31,9 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-            virtual ~threads() throw();           //!< quit threads
-            explicit threads(const bool v=false); //!< construct threads, waiting on start when ready
+            virtual ~threads() throw(); //!< quit threads
+            explicit threads();         //!< construct threads, waiting on start when ready
+
 
             //------------------------------------------------------------------
             //
@@ -40,6 +43,13 @@ namespace upsylon {
             virtual void       run(kernel code, void *data);      //!< unleash threads
             virtual size_t     num_threads() const throw();       //!< access parallelism
             virtual parallel & get_context(const size_t) throw(); //!< access contexts
+
+            //------------------------------------------------------------------
+            //
+            // auxiliary
+            //
+            //------------------------------------------------------------------
+            static bool get_verbosity(); //!< get Y_THREADS_VERBOSITY environment variable
 
             //------------------------------------------------------------------
             //
@@ -53,7 +63,8 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(threads);
             static  void system_entry(void*) throw(); //!< for system call, call this->thread_entry()
             void         thread_entry()      throw(); //!< parallel entry point
-
+            void         initialize();
+            
             __threads  engines;
             bool       halting;
             size_t     ready;

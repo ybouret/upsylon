@@ -1,6 +1,7 @@
 #include "y/string/env.hpp"
 #include "y/concurrent/singleton.hpp"
 #include "y/memory/pooled.hpp"
+#include "y/sequence/list.hpp"
 #include "y/exceptions.hpp"
 
 #include <cerrno>
@@ -17,6 +18,7 @@ extern char **environ;
 #include "y/memory/buffers.hpp"
 #endif
 
+//#include "y/ptr/arc.hpp"
 
 namespace upsylon {
 
@@ -28,6 +30,29 @@ namespace upsylon {
         class envmgr : public singleton<envmgr>
         {
         public:
+
+#if 0
+            class entry : public counted_object
+            {
+            public:
+                typedef arc_ptr<entry> ptr;
+
+                const string name;
+                const string value;
+                inline entry(const string &n,const string v) :
+                name(n), value(v)
+                {
+                }
+
+                inline virtual ~entry() throw()
+                {
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(entry);
+            };
+#endif
+
 
             inline bool query( string &value, const string &name ) const
             {
@@ -76,11 +101,31 @@ namespace upsylon {
             }
 
 
-            inline void store( const string &name, const string &value ) const
+            inline void store( const string &name, const string &value )
             {
                 Y_LOCK(access);
+
+#if 0
+                {
+                    const entry::ptr ep = new entry(name,value);
+                    __env.push_back(ep);
+                }
+                const entry &e = *__env.back();
+
 #if defined(Y_BSD)
-                if( setenv( &name[0], &value[0], 1) < 0 ) {
+                std::cerr << "using '" << e.name << "=" << e.value << "'" << std::endl;
+                if( setenv( *e.name, *e.value, 1) < 0 )
+                {
+                    __env.pop_back();
+                    throw libc::exception( errno, "setenv");
+                }
+#endif
+
+#endif
+
+#if defined(Y_BSD)
+                if( setenv( *name, *value, 1) < 0 )
+                {
                     throw libc::exception( errno, "setenv");
                 }
 #endif
@@ -97,7 +142,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(envmgr);
             friend class singleton<envmgr>;
 
-            explicit envmgr() throw()
+            explicit envmgr() throw() //: __env()
             {
             }
 
@@ -105,6 +150,10 @@ namespace upsylon {
             {
 
             }
+
+            //list<entry::ptr> __env;
+
+
 
             static const at_exit::longevity life_time = longevity_for::system_env;
         };
@@ -133,6 +182,13 @@ namespace upsylon {
     {
         const string _(name);
         set(_,value);
+    }
+
+    void environment::set( const char *name, const char *value)
+    {
+        const string _(name);
+        const string __(value);
+        set(_,__);
     }
 
 
@@ -213,24 +269,12 @@ namespace upsylon {
 namespace upsylon
 {
 
-    static inline bool is_blank( char C ) throw()
-    {
-        switch(C)
-        {
-            case ' ':
-            case '\t':
-                return true;
-
-            default: break;
-        }
-        return true;
-    }
 
     static inline bool env_get_clean( string &content, const string &name )
     {
         if( environment::get(content,name) )
         {
-            content.clean(is_blank);
+            content.clean_with(" \t");
             return true;
         }
         else
@@ -243,31 +287,51 @@ namespace upsylon
     template <>
     bool environment:: check<bool>( bool &value, const string &name )
     {
+        static const char *ok[] = { "yes", "on", "true" , "1" };
+        static const char *no[] = { "no", "off", "false" , "0" };
+
+        value = false;
         string content;
         if( env_get_clean(content,name) )
         {
             string_convert::to_lower(content);
-            if( content == "false" || content == "0" )
+            for(unsigned i=0;i<sizeof(ok)/sizeof(ok[0]);++i)
             {
-                value = false;
-            }
-            else if( content == "true" || content == "1" )
-            {
-                value = true;
-            }
-            else
-            {
-                throw exception("environment::check<bool>: invalid '%s'='%s' )", *name, *content);
+                if(ok[i]==content)
+                {
+                    value = true;
+                    return true;
+                }
             }
 
-            return true;
+            for(unsigned i=0;i<sizeof(no)/sizeof(no[0]);++i)
+            {
+                if(no[i]==content)
+                {
+                    value = false;
+                    return true;
+                }
+            }
+
+            throw exception("environment::check<bool>: invalid '%s'='%s' )", *name, *content);
+
         }
-        else
-        {
-            return false;
-        }
+
+        // undefined, default value=false
+        return false;
     }
 
+
+    bool environment:: flag(const string &name)
+    {
+        bool   value = false;
+        return check<bool>(value,name) ? /* defined */ value : /* undefined */ false;
+    }
+
+    bool environment:: flag(const char *name)
+    {
+        const string _(name); return flag(_);
+    }
 
 #define Y_ENV_CHECK_FOR(TYPE) \
 template <>\

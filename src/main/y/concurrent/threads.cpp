@@ -2,7 +2,8 @@
 #include "y/concurrent/threads.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
-#include "y/exceptions.hpp"
+#include "y/exception.hpp"
+#include "y/string/env.hpp"
 
 #include <iostream>
 
@@ -10,6 +11,9 @@ namespace upsylon
 {
     namespace concurrent
     {
+
+       
+
         threads:: ~threads() throw()
         {
             {
@@ -29,16 +33,24 @@ namespace upsylon
             return engines[context_index];
         }
 
-        threads:: threads(const bool v) :
-        topology( layout::create() ),
-        access(),
-        engines( topology->cores   ),
-        halting(true),
-        ready(0),
-        start(),
-        kproc(0),
-        kdata(0),
-        verbose(v)
+#define Y_THREADS_CTOR(LAYOUT) \
+topology( LAYOUT ),\
+access(),\
+engines( topology->cores   ),\
+halting(true),\
+ready(0),\
+start(),\
+kproc(0),\
+kdata(0),\
+verbose( get_verbosity() )
+
+        threads:: threads() :
+        Y_THREADS_CTOR( layout::create() ) 
+        {
+            initialize();
+        }
+
+        void threads:: initialize()
         {
             //__________________________________________________________________
             //
@@ -89,9 +101,7 @@ namespace upsylon
                 nucleus::thread::assign(thr[i].handle,icpu);
             }
             if(verbose) { std::cerr << "[threads.init] ready to work..." << std::endl; }
-
         }
-
 
         void threads:: system_entry( void *args ) throw()
         {

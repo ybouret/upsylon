@@ -89,12 +89,12 @@ namespace upsylon
 
 
 
-        nexus:: nexus(const bool v) :
+        nexus:: nexus() :
         pending(),
         current(),
         aborted(),
         storage(),
-        workers(v),
+        workers(),
         access( workers.access ),
         prepared(0),
         stopping(false),

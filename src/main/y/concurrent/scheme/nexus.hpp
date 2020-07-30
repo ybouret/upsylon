@@ -76,8 +76,8 @@ namespace upsylon {
             // C++
             //
             //------------------------------------------------------------------
-            explicit nexus(const bool v= false);    //!< initialize
-            virtual ~nexus() throw();               //!< destruct, all pending jobs are removed
+            explicit nexus();         //!< initialize
+            virtual ~nexus() throw(); //!< destruct, all pending jobs are removed
 
             //------------------------------------------------------------------
             //
