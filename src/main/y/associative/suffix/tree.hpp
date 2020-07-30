@@ -131,8 +131,13 @@ namespace upsylon {
     
     //! alias to rebuild keys
     typedef core::suffix_tree::path suffix_path;
-    
+
+    //__________________________________________________________________________
+    //
+    //
     //! generic suffix tree
+    //
+    //__________________________________________________________________________
     template <typename T>
     class suffix_tree : public core::suffix_tree
     {
@@ -209,7 +214,6 @@ namespace upsylon {
                 }
             }
             assert( dlist.size == other.dlist.size );
-            
         }
 
         //! assign by copy/swap
@@ -246,14 +250,14 @@ namespace upsylon {
         inline void free_all() throw()
         {
             data_node::destruct_to(dpool,dlist);
-            release_root();
+            free_root();
         }
 
-        //! release all data
+        //! release all data, keep only root
         inline void release_all() throw()
         {
             release_data();
-            release_root();
+            free_root();
         }
 
 
@@ -474,7 +478,7 @@ namespace upsylon {
         inline void pop_back() throw()
         {
             assert(dlist.size);
-            data_node *dnode = dlist.pop_back(); assert(dnode);
+            data_node *dnode = dlist.pop_back();                assert(dnode);
             node_type *tnode = (node_type*)&(dnode->data.hook); assert(tnode);
             data_node::destruct(dnode,dpool);
             tnode->impl = 0;
@@ -484,7 +488,7 @@ namespace upsylon {
         inline void pop_front() throw()
         {
             assert(dlist.size);
-            data_node *dnode = dlist.pop_front(); assert(dnode);
+            data_node *dnode = dlist.pop_front();               assert(dnode);
             node_type *tnode = (node_type*)&(dnode->data.hook); assert(tnode);
             data_node::destruct(dnode,dpool);
             tnode->impl = 0;
@@ -497,15 +501,28 @@ namespace upsylon {
             dlist.swap_with(tree.dlist);
             dpool.swap_with(tree.dpool);
         }
-        
+
+        //! no-throw optimize
+        inline bool try_optimize() throw()
+        {
+            try
+            {
+                suffix_tree tmp(*this);
+                swap_with(tmp);
+                return true;
+            }
+            catch(...)
+            {
+                return false;
+            }
+        }
+
         
     protected:
         data_list            dlist; //!< list of data nodes
         data_pool            dpool; //!< pool of data nodes
         
     private:
-
-
         template <typename FUNC>
         static inline int call_compare( const data_node *lhs, const data_node *rhs, void *args )
         {
@@ -513,7 +530,7 @@ namespace upsylon {
             return func(lhs->data.data,rhs->data.data);
         }
 
-        inline void release_root() throw()
+        inline void free_root() throw()
         {
             root->chld.release();
             root->impl = NULL;

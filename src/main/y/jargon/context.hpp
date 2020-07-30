@@ -22,9 +22,9 @@ namespace upsylon {
             const int      line;    //!< current line of content
             const int      column;  //!< current column of content
             
-            Context( const Tag    &) throw(); //!< build from a tag
-            Context( const string &);         //!< build from a string
-            Context( const char   *);         //!< build from text
+            Context(const Tag     &) throw(); //!< build from a tag
+            Context(const string  &);         //!< build from a string
+            Context(const char    *);         //!< build from text
             Context(const Context &) throw(); //!< no-throw copy
             virtual ~Context()       throw(); //!< cleanup
             

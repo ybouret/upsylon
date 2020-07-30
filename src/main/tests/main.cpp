@@ -46,7 +46,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(i2r);
     Y_UTEST(marker);
     Y_UTEST(groove);
-
+    Y_UTEST(section);
     
     Y_UTEST(mloops);
     Y_UTEST(comb);

@@ -18,7 +18,6 @@ namespace upsylon {
         typedef ios::serializable     Serializable;  //!< alias
         typedef ios::vizible          Vizible;       //!< alias
         
-      
     }
     
 }

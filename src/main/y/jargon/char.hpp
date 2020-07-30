@@ -12,11 +12,13 @@ namespace upsylon {
     namespace Jargon {
         
         
-        
+        //------------------------------------------------------------------
+        //
         //! a dynamic char for tokens, with a context
         /**
          the content of a Char is perfectly located
          */
+        //------------------------------------------------------------------
         class Char : public Object, public inode<Char>, public Context
         {
         public:
