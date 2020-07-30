@@ -27,6 +27,19 @@ Y_UTEST(section)
     Y_UTEST_SIZEOF(memory::section::block);
     Y_UTEST_SIZEOF(memory::section);
 
+    for(size_t i=1;i<=1000;i+=1+alea.leq(9))
+    {
+        size_t       n = i;
+        const size_t m = memory::section::memory_to_hold(n);
+        std::cerr << n << " => " << m << std::endl;
+        memory::cblock_of<char> buffer(m);
+        memory::section       S(buffer.data,buffer.bytes);
+        void *big = S.acquire(n);
+        Y_ASSERT( big );
+        Y_ASSERT( &S == S.release(big,n) );
+    }
+
+
     for(int iter=0;iter<16;++iter)
     {
         memory::cblock_of<size_t> buffer( memory::section::min_size_t + alea.leq(1000) );
