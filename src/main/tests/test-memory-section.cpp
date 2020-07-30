@@ -16,6 +16,28 @@ Y_UTEST(section)
 
     s.display();
 
+    {
+        size_t zero=0;
+        Y_CHECK(s.acquire(zero)==NULL);
+        Y_CHECK(zero==0);
+    }
+
+    {
+        for(size_t i=1;i<=buffer.bytes;++i)
+        {
+            size_t n=i;
+            void  *p = s.acquire(n);
+            if(!p)
+            {
+            }
+            else
+            {
+                std::cerr << "=>n=" << n << " @" << p << std::endl;
+            }
+        }
+    }
+
+
 }
 Y_UTEST_DONE()
 
