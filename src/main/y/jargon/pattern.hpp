@@ -81,7 +81,7 @@ namespace upsylon {
 
             bool   exactlyMatches(Token &, Module *) const;          //!< the module content must match exactly the pattern
             bool   somehowMatches(Token &, Module *) const;          //!< find first occurence within the module content
-            size_t findAllMatches(sequence<Token> &, Module *) const;//! find all the occurences
+            size_t findAllMatches(sequence<Token> &, Module *) const;//!< find all the occurences
 
             //! helper for string/text
             template <typename CONTENT> inline

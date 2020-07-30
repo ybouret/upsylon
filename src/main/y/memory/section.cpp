@@ -15,7 +15,6 @@ namespace upsylon {
             assert(data!=NULL);
             assert(size>=small_size);
             size_t blocks = size/block_size; assert(blocks>=min_blocks);
-            std::cerr << "Keeping " << blocks * block_size << " out of " << size << std::endl;
 
             guard += --blocks;
 
@@ -38,22 +37,25 @@ namespace upsylon {
 
         section:: ~section() throw()
         {
+            if(!is_free())
+            {
+
+            }
             entry = guard = 0;
+        }
+
+        bool section:: is_free() const throw()
+        {
+            return (NULL==entry->from) && (guard==entry->next);
         }
 
 
 
 
-
-        void * section:: acquire(size_t &n) throw()
+        void * section:: try_acquire(size_t &n, const bool zero) throw()
         {
-            if(n<=0)
-            {
-                return 0;
-            }
-            else
-            {
-                const size_t boundary = Y_ROUND_LN2(block_iln2,n);
+
+                const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_iln2,n);
                 const size_t required = boundary >> block_iln2;
 
                 //--------------------------------------------------------------
@@ -89,12 +91,9 @@ namespace upsylon {
                         // found
                         //
                         //------------------------------------------------------
-                        //std::cerr << "found " << available << "/" << required << std::endl;
-
+                        
                         if(available>=required+2)
                         {
-                            //std::cerr << "should split!" << std::endl;
-
                             // create a new block
                             block *nextBlock = currBlock->next;
                             block *new_block = currBlock+required+1;
@@ -117,13 +116,14 @@ namespace upsylon {
                         }
                         else
                         {
+                            // full block
                             n = currBlock->size * block_size;
                         }
 
                         assert(currBlock->size * block_size == n );
                         currBlock->from = this;
                         void *p = &currBlock[1];
-                        memset(p,0,n);
+                        if(zero) memset(p,0,n);
                         return p;
                     }
 
@@ -142,16 +142,94 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 return 0;
 
+
+        }
+
+        void * section::acquire(size_t &n) throw()
+        {
+            return try_acquire(n,true);
+        }
+
+        section * section:: receive(void * &addr, size_t &maxi, const size_t size) throw()
+        {
+            assert(addr);
+            assert(maxi);
+            assert(maxi>=size);
+            size_t n = size;
+            void  *p = try_acquire(n,false);
+            if(p)
+            {
+                assert(n>=size);
+                memcpy(p,addr,size);
+                memset(static_cast<char*>(p)+size,0,n-size);
+                section *s = release(addr,maxi);
+                addr = p;
+                maxi = n;
+                return s;
+            }
+            else
+            {
+                // left untouched
+                return 0;
             }
         }
 
-        section *section:: release(void *addr, size_t &n) throw()
-        {
-            assert(addr);
-            assert(n>0);
-            block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->size*block_size==n);
-            section *owner     = currBlock->from;                assert(owner->check_block(currBlock));
 
+
+        section *section:: release(void * &addr, size_t &n) throw()
+        {
+            assert(addr); assert(n>0);
+
+            block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->size*block_size==n);
+            section *owner     = currBlock->from;                assert(owner->check_block(currBlock)); assert(owner->guard!=currBlock);
+
+            static const unsigned merge_none = 0x00;
+            static const unsigned merge_prev = 0x01;
+            static const unsigned merge_next = 0x02;
+            static const unsigned merge_both = merge_prev|merge_next;
+
+            unsigned flag      = merge_none;
+            block   *prevBlock = currBlock->prev; if(prevBlock&&(0==prevBlock->from))       flag |= merge_prev;
+            block   *nextBlock = currBlock->next; assert(nextBlock); if(0==nextBlock->from) flag |= merge_next;
+
+            switch(flag)
+            {
+                case merge_prev:
+                    prevBlock->next = nextBlock;
+                    nextBlock->prev = prevBlock;
+                    prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
+                    assert(owner->check_block(prevBlock));
+                    assert(owner->check_block(nextBlock));
+                    break;
+
+                case merge_next:
+                    assert(nextBlock->next!=NULL);
+                    nextBlock=nextBlock->next;
+                    currBlock->next = nextBlock;
+                    nextBlock->prev = currBlock;
+                    currBlock->size = static_cast<len_t>(nextBlock-currBlock)-1;
+                    currBlock->from = 0;
+                    assert(owner->check_block(currBlock));
+                    assert(owner->check_block(nextBlock));
+                    break;
+
+                case merge_both:
+                    assert(nextBlock->next!=NULL);
+                    nextBlock=nextBlock->next;
+                    prevBlock->next = nextBlock;
+                    nextBlock->prev = prevBlock;
+                    prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
+                    assert(owner->check_block(prevBlock));
+                    assert(owner->check_block(nextBlock));
+                    break;
+
+                default:
+                    assert(merge_none==flag);
+                    currBlock->from = 0;
+                    break;
+            }
+
+            addr = 0;
             return owner;
          }
 
@@ -161,7 +239,6 @@ namespace upsylon {
 
 }
 
-#include <iostream>
 
 namespace upsylon {
 
