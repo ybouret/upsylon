@@ -100,19 +100,20 @@ namespace upsylon {
                                             Sequential<T>          &F,
                                             const accessible<T>    &aorg,
                                             const accessible<bool> &used,
-                                            Gradient<T>            &grad) const
+                                            Gradient<T>            &grad,
+                                            const bool              verbose) const
                 {
                     const Handles &self = *this;
                     const size_t   n    = used.size();
                     _alpha.make(n,n);
                     _beta.adjust(n, 0);
-                    
+                    Y_LS_PRINTLN("[LS.Samples] <multiple evaluations>");
                     for(size_t i=self.size();i>0;--i)
                     {
                         _alpha.ld(0);
                         quark::ld(_beta,0);
                         const T  w = weights[i];
-                        deltaSq[i] = w * self[i]->computeAndUpdate(_alpha,_beta,F,aorg,used,grad);
+                        deltaSq[i] = w * self[i]->computeAndUpdate(_alpha,_beta,F,aorg,used,grad,verbose);
                         
                         for(size_t j=n;j>0;--j)
                         {
@@ -123,6 +124,7 @@ namespace upsylon {
                             }
                         }
                     }
+                    Y_LS_PRINTLN("[LS.Samples] <multiple evaluations/>");
                     return sorted_sum(deltaSq);
                 }
 

@@ -91,8 +91,8 @@ namespace upsylon {
                 
             };
 
-            //! conditional println
-#define Y_LS_PRINTLN(OUTPUT) do{ if(verbose) { std::cerr << OUTPUT << std::endl; } } while(false)
+            // //! conditional println
+            // #define Y_LS_PRINTLN(OUTPUT) do{ if(verbose) { std::cerr << OUTPUT << std::endl; } } while(false)
 
             //==================================================================
             //

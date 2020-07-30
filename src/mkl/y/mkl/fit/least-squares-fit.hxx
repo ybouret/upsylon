@@ -36,7 +36,11 @@ inline bool fit(SampleType<T>            &sample,
     setLambda( Algo<T>::Initial() );            // assign
     Y_LS_PRINTLN( "     flags  = " << flags );
     Y_LS_PRINTLN( "     used   = " << used  );
-
+    bool move = false;
+    for(size_t i=n;i>0;--i)
+    {
+        if(used[i]) { move=true; break; }
+    }
 
     //__________________________________________________________________________
     //
@@ -63,8 +67,10 @@ inline bool fit(SampleType<T>            &sample,
     // Effective Algorithm Starts now!
     //
     //__________________________________________________________________________
-    T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+    T      D2org = sample.computeD2(alpha, beta, F, aorg, used, *this, verbose);
     size_t nbad  = 0; // number of successive bad steps
+
+    if(!move) goto CONVERGED;
 
 CYCLE:
     ++cycle;
@@ -153,7 +159,7 @@ STEP_CONTROL:
             // first trial is invalid, won't go further !
             //
             //------------------------------------------------------------------
-            Y_LS_PRINTLN( "[LS] Backtrack Level-1" );
+            Y_LS_PRINTLN( "[LS] backtrack Level-1" );
             ok  = false;
 
             f.c = f.b;                   // initialize an inside bracketing: f.c <- f.b
@@ -171,7 +177,7 @@ STEP_CONTROL:
         {
             //------------------------------------------------------------------
             //
-            // D2(u.b) <= D2(u.a), take next step at u.c
+            // D2(u.b) <= D2(u.a), take next step at u.c=1
             //
             //------------------------------------------------------------------
             f.c = D2(u.c);
@@ -184,7 +190,7 @@ STEP_CONTROL:
                 //
                 //--------------------------------------------------------------
                 ok = false;
-                Y_LS_PRINTLN( "[LS] Backtrack Level-2" );
+                Y_LS_PRINTLN( "[LS] backtrack Level-2" );
                 (void)minimize::run(D2,u,f);
                 assert(f.b<=f.a);
             }
@@ -198,12 +204,14 @@ STEP_CONTROL:
                 if(f.b<=f.c)
                 {
                     // Damping! we met a lower point
+                    Y_LS_PRINTLN( "[LS] full step damping" );
                     (void)minimize::run(D2,u,f);
                     assert(f.b<=f.a);
                 }
                 else
                 {
                     // regular full step
+                    Y_LS_PRINTLN( "[LS] full step accepted" );
                     u.b = u.c;
                     f.b = f.c;
                     assert(f.b<=f.a);
@@ -245,7 +253,7 @@ STEP_CONTROL:
         //----------------------------------------------------------------------
         quark::set(aorg,atry);
         const T D2old = D2org;
-        D2org = sample.computeD2(alpha, beta, F, aorg, used, *this);
+        D2org = sample.computeD2(alpha, beta, F, aorg, used, *this,verbose);
 
         Y_LS_PRINTLN("[LS] D2: " << D2old << " -> " << D2org );
         Y_LS_PRINTLN("[LS] converged variables = <" << converged_variables << ">");

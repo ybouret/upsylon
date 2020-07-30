@@ -195,20 +195,20 @@ Y_UTEST(fit)
 
 
     std::cerr << "S1:" << std::endl;
-    const double D12 = S1.computeD2(alpha, beta, SF, aorg, used, grad);
+    const double D12 = S1.computeD2(alpha, beta, SF, aorg, used, grad,false);
     std::cerr << "beta1="  << beta  << std::endl;
     std::cerr << "alpha1=" << alpha << std::endl;
 
 
 
     std::cerr << "S2: " << std::endl;
-    const double D22 = S2.computeD2(alpha, beta, SF, aorg, used, grad);
+    const double D22 = S2.computeD2(alpha, beta, SF, aorg, used, grad,false);
     std::cerr << "beta2="  << beta  << std::endl;
     std::cerr << "alpha2=" << alpha << std::endl;
     
     
     std::cerr << "S: " << std::endl;
-    const double D02 = S.computeD2(alpha, beta, SF, aorg, used, grad);
+    const double D02 = S.computeD2(alpha, beta, SF, aorg, used, grad,false);
     std::cerr << "beta="  << beta  << std::endl;
     std::cerr << "alpha=" << alpha << std::endl;
     

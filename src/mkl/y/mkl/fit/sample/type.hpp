@@ -52,7 +52,8 @@ namespace upsylon {
                                             Sequential<T>          &F,
                                             const accessible<T>    &aorg,
                                             const accessible<bool> &used,
-                                            Gradient<T>            &grad) const = 0;
+                                            Gradient<T>            &grad,
+                                            const bool              verb) const = 0;
 
                 //! flags activation
                 virtual void activate(addressable<bool>      &target,
@@ -129,10 +130,11 @@ namespace upsylon {
                                    Sequential<T>           &F,
                                    const accessible<T>     &aorg,
                                    const accessible<bool>  &used,
-                                   Gradient<T>             &grad) const
+                                   Gradient<T>             &grad,
+                                   const bool               verb) const
                 {
                     initialize(alpha,beta,used);
-                    const T D2 = computeAndUpdate(alpha,beta,F,aorg,used,grad);
+                    const T D2 = computeAndUpdate(alpha,beta,F,aorg,used,grad,verb);
                     Type<T>::Regularize(alpha);
                     return D2;
                 }

@@ -19,6 +19,8 @@ namespace upsylon {
 
             template <typename T> class Samples; //!< forward declaration
 
+#define Y_LS_PRINTLN(OUTPUT) do { if(verbose) { std::cerr << OUTPUT << std::endl; } } while(false)
+
             //==================================================================
             //
             //
@@ -116,7 +118,8 @@ namespace upsylon {
                                             Sequential<T>          &F,
                                             const accessible<T>    &aorg,
                                             const accessible<bool> &used,
-                                            Gradient<T>            &grad) const
+                                            Gradient<T>            &grad,
+                                            const bool              verbose) const
                 {
                     assert(indices.size() == count() );
                     assert(deltaSq.size() == count() );
@@ -139,6 +142,8 @@ namespace upsylon {
                         //------------------------------------------------------
                         // first pass compute fit/store delta Y
                         //------------------------------------------------------
+                        Y_LS_PRINTLN("[LS.Sample] <evaluations>");
+                        Y_LS_PRINTLN("[LS.Sample] \t<fit function/>");
 
                         // initialize
                         {
@@ -156,6 +161,8 @@ namespace upsylon {
                             const T      F_i = ( Z[i] = F.reach(X_i,aorg,this->variables) );
                             dY[i]            = Y[i] - F_i;
                         }
+
+                        Y_LS_PRINTLN("[LS.Sample] \t<fit gradient/>");
 
                         //------------------------------------------------------
                         // second pass : costly gradient
@@ -188,7 +195,6 @@ namespace upsylon {
 
                         }
 
-
                         //------------------------------------------------------
                         // third pass: build squares for delta and return D2
                         //------------------------------------------------------
@@ -196,6 +202,7 @@ namespace upsylon {
                         {
                             to_square(dY[j]);
                         }
+                        Y_LS_PRINTLN("[LS.Sample] <evaluations/>");
                         return sorted_sum(dY)/2;
                     }
                     else
