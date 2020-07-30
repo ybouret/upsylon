@@ -1,12 +1,21 @@
 #include "y/memory/section.hpp"
 #include "y/code/round.hpp"
+#include "y/type/utils.hpp"
+
 #include <iostream>
 #include <cstring>
 
 namespace upsylon {
 
     namespace memory {
-        
+
+
+        size_t   section:: memory_to_hold(const size_t bytes) throw()
+        {
+            return max_of<size_t>(small_size,Y_ROUND_LN2(block_iln2,bytes)+2*block_size);
+        }
+
+
         section:: section(void        *data,
                           const size_t size) throw():
         entry( static_cast<block *>(data) ),
