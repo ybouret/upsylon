@@ -54,7 +54,7 @@ namespace upsylon {
             // methods
             //__________________________________________________________________
 
-            static size_t   memory_to_hold(const size_t bytes) throw();
+            static size_t   bytes_to_hold(const size_t) throw(); //!< memory computation
             void            display()                     const; //!< display to debug
             static section *release(void * &, size_t &) throw(); //!< release perviously allocated, get owner
             bool            is_free()             const throw(); //!< check section is free
@@ -84,6 +84,8 @@ namespace upsylon {
             block *entry; //!< entry block
             block *guard; //!< final block
 
+            section *next; //!< for list
+            section *prev; //!< for list
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(section);

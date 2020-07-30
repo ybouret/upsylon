@@ -10,7 +10,7 @@ namespace upsylon {
     namespace memory {
 
 
-        size_t   section:: memory_to_hold(const size_t bytes) throw()
+        size_t   section:: bytes_to_hold(const size_t bytes) throw()
         {
             return max_of<size_t>(small_size,Y_ROUND_LN2(block_iln2,bytes)+2*block_size);
         }
@@ -19,7 +19,9 @@ namespace upsylon {
         section:: section(void        *data,
                           const size_t size) throw():
         entry( static_cast<block *>(data) ),
-        guard( entry )
+        guard( entry ),
+        next(0),
+        prev(0)
         {
             assert(data!=NULL);
             assert(size>=small_size);
