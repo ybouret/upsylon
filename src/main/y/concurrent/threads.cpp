@@ -3,7 +3,6 @@
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
 #include "y/exception.hpp"
-#include "y/string/env.hpp"
 
 #include <iostream>
 
@@ -12,18 +11,17 @@ namespace upsylon
     namespace concurrent
     {
 
-       
+#define Y_THREAD_PRINTLN(OUTPUT) do { if(verbose) { std::cerr << OUTPUT << std::endl;}  } while(false)
 
         threads:: ~threads() throw()
         {
             {
                 Y_LOCK(access);
-                if(verbose) { std::cerr << "[threads.quit] " << ready << "/" << engines.count << std::endl; }
+                Y_THREAD_PRINTLN("[threads.quit] " << ready << "/" << engines.count);
             }
             
             start.broadcast();
             Y_MUTEX_PROBE(access,ready<=0);
-
         }
 
         size_t     threads:: num_threads() const throw() { return engines.size(); }
@@ -34,15 +32,15 @@ namespace upsylon
         }
 
 #define Y_THREADS_CTOR(LAYOUT) \
-topology( LAYOUT ),\
-access(),\
-engines( topology->cores   ),\
-halting(true),\
-ready(0),\
-start(),\
-kproc(0),\
-kdata(0),\
-verbose( get_verbosity() )
+topology( LAYOUT ),            \
+access(),                      \
+engines(topology->cores),      \
+halting(true),                 \
+ready(0),                      \
+start(),                       \
+kproc(0),                      \
+kdata(0),                      \
+verbose(get_verbosity())
 
         threads:: threads() :
         Y_THREADS_CTOR( layout::create() ) 
@@ -57,8 +55,7 @@ verbose( get_verbosity() )
             // threads init
             //__________________________________________________________________
             const size_t count = engines.count;
-            if(verbose) { std::cerr << "[threads.init] build " << count << " thread" << plural_s(count) << "..." << std::endl; }
-
+            Y_THREAD_PRINTLN("[threads.init] build " << count << " thread" << plural_s(count) << "...");
             try
             {
                 // construct with halting=true;
@@ -75,7 +72,7 @@ verbose( get_verbosity() )
                 Y_MUTEX_PROBE(access,ready<=0);
                 throw;
             }
-            if(verbose) { std::cerr << "[threads.init] built " << count << " thread" << plural_s(count)  << "!!!" << std::endl; }
+            Y_THREAD_PRINTLN("[threads.init] built " << count << " thread" << plural_s(count));
 
             //__________________________________________________________________
             //
@@ -83,10 +80,7 @@ verbose( get_verbosity() )
             //__________________________________________________________________
 
             // place leading thread
-            if(verbose)
-            {
-                std::cerr << "[threads.init.affinity] main@cpu" << topology->core_index_of(0) << std::endl;
-            }
+            Y_THREAD_PRINTLN("[threads.init.affinity] main@cpu" << topology->core_index_of(0));
             nucleus::thread::assign(nucleus::thread::get_current_handle(),topology->core_index_of(0));
 
             // place other threads
@@ -94,13 +88,10 @@ verbose( get_verbosity() )
             for(size_t i=0;i<count;++i)
             {
                 const size_t icpu = topology->core_index_of(i);
-                if(verbose)
-                {
-                    std::cerr << "[threads.init.affinity]   #" << i << "@cpu" << icpu << std::endl;
-                }
+                Y_THREAD_PRINTLN("[threads.init.affinity]   #" << i << "@cpu" << icpu);
                 nucleus::thread::assign(thr[i].handle,icpu);
             }
-            if(verbose) { std::cerr << "[threads.init] ready to work..." << std::endl; }
+            Y_THREAD_PRINTLN("[threads.init] ready to work...");
         }
 
         void threads:: system_entry( void *args ) throw()
@@ -117,8 +108,8 @@ verbose( get_verbosity() )
             //__________________________________________________________________
             access.lock();
             parallel &context = engines[ready];
-            if(verbose) { std::cerr << "[threads.init.call] (+) " << context.label << std::endl; }
             ++ready; //!< for constructor
+            Y_THREAD_PRINTLN("[threads.init.call] (+) " << context.label << " -> " << ready);
 
             //__________________________________________________________________
             //
@@ -133,35 +124,27 @@ verbose( get_verbosity() )
             //__________________________________________________________________
             if(halting)
             {
-                if(verbose) { std::cerr << "[threads.quit.nope] (-) " << context.label << std::endl; }
+                Y_THREAD_PRINTLN("[threads.quit.nope] (-) " << context.label);
                 --ready;
                 access.unlock();
                 return;
             }
+            Y_THREAD_PRINTLN("[threads.loop] call@" << context.label);
             access.unlock();
 
             //__________________________________________________________________
             //
-            // unlock call
+            // unlocked call
             //__________________________________________________________________
-            if(verbose)
-            {
-                Y_LOCK(access);
-                std::cerr << "[threads.loop] call@" << context.label << std::endl;
-            }
 
             assert(kproc);
             kproc(kdata,context,access);
 
-            
-            if(verbose)
-            {
-                Y_LOCK(access);
-                std::cerr << "[threads.loop] back@" << context.label << std::endl;
-            }
+
             access.lock();
+            //Y_THREAD_PRINTLN("[threads.loop] back@" << context.label);
             --ready;
-            if(verbose) { std::cerr << "[threads.quit.done] (-) " << context.label << std::endl; }
+            Y_THREAD_PRINTLN("[threads.quit.done] (-) " << context.label << " -> " << ready);
             access.unlock();
             return;
 
@@ -171,11 +154,11 @@ verbose( get_verbosity() )
 
         void threads:: run(kernel code, void *data)
         {
-            static const char fn[] = "[threads.run!]";
+            static const char fn[] = "[threads.run]";
             assert(code);
             {
                 Y_LOCK(access);
-                if(verbose) { std::cerr << fn << std::endl; }
+                Y_THREAD_PRINTLN(fn);
                 if(ready<engines.size()) { throw exception("%s unexpected unfinished setup",fn); }
                 if(!halting)             { throw exception("%s already setup run",fn);           }
                 halting = false;

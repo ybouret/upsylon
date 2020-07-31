@@ -13,6 +13,7 @@ namespace upsylon {
 
     namespace concurrent {
 
+        //! environment variable to set/get verbosity
 #define Y_THREADS_VERBOSITY "Y_THREADS_VERBOSITY"
 
         typedef auto_ptr<const layout>       __topology;  //!< topology for threads
@@ -33,7 +34,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual ~threads() throw(); //!< quit threads
             explicit threads();         //!< construct threads, waiting on start when ready
-
+            
 
             //------------------------------------------------------------------
             //
