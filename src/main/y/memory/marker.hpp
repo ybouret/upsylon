@@ -40,6 +40,9 @@ namespace upsylon {
             //! display
             friend std::ostream & operator<<(std::ostream &, const marker &);
 
+            void *      shift(void *)      const throw(); //!< shift address by offset
+            const void *shift(const void*) const throw(); //!< shift const address by offset
+            
         };
 
     }

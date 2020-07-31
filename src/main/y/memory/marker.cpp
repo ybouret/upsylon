@@ -20,6 +20,18 @@ namespace upsylon {
         marker:: marker(const size_t _off, const size_t _len) throw() : offset(_off), length(_len) {}
 
         marker:: marker(const size_t _len) throw() : offset(0), length(_len) {}
+
+        void * marker:: shift(void *addr) const throw()
+        {
+            return static_cast<char*>(addr)+offset;
+        }
+
+
+        const void * marker:: shift(const void *addr) const throw()
+        {
+            return static_cast<const char*>(addr)+offset;
+        }
+
     }
 }
 
