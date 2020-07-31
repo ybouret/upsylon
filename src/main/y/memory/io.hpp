@@ -28,6 +28,14 @@ namespace upsylon
                 const void *q = static_cast<const void *>(p+shift);
                 return static_cast<T*>(q);
             }
+
+            //! translation
+            template <typename T> static inline
+            T *__prev( T *addr ) throw()
+            {
+                static const ptrdiff_t shft = -ptrdiff_t(sizeof(T));
+                return static_cast<T*>( __shift(addr,shft) );
+            }
 #endif
             
             //! out of reach shift
@@ -56,13 +64,7 @@ namespace upsylon
                 return static_cast<const T *>( __addr(addr) );
             }
 
-            //! translation
-            template <typename T> static inline
-            T *__prev( T *addr ) throw()
-            {
-                static const ptrdiff_t shft = -ptrdiff_t(sizeof(T));
-                return static_cast<T*>( __shift(addr,shft) );
-            }
+
         };
 
     }

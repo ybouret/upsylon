@@ -32,7 +32,8 @@ namespace upsylon
         socket_set:: socket_set():
         size(0),
         allocated(0),
-        workspace(0)
+        workspace(0),
+        sock(0), ufd(0), wfd(0), rfd(0), xfd(0)
 #if 0
         allocated( capacity * sizeof(socket_type) + 4 * memory::align(sizeof(fd_set))  ),
         workspace( memory::global::instance().acquire( aliasing::_(allocated)) ),
