@@ -8,8 +8,8 @@
 #endif
 
 #include "y/memory/arena-of.hpp"
-#include "y/memory/io.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {
@@ -22,20 +22,31 @@ namespace upsylon
 #endif
 
         typedef memory::arena_of<net::byte_node> byte_node_arena;
-        static uint64_t __byte_node_arena[Y_U64_FOR_ITEM(byte_node_arena)];
+        static uint64_t ___byte_node_arena[Y_U64_FOR_ITEM(byte_node_arena)];
+
+        static inline byte_node_arena & __byte_node_arena()
+        {
+            return * aliasing::as<byte_node_arena>( ___byte_node_arena );
+        }
+
+        static inline void __zero_byte_node_arena() throw()
+        {
+            Y_BZSET_STATIC(___byte_node_arena);
+        }
+
     }
 
     net::byte_node * network:: acquire_byte_node() const
     {
         Y_LOCK(access);
-        static byte_node_arena &a = *memory::io::__force<byte_node_arena>(__byte_node_arena);
+        static byte_node_arena &a = __byte_node_arena();
         return a.acquire();
     }
 
     void network:: release_byte_node( net::byte_node *p) const throw()
     {
         Y_LOCK(access);
-        static byte_node_arena &a = *memory::io::__force<byte_node_arena>(__byte_node_arena);
+        static byte_node_arena &a = __byte_node_arena();
         a.release(p);
     }
 
@@ -51,8 +62,8 @@ namespace upsylon
         // cleanup local stuff...
         //
         //----------------------------------------------------------------------
-        self_destruct( * memory::io::__force<byte_node_arena>(__byte_node_arena) );
-        memset( __byte_node_arena, 0, sizeof(__byte_node_arena) );
+        self_destruct( __byte_node_arena() );
+        __zero_byte_node_arena();
 
 
         //----------------------------------------------------------------------
@@ -93,8 +104,8 @@ namespace upsylon
         // local stuff...
         //
         //----------------------------------------------------------------------
-        memset( __byte_node_arena, 0, sizeof(__byte_node_arena) );
-        new ( memory::io::__force<byte_node_arena>(__byte_node_arena)) byte_node_arena(Y_CHUNK_SIZE);
+        __zero_byte_node_arena();
+        new ( aliasing::anonymous(___byte_node_arena) ) byte_node_arena(Y_CHUNK_SIZE);
     }
 
 

@@ -11,6 +11,7 @@
 #include "y/iterate/linear.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/type/cswap.hpp"
+#include "y/os/oor.hpp"
 #include <cstring>
 
 namespace upsylon {
@@ -240,22 +241,23 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             }
         }
 
-        static inline void __copy( mutable_type *target, const mutable_type *source, const size_t number_of_bytes ) throw()
+        static inline void __copy( mutable_type *target, const_type *source, const size_t number_of_bytes ) throw()
         {
             assert(0==number_of_bytes%sizeof(type));
-            memcpy( memory::io::__addr(target), memory::io::__addr(source), number_of_bytes );
+            out_of_reach::copy(target,source,number_of_bytes);
         }
 
-        static inline void __move( mutable_type *target, const mutable_type *source, const size_t number_of_bytes ) throw()
+        static inline void __move( mutable_type *target, const_type *source, const size_t number_of_bytes ) throw()
         {
             assert(0==number_of_bytes%sizeof(type));
-            memmove( memory::io::__addr(target), memory::io::__addr(source), number_of_bytes );
+            out_of_reach::move(target,source,number_of_bytes);
+
         }
 
         static inline void __zset(mutable_type *target,const size_t number_of_bytes ) throw()
         {
             assert(0==number_of_bytes%sizeof(type));
-            memset( memory::io::__addr(target), 0, number_of_bytes);
+            out_of_reach::fill(target,0,number_of_bytes);
         }
 
         inline void insert_at( const size_t where, const_type &args )

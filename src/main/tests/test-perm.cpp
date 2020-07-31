@@ -7,7 +7,6 @@
 #include "y/sequence/vector.hpp"
 #include "y/type/ints-display.hpp"
 #include "y/mpl/natural.hpp"
-#include "y/memory/io.hpp"
 
 #include <iomanip>
 
@@ -23,7 +22,7 @@ namespace {
         std::cerr << "<permops " << N << ">" << std::endl;
         size_t       wksp[N];
         size_t       addr[N];
-        size_t      *P     = memory::io::__force<size_t>(wksp)-1;
+        size_t      *P     = aliasing::as<size_t>(wksp)-1;
         const mpn    np    = mpn::factorial(N);
         const size_t count = np.cast_to<size_t>("#perm");
         

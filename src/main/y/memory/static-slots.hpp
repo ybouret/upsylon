@@ -2,7 +2,6 @@
 #ifndef Y_MEMORY_STATIC_SLOTS_INCLUDED
 #define Y_MEMORY_STATIC_SLOTS_INCLUDED 1
 
-#include "y/memory/io.hpp"
 #include "y/type/args.hpp"
 #include "y/code/round.hpp"
 #include "y/type/self-destruct.hpp"
@@ -32,7 +31,7 @@ namespace upsylon
             //! setup
             explicit static_slots() throw() :
             wksp(),
-            addr( io::__force<mutable_type>(wksp)-OFFSET ),
+            addr( aliasing::as<mutable_type>(wksp)-OFFSET ),
             size(0)
             {
                 clr();
@@ -72,7 +71,7 @@ namespace upsylon
             //! free all objects
             inline void free() throw()
             {
-                mutable_type *temp = io::__force<mutable_type>(wksp);
+                mutable_type *temp = aliasing::as<mutable_type>(wksp);
                 while(size>0)
                 {
                     self_destruct( temp[--aliasing::_(size) ] );

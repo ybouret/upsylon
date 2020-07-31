@@ -1,8 +1,9 @@
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/carver.hpp"
-#include "y/memory/io.hpp"
 #include "y/object.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/aliasing.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {
@@ -14,47 +15,38 @@ namespace upsylon
         namespace
         {
             static uint64_t        ___carver[ Y_U64_FOR_ITEM(carver) ] = { 0 };
-            static inline void     __zcarver() throw()
-            {
-                for(size_t i=0;i< sizeof(___carver)/sizeof(___carver[0]);++i) ___carver[i] = 0;
-            }
-
-            static inline carver * __carver() throw()
-            {
-                return io::__force<carver>(___carver);
-            }
         }
 
 
         pooled:: ~pooled() throw()
         {
-            self_destruct( *__carver());
-            __zcarver();
+            self_destruct( *aliasing::as<carver>(___carver) );
+            Y_BZSET_STATIC(___carver);
         }
 
         pooled:: pooled() throw()
         {
-            __zcarver();
-            new ( __carver() ) carver( Y_CHUNK_SIZE );
+            Y_BZSET_STATIC(___carver);
+            new ( aliasing::anonymous(___carver) ) carver( Y_CHUNK_SIZE );
         }
 
         void * pooled:: acquire( size_t &n )
         {
-            static allocator &mgr = * __carver();
+            static allocator &mgr = *aliasing::as<carver>(___carver);
             Y_LOCK(access);
             return mgr.acquire(n);
         }
 
         void pooled:: release(void * &p, size_t &n) throw()
         {
-            static allocator &mgr = * __carver();
+            static allocator &mgr =  *aliasing::as<carver>(___carver);
             Y_LOCK(access);
             mgr.release(p,n);
         }
 
         bool  pooled:: compact(void * &addr, size_t &capa, const size_t size ) throw()
         {
-            static carver &crv = * __carver();
+            static carver &crv = *aliasing::as<carver>(___carver);
             Y_LOCK(access);
             return crv.compact(addr,capa,size);
         }

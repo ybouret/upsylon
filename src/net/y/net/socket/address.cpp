@@ -1,5 +1,6 @@
 #include "y/net/socket/address.hpp"
 #include "y/code/utils.hpp"
+#include "y/type/aliasing.hpp"
 
 #include <iostream>
 
@@ -15,7 +16,7 @@ namespace upsylon
         
         socket_address:: format<v4>:: format(const ip_addr_value value) throw() :
         sa(),
-        addr( *memory::io::__force<net32_t>( &(sa.sin_addr) ) ),
+        addr( *aliasing::as<net32_t>( &(sa.sin_addr) ) ),
         hrb()
         {
             memset( &sa,  0, sizeof(sa)  );
@@ -25,7 +26,7 @@ namespace upsylon
 
         socket_address:: format<v4>:: format(const format &other ) throw() :
         sa(),
-        addr( *memory::io::__force<net32_t>( &(sa.sin_addr) ) ),
+        addr( *aliasing::as<net32_t>( &(sa.sin_addr) ) ),
         hrb( other.hrb )
         {
             memcpy( &sa, &other.sa, sizeof(sa) );
@@ -92,7 +93,7 @@ namespace upsylon
         
         socket_address:: format<v6>:: format(const ip_addr_value value) throw() :
         sa(),
-        addr(  *memory::io::__force<net128_t>( &(sa.sin6_addr) ) ),
+        addr(  *aliasing::as<net128_t>( &(sa.sin6_addr) ) ),
         hrb()
         {
             memset( &sa, 0, sizeof(sa) );
@@ -102,7 +103,7 @@ namespace upsylon
 
         socket_address:: format<v6>:: format(const format &other ) throw() :
         sa(),
-        addr( *memory::io::__force<net128_t>( &(sa.sin6_addr) ) ),
+        addr( *aliasing::as<net128_t>( &(sa.sin6_addr) ) ),
         hrb( other.hrb )
         {
             memcpy( &sa, &other.sa, sizeof(sa) );

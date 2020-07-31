@@ -6,7 +6,6 @@
 #include "y/concurrent/mutex.hpp"
 #include "y/concurrent/at-exit.hpp"
 #include "y/code/round.hpp"
-#include "y/memory/io.hpp"
 #include <new>
 
 namespace upsylon

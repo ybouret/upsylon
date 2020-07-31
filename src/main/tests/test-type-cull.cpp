@@ -244,7 +244,6 @@ Y_UTEST(cull)
 Y_UTEST_DONE()
 
 #include "y/os/wtime.hpp"
-#include "y/memory/io.hpp"
 #include "y/code/hr-ints.hpp"
 
 namespace {
@@ -255,7 +254,7 @@ namespace {
         std::cerr << "N=" << std::setw(3) << N;
         void *addr = calloc(1,N);
         if(!addr) throw exception("no memory in testZSET");
-        void *wksp = memory::io::__addr(addr);
+        void *wksp = aliasing::anonymous(addr);
 
         uint64_t s = 0;
         uint64_t y = 0;
@@ -308,7 +307,7 @@ namespace {
         std::cerr << "N=" << std::setw(3) << N;
         void *addr = calloc(1,2*N);
         if(!addr) throw exception("no memory in testMOVE");
-        char *target = (char *) memory::io::__addr(addr);
+        char *target = aliasing::as<char>(addr);
         char *source = target + N;
 
         uint64_t c = 0;

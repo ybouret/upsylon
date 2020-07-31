@@ -1,4 +1,5 @@
 #include "y/net/socket/addr-ex.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -18,7 +19,7 @@ namespace upsylon
             {
                 case v4:
                 {
-                    ipv4  *a = new( memory::io::__force<ipv4>(wksp) ) ipv4();
+                    ipv4  *a = new( aliasing::as<ipv4>(wksp) ) ipv4();
                     addr = a;
                     assert( a->length() == ipv4::sa_size );
                     assert( ip.length() == ipv4::sa_size );
@@ -27,7 +28,7 @@ namespace upsylon
 
                 case v6:
                 {
-                    ipv6  *a = new( memory::io::__force<ipv6>(wksp) ) ipv6(); assert( a->length() == ipv6::sa_size );
+                    ipv6  *a = new( aliasing::as<ipv6>(wksp) ) ipv6(); assert( a->length() == ipv6::sa_size );
                     addr = a;
                     assert( a->length() == ipv6::sa_size );
                     assert( ip.length() == ipv6::sa_size );
@@ -88,13 +89,13 @@ namespace upsylon
             {
                 case v4:
                 {
-                    ipv4  *a = new( memory::io::__force<ipv4>(wksp) ) ipv4(value,user_port);
+                    ipv4  *a = new( aliasing::as<ipv4>(wksp) ) ipv4(value,user_port);
                     addr = a;
                 } break;
 
                 case v6:
                 {
-                    ipv6  *a = new( memory::io::__force<ipv6>(wksp) ) ipv6(value,user_port);
+                    ipv6  *a = new( aliasing::as<ipv6>(wksp) ) ipv6(value,user_port);
                     addr = a;
                 }   break;
 

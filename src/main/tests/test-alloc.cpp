@@ -1,6 +1,5 @@
 #include "y/memory/cblock.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/io.hpp"
 #include "y/type/aliasing.hpp"
 #include <typeinfo>
 
