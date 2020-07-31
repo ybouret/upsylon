@@ -73,7 +73,7 @@ INSTALL( FILES ${memory_decl} DESTINATION include/y/memory )
 FILE(GLOB memory_allocator_decl   y/memory/allocator/*.hpp)
 FILE(GLOB memory_allocator_code y/memory/allocator/*.cpp)
 SET(memory_allocator_srcs ${memory_allocator_decl} ${memory_allocator_code})
-SOURCE_GROUP( memory_allocator FILES ${memory_allocator_srcs} )
+SOURCE_GROUP( memory/allocator FILES ${memory_allocator_srcs} )
 INSTALL( FILES ${memory_allocator_decl} DESTINATION include/y/memory/allocator )
 
 FILE(GLOB string_decl   y/string/*.hpp)
