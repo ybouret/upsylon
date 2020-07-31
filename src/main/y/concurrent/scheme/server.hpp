@@ -10,9 +10,8 @@ namespace upsylon
 {
     namespace concurrent
     {
-
-        typedef functor<void,TL2(parallel&,lockable&)> job_type; //!< a functor holds the job to do
-        typedef size_t                                 job_uuid; //!< unique ID>0 to look for task completion
+        typedef functor<void,TL2(parallel&,lockable&)> job_type;  //!< a functor holds the job to do
+        typedef size_t                                 job_uuid;  //!< unique ID>0 to look for task completion
         typedef addressable<job_uuid>                  job_uuids; //!< r/w job uuid collection
         typedef accessible<job_type>                   job_batch; //!< r/o jobs
 

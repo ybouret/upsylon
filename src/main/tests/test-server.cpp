@@ -111,7 +111,7 @@ namespace
         {
         }
 
-        inline void operator()( parallel &, lockable &access )
+        inline void operator()(parallel &, lockable &access)
         {
             const size_t nmin = 1+rank * Count;
             const size_t nmax = nmin + Count;
