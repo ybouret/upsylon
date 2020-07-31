@@ -49,8 +49,8 @@ namespace upsylon
                             const size_t chunk_size) throw() :
             next(0),
             prev(0),
-            data( aliasing::cast::as<word_type>(chunk_data,0) ),
-            last( aliasing::cast::as<word_type>(chunk_data,chunk_size) ),
+            data( aliasing::forward<word_type>(chunk_data,0) ),
+            last( aliasing::forward<word_type>(chunk_data,chunk_size) ),
             words_increment(0),
             first_available(0),
             still_available(0),

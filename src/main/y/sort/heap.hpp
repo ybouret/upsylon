@@ -24,7 +24,7 @@ namespace upsylon
             //----------------------------------------------------------------------
             char wksp[ Y_MEMORY_ALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
             //T   &rra = * memory::io::__force<T>( &wksp[0] );
-            T   &rra = aliasing::map::to<T>( &wksp[0] );
+            T   &rra = *aliasing::as<T>( &wksp[0] );
 
             //----------------------------------------------------------------------
             // algorithm
@@ -120,12 +120,10 @@ namespace upsylon
         //-- local memory
         //----------------------------------------------------------------------
         char wksp[ Y_MEMORY_ALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
-        //T   &rra = * memory::io::__force<T>(&wksp[0]);
-        T   &rra = aliasing::map::to<T>( &wksp[0] );
+        T   &rra = *aliasing::as<T>( &wksp[0] );
 
         char wksp2[ Y_MEMORY_ALIGN(sizeof(U)) ]; assert(sizeof(wksp2)>=sizeof(U));
-        //U   &rrb  = * memory::io::__force<U>(&wksp2[0]);
-        U   &rrb = aliasing::map::to<U>( &wksp2[0] );
+        U   &rrb = *aliasing::as<U>( &wksp2[0] );
 
         //----------------------------------------------------------------------
         //-- algorithm

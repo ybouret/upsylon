@@ -111,7 +111,8 @@ namespace upsylon {
         void arena:: prepare_page()
         {
             static global &hmem = global::instance();
-            chunk         *ch   = io::cast<chunk>(pages.store(static_cast<page *>(hmem.__calloc(1,chunk_size))),sizeof(void*));
+            chunk         *ch   = aliasing::shifted<chunk>(pages.store( static_cast<page *>(hmem.__calloc(1,chunk_size)) ), sizeof(void*) );
+            
             for(size_t i=0;i<chunks_per_page;++i)
             {
                 cached.store( ch++ );

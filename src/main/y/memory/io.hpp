@@ -11,7 +11,7 @@ namespace upsylon
         //! operations on memory addresses
         struct io
         {
-
+#if 0
             //! casting with shift
             template <typename T>
             static T *cast( void *addr, const ptrdiff_t shift=0) throw()
@@ -20,7 +20,6 @@ namespace upsylon
                 void *q=static_cast<void *>(p+shift);
                 return static_cast<T*>(q);
             }
-
             //! casting with shift, CONST version
             template <typename T>
             static const T *cast( const void *addr, const ptrdiff_t shift=0) throw()
@@ -29,15 +28,8 @@ namespace upsylon
                 const void *q = static_cast<const void *>(p+shift);
                 return static_cast<T*>(q);
             }
-
-#if 0
-            //! differential in bytes
-            template <typename T>
-            static ptrdiff_t delta(const T *a, const T *b) throw()
-            {
-                return static_cast<ptrdiff_t>(cast<const char>(b)-cast<const char>(a));
-            }
 #endif
+            
             //! out of reach shift
             static void *       __shift( void *addr,       const ptrdiff_t bytes) throw();
             

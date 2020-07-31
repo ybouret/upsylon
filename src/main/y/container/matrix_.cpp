@@ -58,7 +58,7 @@ namespace upsylon
     void matrix_:: hook() throw()
     {
         // hook indices
-        size_t *ipos = memory::io::cast<size_t>(workspace,_indx.offset);
+        size_t *ipos = _indx.as<size_t>(workspace); //memory::io::cast<size_t>(workspace,_indx.offset);
         new ( &r_indices ) indices_type(ipos,rows);
         new ( &c_indices ) indices_type(ipos,cols);
     }

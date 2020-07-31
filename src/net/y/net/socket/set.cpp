@@ -4,6 +4,8 @@
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
 
+#include "y/memory/embed.hpp"
+
 #if defined(Y_BSD)
 #include <sys/select.h>
 #endif
@@ -29,6 +31,9 @@ namespace upsylon
 
         socket_set:: socket_set():
         size(0),
+        allocated(0),
+        workspace(0)
+#if 0
         allocated( capacity * sizeof(socket_type) + 4 * memory::align(sizeof(fd_set))  ),
         workspace( memory::global::instance().acquire( aliasing::_(allocated)) ),
         sock( memory::io::cast<socket_type>(workspace,0) ),
@@ -36,7 +41,31 @@ namespace upsylon
         wfd(  memory::io::cast<fd_set>(ufd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) ),
         rfd(  memory::io::cast<fd_set>(wfd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) ),
         xfd(  memory::io::cast<fd_set>(rfd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) )
+#endif
         {
+
+            Y_NET_VERBOSE(std::cerr << "[network.socket_set.init] capacity  = " << capacity << std::endl);
+            {
+                memory::embed emb[] =
+                {
+                    memory::embed::as(sock,capacity),
+                    memory::embed::as(ufd,1),
+                    memory::embed::as(wfd,1),
+                    memory::embed::as(rfd,1),
+                    memory::embed::as(xfd,1)
+                };
+                workspace = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), memory::global::instance(), aliasing::_(allocated) );
+
+#if !defined(NDEBUG)
+                for(size_t i=1;i<sizeof(emb)/sizeof(emb[0]);++i)
+                {
+                    const memory::embed &m = emb[i];
+                    assert(m.params.length>=sizeof(fd_set));
+                }
+#endif
+                Y_NET_VERBOSE(std::cerr << "[network.socket_set.init] allocated = " << allocated << std::endl);
+
+            }
 
 #if !defined(NDEBUG)
             {

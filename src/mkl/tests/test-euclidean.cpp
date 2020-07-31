@@ -145,7 +145,7 @@ namespace {
                 const_type y     = sin_of(theta)   + noise * alea.symm<T>();
                 const_type z     = sin_of(theta/2) + noise*alea.symm<T>();
                 const_type arr[4] = {x,y,z,0};
-                const_vertex &v = aliasing::map::to<const_vertex>(arr);
+                const_vertex &v = *aliasing::as<const_vertex>(arr);
                 //std::cerr << "v=" << v << std::endl;
                 const SharedPoint p = new PointType(v);
                 Y_ASSERT( points.insert(p) );

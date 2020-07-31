@@ -37,67 +37,51 @@ namespace upsylon {
         //! unreachable const address conversion with shift in bytes
         static const void * anonymous(const void *, const ptrdiff_t shift) throw();
 
-        //______________________________________________________________________
-        //
-        //! casting with same binary layout objects
-        //______________________________________________________________________
-        struct cast
+        
+        //! U* -> T*
+        template <typename T,typename U> static inline
+        T *as(U *addr) throw()
         {
-            //! U -> T
-            template <typename T,typename U> static inline
-            T & to(U &args) throw()
-            {
-                return *static_cast<T*>(anonymous(&args));
-            }
+            void *p = static_cast<char *>( anonymous(addr) );
+            return static_cast<T *>(p);
+        }
 
-            //! U -> T
-            template <typename T,typename U> static inline
-            const T & to(const U &args) throw()
-            {
-                return *static_cast<const T*>(anonymous(&args));
-            }
-
-            //! U* -> T* + offset
-            template <typename T,typename U> static inline
-            T *as(U *addr, const size_t offset=0) throw()
-            {
-                void *p = static_cast<char *>( anonymous(addr) ) + offset;
-                return static_cast<T *>(p);
-            }
-
-            //! U* -> T* + offset, const
-            template <typename T,typename U> static inline
-            const T *as(const U *addr, const size_t offset=0) throw()
-            {
-                const void *p = static_cast<const char *>( anonymous(addr) ) + offset;
-                return static_cast<const T *>(p);
-            }
-
-        };
-
-
-        //______________________________________________________________________
-        //
-        //! mapping a binary layout to object
-        //______________________________________________________________________
-        struct map
+        //! U* +/- shift -> T*
+        template <typename T, typename U> static inline
+        T *shifted(U *addr, const ptrdiff_t shift) throw()
         {
-            //! U* -> T
-            template <typename T,typename U> static inline
-            T &to( U *arr ) throw()
-            {
-                assert(arr);
-                return *static_cast<T*>( anonymous(arr) );
-            }
+            return static_cast<T *>( anonymous(addr,shift) );
+        }
 
-            //! U* -> T
-            template <typename T,typename U> static inline
-            const T &to(const U *arr ) throw()
-            {
-                assert(arr);
-                return *static_cast<const T*>( anonymous(arr) );
-            }
-        };
+        //! U* + offset -> T*
+        template <typename T, typename U> static inline
+        T *forward(U *addr, const size_t offset) throw()
+        {
+            void *p = static_cast<char *>(anonymous(addr)) + offset;
+            return static_cast<T *>(p);
+        }
+
+        //! U* -> T* , const
+        template <typename T,typename U> static inline
+        const T *as(const U *addr) throw()
+        {
+            const void *p = static_cast<const char *>( anonymous(addr) );
+            return static_cast<const T *>(p);
+        }
+
+        template <typename T, typename U> static inline
+        const T *shifted(const U *addr, const ptrdiff_t shift) throw()
+        {
+            return static_cast<const T *>( anonymous(addr,shift) );
+        }
+
+        template <typename T, typename U> static inline
+        const T *forward(const U *addr, const size_t offset) throw()
+        {
+            const void *p = static_cast<const char *>(anonymous(addr)) + offset;
+            return static_cast<const T *>(p);
+        }
+
 
 
         //______________________________________________________________________
@@ -129,7 +113,7 @@ namespace upsylon {
         template <typename T, typename U> static inline
         ptrdiff_t delta(const T *a, const U *b) throw()
         {
-            return static_cast<ptrdiff_t>( (&map::to<const char>(b)) - (&map::to<const char>(a)) );
+            return static_cast<ptrdiff_t>( as<const char>(b) - as<const char>(a) );
         }
 
         

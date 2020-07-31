@@ -457,9 +457,9 @@ namespace upsylon
             //
             // prepare rows
             //__________________________________________________________________
-            row_ptr = memory::io::cast<row>(workspace,_rows.offset);
+            row_ptr = _rows.as<row>(workspace); //aliasing::cast<row>(workspace,_rows.offset);
             {
-                mutable_type *p = memory::io::cast<mutable_type>(workspace,_data.offset);
+                mutable_type *p = get_entry();
                 for(size_t r=0;r<rows;++r,p+=cols)
                 {
                     new (row_ptr+r) row(p,cols);
@@ -471,7 +471,7 @@ namespace upsylon
         //! destroy allocated objects
         inline void destroy(size_t count) throw()
         {
-            mutable_type *entry = memory::io::cast<mutable_type>(workspace,_data.offset);
+            mutable_type *entry = get_entry();
             while(count-- > 0)
             {
                 self_destruct(entry[count]);
@@ -482,7 +482,7 @@ namespace upsylon
         inline void init0()
         {
             size_t        count = 0;
-            mutable_type *entry = memory::io::cast<mutable_type>(workspace,_data.offset);
+            mutable_type *entry = get_entry();
             try
             {
                 while(count<total_items)

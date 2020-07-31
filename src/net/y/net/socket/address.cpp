@@ -1,5 +1,4 @@
 #include "y/net/socket/address.hpp"
-#include "y/memory/io.hpp"
 #include "y/code/utils.hpp"
 
 #include <iostream>
@@ -189,6 +188,7 @@ namespace upsylon
     }
 }
 
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -200,7 +200,7 @@ namespace upsylon
         }
 
         socket_address:: socket_address( void *data, const unsigned port_offset ) throw() :
-        port( *memory::io::cast<net16_t>(data,port_offset) )
+        port( *aliasing::forward<net16_t>(data,port_offset) )
         {
         }
 
