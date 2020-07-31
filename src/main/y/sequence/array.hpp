@@ -5,7 +5,7 @@
 #include "y/sequence/addressable.hpp"
 #include "y/type/block/swap.hpp"
 #include "y/memory/buffer.hpp"
-#include "y/memory/io.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -90,7 +90,7 @@ namespace upsylon
 
         //! default C-style init
         inline array(type *p, const size_t n) throw() :
-        item_( memory::io::__prev( (mutable_type *)p) ),
+        item_( aliasing::prev( (mutable_type*)p ) ),
         size_( n )
         {
         }
