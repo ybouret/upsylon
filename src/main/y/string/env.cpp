@@ -1,7 +1,6 @@
 #include "y/string/env.hpp"
 #include "y/concurrent/singleton.hpp"
 #include "y/memory/pooled.hpp"
-#include "y/sequence/list.hpp"
 #include "y/exceptions.hpp"
 
 #include <cerrno>
@@ -18,7 +17,6 @@ extern char **environ;
 #include "y/memory/buffers.hpp"
 #endif
 
-//#include "y/ptr/arc.hpp"
 
 namespace upsylon {
 
@@ -31,30 +29,7 @@ namespace upsylon {
         {
         public:
 
-#if 0
-            class entry : public counted_object
-            {
-            public:
-                typedef arc_ptr<entry> ptr;
-
-                const string name;
-                const string value;
-                inline entry(const string &n,const string v) :
-                name(n), value(v)
-                {
-                }
-
-                inline virtual ~entry() throw()
-                {
-                }
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(entry);
-            };
-#endif
-
-
-            inline bool query( string &value, const string &name ) const
+            inline bool query(string &value, const string &name) const
             {
                 Y_LOCK(access);
 
@@ -70,7 +45,6 @@ namespace upsylon {
 #endif
 
 #if defined(Y_WIN)
-                //std::cerr << "GetEnvVar '" << name << "'" << std::endl;
                 value.clear();
                 const DWORD res = ::GetEnvironmentVariable( &name[0], NULL, 0);
                 const DWORD err = ::GetLastError();
@@ -104,24 +78,7 @@ namespace upsylon {
             inline void store( const string &name, const string &value )
             {
                 Y_LOCK(access);
-
-#if 0
-                {
-                    const entry::ptr ep = new entry(name,value);
-                    __env.push_back(ep);
-                }
-                const entry &e = *__env.back();
-
-#if defined(Y_BSD)
-                std::cerr << "using '" << e.name << "=" << e.value << "'" << std::endl;
-                if( setenv( *e.name, *e.value, 1) < 0 )
-                {
-                    __env.pop_back();
-                    throw libc::exception( errno, "setenv");
-                }
-#endif
-
-#endif
+                Y_GIANT_LOCK();
 
 #if defined(Y_BSD)
                 if( setenv( *name, *value, 1) < 0 )
@@ -131,8 +88,8 @@ namespace upsylon {
 #endif
 
 #if defined(Y_WIN)
-                Y_GIANT_LOCK();
-                if( ! ::SetEnvironmentVariable( &name[0], &value[0] ) ) {
+                if( ! ::SetEnvironmentVariable( *name, *value ) )
+                {
                     throw win32::exception( ::GetLastError(),  "::SetEnvironmentVariable");
                 }
 #endif
@@ -141,19 +98,8 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(envmgr);
             friend class singleton<envmgr>;
-
-            explicit envmgr() throw() //: __env()
-            {
-            }
-
-            virtual ~envmgr() throw()
-            {
-
-            }
-
-            //list<entry::ptr> __env;
-
-
+            inline explicit envmgr() throw() { }
+            inline virtual ~envmgr() throw() { }
 
             static const at_exit::longevity life_time = longevity_for::system_env;
         };

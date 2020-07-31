@@ -51,7 +51,7 @@ namespace upsylon {
         static bool flag(const char   *name);
 
     };
-
+    
 
 }
 

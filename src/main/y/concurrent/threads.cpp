@@ -19,7 +19,6 @@ namespace upsylon
                 Y_LOCK(access);
                 Y_THREAD_PRINTLN("[threads.quit] " << ready << "/" << engines.count);
             }
-            
             start.broadcast();
             Y_MUTEX_PROBE(access,ready<=0);
         }
