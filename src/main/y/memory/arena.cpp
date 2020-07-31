@@ -21,7 +21,7 @@ namespace upsylon {
                 const size_t bs     = node->words_increment * node->word_size;
                 std::cerr << "[memory.chunk] still #allocated=" << nalloc << ", block_size<=" << bs << std::endl;
             }
-            _.__free(node->data,io::delta(node->data,node->last));
+            _.__free(node->data,aliasing::delta(node->data,node->last));
             return node;
         }
 

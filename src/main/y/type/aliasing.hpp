@@ -57,6 +57,22 @@ namespace upsylon {
                 return *static_cast<const T*>(anonymous(&args));
             }
 
+            //! U* -> T* + offset
+            template <typename T,typename U> static inline
+            T *as(U *addr, const size_t offset=0) throw()
+            {
+                void *p = static_cast<char *>( anonymous(addr) ) + offset;
+                return static_cast<T *>(p);
+            }
+
+            //! U* -> T* + offset, const
+            template <typename T,typename U> static inline
+            const T *as(const U *addr, const size_t offset=0) throw()
+            {
+                const void *p = static_cast<const char *>( anonymous(addr) ) + offset;
+                return static_cast<const T *>(p);
+            }
+
         };
 
 
@@ -111,7 +127,7 @@ namespace upsylon {
 
         //! getting absolut bytes between object a->b
         template <typename T, typename U> static inline
-        ptrdiff_t delta(const T *a, const T *b) throw()
+        ptrdiff_t delta(const T *a, const U *b) throw()
         {
             return static_cast<ptrdiff_t>( (&map::to<const char>(b)) - (&map::to<const char>(a)) );
         }

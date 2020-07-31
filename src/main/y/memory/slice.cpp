@@ -1,6 +1,7 @@
 #include "y/memory/slice.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/io.hpp"
+#include "y/type/aliasing.hpp"
 #include "y/code/round.hpp"
 #include <iostream>
 #include <cstring>
@@ -22,7 +23,7 @@ namespace upsylon
             assert(buflen>=2*sizeof(block_size));
             assert(guard>entry+1);
             assert(buflen%block_size==0);
-            assert(io::delta(entry,guard)==ptrdiff_t(buflen));
+            assert(aliasing::delta(entry,guard)==ptrdiff_t(buflen));
             entry->prev = 0;
             entry->from = 0; //!< aka 'free'
             entry->next = guard;
@@ -34,7 +35,7 @@ namespace upsylon
         {
             if(!is_empty())
             {
-                std::cerr << "[memory.slice] not empty, bytes=" << io::delta(entry,guard) << std::endl;
+                std::cerr << "[memory.slice] not empty, bytes=" << aliasing::delta(entry,guard) << std::endl;
             }
         }
 

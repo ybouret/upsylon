@@ -71,8 +71,8 @@ namespace upsylon
         {
             initialize();
             assert(items==other.items);
-            mutable_type *target = memory::io::cast<mutable_type>(workspace,_data.offset);
-            const_type   *source = memory::io::cast<mutable_type>(other.workspace,other._data.offset);
+            mutable_type *target = get_entry();
+            const_type   *source = other.get_entry();
             size_t        count  = 0;
             try
             {
@@ -271,7 +271,7 @@ namespace upsylon
         //! load value
         inline void ld( param_type value )
         {
-            mutable_type *p = memory::io::cast<T>(workspace,_data.offset);
+            mutable_type *p = get_entry();
             for(size_t i=0;i<items;++i)
             {
                 p[i] = value;
@@ -281,7 +281,7 @@ namespace upsylon
         //! take the opposite (when possible) value
         inline void neg() throw()
         {
-            mutable_type *p = memory::io::cast<T>(workspace,_data.offset);
+            mutable_type *p = get_entry();
             for(size_t i=0;i<items;++i)
             {
                 p[i] = -p[i];
@@ -428,6 +428,9 @@ namespace upsylon
     private:
         row *row_ptr; //! [1..rows]
 
+        inline mutable_type  *get_entry()       throw() { return _data.as<mutable_type>(workspace); }
+        inline const_type    *get_entry() const throw() { return _data.as<const_type>(workspace);   }
+
         //! initialize memory and set every item to default contructor
         inline void initialize()
         {
@@ -443,7 +446,7 @@ namespace upsylon
             // prepare auxiliary arrays
             //__________________________________________________________________
             {
-                T *extra = static_cast<T*>(workspace)+items;
+                mutable_type *extra = get_entry()+items;
                 new (&r_aux1) row(extra,rows);
                 new (&c_aux1) row(extra,cols);
                 extra += largest;

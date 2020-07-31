@@ -52,7 +52,7 @@ namespace upsylon
                 static global &hmem = global::location();
                 slice *s = slices.pop_back();
                 s->~slice();
-                hmem.__free(s->entry,io::delta(s->entry,s->guard));
+                hmem.__free(s->entry,aliasing::delta(s->entry,s->guard));
                 a.release(s);
             }
             self_destruct( a );

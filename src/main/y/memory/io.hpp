@@ -30,14 +30,14 @@ namespace upsylon
                 return static_cast<T*>(q);
             }
 
-
+#if 0
             //! differential in bytes
             template <typename T>
             static ptrdiff_t delta(const T *a, const T *b) throw()
             {
                 return static_cast<ptrdiff_t>(cast<const char>(b)-cast<const char>(a));
             }
-
+#endif
             //! out of reach shift
             static void *       __shift( void *addr,       const ptrdiff_t bytes) throw();
             

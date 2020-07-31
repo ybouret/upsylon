@@ -4,7 +4,7 @@
 
 #include "y/code/round.hpp"
 #include "y/type/ints.hpp"
-#include "y/memory/io.hpp"
+//#include "y/memory/io.hpp"
 #include "y/memory/ownership.hpp"
 #include "y/type/aliasing.hpp"
 #include <iostream>
@@ -49,14 +49,14 @@ namespace upsylon
                             const size_t chunk_size) throw() :
             next(0),
             prev(0),
-            data( io::cast<word_type>(chunk_data,0) ),
-            last( io::cast<word_type>(chunk_data,chunk_size) ),
+            data( aliasing::cast::as<word_type>(chunk_data,0) ),
+            last( aliasing::cast::as<word_type>(chunk_data,chunk_size) ),
             words_increment(0),
             first_available(0),
             still_available(0),
             provided_number(0)
             {
-                assert( chunk_size == size_t(memory::io::delta(data,last)) );
+                assert( chunk_size == size_t(aliasing::delta(data,last)) );
                 assert( chunk_size<=0 || chunk_size >= sizeof(word_type)  );
                 assert( chunk_size<=0 || chunk_size >= sizeof(block_size) );
                 
