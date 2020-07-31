@@ -23,19 +23,24 @@ namespace upsylon {
         //! unreachable const address conversion with shift
         static const void * anonymous(const void *, const ptrdiff_t shift) throw();
 
-        //! casting between same binary objects
-        template <typename T,typename U> static inline
-        T &cast( U &args ) throw()
+        //! casting with same binary layout objects
+        struct cast
         {
-            return *static_cast<T*>(anonymous(&args));
-        }
+            //! U -> T
+            template <typename T,typename U> static inline
+            T &to(U &args) throw()
+            {
+                return *static_cast<T*>(anonymous(&args));
+            }
 
-        //! casting with overide between same const binary objects
-        template <typename T,typename U> static inline
-        const T &cast( const U &args ) throw()
-        {
-            return *static_cast<const T*>(anonymous(&args));
-        }
+            //! U -> T
+            template <typename T,typename U> static inline
+            const T &to(const U &args) throw()
+            {
+                return *static_cast<const T*>(anonymous(&args));
+            }
+
+        };
 
         //! remove constness
         template <typename T> static inline
@@ -44,35 +49,26 @@ namespace upsylon {
             return (T&)args;
         }
 
-        //! casting with overide between same binary objects
-        template <typename T,typename U> static inline
-        T &cast_( const U &args ) throw()
-        {
-            return cast<T,U>(_(args));
-        }
-
         //! mapping a binary layout to object
-        template <typename T,typename U> static inline
-        T &map( U *arr ) throw()
+        struct map
         {
-            assert(arr);
-            return *static_cast<T*>( anonymous(arr) );
-        }
+            //! U* -> T
+            template <typename T,typename U> static inline
+            T &to( U *arr ) throw()
+            {
+                assert(arr);
+                return *static_cast<T*>( anonymous(arr) );
+            }
 
-        //! mapping a const binary layout to object
-        template <typename T,typename U> static inline
-        const T &map(const U *arr ) throw()
-        {
-            assert(arr);
-            return *static_cast<const T*>( anonymous(arr) );
-        }
+            //! U* -> T
+            template <typename T,typename U> static inline
+            const T &to(const U *arr ) throw()
+            {
+                assert(arr);
+                return *static_cast<const T*>( anonymous(arr) );
+            }
+        };
 
-        //! out of reach type
-        template <typename T> static inline
-        T & oor( T &args ) throw()
-        {
-            return *static_cast<T*>(anonymous(&args));
-        }
 
         //! get previous object
         template <typename T> static inline
@@ -89,12 +85,7 @@ namespace upsylon {
             return static_cast<T*>( anonymous(obj,-static_cast<ptrdiff_t>(sizeof(T))) );
         }
 
-        //! get previous object overiding const
-        template <typename T> static inline
-        T *prev_( const T *obj ) throw()
-        {
-            return prev( _(obj) );
-        }
+        
 
 
     };

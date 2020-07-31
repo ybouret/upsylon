@@ -25,8 +25,7 @@ namespace upsylon {
         {
             return static_cast<char*>(addr)+offset;
         }
-
-
+        
         const void * marker:: shift(const void *addr) const throw()
         {
             return static_cast<const char*>(addr)+offset;

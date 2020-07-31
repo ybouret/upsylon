@@ -42,7 +42,15 @@ namespace upsylon {
 
             void *      shift(void *)      const throw(); //!< shift address by offset
             const void *shift(const void*) const throw(); //!< shift const address by offset
-            
+
+            //! object at shifted address
+            template <typename T> inline
+            T *as(void *addr) const throw() { return static_cast<T*>( shift(addr) ); }
+
+            //! object at shifted address
+            template <typename T> inline
+            const T *as(const void *addr) const throw() { return static_cast<const T*>( shift(addr) ); }
+
         };
 
     }
