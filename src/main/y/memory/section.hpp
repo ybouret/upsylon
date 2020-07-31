@@ -81,18 +81,20 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            block *entry; //!< entry block
-            block *guard; //!< final block
+            block   *entry; //!< entry block
+            block   *guard; //!< final block
 
             section *next; //!< for list
             section *prev; //!< for list
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(section);
             bool  check_block(const block *blk) const;
             bool  check() const;
-            void *try_acquire(size_t &,const bool) throw();
-            
+
+            typedef void (*finalize)(void *,const size_t);
+            void *acquire(size_t &n,finalize) throw();
         };
 
     }

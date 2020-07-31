@@ -50,7 +50,15 @@ namespace upsylon {
         {
             if(!is_free())
             {
-
+                std::cerr << "[memory.section] not free: ";
+                for(const block *blk=entry;blk;blk=blk->next)
+                {
+                    if(blk->from)
+                    {
+                        std::cerr << blk->size << "/";
+                    }
+                }
+                std::cerr << std::endl;
             }
             entry = guard = 0;
         }
@@ -60,105 +68,116 @@ namespace upsylon {
             return (NULL==entry->from) && (guard==entry->next);
         }
 
-
-
-
-        void * section:: try_acquire(size_t &n, const bool zero) throw()
+        static inline void __zero(void *p, const size_t n) throw()
         {
-
-                const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_iln2,n);
-                const size_t required = boundary >> block_iln2;
-
-                //--------------------------------------------------------------
-                //
-                // loop over free blocks
-                //
-                //--------------------------------------------------------------
-                const block  *lastBlock = guard;
-                block        *currBlock = entry;
-                while(currBlock!=lastBlock)
-                {
-                    //----------------------------------------------------------
-                    //
-                    // check available
-                    //
-                    //----------------------------------------------------------
-                    if(currBlock->from)
-                    {
-                        currBlock=currBlock->next;
-                        continue;
-                    }
-
-                    //----------------------------------------------------------
-                    //
-                    // check big enough
-                    //
-                    //----------------------------------------------------------
-                    const size_t available = currBlock->size;
-                    if(available>=required)
-                    {
-                        //------------------------------------------------------
-                        //
-                        // found
-                        //
-                        //------------------------------------------------------
-                        
-                        if(available>=required+2)
-                        {
-                            // create a new block
-                            block *nextBlock = currBlock->next;
-                            block *new_block = currBlock+required+1;
-                            new_block->prev  = currBlock;
-                            new_block->next  = nextBlock;
-                            new_block->from  = 0;
-                            new_block->size  = available-required-1;
-
-                            // update nextblock
-                            nextBlock->prev = new_block;
-
-                            // update currBlock
-                            currBlock->size = required;
-                            currBlock->next = new_block;
-
-                            assert(check_block(currBlock));
-                            assert(check_block(nextBlock));
-                            assert(check_block(new_block));
-                            n = boundary;
-                        }
-                        else
-                        {
-                            // full block
-                            n = currBlock->size * block_size;
-                        }
-
-                        assert(currBlock->size * block_size == n );
-                        currBlock->from = this;
-                        void *p = &currBlock[1];
-                        if(zero) memset(p,0,n);
-                        return p;
-                    }
-
-                    //----------------------------------------------------------
-                    //
-                    // try next block
-                    //
-                    //----------------------------------------------------------
-                    currBlock=currBlock->next;
-                }
-
-                //--------------------------------------------------------------
-                //
-                // no possible allocation
-                //
-                //--------------------------------------------------------------
-                return 0;
-
-
+            assert(n>0);
+            assert(p!=NULL);
+            memset(p,0,n);
         }
 
-        void * section::acquire(size_t &n) throw()
+
+        void *section:: acquire(size_t &n) throw()
         {
-            return try_acquire(n,true);
+            return acquire(n,__zero);
+        }
+
+
+        void * section:: acquire(size_t &n, finalize proc) throw()
+        {
+
+            assert(proc);
+            const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_iln2,n);
+            const size_t required = boundary >> block_iln2;
+
+            //--------------------------------------------------------------
+            //
+            // loop over free blocks
+            //
+            //--------------------------------------------------------------
+            const block  *lastBlock = guard;
+            block        *currBlock = entry;
+            while(currBlock!=lastBlock)
+            {
+                //----------------------------------------------------------
+                //
+                // check available
+                //
+                //----------------------------------------------------------
+                if(currBlock->from)
+                {
+                    currBlock=currBlock->next;
+                    continue;
+                }
+
+                //----------------------------------------------------------
+                //
+                // check big enough
+                //
+                //----------------------------------------------------------
+                const size_t available = currBlock->size;
+                if(available>=required)
+                {
+                    //------------------------------------------------------
+                    //
+                    // found
+                    //
+                    //------------------------------------------------------
+
+                    if(available>=required+2)
+                    {
+                        // create a new block
+                        block *nextBlock = currBlock->next;
+                        block *new_block = currBlock+required+1;
+                        new_block->prev  = currBlock;
+                        new_block->next  = nextBlock;
+                        new_block->from  = 0;
+                        new_block->size  = available-required-1;
+
+                        // update nextblock
+                        nextBlock->prev = new_block;
+
+                        // update currBlock
+                        currBlock->size = required;
+                        currBlock->next = new_block;
+
+                        assert(check_block(currBlock));
+                        assert(check_block(nextBlock));
+                        assert(check_block(new_block));
+                        n = boundary;
+                    }
+                    else
+                    {
+                        // full block
+                        n = currBlock->size * block_size;
+                    }
+
+                    assert(currBlock->size * block_size == n );
+                    currBlock->from = this;
+                    void *p = &currBlock[1];
+                    proc(p,n);
+                    return p;
+                }
+
+                //----------------------------------------------------------
+                //
+                // try next block
+                //
+                //----------------------------------------------------------
+                currBlock=currBlock->next;
+            }
+
+            //--------------------------------------------------------------
+            //
+            // no possible allocation
+            //
+            //--------------------------------------------------------------
+            return 0;
+        }
+
+
+        static inline void __nope(void*,const size_t) throw()
+        {
+
         }
 
         section * section:: receive(void * &addr, size_t &maxi, const size_t size) throw()
@@ -167,7 +186,7 @@ namespace upsylon {
             assert(maxi);
             assert(maxi>=size);
             size_t n = size;
-            void  *p = try_acquire(n,false);
+            void  *p = acquire(n,__nope);
             if(p)
             {
                 assert(n>=size);
@@ -191,9 +210,15 @@ namespace upsylon {
         {
             assert(addr); assert(n>0);
 
+            //------------------------------------------------------------------
+            // get block an owner
+            //------------------------------------------------------------------
             block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->size*block_size==n);
             section *owner     = currBlock->from;                assert(owner->check_block(currBlock)); assert(owner->guard!=currBlock);
 
+            //------------------------------------------------------------------
+            // check status
+            //------------------------------------------------------------------
             static const unsigned merge_none = 0x00;
             static const unsigned merge_prev = 0x01;
             static const unsigned merge_next = 0x02;
@@ -203,6 +228,9 @@ namespace upsylon {
             block   *prevBlock = currBlock->prev; if(prevBlock&&(0==prevBlock->from))       flag |= merge_prev;
             block   *nextBlock = currBlock->next; assert(nextBlock); if(0==nextBlock->from) flag |= merge_next;
 
+            //------------------------------------------------------------------
+            // merge
+            //------------------------------------------------------------------
             switch(flag)
             {
                 case merge_prev:
@@ -243,7 +271,7 @@ namespace upsylon {
             addr = 0;
             n    = 0;
             return owner;
-         }
+        }
 
 
 
