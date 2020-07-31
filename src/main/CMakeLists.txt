@@ -70,6 +70,12 @@ SET(memory_srcs ${memory_decl} ${memory_code})
 SOURCE_GROUP( memory FILES ${memory_srcs} )
 INSTALL( FILES ${memory_decl} DESTINATION include/y/memory )
 
+FILE(GLOB memory_allocator_decl   y/memory/allocator/*.hpp)
+FILE(GLOB memory_allocator_code y/memory/allocator/*.cpp)
+SET(memory_allocator_srcs ${memory_allocator_decl} ${memory_allocator_code})
+SOURCE_GROUP( memory_allocator FILES ${memory_allocator_srcs} )
+INSTALL( FILES ${memory_allocator_decl} DESTINATION include/y/memory/allocator )
+
 FILE(GLOB string_decl   y/string/*.hpp)
 FILE(GLOB string_code y/string/*.cpp)
 SET(string_srcs ${string_decl} ${string_code})
@@ -376,7 +382,7 @@ ${sort_srcs}
 ${sort_network_srcs}
 ${randomized_srcs}
 ${hashing_srcs}
-${memory_srcs}
+${memory_srcs} ${memory_allocator_srcs}
 ${string_srcs}
 ${ptr_srcs}
 ${iterate_srcs}

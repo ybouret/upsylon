@@ -2,7 +2,7 @@
 #ifndef Y_GEOM_CONTOUR_INCLUDED
 #define Y_GEOM_CONTOUR_INCLUDED 1
 
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/ordered/sorted-vector.hpp"
 
 namespace upsylon {

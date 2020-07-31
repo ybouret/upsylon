@@ -4,7 +4,7 @@
 
 #include "y/code/round.hpp"
 #include "y/core/loop.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 
 #include <cstring>
 #include <cstdlib>

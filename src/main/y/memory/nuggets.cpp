@@ -1,5 +1,5 @@
 #include "y/memory/nuggets.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/memory/arena.hpp"
 #include "y/type/self-destruct.hpp"
 

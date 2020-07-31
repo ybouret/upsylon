@@ -117,7 +117,7 @@ Y_UTEST_DONE()
 
 #include "y/sequence/vector.hpp"
 #include "y/string/tokenizer.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/type/utils.hpp"
 
 static inline bool isSep( int C )

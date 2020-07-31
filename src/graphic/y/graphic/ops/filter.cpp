@@ -2,7 +2,7 @@
 #include "y/graphic/ops/filter.hpp"
 #include "y/sort/heap.hpp"
 #include "y/comparison.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/sorted-sum.hpp"
 

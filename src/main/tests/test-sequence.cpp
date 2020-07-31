@@ -3,7 +3,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include <typeinfo>
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 using namespace upsylon;
 

@@ -1,7 +1,7 @@
 #include "y/fs/disk/istream.hpp"
 #include "y/fs/disk/ostream.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/string.hpp"
 
 #include <cstdio>

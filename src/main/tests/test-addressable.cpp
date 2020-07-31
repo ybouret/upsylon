@@ -1,7 +1,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
 #include "y/ptr/arc.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/arr.hpp"
 #include "y/ptr/shared.hpp"

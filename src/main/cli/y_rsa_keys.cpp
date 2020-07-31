@@ -3,7 +3,7 @@
 #include "y/fs/local/fs.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/randomized/bits.hpp"
 #include <cstdlib>
 

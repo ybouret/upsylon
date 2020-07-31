@@ -4,7 +4,7 @@
 #include "y/exceptions.hpp"
 #include <cerrno>
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/associative/suffix/store.hpp"
 
 namespace upsylon {

@@ -3,7 +3,7 @@
 #include "y/mkl/fit/sample/load.hpp"
 
 #include "y/utest/run.hpp"
-#include "y/memory/pooled.hpp"
+//#include "y/memory/allocator/pooled.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/lightweight-vector.hpp"
 

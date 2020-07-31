@@ -3,7 +3,7 @@
 
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/memory/buffers.hpp"
 
 namespace upsylon

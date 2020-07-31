@@ -5,7 +5,7 @@
 
 #include "y/spade/layout/fragment.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon {
     

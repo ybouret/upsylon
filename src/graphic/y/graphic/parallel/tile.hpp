@@ -6,7 +6,7 @@
 
 #include "y/graphic/area.hpp"
 #include "y/memory/xslot.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon {
 

@@ -1,6 +1,6 @@
 #include "y/memory/embed.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "support.hpp"
 
 using namespace upsylon;

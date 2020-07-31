@@ -1,6 +1,6 @@
 
 #include "y/tensor/tensor.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/exception.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"

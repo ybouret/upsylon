@@ -1,4 +1,4 @@
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/exceptions.hpp"
 #include <cstdlib>
 #include <cerrno>

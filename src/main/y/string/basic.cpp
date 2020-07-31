@@ -1,5 +1,5 @@
 #include "y/string/basic.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 #include "y/code/utils.hpp"
 

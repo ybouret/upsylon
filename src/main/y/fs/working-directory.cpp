@@ -1,5 +1,5 @@
 #include "y/fs/working-directory.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/memory/buffers.hpp"
 
 #include "y/exceptions.hpp"

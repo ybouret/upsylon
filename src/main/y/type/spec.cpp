@@ -81,7 +81,7 @@ user()
 #include "y/associative/set.hpp"
 #include "y/associative/map.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/exception.hpp"
 #include "y/string/display.hpp"
 #include "y/hashing/fnv.hpp"

@@ -2,7 +2,7 @@
 
 #include "y/zlib/zlib.h"
 #include "y/exceptions.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/string.hpp"
 
 #include <cerrno>

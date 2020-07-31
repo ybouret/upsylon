@@ -9,7 +9,7 @@
 #include "y/graphic/types.hpp"
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon {
 

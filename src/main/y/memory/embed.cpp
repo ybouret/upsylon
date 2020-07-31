@@ -74,7 +74,7 @@ namespace upsylon
 
 }
 
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 
 namespace upsylon
 {

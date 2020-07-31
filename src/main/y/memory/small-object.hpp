@@ -3,8 +3,7 @@
 #define Y_MEMORY_SMALL_OBJECT 1
 
 #include "y/memory/blocks.hpp"
-#include "y/memory/global.hpp"
-#include "y/concurrent/singleton.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/longevities.hpp"
 
 namespace upsylon

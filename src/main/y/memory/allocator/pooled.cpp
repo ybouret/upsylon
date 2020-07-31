@@ -1,4 +1,4 @@
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/memory/carver.hpp"
 #include "y/memory/io.hpp"
 #include "y/object.hpp"

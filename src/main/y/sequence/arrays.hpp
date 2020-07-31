@@ -3,7 +3,7 @@
 #define Y_ARRAYS_INCLUDED 1
 
 #include "y/sequence/array.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/type/self-destruct.hpp"
 
 namespace upsylon {

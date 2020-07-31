@@ -12,7 +12,7 @@ using namespace upsylon;
 #include "y/ios/ocstream.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 Y_UTEST(part)
 {

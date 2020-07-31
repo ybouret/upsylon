@@ -1,5 +1,5 @@
 #include "y/sequence/slots.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
 #include "support.hpp"

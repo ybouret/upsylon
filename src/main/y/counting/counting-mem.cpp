@@ -1,5 +1,5 @@
 #include "y/counting/counting.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon
 {

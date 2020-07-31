@@ -5,7 +5,7 @@
 
 #include "y/container/ordered.hpp"
 #include "y/sequence/accessible.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/comparator.hpp"
 #include "y/core/locate.hpp"
 #include "y/iterate/linear.hpp"

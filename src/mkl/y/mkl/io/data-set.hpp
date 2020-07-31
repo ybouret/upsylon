@@ -9,7 +9,7 @@
 #include "y/string/tokenizer.hpp"
 #include "y/string/convert.hpp"
 #include "y/comparison.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon {
     

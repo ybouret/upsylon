@@ -1,7 +1,7 @@
 #include "y/memory/xslot.hpp"
 #include "y/utest/run.hpp"
 
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/string.hpp"
 
 using namespace upsylon;

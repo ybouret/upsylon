@@ -1,7 +1,7 @@
 #include "y/sequence/maintain.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "support.hpp"
 
 using namespace upsylon;

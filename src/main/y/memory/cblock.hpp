@@ -2,7 +2,7 @@
 #ifndef Y_MEMORY_CBLOCK_INCLUDED
 #define Y_MEMORY_CBLOCK_INCLUDED 1
 
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/type/args.hpp"
 #include "y/type/aliasing.hpp"
 #include <cstring>

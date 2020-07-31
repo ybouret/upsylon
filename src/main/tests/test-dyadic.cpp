@@ -1,6 +1,6 @@
-#include "y/memory/dyadic.hpp"
-#include "y/memory/pooled.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/dyadic.hpp"
+#include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/global.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"

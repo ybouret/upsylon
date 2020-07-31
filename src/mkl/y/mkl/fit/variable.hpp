@@ -6,7 +6,7 @@
 #include "y/string.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/associative/set.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon {

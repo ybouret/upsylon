@@ -1,7 +1,7 @@
 #include "y/mkl/stat/k-means.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
 #include "y/ios/ocstream.hpp"

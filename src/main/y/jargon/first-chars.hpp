@@ -4,7 +4,7 @@
 #define Y_JARGON_FIRST_CHARS_INCLUDED 1
 
 #include "y/ordered/sorted-vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon {
  

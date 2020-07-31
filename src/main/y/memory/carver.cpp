@@ -1,5 +1,5 @@
 #include "y/memory/carver.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/memory/arena-of.hpp"
 #include "y/type/utils.hpp"
 #include "y/exception.hpp"

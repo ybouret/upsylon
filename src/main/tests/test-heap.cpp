@@ -1,7 +1,7 @@
 #include "y/ordered/heap.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/hashing/sha1.hpp"
 using namespace upsylon;
 

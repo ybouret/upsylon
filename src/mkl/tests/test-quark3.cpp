@@ -6,7 +6,7 @@
 #include "y/type/point3d.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/type/spec.hpp"
 
 using namespace upsylon;

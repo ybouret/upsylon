@@ -1,8 +1,8 @@
 #include "y/memory/groove.hpp"
 
 #include "y/object.hpp"
-#include "y/memory/pooled.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/exceptions.hpp"
 
 #include <cstring>

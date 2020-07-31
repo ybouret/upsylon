@@ -1,6 +1,6 @@
 #include "y/memory/arena.hpp"
 #include "y/type/utils.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/os/error.hpp"
 
 #include <iostream>

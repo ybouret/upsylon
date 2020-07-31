@@ -4,7 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
 #include "support.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/associative/set.hpp"
 #include "y/ptr/intr.hpp"
 

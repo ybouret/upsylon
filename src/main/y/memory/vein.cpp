@@ -1,7 +1,7 @@
 
 #include "y/memory/vein.hpp"
 #include "y/memory/nuggets.hpp"
-#include "y/memory/global.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/os/static-check.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/self-destruct.hpp"

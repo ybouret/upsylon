@@ -1,5 +1,5 @@
 #include "y/memory/cblock.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/memory/carver.hpp"
 #include "y/utest/run.hpp"
 #include "y/object.hpp"

@@ -130,7 +130,7 @@ Y_UTEST(store)
 Y_UTEST_DONE()
 
 #include "y/type/spec.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/utest/timings.hpp"
 
 namespace {

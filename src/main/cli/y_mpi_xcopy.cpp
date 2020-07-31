@@ -1,7 +1,7 @@
 #include "y/program.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/sort/unique.hpp"
 #include "y/fs/vfs.hpp"

@@ -1,6 +1,6 @@
 #include "y/fft/xbitrev.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/dyadic.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/hashing/sha1.hpp"
