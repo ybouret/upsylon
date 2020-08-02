@@ -23,7 +23,6 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-
             typedef unsigned_int<sizeof(void*)>::type len_t; //!< ensure aligment
 
             //! block for internal linked list
@@ -35,11 +34,10 @@ namespace upsylon {
             };
 
             static const size_t block_size = sizeof(block);               //!< block size
-            static const size_t block_iln2 = ilog2<block_size>::value;    //!< for bits shift
-            static const size_t min_blocks = 3;                           //!< mininum number of blocks
-            static const size_t small_size = min_blocks * block_size;     //!< minimum size to build
-            static const size_t min_size_t = small_size / sizeof(size_t); //!< minimum number of size_t
-
+            static const size_t block_iln2 = ilog2<block_size>::value;    //!< for bits shift : block_size = 1 << block_iln2
+            static const size_t min_blocks = 3;                           //!< mininum number of blocks for a valid section
+            static const size_t min_length = min_blocks << block_iln2;    //!< minimum length in bytes for a valid section
+                                                                          
             //__________________________________________________________________
             //
             // C++

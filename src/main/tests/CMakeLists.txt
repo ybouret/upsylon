@@ -83,7 +83,8 @@ test-carver.cpp test-pooled.cpp test-buffers.cpp test-xslot.cpp test-nugget.cpp 
 test-static-slots.cpp 
 test-memory-marker.cpp
 test-memory-groove.cpp
-test-memory-section.cpp)
+test-memory-section.cpp
+test-memory-piece.cpp)
 ADD_TEST(mem:chunk       test-main chunk)
 ADD_TEST(mem:arena       test-main arena)
 ADD_TEST(mem:alloc       test-main alloc)
@@ -107,6 +108,7 @@ ADD_TEST(mem:slots       test-main static_slots)
 ADD_TEST(mem:marker      test-main marker)
 ADD_TEST(mem:groove      test-main groove)
 ADD_TEST(mem:section     test-main section)
+ADD_TEST(mem:piece       test-main piece)
 
 SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
 ADD_TEST(par:parallel    test-main parallel)

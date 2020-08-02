@@ -12,7 +12,7 @@ namespace upsylon {
 
         size_t   section:: bytes_to_hold(const size_t bytes) throw()
         {
-            return max_of<size_t>(small_size,Y_ROUND_LN2(block_iln2,bytes)+2*block_size);
+            return max_of<size_t>(min_length,Y_ROUND_LN2(block_iln2,bytes)+2*block_size);
         }
 
 
@@ -24,7 +24,7 @@ namespace upsylon {
         prev(0)
         {
             assert(data!=NULL);
-            assert(size>=small_size);
+            assert(size>=min_length);
             size_t blocks = size/block_size; assert(blocks>=min_blocks);
 
             guard += --blocks;
@@ -85,6 +85,10 @@ namespace upsylon {
         void * section:: acquire(size_t &n, finalize proc) throw()
         {
 
+            static const size_t split_blocks = 3;
+            static const size_t extra_blocks = split_blocks-1;
+            static const size_t delta_blocks = extra_blocks-1;
+            
             assert(proc);
             const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_iln2,n);
             const size_t required = boundary >> block_iln2;
@@ -123,7 +127,7 @@ namespace upsylon {
                     //
                     //------------------------------------------------------
 
-                    if(available>=required+2)
+                    if(available>=required+extra_blocks)
                     {
                         // create a new block
                         block *nextBlock = currBlock->next;
@@ -131,7 +135,7 @@ namespace upsylon {
                         new_block->prev  = currBlock;
                         new_block->next  = nextBlock;
                         new_block->from  = 0;
-                        new_block->size  = available-required-1;
+                        new_block->size  = available-required-delta_blocks;
 
                         // update nextblock
                         nextBlock->prev = new_block;

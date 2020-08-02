@@ -40,7 +40,7 @@ Y_UTEST(section)
 
     for(int iter=0;iter<16;++iter)
     {
-        memory::cblock_of<size_t> buffer( memory::section::min_size_t + alea.leq(1000) );
+        memory::cblock_of<size_t> buffer( memory::section::min_blocks  + alea.leq(1000) );
         memory::section           S(buffer.data,buffer.bytes);
 
         list<block> L;
