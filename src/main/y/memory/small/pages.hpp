@@ -18,7 +18,7 @@ namespace upsylon {
             //__________________________________________________________________
             //
             //
-            //! provider of blank pieces
+            //! provider of blank pieces, a.k.a shared cache for arenas
             //
             //__________________________________________________________________
             class pages
@@ -27,9 +27,9 @@ namespace upsylon {
                 static const size_t header_size         = sizeof(void*);
                 static const size_t min_pieces_per_page = 2;
 
-                //! enough memory for some pieces and a page
+                //! enough memory for some chunks and a page
                 /**
-                 [page *next;...;piece[0]..piece[pieces_per_page-1]
+                 [page *next;...;chunk[0]..chunk[chunks_per_page-1]
                  */
                 static size_t chunk_size_for(const size_t usr_chunk_size) throw();
 
@@ -37,7 +37,7 @@ namespace upsylon {
                 ~pages() throw();
 
                 const size_t chunk_size;
-                const size_t pieces_per_page;
+                const size_t chunks_per_page;
 
                 void   store_nil(chunk *p) throw();
                 chunk *query_nil();

@@ -16,10 +16,10 @@ Y_UTEST(pages)
         std::cerr
         << std::setw(5) << chunk_size << " => "
         << std::setw(5) << cache.chunk_size << " => "
-        << std::setw(5) << cache.pieces_per_page << " pieces/page"
+        << std::setw(5) << cache.chunks_per_page << " pieces/page"
         << std::endl;
 
-        const size_t n = cache.pieces_per_page * 5;
+        const size_t n = cache.chunks_per_page * 5;
         core::list_of<small::chunk> chunks;
         for(size_t i=0;i<n;++i)
         {

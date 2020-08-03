@@ -16,7 +16,7 @@ namespace upsylon {
 
             pages:: ~pages() throw()
             {
-                if(chunks.size!=pieces_per_page*zstore.size)
+                if(chunks.size!=chunks_per_page*zstore.size)
                 {
                     std::cerr << "[small::pages] not all small::pieces are released" << std::endl;
                 }
@@ -36,7 +36,7 @@ namespace upsylon {
 
             pages:: pages(const size_t usr_chunk_size) throw() :
             chunk_size( chunk_size_for(usr_chunk_size) ),
-            pieces_per_page( (chunk_size-header_size)/sizeof(chunk) ),
+            chunks_per_page( (chunk_size-header_size)/sizeof(chunk) ),
             chunks(),
             zstore()
             {
@@ -57,7 +57,7 @@ namespace upsylon {
 
                 // use extra memory as pieces
                 chunk *p = aliasing::forward<chunk>(buffer,header_size);
-                for(size_t i=1;i<pieces_per_page;++i)
+                for(size_t i=1;i<chunks_per_page;++i)
                 {
                     assert(is_zeroed(p[i]));
                     chunks.push_back(&p[i]);
@@ -93,7 +93,7 @@ namespace upsylon {
             bool pages:: is_busy(const page *p) const throw()
             {
                 const chunk *z = aliasing::forward<chunk>(p,header_size);
-                for(size_t i=pieces_per_page;i>0;--i,++z)
+                for(size_t i=chunks_per_page;i>0;--i,++z)
                 {
                     if(z->provided_number) return true;
                 }

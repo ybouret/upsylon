@@ -19,7 +19,7 @@ Y_UTEST(theater)
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
         small::pages cache(chunk_size);
         std::cerr << "\tcache.chunk_size      = " << cache.chunk_size << std::endl;
-        std::cerr << "\tcache.pieces_per_page = " << cache.pieces_per_page << std::endl;
+        std::cerr << "\tcache.chunks_per_page = " << cache.chunks_per_page << std::endl;
         const size_t block_max = min_of<size_t>(chunk_size,60);
         for(size_t block_size=1;block_size<=block_max;++block_size)
         {
