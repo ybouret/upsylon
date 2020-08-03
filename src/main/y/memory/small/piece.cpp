@@ -1,4 +1,5 @@
 #include "y/memory/small/piece.hpp"
+#include <cstring>
 
 namespace upsylon {
 
@@ -40,8 +41,6 @@ namespace upsylon {
             {
                 // setup
                 last += provided_number*block_size;
-
-                //uint8_t   *p = data;
                 for(uint8_t q=0,*p=data; q!=provided_number; ++q)
                 {
                     *(p++) = ++q;
@@ -72,7 +71,57 @@ namespace upsylon {
                 const uint8_t *p = static_cast<const uint8_t*>(addr);
                 return (p>=data) && (p<last);
             }
-            
+
+            bool piece:: is_empty() const throw()
+            {
+                return still_available>=provided_number;
+            }
+
+            size_t piece::allocated() const throw()
+            {
+                assert(still_available<=provided_number);
+                return provided_number-still_available;
+            }
+
+
+            void * piece::acquire(const size_t block_size) throw()
+            {
+                // sanity check
+                assert(still_available>0);
+                assert(still_available<=provided_number);
+
+                // return object
+                uint8_t *p = &data[ first_available*block_size ]; // get address
+                first_available = *p;                             // read next available address
+                --still_available;                                // bookeeping
+                memset(p,0,block_size);                           // zero memory
+                return p;                                         // done
+            }
+
+            bool piece:: is_aligned(const void *addr, const size_t block_size) const throw()
+            {
+                assert(addr!=NULL);
+                assert(owns(addr));
+                return (static_cast<ptrdiff_t>( static_cast<const uint8_t*>(addr)-data) % block_size) == 0;
+            }
+
+            void piece:: release(void *addr, const size_t block_size) throw()
+            {
+                assert(addr!=NULL);
+                assert(owns(addr));
+                assert(still_available<provided_number);
+                assert(is_aligned(addr,block_size));
+
+                // restore linking
+                uint8_t *to_release = static_cast<uint8_t *>(addr);
+                *to_release         = first_available;
+                first_available     = static_cast<uint8_t>(to_release-data);
+                assert( (to_release-data) == first_available );
+
+                // bookkeeping
+                ++still_available;
+            }
+
         }
     }
 }
