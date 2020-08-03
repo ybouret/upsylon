@@ -135,8 +135,8 @@ namespace upsylon {
                 // restore linking
                 uint8_t *to_release = static_cast<uint8_t *>(addr);
                 *to_release         = first_available;
-                first_available     = static_cast<uint8_t>(to_release-data);
-                assert( (to_release-data) == first_available );
+                const size_t indx   = static_cast<size_t>(to_release-data)/block_size; assert(indx<size_t(provided_number));
+                first_available     = static_cast<uint8_t>(indx);
 
                 // bookkeeping
                 ++still_available;
@@ -149,7 +149,6 @@ namespace upsylon {
 }
 
 #include "y/type/utils.hpp"
-#include <iostream>
 
 namespace upsylon {
 
@@ -159,8 +158,12 @@ namespace upsylon {
         namespace small
         {
 
+            size_t piece::min_chunk_size_for(const size_t block_size) throw()
+            {
+                return next_power_of_two(block_size);
+            }
 
-
+            
             size_t piece:: max_chunk_size_for(const size_t block_size) throw()
             {
 
@@ -174,7 +177,7 @@ namespace upsylon {
                 size_t  required = blocks*block_size;
                 size_t  boundary = next_power_of_two(required);
 
-                std::cerr << "boundary " << boundary << " for " << required << " #" << blocks << std::endl;
+                //std::cerr << "boundary " << boundary << " for " << required << " #" << blocks << std::endl;
 
                 //--------------------------------------------------------------
                 //
@@ -190,7 +193,7 @@ namespace upsylon {
                     {
                         required = prev_required;
                         boundary = prev_boundary;
-                        std::cerr << "better with " << boundary  << " for " << required << " #" << blocks << std::endl;
+                        //std::cerr << "better with " << boundary  << " for " << required << " #" << blocks << std::endl;
                         prev_boundary >>= 1;
                     }
                     else

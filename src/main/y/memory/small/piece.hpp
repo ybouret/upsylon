@@ -71,6 +71,9 @@ namespace upsylon {
                  */
                 static size_t max_chunk_size_for(const size_t block_size) throw();
 
+                //! next power of two
+                static size_t min_chunk_size_for(const size_t block_size) throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(piece);
                 bool is_aligned(const void *addr, const size_t block_size) const throw();
