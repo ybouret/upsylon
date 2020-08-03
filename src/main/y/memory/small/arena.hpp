@@ -14,6 +14,12 @@ namespace upsylon {
 
         namespace small {
 
+            //__________________________________________________________________
+            //
+            //
+            //! arena of multiple chunks to acquire/release same block_size
+            //
+            //__________________________________________________________________
             class arena
             {
             public:

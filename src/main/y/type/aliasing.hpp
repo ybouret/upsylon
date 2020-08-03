@@ -69,12 +69,14 @@ namespace upsylon {
             return static_cast<const T *>(p);
         }
 
+        //! shifted in both directions
         template <typename T, typename U> static inline
         const T *shifted(const U *addr, const ptrdiff_t shift) throw()
         {
             return static_cast<const T *>( anonymous(addr,shift) );
         }
 
+        //! forward only
         template <typename T, typename U> static inline
         const T *forward(const U *addr, const size_t offset) throw()
         {
