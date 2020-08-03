@@ -2,7 +2,6 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/memory/allocator/global.hpp"
-//#include "y/type/utils.hpp"
 #include <iomanip>
 
 using namespace upsylon;

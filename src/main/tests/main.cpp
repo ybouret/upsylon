@@ -48,6 +48,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(groove);
     Y_UTEST(section);
     Y_UTEST(piece);
+    Y_UTEST(theater);
     
     Y_UTEST(mloops);
     Y_UTEST(comb);
