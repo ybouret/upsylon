@@ -6,7 +6,7 @@ using namespace upsylon;
 
 Y_UTEST(piece)
 {
-    Y_UTEST_SIZEOF(memory::piece);
+    Y_UTEST_SIZEOF(memory::small::piece);
 }
 Y_UTEST_DONE()
 
