@@ -43,17 +43,19 @@ namespace upsylon {
                 piece *query_nil();
                 void   gc() throw();
 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(pages);
                 struct page
                 {
                     page *next;
                 };
-
-                core::list_of<piece> shared; //!< L.R.U cache
-                core::pool_of<page>  zstore; //!< ever growing store
-
                 piece *query_from_new_page();
+
+            public:
+                const core::list_of<piece> pieces; //!< L.R.U cache
+                const core::pool_of<page>  zstore; //!< ever growing store
+
 
             };
 

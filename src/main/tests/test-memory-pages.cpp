@@ -25,8 +25,15 @@ Y_UTEST(pages)
         {
             pieces.push_back( cache.query_nil() );
         }
+        std::cerr << "cache.zstore=" << cache.zstore.size << std::endl;
+        std::cerr << "cache.pieces=" << cache.pieces.size << std::endl;
+        std::cerr << "pieces      =" << pieces.size << std::endl;
+        alea.shuffle(pieces);
 
-        pieces.reset();
+        while(pieces.size)
+        {
+            cache.store_nil( pieces.pop_back() );
+        }
 
     }
 

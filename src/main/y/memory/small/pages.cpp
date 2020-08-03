@@ -15,17 +15,16 @@ namespace upsylon {
 
             pages:: ~pages() throw()
             {
-                if(shared.size!=pieces_per_page*zstore.size)
+                if(pieces.size!=pieces_per_page*zstore.size)
                 {
                     std::cerr << "[small::pages] not all small::pieces are released" << std::endl;
                 }
-                shared.reset();
+                aliasing::_(pieces).reset();
                 while(zstore.size)
                 {
                     static global &mgr = global::instance();
-                    mgr.__free( zstore.query(), chunk_size );
+                    mgr.__free( aliasing::_(zstore).query(), chunk_size );
                 }
-
             }
             
             size_t pages:: chunk_size_for(const size_t usr_chunk_size) throw()
@@ -37,7 +36,7 @@ namespace upsylon {
             pages:: pages(const size_t usr_chunk_size) throw() :
             chunk_size( chunk_size_for(usr_chunk_size) ),
             pieces_per_page( (chunk_size-header_size)/sizeof(piece) ),
-            shared(),
+            pieces(),
             zstore()
             {
                 
@@ -47,20 +46,20 @@ namespace upsylon {
             {
                 static global &mgr = mgr.instance();
 
-                assert(shared.size<=0);
+                assert(pieces.size<=0);
 
                 // get memory
                 void *buffer = mgr.__calloc(1,chunk_size);
 
                 // store it as a page
-                (void) zstore.store( static_cast<page *>(buffer) );
+                (void) aliasing::_(zstore).store( static_cast<page *>(buffer) );
 
                 // use extra memory as pieces
                 piece *p = aliasing::forward<piece>(buffer,header_size);
                 for(size_t i=1;i<pieces_per_page;++i)
                 {
                     assert(is_zeroed(p[i]));
-                    shared.push_back(&p[i]);
+                    aliasing::_(pieces).push_back(&p[i]);
                 }
                 return p;
             }
@@ -70,14 +69,14 @@ namespace upsylon {
                 assert(p);
                 assert(0==p->next);
                 assert(0==p->prev);
-                shared.push_front(p);
+                aliasing::_(pieces).push_front(p);
             }
 
             piece *pages:: query_nil()
             {
-                if(shared.size)
+                if(pieces.size)
                 {
-                    piece *p = shared.pop_front();
+                    piece *p = aliasing::_(pieces).pop_front();
                     bzset(*p);
                     return p;
                 }
