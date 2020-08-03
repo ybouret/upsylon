@@ -60,6 +60,11 @@ namespace upsylon {
                 uint8_t        still_available; //!< bookeeping
                 const uint8_t  provided_number; //!< initial count
                 
+                //______________________________________________________________
+                //
+                // helpers
+                //______________________________________________________________
+                static size_t max_chunk_size_for(const size_t block_size) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(piece);

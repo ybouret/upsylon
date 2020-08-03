@@ -1,5 +1,4 @@
 #include "y/memory/small/piece.hpp"
-#include <cstring>
 
 namespace upsylon {
 
@@ -8,6 +7,8 @@ namespace upsylon {
 
         namespace small
         {
+            //static const char fn[] = "[memory::small::piece]";
+
             piece:: ~piece() throw()
             {
             }
@@ -41,10 +42,13 @@ namespace upsylon {
             {
                 // setup
                 last += provided_number*block_size;
-                for(uint8_t q=0,*p=data; q!=provided_number; ++q)
+
+                for(uint8_t q=0,*p=data; q!=provided_number; p += block_size)
                 {
-                    *(p++) = ++q;
+                    assert(owns(p));
+                    *p = ++q;
                 }
+
 
             }
 
@@ -83,6 +87,27 @@ namespace upsylon {
                 return provided_number-still_available;
             }
 
+            bool piece:: is_aligned(const void *addr, const size_t block_size) const throw()
+            {
+                assert(addr!=NULL);
+                assert(owns(addr));
+                return (static_cast<ptrdiff_t>( static_cast<const uint8_t*>(addr)-data) % block_size) == 0;
+            }
+
+        }
+
+    }
+
+}
+
+#include <cstring>
+namespace upsylon {
+
+    namespace memory
+    {
+
+        namespace small
+        {
 
             void * piece::acquire(const size_t block_size) throw()
             {
@@ -98,12 +123,7 @@ namespace upsylon {
                 return p;                                         // done
             }
 
-            bool piece:: is_aligned(const void *addr, const size_t block_size) const throw()
-            {
-                assert(addr!=NULL);
-                assert(owns(addr));
-                return (static_cast<ptrdiff_t>( static_cast<const uint8_t*>(addr)-data) % block_size) == 0;
-            }
+
 
             void piece:: release(void *addr, const size_t block_size) throw()
             {
@@ -122,6 +142,28 @@ namespace upsylon {
                 ++still_available;
             }
 
+
+
         }
     }
 }
+
+#include "y/type/utils.hpp"
+namespace upsylon {
+
+    namespace memory
+    {
+
+        namespace small
+        {
+            size_t piece:: max_chunk_size_for(const size_t block_size) throw()
+            {
+                return next_power_of_two( 0xff*block_size );
+            }
+
+        }
+
+    }
+
+}
+
