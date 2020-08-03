@@ -10,6 +10,8 @@ using namespace memory;
 
 Y_UTEST(theater)
 {
+    const size_t count        = 1024;
+    void        *entry[count] = {0 };
 
     for(size_t chunk_size=1; chunk_size <= 8192; chunk_size <<= 1)
     {
@@ -23,9 +25,17 @@ Y_UTEST(theater)
             std::cerr << "\t<block_size=" << std::setw(3) << block_size << ">";
             std::cerr << " chunk_size=" << std::setw(5) << t.chunk_size;
 
-            for(size_t i=0;i<1000;++i)
+            size_t n = 0;
+            for(size_t i=0;i<count;++i)
             {
-                t.acquire();
+                entry[n++] = t.acquire();
+            }
+            alea.shuffle(entry,count);
+
+
+            for(size_t i=0;i<count;++i)
+            {
+                t.release(entry[i]);
             }
 
             std::cerr << std::endl;

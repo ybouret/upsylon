@@ -46,7 +46,7 @@ namespace upsylon {
 
             theater:: theater(const size_t usr_block_size,
                               const size_t usr_chunk_size,
-                              pages &cache) :
+                              pages       &cache) :
             acquiring(0),
             releasing(0),
             empty_one(0),
@@ -64,11 +64,16 @@ namespace upsylon {
                 static global &mgr = mgr.instance();
                 assert(shared);
 
+                //--------------------------------------------------------------
                 // get an empty piece
+                //--------------------------------------------------------------
                 piece * curr = shared->query_nil();
 
-                // provide memory
-                try {
+                //--------------------------------------------------------------
+                // provide memory to this piece
+                //--------------------------------------------------------------
+                try
+                {
                     new (curr) piece(block_size,mgr.__calloc(1,chunk_size),chunk_size);
                 }
                 catch(...)
@@ -77,14 +82,18 @@ namespace upsylon {
                     throw;
                 }
 
+                //--------------------------------------------------------------
                 // put in position
+                //--------------------------------------------------------------
                 (void) pieces.push_back(curr);
                 while(curr->prev&&curr->data<=curr->prev->data)
                 {
                     pieces.towards_head(curr);
                 }
 
+                //--------------------------------------------------------------
                 // update available
+                //--------------------------------------------------------------
                 aliasing::_(available) += curr->provided_number;
                 return curr;
             }
@@ -101,16 +110,32 @@ namespace upsylon {
                 assert(p->data!=NULL);
                 assert(available>=p->provided_number);
 
+                //--------------------------------------------------------------
                 // update available
+                //--------------------------------------------------------------
                 aliasing::_(available) -= p->provided_number;
 
+                //--------------------------------------------------------------
                 // release memory
+                //--------------------------------------------------------------
                 mgr.__free(p->data,chunk_size);
 
+                //--------------------------------------------------------------
                 // return to cache
+                //--------------------------------------------------------------
                 shared->store_nil(p);
             }
 
+        }
+    }
+
+}
+
+namespace upsylon {
+
+    namespace memory {
+
+        namespace small {
 
             void * theater:: acquire()
             {
@@ -171,7 +196,9 @@ namespace upsylon {
                     assert(acquiring);
                     assert(acquiring->still_available);
 
+                    //----------------------------------------------------------
                     // check empty_one
+                    //----------------------------------------------------------
                     if(empty_one==acquiring)
                     {
                         empty_one=0;
@@ -190,9 +217,40 @@ namespace upsylon {
 
                 assert(acquiring);
                 assert(acquiring->still_available);
-                assert(!(empty_one&&empty_one==acquiring));
+                assert(0==empty_one);
                 --aliasing::_(available);
                 return acquiring->acquire(block_size);
+            }
+
+        }
+
+    }
+
+}
+
+
+namespace upsylon {
+
+    namespace memory {
+
+        namespace small {
+
+            void theater:: release(void *p) throw()
+            {
+                assert(p);
+                assert(releasing);
+
+            TRY:
+                switch (releasing->owner_of(p))
+                {
+                    case owned_by_this: goto RELEASE; // cache
+                    case owned_by_prev: assert(releasing->prev); releasing=releasing->prev; goto TRY;
+                    case owned_by_next: assert(releasing->next); releasing=releasing->next; goto TRY;
+                }
+
+            RELEASE:
+                assert(releasing->owns(p));
+
             }
 
         }

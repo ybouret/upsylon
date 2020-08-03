@@ -22,9 +22,11 @@ namespace upsylon {
                         pages       &cache);
 
                 ~theater() throw();
-                
-                //! acquire a zeroed block
-                void  *acquire();
+
+
+                void  *acquire();                //!< allocate a zeroed block
+                void   release(void *p) throw(); //!< release a previously allocated block
+
 
             private:
                 piece               *acquiring; //!< current acquiring piece
