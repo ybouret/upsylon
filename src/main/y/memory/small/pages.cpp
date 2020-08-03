@@ -3,6 +3,9 @@
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/type/block/zset.hpp"
+
+#include <iostream>
 
 namespace upsylon {
 
@@ -12,6 +15,17 @@ namespace upsylon {
 
             pages:: ~pages() throw()
             {
+                if(shared.size!=pieces_per_page*zstore.size)
+                {
+                    std::cerr << "[small::pages] not all small::pieces are released" << std::endl;
+                }
+                shared.reset();
+                while(zstore.size)
+                {
+                    static global &mgr = global::instance();
+                    mgr.__free( zstore.query(), chunk_size );
+                }
+
             }
             
             size_t pages:: chunk_size_for(const size_t usr_chunk_size) throw()
@@ -45,7 +59,8 @@ namespace upsylon {
                 piece *p = aliasing::forward<piece>(buffer,header_size);
                 for(size_t i=1;i<pieces_per_page;++i)
                 {
-                    shared.push_back( &p[i] );
+                    assert(is_zeroed(p[i]));
+                    shared.push_back(&p[i]);
                 }
                 return p;
             }
@@ -60,7 +75,18 @@ namespace upsylon {
 
             piece *pages:: query_nil()
             {
-                return shared.size ? shared.pop_front() : query_from_new_page();
+                if(shared.size)
+                {
+                    piece *p = shared.pop_front();
+                    bzset(*p);
+                    return p;
+                }
+                else
+                {
+                    piece *p= query_from_new_page();
+                    assert(is_zeroed(*p));
+                    return p;
+                }
             }
             
 

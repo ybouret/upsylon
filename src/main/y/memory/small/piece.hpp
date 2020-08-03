@@ -67,7 +67,8 @@ namespace upsylon {
 
                 //! optimize the chunk size
                 /**
-                 optimize the required/boundary ratio
+                 optimize the required/boundary ratio, preferring to
+                 decrease chunk_size than use a half empty memory
                  */
                 static size_t max_chunk_size_for(const size_t block_size) throw();
 

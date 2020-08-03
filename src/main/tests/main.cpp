@@ -49,6 +49,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(section);
     Y_UTEST(piece);
     Y_UTEST(theater);
+    Y_UTEST(pages);
     
     Y_UTEST(mloops);
     Y_UTEST(comb);

@@ -27,17 +27,7 @@ Y_UTEST(theater)
         
     }
 #endif
-
-    for(size_t chunk_size=1;chunk_size<=8192;chunk_size<<=1)
-    {
-        small::pages cache(chunk_size);
-        std::cerr
-        << std::setw(5) << chunk_size << " => "
-        << std::setw(5) << cache.chunk_size << " => "
-        << std::setw(5) << cache.pieces_per_page << " pieces/page"
-        << std::endl;
-    }
-
+    
     Y_UTEST_SIZEOF(small::piece);
     Y_UTEST_SIZEOF(small::pages);
     Y_UTEST_SIZEOF(small::theater);

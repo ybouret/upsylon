@@ -15,8 +15,12 @@ namespace upsylon {
         namespace small {
 
 
-
+            //__________________________________________________________________
+            //
+            //
             //! provider of empty pieces
+            //
+            //__________________________________________________________________
             class pages
             {
             public:
@@ -37,13 +41,15 @@ namespace upsylon {
 
                 void   store_nil(piece *p) throw();
                 piece *query_nil();
-                
+                void   gc() throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(pages);
                 struct page
                 {
                     page *next;
                 };
+
                 core::list_of<piece> shared; //!< L.R.U cache
                 core::pool_of<page>  zstore; //!< ever growing store
 

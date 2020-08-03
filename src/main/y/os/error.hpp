@@ -36,7 +36,7 @@ namespace upsylon
     //! default system error format into buffer
     void format_error( char buffer[], size_t length, error_type err ) throw();
     
-    //! abort program with system error abd context 'when'
+    //! abort program with system error and context 'when'
     void critical_error( error_type err, const char when[] ) throw();
     
     //! an opaque invalid_data error
