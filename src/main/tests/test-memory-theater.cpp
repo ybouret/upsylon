@@ -11,6 +11,7 @@ using namespace memory;
 Y_UTEST(theater)
 {
 
+#if 0
     const size_t usr_block_size = 8000;
     for(size_t block_size=1;block_size<=60;++block_size)
     {
@@ -25,7 +26,20 @@ Y_UTEST(theater)
         t.query_piece();
         
     }
+#endif
+
+    for(size_t chunk_size=1;chunk_size<=8192;chunk_size<<=1)
+    {
+        small::pages cache(chunk_size);
+        std::cerr
+        << std::setw(5) << chunk_size << " => "
+        << std::setw(5) << cache.chunk_size << " => "
+        << std::setw(5) << cache.pieces_per_page << " pieces/page"
+        << std::endl;
+    }
+
     Y_UTEST_SIZEOF(small::piece);
+    Y_UTEST_SIZEOF(small::pages);
     Y_UTEST_SIZEOF(small::theater);
 
 }
