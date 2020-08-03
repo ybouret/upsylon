@@ -42,6 +42,11 @@ namespace upsylon {
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
 
+            size_t theater:: blocks_per_piece() const throw()
+            {
+                assert(acquiring);
+                return acquiring->provided_number;
+            }
 
 
             theater:: theater(const size_t usr_block_size,
@@ -217,7 +222,7 @@ namespace upsylon {
 
                 assert(acquiring);
                 assert(acquiring->still_available);
-                assert(0==empty_one);
+                assert(!(empty_one&&acquiring==empty_one));
                 --aliasing::_(available);
                 return acquiring->acquire(block_size);
             }
@@ -235,22 +240,67 @@ namespace upsylon {
 
         namespace small {
 
-            void theater:: release(void *p) throw()
+            void theater:: release(void *addr) throw()
             {
-                assert(p);
-                assert(releasing);
+                assert(NULL!=addr);
+                assert(NULL!=releasing);
 
-            TRY:
-                switch (releasing->owner_of(p))
+                //--------------------------------------------------------------
+                // locating data
+                //--------------------------------------------------------------
+                switch (releasing->owner_of(addr))
                 {
-                    case owned_by_this: goto RELEASE; // cache
-                    case owned_by_prev: assert(releasing->prev); releasing=releasing->prev; goto TRY;
-                    case owned_by_next: assert(releasing->next); releasing=releasing->next; goto TRY;
+                    case owned_by_this: break;
+                    case owned_by_prev: do { releasing=releasing->prev; assert(releasing); } while( !releasing->owns(addr) ); break;
+                    case owned_by_next: do { releasing=releasing->next; assert(releasing); } while( !releasing->owns(addr) ); break;
                 }
 
-            RELEASE:
-                assert(releasing->owns(p));
+                //--------------------------------------------------------------
+                // release block and update available
+                //--------------------------------------------------------------
+                assert(releasing->owns(addr));
+                assert(empty_one!=releasing);
 
+                releasing->release(addr,block_size);
+                ++aliasing::_(available);
+
+                if(releasing->is_empty())
+                {
+                    assert(releasing->allocated()==0);
+                    if(0==empty_one)
+                    {
+                        //------------------------------------------------------
+                        // initialize empty_one
+                        //------------------------------------------------------
+                        empty_one = releasing;
+                    }
+                    else
+                    {
+                        //------------------------------------------------------
+                        // two empty pieces: free the piece with highed memory
+                        //------------------------------------------------------
+                        piece *to_free = releasing;
+                        piece *to_keep = empty_one;
+                        if(to_free->data<to_keep->data)
+                        {
+                            cswap(to_keep,to_free);
+                        }
+                        assert(to_keep->data<to_free->data);
+
+                        // update status
+                        empty_one = to_keep;
+                        if(acquiring==to_free)
+                        {
+                            acquiring = to_keep;
+                        }
+                        releasing = acquiring;
+                        
+                        delete_piece( pieces.unlink(to_free) );
+
+                    }
+                }
+
+                
             }
 
         }

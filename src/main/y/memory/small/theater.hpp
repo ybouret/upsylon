@@ -24,9 +24,10 @@ namespace upsylon {
                 ~theater() throw();
 
 
-                void  *acquire();                //!< allocate a zeroed block
-                void   release(void *p) throw(); //!< release a previously allocated block
+                void  *acquire();               //!< allocate a zeroed block
+                void   release(void *) throw(); //!< release a previously allocated block
 
+                size_t blocks_per_piece() const throw(); //!< acquiring->provided_number
 
             private:
                 piece               *acquiring; //!< current acquiring piece

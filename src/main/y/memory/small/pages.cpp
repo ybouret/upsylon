@@ -4,6 +4,7 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/sort/merge.hpp"
 
 #include <iostream>
 
@@ -19,11 +20,11 @@ namespace upsylon {
                 {
                     std::cerr << "[small::pages] not all small::pieces are released" << std::endl;
                 }
-                aliasing::_(pieces).reset();
+                pieces.reset();
                 while(zstore.size)
                 {
                     static global &mgr = global::instance();
-                    mgr.__free( aliasing::_(zstore).query(), chunk_size );
+                    mgr.__free(  zstore.query(), chunk_size );
                 }
             }
             
@@ -52,14 +53,14 @@ namespace upsylon {
                 void *buffer = mgr.__calloc(1,chunk_size);
 
                 // store it as a page
-                (void) aliasing::_(zstore).store( static_cast<page *>(buffer) );
+                (void)zstore.store( static_cast<page *>(buffer) );
 
                 // use extra memory as pieces
                 piece *p = aliasing::forward<piece>(buffer,header_size);
                 for(size_t i=1;i<pieces_per_page;++i)
                 {
                     assert(is_zeroed(p[i]));
-                    aliasing::_(pieces).push_back(&p[i]);
+                    pieces.push_back(&p[i]);
                 }
                 return p;
             }
@@ -69,25 +70,41 @@ namespace upsylon {
                 assert(p);
                 assert(0==p->next);
                 assert(0==p->prev);
-                aliasing::_(pieces).push_front(p);
+                aliasing::_(p->provided_number) = 0;
+                pieces.push_front(p);
             }
 
             piece *pages:: query_nil()
             {
                 if(pieces.size)
                 {
-                    piece *p = aliasing::_(pieces).pop_front();
+                    piece *p =  pieces.pop_front();
                     bzset(*p);
                     return p;
                 }
                 else
                 {
-                    piece *p= query_from_new_page();
+                    piece *p = query_from_new_page();
                     assert(is_zeroed(*p));
                     return p;
                 }
             }
-            
+
+            bool pages:: is_busy(const page *p) const throw()
+            {
+                const piece *z = aliasing::forward<piece>(p,header_size);
+                for(size_t i=pieces_per_page;i>0;--i,++z)
+                {
+                    if(z->provided_number) return true;
+                }
+                return false;
+            }
+
+            void pages:: gc() throw()
+            {
+                merging<piece>::sort_by_addr(pieces);
+            }
+
 
         }
 

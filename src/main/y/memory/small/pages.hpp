@@ -51,11 +51,9 @@ namespace upsylon {
                     page *next;
                 };
                 piece *query_from_new_page();
-
-            public:
-                const core::list_of<piece> pieces; //!< L.R.U cache
-                const core::pool_of<page>  zstore; //!< ever growing store
-
+                core::list_of<piece> pieces; //!< L.R.U cache
+                core::pool_of<page>  zstore; //!< ever growing store
+                bool is_busy(const page *) const throw();
 
             };
 
