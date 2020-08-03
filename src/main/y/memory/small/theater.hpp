@@ -30,13 +30,13 @@ namespace upsylon {
                 size_t blocks_per_piece() const throw(); //!< acquiring->provided_number
 
             private:
-                piece               *acquiring; //!< current acquiring piece
-                piece               *releasing; //!< current acquiring piece
-                piece               *empty_one; //!< empty piece
+                chunk               *acquiring; //!< current acquiring piece
+                chunk               *releasing; //!< current acquiring piece
+                chunk               *empty_one; //!< empty piece
             public:
                 const size_t         available; //!< bookkeeping of available blocks
             private:
-                core::list_of<piece> pieces;    //!< pieces, sorted by increasing memory
+                core::list_of<chunk> chunks;    //!< pieces, sorted by increasing memory
                 pages               *shared;    //!< shared cache
                 
             public:
@@ -45,8 +45,8 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(theater);
-                piece *create_piece();                //!< create an put it in its position, update 'available'
-                void   delete_piece(piece *p) throw();//!< delete memory and return to cache, update 'available'
+                chunk *create_piece();                //!< create an put it in its position, update 'available'
+                void   delete_piece(chunk *p) throw();//!< delete memory and return to cache, update 'available'
             };
         }
 

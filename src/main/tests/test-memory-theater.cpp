@@ -63,7 +63,7 @@ Y_UTEST(theater)
     }
 
 
-    Y_UTEST_SIZEOF(small::piece);
+    Y_UTEST_SIZEOF(small::chunk);
     Y_UTEST_SIZEOF(small::pages);
     Y_UTEST_SIZEOF(small::theater);
 

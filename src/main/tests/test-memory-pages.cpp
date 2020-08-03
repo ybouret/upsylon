@@ -20,24 +20,24 @@ Y_UTEST(pages)
         << std::endl;
 
         const size_t n = cache.pieces_per_page * 5;
-        core::list_of<small::piece> pieces;
+        core::list_of<small::chunk> chunks;
         for(size_t i=0;i<n;++i)
         {
-            pieces.push_back( cache.query_nil() );
+            chunks.push_back( cache.query_nil() );
         }
         //std::cerr << "cache.zstore=" << cache.zstore.size << std::endl;
        // std::cerr << "cache.pieces=" << cache.pieces.size << std::endl;
-        std::cerr << "pieces      =" << pieces.size << std::endl;
-        alea.shuffle(pieces);
+        std::cerr << "chunks      =" << chunks.size << std::endl;
+        alea.shuffle(chunks);
 
-        while(pieces.size)
+        while(chunks.size)
         {
-            cache.store_nil( pieces.pop_back() );
+            cache.store_nil( chunks.pop_back() );
         }
 
     }
 
-    Y_UTEST_SIZEOF(small::piece);
+    Y_UTEST_SIZEOF(small::chunk);
     Y_UTEST_SIZEOF(small::pages);
 
 }

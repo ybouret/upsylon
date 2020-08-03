@@ -14,9 +14,9 @@ namespace upsylon {
             theater:: ~theater() throw()
             {
                 size_t leak = 0;
-                while(pieces.size)
+                while(chunks.size)
                 {
-                    piece       *p = pieces.pop_back();
+                    chunk       *p = chunks.pop_back();
                     const size_t n = p->allocated();
                     if(n>0)
                     {
@@ -37,8 +37,8 @@ namespace upsylon {
                                   const size_t chunk_size)
             {
                 assert(block_size>0);
-                const size_t min_cs = piece::min_chunk_size_for(block_size);
-                const size_t max_cs = piece::max_chunk_size_for(block_size);
+                const size_t min_cs = chunk::min_chunk_size_for(block_size);
+                const size_t max_cs = chunk::max_chunk_size_for(block_size);
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
 
@@ -56,7 +56,7 @@ namespace upsylon {
             releasing(0),
             empty_one(0),
             available(0),
-            pieces(),
+            chunks(),
             shared( &cache ),
             block_size( usr_block_size ),
             chunk_size( chunk_size_for(block_size,usr_chunk_size) )
@@ -64,7 +64,7 @@ namespace upsylon {
                 empty_one = acquiring = releasing = create_piece();
             }
 
-            piece * theater:: create_piece()
+            chunk * theater:: create_piece()
             {
                 static global &mgr = mgr.instance();
                 assert(shared);
@@ -72,14 +72,14 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // get an empty piece
                 //--------------------------------------------------------------
-                piece * curr = shared->query_nil();
+                chunk * curr = shared->query_nil();
 
                 //--------------------------------------------------------------
                 // provide memory to this piece
                 //--------------------------------------------------------------
                 try
                 {
-                    new (curr) piece(block_size,mgr.__calloc(1,chunk_size),chunk_size);
+                    new (curr) chunk(block_size,mgr.__calloc(1,chunk_size),chunk_size);
                 }
                 catch(...)
                 {
@@ -90,10 +90,10 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // put in position
                 //--------------------------------------------------------------
-                (void) pieces.push_back(curr);
+                (void) chunks.push_back(curr);
                 while(curr->prev&&curr->data<=curr->prev->data)
                 {
-                    pieces.towards_head(curr);
+                    chunks.towards_head(curr);
                 }
 
                 //--------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace upsylon {
 
 
 
-            void  theater:: delete_piece(piece *p) throw()
+            void  theater:: delete_piece(chunk *p) throw()
             {
                 static global &mgr = global::location();
 
@@ -163,8 +163,8 @@ namespace upsylon {
                         //------------------------------------------------------
                         // local interleaved search
                         //------------------------------------------------------
-                        piece *lo = acquiring->prev;
-                        piece *hi = acquiring->next;
+                        chunk *lo = acquiring->prev;
+                        chunk *hi = acquiring->next;
                         while(lo&&hi)
                         {
                             if(lo->still_available>0)
@@ -215,7 +215,7 @@ namespace upsylon {
                     // need a new piece
                     //----------------------------------------------------------
                     assert(0==empty_one);
-                    piece *p  = create_piece();
+                    chunk *p  = create_piece();
                     acquiring = p;
                 }
 
@@ -279,8 +279,8 @@ namespace upsylon {
                         //------------------------------------------------------
                         // two empty pieces: free the piece with highed memory
                         //------------------------------------------------------
-                        piece *to_free = releasing;
-                        piece *to_keep = empty_one;
+                        chunk *to_free = releasing;
+                        chunk *to_keep = empty_one;
                         if(to_free->data<to_keep->data)
                         {
                             cswap(to_keep,to_free);
@@ -295,7 +295,7 @@ namespace upsylon {
                         }
                         releasing = acquiring;
                         
-                        delete_piece( pieces.unlink(to_free) );
+                        delete_piece( chunks.unlink(to_free) );
 
                     }
                 }

@@ -15,10 +15,10 @@ namespace upsylon {
             //__________________________________________________________________
             //
             //
-            //! piece of memory for multiple contiguous objects
+            //! chunk of memory for multiple contiguous objects
             //
             //__________________________________________________________________
-            class piece
+            class chunk
             {
             public:
                 //______________________________________________________________
@@ -27,12 +27,12 @@ namespace upsylon {
                 //______________________________________________________________
 
                 // constructor: setup all parameters
-                piece(const size_t block_size,
+                chunk(const size_t block_size,
                       void *       chunk_data,
                       const size_t chunk_size) throw();
 
 
-                ~piece() throw();
+                ~chunk() throw();
 
                 //______________________________________________________________
                 //
@@ -52,8 +52,8 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-                piece         *next; //!< for list/poo;
-                piece         *prev; //!< for list
+                chunk         *next; //!< for list/poo;
+                chunk         *prev; //!< for list
                 uint8_t       *data; //!< first item
                 const uint8_t *last; //!< first invalid item
                 uint8_t        first_available; //!< bookeeping
@@ -76,7 +76,7 @@ namespace upsylon {
                 static size_t min_chunk_size_for(const size_t block_size) throw();
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(piece);
+                Y_DISABLE_COPY_AND_ASSIGN(chunk);
                 bool is_aligned(const void *addr, const size_t block_size) const throw();
             };
 

@@ -1,4 +1,4 @@
-#include "y/memory/small/piece.hpp"
+#include "y/memory/small/chunk.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/memory/allocator/global.hpp"
@@ -7,7 +7,7 @@
 using namespace upsylon;
 using namespace memory;
 
-Y_UTEST(piece)
+Y_UTEST(small_chunk)
 {
 
     global &mgr = global::instance();
@@ -17,8 +17,8 @@ Y_UTEST(piece)
     for(size_t block_size=1;block_size<=40;++block_size)
     {
         std::cerr << "<block_size=" << block_size << ">" << std::endl;
-        const size_t min_chunk_size =  small::piece::min_chunk_size_for(block_size);
-        const size_t max_chunk_size =  small::piece::max_chunk_size_for(block_size);
+        const size_t min_chunk_size =  small::chunk::min_chunk_size_for(block_size);
+        const size_t max_chunk_size =  small::chunk::max_chunk_size_for(block_size);
         std::cerr << "\tmin_chunk_size=" << min_chunk_size << std::endl;
         std::cerr << "\tmax_chunk_size=" << max_chunk_size << std::endl;
 
@@ -26,7 +26,7 @@ Y_UTEST(piece)
         {
             void *chunk_data = mgr.__calloc(1,chunk_size);
 
-            small::piece p(block_size,chunk_data,chunk_size);
+            small::chunk p(block_size,chunk_data,chunk_size);
             std::cerr
             << "\t\tchunk_size=" << std::setw(5) << chunk_size
             << " : #blocks="     << std::setw(3) << int(p.provided_number)
@@ -60,7 +60,7 @@ Y_UTEST(piece)
         std::cerr << "<block_size=" << block_size << "/>" << std::endl << std::endl;
     }
 
-    Y_UTEST_SIZEOF(small::piece);
+    Y_UTEST_SIZEOF(small::chunk);
 
 }
 Y_UTEST_DONE()

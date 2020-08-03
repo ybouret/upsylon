@@ -1,4 +1,4 @@
-#include "y/memory/small/piece.hpp"
+#include "y/memory/small/chunk.hpp"
 
 namespace upsylon {
 
@@ -9,7 +9,7 @@ namespace upsylon {
         {
             //static const char fn[] = "[memory::small::piece]";
 
-            piece:: ~piece() throw()
+            chunk:: ~chunk() throw()
             {
             }
 
@@ -29,7 +29,7 @@ namespace upsylon {
                 }
             }
 
-            piece:: piece(const size_t block_size,
+            chunk:: chunk(const size_t block_size,
                           void *       chunk_data,
                           const size_t chunk_size) throw() :
             next(0),
@@ -52,7 +52,7 @@ namespace upsylon {
 
             }
 
-            ownership piece:: owner_of(const void *addr) const throw()
+            ownership chunk:: owner_of(const void *addr) const throw()
             {
                 const uint8_t *p = static_cast<const uint8_t*>(addr);
                 if(p<data)
@@ -70,24 +70,24 @@ namespace upsylon {
                 }
             }
 
-            bool piece:: owns(const void *addr)     const throw()
+            bool chunk:: owns(const void *addr)     const throw()
             {
                 const uint8_t *p = static_cast<const uint8_t*>(addr);
                 return (p>=data) && (p<last);
             }
 
-            bool piece:: is_empty() const throw()
+            bool chunk:: is_empty() const throw()
             {
                 return still_available>=provided_number;
             }
 
-            size_t piece::allocated() const throw()
+            size_t chunk::allocated() const throw()
             {
                 assert(still_available<=provided_number);
                 return provided_number-still_available;
             }
 
-            bool piece:: is_aligned(const void *addr, const size_t block_size) const throw()
+            bool chunk:: is_aligned(const void *addr, const size_t block_size) const throw()
             {
                 assert(addr!=NULL);
                 assert(owns(addr));
@@ -109,7 +109,7 @@ namespace upsylon {
         namespace small
         {
 
-            void * piece::acquire(const size_t block_size) throw()
+            void * chunk::acquire(const size_t block_size) throw()
             {
                 // sanity check
                 assert(still_available>0);
@@ -125,7 +125,7 @@ namespace upsylon {
 
 
 
-            void piece:: release(void *addr, const size_t block_size) throw()
+            void chunk:: release(void *addr, const size_t block_size) throw()
             {
                 assert(addr!=NULL);
                 assert(owns(addr));
@@ -158,13 +158,13 @@ namespace upsylon {
         namespace small
         {
 
-            size_t piece::min_chunk_size_for(const size_t block_size) throw()
+            size_t chunk:: min_chunk_size_for(const size_t block_size) throw()
             {
                 return next_power_of_two(block_size);
             }
 
             
-            size_t piece:: max_chunk_size_for(const size_t block_size) throw()
+            size_t chunk:: max_chunk_size_for(const size_t block_size) throw()
             {
 
                 //--------------------------------------------------------------

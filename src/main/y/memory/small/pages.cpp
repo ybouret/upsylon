@@ -16,11 +16,11 @@ namespace upsylon {
 
             pages:: ~pages() throw()
             {
-                if(pieces.size!=pieces_per_page*zstore.size)
+                if(chunks.size!=pieces_per_page*zstore.size)
                 {
                     std::cerr << "[small::pages] not all small::pieces are released" << std::endl;
                 }
-                pieces.reset();
+                chunks.reset();
                 while(zstore.size)
                 {
                     static global &mgr = global::instance();
@@ -30,24 +30,24 @@ namespace upsylon {
             
             size_t pages:: chunk_size_for(const size_t usr_chunk_size) throw()
             {
-                const size_t bytes_for_pieces = min_pieces_per_page * sizeof(piece) + header_size;
+                const size_t bytes_for_pieces = min_pieces_per_page * sizeof(chunk) + header_size;
                 return next_power_of_two( max_of(usr_chunk_size,bytes_for_pieces) );
             }
 
             pages:: pages(const size_t usr_chunk_size) throw() :
             chunk_size( chunk_size_for(usr_chunk_size) ),
-            pieces_per_page( (chunk_size-header_size)/sizeof(piece) ),
-            pieces(),
+            pieces_per_page( (chunk_size-header_size)/sizeof(chunk) ),
+            chunks(),
             zstore()
             {
                 
             }
 
-            piece * pages:: query_from_new_page()
+            chunk * pages:: query_from_new_page()
             {
                 static global &mgr = mgr.instance();
 
-                assert(pieces.size<=0);
+                assert(chunks.size<=0);
 
                 // get memory
                 void *buffer = mgr.__calloc(1,chunk_size);
@@ -56,35 +56,35 @@ namespace upsylon {
                 (void)zstore.store( static_cast<page *>(buffer) );
 
                 // use extra memory as pieces
-                piece *p = aliasing::forward<piece>(buffer,header_size);
+                chunk *p = aliasing::forward<chunk>(buffer,header_size);
                 for(size_t i=1;i<pieces_per_page;++i)
                 {
                     assert(is_zeroed(p[i]));
-                    pieces.push_back(&p[i]);
+                    chunks.push_back(&p[i]);
                 }
                 return p;
             }
 
-            void pages:: store_nil(piece *p) throw()
+            void pages:: store_nil(chunk *p) throw()
             {
                 assert(p);
                 assert(0==p->next);
                 assert(0==p->prev);
                 aliasing::_(p->provided_number) = 0;
-                pieces.push_front(p);
+                chunks.push_front(p);
             }
 
-            piece *pages:: query_nil()
+            chunk *pages:: query_nil()
             {
-                if(pieces.size)
+                if(chunks.size)
                 {
-                    piece *p =  pieces.pop_front();
+                    chunk *p =  chunks.pop_front();
                     bzset(*p);
                     return p;
                 }
                 else
                 {
-                    piece *p = query_from_new_page();
+                    chunk *p = query_from_new_page();
                     assert(is_zeroed(*p));
                     return p;
                 }
@@ -92,7 +92,7 @@ namespace upsylon {
 
             bool pages:: is_busy(const page *p) const throw()
             {
-                const piece *z = aliasing::forward<piece>(p,header_size);
+                const chunk *z = aliasing::forward<chunk>(p,header_size);
                 for(size_t i=pieces_per_page;i>0;--i,++z)
                 {
                     if(z->provided_number) return true;
@@ -102,7 +102,7 @@ namespace upsylon {
 
             void pages:: gc() throw()
             {
-                merging<piece>::sort_by_addr(pieces);
+                merging<chunk>::sort_by_addr(chunks);
             }
 
 

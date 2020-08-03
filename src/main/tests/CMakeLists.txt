@@ -84,7 +84,7 @@ test-static-slots.cpp
 test-memory-marker.cpp
 test-memory-groove.cpp
 test-memory-section.cpp
-test-memory-piece.cpp
+test-memory-small-chunk.cpp
 test-memory-theater.cpp
 test-memory-pages.cpp)
 ADD_TEST(mem:chunk       test-main chunk)
@@ -110,7 +110,7 @@ ADD_TEST(mem:slots       test-main static_slots)
 ADD_TEST(mem:marker      test-main marker)
 ADD_TEST(mem:groove      test-main groove)
 ADD_TEST(mem:section     test-main section)
-ADD_TEST(mem:piece       test-main piece)
+ADD_TEST(mem:small:chunk test-main small_chunk)
 ADD_TEST(mem:theater     test-main theater)
 ADD_TEST(mem:pages       test-main pages)
 

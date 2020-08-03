@@ -4,7 +4,7 @@
 #ifndef Y_MEMORY_SMALL_PAGES_INCLUDED
 #define Y_MEMORY_SMALL_PAGES_INCLUDED 1
 
-#include "y/memory/small/piece.hpp"
+#include "y/memory/small/chunk.hpp"
 #include "y/core/pool.hpp"
 #include "y/core/list.hpp"
 
@@ -39,8 +39,8 @@ namespace upsylon {
                 const size_t chunk_size;
                 const size_t pieces_per_page;
 
-                void   store_nil(piece *p) throw();
-                piece *query_nil();
+                void   store_nil(chunk *p) throw();
+                chunk *query_nil();
                 void   gc() throw();
 
 
@@ -50,8 +50,8 @@ namespace upsylon {
                 {
                     page *next;
                 };
-                piece *query_from_new_page();
-                core::list_of<piece> pieces; //!< L.R.U cache
+                chunk *query_from_new_page();
+                core::list_of<chunk> chunks; //!< L.R.U cache
                 core::pool_of<page>  zstore; //!< ever growing store
                 bool is_busy(const page *) const throw();
 
