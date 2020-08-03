@@ -64,6 +64,11 @@ namespace upsylon {
                 //
                 // helpers
                 //______________________________________________________________
+
+                //! optimize the chunk size
+                /**
+                 optimize the required/boundary ratio
+                 */
                 static size_t max_chunk_size_for(const size_t block_size) throw();
 
             private:

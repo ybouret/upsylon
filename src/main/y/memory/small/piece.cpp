@@ -149,6 +149,8 @@ namespace upsylon {
 }
 
 #include "y/type/utils.hpp"
+#include <iostream>
+
 namespace upsylon {
 
     namespace memory
@@ -156,9 +158,54 @@ namespace upsylon {
 
         namespace small
         {
+
+
+
             size_t piece:: max_chunk_size_for(const size_t block_size) throw()
             {
-                return next_power_of_two( 0xff*block_size );
+
+                //--------------------------------------------------------------
+                //
+                // take the biggest required abd its boundary
+                //
+                //--------------------------------------------------------------
+
+                size_t  blocks   = 0xff;
+                size_t  required = blocks*block_size;
+                size_t  boundary = next_power_of_two(required);
+
+                std::cerr << "boundary " << boundary << " for " << required << " #" << blocks << std::endl;
+
+                //--------------------------------------------------------------
+                //
+                // build previous ratios
+                //
+                //--------------------------------------------------------------
+                size_t prev_boundary = boundary >> 1;
+                while( prev_boundary >1 )
+                {
+                    blocks                     = prev_boundary/block_size;
+                    const size_t prev_required = blocks*block_size;
+                    if(required*prev_boundary<prev_required*boundary)
+                    {
+                        required = prev_required;
+                        boundary = prev_boundary;
+                        std::cerr << "better with " << boundary  << " for " << required << " #" << blocks << std::endl;
+                        prev_boundary >>= 1;
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // return winning boundary
+                //
+                //--------------------------------------------------------------
+                return boundary;
             }
 
         }

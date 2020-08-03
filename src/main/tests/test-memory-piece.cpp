@@ -12,13 +12,13 @@ Y_UTEST(piece)
 
     global &mgr = global::instance();
 
-    for(size_t block_size=1;block_size<=20;++block_size)
+    for(size_t block_size=1;block_size<=40;++block_size)
     {
-        std::cerr << "<block_size=" << block_size << std::endl;
+        std::cerr << "<block_size=" << block_size << ">" << std::endl;
         const size_t max_chunk_size =  small::piece::max_chunk_size_for(block_size);
         std::cerr << "\tmax_chunk_size=" << max_chunk_size << std::endl;
 
-        for(size_t usr_chunk_size=1;usr_chunk_size<=8192;usr_chunk_size<<=1)
+        for(size_t usr_chunk_size=next_power_of_two(block_size);usr_chunk_size<=8192;usr_chunk_size<<=1)
         {
             const size_t chunk_size = min_of( usr_chunk_size, max_chunk_size);
 
