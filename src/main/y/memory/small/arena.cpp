@@ -1,5 +1,5 @@
 
-#include "y/memory/small/theater.hpp"
+#include "y/memory/small/arena.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/aliasing.hpp"
@@ -11,7 +11,7 @@ namespace upsylon {
 
         namespace small {
 
-            theater:: ~theater() throw()
+            arena:: ~arena() throw()
             {
                 size_t leak = 0;
                 while(chunks.size)
@@ -23,11 +23,11 @@ namespace upsylon {
                         leak += n;
                         aliasing::_(available) += n;
                     }
-                    delete_piece(p);
+                    delete_chunk(p);
                 }
                 if(leak>0)
                 {
-                    std::cerr << "[memory::small::theater] leak #block_size=" << block_size << " = " << leak  << std::endl;
+                    std::cerr << "[memory::small::arena] leak #block_size=" << block_size << " = " << leak  << std::endl;
                 }
 
             }
@@ -42,14 +42,14 @@ namespace upsylon {
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
 
-            size_t theater:: blocks_per_piece() const throw()
+            size_t arena:: blocks_per_piece() const throw()
             {
                 assert(acquiring);
                 return acquiring->provided_number;
             }
 
 
-            theater:: theater(const size_t usr_block_size,
+            arena:: arena(const size_t usr_block_size,
                               const size_t usr_chunk_size,
                               pages       &cache) :
             acquiring(0),
@@ -61,10 +61,10 @@ namespace upsylon {
             block_size( usr_block_size ),
             chunk_size( chunk_size_for(block_size,usr_chunk_size) )
             {
-                empty_one = acquiring = releasing = create_piece();
+                empty_one = acquiring = releasing = create_chunk();
             }
 
-            chunk * theater:: create_piece()
+            chunk * arena:: create_chunk()
             {
                 static global &mgr = mgr.instance();
                 assert(shared);
@@ -105,7 +105,7 @@ namespace upsylon {
 
 
 
-            void  theater:: delete_piece(chunk *p) throw()
+            void  arena:: delete_chunk(chunk *p) throw()
             {
                 static global &mgr = global::location();
 
@@ -142,7 +142,7 @@ namespace upsylon {
 
         namespace small {
 
-            void * theater:: acquire()
+            void * arena:: acquire()
             {
                 assert(acquiring);
                 assert(releasing);
@@ -215,7 +215,7 @@ namespace upsylon {
                     // need a new piece
                     //----------------------------------------------------------
                     assert(0==empty_one);
-                    chunk *p  = create_piece();
+                    chunk *p  = create_chunk();
                     acquiring = p;
                 }
 
@@ -240,7 +240,7 @@ namespace upsylon {
 
         namespace small {
 
-            void theater:: release(void *addr) throw()
+            void arena:: release(void *addr) throw()
             {
                 assert(NULL!=addr);
                 assert(NULL!=releasing);
@@ -277,7 +277,7 @@ namespace upsylon {
                     else
                     {
                         //------------------------------------------------------
-                        // two empty pieces: free the piece with highed memory
+                        // two empty pieces: free the piece with higher memory
                         //------------------------------------------------------
                         chunk *to_free = releasing;
                         chunk *to_keep = empty_one;
@@ -295,7 +295,7 @@ namespace upsylon {
                         }
                         releasing = acquiring;
                         
-                        delete_piece( chunks.unlink(to_free) );
+                        delete_chunk( chunks.unlink(to_free) );
 
                     }
                 }

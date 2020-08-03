@@ -1,5 +1,5 @@
 
-#include "y/memory/small/theater.hpp"
+#include "y/memory/small/arena.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/memory/allocator/global.hpp"
@@ -9,7 +9,7 @@
 using namespace upsylon;
 using namespace memory;
 
-Y_UTEST(theater)
+Y_UTEST(small_arena)
 {
     const size_t count        = 1024;
     void        *entry[count] = {0 };
@@ -23,7 +23,7 @@ Y_UTEST(theater)
         const size_t block_max = min_of<size_t>(chunk_size,60);
         for(size_t block_size=1;block_size<=block_max;++block_size)
         {
-            small::theater t(block_size,chunk_size,cache);
+            small::arena t(block_size,chunk_size,cache);
             std::cerr << "\t<block_size=" << std::setw(3) << block_size << ">";
             std::cerr << " chunk_size=" << std::setw(5) << t.chunk_size;
             std::cerr << " blocks_per_piece=" << std::setw(3) << t.blocks_per_piece();
@@ -65,7 +65,7 @@ Y_UTEST(theater)
 
     Y_UTEST_SIZEOF(small::chunk);
     Y_UTEST_SIZEOF(small::pages);
-    Y_UTEST_SIZEOF(small::theater);
+    Y_UTEST_SIZEOF(small::arena);
 
 }
 Y_UTEST_DONE()

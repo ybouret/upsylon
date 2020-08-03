@@ -7,7 +7,7 @@
 using namespace upsylon;
 using namespace memory;
 
-Y_UTEST(pages)
+Y_UTEST(small_pages)
 {
 
     for(size_t chunk_size=1;chunk_size<=8192;chunk_size<<=1)
@@ -16,7 +16,7 @@ Y_UTEST(pages)
         std::cerr
         << std::setw(5) << chunk_size << " => "
         << std::setw(5) << cache.chunk_size << " => "
-        << std::setw(5) << cache.chunks_per_page << " pieces/page"
+        << std::setw(5) << cache.chunks_per_page << " chunks/page"
         << std::endl;
 
         const size_t n = cache.chunks_per_page * 5;
@@ -27,7 +27,7 @@ Y_UTEST(pages)
         }
         //std::cerr << "cache.zstore=" << cache.zstore.size << std::endl;
        // std::cerr << "cache.pieces=" << cache.pieces.size << std::endl;
-        std::cerr << "chunks      =" << chunks.size << std::endl;
+        std::cerr << "chunks      = " << chunks.size << std::endl;
         alea.shuffle(chunks);
 
         while(chunks.size)

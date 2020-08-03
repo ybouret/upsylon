@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_MEMORY_SMALL_PIECE_INCLUDED
-#define Y_MEMORY_SMALL_PIECE_INCLUDED 1
+#ifndef Y_MEMORY_SMALL_CHUNK_INCLUDED
+#define Y_MEMORY_SMALL_CHUNK_INCLUDED 1
 
 #include "y/os/platform.hpp"
 #include "y/memory/ownership.hpp"

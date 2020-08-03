@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_MEMORY_SMALL_THEATER_INCLUDED
-#define Y_MEMORY_SMALL_THEATER_INCLUDED 1
+#ifndef Y_MEMORY_SMALL_ARENA_INCLUDED
+#define Y_MEMORY_SMALL_ARENA_INCLUDED 1
 
 
 #include "y/memory/small/pages.hpp"
@@ -14,14 +14,14 @@ namespace upsylon {
 
         namespace small {
 
-            class theater
+            class arena
             {
             public:
-                theater(const size_t usr_block_size,
+                arena(const size_t usr_block_size,
                         const size_t usr_chunk_size,
                         pages       &cache);
 
-                ~theater() throw();
+                ~arena() throw();
 
 
                 void  *acquire();               //!< allocate a zeroed block
@@ -44,9 +44,9 @@ namespace upsylon {
                 const size_t chunk_size; //!< clamp( piece::min_chunk_size(block_size), usr_chunk_size, piece::max_chunk_size(block_size) )
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(theater);
-                chunk *create_piece();                //!< create an put it in its position, update 'available'
-                void   delete_piece(chunk *p) throw();//!< delete memory and return to cache, update 'available'
+                Y_DISABLE_COPY_AND_ASSIGN(arena);
+                chunk *create_chunk();                //!< create an put it in its position, update 'available'
+                void   delete_chunk(chunk *p) throw();//!< delete memory and return to cache, update 'available'
             };
         }
 
