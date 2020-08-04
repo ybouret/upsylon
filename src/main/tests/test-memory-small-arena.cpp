@@ -65,3 +65,55 @@ Y_UTEST(small_arena)
 
 }
 Y_UTEST_DONE()
+
+#include "y/string/convert.hpp"
+#include "y/sort/heap.hpp"
+
+Y_UTEST(small_compact)
+{
+    size_t     chunk_size = 1024;
+    if(argc>1) chunk_size = string_convert::to<size_t>(argv[1],"chunk_size");
+
+    small::zcache<small::chunk> cache(chunk_size);
+    const size_t count        = 1024;
+    void        *entry[count] = { 0 };
+
+    for(size_t block_size=1;block_size<=40;++block_size)
+    {
+        small::arena a(block_size,chunk_size,cache);
+
+        size_t n = 0;
+        while(n<count)
+        {
+            entry[n++] = a.acquire();
+        }
+        std::cerr << "n=" << n << std::endl;
+        alea.shuffle(entry,n);
+        while(n>count/2)
+        {
+            a.release(entry[--n]);
+        }
+        hsort(entry,n, comparison::increasing<void*> );
+        size_t ok = 0;
+        for(size_t i=0;i<n;++i)
+        {
+            if( a.compact(entry[i]) )
+            {
+                std::cerr << '+';
+                ++ok;
+            }
+            else
+            {
+                std::cerr << '-';
+            }
+        }
+        std::cerr << std::endl;
+        while(n>0)
+        {
+            a.release(entry[--n]);
+        }
+
+    }
+
+}
+Y_UTEST_DONE()

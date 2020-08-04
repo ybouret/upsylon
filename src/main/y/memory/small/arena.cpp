@@ -315,6 +315,7 @@ namespace upsylon {
 
 }
 
+#include <cstring>
 namespace upsylon {
 
     namespace memory {
@@ -329,35 +330,54 @@ namespace upsylon {
                 if(available)
                 {
                     //----------------------------------------------------------
+                    //
                     // check if available lower memory
+                    //
                     //----------------------------------------------------------
                     releasing_at(addr);
                     for(chunk *guess=chunks.head;guess!=releasing;guess=guess->next)
                     {
                         if(guess->still_available>0)
                         {
+                            //--------------------------------------------------
                             // get a no-throw block
+                            //--------------------------------------------------
                             void *new_addr = (acquiring = guess) ->acquire(block_size);
-
+                            assert(new_addr<addr);
+                            
+                            //--------------------------------------------------
                             // update status
+                            //--------------------------------------------------
                             --available;
                             if(empty_one==acquiring) empty_one=0;
 
+                            //--------------------------------------------------
                             // move memory
+                            //--------------------------------------------------
                             memcpy(new_addr,addr,block_size);
 
+                            //--------------------------------------------------
                             // release old addr
+                            //--------------------------------------------------
                             release(addr);
                             addr = new_addr;
                             return true;
                         }
                     }
+                    
+                    //----------------------------------------------------------
+                    //
+                    // not found
+                    //
+                    //----------------------------------------------------------
                     return false;
                 }
                 else
                 {
                     //----------------------------------------------------------
+                    //
                     // no more available memory at all
+                    //
                     //----------------------------------------------------------
                     return false;
                 }

@@ -51,7 +51,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(small_arena);
     Y_UTEST(small_zcache);
     Y_UTEST(small_blocks);   
- 
+    Y_UTEST(small_compact);
+
     Y_UTEST(mloops);
     Y_UTEST(comb);
     Y_UTEST(perm);
