@@ -124,8 +124,64 @@ namespace upsylon {
                         return (acquiring=entry.push_front(a) )->acquire();
                     }
                 }
-
             }
+
+            void  blocks:: release(void *addr, const size_t block_size) throw()
+            {
+                if(block_size<=0)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // convention: do nothing
+                    //
+                    //----------------------------------------------------------
+                    assert(0==addr);
+                }
+                else if(block_size>limit_size)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // forward to global memory
+                    //
+                    //----------------------------------------------------------
+                    assert(addr!=0);
+                    static global &mgr = global::location();
+                    mgr.__free(addr,block_size);
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    //
+                    // look up
+                    //
+                    //----------------------------------------------------------
+                    assert(addr!=0);
+                    if( releasing && block_size == releasing->block_size )
+                    {
+                        // cached
+                        releasing->release(addr);
+                    }
+                    else
+                    {
+                        // look up
+                        slot_type &entry = slot[block_size&slots_mask];
+                        for(arena *a=entry.head;a;a=a->next)
+                        {
+                            if(block_size==a->block_size)
+                            {
+                                ( releasing = entry.move_to_front(a) )->release(addr);
+                                return;
+                            }
+                        }
+
+                        // should never get here
+                        assert( die("invalid address in small.blocks.release") );
+                    }
+                }
+                
+            }
+
+
 
         }
 

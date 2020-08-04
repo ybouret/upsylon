@@ -39,16 +39,26 @@ Y_UTEST(small_blocks)
             std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(5) <<  blk.arenas.nodes_rise;
             std::cerr << std::endl;
 
-            size_t nblk = 100;
+            size_t nblk = 1000;
             blk_t *blks = static_cast<blk_t *>( global::instance().__calloc(nblk,sizeof(blk_t)) );
 
-            for(size_t i=0;i<nblk;++i)
+            for(size_t iter=0;iter<16;++iter)
             {
-                blk_t &b = blks[i];
-                b.size   = alea.range<size_t>(0,2*limit_size);
-                b.addr   = blk.acquire(b.size);
+                for(size_t i=0;i<nblk;++i)
+                {
+                    blk_t &b = blks[i];
+                    b.size   = alea.range<size_t>(0,2*limit_size);
+                    b.addr   = blk.acquire(b.size);
+                }
+                alea.shuffle(blks,nblk);
+
+                for(size_t i=0;i<nblk;++i)
+                {
+                    blk_t &b = blks[i];
+                    blk.release(b.addr,b.size);
+                }
             }
-            alea.shuffle(blks,nblk);
+
 
             global::location().__free(blks,nblk*sizeof(blk_t));
 

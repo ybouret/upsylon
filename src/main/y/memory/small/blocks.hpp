@@ -31,7 +31,8 @@ namespace upsylon {
                 const size_t limit_size; //!< will call global allocator above this size
 
                 void *acquire(const size_t block_size);
-
+                void  release(void *addr, const size_t block_size) throw();
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(blocks);
                 slot_type      *slot;
