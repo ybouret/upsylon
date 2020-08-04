@@ -69,6 +69,18 @@ namespace upsylon
         return 0;
     }
 
+    template <typename T>
+    inline unsigned integer_log2( T po2 ) throw()
+    {
+        assert( is_a_power_of_two(po2) );
+        unsigned res = 0;
+        while(po2>1)
+        {
+            po2>>=1;
+            ++res;
+        }
+        return res;
+    }
    
    
 
