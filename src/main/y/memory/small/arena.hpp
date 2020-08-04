@@ -66,9 +66,9 @@ namespace upsylon {
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(arena);
-                chunk *create_chunk();                //!< create an put it in its position, update 'available'
-                void   delete_chunk(chunk *p) throw();//!< delete memory and return to cache, update 'available'
-                void   releasing_at(const void *addr) throw();
+                chunk *create_chunk();                       //!< create an put it in its position, update 'available'
+                void   delete_chunk(chunk *)      throw();   //!< delete memory and return to cache, update 'available'
+                void   releasing_at(const void *) throw();   //!< move releasing to designated address
             };
         }
 
