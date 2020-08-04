@@ -4,6 +4,8 @@
 #include "y/memory/allocator/global.hpp"
 #include <iostream>
 
+#define Y_SMALL_ARENA_SHOW 0
+
 namespace upsylon {
 
     namespace memory {
@@ -80,6 +82,9 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 try
                 {
+#if 1 == Y_SMALL_ARENA_SHOW
+                    std::cerr << "< +" << chunk_size << " >";
+#endif
                     new (curr) chunk(block_size,mgr.__calloc(1,chunk_size),chunk_size);
                 }
                 catch(...)
@@ -124,6 +129,10 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // release memory
                 //--------------------------------------------------------------
+#if 1 == Y_SMALL_ARENA_SHOW
+                std::cerr << "< -" << chunk_size << " >";
+#endif
+
                 mgr.__free(p->data,chunk_size);
 
                 //--------------------------------------------------------------
