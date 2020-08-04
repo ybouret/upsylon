@@ -286,9 +286,9 @@ namespace upsylon {
                             acquiring = to_keep;
                         }
                         releasing = acquiring;
-                        
-                        delete_chunk( chunks.unlink(to_free) );
 
+                        // release the extra chunk
+                        delete_chunk( chunks.unlink(to_free) );
                     }
                 }
 
