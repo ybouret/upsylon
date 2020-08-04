@@ -49,7 +49,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(section);
     Y_UTEST(small_chunk);
     Y_UTEST(small_arena);
-    Y_UTEST(small_pages);
+    Y_UTEST(small_zcache);
     
     Y_UTEST(mloops);
     Y_UTEST(comb);
