@@ -7,22 +7,12 @@
 #include "y/memory/small/chunk.hpp"
 #include "y/memory/small/zcache.hpp"
 
-#include "y/core/list.hpp"
-#include "y/core/pool.hpp"
 
 namespace upsylon {
 
     namespace memory {
 
         namespace small {
-
-            //__________________________________________________________________
-            //
-            //
-            //! cache of zombie chunks
-            //
-            //__________________________________________________________________
-            typedef zcache<chunk> zchunks;
 
 
             //__________________________________________________________________
@@ -39,9 +29,9 @@ namespace upsylon {
                 // C++
                 //______________________________________________________________
                 //! setup with first acquiring, releasing and empty_one
-                arena(const size_t     usr_block_size,
-                        const size_t   usr_chunk_size,
-                        zchunks       &usr_cache);
+                arena(const size_t   usr_block_size,
+                      const size_t   usr_chunk_size,
+                      zcache<chunk> &usr_cache);
 
 
                 ~arena() throw();
@@ -60,12 +50,14 @@ namespace upsylon {
                 chunk               *empty_one; //!< empty piece
                 size_t               available; //!< bookkeeping of available blocks
                 core::list_of<chunk> chunks;    //!< pieces, sorted by increasing memory
-                zchunks             *shared;    //!< shared cache
+                zcache<chunk>       *shared;    //!< shared cache
                 
             public:
                 const size_t block_size; //!< the block size
                 const size_t chunk_size; //!< clamp( piece::min_chunk_size(block_size), usr_chunk_size, piece::max_chunk_size(block_size) )
-
+                arena       *next;       //!< for list
+                arena       *prev;       //!< for list
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(arena);
                 chunk *create_chunk();                //!< create an put it in its position, update 'available'

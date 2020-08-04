@@ -86,7 +86,8 @@ test-memory-groove.cpp
 test-memory-section.cpp
 test-memory-small-chunk.cpp
 test-memory-small-arena.cpp
-test-memory-small-zcache.cpp)
+test-memory-small-zcache.cpp
+test-memory-small-blocks.cpp)
 ADD_TEST(mem:chunk        test-main chunk)
 ADD_TEST(mem:arena        test-main arena)
 ADD_TEST(mem:alloc        test-main alloc)
@@ -113,6 +114,7 @@ ADD_TEST(mem:section      test-main section)
 ADD_TEST(mem:small:chunk  test-main small_chunk)
 ADD_TEST(mem:small:arena  test-main small_arena)
 ADD_TEST(mem:small:zcache test-main small_zcache)
+ADD_TEST(mem:small:blocks test-main small_blocks)
 
 SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
 ADD_TEST(par:parallel    test-main parallel)

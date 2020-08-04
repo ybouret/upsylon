@@ -48,17 +48,19 @@ namespace upsylon {
             }
 
 
-            arena:: arena(const size_t usr_block_size,
-                          const size_t usr_chunk_size,
-                          zchunks       &cache) :
+            arena:: arena(const size_t   usr_block_size,
+                          const size_t   usr_chunk_size,
+                          zcache<chunk> &usr_cache) :
             acquiring(0),
             releasing(0),
             empty_one(0),
             available(0),
             chunks(),
-            shared( &cache ),
+            shared( &usr_cache ),
             block_size( usr_block_size ),
-            chunk_size( chunk_size_for(block_size,usr_chunk_size) )
+            chunk_size( chunk_size_for(block_size,usr_chunk_size) ),
+            next(0),
+            prev(0)
             {
                 empty_one = acquiring = releasing = create_chunk();
             }
