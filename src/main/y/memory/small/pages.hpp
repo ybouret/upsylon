@@ -17,57 +17,43 @@ namespace upsylon {
             {
                 page *next;
                 page *prev;
+                typedef core::list_of<page> list;
             };
 
             class pages
             {
             public:
-                typedef core::list_of<page> deposit_type;
-
-                class deposit
+                class page_list : public page::list
                 {
                 public:
-                    explicit deposit(const size_t usr_iln2) throw();
-                    virtual ~deposit() throw();
-
-                    const size_t page_iln2;
-                    const size_t page_size;
-                    size_t       bytes;      //!< size*page_size
-
-
+                    explicit page_list(size_t iln2) throw();
+                    virtual ~page_list() throw();
+                    
+                    const size_t iln2;
+                    
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(deposit);
+                    Y_DISABLE_COPY_AND_ASSIGN(page_list);
                 };
-
-                typedef uint64_t            word_type;
-
-                static const size_t one           = 1;
-                static const size_t min_page_iln2 = ilog2_of<page>::value;
-                static const size_t min_page_size = one << min_page_iln2;
-                static const size_t full_deposits = sizeof(size_t)*8;
-
-                static const size_t size_bytes = full_deposits * sizeof(size_t);
-                static const size_t depo_bytes = full_deposits * sizeof(deposit);
-                static const size_t wksp_bytes = size_bytes+depo_bytes;
-                static const size_t wksp_align = Y_ALIGN_FOR_ITEM(word_type,wksp_bytes);
-                static const size_t wksp_words = wksp_align/sizeof(word_type);
-
-                const size_t max_page_size;
-                const size_t max_page_iln2;
-                const size_t deposit_count;
                 
-                pages(const size_t large_page_size);
-                ~pages() throw();
+                typedef      uint32_t word_type;
+                
+                static const size_t   one       = 1;
+                static const unsigned min_iln2  = ilog2_of<page>::value;
+                static const size_t   min_size  = one << min_iln2;
+                static const unsigned max_iln2  = (sizeof(word_type)<<3)-1;
+                static const size_t   max_size  = one << max_iln2;
+                static const size_t   required  = (max_iln2+1) * sizeof(page_list);
+                static const size_t   _aligned  = Y_ALIGN_FOR_ITEM(word_type,required);
+                static const size_t   in_words  = _aligned/sizeof(word_type);
 
-                void * acquire(const size_t iln2);
-                void   release(void *addr, const size_t iln2) throw();
-
-
+                explicit pages(const size_t large_size);
+                virtual ~pages() throw();
+                
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(pages);
-                const size_t *size; //!< size[min_page_iln2..max_page_iln2]
-                deposit      *depo; //!< depo[min_page_iln2..max_page_iln2];
-                word_type     wksp[wksp_words];
+                page_list *plist;
+                word_type  wksp[in_words];
             };
 
 

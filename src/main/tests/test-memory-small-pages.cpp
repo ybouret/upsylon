@@ -9,25 +9,25 @@
 using namespace upsylon;
 using namespace memory;
 
-#define SHOW_SMALL_PAGE(FIELD) std::cerr <<   #FIELD " = " << std::setw(6) << p.FIELD << std::endl
+ 
+#define SHOW(FIELD) std::cerr << #FIELD " = " << small::pages::FIELD << std::endl
 
 Y_UTEST(small_pages)
 {
-    Y_UTEST_SIZEOF(small::page);
-    Y_CHECK(sizeof(small::page) == small::pages::min_page_size );
-
-
+    
     size_t     large_size = 10000;
     if(argc>1) large_size = string_convert::to<size_t>(argv[1],"large_size");
 
-    small::pages p(large_size);
+    //small::pages p(large_size);
+    
+    SHOW(min_iln2);
+    SHOW(min_size);
+    SHOW(max_iln2);
+    SHOW(max_size);
+    SHOW(required);
+    SHOW(_aligned);
+    SHOW(in_words);
 
-    SHOW_SMALL_PAGE(min_page_size);
-    SHOW_SMALL_PAGE(min_page_iln2);
-    SHOW_SMALL_PAGE(max_page_size);
-    SHOW_SMALL_PAGE(max_page_iln2);
-    SHOW_SMALL_PAGE(deposit_count);
-    SHOW_SMALL_PAGE(full_deposits);
     
 
 }
