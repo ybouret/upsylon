@@ -61,7 +61,6 @@ Y_UTEST(small_arena)
 
 
     Y_UTEST_SIZEOF(small::chunk);
-    Y_UTEST_SIZEOF(small::zcache<small::chunk>);
     Y_UTEST_SIZEOF(small::arena);
 
 }

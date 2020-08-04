@@ -44,6 +44,9 @@ namespace upsylon {
                 void   release(void *) throw();          //!< release a previously allocated block
                 size_t blocks_per_chunk() const throw(); //!< get acquiring->provided_number
 
+                //! try to move content in a lower chunk
+                bool compact(void * &addr) throw();
+
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const arena &);
 
@@ -65,6 +68,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(arena);
                 chunk *create_chunk();                //!< create an put it in its position, update 'available'
                 void   delete_chunk(chunk *p) throw();//!< delete memory and return to cache, update 'available'
+                void   releasing_at(const void *addr) throw();
             };
         }
 

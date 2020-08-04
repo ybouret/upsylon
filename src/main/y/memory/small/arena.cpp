@@ -231,7 +231,7 @@ namespace upsylon {
 
         namespace small {
 
-            void arena:: release(void *addr) throw()
+            void arena::  releasing_at(const void *addr) throw()
             {
                 assert(NULL!=addr);
                 assert(NULL!=releasing);
@@ -245,6 +245,18 @@ namespace upsylon {
                     case owned_by_prev: do { releasing=releasing->prev; assert(releasing); } while( !releasing->owns(addr) ); break;
                     case owned_by_next: do { releasing=releasing->next; assert(releasing); } while( !releasing->owns(addr) ); break;
                 }
+            }
+
+            
+            void arena:: release(void *addr) throw()
+            {
+                assert(NULL!=addr);
+                assert(NULL!=releasing);
+
+                //--------------------------------------------------------------
+                // locating data
+                //--------------------------------------------------------------
+                releasing_at(addr);
 
                 //--------------------------------------------------------------
                 // release block and update available
@@ -303,6 +315,59 @@ namespace upsylon {
 
 }
 
+namespace upsylon {
+
+    namespace memory {
+
+        namespace small {
+
+            bool arena:: compact(void * &addr) throw()
+            {
+                assert(addr!=NULL);
+                assert(releasing!=NULL);
+
+                if(available)
+                {
+                    //----------------------------------------------------------
+                    // check if available lower memory
+                    //----------------------------------------------------------
+                    releasing_at(addr);
+                    for(chunk *guess=chunks.head;guess!=releasing;guess=guess->next)
+                    {
+                        if(guess->still_available>0)
+                        {
+                            // get a no-throw block
+                            void *new_addr = (acquiring = guess) ->acquire(block_size);
+
+                            // update status
+                            --available;
+                            if(empty_one==acquiring) empty_one=0;
+
+                            // move memory
+                            memcpy(new_addr,addr,block_size);
+
+                            // release old addr
+                            release(addr);
+                            addr = new_addr;
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    // no more available memory at all
+                    //----------------------------------------------------------
+                    return false;
+                }
+            }
+
+        }
+
+    }
+
+}
 
 #include <iostream>
 namespace upsylon {
