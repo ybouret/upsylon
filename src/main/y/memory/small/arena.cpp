@@ -26,7 +26,7 @@ namespace upsylon {
                 }
                 if(leak>0)
                 {
-                    std::cerr << "[memory::small::arena] leak #block_size=" << block_size << " = " << leak  << std::endl;
+                    std::cerr << "[memory::small::arena] leak #[block_size=" << block_size << "] = " << leak  << std::endl;
                 }
 
             }
@@ -49,8 +49,8 @@ namespace upsylon {
 
 
             arena:: arena(const size_t usr_block_size,
-                              const size_t usr_chunk_size,
-                              zchunks       &cache) :
+                          const size_t usr_chunk_size,
+                          zchunks       &cache) :
             acquiring(0),
             releasing(0),
             empty_one(0),
@@ -141,20 +141,25 @@ namespace upsylon {
 
         namespace small {
 
+#define Y_ARENA_LOOK_UP(ID,WHICH) if(ID->still_available>0) { acquiring=ID; goto UPDATE; } ID=ID->WHICH
+#define Y_ARENA_LOOK_UP_LO() Y_ARENA_LOOK_UP(lo,prev)
+#define Y_ARENA_LOOK_UP_HI() Y_ARENA_LOOK_UP(hi,next)
+
             void * arena:: acquire()
             {
                 assert(acquiring);
                 assert(releasing);
+                assert(NULL==empty_one||empty_one->is_empty());
 
                 if(available)
                 {
                     //----------------------------------------------------------
-                    // there is a still available piece somewhere!
+                    // there is a block available somewhere
                     //----------------------------------------------------------
                     if(acquiring->still_available)
                     {
                         //------------------------------------------------------
-                        // cached!
+                        // cached! do nothing
                         //------------------------------------------------------
                     }
                     else
@@ -166,35 +171,20 @@ namespace upsylon {
                         chunk *hi = acquiring->next;
                         while(lo&&hi)
                         {
-                            if(lo->still_available>0)
-                            {
-                                acquiring = lo; goto UPDATE;
-                            }
-                            lo=lo->prev;
-                            if(hi->still_available>0)
-                            {
-                                acquiring = hi; goto UPDATE;
-                            }
-                            hi=hi->next;
+                            Y_ARENA_LOOK_UP_LO();
+                            Y_ARENA_LOOK_UP_HI();
                         }
 
                         while(lo)
                         {
-                            if(lo->still_available>0)
-                            {
-                                acquiring = lo; goto UPDATE;
-                            }
-                            lo=lo->prev;
+                            Y_ARENA_LOOK_UP_LO();
                         }
 
                         while(hi)
                         {
-                            if(hi->still_available>0)
-                            {
-                                acquiring = hi; goto UPDATE;
-                            }
-                            hi=hi->next;
+                            Y_ARENA_LOOK_UP_HI();
                         }
+                        // never get here
                     }
                 UPDATE:
                     assert(acquiring);
@@ -221,7 +211,7 @@ namespace upsylon {
 
                 assert(acquiring);
                 assert(acquiring->still_available);
-                assert(!(empty_one&&acquiring==empty_one));
+                assert(NULL==empty_one||empty_one->is_empty());
                 --available;
                 return acquiring->acquire(block_size);
             }

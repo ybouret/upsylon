@@ -34,17 +34,24 @@ namespace upsylon {
             class arena
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 //! setup with first acquiring, releasing and empty_one
                 arena(const size_t     usr_block_size,
                         const size_t   usr_chunk_size,
                         zchunks       &usr_cache);
 
+
                 ~arena() throw();
 
-
-                void  *acquire();               //!< allocate a zeroed block
-                void   release(void *) throw(); //!< release a previously allocated block
-
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                void  *acquire();                        //!< allocate a zeroed block
+                void   release(void *) throw();          //!< release a previously allocated block
                 size_t blocks_per_chunk() const throw(); //!< get acquiring->provided_number
 
             private:

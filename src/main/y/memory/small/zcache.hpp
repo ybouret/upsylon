@@ -60,7 +60,9 @@ namespace upsylon {
                 //! setup from usr_chunk_size
                 inline zcache(const size_t usr_chunk_size) throw() :
                 chunk_size( __zcache::length_from(usr_chunk_size,min_chunk_size) ),
-                nodes_rise( (chunk_size-__zcache::header)/sizeof(NODE) )
+                nodes_rise( (chunk_size-__zcache::header)/sizeof(NODE) ),
+                nodes(),
+                parts()
                 {
 
                 }
