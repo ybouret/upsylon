@@ -30,10 +30,16 @@ namespace upsylon {
                 const size_t slots_mask; //!< slots_size-1
                 const size_t limit_size; //!< will call global allocator above this size
 
-
+                void *acquire(const size_t block_size);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(blocks);
+                slot_type      *slot;
+                arena          *acquiring;
+                arena          *releasing;
+            public:
+                zcache<chunk>   chunks;
+                zcache<arena>   arenas;
             };
 
 

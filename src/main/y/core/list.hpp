@@ -239,12 +239,12 @@ head = tail = node; increase_size()
             }
 
             //! move owned node to front
-            inline void move_to_front( NODE *node ) throw()
+            inline NODE * move_to_front( NODE *node ) throw()
             {
                 assert( owns( node ) );
                 if(node==head)
                 {
-                    return; //...
+                    return node; //...
                 }
                 else
                 {
@@ -268,6 +268,7 @@ head = tail = node; increase_size()
                     node->next = head;
                     head->prev = node;
                     head = node;
+                    return node;
                 }
             }
 

@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_MEMORY_SMALL_ZCACHE_INCLUDED
