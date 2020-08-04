@@ -38,6 +38,7 @@ namespace upsylon {
 
             blocks:: blocks(const size_t usr_chunk_size,
                             const size_t usr_limit_size) :
+            oversized(0),
             chunk_size( next_power_of_two( max_of(usr_chunk_size,usr_limit_size,min_chunk_size) ) ),
             slots_size(most_significant_bit_mask(chunk_size/sizeof(blocks::slot_type))),
             slots_mask(slots_size-1 ),
@@ -78,7 +79,9 @@ namespace upsylon {
                     //
                     //----------------------------------------------------------
                     static global &mgr = global::instance();
-                    return mgr.__calloc(1,block_size);
+                    void *addr=  mgr.__calloc(1,block_size);
+                    oversized += block_size;
+                    return addr;
                 }
                 else
                 {
@@ -149,8 +152,10 @@ namespace upsylon {
                     //
                     //----------------------------------------------------------
                     assert(addr!=0);
+                    assert(int64_t(block_size)<=oversized);
                     static global &mgr = global::location();
                     mgr.__free(addr,block_size);
+                    oversized-=block_size;
                 }
                 else
                 {
@@ -187,9 +192,61 @@ namespace upsylon {
 
 
 
+
         }
 
     }
 
 }
 
+#include <iostream>
+#include <iomanip>
+namespace upsylon {
+
+    namespace memory {
+
+        namespace small {
+
+
+            void blocks:: display_setup(const char *pfx) const
+            {
+                const int w = 5;
+                if(!pfx) pfx="";
+                std::cerr << pfx << "<blocks>" << std::endl;
+                std::cerr << pfx << "\t<chunk_size=" <<  std::setw(w) << chunk_size << ">" << std::endl;
+                std::cerr << pfx << "\t<limit_size=" <<  std::setw(w) << limit_size << ">" << std::endl;
+                std::cerr << pfx << "\t<slots_size=" <<  std::setw(w) << slots_size << "/mask=" << slots_mask << ">" << std::endl;
+                std::cerr << pfx << "\t<zChunks chunk_size=" << std::setw(w) << chunks.chunk_size << ", nodes_rise=" << std::setw(w) << chunks.nodes_rise << ">" << std::endl;
+                std::cerr << pfx << "\t<zArenas chunk_size=" << std::setw(w) << arenas.chunk_size << ", nodes_rise=" << std::setw(w) << arenas.nodes_rise << ">" << std::endl;
+                std::cerr << pfx << "<blocks/>" << std::endl;
+            }
+
+            void blocks:: display_stats(const char *pfx) const
+            {
+                if(!pfx) pfx="";
+                std::cerr << pfx << "<blocks>" << std::endl;
+                std::cerr << pfx << "\t<oversized=" << oversized << ">" << std::endl;
+                for(size_t i=0;i<slots_size;++i)
+                {
+                    const slot_type &entry = slot[i];
+                    if(entry.size)
+                    {
+                        std::cerr << "\t<slot[" << std::setw(3) << i << "]";
+                        std::cerr << " #arena=" << entry.size;
+                        std::cerr << "> ";
+                        for(const arena *a=entry.head;a;a=a->next)
+                        {
+                            std::cerr << "[" << a->block_size << "]";
+                        }
+                        std::cerr << std::endl;
+                    }
+                }
+                std::cerr << pfx << "<blocks/>" << std::endl;
+
+            }
+
+        }
+
+    }
+
+}

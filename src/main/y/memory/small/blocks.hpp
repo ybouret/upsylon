@@ -55,11 +55,16 @@ namespace upsylon {
                 //! compute load_factor=limit_size/slot_size
                 size_t load_factor() const throw();
 
+                //! display info
+                void display_setup(const char *pfx=0) const;
+                void display_stats(const char *pfx=0) const;
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
 
+                int64_t      oversized;  //!< local count of above limit
                 const size_t chunk_size; //!< next power of two(max_of(usr_chunk_size,min_chunk_size,limit_size))
                 const size_t slots_size; //!< number of slots as a power of two
                 const size_t slots_mask; //!< slots_size-1

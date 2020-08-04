@@ -39,6 +39,7 @@ namespace upsylon
             //__________________________________________________________________
             const size_t   chunk_size;  //!< the common chunk_size
             const size_t   table_mask;  //!< the htable size - 1
+
         private:
             arena          *acquiring; //!< acquiring cache
             arena          *releasing; //!< releasing cache

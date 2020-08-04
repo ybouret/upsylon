@@ -42,8 +42,8 @@ Y_UTEST(small_blocks)
             size_t nblk = 1000;
             blk_t *blks = static_cast<blk_t *>( global::instance().__calloc(nblk,sizeof(blk_t)) );
 
-            for(size_t iter=0;iter<16;++iter)
             {
+                blk.display_setup("\t");
                 for(size_t i=0;i<nblk;++i)
                 {
                     blk_t &b = blks[i];
@@ -51,6 +51,7 @@ Y_UTEST(small_blocks)
                     b.addr   = blk.acquire(b.size);
                 }
                 alea.shuffle(blks,nblk);
+                blk.display_stats();
 
                 for(size_t i=0;i<nblk;++i)
                 {
