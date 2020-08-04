@@ -41,6 +41,8 @@ Y_UTEST(small_blocks)
             std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(5) <<  blk.arenas.nodes_rise;
             std::cerr << std::endl;
 
+            std::cerr << blk << std::endl;
+
             const size_t max_size = limit_size+1;
             const size_t bps      = 300;
 
@@ -68,6 +70,7 @@ Y_UTEST(small_blocks)
                     b.size = alea.range(limit_size+1, 2*limit_size);
                 }
 
+
                 Y_ASSERT(nblk==j);
             }
 
@@ -80,7 +83,7 @@ Y_UTEST(small_blocks)
                 b.addr   = blk.acquire(b.size);
             }
 
-            //blk.display_stats("\t(*)");
+            std::cerr << blk << std::endl;
 
             // deallocate
             alea.shuffle(blks,nblk);

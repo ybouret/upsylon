@@ -226,7 +226,11 @@ namespace upsylon {
 
             std::ostream & operator<<(std::ostream &os, const chunk &ch)
             {
-                os << '[' << std::setw(3) << ch.allocated() << '/' << std::setw(3) << int(ch.provided_number) << '@' << ch.data << '+' << std::setw(5) << next_power_of_two( size_t(ch.last-ch.data) ) << ']';
+                os << '[';
+                os << std::setw(3) << ch.allocated();
+                os << '/' << std::setw(3) << int(ch.provided_number);
+                os << ' ' << '(' << std::setw(5) << next_power_of_two( size_t(ch.last-ch.data) ) << ')';
+                os << ']';
                 return os;
             }
 

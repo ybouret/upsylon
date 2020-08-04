@@ -20,7 +20,7 @@ Y_UTEST(small_arena)
         small::zcache<small::chunk> cache(chunk_size);
         std::cerr << "\tcache.chunk_size  = " << cache.chunk_size << std::endl;
         std::cerr << "\tcache.nodes_rise  = " << cache.nodes_rise << std::endl;
-        const size_t block_max = min_of<size_t>(chunk_size,60);
+        const size_t block_max = min_of<size_t>(chunk_size/2,60);
         for(size_t block_size=1;block_size<=block_max;++block_size)
         {
             small::arena t(block_size,chunk_size,cache);
@@ -29,10 +29,6 @@ Y_UTEST(small_arena)
             std::cerr << " blocks/chunk=" << std::setw(3) << t.blocks_per_chunk();
             std::cerr << std::endl;
 
-#if !defined(NDEBUG)
-            if(t.blocks_per_chunk()<=1) continue;
-#endif
-            
             size_t n = 0;
             while(n<count)
             {
@@ -51,6 +47,7 @@ Y_UTEST(small_arena)
             }
             alea.shuffle(entry,count);
 
+            std::cerr << t << std::endl;
 
             for(size_t i=0;i<count;++i)
             {

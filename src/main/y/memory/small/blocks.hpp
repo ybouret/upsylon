@@ -55,9 +55,8 @@ namespace upsylon {
                 //! compute load_factor=limit_size/slot_size
                 size_t load_factor() const throw();
 
-                //! display info
-                void display_setup(const char *pfx=0) const;
-                void display_stats(const char *pfx=0) const;
+                //! display
+                friend std::ostream & operator<<( std::ostream &os, const blocks &b);
 
                 //______________________________________________________________
                 //

@@ -207,44 +207,34 @@ namespace upsylon {
 
         namespace small {
 
-
-            void blocks:: display_setup(const char *pfx) const
+            std::ostream & operator<<( std::ostream &os, const blocks &b)
             {
-                const int w = 5;
-                if(!pfx) pfx="";
-                std::cerr << pfx << "<blocks>" << std::endl;
-                std::cerr << pfx << "\t<chunk_size=" <<  std::setw(w) << chunk_size << ">" << std::endl;
-                std::cerr << pfx << "\t<limit_size=" <<  std::setw(w) << limit_size << ">" << std::endl;
-                std::cerr << pfx << "\t<slots_size=" <<  std::setw(w) << slots_size << "/mask=" << slots_mask << ">" << std::endl;
-                std::cerr << pfx << "\t<zChunks chunk_size=" << std::setw(w) << chunks.chunk_size << ", nodes_rise=" << std::setw(w) << chunks.nodes_rise << ">" << std::endl;
-                std::cerr << pfx << "\t<zArenas chunk_size=" << std::setw(w) << arenas.chunk_size << ", nodes_rise=" << std::setw(w) << arenas.nodes_rise << ">" << std::endl;
-                std::cerr << pfx << "<blocks/>" << std::endl;
-            }
-
-            void blocks:: display_stats(const char *pfx) const
-            {
-                if(!pfx) pfx="";
-                std::cerr << pfx << "<blocks>" << std::endl;
-                std::cerr << pfx << "\t<oversized=" << oversized << ">" << std::endl;
-                for(size_t i=0;i<slots_size;++i)
+                os << "<blocks chunk_size=" << b.chunk_size << " limit_size=" << b.limit_size << " #slots=" << b.slots_size << " >" << std::endl;
+                os << "\t<oversized bytes=" << b.oversized << "/>" << std::endl;
+                for(size_t i=0;i<b.slots_size;++i)
                 {
-                    const slot_type &entry = slot[i];
+                    const blocks::slot_type &entry = b.slot[i];
                     if(entry.size)
                     {
-                        std::cerr << "\t<slot[" << std::setw(3) << i << "]";
-                        std::cerr << " #arena=" << entry.size;
-                        std::cerr << "> ";
+                        os << "\t<slot[" << i << "] #arena=" << entry.size << " {";
                         for(const arena *a=entry.head;a;a=a->next)
                         {
-                            std::cerr << *a;
+                            os << ' ' << a->block_size;
                         }
-                        std::cerr << std::endl;
+                        os << " } >" << std::endl;
+
+                        for(const arena *a=entry.head;a;a=a->next)
+                        {
+                            os << *a << std::endl;
+                        }
+
+                       os << "\t<slot[" << i << "]/>" << std::endl;
                     }
                 }
-                std::cerr << pfx << "<blocks/>" << std::endl;
-
+                os << "<blocks/>" << std::endl;
+                return os;
             }
-
+            
         }
 
     }

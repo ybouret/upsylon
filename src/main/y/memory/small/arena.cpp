@@ -313,9 +313,26 @@ namespace upsylon {
 
             std::ostream & operator<<( std::ostream &os, const arena &a)
             {
-                os << "<arena[" << a.chunks.size << "] block_size=" << a.block_size << " chunk_size=" << a.chunk_size << " blocks_per_chunk=" << a.blocks_per_chunk() << ">" << std::endl;
-
-                os << "<arena/>";
+                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << " blocks_per_chunk=" << a.blocks_per_chunk() << ">" << std::endl;
+                os << "\t  <chunks used=" << a.chunks.size << ">" << std::endl;
+                size_t j=0;
+                bool   r=false;
+                for(const chunk *ch = a.chunks.head;ch;ch=ch->next)
+                {
+                    os << ' ' << *ch;
+                    if( 0 == (++j%4) )
+                    {
+                        os << std::endl;
+                        r = true;
+                    }
+                    else
+                    {
+                        r = false;
+                    }
+                }
+                if(!r) os << std::endl;
+                os << "\t  <chunks/>" << std::endl;
+                os << "\t<arena/>";
                 return os;
             }
 

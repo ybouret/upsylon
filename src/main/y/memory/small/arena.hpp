@@ -33,7 +33,7 @@ namespace upsylon {
                       const size_t   usr_chunk_size,
                       zcache<chunk> &usr_cache);
 
-
+                //! cleanup
                 ~arena() throw();
 
                 //______________________________________________________________
@@ -44,7 +44,8 @@ namespace upsylon {
                 void   release(void *) throw();          //!< release a previously allocated block
                 size_t blocks_per_chunk() const throw(); //!< get acquiring->provided_number
 
-                friend std::ostream & operator<<( std::ostream &os, const arena &);
+                //! display
+                friend std::ostream & operator<<(std::ostream &, const arena &);
 
             private:
                 chunk               *acquiring; //!< current acquiring piece
