@@ -38,22 +38,23 @@ namespace upsylon
             //__________________________________________________________________
 
             //! default constructor, set to empty
-            inline  proc_type() throw() : func(0), name(0) {}
+            inline  proc_type() throw() : func(0), name(0), size(0) {}
             
             //! default destructor
             inline ~proc_type() throw() { func=0; name=0; }
             
             //! direct constructor
-            inline  proc_type(func_type f, const char *n) throw() : func(f), name(n) {}
+            inline  proc_type(func_type f, const char *n) throw() : func(f), name(n), size(name?strlen(name):0) {}
             
             //! copy constructor
-            inline  proc_type(const proc_type &other) throw() : func(other.func), name(other.name) {}
+            inline  proc_type(const proc_type &other) throw() : func(other.func), name(other.name), size(other.size) {}
             
             //! assignment
             inline  proc_type & operator=(const proc_type &other) throw()
             {
-                func = other.func;
-                name = other.name;
+                func          = other.func;
+                name          = other.name;
+                (size_t&)size = other.size;
                 return *this;
             }
 
@@ -76,8 +77,9 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            func_type   func; //!< the function address
-            const char *name; //!< the function's name by user
+            func_type    func; //!< the function address
+            const char  *name; //!< the function's name by user
+            const size_t size; //!< the function's name length
         };
 
         //______________________________________________________________________
@@ -88,7 +90,7 @@ namespace upsylon
         class suite
         {
         public:
-            inline  suite() throw() : reg_(), num_(0) {}
+            inline  suite() throw() : reg_(), num_(0), max_size(0) {}
             inline ~suite() throw() {}
 
             //__________________________________________________________________
@@ -114,7 +116,20 @@ namespace upsylon
                 const proc_type p(func,name);
                 reg_[num_++] = p;
                 qsort(reg_,num_,sizeof(proc_type),proc_type::compare);
+                if(p.size>max_size) max_size=p.size;
             }
+
+            inline std::ostream & display(std::ostream &os, const proc_type &p) const
+            {
+                const size_t     len = p.size; assert(len<=max_size);
+                const size_t     n   = max_size - len;
+                const size_t     h   = n>>1 ;
+                for(size_t j=0;j<h;++j) os << ' ';
+                os << p.name;
+                for(size_t j=h;j<n;++j) os << ' ';
+                return os;
+            }
+
 
             //__________________________________________________________________
             //
@@ -127,7 +142,7 @@ namespace upsylon
                     std::cerr << "List of #Tests=" << num_ << " in " << argv[0] << std::endl;
                     for( size_t i=0;i<num_;++i)
                     {
-                        std::cout << "--  " << reg_[i].name << std::endl;
+                        display( std::cout << '\t' << '[',reg_[i])  << ']' << std::endl;
                     }
                     std::cerr << "End of #Tests=" << num_ << " in " << argv[0] << std::endl;
                     return 1;
@@ -142,8 +157,9 @@ namespace upsylon
                         bool first = true;
                         for(size_t i=0;i<num_;++i)
                         {
-                            const char *guess = reg_[i].name;
-                            const char *match = strstr(guess,name);
+                            const proc_type &p     = reg_[i];
+                            const char      *guess = p.name;
+                            const char      *match = strstr(guess,name);
                             if(match)
                             {
                                 if(first)
@@ -151,7 +167,7 @@ namespace upsylon
                                     std::cerr << "-- But...I know how to :" << std::endl;
                                     first = false;
                                 }
-                                std::cerr << "\t" << guess << std::endl;
+                                display(std::cerr << '\t' << '|',p) << '|' << std::endl;
                             }
 
                         }
@@ -184,6 +200,7 @@ namespace upsylon
         private:
             proc_type reg_[N];
             size_t    num_;
+            size_t    max_size;
             Y_DISABLE_COPY_AND_ASSIGN(suite);
             const proc_type *search( const char *name ) const throw()
             {
