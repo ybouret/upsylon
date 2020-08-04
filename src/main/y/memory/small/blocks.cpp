@@ -46,13 +46,17 @@ namespace upsylon {
             acquiring(0),
             releasing(0),
             chunks(chunk_size),
-            arenas(chunk_size),
-            load_factor(limit_size/slots_size)
+            arenas(chunk_size)
             {
                 for(size_t i=0;i<slots_size;++i)
                 {
                     new (&slot[i]) slot_type();
                 }
+            }
+
+            size_t blocks:: load_factor() const throw()
+            {
+                return limit_size/slots_size;
             }
 
             void * blocks:: acquire(const size_t block_size)
