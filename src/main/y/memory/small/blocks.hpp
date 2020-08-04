@@ -58,6 +58,9 @@ namespace upsylon {
                 //! display
                 friend std::ostream & operator<<( std::ostream &os, const blocks &b);
 
+                //! get/create arena
+                arena & operator[](const size_t block_size);
+
                 //______________________________________________________________
                 //
                 // members
@@ -75,6 +78,9 @@ namespace upsylon {
                 slot_type      *slot;
                 arena          *acquiring;
                 arena          *releasing;
+
+                arena          *query(const size_t block_size);
+                
 
             public:
                 zcache<chunk>   chunks;      //!< shared zombie chunks, built with chunk_size

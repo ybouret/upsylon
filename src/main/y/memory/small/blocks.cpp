@@ -60,6 +60,58 @@ namespace upsylon {
                 return limit_size/slots_size;
             }
 
+            arena * blocks:: query(const size_t block_size)
+            {
+                assert(block_size>0);
+                assert(block_size<=limit_size);
+
+                //----------------------------------------------------------
+                //
+                // look up for acquiring
+                //
+                //----------------------------------------------------------
+                if(acquiring&&acquiring->block_size==block_size)
+                {
+                    //------------------------------------------------------
+                    // cached!
+                    //------------------------------------------------------
+                    return acquiring;
+                }
+                else
+                {
+                    //------------------------------------------------------
+                    // look up!
+                    //------------------------------------------------------
+                    slot_type &entry = slot[block_size&slots_mask];
+                    for(arena *a=entry.head;a;a=a->next)
+                    {
+                        if(block_size==a->block_size)
+                        {
+                            // Found!
+                            return (acquiring=entry.move_to_front(a));
+                        }
+                    }
+
+                    //------------------------------------------------------
+                    // create a new arena
+                    //------------------------------------------------------
+                    arena *a = arenas.query_nil();
+                    try {
+                        new (a) arena(block_size,chunk_size,chunks);
+                    }
+                    catch(...)
+                    {
+                        arenas.store_nil(a);
+                        throw;
+                    }
+
+                    //------------------------------------------------------
+                    // return block
+                    //------------------------------------------------------
+                    return (acquiring=entry.push_front(a) );
+                }
+            }
+
             void * blocks:: acquire(const size_t block_size)
             {
                 if(block_size<=0)
@@ -85,51 +137,7 @@ namespace upsylon {
                 }
                 else
                 {
-                    //----------------------------------------------------------
-                    //
-                    // look up for acquiring
-                    //
-                    //----------------------------------------------------------
-                    if(acquiring&&acquiring->block_size==block_size)
-                    {
-                        //------------------------------------------------------
-                        // cached!
-                        //------------------------------------------------------
-                        return acquiring->acquire();
-                    }
-                    else
-                    {
-                        //------------------------------------------------------
-                        // look up!
-                        //------------------------------------------------------
-                        slot_type &entry = slot[block_size&slots_mask];
-                        for(arena *a=entry.head;a;a=a->next)
-                        {
-                            if(block_size==a->block_size)
-                            {
-                                // Found!
-                                return (acquiring=entry.move_to_front(a))->acquire();
-                            }
-                        }
-
-                        //------------------------------------------------------
-                        // create a new arena
-                        //------------------------------------------------------
-                        arena *a = arenas.query_nil();
-                        try {
-                            new (a) arena(block_size,chunk_size,chunks);
-                        }
-                        catch(...)
-                        {
-                            arenas.store_nil(a);
-                            throw;
-                        }
-
-                        //------------------------------------------------------
-                        // return block
-                        //------------------------------------------------------
-                        return (acquiring=entry.push_front(a) )->acquire();
-                    }
+                    return query(block_size)->acquire();
                 }
             }
 
@@ -228,7 +236,7 @@ namespace upsylon {
                             os << *a << std::endl;
                         }
 
-                       os << "\t<slot[" << i << "]/>" << std::endl;
+                        os << "\t<slot[" << i << "]/>" << std::endl;
                     }
                 }
                 os << "<blocks/>" << std::endl;
@@ -239,4 +247,22 @@ namespace upsylon {
 
     }
 
+}
+
+#include "y/exceptions.hpp"
+
+namespace upsylon {
+
+    namespace memory {
+
+        namespace small {
+
+            arena & blocks:: operator[](const size_t block_size)
+            {
+                if(block_size<=0||block_size>limit_size)
+                    throw libc::exception(EDOM,"small::blocks(block_size=%lu not in [1:%lu])", (unsigned long)block_size, (unsigned long)limit_size);
+                return *query(block_size);
+            }
+        }
+    }
 }

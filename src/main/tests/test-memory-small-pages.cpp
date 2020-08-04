@@ -10,7 +10,7 @@ Y_UTEST(small_pages)
 {
     Y_UTEST_SIZEOF(small::page);
     Y_CHECK(sizeof(small::page) == small::pages::min_page_size );
-
+    std::cerr << "small::pages::max_page_size=" << small::pages::max_page_size << std::endl;
 }
 Y_UTEST_DONE()
 
