@@ -27,10 +27,7 @@ Y_UTEST(small_chunk)
             void *chunk_data = mgr.__calloc(1,chunk_size);
 
             small::chunk p(block_size,chunk_data,chunk_size);
-            std::cerr
-            << "\t\tchunk_size=" << std::setw(5) << chunk_size
-            << " : #blocks="     << std::setw(3) << int(p.provided_number)
-            << " in " << std::setw(5) << (p.last-p.data) << " bytes [";
+            std::cerr << "\tchunk_size=" << std::setw(5) << chunk_size << " " << p << "[";
 
             for(size_t iter=0;iter<256;++iter)
             {
@@ -48,9 +45,17 @@ Y_UTEST(small_chunk)
                     void * &q = addr[p.allocated()-1];
                     p.release(q,block_size);
                 }
+                Y_ASSERT(p.is_empty());
             }
 
-            std::cerr << "]" << std::endl;
+
+            std::cerr << "]";
+            while(p.still_available)
+            {
+                (void) p.acquire(block_size);
+            }
+            std::cerr << p;
+            std::cerr << std::endl;
             mgr.__free(chunk_data,chunk_size);
         }
 

@@ -5,6 +5,7 @@
 
 #include "y/os/platform.hpp"
 #include "y/memory/ownership.hpp"
+#include <iosfwd>
 
 namespace upsylon {
     
@@ -50,6 +51,9 @@ namespace upsylon {
 
                 //! release a preivously acquire block
                 void      release(void *addr, const size_t block_size) throw();
+
+                //! display
+                friend std::ostream & operator<<(std::ostream &, const chunk&);
 
                 //______________________________________________________________
                 //

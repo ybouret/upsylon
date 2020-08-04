@@ -40,7 +40,7 @@ namespace upsylon {
             still_available(compute_blocks(block_size,chunk_size)),
             provided_number(still_available)
             {
-                // setup
+                // setup internal
                 last += provided_number*block_size;
 
                 for(uint8_t q=0,*p=data; q!=provided_number; p += block_size)
@@ -172,12 +172,10 @@ namespace upsylon {
                 // take the biggest required abd its boundary
                 //
                 //--------------------------------------------------------------
-
                 size_t  blocks   = 0xff;
                 size_t  required = blocks*block_size;
                 size_t  boundary = next_power_of_two(required);
 
-                //std::cerr << "boundary " << boundary << " for " << required << " #" << blocks << std::endl;
 
                 //--------------------------------------------------------------
                 //
@@ -193,7 +191,6 @@ namespace upsylon {
                     {
                         required = prev_required;
                         boundary = prev_boundary;
-                        //std::cerr << "better with " << boundary  << " for " << required << " #" << blocks << std::endl;
                         prev_boundary >>= 1;
                     }
                     else
@@ -215,5 +212,25 @@ namespace upsylon {
 
     }
 
+}
+
+#include <iostream>
+#include <iomanip>
+namespace upsylon {
+
+    namespace memory
+    {
+
+        namespace small
+        {
+
+            std::ostream & operator<<(std::ostream &os, const chunk &ch)
+            {
+                os << '[' << std::setw(3) << ch.allocated() << '/' << std::setw(3) << int(ch.provided_number) << '@' << ch.data << '+' << std::setw(5) << next_power_of_two( size_t(ch.last-ch.data) ) << ']';
+                return os;
+            }
+
+        }
+    }
 }
 
