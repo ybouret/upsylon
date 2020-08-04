@@ -40,6 +40,7 @@ namespace upsylon {
             public:
                 zcache<chunk>   chunks;
                 zcache<arena>   arenas;
+                const size_t    load_factor;
             };
 
 

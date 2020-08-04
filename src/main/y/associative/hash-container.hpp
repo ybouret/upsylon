@@ -106,8 +106,8 @@ namespace upsylon
                 assert(s);
                 NODE *node = (NODE *)n;
                 // move to front for subsequent access
-                s->move_to_front(node);
-                return &(node->data);
+                //s->move_to_front(node);
+                return &(s->move_to_front(node)->data);
             }
             else
             {

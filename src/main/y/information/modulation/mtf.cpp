@@ -104,8 +104,7 @@ namespace upsylon {
                 node=node->next;
                 assert(NULL!=node);
             }
-            list_.move_to_front(node);
-            return node->data;
+            return list_.move_to_front(node)->data;
         }
 
 

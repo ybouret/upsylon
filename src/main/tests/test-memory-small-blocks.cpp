@@ -12,7 +12,7 @@ Y_UTEST(small_blocks)
 {
 
 
-    for(size_t chunk_size=1; chunk_size<=4096; chunk_size<<=1 )
+    for(size_t chunk_size=1; chunk_size<=8192; chunk_size<<=1 )
     {
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
         for(size_t limit_size=1;limit_size<=512;limit_size<<=1)
@@ -21,6 +21,7 @@ Y_UTEST(small_blocks)
             small::blocks blk(chunk_size,limit_size);
             std::cerr << " | chunk_size="    << std::setw(5) <<  blk.chunk_size;
             std::cerr << " | slots_size="    << std::setw(5) <<  blk.slots_size;
+            std::cerr << " | load_factor= " << std::setw(3) << blk.load_factor;
             std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.chunks.chunk_size << "," << std::setw(5) <<  blk.chunks.nodes_rise;
             std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(5) <<  blk.arenas.nodes_rise;
 

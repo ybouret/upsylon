@@ -40,7 +40,8 @@ namespace upsylon {
             acquiring(0),
             releasing(0),
             chunks(chunk_size),
-            arenas(chunk_size)
+            arenas(chunk_size),
+            load_factor(limit_size/slots_size)
             {
                 for(size_t i=0;i<slots_size;++i)
                 {
@@ -52,36 +53,55 @@ namespace upsylon {
             {
                 if(block_size<=0)
                 {
+                    //----------------------------------------------------------
+                    //
                     // convention: returns 0
+                    //
+                    //----------------------------------------------------------
                     return 0;
                 }
                 else if(block_size>limit_size)
                 {
+                    //----------------------------------------------------------
+                    //
                     // switch to global
+                    //
+                    //----------------------------------------------------------
                     static global &mgr = global::instance();
                     return mgr.__calloc(1,block_size);
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    //
                     // look up for acquiring
+                    //
+                    //----------------------------------------------------------
                     if(acquiring&&acquiring->block_size==block_size)
                     {
+                        //------------------------------------------------------
                         // cached!
+                        //------------------------------------------------------
                         return acquiring->acquire();
                     }
                     else
                     {
+                        //------------------------------------------------------
+                        // look up!
+                        //------------------------------------------------------
                         slot_type &entry = slot[block_size&slots_mask];
-                        // look up
                         for(arena *a=entry.head;a;a=a->next)
                         {
                             if(block_size==a->block_size)
                             {
-                                entry.move_to_front(a);
-                                return (acquiring = a)->acquire();
+                                // Found!
+                                return (acquiring=entry.move_to_front(a))->acquire();
                             }
                         }
+
+                        //------------------------------------------------------
                         // create a new arena
+                        //------------------------------------------------------
                         arena *a = arenas.query_nil();
                         try {
                             new (a) arena(block_size,chunk_size,chunks);
@@ -91,6 +111,10 @@ namespace upsylon {
                             arenas.store_nil(a);
                             throw;
                         }
+
+                        //------------------------------------------------------
+                        // return block
+                        //------------------------------------------------------
                         return (acquiring=entry.push_front(a) )->acquire();
                     }
                 }
