@@ -236,7 +236,7 @@ namespace upsylon {
                         std::cerr << "> ";
                         for(const arena *a=entry.head;a;a=a->next)
                         {
-                            std::cerr << "[" << a->block_size << "]";
+                            std::cerr << *a;
                         }
                         std::cerr << std::endl;
                     }

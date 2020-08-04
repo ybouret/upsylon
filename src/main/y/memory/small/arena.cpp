@@ -304,3 +304,26 @@ namespace upsylon {
 }
 
 
+#include <iostream>
+namespace upsylon {
+
+    namespace memory {
+
+        namespace small {
+
+            std::ostream & operator<<( std::ostream &os, const arena &a)
+            {
+                os << '[';
+                os
+                << "bs="  << a.block_size
+                << ",cs=" << a.chunk_size
+                << ",chunks="  << a.chunks.size << 'x' << a.blocks_per_chunk();
+                os << ']';
+                return os;
+            }
+
+        }
+
+    }
+
+}

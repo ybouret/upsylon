@@ -6,7 +6,7 @@
 
 #include "y/memory/small/chunk.hpp"
 #include "y/memory/small/zcache.hpp"
-
+#include <iosfwd>
 
 namespace upsylon {
 
@@ -43,6 +43,8 @@ namespace upsylon {
                 void  *acquire();                        //!< allocate a zeroed block
                 void   release(void *) throw();          //!< release a previously allocated block
                 size_t blocks_per_chunk() const throw(); //!< get acquiring->provided_number
+
+                friend std::ostream & operator<<( std::ostream &os, const arena &);
 
             private:
                 chunk               *acquiring; //!< current acquiring piece

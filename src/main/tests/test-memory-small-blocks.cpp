@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/memory/allocator/global.hpp"
+#include "y/type/utils.hpp"
 
 #include <iomanip>
 
@@ -27,7 +28,8 @@ Y_UTEST(small_blocks)
     for(size_t chunk_size=1; chunk_size<=8192; chunk_size<<=1 )
     {
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
-        for(size_t limit_size=1;limit_size<=512;limit_size<<=1)
+        const size_t limit_max = min_of<size_t>(chunk_size/2,512);
+        for(size_t limit_size=1;limit_size<=limit_max;limit_size<<=1)
         {
             std::cerr << "\tlimit_size=" << std::setw(5) << limit_size << ":";
 
@@ -39,27 +41,54 @@ Y_UTEST(small_blocks)
             std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(5) <<  blk.arenas.nodes_rise;
             std::cerr << std::endl;
 
-            size_t nblk = 1000;
-            blk_t *blks = static_cast<blk_t *>( global::instance().__calloc(nblk,sizeof(blk_t)) );
+            const size_t max_size = limit_size+1;
+            const size_t bps      = 300;
 
+            const size_t nblk = bps*max_size;
+            blk_t       *blks = static_cast<blk_t *>( global::instance().__calloc(nblk,sizeof(blk_t)) );
+
+
+            // create blocks
             {
-                blk.display_setup("\t");
-                for(size_t i=0;i<nblk;++i)
+                size_t j=0;
+                for(size_t i=1;i<=limit_size;++i)
                 {
-                    blk_t &b = blks[i];
-                    b.size   = alea.range<size_t>(0,2*limit_size);
-                    b.addr   = blk.acquire(b.size);
+                    for(size_t k=bps;k>0;--k)
+                    {
+                        blk_t &b = blks[j++];
+                        b.addr = 0;
+                        b.size = i;
+                    }
                 }
-                alea.shuffle(blks,nblk);
-                blk.display_stats();
 
-                for(size_t i=0;i<nblk;++i)
+                for(size_t k=bps;k>0;--k)
                 {
-                    blk_t &b = blks[i];
-                    blk.release(b.addr,b.size);
+                    blk_t &b = blks[j++];
+                    b.addr = 0;
+                    b.size = alea.range(limit_size+1, 2*limit_size);
                 }
+
+                Y_ASSERT(nblk==j);
             }
 
+            // allocate blocks
+            alea.shuffle(blks,nblk);
+
+            for(size_t i=0;i<nblk;++i)
+            {
+                blk_t &b = blks[i];
+                b.addr   = blk.acquire(b.size);
+            }
+
+            //blk.display_stats("\t(*)");
+
+            // deallocate
+            alea.shuffle(blks,nblk);
+            for(size_t i=0;i<nblk;++i)
+            {
+                blk_t &b = blks[i];
+                blk.release(b.addr,b.size);
+            }
 
             global::location().__free(blks,nblk*sizeof(blk_t));
 
