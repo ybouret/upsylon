@@ -16,7 +16,13 @@ namespace upsylon {
                 size_t i=slots_size;
                 while(i-- >0)
                 {
-                    self_destruct( slot[i] );
+                    slot_type &entry = slot[i];
+                    while(entry.size)
+                    {
+                        arena *a = entry.pop_back();
+                        self_destruct(*a);
+                        arenas.store_nil(a);
+                    }
                 }
 
                 global::location().__free(slot,chunk_size);
