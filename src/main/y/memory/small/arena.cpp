@@ -2,7 +2,6 @@
 #include "y/memory/small/arena.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/global.hpp"
-#include "y/type/aliasing.hpp"
 #include <iostream>
 
 namespace upsylon {
@@ -20,8 +19,8 @@ namespace upsylon {
                     const size_t n = p->allocated();
                     if(n>0)
                     {
-                        leak += n;
-                        aliasing::_(available) += n;
+                        leak      += n;
+                        available += n;
                     }
                     delete_chunk(p);
                 }
@@ -42,7 +41,7 @@ namespace upsylon {
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
 
-            size_t arena:: blocks_per_piece() const throw()
+            size_t arena:: blocks_per_chunk() const throw()
             {
                 assert(acquiring);
                 return acquiring->provided_number;
@@ -99,7 +98,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // update available
                 //--------------------------------------------------------------
-                aliasing::_(available) += curr->provided_number;
+                available += curr->provided_number;
                 return curr;
             }
 
@@ -118,7 +117,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // update available
                 //--------------------------------------------------------------
-                aliasing::_(available) -= p->provided_number;
+                available -= p->provided_number;
 
                 //--------------------------------------------------------------
                 // release memory
@@ -223,7 +222,7 @@ namespace upsylon {
                 assert(acquiring);
                 assert(acquiring->still_available);
                 assert(!(empty_one&&acquiring==empty_one));
-                --aliasing::_(available);
+                --available;
                 return acquiring->acquire(block_size);
             }
 
@@ -248,7 +247,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // locating data
                 //--------------------------------------------------------------
-                switch (releasing->owner_of(addr))
+                switch (releasing->whose(addr))
                 {
                     case owned_by_this: break;
                     case owned_by_prev: do { releasing=releasing->prev; assert(releasing); } while( !releasing->owns(addr) ); break;
@@ -262,8 +261,11 @@ namespace upsylon {
                 assert(empty_one!=releasing);
 
                 releasing->release(addr,block_size);
-                ++aliasing::_(available);
+                ++available;
 
+                //--------------------------------------------------------------
+                // check memory status
+                //--------------------------------------------------------------
                 if(releasing->is_empty())
                 {
                     assert(releasing->allocated()==0);

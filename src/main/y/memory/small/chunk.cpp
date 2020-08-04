@@ -52,7 +52,7 @@ namespace upsylon {
 
             }
 
-            ownership chunk:: owner_of(const void *addr) const throw()
+            ownership chunk:: whose(const void *addr) const throw()
             {
                 const uint8_t *p = static_cast<const uint8_t*>(addr);
                 if(p<data)

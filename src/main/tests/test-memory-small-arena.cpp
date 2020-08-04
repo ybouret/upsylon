@@ -26,11 +26,11 @@ Y_UTEST(small_arena)
             small::arena t(block_size,chunk_size,cache);
             std::cerr << "\t<block_size=" << std::setw(3) << block_size << ">";
             std::cerr << " chunk_size=" << std::setw(5) << t.chunk_size;
-            std::cerr << " blocks_per_piece=" << std::setw(3) << t.blocks_per_piece();
+            std::cerr << " blocks/chunk=" << std::setw(3) << t.blocks_per_chunk();
             std::cerr << std::endl;
 
 #if !defined(NDEBUG)
-            if(t.blocks_per_piece()<=1) continue;
+            if(t.blocks_per_chunk()<=1) continue;
 #endif
             
             size_t n = 0;

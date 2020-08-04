@@ -26,36 +26,39 @@ namespace upsylon {
                 // C++
                 //______________________________________________________________
 
-                // constructor: setup all parameters
+                //! constructor: setup all parameters
                 chunk(const size_t block_size,
                       void *       chunk_data,
                       const size_t chunk_size) throw();
 
 
+                //! cleanup
                 ~chunk() throw();
 
                 //______________________________________________________________
                 //
                 // method
                 //______________________________________________________________
-                ownership owner_of(const void *addr) const throw(); //!< ownership of an address
+                ownership whose(const void *addr)    const throw(); //!< ownership of an address
                 bool      owns(const void *addr)     const throw(); //!< check is this is the owner
-                bool      is_empty()  const throw(); //!< still_available>=provided_number
-                size_t    allocated() const throw(); //!< provided_number-still_available
+                bool      is_empty()                 const throw(); //!< still_available>=provided_number
+                size_t    allocated()                const throw(); //!< provided_number-still_available
 
 
                 //! acquire a new block, still_available>0
                 void     *acquire(const size_t block_size) throw();
+
+                //! release a preivously acquire block
                 void      release(void *addr, const size_t block_size) throw();
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                chunk         *next; //!< for list/poo;
-                chunk         *prev; //!< for list
-                uint8_t       *data; //!< first item
-                const uint8_t *last; //!< first invalid item
+                chunk         *next;            //!< for list/pool
+                chunk         *prev;            //!< for list
+                uint8_t       *data;            //!< first item
+                const uint8_t *last;            //!< first invalid item
                 uint8_t        first_available; //!< bookeeping
                 uint8_t        still_available; //!< bookeeping
                 const uint8_t  provided_number; //!< initial count

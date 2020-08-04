@@ -24,11 +24,11 @@ namespace upsylon {
             //__________________________________________________________________
             struct __zcache
             {
-                static const size_t header = sizeof(void*);
-                static void * acquire(const size_t);
-                static void   release(void *,const size_t) throw();
-                static size_t length_from(const size_t, const size_t) throw(); //!< aligned max
-                static void  *first(void *) throw();
+                static const size_t header = sizeof(void*);                     //!< reserved bytes for intenal linking
+                static void * acquire(const size_t);                            //!< acquire(chunk_size)
+                static void   release(void *,const size_t)            throw();  //!< acquire(chunk_size)
+                static size_t length_from(const size_t, const size_t) throw();  //!< next_power_of_two(max_of(,))
+                static void  *first(void *)                           throw();  //!< translated address
             };
 
 
@@ -57,6 +57,7 @@ namespace upsylon {
                 // C++
                 //______________________________________________________________
 
+                //! setup from usr_chunk_size
                 inline zcache(const size_t usr_chunk_size) throw() :
                 chunk_size( __zcache::length_from(usr_chunk_size,min_chunk_size) ),
                 nodes_rise( (chunk_size-__zcache::header)/sizeof(NODE) )
@@ -64,6 +65,7 @@ namespace upsylon {
 
                 }
 
+                //! cleanup
                 inline ~zcache() throw()
                 {
                     if( nodes_rise * parts.size != nodes.size )
@@ -75,6 +77,7 @@ namespace upsylon {
                     while(parts.size) __zcache::release(parts.query(),chunk_size);
                 }
 
+                //! return a zeroed NODE
                 inline NODE *query_nil()
                 {
                     if(nodes.size)
@@ -98,6 +101,7 @@ namespace upsylon {
                     }
                 }
 
+                //! store a zombie node
                 inline void store_nil(NODE *node) throw()
                 {
                     assert(node);
@@ -107,6 +111,7 @@ namespace upsylon {
                     nodes.push_front(node);
                 }
 
+                //! check ownership
                 inline bool owns(const NODE *node) const throw()
                 {
                     for(const part *p=parts.head;p;p=p->next)
@@ -116,9 +121,13 @@ namespace upsylon {
                     return false;
                 }
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
 
-                const size_t chunk_size;
-                const size_t nodes_rise;
+                const size_t chunk_size; //!< new bytes per allocation
+                const size_t nodes_rise; //!< new nodes per allocation
 
 
             private:

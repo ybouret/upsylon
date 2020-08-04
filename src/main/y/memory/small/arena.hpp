@@ -16,7 +16,12 @@ namespace upsylon {
 
         namespace small {
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! cache of zombie chunks
+            //
+            //__________________________________________________________________
             typedef zcache<chunk> zchunks;
 
 
@@ -40,15 +45,13 @@ namespace upsylon {
                 void  *acquire();               //!< allocate a zeroed block
                 void   release(void *) throw(); //!< release a previously allocated block
 
-                size_t blocks_per_piece() const throw(); //!< get acquiring->provided_number
+                size_t blocks_per_chunk() const throw(); //!< get acquiring->provided_number
 
             private:
                 chunk               *acquiring; //!< current acquiring piece
                 chunk               *releasing; //!< current acquiring piece
                 chunk               *empty_one; //!< empty piece
-            public:
-                const size_t         available; //!< bookkeeping of available blocks
-            private:
+                size_t               available; //!< bookkeeping of available blocks
                 core::list_of<chunk> chunks;    //!< pieces, sorted by increasing memory
                 zchunks             *shared;    //!< shared cache
                 

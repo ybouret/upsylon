@@ -26,7 +26,7 @@ namespace upsylon
             /**
              \param num_procs total number of processors
              \param num_cores desired number of cores
-             \param main_core where to assign first thread
+             \param starting   where to assign first thread
              procs=max_of(1,num_procs)
              cores=clamp(1,num_cores,proc)
              shift=min_of(0,starting,procs-1)
