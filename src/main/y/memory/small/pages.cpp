@@ -30,7 +30,7 @@ namespace upsylon {
             
             size_t pages:: chunk_size_for(const size_t usr_chunk_size) throw()
             {
-                const size_t bytes_for_pieces = min_pieces_per_page * sizeof(chunk) + header_size;
+                const size_t bytes_for_pieces = min_chunks_per_page * sizeof(chunk) + header_size;
                 return next_power_of_two( max_of(usr_chunk_size,bytes_for_pieces) );
             }
 

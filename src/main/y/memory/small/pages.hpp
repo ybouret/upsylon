@@ -25,7 +25,7 @@ namespace upsylon {
             {
             public:
                 static const size_t header_size         = sizeof(void*);
-                static const size_t min_pieces_per_page = 2;
+                static const size_t min_chunks_per_page = 2;
 
                 //! enough memory for some chunks and a page
                 /**

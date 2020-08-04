@@ -17,9 +17,9 @@ Y_UTEST(small_arena)
     for(size_t chunk_size=32; chunk_size <= 8192; chunk_size <<= 1)
     {
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
-        small::pages cache(chunk_size);
-        std::cerr << "\tcache.chunk_size      = " << cache.chunk_size << std::endl;
-        std::cerr << "\tcache.chunks_per_page = " << cache.chunks_per_page << std::endl;
+        small::zchunks cache(chunk_size);
+        std::cerr << "\tcache.chunk_size  = " << cache.chunk_size << std::endl;
+        std::cerr << "\tcache.nodes_rise  = " << cache.nodes_rise << std::endl;
         const size_t block_max = min_of<size_t>(chunk_size,60);
         for(size_t block_size=1;block_size<=block_max;++block_size)
         {
@@ -64,7 +64,7 @@ Y_UTEST(small_arena)
 
 
     Y_UTEST_SIZEOF(small::chunk);
-    Y_UTEST_SIZEOF(small::pages);
+    Y_UTEST_SIZEOF(small::zchunks);
     Y_UTEST_SIZEOF(small::arena);
 
 }

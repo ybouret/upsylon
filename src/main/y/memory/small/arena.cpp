@@ -51,7 +51,7 @@ namespace upsylon {
 
             arena:: arena(const size_t usr_block_size,
                               const size_t usr_chunk_size,
-                              pages       &cache) :
+                              zchunks       &cache) :
             acquiring(0),
             releasing(0),
             empty_one(0),
