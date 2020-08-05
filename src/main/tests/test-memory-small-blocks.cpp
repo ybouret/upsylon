@@ -43,7 +43,7 @@ Y_UTEST(small_blocks)
             std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(5) <<  blk.arenas.nodes_rise;
             std::cerr << std::endl;
 
-            std::cerr << blk << std::endl;
+            //std::cerr << blk << std::endl;
 
             const size_t max_size = limit_size+1;
             const size_t bps      = 300;
@@ -78,14 +78,13 @@ Y_UTEST(small_blocks)
 
             // allocate blocks
             alea.shuffle(blks,nblk);
-
             for(size_t i=0;i<nblk;++i)
             {
                 blk_t &b = blks[i];
                 b.addr   = blk.acquire(b.size);
             }
 
-            std::cerr << blk << std::endl;
+            //std::cerr << blk << std::endl;
 
             // deallocate
             alea.shuffle(blks,nblk);
@@ -94,10 +93,8 @@ Y_UTEST(small_blocks)
                 blk_t &b = blks[i];
                 blk.release(b.addr,b.size);
             }
-
             global::location().__free(blks,nblk*sizeof(blk_t));
-
-
+            
         }
         std::cerr << "<chunk_size=" << chunk_size << "/>" << std::endl;
         std::cerr << std::endl;

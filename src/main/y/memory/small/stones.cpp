@@ -2,6 +2,7 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/code/hr-ints.hpp"
+#include "y/sort/merge.hpp"
 #include <iostream>
 #include <cstring>
 #include <iomanip>
@@ -36,7 +37,7 @@ namespace upsylon {
                     const size_t delta = count-slist.size;
                     std::cerr << "[small::stones@" << bytes <<"] missing #stone=" << delta << " -> " << delta*bytes << " bytes" << std::endl;
                 }
-
+                merging<stone>::sort_by_addr(slist);
                 while(slist.size)
                 {
                     release( slist.pop_back() );
@@ -73,11 +74,14 @@ namespace upsylon {
             {
                 assert(NULL!=addr);
                 memset(addr,0,sizeof(stone));
+                slist.push_front( static_cast<stone *>(addr) );
+#if 0
                 stone *s = slist.push_front( static_cast<stone *>(addr) );
                 while(s->next&&s>s->next)
                 {
                     slist.towards_tail(s);
                 }
+#endif
             }
 
             std::ostream & operator<<(std::ostream &os, const stones &s)

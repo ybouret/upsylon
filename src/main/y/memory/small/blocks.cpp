@@ -272,11 +272,23 @@ namespace upsylon {
 
         namespace small {
 
+            static const char fn[] = "small::blocks";
+
             arena & blocks:: operator[](const size_t block_size)
             {
                 if(block_size<=0||block_size>limit_size)
-                    throw libc::exception(EDOM,"small::blocks(block_size=%lu not in [1:%lu])", (unsigned long)block_size, (unsigned long)limit_size);
+                    throw libc::exception(EDOM,"%s(block_size=%lu not in [1:%lu])",fn,(unsigned long)block_size, (unsigned long)limit_size);
                 return *query(block_size);
+            }
+
+            const arena & blocks:: operator[](const size_t block_size) const
+            {
+                const slot_type &entry = slot[block_size&slots_mask];
+                for(const arena *a=entry.head;a;a=a->next)
+                {
+                    if(block_size==a->block_size) return *a;
+                }
+                throw libc::exception(EINVAL,"no %s[%lu]",fn,(unsigned long)block_size);
             }
         }
     }
