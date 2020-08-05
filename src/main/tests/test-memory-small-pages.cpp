@@ -14,7 +14,7 @@ using namespace memory;
 Y_UTEST(small_pages)
 {
 
-    void        *reg[ 128 ];
+    void        *reg[ 256 ];
     const size_t num = sizeof(reg)/sizeof(reg[0]);
 
     for(size_t i=small::stones::min_shift;i<=14;++i)
