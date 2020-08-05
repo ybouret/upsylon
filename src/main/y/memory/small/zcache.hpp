@@ -156,7 +156,7 @@ namespace upsylon {
                 {
                     part *next;
                 };
-                stones             &cache; //!< for alloc/free
+                stones             &cache; //!< for alloc/free of parts
                 core::list_of<NODE> nodes; //!< usable nodes
                 core::pool_of<part> parts; //!< holding all nodes
 

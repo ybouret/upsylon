@@ -13,10 +13,7 @@ namespace upsylon {
     namespace memory {
 
         namespace small {
-
-            class quarry;
-            class stones;
-
+            
             //__________________________________________________________________
             //
             //
@@ -34,8 +31,8 @@ namespace upsylon {
                 /**
                  \param the_block_size the block size for all chunks
                  \param req_chunk_size the requested chunk size
-                 \param Z              a cache for empty chunks
-                 \param Q              a cache for power of two chunks
+                 \param Z              a cache for zombie chunks
+                 \param Q              a cache for power of two chunk_data
 
                  - min_cs = max_of(chunk::min_chunk_size_for(block_size),stones::min_bytes)
                  - max_cs = max_of(chunk::max_chunk_size_for(block_size),min_cs);
@@ -55,8 +52,7 @@ namespace upsylon {
                 //______________________________________________________________
                 void  *acquire();                        //!< allocate a zeroed block
                 void   release(void *) throw();          //!< release a previously allocated block
-                size_t blocks_per_chunk() const throw(); //!< get acquiring->provided_number
-
+                
                 //! try to move content in a lower chunk
                 bool compact(void * &addr) throw();
 
@@ -77,8 +73,11 @@ namespace upsylon {
                 arena       *prev;       //!< for list
                 
             private:
-                zcache<chunk> &zchunks;    //!< shared cache of chunks
-                stones        &zstones;    //!< shared cache of stones
+                zcache<chunk> &zchunks;          //!< shared cache of chunks
+                stones        &zstones;          //!< shared cache of stones
+            public:
+                const size_t   blocks_per_chunk; //!< acquiring->provided_number
+                const size_t   reserved;         //!< sizeof=64/128
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(arena);

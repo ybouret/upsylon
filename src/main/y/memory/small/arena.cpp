@@ -1,7 +1,7 @@
 
 #include "y/memory/small/arena.hpp"
 #include "y/type/utils.hpp"
-#include "y/memory/small/quarry.hpp"
+#include "y/type/aliasing.hpp"
 #include <iostream>
 
 
@@ -47,11 +47,7 @@ namespace upsylon {
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
 
-            size_t arena:: blocks_per_chunk() const throw()
-            {
-                assert(acquiring);
-                return acquiring->provided_number;
-            }
+
 
             
 
@@ -69,9 +65,13 @@ namespace upsylon {
             next(0),
             prev(0),
             zchunks(Z),
-            zstones(Q(chunk_size))
+            zstones(Q(chunk_size)),
+            blocks_per_chunk(0),
+            reserved(0)
             {
                 empty_one = acquiring = releasing = create_chunk();
+                aliasing::_(blocks_per_chunk) = acquiring->provided_number;
+                
             }
 
             chunk * arena:: create_chunk()
@@ -404,7 +404,7 @@ namespace upsylon {
 
             std::ostream & operator<<( std::ostream &os, const arena &a)
             {
-                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << "  blocks_per_chunk=" << a.blocks_per_chunk() << ">" << std::endl;
+                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << "  blocks_per_chunk=" << a.blocks_per_chunk << ">" << std::endl;
                 os << "\t  <chunks used=" << a.chunks.size << ">" << std::endl;
                 size_t j=0;
                 bool   r=false;
