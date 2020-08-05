@@ -1,5 +1,5 @@
 
-#include "y/memory/small/stones.hpp"
+#include "y/memory/small/quarry.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string/convert.hpp"
@@ -58,6 +58,8 @@ Y_UTEST(small_pages)
     }
     std::cerr << "small::stones::min_shift=" << small::stones::min_shift << std::endl;
     std::cerr << "small::stones::max_shift=" << small::stones::max_shift << std::endl;
+
+    
 }
 Y_UTEST_DONE()
 
