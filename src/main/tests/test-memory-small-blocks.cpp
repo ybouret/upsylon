@@ -97,9 +97,9 @@ Y_UTEST(small_blocks)
             
         }
         std::cerr << "<chunk_size=" << chunk_size << "/>" << std::endl;
+        std::cerr << Q << std::endl;
         std::cerr << std::endl;
     }
-    
     Y_UTEST_SIZEOF(small::blocks::slot_type);
 
 

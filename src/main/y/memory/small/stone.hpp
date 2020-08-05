@@ -15,7 +15,7 @@ namespace upsylon {
             //! binary layout for a stone
             struct stone
             {
-                stone *next; //!< for list
+                stone *next; //!< for list/pool
                 stone *prev; //!< for list
             };
 

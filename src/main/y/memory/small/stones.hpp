@@ -6,8 +6,7 @@
 
 #include "y/memory/small/stone.hpp"
 #include "y/code/ilog2.hpp"
-#include "y/core/list.hpp"
-
+#include "y/core/pool.hpp"
 #include <iosfwd>
 
 namespace upsylon {
@@ -29,7 +28,7 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef core::list_of<stone> slist_type;                 //!< alias
+                typedef core::pool_of<stone> cache_type;                 //!< alias
                 static  const size_t one       = 1;                      //!< alias
                 static  const size_t min_shift = ilog2_of<stone>::value; //!< to hold a stone
                 static  const size_t min_bytes = one << min_shift;       //!< to hold a stone
@@ -59,14 +58,18 @@ namespace upsylon {
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const stones &);
 
+                //! lower addresses first in cache
+                void optimize() throw();
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 const size_t shift; //!< bytes = 1 << shift
                 const size_t bytes; //!< bytes for each stone
-                slist_type   slist; //!< available stones
+                cache_type   cache; //!< available stones
                 const size_t count; //!< bookkeeping of allocated stones
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(stones);
             };

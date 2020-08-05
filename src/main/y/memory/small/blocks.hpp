@@ -76,9 +76,9 @@ namespace upsylon {
 
                 size_t       oversized;  //!< local count of above limit
                 const size_t chunk_size; //!< next power of two(max_of(usr_chunk_size,min_chunk_size,limit_size))
+                const size_t limit_size; //!< will call global allocator above this size
                 const size_t slots_size; //!< number of slots as a power of two
                 const size_t slots_mask; //!< slots_size-1
-                const size_t limit_size; //!< will call global allocator above this size
 
 
             private:

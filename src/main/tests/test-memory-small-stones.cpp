@@ -53,7 +53,7 @@ Y_UTEST(small_stones)
             Y_ASSERT(NULL!=reg[n]);
             S.store(reg[n]);
         }
-        std::cerr << "|_has " << S.slist.size * S.bytes << " bytes" << std::endl;
+        std::cerr << "|_has " << S.cache.size * S.bytes << " bytes" << std::endl;
 
     }
     std::cerr << "small::stones::min_shift=" << small::stones::min_shift << std::endl;
