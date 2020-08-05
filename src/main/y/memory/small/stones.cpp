@@ -1,8 +1,9 @@
 #include "y/memory/small/stones.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/aliasing.hpp"
-#include <cstring>
+#include "y/code/hr-ints.hpp"
 #include <iostream>
+#include <cstring>
 #include <iomanip>
 
 namespace upsylon {
@@ -85,6 +86,9 @@ namespace upsylon {
                 os << "{2^" << std::left << std::setw(2) << s.shift << std::right << "=";
                 os << std::setw(stones::width) << s.bytes << ": ";
                 os <<  "used " << s.committed() << "/" << s.count;
+                const human_readable hr_used = s.committed() * s.bytes;
+                const human_readable hr_maxi = s.count * s.bytes;
+                os << " ("<< hr_used << "/" << hr_maxi <<")";
                 os << "}";
                 return os;
             }

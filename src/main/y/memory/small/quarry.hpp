@@ -13,7 +13,7 @@ namespace upsylon {
 
         namespace small {
 
-
+            //! quarry of stones: handle of the power of two area
             class quarry
             {
             public:
