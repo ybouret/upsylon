@@ -28,6 +28,11 @@ namespace upsylon {
                 //______________________________________________________________
 
                 //! constructor: setup all parameters
+                /**
+                 \param block_size the block_size allocated by this chunk
+                 \param chunk_data persistent data, provided by user
+                 \param chunk_size bytes of user's data
+                 */
                 chunk(const size_t block_size,
                       void *       chunk_data,
                       const size_t chunk_size) throw();
@@ -79,7 +84,7 @@ namespace upsylon {
                  */
                 static size_t max_chunk_size_for(const size_t block_size) throw();
 
-                //! next power of two
+                //! next_power_of_two(block_size)
                 static size_t min_chunk_size_for(const size_t block_size) throw();
 
             private:

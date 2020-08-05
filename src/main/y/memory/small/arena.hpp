@@ -31,8 +31,18 @@ namespace upsylon {
                 // C++
                 //______________________________________________________________
                 //! setup with first acquiring, releasing and empty_one
-                arena(const size_t   usr_block_size,
-                      const size_t   usr_chunk_size,
+                /**
+                 \param the_block_size the block size for all chunks
+                 \param req_chunk_size the requested chunk size
+                 \param Z              a cache for empty chunks
+                 \param Q              a cache for power of two chunks
+
+                 - min_cs = max_of(chunk::min_chunk_size_for(block_size),stones::min_bytes)
+                 - max_cs = max_of(chunk::max_chunk_size_for(block_size),min_cs);
+                 - compute chunk_exp2 and keep a reference of the associated stones
+                 */
+                arena(const size_t   the_block_size,
+                      const size_t   req_chunk_size,
                       zcache<chunk> &Z,
                       quarry        &Q);
 

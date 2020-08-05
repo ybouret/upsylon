@@ -64,6 +64,7 @@ Y_UTEST(small_arena)
         std::cerr << std::endl;
     }
 
+    std::cerr << Q << std::endl;
 
     Y_UTEST_SIZEOF(small::chunk);
     Y_UTEST_SIZEOF(small::arena);

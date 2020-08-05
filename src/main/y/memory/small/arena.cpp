@@ -1,7 +1,6 @@
 
 #include "y/memory/small/arena.hpp"
 #include "y/type/utils.hpp"
-#include "y/memory/allocator/global.hpp"
 #include "y/memory/small/quarry.hpp"
 #include <iostream>
 
@@ -38,8 +37,13 @@ namespace upsylon {
                                   const size_t chunk_size)
             {
                 assert(block_size>0);
-                const size_t min_cs = max_of(chunk::min_chunk_size_for(block_size),stones::min_bytes);
-                const size_t max_cs = max_of(chunk::max_chunk_size_for(block_size),min_cs);
+                const size_t the_min_chunk_size = chunk::min_chunk_size_for(block_size); assert(is_a_power_of_two(the_min_chunk_size));
+                const size_t the_max_chunk_size = chunk::max_chunk_size_for(block_size); assert(is_a_power_of_two(the_max_chunk_size));
+                assert(is_a_power_of_two(stones::min_bytes));
+
+
+                const size_t min_cs = max_of(the_min_chunk_size,stones::min_bytes);
+                const size_t max_cs = max_of(the_max_chunk_size,min_cs);
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
 
@@ -61,8 +65,8 @@ namespace upsylon {
                 return chunk_exp2;
             }
 
-            arena:: arena(const size_t   usr_block_size,
-                          const size_t   usr_chunk_size,
+            arena:: arena(const size_t   the_block_size,
+                          const size_t   req_chunk_size,
                           zcache<chunk> &Z,
                           quarry        &Q) :
             acquiring(0),
@@ -70,8 +74,8 @@ namespace upsylon {
             empty_one(0),
             available(0),
             chunks(),
-            block_size( usr_block_size ),
-            chunk_size( chunk_size_for(block_size,usr_chunk_size) ),
+            block_size( the_block_size ),
+            chunk_size( chunk_size_for(block_size,req_chunk_size) ),
             chunk_exp2( __chunk_exp2(chunk_size) ),
             next(0),
             prev(0),
@@ -83,7 +87,6 @@ namespace upsylon {
 
             chunk * arena:: create_chunk()
             {
-                static global &mgr = mgr.instance();
 
                 //--------------------------------------------------------------
                 // get an empty piece
@@ -95,7 +98,6 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 try
                 {
-                    //new (curr) chunk(block_size,mgr.__calloc(1,chunk_size),chunk_size);
                     new (curr) chunk(block_size,zstones.query(),chunk_size);
                 }
                 catch(...)
@@ -124,7 +126,6 @@ namespace upsylon {
 
             void  arena:: delete_chunk(chunk *p) throw()
             {
-                static global &mgr = global::location();
 
                 assert(p);
                 assert(0==p->next);
@@ -138,9 +139,9 @@ namespace upsylon {
                 available -= p->provided_number;
 
                 //--------------------------------------------------------------
-                // release memory
+                // release memory into cache
                 //--------------------------------------------------------------
-                mgr.__free(p->data,chunk_size);
+                zstones.store(p->data);
 
                 //--------------------------------------------------------------
                 // return to cache
