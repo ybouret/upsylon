@@ -59,7 +59,7 @@ namespace upsylon {
                 //! display
                 friend std::ostream & operator<<( std::ostream &os, const blocks &b);
 
-                //! get/create arena
+                //! get/create arena using query(block_size)
                 arena & operator[](const size_t block_size);
 
                 //! try to compact a previously allocated block

@@ -132,8 +132,8 @@ namespace upsylon {
                     // switch to global
                     //
                     //----------------------------------------------------------
-                    static global &mgr = global::instance();
-                    void *addr=  mgr.__calloc(1,block_size);
+                    static global &mgr  = global::instance();
+                    void          *addr =  mgr.__calloc(1,block_size);
                     oversized += block_size;
                     return addr;
                 }
@@ -142,6 +142,7 @@ namespace upsylon {
                     return query(block_size)->acquire();
                 }
             }
+
 
             void  blocks:: release(void *addr, const size_t block_size) throw()
             {
@@ -158,7 +159,7 @@ namespace upsylon {
                 {
                     //----------------------------------------------------------
                     //
-                    // forward to global memory
+                    // switch to global memory
                     //
                     //----------------------------------------------------------
                     assert(addr!=0);
