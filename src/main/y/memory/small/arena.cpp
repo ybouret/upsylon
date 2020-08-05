@@ -61,6 +61,7 @@ namespace upsylon {
             shared( &usr_cache ),
             block_size( usr_block_size ),
             chunk_size( chunk_size_for(block_size,usr_chunk_size) ),
+            chunk_exp2( integer_log2(chunk_size) ),
             next(0),
             prev(0)
             {
@@ -76,7 +77,7 @@ namespace upsylon {
                 // get an empty piece
                 //--------------------------------------------------------------
                 chunk * curr = shared->query_nil();
-
+                
                 //--------------------------------------------------------------
                 // provide memory to this piece
                 //--------------------------------------------------------------
@@ -407,7 +408,7 @@ namespace upsylon {
 
             std::ostream & operator<<( std::ostream &os, const arena &a)
             {
-                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << " blocks_per_chunk=" << a.blocks_per_chunk() << ">" << std::endl;
+                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << "=2^" << a.chunk_exp2 <<"  blocks_per_chunk=" << a.blocks_per_chunk() << ">" << std::endl;
                 os << "\t  <chunks used=" << a.chunks.size << ">" << std::endl;
                 size_t j=0;
                 bool   r=false;

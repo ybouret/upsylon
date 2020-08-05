@@ -61,6 +61,7 @@ namespace upsylon {
             public:
                 const size_t block_size; //!< the block size
                 const size_t chunk_size; //!< clamp( piece::min_chunk_size(block_size), usr_chunk_size, piece::max_chunk_size(block_size) )
+                const size_t chunk_exp2; //!< ilog2(chunk_size)
                 arena       *next;       //!< for list
                 arena       *prev;       //!< for list
                 
