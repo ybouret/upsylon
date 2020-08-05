@@ -69,9 +69,9 @@ namespace upsylon {
                 {
                     static global &mgr = global::location();
                     const  size_t  num = stones::one<<shift;
-                    assert(num>=undersized);
+                    assert(num<=undersized);
                     aliasing::_(undersized) -= num;
-                    return mgr.__free(addr,stones::one<<shift);
+                    return mgr.__free(addr,num);
                 }
                 else
                 {

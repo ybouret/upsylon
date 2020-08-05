@@ -1,6 +1,8 @@
 #include "y/memory/small/stones.hpp"
 #include "y/memory/allocator/global.hpp"
+#include "y/type/aliasing.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace upsylon {
 
@@ -17,13 +19,25 @@ namespace upsylon {
 
             stones:: ~stones() throw()
             {
-                while(slist.size) release( slist.pop_back() );
+                assert(slist.size<=count);
+                if(slist.size<count)
+                {
+                    const size_t delta = count-slist.size;
+                    std::cerr << "[small::stones@" << bytes <<"] missing #stone=" << delta << " -> " << delta*bytes << " bytes" << std::endl;
+                }
+
+                while(slist.size)
+                {
+                    release( slist.pop_back() );
+                }
+                aliasing::_(count) = 0;
             }
 
             stones:: stones(const size_t usr_shift) throw() :
             shift(usr_shift),
             bytes(one<<shift),
-            slist()
+            slist(),
+            count(0)
             {
                 assert(shift>=min_shift);
                 assert(shift<=max_shift);
@@ -38,7 +52,9 @@ namespace upsylon {
                 }
                 else
                 {
-                    return mgr.__calloc(1,bytes);
+                    void *addr = mgr.__calloc(1,bytes);
+                    ++aliasing::_(count);
+                    return addr;
                 }
             }
 

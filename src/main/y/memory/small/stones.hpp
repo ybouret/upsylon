@@ -23,9 +23,10 @@ namespace upsylon {
                 static const size_t min_shift = ilog2_of<stone>::value;
                 static const size_t max_shift = (sizeof(size_t)<<3)-1;
 
-                const size_t shift;
-                const size_t bytes;
-                slist_type   slist;
+                const size_t shift; //!< bytes = 1 << shift
+                const size_t bytes; //!< bytes for each stone
+                slist_type   slist; //!< available stones
+                const size_t count; //!< bookkeeping of allocated stones
 
                 stones(const size_t usr_shift) throw();
                 ~stones() throw();

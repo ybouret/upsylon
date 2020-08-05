@@ -33,7 +33,11 @@ Y_UTEST(small_quarry)
         b.entry  = Q.pull(b.shift);
     }
     alea.shuffle(blk,num);
-
+    for(size_t i=0;i<num;++i)
+    {
+        block &b = blk[i];
+        Q.push(b.entry,b.shift);
+    }
 
 }
 Y_UTEST_DONE()
