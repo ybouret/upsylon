@@ -19,7 +19,7 @@ namespace upsylon {
             {
             public:
                 typedef core::list_of<stone> slist_type;
-                static const size_t one      = 1;
+                static const size_t one       = 1;
                 static const size_t min_shift = ilog2_of<stone>::value;
                 static const size_t max_shift = (sizeof(size_t)<<3)-1;
 

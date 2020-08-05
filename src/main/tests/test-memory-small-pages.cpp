@@ -14,7 +14,7 @@ using namespace memory;
 Y_UTEST(small_pages)
 {
 
-    void        *reg[ 1024 ];
+    void        *reg[ 128 ];
     const size_t num = sizeof(reg)/sizeof(reg[0]);
 
     for(size_t i=small::stones::min_shift;i<=14;++i)
@@ -56,7 +56,8 @@ Y_UTEST(small_pages)
         std::cerr << "|_has " << S.slist.size * S.bytes << " bytes" << std::endl;
 
     }
-
+    std::cerr << "small::stones::min_shift=" << small::stones::min_shift << std::endl;
+    std::cerr << "small::stones::max_shift=" << small::stones::max_shift << std::endl;
 }
 Y_UTEST_DONE()
 
