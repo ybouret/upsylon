@@ -85,7 +85,7 @@ namespace upsylon {
                 os << std::dec;
                 os << "{2^" << std::left << std::setw(2) << s.shift << std::right << "=";
                 os << std::setw(stones::width) << s.bytes << ": ";
-                os <<  "used " << s.committed() << "/" << s.count;
+                os <<  "used " << std::setw(3) << s.committed() << "/" << std::setw(3) << s.count;
                 const human_readable hr_used = s.committed() * s.bytes;
                 const human_readable hr_maxi = s.count * s.bytes;
                 os << " ("<< hr_used << "/" << hr_maxi <<")";

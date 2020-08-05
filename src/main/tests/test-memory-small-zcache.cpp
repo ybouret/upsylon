@@ -25,28 +25,26 @@ namespace {
         for(size_t chunk_size=1;chunk_size<=8192;chunk_size<<=1)
         {
             small::zcache<node_type> cache(chunk_size,Q);
-            std::cerr << "\t"
+            std::cerr << "\tchunk_size "
             << std::setw(5) << chunk_size << " => "
             << std::setw(5) << cache.chunk_size << " => "
             << std::setw(5) << cache.nodes_rise << " nodes/alloc...";
 
-            const size_t n = cache.nodes_rise * 5;
-            core::list_of<node_type> chunks;
+            const size_t n = cache.nodes_rise * (2+alea.leq(10));
+            core::list_of<node_type> nodes;
             for(size_t i=0;i<n;++i)
             {
-                chunks.push_back( cache.query_nil() );
+                nodes.push_back( cache.query_nil() );
             }
-            //std::cerr << "cache.zstore=" << cache.zstore.size << std::endl;
-            // std::cerr << "cache.pieces=" << cache.pieces.size << std::endl;
-            std::cerr << "nodes = " << std::setw(5) << chunks.size << std::endl;
-            alea.shuffle(chunks);
+            std::cerr << "nodes = " << std::setw(5) << nodes.size << std::endl;
+            alea.shuffle(nodes);
 
-            while(chunks.size)
+            while(nodes.size)
             {
-                cache.store_nil( chunks.pop_back() );
+                cache.store_nil( nodes.pop_back() );
             }
-
         }
+        std::cerr << Q << std::endl;
     }
 }
 
