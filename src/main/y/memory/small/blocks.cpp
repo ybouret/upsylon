@@ -198,6 +198,18 @@ namespace upsylon {
                 
             }
 
+            bool blocks:: try_compact(void * &addr, const size_t block_size) throw()
+            {
+                slot_type &entry = slot[block_size&slots_mask];
+                for(arena *a=entry.head;a;a=a->next)
+                {
+                    if(block_size==a->block_size)
+                    {
+                        return a->compact(addr);
+                    }
+                }
+                return false; // shouldn't happen
+            }
 
 
 

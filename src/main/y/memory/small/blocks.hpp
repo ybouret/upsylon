@@ -61,6 +61,10 @@ namespace upsylon {
                 //! get/create arena
                 arena & operator[](const size_t block_size);
 
+                //! try to compact a previously allocated block
+                bool try_compact(void * &addr, const size_t block_size) throw();
+
+
                 //______________________________________________________________
                 //
                 // members
