@@ -17,16 +17,23 @@ namespace upsylon {
 
             quarry:: ~quarry() throw()
             {
+                if(undersized)
+                {
+                    std::cerr << "[small::quarry] leak #undersized=" << undersized << std::endl;
+                }
+
                 for(size_t i=stones::max_shift;i>=stones::min_shift;--i)
                 {
                     self_destruct(ore[i]);
                 }
                 ore=0;
                 memset(wksp,0,sizeof(wksp));
+                aliasing::_(undersized) = 0;
             }
 
             quarry:: quarry() throw() :
             ore(0),
+            undersized(0),
             wksp()
             {
                 memset(wksp,0,sizeof(wksp));
@@ -39,11 +46,12 @@ namespace upsylon {
 
             void  * quarry:: pull(const size_t shift)
             {
-
                 if(shift<stones::min_shift)
                 {
                     static global &mgr = global::instance();
-                    return mgr.__calloc(1,stones::one<<shift);
+                    const  size_t  num = stones::one<<shift;
+                    aliasing::_(undersized) += num;
+                    return mgr.__calloc(1,num);
                 }
                 else
                 {
@@ -60,6 +68,9 @@ namespace upsylon {
                 if(shift<stones::min_shift)
                 {
                     static global &mgr = global::location();
+                    const  size_t  num = stones::one<<shift;
+                    assert(num>=undersized);
+                    aliasing::_(undersized) -= num;
                     return mgr.__free(addr,stones::one<<shift);
                 }
                 else

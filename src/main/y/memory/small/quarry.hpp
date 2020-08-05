@@ -26,10 +26,14 @@ namespace upsylon {
                 void *pull(const size_t shift);
                 void  push(void *, const size_t shift) throw();
 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(quarry);
-                stones  *ore;
-                uint64_t wksp[ Y_U64_FOR_SIZE(wksp_bytes) ];
+                stones       *ore;
+            public:
+                const size_t  undersized; //!< number of undersized allocated bytes
+            private:
+                uint64_t      wksp[ Y_U64_FOR_SIZE(wksp_bytes) ];
 
             };
 
