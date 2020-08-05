@@ -1,5 +1,5 @@
 
-#include "y/memory/small/pages.hpp"
+#include "y/memory/small/stones.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string/convert.hpp"
@@ -10,25 +10,52 @@ using namespace upsylon;
 using namespace memory;
 
  
-#define SHOW(FIELD) std::cerr << #FIELD " = " << small::pages::FIELD << std::endl
 
 Y_UTEST(small_pages)
 {
-    
-    size_t     large_size = 10000;
-    if(argc>1) large_size = string_convert::to<size_t>(argv[1],"large_size");
 
-    //small::pages p(large_size);
-    
-    SHOW(min_iln2);
-    SHOW(min_size);
-    SHOW(max_iln2);
-    SHOW(max_size);
-    SHOW(required);
-    SHOW(_aligned);
-    SHOW(in_words);
+    void        *reg[ 1024 ];
+    const size_t num = sizeof(reg)/sizeof(reg[0]);
 
-    
+    for(size_t i=small::stones::min_shift;i<=14;++i)
+    {
+        small::stones S(i);
+        std::cerr << "stones: " << S.bytes << std::endl;
+
+        size_t n=0;
+        while(n<num)
+        {
+            reg[n] = S.query();
+            Y_ASSERT(reg[n]);
+            ++n;
+        }
+        assert(n==num);
+        alea.shuffle(reg,num);
+        while(n>num/2)
+        {
+            --n;
+            Y_ASSERT(NULL!=reg[n]);
+            S.store(reg[n]);
+        }
+
+        while(n<num)
+        {
+            reg[n] = S.query();
+            Y_ASSERT(reg[n]);
+            ++n;
+        }
+
+        alea.shuffle(reg,num);
+
+        while(n>0)
+        {
+            --n;
+            Y_ASSERT(NULL!=reg[n]);
+            S.store(reg[n]);
+        }
+        std::cerr << "|_has " << S.slist.size * S.bytes << " bytes" << std::endl;
+
+    }
 
 }
 Y_UTEST_DONE()
