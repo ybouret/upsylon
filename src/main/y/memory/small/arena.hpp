@@ -14,6 +14,8 @@ namespace upsylon {
 
         namespace small {
 
+            class quarry;
+            class stones;
 
             //__________________________________________________________________
             //
@@ -31,7 +33,8 @@ namespace upsylon {
                 //! setup with first acquiring, releasing and empty_one
                 arena(const size_t   usr_block_size,
                       const size_t   usr_chunk_size,
-                      zcache<chunk> &usr_cache);
+                      zcache<chunk> &Z,
+                      quarry        &Q);
 
                 //! cleanup
                 ~arena() throw();
@@ -56,14 +59,16 @@ namespace upsylon {
                 chunk               *empty_one; //!< empty piece
                 size_t               available; //!< bookkeeping of available blocks
                 core::list_of<chunk> chunks;    //!< pieces, sorted by increasing memory
-                zcache<chunk>       *shared;    //!< shared cache
-                
+
             public:
                 const size_t block_size; //!< the block size
                 const size_t chunk_size; //!< clamp( piece::min_chunk_size(block_size), usr_chunk_size, piece::max_chunk_size(block_size) )
                 const size_t chunk_exp2; //!< ilog2(chunk_size)
                 arena       *next;       //!< for list
                 arena       *prev;       //!< for list
+            private:
+                zcache<chunk> &zchunks;    //!< shared cache of chunks
+                stones        &zstones;    //!< shared cache of stones
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(arena);

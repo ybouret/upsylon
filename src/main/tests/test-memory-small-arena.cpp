@@ -1,8 +1,11 @@
 
 #include "y/memory/small/arena.hpp"
+#include "y/memory/small/quarry.hpp"
+#include "y/memory/allocator/global.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/memory/allocator/global.hpp"
+
 #include "y/type/utils.hpp"
 #include <iomanip>
 
@@ -14,6 +17,8 @@ Y_UTEST(small_arena)
     const size_t count        = 1024;
     void        *entry[count] = {0 };
 
+    small::quarry Q;
+
     for(size_t chunk_size=32; chunk_size <= 8192; chunk_size <<= 1)
     {
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
@@ -23,7 +28,7 @@ Y_UTEST(small_arena)
         const size_t block_max = min_of<size_t>(chunk_size/2,60);
         for(size_t block_size=1;block_size<=block_max;++block_size)
         {
-            small::arena t(block_size,chunk_size,cache);
+            small::arena t(block_size,chunk_size,cache,Q);
             std::cerr << "\t<block_size=" << std::setw(3) << block_size << ">";
             std::cerr << " chunk_size=" << std::setw(5) << t.chunk_size;
             std::cerr << " blocks/chunk=" << std::setw(3) << t.blocks_per_chunk();
@@ -74,20 +79,21 @@ Y_UTEST(small_compact)
     size_t     chunk_size = 1024;
     if(argc>1) chunk_size = string_convert::to<size_t>(argv[1],"chunk_size");
 
+    small::quarry               Q;
     small::zcache<small::chunk> cache(chunk_size);
     const size_t count        = 1024;
     void        *entry[count] = { 0 };
 
     for(size_t block_size=1;block_size<=40;++block_size)
     {
-        small::arena a(block_size,chunk_size,cache);
+        std::cerr << "block_size=" << block_size << std::endl;
+        small::arena a(block_size,chunk_size,cache,Q);
 
         size_t n = 0;
         while(n<count)
         {
             entry[n++] = a.acquire();
         }
-        std::cerr << "n=" << n << std::endl;
         alea.shuffle(entry,n);
         while(n>count/2)
         {
@@ -112,8 +118,10 @@ Y_UTEST(small_compact)
         {
             a.release(entry[--n]);
         }
-
+        std::cerr << Q << std::endl;
     }
+
+
 
 }
 Y_UTEST_DONE()

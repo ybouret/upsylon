@@ -37,7 +37,8 @@ namespace upsylon {
 
 
             blocks:: blocks(const size_t usr_chunk_size,
-                            const size_t usr_limit_size) :
+                            const size_t usr_limit_size,
+                            quarry      &usr_sys_quarry) :
             oversized(0),
             chunk_size( next_power_of_two( max_of(usr_chunk_size,usr_limit_size,min_chunk_size) ) ),
             slots_size(most_significant_bit_mask(chunk_size/sizeof(blocks::slot_type))),
@@ -46,6 +47,7 @@ namespace upsylon {
             slot( static_cast<slot_type *>(global::instance().__calloc(1,chunk_size) ) ),
             acquiring(0),
             releasing(0),
+            Q(usr_sys_quarry),
             chunks(chunk_size),
             arenas(chunk_size)
             {
@@ -97,7 +99,7 @@ namespace upsylon {
                     //------------------------------------------------------
                     arena *a = arenas.query_nil();
                     try {
-                        new (a) arena(block_size,chunk_size,chunks);
+                        new (a) arena(block_size,chunk_size,chunks,Q);
                     }
                     catch(...)
                     {
@@ -160,7 +162,7 @@ namespace upsylon {
                     //
                     //----------------------------------------------------------
                     assert(addr!=0);
-                    assert(int64_t(block_size)<=oversized);
+                    assert(block_size<=oversized);
                     static global &mgr = global::location();
                     mgr.__free(addr,block_size);
                     oversized-=block_size;

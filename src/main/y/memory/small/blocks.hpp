@@ -36,7 +36,8 @@ namespace upsylon {
 
                 //! build
                 blocks(const size_t usr_chunk_size,
-                       const size_t usr_limit_size);
+                       const size_t usr_limit_size,
+                       quarry      &usr_sys_quarry);
 
                 //! clean all resources
                 ~blocks() throw();
@@ -70,7 +71,7 @@ namespace upsylon {
                 // members
                 //______________________________________________________________
 
-                int64_t      oversized;  //!< local count of above limit
+                size_t       oversized;  //!< local count of above limit
                 const size_t chunk_size; //!< next power of two(max_of(usr_chunk_size,min_chunk_size,limit_size))
                 const size_t slots_size; //!< number of slots as a power of two
                 const size_t slots_mask; //!< slots_size-1
@@ -82,9 +83,8 @@ namespace upsylon {
                 slot_type      *slot;
                 arena          *acquiring;
                 arena          *releasing;
-
+                quarry         &Q;
                 arena          *query(const size_t block_size);
-                
 
             public:
                 zcache<chunk>   chunks;      //!< shared zombie chunks, built with chunk_size

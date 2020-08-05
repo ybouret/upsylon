@@ -1,6 +1,7 @@
 
 
 #include "y/memory/small/blocks.hpp"
+#include "y/memory/small/quarry.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/memory/allocator/global.hpp"
@@ -25,6 +26,7 @@ namespace {
 Y_UTEST(small_blocks)
 {
 
+    small::quarry Q;
     for(size_t chunk_size=1; chunk_size<=8192; chunk_size<<=1 )
     {
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
@@ -33,7 +35,7 @@ Y_UTEST(small_blocks)
         {
             std::cerr << "\tlimit_size=" << std::setw(5) << limit_size << ":";
 
-            small::blocks blk(chunk_size,limit_size);
+            small::blocks blk(chunk_size,limit_size,Q);
             std::cerr << " | chunk_size="        << std::setw(5) <<  blk.chunk_size;
             std::cerr << " | slots_size="        << std::setw(5) <<  blk.slots_size;
             std::cerr << " | load_factor="       << std::setw(3) <<  blk.load_factor();

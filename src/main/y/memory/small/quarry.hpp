@@ -17,8 +17,9 @@ namespace upsylon {
             class quarry
             {
             public:
-                static const size_t max_stones = stones::max_shift+1;
-                static const size_t wksp_bytes = max_stones * sizeof(stones);
+                static const size_t   max_stones = stones::max_shift+1;
+                static const size_t   wksp_bytes = max_stones * sizeof(stones);
+                static const unsigned widths[64]; //!< output width in decimal for bytes
 
                 explicit quarry() throw();
                 virtual ~quarry() throw();
@@ -26,12 +27,16 @@ namespace upsylon {
                 void *pull(const size_t shift);
                 void  push(void *, const size_t shift) throw();
 
+                stones & operator[](const size_t shift) throw();
+
+                friend std::ostream & operator<<(std::ostream &, const quarry &);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(quarry);
                 stones       *ore;
             public:
                 const size_t  undersized; //!< number of undersized allocated bytes
+                
             private:
                 uint64_t      wksp[ Y_U64_FOR_SIZE(wksp_bytes) ];
 

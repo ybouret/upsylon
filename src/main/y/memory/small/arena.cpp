@@ -2,9 +2,9 @@
 #include "y/memory/small/arena.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/global.hpp"
+#include "y/memory/small/quarry.hpp"
 #include <iostream>
 
-#define Y_SMALL_ARENA_SHOW 0
 
 namespace upsylon {
 
@@ -38,8 +38,8 @@ namespace upsylon {
                                   const size_t chunk_size)
             {
                 assert(block_size>0);
-                const size_t min_cs = chunk::min_chunk_size_for(block_size);
-                const size_t max_cs = chunk::max_chunk_size_for(block_size);
+                const size_t min_cs = max_of(chunk::min_chunk_size_for(block_size),stones::min_bytes);
+                const size_t max_cs = max_of(chunk::max_chunk_size_for(block_size),min_cs);
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
 
@@ -50,20 +50,33 @@ namespace upsylon {
             }
 
 
+            static inline size_t __chunk_exp2( const size_t chunk_size ) throw()
+            {
+                assert( is_a_power_of_two(chunk_size) );
+                assert( chunk_size>=stones::min_bytes );
+                assert( chunk_size<=stones::max_bytes );
+                const size_t chunk_exp2 = integer_log2(chunk_size);
+                assert(chunk_exp2>=stones::min_shift);
+                assert(chunk_exp2<=stones::max_bytes);
+                return chunk_exp2;
+            }
+
             arena:: arena(const size_t   usr_block_size,
                           const size_t   usr_chunk_size,
-                          zcache<chunk> &usr_cache) :
+                          zcache<chunk> &Z,
+                          quarry        &Q) :
             acquiring(0),
             releasing(0),
             empty_one(0),
             available(0),
             chunks(),
-            shared( &usr_cache ),
             block_size( usr_block_size ),
             chunk_size( chunk_size_for(block_size,usr_chunk_size) ),
-            chunk_exp2( integer_log2(chunk_size) ),
+            chunk_exp2( __chunk_exp2(chunk_size) ),
             next(0),
-            prev(0)
+            prev(0),
+            zchunks(Z),
+            zstones(Q[chunk_exp2])
             {
                 empty_one = acquiring = releasing = create_chunk();
             }
@@ -71,26 +84,23 @@ namespace upsylon {
             chunk * arena:: create_chunk()
             {
                 static global &mgr = mgr.instance();
-                assert(shared);
 
                 //--------------------------------------------------------------
                 // get an empty piece
                 //--------------------------------------------------------------
-                chunk * curr = shared->query_nil();
+                chunk * curr = zchunks.query_nil();
                 
                 //--------------------------------------------------------------
                 // provide memory to this piece
                 //--------------------------------------------------------------
                 try
                 {
-#if 1 == Y_SMALL_ARENA_SHOW
-                    std::cerr << "< +" << chunk_size << " >";
-#endif
-                    new (curr) chunk(block_size,mgr.__calloc(1,chunk_size),chunk_size);
+                    //new (curr) chunk(block_size,mgr.__calloc(1,chunk_size),chunk_size);
+                    new (curr) chunk(block_size,zstones.query(),chunk_size);
                 }
                 catch(...)
                 {
-                    shared->store_nil(curr);
+                    zchunks.store_nil(curr);
                     throw;
                 }
 
@@ -130,16 +140,12 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // release memory
                 //--------------------------------------------------------------
-#if 1 == Y_SMALL_ARENA_SHOW
-                std::cerr << "< -" << chunk_size << " >";
-#endif
-
                 mgr.__free(p->data,chunk_size);
 
                 //--------------------------------------------------------------
                 // return to cache
                 //--------------------------------------------------------------
-                shared->store_nil(p);
+                zchunks.store_nil(p);
             }
 
         }

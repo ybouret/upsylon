@@ -3,6 +3,7 @@
 #include "y/type/aliasing.hpp"
 #include <cstring>
 #include <iostream>
+#include <iomanip>
 
 namespace upsylon {
 
@@ -10,11 +11,20 @@ namespace upsylon {
 
         namespace small {
 
+            unsigned stones::width = 8;
+
             void  stones:: release(stone *s) const throw()
             {
                 static global &mgr = global::location();
                 assert(NULL!=s);
                 mgr.__free(s,bytes);
+            }
+
+
+            size_t stones:: committed() const throw()
+            {
+                assert(slist.size<=count);
+                return count-slist.size;
             }
 
             stones:: ~stones() throw()
@@ -69,6 +79,15 @@ namespace upsylon {
                 }
             }
 
+            std::ostream & operator<<(std::ostream &os, const stones &s)
+            {
+                os << std::dec;
+                os << "{2^" << std::left << std::setw(2) << s.shift << std::right << "=";
+                os << std::setw(stones::width) << s.bytes << ": ";
+                os <<  "used " << s.committed() << "/" << s.count;
+                os << "}";
+                return os;
+            }
 
         }
     }

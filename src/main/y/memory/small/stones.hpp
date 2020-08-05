@@ -8,6 +8,8 @@
 #include "y/code/ilog2.hpp"
 #include "y/core/list.hpp"
 
+#include <iosfwd>
+
 namespace upsylon {
 
     namespace memory {
@@ -21,7 +23,10 @@ namespace upsylon {
                 typedef core::list_of<stone> slist_type;
                 static const size_t one       = 1;
                 static const size_t min_shift = ilog2_of<stone>::value;
+                static const size_t min_bytes = one << min_shift;
                 static const size_t max_shift = (sizeof(size_t)<<3)-1;
+                static const size_t max_bytes = one << max_shift;
+                static unsigned     width; //!< shared global width for ouptu
 
                 const size_t shift; //!< bytes = 1 << shift
                 const size_t bytes; //!< bytes for each stone
@@ -36,7 +41,16 @@ namespace upsylon {
 
                 //! store a previous stone, keep memory ordered
                 void  store(void *) throw();
+
+                //! release unneeded stone
                 void  release(stone *) const throw();
+
+                //! committed = count-slits.size
+                size_t committed() const throw();
+
+                //! display
+                friend std::ostream & operator<<(std::ostream &, const stones &);
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(stones);
