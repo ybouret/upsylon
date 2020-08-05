@@ -35,7 +35,9 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(quarry);
                 stones       *ore;
             public:
-                const size_t  undersized; //!< number of undersized allocated bytes
+                const size_t  undersized;  //!< number of undersized allocated bytes
+                const size_t  acquired;    //!< total number of allocations
+                const size_t  returned;    //!< total number of returned
                 
             private:
                 uint64_t      wksp[ Y_U64_FOR_SIZE(wksp_bytes) ];
