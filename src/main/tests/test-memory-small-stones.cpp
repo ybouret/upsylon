@@ -1,5 +1,5 @@
 
-#include "y/memory/small/quarry.hpp"
+#include "y/memory/small/stones.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string/convert.hpp"
@@ -11,7 +11,7 @@ using namespace memory;
 
  
 
-Y_UTEST(small_pages)
+Y_UTEST(small_stones)
 {
 
     void        *reg[ 256 ];
