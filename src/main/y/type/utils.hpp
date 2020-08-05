@@ -69,6 +69,7 @@ namespace upsylon
         return 0;
     }
 
+    //! po2=1<<shift
     template <typename T>
     inline unsigned integer_log2( T po2 ) throw()
     {

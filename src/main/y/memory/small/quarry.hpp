@@ -13,34 +13,59 @@ namespace upsylon {
 
         namespace small {
 
-            //! quarry of stones: handle of the power of two area
+            //__________________________________________________________________
+            //
+            //
+            //! quarry of stones: handle (raw/dirty) power of two areas
+            //
+            //__________________________________________________________________
             class quarry
             {
             public:
-                static const size_t   max_stones = stones::max_shift+1;
-                static const size_t   wksp_bytes = max_stones * sizeof(stones);
-                static const unsigned widths[64]; //!< output width in decimal for bytes
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                static const size_t   max_stones = stones::max_shift+1;          //!< alias
+                static const size_t   wksp_bytes = max_stones * sizeof(stones);  //!< alias
+                static const unsigned widths[64];                                //!< output width in decimal for bytes
 
-                explicit quarry() throw();
-                virtual ~quarry() throw();
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit quarry() throw(); //!< setup all stones
+                virtual ~quarry() throw(); //!< cleanup all stones
 
-                void *pull(const size_t shift);
-                void  push(void *, const size_t shift) throw();
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                void *pull(const size_t shift);                 //!< pull a memory area of 2^shift bytes
+                void  push(void *, const size_t shift) throw(); //!< push a memory area of 2^shift bytes
 
-                stones & operator[](const size_t shift)      throw();
-                stones & operator()(const size_t chunk_size) throw();
+                stones & operator[](const size_t shift)      throw(); //!< get the stones for a given shift
+                stones & operator()(const size_t chunk_size) throw(); //!< self[ exp2_of(chunk_size) ]
 
-                friend std::ostream & operator<<(std::ostream &, const quarry &);
+                //______________________________________________________________
+                //
+                // helpers
+                //______________________________________________________________
+                static size_t         exp2_of( const size_t chunk_size ) throw(); //!< chunk_size = 1 << shift
+                friend std::ostream & operator<<(std::ostream &, const quarry &); //!< display
 
-                static size_t exp2_of( const size_t chunk_size ) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(quarry);
                 stones       *ore;
             public:
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 const size_t  undersized;  //!< number of undersized allocated bytes
                 const size_t  acquired;    //!< total number of allocations
-                const size_t  returned;    //!< total number of returned
+                const size_t  returned;    //!< total number of deallocations
                 
             private:
                 uint64_t      wksp[ Y_U64_FOR_SIZE(wksp_bytes) ];

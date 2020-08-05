@@ -75,6 +75,7 @@ namespace upsylon {
                 const size_t chunk_size; //!< clamp( piece::min_chunk_size(block_size), usr_chunk_size, piece::max_chunk_size(block_size) )
                 arena       *next;       //!< for list
                 arena       *prev;       //!< for list
+                
             private:
                 zcache<chunk> &zchunks;    //!< shared cache of chunks
                 stones        &zstones;    //!< shared cache of stones

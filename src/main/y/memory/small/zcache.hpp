@@ -23,11 +23,9 @@ namespace upsylon {
             struct __zcache
             {
                 static const size_t header = sizeof(void*);                         //!< reserved bytes for intenal linking
-                static void * acquire(const size_t);                                //!< acquire(chunk_size)
-                static void   release(void *,const size_t)                throw();  //!< acquire(chunk_size)
                 static size_t chunk_size_from(const size_t, const size_t) throw();  //!< next_power_of_two(max_of(,,stones::min_size))
                 static void  *first(void *)                               throw();  //!< translated address
-
+                static void   missing(const size_t,const unsigned)        throw();  //!< display missing node
             };
 
 
@@ -74,34 +72,51 @@ namespace upsylon {
                 //! cleanup
                 inline ~zcache() throw()
                 {
-                    if( nodes_rise * parts.size != nodes.size )
+                    const size_t allocated = nodes_rise * parts.size;
+                    const size_t available = nodes.size;
+                    assert(allocated>=available);
+                    if(available<allocated )
                     {
-                        // missing nodes
+                        __zcache::missing(allocated-available,sizeof(NODE));
                     }
                     nodes.reset();
-                    parts.reverse();
-                    while(parts.size) __zcache::release(parts.query(),chunk_size);
+                    while(parts.size) cache.store( parts.query() );
                 }
 
                 //! return a zeroed NODE
+                /**
+                 a memory area is formatted like this:
+                 part = {part *next;...;node[0]..node[nodes_rise-1]}
+                 */
                 inline NODE *query_nil()
                 {
                     if(nodes.size)
                     {
+                        //------------------------------------------------------
+                        // some nodes are available
+                        //------------------------------------------------------
                         NODE *node = nodes.pop_front();
                         bzset(*node);
                         return node;
                     }
                     else
                     {
-                        void *addr = __zcache::acquire(chunk_size);
-                        (void) parts.store(static_cast<part *>(addr));
+                        //------------------------------------------------------
+                        // get a (dirty) memory are of chunk_size
+                        //------------------------------------------------------
+                        void *addr = cache.query();
+                        {
+                            part  *p = static_cast<part *>(addr);
+                            bzset(*p);
+                            (void) parts.store(p);
+                        }
                         NODE *node = static_cast<NODE *>( __zcache::first(addr) );
-                        assert( is_zeroed(*node) );
+                        bzset(*node);
                         for(size_t i=1;i<nodes_rise;++i)
                         {
-                            assert( is_zeroed(node[i]) );
-                            nodes.push_back( &node[i] );
+                            NODE  *temp = &node[i];
+                            bzset(*temp);
+                            (void) nodes.push_back( temp );
                         }
                         return node;
                     }
@@ -131,7 +146,6 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-
                 const size_t chunk_size; //!< new bytes per allocation
                 const size_t nodes_rise; //!< new nodes per allocation
 
@@ -143,8 +157,8 @@ namespace upsylon {
                     part *next;
                 };
                 stones             &cache; //!< for alloc/free
-                core::list_of<NODE> nodes;
-                core::pool_of<part> parts;
+                core::list_of<NODE> nodes; //!< usable nodes
+                core::pool_of<part> parts; //!< holding all nodes
 
                 inline bool owned_by(const part *p, const NODE *n) const throw()
                 {
@@ -154,8 +168,7 @@ namespace upsylon {
                     return n>=base&&n<last;
                 }
 
-
-
+                
             };
 
         }

@@ -119,6 +119,10 @@ namespace upsylon
                 if(p.size>max_size) max_size=p.size;
             }
 
+            //__________________________________________________________________
+            //
+            //! helper for centered name
+            //__________________________________________________________________
             inline std::ostream & display(std::ostream &os, const proc_type &p) const
             {
                 const size_t     len = p.size; assert(len<=max_size);
