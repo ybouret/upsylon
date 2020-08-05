@@ -48,8 +48,8 @@ namespace upsylon {
             acquiring(0),
             releasing(0),
             Q(usr_sys_quarry),
-            chunks(chunk_size),
-            arenas(chunk_size)
+            chunks(chunk_size,Q),
+            arenas(chunk_size,Q)
             {
                 for(size_t i=0;i<slots_size;++i)
                 {

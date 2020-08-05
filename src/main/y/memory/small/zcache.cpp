@@ -9,9 +9,9 @@ namespace upsylon {
 
         namespace small {
 
-            size_t __zcache:: length_from(const size_t a, const size_t b) throw()
+            size_t __zcache:: chunk_size_from(const size_t a, const size_t b) throw()
             {
-                return next_power_of_two( max_of(a,b) );
+                return next_power_of_two( max_of(a,b,stones::min_bytes) );
             }
 
             void * __zcache:: acquire(const size_t chunk_size)

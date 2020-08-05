@@ -22,7 +22,7 @@ Y_UTEST(small_arena)
     for(size_t chunk_size=32; chunk_size <= 8192; chunk_size <<= 1)
     {
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
-        small::zcache<small::chunk> cache(chunk_size);
+        small::zcache<small::chunk> cache(chunk_size,Q);
         std::cerr << "\tcache.chunk_size  = " << cache.chunk_size << std::endl;
         std::cerr << "\tcache.nodes_rise  = " << cache.nodes_rise << std::endl;
         const size_t block_max = min_of<size_t>(chunk_size/2,60);
@@ -81,7 +81,7 @@ Y_UTEST(small_compact)
     if(argc>1) chunk_size = string_convert::to<size_t>(argv[1],"chunk_size");
 
     small::quarry               Q;
-    small::zcache<small::chunk> cache(chunk_size);
+    small::zcache<small::chunk> cache(chunk_size,Q);
     const size_t count        = 1024;
     void        *entry[count] = { 0 };
 

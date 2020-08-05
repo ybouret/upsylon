@@ -53,17 +53,7 @@ namespace upsylon {
                 return acquiring->provided_number;
             }
 
-
-            static inline size_t __chunk_exp2( const size_t chunk_size ) throw()
-            {
-                assert( is_a_power_of_two(chunk_size) );
-                assert( chunk_size>=stones::min_bytes );
-                assert( chunk_size<=stones::max_bytes );
-                const size_t chunk_exp2 = integer_log2(chunk_size);
-                assert(chunk_exp2>=stones::min_shift);
-                assert(chunk_exp2<=stones::max_bytes);
-                return chunk_exp2;
-            }
+            
 
             arena:: arena(const size_t   the_block_size,
                           const size_t   req_chunk_size,
@@ -76,11 +66,10 @@ namespace upsylon {
             chunks(),
             block_size( the_block_size ),
             chunk_size( chunk_size_for(block_size,req_chunk_size) ),
-            chunk_exp2( __chunk_exp2(chunk_size) ),
             next(0),
             prev(0),
             zchunks(Z),
-            zstones(Q[chunk_exp2])
+            zstones(Q(chunk_size))
             {
                 empty_one = acquiring = releasing = create_chunk();
             }
@@ -415,7 +404,7 @@ namespace upsylon {
 
             std::ostream & operator<<( std::ostream &os, const arena &a)
             {
-                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << "=2^" << a.chunk_exp2 <<"  blocks_per_chunk=" << a.blocks_per_chunk() << ">" << std::endl;
+                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << "  blocks_per_chunk=" << a.blocks_per_chunk() << ">" << std::endl;
                 os << "\t  <chunks used=" << a.chunks.size << ">" << std::endl;
                 size_t j=0;
                 bool   r=false;

@@ -27,9 +27,12 @@ namespace upsylon {
                 void *pull(const size_t shift);
                 void  push(void *, const size_t shift) throw();
 
-                stones & operator[](const size_t shift) throw();
+                stones & operator[](const size_t shift)      throw();
+                stones & operator()(const size_t chunk_size) throw();
 
                 friend std::ostream & operator<<(std::ostream &, const quarry &);
+
+                static size_t exp2_of( const size_t chunk_size ) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(quarry);

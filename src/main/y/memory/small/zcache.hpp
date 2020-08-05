@@ -3,8 +3,8 @@
 #ifndef Y_MEMORY_SMALL_ZCACHE_INCLUDED
 #define Y_MEMORY_SMALL_ZCACHE_INCLUDED 1
 
+#include "y/memory/small/quarry.hpp"
 #include "y/core/pool.hpp"
-#include "y/core/list.hpp"
 #include "y/type/block/zset.hpp"
 
 namespace upsylon {
@@ -22,11 +22,12 @@ namespace upsylon {
             //__________________________________________________________________
             struct __zcache
             {
-                static const size_t header = sizeof(void*);                     //!< reserved bytes for intenal linking
-                static void * acquire(const size_t);                            //!< acquire(chunk_size)
-                static void   release(void *,const size_t)            throw();  //!< acquire(chunk_size)
-                static size_t length_from(const size_t, const size_t) throw();  //!< next_power_of_two(max_of(,))
-                static void  *first(void *)                           throw();  //!< translated address
+                static const size_t header = sizeof(void*);                         //!< reserved bytes for intenal linking
+                static void * acquire(const size_t);                                //!< acquire(chunk_size)
+                static void   release(void *,const size_t)                throw();  //!< acquire(chunk_size)
+                static size_t chunk_size_from(const size_t, const size_t) throw();  //!< next_power_of_two(max_of(,,stones::min_size))
+                static void  *first(void *)                               throw();  //!< translated address
+
             };
 
 
@@ -56,9 +57,14 @@ namespace upsylon {
                 //______________________________________________________________
 
                 //! setup from usr_chunk_size
-                inline zcache(const size_t usr_chunk_size) throw() :
-                chunk_size( __zcache::length_from(usr_chunk_size,min_chunk_size) ),
+                /**
+                 usr_chunk_size is modified to hold enough data, and
+                 the number of zombie nodes created per allocation is computed
+                 */
+                inline zcache(const size_t usr_chunk_size, quarry &Q) throw() :
+                chunk_size( __zcache::chunk_size_from(usr_chunk_size,min_chunk_size) ),
                 nodes_rise( (chunk_size-__zcache::header)/sizeof(NODE) ),
+                cache( Q(chunk_size) ),
                 nodes(),
                 parts()
                 {
@@ -136,6 +142,7 @@ namespace upsylon {
                 {
                     part *next;
                 };
+                stones             &cache; //!< for alloc/free
                 core::list_of<NODE> nodes;
                 core::pool_of<part> parts;
 

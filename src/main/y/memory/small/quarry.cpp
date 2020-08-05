@@ -1,9 +1,11 @@
 
 #include "y/memory/small/quarry.hpp"
+#include "y/memory/allocator/global.hpp"
+#include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/exceptions.hpp"
-#include "y/memory/allocator/global.hpp"
+
 #include <cstring>
 #include <iostream>
 #include <cerrno>
@@ -98,6 +100,12 @@ namespace upsylon {
                 return ore[shift];
             }
 
+            stones & quarry:: operator()(const size_t chunk_size) throw()
+            {
+                return ore[ exp2_of(chunk_size) ];
+            }
+
+
             std::ostream & operator<<(std::ostream &os, const quarry &q)
             {
                 os << "<quarry>" << std::endl;
@@ -121,6 +129,17 @@ namespace upsylon {
 
                 os << "<quarry/>";
                 return os;
+            }
+
+            size_t quarry::exp2_of(const size_t chunk_size) throw()
+            {
+                assert( is_a_power_of_two(chunk_size) );
+                assert( chunk_size>=stones::min_bytes );
+                assert( chunk_size<=stones::max_bytes );
+                const size_t chunk_exp2 = integer_log2(chunk_size);
+                assert(chunk_exp2>=stones::min_shift);
+                assert(chunk_exp2<=stones::max_bytes);
+                return chunk_exp2;
             }
         }
 

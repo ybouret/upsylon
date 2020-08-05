@@ -18,13 +18,13 @@ namespace {
     };
 
     template <size_t N>
-    static inline void doTestZ()
+    static inline void doTestZ( small::quarry &Q )
     {
         typedef Node<N> node_type;
         std::cerr << "sizeof(Node)=" << sizeof(node_type) << std::endl;
         for(size_t chunk_size=1;chunk_size<=8192;chunk_size<<=1)
         {
-            small::zcache<node_type> cache(chunk_size);
+            small::zcache<node_type> cache(chunk_size,Q);
             std::cerr << "\t"
             << std::setw(5) << chunk_size << " => "
             << std::setw(5) << cache.chunk_size << " => "
@@ -52,10 +52,10 @@ namespace {
 
 Y_UTEST(small_zcache)
 {
-
-    doTestZ<1>();
-    doTestZ<10>();
-    doTestZ<100>();
+    small::quarry Q;
+    doTestZ<1>(Q);
+    doTestZ<10>(Q);
+    doTestZ<100>(Q);
 
 
     Y_UTEST_SIZEOF( small::zcache< Node<1>     >);
