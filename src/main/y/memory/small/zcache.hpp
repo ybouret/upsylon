@@ -98,7 +98,7 @@ namespace upsylon {
                  part = {part *next;...;node[0]..node[nodes_rise-1];...}
                         |header|<-          nodes              ->|nope | (chunk_size)
                  */
-                inline NODE *query_nil()
+                inline NODE *zquery()
                 {
                     if(nodes.size)
                     {
@@ -133,7 +133,7 @@ namespace upsylon {
                 }
 
                 //! store a zombie node
-                inline void store_nil(NODE *node) throw()
+                inline void zstore(NODE *node) throw()
                 {
                     assert(node);
                     assert(0==node->prev);

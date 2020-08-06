@@ -81,7 +81,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // get an empty chunk
                 //--------------------------------------------------------------
-                chunk * curr = zchunks.query_nil();
+                chunk * curr = zchunks.zquery();
                 
                 //--------------------------------------------------------------
                 // provide memory to this chunk
@@ -92,7 +92,7 @@ namespace upsylon {
                 }
                 catch(...)
                 {
-                    zchunks.store_nil(curr);
+                    zchunks.zstore(curr);
                     throw;
                 }
 
@@ -136,7 +136,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // return to cache
                 //--------------------------------------------------------------
-                zchunks.store_nil(p);
+                zchunks.zstore(p);
             }
 
         }

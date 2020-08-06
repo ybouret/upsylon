@@ -34,14 +34,14 @@ namespace {
             core::list_of<node_type> nodes;
             for(size_t i=0;i<n;++i)
             {
-                nodes.push_back( cache.query_nil() );
+                nodes.push_back( cache.zquery() );
             }
             std::cerr << "nodes = " << std::setw(5) << nodes.size << std::endl;
             alea.shuffle(nodes);
 
             while(nodes.size)
             {
-                cache.store_nil( nodes.pop_back() );
+                cache.zstore( nodes.pop_back() );
             }
         }
         std::cerr << Q << std::endl;

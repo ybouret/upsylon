@@ -22,7 +22,7 @@ namespace upsylon {
                     {
                         arena *a = entry.pop_back();
                         self_destruct(*a);
-                        zArenas.store_nil(a);
+                        zArenas.zstore(a);
                     }
                 }
 
@@ -98,13 +98,13 @@ namespace upsylon {
                     //------------------------------------------------------
                     // create a new arena
                     //------------------------------------------------------
-                    arena *a = zArenas.query_nil();
+                    arena *a = zArenas.zquery();
                     try {
                         new (a) arena(block_size,chunk_size,zChunks,sharedQ);
                     }
                     catch(...)
                     {
-                        zArenas.store_nil(a);
+                        zArenas.zstore(a);
                         throw;
                     }
 
