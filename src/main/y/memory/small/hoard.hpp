@@ -21,10 +21,23 @@ namespace upsylon {
             class hoard
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 virtual ~hoard() throw();         //!< cleanup
+
+                //______________________________________________________________
+                //
+                // non-virtual interface
+                //______________________________________________________________
                 void    *acquire();               //!< lock/on_acquire/unlock
                 void     release(void *) throw(); //!< lock/on_release/unlock
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 lockable     &access;     //!< shared lock
                 const size_t  block_size; //!< common block size
 
@@ -41,13 +54,18 @@ namespace upsylon {
             //__________________________________________________________________
             //
             //
-            //! generic MT hoard proxy based on a host type
+            //! generic MT proxy based on a host type
             //
             //__________________________________________________________________
             template <typename HOST>
             class mt  : public hoard
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+
                 //! setup with persistent lockable and HOST
                 inline explicit mt(lockable &l, HOST &usr) throw() :
                 hoard(l,usr.block_size),

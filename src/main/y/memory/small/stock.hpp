@@ -22,13 +22,25 @@ namespace upsylon {
             class stock
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+
                 //! minimal valid block_size
                 static const size_t  min_block_size = sizeof(void*);
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 explicit stock(hoard &h); //!< setup with persistent hoard
                 virtual ~stock() throw(); //!< cleanup
 
-
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
                 void  *query();                    //!< query a block
                 void   store(void *) throw();      //!< store a block
                 void   reserve(size_t);            //!< reserve extra blocks
