@@ -42,7 +42,7 @@ namespace upsylon {
                 //
                 // C++
                 //______________________________________________________________
-                stones(const size_t usr_shift) throw(); //!< create stones for bytes=2^usr_shift
+                stones(const size_t the_shift) throw(); //!< create stones for bytes=2^the_shift
                 ~stones() throw();                      //!< cleanup
 
                 //______________________________________________________________
@@ -50,17 +50,14 @@ namespace upsylon {
                 // methods
                 //______________________________________________________________
 
-                void * query();                        //!< get/create a stone, memory may be garbage content!
-                void   store(void *)          throw(); //!< store a previous stone, keep memory ordered
-                void   release(stone *) const throw(); //!< release unneeded stone
+                void * query();                        //!< get/create a stone, set clean status
+                void   store(void *)          throw(); //!< store a previous stone
+                void   release(stone *) const throw(); //!< release uneeded stone
                 size_t committed()      const throw(); //!< committed = count-slist.size
 
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const stones &);
-
-                //! lower addresses first in cache
-                void optimize() throw();
-
+                
                 //______________________________________________________________
                 //
                 // members

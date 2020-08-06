@@ -34,7 +34,6 @@ namespace upsylon {
             stones:: ~stones() throw()
             {
                 assert(cache.size<=count);
-                optimize();
                 while(cache.size)
                 {
                     release( cache.query() );
@@ -61,12 +60,16 @@ namespace upsylon {
                 static global &mgr = global::instance();
                 if(cache.size)
                 {
+                    //----------------------------------------------------------
                     // return an old stone
+                    //----------------------------------------------------------
                     return cache.query();
                 }
                 else
                 {
+                    //----------------------------------------------------------
                     // create a new stone
+                    //----------------------------------------------------------
                     void *addr = mgr.__calloc(1,bytes);
                     ++aliasing::_(count);
                     return addr;
@@ -74,14 +77,7 @@ namespace upsylon {
             }
 
 
-            void stones:: optimize() throw()
-            {
-                core::list_of<stone> temp;
-                while( cache.size )  temp.push_back( cache.query() );
-                merging<stone>::sort_by_addr(temp);
-                while( temp.size ) cache.store( temp.pop_back() );
-            }
-
+            
             void stones:: store(void *addr) throw()
             {
                 assert(NULL!=addr);

@@ -69,24 +69,29 @@ namespace upsylon {
 
                 }
 
-                //! cleanup
+                //! return all memory
                 inline ~zcache() throw()
                 {
+                    // sanity check
                     const size_t allocated = nodes_rise * parts.size;
-                    const size_t available = nodes.size;
-                    assert(allocated>=available);
-                    if(available<allocated )
-                    {
-                        __zcache::missing(allocated-available,sizeof(NODE));
-                    }
-                    nodes.reset();
-                    while(parts.size) cache.store( parts.query() );
+                    const size_t available = nodes.size; assert(allocated>=available);
+                    if(available<allocated ) __zcache::missing(allocated-available,sizeof(NODE));
+
+                    // cleanup
+                    nodes.reset();                                  // dismiss zombies
+                    while(parts.size) cache.store( parts.query() ); // return parts
                 }
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
 
                 //! return a zeroed NODE
                 /**
                  a memory area is formatted like this:
-                 part = {part *next;...;node[0]..node[nodes_rise-1]}
+                 part = {part *next;...;node[0]..node[nodes_rise-1];...}
+                        |header|<-          nodes              ->|nope | (chunk_size)
                  */
                 inline NODE *query_nil()
                 {
@@ -152,13 +157,10 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(zcache);
-                struct part
-                {
-                    part *next;
-                };
-                stones             &cache; //!< for alloc/free of parts
-                core::list_of<NODE> nodes; //!< usable nodes
-                core::pool_of<part> parts; //!< holding all nodes
+                struct part { part  *next; }; //!< binary layout for part
+                stones             &cache;    //!< for alloc/free of parts with same size
+                core::list_of<NODE> nodes;    //!< usable nodes
+                core::pool_of<part> parts;    //!< holding all nodes
 
                 inline bool owned_by(const part *p, const NODE *n) const throw()
                 {

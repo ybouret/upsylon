@@ -1,7 +1,6 @@
 
 #include "y/memory/small/quarry.hpp"
 #include "y/memory/allocator/global.hpp"
-#include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
@@ -28,6 +27,7 @@ namespace upsylon {
                 {
                     std::cerr << "[small::quarry] leak #undersized=" << undersized << std::endl;
                 }
+                aliasing::_(undersized) = 0;
 
                 for(size_t i=stones::max_shift;i>=stones::min_shift;--i)
                 {
@@ -35,7 +35,6 @@ namespace upsylon {
                 }
                 ore=0;
                 memset(wksp,0,sizeof(wksp));
-                aliasing::_(undersized) = 0;
             }
 
             quarry:: quarry() throw() :
