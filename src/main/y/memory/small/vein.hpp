@@ -54,10 +54,10 @@ namespace upsylon {
                 // methods
                 //______________________________________________________________
 
-                void * query();                        //!< get/create a stone, set clean status
-                void   store(void *)          throw(); //!< store a previous stone
-                size_t committed()      const throw(); //!< committed = count-slist.size
-
+                void * acquire();                      //!< get/create a stone, may be dirty
+                void   release(void *)        throw(); //!< store a previous stone
+                size_t committed()      const throw(); //!< committed = count-cache.size
+                
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const vein &);
                 
@@ -72,7 +72,7 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(vein);
-                void   release(ingot *) const throw(); //!< release uneeded stone
+                void   free(ingot *) const throw(); //!< release uneeded stone
 
             };
 

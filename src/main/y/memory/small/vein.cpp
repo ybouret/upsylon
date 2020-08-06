@@ -15,7 +15,7 @@ namespace upsylon {
 
             unsigned vein::width = 8;
 
-            void  vein:: release(ingot *s) const throw()
+            void  vein:: free(ingot *s) const throw()
             {
                 static global &mgr = global::location();
                 assert(NULL!=s);
@@ -37,7 +37,7 @@ namespace upsylon {
                 assert(cache.size<=count);
                 while(cache.size)
                 {
-                    release( cache.query() );
+                    free( cache.query() );
                 }
                 if(count)
                 {
@@ -56,7 +56,7 @@ namespace upsylon {
                 assert(shift<=max_shift);
             }
 
-            void * vein:: query()
+            void * vein:: acquire()
             {
                 static global &mgr = global::instance();
                 if(cache.size)
@@ -79,7 +79,7 @@ namespace upsylon {
 
 
             
-            void vein:: store(void *addr) throw()
+            void vein:: release(void *addr) throw()
             {
                 assert(NULL!=addr);
                 memset(addr,0,sizeof(ingot));

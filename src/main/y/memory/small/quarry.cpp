@@ -62,7 +62,7 @@ namespace upsylon {
                 else
                 {
                     if(shift>vein::max_shift) throw libc::exception(ERANGE,"quarry::pull(shift>%lu)", (unsigned long) shift );
-                    return ore[shift].query();
+                    return ore[shift].acquire();
                 }
 
             }
@@ -81,7 +81,7 @@ namespace upsylon {
                 }
                 else
                 {
-                    return ore[shift].store(addr);
+                    return ore[shift].release(addr);
                 }
             }
 

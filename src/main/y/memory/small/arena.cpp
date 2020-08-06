@@ -88,7 +88,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 try
                 {
-                    new (curr) chunk(block_size,deposit.query(),chunk_size);
+                    new (curr) chunk(block_size,deposit.acquire(),chunk_size);
                 }
                 catch(...)
                 {
@@ -131,7 +131,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // release memory into cache
                 //--------------------------------------------------------------
-                deposit.store(p->data);
+                deposit.release(p->data);
 
                 //--------------------------------------------------------------
                 // return to cache

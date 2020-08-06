@@ -26,7 +26,7 @@ Y_UTEST(small_vein)
         size_t n=0;
         while(n<num)
         {
-            reg[n] = S.query();
+            reg[n] = S.acquire();
             Y_ASSERT(reg[n]);
             ++n;
         }
@@ -36,13 +36,13 @@ Y_UTEST(small_vein)
         {
             --n;
             Y_ASSERT(NULL!=reg[n]);
-            S.store(reg[n]);
+            S.release(reg[n]);
             reg[n] = 0;
         }
 
         while(n<num)
         {
-            reg[n] = S.query();
+            reg[n] = S.acquire();
             Y_ASSERT(reg[n]);
             ++n;
         }
@@ -54,7 +54,7 @@ Y_UTEST(small_vein)
         {
             --n;
             Y_ASSERT(NULL!=reg[n]);
-            S.store(reg[n]);
+            S.release(reg[n]);
             reg[n] = 0;
         }
         Y_ASSERT(0==n);

@@ -83,8 +83,8 @@ namespace upsylon {
                     if(available<allocated ) __zcache::missing(allocated-available,sizeof(NODE));
 
                     // cleanup
-                    nodes.reset();                                  // dismiss zombies
-                    while(parts.size) memIO.store( parts.query() ); // return parts
+                    nodes.reset();                                    // dismiss zombies
+                    while(parts.size) memIO.release( parts.query() ); // return parts
                 }
 
                 //______________________________________________________________
@@ -114,7 +114,7 @@ namespace upsylon {
                         //------------------------------------------------------
                         // get a (dirty) memory are of chunk_size
                         //------------------------------------------------------
-                        void *addr = memIO.query();
+                        void *addr = memIO.acquire();
                         {
                             part  *p = static_cast<part *>(addr);
                             bzset(*p);
