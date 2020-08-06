@@ -17,6 +17,7 @@ Y_UTEST(small_vein)
     void        *reg[ 256 ];
     const size_t num = sizeof(reg)/sizeof(reg[0]);
 
+    memset(reg,0,sizeof(reg));
     for(size_t i=small::vein::min_shift;i<=14;++i)
     {
         small::vein S(i);
@@ -29,13 +30,14 @@ Y_UTEST(small_vein)
             Y_ASSERT(reg[n]);
             ++n;
         }
-        assert(n==num);
+        Y_ASSERT(n==num);
         alea.shuffle(reg,num);
         while(n>num/2)
         {
             --n;
             Y_ASSERT(NULL!=reg[n]);
             S.store(reg[n]);
+            reg[n] = 0;
         }
 
         while(n<num)
@@ -44,6 +46,7 @@ Y_UTEST(small_vein)
             Y_ASSERT(reg[n]);
             ++n;
         }
+        Y_ASSERT(n==num);
 
         alea.shuffle(reg,num);
 
@@ -52,10 +55,12 @@ Y_UTEST(small_vein)
             --n;
             Y_ASSERT(NULL!=reg[n]);
             S.store(reg[n]);
+            reg[n] = 0;
         }
+        Y_ASSERT(0==n);
         std::cerr << "|_has " << S.cache.size * S.bytes << " bytes" << std::endl;
-
     }
+    
     std::cerr << "small::vein::min_shift=" << small::vein::min_shift << std::endl;
     std::cerr << "small::vein::max_shift=" << small::vein::max_shift << std::endl;
 

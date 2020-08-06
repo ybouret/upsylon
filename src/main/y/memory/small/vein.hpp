@@ -63,8 +63,8 @@ namespace upsylon {
                 //______________________________________________________________
                 const size_t shift; //!< bytes = 1 << shift
                 const size_t bytes; //!< bytes for each stone
-                cache_type   cache; //!< available stones
-                const size_t count; //!< bookkeeping of allocated stones
+                cache_type   cache; //!< available ingots
+                const size_t count; //!< bookkeeping of allocated ingot
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(vein);

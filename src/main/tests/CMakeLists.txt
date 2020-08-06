@@ -120,7 +120,7 @@ ADD_TEST(mem:small:arena   test-main small_arena)
 ADD_TEST(mem:small:zcache  test-main small_zcache)
 ADD_TEST(mem:small:blocks  test-main small_blocks)
 ADD_TEST(mem:small:compact test-main small_compact)
-ADD_TEST(mem:small:vei  n  test-main small_vein)
+ADD_TEST(mem:small:vein    test-main small_vein)
 ADD_TEST(mem:small:quarry  test-main small_quarry)
 
 SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
