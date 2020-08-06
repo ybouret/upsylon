@@ -20,7 +20,7 @@ namespace upsylon {
                 static global &mgr = global::location();
                 assert(NULL!=s);
                 assert(count>0);
-                std::cerr << "releasing(" << s << ") #" << count << " bytes=" << bytes << std::endl;
+                //std::cerr << "releasing(" << s << ") #" << count << " bytes=" << bytes << std::endl;
                 mgr.__free(s,bytes);
                 --aliasing::_(count);
             }

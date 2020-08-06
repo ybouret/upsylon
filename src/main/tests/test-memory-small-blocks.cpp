@@ -37,8 +37,8 @@ Y_UTEST(small_blocks)
 
             small::blocks blk(chunk_size,limit_size,Q);
             std::cerr << " | chunk_size="        << std::setw(5) <<  blk.chunk_size;
-            std::cerr << " | slots_size="        << std::setw(5) <<  blk.slots_size;
-            std::cerr << " | load_factor="       << std::setw(3) <<  blk.load_factor();
+            std::cerr << " | #slots="        << std::setw(3) <<  blk.slots_size;
+            std::cerr << " | load="       << std::setw(3) <<  blk.load_factor();
             std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.chunks.chunk_size << "," << std::setw(2) <<  blk.chunks.nodes_rise;
             std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(2) <<  blk.arenas.nodes_rise;
             std::cerr << std::endl;
@@ -46,7 +46,7 @@ Y_UTEST(small_blocks)
             //std::cerr << blk << std::endl;
 
             const size_t max_size = limit_size+1;
-            const size_t bps      = 300;
+            const size_t bps      = 500;
 
             const size_t nblk = bps*max_size;
             blk_t       *blks = static_cast<blk_t *>( global::instance().__calloc(nblk,sizeof(blk_t)) );
