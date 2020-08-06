@@ -1,5 +1,7 @@
 
 #include "y/memory/small/object.hpp"
+#include "y/memory/small/object-hoard.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include <iomanip>
@@ -53,6 +55,13 @@ Y_UTEST(small_object)
 
     testDummy<1>();
     testDummy<10>();
+
+    obj_type::linear_hoard lh(16);
+    std::cerr << "linear.hoard.block_size=" << lh.block_size << std::endl;
+
+    obj_type::dyadic_hoard dh(4);
+    std::cerr << "dyadic.hoard.block_size=" << dh.block_size << std::endl;
+    
 
     std::cerr << mgr.Quarry << std::endl;
 

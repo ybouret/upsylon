@@ -5,6 +5,7 @@
 #define Y_MEMORY_SMALL_OBJECT_INCLUDED 1
 
 #include "y/memory/small/objects.hpp"
+#include "y/memory/small/hoard.hpp"
 #include "y/concurrent/singleton.hpp"
 #include "y/longevities.hpp"
 
@@ -144,7 +145,40 @@ namespace upsylon {
                     {}
 
                 };
-                
+
+
+                typedef mt<arena> linear_mt;
+
+                class linear_hoard : public linear_mt
+                {
+                public:
+                    inline explicit linear_hoard(const size_t block_size) :
+                    linear_mt( supply::instance().Access, supply::instance().Blocks[block_size] )
+                    {
+                    }
+
+                    inline virtual ~linear_hoard() throw() {}
+                    
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(linear_hoard);
+                };
+
+                typedef mt<vein> dyadic_mt;
+                class dyadic_hoard : public dyadic_mt
+                {
+                public:
+                    inline explicit dyadic_hoard(const size_t exp2) :
+                    dyadic_mt( supply::instance().Access, supply::instance().Quarry[exp2] )
+                    {
+                    }
+
+                    inline virtual ~dyadic_hoard() throw() {}
+
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(dyadic_hoard);
+                };
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(object);
