@@ -21,7 +21,7 @@ namespace upsylon {
                 assert(NULL!=s);
                 assert(count>0);
                 //std::cerr << "releasing(" << s << ") #" << count << " bytes=" << bytes << std::endl;
-                mgr.__free(s,bytes);
+                mgr.__free(s,block_size);
                 --aliasing::_(count);
             }
 
@@ -41,19 +41,19 @@ namespace upsylon {
                 }
                 if(count)
                 {
-                    std::cerr << "[small::vein@" << bytes <<"] missing #ingot=" << count << " -> " << count*bytes << " bytes" << std::endl;
+                    std::cerr << "[small::vein@" << block_size <<"] missing #ingot=" << count << " -> " << count*block_size << " bytes" << std::endl;
                 }
                 aliasing::_(count) = 0;
             }
 
             vein:: vein(const size_t the_shift) throw() :
-            shift(the_shift),
-            bytes(one<<shift),
+            block_exp2(the_shift),
+            block_size(one<<block_exp2),
             cache(),
             count(0)
             {
-                assert(shift>=min_shift);
-                assert(shift<=max_shift);
+                assert(block_exp2>=min_shift);
+                assert(block_exp2<=max_shift);
             }
 
             void * vein:: acquire()
@@ -69,9 +69,9 @@ namespace upsylon {
                 else
                 {
                     //----------------------------------------------------------
-                    // create a new stone
+                    // create a new ingot
                     //----------------------------------------------------------
-                    void *addr = mgr.__calloc(1,bytes);
+                    void *addr = mgr.__calloc(1,block_size);
                     ++aliasing::_(count);
                     return addr;
                 }
@@ -89,11 +89,11 @@ namespace upsylon {
             std::ostream & operator<<(std::ostream &os, const vein &s)
             {
                 os << std::dec;
-                os << "{2^" << std::left << std::setw(2) << s.shift << std::right << "=";
-                os << std::setw(vein::width) << s.bytes << ": ";
+                os << "{2^" << std::left << std::setw(2) << s.block_exp2 << std::right << "=";
+                os << std::setw(vein::width) << s.block_size << ": ";
                 os <<  "used " << std::setw(3) << s.committed() << "/" << std::setw(3) << s.count;
-                const human_readable hr_used = s.committed() * s.bytes;
-                const human_readable hr_maxi = s.count * s.bytes;
+                const human_readable hr_used = s.committed() * s.block_size;
+                const human_readable hr_maxi = s.count * s.block_size;
                 os << " ("<< hr_used << "/" << hr_maxi <<")";
                 os << "}";
                 return os;

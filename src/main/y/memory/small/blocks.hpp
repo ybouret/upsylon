@@ -37,6 +37,8 @@ namespace upsylon {
                 //! create internal structure
                 /**
                  \param usr_chunk_size the minimal chunk_size for internal table, caches and arena
+                 \param usr_limit_size the size above which memory is asked directly to system
+                 \param usr_sys_quarry a quarry to setup all the caches
                  */
                 blocks(const size_t usr_chunk_size,
                        const size_t usr_limit_size,

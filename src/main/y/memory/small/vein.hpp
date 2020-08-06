@@ -65,8 +65,8 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-                const size_t shift; //!< bytes = 1 << shift
-                const size_t bytes; //!< bytes for each stone
+                const size_t block_exp2; //!< block_size = 1 << block_exp2
+                const size_t block_size; //!< block_size for each ingot
                 cache_type   cache; //!< available ingots
                 const size_t count; //!< bookkeeping of allocated ingot
 

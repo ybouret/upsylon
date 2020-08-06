@@ -123,6 +123,7 @@ ADD_TEST(mem:small:blocks  test-main small_blocks)
 ADD_TEST(mem:small:compact test-main small_compact)
 ADD_TEST(mem:small:vein    test-main small_vein)
 ADD_TEST(mem:small:quarry  test-main small_quarry)
+ADD_TEST(mem:small:mt      test-main small_mt)
 
 SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
 ADD_TEST(par:parallel    test-main parallel)

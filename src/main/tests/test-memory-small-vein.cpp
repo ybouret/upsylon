@@ -21,7 +21,7 @@ Y_UTEST(small_vein)
     for(size_t i=small::vein::min_shift;i<=14;++i)
     {
         small::vein S(i);
-        std::cerr << "vein: " << S.bytes << std::endl;
+        std::cerr << "vein: " << S.block_size << std::endl;
 
         size_t n=0;
         while(n<num)
@@ -58,7 +58,7 @@ Y_UTEST(small_vein)
             reg[n] = 0;
         }
         Y_ASSERT(0==n);
-        std::cerr << "|_has " << S.cache.size * S.bytes << " bytes" << std::endl;
+        std::cerr << "|_has " << S.cache.size * S.block_size << " bytes" << std::endl;
     }
     
     std::cerr << "small::vein::min_shift=" << small::vein::min_shift << std::endl;

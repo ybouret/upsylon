@@ -63,7 +63,7 @@ Y_UTEST(small_quarry)
         {
             char buffer[1024] = { 0 };
             memset(buffer,0,sizeof(buffer));
-            snprintf(buffer, sizeof(buffer)-1, "%lu", (unsigned long) Q[i].bytes );
+            snprintf(buffer, sizeof(buffer)-1, "%lu", (unsigned long) Q[i].block_size );
             const size_t n = strlen(buffer);
             //std::cerr << i << "->" << n << " (" << buffer << ")" << std::endl;
             fp1("%u %u\n", unsigned(i), unsigned(n) );
