@@ -25,8 +25,7 @@ namespace upsylon {
                         zArenas.zstore(a);
                     }
                 }
-
-                global::location().__free(slot,chunk_size);
+                slots_vein.release(slot);
                 slot=0;
                 acquiring=releasing=0;
                 _bzset(chunk_size);
@@ -45,7 +44,8 @@ namespace upsylon {
             limit_size(usr_limit_size),
             slots_size(most_significant_bit(chunk_size/sizeof(blocks::slot_type))),
             slots_mask(slots_size-1 ),
-            slot( static_cast<slot_type *>(global::instance().__calloc(1,chunk_size) ) ),
+            slots_vein( usr_sys_quarry(chunk_size) ),
+            slot( static_cast<slot_type *>(slots_vein.acquire()) ),
             acquiring(0),
             releasing(0),
             sharedQ(usr_sys_quarry),

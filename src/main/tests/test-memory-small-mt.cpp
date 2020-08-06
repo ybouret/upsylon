@@ -60,7 +60,8 @@ Y_UTEST(small_mt)
 
     small::quarry Q;
     small::blocks B(4096,512,Q);
-
+    std::cerr << "Minimal Quarry: " << std::endl;
+    std::cerr << Q << std::endl;
 
     {
         small::mt<small::vein> v64(access, Q(64) );

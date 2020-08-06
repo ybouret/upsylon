@@ -85,9 +85,9 @@ namespace upsylon {
                 const size_t slots_size; //!< number of slots as a power of two
                 const size_t slots_mask; //!< slots_size-1
 
-
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(blocks);
+                vein           &slots_vein;
                 slot_type      *slot;
                 arena          *acquiring;
                 arena          *releasing;
