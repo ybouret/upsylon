@@ -8,14 +8,15 @@
 namespace upsylon
 {
 
+    //! base2 operations
     template <typename T>
     struct base2
     {
-        Y_DECL_ARGS_(T,type);
-        static const bool     signed_value     = is_signed<type>::value;
-        static const unsigned max_shift        = (sizeof(type)<<3) - (signed_value?2:1);
-        static const_type     one              = 1;
-        static const_type     max_power_of_two = (one << max_shift);
+        Y_DECL_ARGS_(T,type); //!< aliases
+        static const bool     signed_value     = is_signed<type>::value;                 //!< alias
+        static const unsigned max_shift        = (sizeof(type)<<3) - (signed_value?2:1); //!< alias
+        static const_type     one              = 1;                                      //!< alias
+        static const_type     max_power_of_two = (one << max_shift);                     //!< alias
 
         //! v <= (1<<r)
         static inline unsigned log2_of(mutable_type v) throw()

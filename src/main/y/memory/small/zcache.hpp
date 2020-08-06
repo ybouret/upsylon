@@ -33,6 +33,11 @@ namespace upsylon {
             //
             //
             //! provide cache of zombie NODEs
+            /**
+             zombie nodes are store in a list of nodes, when
+             they are allocated by ever-growing parts of chunk_size,
+             using a dedicated vein
+             */
             //
             //__________________________________________________________________
             template <typename NODE>
@@ -44,7 +49,7 @@ namespace upsylon {
                 // types and definitions
                 //______________________________________________________________
 
-                //! minimal increase in available nodes per allocation
+                //! minimal increase in nodes per allocation
                 static const size_t min_nodes_rise = 2;
                 //! mimimal bytes to allocate
                 static const size_t min_chunk_size = __zcache::header + min_nodes_rise * sizeof(NODE);
@@ -62,7 +67,7 @@ namespace upsylon {
                 inline zcache(const size_t usr_chunk_size, quarry &Q) throw() :
                 chunk_size( __zcache::chunk_size_from(usr_chunk_size,min_chunk_size) ),
                 nodes_rise( (chunk_size-__zcache::header)/sizeof(NODE) ),
-                cache( Q(chunk_size) ),
+                memIO( Q(chunk_size) ),
                 nodes(),
                 parts()
                 {
@@ -79,7 +84,7 @@ namespace upsylon {
 
                     // cleanup
                     nodes.reset();                                  // dismiss zombies
-                    while(parts.size) cache.store( parts.query() ); // return parts
+                    while(parts.size) memIO.store( parts.query() ); // return parts
                 }
 
                 //______________________________________________________________
@@ -109,7 +114,7 @@ namespace upsylon {
                         //------------------------------------------------------
                         // get a (dirty) memory are of chunk_size
                         //------------------------------------------------------
-                        void *addr = cache.query();
+                        void *addr = memIO.query();
                         {
                             part  *p = static_cast<part *>(addr);
                             bzset(*p);
@@ -158,7 +163,7 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(zcache);
                 struct part { part  *next; }; //!< binary layout for part
-                vein               &cache;    //!< for alloc/free of parts with same size
+                vein               &memIO;    //!< for alloc/free of parts with same size
                 core::list_of<NODE> nodes;    //!< usable nodes
                 core::pool_of<part> parts;    //!< holding all nodes
 

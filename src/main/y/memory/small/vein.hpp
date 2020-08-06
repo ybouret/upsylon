@@ -19,6 +19,10 @@ namespace upsylon {
             //
             //
             //! (de)allocate ingots of same 2^shift bytes
+            /**
+             used as a cache of bytes=2^shift in interaction with
+             the memory::global allocator calloc/free
+             */
             //
             //__________________________________________________________________
             class vein
