@@ -91,6 +91,7 @@ test-memory-small-zcache.cpp
 test-memory-small-blocks.cpp
 test-memory-small-vein.cpp
 test-memory-small-quarry.cpp
+test-memory-small-mt.cpp
 )
 ADD_TEST(mem:chunk        test-main chunk)
 ADD_TEST(mem:arena        test-main arena)
