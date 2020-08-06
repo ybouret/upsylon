@@ -123,6 +123,12 @@ namespace upsylon {
                     p = 0;
                 }
 
+                static inline objects &proto()
+                {
+                    static objects &self = supply::instance();
+                    return self;
+                }
+                
                 //______________________________________________________________
                 //
                 //! parametric singleton
@@ -153,7 +159,7 @@ namespace upsylon {
                 {
                 public:
                     inline explicit linear_hoard(const size_t block_size) :
-                    linear_mt( supply::instance().Access, supply::instance().Blocks[block_size] )
+                    linear_mt( proto().Access, proto().Blocks[block_size] )
                     {
                     }
 
@@ -169,7 +175,7 @@ namespace upsylon {
                 {
                 public:
                     inline explicit dyadic_hoard(const size_t exp2) :
-                    dyadic_mt( supply::instance().Access, supply::instance().Quarry[exp2] )
+                    dyadic_mt( proto().Access, proto().Quarry[exp2] )
                     {
                     }
 
