@@ -13,22 +13,28 @@ namespace upsylon {
 
         namespace small {
 
+            //__________________________________________________________________
+            //
+            //
+            //! cache to locally and safely query/store items of same block_size
+            //
+            //__________________________________________________________________
             class stock
             {
             public:
+                //! minimal valid block_size
                 static const size_t  min_block_size = sizeof(void*);
 
-                //! setup with persistent hoard
-                explicit stock( hoard &h );
-                virtual ~stock() throw();
+                explicit stock(hoard &h); //!< setup with persistent hoard
+                virtual ~stock() throw(); //!< cleanup
 
-                size_t block_size() const throw();
 
-                void *query();
-                void  store(void *) throw();
-                void  reserve(size_t);
-                void  release() throw();
-                size_t available() const throw();
+                void  *query();                    //!< query a block
+                void   store(void *) throw();      //!< store a block
+                void   reserve(size_t);            //!< reserve extra blocks
+                void   release() throw();          //!< empty cache
+                size_t available() const throw();  //!< cache size
+                size_t block_size() const throw(); //!< common blocks size
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(stock);
