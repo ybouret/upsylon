@@ -170,10 +170,11 @@ namespace upsylon {
 
                 //--------------------------------------------------------------
                 //
-                // take the biggest required abd its boundary
+                // take the biggest required and its boundary,
+                // allowing for an extra lost block
                 //
                 //--------------------------------------------------------------
-                size_t  blocks   = 0xff;
+                size_t  blocks   = 256;
                 size_t  required = blocks*block_size;
                 size_t  boundary = next_power_of_two(required);
 

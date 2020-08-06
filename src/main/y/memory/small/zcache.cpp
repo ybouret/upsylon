@@ -3,6 +3,7 @@
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include <iostream>
+#include <iomanip>
 
 namespace upsylon {
 
@@ -22,8 +23,10 @@ namespace upsylon {
 
             void __zcache:: missing(const size_t num, const unsigned sz)  throw()
             {
-                std::cerr << "[zcache<sizeof=" << sz << ">] missing #zombies=" << num << std::endl;
+                std::cerr << "[small::zcache<sizeof=" << std::setw(4) << sz << ">] missing #zombies=" << num << std::endl;
             }
+            
+
         }
 
     }

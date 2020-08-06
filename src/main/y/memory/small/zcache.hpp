@@ -96,7 +96,7 @@ namespace upsylon {
                 /**
                  a memory area is formatted like this:
                  part = {part *next;...;node[0]..node[nodes_rise-1];...}
-                        |header|<-          nodes              ->|nope | (chunk_size)
+                 |header|<-          nodes              ->|nope | (chunk_size)
                  */
                 inline NODE *zquery()
                 {

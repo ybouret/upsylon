@@ -20,7 +20,7 @@ namespace upsylon {
                 static global &mgr = global::location();
                 assert(NULL!=s);
                 assert(count>0);
-                //std::cerr << "releasing(" << s << ") #" << count << " bytes=" << bytes << std::endl;
+                
                 mgr.__free(s,block_size);
                 --aliasing::_(count);
             }
@@ -71,6 +71,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // create a new ingot
                     //----------------------------------------------------------
+
                     void *addr = mgr.__calloc(1,block_size);
                     ++aliasing::_(count);
                     return addr;

@@ -6,6 +6,7 @@
 #include "y/type/self-destruct.hpp"
 #include "y/type/block/zset.hpp"
 
+
 namespace upsylon {
 
     namespace memory {
@@ -25,16 +26,21 @@ namespace upsylon {
                         zArenas.zstore(a);
                     }
                 }
+
                 slots_vein.release(slot);
                 slot=0;
                 acquiring=releasing=0;
                 _bzset(chunk_size);
                 _bzset(slots_size);
                 _bzset(limit_size);
-
             }
 
 
+
+            static inline void * acquire_slots_with( vein &v )
+            {
+                return v.acquire();
+            }
 
             blocks:: blocks(const size_t usr_chunk_size,
                             const size_t usr_limit_size,
@@ -45,7 +51,7 @@ namespace upsylon {
             slots_size(most_significant_bit(chunk_size/sizeof(blocks::slot_type))),
             slots_mask(slots_size-1 ),
             slots_vein( usr_sys_quarry(chunk_size) ),
-            slot( static_cast<slot_type *>(slots_vein.acquire()) ),
+            slot( static_cast<slot_type *>(acquire_slots_with(slots_vein) ) ),
             acquiring(0),
             releasing(0),
             sharedQ(usr_sys_quarry),

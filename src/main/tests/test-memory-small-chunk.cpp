@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/memory/allocator/global.hpp"
+#include "y/type/utils.hpp"
 #include <iomanip>
 
 using namespace upsylon;
@@ -58,14 +59,23 @@ Y_UTEST(small_chunk)
             std::cerr << std::endl;
             mgr.__free(chunk_data,chunk_size);
         }
-
+        
 
 
 
         std::cerr << "<block_size=" << block_size << "/>" << std::endl << std::endl;
     }
 
-    Y_UTEST_SIZEOF(small::chunk);
+    if(false)
+    {
+        for(size_t block_size=1;block_size<=40;++block_size)
+        {
+            const size_t mcs = small::chunk::max_chunk_size_for(block_size);
+            const size_t bpc = min_of<size_t>(255,mcs/block_size);
+            std::cerr << std::setw(3) << small::chunk::min_chunk_size_for(block_size) << " : " << std::setw(3) << block_size << " : " << std::setw(6) << mcs << " => " << std::setw(3) << bpc << " blocks/chunk" << std::endl;
+        }
+    }
+
 
 }
 Y_UTEST_DONE()

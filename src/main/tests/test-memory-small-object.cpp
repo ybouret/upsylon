@@ -35,9 +35,11 @@ namespace {
         typedef dummy<N> dum_type;
 
         std::cerr << "sizeof( dummy<" << std::setw(3) <<  N << ">) = " << sizeof(dum_type) << std::endl;
-        std::cerr << small::chunk::max_chunk_size_for(sizeof(dum_type)) << std::endl;
         dum_type *d = new dum_type();
-        (void)d;
+        delete    d;
+        d = NULL;
+        delete d;
+        
     }
 
 }
