@@ -45,21 +45,21 @@ namespace upsylon {
             //
             //__________________________________________________________________
             template <typename HOST>
-            class mt : public hoard
+            class mt_proxy : public hoard
             {
             public:
                 //! setup with persistent lockable and HOST
-                inline explicit mt(lockable &l, HOST &usr) throw() :
+                inline explicit mt_proxy(lockable &l, HOST &usr) throw() :
                 hoard(l,usr.block_size),
                 host(usr)
                 {}
 
                 //! cleanup
-                inline virtual ~mt() throw() {}
+                inline virtual ~mt_proxy() throw() {}
 
             private:
                 HOST &host;
-                Y_DISABLE_COPY_AND_ASSIGN(mt);
+                Y_DISABLE_COPY_AND_ASSIGN(mt_proxy);
                 inline virtual void *on_acquire()                   { return host.acquire(); }
                 inline virtual void  on_release(void *addr) throw() { host.release(addr);    }
             };
