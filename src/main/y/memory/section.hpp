@@ -42,8 +42,6 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-
-
             section(void *data,const size_t size) throw();//!< create slice, size>=small_size
             ~section()     throw();                       //!< cleanup
 
@@ -51,10 +49,9 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-
             static size_t   bytes_to_hold(const size_t) throw(); //!< memory computation
             void            display()                     const; //!< display to debug
-            static section *release(void * &, size_t &) throw(); //!< release perviously allocated, get owner
+            static section *release(void * &, size_t &) throw(); //!< release previously allocated, get owner
             bool            is_free()             const throw(); //!< check section is free
 
             //! acquire at least n bytes
