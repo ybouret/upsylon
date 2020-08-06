@@ -34,7 +34,7 @@ namespace upsylon {
                  \param Z              a cache for zombie chunks
                  \param Q              a cache for power of two chunk_data
 
-                 - min_cs = max_of(chunk::min_chunk_size_for(block_size),stones::min_bytes)
+                 - min_cs = max_of(chunk::min_chunk_size_for(block_size),vein::min_bytes)
                  - max_cs = max_of(chunk::max_chunk_size_for(block_size),min_cs);
                  - compute chunk_exp2 and keep a reference of the associated stones
                  */
@@ -73,8 +73,9 @@ namespace upsylon {
                 arena       *prev;       //!< for list
                 
             private:
-                zcache<chunk> &zchunks;          //!< shared cache of chunks
-                stones        &zstones;          //!< shared cache of stones
+                zcache<chunk> &zchunks;   //!< shared cache of zombie chunks
+                vein          &deposit;   //!< shared cache of ingots
+
             public:
                 const size_t   blocks_per_chunk; //!< acquiring->provided_number
                 const size_t   reserved;         //!< sizeof=64/128

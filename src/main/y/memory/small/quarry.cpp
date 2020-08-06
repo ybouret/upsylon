@@ -29,7 +29,7 @@ namespace upsylon {
                 }
                 aliasing::_(undersized) = 0;
 
-                for(size_t i=stones::max_shift;i>=stones::min_shift;--i)
+                for(size_t i=vein::max_shift;i>=vein::min_shift;--i)
                 {
                     self_destruct(ore[i]);
                 }
@@ -43,25 +43,25 @@ namespace upsylon {
             wksp()
             {
                 memset(wksp,0,sizeof(wksp));
-                ore = aliasing::as<stones>(wksp);
-                for(size_t i=stones::min_shift;i<=stones::max_shift;++i)
+                ore = aliasing::as<vein>(wksp);
+                for(size_t i=vein::min_shift;i<=vein::max_shift;++i)
                 {
-                    new (ore+i) stones(i);
+                    new (ore+i) vein(i);
                 }
             }
 
             void  * quarry:: pull(const size_t shift)
             {
-                if(shift<stones::min_shift)
+                if(shift<vein::min_shift)
                 {
                     static global &mgr = global::instance();
-                    const  size_t  num = stones::one<<shift;
+                    const  size_t  num = vein::one<<shift;
                     aliasing::_(undersized) += num;
                     return mgr.__calloc(1,num);
                 }
                 else
                 {
-                    if(shift>stones::max_shift) throw libc::exception(ERANGE,"quarry::pull(shift>%lu)", (unsigned long) shift );
+                    if(shift>vein::max_shift) throw libc::exception(ERANGE,"quarry::pull(shift>%lu)", (unsigned long) shift );
                     return ore[shift].query();
                 }
 
@@ -70,11 +70,11 @@ namespace upsylon {
             void  quarry:: push(void *addr, const size_t shift) throw()
             {
                 assert(addr);
-                assert(shift<=stones::max_shift);
-                if(shift<stones::min_shift)
+                assert(shift<=vein::max_shift);
+                if(shift<vein::min_shift)
                 {
                     static global &mgr = global::location();
-                    const  size_t  num = stones::one<<shift;
+                    const  size_t  num = vein::one<<shift;
                     assert(num<=undersized);
                     aliasing::_(undersized) -= num;
                     return mgr.__free(addr,num);
@@ -85,14 +85,14 @@ namespace upsylon {
                 }
             }
 
-            stones & quarry:: operator[](const size_t shift) throw()
+            vein & quarry:: operator[](const size_t shift) throw()
             {
-                assert(shift<=stones::max_shift);
-                assert(shift>=stones::min_shift);
+                assert(shift<=vein::max_shift);
+                assert(shift>=vein::min_shift);
                 return ore[shift];
             }
 
-            stones & quarry:: operator()(const size_t chunk_size) throw()
+            vein & quarry:: operator()(const size_t chunk_size) throw()
             {
                 return ore[ exp2_of(chunk_size) ];
             }
@@ -102,18 +102,18 @@ namespace upsylon {
             {
                 os << "<quarry>" << std::endl;
                 os << "\t<undersized bytes=" << q.undersized << ">" << std::endl;
-                for(size_t shift=stones::min_shift;shift<=stones::max_shift;++shift)
+                for(size_t shift=vein::min_shift;shift<=vein::max_shift;++shift)
                 {
-                    const stones &s = q.ore[shift];
+                    const vein &s = q.ore[shift];
                     if(s.count)
                     {
-                        stones::width = quarry::widths[shift];
+                        vein::width = quarry::widths[shift];
                     }
                 }
 
-                for(size_t shift=stones::min_shift;shift<=stones::max_shift;++shift)
+                for(size_t shift=vein::min_shift;shift<=vein::max_shift;++shift)
                 {
-                    const stones &s = q.ore[shift];
+                    const vein &s = q.ore[shift];
                     if(s.count)
                     {
                         os << "\t" << s << std::endl;
@@ -127,11 +127,11 @@ namespace upsylon {
             size_t quarry::exp2_of(const size_t chunk_size) throw()
             {
                 assert( is_a_power_of_two(chunk_size) );
-                assert( chunk_size>=stones::min_bytes );
-                assert( chunk_size<=stones::max_bytes );
+                assert( chunk_size>=vein::min_bytes );
+                assert( chunk_size<=vein::max_bytes );
                 const size_t chunk_exp2 = integer_log2(chunk_size);
-                assert(chunk_exp2>=stones::min_shift);
-                assert(chunk_exp2<=stones::max_bytes);
+                assert(chunk_exp2>=vein::min_shift);
+                assert(chunk_exp2<=vein::max_bytes);
                 return chunk_exp2;
             }
         }

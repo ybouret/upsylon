@@ -17,10 +17,10 @@ Y_UTEST(small_vein)
     void        *reg[ 256 ];
     const size_t num = sizeof(reg)/sizeof(reg[0]);
 
-    for(size_t i=small::stones::min_shift;i<=14;++i)
+    for(size_t i=small::vein::min_shift;i<=14;++i)
     {
-        small::stones S(i);
-        std::cerr << "stones: " << S.bytes << std::endl;
+        small::vein S(i);
+        std::cerr << "vein: " << S.bytes << std::endl;
 
         size_t n=0;
         while(n<num)
@@ -56,8 +56,8 @@ Y_UTEST(small_vein)
         std::cerr << "|_has " << S.cache.size * S.bytes << " bytes" << std::endl;
 
     }
-    std::cerr << "small::stones::min_shift=" << small::stones::min_shift << std::endl;
-    std::cerr << "small::stones::max_shift=" << small::stones::max_shift << std::endl;
+    std::cerr << "small::vein::min_shift=" << small::vein::min_shift << std::endl;
+    std::cerr << "small::vein::max_shift=" << small::vein::max_shift << std::endl;
 
     
 }

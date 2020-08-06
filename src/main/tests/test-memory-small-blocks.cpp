@@ -39,8 +39,8 @@ Y_UTEST(small_blocks)
             std::cerr << " | chunk_size="        << std::setw(5) <<  blk.chunk_size;
             std::cerr << " | slots_size="        << std::setw(5) <<  blk.slots_size;
             std::cerr << " | load_factor="       << std::setw(3) <<  blk.load_factor();
-            std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.chunks.chunk_size << "," << std::setw(5) <<  blk.chunks.nodes_rise;
-            std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(5) <<  blk.arenas.nodes_rise;
+            std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.chunks.chunk_size << "," << std::setw(2) <<  blk.chunks.nodes_rise;
+            std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(2) <<  blk.arenas.nodes_rise;
             std::cerr << std::endl;
 
             //std::cerr << blk << std::endl;

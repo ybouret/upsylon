@@ -21,7 +21,7 @@ namespace upsylon {
             //! (de)allocate ingots of same 2^shift bytes
             //
             //__________________________________________________________________
-            class stones
+            class vein
             {
             public:
                 //______________________________________________________________
@@ -42,8 +42,8 @@ namespace upsylon {
                 //
                 // C++
                 //______________________________________________________________
-                stones(const size_t the_shift) throw(); //!< create stones for bytes=2^the_shift
-                ~stones() throw();                      //!< cleanup
+                vein(const size_t the_shift) throw(); //!< create vein for ingots of bytes=2^the_shift
+                ~vein() throw();                      //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -55,7 +55,7 @@ namespace upsylon {
                 size_t committed()      const throw(); //!< committed = count-slist.size
 
                 //! display
-                friend std::ostream & operator<<(std::ostream &, const stones &);
+                friend std::ostream & operator<<(std::ostream &, const vein &);
                 
                 //______________________________________________________________
                 //
@@ -67,7 +67,7 @@ namespace upsylon {
                 const size_t count; //!< bookkeeping of allocated stones
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(stones);
+                Y_DISABLE_COPY_AND_ASSIGN(vein);
                 void   release(ingot *) const throw(); //!< release uneeded stone
 
             };

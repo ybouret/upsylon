@@ -13,9 +13,9 @@ namespace upsylon {
 
         namespace small {
 
-            unsigned stones::width = 8;
+            unsigned vein::width = 8;
 
-            void  stones:: release(ingot *s) const throw()
+            void  vein:: release(ingot *s) const throw()
             {
                 static global &mgr = global::location();
                 assert(NULL!=s);
@@ -25,13 +25,13 @@ namespace upsylon {
             }
 
 
-            size_t stones:: committed() const throw()
+            size_t vein:: committed() const throw()
             {
                 assert(cache.size<=count);
                 return count-cache.size;
             }
 
-            stones:: ~stones() throw()
+            vein:: ~vein() throw()
             {
                 assert(cache.size<=count);
                 while(cache.size)
@@ -40,13 +40,13 @@ namespace upsylon {
                 }
                 if(count)
                 {
-                    std::cerr << "[small::stones@" << bytes <<"] missing #stone=" << count << " -> " << count*bytes << " bytes" << std::endl;
+                    std::cerr << "[small::vein@" << bytes <<"] missing #ingot=" << count << " -> " << count*bytes << " bytes" << std::endl;
                 }
                 aliasing::_(count) = 0;
             }
 
-            stones:: stones(const size_t usr_shift) throw() :
-            shift(usr_shift),
+            vein:: vein(const size_t the_shift) throw() :
+            shift(the_shift),
             bytes(one<<shift),
             cache(),
             count(0)
@@ -55,7 +55,7 @@ namespace upsylon {
                 assert(shift<=max_shift);
             }
 
-            void * stones:: query()
+            void * vein:: query()
             {
                 static global &mgr = global::instance();
                 if(cache.size)
@@ -78,18 +78,18 @@ namespace upsylon {
 
 
             
-            void stones:: store(void *addr) throw()
+            void vein:: store(void *addr) throw()
             {
                 assert(NULL!=addr);
                 memset(addr,0,sizeof(ingot));
                 (void)cache.store( static_cast<ingot *>(addr) );
             }
 
-            std::ostream & operator<<(std::ostream &os, const stones &s)
+            std::ostream & operator<<(std::ostream &os, const vein &s)
             {
                 os << std::dec;
                 os << "{2^" << std::left << std::setw(2) << s.shift << std::right << "=";
-                os << std::setw(stones::width) << s.bytes << ": ";
+                os << std::setw(vein::width) << s.bytes << ": ";
                 os <<  "used " << std::setw(3) << s.committed() << "/" << std::setw(3) << s.count;
                 const human_readable hr_used = s.committed() * s.bytes;
                 const human_readable hr_maxi = s.count * s.bytes;

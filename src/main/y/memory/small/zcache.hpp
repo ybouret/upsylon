@@ -158,7 +158,7 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(zcache);
                 struct part { part  *next; }; //!< binary layout for part
-                stones             &cache;    //!< for alloc/free of parts with same size
+                vein               &cache;    //!< for alloc/free of parts with same size
                 core::list_of<NODE> nodes;    //!< usable nodes
                 core::pool_of<part> parts;    //!< holding all nodes
 

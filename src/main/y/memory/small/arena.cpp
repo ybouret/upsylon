@@ -40,10 +40,10 @@ namespace upsylon {
                 assert(block_size>0);
                 const size_t the_min_chunk_size = chunk::min_chunk_size_for(block_size); assert(is_a_power_of_two(the_min_chunk_size));
                 const size_t the_max_chunk_size = chunk::max_chunk_size_for(block_size); assert(is_a_power_of_two(the_max_chunk_size));
-                assert(is_a_power_of_two(stones::min_bytes));
+                assert(is_a_power_of_two(vein::min_bytes));
 
 
-                const size_t min_cs = max_of(the_min_chunk_size,stones::min_bytes);
+                const size_t min_cs = max_of(the_min_chunk_size,vein::min_bytes);
                 const size_t max_cs = max_of(the_max_chunk_size,min_cs);
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }
@@ -66,7 +66,7 @@ namespace upsylon {
             next(0),
             prev(0),
             zchunks(Z),
-            zstones(Q(chunk_size)),
+            deposit(Q(chunk_size)),
             blocks_per_chunk(0),
             reserved(0)
             {
@@ -79,16 +79,16 @@ namespace upsylon {
             {
 
                 //--------------------------------------------------------------
-                // get an empty piece
+                // get an empty chunk
                 //--------------------------------------------------------------
                 chunk * curr = zchunks.query_nil();
                 
                 //--------------------------------------------------------------
-                // provide memory to this piece
+                // provide memory to this chunk
                 //--------------------------------------------------------------
                 try
                 {
-                    new (curr) chunk(block_size,zstones.query(),chunk_size);
+                    new (curr) chunk(block_size,deposit.query(),chunk_size);
                 }
                 catch(...)
                 {
@@ -131,7 +131,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // release memory into cache
                 //--------------------------------------------------------------
-                zstones.store(p->data);
+                deposit.store(p->data);
 
                 //--------------------------------------------------------------
                 // return to cache
