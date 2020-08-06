@@ -34,7 +34,10 @@ namespace upsylon {
                 // C++
                 //______________________________________________________________
 
-                //! build
+                //! create internal structure
+                /**
+                 \param usr_chunk_size the minimal chunk_size for internal table, caches and arena
+                 */
                 blocks(const size_t usr_chunk_size,
                        const size_t usr_limit_size,
                        quarry      &usr_sys_quarry);
@@ -86,12 +89,12 @@ namespace upsylon {
                 slot_type      *slot;
                 arena          *acquiring;
                 arena          *releasing;
-                quarry         &Q;
                 arena          *query(const size_t block_size);
 
             public:
-                zcache<chunk>   chunks;      //!< shared zombie chunks, built with chunk_size
-                zcache<arena>   arenas;      //!< shared zombie arenas, built with chunk_size
+                quarry         &sharedQ;      //!< shared quarry for all the internal chunk_size(s)
+                zcache<chunk>   zChunks;      //!< all the zombie chunks for all the live arenas
+                zcache<arena>   zArenas;      //!< all the zombie arenas for the internal hash table
              };
 
 

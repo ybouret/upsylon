@@ -22,7 +22,7 @@ namespace upsylon {
                     {
                         arena *a = entry.pop_back();
                         self_destruct(*a);
-                        arenas.store_nil(a);
+                        zArenas.store_nil(a);
                     }
                 }
 
@@ -48,9 +48,9 @@ namespace upsylon {
             slot( static_cast<slot_type *>(global::instance().__calloc(1,chunk_size) ) ),
             acquiring(0),
             releasing(0),
-            Q(usr_sys_quarry),
-            chunks(chunk_size,Q),
-            arenas(chunk_size,Q)
+            sharedQ(usr_sys_quarry),
+            zChunks(chunk_size,sharedQ),
+            zArenas(chunk_size,sharedQ)
             {
                 for(size_t i=0;i<slots_size;++i)
                 {
@@ -98,13 +98,13 @@ namespace upsylon {
                     //------------------------------------------------------
                     // create a new arena
                     //------------------------------------------------------
-                    arena *a = arenas.query_nil();
+                    arena *a = zArenas.query_nil();
                     try {
-                        new (a) arena(block_size,chunk_size,chunks,Q);
+                        new (a) arena(block_size,chunk_size,zChunks,sharedQ);
                     }
                     catch(...)
                     {
-                        arenas.store_nil(a);
+                        zArenas.store_nil(a);
                         throw;
                     }
 

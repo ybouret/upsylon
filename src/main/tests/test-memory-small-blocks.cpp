@@ -36,14 +36,13 @@ Y_UTEST(small_blocks)
             std::cerr << "\tlimit_size=" << std::setw(5) << limit_size << ":";
 
             small::blocks blk(chunk_size,limit_size,Q);
-            std::cerr << " | chunk_size="        << std::setw(5) <<  blk.chunk_size;
-            std::cerr << " | #slots="        << std::setw(3) <<  blk.slots_size;
+            std::cerr << " | chunk_size=" << std::setw(5) <<  blk.chunk_size;
+            std::cerr << " | #slots="     << std::setw(3) <<  blk.slots_size;
             std::cerr << " | load="       << std::setw(3) <<  blk.load_factor();
-            std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.chunks.chunk_size << "," << std::setw(2) <<  blk.chunks.nodes_rise;
-            std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.arenas.chunk_size << "," << std::setw(2) <<  blk.arenas.nodes_rise;
+            std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.zChunks.chunk_size << "," << std::setw(2) <<  blk.zChunks.nodes_rise;
+            std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.zArenas.chunk_size << "," << std::setw(2) <<  blk.zArenas.nodes_rise;
             std::cerr << std::endl;
-
-            //std::cerr << blk << std::endl;
+            
 
             const size_t max_size = limit_size+1;
             const size_t bps      = 500;
