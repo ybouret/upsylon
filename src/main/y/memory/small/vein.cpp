@@ -28,16 +28,16 @@ namespace upsylon {
 
             size_t vein:: committed() const throw()
             {
-                assert(cache.size<=count);
-                return count-cache.size;
+                assert(chest.size<=count);
+                return count-chest.size;
             }
 
             vein:: ~vein() throw()
             {
-                assert(cache.size<=count);
-                while(cache.size)
+                assert(chest.size<=count);
+                while(chest.size)
                 {
-                    free( cache.query() );
+                    free( chest.query() );
                 }
                 if(count)
                 {
@@ -49,7 +49,7 @@ namespace upsylon {
             vein:: vein(const size_t the_shift) throw() :
             block_exp2(the_shift),
             block_size(one<<block_exp2),
-            cache(),
+            chest(),
             count(0)
             {
                 assert(block_exp2>=min_shift);
@@ -59,12 +59,12 @@ namespace upsylon {
             void * vein:: acquire()
             {
                 static global &mgr = global::instance();
-                if(cache.size)
+                if(chest.size)
                 {
                     //----------------------------------------------------------
                     // return an old stone
                     //----------------------------------------------------------
-                    return cache.query();
+                    return chest.query();
                 }
                 else
                 {
@@ -83,7 +83,7 @@ namespace upsylon {
             {
                 assert(NULL!=addr);
                 memset(addr,0,sizeof(ingot));
-                (void)cache.store( static_cast<ingot *>(addr) );
+                (void)chest.store( static_cast<ingot *>(addr) );
             }
 
             std::ostream & operator<<(std::ostream &os, const vein &s)

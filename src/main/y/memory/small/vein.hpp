@@ -32,7 +32,7 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef core::pool_of<ingot> cache_type;                 //!< alias
+                typedef core::pool_of<ingot> chest_type;                 //!< alias
                 static  const size_t one       = 1;                      //!< alias
                 static  const size_t min_shift = ilog2_of<ingot>::value; //!< to hold a stone
                 static  const size_t min_bytes = one << min_shift;       //!< to hold a stone
@@ -67,8 +67,8 @@ namespace upsylon {
                 //______________________________________________________________
                 const size_t block_exp2; //!< block_size = 1 << block_exp2
                 const size_t block_size; //!< block_size for each ingot
-                cache_type   cache; //!< available ingots
-                const size_t count; //!< bookkeeping of allocated ingot
+                chest_type   chest;      //!< available ingots
+                const size_t count;      //!< bookkeeping of allocated ingot
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(vein);

@@ -58,7 +58,7 @@ Y_UTEST(small_vein)
             reg[n] = 0;
         }
         Y_ASSERT(0==n);
-        std::cerr << "|_has " << S.cache.size * S.block_size << " bytes" << std::endl;
+        std::cerr << "|_has " << S.chest.size * S.block_size << " bytes" << std::endl;
     }
     
     std::cerr << "small::vein::min_shift=" << small::vein::min_shift << std::endl;
