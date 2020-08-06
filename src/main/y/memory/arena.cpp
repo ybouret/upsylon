@@ -2,6 +2,7 @@
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/os/error.hpp"
+#include "y/code/base2.hpp"
 
 #include <iostream>
 

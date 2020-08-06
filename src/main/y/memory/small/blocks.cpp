@@ -1,6 +1,7 @@
 
 #include "y/memory/small/blocks.hpp"
 #include "y/type/utils.hpp"
+#include "y/code/base2.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/type/block/zset.hpp"
@@ -42,7 +43,7 @@ namespace upsylon {
             oversized(0),
             chunk_size( next_power_of_two( max_of(usr_chunk_size,usr_limit_size,min_chunk_size) ) ),
             limit_size(usr_limit_size),
-            slots_size(most_significant_bit_mask(chunk_size/sizeof(blocks::slot_type))),
+            slots_size(most_significant_bit(chunk_size/sizeof(blocks::slot_type))),
             slots_mask(slots_size-1 ),
             slot( static_cast<slot_type *>(global::instance().__calloc(1,chunk_size) ) ),
             acquiring(0),

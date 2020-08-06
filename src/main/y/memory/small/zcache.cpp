@@ -1,6 +1,7 @@
 
 #include "y/memory/small/zcache.hpp"
 #include "y/type/utils.hpp"
+#include "y/code/base2.hpp"
 #include <iostream>
 
 namespace upsylon {

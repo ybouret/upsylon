@@ -3,6 +3,7 @@
 #include "y/type/utils.hpp"
 #include "y/type/cswap.hpp"
 #include "y/mpl/memory.hpp"
+#include "y/code/base2.hpp"
 
 
 #include "y/os/endian.hpp"

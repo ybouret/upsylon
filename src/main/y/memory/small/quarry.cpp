@@ -2,6 +2,7 @@
 #include "y/memory/small/quarry.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/utils.hpp"
+#include "y/code/base2.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/exceptions.hpp"

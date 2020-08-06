@@ -29,6 +29,8 @@ namespace upsylon
     template <> struct ilog2<256> { enum { value = 8  }; };
     //! sizeof=512
     template <> struct ilog2<512> { enum { value = 9  }; };
+    //! sizeof=1024
+    template <> struct ilog2<1024> { enum { value = 10  }; };
 
     //! proxy to get ilog2 using the type size
     template <typename T>

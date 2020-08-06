@@ -5,6 +5,7 @@
 #include "y/memory/nugget.hpp"
 #include "y/memory/arena-impl.hpp"
 #include "y/object-parameters.hpp"
+#include "y/code/base2.hpp"
 #include "y/core/list.hpp"
 #include "y/os/error.hpp"
 

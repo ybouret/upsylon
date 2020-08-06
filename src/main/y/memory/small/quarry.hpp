@@ -16,7 +16,7 @@ namespace upsylon {
             //__________________________________________________________________
             //
             //
-            //! quarry of stones: handle (raw/dirty) power of two areas
+            //! quarry of stones: handle (raw/dirty) power of two memory area
             //
             //__________________________________________________________________
             class quarry
@@ -28,7 +28,7 @@ namespace upsylon {
                 //______________________________________________________________
                 static const size_t   max_stones = stones::max_shift+1;          //!< alias
                 static const size_t   wksp_bytes = max_stones * sizeof(stones);  //!< alias
-                static const unsigned widths[64];                                //!< output width in decimal for bytes
+                static const unsigned widths[64];                                //!< helper: output width in decimal for bytes
 
                 //______________________________________________________________
                 //

@@ -8,6 +8,7 @@
 #include "y/container/container.hpp"
 #include "y/sort/merge.hpp"
 #include "y/type/block/swap.hpp"
+#include "y/code/base2.hpp"
 
 namespace upsylon
 {

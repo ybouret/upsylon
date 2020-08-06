@@ -36,52 +36,7 @@ namespace upsylon
     //! default squared value
     template <typename T> inline T square_of( const T a ) { return a*a; }
 
-    //! power of two detection
-    template <typename T> inline bool is_a_power_of_two( T v ) throw()
-    {
-        static const T one(1);
-        return (v != 0) && !( v & (v - one) );
-    }
-
-    //! next power of two \todo check overflow
-    template <typename T>
-    inline T next_power_of_two( T v ) throw()
-    {
-        assert(v>0);
-        --v;
-        for( size_t shift = 1; shift <= (sizeof(T)<<2); shift <<= 1 )
-        {
-            v |= ( v >> shift );
-        }
-        return ++v;
-    }
-
-    //! is prev_power_of_two if v>0
-    template <typename T>
-    inline T most_significant_bit_mask(const T v) throw()
-    {
-        T mask = T(0x1) << (sizeof(T)*8-1);
-        while(mask)
-        {
-            if(0!=(v&mask)) return mask;
-            mask >>= 1;
-        }
-        return 0;
-    }
-
-    //! po2=1<<shift
-    template <typename T>
-    inline unsigned integer_log2( T po2 ) throw()
-    {
-        assert( is_a_power_of_two(po2) );
-        unsigned res = 0;
-        while(po2>1)
-        {
-            po2>>=1;
-            ++res;
-        }
-        return res;
-    }
+   
    
    
 

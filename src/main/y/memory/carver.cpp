@@ -5,6 +5,7 @@
 #include "y/exception.hpp"
 #include "y/os/static-check.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/code/base2.hpp"
 
 #include <iostream>
 #include <cstring>

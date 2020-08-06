@@ -3,6 +3,7 @@
 #include "y/core/list.hpp"
 #include "y/type/utils.hpp"
 #include "y/object.hpp"
+#include "y/code/base2.hpp"
 
 using namespace upsylon;
 

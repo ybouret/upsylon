@@ -1,6 +1,7 @@
 
 #include "y/memory/small/arena.hpp"
 #include "y/type/utils.hpp"
+#include "y/code/base2.hpp"
 #include "y/type/aliasing.hpp"
 #include <iostream>
 

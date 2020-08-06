@@ -2,6 +2,7 @@
 #include "y/mpl/natural.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
+#include "y/code/base2.hpp"
 
 #include <cerrno>
 #include <cstring>

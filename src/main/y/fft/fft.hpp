@@ -4,6 +4,7 @@
 
 #include "y/fft/xbitrev.hpp"
 #include "y/type/utils.hpp"
+#include "y/code/base2.hpp"
 #include <cmath>
 
 namespace upsylon
