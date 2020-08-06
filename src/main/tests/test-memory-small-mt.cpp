@@ -1,5 +1,5 @@
 
-#include "y/memory/small/hoard.hpp"
+#include "y/memory/small/stock.hpp"
 #include "y/memory/small/quarry.hpp"
 #include "y/memory/small/blocks.hpp"
 
@@ -24,6 +24,7 @@ namespace
         {
             reg[i] = h.acquire();
         }
+
         alea.shuffle(reg,num);
         for(size_t i=0;i<num;++i)
         {
@@ -31,24 +32,44 @@ namespace
             reg[i] = 0;
         }
 
+        small::stock s(h);
+        s.reserve(300);
+        std::cerr << "available: " << s.available() << std::endl;
+        for(size_t i=0;i<num;++i)
+        {
+            reg[i] = s.query();
+        }
+
+        std::cerr << "available: " << s.available() << std::endl;
+
+        alea.shuffle(reg,num);
+        for(size_t i=0;i<num;++i)
+        {
+            s.store(reg[i]);
+            reg[i] = 0;
+        }
+        std::cerr << "available: " << s.available() << std::endl;
 
     }
 }
 
 Y_UTEST(small_mt)
 {
+    std::cerr << "stock::min_block_size=" << small::stock::min_block_size << std::endl;
     concurrent::fake_lock access;
 
     small::quarry Q;
     small::blocks B(4096,512,Q);
+
+
     {
-        small::mt_proxy<small::vein> v64(access, Q(64) );
+        small::mt<small::vein> v64(access, Q(64) );
         doMT(v64);
     }
     std::cerr << Q << std::endl;
 
     {
-        small::mt_proxy<small::arena> a64(access,B[64]);
+        small::mt<small::arena> a64(access,B[64]);
         doMT(a64);
     }
     std::cerr << Q << std::endl;
