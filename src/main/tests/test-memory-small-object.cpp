@@ -1,6 +1,5 @@
 
 #include "y/memory/small/object.hpp"
-#include "y/memory/small/object-hoard.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -37,11 +36,20 @@ namespace {
         typedef dummy<N> dum_type;
 
         std::cerr << "sizeof( dummy<" << std::setw(3) <<  N << ">) = " << sizeof(dum_type) << std::endl;
-        dum_type *d = new dum_type();
-        delete    d;
-        d = NULL;
-        delete d;
-        
+        {
+            dum_type *d = new dum_type();
+            delete    d;
+            d = NULL;
+            delete d;
+        }
+
+        {
+            dum_type *d = new dum_type[10];
+            delete []d;
+            d= NULL;
+            delete []d;
+        }
+
     }
 
 }
