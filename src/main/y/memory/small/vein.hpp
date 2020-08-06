@@ -1,10 +1,10 @@
 
 //! \file
 
-#ifndef Y_MEMORY_SMALL_STONES_INCLUDED
-#define Y_MEMORY_SMALL_STONES_INCLUDED 1
+#ifndef Y_MEMORY_SMALL_VEIN_INCLUDED
+#define Y_MEMORY_SMALL_VEIN_INCLUDED 1
 
-#include "y/memory/small/stone.hpp"
+#include "y/memory/small/ingot.hpp"
 #include "y/code/ilog2.hpp"
 #include "y/core/pool.hpp"
 #include <iosfwd>
@@ -18,7 +18,7 @@ namespace upsylon {
             //__________________________________________________________________
             //
             //
-            //! (de)allocate stones of same 2^shift bytes
+            //! (de)allocate ingots of same 2^shift bytes
             //
             //__________________________________________________________________
             class stones
@@ -28,9 +28,9 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef core::pool_of<stone> cache_type;                 //!< alias
+                typedef core::pool_of<ingot> cache_type;                 //!< alias
                 static  const size_t one       = 1;                      //!< alias
-                static  const size_t min_shift = ilog2_of<stone>::value; //!< to hold a stone
+                static  const size_t min_shift = ilog2_of<ingot>::value; //!< to hold a stone
                 static  const size_t min_bytes = one << min_shift;       //!< to hold a stone
                 static  const size_t max_shift = (sizeof(size_t)<<3)-1;  //!< theoretical
                 static  const size_t max_bytes = one << max_shift;       //!< theoretical
@@ -52,7 +52,6 @@ namespace upsylon {
 
                 void * query();                        //!< get/create a stone, set clean status
                 void   store(void *)          throw(); //!< store a previous stone
-                void   release(stone *) const throw(); //!< release uneeded stone
                 size_t committed()      const throw(); //!< committed = count-slist.size
 
                 //! display
@@ -69,6 +68,8 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(stones);
+                void   release(ingot *) const throw(); //!< release uneeded stone
+
             };
 
         }

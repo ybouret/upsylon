@@ -53,7 +53,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(small_zcache);
     Y_UTEST(small_blocks);   
     Y_UTEST(small_compact);
-    Y_UTEST(small_stones);
+    Y_UTEST(small_vein);
     Y_UTEST(small_quarry);
 
 

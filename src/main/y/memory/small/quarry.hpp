@@ -4,7 +4,7 @@
 #ifndef Y_MEMORY_SMALL_QUARRY_INCLUDED
 #define Y_MEMORY_SMALL_QUARRY_INCLUDED 1
 
-#include "y/memory/small/stones.hpp"
+#include "y/memory/small/vein.hpp"
 #include "y/code/round.hpp"
 
 namespace upsylon {

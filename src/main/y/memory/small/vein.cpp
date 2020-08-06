@@ -1,4 +1,4 @@
-#include "y/memory/small/stones.hpp"
+#include "y/memory/small/vein.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/code/hr-ints.hpp"
@@ -15,7 +15,7 @@ namespace upsylon {
 
             unsigned stones::width = 8;
 
-            void  stones:: release(stone *s) const throw()
+            void  stones:: release(ingot *s) const throw()
             {
                 static global &mgr = global::location();
                 assert(NULL!=s);
@@ -81,8 +81,8 @@ namespace upsylon {
             void stones:: store(void *addr) throw()
             {
                 assert(NULL!=addr);
-                memset(addr,0,sizeof(stone));
-                (void)cache.store( static_cast<stone *>(addr) );
+                memset(addr,0,sizeof(ingot));
+                (void)cache.store( static_cast<ingot *>(addr) );
             }
 
             std::ostream & operator<<(std::ostream &os, const stones &s)

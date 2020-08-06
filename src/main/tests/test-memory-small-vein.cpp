@@ -1,5 +1,5 @@
 
-#include "y/memory/small/stones.hpp"
+#include "y/memory/small/vein.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string/convert.hpp"
@@ -11,7 +11,7 @@ using namespace memory;
 
  
 
-Y_UTEST(small_stones)
+Y_UTEST(small_vein)
 {
 
     void        *reg[ 256 ];

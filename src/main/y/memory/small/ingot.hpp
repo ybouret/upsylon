@@ -12,11 +12,11 @@ namespace upsylon {
 
         namespace small {
 
-            //! binary layout for a stone
-            struct stone
+            //! binary layout for an ingot
+            struct ingot
             {
-                stone *next; //!< for list/pool
-                stone *prev; //!< for list
+                ingot *next; //!< for list/pool
+                ingot *prev; //!< for list
             };
 
         }

@@ -89,7 +89,7 @@ test-memory-small-chunk.cpp
 test-memory-small-arena.cpp
 test-memory-small-zcache.cpp
 test-memory-small-blocks.cpp
-test-memory-small-stones.cpp
+test-memory-small-vein.cpp
 test-memory-small-quarry.cpp
 )
 ADD_TEST(mem:chunk        test-main chunk)
@@ -120,7 +120,7 @@ ADD_TEST(mem:small:arena   test-main small_arena)
 ADD_TEST(mem:small:zcache  test-main small_zcache)
 ADD_TEST(mem:small:blocks  test-main small_blocks)
 ADD_TEST(mem:small:compact test-main small_compact)
-ADD_TEST(mem:small:stones  test-main small_stones)
+ADD_TEST(mem:small:vei  n  test-main small_vein)
 ADD_TEST(mem:small:quarry  test-main small_quarry)
 
 SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
