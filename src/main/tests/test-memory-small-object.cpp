@@ -1,5 +1,7 @@
 
 #include "y/memory/small/object.hpp"
+#include "y/memory/small/dyadic-allocator.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include <iomanip>
@@ -52,6 +54,12 @@ namespace {
 
     }
 
+    struct blk_t
+    {
+        void  *addr;
+        size_t size;
+    };
+
 }
 
 
@@ -67,25 +75,53 @@ Y_UTEST(small_object)
     const size_t exp2_last=10;
     const size_t count    = 16;
 
-    void *addr[exp2_last][count];
-
-    memset(addr,0,sizeof(addr));
-    for(size_t exp2=0;exp2<exp2_last;++exp2)
     {
-        for(size_t j=0;j<count;++j)
+        void *addr[exp2_last][count];
+
+        memset(addr,0,sizeof(addr));
+        for(size_t exp2=0;exp2<exp2_last;++exp2)
         {
-            addr[exp2][j] = mgr.dyadic_acquire(exp2);
+            for(size_t j=0;j<count;++j)
+            {
+                addr[exp2][j] = mgr.dyadic_acquire(exp2);
+            }
+            alea.shuffle(addr[exp2],count);
         }
-        alea.shuffle(addr[exp2],count);
-    }
-    for(size_t exp2=0;exp2<exp2_last;++exp2)
-    {
-        for(size_t j=0;j<count;++j)
+        for(size_t exp2=0;exp2<exp2_last;++exp2)
         {
-            mgr.dyadic_release(addr[exp2][j],exp2);
+            for(size_t j=0;j<count;++j)
+            {
+                mgr.dyadic_release(addr[exp2][j],exp2);
+            }
         }
     }
 
+    std::cerr << mgr.Quarry << std::endl;
+
+    {
+        small::dyadic_allocator D(mgr);
+        blk_t        reg[32];
+        const size_t num = sizeof(reg)/sizeof(reg[0]);
+
+        for(size_t i=0;i<num;++i)
+        {
+            reg[i].addr = 0;
+            reg[i].size = alea.leq(10000);
+        }
+        alea.shuffle(reg, num);
+        for(size_t i=0;i<num;++i)
+        {
+            std::cerr << std::setw(5)<< reg[i].size;
+            reg[i].addr = D.acquire( reg[i].size );
+            std::cerr << " -> " << std::setw(5) << reg[i].size << std::endl;
+        }
+        alea.shuffle(reg,num);
+        for(size_t i=0;i<num;++i)
+        {
+            D.release(reg[i].addr, reg[i].size);
+        }
+
+    }
 
     std::cerr << mgr.Quarry << std::endl;
 
