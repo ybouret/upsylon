@@ -59,8 +59,7 @@ namespace upsylon {
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const arena &);
 
-                //! chunk_size = deposit.block_size
-                size_t chunk_size() const throw();
+                
 
             private:
                 chunk               *acquiring; //!< current acquiring piece
@@ -71,6 +70,7 @@ namespace upsylon {
 
             public:
                 const size_t block_size; //!< the block size
+                const size_t chunk_size; //!< adapted for block_size
                 arena       *next;       //!< for list
                 arena       *prev;       //!< for list
                 
