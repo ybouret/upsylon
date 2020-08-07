@@ -14,7 +14,7 @@ namespace upsylon
     {
 
         //! object base class
-        class Object : public counted_object
+        class Object : public object, public counted
         {
         public:
             explicit Object() throw(); //!< constructor

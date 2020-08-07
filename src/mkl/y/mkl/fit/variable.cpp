@@ -11,11 +11,11 @@ namespace upsylon {
 
             Variable:: ~Variable() throw() {}
 
-            Variable:: Variable(const string &id) : counted_object(), name(id) {}
+            Variable:: Variable(const string &id) :  name(id) {}
 
-            Variable:: Variable(const char *id) : counted_object(), name(id) {}
+            Variable:: Variable(const char *id) :  name(id) {}
 
-            Variable:: Variable(const Variable &other) : counted_object(), name(other.name) {}
+            Variable:: Variable(const Variable &other) : object(), counted(), name(other.name) {}
 
             const string & Variable:: key() const throw()
             {

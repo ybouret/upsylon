@@ -30,6 +30,7 @@ namespace upsylon {
         }
 
         Area:: Area(const Area &a) throw() :
+        object(),
         Object(),
         w(a.w),
         h(a.h),

@@ -151,7 +151,7 @@ template <> const TYPE & Value::as<TYPE>() const throw() { assert(Is##TYPE==type
         Array::  Array() throw() : _Array() {}
         Array:: ~Array() throw() {}
         
-        Array:: Array(const Array &other) :  collection(), addressable<Value>(), counted_object(), _Array(other) {}
+        Array:: Array(const Array &other) :  collection(), addressable<Value>(), object(), counted_object(), _Array(other) {}
 
         Array:: Array(const size_t n) : collection(), _Array(n,as_capacity)
         {

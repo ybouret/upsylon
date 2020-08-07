@@ -22,7 +22,7 @@ namespace upsylon {
             //
             //
             //==================================================================
-            class Variable : public counted_object
+            class Variable : public object, public counted
             {
             public:
                 //==============================================================

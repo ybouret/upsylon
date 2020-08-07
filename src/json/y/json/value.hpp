@@ -122,7 +122,7 @@ namespace upsylon
         };
         
         //! base class for Pair
-        class _Pair : public counted_object
+        class _Pair : public object, public counted
         {
         public:
             typedef intr_ptr<string,_Pair> Pointer; //!< alias

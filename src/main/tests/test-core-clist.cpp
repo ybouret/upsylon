@@ -7,7 +7,7 @@ using namespace upsylon;
 
 namespace {
 
-    class dummy : public object{
+    class dummy : public object {
 
     public:
         dummy *next;
@@ -18,7 +18,7 @@ namespace {
 
         }
 
-        inline dummy(const dummy &d) throw() : next(0), prev(0), data( d.data ) {}
+        inline dummy(const dummy &d) throw() : object(), next(0), prev(0), data( d.data ) {}
 
         inline virtual ~dummy() throw()
         {
