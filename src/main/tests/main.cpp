@@ -98,7 +98,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(sequence);
     Y_UTEST(pipe);
     Y_UTEST(arrays);
-    Y_UTEST(dyadic);
     Y_UTEST(endian);
     Y_UTEST(key_address);
     Y_UTEST(addressable);

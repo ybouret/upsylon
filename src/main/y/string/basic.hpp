@@ -65,7 +65,7 @@ do { for(size_t izero=(S).size_;izero<=(S).maxi_;++izero) \
 #endif
 
     //! default fields initialisation
-#define Y_CORE_STRING_CTOR0()      counted_object(), collection(), memory::rw_buffer(), dynamic(), ios::serializable(), upsylon::chainable<T>(), addr_(0)
+#define Y_CORE_STRING_CTOR0()      object(), counted_object(), collection(), memory::rw_buffer(), dynamic(), ios::serializable(), upsylon::chainable<T>(), addr_(0)
 
     //! string constructor to hold SIZE
 #define Y_CORE_STRING_CTOR(SIZE)   Y_CORE_STRING_CTOR0(), size_(SIZE), maxi_(0), items(size_+1), bytes(0)

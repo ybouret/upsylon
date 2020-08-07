@@ -37,6 +37,7 @@ namespace upsylon
     }
 
     uuid:: uuid( const uuid &other ) throw() :
+    object(),
     counted_object(),
     memory::ro_buffer(),
     byte()

@@ -29,6 +29,7 @@ namespace upsylon
     }
 
 #define Y_DIGEST_CTOR(SZ)      \
+object(),                      \
 counted_object(),              \
 memory::rw_buffer(),           \
 ios::serializable(),           \

@@ -34,7 +34,7 @@ namespace upsylon
         //! destructor
         inline virtual ~counted_object() throw() {}
         //! constructor
-        inline explicit counted_object() throw() {}
+        inline explicit counted_object() throw() : object() {}
     private:
         Y_DISABLE_COPY_AND_ASSIGN(counted_object);
     };
