@@ -49,6 +49,10 @@ namespace upsylon {
             }
 
 
+            size_t arena:: chunk_size() const throw()
+            {
+                return deposit.block_size;
+            }
 
             
 
@@ -62,11 +66,10 @@ namespace upsylon {
             available(0),
             chunks(),
             block_size( the_block_size ),
-            chunk_size( chunk_size_for(block_size,req_chunk_size) ),
             next(0),
             prev(0),
             zchunks(Z),
-            deposit(Q(chunk_size)),
+            deposit(Q(chunk_size_for(block_size,req_chunk_size))),
             blocks_per_chunk(0),
             reserved(0)
             {
@@ -88,7 +91,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 try
                 {
-                    new (curr) chunk(block_size,deposit.acquire(),chunk_size);
+                    new (curr) chunk(block_size,deposit.acquire(),deposit.block_size);
                 }
                 catch(...)
                 {
@@ -405,7 +408,7 @@ namespace upsylon {
 
             std::ostream & operator<<( std::ostream &os, const arena &a)
             {
-                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size << "  blocks_per_chunk=" << a.blocks_per_chunk << ">" << std::endl;
+                os << "\t<arena block_size=" << a.block_size << " chunk_size=" << a.chunk_size() << "  blocks_per_chunk=" << a.blocks_per_chunk << ">" << std::endl;
                 os << "\t  <chunks used=" << a.chunks.size << ">" << std::endl;
                 size_t j=0;
                 bool   r=false;
