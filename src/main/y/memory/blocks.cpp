@@ -1,3 +1,4 @@
+#if 1
 #include "y/memory/blocks.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/utils.hpp"
@@ -174,4 +175,4 @@ namespace upsylon
     }
 
 }
-
+#endif
