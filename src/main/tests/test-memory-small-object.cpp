@@ -1,9 +1,9 @@
 
 #include "y/memory/small/object.hpp"
-
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include <iomanip>
+#include <cstring>
 
 using namespace upsylon;
 using namespace memory;

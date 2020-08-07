@@ -7,7 +7,7 @@
 #include "y/memory/small/objects.hpp"
 #include "y/memory/small/hoard.hpp"
 #include "y/concurrent/singleton.hpp"
-#include "y/longevities.hpp"
+#include "y/type/ints.hpp"
 
 namespace upsylon {
 
@@ -77,7 +77,7 @@ namespace upsylon {
                 }
 
                 //! array-like delete
-                static inline void  operator delete[] ( void *p, size_t block_size ) throw()
+                static inline void  operator delete[] (void *p, size_t block_size) throw()
                 {
                     assert(block_size>0);
                     if(NULL!=p)
@@ -136,7 +136,7 @@ namespace upsylon {
                 class supply : public singleton<supply>, public objects
                 {
                 public:
-                    static const at_exit::longevity life_time = longevity_for::memory_object;
+                    static const at_exit::longevity life_time = limit_of<at_exit::longevity>::maximum-1; //!< behind global::lifetime
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(supply);
