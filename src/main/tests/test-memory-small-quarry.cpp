@@ -131,7 +131,7 @@ Y_UTEST(small_quarry)
             block &b = blk[i];
             b.bytes  = i>0 ? alea.leq(1000) : 0;
             b.u8     = A.acquire_bytes(b.bytes,b.shift);
-            Y_ASSERT(1<<b.shift==b.bytes);
+            Y_ASSERT( (size_t(1)<<b.shift)==b.bytes);
         }
         alea.shuffle(blk,num);
 
