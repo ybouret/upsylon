@@ -30,6 +30,7 @@ namespace upsylon
         }
         
         Key:: Key( const Key &other ) :
+        object(),
         counted_object(),
         ios::serializable(),
         modulus( other.modulus ),
@@ -85,6 +86,7 @@ namespace upsylon
         }
         
         PublicKey:: PublicKey( const PublicKey &other ) :
+        object(),
         Key(other),
         publicExponent( other.publicExponent )
         {
@@ -179,6 +181,7 @@ namespace upsylon
 
 
         PrivateKey:: PrivateKey( const PrivateKey &other ) :
+        object(),
         Key(other),
         publicExponent ( other.publicExponent  ),
         privateExponent( other.privateExponent ),

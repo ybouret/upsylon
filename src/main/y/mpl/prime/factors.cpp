@@ -57,6 +57,7 @@ namespace upsylon
         }
 
         prime_factors:: prime_factors(const prime_factors &other) :
+        object(),
         number_type(),
         factors( other.factors.size(), as_capacity )
         {

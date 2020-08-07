@@ -23,6 +23,7 @@ namespace upsylon
         }
 
         prime_factor:: prime_factor( const prime_factor &other ) :
+        object(),
         number_type(),
         p( other.p ),
         n( other.n )

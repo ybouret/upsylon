@@ -16,6 +16,7 @@ namespace upsylon {
             }
 
             Segment::  Segment(const Segment &_ ) throw() :
+            object(),
             head(_.head),
             tail(_.tail),
             next(0),
