@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_MEMORY_SMALL_QUARRY_INCLUDED
@@ -57,7 +56,7 @@ namespace upsylon {
                 //
                 // helpers
                 //______________________________________________________________
-                static size_t         exp2_of( const size_t chunk_size ) throw(); //!< chunk_size = 1 << shift
+                static size_t         exp2_of( const size_t chunk_size ) throw(); //!< chunk_size = 1 << exp2_of
                 friend std::ostream & operator<<(std::ostream &, const quarry &); //!< display
 
             private:
@@ -73,6 +72,7 @@ namespace upsylon {
                 
             private:
                 uint64_t      wksp[ Y_U64_FOR_SIZE(wksp_size) ];
+
 
             };
 
