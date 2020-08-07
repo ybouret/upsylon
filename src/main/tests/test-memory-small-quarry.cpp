@@ -16,10 +16,47 @@ namespace {
 
     struct block
     {
-        void  *entry;
+        union {
+            void    *entry;
+            uint8_t *u8;
+        };
+        size_t   bytes;
+        size_t   shift;
+    };
+
+    template <typename T>
+    struct block_of
+    {
+        T     *entry;
+        size_t count;
         size_t bytes;
         size_t shift;
     };
+
+    template <typename T>
+    static inline void do_test_with( small::quarry &Q )
+    {
+        std::cerr << std::endl;
+        std::cerr << "<typed quarry_allocator>" << std::endl;
+        concurrent::fake_lock   L;
+        small::quarry_allocator A(L,Q);
+
+        block_of<T>   blk[1024];
+        const size_t  num = sizeof(blk)/sizeof(blk[0]);
+
+        for(size_t i=0;i<num;++i)
+        {
+            blk[i].count = alea.leq(100);
+            blk[i].entry = A.acquire_field<T>(blk[i].count,blk[i].bytes,blk[i].shift);
+        }
+
+        alea.shuffle(blk,num);
+        for(size_t i=0;i<num;++i)
+        {
+            A.release_field(blk[i].entry,blk[i].count,blk[i].bytes,blk[i].shift);
+        }
+
+    }
 
 }
 
@@ -92,8 +129,8 @@ Y_UTEST(small_quarry)
         for(size_t i=0;i<num;++i)
         {
             block &b = blk[i];
-            b.bytes  = alea.leq(1000);
-            b.entry  = A.acquire(b.bytes,b.shift);
+            b.bytes  = i>0 ? alea.leq(1000) : 0;
+            b.u8     = A.acquire_bytes(b.bytes,b.shift);
             Y_ASSERT(1<<b.shift==b.bytes);
         }
         alea.shuffle(blk,num);
@@ -101,10 +138,20 @@ Y_UTEST(small_quarry)
         for(size_t i=0;i<num;++i)
         {
             block &b = blk[i];
-            A.release(b.entry, b.bytes, b.shift);
+            A.release_bytes(b.u8, b.bytes, b.shift);
         }
 
     }
+
+    {
+        do_test_with<uint8_t>(Q);
+        do_test_with<float>(Q);
+        do_test_with<double>(Q);
+    }
+
+
+
+
 
     std::cerr << Q << std::endl;
 

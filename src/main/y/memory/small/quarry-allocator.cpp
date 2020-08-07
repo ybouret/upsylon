@@ -76,6 +76,20 @@ namespace upsylon {
             }
 
 
+            uint8_t * quarry_allocator:: acquire_bytes(size_t  &bytes, size_t &shift)
+            {
+                return static_cast<uint8_t*>( acquire(bytes,shift) );
+            }
+
+            void quarry_allocator:: release_bytes(uint8_t * &addr, size_t  &bytes, size_t &shift) throw()
+            {
+                release( *(void **)&addr, bytes, shift);
+            }
+
+
+
+
+
         }
     }
 }

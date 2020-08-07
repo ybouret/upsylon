@@ -4,6 +4,7 @@
 #include "support.hpp"
 #include <typeinfo>
 #include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 using namespace upsylon;
 
@@ -167,9 +168,6 @@ namespace
     }
 }
 
-
-//#include "y/os/confirm.hpp"
-
 Y_UTEST(sequence)
 {
 
@@ -199,6 +197,9 @@ Y_UTEST(sequence)
     do_test< vector<string>   >();
     do_test< vector<uint16_t,memory::pooled> >();
     do_test< vector<string,memory::pooled>   >();
+
+    do_test< vector<uint16_t,memory::dyadic> >();
+    do_test< vector<string,memory::dyadic>   >();
 
     std::cerr << "sizeof(ligthweight_array)=" << sizeof(lightweight_array<int>) << std::endl;
 
