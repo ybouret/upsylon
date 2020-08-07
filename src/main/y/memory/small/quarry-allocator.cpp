@@ -50,6 +50,7 @@ namespace upsylon {
                     bytes   = n;
                     shift   = s;
                     memset(p,0,bytes);
+                    assert(size_t(1)<<shift==bytes);
                     return p;
                 }
                 catch(...)
@@ -67,7 +68,7 @@ namespace upsylon {
                 assert(addr);
                 assert(shift>=vein::min_exp2);
                 assert(shift<=vein::max_exp2);
-                assert(1<<shift==bytes);
+                assert(size_t(1)<<shift==bytes);
                 Y_LOCK(Access);
                 Quarry[shift].release(addr);
                 bytes = 0;

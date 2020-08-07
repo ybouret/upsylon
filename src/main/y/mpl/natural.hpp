@@ -15,7 +15,9 @@ namespace upsylon {
     
     
     namespace mpl {
-        
+
+        class integer; //!< forward declaration
+
 
         
         //======================================================================
@@ -36,10 +38,17 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
 } while(false)
         
         //! in place constructor
-#define Y_MPN_CTOR(SZ,MX) object(), number_type(), memory::ro_buffer(),  bytes(SZ), allocated(MX), byte( __acquire(allocated) ), item(byte-1)
-        
-        class integer; //!< forward declaration
-        
+#define Y_MPN_CTOR(SZ,MX)              \
+object(),                              \
+number_type(),                         \
+memory::ro_buffer(),                   \
+bytes(SZ),                             \
+allocated(MX),                         \
+allocExp2(0),                          \
+byte( __acquire(allocated,allocExp2) ),\
+item(byte-1)
+
+
         //! big natural number
         class natural : public number_type, public memory::ro_buffer
         {
@@ -317,7 +326,8 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             
         private:
             size_t   bytes;     //!< active bytes
-            size_t   allocated; //!< allocated bytes
+            size_t   allocated; //!< allocated bytes, a power of two
+            size_t   allocExp2; //!< allocated = 1<< allocExp2
             uint8_t *byte;      //!< byte[0..allocated-1]
             uint8_t *item;      //!< item[1..allocated]
             
@@ -325,8 +335,6 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             void update()  throw(); //!< from bytes
             void upgrade() throw(); //!< set bytes to allocated and update
             
-            static  uint8_t * __acquire(size_t &n);
-
             static  uint8_t * __acquire(size_t &n, size_t &s);
             static  void      __release(uint8_t * &p, size_t &n, size_t &s) throw();
 
