@@ -18,6 +18,7 @@ namespace upsylon {
         }
         
         Joker:: Joker( const Joker &J ) :
+        object(),
         Pattern(J),
         motif(J.motif->clone())
         {

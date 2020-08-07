@@ -29,6 +29,7 @@ namespace upsylon {
         }
         
         Optional:: Optional(const Optional &other) :
+        object(),
         Joker(other)
         {
             Y_PATTERN_SELF(Optional);

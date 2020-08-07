@@ -30,7 +30,7 @@ namespace {
         {
         }
         
-        dummy( const dummy &other ) : counted_object(), id(other.id)
+        dummy( const dummy &other ) :object(),  counted_object(), id(other.id)
         {
         }
         

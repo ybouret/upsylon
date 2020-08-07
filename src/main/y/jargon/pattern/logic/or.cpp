@@ -18,7 +18,7 @@ namespace upsylon {
             Y_PATTERN_SELF(OR);
         }
         
-        OR:: OR(const OR &other) : Logical(other)
+        OR:: OR(const OR &other) : object(), Logical(other)
         {
             Y_PATTERN_SELF(OR);
         }

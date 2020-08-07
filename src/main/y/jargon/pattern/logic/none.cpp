@@ -13,7 +13,7 @@ namespace upsylon {
             Y_PATTERN_SELF(NONE);
         }
         
-        NONE:: NONE(const NONE &other) : Logical(other)
+        NONE:: NONE(const NONE &other) : object(), Logical(other)
         {
             Y_PATTERN_SELF(NONE);
         }

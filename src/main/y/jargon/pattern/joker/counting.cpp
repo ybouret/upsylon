@@ -105,6 +105,7 @@ namespace upsylon {
         }
         
         Counting:: Counting(const Counting &other) :
+        object(),
         Joker(other),
         minimalCount(other.minimalCount),
         maximalCount(other.maximalCount)

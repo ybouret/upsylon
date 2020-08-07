@@ -29,6 +29,7 @@ entropy(-1)
         }
         
         Pattern:: Pattern(const Pattern &p) throw() :
+        object(),
         Y_JPATTERN(p.uuid)
         {
         }

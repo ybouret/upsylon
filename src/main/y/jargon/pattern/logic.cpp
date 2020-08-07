@@ -16,6 +16,7 @@ namespace upsylon {
         }
         
         Logical::Logical(const Logical &other) :
+        object(),
         Pattern(other),
         Operands(other)
         {

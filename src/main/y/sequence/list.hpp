@@ -62,7 +62,7 @@ namespace upsylon {
         }
 
         //! copy constructor
-        list( const list &other ) : counted_object(), collection(), addressable<T>(),  sequence<T>(), nodes(), cache()
+        list( const list &other ) : object(), counted_object(), collection(), addressable<T>(),  sequence<T>(), nodes(), cache()
         {
             try
             {

@@ -1,5 +1,6 @@
 
 #include "y/spade/field.hpp"
+#include "y/memory/allocator/global.hpp"
 
 namespace upsylon {
     

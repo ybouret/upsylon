@@ -1,5 +1,6 @@
 #include "y/spade/layout/ghost.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/memory/allocator/global.hpp"
 
 namespace upsylon {
 

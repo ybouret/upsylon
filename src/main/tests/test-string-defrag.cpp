@@ -49,7 +49,7 @@ namespace
             std::cerr << "could do " << nd << std::endl;
         }
 
-        class kDummy : public counted_object
+        class kDummy : public object, public counted
         {
         public:
             typedef intr_ptr<string,kDummy> Ptr;
@@ -58,7 +58,7 @@ namespace
 
             const string & key() const throw() { return name; }
 
-            kDummy(const string &id ) : counted_object(), name(id)
+            kDummy(const string &id ) : name(id)
             {
             }
 
@@ -66,7 +66,7 @@ namespace
             {
             }
 
-            kDummy(const kDummy &_) : counted_object(), name(_.name) {}
+            kDummy(const kDummy &_) :  object(), counted(), name(_.name) {}
 
             Y_DISABLE_ASSIGN(kDummy);
 

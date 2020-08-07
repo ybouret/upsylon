@@ -17,7 +17,7 @@ namespace upsylon {
             Y_PATTERN_SELF(AND);
         }
         
-        AND:: AND(const AND &other) : Logical(other)
+        AND:: AND(const AND &other) : object(), Logical(other)
         {
             Y_PATTERN_SELF(AND);
         }

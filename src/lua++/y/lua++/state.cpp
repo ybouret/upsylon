@@ -1,5 +1,6 @@
 #include "y/lua++/state.hpp"
 #include "y/fs/local/fs.hpp"
+#include "y/memory/allocator/global.hpp"
 #include <cstdlib>
 
 namespace upsylon

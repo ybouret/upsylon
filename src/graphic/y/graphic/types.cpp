@@ -1,4 +1,5 @@
 #include "y/graphic/types.hpp"
+#include "y/memory/allocator/global.hpp"
 
 namespace upsylon {
 

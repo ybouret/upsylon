@@ -55,6 +55,7 @@ namespace upsylon {
         }
         
         Repeating:: Repeating(const Repeating &other) :
+        object(),
         Joker(other),
         minimalCount(other.minimalCount)
         {

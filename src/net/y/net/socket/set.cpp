@@ -5,6 +5,7 @@
 #include "y/type/aliasing.hpp"
 
 #include "y/memory/embed.hpp"
+#include "y/memory/allocator/global.hpp"
 
 #if defined(Y_BSD)
 #include <sys/select.h>

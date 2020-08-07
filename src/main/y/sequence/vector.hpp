@@ -25,7 +25,7 @@ namespace upsylon {
 
         //! initialize fields
 #define Y_VECTOR_CTOR(n)                             \
-collection(), addressable<T>(), counted_object(),    \
+collection(), addressable<T>(), object(), counted_object(),    \
 array<T>(), sequence<T>(),                           \
 maxi_(n),  bytes(0), hmem_( ALLOCATOR::instance() ), \
 addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
