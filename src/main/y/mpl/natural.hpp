@@ -16,7 +16,7 @@ namespace upsylon {
     
     namespace mpl {
         
-     
+
         
         //======================================================================
         //
@@ -45,12 +45,13 @@ for(size_t ii=host.bytes;ii<host.allocated;++ii)            \
         {
         public:
             static const char CLASS_NAME[]; //!< "mpn"
-                                            //__________________________________________________________________
-                                            //
-                                            //
-                                            // virtual interface
-                                            //
-                                            //__________________________________________________________________
+
+            //__________________________________________________________________
+            //
+            //
+            // virtual interface
+            //
+            //__________________________________________________________________
             virtual const void  *ro()     const throw(); //!< buffer interface : ro
             virtual size_t       length() const throw(); //!< buffer interface : length
             
@@ -325,7 +326,11 @@ inline friend natural operator OP ( const word_t    lhs, const natural  &rhs ) {
             void upgrade() throw(); //!< set bytes to allocated and update
             
             static  uint8_t * __acquire(size_t &n);
-            
+
+            static  uint8_t * __acquire(size_t &n, size_t &s);
+            static  void      __release(uint8_t * &p, size_t &n, size_t &s) throw();
+
+
             natural __shl(const size_t shift) const;
             
             static natural __add(const uint8_t *l,

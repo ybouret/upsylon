@@ -12,7 +12,7 @@ namespace upsylon {
 
         namespace small {
 
-            class quarry;
+            class quarry; //!< forward declaration
 
             class quarry_allocator
             {

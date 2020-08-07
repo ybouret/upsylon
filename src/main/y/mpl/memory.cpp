@@ -1,11 +1,55 @@
 
 #include "y/mpl/memory.hpp"
+
+namespace upsylon {
+
+    namespace mpl {
+
+        dispatcher:: ~dispatcher() throw()
+        {
+        }
+
+        dispatcher:: dispatcher() throw() :
+        singleton<dispatcher>(),
+        memory::small::quarry(),
+        memory::small::quarry_allocator(access,*this)
+        {
+        }
+
+        
+    }
+
+}
+
+#include "y/mpl/natural.hpp"
+
+namespace upsylon {
+
+    namespace mpl {
+
+        uint8_t * natural:: __acquire(size_t &n, size_t &s)
+        {
+            static dispatcher &mgr = dispatcher::instance();
+            return mgr.acquire_bytes(n,s);
+        }
+
+        void natural:: __release(uint8_t *&p, size_t &n, size_t &s) throw()
+        {
+            assert(p);
+            assert(dispatcher::exists());
+            static dispatcher &mgr = dispatcher::location();
+            mgr.release_bytes(p,n,s);
+        }
+
+    }
+
+}
+
+
 #include "y/memory/vein.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
-
-#include <cstring>
 
 namespace upsylon {
     
