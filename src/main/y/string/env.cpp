@@ -1,6 +1,6 @@
 #include "y/string/env.hpp"
 #include "y/concurrent/singleton.hpp"
-//#include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/exceptions.hpp"
 
 #include <cerrno>
@@ -101,8 +101,10 @@ namespace upsylon {
             inline explicit envmgr() throw() { }
             inline virtual ~envmgr() throw() { }
 
-            static const at_exit::longevity life_time = longevity_for::system_env;
+            static const at_exit::longevity life_time;
         };
+
+        const at_exit::longevity envmgr::life_time = memory::pooled::life_time-1;
 
     }
 

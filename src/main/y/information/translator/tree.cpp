@@ -1,6 +1,7 @@
 
 #include "y/information/translator/tree.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/memory/allocator/global.hpp"
 
 namespace upsylon {
 

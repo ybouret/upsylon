@@ -2,6 +2,7 @@
 #ifndef Y_ORDERED_HEAP_INCLUDED
 #define Y_ORDERED_HEAP_INCLUDED 1
 
+#include "y/memory/allocator/global.hpp"
 #include "y/container/container.hpp"
 #include "y/ordered/priority-queue.hpp"
 #include "y/comparator.hpp"

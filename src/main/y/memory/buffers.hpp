@@ -4,6 +4,7 @@
 
 #include "y/ptr/counted.hpp"
 #include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/type/cswap.hpp"
 

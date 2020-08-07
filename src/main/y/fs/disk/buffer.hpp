@@ -5,6 +5,7 @@
 
 #include "y/fs/disk/file.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/memory/allocator/global.hpp"
 
 namespace upsylon
 {

@@ -74,16 +74,4 @@ namespace upsylon
 
 }
 
-#include "y/memory/allocator/global.hpp"
 
-namespace upsylon
-{
-    namespace memory
-    {
-        void *embed:: create_global(embed *emb, const size_t num, size_t &bytes, size_t *data)
-        {
-            static memory::allocator &mem = memory::global::instance();
-            return embed::create(emb,num,mem,bytes,data);
-        }
-    }
-}

@@ -10,7 +10,7 @@ namespace upsylon
     namespace memory
     {
 
-        const at_exit::longevity  pooled:: life_time =  longevity_for::memory_pooled;
+        const at_exit::longevity  pooled:: life_time =  object::life_time-1;
         
         namespace
         {

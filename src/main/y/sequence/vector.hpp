@@ -2,6 +2,7 @@
 #ifndef Y_VECTOR_INCLUDED
 #define Y_VECTOR_INCLUDED 1
 
+#include "y/memory/allocator/global.hpp"
 #include "y/container/sequence.hpp"
 #include "y/sequence/array.hpp"
 #include "y/iterate/linear.hpp"

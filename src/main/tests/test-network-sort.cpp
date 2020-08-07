@@ -9,6 +9,7 @@
 #include "y/string.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/memory/embed.hpp"
+#include "y/memory/allocator/global.hpp"
 
 using namespace upsylon;
 
@@ -37,7 +38,7 @@ namespace {
                 memory::embed::as(b,N),
                 memory::embed::as(idx,N)
             };
-            wksp = memory::embed::create_global(emb, sizeof(emb)/sizeof(emb[0]), wlen);
+            wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), memory::global::instance(), wlen);
         }
 
 

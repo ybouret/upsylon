@@ -3,6 +3,7 @@
 #define Y_STRING_BASIC_INCLUDED 1
 
 #include "y/memory/buffer.hpp"
+#include "y/memory/allocator.hpp"
 #include "y/type/cswap.hpp"
 #include "y/dynamic.hpp"
 #include "y/comparison.hpp"

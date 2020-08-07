@@ -38,7 +38,7 @@ Y_UTEST(embed)
             memory::embed::as(I,nI),
             memory::embed::as(U,nU)
         };
-        wksp = memory::embed::create_global(emb, sizeof(emb)/sizeof(emb[0]), wlen);
+        wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), memory::global::instance(), wlen);
     }
 
     fill(F,nF);

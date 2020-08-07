@@ -7,6 +7,8 @@
 #include "y/type/utils.hpp"
 #include "y/type/standard.hpp"
 
+#include "y/memory/allocator/global.hpp"
+
 #include <cerrno>
 
 namespace upsylon

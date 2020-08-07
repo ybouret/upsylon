@@ -1,5 +1,6 @@
 #include "y/fs/local/fs.hpp"
 #include "y/exceptions.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 #if defined(Y_BSD)
 #include <sys/stat.h>
@@ -32,7 +33,7 @@ BOOL WINAPI GetFileSizeEx(
 namespace upsylon
 {
 
-    const at_exit::longevity local_fs::life_time = longevity_for::vfs_local;
+    const at_exit::longevity local_fs::life_time = memory::pooled::life_time-1;
     
     local_fs:: local_fs() throw()
     {
