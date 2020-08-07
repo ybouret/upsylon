@@ -1,6 +1,5 @@
 #include "y/fft/xbitrev.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/hashing/sha1.hpp"
@@ -19,8 +18,8 @@ namespace
         for(size_t n=1;n<=8192;n*=2)
         {
             std::cerr << "n=" << n << " : "; std::cerr.flush();
-            vector<cplx,memory::dyadic> v0(n);
-            vector<cplx,memory::dyadic> v(n);
+            vector<cplx> v0(n);
+            vector<cplx> v(n);
             for(size_t iter=0;iter<10;++iter)
             {
                 for(size_t i=1;i<=n;++i)

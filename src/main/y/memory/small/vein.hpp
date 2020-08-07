@@ -34,10 +34,10 @@ namespace upsylon {
                 //______________________________________________________________
                 typedef core::pool_of<ingot> chest_type;                 //!< alias
                 static  const size_t one       = 1;                      //!< alias
-                static  const size_t min_shift = ilog2_of<ingot>::value; //!< to hold a stone
-                static  const size_t min_bytes = one << min_shift;       //!< to hold a stone
-                static  const size_t max_shift = (sizeof(size_t)<<3)-1;  //!< theoretical
-                static  const size_t max_bytes = one << max_shift;       //!< theoretical
+                static  const size_t min_exp2 = ilog2_of<ingot>::value;  //!< to hold a stone
+                static  const size_t min_size = one << min_exp2;         //!< to hold a stone
+                static  const size_t max_exp2 = (sizeof(size_t)<<3)-1;   //!< theoretical
+                static  const size_t max_size = one << max_exp2;         //!< theoretical
                 static  unsigned     width;                              //!< shared global width for ouptut
 
 
@@ -46,8 +46,8 @@ namespace upsylon {
                 //
                 // C++
                 //______________________________________________________________
-                vein(const size_t the_shift) throw(); //!< create vein for ingots of bytes=2^the_shift
-                ~vein() throw();                      //!< cleanup
+                vein(const size_t the_exp2) throw(); //!< create vein for ingots of size=1<<the_exp2
+                ~vein() throw();                     //!< cleanup
 
                 //______________________________________________________________
                 //

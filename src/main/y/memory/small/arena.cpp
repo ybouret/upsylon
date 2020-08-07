@@ -40,10 +40,10 @@ namespace upsylon {
                 assert(block_size>0);
                 const size_t the_min_chunk_size = chunk::min_chunk_size_for(block_size); assert(is_a_power_of_two(the_min_chunk_size));
                 const size_t the_max_chunk_size = chunk::max_chunk_size_for(block_size); assert(is_a_power_of_two(the_max_chunk_size));
-                assert(is_a_power_of_two(vein::min_bytes));
+                assert(is_a_power_of_two(vein::min_size));
 
 
-                const size_t min_cs = max_of(the_min_chunk_size,vein::min_bytes);
+                const size_t min_cs = max_of(the_min_chunk_size,vein::min_size);
                 const size_t max_cs = max_of(the_max_chunk_size,min_cs);
                 return clamp(min_cs,next_power_of_two(chunk_size),max_cs);
             }

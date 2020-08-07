@@ -26,13 +26,17 @@ namespace upsylon {
 
                 void *acquire(const size_t block_size);
                 void  release(void *addr, const size_t block_size) throw();
+
                 void *global_acquire(const size_t global_bytes);
                 void  global_release(void *addr, const size_t global_bytes) throw();
+
+                void *dyadic_acquire(const size_t block_exp2);
+                void  dyadic_release(void *addr, const size_t block_exp2) throw();
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(objects);
-
+                arena *little[vein::min_exp2];
             };
 
         }

@@ -46,14 +46,14 @@ namespace upsylon {
                 aliasing::_(count) = 0;
             }
 
-            vein:: vein(const size_t the_shift) throw() :
-            block_exp2(the_shift),
+            vein:: vein(const size_t the_exp2) throw() :
+            block_exp2(the_exp2),
             block_size(one<<block_exp2),
             chest(),
             count(0)
             {
-                assert(block_exp2>=min_shift);
-                assert(block_exp2<=max_shift);
+                assert(block_exp2>=min_exp2);
+                assert(block_exp2<=max_exp2);
             }
 
             void * vein:: acquire()

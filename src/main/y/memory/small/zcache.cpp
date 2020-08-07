@@ -13,7 +13,7 @@ namespace upsylon {
 
             size_t __zcache:: chunk_size_from(const size_t a, const size_t b) throw()
             {
-                return next_power_of_two( max_of(a,b,vein::min_bytes) );
+                return next_power_of_two( max_of(a,b,vein::min_size) );
             }
 
             void * __zcache:: first(void * addr) throw()

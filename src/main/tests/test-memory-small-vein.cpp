@@ -18,7 +18,7 @@ Y_UTEST(small_vein)
     const size_t num = sizeof(reg)/sizeof(reg[0]);
 
     memset(reg,0,sizeof(reg));
-    for(size_t i=small::vein::min_shift;i<=14;++i)
+    for(size_t i=small::vein::min_exp2;i<=14;++i)
     {
         small::vein S(i);
         std::cerr << "vein: " << S.block_size << std::endl;
@@ -61,8 +61,8 @@ Y_UTEST(small_vein)
         std::cerr << "|_has " << S.chest.size * S.block_size << " bytes" << std::endl;
     }
     
-    std::cerr << "small::vein::min_shift=" << small::vein::min_shift << std::endl;
-    std::cerr << "small::vein::max_shift=" << small::vein::max_shift << std::endl;
+    std::cerr << "small::vein::min_shift=" << small::vein::min_exp2 << std::endl;
+    std::cerr << "small::vein::max_shift=" << small::vein::max_exp2 << std::endl;
 
     
 }

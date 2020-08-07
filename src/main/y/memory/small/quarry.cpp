@@ -29,7 +29,7 @@ namespace upsylon {
                 }
                 aliasing::_(undersized) = 0;
 
-                for(size_t i=vein::max_shift;i>=vein::min_shift;--i)
+                for(size_t i=vein::max_exp2;i>=vein::min_exp2;--i)
                 {
                     self_destruct(ore[i]);
                 }
@@ -44,7 +44,7 @@ namespace upsylon {
             {
                 memset(wksp,0,sizeof(wksp));
                 ore = aliasing::as<vein>(wksp);
-                for(size_t i=vein::min_shift;i<=vein::max_shift;++i)
+                for(size_t i=vein::min_exp2;i<=vein::max_exp2;++i)
                 {
                     new (ore+i) vein(i);
                 }
@@ -52,7 +52,7 @@ namespace upsylon {
 
             void  * quarry:: pull(const size_t shift)
             {
-                if(shift<vein::min_shift)
+                if(shift<vein::min_exp2)
                 {
                     static global &mgr = global::instance();
                     const  size_t  num = vein::one<<shift;
@@ -61,7 +61,7 @@ namespace upsylon {
                 }
                 else
                 {
-                    if(shift>vein::max_shift) throw libc::exception(ERANGE,"quarry::pull(shift>%lu)", (unsigned long) shift );
+                    if(shift>vein::max_exp2) throw libc::exception(ERANGE,"quarry::pull(shift>%lu)", (unsigned long) shift );
                     return ore[shift].acquire();
                 }
 
@@ -70,8 +70,8 @@ namespace upsylon {
             void  quarry:: push(void *addr, const size_t shift) throw()
             {
                 assert(addr);
-                assert(shift<=vein::max_shift);
-                if(shift<vein::min_shift)
+                assert(shift<=vein::max_exp2);
+                if(shift<vein::min_exp2)
                 {
                     static global &mgr = global::location();
                     const  size_t  num = vein::one<<shift;
@@ -87,8 +87,8 @@ namespace upsylon {
 
             vein & quarry:: operator[](const size_t shift) throw()
             {
-                assert(shift<=vein::max_shift);
-                assert(shift>=vein::min_shift);
+                assert(shift<=vein::max_exp2);
+                assert(shift>=vein::min_exp2);
                 return ore[shift];
             }
 
@@ -102,7 +102,7 @@ namespace upsylon {
             {
                 os << "<quarry>" << std::endl;
                 os << "\t<undersized bytes=" << q.undersized << ">" << std::endl;
-                for(size_t shift=vein::min_shift;shift<=vein::max_shift;++shift)
+                for(size_t shift=vein::min_exp2;shift<=vein::max_exp2;++shift)
                 {
                     const vein &s = q.ore[shift];
                     if(s.count)
@@ -111,7 +111,7 @@ namespace upsylon {
                     }
                 }
 
-                for(size_t shift=vein::min_shift;shift<=vein::max_shift;++shift)
+                for(size_t shift=vein::min_exp2;shift<=vein::max_exp2;++shift)
                 {
                     const vein &s = q.ore[shift];
                     if(s.count)
@@ -127,11 +127,11 @@ namespace upsylon {
             size_t quarry::exp2_of(const size_t chunk_size) throw()
             {
                 assert( is_a_power_of_two(chunk_size) );
-                assert( chunk_size>=vein::min_bytes );
-                assert( chunk_size<=vein::max_bytes );
+                assert( chunk_size>=vein::min_size );
+                assert( chunk_size<=vein::max_size );
                 const size_t chunk_exp2 = integer_log2(chunk_size);
-                assert(chunk_exp2>=vein::min_shift);
-                assert(chunk_exp2<=vein::max_bytes);
+                assert(chunk_exp2>=vein::min_exp2);
+                assert(chunk_exp2<=vein::max_exp2);
                 return chunk_exp2;
             }
         }

@@ -64,12 +64,28 @@ Y_UTEST(small_object)
     testDummy<1>();
     testDummy<10>();
 
-    obj_type::linear_hoard lh(16);
-    std::cerr << "linear.hoard.block_size=" << lh.block_size << std::endl;
+    const size_t exp2_last=10;
+    const size_t count    = 16;
 
-    obj_type::dyadic_hoard dh(4);
-    std::cerr << "dyadic.hoard.block_size=" << dh.block_size << std::endl;
-    
+    void *addr[exp2_last][count];
+
+    memset(addr,0,sizeof(addr));
+    for(size_t exp2=0;exp2<exp2_last;++exp2)
+    {
+        for(size_t j=0;j<count;++j)
+        {
+            addr[exp2][j] = mgr.dyadic_acquire(exp2);
+        }
+        alea.shuffle(addr[exp2],count);
+    }
+    for(size_t exp2=0;exp2<exp2_last;++exp2)
+    {
+        for(size_t j=0;j<count;++j)
+        {
+            mgr.dyadic_release(addr[exp2][j],exp2);
+        }
+    }
+
 
     std::cerr << mgr.Quarry << std::endl;
 

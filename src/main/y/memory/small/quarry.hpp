@@ -13,6 +13,7 @@ namespace upsylon {
 
         namespace small {
 
+
             //__________________________________________________________________
             //
             //
@@ -31,7 +32,7 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                static const size_t   max_veins = vein::max_shift+1;         //!< alias
+                static const size_t   max_veins = vein::max_exp2+1;         //!< alias
                 static const size_t   wksp_size = max_veins * sizeof(vein);  //!< alias
                 static const unsigned widths[64];                            //!< helper: output width in decimal for bytes
 
@@ -59,10 +60,10 @@ namespace upsylon {
                 static size_t         exp2_of( const size_t chunk_size ) throw(); //!< chunk_size = 1 << shift
                 friend std::ostream & operator<<(std::ostream &, const quarry &); //!< display
 
-
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(quarry);
                 vein       *ore;
+
             public:
                 //______________________________________________________________
                 //

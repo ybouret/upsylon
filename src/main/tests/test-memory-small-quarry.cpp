@@ -55,11 +55,11 @@ Y_UTEST(small_quarry)
         ios::ocstream fp1("qlen.dat");
         ios::ocstream fp2("qsup.dat");
         size_t p = 0;
-        for(size_t i=0;i<small::vein::min_shift;++i)
+        for(size_t i=0;i<small::vein::min_exp2;++i)
         {
             std::cerr << "0,";
         }
-        for(size_t i=small::vein::min_shift;i<=small::vein::max_shift;++i)
+        for(size_t i=small::vein::min_exp2;i<=small::vein::max_exp2;++i)
         {
             char buffer[1024] = { 0 };
             memset(buffer,0,sizeof(buffer));
@@ -74,7 +74,7 @@ Y_UTEST(small_quarry)
                 p=n;
             }
             std::cerr << n;
-            if(i<small::vein::max_shift) std::cerr << ",";
+            if(i<small::vein::max_exp2) std::cerr << ",";
         }
         std::cerr << std::endl;
     }
