@@ -108,7 +108,7 @@ namespace upsylon {
         FieldsIO:: ~FieldsIO() throw() {}
         
         FieldsIO:: FieldsIO(const FieldsIO &other) :
-        collection(), addressable<_Field>(), counted_object(), FieldsIO_(other) {}
+        collection(), addressable<_Field>(), object(), counted_object(), FieldsIO_(other) {}
         
         FieldsIO & FieldsIO:: operator=( const FieldsIO &other )
         {

@@ -18,6 +18,7 @@ namespace upsylon {
 
 
         Gradients:: Gradients(const Gradients &G) throw() :
+        object(),
         Object(),
         X(G.X),
         Y(G.Y)

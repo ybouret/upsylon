@@ -46,7 +46,7 @@ namespace upsylon {
             }
 
             Filter:: Filter( const Filter &F ) :
-            Object(), weights(F.weights), weight(F.weight), factor(F.factor)
+            object(), Object(), weights(F.weights), weight(F.weight), factor(F.factor)
             {
             }
             

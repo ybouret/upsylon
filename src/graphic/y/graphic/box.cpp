@@ -44,6 +44,7 @@ namespace upsylon {
 
 
         Box:: Box(const Box &other) throw() :
+        object(),
         Area(other),
         lower(other.lower),
         upper(other.upper)
