@@ -30,6 +30,7 @@ namespace upsylon {
 #define Y_MPN_CHECK(PTR)   do {                             \
 assert(PTR); const natural &host = *PTR;                    \
 assert( is_a_power_of_two(host.allocated) );                \
+assert( size_t(1)<<host.allocExp2==host.allocated);         \
 assert( host.bytes  <= host.allocated     );                \
 assert( host.byte-1 == host.item          );                \
 assert( (0 == host.bytes) || host.item[ host.bytes ]> 0 );  \

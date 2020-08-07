@@ -5,6 +5,8 @@
 #define Y_MEMORY_SMALL_QUARRY_ALLOCATOR_INCLUDED 1
 
 #include "y/lockable.hpp"
+#include <iostream>
+#include "y/type/spec.hpp"
 
 namespace upsylon {
 
@@ -28,15 +30,16 @@ namespace upsylon {
                 uint8_t *acquire_bytes(size_t  &bytes, size_t &shift);
                 void     release_bytes(uint8_t *&addr, size_t &bytes, size_t &shift) throw();
 
-                template <typename T>
+                template <typename T> inline
                 T *acquire_field(size_t &count,size_t &bytes, size_t &shift)
                 {
                     try
                     {
                         if(count<=0) count=1;
-                        void *p = acquire(bytes = count * sizeof(T),shift);
+                        void *p = acquire( (bytes=count*sizeof(T)),shift);
                         assert(bytes/sizeof(T)>=count);
                         count = bytes/sizeof(T);
+                        //std::cerr << count << "/" << bytes << "=2^" << shift << std::endl;
                         return static_cast<T*>(p);
                     }
                     catch(...)
@@ -48,17 +51,18 @@ namespace upsylon {
                     }
                 }
 
-                template <typename T>
+                template <typename T> inline
                 void release_field(T * &addr, size_t &count,size_t &bytes, size_t &shift) throw()
                 {
                     assert(addr);
                     assert(count>0);
                     assert(bytes>0);
-                    assert((1<<shift)==bytes);
+                    assert((size_t(1)<<shift)==bytes);
                     release( *(void **)&addr, bytes, shift );
+                    assert(0==addr);
+                    assert(0==bytes);
+                    assert(0==shift);
                     count = 0;
-                    bytes = 0;
-                    shift = 0;
                 }
 
             private:

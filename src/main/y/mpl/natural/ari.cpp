@@ -145,7 +145,9 @@ namespace upsylon
                 {
                     const natural x0 = x1;
                     //x1 = ((x0+n/x0)>>1);
-                    x1 = n/x0; x1 += x0; (void) x1.shr();
+                    x1 = n/x0;
+                    x1 += x0;
+                    (void) x1.shr();
                     if(x1>=x0)
                     {
                         return x0;

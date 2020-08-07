@@ -101,7 +101,7 @@ namespace upsylon
 
             if(nl>0&&nr>0)
             {
-                static memory::allocator &hmem = manager::instance();
+                static dispatcher &mgr = dispatcher::instance();
 
                 const size_t np = nl+nr;             //-- product size
                 natural      P(np, as_capacity );    //-- product value
@@ -112,10 +112,11 @@ namespace upsylon
                 const size_t nn = P.allocated; assert( is_a_power_of_two(nn) ); assert(nn>=np);
 
 
-                size_t       n2 = nn<<1;
-                size_t       ws = 0;
-                cplx_t      *L  = hmem.acquire_as<cplx_t>(n2,ws);
-                cplx_t      *R  = L+nn;
+                size_t       n2     = nn<<1; assert(is_a_power_of_two(n2));
+                size_t       wbytes = 0;
+                size_t       wshift = 0;
+                cplx_t      *L      = mgr.acquire_field<cplx_t>(n2,wbytes,wshift);
+                cplx_t      *R      = L+nn;
 
                 fft_mul(l,nl,r,nr,&L[0].re,&R[0].re,nn);
 
@@ -133,7 +134,7 @@ namespace upsylon
                 prod[top] = uint8_t(carry);
                 P.bytes   = np;
                 P.update();
-                hmem.release_as(L,n2,ws);
+                mgr.release_field(L,n2,wbytes,wshift);
                 return P;
             }
             else
@@ -144,10 +145,10 @@ namespace upsylon
 
         natural natural:: square_of( const natural &lhs )
         {
-            const size_t nl = lhs.bytes;
+            const size_t nl = lhs.bytes;  
             if( nl > 0  )
             {
-                static memory::allocator &hmem = manager::instance();
+                static dispatcher &mgr = dispatcher::instance();
 
                 const size_t np = nl << 1;            //-- product size
                 natural      P( np, as_capacity );    //-- product value
@@ -159,9 +160,10 @@ namespace upsylon
                 //--------------------------------------------------------------
                 //- compute wokspace size and create it
                 //--------------------------------------------------------------
-                size_t         workspace = 0;
-                size_t         nreq      = nn;
-                cplx_t        *L  = hmem.acquire_as<cplx_t>(nreq,workspace);
+                size_t         wbytes = 0;
+                size_t         wshift = 0;
+                size_t         nreq   = nn;
+                cplx_t        *L      = mgr.acquire_field<cplx_t>(nreq,wbytes,wshift);
                 {
                     const uint8_t *l = lhs.byte;
                     for(size_t i=0;i<nl;++i)
@@ -198,9 +200,11 @@ namespace upsylon
                     prod[i]        = uint8_t(r);
                     carry          = q;
                 }
+                assert(top<P.allocated);
                 prod[top] = uint8_t(carry);
                 P.bytes = np;
                 P.update();
+                mgr.release_field(L,nreq,wbytes,wshift);
                 return P;
             }
             else

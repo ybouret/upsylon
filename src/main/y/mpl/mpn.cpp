@@ -4,7 +4,7 @@
 
 namespace upsylon
 {
-    const at_exit::longevity MPN::life_time = mpl::manager::life_time - 1;
+    const at_exit::longevity MPN::life_time = mpl::dispatcher::life_time - 1;
 
     MPN:: PrimeInfo:: ~PrimeInfo() throw()
     {
@@ -63,16 +63,19 @@ namespace upsylon
 {
     MPN:: MetaPrimeVector:: ~MetaPrimeVector() throw()
     {
-        mpl::manager::location().release_as<Slot>(++slot,capacity,bytes);
+        static mpl::dispatcher &mgr = mpl::dispatcher::location();
+        mgr.release_field<Slot>(++slot,capacity,bytes,shift);
     }
 
     MPN:: MetaPrimeVector:: MetaPrimeVector(const size_t n) :
     slot(0),
     size(0),
     capacity(max_of<size_t>(n,2)),
-    bytes(0)
+    bytes(0),
+    shift(0)
     {
-        slot = mpl::manager::instance().acquire_as<Slot>(capacity,bytes);
+        static mpl::dispatcher &mgr = mpl::dispatcher::instance();
+        slot = mgr.acquire_field<Slot>(capacity,bytes,shift);
         --slot;
     }
 
@@ -80,17 +83,19 @@ namespace upsylon
     {
         if(n>1)
         {
-            mpl::manager &mgr          = mpl::manager::location();
+            static mpl::dispatcher &mgr = mpl::dispatcher::location();
             size_t        new_capacity = capacity+n;
             size_t        new_bytes    = 0;
-            Slot         *new_slot     = mgr.acquire_as<Slot>(new_capacity, new_bytes);
+            size_t        new_shift    = 0;
+            Slot         *new_slot     = mgr.acquire_field<Slot>(new_capacity,new_bytes,new_shift);
             ++slot;
             memcpy( new_slot,slot,sizeof(Slot)*size);
-            mgr.release_as(slot,capacity,bytes);
+            mgr.release_field(slot,capacity,bytes,shift);
             --new_slot;
             slot     = new_slot;
             capacity = new_capacity;
             bytes    = new_bytes;
+            shift    = new_shift;
         }
     }
 

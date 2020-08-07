@@ -40,11 +40,11 @@ namespace upsylon {
                         throw libc::exception(EDOM,"quarry_allocator overflow");
                     }
                     size_t s = vein::min_exp2;
-                    size_t n = vein::min_size;
+                    size_t n = vein::min_size; assert(size_t(1)<<s==n);
                     while(n<bytes)
                     {
                         ++s;
-                        n <<= 1;
+                        n <<= 1; assert(size_t(1)<<s==n);
                     }
                     void *p = fetch_locked(s);
                     bytes   = n;

@@ -12,8 +12,16 @@ namespace upsylon
 
        
 
-        void natural:: update()  throw() { while(bytes>0&&item[bytes]<=0) --bytes; Y_MPN_CHECK(this); }
-        void natural:: upgrade() throw() { bytes = allocated; update();                               }
+        void natural:: update()  throw()
+        {
+            while(bytes>0&&item[bytes]<=0) --bytes;
+            Y_MPN_CHECK(this);
+        }
+
+        void natural:: upgrade() throw()
+        {
+            bytes = allocated; update();
+        }
 
 
         natural:: natural() : Y_MPN_CTOR(0,0) { Y_MPN_CHECK(this); }
@@ -86,6 +94,7 @@ namespace upsylon
         {
             cswap(bytes,other.bytes);
             cswap(allocated,other.allocated);
+            cswap(allocExp2,other.allocExp2);
             cswap(byte,other.byte);
             cswap(item,other.item);
         }
