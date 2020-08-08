@@ -2,6 +2,7 @@
 #include "y/exceptions.hpp"
 #include "y/type/ints-display.hpp"
 #include "y/type/aliasing.hpp"
+#include <cerrno>
 
 namespace upsylon {
 
