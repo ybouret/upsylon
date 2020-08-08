@@ -272,6 +272,7 @@ namespace upsylon {
 }
 
 #include "y/exceptions.hpp"
+#include <cerrno>
 
 namespace upsylon {
 
