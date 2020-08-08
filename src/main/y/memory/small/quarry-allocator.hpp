@@ -27,9 +27,12 @@ namespace upsylon {
                 //
                 // C++
                 //______________________________________________________________
+                
+                //! set up with permanent user's data
                 explicit quarry_allocator(lockable &usr_access,
                                           quarry   &usr_quarry) throw();
 
+                //! cleanup
                 virtual ~quarry_allocator() throw();
 
                 //______________________________________________________________
@@ -37,15 +40,20 @@ namespace upsylon {
                 // anonymous allocation
                 //______________________________________________________________
                 
-                void *acquire(size_t &bytes, size_t &shift); //!< clean memory
+                //! acquire next power of two bytes=2^shift, clean memory
+                void *acquire(size_t &bytes, size_t &shift);
+                
+                //! release a previously allocated block
                 void  release(void *&addr, size_t &bytes, size_t &shift) throw();
 
                 //______________________________________________________________
                 //
                 // bytes allocation
                 //______________________________________________________________
-                
+                //! acquire with void* -> uint8_t * conversion
                 uint8_t *acquire_bytes(size_t  &bytes, size_t &shift);
+               
+                //! release previously allocated bytes
                 void     release_bytes(uint8_t *&addr, size_t &bytes, size_t &shift) throw();
 
                 //______________________________________________________________
@@ -53,6 +61,7 @@ namespace upsylon {
                 // fields allocation
                 //______________________________________________________________
                 
+                //! acquire (count * sizeof(T) <= bytes = 2^shift)/sizeof(T) objects
                 template <typename T> inline
                 T *acquire_field(size_t &count,size_t &bytes, size_t &shift)
                 {
@@ -74,6 +83,7 @@ namespace upsylon {
                     }
                 }
 
+                //! release a previously acquired field
                 template <typename T> inline
                 void release_field(T * &addr, size_t &count,size_t &bytes, size_t &shift) throw()
                 {
