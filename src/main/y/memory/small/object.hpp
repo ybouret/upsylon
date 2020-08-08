@@ -123,6 +123,7 @@ namespace upsylon {
                     p = 0;
                 }
 
+                //! return objects prototype
                 static inline objects &proto()
                 {
                     static objects &self = supply::instance();
@@ -157,7 +158,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(object);
 
             public:
-                static const at_exit::longevity life_time = supply::life_time; //! repeat
+                static const at_exit::longevity life_time = supply::life_time; //!< repeat of supply
             };
         }
 

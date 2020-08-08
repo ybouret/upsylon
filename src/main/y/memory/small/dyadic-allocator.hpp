@@ -13,16 +13,29 @@ namespace upsylon {
 
         namespace small {
 
-            class objects;
-
+            class objects; //!< forward declarartion
+                      
+            //__________________________________________________________________
+            //
+            //! allocator of 2^0...2^n blocks
+            //__________________________________________________________________
             class dyadic_allocator : public memory::allocator
             {
             public:
-                explicit dyadic_allocator( objects &usr ) throw();
-                virtual ~dyadic_allocator() throw();
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+               
+                explicit dyadic_allocator(objects &) throw(); //!< setup using persistent objects
+                virtual ~dyadic_allocator() throw();          //!< cleanup
 
-                virtual void *acquire(size_t &n);
-                virtual void  release(void * &p, size_t &n ) throw();
+                //______________________________________________________________
+                //
+                // allocator interface
+                //______________________________________________________________
+                virtual void *acquire(size_t &n);                     //!< acquire=>n=2^p
+                virtual void  release(void * &p, size_t &n ) throw(); //!< release a previously allocated
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(dyadic_allocator);

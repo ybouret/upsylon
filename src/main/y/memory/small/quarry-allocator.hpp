@@ -16,20 +16,43 @@ namespace upsylon {
 
             class quarry; //!< forward declaration
 
+            //__________________________________________________________________
+            //
+            //! allocator with bytes=2^shift markers
+            //__________________________________________________________________
             class quarry_allocator
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 explicit quarry_allocator(lockable &usr_access,
                                           quarry   &usr_quarry) throw();
 
                 virtual ~quarry_allocator() throw();
 
+                //______________________________________________________________
+                //
+                // anonymous allocation
+                //______________________________________________________________
+                
                 void *acquire(size_t &bytes, size_t &shift); //!< clean memory
                 void  release(void *&addr, size_t &bytes, size_t &shift) throw();
 
+                //______________________________________________________________
+                //
+                // bytes allocation
+                //______________________________________________________________
+                
                 uint8_t *acquire_bytes(size_t  &bytes, size_t &shift);
                 void     release_bytes(uint8_t *&addr, size_t &bytes, size_t &shift) throw();
 
+                //______________________________________________________________
+                //
+                // fields allocation
+                //______________________________________________________________
+                
                 template <typename T> inline
                 T *acquire_field(size_t &count,size_t &bytes, size_t &shift)
                 {

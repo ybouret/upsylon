@@ -3,6 +3,7 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/exceptions.hpp"
+#include "y/type/utils.hpp"
 #include <cerrno>
 
 namespace upsylon {
@@ -19,7 +20,7 @@ namespace upsylon {
             objects:: objects(lockable &sync,const size_t chunk_size, const size_t limit_size) :
             Access(sync),
             Quarry(),
-            Blocks(chunk_size,limit_size,Quarry),
+            Blocks(chunk_size,max_of(limit_size,vein::min_size),Quarry),
             little()
             {
                 Y_BZSET_STATIC(little);
@@ -56,6 +57,7 @@ namespace upsylon {
                     throw libc::exception(EDOM,"small::objects::dyadic_acquire(block_exp2=%u>%u)",unsigned(block_exp2),unsigned(vein::max_exp2));
                 }
 
+                Y_LOCK(Access);
                 if(block_exp2<vein::min_exp2)
                 {
                     arena **     ppA = &little[block_exp2];
@@ -73,6 +75,7 @@ namespace upsylon {
                 assert(addr);
                 assert(block_exp2<=vein::max_exp2);
 
+                Y_LOCK(Access);
                 if(block_exp2<vein::min_exp2)
                 {
                     assert(NULL!=little[block_exp2]);

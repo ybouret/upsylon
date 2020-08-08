@@ -12,12 +12,19 @@ namespace upsylon {
     
     namespace mpl {
 
+        //______________________________________________________________________
+        //
+        //
+        //! dedicated memory for mpl
+        //
+        //______________________________________________________________________
         class dispatcher :
         public    singleton<dispatcher>,
         private   memory::small::quarry,
         public    memory::small::quarry_allocator
         {
         public:
+            //! life_time is just behind global
             static const at_exit::longevity life_time = limit_of<at_exit::longevity>::maximum-1;
             
         private:
