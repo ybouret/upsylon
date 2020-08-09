@@ -1,6 +1,6 @@
 #include "y/memory/arena-of.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/cblock.hpp"
+#include "y/ptr/cblock.hpp"
 #include <typeinfo>
 
 using namespace upsylon;
@@ -18,9 +18,9 @@ static inline void test_arena_of(const size_t nb)
     const char *tid = typeid(T).name();
     std::cerr << "< arena_of<" << tid << "> >" << std::endl;
     memory::arena_of<T>   A( 4096 );
-    memory::cblock_of<T*> blk(nb);
+    cblock<T*>            blk(nb);
 
-    const size_t n   = blk.size;
+    const size_t n   = blk.count;
     const size_t h   = n/2;
     for(size_t i=0;i<n;++i)
     {
@@ -51,10 +51,10 @@ Y_UTEST(arena)
     
     const size_t nb = 4000;
 
-    memory::cblock_of<block> blocks(nb);
-    const size_t n   = blocks.size;
-    const size_t h   = n/2;
-    block       *blk = blocks.data;
+    cblock<block> blocks(nb);
+    const size_t  n   = blocks.count;
+    const size_t  h   = n/2;
+    block       * blk = &blocks[0];
 
     for(size_t block_size=1;block_size<=128;block_size*=2)
     {

@@ -42,7 +42,7 @@ namespace
     }
 }
 
-#include "y/memory/cblock.hpp"
+#include "y/ptr/cblock.hpp"
 #include "y/os/wtime.hpp"
 #include "y/string/env.hpp"
 
@@ -52,10 +52,10 @@ Y_UTEST(simd)
     rt_clock clk;
     double   duration = 3;
     size_t   n        = 16384;
-    memory::cblock_of<double> blk(n);
+    cblock<double>    blk(n);
     info   I =
     {
-        blk.data, n
+        &blk[0], n
     };
 
     environment::set(Y_THREADS_VERBOSITY,"1");

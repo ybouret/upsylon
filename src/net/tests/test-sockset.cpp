@@ -1,6 +1,6 @@
 #include "y/net/socket/set.hpp"
 #include "y/net/socket/delay.hpp"
-#include "y/memory/cblock.hpp"
+#include "y/ptr/cblock.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -78,10 +78,10 @@ Y_UTEST(sockset)
     net::bsd_socket udp_v4(net::udp,net::v4);
     net::bsd_socket udp_v6(net::udp,net::v6);
 
-    memory::cblock_of<net::bsd_socket *> blk(4);
+    cblock<net::bsd_socket *> blk(4);
 
     {
-        net::bsd_socket **arr = blk.data;
+        net::bsd_socket **arr = &blk[0];
         size_t            num = 0;
 
         fill(arr, num, tcp_v4);

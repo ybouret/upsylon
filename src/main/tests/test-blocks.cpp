@@ -1,7 +1,7 @@
 #include "y/memory/blocks.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/utils.hpp"
-#include "y/memory/cblock.hpp"
+#include "y/ptr/cblock.hpp"
 #include <cstdlib>
 
 using namespace upsylon;
@@ -27,8 +27,8 @@ Y_UTEST(blocks)
 
         const size_t n = 1000;
         const size_t h = n/2;
-        memory::cblock_of<block> wksp(n);
-        block *blk = wksp.data;
+        cblock<block> wksp(n);
+        block *blk  = &wksp[0];
         for(size_t iter=0;iter<16;++iter)
         {
             for(size_t i=0;i<n;++i)

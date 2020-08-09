@@ -5,7 +5,7 @@ namespace upsylon
 {
     namespace ios
     {
-    
+        
         on_disk:: ~on_disk() throw()
         {
         }
@@ -47,224 +47,228 @@ namespace upsylon
 
 
 namespace upsylon
+{
+    namespace ios
     {
-        namespace ios
-            {
-                disk_file:: ~disk_file() throw()
-                {
-                }
-                
-                disk_file:: disk_file( const disk_file &other ) throw() :
-                on_disk::pointer(other)
-                {}
-                
-                disk_file:: disk_file( const string &filename, const unsigned mode ) :
-                on_disk::pointer( new on_disk(filename,mode) )
-                {
-                }
-                
-                disk_file:: disk_file( const char *filename, const unsigned mode ) :
-                on_disk::pointer( new on_disk(filename,mode) )
-                {
-                }
-                
-                disk_file:: disk_file(const cstdin_t &_) :
-                on_disk::pointer( new on_disk(_) )
-                {
-                }
-                
-                disk_file:: disk_file(const cstdout_t &_) :
-                on_disk::pointer( new on_disk(_) )
-                {
-                }
-                
-                disk_file:: disk_file(const cstderr_t &_) :
-                on_disk::pointer( new on_disk(_) )
-                {
-                }
-                
-                
-                
-                descriptor::type & disk_file:: fd()
-                {
-                    on_disk & self = (**this);
-                    return self.handle;
-                }
-                
-                
-            }
-    }
-
-namespace upsylon
-    {
-        namespace ios
-            {
-                rw_disk_file:: ~rw_disk_file() throw()
-                {
-                }
-                
-                rw_disk_file:: rw_disk_file( const string &filename ) :
-                disk_file(filename,ios::readable|ios::writable)
-                {
-                    
-                }
-                
-                rw_disk_file:: rw_disk_file( const char *filename ) :
-                disk_file(filename,ios::readable|ios::writable)
-                {
-                    
-                }
-                
-                rw_disk_file:: rw_disk_file( const rw_disk_file &other ) throw() :
-                disk_file( other )
-                {
-                }
-                
-                size_t rw_disk_file:: get( void *data, const size_t size )
-                {
-                    size_t done = 0;
-                    descriptor::get( fd(), data, size, done);
-                    return done;
-                }
-                
-                size_t  rw_disk_file:: put(const void *data, const size_t size)
-                {
-                    size_t done = 0;
-                    descriptor::put( fd(), data, size, done);
-                    return done;
-                }
-            }
+        disk_file:: ~disk_file() throw()
+        {
+        }
+        
+        disk_file:: disk_file( const disk_file &other ) throw() :
+        on_disk::pointer(other)
+        {}
+        
+        disk_file:: disk_file( const string &filename, const unsigned mode ) :
+        on_disk::pointer( new on_disk(filename,mode) )
+        {
+        }
+        
+        disk_file:: disk_file( const char *filename, const unsigned mode ) :
+        on_disk::pointer( new on_disk(filename,mode) )
+        {
+        }
+        
+        disk_file:: disk_file(const cstdin_t &_) :
+        on_disk::pointer( new on_disk(_) )
+        {
+        }
+        
+        disk_file:: disk_file(const cstdout_t &_) :
+        on_disk::pointer( new on_disk(_) )
+        {
+        }
+        
+        disk_file:: disk_file(const cstderr_t &_) :
+        on_disk::pointer( new on_disk(_) )
+        {
+        }
+        
+        
+        
+        descriptor::type & disk_file:: fd()
+        {
+            on_disk & self = (**this);
+            return self.handle;
+        }
+        
         
     }
+}
 
 namespace upsylon
+{
+    namespace ios
     {
-        namespace ios
-            {
-                readable_disk_file:: ~readable_disk_file() throw()
-                {}
-                
-                readable_disk_file:: readable_disk_file(const string &filename) :
-                disk_file(filename,ios::readable)
-                {
-                }
-                
-                readable_disk_file:: readable_disk_file(const char *filename) :
-                disk_file(filename,ios::readable)
-                {
-                }
-                
-                readable_disk_file:: readable_disk_file( const cstdin_t &_ ) :
-                disk_file(_)
-                {
-                    
-                }
-                
-                readable_disk_file:: readable_disk_file( const readable_disk_file &other ) throw() :
-                disk_file(other)
-                {
-                }
-                
-                readable_disk_file:: readable_disk_file(const rw_disk_file &other) throw() :
-                disk_file( other )
-                {
-                }
-                
-                
-                size_t readable_disk_file:: get( void *data, const size_t size )
-                {
-                    size_t done = 0;
-                    descriptor::get( fd(), data, size, done);
-                    return done;
-                }
-                
-            }
+        rw_disk_file:: ~rw_disk_file() throw()
+        {
+        }
+        
+        rw_disk_file:: rw_disk_file( const string &filename ) :
+        disk_file(filename,ios::readable|ios::writable)
+        {
+            
+        }
+        
+        rw_disk_file:: rw_disk_file( const char *filename ) :
+        disk_file(filename,ios::readable|ios::writable)
+        {
+            
+        }
+        
+        rw_disk_file:: rw_disk_file( const rw_disk_file &other ) throw() :
+        disk_file( other )
+        {
+        }
+        
+        size_t rw_disk_file:: get( void *data, const size_t size )
+        {
+            size_t done = 0;
+            descriptor::get( fd(), data, size, done);
+            return done;
+        }
+        
+        size_t  rw_disk_file:: put(const void *data, const size_t size)
+        {
+            size_t done = 0;
+            descriptor::put( fd(), data, size, done);
+            return done;
+        }
     }
+    
+}
+
+namespace upsylon
+{
+    namespace ios
+    {
+        readable_disk_file:: ~readable_disk_file() throw()
+        {}
+        
+        readable_disk_file:: readable_disk_file(const string &filename) :
+        disk_file(filename,ios::readable)
+        {
+        }
+        
+        readable_disk_file:: readable_disk_file(const char *filename) :
+        disk_file(filename,ios::readable)
+        {
+        }
+        
+        readable_disk_file:: readable_disk_file( const cstdin_t &_ ) :
+        disk_file(_)
+        {
+            
+        }
+        
+        readable_disk_file:: readable_disk_file( const readable_disk_file &other ) throw() :
+        disk_file(other)
+        {
+        }
+        
+        readable_disk_file:: readable_disk_file(const rw_disk_file &other) throw() :
+        disk_file( other )
+        {
+        }
+        
+        
+        size_t readable_disk_file:: get( void *data, const size_t size )
+        {
+            size_t done = 0;
+            descriptor::get( fd(), data, size, done);
+            return done;
+        }
+        
+    }
+}
 
 #include "y/exceptions.hpp"
 #include <cerrno>
 
 namespace upsylon
+{
+    namespace ios
     {
-        namespace ios
+        writable_disk_file:: ~writable_disk_file() throw()
+        {
+        }
+        
+        writable_disk_file:: writable_disk_file(const string &filename, const bool append ) :
+        disk_file(filename, ios::writable | ( append ? 0 : ios::truncate) )
+        {
+            if(append)
             {
-                writable_disk_file:: ~writable_disk_file() throw()
-                {
-                }
-                
-                writable_disk_file:: writable_disk_file(const string &filename, const bool append ) :
-                disk_file(filename, ios::writable | ( append ? 0 : ios::truncate) )
-                {
-                    if(append)
-                    {
-                        (*this)->unwind();
-                    }
-                }
-                
-                writable_disk_file:: writable_disk_file(const char *filename, const bool append ) :
-                disk_file(filename, ios::writable | ( append ? 0 : ios::truncate) )
-                {
-                    if(append)
-                    {
-                        (*this)->unwind();
-                    }
-                }
-                
-                writable_disk_file:: writable_disk_file( const cstderr_t &_ ) :
-                disk_file(_)
-                {
-                }
-                
-                writable_disk_file:: writable_disk_file( const cstdout_t &_ ) :
-                disk_file(_)
-                {
-                }
-                
-                size_t  writable_disk_file:: put(const void *data, const size_t size)
-                {
-                    size_t done = 0;
-                    descriptor::put( fd(), data, size, done);
-                    return done;
-                }
-                
-                void   writable_disk_file:: put_all(const void *data, const size_t size)
-                {
-                    const uint8_t *buff = (const uint8_t *)data;
-                    size_t         todo = size;
-                    while(todo>0)
-                    {
-                        const size_t nw = put(buff,todo);
-                        if(nw<=0) throw libc::exception( EIO, "writable_disk_file.put_all()" );
-                        buff += nw;
-                        todo -= nw;
-                    }
-                }
-                
-                writable_disk_file:: writable_disk_file(const writable_disk_file &other) throw() :
-                disk_file(other)
-                {
-                }
-                
-                writable_disk_file:: writable_disk_file(const rw_disk_file &other) throw() :
-                disk_file(other)
-                {
-                }
-                
-                
+                (*this)->unwind();
             }
+        }
+        
+        writable_disk_file:: writable_disk_file(const char *filename, const bool append ) :
+        disk_file(filename, ios::writable | ( append ? 0 : ios::truncate) )
+        {
+            if(append)
+            {
+                (*this)->unwind();
+            }
+        }
+        
+        writable_disk_file:: writable_disk_file( const cstderr_t &_ ) :
+        disk_file(_)
+        {
+        }
+        
+        writable_disk_file:: writable_disk_file( const cstdout_t &_ ) :
+        disk_file(_)
+        {
+        }
+        
+        size_t  writable_disk_file:: put(const void *data, const size_t size)
+        {
+            size_t done = 0;
+            descriptor::put( fd(), data, size, done);
+            return done;
+        }
+        
+        void   writable_disk_file:: put_all(const void *data, const size_t size)
+        {
+            const uint8_t *buff = (const uint8_t *)data;
+            size_t         todo = size;
+            while(todo>0)
+            {
+                const size_t nw = put(buff,todo);
+                if(nw<=0) throw libc::exception( EIO, "writable_disk_file.put_all()" );
+                buff += nw;
+                todo -= nw;
+            }
+        }
+        
+        writable_disk_file:: writable_disk_file(const writable_disk_file &other) throw() :
+        disk_file(other)
+        {
+        }
+        
+        writable_disk_file:: writable_disk_file(const rw_disk_file &other) throw() :
+        disk_file(other)
+        {
+        }
+        
+        
     }
+}
 
-#include "y/memory/cblock.hpp"
+#include "y/ptr/cblock.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
-namespace upsylon {
-    namespace ios  {
+namespace upsylon
+{
+    namespace ios
+    {
+    
         void disk_file:: copy(const string &target,
                               const string &source,
                               const bool    append)
         {
-            memory::cblock_of<char> blk( BUFSIZ );
-            char                   *buf = blk.data;
-            const size_t            len = blk.size;
+            cblock<char,memory::dyadic> blk( BUFSIZ );
+            char                       *buf = & *blk;
+            const size_t                len = blk.count;
             
             readable_disk_file src(source);
             writable_disk_file tgt(target,append);
@@ -278,9 +282,10 @@ namespace upsylon {
         
         size_t disk_file:: load( chainable<char> &target, const string &source )
         {
-            memory::cblock_of<char> blk( BUFSIZ );
-            char                   *buf = blk.data;
-            const size_t            len = blk.size;
+            cblock<char,memory::dyadic> blk( BUFSIZ );
+            char                       *buf = & *blk;
+            const size_t                len = blk.count;
+            
             size_t count = 0;
             readable_disk_file src(source);
             while(true)
@@ -299,7 +304,7 @@ namespace upsylon {
             return load( (chainable<char>&)target, source );
         }
         
-      
+        
         
     }
     
@@ -312,9 +317,9 @@ namespace upsylon     {
         
         void disk_file:: hash_with( hashing::function &H, const string &source)
         {
-            memory::cblock_of<char> blk( BUFSIZ );
-            char                   *buf = blk.data;
-            const size_t            len = blk.size;
+            cblock<char,memory::dyadic> blk( BUFSIZ );
+            char                       *buf = & *blk;
+            const size_t                len = blk.count;
             readable_disk_file      src(source);
             while(true)
             {
@@ -323,7 +328,7 @@ namespace upsylon     {
                 H.run(buf,nr);
             }
         }
-
+        
         digest disk_file:: md(hashing::function &H, const string &source)
         {
             H.set();
