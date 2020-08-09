@@ -81,6 +81,7 @@ ADD_TEST(core:metaloop    test-main metaloop)
 
 SOURCE_GROUP(mem FILES test-chunk.cpp test-arena.cpp test-alloc.cpp test-blocks.cpp test-slab.cpp test-object.cpp test-slice.cpp test-embed.cpp
 test-carver.cpp test-pooled.cpp test-buffers.cpp test-xslot.cpp test-ptr.cpp test-release.cpp 
+test-memory-memblk.cpp
 test-static-slots.cpp 
 test-memory-marker.cpp
 test-memory-groove.cpp

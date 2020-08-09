@@ -1,0 +1,35 @@
+
+//! \file
+#ifndef Y_PTR_CBLOCK_INCLUDED
+#define Y_PTR_CBLOCK_INCLUDED 1
+
+#include "y/ptr/memblk.hpp"
+
+namespace upsylon
+{
+    
+    template <typename T, typename ALLOCATOR = memory::global >
+    class cblock : public memblk<T,ALLOCATOR>
+    {
+    public:
+        Y_DECL_ARGS(T,type);
+        typedef memblk<T,ALLOCATOR> memblk_type;
+        
+        virtual ~cblock() throw()
+        {
+            
+        }
+        
+        explicit cblock(const size_t required) :
+        memblk_type(required)
+        {
+        }
+        
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(cblock);
+        
+    };
+}
+
+#endif
