@@ -57,6 +57,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(small_quarry);
     Y_UTEST(small_mt);
     Y_UTEST(small_object);
+    Y_UTEST(memblk);
 
     Y_UTEST(mloops);
     Y_UTEST(comb);

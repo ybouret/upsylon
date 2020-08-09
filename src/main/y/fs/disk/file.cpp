@@ -1,8 +1,11 @@
 #include "y/fs/disk/file.hpp"
 
 
-namespace upsylon {
-    namespace ios {
+namespace upsylon
+{
+    namespace ios
+    {
+    
         on_disk:: ~on_disk() throw()
         {
         }
@@ -36,8 +39,6 @@ namespace upsylon {
         access()
         {
         }
-        
-        
         
     }
 }
