@@ -4,6 +4,7 @@
 #define Y_PTR_CBLOCK_INCLUDED 1
 
 #include "y/ptr/memblk.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -38,6 +39,10 @@ namespace upsylon
             return this->pointee[indx];
         }
         
+        inline void clear() throw()
+        {
+            memset(this->pointee,0,this->bytes);
+        }
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(cblock);
