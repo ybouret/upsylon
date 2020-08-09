@@ -25,6 +25,19 @@ namespace upsylon
         {
         }
         
+        inline type & operator[](const size_t indx) throw()
+        {
+            assert(indx<this->count);
+            return this->pointee[indx];
+        }
+        
+        
+        inline const_type & operator[](const size_t indx) const throw()
+        {
+            assert(indx<this->count);
+            return this->pointee[indx];
+        }
+        
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(cblock);
