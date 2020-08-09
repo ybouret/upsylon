@@ -262,13 +262,15 @@ namespace upsylon
     namespace ios
     {
     
+        typedef cblock<char,memory::dyadic> io_block;
+        
         void disk_file:: copy(const string &target,
                               const string &source,
                               const bool    append)
         {
-            cblock<char,memory::dyadic> blk( BUFSIZ );
-            char                       *buf = & *blk;
-            const size_t                len = blk.count;
+            io_block      blk(BUFSIZ);
+            char         *buf = & *blk;
+            const size_t  len = blk.count;
             
             readable_disk_file src(source);
             writable_disk_file tgt(target,append);
@@ -282,9 +284,9 @@ namespace upsylon
         
         size_t disk_file:: load( chainable<char> &target, const string &source )
         {
-            cblock<char,memory::dyadic> blk( BUFSIZ );
-            char                       *buf = & *blk;
-            const size_t                len = blk.count;
+            io_block      blk(BUFSIZ);
+            char         *buf = & *blk;
+            const size_t  len = blk.count;
             
             size_t count = 0;
             readable_disk_file src(source);
@@ -312,15 +314,17 @@ namespace upsylon
 
 #include "y/hashing/function.hpp"
 
-namespace upsylon     {
+namespace upsylon {
+    
     namespace ios {
         
         void disk_file:: hash_with( hashing::function &H, const string &source)
         {
-            cblock<char,memory::dyadic> blk( BUFSIZ );
-            char                       *buf = & *blk;
-            const size_t                len = blk.count;
-            readable_disk_file      src(source);
+            io_block      blk(BUFSIZ);
+            char         *buf = & *blk;
+            const size_t  len = blk.count;
+            
+            readable_disk_file src(source);
             while(true)
             {
                 const size_t nr = src.get(buf,len);
