@@ -14,7 +14,7 @@ extern char **environ;
 #if defined(Y_WIN)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #endif
 
 
