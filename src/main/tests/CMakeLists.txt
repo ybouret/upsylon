@@ -86,6 +86,7 @@ test-static-slots.cpp
 test-memory-marker.cpp
 test-memory-groove.cpp
 test-memory-joint-section.cpp
+test-memory-joint-ward.cpp
 test-memory-tight-chunk.cpp
 test-memory-tight-arena.cpp
 test-memory-tight-zcache.cpp

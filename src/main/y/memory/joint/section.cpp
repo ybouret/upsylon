@@ -1,7 +1,9 @@
 #include "y/memory/joint/section.hpp"
 #include "y/code/round.hpp"
 #include "y/type/utils.hpp"
-
+#include "y/type/aliasing.hpp"
+#include "y/code/base2.hpp"
+#include "y/memory/tight/vein.hpp"
 #include <iostream>
 #include <cstring>
 
@@ -13,20 +15,25 @@ namespace upsylon {
 
             size_t   section:: bytes_to_hold(const size_t bytes) throw()
             {
-                return max_of<size_t>(min_length,Y_ROUND_LN2(block_iln2,bytes)+2*block_size);
+                return max_of<size_t>(min_length,Y_ROUND_LN2(block_iln2,bytes)+2*block_size,tight::vein::min_size);
             }
 
 
-            section:: section(void        *data,
-                              const size_t size) throw():
+            section:: section(void   *data,
+                              size_t size) throw():
             entry( static_cast<block *>(data) ),
             guard( entry ),
             next(0),
-            prev(0)
+            prev(0),
+            bsize(min_of(size,tight::vein::max_size)),
+            xsize(tight::vein::min_size),
+            xexp2(tight::vein::min_exp2),
+            priv()
             {
                 assert(data!=NULL);
                 assert(size>=min_length);
-                size_t blocks = size/block_size; assert(blocks>=min_blocks);
+                assert(size>=tight::vein::min_size);
+                size_t blocks = bsize/block_size; assert(blocks>=min_blocks);
 
                 guard += --blocks;
 
@@ -44,8 +51,15 @@ namespace upsylon {
                 assert(check_block(entry));
                 assert(check_block(guard));
 
+                aliasing::_(bsize) = blocks * block_size;
+                while(xsize<bsize)
+                {
+                    aliasing::_(xsize) <<= 1;
+                    ++aliasing::_(xexp2);
+                }
 
             }
+            
 
             section:: ~section() throw()
             {

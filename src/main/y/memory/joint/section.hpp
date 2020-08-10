@@ -44,7 +44,7 @@ namespace upsylon {
                 //
                 // C++
                 //______________________________________________________________
-                section(void *data,const size_t size) throw();//!< create slice, size>=small_size
+                section(void *data, const size_t size) throw();//!< create slice, size>=small_size
                 ~section()     throw();                       //!< cleanup
 
                 //______________________________________________________________
@@ -72,7 +72,7 @@ namespace upsylon {
                  */
                 section *      receive(void * &addr, size_t &maxi, const size_t size) throw();
 
-
+                
 
                 //______________________________________________________________
                 //
@@ -84,6 +84,10 @@ namespace upsylon {
                 section *next; //!< for list
                 section *prev; //!< for list
 
+                const len_t bsize; //!< bytes for blocks
+                const len_t xsize; //!< next_power_of_two(size)
+                const len_t xexp2; //!< size = 1 << exp2
+                len_t       priv; //!< for alignment
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(section);
