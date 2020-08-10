@@ -19,6 +19,8 @@ namespace upsylon {
                 explicit ward(const size_t usr_chunk_size);
                 virtual ~ward() throw();
 
+                void * acquire(size_t &n );
+                void   release(void *p, size_t &n) throw();
 
             private:
                 section               *acquiring;
