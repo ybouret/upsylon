@@ -82,6 +82,12 @@ SET(memory_tight_srcs ${memory_tight_decl} ${memory_tight_code})
 SOURCE_GROUP( memory/tight FILES ${memory_tight_srcs} )
 INSTALL( FILES ${memory_tight_decl} DESTINATION include/y/memory/tight )
 
+FILE(GLOB memory_pooled_decl   y/memory/pooled/*.hpp)
+FILE(GLOB memory_pooled_code y/memory/pooled/*.cpp)
+SET(memory_pooled_srcs ${memory_pooled_decl} ${memory_pooled_code})
+SOURCE_GROUP( memory/pooled FILES ${memory_pooled_srcs} )
+INSTALL( FILES ${memory_pooled_decl} DESTINATION include/y/memory/pooled )
+
 
 FILE(GLOB string_decl   y/string/*.hpp)
 FILE(GLOB string_code y/string/*.cpp)
@@ -389,7 +395,7 @@ ${sort_srcs}
 ${sort_network_srcs}
 ${randomized_srcs}
 ${hashing_srcs}
-${memory_srcs} ${memory_allocator_srcs} ${memory_tight_srcs}
+${memory_srcs} ${memory_allocator_srcs} ${memory_tight_srcs} ${memory_pooled_srcs}
 ${string_srcs}
 ${ptr_srcs}
 ${iterate_srcs}
