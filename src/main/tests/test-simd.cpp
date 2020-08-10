@@ -55,7 +55,7 @@ Y_UTEST(simd)
     zblock<double,memory::global>    blk(n);
     info   I =
     {
-        (*blk)-1, n
+        (*blk), n
     };
 
     environment::set(Y_THREADS_VERBOSITY,"1");
