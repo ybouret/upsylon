@@ -94,11 +94,11 @@ test-memory-small-vein.cpp
 test-memory-small-quarry.cpp
 test-memory-small-mt.cpp
 test-memory-small-object.cpp
+test-memory-zblock.cpp
 )
 ADD_TEST(mem:chunk        test-main chunk)
 ADD_TEST(mem:arena        test-main arena)
 ADD_TEST(mem:alloc        test-main alloc)
-ADD_TEST(mem:blocks       test-main blocks)
 ADD_Test(mem:slab         test-main slab)
 ADD_TEST(mem:object0      test-main object0)
 ADD_TEST(mem:objectY      test-main objectY)
@@ -113,6 +113,7 @@ ADD_TEST(mem:embed        test-main embed)
 ADD_TEST(mem:slots        test-main static_slots)
 ADD_TEST(mem:marker       test-main marker)
 ADD_TEST(mem:groove       test-main groove)
+ADD_TEST(mem:zblock       test-main zblock)
 ADD_TEST(mem:section      test-main section)
 ADD_TEST(mem:small:chunk   test-main small_chunk)
 ADD_TEST(mem:small:arena   test-main small_arena)

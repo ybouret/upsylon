@@ -40,6 +40,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(carver);
     Y_UTEST(pooled);
     Y_UTEST(buffers);
+    Y_UTEST(zblock);
     Y_UTEST(xslot);
     Y_UTEST(static_slots);
     Y_UTEST(ints_display);
