@@ -27,28 +27,32 @@ namespace
 Y_UTEST(joint_section)
 {
 
-    for(size_t i=1;i<=1000;i+=1+alea.leq(9))
+    for(size_t i=1;i<=100000;i+=1+alea.leq(1000))
     {
-        size_t       n = i;
-        const size_t m = joint::section::bytes_to_hold(n);
-        std::cerr << n << " => " << m << std::endl;
-        zblock<char,global>  buffer(m);
-        joint::section       S(buffer.rw(),buffer.length());
-        void *big = S.acquire(n);
-        Y_ASSERT( big );
-        Y_ASSERT( &S == S.release(big,n) );
-    }
+        size_t       required = i;
+        size_t       shift = 0;
+        const size_t bytes = joint::section::bytes_to_hold(required,shift);
 
+        std::cerr << required << " => " << bytes <<  "=2^" << shift << std::endl;
+        zblock<char,global>  buffer(bytes);
+        joint::section       S(buffer.rw(),bytes,shift);
+        Y_ASSERT(S.size==bytes);
+        Y_ASSERT(S.exp2==shift);
+
+        void *big = S.acquire(required);
+        Y_ASSERT( big );
+        Y_ASSERT( &S == S.release(big,required) );
+    }
 
     for(int iter=0;iter<16;++iter)
     {
-        zblock<joint::section::block,global>  buffer( memory::joint::section::min_blocks  + alea.leq(1000) );
-        joint::section S(buffer.rw(),buffer.length());
+        const size_t required = 100 + alea.leq(10000);
+        size_t       shift    = 0;
+        const size_t bytes    = joint::section::bytes_to_hold(required, shift);
+        zblock<char,global>  buffer(bytes);
+        joint::section S(buffer.rw(),bytes,shift);
+        std::cerr << required << " => section.size=" << S.size << "=2^" << S.exp2 << std::endl;
 
-        std::cerr << "provided: " << buffer.length() << std::endl;
-        std::cerr << "used    : " << S.bsize         << std::endl;
-        std::cerr << "xsize   : " << S.xsize         << std::endl;
-        std::cerr << "xexp2   : " << S.xexp2         << std::endl;
 
         list<block> L;
         while(true)

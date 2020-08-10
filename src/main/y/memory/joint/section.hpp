@@ -36,22 +36,25 @@ namespace upsylon {
                 };
 
                 static const size_t block_size = sizeof(block);               //!< block size
-                static const size_t block_iln2 = ilog2<block_size>::value;    //!< for bits shift : block_size = 1 << block_iln2
-                static const size_t min_blocks = 3;                           //!< mininum number of blocks for a valid section
-                static const size_t min_length = min_blocks << block_iln2;    //!< minimum length in bytes for a valid section
+                static const size_t block_exp2 = ilog2<block_size>::value;    //!< for bits shift : block_size = 1 << block_iln2
+                static const size_t min_blocks = 4;                           //!< mininum number of blocks for a valid section
+                static const size_t min_size   = min_blocks << block_exp2;    //!< minimum size in bytes for a valid section
+                static const size_t min_exp2   = ilog2<min_size>::value;
 
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-                section(void *data, const size_t size) throw();//!< create slice, size>=small_size
-                ~section()     throw();                       //!< cleanup
+                section(void        *usr_data,
+                        const size_t usr_size,
+                        const size_t usr_exp2) throw();  //!< create slice, size>=small_size
+                ~section()     throw();                  //!< cleanup
 
                 //______________________________________________________________
                 //
                 // methods
                 //______________________________________________________________
-                static size_t   bytes_to_hold(const size_t) throw(); //!< memory computation
+                static size_t   bytes_to_hold(const size_t bytes,size_t &shift); //!< memory demand, error if too big
                 void            display()                     const; //!< display to debug
                 static section *release(void * &, size_t &) throw(); //!< release previously allocated, get owner
                 bool            is_free()             const throw(); //!< check section is free
@@ -84,11 +87,10 @@ namespace upsylon {
                 section *next; //!< for list
                 section *prev; //!< for list
 
-                const len_t bsize; //!< bytes for blocks
-                const len_t xsize; //!< next_power_of_two(size)
-                const len_t xexp2; //!< size = 1 << exp2
-                len_t       priv; //!< for alignment
-
+                const len_t size; //!< bytes for blocks, as power of two
+                const len_t exp2; //!< size = 1 << exp2       if built with vein
+                len_t       prv1; //!< for alignment
+                len_t       prv2; //!< for alignment
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(section);
                 bool  check_block(const block *blk) const;
@@ -96,6 +98,8 @@ namespace upsylon {
 
                 typedef void (*finalize)(void *,const size_t);
                 void *acquire(size_t &n,finalize) throw();
+
+                void format(const size_t blocks) throw();
             };
 
         }

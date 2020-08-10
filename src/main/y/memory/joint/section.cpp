@@ -4,6 +4,8 @@
 #include "y/type/aliasing.hpp"
 #include "y/code/base2.hpp"
 #include "y/memory/tight/vein.hpp"
+#include "y/exceptions.hpp"
+
 #include <iostream>
 #include <cstring>
 
@@ -13,28 +15,42 @@ namespace upsylon {
 
         namespace joint {
 
-            size_t   section:: bytes_to_hold(const size_t bytes) throw()
+            size_t   section:: bytes_to_hold(const size_t bytes, size_t &shift)
             {
-                return max_of<size_t>(min_length,Y_ROUND_LN2(block_iln2,bytes)+2*block_size,tight::vein::min_size);
+                assert(min_size>=tight::vein::min_size);
+
+                static const size_t max_usr_size = base2<size_t>::max_power_of_two;
+                static const size_t max_blk_size = max_usr_size-2*block_size;
+                const size_t        aligned_size = Y_ROUND_LN2(block_exp2,bytes);
+                if(aligned_size>max_blk_size) throw exception("joint::section: too manu bytes to hold");
+                const size_t ans = next_power_of_two( max_of<size_t>(min_size,Y_ROUND_LN2(block_exp2,bytes)+2*block_size) );
+                shift = integer_log2(ans);
+
+                assert(size_t(1)<<shift==ans);
+                assert(ans>=bytes);
+                return ans;
             }
 
 
-            section:: section(void   *data,
-                              size_t size) throw():
-            entry( static_cast<block *>(data) ),
+            section:: section(void        *usr_data,
+                              const size_t usr_size,
+                              const size_t usr_exp2) throw():
+            entry( static_cast<block *>(usr_data) ),
             guard( entry ),
             next(0),
             prev(0),
-            bsize(min_of(size,tight::vein::max_size)),
-            xsize(tight::vein::min_size),
-            xexp2(tight::vein::min_exp2),
-            priv()
+            size(usr_size),
+            exp2(usr_exp2),
+            prv1(0),
+            prv2(0)
             {
-                assert(data!=NULL);
-                assert(size>=min_length);
-                assert(size>=tight::vein::min_size);
-                size_t blocks = bsize/block_size; assert(blocks>=min_blocks);
+                assert(usr_data!=NULL);
+                assert(size>=min_size);
+                assert(is_a_power_of_two(size));
+                assert(size_t(1)<<exp2==size);
 
+                size_t blocks = size/block_size;
+                assert(blocks>=min_blocks);
                 guard += --blocks;
 
                 entry->prev = 0;
@@ -50,13 +66,6 @@ namespace upsylon {
 
                 assert(check_block(entry));
                 assert(check_block(guard));
-
-                aliasing::_(bsize) = blocks * block_size;
-                while(xsize<bsize)
-                {
-                    aliasing::_(xsize) <<= 1;
-                    ++aliasing::_(xexp2);
-                }
 
             }
             
@@ -105,8 +114,8 @@ namespace upsylon {
                 static const size_t delta_blocks = extra_blocks-1;
 
                 assert(proc);
-                const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_iln2,n);
-                const size_t required = boundary >> block_iln2;
+                const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_exp2,n);
+                const size_t required = boundary >> block_exp2;
 
                 //--------------------------------------------------------------
                 //
