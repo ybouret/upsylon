@@ -1,4 +1,4 @@
-#include "y/memory/pooled/section.hpp"
+#include "y/memory/joint/section.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/memory/zblock.hpp"
