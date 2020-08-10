@@ -23,10 +23,10 @@ namespace {
 
 }
 
-Y_UTEST(small_blocks)
+Y_UTEST(tight_blocks)
 {
 
-    small::quarry Q;
+    tight::quarry Q;
     for(size_t chunk_size=1; chunk_size<=8192; chunk_size<<=1 )
     {
         std::cerr << "<chunk_size=" << chunk_size << ">" << std::endl;
@@ -35,7 +35,7 @@ Y_UTEST(small_blocks)
         {
             std::cerr << "\tlimit_size=" << std::setw(5) << limit_size << ":";
 
-            small::blocks blk(chunk_size,limit_size,Q);
+            tight::blocks blk(chunk_size,limit_size,Q);
             std::cerr << " | chunk_size=" << std::setw(5) <<  blk.chunk_size;
             std::cerr << " | #slots="     << std::setw(3) <<  blk.slots_size;
             std::cerr << " | load="       << std::setw(3) <<  blk.load_factor();
@@ -99,7 +99,7 @@ Y_UTEST(small_blocks)
         std::cerr << Q << std::endl;
         std::cerr << std::endl;
     }
-    Y_UTEST_SIZEOF(small::blocks::slot_type);
+    Y_UTEST_SIZEOF(tight::blocks::slot_type);
 
 
 }

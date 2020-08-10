@@ -16,7 +16,7 @@ namespace upsylon {
         //! create an allocated based on internal objects
         //
         //______________________________________________________________________
-        class dyadic : public singleton<dyadic>, public small::dyadic_allocator
+        class dyadic : public singleton<dyadic>, public tight::dyadic_allocator
         {
         public:
             static const at_exit::longevity life_time; //!< from object::life_time-1

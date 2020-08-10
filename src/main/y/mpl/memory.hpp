@@ -20,8 +20,8 @@ namespace upsylon {
         //______________________________________________________________________
         class dispatcher :
         public    singleton<dispatcher>,
-        private   memory::small::quarry,
-        public    memory::small::quarry_allocator
+        private   memory::tight::quarry,
+        public    memory::tight::quarry_allocator
         {
         public:
             //! life_time is just behind global

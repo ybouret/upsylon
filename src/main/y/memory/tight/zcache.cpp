@@ -9,7 +9,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             size_t __zcache:: chunk_size_from(const size_t a, const size_t b) throw()
             {

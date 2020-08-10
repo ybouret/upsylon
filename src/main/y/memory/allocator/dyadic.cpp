@@ -15,7 +15,7 @@ namespace upsylon {
 
         dyadic:: dyadic() :
         singleton<dyadic>(),
-        small::dyadic_allocator( object::proto() )
+        tight::dyadic_allocator( object::proto() )
         {
         }
 

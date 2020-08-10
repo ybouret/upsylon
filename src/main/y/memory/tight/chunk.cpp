@@ -5,7 +5,7 @@ namespace upsylon {
     namespace memory
     {
 
-        namespace small
+        namespace tight
         {
             //static const char fn[] = "[memory::small::piece]";
 
@@ -106,7 +106,7 @@ namespace upsylon {
     namespace memory
     {
 
-        namespace small
+        namespace tight
         {
 
             void * chunk::acquire(const size_t block_size) throw()
@@ -148,7 +148,6 @@ namespace upsylon {
     }
 }
 
-//#include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 
 namespace upsylon {
@@ -156,7 +155,7 @@ namespace upsylon {
     namespace memory
     {
 
-        namespace small
+        namespace tight
         {
 
             size_t chunk:: min_chunk_size_for(const size_t block_size) throw()
@@ -223,7 +222,7 @@ namespace upsylon {
     namespace memory
     {
 
-        namespace small
+        namespace tight
         {
 
             std::ostream & operator<<(std::ostream &os, const chunk &ch)

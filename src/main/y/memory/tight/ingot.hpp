@@ -10,7 +10,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             //! binary layout for an ingot
             struct ingot

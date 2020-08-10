@@ -11,7 +11,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
         
             //__________________________________________________________________
             //

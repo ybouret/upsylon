@@ -7,7 +7,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             stock:: ~stock() throw()
             {

@@ -34,12 +34,12 @@ namespace {
     };
 
     template <typename T>
-    static inline void do_test_with( small::quarry &Q )
+    static inline void do_test_with( tight::quarry &Q )
     {
         std::cerr << std::endl;
         std::cerr << "<typed quarry_allocator>" << std::endl;
         concurrent::fake_lock   L;
-        small::quarry_allocator A(L,Q);
+        tight::quarry_allocator A(L,Q);
 
         block_of<T>   blk[1024];
         const size_t  num = sizeof(blk)/sizeof(blk[0]);
@@ -60,9 +60,9 @@ namespace {
 
 }
 
-Y_UTEST(small_quarry)
+Y_UTEST(tight_quarry)
 {
-    small::quarry Q;
+    tight::quarry Q;
     block         blk[ 1024 ];
     const size_t  num = sizeof(blk)/sizeof(blk[0]);
 
@@ -97,11 +97,11 @@ Y_UTEST(small_quarry)
             ios::ocstream fp1("qlen.dat");
             ios::ocstream fp2("qsup.dat");
             size_t p = 0;
-            for(size_t i=0;i<small::vein::min_exp2;++i)
+            for(size_t i=0;i<tight::vein::min_exp2;++i)
             {
                 std::cerr << "0,";
             }
-            for(size_t i=small::vein::min_exp2;i<=small::vein::max_exp2;++i)
+            for(size_t i=tight::vein::min_exp2;i<=tight::vein::max_exp2;++i)
             {
                 char buffer[1024] = { 0 };
                 memset(buffer,0,sizeof(buffer));
@@ -116,7 +116,7 @@ Y_UTEST(small_quarry)
                     p=n;
                 }
                 std::cerr << n;
-                if(i<small::vein::max_exp2) std::cerr << ",";
+                if(i<tight::vein::max_exp2) std::cerr << ",";
             }
             std::cerr << std::endl;
         }
@@ -124,7 +124,7 @@ Y_UTEST(small_quarry)
 
     {
         concurrent::fake_lock   L;
-        small::quarry_allocator A(L,Q);
+        tight::quarry_allocator A(L,Q);
 
         for(size_t i=0;i<num;++i)
         {

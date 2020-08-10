@@ -13,7 +13,7 @@ using namespace memory;
 
 namespace
 {
-    static inline void doMT( small::hoard &h )
+    static inline void doMT( tight::hoard &h )
     {
         std::cerr << "block_size=" << h.block_size << std::endl;
 
@@ -32,7 +32,7 @@ namespace
             reg[i] = 0;
         }
 
-        small::stock s(h);
+        tight::stock s(h);
         s.reserve(300);
         std::cerr << "available: " << s.available() << std::endl;
         for(size_t i=0;i<num;++i)
@@ -53,24 +53,24 @@ namespace
     }
 }
 
-Y_UTEST(small_mt)
+Y_UTEST(tight_mt)
 {
-    std::cerr << "stock::min_block_size=" << small::stock::min_block_size << std::endl;
+    std::cerr << "stock::min_block_size=" << tight::stock::min_block_size << std::endl;
     concurrent::fake_lock access;
 
-    small::quarry Q;
-    small::blocks B(4096,512,Q);
+    tight::quarry Q;
+    tight::blocks B(4096,512,Q);
     std::cerr << "Minimal Quarry: " << std::endl;
     std::cerr << Q << std::endl;
 
     {
-        small::mt<small::vein> v64(access, Q(64) );
+        tight::mt<tight::vein> v64(access, Q(64) );
         doMT(v64);
     }
     std::cerr << Q << std::endl;
 
     {
-        small::mt<small::arena> a64(access,B[64]);
+        tight::mt<tight::arena> a64(access,B[64]);
         doMT(a64);
     }
     std::cerr << Q << std::endl;

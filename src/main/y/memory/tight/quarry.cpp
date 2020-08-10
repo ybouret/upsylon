@@ -14,7 +14,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             const unsigned quarry::widths[64] =
             {

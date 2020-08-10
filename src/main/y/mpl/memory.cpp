@@ -11,8 +11,8 @@ namespace upsylon {
 
         dispatcher:: dispatcher() throw() :
         singleton<dispatcher>(),
-        memory::small::quarry(),
-        memory::small::quarry_allocator(access,*this)
+        memory::tight::quarry(),
+        memory::tight::quarry_allocator(access,*this)
         {
         }
 

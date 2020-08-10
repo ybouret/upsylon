@@ -10,7 +10,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             arena:: ~arena() throw()
             {
@@ -149,7 +149,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
 #define Y_ARENA_LOOK_UP(ID,WHICH) if(ID->still_available>0) { acquiring=ID; goto UPDATE; } ID=ID->WHICH
 #define Y_ARENA_LOOK_UP_LO() Y_ARENA_LOOK_UP(lo,prev)
@@ -237,7 +237,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             void arena::  releasing_at(const void *addr) throw()
             {
@@ -328,7 +328,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             bool arena:: compact(void * &addr) throw()
             {
@@ -402,7 +402,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             std::ostream & operator<<( std::ostream &os, const arena &a)
             {

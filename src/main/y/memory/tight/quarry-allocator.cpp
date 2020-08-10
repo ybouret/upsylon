@@ -9,7 +9,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
 
             quarry_allocator:: ~quarry_allocator() throw()

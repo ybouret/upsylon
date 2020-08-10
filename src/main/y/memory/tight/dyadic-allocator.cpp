@@ -9,7 +9,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             dyadic_allocator:: ~dyadic_allocator() throw()
             {

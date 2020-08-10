@@ -10,7 +10,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             objects:: ~objects() throw()
             {

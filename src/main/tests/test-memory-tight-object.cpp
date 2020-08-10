@@ -11,7 +11,7 @@ using namespace upsylon;
 using namespace memory;
 
 namespace {
-    typedef small::object<4096,512> obj_type;
+    typedef tight::object<4096,512> obj_type;
 
     template <size_t N>
     class dummy : public obj_type
@@ -63,7 +63,7 @@ namespace {
 }
 
 
-Y_UTEST(small_object)
+Y_UTEST(tight_object)
 {
 
     obj_type::supply &mgr = obj_type::supply::instance();
@@ -99,7 +99,7 @@ Y_UTEST(small_object)
     std::cerr << mgr.Quarry << std::endl;
 
     {
-        small::dyadic_allocator D(mgr);
+        tight::dyadic_allocator D(mgr);
         blk_t        reg[32];
         const size_t num = sizeof(reg)/sizeof(reg[0]);
 

@@ -11,7 +11,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             blocks:: ~blocks() throw()
             {
@@ -235,7 +235,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             std::ostream & operator<<( std::ostream &os, const blocks &b)
             {
@@ -278,9 +278,9 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
-            static const char fn[] = "small::blocks";
+            static const char fn[] = "tight::blocks";
 
             arena & blocks:: operator[](const size_t block_size)
             {

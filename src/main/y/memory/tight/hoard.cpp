@@ -6,7 +6,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             hoard:: ~hoard() throw() { _bzset(block_size); }
 

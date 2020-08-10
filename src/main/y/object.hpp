@@ -8,8 +8,8 @@
 
 namespace upsylon
 {
-    //! specific small object for upsylon
-    typedef memory::small::object<Y_CHUNK_SIZE,Y_LIMIT_SIZE> object;
+    //! specific tight object for upsylon
+    typedef memory::tight::object<Y_CHUNK_SIZE,Y_LIMIT_SIZE> object;
 }
 
 #endif

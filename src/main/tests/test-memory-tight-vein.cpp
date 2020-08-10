@@ -11,16 +11,16 @@ using namespace memory;
 
  
 
-Y_UTEST(small_vein)
+Y_UTEST(tight_vein)
 {
 
     void        *reg[ 256 ];
     const size_t num = sizeof(reg)/sizeof(reg[0]);
 
     memset(reg,0,sizeof(reg));
-    for(size_t i=small::vein::min_exp2;i<=14;++i)
+    for(size_t i=tight::vein::min_exp2;i<=14;++i)
     {
-        small::vein S(i);
+        tight::vein S(i);
         std::cerr << "vein: " << S.block_size << std::endl;
 
         size_t n=0;
@@ -61,8 +61,8 @@ Y_UTEST(small_vein)
         std::cerr << "|_has " << S.chest.size * S.block_size << " bytes" << std::endl;
     }
     
-    std::cerr << "small::vein::min_shift=" << small::vein::min_exp2 << std::endl;
-    std::cerr << "small::vein::max_shift=" << small::vein::max_exp2 << std::endl;
+    std::cerr << "tight::vein::min_shift=" << tight::vein::min_exp2 << std::endl;
+    std::cerr << "tight::vein::max_shift=" << tight::vein::max_exp2 << std::endl;
 
     
 }

@@ -12,7 +12,7 @@ namespace upsylon {
 
     namespace memory {
 
-        namespace small {
+        namespace tight {
 
             class quarry; //!< forward declaration
 
