@@ -19,6 +19,7 @@ namespace upsylon {
 
             ward:: ~ward() throw()
             {
+                S.reset();
             }
             
 
@@ -35,30 +36,42 @@ namespace upsylon {
                 std::cerr << "W.chunk_size=" << chunk_size   << std::endl;
                 std::cerr << "Z.chunk_size=" << Z.chunk_size << std::endl;
                 std::cerr << "|_nodes_rise=" << Z.nodes_rise << " section/part" << std::endl;
-                
+
+                acquiring = releasing = empty_one = S.push_back( section_for(0) );
+
             }
 
-#if 0
-            tight::vein & ward:: vein_for(const size_t required)
+             tight::vein & ward:: vein_for(const size_t required)
             {
-                const size_t bytes = section::bytes_to_hold(required);
+                size_t       shift=0;
+                const size_t bytes = section::bytes_to_hold(required,shift); assert(bytes<=tight::vein::max_size);
+
                 if(bytes<=chunk_size)
                 {
+                    assert(bytes<=V.block_size);
+                    assert(shift<=V.block_exp2);
                     return V;
-                }
-                else if(bytes>tight::vein::max_size)
-                {
-                    throw exception("too many bytes for ward");
                 }
                 else
                 {
-                    assert(bytes>chunk_size);
-                    assert(bytes>=tight::vein::min_size);
-                    return Q( next_power_of_two(bytes) );
+                    return Q[shift];
                 }
 
             }
-#endif
+
+            section     * ward:: section_for(const size_t required)
+            {
+                tight::vein &v = vein_for(required);
+                section     *s = Z.zquery();
+                try {
+                    return new (s) section( v.acquire(), v.block_size, v.block_exp2 );
+                }
+                catch(...)
+                {
+                    Z.zstore(s);
+                    throw;
+                }
+            }
 
 
         }
