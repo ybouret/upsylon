@@ -158,6 +158,7 @@ Y_UTEST_INIT(256)
     
     Y_UTEST(fft);
     Y_UTEST(network_sort);
+    Y_UTEST(merge_sort);
     Y_UTEST(sort);
     Y_UTEST(unique);
     Y_UTEST(classes);
