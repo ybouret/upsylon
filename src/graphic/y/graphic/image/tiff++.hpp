@@ -3,7 +3,7 @@
 #define Y_TIFFPP_INCLUDED 1
 
 #include "y/string.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/memory/allocator/global.hpp"
 
 namespace upsylon
@@ -18,7 +18,7 @@ namespace upsylon
             virtual ~ _TIFF() throw();
 
             //! internal raster base type
-            typedef memory:: buffer_of<uint32_t,memory::global> _Raster;
+            typedef zblock<uint32_t,memory::global> _Raster;
             
             //! internal memory raster
             class Raster : public _Raster
@@ -31,12 +31,12 @@ namespace upsylon
                 //! ensure enough dwords
                 inline void startup(const size_t n)
                 {
-                    if( n > size )
+                    if( n > size() )
                     {
                         _Raster tmp(n);
                         swap_with(tmp);
                     }
-                    assert(size>=n);
+                    assert(size()>=n);
                 }
 
                 

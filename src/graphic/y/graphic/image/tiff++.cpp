@@ -193,7 +193,7 @@ namespace upsylon
                                      const int     h,
                                      const int     iDirectory)
         {
-            assert(w*h<=unit_t(raster.size));
+            assert(w*h<=raster.ssize());
             assert(w>0);
             assert(h>0);
             TIFF *out = (TIFF *)handle;
@@ -207,7 +207,7 @@ namespace upsylon
 
             // We set the strip size of the file to be size of one row of pixels
             TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out,usr_scanline) );
-            memory:: buffer_of<unsigned char,memory::global> tmpbuf(buf_scanline);
+            zblock<unsigned char,memory::global> tmpbuf(buf_scanline);
             unsigned char *buf = *tmpbuf;
 
             //Now writing image to the file one strip at a time

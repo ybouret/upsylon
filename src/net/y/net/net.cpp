@@ -121,7 +121,7 @@ namespace upsylon
 }
 
 
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon
@@ -135,7 +135,7 @@ namespace upsylon
 #if defined(Y_BSD)
         for(;;)
         {
-            memory:: buffer_of<char,memory::pooled> blk( len );
+            zblock<char,memory::pooled> blk( len );
             if( ::gethostname( *blk, blk.length() ) != 0)
             {
                 len *= 2;
@@ -147,7 +147,7 @@ namespace upsylon
 
 #if defined(Y_WIN)
         for(;;) {
-            memory::pooled_buffer_of<char> blk( len );
+            zblock<char,memory::pooled> blk( len );
             if( ::gethostname( *blk, int(blk.length()) ) == SOCKET_ERROR ) {
                 const DWORD err = ::WSAGetLastError();
                 if( err != WSAEFAULT )

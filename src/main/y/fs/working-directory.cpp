@@ -1,6 +1,6 @@
 #include "y/fs/working-directory.hpp"
 #include "y/memory/allocator/pooled.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 
 #include "y/exceptions.hpp"
 #include "y/fs/local/fs.hpp"
@@ -32,13 +32,14 @@ namespace upsylon
     
     string working_directory:: get() const
     {
+        typedef zblock<char, memory::pooled> zbuf;
         Y_LOCK( access );
         
 #if defined(Y_BSD)
         size_t length = 64;
         while( true )
         {
-            memory::buffer_of<char,memory::pooled> buffer( length );
+            zbuf buffer( length );
             Y_GIANT_LOCK();
             const char   *wd = getcwd( *buffer, buffer.length() );
             if( !wd )
@@ -62,7 +63,7 @@ namespace upsylon
         if( !len )
             throw win32::exception( ::GetLastError(), "::GetCurrentDirectory()" );
         
-        memory::buffer_of<char,memory::pooled> buffer( len+1 ); assert( buffer.length() > len );
+        zbuf buffer( len+1 ); assert( buffer.length() > len );
         const DWORD res = ::GetCurrentDirectory( len, *buffer );
         if( !res )
             throw win32::exception( ::GetLastError(), "::GetCurrentDirectory()" );

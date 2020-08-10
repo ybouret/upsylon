@@ -4,7 +4,7 @@
 #include "y/ios/istream.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/memory/allocator/global.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 
 namespace upsylon
 {
@@ -24,7 +24,7 @@ namespace upsylon
 			
 
 		private:
-			typedef memory::buffer_of<char,memory::global> buff_t;
+			typedef zblock<char,memory::global> buff_t;
 			const size_t          CHUNK;
 			buff_t                wksp_;
 			char                 *in;

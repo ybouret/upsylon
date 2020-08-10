@@ -76,7 +76,7 @@ namespace upsylon
         {
             const unit_t w = bmp.w;
             const unit_t h = bmp.h;
-            assert( raster.size >= size_t(w*h) );
+            assert( raster.ssize() >= (w*h) );
             const uint32_t *p = *raster;
             for(int j=0;j<h;++j)
             {

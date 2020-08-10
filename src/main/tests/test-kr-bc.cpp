@@ -10,7 +10,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/os/uuid.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/hashing/sha1.hpp"
 #include "y/memory/allocator/global.hpp"
 
@@ -129,12 +129,13 @@ namespace
         IV.rand();
 
         std::cerr << "Testing Operating with IV=" << IV << std::endl;
-        
+
+        typedef zblock<char,memory::global> zbuf;
         for(size_t length=0;length<=1000;++length)
         {
-            memory:: buffer_of<char,memory::global> ini(length);
-            memory:: buffer_of<char,memory::global> enc(length);
-            memory:: buffer_of<char,memory::global> dec(length);
+            zbuf ini(length);
+            zbuf enc(length);
+            zbuf dec(length);
 
             test_op<crypto::ecb>(IV,*c,ini,enc,dec);
             test_op<crypto::cbc>(IV,*c,ini,enc,dec);

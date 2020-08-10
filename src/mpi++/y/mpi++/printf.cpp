@@ -2,7 +2,7 @@
 #include "y/mpi++/mpi.hpp"
 #include "y/os/rt-clock.hpp"
 #include "y/exceptions.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/memory/allocator/global.hpp"
 #include <cstdarg>
 #include <cerrno>
@@ -28,7 +28,7 @@ namespace upsylon {
     
     void mpi:: Printf(FILE *fp, const char *fmt, ...) const
     {
-        typedef memory::buffer_of<char,memory::global> dataBuffer;
+        typedef zblock<char,memory::global> dataBuffer;
         
         Barrier();
         
@@ -58,7 +58,7 @@ namespace upsylon {
             {
                 dataBuffer databuf( n );
                 char  *buffer  = *databuf;
-                int    length  = int( databuf.size );
+                int    length  = int( databuf.length() );
                 if( length < 0 )
                     throw libc::exception( ERANGE, "string::vformat memory overflow");
                 

@@ -1,6 +1,6 @@
 #include "y/memory/slab.hpp"
 #include "y/utest/run.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/core/list.hpp"
 #include "y/memory/allocator/global.hpp"
 
@@ -40,7 +40,7 @@ namespace
         for(size_t count=1;count<=1024;++count)
         {
             const size_t bytes = memory::slab_of<T>::bytes_for(count);
-            memory::buffer_of<char,memory::global> buff(bytes);
+            zblock<char,memory::global> buff(bytes);
             memory::slab_of<T> S(*buff,bytes);
             while( S.size( ) )
             {

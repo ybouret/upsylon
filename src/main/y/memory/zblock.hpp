@@ -103,6 +103,15 @@ namespace upsylon
             out_of_reach::fill(entry,0,bytes);
         }
 
+        //! no-throw swap
+        inline void swap_with(zblock &other) throw()
+        {
+            _cswap(count,other.count);
+            _cswap(bytes,other.bytes);
+            cswap(owned,other.owned);
+            cswap(entry,other.entry);
+            cswap(shift,other.shift);
+        }
 
         //______________________________________________________________________
         //

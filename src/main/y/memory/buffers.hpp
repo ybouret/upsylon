@@ -1,3 +1,5 @@
+#if 0
+
 //! \file
 #ifndef Y_MEMORY_BUFFERS_INCLUDED
 #define Y_MEMORY_BUFFERS_INCLUDED 1
@@ -10,7 +12,7 @@ namespace upsylon
 {
     namespace memory
     {
-        //! flexible local buffers
+         //! flexible local buffers
         template <typename T,typename ALLOCATOR>
         class buffer_of : public object, public counted, public memory::rw_buffer
         {
@@ -96,3 +98,4 @@ namespace upsylon
 
 #endif
 
+#endif

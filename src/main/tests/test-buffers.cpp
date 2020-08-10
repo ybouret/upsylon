@@ -8,6 +8,7 @@ using namespace upsylon;
 
 Y_UTEST(buffers)
 {
+#if 0
     for(size_t iter=0;iter<32;++iter)
     {
         const size_t n1 = alea.leq(1000);
@@ -26,7 +27,7 @@ Y_UTEST(buffers)
         Y_CHECK(n3==b3.size);
         Y_CHECK(sizeof(int64_t)*n3==b3.length());
     }
-
+#endif
 
 }
 Y_UTEST_DONE()

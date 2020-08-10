@@ -10,7 +10,7 @@ extern "C" {
 #include "y/ios/ocstream.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 
 #include <setjmp.h>
 
@@ -63,7 +63,7 @@ namespace upsylon {
         }
 
 
-        typedef memory:: buffer_of<JSAMPLE, memory::global> jsample_buffer;
+        typedef zblock<JSAMPLE, memory::global> jsample_buffer;
 
 
         Bitmap  * JPEG_Format:: load(const string         &filename,

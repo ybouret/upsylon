@@ -1,7 +1,7 @@
 
 #include "y/string.hpp"
 #include "y/exceptions.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/strfwd.hpp"
 #include "y/memory/allocator/global.hpp"
 #include <cerrno>
@@ -12,13 +12,14 @@ namespace upsylon
 {
     string vformat( const char *fmt,... )
     {
+        typedef zblock<char,memory::global> zbuf;
         assert(fmt);
         size_t n = 32;
     TRY:
         {
-            memory::buffer_of<char,memory::global> databuf( n );
+            zbuf   databuf( n );
             char  *buffer  = *databuf;
-            int    length  = int( databuf.size );
+            int    length  = int( databuf.length() );
             if( length < 0 )
                 throw libc::exception( ERANGE, "string::vformat memory overflow");
 

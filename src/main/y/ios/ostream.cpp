@@ -1,5 +1,5 @@
 #include "y/ios/ostream.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
 #include "y/string.hpp"
@@ -37,10 +37,11 @@ namespace upsylon
         ostream & ostream:: operator()(const char *fmt,...)
         {
             assert(fmt);
+            typedef zblock<char,memory::pooled> zbuf;
             size_t n = 32;
         TRY:
             {
-                memory::buffer_of<char,memory::pooled> databuf( n );
+                zbuf   databuf( n );
                 char  *buffer  = *databuf;
                 int    length  = int( databuf.length() );
                 if( length < 0 )
