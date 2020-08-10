@@ -32,7 +32,6 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(isqrt);
     Y_UTEST(arena);
-    Y_UTEST(blocks);
     Y_UTEST(slab);
     Y_UTEST(primality);
     Y_UTEST(object0);
