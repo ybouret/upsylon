@@ -1,6 +1,7 @@
 #include "y/memory/arena-of.hpp"
 #include "y/utest/run.hpp"
-#include "y/ptr/cblock.hpp"
+#include "y/memory/zblock.hpp"
+#include "y/memory/allocator/global.hpp"
 #include <typeinfo>
 
 using namespace upsylon;
@@ -17,27 +18,27 @@ static inline void test_arena_of(const size_t nb)
 {
     const char *tid = typeid(T).name();
     std::cerr << "< arena_of<" << tid << "> >" << std::endl;
-    memory::arena_of<T>   A( 4096 );
-    cblock<T*>            blk(nb);
+    memory::arena_of<T>        A( 4096 );
+    zblock<T*,memory::global>  blk(nb);
 
     const size_t n   = blk.count;
     const size_t h   = n/2;
-    for(size_t i=0;i<n;++i)
+    for(size_t i=1;i<=n;++i)
     {
         blk[i] = A.acquire();
     }
-    alea.shuffle( &blk[0],n);
-    for(size_t i=h;i<n;++i)
+    alea.shuffle( &blk[1],n);
+    for(size_t i=h;i<=n;++i)
     {
         A.release(blk[i]);
     }
-    for(size_t i=h;i<n;++i)
+    for(size_t i=h;i<=n;++i)
     {
         blk[i] = A.acquire();
     }
-    alea.shuffle( &blk[0],n);
+    alea.shuffle( &blk[1],n);
 
-    for(size_t i=0;i<n;++i)
+    for(size_t i=1;i<=n;++i)
     {
         A.release(blk[i]);
     }
@@ -51,10 +52,10 @@ Y_UTEST(arena)
     
     const size_t nb = 4000;
 
-    cblock<block> blocks(nb);
+    zblock<block,memory::global> blocks(nb);
     const size_t  n   = blocks.count;
     const size_t  h   = n/2;
-    block       * blk = &blocks[0];
+    block       * blk = *blocks;
 
     for(size_t block_size=1;block_size<=128;block_size*=2)
     {

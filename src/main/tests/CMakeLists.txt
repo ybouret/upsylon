@@ -80,8 +80,8 @@ ADD_TEST(core:binary      test-main binary)
 ADD_TEST(core:metaloop    test-main metaloop)
 
 SOURCE_GROUP(mem FILES test-chunk.cpp test-arena.cpp test-alloc.cpp test-slab.cpp test-object.cpp test-slice.cpp test-embed.cpp
-test-carver.cpp test-pooled.cpp test-buffers.cpp test-xslot.cpp test-ptr.cpp test-release.cpp 
-test-memory-memblk.cpp
+test-carver.cpp test-pooled.cpp 
+test-xslot.cpp test-ptr.cpp test-release.cpp 
 test-static-slots.cpp 
 test-memory-marker.cpp
 test-memory-groove.cpp
@@ -105,7 +105,6 @@ ADD_TEST(mem:objectY      test-main objectY)
 ADD_TEST(mem:slice        test-main slice)
 ADD_TEST(mem:carver       test-main carver)
 ADD_TEST(mem:pooled       test-main pooled)
-ADD_TEST(mem:buffers      test-main buffers)
 ADD_TEST(mem:xslot        test-main xslot)
 ADD_TEST(mem:ptr          test-main ptr)
 ADD_TEST(mem:release      test-main release)
@@ -188,7 +187,7 @@ ADD_TEST(crypto:rsa2        test-main rsa 62507 55487 65537)
 ADD_TEST(crypto:rsa3        test-main rsa 3935648537 3730255349 65537)
 ADD_TEST(crypto:rsa4        test-main rsa 18300546520784097569 16483490701427528033 65537)
 ADD_TEST(crypto:rsa_keys    test-main rsa_keys ${HERE}/rsa-keys.bin)
-ADD_TEST(crypto:rsa_io      test-main rsa_io 0 2 4 8)
+ADD_TEST(crypto:rsa_io      test-main rsa_io 0)
 ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
 
 SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp)
@@ -245,7 +244,7 @@ ADD_TEST(info:qrl          test-main qrl ${HERE}/words.db)
 ADD_TEST(info:run_length   test-main run_length)
 ADD_TEST(info:pack         test-main pack ${HERE}/words.db)
 ADD_TEST(info:bytewise     test-main bytewise ${HERE}/words.db)
-ADD_TEST(info:qcodec       test-main qcodec ${HERE}/words.db)
+ADD_TEST(info:qcodec       test-main qcodec ${HERE}/thousand.db)
 ADD_TEST(info:base64       test-main base64)
 ADD_TEST(info:codecs       test-main codecs)
 

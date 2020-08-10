@@ -1,8 +1,9 @@
 #include "y/memory/section.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/ptr/cblock.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/sequence/list.hpp"
+#include "y/memory/allocator/global.hpp"
 
 using namespace upsylon;
 
@@ -30,8 +31,8 @@ Y_UTEST(section)
         size_t       n = i;
         const size_t m = memory::section::bytes_to_hold(n);
         std::cerr << n << " => " << m << std::endl;
-        cblock<char>          buffer(m);
-        memory::section       S(&buffer[0],buffer.bytes);
+        zblock<char,memory::global>  buffer(m);
+        memory::section            S(buffer.rw(),buffer.length());
         void *big = S.acquire(n);
         Y_ASSERT( big );
         Y_ASSERT( &S == S.release(big,n) );
@@ -40,8 +41,8 @@ Y_UTEST(section)
 
     for(int iter=0;iter<16;++iter)
     {
-        cblock<memory::section::block>  buffer( memory::section::min_blocks  + alea.leq(1000) );
-        memory::section S(&buffer[0],buffer.bytes);
+        zblock<memory::section::block,memory::global>  buffer( memory::section::min_blocks  + alea.leq(1000) );
+        memory::section S(buffer.rw(),buffer.length());
 
         list<block> L;
         while(true)

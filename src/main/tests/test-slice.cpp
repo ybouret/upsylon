@@ -1,5 +1,6 @@
 #include "y/memory/slice.hpp"
-#include "y/ptr/cblock.hpp"
+#include "y/memory/zblock.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/utest/run.hpp"
 #include "y/sort/merge.hpp"
 #include "y/comparison.hpp"
@@ -74,7 +75,7 @@ Y_UTEST(slice)
         for(size_t bs=100;bs<=10000;bs += 100 + alea.leq(100))
         {
 
-            cblock<char> buffer(Y_ALIGN_FOR_ITEM(memory::slice::block,bs));
+            zblock<char,memory::global> buffer(Y_ALIGN_FOR_ITEM(memory::slice::block,bs));
             std::cerr << "/#bytes=" << buffer.bytes;
             memory::slice s(&buffer[0],buffer.bytes);
 
@@ -96,7 +97,7 @@ Y_UTEST(slice)
         std::cerr << "<Testing (de)allocation/>" << std::endl;
     }
 
-    if(false)
+    if(true)
     {
         std::cerr << "<Testing re-allocation>" << std::endl;
         for(size_t iter=0;iter<32;++iter)
@@ -104,11 +105,11 @@ Y_UTEST(slice)
             const size_t source_bs = 10000+alea.leq(10000);
             const size_t target_bs = source_bs+alea.leq(10000);
 
-            cblock<char> source_buffer(Y_ALIGN_FOR_ITEM(memory::slice::block,source_bs));
-            cblock<char> target_buffer(Y_ALIGN_FOR_ITEM(memory::slice::block,target_bs));
+            zblock<char,memory::global> source_buffer(Y_ALIGN_FOR_ITEM(memory::slice::block,source_bs));
+            zblock<char,memory::global> target_buffer(Y_ALIGN_FOR_ITEM(memory::slice::block,target_bs));
 
-            memory::slice source( &source_buffer[0], source_buffer.bytes);
-            memory::slice target( &target_buffer[0], target_buffer.bytes);
+            memory::slice source( *source_buffer, source_buffer.count);
+            memory::slice target( *target_buffer, target_buffer.count);
 
             core::list_of_cpp<block> source_blocks;
             core::list_of_cpp<block> target_blocks;

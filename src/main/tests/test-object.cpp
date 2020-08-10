@@ -1,6 +1,7 @@
 #include "y/object.hpp"
 #include "y/utest/run.hpp"
-#include "y/ptr/cblock.hpp"
+#include "y/memory/zblock.hpp"
+#include "y/memory/allocator/global.hpp"
 #include "y/os/rt-clock.hpp"
 #include <cstdlib>
 
@@ -23,7 +24,7 @@ Y_UTEST(object0)
     if(argc>1) N    = atol(argv[1]);
     if(argc>2) Iter = atol(argv[2]);
 
-    cblock<block_t> org(N);
+    zblock<block_t,memory::global> org(N);
     block_t        *blk=&org[0];
     uint64_t        s=0;
     for(size_t iter=0;iter<Iter;++iter)
@@ -78,7 +79,7 @@ Y_UTEST(objectY)
     if(argc>1) N    = atol(argv[1]);
     if(argc>2) Iter = atol(argv[2]);
 
-    cblock<block_t> org(N);
+    zblock<block_t,memory::global> org(N);
     block_t        *blk=&org[0];
     uint64_t   s=0;
     for(size_t iter=0;iter<Iter;++iter)

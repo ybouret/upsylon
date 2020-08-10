@@ -42,7 +42,7 @@ namespace
     }
 }
 
-#include "y/ptr/cblock.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/os/wtime.hpp"
 #include "y/string/env.hpp"
 
@@ -52,10 +52,10 @@ Y_UTEST(simd)
     rt_clock clk;
     double   duration = 3;
     size_t   n        = 16384;
-    cblock<double>    blk(n);
+    zblock<double,memory::global>    blk(n);
     info   I =
     {
-        &blk[0], n
+        (*blk)-1, n
     };
 
     environment::set(Y_THREADS_VERBOSITY,"1");
@@ -81,7 +81,6 @@ Y_UTEST(simd)
     environment::set(Y_THREADS_VERBOSITY,"0");
     double           par_speed = 0;
     concurrent::simd par;
-    //par.engine().acquire_all(12);
     {
         wtime  chrono;
         size_t cycles=0;

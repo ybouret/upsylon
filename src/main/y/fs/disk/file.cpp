@@ -254,7 +254,7 @@ namespace upsylon
     }
 }
 
-#include "y/ptr/cblock.hpp"
+#include "y/memory/zblock.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 
 namespace upsylon
@@ -262,15 +262,15 @@ namespace upsylon
     namespace ios
     {
     
-        typedef cblock<char,memory::dyadic> io_block;
+        typedef zblock<char,memory::dyadic> io_block;
         
         void disk_file:: copy(const string &target,
                               const string &source,
                               const bool    append)
         {
             io_block      blk(BUFSIZ);
-            char         *buf = & *blk;
-            const size_t  len = blk.count;
+            char         *buf = *blk;
+            const size_t  len =  blk.count;
             
             readable_disk_file src(source);
             writable_disk_file tgt(target,append);
@@ -285,8 +285,8 @@ namespace upsylon
         size_t disk_file:: load( chainable<char> &target, const string &source )
         {
             io_block      blk(BUFSIZ);
-            char         *buf = & *blk;
-            const size_t  len = blk.count;
+            char         *buf = *blk;
+            const size_t  len =  blk.count;
             
             size_t count = 0;
             readable_disk_file src(source);
@@ -321,8 +321,8 @@ namespace upsylon {
         void disk_file:: hash_with( hashing::function &H, const string &source)
         {
             io_block      blk(BUFSIZ);
-            char         *buf = & *blk;
-            const size_t  len = blk.count;
+            char         *buf = *blk;
+            const size_t  len =  blk.count;
             
             readable_disk_file src(source);
             while(true)

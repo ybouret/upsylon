@@ -1,8 +1,8 @@
 #include "y/net/socket/set.hpp"
 #include "y/net/socket/delay.hpp"
-#include "y/ptr/cblock.hpp"
-
+#include "y/memory/zblock.hpp"
 #include "y/utest/run.hpp"
+#include "y/memory/allocator/global.hpp"
 
 using namespace upsylon;
 
@@ -78,10 +78,10 @@ Y_UTEST(sockset)
     net::bsd_socket udp_v4(net::udp,net::v4);
     net::bsd_socket udp_v6(net::udp,net::v6);
 
-    cblock<net::bsd_socket *> blk(4);
+    zblock<net::bsd_socket *,memory::global> blk(4);
 
     {
-        net::bsd_socket **arr = &blk[0];
+        net::bsd_socket **arr = &blk[1];
         size_t            num = 0;
 
         fill(arr, num, tcp_v4);

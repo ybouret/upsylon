@@ -5,7 +5,8 @@
 #include "y/sequence/array.hpp"
 #include "y/sequence/list.hpp"
 #include "y/type/block/move.hpp"
-#include "y/ptr/cppblock.hpp"
+#include "y/memory/zblock.hpp"
+#include "y/memory/allocator/global.hpp"
 
 namespace upsylon
 {
@@ -55,7 +56,7 @@ namespace upsylon
             const size_t           na = arr.size();
             size_t                 ia = 1;
 
-            cppblock<T>  blk(na);
+            zblock<T,memory::global>  blk(na);
             size_t       ib = 1;
             size_t       nb = na;
             for(size_t i=ni;i>0;--i,++ii)

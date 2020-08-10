@@ -29,22 +29,31 @@ Y_UTEST(rsa_io)
     {
         return 0;
     }
+    for(size_t i=1;i<=keys.size();++i)
+    {
+        std::cerr << (*keys[i]).modulus.bits() << std::endl;
+    }
 
     for(int i=1;i<argc;++i)
     {
         const size_t    j   = 1 + (string_convert::to<size_t>( argv[i], "index" )%keys.size());
         const RSA::Key &key = *keys[j];
         std::cerr << "Testing Key with #bits=" << key.modulus.bits() << std::endl;
+
         {
             const mpn M( key.maxbits, alea );
+            std::cerr << "\tencoding with public key..." << std::endl;
             const mpn C = key.pub(M);
+            std::cerr << "\tdecoding with private key..." << std::endl;
             const mpn D = key.prv(C);
             Y_ASSERT(D==M);
         }
 
         {
             const mpn M( key.maxbits, alea );
+            std::cerr << "\tencoding with private key..." << std::endl;
             const mpn C = key.prv(M);
+            std::cerr << "\tdecoding with public key..." << std::endl;
             const mpn D = key.pub(C);
             Y_ASSERT(D==M);
         }

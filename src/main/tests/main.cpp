@@ -39,7 +39,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(slice);
     Y_UTEST(carver);
     Y_UTEST(pooled);
-    Y_UTEST(buffers);
     Y_UTEST(zblock);
     Y_UTEST(xslot);
     Y_UTEST(static_slots);
@@ -57,8 +56,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(small_quarry);
     Y_UTEST(small_mt);
     Y_UTEST(small_object);
-    Y_UTEST(memblk);
-
+    
     Y_UTEST(mloops);
     Y_UTEST(comb);
     Y_UTEST(perm);
