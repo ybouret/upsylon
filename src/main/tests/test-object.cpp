@@ -80,8 +80,8 @@ Y_UTEST(objectY)
     if(argc>2) Iter = atol(argv[2]);
 
     zblock<block_t,memory::global> org(N);
-    block_t        *blk=&org[0];
-    uint64_t   s=0;
+    block_t        *blk= *org;
+    uint64_t        s  = 0;
     for(size_t iter=0;iter<Iter;++iter)
     {
         for(size_t i=0;i<N;++i)
