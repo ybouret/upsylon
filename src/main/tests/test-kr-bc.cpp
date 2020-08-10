@@ -12,6 +12,7 @@
 #include "y/os/uuid.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/hashing/sha1.hpp"
+#include "y/memory/allocator/global.hpp"
 
 using namespace upsylon;
 
@@ -131,9 +132,9 @@ namespace
         
         for(size_t length=0;length<=1000;++length)
         {
-            memory::global_buffer_of<char> ini(length);
-            memory::global_buffer_of<char> enc(length);
-            memory::global_buffer_of<char> dec(length);
+            memory:: buffer_of<char,memory::global> ini(length);
+            memory:: buffer_of<char,memory::global> enc(length);
+            memory:: buffer_of<char,memory::global> dec(length);
 
             test_op<crypto::ecb>(IV,*c,ini,enc,dec);
             test_op<crypto::cbc>(IV,*c,ini,enc,dec);

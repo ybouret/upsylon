@@ -3,8 +3,6 @@
 #define Y_MEMORY_BUFFERS_INCLUDED 1
 
 #include "y/ptr/counted.hpp"
-#include "y/memory/allocator/pooled.hpp"
-#include "y/memory/allocator/global.hpp"
 #include "y/memory/buffer.hpp"
 #include "y/type/cswap.hpp"
 
@@ -14,7 +12,7 @@ namespace upsylon
     {
         //! flexible local buffers
         template <typename T,typename ALLOCATOR>
-        class buffer_of : public counted_object, public memory::rw_buffer
+        class buffer_of : public object, public counted, public memory::rw_buffer
         {
         public:
 
@@ -62,6 +60,7 @@ namespace upsylon
             T     *data;
         };
 
+#if 0
         //! global buffer
         template <typename T>
         class global_buffer_of : public buffer_of<T,memory::global>
@@ -91,7 +90,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pooled_buffer_of);
         };
-
+#endif
     }
 }
 

@@ -207,7 +207,7 @@ namespace upsylon
 
             // We set the strip size of the file to be size of one row of pixels
             TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, TIFFDefaultStripSize(out,usr_scanline) );
-            memory::global_buffer_of<unsigned char> tmpbuf(buf_scanline);
+            memory:: buffer_of<unsigned char,memory::global> tmpbuf(buf_scanline);
             unsigned char *buf = *tmpbuf;
 
             //Now writing image to the file one strip at a time

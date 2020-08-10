@@ -63,7 +63,7 @@ namespace upsylon {
         }
 
 
-        typedef memory::global_buffer_of<JSAMPLE> jsample_buffer;
+        typedef memory:: buffer_of<JSAMPLE, memory::global> jsample_buffer;
 
 
         Bitmap  * JPEG_Format:: load(const string         &filename,

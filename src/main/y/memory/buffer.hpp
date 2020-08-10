@@ -8,7 +8,12 @@ namespace upsylon
 {
     namespace memory
     {
+        //______________________________________________________________________
+        //
+        //
         //! read-only buffer
+        //
+        //______________________________________________________________________
         class ro_buffer
         {
         public:
@@ -18,10 +23,12 @@ namespace upsylon
             virtual            ~ro_buffer()             throw();     //!< destructor
             virtual const void *ro()              const throw() = 0; //!< read only memory of length()
             virtual size_t      length()          const throw() = 0; //!< valid length() byte
+
             //------------------------------------------------------------------
             // non virtual interface
             //------------------------------------------------------------------
             uint8_t             byte_at(size_t i) const throw();     //!< virtual never ending byte access
+
         protected:
             explicit ro_buffer() throw();                            //!< constructor
 
@@ -29,7 +36,12 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(ro_buffer);
         };
 
+        //______________________________________________________________________
+        //
+        //
         //! read-write buffer
+        //
+        //______________________________________________________________________
         class rw_buffer : public ro_buffer
         {
         public:

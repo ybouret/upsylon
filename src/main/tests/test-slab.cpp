@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/core/list.hpp"
+#include "y/memory/allocator/global.hpp"
 
 using namespace upsylon;
 

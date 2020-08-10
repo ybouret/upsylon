@@ -3,7 +3,7 @@
 #include "y/exceptions.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/strfwd.hpp"
-
+#include "y/memory/allocator/global.hpp"
 #include <cerrno>
 #include <cstdarg>
 #include <cstdio>

@@ -1,5 +1,8 @@
 #include "y/memory/buffers.hpp"
 #include "y/utest/run.hpp"
+#include "y/memory/allocator/global.hpp"
+#include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 using namespace upsylon;
 
@@ -16,6 +19,12 @@ Y_UTEST(buffers)
         memory::buffer_of<int64_t,memory::global> b2( n2 );
         Y_CHECK(n2==b2.size);
         Y_CHECK(sizeof(int64_t)*n2==b2.length());
+
+
+        const size_t n3 = alea.leq(1000);
+        memory::buffer_of<int64_t,memory::dyadic> b3( n3 );
+        Y_CHECK(n3==b3.size);
+        Y_CHECK(sizeof(int64_t)*n3==b3.length());
     }
 
 

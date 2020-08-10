@@ -3,6 +3,7 @@
 #include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
 #include "y/string.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include <cerrno>
 #include <cstdarg>
 #include <cstdio>

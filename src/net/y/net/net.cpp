@@ -122,6 +122,7 @@ namespace upsylon
 
 
 #include "y/memory/buffers.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon
 {
@@ -134,7 +135,7 @@ namespace upsylon
 #if defined(Y_BSD)
         for(;;)
         {
-            memory::pooled_buffer_of<char> blk( len );
+            memory:: buffer_of<char,memory::pooled> blk( len );
             if( ::gethostname( *blk, blk.length() ) != 0)
             {
                 len *= 2;
