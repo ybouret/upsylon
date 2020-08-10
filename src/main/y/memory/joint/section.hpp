@@ -15,7 +15,7 @@ namespace upsylon {
             //__________________________________________________________________
             //
             //
-            //! wrapper for multiple blocks inside a memory area
+            //! wrapper for multiple blocks inside a power of two memory area
             //
             //__________________________________________________________________
             class section
@@ -37,17 +37,21 @@ namespace upsylon {
 
                 static const size_t block_size = sizeof(block);               //!< block size
                 static const size_t block_exp2 = ilog2<block_size>::value;    //!< for bits shift : block_size = 1 << block_iln2
-                static const size_t min_blocks = 4;                           //!< mininum number of blocks for a valid section
+                static const size_t min_blocks = 1<<2;                        //!< mininum number of blocks for a valid section
                 static const size_t min_size   = min_blocks << block_exp2;    //!< minimum size in bytes for a valid section
-                static const size_t min_exp2   = ilog2<min_size>::value;
+                static const size_t min_exp2   = ilog2<min_size>::value;      //!< min_size = 1<<min_exp2
 
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
+                //! format a section
+                /**
+                 [usr_data]=usr_size=2^usr_exp2, usr_exp2>=min_exp2
+                 */
                 section(void        *usr_data,
                         const size_t usr_size,
-                        const size_t usr_exp2) throw();  //!< create slice, size>=small_size
+                        const size_t usr_exp2) throw();
                 ~section()     throw();                  //!< cleanup
 
                 //______________________________________________________________
@@ -98,9 +102,8 @@ namespace upsylon {
 
                 typedef void (*finalize)(void *,const size_t);
                 void *acquire(size_t &n,finalize) throw();
-
-                void format(const size_t blocks) throw();
-            };
+                
+             };
 
         }
     }

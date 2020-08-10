@@ -117,8 +117,8 @@ namespace upsylon
         //
         // members
         //______________________________________________________________________
-        const size_t count;
-        const size_t bytes;
+        const size_t count; //!< number of zombie objects
+        const size_t bytes; //!< bytes for those zombies
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(zblock);

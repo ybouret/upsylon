@@ -14,7 +14,8 @@ namespace upsylon {
             static inline
             size_t ward_chunk_size(const size_t chunk_size)
             {
-                return next_power_of_two( clamp(tight::vein::min_size,chunk_size,tight::vein::max_size) );
+                assert(section::min_size<=tight::vein::max_size);
+                return next_power_of_two( clamp(section::min_size,chunk_size,tight::vein::max_size) );
             }
 
             ward:: ~ward() throw()
@@ -22,31 +23,32 @@ namespace upsylon {
                 S.reset();
             }
             
+            size_t ward:: chunk_size() const throw()
+            {
+                return V.block_size;
+            }
 
             ward:: ward(const size_t usr_chunk_size) :
             acquiring(0),
-            releasing(0),
-            empty_one(0),
             S(),
             Q(),
-            chunk_size( ward_chunk_size(usr_chunk_size) ),
-            V(Q(chunk_size)),
-            Z(chunk_size,Q)
+            V(Q(ward_chunk_size(usr_chunk_size))),
+            Z(V.block_size,Q)
             {
-                std::cerr << "W.chunk_size=" << chunk_size   << std::endl;
+                std::cerr << "W.chunk_size=" << chunk_size()   << std::endl;
                 std::cerr << "Z.chunk_size=" << Z.chunk_size << std::endl;
                 std::cerr << "|_nodes_rise=" << Z.nodes_rise << " section/part" << std::endl;
 
-                acquiring = releasing = empty_one = S.push_back( section_for(0) );
+                acquiring = S.push_back( section_for(0) );
 
             }
 
-             tight::vein & ward:: vein_for(const size_t required)
+            tight::vein & ward:: vein_for(const size_t required)
             {
                 size_t       shift=0;
                 const size_t bytes = section::bytes_to_hold(required,shift); assert(bytes<=tight::vein::max_size);
 
-                if(bytes<=chunk_size)
+                if(bytes<=V.block_size)
                 {
                     assert(bytes<=V.block_size);
                     assert(shift<=V.block_exp2);
@@ -54,6 +56,8 @@ namespace upsylon {
                 }
                 else
                 {
+                    assert(shift>=tight::vein::min_exp2);
+                    assert(shift<=tight::vein::max_exp2);
                     return Q[shift];
                 }
 

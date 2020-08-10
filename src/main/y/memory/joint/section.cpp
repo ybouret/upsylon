@@ -5,7 +5,7 @@
 #include "y/code/base2.hpp"
 #include "y/memory/tight/vein.hpp"
 #include "y/exceptions.hpp"
-
+#include "y/os/static-check.hpp"
 #include <iostream>
 #include <cstring>
 
@@ -17,15 +17,15 @@ namespace upsylon {
 
             size_t   section:: bytes_to_hold(const size_t bytes, size_t &shift)
             {
-                assert(min_size>=tight::vein::min_size);
-
+                Y_STATIC_CHECK(section::min_size>=tight::vein::min_size,unexpected_sizes);
                 static const size_t max_usr_size = base2<size_t>::max_power_of_two;
                 static const size_t max_blk_size = max_usr_size-2*block_size;
-                const size_t        aligned_size = Y_ROUND_LN2(block_exp2,bytes);
-                if(aligned_size>max_blk_size) throw exception("joint::section: too manu bytes to hold");
-                const size_t ans = next_power_of_two( max_of<size_t>(min_size,Y_ROUND_LN2(block_exp2,bytes)+2*block_size) );
-                shift = integer_log2(ans);
 
+                const size_t        aligned_size = Y_ROUND_LN2(block_exp2,bytes);
+                if(aligned_size>max_blk_size) throw exception("joint::section: too many bytes to hold");
+                const size_t        required    = aligned_size+2*block_size;
+                const size_t ans = next_power_of_two( max_of<size_t>(min_size,required) );
+                shift = integer_log2(ans);
                 assert(size_t(1)<<shift==ans);
                 assert(ans>=bytes);
                 return ans;
@@ -66,6 +66,7 @@ namespace upsylon {
 
                 assert(check_block(entry));
                 assert(check_block(guard));
+                std::cerr << "[+section: size=" << size << ", hold=" << entry->size*block_size << "]" << std::endl;
 
             }
             
