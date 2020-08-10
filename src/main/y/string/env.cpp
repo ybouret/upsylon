@@ -15,6 +15,7 @@ extern char **environ;
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "y/memory/zblock.hpp"
+#include "y/memory/allocator/global.hpp"
 #endif
 
 
