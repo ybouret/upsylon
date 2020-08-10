@@ -4,8 +4,8 @@
 #define Y_MP_MEMORY_INCLUDED 1
 
 #include "y/concurrent/singleton.hpp"
-#include "y/memory/small/quarry-allocator.hpp"
-#include "y/memory/small/quarry.hpp"
+#include "y/memory/tight/quarry-allocator.hpp"
+#include "y/memory/tight/quarry.hpp"
 #include "y/type/ints.hpp"
 
 namespace upsylon {

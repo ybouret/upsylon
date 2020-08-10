@@ -76,11 +76,11 @@ SET(memory_allocator_srcs ${memory_allocator_decl} ${memory_allocator_code})
 SOURCE_GROUP( memory/allocator FILES ${memory_allocator_srcs} )
 INSTALL( FILES ${memory_allocator_decl} DESTINATION include/y/memory/allocator )
 
-FILE(GLOB memory_small_decl   y/memory/small/*.hpp)
-FILE(GLOB memory_small_code y/memory/small/*.cpp)
-SET(memory_small_srcs ${memory_small_decl} ${memory_small_code})
-SOURCE_GROUP( memory/small FILES ${memory_small_srcs} )
-INSTALL( FILES ${memory_small_decl} DESTINATION include/y/memory/small )
+FILE(GLOB memory_tight_decl   y/memory/tight/*.hpp)
+FILE(GLOB memory_tight_code y/memory/tight/*.cpp)
+SET(memory_tight_srcs ${memory_tight_decl} ${memory_tight_code})
+SOURCE_GROUP( memory/tight FILES ${memory_tight_srcs} )
+INSTALL( FILES ${memory_tight_decl} DESTINATION include/y/memory/tight )
 
 
 FILE(GLOB string_decl   y/string/*.hpp)
@@ -389,7 +389,7 @@ ${sort_srcs}
 ${sort_network_srcs}
 ${randomized_srcs}
 ${hashing_srcs}
-${memory_srcs} ${memory_allocator_srcs} ${memory_small_srcs}
+${memory_srcs} ${memory_allocator_srcs} ${memory_tight_srcs}
 ${string_srcs}
 ${ptr_srcs}
 ${iterate_srcs}

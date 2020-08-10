@@ -86,14 +86,14 @@ test-static-slots.cpp
 test-memory-marker.cpp
 test-memory-groove.cpp
 test-memory-section.cpp
-test-memory-small-chunk.cpp
-test-memory-small-arena.cpp
-test-memory-small-zcache.cpp
-test-memory-small-blocks.cpp
-test-memory-small-vein.cpp
-test-memory-small-quarry.cpp
-test-memory-small-mt.cpp
-test-memory-small-object.cpp
+test-memory-tight-chunk.cpp
+test-memory-tight-arena.cpp
+test-memory-tight-zcache.cpp
+test-memory-tight-blocks.cpp
+test-memory-tight-vein.cpp
+test-memory-tight-quarry.cpp
+test-memory-tight-mt.cpp
+test-memory-tight-object.cpp
 test-memory-zblock.cpp
 )
 ADD_TEST(mem:chunk        test-main chunk)
@@ -114,15 +114,15 @@ ADD_TEST(mem:marker       test-main marker)
 ADD_TEST(mem:groove       test-main groove)
 ADD_TEST(mem:zblock       test-main zblock)
 ADD_TEST(mem:section      test-main section)
-ADD_TEST(mem:small:chunk   test-main small_chunk)
-ADD_TEST(mem:small:arena   test-main small_arena)
-ADD_TEST(mem:small:zcache  test-main small_zcache)
-ADD_TEST(mem:small:blocks  test-main small_blocks)
-ADD_TEST(mem:small:compact test-main small_compact)
-ADD_TEST(mem:small:vein    test-main small_vein)
-ADD_TEST(mem:small:quarry  test-main small_quarry)
-ADD_TEST(mem:small:mt      test-main small_mt)
-ADD_TEST(mem:small:object  test-main small_object)
+ADD_TEST(mem:tight:chunk   test-main tight_chunk)
+ADD_TEST(mem:tight:arena   test-main tight_arena)
+ADD_TEST(mem:tight:zcache  test-main tight_zcache)
+ADD_TEST(mem:tight:blocks  test-main tight_blocks)
+ADD_TEST(mem:tight:compact test-main tight_compact)
+ADD_TEST(mem:tight:vein    test-main tight_vein)
+ADD_TEST(mem:tight:quarry  test-main tight_quarry)
+ADD_TEST(mem:tight:mt      test-main tight_mt)
+ADD_TEST(mem:tight:object  test-main tight_object)
 
 SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
 ADD_TEST(par:parallel    test-main parallel)

@@ -3,7 +3,7 @@
 #ifndef Y_MEMORY_DYADIC_ALLOCATOR
 #define Y_MEMORY_DYADIC_ALLOCATOR 1
 
-#include "y/memory/small/dyadic-allocator.hpp"
+#include "y/memory/tight/dyadic-allocator.hpp"
 #include "y/concurrent/singleton.hpp"
 
 namespace upsylon {
