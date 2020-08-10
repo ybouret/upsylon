@@ -1,4 +1,5 @@
 #include "y/ptr/cblock.hpp"
+#include "y/ptr/cppblock.hpp"
 #include "y/utest/run.hpp"
 
 #include "y/string.hpp"
@@ -15,11 +16,12 @@ namespace
         for(size_t iter=0;iter<16;++iter)
         {
             const size_t required = alea.leq(1000);
-            memblk<T,ALLOCATOR> _blk( required ); Y_ASSERT(_blk.count==required);
-            cblock<T,ALLOCATOR> cblk( required ); Y_ASSERT(cblk.count==required);
+            cblock<T,ALLOCATOR>   cblk( required ); Y_ASSERT(cblk.count==required);
+            cppblock<T,ALLOCATOR> xblk( required ); Y_ASSERT(cblk.count==required);
             for(size_t i=0;i<cblk.count;++i)
             {
                 (void) cblk[i];
+                (void) xblk[i+1];
             }
         }
     }

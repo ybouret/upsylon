@@ -6,7 +6,12 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
     //! embedding a derived pointer managed by a base class PTR
+    //
+    //__________________________________________________________________________
     template <typename T, typename U, template <class> class PTR >
     class embedded
     {

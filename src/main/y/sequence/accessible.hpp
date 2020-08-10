@@ -8,7 +8,12 @@
 
 namespace upsylon {
 
+    //__________________________________________________________________________
+    //
+    //
     //! a collection with some access
+    //
+    //__________________________________________________________________________
     template <typename T>
     class accessible : public virtual collection
     {

@@ -7,8 +7,12 @@
 
 namespace upsylon {
 
-    
+    //__________________________________________________________________________
+    //
+    //
     //! collection of addressable items
+    //
+    //__________________________________________________________________________
     template <typename T>
     class addressable : public accessible<T>
     {
