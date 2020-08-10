@@ -28,6 +28,18 @@ namespace upsylon {
                 return V.block_size;
             }
 
+            const ward::quarry_type & ward:: _quarry()   const throw()
+            {
+                return Q;
+            }
+
+            const ward::sections    & ward:: _sections()   const throw()
+            {
+                return S;
+            }
+
+            
+
             ward:: ward(const size_t usr_chunk_size) :
             acquiring(0),
             S(),
