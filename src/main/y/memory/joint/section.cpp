@@ -9,276 +9,277 @@ namespace upsylon {
 
     namespace memory {
 
+        namespace joint {
 
-        size_t   section:: bytes_to_hold(const size_t bytes) throw()
-        {
-            return max_of<size_t>(min_length,Y_ROUND_LN2(block_iln2,bytes)+2*block_size);
-        }
-
-
-        section:: section(void        *data,
-                          const size_t size) throw():
-        entry( static_cast<block *>(data) ),
-        guard( entry ),
-        next(0),
-        prev(0)
-        {
-            assert(data!=NULL);
-            assert(size>=min_length);
-            size_t blocks = size/block_size; assert(blocks>=min_blocks);
-
-            guard += --blocks;
-
-            entry->prev = 0;
-            entry->next = guard;
-            entry->from = 0;
-            entry->size = --blocks;
-
-
-            guard->prev = entry;
-            guard->next = NULL;
-            guard->size = 0;
-            guard->from = this;
-
-            assert(check_block(entry));
-            assert(check_block(guard));
-
-
-        }
-
-        section:: ~section() throw()
-        {
-            if(!is_free())
+            size_t   section:: bytes_to_hold(const size_t bytes) throw()
             {
-                std::cerr << "[memory.section] not free: ";
-                for(const block *blk=entry;blk;blk=blk->next)
-                {
-                    if(blk->from)
-                    {
-                        std::cerr << blk->size << "/";
-                    }
-                }
-                std::cerr << std::endl;
+                return max_of<size_t>(min_length,Y_ROUND_LN2(block_iln2,bytes)+2*block_size);
             }
-            entry = guard = 0;
-        }
-
-        bool section:: is_free() const throw()
-        {
-            return (NULL==entry->from) && (guard==entry->next);
-        }
-
-        static inline void __zero(void *p, const size_t n) throw()
-        {
-            assert(n>0);
-            assert(p!=NULL);
-            memset(p,0,n);
-        }
 
 
-        void *section:: acquire(size_t &n) throw()
-        {
-            return acquire(n,__zero);
-        }
-
-
-        void * section:: acquire(size_t &n, finalize proc) throw()
-        {
-
-            static const size_t split_blocks = 3;
-            static const size_t extra_blocks = split_blocks-1;
-            static const size_t delta_blocks = extra_blocks-1;
-            
-            assert(proc);
-            const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_iln2,n);
-            const size_t required = boundary >> block_iln2;
-
-            //--------------------------------------------------------------
-            //
-            // loop over free blocks
-            //
-            //--------------------------------------------------------------
-            const block  *lastBlock = guard;
-            block        *currBlock = entry;
-            while(currBlock!=lastBlock)
+            section:: section(void        *data,
+                              const size_t size) throw():
+            entry( static_cast<block *>(data) ),
+            guard( entry ),
+            next(0),
+            prev(0)
             {
-                //----------------------------------------------------------
-                //
-                // check available
-                //
-                //----------------------------------------------------------
-                if(currBlock->from)
+                assert(data!=NULL);
+                assert(size>=min_length);
+                size_t blocks = size/block_size; assert(blocks>=min_blocks);
+
+                guard += --blocks;
+
+                entry->prev = 0;
+                entry->next = guard;
+                entry->from = 0;
+                entry->size = --blocks;
+
+
+                guard->prev = entry;
+                guard->next = NULL;
+                guard->size = 0;
+                guard->from = this;
+
+                assert(check_block(entry));
+                assert(check_block(guard));
+
+
+            }
+
+            section:: ~section() throw()
+            {
+                if(!is_free())
                 {
+                    std::cerr << "[memory.section] not free: ";
+                    for(const block *blk=entry;blk;blk=blk->next)
+                    {
+                        if(blk->from)
+                        {
+                            std::cerr << blk->size << "/";
+                        }
+                    }
+                    std::cerr << std::endl;
+                }
+                entry = guard = 0;
+            }
+
+            bool section:: is_free() const throw()
+            {
+                return (NULL==entry->from) && (guard==entry->next);
+            }
+
+            static inline void __zero(void *p, const size_t n) throw()
+            {
+                assert(n>0);
+                assert(p!=NULL);
+                memset(p,0,n);
+            }
+
+
+            void *section:: acquire(size_t &n) throw()
+            {
+                return acquire(n,__zero);
+            }
+
+
+            void * section:: acquire(size_t &n, finalize proc) throw()
+            {
+
+                static const size_t split_blocks = 3;
+                static const size_t extra_blocks = split_blocks-1;
+                static const size_t delta_blocks = extra_blocks-1;
+
+                assert(proc);
+                const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_iln2,n);
+                const size_t required = boundary >> block_iln2;
+
+                //--------------------------------------------------------------
+                //
+                // loop over free blocks
+                //
+                //--------------------------------------------------------------
+                const block  *lastBlock = guard;
+                block        *currBlock = entry;
+                while(currBlock!=lastBlock)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // check available
+                    //
+                    //----------------------------------------------------------
+                    if(currBlock->from)
+                    {
+                        currBlock=currBlock->next;
+                        continue;
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // check big enough
+                    //
+                    //----------------------------------------------------------
+                    const size_t available = currBlock->size;
+                    if(available>=required)
+                    {
+                        //------------------------------------------------------
+                        //
+                        // found
+                        //
+                        //------------------------------------------------------
+
+                        if(available>=required+extra_blocks)
+                        {
+                            // create a new block
+                            block *nextBlock = currBlock->next;
+                            block *new_block = currBlock+required+1;
+                            new_block->prev  = currBlock;
+                            new_block->next  = nextBlock;
+                            new_block->from  = 0;
+                            new_block->size  = available-required-delta_blocks;
+
+                            // update nextblock
+                            nextBlock->prev = new_block;
+
+                            // update currBlock
+                            currBlock->size = required;
+                            currBlock->next = new_block;
+
+                            assert(check_block(currBlock));
+                            assert(check_block(nextBlock));
+                            assert(check_block(new_block));
+                            n = boundary;
+                        }
+                        else
+                        {
+                            // full block
+                            n = currBlock->size * block_size;
+                        }
+
+                        assert(currBlock->size * block_size == n );
+                        currBlock->from = this;
+                        void *p = &currBlock[1];
+                        proc(p,n);
+                        return p;
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // try next block
+                    //
+                    //----------------------------------------------------------
                     currBlock=currBlock->next;
-                    continue;
                 }
 
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 //
-                // check big enough
+                // no possible allocation
                 //
-                //----------------------------------------------------------
-                const size_t available = currBlock->size;
-                if(available>=required)
-                {
-                    //------------------------------------------------------
-                    //
-                    // found
-                    //
-                    //------------------------------------------------------
-
-                    if(available>=required+extra_blocks)
-                    {
-                        // create a new block
-                        block *nextBlock = currBlock->next;
-                        block *new_block = currBlock+required+1;
-                        new_block->prev  = currBlock;
-                        new_block->next  = nextBlock;
-                        new_block->from  = 0;
-                        new_block->size  = available-required-delta_blocks;
-
-                        // update nextblock
-                        nextBlock->prev = new_block;
-
-                        // update currBlock
-                        currBlock->size = required;
-                        currBlock->next = new_block;
-
-                        assert(check_block(currBlock));
-                        assert(check_block(nextBlock));
-                        assert(check_block(new_block));
-                        n = boundary;
-                    }
-                    else
-                    {
-                        // full block
-                        n = currBlock->size * block_size;
-                    }
-
-                    assert(currBlock->size * block_size == n );
-                    currBlock->from = this;
-                    void *p = &currBlock[1];
-                    proc(p,n);
-                    return p;
-                }
-
-                //----------------------------------------------------------
-                //
-                // try next block
-                //
-                //----------------------------------------------------------
-                currBlock=currBlock->next;
-            }
-
-            //--------------------------------------------------------------
-            //
-            // no possible allocation
-            //
-            //--------------------------------------------------------------
-            return 0;
-        }
-
-
-        static inline void __nope(void*,const size_t) throw()
-        {
-
-        }
-
-        section * section:: receive(void * &addr, size_t &maxi, const size_t size) throw()
-        {
-            assert(addr);
-            assert(maxi);
-            assert(maxi>=size);
-            size_t n = size;
-            void  *p = acquire(n,__nope);
-            if(p)
-            {
-                assert(n>=size);
-                memcpy(p,addr,size);
-                memset(static_cast<char*>(p)+size,0,n-size);
-                section *s = release(addr,maxi);
-                addr = p;
-                maxi = n;
-                return s;
-            }
-            else
-            {
-                // left untouched
+                //--------------------------------------------------------------
                 return 0;
             }
-        }
 
 
-
-        section *section:: release(void * &addr, size_t &n) throw()
-        {
-            assert(addr); assert(n>0);
-
-            //------------------------------------------------------------------
-            // get block an owner
-            //------------------------------------------------------------------
-            block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->size*block_size==n);
-            section *owner     = currBlock->from;                assert(owner->check_block(currBlock)); assert(owner->guard!=currBlock);
-
-            //------------------------------------------------------------------
-            // check status
-            //------------------------------------------------------------------
-            static const unsigned merge_none = 0x00;
-            static const unsigned merge_prev = 0x01;
-            static const unsigned merge_next = 0x02;
-            static const unsigned merge_both = merge_prev|merge_next;
-
-            unsigned flag      = merge_none;
-            block   *prevBlock = currBlock->prev; if(prevBlock&&(0==prevBlock->from))       flag |= merge_prev;
-            block   *nextBlock = currBlock->next; assert(nextBlock); if(0==nextBlock->from) flag |= merge_next;
-
-            //------------------------------------------------------------------
-            // merge
-            //------------------------------------------------------------------
-            switch(flag)
+            static inline void __nope(void*,const size_t) throw()
             {
-                case merge_prev:
-                    prevBlock->next = nextBlock;
-                    nextBlock->prev = prevBlock;
-                    prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
-                    assert(owner->check_block(prevBlock));
-                    assert(owner->check_block(nextBlock));
-                    break;
 
-                case merge_next:
-                    assert(nextBlock->next!=NULL);
-                    nextBlock=nextBlock->next;
-                    currBlock->next = nextBlock;
-                    nextBlock->prev = currBlock;
-                    currBlock->size = static_cast<len_t>(nextBlock-currBlock)-1;
-                    currBlock->from = 0;
-                    assert(owner->check_block(currBlock));
-                    assert(owner->check_block(nextBlock));
-                    break;
-
-                case merge_both:
-                    assert(nextBlock->next!=NULL);
-                    nextBlock=nextBlock->next;
-                    prevBlock->next = nextBlock;
-                    nextBlock->prev = prevBlock;
-                    prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
-                    assert(owner->check_block(prevBlock));
-                    assert(owner->check_block(nextBlock));
-                    break;
-
-                default:
-                    assert(merge_none==flag);
-                    currBlock->from = 0;
-                    break;
             }
 
-            addr = 0;
-            n    = 0;
-            return owner;
+            section * section:: receive(void * &addr, size_t &maxi, const size_t size) throw()
+            {
+                assert(addr);
+                assert(maxi);
+                assert(maxi>=size);
+                size_t n = size;
+                void  *p = acquire(n,__nope);
+                if(p)
+                {
+                    assert(n>=size);
+                    memcpy(p,addr,size);
+                    memset(static_cast<char*>(p)+size,0,n-size);
+                    section *s = release(addr,maxi);
+                    addr = p;
+                    maxi = n;
+                    return s;
+                }
+                else
+                {
+                    // left untouched
+                    return 0;
+                }
+            }
+
+
+
+            section *section:: release(void * &addr, size_t &n) throw()
+            {
+                assert(addr); assert(n>0);
+
+                //------------------------------------------------------------------
+                // get block an owner
+                //------------------------------------------------------------------
+                block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->size*block_size==n);
+                section *owner     = currBlock->from;                assert(owner->check_block(currBlock)); assert(owner->guard!=currBlock);
+
+                //------------------------------------------------------------------
+                // check status
+                //------------------------------------------------------------------
+                static const unsigned merge_none = 0x00;
+                static const unsigned merge_prev = 0x01;
+                static const unsigned merge_next = 0x02;
+                static const unsigned merge_both = merge_prev|merge_next;
+
+                unsigned flag      = merge_none;
+                block   *prevBlock = currBlock->prev; if(prevBlock&&(0==prevBlock->from))       flag |= merge_prev;
+                block   *nextBlock = currBlock->next; assert(nextBlock); if(0==nextBlock->from) flag |= merge_next;
+
+                //------------------------------------------------------------------
+                // merge
+                //------------------------------------------------------------------
+                switch(flag)
+                {
+                    case merge_prev:
+                        prevBlock->next = nextBlock;
+                        nextBlock->prev = prevBlock;
+                        prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
+                        assert(owner->check_block(prevBlock));
+                        assert(owner->check_block(nextBlock));
+                        break;
+
+                    case merge_next:
+                        assert(nextBlock->next!=NULL);
+                        nextBlock=nextBlock->next;
+                        currBlock->next = nextBlock;
+                        nextBlock->prev = currBlock;
+                        currBlock->size = static_cast<len_t>(nextBlock-currBlock)-1;
+                        currBlock->from = 0;
+                        assert(owner->check_block(currBlock));
+                        assert(owner->check_block(nextBlock));
+                        break;
+
+                    case merge_both:
+                        assert(nextBlock->next!=NULL);
+                        nextBlock=nextBlock->next;
+                        prevBlock->next = nextBlock;
+                        nextBlock->prev = prevBlock;
+                        prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
+                        assert(owner->check_block(prevBlock));
+                        assert(owner->check_block(nextBlock));
+                        break;
+
+                    default:
+                        assert(merge_none==flag);
+                        currBlock->from = 0;
+                        break;
+                }
+
+                addr = 0;
+                n    = 0;
+                return owner;
+            }
+
+
         }
-
-
-
     }
 
 }
@@ -288,71 +289,74 @@ namespace upsylon {
 
     namespace memory {
 
-        void section:: display() const
-        {
-            assert(entry);
-            assert(guard);
-            const block *blk = entry;
-            std::cerr << '|';
-            while(blk)
+        namespace joint {
+
+            void section:: display() const
             {
-                std::cerr << "(" << block_size << ")";
-                if(blk->next==NULL)
+                assert(entry);
+                assert(guard);
+                const block *blk = entry;
+                std::cerr << '|';
+                while(blk)
                 {
-                    std::cerr << '|';
-                }
-                else
-                {
-                    if(blk->from)
+                    std::cerr << "(" << block_size << ")";
+                    if(blk->next==NULL)
                     {
-                        std::cerr << "<" << blk->size * block_size << ">";
+                        std::cerr << '|';
                     }
                     else
                     {
-                        std::cerr << "[" << blk->size * block_size << "]";
+                        if(blk->from)
+                        {
+                            std::cerr << "<" << blk->size * block_size << ">";
+                        }
+                        else
+                        {
+                            std::cerr << "[" << blk->size * block_size << "]";
+                        }
                     }
+                    blk = blk->next;
                 }
-                blk = blk->next;
-            }
-            std::cerr << std::endl;
+                std::cerr << std::endl;
 
-        }
+            }
 
 #define Y_MEM_SEC_BLK(EXPR) do { if(!(EXPR)) { std::cerr << pfx << #EXPR << sfx << std::endl; return false; } } while(false)
 
-        bool section:: check_block(const block *blk) const
-        {
-            static const char pfx[] = "memory.section.check_block: ! '";
-            static const char sfx[] = "'";
-            assert(blk);
-            if(blk->next)
+            bool section:: check_block(const block *blk) const
             {
-                const block *nxt = blk->next;
-                Y_MEM_SEC_BLK(nxt->prev==blk);
-                Y_MEM_SEC_BLK(blk->size==static_cast<len_t>(nxt-blk)-1);
+                static const char pfx[] = "memory.section.check_block: ! '";
+                static const char sfx[] = "'";
+                assert(blk);
+                if(blk->next)
+                {
+                    const block *nxt = blk->next;
+                    Y_MEM_SEC_BLK(nxt->prev==blk);
+                    Y_MEM_SEC_BLK(blk->size==static_cast<len_t>(nxt-blk)-1);
+                }
+
+                if(blk->from)
+                {
+                    Y_MEM_SEC_BLK(blk->from==this);
+                }
+
+                if(blk->prev)
+                {
+                    const block *prv = blk->prev;
+                    Y_MEM_SEC_BLK(prv->next==blk);
+                }
+
+                return true;
             }
 
-            if(blk->from)
+            bool section:: check() const
             {
-                Y_MEM_SEC_BLK(blk->from==this);
+                for(const block *blk=entry; blk; blk=blk->next)
+                {
+                    if(!check_block(blk)) return false;
+                }
+                return true;
             }
-
-            if(blk->prev)
-            {
-                const block *prv = blk->prev;
-                Y_MEM_SEC_BLK(prv->next==blk);
-            }
-
-            return true;
-        }
-
-        bool section:: check() const
-        {
-            for(const block *blk=entry; blk; blk=blk->next)
-            {
-                if(!check_block(blk)) return false;
-            }
-            return true;
         }
     }
 

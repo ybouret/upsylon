@@ -85,7 +85,7 @@ test-xslot.cpp test-ptr.cpp test-release.cpp
 test-static-slots.cpp 
 test-memory-marker.cpp
 test-memory-groove.cpp
-test-memory-section.cpp
+test-memory-joint-section.cpp
 test-memory-tight-chunk.cpp
 test-memory-tight-arena.cpp
 test-memory-tight-zcache.cpp
@@ -96,24 +96,25 @@ test-memory-tight-mt.cpp
 test-memory-tight-object.cpp
 test-memory-zblock.cpp
 )
-ADD_TEST(mem:chunk        test-main chunk)
-ADD_TEST(mem:arena        test-main arena)
-ADD_TEST(mem:alloc        test-main alloc)
-ADD_Test(mem:slab         test-main slab)
-ADD_TEST(mem:object0      test-main object0)
-ADD_TEST(mem:objectY      test-main objectY)
-ADD_TEST(mem:slice        test-main slice)
-ADD_TEST(mem:carver       test-main carver)
-ADD_TEST(mem:pooled       test-main pooled)
-ADD_TEST(mem:xslot        test-main xslot)
-ADD_TEST(mem:ptr          test-main ptr)
-ADD_TEST(mem:release      test-main release)
-ADD_TEST(mem:embed        test-main embed)
-ADD_TEST(mem:slots        test-main static_slots)
-ADD_TEST(mem:marker       test-main marker)
-ADD_TEST(mem:groove       test-main groove)
-ADD_TEST(mem:zblock       test-main zblock)
-ADD_TEST(mem:section      test-main section)
+ADD_TEST(mem:chunk         test-main chunk)
+ADD_TEST(mem:arena         test-main arena)
+ADD_TEST(mem:alloc         test-main alloc)
+ADD_Test(mem:slab          test-main slab)
+ADD_TEST(mem:object0       test-main object0)
+ADD_TEST(mem:objectY       test-main objectY)
+ADD_TEST(mem:slice         test-main slice)
+ADD_TEST(mem:carver        test-main carver)
+ADD_TEST(mem:pooled        test-main pooled)
+ADD_TEST(mem:xslot         test-main xslot)
+ADD_TEST(mem:ptr           test-main ptr)
+ADD_TEST(mem:release       test-main release)
+ADD_TEST(mem:embed         test-main embed)
+ADD_TEST(mem:slots         test-main static_slots)
+ADD_TEST(mem:marker        test-main marker)
+ADD_TEST(mem:groove        test-main groove)
+ADD_TEST(mem:zblock        test-main zblock)
+ADD_TEST(mem:joint:section test-main joint_section)
+ADD_TEST(mem:joint:ward    test-main joint_ward)
 ADD_TEST(mem:tight:chunk   test-main tight_chunk)
 ADD_TEST(mem:tight:arena   test-main tight_arena)
 ADD_TEST(mem:tight:zcache  test-main tight_zcache)

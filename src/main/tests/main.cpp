@@ -46,7 +46,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(i2r);
     Y_UTEST(marker);
     Y_UTEST(groove);
-    Y_UTEST(section);
+    Y_UTEST(joint_section);
+    Y_UTEST(joint_ward);
     Y_UTEST(tight_chunk);
     Y_UTEST(tight_arena);
     Y_UTEST(tight_zcache);

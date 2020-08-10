@@ -23,16 +23,16 @@ namespace
     };
 }
 
-Y_UTEST(section)
+Y_UTEST(joint_section)
 {
 
     for(size_t i=1;i<=1000;i+=1+alea.leq(9))
     {
         size_t       n = i;
-        const size_t m = memory::section::bytes_to_hold(n);
+        const size_t m = memory::joint::section::bytes_to_hold(n);
         std::cerr << n << " => " << m << std::endl;
         zblock<char,memory::global>  buffer(m);
-        memory::section            S(buffer.rw(),buffer.length());
+        memory::joint::section       S(buffer.rw(),buffer.length());
         void *big = S.acquire(n);
         Y_ASSERT( big );
         Y_ASSERT( &S == S.release(big,n) );
@@ -41,13 +41,13 @@ Y_UTEST(section)
 
     for(int iter=0;iter<16;++iter)
     {
-        zblock<memory::section::block,memory::global>  buffer( memory::section::min_blocks  + alea.leq(1000) );
-        memory::section S(buffer.rw(),buffer.length());
+        zblock<memory::joint::section::block,memory::global>  buffer( memory::joint::section::min_blocks  + alea.leq(1000) );
+        memory::joint::section S(buffer.rw(),buffer.length());
 
         list<block> L;
         while(true)
         {
-            block blk = { 0, alea.range<size_t>(0,3*memory::section::block_size) };
+            block blk = { 0, alea.range<size_t>(0,3*memory::joint::section::block_size) };
             blk.addr  = S.acquire(blk.size);
             if(!blk.addr)
             {
@@ -61,13 +61,13 @@ Y_UTEST(section)
         while(L.size())
         {
             block     &b = L.back();
-            Y_ASSERT( &S == memory::section::release(b.addr,b.size) );
+            Y_ASSERT( &S == memory::joint::section::release(b.addr,b.size) );
             L.pop_back();
         }
         Y_ASSERT(S.is_free());
         while(true)
         {
-            block blk = { 0, alea.range<size_t>(0,3*memory::section::block_size) };
+            block blk = { 0, alea.range<size_t>(0,3*memory::joint::section::block_size) };
             blk.addr  = S.acquire(blk.size);
             if(!blk.addr)
             {
@@ -80,12 +80,12 @@ Y_UTEST(section)
         for(size_t i=L.size()/2;i>0;--i)
         {
             block     &b = L.back();
-            Y_ASSERT( &S == memory::section::release(b.addr,b.size) );
+            Y_ASSERT( &S == memory::joint::section::release(b.addr,b.size) );
             L.pop_back();
         }
         while(true)
         {
-            block blk = { 0, alea.range<size_t>(0,3*memory::section::block_size) };
+            block blk = { 0, alea.range<size_t>(0,3*memory::joint::section::block_size) };
             blk.addr  = S.acquire(blk.size);
             if(!blk.addr)
             {
@@ -98,14 +98,14 @@ Y_UTEST(section)
         while(L.size())
         {
             block     &b = L.back();
-            Y_ASSERT( &S == memory::section::release(b.addr,b.size) );
+            Y_ASSERT( &S == memory::joint::section::release(b.addr,b.size) );
             L.pop_back();
         }
         Y_ASSERT(S.is_free());
     }
 
-    Y_UTEST_SIZEOF(memory::section::block);
-    Y_UTEST_SIZEOF(memory::section);
+    Y_UTEST_SIZEOF(memory::joint::section::block);
+    Y_UTEST_SIZEOF(memory::joint::section);
     
 
 
