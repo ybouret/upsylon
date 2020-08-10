@@ -32,6 +32,7 @@ namespace upsylon {
                 size_t chunk_size() const throw();         //!< default vein.block_size
 
             private:
+                Y_DISABLE_COPY_AND_ASSIGN(ward);
                 section               *acquiring; //!< last acquisition
                 core::list_of<section> S;         //!< all the sections
                 tight::quarry          Q;         //!< cache for section memory
