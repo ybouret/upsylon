@@ -42,6 +42,7 @@ Y_UTEST(joint_section)
     SHOW(min_allocated);
     SHOW(max_allocated);
 
+    std::cerr << "-- one shot acquire" << std::endl;
     for(size_t i=1;i<=100000;i+=1+alea.leq(1000))
     {
         size_t       required = i;
@@ -58,7 +59,9 @@ Y_UTEST(joint_section)
         Y_ASSERT( big );
         Y_ASSERT( &S == S.release(big,required) );
     }
+    std::cerr << std::endl;
 
+    std::cerr << "-- multiple I/O" << std::endl;
     for(int iter=0;iter<16;++iter)
     {
         const size_t required = 100 + alea.leq(10000);
@@ -82,6 +85,7 @@ Y_UTEST(joint_section)
         }
         std::cerr << "#blocks v1=" << L.size() << std::endl;
 
+
         alea.shuffle(*L);
         while(L.size())
         {
@@ -90,6 +94,7 @@ Y_UTEST(joint_section)
             L.pop_back();
         }
         Y_ASSERT(S.is_empty());
+
         while(true)
         {
             block blk = { 0, alea.range<size_t>(0,3*joint::section::block::size) };

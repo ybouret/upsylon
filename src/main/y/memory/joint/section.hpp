@@ -31,7 +31,8 @@ namespace upsylon {
                 typedef unsigned_int<sizeof(void*)>::type len_t; //!< ensure aligment
 
                 //! block for internal linked list
-                struct block {
+                struct block
+                {
                     block   *prev; //!< prev==NULL <=> entry
                     block   *next; //!< next==NULL <=> guard
                     len_t    bulk; //!< number of available BLOCKS
@@ -39,7 +40,10 @@ namespace upsylon {
 
                     static const size_t size = 4 * sizeof(void*);    //!< size in bytes
                     static const size_t exp2 = ilog2<size>::value;   //!< size=1<<exp2
-                    static size_t round(const size_t bytes) throw(); //!< align to block::size
+
+                    static size_t round(const size_t bytes) throw();               //!< align to block::size
+                    inline bool   is_used() const throw() { return NULL!=from;   } //!< alias
+                    inline bool   is_free() const throw() { return NULL==from;   } //!< alias
                 };
 
                 // formatting constants
@@ -92,6 +96,7 @@ namespace upsylon {
                  */
                 void *         acquire(size_t &n)    throw(); //!< try to acquire at least n bytes, zeroed or not
 
+
                 //! try to change ownership
                 /**
                  \param addr current address, updated upon success, left untouched otherwise
@@ -107,16 +112,15 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-                block   *entry; //!< entry block
-                block   *guard; //!< final block
-
-                section *next; //!< for list
-                section *prev; //!< for list
-
-                const len_t size; //!< bytes for all blocks, a power of two
-                const len_t exp2; //!< size = 1 << exp2
+                block      *entry;    //!< entry block
+                block      *guard;    //!< final block
                 block      *greatest; //!< block with greatest capacity
                 len_t       capacity; //!< greatest number of BYTES
+                section    *next;     //!< for list
+                section    *prev;     //!< for list
+                const len_t size;     //!< bytes for all blocks, a power of two
+                const len_t exp2;     //!< size = 1 << exp2
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(section);
@@ -125,6 +129,7 @@ namespace upsylon {
 
                 typedef void (*finalize)(void *,const size_t);
                 void *acquire(size_t &n,finalize) throw();
+                void *acquire_(size_t &n,finalize) throw();
 
                 void  updated_greatest() throw();
                 void  look_up_greatest() throw(); //!< full search

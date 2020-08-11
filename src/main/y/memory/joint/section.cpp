@@ -46,12 +46,12 @@ namespace upsylon {
                               const size_t usr_exp2) throw():
             entry( static_cast<block *>(usr_data) ),
             guard( entry ),
+            greatest(entry),
+            capacity(0),
             next(0),
             prev(0),
             size(usr_size),
-            exp2(usr_exp2),
-            greatest(entry),
-            capacity(0)
+            exp2(usr_exp2)
             {
                 assert(usr_data!=NULL);
                 assert(size>=min_size);
@@ -76,7 +76,7 @@ namespace upsylon {
                 assert(check_block(entry));
                 assert(check_block(guard));
                 
-                capacity = greatest->bulk << block::exp2;
+                capacity = (greatest->bulk << block::exp2);
 
             }
             
@@ -95,14 +95,16 @@ namespace upsylon {
                     }
                     std::cerr << std::endl;
                 }
-                entry = guard = 0;
-
+                entry    = guard = greatest = 0;
+                capacity = 0;
             }
 
             bool section:: is_empty() const throw()
             {
                 if( (NULL==entry->from) && (guard==entry->next) )
                 {
+                    assert(greatest==entry);
+                    assert(capacity==entry->bulk << block::exp2);
                     return true;
                 }
                 else
@@ -145,6 +147,7 @@ namespace upsylon {
                 {
                     for(block *b=g->next;b;b=b->next)
                     {
+                        if(NULL!=b->from) continue;
                         const size_t tmp = b->bulk;
                         if(tmp>n)
                         {
@@ -155,10 +158,11 @@ namespace upsylon {
 
                     // update status
                     greatest = g;
-                    capacity = n << block::exp2;
+                    capacity = (n << block::exp2);
                 }
                 else
                 {
+                    // full section
                     greatest = 0;
                     capacity = 0;
                 }
@@ -167,53 +171,35 @@ namespace upsylon {
 
             }
 
-
-
             void * section:: acquire(size_t &n, finalize proc) throw()
             {
-
+                // parameters to trigger a new block
                 static const size_t split_blocks = 3;
                 static const size_t extra_blocks = split_blocks-1;
                 static const size_t delta_blocks = extra_blocks-1;
 
                 assert(proc);
-                const size_t boundary = block::round(n);
-                const size_t required = boundary >> block::exp2;
 
-                //--------------------------------------------------------------
-                //
-                // loop over free blocks
-                //
-                //--------------------------------------------------------------
-                block   *currBlock = entry;
-                while(0!=currBlock)
+                if(greatest)
                 {
-                    //----------------------------------------------------------
-                    //
-                    // check available
-                    //
-                    //----------------------------------------------------------
-                    if(currBlock->from)
+                    assert(greatest->is_free());
+                    if(capacity>=n)
                     {
-                        currBlock=currBlock->next;
-                        continue;
-                    }
 
-                    //----------------------------------------------------------
-                    //
-                    // check big enough
-                    //
-                    //----------------------------------------------------------
-                    const size_t available = currBlock->bulk;
-                    if(available>=required)
-                    {
                         //------------------------------------------------------
-                        //
-                        // found
-                        //
+                        // ok!
                         //------------------------------------------------------
+                        block       *currBlock = greatest;
+                        const size_t available = currBlock->bulk;
+                        const size_t boundary  = block::round(n);         assert(capacity  >= boundary);
+                        const size_t required  = boundary >> block::exp2; assert(available >= required);
+
                         if(available>=required+extra_blocks)
                         {
+                            //--------------------------------------------------
+                            // shall split
+                            //--------------------------------------------------
+                            
                             // create a new block
                             block *nextBlock = currBlock->next;
                             block *new_block = currBlock+required+1;
@@ -232,36 +218,45 @@ namespace upsylon {
                             assert(check_block(currBlock));
                             assert(check_block(nextBlock));
                             assert(check_block(new_block));
+                            assert(currBlock->bulk==required);
                             n = boundary;
                         }
                         else
                         {
-                            // full block
-                            n = currBlock->bulk * block::size;
+                            //--------------------------------------------------
+                            // take the full currBlock
+                            //--------------------------------------------------
+                            n = capacity;
                         }
 
-                        assert(currBlock->bulk * block::size == n );
+                        assert(n==currBlock->bulk * block::size);
+
                         currBlock->from = this;
                         void *p = &currBlock[1];
                         proc(p,n);
+                        look_up_greatest();
                         return p;
                     }
-
+                    else
+                    {
+                        //------------------------------------------------------
+                        // not enough space
+                        //------------------------------------------------------
+                        return 0;
+                    }
+                }
+                else
+                {
                     //----------------------------------------------------------
-                    //
-                    // try next block
-                    //
+                    // section has no blocks left
                     //----------------------------------------------------------
-                    currBlock=currBlock->next;
+                    return 0;
                 }
 
-                //--------------------------------------------------------------
-                //
-                // no possible allocation
-                //
-                //--------------------------------------------------------------
-                return 0;
+
             }
+
+
 
 
             static inline void __nope(void*,const size_t) throw()
@@ -359,6 +354,7 @@ namespace upsylon {
 
                 addr = 0;
                 n    = 0;
+                owner->look_up_greatest();
                 return owner;
             }
 
