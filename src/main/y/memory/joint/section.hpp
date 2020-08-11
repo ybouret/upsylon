@@ -131,9 +131,11 @@ namespace upsylon {
                 void *acquire(size_t &n,finalize) throw();
                 void *acquire_(size_t &n,finalize) throw();
 
-                void  updated_greatest() throw();
-                void  look_up_greatest() throw(); //!< full search
-             };
+                void   look_up_greatest() throw(); //!< full search
+                void   update_greatest() throw();  //!< from current
+                block *greatest_within(block *lo, block *hi) throw();
+                void   assign_greatest(block *g) throw();
+            };
 
         }
     }

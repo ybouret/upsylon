@@ -167,9 +167,120 @@ namespace upsylon {
                     capacity = 0;
                 }
 
+            }
+
+            section::block * section:: greatest_within(block *lo, block *hi) throw()
+            {
+                assert(lo);
+                assert(hi);
+
+                block *g=0;
+                len_t  n=0;
+                for(block *blk=lo;blk!=hi;blk=blk->next)
+                {
+                    if(0==blk->from)
+                    {
+                        g = blk;
+                        n = blk->bulk;
+                        break;
+                    }
+                }
+
+                if(g)
+                {
+                    for(block *b=g->next;b!=hi;b=b->next)
+                    {
+                        if(NULL!=b->from) continue;
+                        const size_t tmp = b->bulk;
+                        if(tmp>n)
+                        {
+                            g=b;
+                            n=tmp;
+                        }
+                    }
+                    return g;
+                }
+                else
+                {
+                    return 0;
+                }
+
+            }
+
+            void section:: assign_greatest(block *g) throw()
+            {
+                assert(g);
+                assert(g->is_free());
+                greatest = g;
+                capacity = (g->bulk<<block::exp2);
+            }
+
+            void  section:: update_greatest() throw()
+            {
+                assert(greatest);
+                assert(greatest->is_used());
+
+                static const unsigned found_none  = 0;
+                static const unsigned found_left  = 0x01;
+                static const unsigned found_right = 0x02;
+                static const unsigned found_both  = found_left | found_right;
+
+                unsigned found = found_none;
+                block   *lhs   = 0;
+                if(greatest->prev && NULL!=(lhs=greatest_within(entry,greatest)) )
+                {
+                    found |= found_left;
+                }
+
+                block   *rhs   = 0;
+                {
+                    block *at_right = greatest->next;
+                    if(at_right && NULL!=(rhs=greatest_within(at_right,guard) ))
+                    {
+                        found |= found_right;
+                    }
+                }
+
+                switch(found)
+                {
+                    case found_left:
+                        assert(!rhs);
+                        assert(lhs);
+                        assert(lhs->is_free());
+                        assign_greatest(lhs);
+                        break;
+
+                    case found_right:
+                        assert(!lhs);
+                        assert(rhs);
+                        assert(rhs->is_free());
+                        assign_greatest(rhs);
+                        break;
+
+                    case found_both: // compare, priority on lhs
+                        assert(lhs);
+                        assert(rhs);
+                        if(lhs->bulk>=rhs->bulk)
+                        {
+                            assign_greatest(lhs);
+                        }
+                        else
+                        {
+                            assign_greatest(rhs);
+                        }
+                        break;
+
+                    default:
+                        assert(found_none==found);
+                        greatest = 0;
+                        capacity = 0;
+                        break;
+                }
 
 
             }
+
+
 
             void * section:: acquire(size_t &n, finalize proc) throw()
             {
@@ -228,13 +339,13 @@ namespace upsylon {
                             //--------------------------------------------------
                             n = capacity;
                         }
-
+                        
                         assert(n==currBlock->bulk * block::size);
 
                         currBlock->from = this;
                         void *p = &currBlock[1];
                         proc(p,n);
-                        look_up_greatest();
+                        update_greatest();
                         return p;
                     }
                     else
