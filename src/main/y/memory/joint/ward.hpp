@@ -51,6 +51,7 @@ namespace upsylon {
                 //! find the vein that shall hold required bytes
                 tight::vein &vein_for(const size_t required);
                 section     *section_for(const size_t required);
+                void         restore( section *s ) throw();
             };
 
 

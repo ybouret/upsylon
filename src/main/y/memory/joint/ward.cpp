@@ -18,16 +18,23 @@ namespace upsylon {
                 return next_power_of_two( clamp(section::min_size,chunk_size,tight::vein::max_size) );
             }
 
+            void ward:: restore( section *s ) throw()
+            {
+                assert(s);
+                assert(NULL==s->next);
+                assert(NULL==s->prev);
+                tight::vein &v = Q[s->exp2];   // find memory provider
+                void        *p = s->entry;     // find memory address
+                self_destruct(*s);             // cleanup the segment
+                v.release(p);                  // return memory into vein of quarry
+                Z.zstore(s);                   // return zombie section
+            }
+
             ward:: ~ward() throw()
             {
                 while(S.size)
                 {
-                    section     *s = S.pop_back(); // remove section
-                    tight::vein &v = Q[s->exp2];   // find memory provider
-                    void        *p = s->entry;     // find memory address
-                    self_destruct(*s);             // cleanup the segment
-                    v.release(p);                  // return memory into vein of quarry
-                    Z.zstore(s);                   // return zombie section
+                    restore( S.pop_back() );
                 }
             }
             
@@ -99,7 +106,7 @@ namespace upsylon {
             }
 
 #define Y_MEM_WARD_TEST(PTR,MEMBER) \
-do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto RETURN; } PTR=PTR->MEMBER; } while(false)
+do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto CHECK_AND_RETURN; } PTR=PTR->MEMBER; } while(false)
 
 #define Y_MEM_WARD_TEST_LO() Y_MEM_WARD_TEST(lo,prev)
 #define Y_MEM_WARD_TEST_HI() Y_MEM_WARD_TEST(hi,next)
@@ -109,26 +116,35 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto RETURN; } PTR=PTR->MEM
                 assert(acquiring);
                 void *p = acquiring->acquire(n);
                 if(p)
-                {
-                    return p;
-                }
+                    //----------------------------------------------------------
+                    // cache!
+                    //----------------------------------------------------------
+                    goto CHECK_AND_RETURN;
                 else
                 {
-                    // interleaved look-up
-                    section *lo = acquiring->prev;
-                    section *hi = acquiring->next;
-                    while(lo&&hi)
+                    //----------------------------------------------------------
+                    // interleaved look-up in porximity
+                    //----------------------------------------------------------
                     {
-                        Y_MEM_WARD_TEST_LO();
-                        Y_MEM_WARD_TEST_HI();
+                        section *lo = acquiring->prev;
+                        section *hi = acquiring->next;
+                        while(lo&&hi)
+                        {
+                            Y_MEM_WARD_TEST_LO();
+                            Y_MEM_WARD_TEST_HI();
+                        }
+                        while(lo) Y_MEM_WARD_TEST_LO();
+                        while(hi) Y_MEM_WARD_TEST_HI();
+                        assert(NULL==lo);
+                        assert(NULL==hi);
                     }
 
-                    while(lo) Y_MEM_WARD_TEST_LO();
-                    while(hi) Y_MEM_WARD_TEST_HI();
-
+                    //----------------------------------------------------------
                     // new section creation
+                    //----------------------------------------------------------
                     acquiring = S.push_back(section_for(n)); assert(acquiring->capacity>=n);
                     p         = acquiring->acquire(n);
+                    if(false)
                     {
                         section *s = acquiring;
                         while(s->prev && (s->entry<s->prev->entry) )
@@ -136,22 +152,68 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto RETURN; } PTR=PTR->MEM
                             S.towards_head(s);
                         }
                     }
-                    return p;
-
-                RETURN:
-                    if(acquiring==empty_one)
-                    {
-                        empty_one = 0; 
-                    }
+                    assert(!acquiring->is_empty());
+                    assert( empty_one!=acquiring );
                     return p;
                 }
+
+            CHECK_AND_RETURN:
+                if(acquiring==empty_one)
+                {
+                    empty_one = 0;
+                }
+                assert(!acquiring->is_empty());
+                assert( empty_one!=acquiring );
+                return p;
+
             }
 
+
+            inline void _choose(section * &releasing,
+                                 section * &empty_one) throw()
+            {
+                assert(releasing!=empty_one);
+                if(releasing->size<empty_one->size)
+                {
+                    cswap(releasing,empty_one);
+                    assert(releasing->size>empty_one->size);
+                    return;
+                }
+                else if(releasing->size==empty_one->size)
+                {
+                    if(empty_one->entry<releasing->entry)
+                    {
+                        cswap(empty_one,releasing);
+                        assert(releasing->entry<empty_one->entry);
+                    }
+                    return;
+                }
+                else
+                {
+                    assert(releasing->size>empty_one->size);
+                    return;
+                }
+            }
 
             void ward:: release_block(void *&p, size_t &n) throw()
             {
                 section *releasing = section::release(p,n);
-                (void) releasing;
+                if(releasing->is_empty())
+                {
+                    if(empty_one)
+                    {
+                        assert(empty_one->is_empty());
+                        assert(empty_one!=releasing); // otherwise shouldn't release
+                        _choose(releasing,empty_one);
+                        restore(S.unlink(releasing));
+                    }
+                    else
+                    {
+                        empty_one = releasing;
+                    }
+                    assert(empty_one);
+                    assert(empty_one->is_empty());
+                }
             }
 
             std::ostream & operator<<( std::ostream &os, const ward &w)
