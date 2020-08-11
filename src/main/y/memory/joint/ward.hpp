@@ -39,6 +39,8 @@ namespace upsylon {
 
                 friend std::ostream & operator<<( std::ostream &os, const ward &w);
 
+                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ward);
                 section               *acquiring; //!< last acquisition

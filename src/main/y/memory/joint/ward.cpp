@@ -140,11 +140,11 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto CHECK_AND_RETURN; } PT
                     }
 
                     //----------------------------------------------------------
-                    // new section creation
+                    // new section creation and move it into place
                     //----------------------------------------------------------
                     acquiring = S.push_back(section_for(n)); assert(acquiring->capacity>=n);
                     p         = acquiring->acquire(n);
-                    if(false)
+                    if(true)
                     {
                         section *s = acquiring;
                         while(s->prev && (s->entry<s->prev->entry) )
