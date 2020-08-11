@@ -18,7 +18,7 @@ namespace upsylon {
             //
             //! quarry of stones: handle (raw/dirty) power of two memory area
             /**
-             every 2^shift>=vein::min_shift has a dedicated vein,
+             every 2^(shift>=vein::min_shift) has a dedicated vein,
              and a direct call to memory is made otherwise, keeping track
              of undersized bytes.
              */
