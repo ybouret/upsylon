@@ -125,7 +125,8 @@ namespace upsylon {
 
                 typedef void (*finalize)(void *,const size_t);
                 void *acquire(size_t &n,finalize) throw();
-                
+
+                void  find_greatest() throw();
              };
 
         }

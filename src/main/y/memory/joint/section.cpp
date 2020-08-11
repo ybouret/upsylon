@@ -96,11 +96,19 @@ namespace upsylon {
                     std::cerr << std::endl;
                 }
                 entry = guard = 0;
+
             }
 
             bool section:: is_empty() const throw()
             {
-                return (NULL==entry->from) && (guard==entry->next);
+                if( (NULL==entry->from) && (guard==entry->next) )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             static inline void __zero(void *p, const size_t n) throw()
@@ -114,6 +122,20 @@ namespace upsylon {
             void *section:: acquire(size_t &n) throw()
             {
                 return acquire(n,__zero);
+            }
+
+            void section:: find_greatest() throw()
+            {
+                block *g = 0;
+                len_t  n = 0;
+                for(block *b=entry;b;b=b->next)
+                {
+                    if(0==b->from)
+                    {
+                        g=b;
+                        n=b->bulk;
+                    }
+                }
             }
 
 
