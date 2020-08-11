@@ -43,7 +43,7 @@ Y_UTEST(joint_section)
     SHOW(max_allocated);
 
     std::cerr << "-- one shot acquire" << std::endl;
-    for(size_t i=1;i<=100000;i+=1+alea.leq(8000))
+    for(size_t i=1;i<=100000;i+=1+alea.leq(1000))
     {
         size_t       required = i;
         size_t       shift = 0;
@@ -65,7 +65,7 @@ Y_UTEST(joint_section)
     list<block> L;
     for(int iter=0;iter<32;++iter)
     {
-        const size_t         required = 100 + alea.leq(10000);
+        const size_t         required = 100 + alea.leq(20000);
         size_t               shift    = 0;
         const size_t         bytes    = joint::section::holding(required, shift);
         zblock<char,global>  buffer(bytes);
