@@ -5,7 +5,7 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/type/block/zset.hpp"
-
+#include "y/os/run-time-log.hpp"
 
 namespace upsylon {
 
@@ -202,7 +202,8 @@ namespace upsylon {
                         }
 
                         // should never get here
-                        assert( die("invalid address in small.blocks.release") );
+                        rtl(run_time_error) << "[tight::blocks] invalid address to release" << std::endl;
+                        exit(-1);
                     }
                 }
                 
@@ -229,8 +230,7 @@ namespace upsylon {
 
 }
 
-#include <iostream>
-#include <iomanip>
+
 namespace upsylon {
 
     namespace memory {

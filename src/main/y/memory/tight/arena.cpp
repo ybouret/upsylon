@@ -3,6 +3,7 @@
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/os/run-time-log.hpp"
 #include <iostream>
 
 
@@ -28,7 +29,7 @@ namespace upsylon {
                 }
                 if(leak>0)
                 {
-                    std::cerr << "[memory::small::arena] leak #[block_size=" << block_size << "] = " << leak  << std::endl;
+                    rtl(run_time_warning) << "[memory::tight::arena] leak #[block_size=" << block_size << "] = " << leak  << std::endl;
                 }
 
             }

@@ -3,9 +3,8 @@
 #include "y/type/aliasing.hpp"
 #include "y/code/hr-ints.hpp"
 #include "y/sort/merge.hpp"
-#include <iostream>
+#include "y/os/run-time-log.hpp"
 #include <cstring>
-#include <iomanip>
 
 namespace upsylon {
 
@@ -46,7 +45,7 @@ namespace upsylon {
                 }
                 if(count)
                 {
-                    std::cerr << "[small::vein@" << block_size <<"] missing #ingot=" << count << " -> " << count*block_size << " bytes" << std::endl;
+                    rtl(run_time_warning) << "[tight::vein@" << block_size <<"] missing #ingot=" << count << " -> " << count*block_size << " bytes" << std::endl;
                 }
                 aliasing::_(count) = 0;
             }

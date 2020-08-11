@@ -5,6 +5,7 @@
 
 #include "y/concurrent/singleton.hpp"
 #include "y/os/rt-clock.hpp"
+#include <iostream>
 #include <iomanip>
 
 namespace upsylon {

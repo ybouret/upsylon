@@ -2,8 +2,8 @@
 #include "y/memory/tight/zcache.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
-#include <iostream>
-#include <iomanip>
+#include "y/os/run-time-log.hpp"
+ 
 
 namespace upsylon {
 
@@ -23,7 +23,7 @@ namespace upsylon {
 
             void __zcache:: missing(const size_t num, const unsigned sz)  throw()
             {
-                std::cerr << "[small::zcache<sizeof=" << std::setw(4) << sz << ">] missing #zombies=" << num << std::endl;
+                rtl(run_time_warning) << "[tight::zcache<sizeof=" << std::setw(4) << sz << ">] missing #zombies=" << num << std::endl;
             }
             
 
