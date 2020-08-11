@@ -78,7 +78,7 @@ Y_UTEST(joint_section)
         for(size_t cycle=1;cycle<=256;++cycle)
         {
             if(0==(cycle%16)) std::cerr << '.';
-            assert(0==L.size());
+            Y_ASSERT(0==L.size());
             while(true)
             {
                 block blk = { 0, alea.range<size_t>(0,3*joint::section::block::size) };
