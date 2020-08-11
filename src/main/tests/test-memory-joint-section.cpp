@@ -43,7 +43,7 @@ Y_UTEST(joint_section)
     SHOW(max_allocated);
 
     std::cerr << "-- one shot acquire" << std::endl;
-    for(size_t i=1;i<=100000;i+=1+alea.leq(1000))
+    for(size_t i=1;i<=100000;i+=1+alea.leq(8000))
     {
         size_t       required = i;
         size_t       shift = 0;
