@@ -1,5 +1,6 @@
 
 #include "y/memory/joint/ward-allocator.hpp"
+#include "y/memory/joint/ward.hpp"
 
 namespace upsylon {
 
@@ -29,7 +30,13 @@ namespace upsylon {
                 Y_LOCK(L);
                 W.release_block(p,n);
             }
-                
+
+            bool ward_allocator:: compact(void * &addr, size_t &capa, const size_t size) throw()
+            {
+                Y_LOCK(L);
+                return W.compact(addr,capa,size);
+            }
+
             
         }
 

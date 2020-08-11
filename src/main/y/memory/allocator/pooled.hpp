@@ -48,7 +48,7 @@ namespace upsylon
             friend class singleton<pooled>;
             
         public:
-            //! come right before object::life_time
+            //! same as object::life_time, right before global
             static  const at_exit::longevity  life_time;
 
         };

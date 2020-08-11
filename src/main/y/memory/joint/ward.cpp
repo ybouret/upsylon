@@ -235,7 +235,7 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto CHECK_AND_RETURN; } PT
                 os << "<sections #=" << w.S.size << ">" << std::endl;
                 for(const section *s = w.S.head;s;s=s->next)
                 {
-                    std::cerr << "\t@" << s->entry << "+" << s->size << std::endl;
+                    os << "\t@" << s->entry << "+" << s->size << std::endl;
                 }
                 os << "<sections/>" << std::endl;
                 os << "<ward/>";
@@ -245,8 +245,8 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto CHECK_AND_RETURN; } PT
 
             bool ward:: compact( void * &addr, size_t &capa, const size_t size) throw()
             {
-
-                section *origin = section::owner_of(addr); assert(S.owns(origin));
+                section *origin = section::owner_of(addr);
+                assert(S.owns(origin));
                 assert(empty_one!=origin); // NULL or different :)
 
                 for(section *target = S.head; target!=origin; target=target->next)

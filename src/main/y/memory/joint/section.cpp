@@ -411,7 +411,7 @@ namespace upsylon {
                     assert(n>=size);
                     memcpy(p,addr,size);
                     memset(static_cast<char*>(p)+size,0,n-size);
-                    section *s = release(addr,capa);
+                    section *s = release(addr,capa); assert(0==addr); assert(0==capa);
                     addr = p;
                     capa = n;
                     return s;
@@ -432,14 +432,14 @@ namespace upsylon {
             }
 
 
-            section *section:: release(void * &addr, size_t &n) throw()
+            section *section:: release(void * &p, size_t &n) throw()
             {
-                assert(addr); assert(n>0);
+                assert(p); assert(n>0);
 
                 //--------------------------------------------------------------
                 // get block
                 //--------------------------------------------------------------
-                block   *currBlock = static_cast<block *>(addr) - 1;
+                block   *currBlock = static_cast<block *>(p) - 1;
                 assert(currBlock->from);
                 assert(currBlock->bulk*block::size==n);
 
@@ -512,8 +512,8 @@ namespace upsylon {
                 assert(guess);
                 assert(guess->from==0);
                 owner->post_release_greatest(guess);
-                addr = 0;
-                n    = 0;
+                p = 0;
+                n = 0;
                 return owner;
             }
 

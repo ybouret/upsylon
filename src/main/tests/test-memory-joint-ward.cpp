@@ -101,31 +101,34 @@ Y_UTEST(joint_compact)
             W.release_block(blk[i].addr, blk[i].size);
         }
 
-        while(true)
+        if(true)
         {
-            bool moved = false;
-            size_t count = 0;
-            std::cerr << ' ';
-            for(size_t i=0;i<half;++i)
+            while(true)
             {
-                if( W.compact(blk[i].addr, blk[i].size, alea.range<size_t>(0,blk[i].size)) )
+                bool moved = false;
+                size_t count = 0;
+                std::cerr << ' ';
+                for(size_t i=0;i<half;++i)
                 {
-                    moved = true;
-                    std::cerr << '+';
-                }
-                else
-                {
-                    std::cerr << '-';
-                }
-                if(0==(++count%64))
-                {
-                    std::cerr << std::endl << ' ';
-                }
+                    if( W.compact(blk[i].addr, blk[i].size, alea.range<size_t>(0,blk[i].size)) )
+                    {
+                        moved = true;
+                        std::cerr << '+';
+                    }
+                    else
+                    {
+                        std::cerr << '-';
+                    }
+                    if(0==(++count%64))
+                    {
+                        std::cerr << std::endl << ' ';
+                    }
 
+                }
+                std::cerr << std::endl;
+                if(!moved)
+                    break;
             }
-            std::cerr << std::endl;
-            if(!moved)
-                break;
         }
 
         alea.shuffle(blk,half);
@@ -134,6 +137,7 @@ Y_UTEST(joint_compact)
             W.release_block(blk[i].addr, blk[i].size );
         }
     }
+    std::cerr << "Final:" << std::endl;
     std::cerr << W << std::endl;
 
 }

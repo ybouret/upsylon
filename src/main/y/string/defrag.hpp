@@ -19,12 +19,12 @@ namespace upsylon
         typedef core::pool_of_cpp<s_node> s_pool; //!< alias
 
         explicit string_defrag() throw(); //!< setup
-        virtual ~string_defrag() throw(); //!< cleanu
+        virtual ~string_defrag() throw(); //!< cleanup
 
         void         record( string &s );         //!< record a string to be defragged
         void         remove( string &s ) throw(); //!< remove a string
         void         free() throw();              //!< drop all the work to do
-        virtual void release() throw();           //!< free() and release mempry
+        virtual void release() throw();           //!< free() and release memory
 
         size_t       one_cycle() throw(); //!< call a direct cycle upon the recorded strings
         size_t       cycle() throw();     //!< order string, call one_cycle repeatedly

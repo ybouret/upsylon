@@ -22,7 +22,7 @@ namespace
 
             noise() : content( extent, as_capacity  )
             {
-                std::cerr << "\t** tadding noise" << std::endl;
+                std::cerr << "\t** adding noise" << std::endl;
                 for(size_t i=0;i<extent;++i)
                 {
                     const string s( alea.leq(100), as_capacity, false);
