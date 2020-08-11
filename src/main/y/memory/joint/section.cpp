@@ -124,19 +124,49 @@ namespace upsylon {
                 return acquire(n,__zero);
             }
 
-            void section:: find_greatest() throw()
+            void  section:: look_up_greatest() throw()
             {
-                block *g = 0;
-                len_t  n = 0;
-                for(block *b=entry;b;b=b->next)
+                block *g=0;
+                len_t  n=0;
+
+                // find a first free block
+                for(block *blk=entry;blk;blk=blk->next)
                 {
-                    if(0==b->from)
+                    if(0==blk->from)
                     {
-                        g=b;
-                        n=b->bulk;
+                        g=blk;
+                        n=blk->bulk;
+                        break;
                     }
                 }
+
+                // find better blocks
+                if(g)
+                {
+                    for(block *b=g->next;b;b=b->next)
+                    {
+                        const size_t tmp = b->bulk;
+                        if(tmp>n)
+                        {
+                            g=b;
+                            n=tmp;
+                        }
+                    }
+
+                    // update status
+                    greatest = g;
+                    capacity = n << block::exp2;
+                }
+                else
+                {
+                    greatest = 0;
+                    capacity = 0;
+                }
+
+
+
             }
+
 
 
             void * section:: acquire(size_t &n, finalize proc) throw()
