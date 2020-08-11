@@ -31,7 +31,7 @@ namespace upsylon {
                 struct block {
                     block   *prev; //!< prev==NULL <=> entry
                     block   *next; //!< next==NULL <=> guard
-                    len_t    size; //!< in number of blocks
+                    len_t    bulk; //!< number of available !!blocks!!
                     section *from; //!< NULL <=> free
                 };
 

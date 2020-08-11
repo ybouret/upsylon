@@ -56,17 +56,17 @@ namespace upsylon {
                 entry->prev = 0;
                 entry->next = guard;
                 entry->from = 0;
-                entry->size = --blocks;
+                entry->bulk = --blocks;
 
 
                 guard->prev = entry;
                 guard->next = NULL;
-                guard->size = 0;
+                guard->bulk = 0;
                 guard->from = this;
 
                 assert(check_block(entry));
                 assert(check_block(guard));
-                std::cerr << "[+section: size=" << size << ", hold=" << entry->size*block_size << "]" << std::endl;
+                std::cerr << "[+section: size=" << size << ", hold=" << entry->bulk*block_size << "]" << std::endl;
 
             }
             
@@ -80,7 +80,7 @@ namespace upsylon {
                     {
                         if(blk->from)
                         {
-                            std::cerr << blk->size << "/";
+                            std::cerr << blk->bulk << "/";
                         }
                     }
                     std::cerr << std::endl;
@@ -143,7 +143,7 @@ namespace upsylon {
                     // check big enough
                     //
                     //----------------------------------------------------------
-                    const size_t available = currBlock->size;
+                    const size_t available = currBlock->bulk;
                     if(available>=required)
                     {
                         //------------------------------------------------------
@@ -160,13 +160,13 @@ namespace upsylon {
                             new_block->prev  = currBlock;
                             new_block->next  = nextBlock;
                             new_block->from  = 0;
-                            new_block->size  = available-required-delta_blocks;
+                            new_block->bulk  = available-required-delta_blocks;
 
                             // update nextblock
                             nextBlock->prev = new_block;
 
                             // update currBlock
-                            currBlock->size = required;
+                            currBlock->bulk = required;
                             currBlock->next = new_block;
 
                             assert(check_block(currBlock));
@@ -177,10 +177,10 @@ namespace upsylon {
                         else
                         {
                             // full block
-                            n = currBlock->size * block_size;
+                            n = currBlock->bulk * block_size;
                         }
 
-                        assert(currBlock->size * block_size == n );
+                        assert(currBlock->bulk * block_size == n );
                         currBlock->from = this;
                         void *p = &currBlock[1];
                         proc(p,n);
@@ -242,7 +242,7 @@ namespace upsylon {
                 //------------------------------------------------------------------
                 // get block an owner
                 //------------------------------------------------------------------
-                block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->size*block_size==n);
+                block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->bulk*block_size==n);
                 section *owner     = currBlock->from;                assert(owner->check_block(currBlock)); assert(owner->guard!=currBlock);
 
                 //------------------------------------------------------------------
@@ -265,7 +265,7 @@ namespace upsylon {
                     case merge_prev:
                         prevBlock->next = nextBlock;
                         nextBlock->prev = prevBlock;
-                        prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
+                        prevBlock->bulk = static_cast<len_t>(nextBlock-prevBlock)-1;
                         assert(owner->check_block(prevBlock));
                         assert(owner->check_block(nextBlock));
                         break;
@@ -275,7 +275,7 @@ namespace upsylon {
                         nextBlock=nextBlock->next;
                         currBlock->next = nextBlock;
                         nextBlock->prev = currBlock;
-                        currBlock->size = static_cast<len_t>(nextBlock-currBlock)-1;
+                        currBlock->bulk = static_cast<len_t>(nextBlock-currBlock)-1;
                         currBlock->from = 0;
                         assert(owner->check_block(currBlock));
                         assert(owner->check_block(nextBlock));
@@ -286,7 +286,7 @@ namespace upsylon {
                         nextBlock=nextBlock->next;
                         prevBlock->next = nextBlock;
                         nextBlock->prev = prevBlock;
-                        prevBlock->size = static_cast<len_t>(nextBlock-prevBlock)-1;
+                        prevBlock->bulk = static_cast<len_t>(nextBlock-prevBlock)-1;
                         assert(owner->check_block(prevBlock));
                         assert(owner->check_block(nextBlock));
                         break;
@@ -332,11 +332,11 @@ namespace upsylon {
                     {
                         if(blk->from)
                         {
-                            std::cerr << "<" << blk->size * block_size << ">";
+                            std::cerr << "<" << blk->bulk * block_size << ">";
                         }
                         else
                         {
-                            std::cerr << "[" << blk->size * block_size << "]";
+                            std::cerr << "[" << blk->bulk * block_size << "]";
                         }
                     }
                     blk = blk->next;
@@ -356,7 +356,7 @@ namespace upsylon {
                 {
                     const block *nxt = blk->next;
                     Y_MEM_SEC_BLK(nxt->prev==blk);
-                    Y_MEM_SEC_BLK(blk->size==static_cast<len_t>(nxt-blk)-1);
+                    Y_MEM_SEC_BLK(blk->bulk==static_cast<len_t>(nxt-blk)-1);
                 }
 
                 if(blk->from)
