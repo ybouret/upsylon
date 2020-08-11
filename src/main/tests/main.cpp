@@ -12,6 +12,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(decomp);
     Y_UTEST(standard);
     Y_UTEST(lockable);
+    Y_UTEST(rtl);
 
     Y_UTEST(cull);
     Y_UTEST(zset_perf);

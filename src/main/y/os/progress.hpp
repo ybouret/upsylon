@@ -31,7 +31,7 @@ namespace upsylon
         }
 
         //! fmt size >= format_size!
-        static void format(char *fmt, const double tmx );
+        static void format(char *fmt, const double tmx);
 
         //! output
         std::ostream &display( std::ostream & ) const;
