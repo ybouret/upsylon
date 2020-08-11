@@ -10,6 +10,21 @@
 
 namespace upsylon
 {
+    namespace core
+    {
+        class singleton
+        {
+        public:
+            static bool verbose;
+            virtual ~singleton() throw();
+            
+        protected:
+            explicit singleton() throw();
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(singleton);
+        };
+    }
     //! singleton of T
     /**
      T must define a static at_exit::longevity life_time
