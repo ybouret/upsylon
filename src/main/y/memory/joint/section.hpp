@@ -30,7 +30,9 @@ namespace upsylon {
                 //______________________________________________________________
                 typedef unsigned_int<sizeof(void*)>::type len_t; //!< ensure aligment
 
+                //--------------------------------------------------------------
                 //! block for internal linked list
+                //--------------------------------------------------------------
                 struct block
                 {
                     block   *prev; //!< prev==NULL <=> entry
@@ -46,7 +48,9 @@ namespace upsylon {
                     inline bool   is_free() const throw() { return NULL==from;   } //!< alias
                 };
 
+                //--------------------------------------------------------------
                 // formatting constants
+                //--------------------------------------------------------------
                 static const size_t min_blocks = 1<<2;                        //!< mininum number of blocks for a valid section
                 static const size_t min_size_  = min_blocks << block::exp2;   //!< minimum size  for a valid section
                 static const size_t min_vein_  = tight::vein::min_size;       //!< alias
@@ -55,7 +59,9 @@ namespace upsylon {
                 static const size_t max_size   = tight::vein::max_size;       //!< max required size
                 static const size_t max_exp2   = tight::vein::max_exp2;       //!< max_size=1<<max_exp2
 
+                //--------------------------------------------------------------
                 // I/O constant
+                //--------------------------------------------------------------
                 static const size_t min_allocated = block::size;              //!< returned valid bytes
                 static const size_t max_allocated = max_size - 2*block::size; //!< returned valid bytes
 
@@ -128,13 +134,13 @@ namespace upsylon {
                 bool  check() const;
 
                 typedef void (*finalize)(void *,const size_t);
-                void *acquire(size_t &n,finalize) throw();
-                void *acquire_(size_t &n,finalize) throw();
+                void  *acquire(size_t &n,finalize) throw();
 
                 void   look_up_greatest() throw(); //!< full search
                 void   update_greatest() throw();  //!< from current
-                block *greatest_within(block *lo, block *hi) throw();
-                void   assign_greatest(block *g) throw();
+                block *greatest_within(block *lo, block *hi) throw(); //!< local search, called from update_greates
+                void   assign_greatest(block *g) throw();             //!< greatest and capacity
+                void   assign_greatest(block *lhs, block *rhs) throw(); //!< priority on lhs
             };
 
         }

@@ -215,6 +215,21 @@ namespace upsylon {
                 capacity = (g->bulk<<block::exp2);
             }
 
+            void section:: assign_greatest(block *lhs, block *rhs) throw()
+            {
+                assert(lhs);
+                assert(rhs);
+                assert(lhs<rhs);
+                if(lhs->bulk>=rhs->bulk)
+                {
+                    assign_greatest(lhs);
+                }
+                else
+                {
+                    assign_greatest(rhs);
+                }
+            }
+
             void  section:: update_greatest() throw()
             {
                 assert(greatest);
@@ -257,17 +272,11 @@ namespace upsylon {
                         assign_greatest(rhs);
                         break;
 
-                    case found_both: // compare, priority on lhs
+                    case found_both:
                         assert(lhs);
                         assert(rhs);
-                        if(lhs->bulk>=rhs->bulk)
-                        {
-                            assign_greatest(lhs);
-                        }
-                        else
-                        {
-                            assign_greatest(rhs);
-                        }
+                        assert(lhs<rhs);
+                        assign_greatest(lhs,rhs);
                         break;
 
                     default:
@@ -284,7 +293,9 @@ namespace upsylon {
 
             void * section:: acquire(size_t &n, finalize proc) throw()
             {
+                //--------------------------------------------------------------
                 // parameters to trigger a new block
+                //--------------------------------------------------------------
                 static const size_t split_blocks = 3;
                 static const size_t extra_blocks = split_blocks-1;
                 static const size_t delta_blocks = extra_blocks-1;
@@ -361,6 +372,8 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // section has no blocks left
                     //----------------------------------------------------------
+                    assert(0==greatest);
+                    assert(0>=capacity);
                     return 0;
                 }
 
