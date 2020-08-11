@@ -48,11 +48,11 @@ Y_UTEST(joint_section)
         size_t       shift = 0;
         const size_t bytes = joint::section::holding(required,shift);
 
-        std::cerr << required << " => " << bytes <<  "=2^" << shift << std::endl;
         zblock<char,global>  buffer(bytes);
         joint::section       S(buffer.rw(),bytes,shift);
         Y_ASSERT(S.size==bytes);
         Y_ASSERT(S.exp2==shift);
+        std::cerr << required << " => " << bytes <<  "=2^" << shift << " => capacity=" << S.capacity << std::endl;
 
         void *big = S.acquire(required);
         Y_ASSERT( big );

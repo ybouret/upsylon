@@ -50,15 +50,15 @@ namespace upsylon {
             prev(0),
             size(usr_size),
             exp2(usr_exp2),
-            prv1(0),
-            prv2(0)
+            greatest(entry),
+            capacity(0)
             {
                 assert(usr_data!=NULL);
                 assert(size>=min_size);
                 assert(is_a_power_of_two(size));
                 assert(size_t(1)<<exp2==size);
 
-                size_t blocks = size/block::size;
+                size_t blocks = size >> block::exp2;
                 assert(blocks>=min_blocks);
                 guard += --blocks;
 
@@ -75,7 +75,8 @@ namespace upsylon {
 
                 assert(check_block(entry));
                 assert(check_block(guard));
-                std::cerr << "[+section: size=" << size << ", hold=" << entry->bulk*block::size << "]" << std::endl;
+                
+                capacity = greatest->bulk << block::exp2;
 
             }
             
@@ -132,9 +133,8 @@ namespace upsylon {
                 // loop over free blocks
                 //
                 //--------------------------------------------------------------
-                const block  *lastBlock = guard;
-                block        *currBlock = entry;
-                while(currBlock!=lastBlock)
+                block   *currBlock = entry;
+                while(0!=currBlock)
                 {
                     //----------------------------------------------------------
                     //
@@ -170,7 +170,7 @@ namespace upsylon {
                             new_block->from  = 0;
                             new_block->bulk  = available-required-delta_blocks;
 
-                            // update nextblock
+                            // update nextBlock
                             nextBlock->prev = new_block;
 
                             // update currBlock

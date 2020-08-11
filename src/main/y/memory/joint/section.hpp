@@ -34,7 +34,7 @@ namespace upsylon {
                 struct block {
                     block   *prev; //!< prev==NULL <=> entry
                     block   *next; //!< next==NULL <=> guard
-                    len_t    bulk; //!< number of available !!blocks!!
+                    len_t    bulk; //!< number of available BLOCKS
                     section *from; //!< NULL <=> free
 
                     static const size_t size = 4 * sizeof(void*);    //!< size in bytes
@@ -113,10 +113,11 @@ namespace upsylon {
                 section *next; //!< for list
                 section *prev; //!< for list
 
-                const len_t size; //!< bytes for blocks, as power of two
-                const len_t exp2; //!< size = 1 << exp2       if built with vein
-                len_t       prv1; //!< for alignment
-                len_t       prv2; //!< for alignment
+                const len_t size; //!< bytes for all blocks, a power of two
+                const len_t exp2; //!< size = 1 << exp2
+                block      *greatest; //!< block with greatest capacity
+                len_t       capacity; //!< greatest number of BYTES
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(section);
                 bool  check_block(const block *blk) const;
