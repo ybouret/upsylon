@@ -3,8 +3,8 @@
 #ifndef Y_MEMORY_JOINT_SECTION_INCLUDED
 #define Y_MEMORY_JOINT_SECTION_INCLUDED 1
 
+#include "y/memory/tight/vein.hpp"
 #include "y/type/ints.hpp"
-#include "y/code/ilog2.hpp"
 
 namespace upsylon {
 
@@ -16,6 +16,9 @@ namespace upsylon {
             //
             //
             //! wrapper for multiple blocks inside a power of two memory area
+            /**
+             made to work with veins
+             */
             //
             //__________________________________________________________________
             class section
@@ -33,13 +36,24 @@ namespace upsylon {
                     block   *next; //!< next==NULL <=> guard
                     len_t    bulk; //!< number of available !!blocks!!
                     section *from; //!< NULL <=> free
+
+                    static const size_t size = 4 * sizeof(void*);    //!< size in bytes
+                    static const size_t exp2 = ilog2<size>::value;   //!< size=1<<exp2
+                    static size_t round(const size_t bytes) throw(); //!< align to block::size
                 };
 
-                static const size_t block_size = sizeof(block);               //!< block size
-                static const size_t block_exp2 = ilog2<block_size>::value;    //!< for bits shift : block_size = 1 << block_iln2
+                // formatting constants
                 static const size_t min_blocks = 1<<2;                        //!< mininum number of blocks for a valid section
-                static const size_t min_size   = min_blocks << block_exp2;    //!< minimum size in bytes for a valid section
+                static const size_t min_size_  = min_blocks << block::exp2;   //!< minimum size  for a valid section
+                static const size_t min_vein_  = tight::vein::min_size;       //!< alias
+                static const size_t min_size   = min_size_ > min_vein_ ? min_size_ : min_vein_; //!< ensure a valid vein exists
                 static const size_t min_exp2   = ilog2<min_size>::value;      //!< min_size = 1<<min_exp2
+                static const size_t max_size   = tight::vein::max_size;       //!< max required size
+                static const size_t max_exp2   = tight::vein::max_exp2;       //!< max_size=1<<max_exp2
+
+                // I/O constant
+                static const size_t min_allocated = block::size;              //!< returned valid bytes
+                static const size_t max_allocated = max_size - 2*block::size; //!< returned valid bytes
 
                 //______________________________________________________________
                 //
@@ -47,7 +61,7 @@ namespace upsylon {
                 //______________________________________________________________
                 //! format a section
                 /**
-                 [usr_data]=usr_size=2^usr_exp2, usr_exp2>=min_exp2
+                 [usr_data]=usr_size=2^usr_exp2, usr_exp2>=min_exp2, usr_size>=min_size
                  */
                 section(void        *usr_data,
                         const size_t usr_size,

@@ -15,15 +15,30 @@ namespace upsylon {
 
         namespace joint {
 
+            size_t  section::block:: round(const size_t bytes) throw()
+            {
+                if(bytes<=size)
+                {
+                    return size;
+                }
+                else
+                {
+                    assert(bytes>size);
+                    const size_t ans = Y_ROUND_LN2(exp2,bytes);
+                    assert(0==(ans%size));
+                    return ans;
+                }
+            }
+
             size_t   section:: bytes_to_hold(const size_t bytes, size_t &shift)
             {
                 Y_STATIC_CHECK(section::min_size>=tight::vein::min_size,unexpected_sizes);
                 static const size_t max_usr_size = base2<size_t>::max_power_of_two;
-                static const size_t max_blk_size = max_usr_size-2*block_size;
+                static const size_t max_blk_size = max_usr_size-2*block::size;
 
-                const size_t        aligned_size = Y_ROUND_LN2(block_exp2,bytes);
+                const size_t        aligned_size = Y_ROUND_LN2(block::exp2,bytes);
                 if(aligned_size>max_blk_size) throw exception("joint::section: too many bytes to hold");
-                const size_t        required    = aligned_size+2*block_size;
+                const size_t        required    = aligned_size+2*block::size;
                 const size_t ans = next_power_of_two( max_of<size_t>(min_size,required) );
                 shift = integer_log2(ans);
                 assert(size_t(1)<<shift==ans);
@@ -49,7 +64,7 @@ namespace upsylon {
                 assert(is_a_power_of_two(size));
                 assert(size_t(1)<<exp2==size);
 
-                size_t blocks = size/block_size;
+                size_t blocks = size/block::size;
                 assert(blocks>=min_blocks);
                 guard += --blocks;
 
@@ -66,7 +81,7 @@ namespace upsylon {
 
                 assert(check_block(entry));
                 assert(check_block(guard));
-                std::cerr << "[+section: size=" << size << ", hold=" << entry->bulk*block_size << "]" << std::endl;
+                std::cerr << "[+section: size=" << size << ", hold=" << entry->bulk*block::size << "]" << std::endl;
 
             }
             
@@ -115,8 +130,8 @@ namespace upsylon {
                 static const size_t delta_blocks = extra_blocks-1;
 
                 assert(proc);
-                const size_t boundary = (n<=0) ? block_size : Y_ROUND_LN2(block_exp2,n);
-                const size_t required = boundary >> block_exp2;
+                const size_t boundary = block::round(n);
+                const size_t required = boundary >> block::exp2;
 
                 //--------------------------------------------------------------
                 //
@@ -151,7 +166,6 @@ namespace upsylon {
                         // found
                         //
                         //------------------------------------------------------
-
                         if(available>=required+extra_blocks)
                         {
                             // create a new block
@@ -177,10 +191,10 @@ namespace upsylon {
                         else
                         {
                             // full block
-                            n = currBlock->bulk * block_size;
+                            n = currBlock->bulk * block::size;
                         }
 
-                        assert(currBlock->bulk * block_size == n );
+                        assert(currBlock->bulk * block::size == n );
                         currBlock->from = this;
                         void *p = &currBlock[1];
                         proc(p,n);
@@ -242,7 +256,7 @@ namespace upsylon {
                 //------------------------------------------------------------------
                 // get block an owner
                 //------------------------------------------------------------------
-                block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->bulk*block_size==n);
+                block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->bulk*block::size==n);
                 section *owner     = currBlock->from;                assert(owner->check_block(currBlock)); assert(owner->guard!=currBlock);
 
                 //------------------------------------------------------------------
@@ -323,7 +337,7 @@ namespace upsylon {
                 std::cerr << '|';
                 while(blk)
                 {
-                    std::cerr << "(" << block_size << ")";
+                    std::cerr << "(" << block::size << ")";
                     if(blk->next==NULL)
                     {
                         std::cerr << '|';
@@ -332,11 +346,11 @@ namespace upsylon {
                     {
                         if(blk->from)
                         {
-                            std::cerr << "<" << blk->bulk * block_size << ">";
+                            std::cerr << "<" << blk->bulk * block::size << ">";
                         }
                         else
                         {
-                            std::cerr << "[" << blk->bulk * block_size << "]";
+                            std::cerr << "[" << blk->bulk * block::size << "]";
                         }
                     }
                     blk = blk->next;

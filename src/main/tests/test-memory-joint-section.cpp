@@ -4,6 +4,7 @@
 #include "y/memory/zblock.hpp"
 #include "y/sequence/list.hpp"
 #include "y/memory/allocator/global.hpp"
+#include <iomanip>
 
 using namespace upsylon;
 using namespace memory;
@@ -24,9 +25,24 @@ namespace
     };
 }
 
+#define SHOW(FIELD) std::cerr << "section:: " << std::left << std::setw(16) <<  #FIELD << " = " << joint::section::FIELD << std::endl
+
 Y_UTEST(joint_section)
 {
 
+    SHOW(block::size);
+    SHOW(block::exp2);
+    SHOW(min_blocks);
+    SHOW(min_size_);
+    SHOW(min_vein_);
+    SHOW(min_size);
+    SHOW(min_exp2);
+    SHOW(max_size);
+    SHOW(max_exp2);
+    SHOW(min_allocated);
+    SHOW(max_allocated);
+
+    return 0;
     for(size_t i=1;i<=100000;i+=1+alea.leq(1000))
     {
         size_t       required = i;
@@ -57,7 +73,7 @@ Y_UTEST(joint_section)
         list<block> L;
         while(true)
         {
-            block blk = { 0, alea.range<size_t>(0,3*joint::section::block_size) };
+            block blk = { 0, alea.range<size_t>(0,3*joint::section::block::size) };
             blk.addr  = S.acquire(blk.size);
             if(!blk.addr)
             {
@@ -77,7 +93,7 @@ Y_UTEST(joint_section)
         Y_ASSERT(S.is_free());
         while(true)
         {
-            block blk = { 0, alea.range<size_t>(0,3*joint::section::block_size) };
+            block blk = { 0, alea.range<size_t>(0,3*joint::section::block::size) };
             blk.addr  = S.acquire(blk.size);
             if(!blk.addr)
             {
@@ -95,7 +111,7 @@ Y_UTEST(joint_section)
         }
         while(true)
         {
-            block blk = { 0, alea.range<size_t>(0,3*memory::joint::section::block_size) };
+            block blk = { 0, alea.range<size_t>(0,3*memory::joint::section::block::size) };
             blk.addr  = S.acquire(blk.size);
             if(!blk.addr)
             {
