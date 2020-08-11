@@ -65,19 +65,20 @@ Y_UTEST(joint_section)
     list<block> L;
     for(int iter=0;iter<32;++iter)
     {
-        const size_t required = 100 + alea.leq(10000);
-        size_t       shift    = 0;
-        const size_t bytes    = joint::section::holding(required, shift);
+        const size_t         required = 100 + alea.leq(10000);
+        size_t               shift    = 0;
+        const size_t         bytes    = joint::section::holding(required, shift);
         zblock<char,global>  buffer(bytes);
-        joint::section S(buffer.rw(),bytes,shift);
+        joint::section       S(buffer.rw(),bytes,shift);
+
         std::cerr << std::setw(6) << required << " => section.size=" << std::setw(6) << S.size << " = 2^" << std::setw(2) << S.exp2;
         std::cerr.flush();
 
         size_t maxBlocks=0;
         std::cerr << ' ' << '[';
-        for(size_t cycle=1;cycle<=256;++cycle)
+        for(size_t cycle=1;cycle<=512;++cycle)
         {
-            if(0==(cycle%16)) std::cerr << '.';
+            if(0==(cycle%32)) std::cerr << '.';
             Y_ASSERT(0==L.size());
             while(true)
             {
