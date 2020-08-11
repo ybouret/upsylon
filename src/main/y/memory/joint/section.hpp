@@ -72,10 +72,18 @@ namespace upsylon {
                 //
                 // methods
                 //______________________________________________________________
-                static size_t   bytes_to_hold(const size_t bytes,size_t &shift); //!< memory demand, error if too big
+
+                //! compute memory demand
+                /**
+                 \param bytes query for a section able to hold those bytes
+                 \param shift return (1<<shift)
+                 by definition, the shift value will always correspond to an
+                 existing tight::vein in a tight::quarry
+                 */
+                static size_t   holding(const size_t bytes,size_t &shift); 
                 void            display()                     const; //!< display to debug
                 static section *release(void * &, size_t &) throw(); //!< release previously allocated, get owner
-                bool            is_free()             const throw(); //!< check section is free
+                bool            is_empty()            const throw(); //!< check section is free
 
                 //! acquire at least n bytes
                 /**

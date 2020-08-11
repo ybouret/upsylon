@@ -3,9 +3,7 @@
 #include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/code/base2.hpp"
-#include "y/memory/tight/vein.hpp"
 #include "y/exceptions.hpp"
-#include "y/os/static-check.hpp"
 #include <iostream>
 #include <cstring>
 
@@ -30,21 +28,17 @@ namespace upsylon {
                 }
             }
 
-            size_t   section:: bytes_to_hold(const size_t bytes, size_t &shift)
+            size_t section:: holding(const size_t bytes, size_t &shift)
             {
-                Y_STATIC_CHECK(section::min_size>=tight::vein::min_size,unexpected_sizes);
-                static const size_t max_usr_size = base2<size_t>::max_power_of_two;
-                static const size_t max_blk_size = max_usr_size-2*block::size;
 
-                const size_t        aligned_size = Y_ROUND_LN2(block::exp2,bytes);
-                if(aligned_size>max_blk_size) throw exception("joint::section: too many bytes to hold");
-                const size_t        required    = aligned_size+2*block::size;
-                const size_t ans = next_power_of_two( max_of<size_t>(min_size,required) );
-                shift = integer_log2(ans);
-                assert(size_t(1)<<shift==ans);
-                assert(ans>=bytes);
+                const size_t aligned_bytes = block::round(bytes);
+                if(aligned_bytes>max_allocated) throw exception("joint::section:: too many bytes to hold");
+
+                const size_t ans = next_power_of_two(max_of(aligned_bytes+2*block::size,min_size));
+                shift            = integer_log2(ans); /* and check... */ assert(size_t(1)<<shift==ans);  assert(ans>=bytes);
                 return ans;
-            }
+
+             }
 
 
             section:: section(void        *usr_data,
@@ -88,9 +82,9 @@ namespace upsylon {
 
             section:: ~section() throw()
             {
-                if(!is_free())
+                if(!is_empty())
                 {
-                    std::cerr << "[memory.section] not free: ";
+                    std::cerr << "[memory.section] not empty: ";
                     for(const block *blk=entry;blk;blk=blk->next)
                     {
                         if(blk->from)
@@ -103,7 +97,7 @@ namespace upsylon {
                 entry = guard = 0;
             }
 
-            bool section:: is_free() const throw()
+            bool section:: is_empty() const throw()
             {
                 return (NULL==entry->from) && (guard==entry->next);
             }

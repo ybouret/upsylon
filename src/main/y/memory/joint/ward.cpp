@@ -58,7 +58,7 @@ namespace upsylon {
             tight::vein & ward:: vein_for(const size_t required)
             {
                 size_t       shift=0;
-                const size_t bytes = section::bytes_to_hold(required,shift); assert(bytes<=tight::vein::max_size);
+                const size_t bytes = section::holding(required,shift); assert(bytes<=tight::vein::max_size);
 
                 if(bytes<=V.block_size)
                 {

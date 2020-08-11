@@ -42,12 +42,11 @@ Y_UTEST(joint_section)
     SHOW(min_allocated);
     SHOW(max_allocated);
 
-    return 0;
     for(size_t i=1;i<=100000;i+=1+alea.leq(1000))
     {
         size_t       required = i;
         size_t       shift = 0;
-        const size_t bytes = joint::section::bytes_to_hold(required,shift);
+        const size_t bytes = joint::section::holding(required,shift);
 
         std::cerr << required << " => " << bytes <<  "=2^" << shift << std::endl;
         zblock<char,global>  buffer(bytes);
@@ -64,7 +63,7 @@ Y_UTEST(joint_section)
     {
         const size_t required = 100 + alea.leq(10000);
         size_t       shift    = 0;
-        const size_t bytes    = joint::section::bytes_to_hold(required, shift);
+        const size_t bytes    = joint::section::holding(required, shift);
         zblock<char,global>  buffer(bytes);
         joint::section S(buffer.rw(),bytes,shift);
         std::cerr << required << " => section.size=" << S.size << "=2^" << S.exp2 << std::endl;
@@ -90,7 +89,7 @@ Y_UTEST(joint_section)
             Y_ASSERT( &S == memory::joint::section::release(b.addr,b.size) );
             L.pop_back();
         }
-        Y_ASSERT(S.is_free());
+        Y_ASSERT(S.is_empty());
         while(true)
         {
             block blk = { 0, alea.range<size_t>(0,3*joint::section::block::size) };
@@ -127,7 +126,7 @@ Y_UTEST(joint_section)
             Y_ASSERT( &S ==  joint::section::release(b.addr,b.size) );
             L.pop_back();
         }
-        Y_ASSERT(S.is_free());
+        Y_ASSERT(S.is_empty());
     }
 
     Y_UTEST_SIZEOF(joint::section::block);
