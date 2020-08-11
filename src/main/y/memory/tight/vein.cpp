@@ -32,6 +32,11 @@ namespace upsylon {
                 return count-chest.size;
             }
 
+            size_t vein:: available() const throw()
+            {
+                return chest.size;
+            }
+
             vein:: ~vein() throw()
             {
                 assert(chest.size<=count);
