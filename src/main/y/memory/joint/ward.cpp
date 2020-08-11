@@ -2,8 +2,8 @@
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/exception.hpp"
-
-#include <iostream>
+#include "y/os/run-time-log.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon {
 
@@ -20,7 +20,15 @@ namespace upsylon {
 
             ward:: ~ward() throw()
             {
-                S.reset();
+                while(S.size)
+                {
+                    section     *s = S.pop_back(); // remove section
+                    tight::vein &v = Q[s->exp2];   // find memory provider
+                    void        *p = s->entry;     // find memory address
+                    self_destruct(*s);             // cleanup the segment
+                    v.release(p);                  // return memory into vein of quarry
+                    Z.zstore(s);                   // return zombie section
+                }
             }
             
             size_t ward:: chunk_size() const throw()
@@ -42,6 +50,7 @@ namespace upsylon {
 
             ward:: ward(const size_t usr_chunk_size) :
             acquiring(0),
+            empty_one(0),
             S(),
             Q(),
             V(Q(ward_chunk_size(usr_chunk_size))),
@@ -51,7 +60,7 @@ namespace upsylon {
                 std::cerr << "Z.chunk_size=" << Z.chunk_size << std::endl;
                 std::cerr << "|_nodes_rise=" << Z.nodes_rise << " section/part" << std::endl;
 
-                acquiring = S.push_back( section_for(0) );
+                acquiring = empty_one = S.push_back( section_for(0) );
 
             }
 
@@ -89,6 +98,75 @@ namespace upsylon {
                 }
             }
 
+#define Y_MEM_WARD_TEST(PTR,MEMBER) \
+do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto RETURN; } PTR=PTR->MEMBER; } while(false)
+
+#define Y_MEM_WARD_TEST_LO() Y_MEM_WARD_TEST(lo,prev)
+#define Y_MEM_WARD_TEST_HI() Y_MEM_WARD_TEST(hi,next)
+
+            void * ward:: acquire_block(size_t &n)
+            {
+                assert(acquiring);
+                void *p = acquiring->acquire(n);
+                if(p)
+                {
+                    return p;
+                }
+                else
+                {
+                    // interleaved look-up
+                    section *lo = acquiring->prev;
+                    section *hi = acquiring->next;
+                    while(lo&&hi)
+                    {
+                        Y_MEM_WARD_TEST_LO();
+                        Y_MEM_WARD_TEST_HI();
+                    }
+
+                    while(lo) Y_MEM_WARD_TEST_LO();
+                    while(hi) Y_MEM_WARD_TEST_HI();
+
+                    // new section creation
+                    acquiring = S.push_back(section_for(n)); assert(acquiring->capacity>=n);
+                    p         = acquiring->acquire(n);
+                    {
+                        section *s = acquiring;
+                        while(s->prev && (s->entry<s->prev->entry) )
+                        {
+                            S.towards_head(s);
+                        }
+                    }
+                    return p;
+
+                RETURN:
+                    if(acquiring==empty_one)
+                    {
+                        empty_one = 0; 
+                    }
+                    return p;
+                }
+            }
+
+
+            void ward:: release_block(void *&p, size_t &n) throw()
+            {
+                section *releasing = section::release(p,n);
+                (void) releasing;
+            }
+
+            std::ostream & operator<<( std::ostream &os, const ward &w)
+            {
+                os << "<ward>" << std::endl;
+                os << w.Q << std::endl;
+                os << "<sections #=" << w.S.size << ">" << std::endl;
+                for(const section *s = w.S.head;s;s=s->next)
+                {
+                    std::cerr << "\t@" << s->entry << "+" << s->size << std::endl;
+                }
+                os << "<sections/>" << std::endl;
+                os << "<ward/>";
+                return os;
+            }
 
         }
     }

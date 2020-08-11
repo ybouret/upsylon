@@ -118,14 +118,14 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-                block      *entry;    //!< entry block
-                block      *guard;    //!< final block
-                block      *greatest; //!< block with greatest capacity
-                len_t       capacity; //!< greatest number of BYTES
-                section    *next;     //!< for list
-                section    *prev;     //!< for list
-                const len_t size;     //!< bytes for all blocks, a power of two
-                const len_t exp2;     //!< size = 1 << exp2
+                block      *entry;    //!< entry block                         | +1
+                block      *guard;    //!< final block                         | +2
+                block      *greatest; //!< block with greatest capacity        | +3
+                len_t       capacity; //!< greatest number of BYTES            | +4
+                section    *next;     //!< for list                            | +5
+                section    *prev;     //!< for list                            | +6
+                const len_t size;     //!< bytes for all blocks, a power of two| +7
+                const len_t exp2;     //!< size = 1 << exp2                    | +8 words
 
 
             private:

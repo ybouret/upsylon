@@ -4,7 +4,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/code/base2.hpp"
 #include "y/exceptions.hpp"
-#include <iostream>
+#include "y/os/run-time-log.hpp"
 #include <cstring>
 
 namespace upsylon {
@@ -85,12 +85,13 @@ namespace upsylon {
             {
                 if(!is_empty())
                 {
-                    std::cerr << "[memory.section] not empty: ";
+                    std::ostream &os = rtl(run_time_warning);
+                    os << "[memory::section] not empty: ";
                     for(const block *blk=entry;blk;blk=blk->next)
                     {
                         if(blk->from)
                         {
-                            std::cerr << blk->bulk << "/";
+                            std::cerr << (blk->bulk << block::exp2) << "/";
                         }
                     }
                     std::cerr << std::endl;
@@ -126,7 +127,6 @@ namespace upsylon {
                 return acquire(n,__zero);
             }
 
-#if 1
             void  section:: look_up_greatest() throw()
             {
                 block *g=0;
@@ -169,8 +169,7 @@ namespace upsylon {
                 }
 
             }
-#endif
-
+            
 
             section::block * section:: guess_greatest_within(block *lo, block *hi) throw()
             {

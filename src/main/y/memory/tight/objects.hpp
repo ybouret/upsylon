@@ -71,7 +71,7 @@ namespace upsylon {
                 //______________________________________________________________
                 lockable &Access; //!< persistent synchro object
                 quarry    Quarry; //!< for all 2^n allocation
-                blocks    Blocks; //!< for 1..limiti_size
+                blocks    Blocks; //!< for 1..limit_size
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(objects);

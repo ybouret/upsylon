@@ -56,6 +56,7 @@ namespace upsylon {
                 assert(n>0);
                 assert(n<=vein::max_size);
                 assert(is_a_power_of_two(n));
+                
                 Y_LOCK(objs.Access);
                 objs.dyadic_release(p,integer_log2(n));
                 p=NULL;
