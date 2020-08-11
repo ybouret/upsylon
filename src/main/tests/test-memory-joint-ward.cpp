@@ -77,11 +77,20 @@ Y_UTEST(joint_ward)
 }
 Y_UTEST_DONE()
 
+#include <cstring>
+
 Y_UTEST(joint_compact)
 {
-    joint::ward W(4000);
+
+    joint::ward W(2000);
+    std::cerr << "Initial:" << std::endl;
+    std::cerr << W << std::endl;
+    std::cerr << "Entering..." << std::endl;
+
+#if 0
 
     block        blk[512];
+    memset(blk,0,sizeof(blk));
     const size_t num  = sizeof(blk)/sizeof(blk[0]);
     const size_t half = num/2;
 
@@ -95,13 +104,24 @@ Y_UTEST(joint_compact)
             b.size   = alea.leq(256);
             b.addr   = W.acquire_block(b.size);
         }
+        for(size_t i=0;i<num;++i)
+        {
+            Y_ASSERT(blk[i].addr);
+            Y_ASSERT(blk[i].size);
+        }
 
         for(size_t i=half;i<num;++i)
         {
             W.release_block(blk[i].addr, blk[i].size);
         }
 
-        if(true)
+        for(size_t i=0;i<half;++i)
+        {
+            Y_ASSERT(blk[i].addr);
+            Y_ASSERT(blk[i].size);
+        }
+
+        if(false)
         {
             while(true)
             {
@@ -134,11 +154,18 @@ Y_UTEST(joint_compact)
         alea.shuffle(blk,half);
         for(size_t i=0;i<half;++i)
         {
+            Y_ASSERT(blk[i].addr);
+            Y_ASSERT(blk[i].size);
+        }
+        for(size_t i=0;i<half;++i)
+        {
             W.release_block(blk[i].addr, blk[i].size );
         }
     }
     std::cerr << "Final:" << std::endl;
     std::cerr << W << std::endl;
+    std::cerr << "Leaving..." << std::endl;
+#endif
 
 }
 Y_UTEST_DONE()

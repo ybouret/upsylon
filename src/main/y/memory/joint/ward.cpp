@@ -63,10 +63,11 @@ namespace upsylon {
             V(Q(ward_chunk_size(usr_chunk_size))),
             Z(V.block_size,Q)
             {
+#if 1
                 std::cerr << "W.chunk_size=" << chunk_size()   << std::endl;
                 std::cerr << "Z.chunk_size=" << Z.chunk_size << std::endl;
                 std::cerr << "|_nodes_rise=" << Z.nodes_rise << " section/part" << std::endl;
-
+#endif
                 acquiring = empty_one = S.push_back( section_for(0) );
 
             }
