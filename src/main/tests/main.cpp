@@ -47,8 +47,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(i2r);
     Y_UTEST(marker);
     Y_UTEST(groove);
-    Y_UTEST(joint_section);
-    Y_UTEST(joint_ward);
+
     Y_UTEST(tight_chunk);
     Y_UTEST(tight_arena);
     Y_UTEST(tight_zcache);
@@ -58,7 +57,11 @@ Y_UTEST_INIT(256)
     Y_UTEST(tight_quarry);
     Y_UTEST(tight_mt);
     Y_UTEST(tight_object);
-    
+
+    Y_UTEST(joint_section);
+    Y_UTEST(joint_ward);
+    Y_UTEST(joint_compact);
+
     Y_UTEST(mloops);
     Y_UTEST(comb);
     Y_UTEST(perm);

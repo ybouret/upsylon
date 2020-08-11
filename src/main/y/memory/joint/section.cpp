@@ -399,11 +399,11 @@ namespace upsylon {
 
             }
 
-            section * section:: receive(void * &addr, size_t &maxi, const size_t size) throw()
+            section * section:: receive(void * &addr, size_t &capa, const size_t size) throw()
             {
                 assert(addr);
-                assert(maxi);
-                assert(maxi>=size);
+                assert(capa);
+                assert(capa>=size);
                 size_t n = size;
                 void  *p = acquire(n,__nope);
                 if(p)
@@ -411,9 +411,9 @@ namespace upsylon {
                     assert(n>=size);
                     memcpy(p,addr,size);
                     memset(static_cast<char*>(p)+size,0,n-size);
-                    section *s = release(addr,maxi);
+                    section *s = release(addr,capa);
                     addr = p;
-                    maxi = n;
+                    capa = n;
                     return s;
                 }
                 else
@@ -423,6 +423,13 @@ namespace upsylon {
                 }
             }
 
+            section * section:: owner_of(void *p) throw()
+            {
+                assert(p);
+                block *b = static_cast<block *>(p)-1;
+                assert(b->from);
+                return b->from;
+            }
 
 
             section *section:: release(void * &addr, size_t &n) throw()

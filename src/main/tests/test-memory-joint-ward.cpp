@@ -77,3 +77,64 @@ Y_UTEST(joint_ward)
 }
 Y_UTEST_DONE()
 
+Y_UTEST(joint_compact)
+{
+    joint::ward W(4000);
+
+    block        blk[512];
+    const size_t num  = sizeof(blk)/sizeof(blk[0]);
+    const size_t half = num/2;
+
+    for(size_t iter=0;iter<1024;++iter)
+    {
+
+        for(size_t i=num;i>0;)
+        {
+            --i;
+            block &b = blk[i];
+            b.size   = alea.leq(256);
+            b.addr   = W.acquire_block(b.size);
+        }
+
+        for(size_t i=half;i<num;++i)
+        {
+            W.release_block(blk[i].addr, blk[i].size);
+        }
+
+        while(true)
+        {
+            bool moved = false;
+            size_t count = 0;
+            std::cerr << ' ';
+            for(size_t i=0;i<half;++i)
+            {
+                if( W.compact(blk[i].addr, blk[i].size, alea.range<size_t>(0,blk[i].size)) )
+                {
+                    moved = true;
+                    std::cerr << '+';
+                }
+                else
+                {
+                    std::cerr << '-';
+                }
+                if(0==(++count%64))
+                {
+                    std::cerr << std::endl << ' ';
+                }
+
+            }
+            std::cerr << std::endl;
+            if(!moved)
+                break;
+        }
+
+        alea.shuffle(blk,half);
+        for(size_t i=0;i<half;++i)
+        {
+            W.release_block(blk[i].addr, blk[i].size );
+        }
+    }
+    std::cerr << W << std::endl;
+
+}
+Y_UTEST_DONE()

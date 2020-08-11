@@ -39,7 +39,7 @@ namespace upsylon {
 
                 friend std::ostream & operator<<( std::ostream &os, const ward &w);
 
-                
+                bool compact( void * &addr, size_t &capa, const size_t size) throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ward);
@@ -52,8 +52,16 @@ namespace upsylon {
 
                 //! find the vein that shall hold required bytes
                 tight::vein &vein_for(const size_t required);
+
+                //! create a section for the required bytes
                 section     *section_for(const size_t required);
+
+                //! return memory pieces
                 void         restore( section *s ) throw();
+
+                //!
+                void update(section *releasing) throw();
+
             };
 
 

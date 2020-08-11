@@ -106,12 +106,13 @@ namespace upsylon {
                 //! try to change ownership
                 /**
                  \param addr current address, updated upon success, left untouched otherwise
-                 \param maxi current capacity >= size
+                 \param capa current capacity >= size
                  \param size current size at address
                  \return the original owner upon success
                  */
-                section *      receive(void * &addr, size_t &maxi, const size_t size) throw();
+                section *      receive(void * &addr, size_t &capa, const size_t size) throw();
 
+                static section *owner_of(void *p) throw();
                 
 
                 //______________________________________________________________

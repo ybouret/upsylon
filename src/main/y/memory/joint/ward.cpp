@@ -195,24 +195,36 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto CHECK_AND_RETURN; } PT
                 }
             }
 
+            void ward:: update(section *releasing) throw()
+            {
+                assert(releasing);
+                assert(releasing->is_empty());
+                if(empty_one)
+                {
+                    assert(empty_one->is_empty());
+                    assert(empty_one!=releasing); // otherwise shouldn't release
+                    _choose(releasing,empty_one);
+                    if(acquiring==releasing)
+                    {
+                        acquiring=empty_one;
+                    }
+                    restore(S.unlink(releasing));
+
+                }
+                else
+                {
+                    empty_one = releasing;
+                }
+                assert(empty_one);
+                assert(empty_one->is_empty());
+            }
+
             void ward:: release_block(void *&p, size_t &n) throw()
             {
                 section *releasing = section::release(p,n);
                 if(releasing->is_empty())
                 {
-                    if(empty_one)
-                    {
-                        assert(empty_one->is_empty());
-                        assert(empty_one!=releasing); // otherwise shouldn't release
-                        _choose(releasing,empty_one);
-                        restore(S.unlink(releasing));
-                    }
-                    else
-                    {
-                        empty_one = releasing;
-                    }
-                    assert(empty_one);
-                    assert(empty_one->is_empty());
+                    update(releasing);
                 }
             }
 
@@ -229,6 +241,37 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto CHECK_AND_RETURN; } PT
                 os << "<ward/>";
                 return os;
             }
+
+
+            bool ward:: compact( void * &addr, size_t &capa, const size_t size) throw()
+            {
+
+                section *origin = section::owner_of(addr); assert(S.owns(origin));
+                assert(empty_one!=origin); // NULL or different :)
+
+                for(section *target = S.head; target!=origin; target=target->next)
+                {
+                    section *releasing = target->receive(addr,capa,size);
+                    if(releasing)
+                    {
+                        assert(releasing==origin);
+                        if(empty_one==target)
+                        {
+                            empty_one = 0;
+                        }
+
+                        if(releasing->is_empty())
+                        {
+                            update(releasing);
+                        }
+                        
+                        return true;
+                    }
+                }
+                return false;
+                
+            }
+
 
         }
     }
