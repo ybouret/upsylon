@@ -18,6 +18,7 @@ namespace upsylon
             static bool verbose;
             virtual ~singleton() throw();
             
+            
         protected:
             explicit singleton() throw();
             
