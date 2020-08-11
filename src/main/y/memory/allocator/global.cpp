@@ -1,8 +1,8 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/exceptions.hpp"
+#include "y/os/run-time-log.hpp"
 #include <cstdlib>
 #include <cerrno>
-#include <iostream>
 
 namespace upsylon
 {
@@ -10,11 +10,12 @@ namespace upsylon
     namespace  memory
     {
 
+        static const char fn[] = "[memory::global] ";
         global:: ~global() throw()
         {
             if(allocated!=0)
             {
-                std::cerr << "[memory.global] allocated=" << allocated << std::endl;
+                rtl(run_time_warning) << fn << "still allocated=" << allocated << std::endl;
             }
         }
 
@@ -34,7 +35,7 @@ namespace upsylon
                 {
                     const unsigned long desired = (unsigned long)n;
                     n = 0;
-                    throw libc::exception(ENOMEM,"memory.global.acquire(%lu)",desired);
+                    throw libc::exception(ENOMEM,"%sacquire(%lu)",fn,desired);
                 }
                 allocated += n;
                 return p;
