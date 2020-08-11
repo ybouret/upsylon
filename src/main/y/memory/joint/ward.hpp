@@ -21,8 +21,8 @@ namespace upsylon {
             class ward
             {
             public:
-                typedef tight::quarry          quarry_type;
-                typedef core::list_of<section> sections;
+                typedef tight::quarry          quarry_type; //!< alias
+                typedef core::list_of<section> sections;    //!< alias
                 //______________________________________________________________
                 //
                 // C++
@@ -33,8 +33,8 @@ namespace upsylon {
                 void * acquire(size_t &n);                 //!< acquire for a block
                 size_t chunk_size() const throw();         //!< default vein.block_size
 
-                const quarry_type & _quarry()   const throw();
-                const sections    & _sections() const throw();
+                const quarry_type & _quarry()   const throw(); //!< access
+                const sections    & _sections() const throw(); //!< access
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(ward);
