@@ -137,10 +137,26 @@ namespace upsylon {
                 void  *acquire(size_t &n,finalize) throw();
 
                 void   look_up_greatest() throw(); //!< full search
-                void   update_greatest() throw();  //!< from current
-                block *greatest_within(block *lo, block *hi) throw(); //!< local search, called from update_greates
-                void   assign_greatest(block *g) throw();             //!< greatest and capacity
+
+                //______________________________________________________________
+                //
+                // greatest API for setup
+                //______________________________________________________________
+                void   assign_greatest(block *g) throw();               //!< greatest and capacity
                 void   assign_greatest(block *lhs, block *rhs) throw(); //!< priority on lhs
+
+                //______________________________________________________________
+                //
+                // greatest API for post-acquire
+                //______________________________________________________________
+                void   post_acquire_greatest() throw();  //!< from current
+                block *guess_greatest_within(block *lo, block *hi) throw(); //!< local search, called from update_greates
+
+                //______________________________________________________________
+                //
+                // greatest API for post-release
+                //______________________________________________________________
+                void post_release_greatest(block *blk) throw();
             };
 
         }

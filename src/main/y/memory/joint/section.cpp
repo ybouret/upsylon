@@ -38,7 +38,7 @@ namespace upsylon {
                 shift            = integer_log2(ans); /* and check... */ assert(size_t(1)<<shift==ans);  assert(ans>=bytes);
                 return ans;
 
-             }
+            }
 
 
             section:: section(void        *usr_data,
@@ -126,6 +126,7 @@ namespace upsylon {
                 return acquire(n,__zero);
             }
 
+#if 1
             void  section:: look_up_greatest() throw()
             {
                 block *g=0;
@@ -168,8 +169,10 @@ namespace upsylon {
                 }
 
             }
+#endif
 
-            section::block * section:: greatest_within(block *lo, block *hi) throw()
+
+            section::block * section:: guess_greatest_within(block *lo, block *hi) throw()
             {
                 assert(lo);
                 assert(hi);
@@ -230,7 +233,7 @@ namespace upsylon {
                 }
             }
 
-            void  section:: update_greatest() throw()
+            void  section:: post_acquire_greatest() throw()
             {
                 assert(greatest);
                 assert(greatest->is_used());
@@ -242,7 +245,7 @@ namespace upsylon {
 
                 unsigned found = found_none;
                 block   *lhs   = 0;
-                if(greatest->prev && NULL!=(lhs=greatest_within(entry,greatest)) )
+                if(greatest->prev && NULL!=(lhs=guess_greatest_within(entry,greatest)) )
                 {
                     found |= found_left;
                 }
@@ -250,7 +253,7 @@ namespace upsylon {
                 block   *rhs   = 0;
                 {
                     block *at_right = greatest->next;
-                    if(at_right && NULL!=(rhs=greatest_within(at_right,guard) ))
+                    if(at_right && NULL!=(rhs=guess_greatest_within(at_right,guard) ))
                     {
                         found |= found_right;
                     }
@@ -286,6 +289,15 @@ namespace upsylon {
                         break;
                 }
 
+#ifndef NDEBUG
+                {
+                    block *g = greatest;
+                    size_t n = capacity;
+                    look_up_greatest();
+                    assert(greatest==g);
+                    assert(capacity==n);
+                }
+#endif
 
             }
 
@@ -351,12 +363,12 @@ namespace upsylon {
                             n = capacity;
                         }
                         
-                        assert(n==currBlock->bulk * block::size);
+                        assert( n == (currBlock->bulk<<block::exp2) );
 
                         currBlock->from = this;
                         void *p = &currBlock[1];
                         proc(p,n);
-                        update_greatest();
+                        post_acquire_greatest();
                         return p;
                     }
                     else
@@ -418,15 +430,24 @@ namespace upsylon {
             {
                 assert(addr); assert(n>0);
 
-                //------------------------------------------------------------------
-                // get block an owner
-                //------------------------------------------------------------------
-                block   *currBlock = static_cast<block *>(addr) - 1; assert(currBlock->from); assert(currBlock->bulk*block::size==n);
-                section *owner     = currBlock->from;                assert(owner->check_block(currBlock)); assert(owner->guard!=currBlock);
+                //--------------------------------------------------------------
+                // get block
+                //--------------------------------------------------------------
+                block   *currBlock = static_cast<block *>(addr) - 1;
+                assert(currBlock->from);
+                assert(currBlock->bulk*block::size==n);
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
+                // get owner
+                //--------------------------------------------------------------
+                section *owner     = currBlock->from;
+                assert(owner->check_block(currBlock));
+                assert(owner->guard!=currBlock);
+                assert(currBlock!=owner->greatest);
+
+                //--------------------------------------------------------------
                 // check status
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 static const unsigned merge_none = 0x00;
                 static const unsigned merge_prev = 0x01;
                 static const unsigned merge_next = 0x02;
@@ -436,9 +457,10 @@ namespace upsylon {
                 block   *prevBlock = currBlock->prev; if(prevBlock&&(0==prevBlock->from))       flag |= merge_prev;
                 block   *nextBlock = currBlock->next; assert(nextBlock); if(0==nextBlock->from) flag |= merge_next;
 
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 // merge
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
+                block *guess = 0;
                 switch(flag)
                 {
                     case merge_prev:
@@ -447,6 +469,7 @@ namespace upsylon {
                         prevBlock->bulk = static_cast<len_t>(nextBlock-prevBlock)-1;
                         assert(owner->check_block(prevBlock));
                         assert(owner->check_block(nextBlock));
+                        guess = prevBlock;
                         break;
 
                     case merge_next:
@@ -458,28 +481,70 @@ namespace upsylon {
                         currBlock->from = 0;
                         assert(owner->check_block(currBlock));
                         assert(owner->check_block(nextBlock));
+                        guess = currBlock;
                         break;
 
                     case merge_both:
                         assert(nextBlock->next!=NULL);
+                        assert(nextBlock->next->from);
                         nextBlock=nextBlock->next;
                         prevBlock->next = nextBlock;
                         nextBlock->prev = prevBlock;
                         prevBlock->bulk = static_cast<len_t>(nextBlock-prevBlock)-1;
                         assert(owner->check_block(prevBlock));
                         assert(owner->check_block(nextBlock));
+                        guess=prevBlock;
                         break;
 
                     default:
                         assert(merge_none==flag);
                         currBlock->from = 0;
+                        guess = currBlock;
                         break;
                 }
 
+                assert(guess);
+                assert(guess->from==0);
+                owner->post_release_greatest(guess);
                 addr = 0;
                 n    = 0;
-                owner->look_up_greatest();
                 return owner;
+            }
+
+
+            void section:: post_release_greatest(block *guess) throw()
+            {
+                assert(guess);
+                assert(guess->is_free());
+
+                if(!greatest)
+                {
+                    assign_greatest(guess);
+                }
+                else
+                {
+                    if( guess==greatest )
+                    {
+                        // update capacity
+                        capacity = (greatest->bulk<<block::exp2);
+                    }
+                    else
+                    {
+                        // choice
+                        assert(greatest!=NULL && guess!=greatest);
+                        if(guess<greatest) assign_greatest(guess,greatest); else assign_greatest(greatest,guess);
+                    }
+                }
+
+#ifndef NDEBUG
+                {
+                    block *g = greatest;
+                    size_t n = capacity;
+                    look_up_greatest();
+                    assert(greatest==g);
+                    assert(capacity==n);
+                }
+#endif
             }
 
 
