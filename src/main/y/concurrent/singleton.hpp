@@ -130,7 +130,7 @@ const at_exit::longevity TYPE::life_time = (LIFE_TIME)
 
     protected:
         inline explicit singleton() throw() :
-        concurrent::singleton( T::call_sign, T::life_time)
+        concurrent::singleton(T::call_sign,T::life_time)
         {}
         inline virtual ~singleton() throw() {}
 
