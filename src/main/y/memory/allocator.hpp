@@ -15,10 +15,10 @@ namespace upsylon
             //! desctructor
             virtual ~allocator() throw();
 
-            //! proxy for __acquire
+            //! acquire, return NULL for n==0
             virtual void  *acquire( size_t &n ) = 0;
 
-            //! proxy for __release
+            //! release a previously acquire memory zone
             virtual void   release( void * &p, size_t &n) throw() = 0;
 
             //! acquire>=count objects, bytes is computed

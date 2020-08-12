@@ -34,33 +34,46 @@ namespace upsylon {
 
             void *dyadic_allocator:: acquire(size_t &n)
             {
-                if(n>vein::max_size) throw libc::exception(EDOM,"dyadic_acquire");
-                size_t exp2 = 0;
-                size_t size = po2(n,exp2);
-                try {
-                    Y_LOCK(objs.Access);
-                    void *p = objs.dyadic_acquire(exp2);
-                    n=size;
-                    return p;
-                }
-                catch(...)
+                if(n>0)
                 {
-                    n=0;
-                    throw;
+                    if(n>vein::max_size) throw libc::exception(EDOM,"dyadic_acquire");
+                    size_t exp2 = 0;
+                    size_t size = po2(n,exp2);
+                    try {
+                        Y_LOCK(objs.Access);
+                        void *p = objs.dyadic_acquire(exp2);
+                        n=size;
+                        return p;
+                    }
+                    catch(...)
+                    {
+                        n=0;
+                        throw;
+                    }
+                }
+                else
+                {
+                    return 0;
                 }
             }
 
             void dyadic_allocator:: release(void *&p, size_t &n) throw()
             {
-                assert(p);
-                assert(n>0);
-                assert(n<=vein::max_size);
-                assert(is_a_power_of_two(n));
-                
-                Y_LOCK(objs.Access);
-                objs.dyadic_release(p,integer_log2(n));
-                p=NULL;
-                n=0;
+                if(p)
+                {
+                    assert(n>0);
+                    assert(n<=vein::max_size);
+                    assert(is_a_power_of_two(n));
+
+                    Y_LOCK(objs.Access);
+                    objs.dyadic_release(p,integer_log2(n));
+                    p=NULL;
+                    n=0;
+                }
+                else
+                {
+                    assert(n<=0);
+                }
             }
 
         }

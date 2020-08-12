@@ -117,10 +117,12 @@ do { if( 0 != (p=PTR->acquire(n)) ) { acquiring=PTR; goto CHECK_AND_RETURN; } PT
                 assert(acquiring);
                 void *p = acquiring->acquire(n);
                 if(p)
+                {
                     //----------------------------------------------------------
                     // cache!
                     //----------------------------------------------------------
                     goto CHECK_AND_RETURN;
+                }
                 else
                 {
                     //----------------------------------------------------------

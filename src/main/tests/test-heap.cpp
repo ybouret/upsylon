@@ -8,13 +8,18 @@ using namespace upsylon;
 
 Y_UTEST(heap)
 {
+    concurrent::singleton::verbose = true;
+    
     { heap<int> H; }
+
     { heap<int> H(0,as_capacity); }
+
     { heap<int> H(10,as_capacity); }
 
     vector<int>   data;
     heap<int>     H;
     heap<int,decreasing_comparator<int>,memory::pooled> D;
+
     for(size_t iter=0;iter<16;++iter)
     {
         data.free();

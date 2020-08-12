@@ -30,7 +30,10 @@ array<T>(), sequence<T>(),                           \
 maxi_(n),  bytes(0), hmem_( ALLOCATOR::instance() ), \
 addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
 
-        inline vector() : Y_VECTOR_CTOR(0) {}
+        inline vector() : Y_VECTOR_CTOR(0)
+        {
+            post_init();
+        }
 
         inline virtual ~vector() throw()
         {
@@ -40,13 +43,13 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         //! vector with empty memory
         inline vector(const size_t n, const as_capacity_t &) : Y_VECTOR_CTOR(n)
         {
-            this->item_ = addr_-1;
+            post_init();
         }
 
         //! vector with default memory
         inline vector(const size_t n) : Y_VECTOR_CTOR(n)
         {
-            this->item_ = addr_-1;
+            post_init();
             try
             {
                 while(this->size_<n)
@@ -65,7 +68,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         //! vector with construction of each item with args
         inline vector(const size_t n, param_type args) : Y_VECTOR_CTOR(n)
         {
-            this->item_ = addr_-1;
+            post_init();
             try
             {
                 while(this->size_<n)
@@ -104,7 +107,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         template <typename FUNC>
         inline vector(const size_t n, FUNC &func) : Y_VECTOR_CTOR(n)
         {
-            this->item_ = addr_-1;
+            post_init();
             try
             {
                 while(this->size_<n)
@@ -124,7 +127,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         //! copy constructor
         inline vector(const vector &other) : Y_VECTOR_CTOR(other.size_)
         {
-            this->item_ = addr_-1;
+            post_init();
             try
             {
                 while(this->size_<other.size_)
@@ -391,16 +394,22 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         memory::allocator &hmem_;
         mutable_type      *addr_;
 
+        //! hook data
+        inline void post_init() throw()
+        {
+            this->item_ = addr_-1;
+        }
+
         //! append and erase if failure
-        inline void append_to( mutable_type *target,
-                              const T       *addr,
+        inline void append_to(mutable_type  *target,
+                              const T       *source,
                               const size_t   numObjects)
         {
             size_t        i      = 0;
             try {
                 for(;i<numObjects;++i)
                 {
-                    new (&target[i]) mutable_type( addr[i] );
+                    new (&target[i]) mutable_type( source[i] );
                 }
             }
             catch(...)

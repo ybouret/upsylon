@@ -55,7 +55,8 @@ static inline void doCreate()
 
 Y_UTEST(addressable)
 {
-    
+
+    concurrent::singleton::verbose = true;
     doCreate<int>();
     doCreate<string>();
     doCreate<float>();

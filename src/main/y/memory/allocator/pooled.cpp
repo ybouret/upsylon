@@ -32,16 +32,32 @@ namespace upsylon
 
         void * pooled:: acquire( size_t &n )
         {
-            static joint::ward &w = *aliasing::as<joint::ward>(impl);
-            Y_LOCK(access);
-            return w.acquire_block(n);
+            if(n>0)
+            {
+                static joint::ward &w = *aliasing::as<joint::ward>(impl);
+                Y_LOCK(access);
+                void *p = w.acquire_block(n);
+                assert(n>0);
+                return p;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         void pooled:: release(void * &p, size_t &n) throw()
         {
-            static joint::ward &w = *aliasing::as<joint::ward>(impl);
-            Y_LOCK(access);
-            return w.release_block(p,n);
+            if(p)
+            {
+                static joint::ward &w = *aliasing::as<joint::ward>(impl);
+                Y_LOCK(access);
+                w.release_block(p,n);
+            }
+            else
+            {
+                assert(0==n);
+            }
         }
 
         bool  pooled:: compact(void * &addr, size_t &capa, const size_t size ) throw()
@@ -55,62 +71,4 @@ namespace upsylon
 }
 
 
-#if 0
-#include "y/memory/carver.hpp"
-#include "y/object.hpp"
-#include "y/type/self-destruct.hpp"
-#include "y/type/aliasing.hpp"
-#include "y/type/block/zset.hpp"
-
-namespace upsylon
-{
-    namespace memory
-    {
-
-        const at_exit::longevity  pooled:: life_time =  object::life_time-1;
-        
-        namespace
-        {
-            static uint64_t        ___carver[ Y_U64_FOR_ITEM(carver) ] = { 0 };
-        }
-
-
-        pooled:: ~pooled() throw()
-        {
-            self_destruct( *aliasing::as<carver>(___carver) );
-            Y_BZSET_STATIC(___carver);
-        }
-
-        pooled:: pooled() throw()
-        {
-            Y_BZSET_STATIC(___carver);
-            new ( aliasing::anonymous(___carver) ) carver( Y_CHUNK_SIZE );
-        }
-
-        void * pooled:: acquire( size_t &n )
-        {
-            static allocator &mgr = *aliasing::as<carver>(___carver);
-            Y_LOCK(access);
-            return mgr.acquire(n);
-        }
-
-        void pooled:: release(void * &p, size_t &n) throw()
-        {
-            static allocator &mgr =  *aliasing::as<carver>(___carver);
-            Y_LOCK(access);
-            mgr.release(p,n);
-        }
-
-        bool  pooled:: compact(void * &addr, size_t &capa, const size_t size ) throw()
-        {
-            static carver &crv = *aliasing::as<carver>(___carver);
-            Y_LOCK(access);
-            return crv.compact(addr,capa,size);
-        }
-
-
-    }
-}
-#endif
-
-
+ 

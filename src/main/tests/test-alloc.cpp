@@ -24,7 +24,7 @@ namespace
         {
             for(size_t i=0;i<N;++i)
             {
-                blk[i].size = alea.leq(100);
+                blk[i].size = i>0 ? alea.leq(100) : 0;
                 blk[i].addr = a.acquire(blk[i].size);
             }
             alea.shuffle(blk,N);
