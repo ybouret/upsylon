@@ -319,6 +319,10 @@ ADD_TEST(counting:meta     test-main metaloop)
 ADD_TEST(counting:perf     test-main counting_perf)
 ADD_TEST(counting:drawers  test-main drawers)
 
+SOURCE_GROUP(sibyl FILES
+test-sibyl-natural.cpp)
+ADD_TEST(sibyl:n test-main sibyl_n)
+
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)
