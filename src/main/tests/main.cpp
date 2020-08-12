@@ -37,7 +37,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(primality);
     Y_UTEST(object0);
     Y_UTEST(objectY);
-    Y_UTEST(slice);
     Y_UTEST(zblock);
     Y_UTEST(xslot);
     Y_UTEST(static_slots);
