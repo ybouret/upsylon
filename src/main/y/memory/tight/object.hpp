@@ -159,7 +159,7 @@ namespace upsylon {
                 static const at_exit::longevity life_time = supply::life_time; //!< repeat of supply
             };
 
-            template <size_t CHUNK_SIZE,size_t LIMIT_SIZE> const char * const object<CHUNK_SIZE,LIMIT_SIZE>::supply::call_sign = 0;
+            template <size_t CHUNK_SIZE,size_t LIMIT_SIZE> const char * const object<CHUNK_SIZE,LIMIT_SIZE>::supply::call_sign = objects::undefined;
 
         }
 

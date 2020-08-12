@@ -12,6 +12,8 @@ namespace upsylon {
 
         namespace tight {
 
+            const char objects:: undefined[] = "undefined objects";
+
             objects:: ~objects() throw()
             {
                 Y_BZSET_STATIC(little);

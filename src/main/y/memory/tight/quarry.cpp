@@ -102,6 +102,8 @@ namespace upsylon {
             {
                 os << "<quarry>" << std::endl;
                 os << "\t<undersized bytes=" << q.undersized << ">" << std::endl;
+
+
                 for(size_t shift=vein::min_exp2;shift<=vein::max_exp2;++shift)
                 {
                     const vein &s = q.ore[shift];

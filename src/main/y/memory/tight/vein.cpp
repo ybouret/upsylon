@@ -100,7 +100,7 @@ namespace upsylon {
                 const human_readable hr_used = s.committed() * s.block_size;
                 const human_readable hr_maxi = s.count * s.block_size;
                 os << " ("<< hr_used << "/" << hr_maxi <<")";
-                os << "}";
+                 os << "}";
                 return os;
             }
 

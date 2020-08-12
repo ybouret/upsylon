@@ -22,6 +22,8 @@ namespace upsylon {
             class objects
             {
             public:
+                static const char undefined[];
+
                 //______________________________________________________________
                 //
                 // C++
@@ -37,7 +39,7 @@ namespace upsylon {
                                  const size_t chunk_size,
                                  const size_t limit_size);
                 
-                //! cleanu
+                //! cleanup
                 virtual ~objects() throw();
 
                

@@ -1,6 +1,7 @@
 
 #include "y/memory/tight/object.hpp"
 #include "y/memory/tight/dyadic-allocator.hpp"
+#include "y/memory/tight/xcache.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -65,7 +66,8 @@ namespace {
 
 Y_UTEST(tight_object)
 {
-
+    concurrent::singleton::verbose = true;
+    
     obj_type::supply &mgr = obj_type::supply::instance();
     std::cerr << mgr.Quarry << std::endl;
 
@@ -125,7 +127,14 @@ Y_UTEST(tight_object)
 
     std::cerr << mgr.Quarry << std::endl;
 
+    {
+        for(size_t bs=1;bs<=mgr.Blocks.limit_size;++bs)
+        {
+            tight::xcache xc(mgr,bs);
+        }
+    }
 
+    
 }
 Y_UTEST_DONE()
 

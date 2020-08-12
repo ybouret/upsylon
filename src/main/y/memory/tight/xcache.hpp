@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_MEMORY_TIGHT_ZCACHE_INCLUDED
-#define Y_MEMORY_TIGHT_ZCACHE_INCLUDED 1
+#ifndef Y_MEMORY_TIGHT_XCACHE_INCLUDED
+#define Y_MEMORY_TIGHT_XCACHE_INCLUDED 1
 
 #include "y/memory/tight/objects.hpp"
 
@@ -12,14 +12,52 @@ namespace upsylon {
 
         namespace tight {
 
+            //! eXtracted cache
             class xcache
             {
             public:
-                explicit xcache(objects &objs, const size_t bs);
+                //! extract access and shared arena
+                explicit xcache(objects &objs, const size_t block_size);
+
+
+                //! cleanup
                 virtual ~xcache() throw();
-                
+
+                //! shared.block_size
+                size_t   block_size() const throw();
+
+
+                void *acquire();               //!< locked acquire
+                void  release(void *) throw(); //!< locked release
+
+                lockable &access; //!< synchronize objects access
+
+                void *acquire_unlocked();
+                void  release_unlocked(void *addr) throw();
+
             private:
+                arena    &shared;
                 Y_DISABLE_COPY_AND_ASSIGN(xcache);
+            };
+
+            template <typename T>
+            class xcache_of : public xcache
+            {
+            public:
+
+                inline explicit xcache_of(objects &objs) : xcache(objs,sizeof(T))
+                {
+                }
+
+                inline virtual ~xcache_of() throw()
+                {
+                }
+
+                inline T *acquire() { return static_cast<T*>(xcache::acquire()); }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(xcache_of);
             };
 
         }
@@ -27,3 +65,6 @@ namespace upsylon {
     }
 
 }
+
+#endif
+

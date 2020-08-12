@@ -1,10 +1,9 @@
 
 #include "y/code/hr-ints.hpp"
-#include "y/type/utils.hpp"
 #include "y/core/ipower.hpp"
-#include "y/string.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
+#include <iostream>
 
 namespace upsylon {
     
@@ -59,8 +58,10 @@ namespace upsylon {
     
     std::ostream & operator<<( std::ostream &os, const human_readable &hr)
     {
-        const string value = vformat( "%8.2f", hr.value );
-        os << value << hr.radix;
+        char buffer[128] = { 0 };
+        Y_BZSET_STATIC(buffer);
+        snprintf(buffer, sizeof(buffer)-1, "%8.2f", hr.value);
+        os << &buffer[0] << hr.radix;
         return os;
     }
 }

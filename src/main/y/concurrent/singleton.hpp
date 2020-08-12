@@ -5,7 +5,6 @@
 
 #include "y/concurrent/mutex.hpp"
 #include "y/concurrent/at-exit.hpp"
-#include "y/code/round.hpp"
 #include <new>
 
 namespace upsylon
@@ -15,18 +14,23 @@ namespace upsylon
         class singleton
         {
         public:
-            static bool verbose;
+            static bool   verbose;
+            static mutex  gateway;
+
+
             virtual ~singleton() throw();
 
             const char * const       uuid;
             const at_exit::longevity span;
-
+            const size_t             _len; //!< strlen(uuid)
+            
         protected:
             explicit singleton(const char              *u,
                                const at_exit::longevity s) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(singleton);
+            static size_t breadth;
         };
     }
 
