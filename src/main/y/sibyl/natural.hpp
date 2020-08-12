@@ -11,7 +11,6 @@
 #include "y/code/round.hpp"
 #include "y/code/utils.hpp"
 #include "y/os/endian.hpp"
-#include "y/sequence/addressable.hpp"
 
 namespace upsylon {
 
@@ -88,16 +87,20 @@ words( acquire(count,width,shift) )
                 memcpy(words,_.words,bytes);
             }
 
-#define Y_SIBYL_NATURAL_ASSIGN(ARGS) \
-inline natural & operator=(ARGS _) \
-{\
-/**/ natural tmp(_); xch(tmp); return *this;\
-}
+            //! assign by copy/xch
+            inline natural & operator=(const natural &_)
+            {
+                natural tmp(_); xch(tmp); return *this;
+            }
+            
+            //! assign by copy/xch
+            inline natural & operator=(const utype _)
+            {
+                natural tmp(_); xch(tmp); return *this;
+            }
+            
 
-            Y_SIBYL_NATURAL_ASSIGN(const natural &)
-            Y_SIBYL_NATURAL_ASSIGN(const utype)
-
-
+            
             //__________________________________________________________________
             //
             // methods
@@ -149,7 +152,17 @@ inline natural & operator=(ARGS _) \
                 n.display(os);
                 return os;
             }
-
+            
+            //__________________________________________________________________
+            //
+            // addition
+            //__________________________________________________________________
+            inline void add(const word_type *lhs, const size_t nl,
+                            const word_type *rhs, const size_t nr)
+            {
+                
+            }
+            
             //__________________________________________________________________
             //
             // helpers
@@ -174,10 +187,10 @@ inline natural & operator=(ARGS _) \
 
 
         private:
-            size_t     bytes; //!< number of bytes
-            size_t     count; //!< number of words
-            size_t     width; //!< memory size = count * sizeof(word_type)
-            size_t     shift; //!< _size = 1 << _exp2
+            size_t     bytes; //!< active: number of bytes
+            size_t     count; //!< memory: number of words
+            size_t     width; //!< memory: width = count * sizeof(word_type)
+            size_t     shift; //!< memory: width = 1 << shift
             word_type *words; //!< active memory
 
             //! decrease bytes to first not 0
