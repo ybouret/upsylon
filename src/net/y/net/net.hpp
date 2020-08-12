@@ -36,11 +36,9 @@ namespace upsylon
         Y_DISABLE_COPY_AND_ASSIGN(network);
         explicit network();
         virtual ~network() throw();
-        friend class singleton<network>;
-
+        
     public:
-        static const at_exit::longevity life_time = object::life_time - 13; //!< life time
-
+        Y_SINGLETON_DECL_WITH(object::life_time-13,network);
         
     };
 

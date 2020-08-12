@@ -29,7 +29,7 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            static const at_exit::longevity life_time = 0; //!< for singleton
+            Y_SINGLETON_DECL(vtk);
             static const char     DATASET[];          //!< "DATASET"
             static const char     DIMENSIONS[];       //!< "DIMENSIONS"
             static const char     ORIGIN[];           //!< "ORIGIN"
@@ -555,7 +555,6 @@ namespace upsylon {
         private:
             explicit vtk();
             virtual ~vtk() throw();
-            friend class singleton<vtk>;
             Y_DISABLE_COPY_AND_ASSIGN(vtk);
             
             suffix_tree<INative> natives;

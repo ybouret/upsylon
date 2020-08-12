@@ -5,6 +5,9 @@
 
 namespace upsylon {
 
+    Y_SINGLETON_IMPL_WITH(0,Graphic::Image);
+
+
     namespace Graphic {
 
 

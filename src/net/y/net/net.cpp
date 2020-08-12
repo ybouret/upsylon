@@ -14,6 +14,8 @@
 namespace upsylon
 {
 
+    Y_SINGLETON_IMPL(network);
+    
     namespace
     {
 

@@ -5,7 +5,9 @@
 #include "y/parops.hpp"
 
 namespace upsylon {
-    
+
+    Y_SINGLETON_IMPL(mpi);
+
     int mpi:: nextRank() const throw()
     {
         return parops::rank_next(size,rank);

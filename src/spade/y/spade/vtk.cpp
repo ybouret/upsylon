@@ -3,6 +3,8 @@
 
 namespace upsylon {
 
+    Y_SINGLETON_IMPL_WITH(0,Spade::vtk);
+    
     namespace Spade
     {
 

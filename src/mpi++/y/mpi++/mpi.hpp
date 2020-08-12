@@ -535,9 +535,9 @@ namespace upsylon
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mpi);
+
         virtual ~mpi() throw();
         explicit mpi();
-        friend class singleton<mpi>;
         void finalize() throw(); //!< MPI_Finalize()
         void build_data_types(); //!< build the database of primary types
       
@@ -559,9 +559,8 @@ namespace upsylon
         // helpers
         //
         //______________________________________________________________________
-        
-        //! life-time of the singleton
-        static const  at_exit::longevity life_time = object::life_time-2;
+        Y_SINGLETON_DECL_WITH(object::life_time-2,mpi);
+
     };
     
     //! MPI_Init

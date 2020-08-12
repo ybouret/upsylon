@@ -129,7 +129,6 @@ namespace upsylon {
             };
 
 
-            static const at_exit::longevity life_time = 0; //!< longevity
 
             void use( Format *format ); //!< declare format to use
 
@@ -169,6 +168,7 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Image);
+            Y_SINGLETON_DECL(Image);
             explicit Image();
             virtual ~Image() throw();
             typedef arc_ptr<Format> Fmt;
@@ -177,7 +177,6 @@ namespace upsylon {
             Format::Set formats;
             FmtDB       db;
             
-            friend class singleton<Image>;
             void compile();
 
         public:
