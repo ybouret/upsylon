@@ -77,6 +77,8 @@ Y_UTEST_DONE()
 
 Y_UTEST(tight_compact)
 {
+    concurrent::singleton::verbose = true;
+    
     size_t     chunk_size = 1024;
     if(argc>1) chunk_size = string_convert::to<size_t>(argv[1],"chunk_size");
 

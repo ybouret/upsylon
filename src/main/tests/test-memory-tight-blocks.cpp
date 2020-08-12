@@ -25,6 +25,7 @@ namespace {
 
 Y_UTEST(tight_blocks)
 {
+    concurrent::singleton::verbose = true;
 
     tight::quarry Q;
     for(size_t chunk_size=1; chunk_size<=8192; chunk_size<<=1 )

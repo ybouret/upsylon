@@ -10,6 +10,7 @@ using namespace memory;
 
 Y_UTEST(tight_chunk)
 {
+    concurrent::singleton::verbose = true;
 
     global &mgr = global::instance();
 
