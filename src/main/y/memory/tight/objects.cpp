@@ -5,6 +5,9 @@
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 #include <cerrno>
+#include <cstring>
+
+//#include <iostream>
 
 namespace upsylon {
 
@@ -12,20 +15,47 @@ namespace upsylon {
 
         namespace tight {
 
-            const char objects:: undefined[] = "undefined objects";
+
+            void objects:: format(char        *buffer,
+                                  const size_t buflen,
+                                  const size_t cs,
+                                  const size_t ls) const throw()
+            {
+                // std::cerr << "formatting" << std::endl;
+                if(buffer)
+                {
+                    //std::cerr << "|_buffer ok" << std::endl;
+                    if(buflen>0)
+                    {
+                        //std::cerr << "|_buflen=" << buflen << std::endl;
+                        memset(buffer,0,buflen);
+                        snprintf(buffer,buflen-1, "object<%u,%u>", unsigned(cs), unsigned(ls) );
+                    }
+                }
+                else
+                {
+                    assert(buflen<=0);
+                }
+            }
+
 
             objects:: ~objects() throw()
             {
                 Y_BZSET_STATIC(little);
             }
 
-            objects:: objects(lockable &sync,const size_t chunk_size, const size_t limit_size) :
+            objects:: objects(lockable    &sync,
+                              const size_t chunk_size,
+                              const size_t limit_size,
+                              char        *buffer,
+                              const size_t buflen) :
             Access(sync),
             Quarry(),
             Blocks(chunk_size,max_of(limit_size,vein::min_size),Quarry),
             little()
             {
                 Y_BZSET_STATIC(little);
+                format(buffer,buflen,chunk_size,limit_size);
             }
 
             void * objects:: acquire(const size_t block_size)

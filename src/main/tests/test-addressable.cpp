@@ -55,7 +55,6 @@ static inline void doCreate()
 
 Y_UTEST(addressable)
 {
-
     
     doCreate<int>();
     doCreate<string>();

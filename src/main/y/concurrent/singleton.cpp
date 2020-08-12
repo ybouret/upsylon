@@ -38,26 +38,29 @@ namespace upsylon
         {
             if(verbose)
             {
-                __disp(std::cerr << "[-singleton<" , uuid, _len, breadth) << "> life_time=" << std::setw(6) << span << "]" << std::endl;
+                __disp(std::cerr << "[-{" , uuid, _len, breadth) << "} life_time=" << std::setw(6) << span << "]" << std::endl;
             }
+        }
+
+        void singleton:: rename(const char *u) throw()
+        {
+            Y_LOCK(gateway);
+            assert(u);
+            aliasing::_(uuid) = u;
+            aliasing::_(_len) = strlen(uuid);
+            if(_len>breadth) breadth=_len;
         }
 
         singleton::  singleton(const char              *u,
                                const at_exit::longevity s) throw() :
-        uuid(u),
+        uuid(0),
         span(s),
         _len(0)
         {
-            assert(uuid);
-            {
-                Y_LOCK(gateway);
-                const size_t len = aliasing::_(_len) = strlen(uuid);
-                if(len>breadth) breadth = len;
-            }
-            
+            rename(u);
             if(verbose)
             {
-                __disp(std::cerr << "[+singleton<" , uuid, _len, breadth) << "> life_time=" << std::setw(6) << span << "]" << std::endl;
+                __disp(std::cerr << "[+{" , uuid, _len, breadth) << "} life_time=" << std::setw(6) << span << "]" << std::endl;
             }
         }
         

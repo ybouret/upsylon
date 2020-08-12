@@ -27,6 +27,8 @@ namespace upsylon
         protected:
             explicit singleton(const char              *u,
                                const at_exit::longevity s) throw();
+
+            void rename(const char *u) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(singleton);

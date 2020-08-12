@@ -133,7 +133,7 @@ namespace upsylon {
                 //
                 //! parametric singleton
                 //______________________________________________________________
-                class supply : public singleton<supply>, public objects
+                class supply : public objects, public singleton<supply>
                 {
                 public:
                     Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,supply);
@@ -142,13 +142,15 @@ namespace upsylon {
                     Y_DISABLE_COPY_AND_ASSIGN(supply);
                     
                     inline explicit supply() :
-                    singleton<supply>(), objects(this->access,chunk_size,limit_size)
+                    objects(this->access,chunk_size,limit_size,id,sizeof(id)),
+                    singleton<supply>()
                     {
                     }
 
                     inline virtual ~supply() throw()
                     {}
 
+                    static char id[64];
                 };
                 
 
@@ -159,8 +161,11 @@ namespace upsylon {
                 static const at_exit::longevity life_time = supply::life_time; //!< repeat of supply
             };
 
-            template <size_t CHUNK_SIZE,size_t LIMIT_SIZE> const char * const object<CHUNK_SIZE,LIMIT_SIZE>::supply::call_sign = objects::undefined;
+            template <size_t CHUNK_SIZE,size_t LIMIT_SIZE>
+            char object<CHUNK_SIZE,LIMIT_SIZE>::supply::id[];
 
+            template <size_t CHUNK_SIZE,size_t LIMIT_SIZE>
+            const char * const object<CHUNK_SIZE,LIMIT_SIZE>::supply::call_sign = object<CHUNK_SIZE,LIMIT_SIZE>::supply::id;
         }
 
     }

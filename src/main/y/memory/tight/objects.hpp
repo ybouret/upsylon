@@ -22,8 +22,7 @@ namespace upsylon {
             class objects
             {
             public:
-                static const char undefined[];
-
+                
                 //______________________________________________________________
                 //
                 // C++
@@ -37,7 +36,9 @@ namespace upsylon {
                  */
                 explicit objects(lockable     &sync,
                                  const size_t chunk_size,
-                                 const size_t limit_size);
+                                 const size_t limit_size,
+                                 char        *buffer = 0,
+                                 const size_t buflen = 0);
                 
                 //! cleanup
                 virtual ~objects() throw();
@@ -74,10 +75,14 @@ namespace upsylon {
                 lockable &Access; //!< persistent synchro object
                 quarry    Quarry; //!< for all 2^n allocation
                 blocks    Blocks; //!< for 1..limit_size
-                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(objects);
                 arena *little[vein::min_exp2];
+                void format(char        *buffer,
+                            const size_t buflen,
+                            const size_t cs,
+                            const size_t ls) const throw();
             };
 
         }

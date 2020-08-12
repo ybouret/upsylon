@@ -4,6 +4,12 @@
 
 namespace upsylon
 {
+    namespace memory {
 
-    template <> const char * const object::supply::call_sign = "object";
+        namespace tight {
+
+            //template <> const char * const object<Y_CHUNK_SIZE,Y_LIMIT_SIZE>::supply::call_sign = "object";
+            
+        }
+    }
 }
