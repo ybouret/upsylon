@@ -81,7 +81,7 @@ ADD_TEST(core:zfi         test-main zfi)
 ADD_TEST(core:binary      test-main binary)
 ADD_TEST(core:metaloop    test-main metaloop)
 
-SOURCE_GROUP(mem FILES test-chunk.cpp test-arena.cpp test-alloc.cpp test-slab.cpp test-object.cpp test-embed.cpp
+SOURCE_GROUP(mem FILES test-chunk.cpp test-alloc.cpp test-slab.cpp test-object.cpp test-embed.cpp
 test-xslot.cpp test-ptr.cpp test-release.cpp 
 test-static-slots.cpp 
 test-memory-marker.cpp
@@ -98,7 +98,6 @@ test-memory-tight-object.cpp
 test-memory-zblock.cpp
 )
 ADD_TEST(mem:chunk         test-main chunk)
-ADD_TEST(mem:arena         test-main arena)
 ADD_TEST(mem:alloc         test-main alloc)
 ADD_Test(mem:slab          test-main slab)
 ADD_TEST(mem:object0       test-main object0)
