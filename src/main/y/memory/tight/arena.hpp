@@ -68,7 +68,7 @@ namespace upsylon {
                 chunk               *releasing; //!< current acquiring piece
                 chunk               *empty_one; //!< empty piece
                 size_t               available; //!< bookkeeping of available blocks
-                core::list_of<chunk> chunks;    //!< pieces, sorted by increasing memory
+                core::list_of<chunk> chunks;    //!< chunks, sorted by increasing memory
 
             public:
                 const size_t block_size; //!< the block size
