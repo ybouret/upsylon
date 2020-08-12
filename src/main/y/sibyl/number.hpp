@@ -9,17 +9,20 @@
 
 #include "y/type/ints.hpp"
 #include "y/ptr/counted.hpp"
-#include "y/memory/allocator.hpp"
+#include "y/memory/tight/quarry-allocator.hpp"
 
 namespace upsylon {
 
 
     namespace sibyl {
 
-        
+        typedef memory::tight::quarry_allocator &memory_allocator;
+
         class number : public object, public counted
         {
         public:
+            static memory_allocator &instance();
+            static memory_allocator &location() throw();
 
             virtual ~number() throw();
             static  const size_t                         sys_core_size = sizeof(void*);

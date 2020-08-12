@@ -11,6 +11,10 @@ namespace upsylon {
 
         namespace tight {
 
+            const quarry & quarry_allocator:: operator*() const throw()
+            {
+                return Quarry;
+            }
 
             quarry_allocator:: ~quarry_allocator() throw()
             {

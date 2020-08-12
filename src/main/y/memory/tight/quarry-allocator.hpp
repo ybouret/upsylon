@@ -98,6 +98,9 @@ namespace upsylon {
                     count = 0;
                 }
 
+                //! access internal quarry R/O
+                const quarry & operator*() const throw();
+
             private:
                 lockable &Access;
                 quarry   &Quarry;
