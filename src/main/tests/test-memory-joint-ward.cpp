@@ -87,7 +87,7 @@ Y_UTEST(joint_compact)
     std::cerr << W << std::endl;
     std::cerr << "Entering..." << std::endl;
 
-#if 0
+#if 1
 
     block        blk[512];
     memset(blk,0,sizeof(blk));
@@ -121,7 +121,7 @@ Y_UTEST(joint_compact)
             Y_ASSERT(blk[i].size);
         }
 
-        if(false)
+        if(true)
         {
             while(true)
             {
