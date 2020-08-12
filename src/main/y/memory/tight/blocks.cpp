@@ -6,6 +6,7 @@
 #include "y/type/self-destruct.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/os/run-time-log.hpp"
+#include <cstdlib>
 
 namespace upsylon {
 

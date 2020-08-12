@@ -20,6 +20,8 @@ namespace
 
 Y_UTEST(alloc)
 {
+    concurrent::singleton::verbose = true;
+    
     memory::allocator &a = memory::global::instance();
     {
         static const size_t N = 100;
