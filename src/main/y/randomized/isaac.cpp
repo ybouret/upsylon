@@ -24,7 +24,7 @@ namespace upsylon
             ISAAC<4> __simple;
             ISAAC<8> __crypto;
 
-            static const at_exit::longevity life_time = 0;
+            Y_SINGLETON_DECL(BitsSource);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(BitsSource);
@@ -46,6 +46,8 @@ namespace upsylon
             return BitsSource::access;
         }
     }
+
+    Y_SINGLETON_IMPL_WITH(0,randomized::BitsSource);
 
 }
 

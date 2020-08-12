@@ -22,9 +22,8 @@ namespace upsylon
     private:
         explicit local_fs() throw();
         virtual ~local_fs() throw();
-        friend class singleton<local_fs>;
         Y_DISABLE_COPY_AND_ASSIGN(local_fs);
-        static const at_exit::longevity life_time;
+        Y_SINGLETON_DECL(local_fs);
     };
 
     

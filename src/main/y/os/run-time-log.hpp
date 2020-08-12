@@ -35,8 +35,9 @@ namespace upsylon {
         Y_DISABLE_COPY_AND_ASSIGN(run_time_log);
         explicit run_time_log();
         virtual ~run_time_log() throw();
-        static const at_exit::longevity life_time;
-        friend class singleton<run_time_log>;
+        
+    public:
+        Y_SINGLETON_DECL_WITH(at_exit::uttermost,run_time_log);
     };
 
     std::ostream & rtl( run_time_level );

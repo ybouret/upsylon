@@ -4,8 +4,11 @@
 
 namespace upsylon {
 
+    Y_SINGLETON_IMPL_WITH(0,Jargon::Tags);
+
     namespace Jargon {
-       
+
+
         Tags :: ~Tags() throw()
         {
         }

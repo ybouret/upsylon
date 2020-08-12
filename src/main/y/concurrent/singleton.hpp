@@ -10,28 +10,52 @@
 
 namespace upsylon
 {
-    namespace core
+    namespace concurrent
     {
         class singleton
         {
         public:
             static bool verbose;
             virtual ~singleton() throw();
-            
-            
+
+            const char * const       uuid;
+            const at_exit::longevity span;
+
         protected:
-            explicit singleton() throw();
+            explicit singleton(const char              *u,
+                               const at_exit::longevity s) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(singleton);
         };
     }
+
+#define Y_SINGLETON_DECL_(CLASS)    \
+friend class singleton<CLASS>;      \
+static const char * const call_sign
+
+#define Y_SINGLETON_DECL(CLASS)          \
+Y_SINGLETON_DECL_(CLASS);                \
+static const at_exit::longevity life_time
+
+#define Y_SINGLETON_DECL_WITH(LIFE_TIME,CLASS)          \
+Y_SINGLETON_DECL_(CLASS);                               \
+static const at_exit::longevity life_time = (LIFE_TIME)
+
+#define Y_SINGLETON_IMPL(TYPE) \
+const char * const TYPE::call_sign = #TYPE
+
+#define Y_SINGLETON_IMPL_WITH(LIFE_TIME,TYPE) \
+Y_SINGLETON_IMPL(TYPE);\
+const at_exit::longevity TYPE::life_time = (LIFE_TIME)
+
     //! singleton of T
     /**
-     T must define a static at_exit::longevity life_time
+     - T must define a static at_exit::longevity life_time
+     - T must also define a   const char *       call_sign
      */
     template <typename T>
-    class singleton
+    class singleton : public concurrent::singleton
     {
     public:
         //! a mutex for thread safe handling
@@ -105,7 +129,9 @@ namespace upsylon
 
 
     protected:
-        inline explicit singleton() throw() {}
+        inline explicit singleton() throw() :
+        concurrent::singleton( T::call_sign, T::life_time)
+        {}
         inline virtual ~singleton() throw() {}
 
     private:

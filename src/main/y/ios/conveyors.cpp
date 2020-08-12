@@ -9,7 +9,10 @@
 #include "y/exception.hpp"
 
 namespace upsylon {
- 
+
+    Y_SINGLETON_IMPL_WITH(0,ios::conveyors);
+
+
     namespace ios {
     
         namespace {

@@ -44,13 +44,9 @@ namespace upsylon
         private:
             explicit pooled() throw();
             virtual ~pooled() throw();
-
-            friend class singleton<pooled>;
             
         public:
-            //! same as object::life_time, right before global
-            static  const at_exit::longevity  life_time;
-
+            Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,pooled);
         };
     }
 }

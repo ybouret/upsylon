@@ -35,9 +35,7 @@ namespace upsylon
         virtual ~working_directory() throw();
         
         Y_DISABLE_COPY_AND_ASSIGN(working_directory);
-        friend class singleton<working_directory>;
-        
-        static const at_exit::longevity life_time; // TODO: check this value
+        Y_SINGLETON_DECL(working_directory);
     };
 
     //! avoid code deleting...

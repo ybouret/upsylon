@@ -190,7 +190,7 @@ namespace upsylon
         size_t nextProbe();
 
     public:
-        static const at_exit::longevity life_time; //!< based on manager existence
+        Y_SINGLETON_DECL(MPN); // based on mpl::dispatcher
 
     private:
         template <typename ITERATOR> inline static

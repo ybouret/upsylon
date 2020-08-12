@@ -6,11 +6,11 @@
 
 namespace upsylon
 {
+    Y_SINGLETON_IMPL(memory::pooled);
+    
     namespace memory
     {
 
-
-        const at_exit::longevity  pooled:: life_time =  limit_of<at_exit::longevity>::maximum - 1;
 
         namespace
         {

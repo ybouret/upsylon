@@ -34,8 +34,8 @@ namespace upsylon {
             static void Release() throw();  //!< release resources
             
         private:
-            static const at_exit::longevity life_time = 0;
             Y_DISABLE_COPY_AND_ASSIGN(Tags);
+            Y_SINGLETON_DECL(Tags);
             explicit Tags();
             virtual ~Tags() throw();
             friend class singleton<Tags>;

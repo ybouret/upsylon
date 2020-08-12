@@ -4,7 +4,8 @@
 
 namespace upsylon
 {
-    const at_exit::longevity MPN::life_time = mpl::dispatcher::life_time - 1;
+    
+    Y_SINGLETON_IMPL_WITH(mpl::dispatcher::life_time - 1,MPN);
 
     MPN:: PrimeInfo:: ~PrimeInfo() throw()
     {

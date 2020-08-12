@@ -7,15 +7,18 @@
 namespace upsylon
 {
 
+    Y_SINGLETON_IMPL(memory::global);
+
     namespace  memory
     {
 
-        static const char fn[] = "[memory::global] ";
+        //const char global::call_sign[] = "memory::global";
+
         global:: ~global() throw()
         {
             if(allocated!=0)
             {
-                rtl(run_time_warning) << fn << "still allocated=" << allocated << std::endl;
+                rtl(run_time_warning) << uuid << " still allocated=" << allocated << std::endl;
             }
         }
 
@@ -35,7 +38,7 @@ namespace upsylon
                 {
                     const unsigned long desired = (unsigned long)n;
                     n = 0;
-                    throw libc::exception(ENOMEM,"%sacquire(%lu)",fn,desired);
+                    throw libc::exception(ENOMEM,"%s acquire(%lu)",uuid,desired);
                 }
                 allocated += n;
                 return p;
@@ -72,7 +75,7 @@ namespace upsylon
             if(count>0)
             {
                 void *p = calloc(count,size);
-                if(!p) throw libc::exception(ENOMEM,"calloc(%u,%u)",unsigned(count),unsigned(size));
+                if(!p) throw libc::exception(ENOMEM,"%s calloc(%u,%u)",uuid,unsigned(count),unsigned(size));
                 allocated += int64_t(count*size);
                 return p;
             }

@@ -37,6 +37,8 @@ namespace upsylon {
 
 namespace upsylon {
 
+    Y_SINGLETON_IMPL_WITH(0,hashing::factory);
+    
     namespace hashing {
 
 #define Y_H_DECL(NAME) use( NAME::CLID, NAME::create )

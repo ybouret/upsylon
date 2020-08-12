@@ -24,12 +24,10 @@ namespace upsylon {
         public    memory::tight::quarry_allocator
         {
         public:
-            //! life_time is just behind global
-            static const at_exit::longevity life_time = limit_of<at_exit::longevity>::maximum-1;
-            
+            Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,dispatcher);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);
-            friend class singleton<dispatcher>;
             explicit dispatcher() throw();
             virtual ~dispatcher() throw();
         };

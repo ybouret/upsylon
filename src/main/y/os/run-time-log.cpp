@@ -14,7 +14,7 @@ namespace upsylon
         std::ostream   *rtl_os   = 0;
     }
 
-    const at_exit::longevity run_time_log::life_time = limit_of<at_exit::longevity>::maximum;
+    Y_SINGLETON_IMPL(run_time_log);
 
     run_time_log:: run_time_log() : rt_clock()
     {

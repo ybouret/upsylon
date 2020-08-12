@@ -44,11 +44,9 @@ namespace upsylon
             explicit global() throw();
             virtual ~global() throw();
             Y_DISABLE_COPY_AND_ASSIGN(global);
-            friend class singleton<global>;
 
         public:
-            //! the longest life_time
-            static const at_exit::longevity life_time = limit_of<at_exit::longevity>::maximum;
+            Y_SINGLETON_DECL_WITH( at_exit::uttermost,global);
         };
     }
 }

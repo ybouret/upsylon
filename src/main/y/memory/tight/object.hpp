@@ -136,12 +136,11 @@ namespace upsylon {
                 class supply : public singleton<supply>, public objects
                 {
                 public:
-                    static const at_exit::longevity life_time = limit_of<at_exit::longevity>::maximum-1; //!< behind global::lifetime
-
+                    Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,supply);
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(supply);
-                    friend class singleton<supply>;
-
+                    
                     inline explicit supply() :
                     singleton<supply>(), objects(this->access,chunk_size,limit_size)
                     {
@@ -159,6 +158,9 @@ namespace upsylon {
             public:
                 static const at_exit::longevity life_time = supply::life_time; //!< repeat of supply
             };
+
+            //template <size_t CHUNK_SIZE,size_t LIMIT_SIZE> const char * const object<CHUNK_SIZE,LIMIT_SIZE>::supply::call_sign;
+
         }
 
     }

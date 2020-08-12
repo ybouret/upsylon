@@ -3,6 +3,8 @@
 
 namespace upsylon {
 
+    Y_SINGLETON_IMPL(mpl::dispatcher);
+
     namespace mpl {
 
         dispatcher:: ~dispatcher() throw()
@@ -15,7 +17,6 @@ namespace upsylon {
         memory::tight::quarry_allocator(access,*this)
         {
         }
-
         
     }
 

@@ -244,8 +244,8 @@ namespace upsylon {
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(type_specs);
-        static const at_exit::longevity life_time;
-
+        Y_SINGLETON_DECL_WITH(at_exit::uttermost-3,type_specs);
+        
         friend class singleton<type_specs>;
 
         inline virtual ~type_specs() throw() {}
@@ -263,7 +263,7 @@ namespace upsylon {
 
     };
 
-    const at_exit::longevity type_specs::life_time =memory::pooled::life_time-2;
+    Y_SINGLETON_IMPL(type_specs);
 
 
     std::ostream & operator<<(std::ostream &os, const type_spec &t)

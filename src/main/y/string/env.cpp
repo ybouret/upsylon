@@ -98,15 +98,16 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(envmgr);
-            friend class singleton<envmgr>;
+            Y_SINGLETON_DECL(envmgr);
+
             inline explicit envmgr() throw() { }
             inline virtual ~envmgr() throw() { }
 
-            static const at_exit::longevity life_time;
+
         };
 
-        const at_exit::longevity envmgr::life_time = memory::pooled::life_time-1;
-
+        Y_SINGLETON_IMPL_WITH(memory::pooled::life_time-1,envmgr);
+        
     }
 
 

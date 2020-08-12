@@ -27,8 +27,8 @@ namespace upsylon {
             // types and definitions
             //__________________________________________________________________
             typedef arc_ptr<const conveyor>  convoy;          //!< internal shared conveyor
-            static  const at_exit::longevity life_time = 0;   //!< for singleton
-            
+            Y_SINGLETON_DECL(conveyors);
+
             //__________________________________________________________________
             //
             // methods

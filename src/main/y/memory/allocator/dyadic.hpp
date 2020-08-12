@@ -19,11 +19,10 @@ namespace upsylon {
         class dyadic : public singleton<dyadic>, public tight::dyadic_allocator
         {
         public:
-            static const at_exit::longevity life_time; //!< from object::life_time-1
-
+            Y_SINGLETON_DECL(dyadic);
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dyadic);
-            friend class singleton<dyadic>;
             virtual ~dyadic() throw();
             explicit dyadic();
 

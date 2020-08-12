@@ -45,12 +45,10 @@ throw exception(fmt,key);\
 
                 }
                 
-                friend class singleton<posix_db>;
-                static const at_exit::longevity life_time = 0;
-                
+                Y_SINGLETON_DECL_WITH(0,posix_db);
             };
-            
-           
+
+            Y_SINGLETON_IMPL(posix_db);
         }
         
         Pattern * posix::get(const string &id)

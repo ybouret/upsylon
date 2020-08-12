@@ -3,11 +3,13 @@
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/object.hpp"
 
-namespace upsylon {
+namespace upsylon
+{
 
-    namespace memory {
+    Y_SINGLETON_IMPL_WITH(object::life_time-1,memory::dyadic);
 
-        const at_exit::longevity dyadic::life_time = object::life_time-1;
+    namespace memory
+    {
 
         dyadic:: ~dyadic() throw()
         {

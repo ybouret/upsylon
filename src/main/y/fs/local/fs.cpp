@@ -33,8 +33,9 @@ BOOL WINAPI GetFileSizeEx(
 namespace upsylon
 {
 
-    const at_exit::longevity local_fs::life_time = memory::pooled::life_time-1;
     
+    Y_SINGLETON_IMPL_WITH(memory::pooled::life_time-1,local_fs);
+
     local_fs:: local_fs() throw()
     {
     }
