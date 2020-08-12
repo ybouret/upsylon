@@ -59,6 +59,8 @@ namespace upsylon {
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const arena &);
 
+                //! check ownership
+                bool owns(const void *addr) const throw();
                 
 
             private:

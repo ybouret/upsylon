@@ -19,7 +19,7 @@ namespace upsylon {
         class dyadic : public singleton<dyadic>, public tight::dyadic_allocator
         {
         public:
-            Y_SINGLETON_DECL(dyadic);
+            Y_SINGLETON_DECL(dyadic); //!< setup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dyadic);

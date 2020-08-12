@@ -112,6 +112,7 @@ namespace upsylon {
                  */
                 section *      receive(void * &addr, size_t &capa, const size_t size) throw();
 
+                //! translate address to its owner
                 static section *owner_of(void *p) throw();
                 
 

@@ -220,9 +220,27 @@ namespace upsylon {
                         return a->compact(addr);
                     }
                 }
-                return false; // shouldn't happen
+                return false; // shouldn't
             }
 
+            bool blocks:: owns(const void *addr, size_t &block_size) const throw()
+            {
+                for(size_t i=0;i<slots_size;++i)
+                {
+                    const slot_type &entry = slot[i];
+                    for(const arena *a = entry.head; a; a=a->next)
+                    {
+                        if(a->owns(addr))
+                        {
+                            block_size = a->block_size;
+                            return true;
+                        }
+
+                    }
+                }
+                block_size = 0;
+                return false;
+            }
 
 
         }

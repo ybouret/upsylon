@@ -73,6 +73,8 @@ namespace upsylon {
                 //! try to compact a previously allocated block
                 bool try_compact(void * &addr, const size_t block_size) throw();
 
+                //! find ownership and block size
+                bool owns(const void *addr, size_t &block_size) const throw();
 
                 //______________________________________________________________
                 //

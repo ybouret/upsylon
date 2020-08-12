@@ -29,7 +29,7 @@ namespace upsylon {
             // types and definitions
             //
             //------------------------------------------------------------------
-            Y_SINGLETON_DECL(vtk);
+            Y_SINGLETON_DECL(vtk);                    //!< setup
             static const char     DATASET[];          //!< "DATASET"
             static const char     DIMENSIONS[];       //!< "DIMENSIONS"
             static const char     ORIGIN[];           //!< "ORIGIN"

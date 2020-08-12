@@ -12,51 +12,79 @@ namespace upsylon {
 
         namespace tight {
 
-            //! eXtracted cache
+            //__________________________________________________________________
+            //
+            //! eXtracted cache from objects
+            //__________________________________________________________________
             class xcache
             {
             public:
-                //! extract access and shared arena
-                explicit xcache(objects &objs, const size_t block_size);
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit xcache(objects &, const size_t block_size); //!< extract access and shared arena
+                virtual ~xcache() throw();                           //! cleanup
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                size_t block_size() const throw();      //! shared.block_size
+                void * acquire();                       //!< locked acquire
+                void   release(void *) throw();         //!< locked release
+                void * acquire_unlocked();              //!< for multiple acquires
+                void   release_unlocked(void *) throw();//!< for mutliple releases
 
-                //! cleanup
-                virtual ~xcache() throw();
-
-                //! shared.block_size
-                size_t   block_size() const throw();
-
-
-                void *acquire();               //!< locked acquire
-                void  release(void *) throw(); //!< locked release
-
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 lockable &access; //!< synchronize objects access
-
-                void *acquire_unlocked();
-                void  release_unlocked(void *addr) throw();
 
             private:
                 arena    &shared;
                 Y_DISABLE_COPY_AND_ASSIGN(xcache);
             };
 
+            //__________________________________________________________________
+            //
+            //! eXtracted cache of same types
+            //__________________________________________________________________
             template <typename T>
             class xcache_of : public xcache
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
 
+                //! setup with sizeof(T)
                 inline explicit xcache_of(objects &objs) : xcache(objs,sizeof(T))
                 {
                 }
 
+                //! cleanup
                 inline virtual ~xcache_of() throw()
                 {
                 }
 
-                inline T   *acquire() { return static_cast<T*>(xcache::acquire()); }
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+
+                //! acquire/cast
+                inline T   *acquire()             { return static_cast<T*>(xcache::acquire()); }
+
+                //! release/cast
                 inline void release(T *p) throw() { xcache::release( (void*)p ); }
 
+                //! for multiple acquires/cast
                 inline T   *acquire_unlocked()             {return static_cast<T*>(xcache::acquire_unlocked()); }
+
+                //! for multiple releases/cast
                 inline void release_unlocked(T *p) throw() { xcache::release_unlocked( (void*)p ); }
 
             private:

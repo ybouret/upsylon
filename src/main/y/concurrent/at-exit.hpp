@@ -13,6 +13,7 @@ namespace upsylon
         static  const size_t    stack_size = 64;   //!< maximum number of register procedures
         typedef void          (*procedure)();      //!< a procedure to be called
         typedef int16_t         longevity;         //!< its longevity
+        //! highest longevity
         static  const longevity uttermost = limit_of<longevity>::maximum;
 
         //! register a new procedure

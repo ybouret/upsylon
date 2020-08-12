@@ -42,22 +42,20 @@ namespace upsylon
             }
         }
 
-        void singleton:: rename(const char *u) throw()
-        {
-            Y_LOCK(gateway);
-            assert(u);
-            aliasing::_(uuid) = u;
-            aliasing::_(_len) = strlen(uuid);
-            if(_len>breadth) breadth=_len;
-        }
-
+        
         singleton::  singleton(const char              *u,
                                const at_exit::longevity s) throw() :
         uuid(0),
         span(s),
         _len(0)
         {
-            rename(u);
+
+            Y_LOCK(gateway);
+            assert(u);
+            aliasing::_(uuid) = u;
+            aliasing::_(_len) = strlen(uuid);
+            if(_len>breadth) breadth=_len;
+
             if(verbose)
             {
                 __disp(std::cerr << "[+{" , uuid, _len, breadth) << "} life_time=" << std::setw(6) << span << "]" << std::endl;

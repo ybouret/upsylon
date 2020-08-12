@@ -73,7 +73,7 @@ namespace upsylon {
                 //
                 // helpers
                 //______________________________________________________________
-                friend std::ostream & operator<<(std::ostream &, const vein &);  //! display
+                friend std::ostream & operator<<(std::ostream &, const vein &);  //!< display
                 static unsigned       width;                                     //!< shared global width for ouptut
 
             private:

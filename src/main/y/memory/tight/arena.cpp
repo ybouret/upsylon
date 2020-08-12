@@ -240,6 +240,17 @@ namespace upsylon {
 
         namespace tight {
 
+
+            bool arena:: owns(const void *addr) const throw()
+            {
+                for(const chunk *ch=chunks.head;ch;ch=ch->next)
+                {
+                    if(ch->owns(addr)) return true;
+                }
+                return false;
+            }
+
+
             void arena::  releasing_at(const void *addr) throw()
             {
                 assert(NULL!=addr);

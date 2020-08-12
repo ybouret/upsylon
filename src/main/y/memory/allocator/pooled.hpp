@@ -46,7 +46,7 @@ namespace upsylon
             virtual ~pooled() throw();
             
         public:
-            Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,pooled);
+            Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,pooled); //!< setup
         };
     }
 }

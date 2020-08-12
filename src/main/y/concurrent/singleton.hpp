@@ -11,24 +11,39 @@ namespace upsylon
 {
     namespace concurrent
     {
+        //______________________________________________________________________
+        //
+        //! base class for all singleton
+        //______________________________________________________________________
         class singleton
         {
         public:
-            static bool   verbose;
-            static mutex  gateway;
+            //__________________________________________________________________
+            //
+            // global data
+            //__________________________________________________________________
+            static bool   verbose; //!< verbosity
+            static mutex  gateway; //!< sync for all singleton
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            virtual ~singleton() throw(); //!< cleanup
 
-            virtual ~singleton() throw();
-
-            const char * const       uuid;
-            const at_exit::longevity span;
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const char * const       uuid; //!< from call_sign
+            const at_exit::longevity span; //!< from life_time
             const size_t             _len; //!< strlen(uuid)
             
         protected:
+            //! setup from singleton instances
             explicit singleton(const char              *u,
                                const at_exit::longevity s) throw();
 
-            void rename(const char *u) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(singleton);
@@ -36,21 +51,26 @@ namespace upsylon
         };
     }
 
+    //! declare singleton/call_sign
 #define Y_SINGLETON_DECL_(CLASS)    \
 friend class singleton<CLASS>;      \
 static const char * const call_sign
 
+    //! declare singleton/call_sign/life_time
 #define Y_SINGLETON_DECL(CLASS)          \
 Y_SINGLETON_DECL_(CLASS);                \
 static const at_exit::longevity life_time
 
+    //! declare singleton/call_sign/life_time=LIFE_TIME
 #define Y_SINGLETON_DECL_WITH(LIFE_TIME,CLASS)          \
 Y_SINGLETON_DECL_(CLASS);                               \
 static const at_exit::longevity life_time = (LIFE_TIME)
 
+    //! implement singleton
 #define Y_SINGLETON_IMPL(TYPE) \
 const char * const TYPE::call_sign = #TYPE
 
+    //! implement singleton with life_time
 #define Y_SINGLETON_IMPL_WITH(LIFE_TIME,TYPE) \
 Y_SINGLETON_IMPL(TYPE);\
 const at_exit::longevity TYPE::life_time = (LIFE_TIME)

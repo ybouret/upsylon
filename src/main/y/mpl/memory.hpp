@@ -24,7 +24,7 @@ namespace upsylon {
         public    memory::tight::quarry_allocator
         {
         public:
-            Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,dispatcher);
+            Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,dispatcher); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dispatcher);

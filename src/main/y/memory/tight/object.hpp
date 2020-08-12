@@ -136,9 +136,11 @@ namespace upsylon {
                 class supply : public objects, public singleton<supply>
                 {
                 public:
-                    Y_SINGLETON_DECL_WITH(at_exit::uttermost-1,supply);
+                    static const char * const       call_sign; //! =id
+                    static const at_exit::longevity life_time = at_exit::uttermost-1; //!< before global
                     
                 private:
+                    friend class singleton<supply>;
                     Y_DISABLE_COPY_AND_ASSIGN(supply);
                     
                     inline explicit supply() :
@@ -164,6 +166,7 @@ namespace upsylon {
             template <size_t CHUNK_SIZE,size_t LIMIT_SIZE>
             char object<CHUNK_SIZE,LIMIT_SIZE>::supply::id[];
 
+            //! global call_sign points to local-single id
             template <size_t CHUNK_SIZE,size_t LIMIT_SIZE>
             const char * const object<CHUNK_SIZE,LIMIT_SIZE>::supply::call_sign = object<CHUNK_SIZE,LIMIT_SIZE>::supply::id;
         }

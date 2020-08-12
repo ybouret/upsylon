@@ -190,7 +190,7 @@ namespace upsylon
         size_t nextProbe();
 
     public:
-        Y_SINGLETON_DECL(MPN); // based on mpl::dispatcher
+        Y_SINGLETON_DECL(MPN); //!< setup
 
     private:
         template <typename ITERATOR> inline static

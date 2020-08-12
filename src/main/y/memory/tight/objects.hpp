@@ -33,6 +33,8 @@ namespace upsylon {
                  \param sync synchronisation
                  \param chunk_size desired chunk_size for blocks
                  \param limit_size for blocks, extended to vein::small_size
+                 \param buffer to format an id
+                 \param buflen size of buffer
                  */
                 explicit objects(lockable     &sync,
                                  const size_t chunk_size,

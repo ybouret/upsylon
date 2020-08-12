@@ -8,32 +8,52 @@
 
 namespace upsylon
 {
-    
+
+    //__________________________________________________________________________
+    //
+    //
     //! network instance for system
+    //
+    //__________________________________________________________________________
     class network : public singleton<network>
     {
     public:
-        typedef memory::tight::xcache_of<net::byte_node> byte_nodes_cache;
+        //______________________________________________________________________
+        //
+        // types and definition
+        //______________________________________________________________________
 
-        static bool verbose;          //!< mostly to debug
-        string get_host_name() const; //!< get host name
+        typedef memory::tight::xcache_of<net::byte_node> byte_nodes_cache; //!< for I/O
+
+        static bool           verbose;                 //!< mostly to debug
+        static const uint16_t reserved_port;           //!< port < reserved_port: for system
+        static const uint16_t first_user_port;         //!< port >= first_user_port: for user
+        static const uint16_t final_user_port = 65535; //!< for information
+        static const uint16_t user_port_width;         //!< final_user_port-first_user_port+1;
+
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
+        //! get host name
+        string get_host_name() const;
 
         //! create a socket
-        net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
+        net::socket_type open(const net::ip_protocol, const net::ip_version);
 
-        
         //! resolve the address, preserving the port
         void resolve( net::socket_address &ip, const string &s ) const;
 
         //! resolve the address, preserving the port, wrapper
         void resolve( net::socket_address &ip, const char   *s ) const;
 
-        static const uint16_t reserved_port;           //!< port < reserved_port: for system
-        static const uint16_t first_user_port;         //!< port >= first_user_port: for user
-        static const uint16_t final_user_port = 65535; //!< for information
-        static const uint16_t user_port_width;         //!< final_user_port-first_user_port+1;
 
-        byte_nodes_cache byte_nodes;
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        byte_nodes_cache byte_nodes; //!< shared cache for I/O
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(network);
@@ -41,7 +61,7 @@ namespace upsylon
         virtual ~network() throw();
         
     public:
-        Y_SINGLETON_DECL_WITH(object::life_time-13,network);
+        Y_SINGLETON_DECL_WITH(object::life_time-13,network); //!< setup
         
     };
 

@@ -37,8 +37,10 @@ namespace upsylon {
                 const quarry_type & _quarry()   const throw(); //!< access
                 const sections    & _sections() const throw(); //!< access
 
+                //! diplay status
                 friend std::ostream & operator<<( std::ostream &os, const ward &w);
 
+                //! current addr[capa] with 'size' bytes occupied
                 bool compact( void * &addr, size_t &capa, const size_t size) throw();
 
             private:

@@ -559,7 +559,7 @@ namespace upsylon
         // helpers
         //
         //______________________________________________________________________
-        Y_SINGLETON_DECL_WITH(object::life_time-2,mpi);
+        Y_SINGLETON_DECL_WITH(object::life_time-2,mpi); //!< setup
 
     };
     

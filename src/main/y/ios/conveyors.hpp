@@ -26,8 +26,8 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            typedef arc_ptr<const conveyor>  convoy;          //!< internal shared conveyor
-            Y_SINGLETON_DECL(conveyors);
+            typedef arc_ptr<const conveyor>  convoy;  //!< internal shared conveyor
+            Y_SINGLETON_DECL(conveyors);              //!< setup
 
             //__________________________________________________________________
             //

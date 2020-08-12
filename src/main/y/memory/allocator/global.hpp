@@ -46,7 +46,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(global);
 
         public:
-            Y_SINGLETON_DECL_WITH( at_exit::uttermost,global);
+            Y_SINGLETON_DECL_WITH( at_exit::uttermost,global); //!< setup
         };
     }
 }
