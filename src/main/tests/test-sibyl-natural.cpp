@@ -22,8 +22,7 @@ namespace {
         SHOW(natural<BITS>::word_bits);
         SHOW(natural<BITS>::word_exp2);
         SHOW(natural<BITS>::word_mask);
-        SHOW(natural<BITS>::max_word);
-
+        
 
         Unsigned z;
         Unsigned z1(200,as_capacity);
@@ -31,13 +30,12 @@ namespace {
         z1.xch(z);
         z1.xch(z);
 
-        std::cerr << "z.count=" << z.count << "/width=" << z.width << std::endl;
         std::cerr << "zero = " << z << std::endl;
 
         Unsigned one(1);
         std::cerr << "one  = " << one << std::endl;
 
-        Unsigned abcd( 0x0a0b0c0d );
+        Unsigned abcd( alea.partial<uint64_t>() );
         std::cerr << "abcd = " << abcd << std::endl;
 
         Unsigned temp(abcd);
