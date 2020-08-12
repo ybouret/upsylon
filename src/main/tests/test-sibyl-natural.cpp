@@ -16,7 +16,6 @@ namespace {
         std::cerr << "BITS=" << BITS << std::endl;
         SHOW(natural<BITS>::word_size);
         SHOW(natural<BITS>::core_size);
-        SHOW(natural<BITS>::possible);
     }
 }
 
@@ -29,7 +28,7 @@ Y_UTEST(sibyl_n)
     doTest<8>();
     doTest<16>();
     doTest<32>();
-    doTest<64>();
+    //doTest<64>();
     
 
 }
