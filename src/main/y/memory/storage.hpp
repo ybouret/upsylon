@@ -21,9 +21,10 @@ namespace upsylon {
             //! possible model
             enum model {
                 unused, //!< no memory
-                shared, //!< using small_object
+                shared, //!< using tight object
                 pooled, //!< using memory::pooled
-                global  //!< using memory::global
+                global, //!< using memory::global
+                dyadic  //!< using memory::dyadic
             };
 
             //! return human readable text for storage

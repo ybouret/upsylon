@@ -16,6 +16,7 @@ namespace upsylon {
                     Y_MEM_STORAGE(shared);
                     Y_MEM_STORAGE(pooled);
                     Y_MEM_STORAGE(global);
+                    Y_MEM_STORAGE(dyadic);
             }
             return "unknown";
         }

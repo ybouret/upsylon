@@ -3,6 +3,7 @@
 #include "y/object.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/allocator/global.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 #include "y/exceptions.hpp"
 
 #include <cstring>
@@ -73,6 +74,12 @@ namespace upsylon {
                         assert(0==owned);
                     } break;
 
+                    case storage:: dyadic: {
+                        static memory::allocator & mgr = memory::dyadic::location();
+                        mgr.release( *(void **) &entry, aliasing::_(owned) );
+                        assert(0==entry);
+                        assert(0==owned);
+                    } break;
                 }
 
                 assert(0==aliasing::_(owned));
@@ -162,6 +169,11 @@ namespace upsylon {
 
                         case storage::global: {
                             static memory::allocator & mgr = memory::global::instance();
+                            entry = mgr.acquire( aliasing::_(owned) = n );
+                        } break;
+
+                        case storage::dyadic: {
+                            static memory::allocator & mgr = memory::dyadic::instance();
                             entry = mgr.acquire( aliasing::_(owned) = n );
                         } break;
                     }

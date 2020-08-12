@@ -104,7 +104,6 @@ namespace upsylon
 }
 
 #include <cstring>
-#include "y/memory/buffers.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon

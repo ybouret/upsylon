@@ -43,17 +43,21 @@ namespace {
             g.make<T>(memory::storage::shared);std::cerr << ' ' << g; doTestOf<T>(g);
             g.make<T>(memory::storage::pooled);std::cerr << ' ' << g; doTestOf<T>(g);
             g.make<T>(memory::storage::global);std::cerr << ' ' << g; doTestOf<T>(g);
+            g.make<T>(memory::storage::dyadic);std::cerr << ' ' << g; doTestOf<T>(g);
+
             {
                 const T tmp = support::get<T>();
                 std::cerr << "\tmake <" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
                 g.make<T,T>(memory::storage::shared,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
                 g.make<T,T>(memory::storage::pooled,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
                 g.make<T,T>(memory::storage::global,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+                g.make<T,T>(memory::storage::dyadic,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
 
                 std::cerr << "\tcopy <" << type_name_of<T>() << ">[" << n << "](" << tmp << "):";
                 g.copy<T>(memory::storage::shared,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
                 g.copy<T>(memory::storage::pooled,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
                 g.copy<T>(memory::storage::global,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
+                g.copy<T>(memory::storage::dyadic,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
             }
             std::cerr << std::endl;
         }
@@ -62,6 +66,7 @@ namespace {
         g.vmake<T>(memory::storage::shared,n); std::cerr << ' ' << g; doTestOf<T>(g);
         g.vmake<T>(memory::storage::pooled,n); std::cerr << ' ' << g; doTestOf<T>(g);
         g.vmake<T>(memory::storage::global,n); std::cerr << ' ' << g; doTestOf<T>(g);
+        g.vmake<T>(memory::storage::dyadic,n); std::cerr << ' ' << g; doTestOf<T>(g);
         std::cerr << std::endl;
 
         {
@@ -71,7 +76,7 @@ namespace {
             g.vmake<T,T>(memory::storage::shared,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
             g.vmake<T,T>(memory::storage::pooled,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
             g.vmake<T,T>(memory::storage::global,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
-
+            g.vmake<T,T>(memory::storage::dyadic,n,tmp); std::cerr << ' ' << g;doTestOf<T>(g);
             std::cerr << std::endl;
         }
 
@@ -99,6 +104,7 @@ Y_UTEST(groove)
     std::cerr << '\t' << memory::storage::text(memory::storage::shared) << std::endl;
     std::cerr << '\t' << memory::storage::text(memory::storage::pooled) << std::endl;
     std::cerr << '\t' << memory::storage::text(memory::storage::global) << std::endl;
+    std::cerr << '\t' << memory::storage::text(memory::storage::dyadic) << std::endl;
     std::cerr << std::endl;
     
     Y_UTEST_SIZEOF(memory::groove);
@@ -112,6 +118,7 @@ Y_UTEST(groove)
             g.acquire(memory::storage::shared,n); std::cerr << g << ' ';
             g.acquire(memory::storage::pooled,n); std::cerr << g << ' ';
             g.acquire(memory::storage::global,n); std::cerr << g << ' ';
+            g.acquire(memory::storage::dyadic,n); std::cerr << g << ' ';
             std::cerr << std::endl;
         }
 
@@ -160,6 +167,14 @@ Y_UTEST(groove)
 
         {
             memory::groove_of<mpn> G(g,memory::storage::global,9);
+            std::cerr << "size=" << G.size() << std::endl;
+            std::cerr << G << std::endl;
+            support::fill1D(G);
+            std::cerr << G << std::endl;
+        }
+
+        {
+            memory::groove_of<mpq> G(g,memory::storage::dyadic,11);
             std::cerr << "size=" << G.size() << std::endl;
             std::cerr << G << std::endl;
             support::fill1D(G);
