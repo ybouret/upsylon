@@ -6,6 +6,7 @@
 #include "y/type/utils.hpp"
 #include <cerrno>
 #include <cstring>
+#include <cstdio>
 
 //#include <iostream>
 

@@ -30,7 +30,7 @@ Y_UTEST(sibyl_n)
     doTest<16>();
     doTest<32>();
     doTest<64>();
-
+    
 
 }
 Y_UTEST_DONE()
