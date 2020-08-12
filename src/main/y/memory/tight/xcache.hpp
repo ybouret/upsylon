@@ -53,8 +53,11 @@ namespace upsylon {
                 {
                 }
 
-                inline T *acquire() { return static_cast<T*>(xcache::acquire()); }
+                inline T   *acquire() { return static_cast<T*>(xcache::acquire()); }
+                inline void release(T *p) throw() { xcache::release( (void*)p ); }
 
+                inline T   *acquire_unlocked()             {return static_cast<T*>(xcache::acquire_unlocked()); }
+                inline void release_unlocked(T *p) throw() { xcache::release_unlocked( (void*)p ); }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(xcache_of);

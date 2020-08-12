@@ -32,12 +32,14 @@ namespace upsylon
         {
             prune();
 
+
             while( bytes.size )
             {
-                static const network &nw = network::location();
-                nw.release_byte_node( bytes.pop_back() );
+                static network &nw = network::location();
+                nw.byte_nodes.release( bytes.pop_back() );
             }
-            
+
+
             memset(buffer,0,allocated);
             memory::pooled::location().release_bytes(buffer,allocated);
             _bzset(block_size);
@@ -53,8 +55,8 @@ namespace upsylon
         {
             while( bpool.size )
             {
-                static const network &nw = network::location();
-                nw.release_byte_node( bpool.query() );
+                static   network &nw = network::location();
+                nw.byte_nodes.release( bpool.query() );
             }
         }
 
@@ -71,8 +73,8 @@ namespace upsylon
 
         byte_node * tcp_queue:: to_node(const uint8_t code)
         {
-            static const network &nw = network::instance();
-            return byte_node_fmt( (bpool.size>0) ? bpool.query() : nw.acquire_byte_node() ,code);
+            static network &nw = network::instance();
+            return byte_node_fmt( (bpool.size>0) ? bpool.query() : nw.byte_nodes.acquire() ,code);
         }
 
 

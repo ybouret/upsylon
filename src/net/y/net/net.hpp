@@ -3,7 +3,7 @@
 #define Y_NETWORK_INCLUDED 1
 
 #include "y/net/socket/addr-ex.hpp"
-#include "y/memory/tight/hoard.hpp"
+#include "y/memory/tight/xcache.hpp"
 #include "y/string.hpp"
 
 namespace upsylon
@@ -13,15 +13,15 @@ namespace upsylon
     class network : public singleton<network>
     {
     public:
+        typedef memory::tight::xcache_of<net::byte_node> byte_nodes_cache;
+
         static bool verbose;          //!< mostly to debug
         string get_host_name() const; //!< get host name
 
         //! create a socket
         net::socket_type open(const net::ip_protocol proto, const net::ip_version version);
 
-        net::byte_node *acquire_byte_node() const;                           //!< acquire byte_node
-        void            release_byte_node( net::byte_node * ) const throw(); //!< release a byte_node
-
+        
         //! resolve the address, preserving the port
         void resolve( net::socket_address &ip, const string &s ) const;
 
@@ -33,6 +33,8 @@ namespace upsylon
         static const uint16_t final_user_port = 65535; //!< for information
         static const uint16_t user_port_width;         //!< final_user_port-first_user_port+1;
 
+        byte_nodes_cache byte_nodes;
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(network);
         explicit network();

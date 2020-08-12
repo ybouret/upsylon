@@ -7,8 +7,6 @@
 #include <cerrno>
 #endif
 
-#include "y/memory/arena-of.hpp"
-#include "y/type/self-destruct.hpp"
 #include "y/type/block/zset.hpp"
 
 namespace upsylon
@@ -23,34 +21,9 @@ namespace upsylon
         static WSADATA wsa;
 #endif
 
-        typedef memory::arena_of<net::byte_node> byte_node_arena;
-        static uint64_t ___byte_node_arena[Y_U64_FOR_ITEM(byte_node_arena)];
-
-        static inline byte_node_arena & __byte_node_arena()
-        {
-            return * aliasing::as<byte_node_arena>( ___byte_node_arena );
-        }
-
-        static inline void __zero_byte_node_arena() throw()
-        {
-            Y_BZSET_STATIC(___byte_node_arena);
-        }
 
     }
 
-    net::byte_node * network:: acquire_byte_node() const
-    {
-        Y_LOCK(access);
-        static byte_node_arena &a = __byte_node_arena();
-        return a.acquire();
-    }
-
-    void network:: release_byte_node( net::byte_node *p) const throw()
-    {
-        Y_LOCK(access);
-        static byte_node_arena &a = __byte_node_arena();
-        a.release(p);
-    }
 
     bool network::verbose = false;
 
@@ -64,8 +37,7 @@ namespace upsylon
         // cleanup local stuff...
         //
         //----------------------------------------------------------------------
-        self_destruct( __byte_node_arena() );
-        __zero_byte_node_arena();
+
 
 
         //----------------------------------------------------------------------
@@ -79,7 +51,8 @@ namespace upsylon
     }
 
 
-    network:: network()
+    network:: network() :
+    byte_nodes( object::proto() )
     {
         Y_NET_VERBOSE(std::cerr << "[network.startup]" << std::endl);
         Y_GIANT_LOCK();
@@ -106,8 +79,7 @@ namespace upsylon
         // local stuff...
         //
         //----------------------------------------------------------------------
-        __zero_byte_node_arena();
-        new ( aliasing::anonymous(___byte_node_arena) ) byte_node_arena(Y_CHUNK_SIZE);
+        
     }
 
 

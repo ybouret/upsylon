@@ -52,7 +52,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(tight_compact);
     Y_UTEST(tight_vein);
     Y_UTEST(tight_quarry);
-    Y_UTEST(tight_mt);
     Y_UTEST(tight_object);
 
     Y_UTEST(joint_section);

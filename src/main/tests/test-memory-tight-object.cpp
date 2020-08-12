@@ -127,12 +127,45 @@ Y_UTEST(tight_object)
 
     std::cerr << mgr.Quarry << std::endl;
 
+    std::cerr << std::endl;
+    std::cerr << "-- testing xcache..." << std::endl;
     {
         for(size_t bs=1;bs<=mgr.Blocks.limit_size;++bs)
         {
             tight::xcache xc(mgr,bs);
+            void        *reg[1000];
+            const size_t num = sizeof(reg)/sizeof(reg[0]);
+            for(size_t i=0;i<num;++i)
+            {
+                reg[i] = xc.acquire();
+            }
+            alea.shuffle(reg,num);
+            for(size_t i=0;i<num;++i)
+            {
+                xc.release(reg[i]);
+            }
         }
+
+        {
+            tight::xcache_of<blk_t> xc(mgr);
+            {
+                blk_t       *reg[10000];
+                const size_t num = sizeof(reg)/sizeof(reg[0]);
+                for(size_t i=0;i<num;++i)
+                {
+                    reg[i] = xc.acquire();
+                }
+                alea.shuffle(reg,num);
+                for(size_t i=0;i<num;++i)
+                {
+                    xc.release(reg[i]);
+                }
+            }
+        }
+
     }
+    std::cerr << mgr.Quarry << std::endl;
+    std::cerr << "-- done" << std::endl << std::endl;
 
     
 }
