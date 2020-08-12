@@ -75,9 +75,9 @@ words( acquire(count,width,shift) )
                 release(words,count,width, shift);
             }
 
-            inline explicit natural() : Y_SIBYL_NATURAL_CTOR(0) {}
+            inline  natural() : Y_SIBYL_NATURAL_CTOR(0) {}
 
-            inline explicit natural(const size_t n, const as_capacity_t &) : Y_SIBYL_NATURAL_CTOR(n) {}
+            inline  natural(const size_t n, const as_capacity_t &) : Y_SIBYL_NATURAL_CTOR(n) {}
 
             inline void xch( natural &_ ) throw()
             {
@@ -88,7 +88,7 @@ words( acquire(count,width,shift) )
                 cswap(words,_.words);
             }
 
-            inline explicit natural(utype u) : Y_SIBYL_NATURAL_CTOR(sizeof(utype))
+            inline natural(utype u) : Y_SIBYL_NATURAL_CTOR(sizeof(utype))
             {
                 static const size_t nw = sizeof(utype)>>word_exp2;
                 std::cerr << "copy #words=" << nw << std::endl;
@@ -97,10 +97,17 @@ words( acquire(count,width,shift) )
                     words[iw] = word_type(u);
                     u >>= word_bits;
                 }
+                update();
             }
 
-            //! access all addressable bytes
-            uint8_t &get(const size_t indx) const throw()
+            inline natural(const natural &_) : Y_SIBYL_NATURAL_CTOR(_.bytes)
+            {
+                memcpy(words,_.words,bytes);
+            }
+
+
+            //! access all addressable bytes in 0..width-1
+            inline uint8_t &get(const size_t indx) const throw()
             {
                 assert(indx<width);
                 const word_type &w = words[ indx >> word_exp2];
@@ -115,7 +122,7 @@ words( acquire(count,width,shift) )
 
             inline void  display(std::ostream &os ) const
             {
-                for(size_t i=width;i>0;)
+                for(size_t i=bytes;i>0;)
                 {
                     --i;
                      os<< hexadecimal::lowercase[ get(i) ];
@@ -128,13 +135,24 @@ words( acquire(count,width,shift) )
                 return os;
             }
 
+            //! decrease bytes to first not 0
+            inline void update() throw()
+            {
+                size_t curr = bytes;
+                size_t prev = curr-1;
+                while(curr>0&&get(prev)<=0)
+                    curr = prev--;
+                bytes = curr;
+             }
 
-
-
-
-
+            //! set bytes to width and update
+            inline void upgrade() throw()
+            {
+                bytes=width;
+                update();
+            }
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(natural);
+            Y_DISABLE_ASSIGN(natural);
         };
 
     }

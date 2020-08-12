@@ -40,6 +40,10 @@ namespace {
         Unsigned abcd( 0x0a0b0c0d );
         std::cerr << "abcd = " << abcd << std::endl;
 
+        Unsigned temp(abcd);
+        std::cerr << "temp = " << temp << std::endl;
+
+
 
         std::cerr << std::endl;
     }
