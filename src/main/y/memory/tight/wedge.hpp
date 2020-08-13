@@ -4,6 +4,7 @@
 #define Y_MEMORY_TIGHT_WEDGE_INCLUDED 1
 
 #include "y/code/round.hpp"
+#include "y/type/cswap.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -76,6 +77,8 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
 
+
+
                 //! detect ownership
                 inline bool owns(const void *addr) const throw()
                 {
@@ -119,7 +122,15 @@ namespace upsylon
                     ++still_available;
                 }
 
-                
+                //! no-throw swap
+                inline void swap_with( wedge &other ) throw()
+                {
+                    _cswap(first_available,other.first_available);
+                    _cswap(data,other.data);
+                    _cswap(still_available,other.still_available);
+                    _cswap(provided_number,other.provided_number);
+                    _cswap(last,other.last);
+                }
 
                 size_t               first_available; //!< for internal status
                 size_t              *data;            //!< first entry
