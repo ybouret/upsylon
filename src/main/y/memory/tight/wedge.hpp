@@ -4,7 +4,6 @@
 #define Y_MEMORY_TIGHT_WEDGE_INCLUDED 1
 
 #include "y/code/round.hpp"
-#include "y/type/cswap.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -83,8 +82,7 @@ namespace upsylon
                     return block_size * num_objects;
                 }
 
-
-
+                
                 //! detect ownership
                 inline bool owns(const void *addr) const throw()
                 {
@@ -97,13 +95,6 @@ namespace upsylon
                 {
                     return still_available>=provided_number;
                 }
-
-#if 0
-                inline size_t capacity() const throw()
-                {
-                    return provided_number;
-                }
-#endif
 
                 //! get a block
                 inline T *acquire() throw()
@@ -135,17 +126,7 @@ namespace upsylon
                     ++still_available;
                     assert(still_available<=provided_number);
                 }
-
-                //! no-throw swap
-                inline void swap_with( wedge &other ) throw()
-                {
-                    _cswap(first_available,other.first_available);
-                    _cswap(data,other.data);
-                    _cswap(still_available,other.still_available);
-                    _cswap(provided_number,other.provided_number);
-                    _cswap(last,other.last);
-                }
-
+                
                 size_t               first_available; //!< for internal status
                 size_t              *data;            //!< first entry
                 size_t               still_available; //!< blocks ready for use

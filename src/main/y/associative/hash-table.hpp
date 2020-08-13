@@ -48,10 +48,10 @@ namespace upsylon
 
             //! default initialization
 #define Y_CORE_HASH_TABLE_CTOR() hash_table_info(), chain(),slot(0),slots(0),smask(0),items(0),nodes(0,0),metas(0,0),buffer(0),allocated(0)
+
             //! empty table
-            inline  hash_table() throw() : Y_CORE_HASH_TABLE_CTOR()
-            {
-            }
+            inline  hash_table() throw() : Y_CORE_HASH_TABLE_CTOR() {}
+
 
             //! self content n objects
             inline  hash_table(const size_t n) throw() :  Y_CORE_HASH_TABLE_CTOR()
@@ -109,13 +109,13 @@ namespace upsylon
             //! no throw swap
             inline void swap_with( hash_table &other ) throw()
             {
-                bswap(chain,other.chain);
+                upsylon::bswap(chain,other.chain);
                 upsylon::cswap(slot,other.slot);
                 upsylon::cswap(slots,other.slots);
                 upsylon::cswap(smask,other.smask);
                 upsylon::cswap(items,other.items);
-                nodes.swap_with(other.nodes);
-                metas.swap_with(other.metas);
+                upsylon::bswap(nodes,other.nodes);
+                upsylon::bswap(metas,other.metas);
                 upsylon::cswap(buffer,other.buffer);
                 upsylon::cswap(allocated,other.allocated);
             }

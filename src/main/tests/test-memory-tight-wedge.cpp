@@ -32,9 +32,11 @@ namespace {
     template <size_t N>
     void testWedge()
     {
-        typedef dummy<N> type;
-        std::cerr << "sizeof(type)=" << sizeof(type) << std::endl;
+        typedef dummy<N>           type;
         typedef tight::wedge<type> wedge;
+        std::cerr << "sizeof(type) =" << sizeof(type) << std::endl;
+        std::cerr << "sizeof(wedge)=" << sizeof(wedge) << std::endl;
+
         std::cerr << "wedge.block_size=" << wedge::block_size << std::endl;
         std::cerr << "wedge.block_step=" << wedge::block_step << std::endl;
 
