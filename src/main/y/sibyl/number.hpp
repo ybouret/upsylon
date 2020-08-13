@@ -33,19 +33,22 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static  const size_t                         sys_core_size = sizeof(void*);
-            typedef unsigned_int<sys_core_size>::type    sys_core_type;
 
-            typedef unsigned_int<sizeof(uint64_t)>::type max_core_type;
-            static  const size_t                         max_core_size   = sizeof(max_core_type);
-            static  const size_t                         max_word_size = max_core_size >> 1;
+            // system
+            static  const size_t                         sys_core_size = sizeof(void*); //!<  system unsigned size
+            typedef unsigned_int<sys_core_size>::type    sys_core_type;                 //!<  system unsigned type
+
+            // widest
+            typedef unsigned_int<sizeof(uint64_t)>::type max_core_type;                         //!< 64 bits computation ?
+            static  const size_t                         max_core_size = sizeof(max_core_type); //!< its size
+            static  const size_t                         max_word_size = max_core_size >> 1;    //!< maximal word size
 
             //__________________________________________________________________
             //
             // helpers
             //__________________________________________________________________
-            static memory_allocator &instance();
-            static memory_allocator &location() throw();
+            static memory_allocator &instance();          //!< internal dedicated memory
+            static memory_allocator &location() throw();  //!< internal dedicated memory
 
             //__________________________________________________________________
             //

@@ -104,6 +104,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
 
             //! copy constructor
             inline natural(const natural &other) :
+            number(),
             bytes(other.bytes),
             words(other.words),
             count(words),
@@ -212,6 +213,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
 #endif
             }
 
+            //! display value
             inline void  display(std::ostream &os) const
             {
                 Y_SIBYL_NATURAL_CHECK(*this);
@@ -222,6 +224,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 }
             }
 
+            //! output operator
             inline friend std::ostream & operator<<( std::ostream &os, const natural &n )
             {
                 n.display(os);
@@ -241,7 +244,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 return ans;
             }
 
-            //! number of bits
+            //! compute number of bits
             inline size_t bits() const throw()
             {
                 if(bytes<=0)
@@ -257,6 +260,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 }
             }
 
+            //! get bit flag at position ibit<bits()
             inline bool get_bit(const size_t ibit) const throw()
             {
                 assert(ibit<bits());
