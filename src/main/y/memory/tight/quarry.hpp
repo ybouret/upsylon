@@ -51,6 +51,7 @@ namespace upsylon {
 
                 vein & operator[](const size_t shift)      throw(); //!< get the vein for a given shift
                 vein & operator()(const size_t chunk_size) throw(); //!< self[ exp2_of(chunk_size) ]
+                void   optimize() throw();                          //!< optimize all veins
 
                 //______________________________________________________________
                 //

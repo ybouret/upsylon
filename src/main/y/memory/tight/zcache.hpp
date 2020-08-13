@@ -5,6 +5,7 @@
 
 #include "y/memory/tight/quarry.hpp"
 #include "y/core/pool.hpp"
+#include "y/sort/merge.hpp"
 #include "y/type/block/zset.hpp"
 
 namespace upsylon {
@@ -22,7 +23,11 @@ namespace upsylon {
             //__________________________________________________________________
             struct __zcache
             {
-                static const size_t header = sizeof(void*);                         //!< reserved bytes for intenal linking
+                // types and definitions
+                struct part { part  *next; };                                       //!< binary layout for part
+                static const size_t header = sizeof(part);                          //!< reserved bytes for intenal linking
+
+                // helpers
                 static size_t chunk_size_from(const size_t, const size_t) throw();  //!< next_power_of_two(max_of(,,stones::min_size))
                 static void  *first(void *)                               throw();  //!< translated address
                 static void   missing(const size_t,const unsigned)        throw();  //!< display missing node
@@ -48,6 +53,9 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
+                typedef __zcache::part      part;       //!< alias
+                typedef core::pool_of<part> parts_type; //!< alias
+                typedef core::list_of<NODE> nodes_type; //!< alias
 
                 //! minimal increase in nodes per allocation
                 static const size_t min_nodes_rise = 2;
@@ -96,7 +104,7 @@ namespace upsylon {
                 /**
                  a memory area is formatted like this:
                  part = {part *next;...;node[0]..node[nodes_rise-1];...}
-                 |header|<-          nodes              ->|nope | (chunk_size)
+                 =      |header|<-          nodes              ->|nope | (chunk_size)
                  */
                 inline NODE *zquery()
                 {
@@ -159,13 +167,32 @@ namespace upsylon {
                 const size_t chunk_size; //!< new bytes per allocation
                 const size_t nodes_rise; //!< new nodes per allocation
 
+                void gc() throw()
+                {
+                    // top parts are the most increased memory
+                    // so sort nodes by increasing memory and
+                    // start from the end
+                    merging<NODE>::sort_by_addr(nodes);
+                    parts_type  tmp_parts;
+                    nodes_type  tmp_nodes;
+                    while(parts.size)
+                    {
+                        part *p = parts.query(); assert(p->next||p->next<p);
+                        
+                        tmp_parts.store(p);
+                    }
+
+                    // restore pages
+                    while( tmp_parts.size ) parts.store( tmp_parts.query() );
+
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(zcache);
-                struct part { part  *next; }; //!< binary layout for part
-                vein               &memIO;    //!< for alloc/free of parts with same size
-                core::list_of<NODE> nodes;    //!< usable nodes
-                core::pool_of<part> parts;    //!< holding all nodes
+
+                vein      &memIO;    //!< for alloc/free of parts with same size
+                nodes_type nodes;    //!< usable nodes
+                parts_type parts;    //!< holding all nodes
 
                 inline bool owned_by(const part *p, const NODE *n) const throw()
                 {
@@ -174,6 +201,7 @@ namespace upsylon {
                     const NODE *last = base + nodes_rise;
                     return n>=base&&n<last;
                 }
+
 
                 
             };

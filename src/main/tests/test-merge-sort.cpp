@@ -30,7 +30,7 @@ namespace {
 
 
     template <typename NODE>
-    struct merging {
+    struct Merging {
 
         typedef core::list_of<NODE> list_base;
 
@@ -118,7 +118,7 @@ Y_UTEST(merge_sort)
         std::cerr << *D.tail << std::endl;
     }
 
-    merging<dummy>::sort(D,NULL,NULL);
+    Merging<dummy>::sort(D,NULL,NULL);
 }
 Y_UTEST_DONE()
 

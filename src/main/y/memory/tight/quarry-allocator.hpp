@@ -100,6 +100,9 @@ namespace upsylon {
                 //! access internal quarry R/O
                 const quarry & operator*() const throw();
 
+                //! locked optimization
+                void optimize() throw();
+
             private:
                 lockable &Access;
                 quarry   &Quarry;

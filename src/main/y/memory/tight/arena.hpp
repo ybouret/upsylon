@@ -66,7 +66,7 @@ namespace upsylon {
             private:
                 chunk               *acquiring; //!< current acquiring piece
                 chunk               *releasing; //!< current acquiring piece
-                chunk               *empty_one; //!< empty piece
+                chunk               *empty_one; //!< empty chunk
                 size_t               available; //!< bookkeeping of available blocks
                 core::list_of<chunk> chunks;    //!< chunks, sorted by increasing memory
 
@@ -82,7 +82,7 @@ namespace upsylon {
 
             public:
                 const size_t   blocks_per_chunk; //!< acquiring->provided_number
-                const size_t   reserved;         //!< sizeof=64/128
+                const size_t   reserved;         //!< sizeof(arena)=64/128
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(arena);

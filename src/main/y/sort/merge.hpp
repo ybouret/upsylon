@@ -75,7 +75,7 @@ namespace upsylon
         
         static inline int compare_nodes_addr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
-            return int( static_cast<ptrdiff_t>(rhs-lhs) );
+            return int( static_cast<ptrdiff_t>(lhs-rhs) );
         }
     };
 }

@@ -92,6 +92,11 @@ namespace upsylon {
             }
 
 
+            void  quarry_allocator:: optimize() throw()
+            {
+                Y_LOCK(Access);
+                Quarry.optimize();
+            }
 
 
 

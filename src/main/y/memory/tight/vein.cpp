@@ -100,10 +100,47 @@ namespace upsylon {
                 const human_readable hr_used = s.committed() * s.block_size;
                 const human_readable hr_maxi = s.count * s.block_size;
                 os << " ("<< hr_used << "/" << hr_maxi <<")";
-                 os << "}";
+                os << "}";
                 return os;
             }
 
+
+            void  vein:: optimize() throw()
+            {
+                {
+                    core::list_of<ingot> ingots;
+                    while(chest.size) {
+                        ingots.push_back(chest.query());
+                    }
+                    merging<ingot>::sort_by_addr(ingots);
+#if !defined(NDEBUG)
+                    {
+                        const ingot *node = ingots.head;
+                        while(node&&node->next)
+                        {
+                            assert(node<node->next);
+                            node=node->next;
+                        }
+                    }
+#endif
+
+                    while (ingots.size)
+                    {
+                        chest.store(ingots.pop_front());
+                    }
+                }
+
+#if !defined(NDEBUG)
+                {
+                    const ingot *node = chest.head;
+                    while(node&&node->next)
+                    {
+                        assert(node>node->next);
+                        node=node->next;
+                    }
+                }
+#endif
+            }
         }
     }
 }

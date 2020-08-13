@@ -39,10 +39,21 @@ namespace {
             std::cerr << "nodes = " << std::setw(5) << nodes.size << std::endl;
             alea.shuffle(nodes);
 
+            const size_t h=nodes.size/2;
+
+            while(nodes.size>h)
+            {
+                cache.zstore( nodes.pop_back() );
+            }
+
+            cache.gc();
+
             while(nodes.size)
             {
                 cache.zstore( nodes.pop_back() );
             }
+
+            cache.gc();
         }
         std::cerr << Q << std::endl;
     }

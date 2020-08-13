@@ -65,6 +65,13 @@ namespace upsylon {
                 return Blocks.acquire(block_size);
             }
 
+            void  objects:: optimize() throw()
+            {
+                Y_LOCK(Access);
+                Quarry.optimize();
+            }
+
+
             void objects:: release(void *addr, const size_t block_size) throw()
             {
                 Y_LOCK(Access);

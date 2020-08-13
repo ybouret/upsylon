@@ -59,6 +59,8 @@ Y_UTEST(tight_vein)
         }
         Y_ASSERT(0==n);
         std::cerr << "|_has " << S.available() * S.block_size << " bytes" << std::endl;
+
+        S.optimize();
     }
     
     std::cerr << "tight::vein::min_shift=" << tight::vein::min_exp2 << std::endl;

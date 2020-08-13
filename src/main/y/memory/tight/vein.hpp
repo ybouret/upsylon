@@ -22,7 +22,7 @@ namespace upsylon {
             /**
              - used as a cache of bytes=2^shift in interaction with
              the memory::global allocator calloc/free
-             - all the blocks (a.k.a) ingots are used in a linked list when
+             - all the blocks (a.k.a) ingots are used in a pool when
              they are store, so that they need to be big enough to hold sizeof(ingot)
              */
             //
@@ -35,7 +35,7 @@ namespace upsylon {
                 // types and definitions
                 //______________________________________________________________
                 typedef core::pool_of<ingot> chest_type;                 //!< alias
-                static  const size_t one       = 1;                      //!< alias
+                static  const size_t one      = 1;                       //!< alias
                 static  const size_t min_exp2 = ilog2_of<ingot>::value;  //!< to hold a stone
                 static  const size_t min_size = one << min_exp2;         //!< to hold a stone
                 static  const size_t max_exp2 = (sizeof(size_t)<<3)-1;   //!< theoretical
@@ -52,11 +52,11 @@ namespace upsylon {
                 //
                 // methods
                 //______________________________________________________________
-                void * acquire();                      //!< get/create an ingot, may be dirty
+                void * acquire();                      //!< get/create an ingot, !!may be dirty!!
                 void   release(void *)        throw(); //!< store a previously allocated ingot
                 size_t committed()      const throw(); //!< committed = count-chest.size
                 size_t available()      const throw(); //!< chest.size
-
+                void   optimize() throw();             //!< rearrange chest
                 
                 //______________________________________________________________
                 //

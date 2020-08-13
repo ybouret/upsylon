@@ -167,6 +167,9 @@ Y_UTEST(tight_object)
     std::cerr << mgr.Quarry << std::endl;
     std::cerr << "-- done" << std::endl << std::endl;
 
+    std::cerr << "optimization..." << std::endl;
+    mgr.optimize();
+
     
 }
 Y_UTEST_DONE()

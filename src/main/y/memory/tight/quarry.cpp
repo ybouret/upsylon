@@ -136,6 +136,15 @@ namespace upsylon {
                 assert(chunk_exp2<=vein::max_exp2);
                 return chunk_exp2;
             }
+
+            void quarry:: optimize() throw()
+            {
+                for(size_t shift=vein::min_exp2;shift<=vein::max_exp2;++shift)
+                {
+                    vein &v = ore[shift];
+                    v.optimize();
+                }
+            }
         }
 
     }

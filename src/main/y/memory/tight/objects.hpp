@@ -69,14 +69,17 @@ namespace upsylon {
                 
                 //! release a 2^n block
                 void  dyadic_release(void *addr, const size_t block_exp2) throw();
-                
+
+                //! locked optimization or Quarry
+                void  optimize() throw();
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 lockable &Access; //!< persistent synchro object
                 quarry    Quarry; //!< for all 2^n allocation
-                blocks    Blocks; //!< for 1..limit_size
+                blocks    Blocks; //!< for 1..limit_size + caches
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(objects);
