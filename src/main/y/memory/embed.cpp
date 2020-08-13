@@ -13,17 +13,31 @@ namespace upsylon
 
         embed:: embed(void **pp, const size_t nb) throw() :
         params(0,nb),
-        ppHead( pp )
+        policy(by_hook)
         {
-            assert( ppHead );
-            assert( NULL == *ppHead );
+
+            hook = pp;
+            assert(NULL!=  hook);
+            assert(NULL== *hook);
             assert( params.length>0 );
         }
 
+        embed:: embed(const size_t nb) throw() :
+        params(0,nb),
+        policy(by_addr)
+        {
+
+            addr=NULL;
+            assert( params.length>0 );
+        }
+
+
+
         embed:: embed( const embed &other ) throw() :
         params( other.params ),
-        ppHead( other.ppHead )
+        policy( other.policy )
         {
+            addr = other.addr;
         }
 
         void * embed:: create(embed             *emb,
@@ -49,8 +63,8 @@ namespace upsylon
             //------------------------------------------------------------------
             // allocated memory
             //------------------------------------------------------------------
-            if(data) *data = bytes;
-            void     *addr = mem.acquire(bytes);
+            if(data) *data = bytes;              // exact count
+            void     *addr = mem.acquire(bytes); // now may be greater
 
             //------------------------------------------------------------------
             // link
@@ -61,7 +75,12 @@ namespace upsylon
                 {
                     embed &em    = emb[i];
                     assert(0==(em.params.offset%Y_MEMORY_ALIGNED));
-                    *(em.ppHead) = &p[ em.params.offset ];
+                    void  *field  = &p[ em.params.offset ];
+                    switch(em.policy)
+                    {
+                        case by_hook: (*em.hook) = field; break;
+                        case by_addr:   em.addr  = field; break;
+                    }
                 }
             }
 

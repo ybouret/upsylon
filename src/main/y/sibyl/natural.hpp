@@ -134,7 +134,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 return *this;
             }
 
-            //! build from bits
+            //! build from random bits
             inline natural( randomized::bits &ran, const size_t bits ) : Y_MPN_CTOR( Y_ROUND8(bits)>>3 )
             {
                 if(bits)

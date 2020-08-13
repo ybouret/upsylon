@@ -13,21 +13,36 @@ namespace upsylon
         class embed
         {
         public:
+            //! direct or indirect memory set
+            enum kind
+            {
+                by_hook, //! pointer to address
+                by_addr  //! just set address
+            };
+
             //! cleanup
             ~embed() throw();
 
-            //! prepare data
+            //! prepare data by hook
             /**
              \param pp a pointer (not NULL) on a (NULL) address
              \param nb number of bytes
              */
             embed(void **pp, const size_t nb) throw();
 
+            //! prepare data by addr
+            embed(const size_t nb) throw();
+
             //! no throw copy for sequence
             embed(const embed &other ) throw();
 
             const marker params; //!< initialized to (0,length)
-            void       **ppHead; //!< pointer to address
+            const kind   policy; //!< kind type
+            union         
+            {
+                void *  addr;
+                void ** hook;
+            };
 
             //! acquire memory and dispatch chunks
             /**

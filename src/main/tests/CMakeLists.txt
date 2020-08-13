@@ -99,7 +99,6 @@ test-memory-tight-wedge.cpp
 test-memory-zblock.cpp
 )
 ADD_TEST(mem:alloc         test-main alloc)
-ADD_Test(mem:slab          test-main slab)
 ADD_TEST(mem:object0       test-main object0)
 ADD_TEST(mem:objectY       test-main objectY)
 ADD_TEST(mem:xslot         test-main xslot)

@@ -3,13 +3,15 @@
 #define Y_HASH_TABLE_INCLUDED 1
 
 #include "y/core/addr-list.hpp"
-#include "y/memory/tight/wedge.hpp"
 #include "y/type/utils.hpp"
 #include "y/container/container.hpp"
 #include "y/sort/merge.hpp"
 #include "y/type/block/swap.hpp"
 #include "y/code/base2.hpp"
+
 #include "y/memory/allocator/global.hpp"
+#include "y/memory/embed.hpp"
+#include "y/memory/tight/wedge.hpp"
 
 namespace upsylon
 {
@@ -305,21 +307,19 @@ namespace upsylon
             {
                 if(n>0)
                 {
-                    static memory::allocator &hmem = ALLOCATOR::instance();
+                    static memory::allocator &hmem      = ALLOCATOR::instance();
+                    const size_t              num_slots = next_power_of_two(max_of<size_t>(n/load_factor,min_slots));
+                    memory::embed emb[] =
+                    {
+                        memory::embed::as(slot,num_slots),
+                        memory::embed(node_slab::bytes_for(n)),
+                        memory::embed(meta_slab::bytes_for(n))
+                    };
 
-                    const size_t num_slots    = next_power_of_two(max_of<size_t>(n/load_factor,min_slots));
-                    const size_t slots_offset = 0;
-                    const size_t slots_length = num_slots * sizeof(slot_type);
-                    const size_t nodes_offset = memory::align(slots_offset+slots_length);
-                    const size_t nodes_length = node_slab::bytes_for(n);
-                    const size_t metas_offset = memory::align(nodes_offset+nodes_length);
-                    const size_t metas_length = meta_slab::bytes_for(n);
-
-                    allocated = memory::align(metas_offset+metas_length);
-                    char *p   = static_cast<char *>( buffer    = hmem.acquire(allocated) );
-                    slot      = static_cast<slot_type *>( (void *) &p[slots_offset] );
-                    new ( &nodes ) node_slab( &p[nodes_offset], nodes_length );
-                    new ( &metas ) meta_slab( &p[metas_offset], metas_length );
+                    buffer = memory::embed::create(emb,3,hmem,allocated);
+                    assert(slot);
+                    new ( &nodes ) node_slab( emb[1].addr, emb[1].params.length );
+                    new ( &metas ) meta_slab( emb[2].addr, emb[2].params.length );
                     slots = num_slots;
                     smask = num_slots-1;
                     items = n;
