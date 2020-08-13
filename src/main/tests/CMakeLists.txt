@@ -94,6 +94,7 @@ test-memory-tight-blocks.cpp
 test-memory-tight-vein.cpp
 test-memory-tight-quarry.cpp
 test-memory-tight-object.cpp
+test-memory-tight-wedge.cpp
 test-memory-zblock.cpp
 )
 ADD_TEST(mem:chunk         test-main chunk)
@@ -116,6 +117,7 @@ ADD_TEST(mem:tight:compact test-main tight_compact)
 ADD_TEST(mem:tight:vein    test-main tight_vein)
 ADD_TEST(mem:tight:quarry  test-main tight_quarry)
 ADD_TEST(mem:tight:object  test-main tight_object)
+ADD_TEST(mem:tight:wedge   test-main tight_wedge)
 ADD_TEST(mem:joint:section test-main joint_section)
 ADD_TEST(mem:joint:ward    test-main joint_ward)
 ADD_TEST(mem:joint:compact test-main joint_compact)
