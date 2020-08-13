@@ -47,6 +47,14 @@ namespace {
             Unsigned temp(abcd);
             std::cerr << "abcd = " << abcd << "/" << temp << std::endl;
             Y_ASSERT( Unsigned::eq(abcd,temp) );
+            const size_t nb=abcd.bits();
+            std::cerr << "#bits=" << nb << " : ";
+            for(size_t n=nb;n>0;)
+            {
+                const bool flag = abcd.get_bit(--n);
+                std::cerr << (flag?'1':'0');
+            }
+            std::cerr << std::endl;
         }
 
         std::cerr << std::hex;
@@ -63,7 +71,12 @@ namespace {
 
         }
 
-
+        for(size_t bits=0;bits<=100;++bits)
+        {
+            Unsigned r(alea,bits);
+            std::cerr << "ran=" << r << std::endl;
+            Y_ASSERT(r.bits()==bits);
+        }
 
         std::cerr << std::endl;
     }

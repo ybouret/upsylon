@@ -11,14 +11,15 @@
 #include "y/code/round.hpp"
 #include "y/code/utils.hpp"
 #include "y/os/endian.hpp"
+#include "y/randomized/bits.hpp"
 
 namespace upsylon {
 
 
     namespace sibyl {
 
-        
-#define Y_SIBYL_NATURAL_CTOR(BYTES) \
+        //! constructor setup to prepare for BYTES
+#define Y_MPN_CTOR(BYTES)           \
 number(),                           \
 bytes(0),                           \
 words(0),                           \
@@ -27,7 +28,9 @@ width(0),                           \
 shift(0),                           \
 word( acquire(count,width,shift) )
 
+
 #if !defined(NDEBUG)
+        //! full consistency checking
 #define Y_SIBYL_NATURAL_CHECK(HOST) do { \
 assert( (HOST).words ==  words_for( (HOST).bytes ) );\
 assert( (HOST).words <= (HOST).count ); \
@@ -53,13 +56,13 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             //
             // types and definition
             //__________________________________________________________________
-            static const size_t                            word_bits = Y_ROUND8(WORD_BITS);     //!< aligned WORD_BITS
-            static const size_t                            word_size = word_bits >> 3;          //!< sizeof(word)
-            static const size_t                            word_exp2 = ilog2<word_size>::value; //!< word_size = 1 << word_exp2
-            static const size_t                            word_mask = word_size-1;             //!< to compute modulo within a word
-            typedef typename unsigned_int<word_size>::type word_type;                           //!< external word to work with
-            static  const size_t                           min_core_size = word_size << 1;      //!< internal core to compute with
-            static const word_type                         max_word      = limit_of<word_type>::maximum;
+            static const size_t                            word_bits = Y_ROUND8(WORD_BITS);              //!< aligned WORD_BITS
+            static const size_t                            word_size = word_bits >> 3;                   //!< sizeof(word)
+            static const size_t                            word_exp2 = ilog2<word_size>::value;          //!< word_size = 1 << word_exp2
+            static const size_t                            word_mask = word_size-1;                      //!< to compute modulo within a word
+            typedef typename unsigned_int<word_size>::type word_type;                                    //!< external word to work with
+            static  const size_t                           min_core_size = word_size << 1;               //!< internal core to compute with
+            static const word_type                         max_word      = limit_of<word_type>::maximum; //!< single word max value
             //! try to use system core type, otherwise fallback on largest type
             static  const size_t                           core_size     = (min_core_size>sys_core_size) ? max_core_size : sys_core_size;
             //! validate size
@@ -70,7 +73,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
 
             //__________________________________________________________________
             //
-            // C++
+            // C++ with different constructors/assigns...
             //__________________________________________________________________
 
             //! cleanup
@@ -81,13 +84,13 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             }
 
             //! default constructor: 0
-            inline  natural() : Y_SIBYL_NATURAL_CTOR(0) { Y_SIBYL_NATURAL_CHECK(*this); }
+            inline  natural() : Y_MPN_CTOR(0) { Y_SIBYL_NATURAL_CHECK(*this); }
 
             //! default constructor with some capacity
-            inline  natural(const size_t n, const as_capacity_t &) : Y_SIBYL_NATURAL_CTOR(n) { Y_SIBYL_NATURAL_CHECK(*this); }
+            inline  natural(const size_t n, const as_capacity_t &) : Y_MPN_CTOR(n) { Y_SIBYL_NATURAL_CHECK(*this); }
 
             //! construct from an integral type
-            inline natural(utype u) : Y_SIBYL_NATURAL_CTOR(sizeof(utype))
+            inline natural(utype u) : Y_MPN_CTOR(sizeof(utype))
             {
                 Y_SIBYL_NATURAL_CHECK(*this);
                 for(size_t iw=0;iw<words_per_utype;++iw)
@@ -129,9 +132,41 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 Y_SIBYL_NATURAL_CHECK(*this);
                 return *this;
             }
-            
 
-            
+            //! build from bits
+            inline natural( randomized::bits &ran, const size_t bits ) : Y_MPN_CTOR( Y_ROUND8(bits)>>3 )
+            {
+                if(bits)
+                {
+                    size_t ibit = bits-1;  // must be set to 1
+                    size_t imsb = ibit>>3; // at this byte
+                    // prepare MSBD
+                    {
+                        uint8_t &b = get(imsb);
+                        ibit      &= 7;
+                        b = bits_table::value[ibit];
+                        while(ibit-- > 0)
+                        {
+                            if(ran.choice()) b |= bits_table::value[ibit];
+                        }
+                    }
+
+                    // fill
+                    for(size_t i=0;i<imsb;++i)
+                    {
+                        get(i) = ran.full<uint8_t>();
+                    }
+
+                    // update status
+                    bytes = ++imsb;
+                    words = words_for(bytes);
+
+
+
+                }
+            }
+
+
             //__________________________________________________________________
             //
             // methods
@@ -222,15 +257,24 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 }
             }
 
+            inline bool get_bit(const size_t ibit) const throw()
+            {
+                assert(ibit<bits());
+                const uint8_t b = get(ibit>>3);
+                return 0 != (b&bits_table::value[ibit&7]);
+            }
+
+            //! locally prepare an utype into a nw words at pw
 #define Y_MPN_U2W(ARGS) size_t nw = 0; const word_type *pw=u2w(ARGS,nw)
 
-#define Y_MPN_COMPLETE(CALL) \
+            //! wrap the different calls
+#define Y_MPN_WRAP_API(CALL) \
 static inline natural CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);            }\
-static inline natural CALL(const natural &lhs, utype          u  ) { Y_MPN_U2W(u); return CALL(lhs.word,lhs.words,pw,nw); }\
-static inline natural CALL(utype          u,   const natural &rhs) { Y_MPN_U2W(u); return CALL(pw,nw,rhs.word,rhs.words); }
+static inline natural CALL(const natural &lhs, utype          rhs) { Y_MPN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }\
+static inline natural CALL(utype          lhs, const natural &rhs) { Y_MPN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }
 
 
-
+            //! wrap the different binary calls
 #define Y_MPN_WRAP_OPS(OP,CALL) \
 inline natural & operator OP##= (const natural &rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
 inline natural & operator OP##= (utype          rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
@@ -242,16 +286,43 @@ inline friend  natural operator OP (const natural &lhs, utype          rhs) { re
             //
             // addition
             //__________________________________________________________________
-            Y_MPN_COMPLETE(add)
+            Y_MPN_WRAP_API(add)
             Y_MPN_WRAP_OPS(+,add)
 
+            //! unary '+'
+            inline natural operator+() const
+            {
+                return *this;
+            }
 
-#define Y_MPN_COMPLETE_NO_THROW(RETURN,FUNCTION) \
+            //! prefix++ operator
+            inline natural & operator++()
+            {
+                static word_type one = 1;
+                natural          tmp = add(&one,1,word,count);
+                xch(tmp); return *this;
+            }
+
+            //! postfix++ operator
+            inline natural  operator++(int)
+            {
+                static word_type one = 1;
+                const  natural   ans(*this);
+                {
+                    natural          tmp = add(&one,1,word,count);
+                    xch(tmp);
+                }
+                return ans;
+            }
+
+            //! wrap the different calls
+#define Y_MPN_WRAP_SAFE_API(RETURN,FUNCTION) \
 static inline RETURN FUNCTION(const natural &lhs, const natural &rhs) throw() { return FUNCTION(lhs.word,lhs.words,rhs.word,rhs.words);  }\
 static inline RETURN FUNCTION(const natural &lhs, utype          u  ) throw() { Y_MPN_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
 static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { Y_MPN_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
 
-#define Y_MPN_WRAP_CMP(OP,CALL) \
+            //! wrap the different boolean calls
+#define Y_MPN_WRAP_SAFE_CMP(OP,CALL) \
 inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs); } \
 inline friend bool operator OP (const natural &lhs, utype          rhs) throw() { return CALL(lhs,rhs); } \
 inline friend bool operator OP (utype          lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }
@@ -260,15 +331,15 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
             //
             // equality
             //__________________________________________________________________
-            Y_MPN_COMPLETE_NO_THROW(bool,eq)
-            Y_MPN_WRAP_CMP(==,eq)
+            Y_MPN_WRAP_SAFE_API(bool,eq)
+            Y_MPN_WRAP_SAFE_CMP(==,eq)
 
             //__________________________________________________________________
             //
             // difference
             //__________________________________________________________________
-            Y_MPN_COMPLETE_NO_THROW(bool,neq)
-            Y_MPN_WRAP_CMP(!=,neq)
+            Y_MPN_WRAP_SAFE_API(bool,neq)
+            Y_MPN_WRAP_SAFE_CMP(!=,neq)
 
 
             //__________________________________________________________________
@@ -335,8 +406,22 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                 bytes=width;
                 update();
             }
-
-
+#if 0
+            inline size_t set_bit_(const size_t ibit,const bool flag) throw()
+            {
+                const size_t  i = ibit>>3;
+                uint8_t      &b = get(i);
+                if(flag)
+                {
+                    b |=  bits_table::value[ibit&7];
+                }
+                else
+                {
+                    b &= ~bits_table::value[ibit&7];
+                }
+                return i;
+            }
+#endif
             //__________________________________________________________________
             //
             // addition
