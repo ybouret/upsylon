@@ -4,6 +4,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
 #include <iostream>
+#include <cstring>
 
 namespace upsylon {
     
