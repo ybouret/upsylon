@@ -6,7 +6,7 @@
 using namespace upsylon;
 using namespace sibyl;
 
-#define SHOW(X) std::cerr << #X << " = " << X << std::endl
+#define SHOW(X) std::cerr << #X << " = " << int64_t(X) << std::endl
 
 namespace {
 
@@ -17,29 +17,46 @@ namespace {
         typedef natural<BITS> Unsigned;
 
         std::cerr << "BITS=" << BITS << std::endl;
+        SHOW(natural<BITS>::word_bits);
         SHOW(natural<BITS>::word_size);
         SHOW(natural<BITS>::core_size);
         SHOW(natural<BITS>::word_bits);
         SHOW(natural<BITS>::word_exp2);
         SHOW(natural<BITS>::word_mask);
-        
+        SHOW(natural<BITS>::max_word);
+        SHOW(natural<BITS>::words_per_utype);
+
 
         Unsigned z;
-        Unsigned z1(200,as_capacity);
-
-        z1.xch(z);
-        z1.xch(z);
-
         std::cerr << "zero = " << z << std::endl;
+        
+        {
+            Unsigned z1(200,as_capacity);
+            z1.xch(z);
+            z1.xch(z);
+        }
+
 
         Unsigned one(1);
         std::cerr << "one  = " << one << std::endl;
 
-        Unsigned abcd( alea.partial<uint64_t>() );
-        std::cerr << "abcd = " << abcd << std::endl;
+        for(size_t i=0;i<16;++i)
+        {
+            Unsigned abcd( alea.partial<uint64_t>() );
+            Unsigned temp(abcd);
+            std::cerr << "abcd = " << abcd << "/" << temp << std::endl;
+        }
 
-        Unsigned temp(abcd);
-        std::cerr << "temp = " << temp << std::endl;
+        std::cerr << std::hex;
+        for(size_t i=0;i<1024;++i)
+        {
+            const uint32_t a = alea.partial<uint32_t>(30);
+            const uint32_t b = alea.partial<uint32_t>(30);
+            const uint32_t c = a+b;
+            Y_ASSERT(a+b==c);
+            const Unsigned A = a; Y_ASSERT( A.lsw() == a );
+            const Unsigned B = b; Y_ASSERT( B.lsw() == b );
+        }
 
 
 
@@ -51,7 +68,7 @@ Y_UTEST(sibyl_n)
 {
     SHOW(number::sys_core_size); std::cerr << type_name_of<number::sys_core_type>() << std::endl;
     SHOW(number::max_core_size); std::cerr << type_name_of<number::max_core_type>() << std::endl;
-    SHOW(number::max_word_size);  
+    SHOW(number::max_word_size);
 
     doTest<8>();
     doTest<16>();

@@ -63,7 +63,7 @@ namespace upsylon {
                 
                 //! acquire (count * sizeof(T) <= bytes = 2^shift)/sizeof(T) objects
                 template <typename T> inline
-                T *acquire_field(size_t &count,size_t &bytes, size_t &shift)
+                T *acquire_field(size_t &count, size_t &bytes, size_t &shift)
                 {
                     try
                     {
@@ -71,7 +71,6 @@ namespace upsylon {
                         void *p = acquire( (bytes=count*sizeof(T)),shift);
                         assert(bytes/sizeof(T)>=count);
                         count = bytes/sizeof(T);
-                        //std::cerr << count << "/" << bytes << "=2^" << shift << std::endl;
                         return static_cast<T*>(p);
                     }
                     catch(...)
