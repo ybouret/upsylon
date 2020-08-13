@@ -83,7 +83,6 @@ ADD_TEST(core:metaloop    test-main metaloop)
 
 SOURCE_GROUP(mem FILES test-chunk.cpp test-alloc.cpp test-slab.cpp test-object.cpp test-embed.cpp
 test-xslot.cpp test-ptr.cpp test-release.cpp 
-test-static-slots.cpp 
 test-memory-marker.cpp
 test-memory-groove.cpp
 test-memory-joint-section.cpp
@@ -106,7 +105,6 @@ ADD_TEST(mem:xslot         test-main xslot)
 ADD_TEST(mem:ptr           test-main ptr)
 ADD_TEST(mem:release       test-main release)
 ADD_TEST(mem:embed         test-main embed)
-ADD_TEST(mem:slots         test-main static_slots)
 ADD_TEST(mem:marker        test-main marker)
 ADD_TEST(mem:groove        test-main groove)
 ADD_TEST(mem:zblock        test-main zblock)

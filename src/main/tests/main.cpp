@@ -38,7 +38,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(objectY);
     Y_UTEST(zblock);
     Y_UTEST(xslot);
-    Y_UTEST(static_slots);
     Y_UTEST(ints_display);
     Y_UTEST(i2r);
     Y_UTEST(marker);
