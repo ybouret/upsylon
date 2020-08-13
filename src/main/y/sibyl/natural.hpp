@@ -27,11 +27,17 @@ width(0),                           \
 shift(0),                           \
 word( acquire(count,width,shift) )
 
+#if !defined(NDEBUG)
 #define Y_SIBYL_NATURAL_CHECK(HOST) do { \
 assert( (HOST).words ==  words_for( (HOST).bytes ) );\
 assert( (HOST).words <= (HOST).count ); \
 assert( (HOST).bytes <= (HOST).width ); \
+if( (HOST).bytes > 0 ) assert( 0 != (HOST).get((HOST).bytes-1) );\
+for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (HOST).get(remaining) == 0 );\
 } while(false)
+#else
+#define Y_SIBYL_NATURAL_CHECK(HOST)
+#endif
 
         //______________________________________________________________________
         //
@@ -198,6 +204,97 @@ assert( (HOST).bytes <= (HOST).width ); \
                 return ans;
             }
 
+#define Y_SIBYL_NATURAL_U2W(ARGS) size_t nw = 0; const word_type *pw=u2w(ARGS,nw)
+
+#define Y_SIBYL_NATURAL_COMPLETE(FUNCTION) \
+static inline natural FUNCTION(const natural &lhs, const natural &rhs) { return FUNCTION(lhs.word,lhs.words,rhs.word,rhs.words);            }\
+static inline natural FUNCTION(const natural &lhs, utype          u  ) { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
+static inline natural FUNCTION(utype          u,   const natural &rhs) { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
+
+#define Y_SIBYL_NATURAL_NO_THROW(RETURN,FUNCTION) \
+static inline RETURN FUNCTION(const natural &lhs, const natural &rhs) throw() { return FUNCTION(lhs.word,lhs.words,rhs.word,rhs.words);            }\
+static inline RETURN FUNCTION(const natural &lhs, utype          u  ) throw() { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
+static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
+
+
+            //__________________________________________________________________
+            //
+            // addition
+            //__________________________________________________________________
+            Y_SIBYL_NATURAL_COMPLETE(add)
+
+
+            //__________________________________________________________________
+            //
+            // equality
+            //__________________________________________________________________
+            Y_SIBYL_NATURAL_NO_THROW(bool,eq)
+
+
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
+
+            //! find number of words to hold some bytes
+            static inline size_t words_for(const size_t bytes) throw() { return Y_ALIGN_FOR_ITEM(word_type,bytes) >> word_exp2;  }
+
+            //! memory acquire
+            static  inline word_type *acquire(size_t &count, size_t &width, size_t &shift)
+            {
+                static memory_allocator &mgr = instance();
+                return mgr.acquire_field<word_type>(count,width,shift);
+            }
+
+            //! memory release
+            static inline void release(word_type * &w, size_t &count, size_t &width, size_t &shift) throw()
+            {
+                static memory_allocator &mgr = location();
+                mgr.release_field(w,count,width,shift);
+            }
+
+            //! utype -> words, and number of words = words_per_utype
+            static inline const word_type *u2w( utype &u, size_t &n ) throw()
+            {
+                u            = swap_le(u);
+                word_type *w = (word_type *)&u;
+                n            = words_per_utype;
+                size_t m     = words_per_utype-1;
+                while(n>0&&w[m]<=0)
+                {
+                    --n;
+                    --n;
+                }
+                return w;
+            }
+
+        private:
+            size_t     bytes; //!< active: number of bytes
+            size_t     words; //!< active: number of words
+            size_t     count; //!< memory: max number of words
+            size_t     width; //!< memory: width = count * sizeof(word_type), max number of bytes
+            size_t     shift; //!< memory: width = 1 << shift
+            word_type *word;  //!< address
+
+            //! decrease bytes to first not 0
+            inline void update() throw()
+            {
+                size_t curr = bytes;
+                size_t prev = curr-1;
+                while(curr>0&&get(prev)<=0)
+                    curr = prev--;
+                bytes = curr;
+                words = words_for(bytes);
+            }
+
+            //! set bytes to width and update
+            inline void upgrade() throw()
+            {
+                bytes=width;
+                update();
+            }
+
+
             //__________________________________________________________________
             //
             // addition
@@ -205,6 +302,7 @@ assert( (HOST).bytes <= (HOST).width ); \
             static inline natural add(const word_type *lhs, const size_t nl,
                                       const word_type *rhs, const size_t nr)
             {
+                assert(lhs);assert(rhs);
                 //--------------------------------------------------------------
                 // organize data
                 //--------------------------------------------------------------
@@ -255,59 +353,28 @@ assert( (HOST).bytes <= (HOST).width ); \
                 return ans;
             }
 
-            static inline natural add(const natural &lhs, const natural &rhs)
-            {
-                return add( lhs.word, lhs.words, rhs.word, rhs.words);
-            }
-
             //__________________________________________________________________
             //
-            // helpers
+            // equality
             //__________________________________________________________________
-
-            //! find number of words to hold some bytes
-            static inline size_t words_for(const size_t bytes) throw() { return Y_ALIGN_FOR_ITEM(word_type,bytes) >> word_exp2;  }
-
-            //! memory acquire
-            static  inline word_type *acquire(size_t &count, size_t &width, size_t &shift)
+            inline static bool eq(const word_type *lhs, const size_t nl,
+                                  const word_type *rhs, const size_t nr) throw()
             {
-                static memory_allocator &mgr = instance();
-                return mgr.acquire_field<word_type>(count,width,shift);
+                assert(rhs); assert(lhs);
+                if(nl!=nr)
+                    return false;
+                else
+                {
+                    size_t n = nl;
+                    while(n-- > 0)
+                    {
+                        if(lhs[n]!=rhs[n]) return false;
+                    }
+                    return true;
+                }
             }
 
-            //! memory release
-            static inline void release(word_type * &w, size_t &count, size_t &width, size_t &shift) throw()
-            {
-                static memory_allocator &mgr = location();
-                mgr.release_field(w,count,width,shift);
-            }
 
-
-        private:
-            size_t     bytes; //!< active: number of bytes
-            size_t     words; //!< active: number of words
-            size_t     count; //!< memory: max number of words
-            size_t     width; //!< memory: width = count * sizeof(word_type), max number of bytes
-            size_t     shift; //!< memory: width = 1 << shift
-            word_type *word;  //!< address
-
-            //! decrease bytes to first not 0
-            inline void update() throw()
-            {
-                size_t curr = bytes;
-                size_t prev = curr-1;
-                while(curr>0&&get(prev)<=0)
-                    curr = prev--;
-                bytes = curr;
-                words = words_for(bytes);
-            }
-
-            //! set bytes to width and update
-            inline void upgrade() throw()
-            {
-                bytes=width;
-                update();
-            }
         };
 
     }

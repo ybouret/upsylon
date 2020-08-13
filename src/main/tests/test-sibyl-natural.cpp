@@ -14,6 +14,7 @@ namespace {
     template <size_t BITS>
     static inline void doTest()
     {
+        std::cerr << std::dec;
         typedef natural<BITS> Unsigned;
 
         std::cerr << "BITS=" << BITS << std::endl;
@@ -45,6 +46,7 @@ namespace {
             Unsigned abcd( alea.partial<uint64_t>() );
             Unsigned temp(abcd);
             std::cerr << "abcd = " << abcd << "/" << temp << std::endl;
+            Y_ASSERT( Unsigned::eq(abcd,temp) );
         }
 
         std::cerr << std::hex;
@@ -54,8 +56,11 @@ namespace {
             const uint32_t b = alea.partial<uint32_t>(30);
             const uint32_t c = a+b;
             Y_ASSERT(a+b==c);
-            const Unsigned A = a; Y_ASSERT( A.lsw() == a );
-            const Unsigned B = b; Y_ASSERT( B.lsw() == b );
+            const Unsigned A = a;                  Y_ASSERT( A.lsw() == a );
+            const Unsigned B = b;                  Y_ASSERT( B.lsw() == b );
+            const Unsigned C = Unsigned::add(A,B); Y_ASSERT( C.lsw() == c );
+
+
         }
 
 
