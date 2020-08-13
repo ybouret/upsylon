@@ -64,9 +64,9 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             static  const size_t                           core_size     = (min_core_size>sys_core_size) ? max_core_size : sys_core_size;
             //! validate size
             static  const size_t                           find_size     = (core_size>=min_core_size) ? core_size : 0;
-            typedef typename unsigned_int<find_size>::type core_type; //!< internal core_type
-            typedef uint64_t                               utype;     //!< unsigned integral type
-            static  const size_t                           words_per_utype = sizeof(utype) >> word_exp2;
+            typedef typename unsigned_int<find_size>::type core_type;                                    //!< internal core_type
+            typedef uint64_t                               utype;                                        //!< unsigned integral type
+            static  const size_t                           words_per_utype = sizeof(utype) >> word_exp2; //!< utype <=> words
 
             //__________________________________________________________________
             //
@@ -206,31 +206,69 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 return ans;
             }
 
-#define Y_SIBYL_NATURAL_U2W(ARGS) size_t nw = 0; const word_type *pw=u2w(ARGS,nw)
+            //! number of bits
+            inline size_t bits() const throw()
+            {
+                if(bytes<=0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    const size_t  bm1 = bytes-1;
+                    const uint8_t msb = get(bm1);
+                    assert(msb);
+                    return (bm1 << 3) + bits_table::count_for_byte[ msb ];
+                }
+            }
 
-#define Y_SIBYL_NATURAL_COMPLETE(FUNCTION) \
-static inline natural FUNCTION(const natural &lhs, const natural &rhs) { return FUNCTION(lhs.word,lhs.words,rhs.word,rhs.words);            }\
-static inline natural FUNCTION(const natural &lhs, utype          u  ) { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
-static inline natural FUNCTION(utype          u,   const natural &rhs) { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
+#define Y_MPN_U2W(ARGS) size_t nw = 0; const word_type *pw=u2w(ARGS,nw)
 
-#define Y_SIBYL_NATURAL_NO_THROW(RETURN,FUNCTION) \
-static inline RETURN FUNCTION(const natural &lhs, const natural &rhs) throw() { return FUNCTION(lhs.word,lhs.words,rhs.word,rhs.words);            }\
-static inline RETURN FUNCTION(const natural &lhs, utype          u  ) throw() { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
-static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { Y_SIBYL_NATURAL_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
+#define Y_MPN_COMPLETE(CALL) \
+static inline natural CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);            }\
+static inline natural CALL(const natural &lhs, utype          u  ) { Y_MPN_U2W(u); return CALL(lhs.word,lhs.words,pw,nw); }\
+static inline natural CALL(utype          u,   const natural &rhs) { Y_MPN_U2W(u); return CALL(pw,nw,rhs.word,rhs.words); }
 
+
+
+#define Y_MPN_WRAP_OPS(OP,CALL) \
+inline natural & operator OP##= (const natural &rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline natural & operator OP##= (utype          rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline friend  natural operator OP (const natural &lhs, const natural &rhs) { return CALL(lhs,rhs); }\
+inline friend  natural operator OP (utype          lhs, const natural &rhs) { return CALL(lhs,rhs); }\
+inline friend  natural operator OP (const natural &lhs, utype          rhs) { return CALL(lhs,rhs); }\
 
             //__________________________________________________________________
             //
             // addition
             //__________________________________________________________________
-            Y_SIBYL_NATURAL_COMPLETE(add)
+            Y_MPN_COMPLETE(add)
+            Y_MPN_WRAP_OPS(+,add)
 
+
+#define Y_MPN_COMPLETE_NO_THROW(RETURN,FUNCTION) \
+static inline RETURN FUNCTION(const natural &lhs, const natural &rhs) throw() { return FUNCTION(lhs.word,lhs.words,rhs.word,rhs.words);  }\
+static inline RETURN FUNCTION(const natural &lhs, utype          u  ) throw() { Y_MPN_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
+static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { Y_MPN_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
+
+#define Y_MPN_WRAP_CMP(OP,CALL) \
+inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs); } \
+inline friend bool operator OP (const natural &lhs, utype          rhs) throw() { return CALL(lhs,rhs); } \
+inline friend bool operator OP (utype          lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }
 
             //__________________________________________________________________
             //
             // equality
             //__________________________________________________________________
-            Y_SIBYL_NATURAL_NO_THROW(bool,eq)
+            Y_MPN_COMPLETE_NO_THROW(bool,eq)
+            Y_MPN_WRAP_CMP(==,eq)
+
+            //__________________________________________________________________
+            //
+            // difference
+            //__________________________________________________________________
+            Y_MPN_COMPLETE_NO_THROW(bool,neq)
+            Y_MPN_WRAP_CMP(!=,neq)
 
 
             //__________________________________________________________________
@@ -265,7 +303,7 @@ static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { 
                 while(n>0&&w[m]<=0)
                 {
                     --n;
-                    --n;
+                    --m;
                 }
                 return w;
             }
@@ -284,7 +322,9 @@ static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { 
                 size_t curr = bytes;
                 size_t prev = curr-1;
                 while(curr>0&&get(prev)<=0)
+                {
                     curr = prev--;
+                }
                 bytes = curr;
                 words = words_for(bytes);
             }
@@ -318,7 +358,7 @@ static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { 
                     cswap(small_size,large_size);
                 }
                 const size_t num   = large_size+1;
-                natural      ans(num,as_capacity);
+                natural      ans(num,as_capacity); Y_SIBYL_NATURAL_CHECK(ans);
                 word_type   *sum   = ans.word;
                 core_type    carry = 0;
 
@@ -350,8 +390,9 @@ static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { 
                 //__________________________________________________________________
                 sum[large_size] = word_type(carry);
 
-                ans.bytes = num;
+                ans.bytes = (num << word_exp2);
                 ans.update();
+                Y_SIBYL_NATURAL_CHECK(ans);
                 return ans;
             }
 
@@ -373,6 +414,23 @@ static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { 
                         if(lhs[n]!=rhs[n]) return false;
                     }
                     return true;
+                }
+            }
+
+            inline static bool neq(const word_type *lhs, const size_t nl,
+                                   const word_type *rhs, const size_t nr) throw()
+            {
+                assert(rhs); assert(lhs);
+                if(nl!=nr)
+                    return true;
+                else
+                {
+                    size_t n = nl;
+                    while(n-- > 0)
+                    {
+                        if(lhs[n]!=rhs[n]) return true;
+                    }
+                    return false;
                 }
             }
 
