@@ -85,7 +85,7 @@ Y_UTEST(chunk)
     __SHOW(memory::__chunk<uint8_t>);
     __SHOW(memory::__chunk<uint16_t>);
     __SHOW(memory::__chunk<uint32_t>);
-    //__SHOW(memory::__chunk<uint64_t>);
+    __SHOW(memory::__chunk<uint64_t>);
     __SHOW(memory::__chunk<size_t>);
 
 }

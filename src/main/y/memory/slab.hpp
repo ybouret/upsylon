@@ -10,7 +10,12 @@ namespace upsylon
     namespace memory
     {
 
+        //______________________________________________________________________
+        //
+        //
         //! slab base class, NOT a POD!
+        //
+        //______________________________________________________________________
         class slab : public dynamic
         {
         public:
@@ -43,7 +48,12 @@ namespace upsylon
             void      *data[ 8 ]; //!< greater or equal to sizeof any __chunk
         };
 
+        //______________________________________________________________________
+        //
+        //
         //! memory I/O for a fixed number of objects
+        //
+        //______________________________________________________________________
         template <typename T>
         class slab_of : public slab
         {
@@ -69,6 +79,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(slab_of);
         };
+
+
     }
 }
 
