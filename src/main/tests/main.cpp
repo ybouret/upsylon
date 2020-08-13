@@ -21,7 +21,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(at_exit);
     Y_UTEST(sys);
     Y_UTEST(bits);
-    Y_UTEST(chunk);
     Y_UTEST(code);
     Y_UTEST(alloc);
 
