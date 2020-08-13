@@ -32,7 +32,6 @@ Y_UTEST_INIT(256)
 
 
     Y_UTEST(isqrt);
-    Y_UTEST(slab);
     Y_UTEST(primality);
     Y_UTEST(object0);
     Y_UTEST(objectY);

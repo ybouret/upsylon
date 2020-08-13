@@ -81,7 +81,8 @@ ADD_TEST(core:zfi         test-main zfi)
 ADD_TEST(core:binary      test-main binary)
 ADD_TEST(core:metaloop    test-main metaloop)
 
-SOURCE_GROUP(mem FILES test-chunk.cpp test-alloc.cpp test-slab.cpp test-object.cpp test-embed.cpp
+SOURCE_GROUP(mem FILES test-chunk.cpp test-alloc.cpp 
+test-object.cpp test-embed.cpp
 test-xslot.cpp test-ptr.cpp test-release.cpp 
 test-memory-marker.cpp
 test-memory-groove.cpp
