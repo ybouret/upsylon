@@ -3,7 +3,7 @@
 #define Y_HASH_TABLE_INCLUDED 1
 
 #include "y/core/addr-list.hpp"
-#include "y/memory/slab.hpp"
+#include "y/memory/tight/wedge.hpp"
 #include "y/type/utils.hpp"
 #include "y/container/container.hpp"
 #include "y/sort/merge.hpp"
@@ -40,11 +40,11 @@ namespace upsylon
         class hash_table : public hash_table_info
         {
         public:
-            typedef addr_node<NODE>            meta_node; //!< to store node addresses
-            typedef addr_list<NODE>            meta_list; //!< list of node addresses
-            typedef core::list_of<NODE>        slot_type; //!< a slot of the hash table
-            typedef memory::slab_of<NODE>      node_slab; //!< to acquire/release node
-            typedef memory::slab_of<meta_node> meta_slab; //!< to acquire/release meta
+            typedef addr_node<NODE>                 meta_node; //!< to store node addresses
+            typedef addr_list<NODE>                 meta_list; //!< list of node addresses
+            typedef core::list_of<NODE>             slot_type; //!< a slot of the hash table
+            typedef memory::tight::wedge<NODE>      node_slab; //!< to acquire/release node
+            typedef memory::tight::wedge<meta_node> meta_slab; //!< to acquire/release meta
 
             //! default initialization
 #define Y_CORE_HASH_TABLE_CTOR() hash_table_info(), chain(),slot(0),slots(0),smask(0),items(0),nodes(0,0),metas(0,0),buffer(0),allocated(0)
@@ -80,8 +80,8 @@ namespace upsylon
                         __free(node);
                     }
                 }
-                assert( nodes.is_filled() );
-                assert( metas.is_filled() );
+                assert( nodes.is_empty() );
+                assert( metas.is_empty() );
             }
 
             //! release resources and store back node and meta
@@ -323,8 +323,8 @@ namespace upsylon
                     slots = num_slots;
                     smask = num_slots-1;
                     items = n;
-                    assert(nodes.capacity()>=n);
-                    assert(metas.capacity()>=n);
+                    assert(nodes.provided_number>=n);
+                    assert(metas.provided_number>=n);
                 }
             }
         };

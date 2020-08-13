@@ -77,6 +77,12 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
 
+                //! compute bytes to provide to hold num_objects
+                static inline size_t bytes_for( const size_t num_objects ) throw()
+                {
+                    return block_size * num_objects;
+                }
+
 
 
                 //! detect ownership
@@ -91,6 +97,13 @@ namespace upsylon
                 {
                     return still_available>=provided_number;
                 }
+
+#if 0
+                inline size_t capacity() const throw()
+                {
+                    return provided_number;
+                }
+#endif
 
                 //! get a block
                 inline T *acquire() throw()
@@ -120,6 +133,7 @@ namespace upsylon
                     const size_t indx = static_cast<size_t>(to_release-data)/block_step;
                     first_available   = indx;
                     ++still_available;
+                    assert(still_available<=provided_number);
                 }
 
                 //! no-throw swap
