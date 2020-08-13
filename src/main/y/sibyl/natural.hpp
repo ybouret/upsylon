@@ -140,9 +140,11 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             //! set to zero
             inline void ldz() throw()
             {
+                Y_SIBYL_NATURAL_CHECK(*this);
                 memset(word,0,width);
                 bytes=0;
                 words=0;
+                Y_SIBYL_NATURAL_CHECK(*this);
             }
 
             //! no-throw exchange
