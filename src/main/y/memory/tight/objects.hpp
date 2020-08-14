@@ -5,6 +5,7 @@
 #define Y_MEMORY_TIGHT_OBJECTS_INCLUDED 1
 
 #include "y/memory/tight/blocks.hpp"
+#include "y/memory/tight/quarry.hpp"
 #include "y/lockable.hpp"
 
 namespace upsylon {

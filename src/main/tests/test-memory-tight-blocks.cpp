@@ -40,8 +40,8 @@ Y_UTEST(tight_blocks)
             std::cerr << " | chunk_size=" << std::setw(5) <<  blk.chunk_size;
             std::cerr << " | #slots="     << std::setw(3) <<  blk.slots_size;
             std::cerr << " | load="       << std::setw(3) <<  blk.load_factor();
-            std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.zChunks.chunk_size << "," << std::setw(2) <<  blk.zChunks.nodes_rise;
-            std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.zArenas.chunk_size << "," << std::setw(2) <<  blk.zArenas.nodes_rise;
+            //std::cerr << " | chunks#size,rise="  << std::setw(5) <<  blk.zChunks.chunk_size << "," << std::setw(2) <<  blk.zChunks.nodes_rise;
+            //std::cerr << " | arenas#size,rise="  << std::setw(5) <<  blk.zArenas.chunk_size << "," << std::setw(2) <<  blk.zArenas.nodes_rise;
             std::cerr << std::endl;
             
 

@@ -3,6 +3,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/object-parameters.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon
 {

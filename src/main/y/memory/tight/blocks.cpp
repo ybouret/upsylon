@@ -1,5 +1,6 @@
 
 #include "y/memory/tight/blocks.hpp"
+#include "y/memory/tight/zcache.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/memory/allocator/global.hpp"
@@ -7,6 +8,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/os/run-time-log.hpp"
 #include <cstdlib>
+#include <cstring>
 
 namespace upsylon {
 
@@ -16,21 +18,27 @@ namespace upsylon {
 
             blocks:: ~blocks() throw()
             {
-                size_t i=slots_size;
-                while(i-- >0)
                 {
-                    slot_type &entry = slot[i];
-                    while(entry.size)
+                    zcache<arena> &za = *(zcache<arena> *)zArenas;
+                    size_t         i  = slots_size;
+                    while(i-- >0)
                     {
-                        arena *a = entry.pop_back();
-                        self_destruct(*a);
-                        zArenas.zstore(a);
+                        slot_type &entry = slot[i];
+                        while(entry.size)
+                        {
+                            arena *a = entry.pop_back();
+                            self_destruct(*a);
+                            za.zstore(a);
+                        }
                     }
                 }
 
                 slots_vein.release(slot);
+                self_destruct(*(zcache<arena>*)zArenas); Y_BZSET_STATIC(zArenas);
+                self_destruct(*(zcache<chunk>*)zChunks); Y_BZSET_STATIC(zChunks);
                 slot=0;
-                acquiring=releasing=0;
+                acquiring=0;
+                releasing=0;
                 _bzset(chunk_size);
                 _bzset(slots_size);
                 _bzset(limit_size);
@@ -55,10 +63,12 @@ namespace upsylon {
             slot( static_cast<slot_type *>(acquire_slots_with(slots_vein) ) ),
             acquiring(0),
             releasing(0),
-            sharedQ(usr_sys_quarry),
-            zChunks(chunk_size,sharedQ),
-            zArenas(chunk_size,sharedQ)
+            sharedQ(usr_sys_quarry)
             {
+                Y_BZSET_STATIC(zChunks); new (zChunks) zcache<chunk>(chunk_size,sharedQ);
+                Y_BZSET_STATIC(zArenas); new (zArenas) zcache<arena>(chunk_size,sharedQ);
+
+                // initialize hash table
                 for(size_t i=0;i<slots_size;++i)
                 {
                     new (&slot[i]) slot_type();
@@ -75,23 +85,23 @@ namespace upsylon {
                 assert(block_size>0);
                 assert(block_size<=limit_size);
 
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 //
                 // look up for acquiring
                 //
-                //----------------------------------------------------------
+                //--------------------------------------------------------------
                 if(acquiring&&acquiring->block_size==block_size)
                 {
-                    //------------------------------------------------------
+                    //----------------------------------------------------------
                     // cached!
-                    //------------------------------------------------------
+                    //----------------------------------------------------------
                     return acquiring;
                 }
                 else
                 {
-                    //------------------------------------------------------
+                    //----------------------------------------------------------
                     // look up!
-                    //------------------------------------------------------
+                    //----------------------------------------------------------
                     slot_type &entry = slot[block_size&slots_mask];
                     for(arena *a=entry.head;a;a=a->next)
                     {
@@ -102,16 +112,17 @@ namespace upsylon {
                         }
                     }
 
-                    //------------------------------------------------------
+                    //----------------------------------------------------------
                     // create a new arena
-                    //------------------------------------------------------
-                    arena *a = zArenas.zquery();
+                    //----------------------------------------------------------
+                    zcache<arena> &za = *(zcache<arena> *)zArenas;
+                    arena *a = za.zquery();
                     try {
-                        new (a) arena(block_size,chunk_size,&zChunks,sharedQ);
+                        new (a) arena(block_size,chunk_size,zChunks,sharedQ);
                     }
                     catch(...)
                     {
-                        zArenas.zstore(a);
+                        za.zstore(a);
                         throw;
                     }
 

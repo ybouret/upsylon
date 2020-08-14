@@ -5,7 +5,7 @@
 #define Y_MEMORY_TIGHT_BLOCKS_INCLUDED 1
 
 #include "y/memory/tight/arena.hpp"
-#include "y/memory/tight/zcache.hpp"
+#include "y/memory/tight/zcache-metrics.hpp"
 
 namespace upsylon {
 
@@ -90,16 +90,17 @@ namespace upsylon {
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(blocks);
+                static const size_t zcache_metrics = Y_MEMORY_TIGHT_ZCACHE_METRICS;
                 vein           &slots_vein;
                 slot_type      *slot;
                 arena          *acquiring;
                 arena          *releasing;
                 arena          *query(const size_t block_size);
 
-            public:
-                quarry         &sharedQ;      //!< shared quarry for all the internal chunk_size(s)
-                zcache<chunk>   zChunks;      //!< all the zombie chunks for all the live arenas
-                zcache<arena>   zArenas;      //!< all the zombie arenas for the internal hash table
+                quarry         &sharedQ;                 //!< shared quarry for all the internal chunk_size(s)
+                void *          zChunks[zcache_metrics]; //!< all the zombie chunks for all the live arenas
+                void *          zArenas[zcache_metrics]; //!< all the zombie arenas for the internal hash table
+
              };
 
 

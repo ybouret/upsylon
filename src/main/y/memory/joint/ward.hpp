@@ -4,7 +4,8 @@
 #define Y_MEMORY_JOINT_WARD_INCLUDED 1
 
 #include "y/memory/joint/section.hpp"
-#include "y/memory/tight/zcache.hpp"
+#include "y/memory/tight/quarry.hpp"
+#include "y/memory/tight/zcache-metrics.hpp"
 
 namespace upsylon {
 
@@ -50,7 +51,9 @@ namespace upsylon {
                 sections               S;         //!< all the sections
                 quarry_type            Q;         //!< cache for section memory
                 tight::vein           &V;         //!< default vein for chunk_size
-                tight::zcache<section> Z;         //!< cache of zombie sections
+                //tight::zcache<section> Z;         //!< cache of zombie sections
+                //! cache of zombie section
+                void                  *Z[Y_MEMORY_TIGHT_ZCACHE_METRICS];
 
                 //! find the vein that shall hold required bytes
                 tight::vein &vein_for(const size_t required);

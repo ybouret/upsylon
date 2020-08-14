@@ -1,15 +1,19 @@
 #include "y/memory/joint/ward.hpp"
+#include "y/memory/tight/zcache.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/exception.hpp"
 #include "y/os/run-time-log.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon {
 
     namespace memory {
 
         namespace joint {
+
+            typedef tight::zcache<section> zsections;
 
             static inline
             size_t ward_chunk_size(const size_t chunk_size)
@@ -27,7 +31,7 @@ namespace upsylon {
                 void        *p = s->entry;     // find memory address
                 self_destruct(*s);             // cleanup the segment
                 v.release(p);                  // return memory into vein of quarry
-                Z.zstore(s);                   // return zombie section
+                ((zsections *)Z)->zstore(s);   // return zombie section
             }
 
             ward:: ~ward() throw()
@@ -36,6 +40,8 @@ namespace upsylon {
                 {
                     restore( S.pop_back() );
                 }
+                self_destruct( *(zsections *)Z );
+                Y_BZSET_STATIC(Z);
             }
             
             size_t ward:: chunk_size() const throw()
@@ -60,16 +66,11 @@ namespace upsylon {
             empty_one(0),
             S(),
             Q(),
-            V(Q(ward_chunk_size(usr_chunk_size))),
-            Z(V.block_size,Q)
+            V(Q(ward_chunk_size(usr_chunk_size)))
             {
-#if 0
-                std::cerr << "W.chunk_size=" << chunk_size()   << std::endl;
-                std::cerr << "Z.chunk_size=" << Z.chunk_size << std::endl;
-                std::cerr << "|_nodes_rise=" << Z.nodes_rise << " section/part" << std::endl;
-#endif
+                Y_BZSET_STATIC(Z);
+                new (Z) zsections(V.block_size,Q);
                 acquiring = empty_one = S.push_back( section_for(0) );
-
             }
 
             tight::vein & ward:: vein_for(const size_t required)
@@ -95,13 +96,13 @@ namespace upsylon {
             section     * ward:: section_for(const size_t required)
             {
                 tight::vein &v = vein_for(required);
-                section     *s = Z.zquery();
+                section     *s = ((zsections *)Z)->zquery();
                 try {
                     return new (s) section( v.acquire(), v.block_size, v.block_exp2 );
                 }
                 catch(...)
                 {
-                    Z.zstore(s);
+                    ((zsections *)Z)->zstore(s);
                     throw;
                 }
             }
