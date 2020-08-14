@@ -13,7 +13,7 @@ using namespace sibyl;
 
 namespace {
 
-    static const char add_fn[] = "mpn-add-ticks.dat";
+     static const char add_fn[] = "mpn-add-ticks.dat";
 
     template <size_t BITS>
     static inline void doTest()
@@ -34,7 +34,6 @@ namespace {
         SHOW(natural<BITS>::words_per_utype);
         std::cerr << "\t<parameters/>" << std::endl;
 
-        std::cerr << "add_ticks: " << Unsigned::add_ticks << std::endl;
 
         std::cerr << "-- initializing with zero or bits" << std::endl;
         {
@@ -73,7 +72,6 @@ namespace {
         }
 
         std::cerr << "-- small additions" << std::endl;
-        Unsigned::add_ticks = 0;
         for(size_t iter=0;iter<1024*16;++iter)
         {
             const uint64_t a = alea.partial<uint64_t>( alea.leq(63) );
@@ -84,82 +82,31 @@ namespace {
             const Unsigned C = A+B; Y_ASSERT( C.lsw() == c );
         }
 
-        std::cerr << "-- large additions" << std::endl;
-        for(size_t bits=32;bits<=2048;bits <<=1)
+        std::cerr << "-- all additions" << std::endl;
+        ios::ocstream::echo(add_fn, "%2d", int(BITS));
+        for(size_t bits=1;bits<=2048;bits <<=1)
         {
-            for(size_t iter=0;iter<1024*16;++iter)
+            Unsigned::add_ticks = 0;
+            static const size_t add_cycles = 1024*16;
+            for(size_t iter=0;iter<add_cycles;++iter)
             {
-                const Unsigned A(alea,alea.range<size_t>(bits-5,bits));
-                const Unsigned B(alea,alea.range<size_t>(bits-5,bits));
-                const Unsigned C = A+B;
-                (void) C;
+                const Unsigned A(alea,alea.range<size_t>(bits-0,bits));
+                const Unsigned B(alea,alea.range<size_t>(bits-0,bits));
+                Unsigned C = A+B;
+                C.ldz();
             }
+            const double add_time = clk(Unsigned::add_ticks);
+            const double speed    = add_cycles/(add_time*1e6);
+            ios::ocstream::echo(add_fn," %g",speed);
         }
-        std::cerr << " |_add_ticks : " << human_readable(Unsigned::add_ticks) << std::endl;
-        {
-            const double t = clk(Unsigned::add_ticks);
-            std::cerr << " |_add_time  : " << t << std::endl;
-            ios::ocstream::echo(add_fn, "%2d %g\n", int(BITS), t*1e6);
-        }
+        ios::ocstream::echo(add_fn,"\n");
 
 
 
         std::cerr << "<natural/>" << std::endl;
         std::cerr << std::endl;
 
-#if 0
-        Unsigned z;
-        std::cerr << "zero = " << z << std::endl;
-        
-        {
-            Unsigned z1(200,as_capacity);
-            z1.xch(z);
-            z1.xch(z);
-        }
 
-
-        Unsigned one(1);
-        std::cerr << "one  = " << one << std::endl;
-
-        for(size_t i=0;i<16;++i)
-        {
-            Unsigned abcd( alea.partial<uint64_t>() );
-            Unsigned temp(abcd);
-            std::cerr << "abcd = " << abcd << "/" << temp << std::endl;
-            Y_ASSERT( Unsigned::eq(abcd,temp) );
-            const size_t nb=abcd.bits();
-            std::cerr << "#bits=" << nb << " : ";
-            for(size_t n=nb;n>0;)
-            {
-                const bool flag = abcd.get_bit(--n);
-                std::cerr << (flag?'1':'0');
-            }
-            std::cerr << std::endl;
-        }
-
-        std::cerr << std::hex;
-        for(size_t i=0;i<1024;++i)
-        {
-            const uint32_t a = alea.partial<uint32_t>(30);
-            const uint32_t b = alea.partial<uint32_t>(30);
-            const uint32_t c = a+b;
-            Y_ASSERT(a+b==c);
-            const Unsigned A = a;                  Y_ASSERT( A.lsw() == a );
-            const Unsigned B = b;                  Y_ASSERT( B.lsw() == b );
-            const Unsigned C = Unsigned::add(A,B); Y_ASSERT( C.lsw() == c );
-
-
-        }
-
-        for(size_t bits=0;bits<=100;++bits)
-        {
-            Unsigned r(alea,bits);
-            std::cerr << "ran=" << r << std::endl;
-            Y_ASSERT(r.bits()==bits);
-        }
-
-        std::cerr << std::endl;
-#endif
     }
 }
 

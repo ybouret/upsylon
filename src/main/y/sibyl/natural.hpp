@@ -32,13 +32,16 @@ word( acquire(count,width,shift) )
 
 #if !defined(NDEBUG)
         //! full consistency checking
-#define Y_MPN_CHECK(HOST) do {                        \
-assert( (HOST).words ==  words_for( (HOST).bytes ) ); \
-assert( (HOST).words <= (HOST).count );         \
-assert( (HOST).bytes <= (HOST).width ); \
-if( (HOST).bytes > 0 ) assert( 0 != (HOST).get((HOST).bytes-1,"msb") );\
-for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (HOST).get(remaining,"remaining") == 0 );\
-} while(false)
+#define Y_MPN_CHECK(HOST)\
+/**/ do {                                                      \
+/**/     assert( (HOST).words ==  words_for( (HOST).bytes ) ); \
+/**/     assert( (HOST).words <= (HOST).count );               \
+/**/     assert( (HOST).bytes <= (HOST).width );               \
+/**/     if( (HOST).bytes > 0 )                                \
+/**/         assert( 0 != (HOST).get((HOST).bytes-1) );        \
+/**/     for(size_t r=(HOST).bytes;r<(HOST).width;++r)         \
+/**/         assert( (HOST).get(r) == 0 );                     \
+/**/ } while(false)
 #else
 #define Y_MPN_CHECK(HOST)
 #endif
@@ -148,9 +151,9 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 {
                     size_t ibit = bits-1;  // must be set to 1
                     size_t imsb = ibit>>3; // at this byte
-                    // prepare MSBD
+                    // prepare MSB
                     {
-                        uint8_t &b = get(imsb,"alea.init");
+                        uint8_t &b = get(imsb);
                         ibit      &= 7;
                         b = bits_table::value[ibit];
                         while(ibit-- > 0)
@@ -162,7 +165,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                     // fill
                     for(size_t i=0;i<imsb;++i)
                     {
-                        get(i,"alea.fill") = ran.full<uint8_t>();
+                        get(i) = ran.full<uint8_t>();
                     }
 
                     // update status
@@ -205,24 +208,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             }
 
 
-            //! access all addressable bytes in 0..width-1
-            inline uint8_t &get(const size_t indx,const char *ctx=0) const throw()
-            {
-                if(indx>=width)
-                {
-                    std::cerr << "bad get from " << (ctx?ctx:"unknowm") << std::endl;
-                }
 
-                assert(indx<width);
-                const word_type &w = word[ indx >> word_exp2];
-                uint8_t         *p = (uint8_t *)&w;
-                const size_t     i = indx &  word_mask;
-#if Y_BYTE_ORDER == Y_BIG_ENDIAN
-                return p[word_mask-i];
-#else
-                return p[i];
-#endif
-            }
 
             //! display value
             inline void  display(std::ostream &os) const
@@ -233,7 +219,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                     for(size_t i=bytes;i>0;)
                     {
                         --i;
-                        os<< hexadecimal::lowercase[ get(i,"display") ];
+                        os<< hexadecimal::lowercase[ get(i) ];
                     }
                 }
                 else
@@ -272,7 +258,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 else
                 {
                     const size_t  bm1 = bytes-1;
-                    const uint8_t msb = get(bm1,"bits");
+                    const uint8_t msb = get(bm1);
                     assert(msb);
                     return (bm1 << 3) + bits_table::count_for_byte[ msb ];
                 }
@@ -282,7 +268,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             inline bool get_bit(const size_t ibit) const throw()
             {
                 assert(ibit<bits());
-                const uint8_t b = get(ibit>>3,"get_bit");
+                const uint8_t b = get(ibit>>3);
                 return 0 != (b&bits_table::value[ibit&7]);
             }
 
@@ -415,7 +401,7 @@ inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() 
                 assert(bytes<=width);
                 size_t curr = bytes;
                 size_t prev = curr-1;
-                while(curr>0&&get(prev,"update")<=0)
+                while(curr>0&&get(prev)<=0)
                 {
                     curr = prev--;
                 }
@@ -532,6 +518,20 @@ inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() 
                     }
                     return false;
                 }
+            }
+
+            //! access all addressable bytes in 0..width-1
+            inline uint8_t &get(const size_t indx) const throw()
+            {
+                assert(indx<width);
+                const word_type &w = word[ indx >> word_exp2];
+                uint8_t         *p = (uint8_t *)&w;
+                const size_t     i = indx &  word_mask;
+#if Y_BYTE_ORDER == Y_BIG_ENDIAN
+                return p[word_mask-i];
+#else
+                return p[i];
+#endif
             }
         };
 
