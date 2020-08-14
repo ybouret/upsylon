@@ -24,7 +24,7 @@ namespace upsylon {
             struct __zcache
             {
                 // types and definitions
-                struct part { part  *next; };                                       //!< binary layout for part
+                struct part { part  *next; /*!< for anonymous pool */ };            //!< binary layout for part
                 static const size_t header = sizeof(part);                          //!< reserved bytes for intenal linking
 
                 // helpers
@@ -161,7 +161,7 @@ namespace upsylon {
                 }
 
 
-
+                //! garbage collector: remove unused parts
                 void gc() throw()
                 {
                     //----------------------------------------------------------

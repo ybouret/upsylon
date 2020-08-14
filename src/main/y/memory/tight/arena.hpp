@@ -35,8 +35,8 @@ namespace upsylon {
                 /**
                  \param the_block_size the block size for all chunks
                  \param req_chunk_size the requested chunk size
-                 \param Z              a cache for zombie chunks
-                 \param Q              a cache for power of two chunk_data
+                 \param shared_zchunks address of a cache for zombie chunks
+                 \param shared_quarry  a cache for power of two chunk_data
 
                  - min_cs = max_of(chunk::min_chunk_size_for(block_size),vein::min_bytes)
                  - max_cs = max_of(chunk::max_chunk_size_for(block_size),min_cs);

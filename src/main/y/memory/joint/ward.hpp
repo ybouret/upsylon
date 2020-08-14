@@ -53,7 +53,7 @@ namespace upsylon {
                 //! current addr[capa] with 'size' bytes occupied
                 bool compact( void * &addr, size_t &capa, const size_t size) throw();
 
-                //! garbage collector for zcache or sections
+                //! garbage collector for zcache of sections
                 void gc() throw();
 
             private:
