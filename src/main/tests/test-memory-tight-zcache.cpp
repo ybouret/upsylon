@@ -42,13 +42,13 @@ namespace {
             std::cerr << "nodes = " << std::setw(5) << nodes.size << std::endl;
             alea.shuffle(nodes);
 
-            const size_t h=nodes.size/2;
+            const size_t h=nodes.size/4;
 
             while(nodes.size>h)
             {
                 cache.zstore( nodes.pop_back() );
             }
-
+            std::cerr << "-- PARTIAL GC" << std::endl;
             cache.gc();
 
             while(nodes.size)
@@ -56,7 +56,9 @@ namespace {
                 cache.zstore( nodes.pop_back() );
             }
 
+            std::cerr << "-- FULL GC" << std::endl;
             cache.gc();
+            std::cerr << "<info>" << std::endl;
             std::cerr << "\tsizeof      : " << sizeof(tight::zcache<node_type>) << std::endl;
             std::cerr << "\tsizeof_nodes: " << sizeof(typename tight::zcache<node_type>::nodes_type) << std::endl;
             std::cerr << "\tsizeof_parts: " << sizeof(typename tight::zcache<node_type>::parts_type) << std::endl;
@@ -64,6 +66,7 @@ namespace {
                 void *wksp[ Y_MEMORY_TIGHT_ZCACHE_METRICS ];
                 Y_CHECK(sizeof(tight::zcache<node_type>) <= sizeof(wksp) );
             }
+            std::cerr << "<info/>" << std::endl;
         }
         std::cerr << Q << std::endl;
         std::cerr << std::endl;

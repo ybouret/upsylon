@@ -16,7 +16,7 @@ namespace upsylon {
                 return next_power_of_two( max_of(a,b,vein::min_size) );
             }
 
-            void * __zcache:: first(void * addr) throw()
+            void * __zcache:: first_node_of(void * addr) throw()
             {
                 return static_cast<char *>(addr)+header;
             }

@@ -29,7 +29,7 @@ namespace upsylon {
 
                 // helpers
                 static size_t chunk_size_from(const size_t, const size_t) throw();  //!< next_power_of_two(max_of(,,stones::min_size))
-                static void  *first(void *)                               throw();  //!< translated address
+                static void  *first_node_of(void *)                       throw();  //!< translated address
                 static void   missing(const size_t,const unsigned)        throw();  //!< display missing node
             };
 
@@ -128,7 +128,7 @@ namespace upsylon {
                             bzset(*p);
                             (void) parts.store(p);
                         }
-                        NODE *node = static_cast<NODE *>( __zcache::first(addr) );
+                        NODE *node = static_cast<NODE *>( __zcache::first_node_of(addr) );
                         bzset(*node);
                         for(size_t i=1;i<nodes_rise;++i)
                         {
@@ -164,21 +164,55 @@ namespace upsylon {
 
                 void gc() throw()
                 {
-                    // top parts are the most increased memory
-                    // so sort nodes by increasing memory and
-                    // start from the end
-                    merging<NODE>::sort_by_decreasing_address(nodes);
-                    parts_type  tmp_parts;
-                    nodes_type  tmp_nodes;
-                    while(parts.size)
+                    //----------------------------------------------------------
+                    // sort nodes, lowest memory first
+                    //----------------------------------------------------------
+
+                    merging<NODE>::sort_by_increasing_address(nodes);
+
+                    //----------------------------------------------------------
+                    // explore all parts, using a local stack
+                    //----------------------------------------------------------
+                    parts_type  stk;
+                    while(parts.size>0)
                     {
-                        part *p = parts.query(); assert(p->next||p->next<p);
-                        
-                        tmp_parts.store(p);
+                        part *probe = parts.query();
+                        NODE *lower = lower_node_of(probe);
+                        if(nodes.owns(lower))
+                        {
+                            NODE  *node  = lower->next;
+                            for(size_t i=1;i<nodes_rise;++i,node=node->next)
+                            {
+                                if(lower+i!=node)
+                                {
+                                    goto KEEP_PAGE;
+                                }
+                            }
+                            assert(nodes.owns(upper_node_of(probe)));
+
+                            //--------------------------------------------------
+                            // cleanup
+                            //--------------------------------------------------
+                            for(size_t i=nodes_rise;i>0;--i)
+                            {
+                                (void) nodes.unlink( lower++ );
+                            }
+                            memIO.release(probe);
+                            continue;
+                        }
+
+
+                    KEEP_PAGE:
+                        stk.store(probe);
                     }
 
-                    // restore pages
-                    while( tmp_parts.size ) parts.store( tmp_parts.query() );
+                    //----------------------------------------------------------
+                    // restore the current parts from remaining stack
+                    //----------------------------------------------------------
+                    while(stk.size>0)
+                    {
+                        parts.store( stk.query() );
+                    }
 
                 }
 
@@ -198,11 +232,21 @@ namespace upsylon {
                 inline bool owned_by(const part *p, const NODE *n) const throw()
                 {
                     assert(p); assert(n);
-                    const NODE *base = static_cast<const NODE*>( __zcache::first( (void*)p ) );
+                    const NODE *base = lower_node_of(p);
                     const NODE *last = base + nodes_rise;
                     return n>=base&&n<last;
                 }
 
+                inline NODE *upper_node_of(const part *p) const throw()
+                {
+                    NODE *n = lower_node_of(p) + nodes_rise;
+                    return --n;
+                }
+
+                inline NODE *lower_node_of(const part *p) const throw()
+                {
+                    return static_cast<NODE*>( __zcache::first_node_of( (void*)p ) );
+                }
 
                 
             };
