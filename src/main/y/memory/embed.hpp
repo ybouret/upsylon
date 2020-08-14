@@ -14,7 +14,7 @@ namespace upsylon
         {
         public:
             //! direct or indirect memory set
-            enum kind
+            enum policy_type
             {
                 by_hook, //! pointer to address
                 by_addr  //! just set address
@@ -36,8 +36,8 @@ namespace upsylon
             //! no throw copy for sequence
             embed(const embed &other ) throw();
 
-            const marker params; //!< initialized to (0,length)
-            const kind   policy; //!< kind type
+            const marker        params; //!< initialized to (0,length)
+            const policy_type   policy; //!< kind type
             union         
             {
                 void *  addr;
