@@ -12,7 +12,6 @@
 #include "y/code/utils.hpp"
 #include "y/os/endian.hpp"
 #include "y/randomized/bits.hpp"
-#include "y/sequence/addressable.hpp"
 #include "y/os/rt-clock.hpp"
 
 namespace upsylon {
@@ -33,12 +32,12 @@ word( acquire(count,width,shift) )
 
 #if !defined(NDEBUG)
         //! full consistency checking
-#define Y_MPN_CHECK(HOST) do { \
-assert( (HOST).words ==  words_for( (HOST).bytes ) );\
-assert( (HOST).words <= (HOST).count ); \
+#define Y_MPN_CHECK(HOST) do {                        \
+assert( (HOST).words ==  words_for( (HOST).bytes ) ); \
+assert( (HOST).words <= (HOST).count );         \
 assert( (HOST).bytes <= (HOST).width ); \
-if( (HOST).bytes > 0 ) assert( 0 != (HOST).get((HOST).bytes-1) );\
-for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (HOST).get(remaining) == 0 );\
+if( (HOST).bytes > 0 ) assert( 0 != (HOST).get((HOST).bytes-1,"msb") );\
+for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (HOST).get(remaining,"remaining") == 0 );\
 } while(false)
 #else
 #define Y_MPN_CHECK(HOST)
@@ -46,7 +45,6 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
 
 #define Y_MPN_ADD_TMX
 
-        typedef addressable<uint8_t> unified;
 
         //______________________________________________________________________
         //
@@ -55,7 +53,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
         //
         //______________________________________________________________________
         template <size_t WORD_BITS>
-        class natural : public number, public unified
+        class natural : public number
         {
         public:
             //__________________________________________________________________
@@ -152,7 +150,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                     size_t imsb = ibit>>3; // at this byte
                     // prepare MSBD
                     {
-                        uint8_t &b = get(imsb);
+                        uint8_t &b = get(imsb,"alea.init");
                         ibit      &= 7;
                         b = bits_table::value[ibit];
                         while(ibit-- > 0)
@@ -164,7 +162,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                     // fill
                     for(size_t i=0;i<imsb;++i)
                     {
-                        get(i) = ran.full<uint8_t>();
+                        get(i,"alea.fill") = ran.full<uint8_t>();
                     }
 
                     // update status
@@ -174,19 +172,6 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 }
             }
 
-            //__________________________________________________________________
-            //
-            // unified interface
-            //__________________________________________________________________
-
-            //! size=bytes
-            inline virtual size_t   size() const throw() { Y_MPN_CHECK(*this); return bytes; }
-
-            //! access[1..bytes]
-            inline virtual uint8_t &operator[](const size_t indx) throw() { Y_MPN_CHECK(*this); return get(1+indx); }
-
-            //! access[1..bytes], const
-            inline virtual const uint8_t &operator[](const size_t indx) const throw() { Y_MPN_CHECK(*this); return get(1+indx); }
 
 
             //__________________________________________________________________
@@ -197,15 +182,15 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             //! set to zero
             inline void ldz() throw()
             {
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
                 memset(word,0,width);
                 bytes=0;
                 words=0;
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
             }
 
             //! no-throw exchange
-            inline void xch( natural &other) throw()
+            inline void xch(natural &other) throw()
             {
                 Y_MPN_CHECK(other);
                 Y_MPN_CHECK(*this);
@@ -221,8 +206,13 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
 
 
             //! access all addressable bytes in 0..width-1
-            inline uint8_t &get(const size_t indx) const throw()
+            inline uint8_t &get(const size_t indx,const char *ctx=0) const throw()
             {
+                if(indx>=width)
+                {
+                    std::cerr << "bad get from " << (ctx?ctx:"unknowm") << std::endl;
+                }
+
                 assert(indx<width);
                 const word_type &w = word[ indx >> word_exp2];
                 uint8_t         *p = (uint8_t *)&w;
@@ -243,7 +233,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                     for(size_t i=bytes;i>0;)
                     {
                         --i;
-                        os<< hexadecimal::lowercase[ get(i) ];
+                        os<< hexadecimal::lowercase[ get(i,"display") ];
                     }
                 }
                 else
@@ -282,7 +272,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                 else
                 {
                     const size_t  bm1 = bytes-1;
-                    const uint8_t msb = get(bm1);
+                    const uint8_t msb = get(bm1,"bits");
                     assert(msb);
                     return (bm1 << 3) + bits_table::count_for_byte[ msb ];
                 }
@@ -292,18 +282,18 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             inline bool get_bit(const size_t ibit) const throw()
             {
                 assert(ibit<bits());
-                const uint8_t b = get(ibit>>3);
+                const uint8_t b = get(ibit>>3,"get_bit");
                 return 0 != (b&bits_table::value[ibit&7]);
             }
 
             //! locally prepare an utype into a nw words at pw
-#define Y_MPN_U2W(ARGS) size_t nw = 0; const word_type *pw=u2w(ARGS,nw)
+#define Y_MPN_U2W(ARGS) volatile utype _ = (ARGS); size_t nw = 0; const word_type *pw=u2w((utype&)_,nw)
 
             //! wrap the different calls
 #define Y_MPN_WRAP_API(CALL) \
 static inline natural CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);            }\
-static inline natural CALL(const natural &lhs, utype          rhs) { Y_MPN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }\
-static inline natural CALL(utype          lhs, const natural &rhs) { Y_MPN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }
+static inline natural CALL(const natural &lhs, const utype    rhs) { Y_MPN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }\
+static inline natural CALL(const utype    lhs, const natural &rhs) { Y_MPN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }
 
 
             //! wrap the different binary calls
@@ -311,8 +301,8 @@ static inline natural CALL(utype          lhs, const natural &rhs) { Y_MPN_U2W(l
 inline natural & operator OP##= (const natural &rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
 inline natural & operator OP##= (utype          rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
 inline friend  natural operator OP (const natural &lhs, const natural &rhs) { return CALL(lhs,rhs); }\
-inline friend  natural operator OP (utype          lhs, const natural &rhs) { return CALL(lhs,rhs); }\
-inline friend  natural operator OP (const natural &lhs, utype          rhs) { return CALL(lhs,rhs); }\
+inline friend  natural operator OP (const utype    lhs, const natural &rhs) { return CALL(lhs,rhs); }\
+inline friend  natural operator OP (const natural &lhs, const utype    rhs) { return CALL(lhs,rhs); }\
 
             //__________________________________________________________________
             //
@@ -350,14 +340,14 @@ inline friend  natural operator OP (const natural &lhs, utype          rhs) { re
             //! wrap the different calls
 #define Y_MPN_WRAP_SAFE_API(RETURN,FUNCTION) \
 static inline RETURN FUNCTION(const natural &lhs, const natural &rhs) throw() { return FUNCTION(lhs.word,lhs.words,rhs.word,rhs.words);  }\
-static inline RETURN FUNCTION(const natural &lhs, utype          u  ) throw() { Y_MPN_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
-static inline RETURN FUNCTION(utype          u,   const natural &rhs) throw() { Y_MPN_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
+static inline RETURN FUNCTION(const natural &lhs, const utype    u  ) throw() { Y_MPN_U2W(u); return FUNCTION(lhs.word,lhs.words,pw,nw); }\
+static inline RETURN FUNCTION(const utype    u,   const natural &rhs) throw() { Y_MPN_U2W(u); return FUNCTION(pw,nw,rhs.word,rhs.words); }
 
             //! wrap the different boolean calls
 #define Y_MPN_WRAP_SAFE_CMP(OP,CALL) \
 inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs); } \
-inline friend bool operator OP (const natural &lhs, utype          rhs) throw() { return CALL(lhs,rhs); } \
-inline friend bool operator OP (utype          lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }
+inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() { return CALL(lhs,rhs); } \
+inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }
 
             //__________________________________________________________________
             //
@@ -396,7 +386,7 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                 mgr.release_field(w,count,width,shift);
             }
 
-            //! utype -> words, and number of words = words_per_utype
+            //! utype -> words, and number of words <= words_per_utype
             static inline const word_type *u2w( utype &u, size_t &n ) throw()
             {
                 u            = swap_le(u);
@@ -412,8 +402,8 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
             }
 
         private:
-            size_t     bytes; //!< active: number of bytes
-            size_t     words; //!< active: number of words
+            size_t     bytes; //!< active: number of bytes <= width=2^shift
+            size_t     words; //!< active: number of words <= count
             size_t     count; //!< memory: max number of words
             size_t     width; //!< memory: width = count * sizeof(word_type), max number of bytes
             size_t     shift; //!< memory: width = 1 << shift
@@ -422,9 +412,10 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
             //! decrease bytes to first not 0
             inline void update() throw()
             {
+                assert(bytes<=width);
                 size_t curr = bytes;
                 size_t prev = curr-1;
-                while(curr>0&&get(prev)<=0)
+                while(curr>0&&get(prev,"update")<=0)
                 {
                     curr = prev--;
                 }
@@ -460,7 +451,8 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                     cswap(small_size,large_size);
                 }
                 const size_t num   = large_size+1;
-                natural      ans(num,as_capacity); Y_MPN_CHECK(ans);
+                const size_t space = num << word_exp2;
+                natural      ans(space,as_capacity); Y_MPN_CHECK(ans);
 #if defined(Y_MPN_ADD_TMX)
                 const uint64_t tmx = rt_clock::ticks();
 #endif
@@ -495,7 +487,7 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                 //__________________________________________________________________
                 sum[large_size] = word_type(carry);
 
-                ans.bytes = (num << word_exp2);
+                ans.bytes = space;
                 ans.update();
 #if defined(Y_MPN_ADD_TMX)
                 add_ticks += rt_clock::ticks()-tmx;

@@ -3,6 +3,7 @@
 #include "y/type/spec.hpp"
 #include "y/code/utils.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/code/hr-ints.hpp"
 
 using namespace upsylon;
 using namespace sibyl;
@@ -73,7 +74,7 @@ namespace {
 
         std::cerr << "-- small additions" << std::endl;
         Unsigned::add_ticks = 0;
-        for(size_t iter=0;iter<1024*1024;++iter)
+        for(size_t iter=0;iter<1024*16;++iter)
         {
             const uint64_t a = alea.partial<uint64_t>( alea.leq(63) );
             const uint64_t b = alea.partial<uint64_t>( alea.leq(63) );
@@ -82,12 +83,27 @@ namespace {
             const Unsigned B = b;   Y_ASSERT( B.lsw() == b );
             const Unsigned C = A+B; Y_ASSERT( C.lsw() == c );
         }
-        std::cerr << " |_add_ticks : " << Unsigned::add_ticks << std::endl;
+
+        std::cerr << "-- large additions" << std::endl;
+        for(size_t bits=32;bits<=2048;bits <<=1)
+        {
+            for(size_t iter=0;iter<1024*16;++iter)
+            {
+                const Unsigned A(alea,alea.range<size_t>(bits-5,bits));
+                const Unsigned B(alea,alea.range<size_t>(bits-5,bits));
+                const Unsigned C = A+B;
+                (void) C;
+            }
+        }
+        std::cerr << " |_add_ticks : " << human_readable(Unsigned::add_ticks) << std::endl;
         {
             const double t = clk(Unsigned::add_ticks);
-            std::cerr << " |_add_time : " << t << std::endl;
-            ios::ocstream::echo(add_fn, "%d %g\n", int(BITS), t);
+            std::cerr << " |_add_time  : " << t << std::endl;
+            ios::ocstream::echo(add_fn, "%2d %g\n", int(BITS), t*1e6);
         }
+
+
+
         std::cerr << "<natural/>" << std::endl;
         std::cerr << std::endl;
 
