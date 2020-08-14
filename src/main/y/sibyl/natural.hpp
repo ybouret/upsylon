@@ -12,6 +12,8 @@
 #include "y/code/utils.hpp"
 #include "y/os/endian.hpp"
 #include "y/randomized/bits.hpp"
+#include "y/sequence/addressable.hpp"
+#include "y/os/rt-clock.hpp"
 
 namespace upsylon {
 
@@ -31,7 +33,7 @@ word( acquire(count,width,shift) )
 
 #if !defined(NDEBUG)
         //! full consistency checking
-#define Y_SIBYL_NATURAL_CHECK(HOST) do { \
+#define Y_MPN_CHECK(HOST) do { \
 assert( (HOST).words ==  words_for( (HOST).bytes ) );\
 assert( (HOST).words <= (HOST).count ); \
 assert( (HOST).bytes <= (HOST).width ); \
@@ -39,8 +41,12 @@ if( (HOST).bytes > 0 ) assert( 0 != (HOST).get((HOST).bytes-1) );\
 for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (HOST).get(remaining) == 0 );\
 } while(false)
 #else
-#define Y_SIBYL_NATURAL_CHECK(HOST)
+#define Y_MPN_CHECK(HOST)
 #endif
+
+#define Y_MPN_ADD_TMX
+
+        typedef addressable<uint8_t> unified;
 
         //______________________________________________________________________
         //
@@ -49,7 +55,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
         //
         //______________________________________________________________________
         template <size_t WORD_BITS>
-        class natural : public number
+        class natural : public number, public unified
         {
         public:
             //__________________________________________________________________
@@ -71,6 +77,8 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             typedef uint64_t                               utype;                                        //!< unsigned integral type
             static  const size_t                           words_per_utype = sizeof(utype) >> word_exp2; //!< utype <=> words
 
+            static uint64_t add_ticks;
+
             //__________________________________________________________________
             //
             // C++ with different constructors/assigns...
@@ -84,22 +92,22 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             }
 
             //! default constructor: 0
-            inline  natural() : Y_MPN_CTOR(0) { Y_SIBYL_NATURAL_CHECK(*this); }
+            inline  natural() : Y_MPN_CTOR(0) { Y_MPN_CHECK(*this); }
 
             //! default constructor with some capacity
-            inline  natural(const size_t n, const as_capacity_t &) : Y_MPN_CTOR(n) { Y_SIBYL_NATURAL_CHECK(*this); }
+            inline  natural(const size_t n, const as_capacity_t &) : Y_MPN_CTOR(n) { Y_MPN_CHECK(*this); }
 
             //! construct from an integral type
             inline natural(utype u) : Y_MPN_CTOR(sizeof(utype))
             {
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
                 for(size_t iw=0;iw<words_per_utype;++iw)
                 {
                     word[iw] = word_type(u);
                     u >>= word_bits;
                 }
                 upgrade();
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
             }
 
             //! copy constructor
@@ -112,17 +120,17 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             shift(0),
             word(acquire(count,width,shift) )
             {
-                Y_SIBYL_NATURAL_CHECK(other);
+                Y_MPN_CHECK(other);
                 memcpy(word,other.word,bytes);
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
             }
 
             //! assign by copy/xch
             inline natural & operator=(const natural &other)
             {
-                Y_SIBYL_NATURAL_CHECK(other);
+                Y_MPN_CHECK(other);
                 natural tmp(other); xch(tmp);
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
                 return *this;
             }
             
@@ -130,13 +138,14 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             inline natural & operator=(const utype _)
             {
                 natural tmp(_); xch(tmp);
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
                 return *this;
             }
 
             //! build from random bits
             inline natural( randomized::bits &ran, const size_t bits ) : Y_MPN_CTOR( Y_ROUND8(bits)>>3 )
             {
+                Y_MPN_CHECK(*this);
                 if(bits)
                 {
                     size_t ibit = bits-1;  // must be set to 1
@@ -161,11 +170,23 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
                     // update status
                     bytes = ++imsb;
                     words = words_for(bytes);
-
-
-
+                    Y_MPN_CHECK(*this);
                 }
             }
+
+            //__________________________________________________________________
+            //
+            // unified interface
+            //__________________________________________________________________
+
+            //! size=bytes
+            inline virtual size_t   size() const throw() { Y_MPN_CHECK(*this); return bytes; }
+
+            //! access[1..bytes]
+            inline virtual uint8_t &operator[](const size_t indx) throw() { Y_MPN_CHECK(*this); return get(1+indx); }
+
+            //! access[1..bytes], const
+            inline virtual const uint8_t &operator[](const size_t indx) const throw() { Y_MPN_CHECK(*this); return get(1+indx); }
 
 
             //__________________________________________________________________
@@ -186,16 +207,16 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             //! no-throw exchange
             inline void xch( natural &other) throw()
             {
-                Y_SIBYL_NATURAL_CHECK(other);
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(other);
+                Y_MPN_CHECK(*this);
                 cswap(bytes,other.bytes);
                 cswap(count,other.count);
                 cswap(width,other.width);
                 cswap(shift,other.shift);
                 cswap(words,other.words);
                 cswap(word, other.word );
-                Y_SIBYL_NATURAL_CHECK(other);
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(other);
+                Y_MPN_CHECK(*this);
             }
 
 
@@ -216,11 +237,18 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             //! display value
             inline void  display(std::ostream &os) const
             {
-                Y_SIBYL_NATURAL_CHECK(*this);
-                for(size_t i=bytes;i>0;)
+                Y_MPN_CHECK(*this);
+                if(bytes>0)
                 {
-                    --i;
-                    os<< hexadecimal::lowercase[ get(i) ];
+                    for(size_t i=bytes;i>0;)
+                    {
+                        --i;
+                        os<< hexadecimal::lowercase[ get(i) ];
+                    }
+                }
+                else
+                {
+                    os << '0';
                 }
             }
 
@@ -234,7 +262,7 @@ for(size_t remaining=(HOST).bytes;remaining<(HOST).width;++remaining) assert( (H
             //! get least significant words
             utype lsw() const throw()
             {
-                Y_SIBYL_NATURAL_CHECK(*this);
+                Y_MPN_CHECK(*this);
                 utype ans = 0;
                 for(size_t i=words_per_utype;i>0;)
                 {
@@ -410,22 +438,7 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                 bytes=width;
                 update();
             }
-#if 0
-            inline size_t set_bit_(const size_t ibit,const bool flag) throw()
-            {
-                const size_t  i = ibit>>3;
-                uint8_t      &b = get(i);
-                if(flag)
-                {
-                    b |=  bits_table::value[ibit&7];
-                }
-                else
-                {
-                    b &= ~bits_table::value[ibit&7];
-                }
-                return i;
-            }
-#endif
+
             //__________________________________________________________________
             //
             // addition
@@ -447,12 +460,15 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                     cswap(small_size,large_size);
                 }
                 const size_t num   = large_size+1;
-                natural      ans(num,as_capacity); Y_SIBYL_NATURAL_CHECK(ans);
+                natural      ans(num,as_capacity); Y_MPN_CHECK(ans);
+#if defined(Y_MPN_ADD_TMX)
+                const uint64_t tmx = rt_clock::ticks();
+#endif
                 word_type   *sum   = ans.word;
                 core_type    carry = 0;
 
                 //--------------------------------------------------------------
-                // common part
+                // add for common part
                 //--------------------------------------------------------------
                 for(size_t i=0;i<small_size;++i)
                 {
@@ -463,7 +479,7 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                 }
 
                 //--------------------------------------------------------------
-                // propagate carry
+                // then propagate carry
                 //--------------------------------------------------------------
                 for(size_t i=small_size;i<large_size;++i)
                 {
@@ -481,7 +497,10 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
 
                 ans.bytes = (num << word_exp2);
                 ans.update();
-                Y_SIBYL_NATURAL_CHECK(ans);
+#if defined(Y_MPN_ADD_TMX)
+                add_ticks += rt_clock::ticks()-tmx;
+#endif
+                Y_MPN_CHECK(ans);
                 return ans;
             }
 
@@ -522,9 +541,9 @@ inline friend bool operator OP (utype          lhs, const natural &rhs) throw() 
                     return false;
                 }
             }
-
-
         };
+
+        template <size_t BITS> uint64_t natural<BITS>::add_ticks = 0;
 
     }
 
