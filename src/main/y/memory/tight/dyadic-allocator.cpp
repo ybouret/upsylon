@@ -23,7 +23,8 @@ namespace upsylon {
 
             static inline size_t po2(const size_t n, size_t &ibit )
             {
-                size_t p = 1<<ibit;
+                static const size_t one = 1;
+                size_t p = one<<ibit;
                 while(p<n)
                 {
                     ++ibit;
