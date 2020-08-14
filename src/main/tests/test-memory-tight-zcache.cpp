@@ -1,5 +1,7 @@
 
 #include "y/memory/tight/zcache.hpp"
+#include "y/memory/tight/zcache-metrics.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include <iomanip>
@@ -30,6 +32,7 @@ namespace {
             << std::setw(5) << cache.chunk_size << " => "
             << std::setw(5) << cache.nodes_rise << " nodes/alloc...";
 
+
             const size_t n = cache.nodes_rise * (2+alea.leq(10));
             core::list_of<node_type> nodes;
             for(size_t i=0;i<n;++i)
@@ -54,8 +57,16 @@ namespace {
             }
 
             cache.gc();
+            std::cerr << "\tsizeof      : " << sizeof(tight::zcache<node_type>) << std::endl;
+            std::cerr << "\tsizeof_nodes: " << sizeof(typename tight::zcache<node_type>::nodes_type) << std::endl;
+            std::cerr << "\tsizeof_parts: " << sizeof(typename tight::zcache<node_type>::parts_type) << std::endl;
+            {
+                void *wksp[ Y_MEMORY_TIGHT_ZCACHE_METRICS ];
+                Y_CHECK(sizeof(tight::zcache<node_type>) <= sizeof(wksp) );
+            }
         }
         std::cerr << Q << std::endl;
+        std::cerr << std::endl;
     }
 }
 

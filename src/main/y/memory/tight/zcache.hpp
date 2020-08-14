@@ -160,12 +160,7 @@ namespace upsylon {
                     return false;
                 }
 
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
-                const size_t chunk_size; //!< new bytes per allocation
-                const size_t nodes_rise; //!< new nodes per allocation
+
 
                 void gc() throw()
                 {
@@ -187,12 +182,18 @@ namespace upsylon {
 
                 }
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const size_t chunk_size; //!< new bytes per allocation           |+1=1
+                const size_t nodes_rise; //!< new nodes per allocation           |+1=2
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(zcache);
 
-                vein      &memIO;    //!< for alloc/free of parts with same size
-                nodes_type nodes;    //!< usable nodes
-                parts_type parts;    //!< holding all nodes
+                vein      &memIO;    //!< for alloc/free of parts with same size |+1=3
+                nodes_type nodes;    //!< usable nodes                           |+4=7
+                parts_type parts;    //!< holding all nodes                      |+3=10
 
                 inline bool owned_by(const part *p, const NODE *n) const throw()
                 {
