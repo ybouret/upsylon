@@ -34,6 +34,13 @@ namespace upsylon {
                 ((zsections *)Z)->zstore(s);   // return zombie section
             }
 
+
+            void ward:: gc() throw()
+            {
+                ((zsections *)Z)->gc();
+            }
+
+
             ward:: ~ward() throw()
             {
                 while(S.size)

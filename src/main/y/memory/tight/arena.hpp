@@ -65,7 +65,9 @@ namespace upsylon {
 
                 //! check ownership
                 bool owns(const void *addr) const throw();
-                
+
+                //! trigger zchunks garbage collector
+                void gc() throw();
 
             private:
                 chunk               *acquiring; //!< current acquiring piece

@@ -45,6 +45,13 @@ namespace upsylon {
             }
 
 
+            void blocks:: gc() throw()
+            {
+                ((zcache<arena> *)zArenas)->gc();
+                ((zcache<chunk> *)zChunks)->gc();
+            }
+
+
 
             static inline void * acquire_slots_with( vein &v )
             {

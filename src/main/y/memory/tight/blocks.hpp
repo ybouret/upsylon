@@ -76,6 +76,8 @@ namespace upsylon {
                 //! find ownership and block size
                 bool owns(const void *addr, size_t &block_size) const throw();
 
+                //! chunks/arena garbage collector
+                void gc() throw();
                 
                 //______________________________________________________________
                 //

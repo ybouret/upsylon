@@ -406,6 +406,13 @@ namespace upsylon {
                 }
             }
 
+
+            void arena:: gc() throw()
+            {
+                static_cast< zcache<chunk> *>(zchunks)->gc();
+            }
+
+
         }
 
     }
