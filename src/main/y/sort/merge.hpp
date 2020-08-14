@@ -40,11 +40,18 @@ namespace upsylon
             }
         }
 
-        //! sorting nodes by address
+        //! sorting nodes by increasing address
         template <typename LIST> static inline
-        void sort_by_addr( LIST &source )
+        void sort_by_increasing_address( LIST &source )
         {
-            sort<LIST>(source,compare_nodes_addr,NULL);
+            sort<LIST>(source,compare_nodes_incr,NULL);
+        }
+
+        //! sorting nodes by increasing address
+        template <typename LIST> static inline
+        void sort_by_decreasing_address( LIST &source )
+        {
+            sort<LIST>(source,compare_nodes_decr,NULL);
         }
         
     private:
@@ -73,9 +80,14 @@ namespace upsylon
             while( R.size > 0 ) target.push_back( R.pop_front() );
         }
         
-        static inline int compare_nodes_addr( const NODE *lhs, const NODE *rhs, void *) throw()
+        static inline int compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
             return int( static_cast<ptrdiff_t>(lhs-rhs) );
+        }
+
+        static inline int compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
+        {
+            return int( static_cast<ptrdiff_t>(rhs-lhs) );
         }
     };
 }

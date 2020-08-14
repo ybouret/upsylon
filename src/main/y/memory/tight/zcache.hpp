@@ -167,7 +167,7 @@ namespace upsylon {
                     // top parts are the most increased memory
                     // so sort nodes by increasing memory and
                     // start from the end
-                    merging<NODE>::sort_by_addr(nodes);
+                    merging<NODE>::sort_by_decreasing_address(nodes);
                     parts_type  tmp_parts;
                     nodes_type  tmp_nodes;
                     while(parts.size)

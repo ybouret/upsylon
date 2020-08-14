@@ -112,7 +112,7 @@ namespace upsylon {
                     while(chest.size) {
                         ingots.push_back(chest.query());
                     }
-                    merging<ingot>::sort_by_addr(ingots);
+                    merging<ingot>::sort_by_increasing_address(ingots);
 #if !defined(NDEBUG)
                     {
                         const ingot *node = ingots.head;

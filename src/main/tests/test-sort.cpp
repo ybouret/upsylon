@@ -70,9 +70,28 @@ namespace
                 std::cerr << node->data << " ";
             }
             std::cerr << std::endl;
-            
-            merging<Node>::sort_by_addr(L);
-            
+
+            std::cerr << "by increasing address" << std::endl;
+            merging<Node>::sort_by_increasing_address(L);
+            {
+                Node *node=L.head;
+                while(node&&node->next)
+                {
+                    Y_ASSERT(node<node->next);
+                    node=node->next;
+                }
+            }
+
+            std::cerr << "by decreasing address" << std::endl;
+            merging<Node>::sort_by_decreasing_address(L);
+            {
+                Node *node=L.head;
+                while(node&&node->next)
+                {
+                    Y_ASSERT(node>node->next);
+                    node=node->next;
+                }
+            }
             
             std::cerr << "\tHeap" << std::endl;
             vector<T> V;
