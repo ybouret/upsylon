@@ -84,10 +84,10 @@ namespace {
 
         std::cerr << "-- all additions" << std::endl;
         ios::ocstream::echo(add_fn, "%2d", int(BITS));
-        for(size_t bits=1;bits<=2048;bits <<=1)
+        for(size_t bits=1;bits<=4096;bits <<=1)
         {
             Unsigned::add_ticks = 0;
-            static const size_t add_cycles = 1024*16;
+            static const size_t add_cycles = 1024*32;
             for(size_t iter=0;iter<add_cycles;++iter)
             {
                 const Unsigned A(alea,alea.range<size_t>(bits-0,bits));
@@ -97,7 +97,7 @@ namespace {
             }
             const double add_time = clk(Unsigned::add_ticks);
             const double speed    = add_cycles/(add_time*1e6);
-            ios::ocstream::echo(add_fn," %g",speed);
+            ios::ocstream::echo(add_fn," %8.2lf",speed);
         }
         ios::ocstream::echo(add_fn,"\n");
 
@@ -113,6 +113,13 @@ namespace {
 Y_UTEST(sibyl_n)
 {
     ios::ocstream::overwrite(add_fn);
+    ios::ocstream::echo(add_fn, "#b");
+    for(unsigned bits=1;bits<=4096;bits <<=1)
+    {
+        ios::ocstream::echo(add_fn," %8u", bits);
+    }
+    ios::ocstream::echo(add_fn,"\n");
+
     SHOW(number::sys_core_size); std::cerr << type_name_of<number::sys_core_type>() << std::endl;
     SHOW(number::max_core_size); std::cerr << type_name_of<number::max_core_type>() << std::endl;
     SHOW(number::max_word_size);
