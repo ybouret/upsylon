@@ -107,7 +107,7 @@ namespace upsylon {
                     //------------------------------------------------------
                     arena *a = zArenas.zquery();
                     try {
-                        new (a) arena(block_size,chunk_size,zChunks,sharedQ);
+                        new (a) arena(block_size,chunk_size,&zChunks,sharedQ);
                     }
                     catch(...)
                     {

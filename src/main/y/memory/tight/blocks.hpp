@@ -5,7 +5,7 @@
 #define Y_MEMORY_TIGHT_BLOCKS_INCLUDED 1
 
 #include "y/memory/tight/arena.hpp"
-
+#include "y/memory/tight/zcache.hpp"
 
 namespace upsylon {
 

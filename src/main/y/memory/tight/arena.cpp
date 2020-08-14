@@ -1,5 +1,6 @@
 
 #include "y/memory/tight/arena.hpp"
+#include "y/memory/tight/zcache.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/type/aliasing.hpp"
@@ -56,8 +57,8 @@ namespace upsylon {
 
             arena:: arena(const size_t   the_block_size,
                           const size_t   req_chunk_size,
-                          zcache<chunk> &Z,
-                          quarry        &Q) :
+                          void          *shared_zchunks,
+                          quarry        &shared_quarry) :
             acquiring(0),
             releasing(0),
             empty_one(0),
@@ -67,8 +68,8 @@ namespace upsylon {
             chunk_size(chunk_size_for(block_size,req_chunk_size)),
             next(0),
             prev(0),
-            zchunks(Z),
-            deposit(Q(chunk_size)),
+            zchunks(shared_zchunks),
+            deposit(shared_quarry(chunk_size)),
             blocks_per_chunk(0),
             reserved(0)
             {
@@ -79,11 +80,12 @@ namespace upsylon {
 
             chunk * arena:: create_chunk()
             {
-
+                assert(zchunks);
+                zcache<chunk> &zc = *static_cast< zcache<chunk> *>(zchunks);
                 //--------------------------------------------------------------
                 // get an empty chunk
                 //--------------------------------------------------------------
-                chunk * curr = zchunks.zquery();
+                chunk * curr = zc.zquery();
                 
                 //--------------------------------------------------------------
                 // provide memory to this chunk
@@ -94,7 +96,7 @@ namespace upsylon {
                 }
                 catch(...)
                 {
-                    zchunks.zstore(curr);
+                    zc.zstore(curr);
                     throw;
                 }
 
@@ -119,6 +121,7 @@ namespace upsylon {
             void  arena:: delete_chunk(chunk *p) throw()
             {
 
+                assert(zchunks);
                 assert(p);
                 assert(0==p->next);
                 assert(0==p->prev);
@@ -138,7 +141,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // return to cache
                 //--------------------------------------------------------------
-                zchunks.zstore(p);
+                static_cast< zcache<chunk> *>(zchunks)->zstore(p);
             }
 
         }

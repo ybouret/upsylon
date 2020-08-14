@@ -1,6 +1,7 @@
 
 #include "y/memory/tight/arena.hpp"
 #include "y/memory/tight/quarry.hpp"
+#include "y/memory/tight/zcache.hpp"
 #include "y/memory/allocator/global.hpp"
 
 #include "y/utest/run.hpp"
@@ -28,7 +29,7 @@ Y_UTEST(tight_arena)
         const size_t block_max = min_of<size_t>(chunk_size/2,60);
         for(size_t block_size=1;block_size<=block_max;++block_size)
         {
-            tight::arena t(block_size,chunk_size,cache,Q);
+            tight::arena t(block_size,chunk_size,&cache,Q);
             std::cerr << "\t<block_size=" << std::setw(3) << block_size << ">";
             std::cerr << " chunk_size=" << std::setw(5) << t.chunk_size;
             std::cerr << " blocks/chunk=" << std::setw(3) << t.blocks_per_chunk;
@@ -90,7 +91,7 @@ Y_UTEST(tight_compact)
     for(size_t block_size=1;block_size<=40;++block_size)
     {
         std::cerr << "block_size=" << block_size << std::endl;
-        tight::arena a(block_size,chunk_size,cache,Q);
+        tight::arena a(block_size,chunk_size,&cache,Q);
 
         size_t n = 0;
         while(n<count)

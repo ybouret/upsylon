@@ -5,8 +5,8 @@
 
 #include "y/memory/tight/quarry.hpp"
 #include "y/core/pool.hpp"
-#include "y/sort/merge.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/sort/merge.hpp"
 
 namespace upsylon {
 

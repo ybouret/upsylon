@@ -5,7 +5,7 @@
 
 
 #include "y/memory/tight/chunk.hpp"
-#include "y/memory/tight/zcache.hpp"
+#include "y/core/list.hpp"
 #include <iosfwd>
 
 namespace upsylon {
@@ -13,6 +13,9 @@ namespace upsylon {
     namespace memory {
 
         namespace tight {
+
+            class quarry; //!< forward declaration
+            class vein;   //!< forward declaration
             
             //__________________________________________________________________
             //
@@ -23,6 +26,7 @@ namespace upsylon {
             class arena
             {
             public:
+
                 //______________________________________________________________
                 //
                 // C++
@@ -40,8 +44,8 @@ namespace upsylon {
                  */
                 arena(const size_t   the_block_size,
                       const size_t   req_chunk_size,
-                      zcache<chunk> &Z,
-                      quarry        &Q);
+                      void *         shared_zchunks,
+                      quarry        &shared_quarry);
 
                 //! cleanup
                 ~arena() throw();
@@ -77,7 +81,7 @@ namespace upsylon {
                 arena       *prev;       //!< for list
                 
             private:
-                zcache<chunk> &zchunks;   //!< shared cache of zombie chunks
+                void          *zchunks;   //!< shared cache of zombie chunks
                 vein          &deposit;   //!< shared cache of ingots
 
             public:
