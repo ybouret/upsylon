@@ -78,6 +78,23 @@ namespace {
         return tmx;
     }
     
+    template <typename CORE>
+    static inline uint64_t add64()
+    {
+        uint64_t tmx = 0;
+        for(size_t iter=0;iter<65536;++iter)
+        {
+            uint64_t A = alea.full<uint64_t>();
+            uint64_t B = alea.full<uint64_t>();
+            uint64_t S = 0;
+            uint64_t C = 0;
+            const uint64_t mark = rt_clock::ticks();
+            slick::add_with_carry<CORE,uint64_t>(C,S,A,B);
+            tmx += rt_clock::ticks()-mark;
+        }
+        return tmx;
+    }
+    
 }
 
 #define TEST(NAME,SOURCE,TARGET) do {\
@@ -91,45 +108,33 @@ do { ++cyc; tmx += NAME##SOURCE<uint##TARGET##_t>(); } while( (ell=clk(tmx)) < d
 std::cerr << (ops*double(cyc)/ell) << std::endl;\
 } while(false)
 
-
+#include "y/string/convert.hpp"
 
 Y_UTEST(sibyl_t)
 {
     
-    if(false)
+    double duration = 1.0;
+    if(argc>1)
     {
-        union wrap8 {
-            uint8_t w;
-            struct {
-                uint8_t l: 4;
-                uint8_t h: 4;
-            } r;
-        };
-        
-        const uint8_t x = 0xab;
-        wrap8         y = { x };
-        std::cerr << "sizeof(wrap8)=" << sizeof(wrap8) << std::endl;
-        std::cerr << std::hex;
-        std::cerr << "x=" << int(x) << ", y.w=" << int(y.w) << ", l=" << int(y.r.l) << ", h=" << int(y.r.h) << std::endl;
+        duration = string_convert::to<double>(argv[1],"duration");
     }
     
-    
-    
-    double duration=1;
     TEST(add,8,8);
     TEST(add,8,16);
     TEST(add,8,32);
     TEST(add,8,64);
     std::cerr << std::endl;
 
-    //TEST(add,16,16);
+    TEST(add,16,16);
     TEST(add,16,32);
     TEST(add,16,64);
     std::cerr << std::endl;
     
+    TEST(add,32,32);
     TEST(add,32,64);
+    std::cerr << std::endl;
 
-    
+    TEST(add,64,64);
 }
 Y_UTEST_DONE()
 
