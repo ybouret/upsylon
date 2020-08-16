@@ -319,7 +319,9 @@ ADD_TEST(counting:perf     test-main counting_perf)
 ADD_TEST(counting:drawers  test-main drawers)
 
 SOURCE_GROUP(sibyl FILES
-test-sibyl-natural.cpp)
+test-sibyl-natural.cpp
+test-sibyl-types.cpp)
+ADD_TEST(sibyl:t test-main sibyl_t)
 ADD_TEST(sibyl:n test-main sibyl_n)
 
 ADD_CUSTOM_TARGET(utest-main

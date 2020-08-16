@@ -111,17 +111,10 @@ namespace {
     }
 }
 
-union wrap8 {
-    uint8_t w;
-    struct {
-        uint8_t l: 4;
-        uint8_t h: 4;
-    } r;
-};
 
 Y_UTEST(sibyl_n)
 {
-    if(false)
+    if(true)
     {
         ios::ocstream::overwrite(add_fn);
         ios::ocstream::echo(add_fn, "#b");
@@ -141,12 +134,8 @@ Y_UTEST(sibyl_n)
         
         std::cerr << *number::instance() << std::endl;
     }
+   
     
-    const uint8_t x = 0xab;
-    wrap8         y = { x };
-    std::cerr << "sizeof(wrap8)=" << sizeof(wrap8) << std::endl;
-    std::cerr << std::hex;
-    std::cerr << "x=" << int(x) << ", y.w=" << int(y.w) << ", l=" << int(y.r.l) << ", h=" << int(y.r.h) << std::endl;
     
     
 }

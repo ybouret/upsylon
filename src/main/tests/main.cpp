@@ -221,6 +221,7 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(tensors);
 
+    Y_UTEST(sibyl_t);
     Y_UTEST(sibyl_n);
 
 }
