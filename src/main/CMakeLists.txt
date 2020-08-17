@@ -228,12 +228,6 @@ SET(fft_srcs ${fft_decl} ${fft_code})
 SOURCE_GROUP( fft FILES ${fft_srcs} )
 INSTALL( FILES ${fft_decl} DESTINATION include/y/fft )
 
-FILE(GLOB sibyl_decl y/sibyl/*.hpp)
-FILE(GLOB sibyl_code y/sibyl/*.cpp)
-SET(sibyl_srcs ${sibyl_decl} ${sibyl_code})
-SOURCE_GROUP( sibyl FILES ${sibyl_srcs} )
-INSTALL( FILES ${sibyl_decl} DESTINATION include/y/sibyl )
-
 FILE(GLOB mpl_decl y/mpl/*.hpp)
 FILE(GLOB mpl_code y/mpl/*.cpp)
 SET(mpl_srcs ${mpl_decl} ${mpl_code})
@@ -453,7 +447,6 @@ ${jargon_pattern_basic_srcs}
 ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
 ${tensor_srcs}
-${sibyl_srcs}
 ${yap_srcs} ${yap_natural_srcs}
 )
  
