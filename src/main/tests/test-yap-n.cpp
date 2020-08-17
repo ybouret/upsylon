@@ -1,4 +1,4 @@
-#include "y/yap/number.hpp"
+#include "y/yap/natural.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -10,6 +10,13 @@ Y_UTEST(yap_n)
     std::cerr << "word_bits=" << number::word_bits << std::endl;
     Y_CHECK(number::word_bits<=number::core_bits/2);
     Y_CHECK((1<<number::word_exp2)==number::word_size);
+
+    natural zero;
+    std::cerr << "zero=" << zero << std::endl;
+
+    natural one = 1;
+    std::cerr << "one=" << one << std::endl;
+
 }
 Y_UTEST_DONE()
 

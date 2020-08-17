@@ -32,7 +32,15 @@ word( acquire(count,width,shift) )
         {
         public:
 
+            //__________________________________________________________________
+            //
+            // C++ and constructores
+            //__________________________________________________________________
             virtual ~natural() throw();
+            natural(); //!< zero
+            natural(const size_t num_bytes, const as_capacity_t &); //!< zero with memory for bytes
+            natural(const natural &);
+            natural(utype);
 
             //__________________________________________________________________
             //
@@ -41,6 +49,8 @@ word( acquire(count,width,shift) )
             static memory_allocator &instance();          //!< internal dedicated memory
             static memory_allocator &location() throw();  //!< internal dedicated memory
             static size_t            words_for(const size_t bytes) throw();
+            friend std::ostream    &operator<<(std::ostream &, const natural &);
+
 
 
         private:
@@ -53,6 +63,12 @@ word( acquire(count,width,shift) )
 
             static word_type *acquire(size_t &count, size_t &width, size_t &shift);
             static void       release(word_type *, size_t &count, size_t &width, size_t &shift) throw();
+
+            uint8_t &get(size_t i) const throw(); //!< LE byte in [0..width-1]
+
+            void update()  throw(); //!< check bytes from current position
+            void upgrade() throw(); //!< set bytes to width and update
+
         };
 
     }

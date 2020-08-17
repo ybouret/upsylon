@@ -46,8 +46,10 @@ namespace upsylon {
             static const size_t                                word_size = sizeof(word_type);
             static const size_t                                word_bits = word_size << 3;
             static const size_t                                word_exp2 = ilog2<word_size>::value;
+            static const size_t                                word_mask = word_size-1;
 
-          
+            static const size_t                                words_per_utype = sizeof(utype)/word_size;
+
             //__________________________________________________________________
             //
             // C++
