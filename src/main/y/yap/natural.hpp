@@ -144,13 +144,28 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
             //
             // additions
             //__________________________________________________________________
+
+            //! complete API
 #define Y_APN_WRAP_API(RETURN,CALL) \
 inline static RETURN CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
 inline static RETURN CALL(const utype    lhs, const natural &rhs) { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
 inline static RETURN CALL(const natural &lhs, const utype    rhs) { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
 
-            Y_APN_WRAP_API(natural,add);
+            //! complete binary operators
+#define Y_APN_WRAP_OPS(OP,CALL) \
+inline natural & operator OP##=( const natural &rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline natural & operator OP##=( const utype    rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline friend natural operator OP (const natural &lhs, const natural &rhs) { return CALL(lhs,rhs); }\
+inline friend natural operator OP (const utype    lhs, const natural &rhs) { return CALL(lhs,rhs); }\
+inline friend natural operator OP (const natural &lhs, const utype    rhs) { return CALL(lhs,rhs); }
 
+
+            Y_APN_WRAP_API(natural,add);
+            Y_APN_WRAP_OPS(+,add)
+
+            natural   operator+() const; //!< unary +
+            natural & operator++();      //!< prefix++ operator
+            natural   operator++(int);   //!< postfix++ operator
 
 
             //__________________________________________________________________

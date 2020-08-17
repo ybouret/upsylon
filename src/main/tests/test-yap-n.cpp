@@ -12,19 +12,10 @@ namespace {
     
     static inline void check_u2w(const uint64_t u)
     {
-        //std::cerr << "check_u2w..." << std::endl;
         volatile uint64_t v  = u;
         volatile size_t   nw = 0;
         const natural::word_type  *pw = natural::u2w(v,nw);
-#if 0
-        std::cerr << std::hex;
-        std::cerr << "u: " << u << " => [" << nw << "]";
-        for(size_t i=0;i<nw;++i)
-        {
-            std::cerr << " " << pw[i];
-        }
-        std::cerr << std::endl;
-#endif
+
         number::utype x = 0;
         for(size_t i=nw;i>0;)
         {
@@ -179,6 +170,82 @@ Y_UTEST(yap_n)
                 Y_ASSERT(A>b); Y_ASSERT(A>=b);
             }
         }
+    }
+
+    std::cerr << "-- test addition" << std::endl;
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        const uint64_t a = alea.partial<uint64_t>(63);
+        const uint64_t b = alea.partial<uint64_t>(63);
+        const uint64_t c = a+b;
+        const natural  A = a; Y_ASSERT( A.lsw() == a );
+        const natural  B = b; Y_ASSERT( B.lsw() == b );
+        const natural  C = c; Y_ASSERT( C.lsw() == c );
+        const natural  S = A+B;
+        Y_ASSERT(S==C);
+    }
+
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        const natural A(alea,alea.leq(5000));
+        {
+            const natural ID = +A; Y_ASSERT(ID==A);
+        }
+        const natural B(alea,alea.leq(5000));
+        const natural C = A+B;
+        {
+            natural  a = A;
+            a += B;
+            Y_ASSERT(C==a);
+        }
+        {
+            natural b = B;
+            b += A;
+            Y_ASSERT(C==b);
+        }
+    }
+
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        const natural  A(alea,alea.leq(5000));
+        const uint64_t b = alea.full<uint64_t>();
+        const natural  B = b;
+        const natural  S = A+B;
+        assert( A+b == S );
+        assert( b+A == S );
+        {
+            natural a  = A;
+            a += b;
+            Y_ASSERT(S==a);
+        }
+    }
+
+    for(size_t iter=0;iter<16;++iter)
+    {
+        {
+            natural       i(alea,alea.leq(5000));
+            const size_t  n = alea.leq(1000);
+            const natural end = i+n;
+            size_t        count = 0;
+            for(;i<end;++i)
+            {
+                ++count;
+            }
+            Y_ASSERT(n==count);
+        }
+
+        {
+            natural       i(alea,alea.leq(5000));
+            const size_t  n = alea.leq(1000);
+            const natural end = i+n;
+            size_t        count = 0;
+            for(;i<end;i++)
+            {
+                ++count;
+            }
+            Y_ASSERT(n==count);
+        }
+
     }
 
 

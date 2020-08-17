@@ -62,6 +62,31 @@ namespace upsylon
             assert( check(ans,"result@add") );
             return ans;
         }
+
+        natural natural:: operator+() const
+        {
+            return natural(*this);
+        }
+
+        natural & natural:: operator++()
+        {
+            static word_type one = 1;
+            natural          tmp = add(&one,1,word,words);
+            xch(tmp);
+            return *this;
+        }
+
+        natural  natural:: operator++(int)
+        {
+            static word_type one = 1;
+            const  natural   ans(*this);
+            {
+                natural          tmp = add(&one,1,word,words);
+                xch(tmp);
+            }
+            return ans;
+        }
+
     }
 }
 
