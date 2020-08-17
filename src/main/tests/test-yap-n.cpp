@@ -249,6 +249,8 @@ Y_UTEST(yap_n)
     }
 
 
+    std::cerr << *natural::instance() << std::endl;
+
 
 
 }
