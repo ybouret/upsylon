@@ -318,12 +318,6 @@ ADD_TEST(counting:meta     test-main metaloop)
 ADD_TEST(counting:perf     test-main counting_perf)
 ADD_TEST(counting:drawers  test-main drawers)
 
-SOURCE_GROUP(sibyl FILES
-test-sibyl-natural.cpp
-test-sibyl-types.cpp)
-ADD_TEST(sibyl:t test-main sibyl_t)
-ADD_TEST(sibyl:n test-main sibyl_n)
-
 SOURCE_GROUP(yap FILES
 test-yap-n.cpp)
 ADD_TEST(yap:n test-main yap_n)

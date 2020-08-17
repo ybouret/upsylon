@@ -1,5 +1,4 @@
 #include "y/sibyl/natural.hpp"
-#include "y/sibyl/types.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/code/utils.hpp"
