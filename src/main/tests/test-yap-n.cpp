@@ -1,6 +1,10 @@
 #include "y/yap/natural.hpp"
 #include "y/utest/run.hpp"
 #include "y/exceptions.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/ios/icstream.hpp"
+
 #include <cerrno>
 
 using namespace upsylon;
@@ -42,12 +46,37 @@ Y_UTEST(yap_n)
 
     }
 
-    std::cerr << "-- test ran" << std::endl;
-    for(size_t iter=0;iter<1024;++iter)
+    std::cerr << "-- test ran/eq" << std::endl;
     {
-        const size_t  bits = alea.leq(5000);
-        const natural n(alea,bits);
-        Y_ASSERT(n.bits()==bits);
+        vector<natural> rans;
+        size_t          written = 0;
+        {
+            ios::ocstream fp("apn-ran.dat");
+            for(size_t iter=0;iter<1024;++iter)
+            {
+                const size_t  bits = alea.leq(5000);
+                const natural n(alea,bits);
+                Y_ASSERT(n.bits()==bits);
+                rans.push_back(n);
+                written += n.serialize(fp);
+            }
+        }
+        std::cerr << "\t#written = " << written << std::endl;
+
+        {
+            ios::icstream fp("apn-ran.dat");
+            size_t        read  = 0;
+            size_t        count = 0;
+            while( fp.is_active() )
+            {
+                size_t delta = 0;
+                const  natural n = natural::read(fp, delta, "apn");
+                read += delta;
+                ++count;
+                if(count>rans.size()) throw exception("too many apn in file");
+            }
+            std::cerr << "\t#read    = " << read << std::endl;
+        }
     }
 
 

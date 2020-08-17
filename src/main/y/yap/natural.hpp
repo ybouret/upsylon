@@ -68,6 +68,12 @@ word( acquire(count,width,shift) )
             //__________________________________________________________________
             virtual const char *className()       const throw(); //!< CLASS_NAME
             virtual size_t      serialize(ios::ostream &) const; //!< portable output
+            static  natural     read(ios::istream &, size_t &, const char *); //!< relaod
+            
+            //__________________________________________________________________
+            //
+            // comparisons
+            //__________________________________________________________________
 
             //__________________________________________________________________
             //
@@ -96,6 +102,9 @@ word( acquire(count,width,shift) )
             void update()  throw(); //!< check bytes from current position
             void upgrade() throw(); //!< set bytes to width and update
 
+            //! test words equality
+            static bool eq(const word_type *lhs, const size_t lnw,
+                           const word_type *rhs, const size_t rnw) throw();
         };
 
     }
