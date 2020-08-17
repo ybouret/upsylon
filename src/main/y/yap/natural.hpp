@@ -69,11 +69,12 @@ word( acquire(count,width,shift) )
             virtual const char *className()       const throw(); //!< CLASS_NAME
             virtual size_t      serialize(ios::ostream &) const; //!< portable output
             static  natural     read(ios::istream &, size_t &, const char *); //!< relaod
-            
+
             //__________________________________________________________________
             //
             // comparisons
             //__________________________________________________________________
+
 
             //__________________________________________________________________
             //
@@ -84,7 +85,8 @@ word( acquire(count,width,shift) )
             static size_t            words_for(const size_t bytes) throw();
             friend std::ostream     &operator<<(std::ostream &, const natural &);
 
-            static bool check(const natural &n, const char *which) throw();
+            static bool             check(const natural &n, const char *which) throw();
+            static const word_type *u2w(volatile utype &u, size_t &n) throw();
 
         private:
             size_t     bytes; //!< effective number of bytes

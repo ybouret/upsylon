@@ -51,7 +51,7 @@ namespace upsylon {
             return Y_ROUND_LN2(word_exp2,bytes);
         }
 
-        number::word_type * natural:: acquire(size_t &count, size_t &width, size_t &shift)
+        word_type * natural:: acquire(size_t &count, size_t &width, size_t &shift)
         {
             static memory_allocator &mgr = instance();
             return mgr.acquire_field<word_type>(count,width,shift);
@@ -106,10 +106,10 @@ namespace upsylon {
 
 
 
-        number::utype natural::lsw() const throw()
+        utype natural::lsw() const throw()
         {
             assert(check(*this,"self@lsw"));
-            number::utype u = 0;
+            utype u = 0;
             for(size_t i=words_per_utype;i>0;)
             {
                 u <<= word_bits;
@@ -204,6 +204,26 @@ namespace upsylon {
             natural tmp(u); xch(tmp);
             assert(check(*this,"self@="));
             return *this;
+        }
+
+        const word_type * natural:: u2w(volatile utype &u, size_t &n) throw()
+        {
+            utype      tmp = 0;
+            word_type *w   = (word_type *)&tmp;
+            for(size_t i=0;i<words_per_utype;++i)
+            {
+                w[i] = word_type(u);
+                u >>=  word_bits;
+            }
+            n=words_per_utype;
+            for(size_t m=words_per_utype-1;n>0;)
+            {
+                if(w[m]>0) break;
+                n=m;
+                --m;
+            }
+            u = tmp;
+            return (word_type *) &u;
         }
 
     }

@@ -10,12 +10,35 @@
 using namespace upsylon;
 using namespace yap;
 
+namespace {
+    static inline void check_u2w(const uint64_t u)
+    {
+        uint64_t         v  = u;
+        size_t           nw = 0;
+        const word_type *pw = natural::u2w(v,nw);
+        std::cerr << std::hex;
+        std::cerr << "u: " << u << " => [" << nw << "]";
+        for(size_t i=0;i<nw;++i)
+        {
+            std::cerr << " " << pw[i];
+        }
+        std::cerr << std::endl;
+        uint64_t x = 0;
+        for(size_t i=nw;i>0;)
+        {
+            x <<= word_bits;
+            x |=  pw[--i];
+        }
+        Y_ASSERT(u==x);
+    }
+}
+
 Y_UTEST(yap_n)
 {
-    std::cerr << "core_bits=" << number::core_bits << std::endl;
-    std::cerr << "word_bits=" << number::word_bits << std::endl;
-    Y_CHECK(number::word_bits<=number::core_bits/2);
-    Y_CHECK((1<<number::word_exp2)==number::word_size);
+    std::cerr << "core_bits=" << core_bits << std::endl;
+    std::cerr << "word_bits=" << word_bits << std::endl;
+    Y_CHECK(word_bits<=core_bits/2);
+    Y_CHECK((1<< word_exp2)==word_size);
 
     std::cerr << "-- test zero" << std::endl;
     {
@@ -28,6 +51,19 @@ Y_UTEST(yap_n)
         std::cerr << "zero=" << zero << std::endl;
     }
 
+    std::cerr << "-- test u2w" << std::endl;
+
+    check_u2w(0);
+    for(utype u=1,s=0;s<sizeof(utype)*8;u<<=1,++s)
+    {
+        check_u2w(u);
+    }
+
+    for(size_t iter=0;iter<8;++iter)
+    {
+        const uint64_t   u  = alea.full<uint64_t>();
+        check_u2w(u);
+    }
 
     std::cerr << "-- test set/lsw" << std::endl;
     for(size_t iter=0;iter<1024;++iter)
@@ -48,6 +84,7 @@ Y_UTEST(yap_n)
 
     std::cerr << "-- test ran/eq" << std::endl;
     {
+        std::cerr << std::dec;
         vector<natural> rans;
         size_t          written = 0;
         {
@@ -88,8 +125,8 @@ libc::exception e(ERR,#ERR); std::cerr << e.what() << " : " << e.when() << std::
     Y_TEST_EXCP(EDOM);
     Y_TEST_EXCP(ERANGE);
 #endif
-    std::cerr << "core_bits=" << number::core_bits << std::endl;
-    std::cerr << "word_bits=" << number::word_bits << std::endl;
+    std::cerr << "core_bits=" <<  core_bits << std::endl;
+    std::cerr << "word_bits=" <<  word_bits << std::endl;
 }
 Y_UTEST_DONE()
 
