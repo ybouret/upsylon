@@ -1,5 +1,7 @@
 #include "y/yap/natural.hpp"
 #include "y/utest/run.hpp"
+#include "y/exceptions.hpp"
+#include <cerrno>
 
 using namespace upsylon;
 using namespace yap;
@@ -39,6 +41,23 @@ Y_UTEST(yap_n)
         Y_ASSERT(n3.lsw()==u);
 
     }
+
+    std::cerr << "-- test ran" << std::endl;
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        const size_t  bits = alea.leq(5000);
+        const natural n(alea,bits);
+        Y_ASSERT(n.bits()==bits);
+    }
+
+
+
+#define Y_TEST_EXCP(ERR) do {\
+libc::exception e(ERR,#ERR); std::cerr << e.what() << " : " << e.when() << std::endl;\
+} while(false)
+
+    Y_TEST_EXCP(EDOM);
+    Y_TEST_EXCP(ERANGE);
 
 }
 Y_UTEST_DONE()

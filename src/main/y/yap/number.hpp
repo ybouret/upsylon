@@ -5,6 +5,7 @@
 #include "y/type/ints.hpp"
 #include "y/code/ilog2.hpp"
 #include "y/ptr/counted.hpp"
+#include "y/ios/serializable.hpp"
 
 namespace upsylon {
 
@@ -19,7 +20,7 @@ namespace upsylon {
         //! base class for numbers
         //
         //______________________________________________________________________
-        class number : public object, public counted
+        class number : public object, public counted, public ios::serializable
         {
         public:
             //__________________________________________________________________

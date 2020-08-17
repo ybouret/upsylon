@@ -395,6 +395,12 @@ SET(yap_srcs ${yap_decl} ${yap_code})
 SOURCE_GROUP( yap FILES ${yap_srcs} )
 INSTALL( FILES ${yap_decl} DESTINATION include/y/yap )
 
+FILE(GLOB yap_natural_decl y/yap/natural/*.hpp)
+FILE(GLOB yap_natural_code y/yap/natural/*.cpp)
+SET(yap_natural_srcs ${yap_natural_decl} ${yap_natural_code})
+SOURCE_GROUP( yap/natural FILES ${yap_natural_srcs} )
+INSTALL( FILES ${yap_natural_decl} DESTINATION include/y/yap/natural )
+
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -448,7 +454,7 @@ ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
 ${tensor_srcs}
 ${sibyl_srcs}
-${yap_srcs}
+${yap_srcs} ${yap_natural_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

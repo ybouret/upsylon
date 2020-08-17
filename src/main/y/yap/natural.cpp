@@ -22,6 +22,18 @@ namespace upsylon {
             static const char sfx[] = " FAILURE!";
             std::cerr << "..checking " << which << std::endl;
             Y_APN_CHECK(n.words==words_for(n.bytes));
+            Y_APN_CHECK(n.count>=n.words);
+            Y_APN_CHECK(n.count*word_size==n.width);
+            Y_APN_CHECK(n.width == (size_t(1) << n.shift) );
+            Y_APN_CHECK(n.bytes <= n.width );
+            if(n.bytes>0)
+            {
+                Y_APN_CHECK(n.get(n.bytes-1)>0);
+            }
+            for(size_t remaining=n.bytes;remaining<n.width;++remaining)
+            {
+                Y_APN_CHECK(0==n.get(remaining));
+            }
             return true;
         }
 
@@ -92,6 +104,8 @@ namespace upsylon {
 
         }
 
+
+
         number::utype natural::lsw() const throw()
         {
             assert(check(*this,"self@lsw"));
@@ -103,6 +117,28 @@ namespace upsylon {
             }
             return u;
         }
+
+        size_t natural:: bits() const throw()
+        {
+            if(bytes<=0)
+            {
+                return 0;
+            }
+            else
+            {
+                const size_t  bm1 = bytes-1;
+                const uint8_t msb = get(bm1);
+                assert(msb);
+                return (bm1 << 3) + bits_table::count_for_byte[ msb ];
+            }
+        }
+
+        size_t natural:: size() const throw()
+        {
+            return bytes;
+        }
+
+
 
 
         void natural:: update() throw()
@@ -215,4 +251,47 @@ namespace upsylon
 
 }
 
+#include "y/randomized/bits.hpp"
+
+namespace upsylon
+{
+
+    namespace yap
+    {
+        natural:: natural(randomized::bits &ran, const size_t nbit) : Y_APN_CTOR( Y_ROUND8(nbit)>>3 )
+        {
+            assert(check(*this,"self@ran"));
+            if(nbit)
+            {
+                size_t ibit = nbit-1;  // must be set to 1
+                size_t imsb = ibit>>3; // at this byte
+
+                // prepare MSB
+                {
+                    uint8_t &b = get(imsb);
+                    ibit      &= 7;
+                    b = bits_table::value[ibit];
+                    while(ibit-- > 0)
+                    {
+                        if(ran.choice()) b |= bits_table::value[ibit];
+                    }
+                }
+
+                // fill
+                for(size_t i=0;i<imsb;++i)
+                {
+                    get(i) = ran.full<uint8_t>();
+                }
+
+                // update status
+                bytes = ++imsb;
+                words = words_for(bytes);
+                assert(check(*this,"self@ran"));
+            }
+            assert(bits()==nbit);
+        }
+
+    }
+
+}
 

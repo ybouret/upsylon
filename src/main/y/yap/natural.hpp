@@ -8,6 +8,11 @@
 
 namespace upsylon {
 
+    namespace randomized {
+
+        class bits;
+    }
+
     namespace yap {
         
         typedef memory::tight::quarry_allocator &memory_allocator; //!< alias
@@ -31,7 +36,8 @@ word( acquire(count,width,shift) )
         class natural : public number
         {
         public:
-
+            static const char CLASS_NAME[]; //!< "yapn"
+            
             //__________________________________________________________________
             //
             // C++ and constructores
@@ -45,12 +51,23 @@ word( acquire(count,width,shift) )
             natural & operator=(const natural &);
             natural & operator=(const utype);
 
+            natural(randomized::bits &, const size_t nbit);
+
             //__________________________________________________________________
             //
             // management methods
             //__________________________________________________________________
-            void  xch(natural &) throw();
-            utype lsw() const throw();
+            void   xch(natural &) throw();
+            utype  lsw() const throw();
+            size_t bits() const throw();
+            size_t size() const throw(); //!< bytes
+
+            //__________________________________________________________________
+            //
+            // serializable interface
+            //__________________________________________________________________
+            virtual const char *className()       const throw(); //!< CLASS_NAME
+            virtual size_t      serialize(ios::ostream &) const; //!< portable output
 
             //__________________________________________________________________
             //
