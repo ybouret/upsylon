@@ -42,6 +42,15 @@ word( acquire(count,width,shift) )
             natural(const natural &);
             natural(utype);
 
+            natural & operator=(const natural &);
+            natural & operator=(const utype);
+
+            //__________________________________________________________________
+            //
+            // management methods
+            //__________________________________________________________________
+            void xch(natural &) throw();
+
             //__________________________________________________________________
             //
             // helpers
@@ -49,9 +58,9 @@ word( acquire(count,width,shift) )
             static memory_allocator &instance();          //!< internal dedicated memory
             static memory_allocator &location() throw();  //!< internal dedicated memory
             static size_t            words_for(const size_t bytes) throw();
-            friend std::ostream    &operator<<(std::ostream &, const natural &);
+            friend std::ostream     &operator<<(std::ostream &, const natural &);
 
-
+            static bool check(const natural &n, const char *which) throw();
 
         private:
             size_t     bytes; //!< effective number of bytes

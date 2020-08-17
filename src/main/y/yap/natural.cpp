@@ -6,8 +6,29 @@ namespace upsylon {
 
     namespace yap {
 
+#define Y_APN_CHECK(EXPR) do { \
+/**/ if(!(EXPR))\
+/**/     {\
+/**/         std::cerr <<  pfx << which << mid << #EXPR << sfx  << std::endl;\
+/**/         return false;\
+/**/     }\
+/**/ } while(false)
+
+        bool natural:: check(const natural &n, const char *which) throw()
+        {
+            assert(which);
+            static const char pfx[] = "***[natural] '";
+            static const char mid[] = "' : ";
+            static const char sfx[] = " FAILURE!";
+            std::cerr << "..checking " << which << std::endl;
+            Y_APN_CHECK(n.words==words_for(n.bytes));
+            return true;
+        }
+
+
         natural:: ~natural() throw()
         {
+            assert(check(*this,"self@~natural"));
             release(word,count,width,shift);
             bytes=0;
             words=0;
@@ -30,9 +51,16 @@ namespace upsylon {
             mgr.release_field(w,count,width,shift);
         }
 
-        natural::natural() : Y_APN_CTOR(0) {}
+        natural::natural() : Y_APN_CTOR(0)
+        {
+            assert(check(*this,"self@init"));
+        }
         
-        natural:: natural(const size_t num_bytes, const as_capacity_t &) : Y_APN_CTOR(num_bytes) {}
+        natural:: natural(const size_t num_bytes, const as_capacity_t &) :
+        Y_APN_CTOR(num_bytes)
+        {
+            assert(check(*this,"self@init(capa)"));
+        }
 
         natural:: natural(const natural &other) :
         number(),
@@ -41,11 +69,13 @@ namespace upsylon {
         count( words_for(bytes) ), width(0), shift(0),
         word( acquire(count,width,shift) )
         {
+            assert(check(other,"other@copy"));
             for(size_t w=words;w>0;)
             {
                 --w;
                 word[w] = other.word[w];
             }
+            assert(check(other,"self@copy"));
         }
 
         natural:: natural(utype u) : Y_APN_CTOR( sizeof(utype) )
@@ -58,6 +88,8 @@ namespace upsylon {
                 u >>= word_bits;
             }
             upgrade();
+            assert(check(*this,"self@init(utype)"));
+
         }
 
 
@@ -90,6 +122,40 @@ namespace upsylon {
 #else
             return addr[word_mask-i];
 #endif
+        }
+
+
+        void natural:: xch(natural &other) throw()
+        {
+            assert(check(*this,"self@xch"));
+            assert(check(other,"other@xch)"));
+
+            cswap(bytes,other.bytes);
+            cswap(words,other.words);
+            cswap(count,other.count);
+            cswap(width,other.width);
+            cswap(shift,other.shift);
+            cswap(word, other.word );
+            
+            assert(check(*this,"self@xch"));
+            assert(check(other,"other@xch)"));
+        }
+
+        natural & natural:: operator=(const natural &other)
+        {
+            assert(check(*this,"self@="));
+            assert(check(other,"other@=)"));
+            natural tmp(other); xch(tmp);
+            assert(check(*this,"self@="));
+            return *this;
+        }
+
+        natural & natural:: operator=(const utype u)
+        {
+            assert(check(*this,"self@="));
+            natural tmp(u); xch(tmp);
+            assert(check(*this,"self@="));
+            return *this;
         }
 
     }

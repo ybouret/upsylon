@@ -17,6 +17,14 @@ Y_UTEST(yap_n)
     natural one = 1;
     std::cerr << "one=" << one << std::endl;
 
+    one.xch(zero);
+    zero.xch(one);
+
+    {
+        natural tmp(200,as_capacity);
+        zero.xch(tmp);
+    }
+
 }
 Y_UTEST_DONE()
 
