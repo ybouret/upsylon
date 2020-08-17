@@ -51,14 +51,16 @@ Y_UTEST(yap_n)
     }
 
 
-
+#if 0
 #define Y_TEST_EXCP(ERR) do {\
 libc::exception e(ERR,#ERR); std::cerr << e.what() << " : " << e.when() << std::endl;\
 } while(false)
 
     Y_TEST_EXCP(EDOM);
     Y_TEST_EXCP(ERANGE);
-
+#endif
+    std::cerr << "core_bits=" << number::core_bits << std::endl;
+    std::cerr << "word_bits=" << number::word_bits << std::endl;
 }
 Y_UTEST_DONE()
 
