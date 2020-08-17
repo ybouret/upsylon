@@ -94,6 +94,20 @@ inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() 
             Y_APN_WRAP_CMP_FULL(==,eq)
             Y_APN_WRAP_CMP_FULL(!=,neq)
 
+#define Y_APN_WRAP_CMP_PART(OP,CALL)\
+inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() { return CALL(lhs,rhs) OP 0; }
+
+#define Y_APN_WRAP_CMP_PART_ALL() \
+Y_APN_WRAP_CMP_PART(<,cmp)        \
+Y_APN_WRAP_CMP_PART(<=,cmp)       \
+Y_APN_WRAP_CMP_PART(>,cmp)        \
+Y_APN_WRAP_CMP_PART(>=,cmp)
+
+            Y_APN_WRAP_CMP_PART_ALL()
+            
+
             //__________________________________________________________________
             //
             // helpers
@@ -131,6 +145,11 @@ inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() 
             static bool neq(const word_type *lhs, const size_t lnw,
                             const word_type *rhs, const size_t rnw) throw();
             Y_APN_WRAP_NO_THROW(bool,neq)
+
+            //! comparison
+            static int  cmp(const word_type *lhs, const size_t lnw,
+                            const word_type *rhs, const size_t rnw) throw();
+            Y_APN_WRAP_NO_THROW(int,cmp)
 
         };
 

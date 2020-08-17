@@ -49,6 +49,36 @@ namespace upsylon {
                 return true;
             }
         }
+
+
+        int  natural:: cmp(const word_type *lhs, const size_t lnw,
+                           const word_type *rhs, const size_t rnw) throw()
+        {
+            assert(lhs);
+            assert(rhs);
+            if(lnw<rnw)
+            {
+                return -1;
+            }
+            else if(rnw<lnw)
+            {
+                return 1;
+            }
+            else
+            {
+                for(size_t i=lnw;i>0;)
+                {
+                    --i;
+                    const word_type L = lhs[i];
+                    const word_type R = rhs[i];
+                    if(L<R)      return -1;
+                    else if(R<L) return  1;
+                    else         continue;
+                }
+                return 0;
+            }
+
+        }
     }
 
 }

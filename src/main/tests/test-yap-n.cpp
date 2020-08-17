@@ -130,11 +130,35 @@ Y_UTEST(yap_n)
                 ++count;
                 if(count>rans.size()) throw exception("too many apn in file");
                 Y_ASSERT( n == rans[count] );
+                Y_ASSERT( ! (n!=rans[count]) );
             }
             std::cerr << "\t#read    = " << read << std::endl;
         }
     }
     std::cerr << std::endl;
+
+
+
+    std::cerr << "-- test comparison" << std::endl;
+
+    for(size_t iter=0;iter<1024;++iter)
+    {
+
+        uint64_t a = alea.full<uint64_t>();
+        uint64_t b = alea.full<uint64_t>();
+        while(b==a) b = alea.full<uint64_t>();
+        if(a>b) cswap(a,b); Y_ASSERT(a<b);
+        natural A = a;
+        natural B = b;
+        
+        Y_ASSERT(A<B);
+        Y_ASSERT(A<=B);
+        Y_ASSERT(B>A);
+        Y_ASSERT(B>=A);
+        B=A;
+        Y_ASSERT(A<=B);
+        Y_ASSERT(A>=B);
+    }
 
 
 #if 0
