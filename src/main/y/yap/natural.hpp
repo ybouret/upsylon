@@ -61,6 +61,7 @@ word( acquire(count,width,shift) )
             utype  lsw() const throw();
             size_t bits() const throw();
             size_t size() const throw(); //!< bytes
+            size_t wc()   const throw(); //!< words
 
             //__________________________________________________________________
             //
@@ -74,7 +75,24 @@ word( acquire(count,width,shift) )
             //
             // comparisons
             //__________________________________________________________________
+#define Y_APN_U2W(args)         \
+volatile utype   u  = (args);   \
+size_t           nw = 0;        \
+const word_type *pw = u2w(u,nw)
 
+#define Y_APN_WRAP_NO_THROW(RETURN,CALL) \
+inline static RETURN CALL(const natural &lhs, const natural &rhs) throw() { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
+inline static RETURN CALL(const utype    lhs, const natural &rhs) throw() { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
+inline static RETURN CALL(const natural &lhs, const utype    rhs) throw() { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
+
+
+#define Y_APN_WRAP_CMP_FULL(OP,CALL)\
+inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }\
+inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }\
+inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() { return CALL(lhs,rhs); }
+
+            Y_APN_WRAP_CMP_FULL(==,eq)
+            Y_APN_WRAP_CMP_FULL(!=,neq)
 
             //__________________________________________________________________
             //
@@ -86,7 +104,7 @@ word( acquire(count,width,shift) )
             friend std::ostream     &operator<<(std::ostream &, const natural &);
 
             static bool             check(const natural &n, const char *which) throw();
-            static const word_type *u2w(volatile utype &u, size_t &n) throw();
+            static const word_type *u2w(volatile utype &u, volatile size_t &n) throw();
 
         private:
             size_t     bytes; //!< effective number of bytes
@@ -107,6 +125,13 @@ word( acquire(count,width,shift) )
             //! test words equality
             static bool eq(const word_type *lhs, const size_t lnw,
                            const word_type *rhs, const size_t rnw) throw();
+            Y_APN_WRAP_NO_THROW(bool,eq)
+
+            //! test words difference
+            static bool neq(const word_type *lhs, const size_t lnw,
+                            const word_type *rhs, const size_t rnw) throw();
+            Y_APN_WRAP_NO_THROW(bool,neq)
+
         };
 
     }

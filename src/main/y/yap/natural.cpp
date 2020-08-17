@@ -48,7 +48,7 @@ namespace upsylon {
 
         size_t natural:: words_for(const size_t bytes) throw()
         {
-            return Y_ROUND_LN2(word_exp2,bytes);
+            return Y_ROUND_LN2(word_exp2,bytes)>>word_exp2;
         }
 
         word_type * natural:: acquire(size_t &count, size_t &width, size_t &shift)
@@ -87,7 +87,7 @@ namespace upsylon {
                 --w;
                 word[w] = other.word[w];
             }
-            assert(check(other,"self@copy"));
+            assert(check(*this,"self@copy"));
         }
 
         natural:: natural(utype u) : Y_APN_CTOR( sizeof(utype) )
@@ -137,7 +137,11 @@ namespace upsylon {
         {
             return bytes;
         }
-
+        
+        size_t natural:: wc() const throw()
+        {
+            return words;
+        }
 
 
 
@@ -152,6 +156,7 @@ namespace upsylon {
             }
             bytes = curr;
             words = words_for(bytes);
+            assert( check(*this,"self@update") );
         }
 
         void natural:: upgrade() throw()
@@ -206,22 +211,33 @@ namespace upsylon {
             return *this;
         }
 
-        const word_type * natural:: u2w(volatile utype &u, size_t &n) throw()
+        const word_type * natural:: u2w(volatile utype &u, volatile size_t &n) throw()
         {
-            utype      tmp = 0;
-            word_type *w   = (word_type *)&tmp;
+            volatile utype    tmp = 0;
+            word_type        *w   = (word_type *)&tmp;
+            //std::cerr << "u2w(" << u <<  ")" << std::endl;
             for(size_t i=0;i<words_per_utype;++i)
             {
                 w[i] = word_type(u);
                 u >>=  word_bits;
+                //std::cerr << "w[" << i << "]=" << w[i] << std::endl;
             }
-            n=words_per_utype;
-            for(size_t m=words_per_utype-1;n>0;)
+
+            n = words_per_utype;
+            while(n>0)
             {
-                if(w[m]>0) break;
+                const size_t m=n-1;
+                //std::cerr << "testing w[" << n-1 << "]=" << w[n-1] << std::endl;
+                if(w[m]>0)
+                {
+                    //std::cerr << "->n=" << n << std::endl;
+                    break;
+                }
                 n=m;
-                --m;
             }
+            //std::cerr << "->n=" << n << std::endl;
+
+
             u = tmp;
             return (word_type *) &u;
         }

@@ -11,11 +11,14 @@ using namespace upsylon;
 using namespace yap;
 
 namespace {
+    
     static inline void check_u2w(const uint64_t u)
     {
-        uint64_t         v  = u;
-        size_t           nw = 0;
-        const word_type *pw = natural::u2w(v,nw);
+        //std::cerr << "check_u2w..." << std::endl;
+        volatile uint64_t v  = u;
+        volatile size_t   nw = 0;
+        const word_type  *pw = natural::u2w(v,nw);
+#if 0
         std::cerr << std::hex;
         std::cerr << "u: " << u << " => [" << nw << "]";
         for(size_t i=0;i<nw;++i)
@@ -23,6 +26,7 @@ namespace {
             std::cerr << " " << pw[i];
         }
         std::cerr << std::endl;
+#endif
         uint64_t x = 0;
         for(size_t i=nw;i>0;)
         {
@@ -40,47 +44,61 @@ Y_UTEST(yap_n)
     Y_CHECK(word_bits<=core_bits/2);
     Y_CHECK((1<< word_exp2)==word_size);
 
+    std::cerr << "-- test u2w" << std::endl;
+    {
+        check_u2w(0);
+        for(utype u=1,s=0;s<sizeof(utype)*8;u<<=1,++s)
+        {
+            check_u2w(u);
+        }
+
+        for(size_t iter=0;iter<8;++iter)
+        {
+            const uint64_t   u  = alea.full<uint64_t>();
+            check_u2w(u);
+        }
+    }
+    std::cerr << std::endl;
+
     std::cerr << "-- test zero" << std::endl;
     {
         natural zero;
         std::cerr << "zero=" << zero << std::endl;
+
+        Y_ASSERT(0==zero);
+        Y_ASSERT(zero==0);
+        Y_ASSERT( !(0!=zero) );
+        Y_ASSERT( !(zero!=0) );
+
         {
             natural tmp(200,as_capacity);
             zero.xch(tmp);
         }
         std::cerr << "zero=" << zero << std::endl;
     }
+    std::cerr << std::endl;
 
-    std::cerr << "-- test u2w" << std::endl;
 
-    check_u2w(0);
-    for(utype u=1,s=0;s<sizeof(utype)*8;u<<=1,++s)
-    {
-        check_u2w(u);
-    }
-
-    for(size_t iter=0;iter<8;++iter)
-    {
-        const uint64_t   u  = alea.full<uint64_t>();
-        check_u2w(u);
-    }
 
     std::cerr << "-- test set/lsw" << std::endl;
     for(size_t iter=0;iter<1024;++iter)
     {
-        const uint64_t u = alea.full<uint64_t>();
-        const natural  n = u;
-        const natural  n1 = n;
-        natural        n2;
-        n2 = n;
-        natural        n3;
-        n3 = u;
-        Y_ASSERT(n.lsw()==u);
+        const utype    u  = alea.full<utype>();
+        const natural  n  = u;        Y_ASSERT(n.bits()<=64); Y_ASSERT(n.size()<=8); Y_ASSERT(n.wc()<=words_per_utype);
+        const natural  n1 = n;        Y_ASSERT(n1==n); Y_ASSERT( !(n1!=n) );
+        natural        n2; n2 = n;
+        natural        n3; n3 = u;
+
+        Y_ASSERT(n.lsw() ==u);
         Y_ASSERT(n1.lsw()==u);
         Y_ASSERT(n2.lsw()==u);
         Y_ASSERT(n3.lsw()==u);
-
+        Y_ASSERT(n==u);
+        Y_ASSERT(u==n);
+        Y_ASSERT(!(n!=u));
+        Y_ASSERT(!(u!=n));
     }
+    std::cerr << std::endl;
 
     std::cerr << "-- test ran/eq" << std::endl;
     {
@@ -111,10 +129,12 @@ Y_UTEST(yap_n)
                 read += delta;
                 ++count;
                 if(count>rans.size()) throw exception("too many apn in file");
+                Y_ASSERT( n == rans[count] );
             }
             std::cerr << "\t#read    = " << read << std::endl;
         }
     }
+    std::cerr << std::endl;
 
 
 #if 0
