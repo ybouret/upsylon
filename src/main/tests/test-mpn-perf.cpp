@@ -99,18 +99,18 @@ namespace
         //std::cerr << "lhs=" << lhs << std::endl;
         //std::cerr << "rhs=" << rhs << std::endl;
 
-        rt_clock clk;
-        uint64_t sum = 0;
-        size_t   cycles = 0;
+        real_time_clock clk;
+        uint64_t        sum = 0;
+        size_t          cycles = 0;
         while( clk( sum ) < duration )
         {
             ++cycles;
             ans.free();
             for(size_t i=count;i>0;--i)
             {
-                const uint64_t mark = rt_clock::ticks();
+                const uint64_t mark = real_time_clock::ticks();
                 mpn      temp = op.proc(lhs[i],rhs[i]);
-                sum += ( rt_clock::ticks() - mark );
+                sum += ( real_time_clock::ticks() - mark );
                 ans.push_back_(temp);
             }
         }

@@ -20,7 +20,7 @@ Y_UTEST(sys)
     wtime chrono;
     for(size_t i=0;i<10;++i)
     {
-        std::cerr << "#ticks=" << rt_clock::ticks() << std::endl;
+        std::cerr << "#ticks=" << real_time_clock::ticks() << std::endl;
         std::cerr << "chrono=" << chrono.query() << std::endl;
         chrono.sleep(0.02);
     }

@@ -5,7 +5,7 @@ using namespace upsylon;
 
 Y_UTEST(rtl)
 {
-    rt_clock &clk = run_time_log::instance();
+    real_time_clock &clk = run_time_log::instance();
 
     rtl(run_time_message) << " hello! " << std::endl;
     clk.sleep(0.2);

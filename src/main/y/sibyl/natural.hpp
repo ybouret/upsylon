@@ -440,7 +440,7 @@ inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() 
                 const size_t space = num << word_exp2;
                 natural      ans(space,as_capacity); Y_MPN_CHECK(ans);
 #if defined(Y_MPN_ADD_TMX)
-                const uint64_t tmx = rt_clock::ticks();
+                const uint64_t tmx = real_time_clock::ticks();
 #endif
                 word_type   *sum   = ans.word;
                 core_type    carry = 0;
@@ -476,7 +476,7 @@ inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() 
                 ans.bytes = space;
                 ans.update();
 #if defined(Y_MPN_ADD_TMX)
-                add_ticks += rt_clock::ticks()-tmx;
+                add_ticks += real_time_clock::ticks()-tmx;
 #endif
                 Y_MPN_CHECK(ans);
                 return ans;

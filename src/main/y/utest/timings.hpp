@@ -7,18 +7,18 @@
 namespace upsylon
 {
     //! append to COUNT the number of ticks to execute CODE
-#define Y_TIMINGS_TICKS(COUNT,CODE)                \
-/**/do {                                           \
-/**/    const uint64_t __mark = rt_clock::ticks(); \
-/**/    do { CODE; } while(false);                 \
-/**/    (COUNT) += (rt_clock::ticks() - __mark);   \
+#define Y_TIMINGS_TICKS(COUNT,CODE)                       \
+/**/do {                                                  \
+/**/    const uint64_t __mark = real_time_clock::ticks(); \
+/**/    do { CODE; } while(false);                        \
+/**/    (COUNT) += (real_time_clock::ticks() - __mark);   \
 /**/} while(false)
 
 
     //! compute the SPEED of CODE during DURATION
 #define Y_TIMINGS_(SPEED,DURATION,CODE,CYCLES)                        \
 /**/do {                                                              \
-/**/    upsylon::rt_clock __timing;                                   \
+/**/    upsylon::real_time_clock   __timing;                          \
 /**/    const uint64_t    __ini = __timing.ticks();                   \
 /**/    double            __ell = 0;                                  \
 /**/    const double      __all = (DURATION);                         \

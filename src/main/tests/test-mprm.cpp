@@ -22,7 +22,7 @@ void check_consistency(const size_t count,
     const string filename = "mpchk.dat";
     ios::ocstream::overwrite(filename);
 
-    rt_clock rtc;
+    real_time_clock rtc;
 
     for(;mgr.plist.size()<=count;mgr.createPrimes(1))
     {

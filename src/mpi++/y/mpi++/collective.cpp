@@ -5,9 +5,9 @@ namespace upsylon {
     
     void mpi:: Barrier() const
     {
-        const uint64_t mark = rt_clock::ticks();
+        const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Barrier(MPI_COMM_WORLD));
-        const uint64_t delta = rt_clock::ticks() - mark;
+        const uint64_t delta = real_time_clock::ticks() - mark;
         commRecv.ticks(delta);
         commSend.ticks(delta);
     }
@@ -19,9 +19,9 @@ namespace upsylon {
         assert(root<size);
         const int nbcast = static_cast<int>(count);
         if(nbcast<0) throw upsylon::exception( "mpi::Bcast(size overflow)");
-        const uint64_t mark = rt_clock::ticks();
+        const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Bcast(buffer,nbcast,datatype,root,comm));
-        const uint64_t delta = rt_clock::ticks() - mark;
+        const uint64_t delta = real_time_clock::ticks() - mark;
         commRecv.ticks(delta);
         commSend.ticks(delta);
     }
@@ -74,9 +74,9 @@ namespace upsylon {
         
         const int nred = static_cast<int>(count);
         if(nred<0) throw upsylon::exception( "mpi::Reduce(size overflow)");
-        const uint64_t mark = rt_clock::ticks();
+        const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Reduce((void*)send_data, recv_data, nred, datatype, op, root, comm));
-        const uint64_t delta = rt_clock::ticks() - mark;
+        const uint64_t delta = real_time_clock::ticks() - mark;
         commRecv.ticks(delta);
         commSend.ticks(delta);
     }
@@ -92,9 +92,9 @@ namespace upsylon {
         assert( !(recv_data==NULL&&count>0) );
         const int nred = static_cast<int>(count);
         if(nred<0) throw upsylon::exception( "mpi::Allreduce(size overflow)");
-        const uint64_t mark = rt_clock::ticks();
+        const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Allreduce((void*)send_data, recv_data, nred, datatype, op,comm));
-        const uint64_t delta = rt_clock::ticks() - mark;
+        const uint64_t delta = real_time_clock::ticks() - mark;
         commRecv.ticks(delta);
         commSend.ticks(delta);
     }

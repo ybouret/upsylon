@@ -19,7 +19,7 @@ namespace upsylon {
     };
 
     //! run time write on std::ostream
-    class run_time_log : public singleton<run_time_log>, public rt_clock
+    class run_time_log : public singleton<run_time_log>, public real_time_clock
     {
     public:
         void        restart() throw(); //!< reset wall time

@@ -96,12 +96,12 @@ namespace
         for(size_t i=nops;i>0;--i)
         {
             const T    temp = support::get<T>();
-            uint64_t   mark = rt_clock::ticks();
+            uint64_t   mark = real_time_clock::ticks();
             const bool flag = find_std(data, num, temp);
-            std64          += rt_clock::ticks() - mark;
-            mark            = rt_clock::ticks();
+            std64          += real_time_clock::ticks() - mark;
+            mark            = real_time_clock::ticks();
             const bool fbis = find_bis(data,num,temp);
-            bis64          += rt_clock::ticks() - mark;
+            bis64          += real_time_clock::ticks() - mark;
             Y_ASSERT(fbis==flag);
         }
         

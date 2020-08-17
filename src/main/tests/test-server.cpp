@@ -10,10 +10,10 @@ namespace {
     class dummy
     {
     public:
-        int       data;
-        rt_clock &rtc;
+        int              data;
+        real_time_clock &rtc;
 
-        explicit dummy(const int d, rt_clock &c) : data(d), rtc(c)
+        explicit dummy(const int d, real_time_clock &c) : data(d), rtc(c)
         {
 
         }

@@ -23,7 +23,7 @@ namespace upsylon
         {
             randomized::bits & b = randomized::bits::crypto();
             {
-                const uint64_t mark = rt_clock::ticks();
+                const uint64_t mark = real_time_clock::ticks();
                 H.run_type(mark);
             }
             for(size_t i=BYTES;i>0;--i)

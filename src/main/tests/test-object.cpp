@@ -36,12 +36,12 @@ Y_UTEST(object0)
 
             {
                 void    *addr   = 0;
-                uint64_t mark = rt_clock::ticks();
+                uint64_t mark = real_time_clock::ticks();
                 {
                     Y_LOCK(memory::global::access);
                     addr = calloc(1,n);
                 }
-                s += (rt_clock::ticks()-mark);
+                s += (real_time_clock::ticks()-mark);
                 b.addr = addr;
                 if(!addr) throw exception("no memory for calloc");
             }
@@ -54,12 +54,12 @@ Y_UTEST(object0)
             //const size_t n = b.size;
             {
                 void *addr = b.addr;
-                uint64_t mark = rt_clock::ticks();
+                uint64_t mark = real_time_clock::ticks();
                 {
                     Y_LOCK(memory::global::access);
                     free(addr);
                 }
-                s += (rt_clock::ticks()-mark);
+                s += (real_time_clock::ticks()-mark);
             }
             b.addr = 0;
             b.size = 0;
@@ -91,11 +91,11 @@ Y_UTEST(objectY)
 
             {
                 void    *addr   = 0;
-                uint64_t mark = rt_clock::ticks();
+                uint64_t mark = real_time_clock::ticks();
                 {
                     addr = object::operator new(n);
                 }
-                s += (rt_clock::ticks()-mark);
+                s += (real_time_clock::ticks()-mark);
                 b.addr = addr;
                 if(!addr)
                 {
@@ -111,11 +111,11 @@ Y_UTEST(objectY)
             const size_t n = b.size;
             {
                 void    *addr = b.addr;
-                uint64_t mark = rt_clock::ticks();
+                uint64_t mark = real_time_clock::ticks();
                 {
                     object::operator delete(addr,n);
                 }
-                s += (rt_clock::ticks()-mark);
+                s += (real_time_clock::ticks()-mark);
             }
             b.addr = 0;
             b.size = 0;

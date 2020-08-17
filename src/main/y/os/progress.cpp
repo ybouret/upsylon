@@ -57,7 +57,7 @@ namespace upsylon
         else
         {
             bips  = ticks() - mark;
-            rt_clock   &self  = *this;
+            real_time_clock   &self  = *this;
             aliasing::_(done) = self(bips);
             aliasing::_(left) = (1.0-ratio)/ratio * done;
         }

@@ -149,7 +149,7 @@ namespace
                  sequence<double>   &yspd)
     {
         const size_t ITER = 1024;
-        rt_clock clk;
+        real_time_clock clk;
         count.free();
         hspd.free();
         qspd.free();
@@ -171,23 +171,23 @@ namespace
                 }
 
                 {
-                    const uint64_t mark = rt_clock::ticks();
+                    const uint64_t mark = real_time_clock::ticks();
                     hsort(arr,comparison::increasing<T>);
-                    htmx += rt_clock::ticks() - mark;
+                    htmx += real_time_clock::ticks() - mark;
                 }
 
                 alea.shuffle(*arr,n);
                 {
-                    const uint64_t mark = rt_clock::ticks();
+                    const uint64_t mark = real_time_clock::ticks();
                     qsort(*arr,n,sizeof(T),comparison::__increasing<T>);
-                    qtmx += rt_clock::ticks() - mark;
+                    qtmx += real_time_clock::ticks() - mark;
                 }
 
                 alea.shuffle(*arr,n);
                 {
-                    const uint64_t mark = rt_clock::ticks();
+                    const uint64_t mark = real_time_clock::ticks();
                     ysort(arr,comparison::increasing<T>);
-                    ytmx += rt_clock::ticks() - mark;
+                    ytmx += real_time_clock::ticks() - mark;
                 }
 
 

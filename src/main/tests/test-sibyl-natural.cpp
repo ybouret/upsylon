@@ -18,7 +18,7 @@ namespace {
     template <size_t BITS>
     static inline void doTest()
     {
-        rt_clock clk;
+        real_time_clock clk;
         
         std::cerr << "<natural BITS=" << BITS << ">" << std::endl;
         std::cerr << std::dec;

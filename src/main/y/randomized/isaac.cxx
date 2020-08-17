@@ -133,7 +133,7 @@ h^=a>>9;  c+=h; a+=b; \
             uint64_t seed = brew_isaac( process_id::get() );
 			for( size_t i=0, j=0; i < m; ++i )
 			{
-				seed = brew_isaac( seed + rt_clock::ticks() );
+				seed = brew_isaac( seed + real_time_clock::ticks() );
 				const union
 				{
 					uint64_t qw;

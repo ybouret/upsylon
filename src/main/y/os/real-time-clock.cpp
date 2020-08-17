@@ -26,7 +26,7 @@ namespace upsylon
 
 #if defined(Y_APPLE)
 
-    void rt_clock::calibrate()
+    void real_time_clock::calibrate()
     {
         Y_GIANT_LOCK();
         mach_timebase_info_data_t timebase;
@@ -39,13 +39,13 @@ namespace upsylon
         freq = 1e-9 * conversion_factor;
     }
 
-    uint64_t rt_clock:: ticks()
+    uint64_t real_time_clock:: ticks()
     {
         Y_GIANT_LOCK();
         return mach_absolute_time();
     }
 
-    double   rt_clock:: operator()(uint64_t num_ticks) const throw()
+    double   real_time_clock:: operator()(uint64_t num_ticks) const throw()
     {
         return freq * double(num_ticks);
     }
@@ -56,7 +56,7 @@ namespace upsylon
 
     static const uint64_t __giga64 = Y_U64(0x3B9ACA00);
 
-    void rt_clock:: calibrate()
+    void real_time_clock:: calibrate()
     {
         Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
@@ -67,7 +67,7 @@ namespace upsylon
         freq = res;
     }
 
-    uint64_t rt_clock:: ticks()
+    uint64_t real_time_clock:: ticks()
     {
         Y_GIANT_LOCK();
         struct timespec tp  = { 0, 0 };
@@ -78,7 +78,7 @@ namespace upsylon
         return __giga64*uint64_t(tp.tv_sec) + uint64_t(tp.tv_nsec);
     }
 
-    double rt_clock:: operator()( uint64_t num_ticks ) const throw()
+    double real_time_clock:: operator()( uint64_t num_ticks ) const throw()
     {
         return 1e-9 * double(num_ticks);
     }
@@ -86,7 +86,7 @@ namespace upsylon
 
 
 #if defined(Y_WIN)
-    void rt_clock:: calibrate()
+    void real_time_clock:: calibrate()
     {
         static const long double l_one = 1;
         Y_GIANT_LOCK();
@@ -98,7 +98,7 @@ namespace upsylon
         freq = l_one / static_cast<long double>( F.QuadPart );
     }
 
-    uint64_t rt_clock:: ticks()
+    uint64_t real_time_clock:: ticks()
     {
         Y_GIANT_LOCK();
         int64_t Q = 0;
@@ -109,47 +109,47 @@ namespace upsylon
         return uint64_t(Q);
     }
 
-    double rt_clock:: operator()( uint64_t num_clicks ) const throw()
+    double real_time_clock:: operator()( uint64_t num_clicks ) const throw()
     {
         return freq * double(num_clicks);
     }
 #endif
 
 
-    rt_clock:: rt_clock() : freq(0)
+    real_time_clock:: real_time_clock() : freq(0)
     {
         calibrate();
     }
 
-    rt_clock:: ~rt_clock() throw()
+    real_time_clock:: ~real_time_clock() throw()
     {
         freq=0;
     }
 
-    void rt_clock:: sleep(const double nsec) const
+    void real_time_clock:: sleep(const double nsec) const
     {
         const uint64_t start = ticks();
         while( (*this)(ticks()-start) < nsec )
             ;
     }
 
-    double rt_clock:: speedup( const uint64_t full, const uint64_t fast, const size_t precision) const
+    double real_time_clock:: speedup( const uint64_t full, const uint64_t fast, const size_t precision) const
     {
         if(fast<=0) throw exception("rt_clock.speedup(division by zero)");
         const double p = ipower<double>(10,precision);
-        const rt_clock &self = *this;
+        const real_time_clock &self = *this;
         return floor( p * self(full)/self(fast) + 0.5)/p;
     }
 }
 
 namespace upsylon
 {
-    stopwatch::  stopwatch() : rt_clock() {}
+    stopwatch::  stopwatch() : real_time_clock() {}
     stopwatch:: ~stopwatch() throw() {}
 
     double stopwatch:: query() const
     {
-        const rt_clock &self = *this;
+        const real_time_clock &self = *this;
         return self( count() );
     }
 }

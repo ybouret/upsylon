@@ -49,7 +49,7 @@ namespace
 Y_UTEST(simd)
 {
     std::cerr << "-- init program -- " << std::endl;
-    rt_clock clk;
+    real_time_clock clk;
     double   duration = 3;
     size_t   n        = 16384;
     zblock<double,memory::global>    blk(n);

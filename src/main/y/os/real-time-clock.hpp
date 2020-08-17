@@ -8,7 +8,7 @@ namespace upsylon
 {
 
     //! real time clock interface
-    class rt_clock
+    class real_time_clock
     {
     public:
         //! frequency to convert ticks to seconds
@@ -17,8 +17,8 @@ namespace upsylon
 #else
         typedef uint64_t freq_type;
 #endif
-        explicit rt_clock();         //!< calibrate during constructor
-        virtual ~rt_clock() throw(); //!< destructor
+        explicit real_time_clock();         //!< calibrate during constructor
+        virtual ~real_time_clock() throw(); //!< destructor
 
         static uint64_t  ticks();     //!< system ticks
         void             calibrate(); //!< called during constructor, needed to transforms ticks to seconds.
@@ -28,12 +28,12 @@ namespace upsylon
         double           speedup( const uint64_t full, const uint64_t fast, const size_t precision=3) const;
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(rt_clock);
+        Y_DISABLE_COPY_AND_ASSIGN(real_time_clock);
         freq_type freq;
     };
 
     //! stopwatch interface
-    class stopwatch : public rt_clock
+    class stopwatch : public real_time_clock
     {
     public:
         virtual ~stopwatch() throw(); //!< destructor

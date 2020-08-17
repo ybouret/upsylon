@@ -68,7 +68,7 @@ namespace upsylon
     uint64_t parallel:: ticks(lockable &access) const throw()
     {
         Y_LOCK(access);
-        return rt_clock::ticks();
+        return real_time_clock::ticks();
     }
 
 

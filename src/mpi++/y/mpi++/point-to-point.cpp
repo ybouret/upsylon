@@ -19,9 +19,9 @@ namespace upsylon {
         {
             const int items = static_cast<int>(count);
             if(items<0) throw exception(MPI_ERR_COUNT, "mpi::Send(count overflow)");
-            const uint64_t mark = rt_clock::ticks();
+            const uint64_t mark = real_time_clock::ticks();
             Y_MPI_CHECK(MPI_Send((void*)buffer,items,datatype,dest,tag,comm));
-            commSend.ticks( rt_clock::ticks() - mark );
+            commSend.ticks( real_time_clock::ticks() - mark );
         }
         
     }
@@ -54,9 +54,9 @@ namespace upsylon {
         {
             const int items = static_cast<int>(count);
             if(items<0) throw exception(MPI_ERR_COUNT, "mpi::Recv(count overflow)");
-            const uint64_t mark = rt_clock::ticks();
+            const uint64_t mark = real_time_clock::ticks();
             Y_MPI_CHECK(MPI_Recv(buffer,items,datatype,source,tag,comm,&status));
-            commRecv.ticks( rt_clock::ticks() - mark );
+            commRecv.ticks( real_time_clock::ticks() - mark );
         }
     }
     
@@ -101,7 +101,7 @@ namespace upsylon {
         assert(source<size);
         const int      nsend = static_cast<int>(sendcount);  if(nsend<0) throw upsylon::exception("%ssendcount overflow",fn);
         const int      nrecv = static_cast<int>(recvcount);  if(nrecv<0) throw upsylon::exception("%srecvcount overflow",fn);
-        const uint64_t mark  = rt_clock::ticks();
+        const uint64_t mark  = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Sendrecv((void*)sendbuf,
                                  nsend,
                                  sendtype,
@@ -114,7 +114,7 @@ namespace upsylon {
                                  recvtag,
                                  comm,
                                  &status) );
-        const uint64_t delta = rt_clock::ticks()-mark;
+        const uint64_t delta = real_time_clock::ticks()-mark;
         commRecv.ticks(delta);
         commSend.ticks(delta);
     }

@@ -16,7 +16,7 @@ namespace upsylon
 
     Y_SINGLETON_IMPL(run_time_log);
 
-    run_time_log:: run_time_log() : rt_clock()
+    run_time_log:: run_time_log() : real_time_clock()
     {
         restart();
         rtl_mark = ticks();
