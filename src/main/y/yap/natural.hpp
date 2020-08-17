@@ -176,6 +176,13 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             natural & operator--();      //!< prefix-- operator
             natural   operator--(int);   //!< postfix-- operator
 
+
+            //__________________________________________________________________
+            //
+            // bit shifting
+            //__________________________________________________________________
+            static natural exp2( const size_t ibit ); //! 1 << ibit
+
             //__________________________________________________________________
             //
             // helpers
@@ -226,6 +233,10 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
 
             //! addition
             static natural sub(const word_type *lhs, const size_t lnw,
+                               const word_type *rhs, const size_t rnw);
+
+            //! multiplicaion
+            static natural mul(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
         };
 
