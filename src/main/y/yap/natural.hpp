@@ -37,8 +37,37 @@ word( acquire(count,width,shift) )
         class natural : public number
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const char CLASS_NAME[]; //!< "yapn"
-            
+
+            //------------------------------------------------------------------
+            // core type, to perform internal computations
+            //------------------------------------------------------------------
+            typedef typename unsigned_int<sizeof(void*)>::type core_type;                     //!< system native unsigned
+            static const size_t                                core_size = sizeof(core_type); //!< system native size
+            static const size_t                                core_bits = core_size << 3;    //!< system native  bits
+
+
+            //------------------------------------------------------------------
+            // word type, to handle memory
+            //------------------------------------------------------------------
+#if defined(Y_YAP_FORCE16)
+            typedef uint16_t                                    word_type; //!< memory of word_type
+#else
+            typedef typename unsigned_int<(core_size>>1)>::type word_type; //!< memory of word_type
+#endif
+            static const size_t                                word_size  = sizeof(word_type);            //!< word size
+            static const size_t                                word_bits  = word_size << 3;               //!< word bits
+            static const size_t                                word_exp2  = ilog2<word_size>::value;      //!< word_size = 1 << word_exp2
+            static const size_t                                word_mask  = word_size-1;                  //!< word_size - 1 = least significant bits
+            static const core_type                             word_max   = limit_of<word_type>::maximum; //!< maxium  for core_type
+            static const core_type                             word_radix = core_type(1) << word_bits;    //!< radix  for core_type
+            //! number of words per utype
+            static const size_t                                words_per_utype = sizeof(utype)/word_size;
+
             //__________________________________________________________________
             //
             // C++ and constructores
@@ -111,6 +140,18 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
 
             Y_APN_WRAP_CMP_PART_ALL()
 
+            //__________________________________________________________________
+            //
+            // additions
+            //__________________________________________________________________
+#define Y_APN_WRAP_API(RETURN,CALL) \
+inline static RETURN CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
+inline static RETURN CALL(const utype    lhs, const natural &rhs) { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
+inline static RETURN CALL(const natural &lhs, const utype    rhs) { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
+
+            Y_APN_WRAP_API(natural,add);
+
+
 
             //__________________________________________________________________
             //
@@ -156,6 +197,9 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
                             const word_type *rhs, const size_t rnw) throw();
             Y_APN_WRAP_NO_THROW(int,cmp)
 
+            //! addition
+            static natural add(const word_type *lhs, const size_t lnw,
+                               const word_type *rhs, const size_t rnw);
         };
 
     }

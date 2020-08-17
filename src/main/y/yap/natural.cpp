@@ -51,7 +51,7 @@ namespace upsylon {
             return Y_ROUND_LN2(word_exp2,bytes)>>word_exp2;
         }
 
-        number::word_type * natural:: acquire(size_t &count, size_t &width, size_t &shift)
+        natural::word_type * natural:: acquire(size_t &count, size_t &width, size_t &shift)
         {
             static memory_allocator &mgr = instance();
             return mgr.acquire_field<word_type>(count,width,shift);
@@ -211,7 +211,7 @@ namespace upsylon {
             return *this;
         }
 
-        const number::word_type * natural:: u2w(volatile utype &u, volatile size_t &n) throw()
+        const natural::word_type * natural:: u2w(volatile utype &u, volatile size_t &n) throw()
         {
             volatile utype    tmp = 0;
             word_type        *w   = (word_type *)&tmp;

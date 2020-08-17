@@ -15,7 +15,7 @@ namespace {
         //std::cerr << "check_u2w..." << std::endl;
         volatile uint64_t v  = u;
         volatile size_t   nw = 0;
-        const number::word_type  *pw = natural::u2w(v,nw);
+        const natural::word_type  *pw = natural::u2w(v,nw);
 #if 0
         std::cerr << std::hex;
         std::cerr << "u: " << u << " => [" << nw << "]";
@@ -28,7 +28,7 @@ namespace {
         number::utype x = 0;
         for(size_t i=nw;i>0;)
         {
-            x <<= number::word_bits;
+            x <<= natural::word_bits;
             x |=  pw[--i];
         }
         Y_ASSERT(u==x);
@@ -37,10 +37,10 @@ namespace {
 
 Y_UTEST(yap_n)
 {
-    std::cerr << "core_bits=" << number::core_bits << std::endl;
-    std::cerr << "word_bits=" << number::word_bits << std::endl;
-    Y_CHECK(number::word_bits<=number::core_bits/2);
-    Y_CHECK((1<< number::word_exp2)==number::word_size);
+    std::cerr << "core_bits=" << natural::core_bits << std::endl;
+    std::cerr << "word_bits=" << natural::word_bits << std::endl;
+    Y_CHECK(natural::word_bits<=natural::core_bits/2);
+    Y_CHECK((1<< natural::word_exp2)==natural::word_size);
 
     std::cerr << "-- test u2w" << std::endl;
     {
@@ -82,10 +82,10 @@ Y_UTEST(yap_n)
     for(size_t iter=0;iter<1024;++iter)
     {
         const number::utype u  = alea.full<number::utype>();
-        const natural  n  = u;        Y_ASSERT(n.bits()<=64); Y_ASSERT(n.size()<=8); Y_ASSERT(n.wc()<=number::words_per_utype);
-        const natural  n1 = n;        Y_ASSERT(n1==n); Y_ASSERT( !(n1!=n) );
-        natural        n2; n2 = n;
-        natural        n3; n3 = u;
+        const natural       n  = u; Y_ASSERT(n.bits()<=64); Y_ASSERT(n.size()<=8); Y_ASSERT(n.wc()<=natural::words_per_utype);
+        const natural       n1 = n; Y_ASSERT(n1==n); Y_ASSERT( !(n1!=n) );
+        natural             n2; n2 = n;
+        natural             n3; n3 = u;
 
         Y_ASSERT(n.lsw() ==u);
         Y_ASSERT(n1.lsw()==u);
