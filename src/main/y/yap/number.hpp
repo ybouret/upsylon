@@ -5,7 +5,6 @@
 #include "y/type/ints.hpp"
 #include "y/code/ilog2.hpp"
 #include "y/ptr/counted.hpp"
-#include "y/memory/tight/quarry-allocator.hpp"
 
 namespace upsylon {
 
@@ -13,7 +12,6 @@ namespace upsylon {
 
 //#define Y_YAP_FORCE16
 
-        typedef memory::tight::quarry_allocator &memory_allocator; //!< alias
 
         //______________________________________________________________________
         //
@@ -38,6 +36,8 @@ namespace upsylon {
             static const size_t                                core_size = sizeof(core_type);
             static const size_t                                core_bits = core_size << 3;
 
+
+            // word type, to handle memory
 #if defined(Y_YAP_FORCE16)
             typedef uint16_t                                    word_type;
 #else
@@ -47,13 +47,7 @@ namespace upsylon {
             static const size_t                                word_bits = word_size << 3;
             static const size_t                                word_exp2 = ilog2<word_size>::value;
 
-            //__________________________________________________________________
-            //
-            // helpers
-            //__________________________________________________________________
-            static memory_allocator &instance();          //!< internal dedicated memory
-            static memory_allocator &location() throw();  //!< internal dedicated memory
-
+          
             //__________________________________________________________________
             //
             // C++

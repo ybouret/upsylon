@@ -24,20 +24,19 @@ namespace upsylon {
 
 }
 
-#include "y/yap/number.hpp"
+#include "y/yap/natural.hpp"
 
 
 namespace upsylon {
 
-
     namespace yap {
 
-        memory_allocator & number::instance()
+        memory_allocator & natural::instance()
         {
             return archon::instance();
         }
 
-        memory_allocator & number::location() throw()
+        memory_allocator & natural::location() throw()
         {
             return archon::location();
         }
