@@ -50,7 +50,6 @@ word( acquire(count,width,shift) )
             static const size_t                                core_size = sizeof(core_type); //!< system native size
             static const size_t                                core_bits = core_size << 3;    //!< system native  bits
 
-
             //------------------------------------------------------------------
             // word type, to handle memory
             //------------------------------------------------------------------
@@ -70,7 +69,7 @@ word( acquire(count,width,shift) )
 
             //__________________________________________________________________
             //
-            // C++ and constructores
+            // C++ and constructors
             //__________________________________________________________________
             virtual ~natural() throw();                    //!< cleanup
             natural();                                     //!< zero
@@ -160,13 +159,22 @@ inline friend natural operator OP (const utype    lhs, const natural &rhs) { ret
 inline friend natural operator OP (const natural &lhs, const utype    rhs) { return CALL(lhs,rhs); }
 
 
-            Y_APN_WRAP_API(natural,add);
+            Y_APN_WRAP_API(natural,add)
             Y_APN_WRAP_OPS(+,add)
 
             natural   operator+() const; //!< unary +
             natural & operator++();      //!< prefix++ operator
             natural   operator++(int);   //!< postfix++ operator
 
+            //__________________________________________________________________
+            //
+            // subtraction, no unitary -
+            //__________________________________________________________________
+            Y_APN_WRAP_API(natural,sub)
+            Y_APN_WRAP_OPS(-,sub)
+
+            natural & operator--();      //!< prefix-- operator
+            natural   operator--(int);   //!< postfix-- operator
 
             //__________________________________________________________________
             //
@@ -214,6 +222,10 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
 
             //! addition
             static natural add(const word_type *lhs, const size_t lnw,
+                               const word_type *rhs, const size_t rnw);
+
+            //! addition
+            static natural sub(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
         };
 

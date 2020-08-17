@@ -248,6 +248,82 @@ Y_UTEST(yap_n)
 
     }
 
+    std::cerr << "-- test subtraction" << std::endl;
+
+    
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        uint64_t a = alea.full<uint64_t>();
+        uint64_t b = alea.full<uint64_t>();
+        if(b<a) cswap(a,b);
+        Y_ASSERT(a<b);
+        const natural A = a;
+        const natural B = b;
+        Y_ASSERT(A<B);
+        const natural  C = B-A;
+        const uint64_t c = b-a;
+        Y_ASSERT( C.lsw() == c );
+    }
+
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        const natural A(alea,alea.leq(5000));
+        {
+            const uint64_t u = alea.full<uint64_t>();
+            const natural  B = A+u;
+            const natural  C = B-u;
+            Y_ASSERT(A==C);
+        }
+        {
+            const natural delta(alea,alea.leq(5000));
+            const natural B = A+delta;
+            const natural C = B-delta;
+            Y_ASSERT(A==C);
+        }
+    }
+
+    {
+        for(size_t lbits=0;lbits<=1024;lbits += 1+alea.leq(10))
+        {
+            const natural lhs(alea,lbits);
+            for(size_t rbits=0;rbits<lbits;rbits+=1+alea.leq(10))
+            {
+                const natural rhs(alea,rbits);
+                Y_ASSERT(rhs<lhs);
+                const natural del = lhs-rhs;
+                const natural recover = rhs+del;
+                Y_ASSERT(lhs==recover);
+            }
+        }
+    }
+
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        const natural A(alea,1+alea.leq(5000));
+        const size_t  n = alea.leq(100);
+        const natural B = A + n;
+        {
+            size_t count = 0;
+            for(natural i=B;i!=A;--i)
+            {
+                ++count;
+            }
+            Y_ASSERT(count==n);
+        }
+        {
+            size_t count = 0;
+            for(natural i=B;i!=A;i--)
+            {
+                ++count;
+            }
+            Y_ASSERT(count==n);
+        }
+    }
+
+
+
+
+
 
     std::cerr << *natural::instance() << std::endl;
 
