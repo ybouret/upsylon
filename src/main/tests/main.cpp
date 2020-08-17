@@ -224,6 +224,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(sibyl_t);
     Y_UTEST(sibyl_n);
 
+    Y_UTEST(yap_n);
 }
 Y_UTEST_EXEC()
 

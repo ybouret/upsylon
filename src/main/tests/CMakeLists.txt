@@ -324,6 +324,10 @@ test-sibyl-types.cpp)
 ADD_TEST(sibyl:t test-main sibyl_t)
 ADD_TEST(sibyl:n test-main sibyl_n)
 
+SOURCE_GROUP(yap FILES
+test-yap-n.cpp)
+ADD_TEST(yap:n test-main yap_n)
+
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)

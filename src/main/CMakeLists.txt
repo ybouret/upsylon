@@ -389,6 +389,13 @@ SET(tensor_srcs ${tensor_decl} ${tensor_code})
 SOURCE_GROUP( tensor FILES ${tensor_srcs} )
 INSTALL( FILES ${tensor_decl} DESTINATION include/y/tensor ) 
 
+FILE(GLOB yap_decl y/yap/*.hpp)
+FILE(GLOB yap_code y/yap/*.cpp)
+SET(yap_srcs ${yap_decl} ${yap_code})
+SOURCE_GROUP( yap FILES ${yap_srcs} )
+INSTALL( FILES ${yap_decl} DESTINATION include/y/yap )
+
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -441,6 +448,7 @@ ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
 ${tensor_srcs}
 ${sibyl_srcs}
+${yap_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
