@@ -140,25 +140,52 @@ Y_UTEST(yap_n)
 
 
     std::cerr << "-- test comparison" << std::endl;
+    {
+        size_t count=0;
+        for(size_t lbits=0;lbits<=1024;lbits += 1+alea.leq(10))
+        {
+            const natural lhs(alea,lbits);
+            for(size_t rbits=0;rbits<lbits;rbits+=1+alea.leq(10))
+            {
+                const natural rhs(alea,rbits);
+                Y_ASSERT(rhs<lhs);
+                Y_ASSERT(lhs>rhs);
+                ++count;
+            }
+            Y_ASSERT(lhs<=lhs);
+            Y_ASSERT(lhs>=lhs);
+            Y_ASSERT(lhs==lhs);
+            Y_ASSERT(!(lhs!=lhs));
+        }
+        std::cerr << "|_done with at least " << count << " trials..." << std::endl;
+    }
 
     for(size_t iter=0;iter<1024;++iter)
     {
-
-        uint64_t a = alea.full<uint64_t>();
-        uint64_t b = alea.full<uint64_t>();
-        while(b==a) b = alea.full<uint64_t>();
-        if(a>b) cswap(a,b); Y_ASSERT(a<b);
-        natural A = a;
-        natural B = b;
-        
-        Y_ASSERT(A<B);
-        Y_ASSERT(A<=B);
-        Y_ASSERT(B>A);
-        Y_ASSERT(B>=A);
-        B=A;
-        Y_ASSERT(A<=B);
-        Y_ASSERT(A>=B);
+        const utype a = alea.full<utype>();
+        const utype b = alea.full<utype>();
+        const natural A=a;
+        const natural B=b;
+        if(a<b)
+        {
+            Y_ASSERT(A<B); Y_ASSERT(A<=B);
+            Y_ASSERT(a<B); Y_ASSERT(a<=B);
+            Y_ASSERT(A<b); Y_ASSERT(A<=b);
+        }
+        else
+        {
+            if(a>b)
+            {
+                Y_ASSERT(A>B); Y_ASSERT(A>=B);
+                Y_ASSERT(a>B); Y_ASSERT(a>=B);
+                Y_ASSERT(A>b); Y_ASSERT(A>=b);
+            }
+        }
     }
+
+
+
+
 
 
 #if 0
