@@ -2,7 +2,7 @@
 #ifndef Y_OS_WTIME_INCLUDED
 #define Y_OS_WTIME_INCLUDED 1
 
-#include "y/os/rt-clock.hpp"
+#include "y/os/real-time-clock.hpp"
 
 namespace upsylon
 {

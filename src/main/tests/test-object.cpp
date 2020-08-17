@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/memory/zblock.hpp"
 #include "y/memory/allocator/global.hpp"
-#include "y/os/rt-clock.hpp"
+#include "y/os/real-time-clock.hpp"
 #include <cstdlib>
 
 using namespace upsylon;
