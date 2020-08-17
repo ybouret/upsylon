@@ -29,9 +29,6 @@ namespace upsylon {
             // types and definitions
             //__________________________________________________________________
 
-            //------------------------------------------------------------------
-            // integral types
-            //------------------------------------------------------------------
             typedef uint64_t utype; //!< user unsigned integral type
             typedef int64_t  itype; //!< user signed   integral type
 
