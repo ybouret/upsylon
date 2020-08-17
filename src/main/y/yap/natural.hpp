@@ -49,7 +49,8 @@ word( acquire(count,width,shift) )
             //
             // management methods
             //__________________________________________________________________
-            void xch(natural &) throw();
+            void  xch(natural &) throw();
+            utype lsw() const throw();
 
             //__________________________________________________________________
             //

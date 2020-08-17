@@ -92,6 +92,18 @@ namespace upsylon {
 
         }
 
+        number::utype natural::lsw() const throw()
+        {
+            assert(check(*this,"self@lsw"));
+            number::utype u = 0;
+            for(size_t i=words_per_utype;i>0;)
+            {
+                u <<= word_bits;
+                u |=  word[--i];
+            }
+            return u;
+        }
+
 
         void natural:: update() throw()
         {
