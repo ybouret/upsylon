@@ -51,7 +51,7 @@ namespace upsylon {
             return Y_ROUND_LN2(word_exp2,bytes)>>word_exp2;
         }
 
-        word_type * natural:: acquire(size_t &count, size_t &width, size_t &shift)
+        number::word_type * natural:: acquire(size_t &count, size_t &width, size_t &shift)
         {
             static memory_allocator &mgr = instance();
             return mgr.acquire_field<word_type>(count,width,shift);
@@ -106,7 +106,7 @@ namespace upsylon {
 
 
 
-        utype natural::lsw() const throw()
+        number::utype natural::lsw() const throw()
         {
             assert(check(*this,"self@lsw"));
             utype u = 0;
@@ -211,32 +211,27 @@ namespace upsylon {
             return *this;
         }
 
-        const word_type * natural:: u2w(volatile utype &u, volatile size_t &n) throw()
+        const number::word_type * natural:: u2w(volatile utype &u, volatile size_t &n) throw()
         {
             volatile utype    tmp = 0;
             word_type        *w   = (word_type *)&tmp;
-            //std::cerr << "u2w(" << u <<  ")" << std::endl;
             for(size_t i=0;i<words_per_utype;++i)
             {
                 w[i] = word_type(u);
                 u >>=  word_bits;
-                //std::cerr << "w[" << i << "]=" << w[i] << std::endl;
             }
 
             n = words_per_utype;
             while(n>0)
             {
                 const size_t m=n-1;
-                //std::cerr << "testing w[" << n-1 << "]=" << w[n-1] << std::endl;
                 if(w[m]>0)
                 {
-                    //std::cerr << "->n=" << n << std::endl;
                     break;
                 }
                 n=m;
             }
-            //std::cerr << "->n=" << n << std::endl;
-
+            
 
             u = tmp;
             return (word_type *) &u;

@@ -2,7 +2,7 @@
 //! \file
 
 #ifndef Y_SIBYL_TYPES_INCLUDED
-#define Y_SIBYL_TYPE_INCLUDED 1
+#define Y_SIBYL_TYPES_INCLUDED 1
 
 #include "y/type/ints.hpp"
 #include "y/os/endian.hpp"

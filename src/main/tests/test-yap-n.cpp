@@ -1,11 +1,9 @@
 #include "y/yap/natural.hpp"
 #include "y/utest/run.hpp"
-#include "y/exceptions.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 
-#include <cerrno>
 
 using namespace upsylon;
 using namespace yap;
@@ -17,7 +15,7 @@ namespace {
         //std::cerr << "check_u2w..." << std::endl;
         volatile uint64_t v  = u;
         volatile size_t   nw = 0;
-        const word_type  *pw = natural::u2w(v,nw);
+        const number::word_type  *pw = natural::u2w(v,nw);
 #if 0
         std::cerr << std::hex;
         std::cerr << "u: " << u << " => [" << nw << "]";
@@ -27,10 +25,10 @@ namespace {
         }
         std::cerr << std::endl;
 #endif
-        uint64_t x = 0;
+        number::utype x = 0;
         for(size_t i=nw;i>0;)
         {
-            x <<= word_bits;
+            x <<= number::word_bits;
             x |=  pw[--i];
         }
         Y_ASSERT(u==x);
@@ -39,22 +37,22 @@ namespace {
 
 Y_UTEST(yap_n)
 {
-    std::cerr << "core_bits=" << core_bits << std::endl;
-    std::cerr << "word_bits=" << word_bits << std::endl;
-    Y_CHECK(word_bits<=core_bits/2);
-    Y_CHECK((1<< word_exp2)==word_size);
+    std::cerr << "core_bits=" << number::core_bits << std::endl;
+    std::cerr << "word_bits=" << number::word_bits << std::endl;
+    Y_CHECK(number::word_bits<=number::core_bits/2);
+    Y_CHECK((1<< number::word_exp2)==number::word_size);
 
     std::cerr << "-- test u2w" << std::endl;
     {
         check_u2w(0);
-        for(utype u=1,s=0;s<sizeof(utype)*8;u<<=1,++s)
+        for(number::utype u=1,s=0;s<sizeof(number::utype)*8;u<<=1,++s)
         {
             check_u2w(u);
         }
 
         for(size_t iter=0;iter<8;++iter)
         {
-            const uint64_t   u  = alea.full<uint64_t>();
+            const number::utype u  = alea.full<number::utype>();
             check_u2w(u);
         }
     }
@@ -83,8 +81,8 @@ Y_UTEST(yap_n)
     std::cerr << "-- test set/lsw" << std::endl;
     for(size_t iter=0;iter<1024;++iter)
     {
-        const utype    u  = alea.full<utype>();
-        const natural  n  = u;        Y_ASSERT(n.bits()<=64); Y_ASSERT(n.size()<=8); Y_ASSERT(n.wc()<=words_per_utype);
+        const number::utype u  = alea.full<number::utype>();
+        const natural  n  = u;        Y_ASSERT(n.bits()<=64); Y_ASSERT(n.size()<=8); Y_ASSERT(n.wc()<=number::words_per_utype);
         const natural  n1 = n;        Y_ASSERT(n1==n); Y_ASSERT( !(n1!=n) );
         natural        n2; n2 = n;
         natural        n3; n3 = u;
@@ -162,8 +160,8 @@ Y_UTEST(yap_n)
 
     for(size_t iter=0;iter<1024;++iter)
     {
-        const utype a = alea.full<utype>();
-        const utype b = alea.full<utype>();
+        const number::utype a = alea.full<number::utype>();
+        const number::utype b = alea.full<number::utype>();
         const natural A=a;
         const natural B=b;
         if(a<b)
@@ -186,18 +184,6 @@ Y_UTEST(yap_n)
 
 
 
-
-
-#if 0
-#define Y_TEST_EXCP(ERR) do {\
-libc::exception e(ERR,#ERR); std::cerr << e.what() << " : " << e.when() << std::endl;\
-} while(false)
-
-    Y_TEST_EXCP(EDOM);
-    Y_TEST_EXCP(ERANGE);
-#endif
-    std::cerr << "core_bits=" <<  core_bits << std::endl;
-    std::cerr << "word_bits=" <<  word_bits << std::endl;
 }
 Y_UTEST_DONE()
 
