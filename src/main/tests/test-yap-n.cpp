@@ -396,15 +396,18 @@ Y_UTEST(yap_n)
             }
         }
     }
-    std::cerr << " |_shr" << std::endl;
+    
+    std::cerr << " |_shifting" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
     {
-        natural A( alea, alea.leq(5000) );
-        std::cerr << A << std::endl;
-        while( A.bits() )
+        natural A( alea, alea.leq(500) );
+        for(size_t i=0;i<64;++i)
         {
-            const size_t s = alea.range<size_t>(1,A.bits()+1);
+            const natural B = A;
+            const size_t  s = alea.leq(100);
+            A.shl(s);
             A.shr(s);
-            std::cerr << A << std::endl;
+            Y_ASSERT(B==A);
         }
     }
 

@@ -86,7 +86,33 @@ namespace upsylon
             }
             return *this;
         }
-
+        
+        natural & natural:: shl(const size_t s)
+        {
+            if(s>0)
+            {
+                const size_t cur_bits = bits();
+                if(cur_bits>0)
+                {
+                    const size_t new_bits = cur_bits+s;
+                    const size_t new_bytes = Y_BYTES_FOR(new_bits);
+                    natural      shifted(new_bytes,as_capacity);
+                    const word_type *source = word;
+                    word_type       *target = shifted.word;
+                    for(size_t i=0,j=s;i<cur_bits;++i,++j)
+                    {
+                        if(get_bit(source,i)) set_bit(target,j);
+                    }
+                    
+                    shifted.bytes = new_bytes;
+                    shifted.update();
+                    xch(shifted);
+                }
+            }
+            
+            return *this;
+        }
+    
         
     }
 }

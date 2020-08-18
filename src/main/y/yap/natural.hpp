@@ -194,7 +194,8 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             static natural exp2( const size_t nbits );           //!< 1 << nbits
             bool           bit(const size_t ibit) const throw(); //!< get the bit status
             natural       &shr(const size_t s) throw();          //!< in-place right shift, no-throw
-
+            natural       &shl(const size_t s);                  //!< left shift, would throw
+            
             //__________________________________________________________________
             //
             // helpers
