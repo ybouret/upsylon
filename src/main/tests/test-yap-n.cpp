@@ -399,10 +399,12 @@ Y_UTEST(yap_n)
     std::cerr << " |_shr" << std::endl;
     {
         natural A( alea, alea.leq(5000) );
+        std::cerr << A << std::endl;
         while( A.bits() )
         {
-            const size_t s = alea.range<size_t>(0,A.bits()+1);
+            const size_t s = alea.range<size_t>(1,A.bits()+1);
             A.shr(s);
+            std::cerr << A << std::endl;
         }
     }
 

@@ -60,7 +60,28 @@ namespace upsylon
                 }
                 else
                 {
-                    
+                    word_type *w = word;
+                    {
+                        size_t     wpos = 0;
+                        size_t     rpos = s;
+                        for(size_t i=source-s;i>0;--i)
+                        {
+                            const bool b = get_bit(w,rpos++);
+                            if(b)
+                            {
+                                set_bit(w,wpos++);
+                            }
+                            else
+                            {
+                                clr_bit(w,wpos++);
+                            }
+                        }
+                    }
+                    for(size_t i=s;i>0;--i)
+                    {
+                        clr_bit(w,--source);
+                    }
+                    update();
                 }
             }
             return *this;
