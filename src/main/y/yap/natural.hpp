@@ -202,6 +202,15 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             
             //__________________________________________________________________
             //
+            // bitwise logical
+            //__________________________________________________________________
+            Y_APN_WRAP_OPS(|,_or)
+            Y_APN_WRAP_OPS(&,_and)
+            Y_APN_WRAP_OPS(^,_xor)
+
+            
+            //__________________________________________________________________
+            //
             // helpers
             //__________________________________________________________________
             static memory_allocator &instance();                                       //!< internal dedicated memory
@@ -263,10 +272,21 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             static natural mul(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
 
-            //! binary operators
-            static natural _or(const word_type *lhs, const size_t lnw,
-                               const word_type *rhs, const size_t rnw);
+            typedef word_type (*l_op)(const word_type,const word_type);
             
+#define Y_APN_LOGICAL(FCN,OP) \
+static inline word_type _##FCN(const word_type lhs, const word_type rhs) throw() { return (lhs OP rhs); }\
+static inline natural      FCN(const word_type *lhs, const size_t lnw, const word_type *rhs, const size_t rnw) \
+{ return logical(_##FCN,lhs,lnw,rhs,rnw); }
+            
+            Y_APN_LOGICAL(_or,|)  Y_APN_WRAP_API(natural,_or)
+            Y_APN_LOGICAL(_and,&) Y_APN_WRAP_API(natural,_and)
+            Y_APN_LOGICAL(_xor,^) Y_APN_WRAP_API(natural,_xor)
+
+            //! logical operators
+            static natural logical(l_op op,
+                                   const word_type *lhs, const size_t lnw,
+                                   const word_type *rhs, const size_t rnw);
             
 
         };

@@ -35,7 +35,7 @@ Y_UTEST(yap_n)
     Y_CHECK(natural::word_bits<=natural::core_bits/2);
     Y_CHECK((1<< natural::word_exp2)==natural::word_size);
 
-    std::cerr << "-- test u2w" << std::endl;
+    std::cerr << "---> test u2w" << std::endl;
     {
         check_u2w(0);
         for(number::utype u=1,s=0;s<sizeof(number::utype)*8;u<<=1,++s)
@@ -50,7 +50,7 @@ Y_UTEST(yap_n)
         }
     }
     
-    std::cerr << "-- test zero" << std::endl;
+    std::cerr << "----> test zero" << std::endl;
     {
         natural zero;
         std::cerr << "zero=" << zero << std::endl;
@@ -64,12 +64,11 @@ Y_UTEST(yap_n)
             natural tmp(200,as_capacity);
             zero.xch(tmp);
         }
-        std::cerr << "zero=" << zero << std::endl;
     }
     
 
 
-    std::cerr << "-- test set/lsw" << std::endl;
+    std::cerr << "---> test set/lsw" << std::endl;
     for(size_t iter=0;iter<ITER;++iter)
     {
         const number::utype u  = alea.full<number::utype>();
@@ -88,7 +87,7 @@ Y_UTEST(yap_n)
         Y_ASSERT(!(u!=n));
     }
     
-    std::cerr << "-- test ran/eq" << std::endl;
+    std::cerr << "---> test ran/eq" << std::endl;
     {
         std::cerr << std::dec;
         vector<natural> rans;
@@ -125,7 +124,7 @@ Y_UTEST(yap_n)
     }
     
     
-    std::cerr << "-- test comparison" << std::endl;
+    std::cerr << "---> test comparison" << std::endl;
     {
         size_t count=0;
         for(size_t lbits=0;lbits<=1024;lbits += 1+alea.leq(10))
@@ -168,9 +167,8 @@ Y_UTEST(yap_n)
             }
         }
     }
-    std::cerr << std::endl;
 
-    std::cerr << "-- test addition" << std::endl;
+    std::cerr << "---> test addition" << std::endl;
     for(size_t iter=0;iter<ITER;++iter)
     {
         const uint64_t a = alea.partial<uint64_t>(63);
@@ -247,7 +245,7 @@ Y_UTEST(yap_n)
     }
     
     
-    std::cerr << "-- test subtraction" << std::endl;
+    std::cerr << "---> test subtraction" << std::endl;
     for(size_t iter=0;iter<ITER;++iter)
     {
         uint64_t a = alea.full<uint64_t>();
@@ -317,15 +315,13 @@ Y_UTEST(yap_n)
         }
     }
     
-    std::cerr << "-- test exp2" << std::endl;
+    std::cerr << "---> test exp2" << std::endl;
     for(size_t shift=0;shift<=4096;++shift)
     {
         const natural a = natural::exp2(shift);
         Y_ASSERT(shift+1==a.bits());
     }
-    std::cerr << std::endl;
-    
-    std::cerr << "-- test multiplication" << std::endl;
+    std::cerr << "---> test multiplication" << std::endl;
     std::cerr << " |_small" << std::endl;
     std::cerr << std::hex;
     for(size_t i=0;i<ITER;++i)
@@ -381,8 +377,22 @@ Y_UTEST(yap_n)
         const natural S = natural::square_of(A);
         Y_ASSERT(A*A==S);
     }
+    
+    std::cerr << "---> test bitwise" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const uint64_t a = alea.full<uint64_t>();
+        const uint64_t b = alea.full<uint64_t>();
+        const natural  A = a;
+        const natural  B = b;
+        Y_ASSERT( (A|B).lsw() == (a|b) );
+        Y_ASSERT( (A&B).lsw() == (a&b) );
+        Y_ASSERT( (A^B).lsw() == (a^b) );
 
-    std::cerr << "-- test bits" << std::endl;
+    }
+    
+
+    std::cerr << "---> test bits" << std::endl;
     std::cerr << " |_checking" << std::endl;
     {
         const natural A(alea,alea.leq(5000));
@@ -413,13 +423,19 @@ Y_UTEST(yap_n)
         {
             A.shr(alea.leq(16));
         }
-        
+        Y_ASSERT(0==A);
         uint64_t a = 0;
         for(size_t i=0;i<64;++i)
         {
             a <<= 1;
             A <<= 1;
+            if( alea.choice() )
+            {
+                a |= 1;
+                A |= 1;
+            }
         }
+        Y_ASSERT(a==A);
         
     }
 
