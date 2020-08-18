@@ -60,8 +60,7 @@ namespace upsylon
                 }
                 else
                 {
-                    size_t target = source-s;
-
+                    
                 }
             }
             return *this;
