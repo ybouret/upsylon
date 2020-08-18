@@ -79,6 +79,32 @@ namespace upsylon
         }
         
         
+        static inline
+        void finalize(uint8_t      *prod,
+                      const size_t  p_bytes,
+                      const cplx_t *L,
+                      const size_t  nn) throw()
+        {
+            const real_t fac   = 1.0/nn;
+            real_t       carry = 0.0;
+            const size_t top   = p_bytes - 1;
+            for(size_t i=0;i<top;++i)
+            {
+                const real_t q = floor( (carry += (L[i].re*fac + 0.5) ) * 0.00390625 );
+                const real_t r = carry - (256.0 * q);
+                prod[i]        = uint8_t(r);
+                carry          = q;
+            }
+            prod[top] = uint8_t(carry);
+            
+            const size_t  nw = natural::words_for(p_bytes);
+            word_t       *w  = (word_t *)prod;
+            for(size_t i=0;i<nw;++i)
+            {
+                w[i] = swap_le(w[i]);
+            }
+        }
+        
         natural natural:: mul(const word_type *lhs, const size_t lnw,
                               const word_type *rhs, const size_t rnw)
         {
@@ -144,22 +170,8 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // finalizing product in BYTES
                 //--------------------------------------------------------------
-                {
-                    const real_t fac   = 1.0/nn;
-                    real_t       carry = 0.0;
-                    uint8_t     *prod  = (uint8_t*)(p.word);
-                    const size_t top   = p_bytes - 1;
-                    for(size_t i=0;i<top;++i)
-                    {
-                        const real_t q = floor( (carry += (L[i].re*fac + 0.5) ) * 0.00390625 );
-                        const real_t r = carry - (256.0 * q);
-                        prod[i]        = uint8_t(r);
-                        carry          = q;
-                    }
-                    prod[top] = uint8_t(carry);
-                }
+                finalize((uint8_t *)(p.word), p_bytes, L,nn);
                 
-
                 
                 mgr.release_field(L,cplx_count,cplx_bytes,cplx_shift);
                 p.bytes=p_bytes;

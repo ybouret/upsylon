@@ -188,7 +188,7 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             //
             // bit shifting
             //__________________________________________________________________
-            static natural exp2( const size_t ibit ); //! 1 << ibit
+            static natural exp2( const size_t nbits ); //! 1 << nbits
 
             //__________________________________________________________________
             //

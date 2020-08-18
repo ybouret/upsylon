@@ -47,8 +47,7 @@ Y_UTEST(yap_n)
             check_u2w(u);
         }
     }
-    std::cerr << std::endl;
-
+    
     std::cerr << "-- test zero" << std::endl;
     {
         natural zero;
@@ -65,8 +64,7 @@ Y_UTEST(yap_n)
         }
         std::cerr << "zero=" << zero << std::endl;
     }
-    std::cerr << std::endl;
-
+    
 
 
     std::cerr << "-- test set/lsw" << std::endl;
@@ -87,8 +85,7 @@ Y_UTEST(yap_n)
         Y_ASSERT(!(n!=u));
         Y_ASSERT(!(u!=n));
     }
-    std::cerr << std::endl;
-
+    
     std::cerr << "-- test ran/eq" << std::endl;
     {
         std::cerr << std::dec;
@@ -124,10 +121,8 @@ Y_UTEST(yap_n)
             std::cerr << "\t#read    = " << read << std::endl;
         }
     }
-    std::cerr << std::endl;
-
-
-
+    
+    
     std::cerr << "-- test comparison" << std::endl;
     {
         size_t count=0;
@@ -248,8 +243,7 @@ Y_UTEST(yap_n)
         }
 
     }
-    std::cerr << std::endl;
-
+    
     
     std::cerr << "-- test subtraction" << std::endl;
     for(size_t iter=0;iter<1024;++iter)
@@ -320,6 +314,13 @@ Y_UTEST(yap_n)
             Y_ASSERT(count==n);
         }
     }
+    
+    std::cerr << "-- test exp2" << std::endl;
+    for(size_t shift=0;shift<=4096;++shift)
+    {
+        const natural a = natural::exp2(shift);
+        Y_ASSERT(shift+1==a.bits());
+    }
     std::cerr << std::endl;
     
     std::cerr << "-- test multiplication" << std::endl;
@@ -336,18 +337,30 @@ Y_UTEST(yap_n)
         const natural C = A*B; Y_ASSERT( C.lsw() == c);
         const natural D = a*B; Y_ASSERT( D==C );
         const natural E = A*b; Y_ASSERT( E==C );
-        //std::cerr << "A=" << A << "/" << a << std::endl;
-        //std::cerr << "B=" << B << "/" << b << std::endl;
-        //std::cerr << "C=" << C << "/" << c << std::endl;
     }
-    std::cerr << " |_large" << std::endl;
+    std::cerr << " |_large exp2" << std::endl;
     std::cerr << std::dec;
+    for(size_t ls=0;ls<=100;++ls)
+    {
+        const natural lhs = natural::exp2(ls);
+        for(size_t rs=0;rs<=100;++rs)
+        {
+            const natural rhs = natural::exp2(rs);
+            const natural p   = lhs*rhs;
+            const natural q   = rhs*lhs;
+            Y_ASSERT(p==q);
+            const natural z   = natural::exp2(ls+rs);
+            Y_ASSERT(p==z);
+        }
+    }
+    std::cerr << " |_large random" << std::endl;
     for(size_t i=0;i<1024;++i)
     {
         const natural A(alea,alea.leq(1000));
         const natural B(alea,alea.leq(1000));
         const natural C = A*B;
-        
+        const natural D = B*A;
+        Y_ASSERT(C==D);
     }
     std::cerr << std::endl;
     
