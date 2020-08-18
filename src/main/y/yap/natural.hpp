@@ -195,6 +195,10 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             bool           bit(const size_t ibit) const throw(); //!< get the bit status
             natural       &shr(const size_t s) throw();          //!< in-place right shift, no-throw
             natural       &shl(const size_t s);                  //!< left shift, would throw
+            friend natural operator >> (const natural &,const size_t);
+            friend natural operator << (const natural &,const size_t);
+            natural & operator<<=(const size_t s);
+            natural & operator>>=(const size_t s) throw();
             
             //__________________________________________________________________
             //
@@ -259,7 +263,10 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             static natural mul(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
 
-
+            //! binary operators
+            static natural _or(const word_type *lhs, const size_t lnw,
+                               const word_type *rhs, const size_t rnw);
+            
             
 
         };

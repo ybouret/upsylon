@@ -413,6 +413,14 @@ Y_UTEST(yap_n)
         {
             A.shr(alea.leq(16));
         }
+        
+        uint64_t a = 0;
+        for(size_t i=0;i<64;++i)
+        {
+            a <<= 1;
+            A <<= 1;
+        }
+        
     }
 
     std::cerr << std::endl;

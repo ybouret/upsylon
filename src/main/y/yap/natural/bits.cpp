@@ -113,7 +113,28 @@ namespace upsylon
             return *this;
         }
     
+        natural operator >> (const natural &n, const size_t s)
+        {
+            natural ans(n); return ans.shr(s);
+        }
         
+        natural operator << (const natural &n, const size_t s)
+        {
+            natural ans(n); return ans.shl(s);
+        }
+        
+        natural & natural:: operator<<=(const size_t s)
+        {
+            return shl(s);
+        }
+        
+        natural & natural:: operator>>=(const size_t s) throw()
+        {
+            return shr(s);
+        }
+        
+        
+
     }
 }
 
