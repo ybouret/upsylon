@@ -186,7 +186,50 @@ namespace upsylon
                 return natural();
             }
         }
-        
+
+        natural natural::square_of(const natural &x)
+        {
+            if(x.bytes)
+            {
+                static memory_allocator &mgr = instance();
+
+                //--------------------------------------------------------------
+                // prepare product and intenal memory
+                //--------------------------------------------------------------
+                const size_t p_bytes = x.bytes << 1; natural      p(p_bytes,as_capacity);
+                const size_t nn      = p.width;      complexes    cplx(mgr,nn);
+                cplx_t *     L       = *cplx;
+
+                //--------------------------------------------------------------
+                // auto-correlation
+                //--------------------------------------------------------------
+                {
+                    real_t      *fft1 = &L[0].re;
+                    encode_re(fft1,x.word,x.words);
+                    --fft1;
+                    fft<real_t>::forward(fft1,nn);
+                    for(size_t i=0;i<nn;++i)
+                    {
+                        L[i].__square();
+                    }
+                    fft<real_t>::reverse(fft1,nn);
+                }
+
+                //--------------------------------------------------------------
+                // finalizing product
+                //--------------------------------------------------------------
+                finalize((uint8_t *)(p.word), p_bytes, L,nn);
+
+
+                p.bytes=p_bytes;
+                p.update();
+                return p;
+            }
+            else
+            {
+                return natural();
+            }
+        }
         
     }
     
