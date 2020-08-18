@@ -13,7 +13,12 @@ namespace upsylon {
 
 //#define Y_YAP_FORCE16
 
-
+        enum sign_type
+        {
+            __negative, //!< -1
+            __zero,     //!<  0
+            __positive  //!<  1
+        };
 
         //______________________________________________________________________
         //
@@ -28,7 +33,7 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-
+           
             typedef uint64_t utype; //!< user unsigned integral type
             typedef int64_t  itype; //!< user signed   integral type
 

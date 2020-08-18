@@ -289,6 +289,8 @@ static inline natural      FCN(const word_type *lhs, const size_t lnw, const wor
                                    const word_type *lhs, const size_t lnw,
                                    const word_type *rhs, const size_t rnw);
             
+            //! division
+            static natural _div(const natural &num, const natural &den);
 
         };
 
