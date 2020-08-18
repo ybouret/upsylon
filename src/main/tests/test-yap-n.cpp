@@ -409,6 +409,10 @@ Y_UTEST(yap_n)
             A.shr(s);
             Y_ASSERT(B==A);
         }
+        while(A>0)
+        {
+            A.shr(alea.leq(16));
+        }
     }
 
     std::cerr << std::endl;
