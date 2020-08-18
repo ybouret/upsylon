@@ -18,6 +18,20 @@ namespace upsylon
             assert(ans.bits()==ibit);
             return  ans;
         }
+
+        bool natural:: get_bit(const word_type *w, const size_t ibit) throw()
+        {
+            assert(w);
+            const size_t  i = ibit>>3;
+            const uint8_t u = get_byte(w,i);
+            return 0 != (u&bits_table::value[ibit&7]);
+        }
+
+        bool natural:: bit(const size_t ibit) const throw()
+        {
+            assert(ibit<bits());
+            return get_bit(word,ibit);
+        }
     }
 }
 

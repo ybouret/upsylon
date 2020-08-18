@@ -190,7 +190,8 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             //
             // bit shifting
             //__________________________________________________________________
-            static natural exp2( const size_t nbits ); //! 1 << nbits
+            static natural exp2( const size_t nbits );   //!< 1 << nbits
+            bool   bit(const size_t ibit) const throw(); //!< get the bit status
 
             //__________________________________________________________________
             //
@@ -205,6 +206,8 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             //! output
             friend std::ostream     &operator<<(std::ostream &, const natural &);
 
+
+
         private:
             size_t     bytes; //!< effective number of bytes
             size_t     words; //!< effective number of words = words_for(bytes)
@@ -215,8 +218,11 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             
             static word_type *acquire(size_t &count, size_t &width, size_t &shift);
             static void       release(word_type *, size_t &count, size_t &width, size_t &shift) throw();
+            static uint8_t   &get_byte(const word_type *w, const size_t i);
+            static bool       get_bit(const word_type *w, const size_t ibit) throw();
 
-            uint8_t &get(size_t i) const throw(); //!< LE byte in [0..width-1]
+            uint8_t &get(const size_t i) const throw(); //!< LE byte in [0..width-1]
+
 
             void update()  throw(); //!< check bytes from current position
             void upgrade() throw(); //!< set bytes to width and update
@@ -247,6 +253,9 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             //! multiplicaion
             static natural mul(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
+
+            
+
         };
 
     }

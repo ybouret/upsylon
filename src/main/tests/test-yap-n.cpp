@@ -382,6 +382,21 @@ Y_UTEST(yap_n)
         Y_ASSERT(A*A==S);
     }
 
+    std::cerr << "-- test bits" << std::endl;
+
+    {
+        const natural A(alea,alea.leq(5000));
+        const size_t  bits = A.bits();
+        for(size_t i=0;i<bits;++i)
+        {
+            if(A.bit(i))
+            {
+                const natural B = natural::exp2(i);
+                Y_ASSERT(A>=B);
+            }
+        }
+    }
+
     std::cerr << std::endl;
     
 

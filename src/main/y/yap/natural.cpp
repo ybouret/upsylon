@@ -166,17 +166,23 @@ namespace upsylon {
             update();
         }
 
-        uint8_t & natural:: get(size_t i) const throw()
+        uint8_t & natural:: get(const size_t i) const throw()
         {
             assert(i<width);
-            uint8_t *addr = (uint8_t*) &word[i>>word_exp2];
-            i &= word_mask;
+            return get_byte(word,i);
+        }
+
+        uint8_t &natural::get_byte(const word_type *w, const size_t i)
+        {
+            assert(w);
+            uint8_t *addr = (uint8_t*) &w[i>>word_exp2];
 #if Y_BYTE_ORDER == Y_LIT_ENDIAN
-            return addr[i];
+            return addr[i&word_mask];
 #else
-            return addr[word_mask-i];
+            return addr[word_mask-(i&word_mask)];
 #endif
         }
+
 
 
         void natural:: xch(natural &other) throw()
