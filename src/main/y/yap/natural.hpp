@@ -179,6 +179,13 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
 
             //__________________________________________________________________
             //
+            // multiplication
+            //__________________________________________________________________
+            Y_APN_WRAP_API(natural,mul)
+            Y_APN_WRAP_OPS(*,mul);
+            
+            //__________________________________________________________________
+            //
             // bit shifting
             //__________________________________________________________________
             static natural exp2( const size_t ibit ); //! 1 << ibit

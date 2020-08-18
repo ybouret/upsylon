@@ -171,6 +171,7 @@ Y_UTEST(yap_n)
             }
         }
     }
+    std::cerr << std::endl;
 
     std::cerr << "-- test addition" << std::endl;
     for(size_t iter=0;iter<1024;++iter)
@@ -247,10 +248,10 @@ Y_UTEST(yap_n)
         }
 
     }
-
-    std::cerr << "-- test subtraction" << std::endl;
+    std::cerr << std::endl;
 
     
+    std::cerr << "-- test subtraction" << std::endl;
     for(size_t iter=0;iter<1024;++iter)
     {
         uint64_t a = alea.full<uint64_t>();
@@ -319,8 +320,37 @@ Y_UTEST(yap_n)
             Y_ASSERT(count==n);
         }
     }
-
-
+    std::cerr << std::endl;
+    
+    std::cerr << "-- test multiplication" << std::endl;
+    std::cerr << " |_small" << std::endl;
+    std::cerr << std::hex;
+    for(size_t i=0;i<1024;++i)
+    {
+        const uint64_t a = alea.full<uint32_t>();
+        const uint64_t b = alea.full<uint32_t>();
+        const uint64_t c = a*b;
+        
+        const natural A = a;   Y_ASSERT( A.lsw() == a);
+        const natural B = b;   Y_ASSERT( B.lsw() == b);
+        const natural C = A*B; Y_ASSERT( C.lsw() == c);
+        const natural D = a*B; Y_ASSERT( D==C );
+        const natural E = A*b; Y_ASSERT( E==C );
+        //std::cerr << "A=" << A << "/" << a << std::endl;
+        //std::cerr << "B=" << B << "/" << b << std::endl;
+        //std::cerr << "C=" << C << "/" << c << std::endl;
+    }
+    std::cerr << " |_large" << std::endl;
+    std::cerr << std::dec;
+    for(size_t i=0;i<1024;++i)
+    {
+        const natural A(alea,alea.leq(1000));
+        const natural B(alea,alea.leq(1000));
+        const natural C = A*B;
+        
+    }
+    std::cerr << std::endl;
+    
 
 
 
