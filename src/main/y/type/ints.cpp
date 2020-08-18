@@ -34,6 +34,18 @@ namespace upsylon
         128
     };
 
+    const uint8_t bits_table::vmask[8] =
+    {
+        255-1,
+        255-2,
+        255-4,
+        255-8,
+        255-16,
+        255-32,
+        255-64,
+        255-128
+    };
+
     const uint8_t bits_table::_true[256] =
     {
         0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,

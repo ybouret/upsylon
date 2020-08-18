@@ -27,11 +27,47 @@ namespace upsylon
             return 0 != (u&bits_table::value[ibit&7]);
         }
 
+        void natural:: set_bit(const word_type *w, const size_t ibit) throw()
+        {
+            assert(w);
+            const size_t  i = ibit>>3;
+            uint8_t      &u = get_byte(w,i);
+            u |= bits_table::value[ibit&7];
+        }
+
+        void natural:: clr_bit(const word_type *w, const size_t ibit) throw()
+        {
+            assert(w);
+            const size_t  i = ibit>>3;
+            uint8_t      &u = get_byte(w,i);
+            u &= bits_table::vmask[ibit&7];
+        }
+
         bool natural:: bit(const size_t ibit) const throw()
         {
             assert(ibit<bits());
             return get_bit(word,ibit);
         }
+
+        natural & natural:: shr(const size_t s) throw()
+        {
+            size_t source = bits();
+            if(s>0)
+            {
+                if(s>=source)
+                {
+                    ldz();
+                }
+                else
+                {
+                    size_t target = source-s;
+
+                }
+            }
+            return *this;
+        }
+
+        
     }
 }
 

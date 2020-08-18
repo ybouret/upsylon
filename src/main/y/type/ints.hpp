@@ -176,6 +176,7 @@ namespace upsylon
     {
         static const uint8_t  count_for_byte[256]; //!< count of bits for bytes[0..255]
         static const uint8_t  value[8];            //!< [2^0...2^7]
+        static const uint8_t  vmask[8];            //!< ~value=255-value
         static const uint8_t  _true[256];          //!< [0,1,1,1,1,1,1...1,1,1]
     };
 

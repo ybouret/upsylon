@@ -383,7 +383,7 @@ Y_UTEST(yap_n)
     }
 
     std::cerr << "-- test bits" << std::endl;
-
+    std::cerr << " |_checking" << std::endl;
     {
         const natural A(alea,alea.leq(5000));
         const size_t  bits = A.bits();
@@ -394,6 +394,15 @@ Y_UTEST(yap_n)
                 const natural B = natural::exp2(i);
                 Y_ASSERT(A>=B);
             }
+        }
+    }
+    std::cerr << " |_shr" << std::endl;
+    {
+        natural A( alea, alea.leq(5000) );
+        while( A.bits() )
+        {
+            const size_t s = alea.range<size_t>(0,A.bits()+1);
+            A.shr(s);
         }
     }
 

@@ -2,6 +2,7 @@
 #include "y/yap/natural.hpp"
 #include "y/os/endian.hpp"
 #include <iostream>
+#include <cstring>
 
 namespace upsylon {
 
@@ -105,7 +106,14 @@ namespace upsylon {
 
         }
 
-
+        void   natural:: ldz()    throw()
+        {
+            assert(check(*this,"self@ldz"));
+            memset(word,0,width);
+            bytes = 0;
+            words = 0;
+            assert(check(*this,"self@ldz"));
+        }
 
         number::utype natural::lsw() const throw()
         {
