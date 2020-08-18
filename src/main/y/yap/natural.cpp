@@ -1,6 +1,7 @@
 
 #include "y/yap/natural.hpp"
 #include "y/os/endian.hpp"
+#include <iostream>
 
 namespace upsylon {
 
@@ -20,7 +21,7 @@ namespace upsylon {
             static const char pfx[] = "***[natural] '";
             static const char mid[] = "' : ";
             static const char sfx[] = " FAILURE!";
-            //std::cerr << "..checking " << which << std::endl;
+
             Y_APN_CHECK(n.words==words_for(n.bytes));
             Y_APN_CHECK(n.count>=n.words);
             Y_APN_CHECK(n.count*word_size==n.width);

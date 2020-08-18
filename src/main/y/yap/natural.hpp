@@ -184,6 +184,8 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             Y_APN_WRAP_API(natural,mul)
             Y_APN_WRAP_OPS(*,mul);
             
+            static natural square_of(const natural &x); //!< x*x
+            
             //__________________________________________________________________
             //
             // bit shifting

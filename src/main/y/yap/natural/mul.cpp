@@ -14,38 +14,40 @@ namespace upsylon
         
         
         static inline
-        void encode_data(real_t       *fft1,
-                         const word_t *lhs,
-                         const size_t  lnw,
-                         const word_t *rhs,
-                         const size_t  rnw) throw()
+        void encode_re(real_t       *fft1,
+                       const word_t *lhs,
+                       const size_t  lnw) throw()
         {
+            size_t i=0;
+            for(size_t j=0;j<lnw;++j)
             {
-                size_t i=0;
-                for(size_t j=0;j<lnw;++j)
+                word_t w = lhs[j];
+                for(size_t k=0;k<sizeof(word_t);++k,++i)
                 {
-                    word_t w = lhs[j];
-                    for(size_t k=0;k<sizeof(word_t);++k,++i)
-                    {
-                        fft1[ (i<<1) ] = uint8_t(w);
-                        w >>= 8;
-                    }
-                }
-            }
-            
-            {
-                size_t i=0;
-                for(size_t j=0;j<rnw;++j)
-                {
-                    word_t w = rhs[j];
-                    for(size_t k=0;k<sizeof(word_t);++k,++i)
-                    {
-                        fft1[ (i<<1)+1 ] = uint8_t(w);
-                        w >>= 8;
-                    }
+                    fft1[ (i<<1) ] = uint8_t(w);
+                    w >>= 8;
                 }
             }
         }
+        
+        
+        static inline
+        void encode_im(real_t       *fft1,
+                       const word_t *rhs,
+                       const size_t  rnw) throw()
+        {
+            size_t i=0;
+            for(size_t j=0;j<rnw;++j)
+            {
+                word_t w = rhs[j];
+                for(size_t k=0;k<sizeof(word_t);++k,++i)
+                {
+                    fft1[ (i<<1)+1 ] = uint8_t(w);
+                    w >>= 8;
+                }
+            }
+        }
+        
         
         static inline
         void decode_data(real_t *fft1,
@@ -105,6 +107,8 @@ namespace upsylon
             }
         }
         
+        typedef memory::tight::quarry_field<cplx_t> complexes;
+        
         natural natural:: mul(const word_type *lhs, const size_t lnw,
                               const word_type *rhs, const size_t rnw)
         {
@@ -127,10 +131,8 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // get memory to hold two arrays of complexes
                 //--------------------------------------------------------------
-                size_t  cplx_count = nn << 1;
-                size_t  cplx_bytes = 0;
-                size_t  cplx_shift = 0;
-                cplx_t *L          = mgr.acquire_field<cplx_t>(cplx_count,cplx_bytes,cplx_shift);
+                complexes cplx(mgr,nn<<1);
+                cplx_t *L = *cplx; //mgr.acquire_field<cplx_t>(cplx_count,cplx_bytes,cplx_shift);
                 
                 
                 {
@@ -138,7 +140,8 @@ namespace upsylon
                     // encode data
                     //----------------------------------------------------------
                     real_t *fft1 = &L[0].re;
-                    encode_data(fft1,lhs,lnw,rhs,rnw);
+                    encode_re(fft1,lhs,lnw);
+                    encode_im(fft1,rhs,rnw);
                     
                     //----------------------------------------------------------
                     // forward transform
@@ -168,12 +171,11 @@ namespace upsylon
                 }
                 
                 //--------------------------------------------------------------
-                // finalizing product in BYTES
+                // finalizing product
                 //--------------------------------------------------------------
                 finalize((uint8_t *)(p.word), p_bytes, L,nn);
                 
                 
-                mgr.release_field(L,cplx_count,cplx_bytes,cplx_shift);
                 p.bytes=p_bytes;
                 p.update();
                 return p;

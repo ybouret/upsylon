@@ -5,8 +5,7 @@
 #define Y_MEMORY_TIGHT_QUARRY_ALLOCATOR_INCLUDED 1
 
 #include "y/lockable.hpp"
-#include <iostream>
-#include "y/type/spec.hpp"
+#include "y/type/args.hpp"
 
 namespace upsylon {
 
@@ -18,7 +17,9 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
+            //
             //! allocator with bytes=2^shift markers
+            //
             //__________________________________________________________________
             class quarry_allocator
             {
@@ -109,6 +110,46 @@ namespace upsylon {
 
                 Y_DISABLE_COPY_AND_ASSIGN(quarry_allocator);
                 void *fetch_locked(const size_t);
+            };
+            
+            //__________________________________________________________________
+            //
+            //
+            //! smart pointer for a field
+            //
+            //__________________________________________________________________
+            
+            template <typename T>
+            class quarry_field
+            {
+            public:
+                Y_DECL_ARGS(T,type);
+                
+                inline explicit quarry_field(quarry_allocator &mgr,const size_t required) :
+                qhost(mgr),
+                count(required),
+                bytes(0),
+                shift(0),
+                field( qhost.acquire_field<mutable_type>(count, bytes, shift) )
+                {
+                }
+                
+                inline virtual ~quarry_field() throw()
+                {
+                    qhost.release_field(field,count,bytes,shift);
+                }
+                
+                
+                inline type *       operator*() throw()       { return field; }
+                inline const_type * operator*() const throw() { return field; }
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(quarry_field);
+                quarry_allocator &qhost;
+                size_t            count;
+                size_t            bytes;
+                size_t            shift;
+                mutable_type     *field;
             };
 
         }
