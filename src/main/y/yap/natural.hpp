@@ -183,7 +183,7 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             // multiplication
             //__________________________________________________________________
             Y_APN_WRAP_API(natural,mul)
-            Y_APN_WRAP_OPS(*,mul);
+            Y_APN_WRAP_OPS(*,mul)
             
             static natural square_of(const natural &x); //!< x*x
             
@@ -191,14 +191,14 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             //
             // bit shifting
             //__________________________________________________________________
-            static natural exp2( const size_t nbits );           //!< 1 << nbits
-            bool           bit(const size_t ibit) const throw(); //!< get the bit status
-            natural       &shr(const size_t s) throw();          //!< in-place right shift, no-throw
-            natural       &shl(const size_t s);                  //!< left shift, would throw
-            friend natural operator >> (const natural &,const size_t);
-            friend natural operator << (const natural &,const size_t);
-            natural & operator<<=(const size_t s);
-            natural & operator>>=(const size_t s) throw();
+            static natural exp2( const size_t nbits );                 //!< 1 << nbits
+            bool           bit(const size_t ibit) const throw();       //!< get the bit status
+            natural       &shr(const size_t s) throw();                //!< in-place right shift, no-throw
+            natural       &shl(const size_t s);                        //!< left shift, would throw
+            friend natural operator >> (const natural &,const size_t); //!< right shift
+            friend natural operator << (const natural &,const size_t); //!< left shift
+            natural & operator<<=(const size_t s);                     //!< left shift
+            natural & operator>>=(const size_t s) throw();             //!< right shift
             
             //__________________________________________________________________
             //
@@ -274,6 +274,7 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
 
             typedef word_type (*l_op)(const word_type,const word_type);
             
+            //! implementing logical operators
 #define Y_APN_LOGICAL(FCN,OP) \
 static inline word_type _##FCN(const word_type lhs, const word_type rhs) throw() { return (lhs OP rhs); }\
 static inline natural      FCN(const word_type *lhs, const size_t lnw, const word_type *rhs, const size_t rnw) \

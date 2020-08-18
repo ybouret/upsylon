@@ -118,13 +118,13 @@ namespace upsylon {
             //! smart pointer for a field
             //
             //__________________________________________________________________
-            
             template <typename T>
             class quarry_field
             {
             public:
-                Y_DECL_ARGS(T,type);
+                Y_DECL_ARGS(T,type); //!< aliasing
                 
+                //! acquire resource, keep track of allocator
                 inline explicit quarry_field(quarry_allocator &mgr,const size_t required) :
                 qhost(mgr),
                 count(required),
@@ -134,13 +134,16 @@ namespace upsylon {
                 {
                 }
                 
+                //! release resource
                 inline virtual ~quarry_field() throw()
                 {
                     qhost.release_field(field,count,bytes,shift);
                 }
                 
-                
+                //! access to memory field
                 inline type *       operator*() throw()       { return field; }
+                
+                //! access to memory field, const
                 inline const_type * operator*() const throw() { return field; }
                 
             private:

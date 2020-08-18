@@ -94,7 +94,7 @@ namespace upsylon {
             std::ostream & operator<<(std::ostream &os, const vein &s)
             {
                 os << std::dec;
-                os << "{2^" << std::left << std::setw(2) << s.block_exp2 << std::right << "=";
+                os << "{2^" << std::left << std::setw(2) << s.block_exp2 << std::right << " = ";
                 os << std::setw(vein::width) << s.block_size << ": ";
                 os <<  "used " << std::setw(3) << s.committed() << "/" << std::setw(3) << s.count;
                 const human_readable hr_used = s.committed() * s.block_size;
