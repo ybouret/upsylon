@@ -223,6 +223,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //
             // decomposition
             //__________________________________________________________________
+            //! num = q*den+r
             static void divide(natural &q, natural &r, const natural &num, const natural &den);
 
             //__________________________________________________________________
@@ -259,7 +260,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
 
             //! output
             friend std::ostream     &operator<<(std::ostream &, const natural &);
-
+            
 
 
         private:
