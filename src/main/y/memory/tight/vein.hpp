@@ -57,7 +57,8 @@ namespace upsylon {
                 size_t committed()      const throw(); //!< committed = count-chest.size
                 size_t available()      const throw(); //!< chest.size
                 void   optimize() throw();             //!< rearrange chest
-                
+                void   prefetch(size_t n);             //!< create in store some more ingot
+
                 //______________________________________________________________
                 //
                 // members
@@ -79,7 +80,7 @@ namespace upsylon {
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(vein);
                 void   free(ingot *) const throw(); //!< release uneeded ingot
-
+                ingot *make();
             };
 
         }

@@ -62,7 +62,6 @@ namespace upsylon {
 
             void * vein:: acquire()
             {
-                static global &mgr = global::instance();
                 if(chest.size)
                 {
                     //----------------------------------------------------------
@@ -74,11 +73,23 @@ namespace upsylon {
                 {
                     //----------------------------------------------------------
                     // create a new ingot
-                    //----------------------------------------------------------
+                    return make();
+                }
+            }
 
-                    void *addr = mgr.__calloc(1,block_size);
-                    ++aliasing::_(count);
-                    return addr;
+            ingot * vein:: make()
+            {
+                static global &mgr = global::instance();
+                void *addr = mgr.__calloc(1,block_size);
+                ++aliasing::_(count);
+                return static_cast<ingot *>(addr);
+            }
+
+            void vein:: prefetch(size_t n)
+            {
+                while(n-- > 0 )
+                {
+                    chest.store( make() );
                 }
             }
 
@@ -141,6 +152,8 @@ namespace upsylon {
                 }
 #endif
             }
+
+            
         }
     }
 }
