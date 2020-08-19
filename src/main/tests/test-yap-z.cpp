@@ -62,6 +62,7 @@ Y_UTEST(yap_z)
                     throw exception("bad integer read");
                 }
                 Y_ASSERT(z==Z[i]);
+                Y_ASSERT(!(z!=Z[i]));
             }
         }
         Y_ASSERT(read==written);

@@ -16,7 +16,10 @@ namespace upsylon {
         class integer : public number
         {
         public:
-            static const char CLASS_NAME[];
+            static const char    CLASS_NAME[];
+            static const unsigned __n = 0x01;
+            static const unsigned __z = 0x02;
+            static const unsigned __p = 0x04;
 
 
             //C++
@@ -40,6 +43,7 @@ namespace upsylon {
             static  integer     read(ios::istream &, size_t &, const char *); //!< relaod
 
             // helpers
+            
             static uint8_t   sign2byte(const sign_type) throw();
             
             // members

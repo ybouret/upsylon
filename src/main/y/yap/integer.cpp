@@ -105,9 +105,9 @@ namespace upsylon
         {
             switch(s)
             {
-                case __zero:     return 0x00;
-                case __positive: return 0x01;
-                case __negative: return 0x02;
+                case __negative: return uint8_t(__n);
+                case __zero:     return uint8_t(__z);
+                case __positive: return uint8_t(__p);
             }
             return 0xff; // never get here
         }
@@ -141,14 +141,15 @@ namespace upsylon
             }
             switch(b)
             {
-                case 0x00: delta=1; return integer();
-                case 0x01: {
+                case __z: delta=1; return integer();
+                    
+                case __p: {
                     const natural _ = natural::read(fp, delta, which);
                     ++delta;
                     if(_<=0) throw exception("%s(invalid natural for positive '%s')",fn,which);
                     return integer(__positive,_);
                 }
-                case 0x02: {
+                case __n: {
                     const natural _ = natural::read(fp, delta, which);
                     ++delta;
                     if(_<=0) throw exception("%s(invalid natural for negative '%s')",fn,which);
@@ -213,11 +214,32 @@ namespace upsylon
         // comparison
         //
         //======================================================================
+       
+#define Y_APZ_SIGNS(A,B) ( (A<<8) | B )
+        static unsigned signs2flag(const unsigned l, const unsigned r) throw()
+        {
+            return Y_APZ_SIGNS(l,r);
+        }
+        
         int integer::cmp(const integer &lhs, const integer &rhs) throw()
         {
+            const unsigned flag = signs2flag( sign2byte(lhs.s), sign2byte(rhs.s) );
+            switch(flag)
+            {
+                case Y_APZ_SIGNS(__z,__z): return 0;
+                case Y_APZ_SIGNS(__z,__p): return -1;
+                
+            }
+            
             switch(lhs.s)
             {
                 case __negative:
+                    switch(rhs.s)
+                    {
+                        case __zero:     return  -1; // (lhs<0) < (rhs=0)
+                        case __negative: return   natural::cmp(rhs.n,lhs.n); // (lhs<0) ,  (rhs<0)
+                        case __positive: return  -1; // (lhs<0) <  (rhs>0)
+                    }
                     break;
                     
                 case __zero:
@@ -230,6 +252,12 @@ namespace upsylon
                     break;
                     
                 case __positive:
+                    switch(rhs.s)
+                    {
+                        case __zero:     return   1; // (lhs>0) >  (rhs=0)
+                        case __negative: return   1; // (lhs>0) >  (rhs<0)
+                        case __positive: return  natural::cmp(lhs.n,rhs.n); // (lhs>0) ,  (rhs>0)
+                    }
                     break;
             }
             

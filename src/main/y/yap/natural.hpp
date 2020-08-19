@@ -129,6 +129,8 @@ inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() 
             Y_APN_WRAP_CMP_FULL(==,eq)
             Y_APN_WRAP_CMP_FULL(!=,neq)
 
+            Y_APN_WRAP_NO_THROW(int,cmp)
+
             //! build partial comparators
 #define Y_APN_WRAP_CMP_PART(OP,CALL)\
 inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
@@ -152,7 +154,7 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
             // additions
             //__________________________________________________________________
 
-
+            
             //! complete API
 #define Y_APN_WRAP_API(RETURN,CALL) \
 inline static RETURN CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
@@ -372,7 +374,6 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //! comparison
             static int  cmp(const word_type *lhs, const size_t lnw,
                             const word_type *rhs, const size_t rnw) throw();
-            Y_APN_WRAP_NO_THROW(int,cmp)
 
             static sign_type scmp(const word_type *lhs, const size_t lnw,
                                   const word_type *rhs, const size_t rnw) throw();
