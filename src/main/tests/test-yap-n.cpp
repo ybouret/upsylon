@@ -472,7 +472,7 @@ namespace {
 
         // q->0
         std::cerr << " |_nil quotient" << std::endl;
-        for(size_t iter=0;iter<1024;++iter)
+        for(size_t iter=0;iter<ITER;++iter)
         {
             const natural Num(alea,alea.range<size_t>(0,255));
             const natural Den(alea,alea.range<size_t>(Num.bits()+1,512));
@@ -507,7 +507,7 @@ Y_UTEST(yap_n)
     std::cerr << "word_bits=" << natural::word_bits << std::endl;
     Y_CHECK(natural::word_bits<=natural::core_bits/2);
     Y_CHECK((1<< natural::word_exp2)==natural::word_size);
-    
+
     if(false)
     {
         test_u2w();
