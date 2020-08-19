@@ -140,10 +140,14 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
 
             Y_APN_WRAP_CMP_PART_ALL()
 
+            //! for different sorting algorithms
+            static inline int compare(const natural &lhs, const natural &rhs) throw() { return cmp(lhs,rhs); }
+
             //__________________________________________________________________
             //
             // additions
             //__________________________________________________________________
+
 
             //! complete API
 #define Y_APN_WRAP_API(RETURN,CALL) \
@@ -186,7 +190,21 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             Y_APN_WRAP_OPS(*,mul)
             
             static natural square_of(const natural &x); //!< x*x
-            
+
+            //__________________________________________________________________
+            //
+            // division
+            //__________________________________________________________________
+
+#define Y_APN_WRAP_HL_API(RETURN,CALL) \
+static inline RETURN CALL(const natural &lhs, const utype    rhs) { const natural tmp(rhs); return CALL(lhs,tmp); }\
+static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natural tmp(lhs); return CALL(tmp,rhs); }\
+
+            //! division
+            static natural divide(const natural &num, const natural &den);
+            Y_APN_WRAP_HL_API(natural,divide)
+
+
             //__________________________________________________________________
             //
             // bit shifting
@@ -260,6 +278,10 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
                             const word_type *rhs, const size_t rnw) throw();
             Y_APN_WRAP_NO_THROW(int,cmp)
 
+            static sign_type scmp(const word_type *lhs, const size_t lnw,
+                                  const word_type *rhs, const size_t rnw) throw();
+            Y_APN_WRAP_NO_THROW(sign_type,scmp)
+
             //! addition
             static natural add(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
@@ -289,8 +311,7 @@ static inline natural      FCN(const word_type *lhs, const size_t lnw, const wor
                                    const word_type *lhs, const size_t lnw,
                                    const word_type *rhs, const size_t rnw);
             
-            //! division
-            static natural _div(const natural &num, const natural &den);
+
 
         };
 

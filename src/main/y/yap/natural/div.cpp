@@ -6,7 +6,7 @@ namespace upsylon
 {
     namespace yap
     {
-        natural natural:: _div(const natural &num, const natural &den)
+        natural natural:: divide(const natural &num, const natural &den)
         {
             static const char fn[] = "natural::division";
             
@@ -19,16 +19,29 @@ namespace upsylon
             //------------------------------------------------------------------
             // initial status
             //------------------------------------------------------------------
-            const int c = natural::cmp(num,den);
-            switch(c)
+            switch(natural::scmp(num,den))
             {
-                case -1: assert(num<den);  return natural(0);
-                case  0: assert(num==den); return natural(1);
-                case  1: assert(num>den);  break;
-                default:
-                    throw exception("%s corrupted comparison level-1",fn);
+                case __negative: assert(num<den);  return natural(0); // early return
+                case __zero:     assert(num==den); return natural(1); // early return
+                case __positive: assert(num>den);  break;
             }
-            
+
+            // we look for num = q * den + rem
+            // start with q = (1<<nbits)
+            natural probe = den;
+            size_t  nbits = 1;
+            probe.shl(1);
+
+        FIND_PROBE:
+            switch(natural::scmp(num,probe))
+            {
+                case __negative: assert(num<probe);  break;
+                case __zero:     assert(num==probe); return natural::exp2(nbits); // early return
+                case __positive: assert(num>probe); ++nbits; (void) probe.shl(1); goto FIND_PROBE;
+            }
+
+            assert(num<probe);
+            assert(num>(probe>>1));
             return natural();
         }
     }

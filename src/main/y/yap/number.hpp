@@ -13,6 +13,7 @@ namespace upsylon {
 
 //#define Y_YAP_FORCE16
 
+        //! type for integer of comparisons
         enum sign_type
         {
             __negative, //!< -1

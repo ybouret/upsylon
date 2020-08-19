@@ -26,7 +26,7 @@ namespace {
     }
 }
 
-#define ITER (1024*2)
+#define ITER (1024)
 
 Y_UTEST(yap_n)
 {
@@ -292,7 +292,7 @@ Y_UTEST(yap_n)
         }
     }
 
-    for(size_t iter=0;iter<ITER;++iter)
+    for(size_t iter=0;iter<128;++iter)
     {
         const natural A(alea,1+alea.leq(5000));
         const size_t  n = alea.leq(100);
@@ -437,6 +437,25 @@ Y_UTEST(yap_n)
         }
         Y_ASSERT(a==A);
         
+    }
+
+
+    std::cerr << "---> test division" << std::endl;
+    std::cerr << std::hex;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const uint64_t num = alea.partial<uint64_t>();
+        uint64_t       den = alea.partial<uint64_t>();
+        while(den<=0)  den = alea.partial<uint64_t>();
+        const uint64_t q   = num/den;
+
+        const natural  Num = num;
+        const natural  Den = den;
+        const natural  Q   = natural::divide(Num,Den);
+
+        std::cerr << "q=" << q << " / " << Q << std::endl;
+
+
     }
 
     std::cerr << std::endl;
