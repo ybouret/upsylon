@@ -465,6 +465,8 @@ namespace {
         }
     }
 
+
+
     static inline void test_div()
     {
         std::cerr << "---> test division" << std::endl;
@@ -480,23 +482,41 @@ namespace {
             Y_ASSERT(Q==0);
         }
 
-        std::cerr << " |_small" << std::endl;
-        for(size_t iter=0;iter<8;++iter)
+        // q->1
+        std::cerr << " |_one quotient" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
         {
-            const uint64_t  num = alea.full<uint64_t>();
-            uint64_t        den = alea.partial<uint64_t>();
-            while(den>num)  den = alea.partial<uint64_t>();
-            const uint64_t  q   = num/den;
-
-            const natural  Num = num;
-            const natural  Den = den;
-            const natural  Q   = Num/Den;
-            std::cerr << "num=" << Num << "/den=" << Den << std::endl;
-            std::cerr << "q=" << q << " / " << Q << std::endl;
-
-
+            const natural Num(alea,alea.range<size_t>(1,1000));
+            const natural Den(Num);
+            const natural Q = Num/Den;
+            Y_ASSERT(Q==1);
         }
+
+        std::cerr << " |_divide by one" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const natural Num(alea,alea.range<size_t>(1,100));
+            const natural Den = 1;
+            const natural Q = Num/Den;
+            Y_ASSERT(Q==Num);
+        }
+
+        std::cerr << " |_divide by power of two" << std::endl;
+        for(size_t iter=0;iter<128;++iter)
+        {
+            const natural q(alea,alea.leq(200));
+            for(size_t s=0;s<=8;++s)
+            {
+                const natural Den = natural::exp2(s);
+                const natural Num = q * Den; Y_ASSERT(Num==q<<s);
+                const natural Q   = Num/Den;
+                Y_ASSERT(Q==q);
+            }
+        }
+
+
     }
+
 
 }
 
@@ -515,6 +535,7 @@ Y_UTEST(yap_n)
         test_set();
         test_ran();
         test_cmp();
+        test_add();
         test_sub();
         test_exp2();
         test_mul();

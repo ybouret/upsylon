@@ -2,6 +2,7 @@
 #include "y/exceptions.hpp"
 #include <cerrno>
 #include <iostream>
+
 namespace upsylon
 {
     namespace yap
@@ -38,9 +39,16 @@ namespace upsylon
             FIND_PROBE:
                 switch(scmp(num,probe))
                 {
-                    case __negative: assert(num<probe);  break;
-                    case __zero:     assert(num==probe); return exp2(nbits); // early return
-                    case __positive: assert(num>probe); ++nbits; (void) probe.shl(1); goto FIND_PROBE;
+                    case __negative: assert(num<probe);
+                        break;
+
+                    case __zero:     assert(num==probe);
+                        return exp2(nbits); // early return
+
+                    case __positive: assert(num>probe);
+                        ++nbits;
+                        (void) probe.shl(1);
+                        goto FIND_PROBE;
                 }
 
                 //------------------------------------------------------------------
@@ -49,24 +57,38 @@ namespace upsylon
                 assert(num<probe);
                 assert(num>(probe>>1));
                 assert(probe==(den<<nbits));
-                //std::cerr << num << " between " << (probe>>1) << " and " << probe << std::endl;
             }
+
+            //------------------------------------------------------------------
+            // bisection
+            //------------------------------------------------------------------
             natural lower = exp2(nbits-1);
             natural upper = exp2(nbits);
-            std::cerr << "quotient between " << lower << " and " << upper << std::endl;
+
+            while(true)
             {
                 natural       probe = add(lower,upper);probe.shr(1);
                 const natural trial = probe * den;
                 switch(scmp(trial,num))
                 {
-                    case __zero:       return probe; // exact: early return
-                    case __negative: assert(trial<num); lower.xch(probe); break;
-                    case __positive: assert(num<trial); upper.xch(probe); break;
-                }
+                        // exact: early return
+                    case __zero:
+                        return probe;
 
+                        // probe=>lower
+                    case __negative: assert(trial<num);
+                        if(probe==lower) return lower;
+                        lower.xch(probe);
+                        break;
+
+                        // probe=>upper
+                    case __positive: assert(num<trial);
+                        if(probe==upper) return lower;
+                        upper.xch(probe);
+                        break;
+                }
             }
 
-            return natural();
         }
     }
     
