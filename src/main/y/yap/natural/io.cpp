@@ -96,6 +96,38 @@ namespace upsylon
             return os;
         }
 
+        double natural:: to_double() const
+        {
+            double ans = 0;
+            for(size_t i=bytes;i>0;)
+            {
+                ans *= 256.0;
+                ans += get(--i);
+            }
+            return ans;
+        }
+
+        double natural:: ratio_of(const natural &num,const natural &den)
+        {
+            static const library &apl = library::instance();
+            static const natural &ten = apl._10;
+            natural q,r;
+            natural::divide(q, r, num, den);
+            double ans = q.to_double();
+
+            const size_t nd  = den.bits();
+            double       fac = 1;
+            for(size_t i=1;i<=nd;++i)
+            {
+                const natural n = r*ten;
+                natural::divide(q,r,n,den);
+                fac *= 0.1;
+                const double x = q.to_double();
+                ans += fac*x;
+            }
+            return ans;
+        }
+
     }
 
 }

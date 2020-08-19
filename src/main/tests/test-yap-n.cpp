@@ -594,6 +594,17 @@ Y_UTEST(yap_n)
     }
 
 
+    for(size_t i=0;i<8;++i)
+    {
+        const natural a = alea.full<uint16_t>();
+        natural       b = alea.full<uint16_t>();
+        while(b<=0)   b = alea.full<uint16_t>();
+        std::cerr << a << " -> " << a.to_double() << std::endl;
+        std::cerr << b << " -> " << b.to_double() << std::endl;
+        std::cerr << "=> " << a.to_double()/b.to_double() << " | " << natural::ratio_of(a,b) << std::endl;
+
+    }
+
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;

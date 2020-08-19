@@ -266,8 +266,22 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //
             // conversions
             //__________________________________________________________________
-            string to_dec() const;
-            string to_hex() const;
+            string to_dec() const; //!< to decimal string
+            string to_hex() const; //!< to hexadecimal string
+            static natural dec(const char *buffer, const size_t buflen);
+            static natural dec(const char   *);
+            static natural dec(const string &);
+            static natural hex(const char *buffer, const size_t buflen);
+            static natural hex(const char   *);
+            static natural hex(const string &);
+
+            //__________________________________________________________________
+            //
+            // other maths
+            //__________________________________________________________________
+            double         to_double() const;
+            static double  ratio_of(const natural &num, const natural &den);
+
 
         private:
             size_t     bytes; //!< effective number of bytes
