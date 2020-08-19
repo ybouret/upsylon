@@ -49,19 +49,69 @@ namespace upsylon {
 
             friend std::ostream & operator<<( std::ostream &, const integer &z);
 
-            // comparison
+            // comparisons
+
+            //! equality
             inline friend bool operator==( const integer &lhs, const integer &rhs ) throw()
             {
                 return (lhs.s == rhs.s) && (lhs.n==rhs.n);
             }
 
+            //! equality
+            inline friend bool operator==(const integer &lhs, const itype rhs) throw()
+            {
+                return (lhs.s==sign_of(rhs)) && (lhs.n==iabs_of(rhs));
+            }
+
+            //! equality
+            inline friend bool operator==(const itype lhs, const integer &rhs) throw()
+            {
+                return (sign_of(lhs)==rhs.s) && (iabs_of(lhs)==rhs.n);
+            }
+
+            //! difference
             inline friend bool operator!=(const integer &lhs, const integer &rhs) throw()
             {
                 return ( lhs.s != rhs.s) || (lhs.n!=rhs.n);
             }
 
+            //! difference
+            inline friend bool operator!=(const integer &lhs, const itype rhs) throw()
+            {
+                return (lhs.s!=sign_of(rhs)) || (lhs.n!=iabs_of(rhs));
+            }
+
+            //! difference
+            inline friend bool operator!=(const itype lhs, const integer &rhs) throw()
+            {
+                return (sign_of(lhs)!=rhs.s) || (iabs_of(lhs)!=rhs.n);
+            }
+
+            //! build partial comparators
+#define Y_APZ_WRAP_CMP_PART(OP,CALL)\
+inline friend bool operator OP (const integer &lhs, const integer &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const itype    lhs, const integer &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const integer &lhs, const itype    rhs) throw() { return CALL(lhs,rhs) OP 0; }
+
+            //! build all partial comparators
+#define Y_APZ_WRAP_CMP_PART_ALL() \
+Y_APZ_WRAP_CMP_PART(<,cmp)        \
+Y_APZ_WRAP_CMP_PART(<=,cmp)       \
+Y_APZ_WRAP_CMP_PART(>,cmp)        \
+Y_APZ_WRAP_CMP_PART(>=,cmp)
+
+            Y_APZ_WRAP_CMP_PART_ALL()
+
+            //! for different sorting algorithms
+            static inline int compare(const integer &lhs, const integer &rhs) throw() { return cmp(lhs,rhs); }
+
         private:
             void update() throw();
+            static int cmp(const integer &lhs, const integer &rhs) throw();
+            static int cmp(const integer &lhs, const itype    rhs) throw();
+            static int cmp(const itype    lhs, const integer &rhs) throw();
+
+
         };
 
     }
