@@ -5,6 +5,7 @@
 
 #include "y/yap/number.hpp"
 #include "y/memory/tight/quarry-allocator.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon {
 
@@ -261,7 +262,12 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //! output
             friend std::ostream     &operator<<(std::ostream &, const natural &);
             
-
+            //__________________________________________________________________
+            //
+            // conversions
+            //__________________________________________________________________
+            string to_dec() const;
+            string to_hex() const;
 
         private:
             size_t     bytes; //!< effective number of bytes

@@ -557,6 +557,7 @@ namespace {
 
 }
 
+#include "y/string.hpp"
 
 Y_UTEST(yap_n)
 {
@@ -580,9 +581,17 @@ Y_UTEST(yap_n)
         test_mul();
         test_bitwise();
         test_bits();
+        test_div();
     }
-    test_div();
-    
+
+    for(size_t i=0;i<1000;i+=alea.range(10,100))
+    {
+        const natural I = i;
+        std::cerr << std::dec << i << " -> " << I << std::hex << " | " << i << " -> " << I << std::endl;
+        const string d = I.to_dec();
+        const string h = I.to_hex();
+        std::cerr << "|_" << d << " | " << h << std::endl;
+    }
 
 
 

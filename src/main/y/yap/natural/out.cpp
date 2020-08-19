@@ -1,7 +1,7 @@
 
 #include "y/yap/library.hpp"
 #include "y/code/utils.hpp"
-#include <iostream>
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -20,20 +20,78 @@ namespace upsylon
 
         }
 
-        std::ostream & operator<<(std::ostream &os, const natural &n)
+
+        string natural:: to_dec() const
         {
-            if(n.bytes<=0)
+            string s;
+            if(bytes<=0)
             {
-                os << '0';
+                s = '0';
             }
             else
             {
-                size_t i=n.bytes;
-                output_top_byte(os,n.get(--i));
-                while(i>0)
+                static const library &apl = library::instance();
+                static const natural &ten = apl._10;
+                natural self = *this;
+                natural q,r;
+                while(self>0)
                 {
-                    os << hexadecimal::lowercase[ n.get(--i) ];
+                    divide(q,r,self,ten);
+                    assert(r.bytes<=1);
+                    assert(r.word[0]<10);
+                    s += char('0'+r.word[0]);
+                    self = q;
                 }
+                s.reverse();
+            }
+            return s;
+        }
+
+        string natural:: to_hex() const
+        {
+            if(bytes<=0)
+            {
+                const string s = '0';
+                return s;
+            }
+            else
+            {
+                string s(2*bytes,as_capacity,false);
+                for(size_t i=bytes;i>0;)
+                {
+                    s += hexadecimal::lowercase[ get(--i) ];
+                }
+                s.skip_with('0');
+                return s;
+            }
+
+        }
+
+        std::ostream & operator<<(std::ostream &os, const natural &n)
+        {
+
+            std::ios_base::fmtflags flags = os.flags();
+            if( flags &  std::ios::hex)
+            {
+                if(n.bytes<=0)
+                {
+                    os << '0';
+                }
+                else
+                {
+                    size_t i=n.bytes;
+                    output_top_byte(os,n.get(--i));
+                    while(i>0)
+                    {
+                        os << hexadecimal::lowercase[ n.get(--i) ];
+                    }
+                }
+            }
+            else
+            {
+                // assuming decimal
+                const string s = n.to_dec();
+                os << s;
             }
             return os;
         }
