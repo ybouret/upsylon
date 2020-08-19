@@ -271,38 +271,40 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //
             // parsing
             //__________________________________________________________________
-            string to_dec() const; //!< to decimal string
-            string to_hex() const; //!< to hexadecimal string
-            static natural dec(const char *buffer, const size_t buflen);
-            static natural dec(const char   *);
-            static natural dec(const string &);
-            static natural hex(const char *buffer, const size_t buflen);
-            static natural hex(const char   *);
-            static natural hex(const string &);
-            static natural parse(const char *buffer, const size_t buflen);
-            static natural parse(const char *buffer);
-            static natural parse(const string &);
+            string to_dec() const;                            //!< to decimal string
+            string to_hex() const;                            //!< to hexadecimal string
+            static natural dec(const char *, const size_t);   //!< parse decimal
+            static natural dec(const char   *);               //!< parse decimal
+            static natural dec(const string &);               //!< parse decimal
+            static natural hex(const char * ,const size_t);   //!< parse hexadecimal
+            static natural hex(const char   *);               //!< parse hexadecimal
+            static natural hex(const string &);               //!< parse hexadecimal
+            static natural parse(const char *, const size_t); //!< parse depending on "0x"
+            static natural parse(const char *);               //!< parse wrapper
+            static natural parse(const string &);             //!< parse wrapper
 
             //__________________________________________________________________
             //
             // floating point
             //__________________________________________________________________
-            double         to_double() const;
-            static double  ratio_of(const natural &num, const natural &den);
+            double         to_double() const;                                //!< convert to a double value
+            static double  ratio_of(const natural &num, const natural &den); //!< convert ratio to double
 
             //__________________________________________________________________
             //
             // arithmethic
             //__________________________________________________________________
-            static natural factorial(size_t n);
-            static natural comb(const size_t n, const size_t k);
-            static natural gcd(const natural &x, const natural &y);
+            static natural factorial(size_t n);                      //!< n!
+            static natural comb(const size_t n, const size_t k);     //!< n!/k!/(n-k)!
+            static natural gcd(const natural &x, const natural &y);  //!< gcd(x>0,y>0)
             Y_APN_WRAP_HL_API(natural,gcd)
-            static void    simplify(natural &num, natural &den);
+            static void    simplify(natural &num, natural &den);     //!< simplify fraction
+
             //__________________________________________________________________
             //
             // conversion
             //__________________________________________________________________
+            //! convert to an integral type
             template <typename T> inline
             bool to( T &target ) const throw()
             {
@@ -331,7 +333,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
                 return ans;
             }
 
-            static void cast_overflow(const char *when);
+
 
         private:
             size_t     bytes; //!< effective number of bytes
@@ -347,6 +349,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             static bool       get_bit(const word_type *w, const size_t ibit) throw();
             static void       set_bit(const word_type *w, const size_t ibit) throw();
             static void       clr_bit(const word_type *w, const size_t ibit) throw();
+            static void       cast_overflow(const char *); //!< throw on overflow
 
             uint8_t &get(const size_t i) const throw(); //!< LE byte in [0..width-1]
 
