@@ -13,6 +13,12 @@ namespace upsylon
     namespace yap
     {
 
+        //======================================================================
+        //
+        // C++/setup
+        //
+        //======================================================================
+
         void integer:: update() throw()
         {
             if(n<=0)
@@ -90,8 +96,11 @@ namespace upsylon
             return *this;
         }
 
-        // io
-
+        //======================================================================
+        //
+        // I/O
+        //
+        //======================================================================
         uint8_t integer:: sign2byte(const sign_type s) throw()
         {
             switch(s)
@@ -103,17 +112,7 @@ namespace upsylon
             return 0xff; // never get here
         }
 
-        sign_type integer:: byte2sign(const uint8_t u)
-        {
-            switch(u)
-            {
-                case 0x00: return __zero;
-                case 0x01: return __positive;
-                case 0x02: return __negative;
-            }
-            throw exception("integer(invalid byte sign 0x%02x)",u);
-        }
-
+        
         const char integer:: CLASS_NAME[] = "yapz";
 
         const char *integer:: className() const throw() { return CLASS_NAME; }
@@ -173,6 +172,70 @@ namespace upsylon
             return os;
         }
 
+        //======================================================================
+        //
+        // eq/neq
+        //
+        //======================================================================
+        
+        bool integer::eq(const integer &lhs, const integer &rhs) throw()
+        {
+            return (lhs.s==rhs.s) && (lhs.n==rhs.n);
+        }
+        
+        bool integer::eq(const integer &lhs, const itype rhs) throw()
+        {
+            return (lhs.s==sign_of(rhs)) && (lhs.n==iabs_of(rhs));
+        }
+        
+        bool integer::eq(const itype    lhs, const integer &rhs) throw()
+        {
+            return (sign_of(lhs)==rhs.s) && (iabs_of(lhs)==rhs.n);
+        }
+        
+        bool integer::neq(const integer &lhs, const integer &rhs) throw()
+        {
+            return !((lhs.s==rhs.s) && (lhs.n==rhs.n) );
+        }
+        
+        bool integer::neq(const integer &lhs, const itype rhs) throw()
+        {
+            return !((lhs.s==sign_of(rhs)) && (lhs.n==iabs_of(rhs)));
+        }
+        
+        bool integer::neq(const itype    lhs, const integer &rhs) throw()
+        {
+            return !((sign_of(lhs)==rhs.s) && (iabs_of(lhs)==rhs.n));
+        }
+        
+        //======================================================================
+        //
+        // comparison
+        //
+        //======================================================================
+        int integer::cmp(const integer &lhs, const integer &rhs) throw()
+        {
+            switch(lhs.s)
+            {
+                case __negative:
+                    break;
+                    
+                case __zero:
+                    switch(rhs.s)
+                    {
+                        case __zero:     return  0; // (lhs=0) == (rhs=0)
+                        case __negative: return  1; // (lhs=0) >  (rhs<0)
+                        case __positive: return -1; // (lhs=0) <  (rhs>0)
+                    }
+                    break;
+                    
+                case __positive:
+                    break;
+            }
+            
+            
+        }
+        
     }
 
 }

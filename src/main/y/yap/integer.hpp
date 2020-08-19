@@ -41,8 +41,7 @@ namespace upsylon {
 
             // helpers
             static uint8_t   sign2byte(const sign_type) throw();
-            static sign_type byte2sign(const uint8_t  );
-
+            
             // members
             const sign_type s;
             const natural   n;
@@ -50,43 +49,21 @@ namespace upsylon {
             friend std::ostream & operator<<( std::ostream &, const integer &z);
 
             // comparisons
+            
+#define Y_APZ_DECL_NO_THROW(RETURN,CALL) \
+static RETURN CALL(const integer &lhs, const integer &rhs) throw();\
+static RETURN CALL(const integer &lhs, const itype    rhs) throw();\
+static RETURN CALL(const itype    lhs, const integer &rhs) throw()
+            
+#define Y_APZ_CMP_FULL(OP,CALL) \
+inline friend bool operator OP (const integer &lhs, const integer &rhs) throw() { return CALL(lhs,rhs); }\
+inline friend bool operator OP (const integer &lhs, const itype    rhs) throw() { return CALL(lhs,rhs); }\
+inline friend bool operator OP (const itype    lhs, const integer &rhs) throw() { return CALL(lhs,rhs); }
+  
+            Y_APZ_CMP_FULL(==,eq)
+            Y_APZ_CMP_FULL(!=,neq)
 
-            //! equality
-            inline friend bool operator==( const integer &lhs, const integer &rhs ) throw()
-            {
-                return (lhs.s == rhs.s) && (lhs.n==rhs.n);
-            }
-
-            //! equality
-            inline friend bool operator==(const integer &lhs, const itype rhs) throw()
-            {
-                return (lhs.s==sign_of(rhs)) && (lhs.n==iabs_of(rhs));
-            }
-
-            //! equality
-            inline friend bool operator==(const itype lhs, const integer &rhs) throw()
-            {
-                return (sign_of(lhs)==rhs.s) && (iabs_of(lhs)==rhs.n);
-            }
-
-            //! difference
-            inline friend bool operator!=(const integer &lhs, const integer &rhs) throw()
-            {
-                return ( lhs.s != rhs.s) || (lhs.n!=rhs.n);
-            }
-
-            //! difference
-            inline friend bool operator!=(const integer &lhs, const itype rhs) throw()
-            {
-                return (lhs.s!=sign_of(rhs)) || (lhs.n!=iabs_of(rhs));
-            }
-
-            //! difference
-            inline friend bool operator!=(const itype lhs, const integer &rhs) throw()
-            {
-                return (sign_of(lhs)!=rhs.s) || (iabs_of(lhs)!=rhs.n);
-            }
-
+            
             //! build partial comparators
 #define Y_APZ_WRAP_CMP_PART(OP,CALL)\
 inline friend bool operator OP (const integer &lhs, const integer &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
@@ -107,9 +84,10 @@ Y_APZ_WRAP_CMP_PART(>=,cmp)
 
         private:
             void update() throw();
-            static int cmp(const integer &lhs, const integer &rhs) throw();
-            static int cmp(const integer &lhs, const itype    rhs) throw();
-            static int cmp(const itype    lhs, const integer &rhs) throw();
+            Y_APZ_DECL_NO_THROW(bool,eq);
+            Y_APZ_DECL_NO_THROW(bool,neq);
+            Y_APZ_DECL_NO_THROW(int,cmp);
+
 
 
         };
