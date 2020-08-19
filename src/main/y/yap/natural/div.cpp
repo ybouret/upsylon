@@ -1,4 +1,4 @@
-#include "y/yap/natural.hpp"
+#include "y/yap/library.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 #include <cerrno>
@@ -9,8 +9,8 @@ namespace upsylon
     {
         natural natural:: divide(const natural &num, const natural &den)
         {
-            static const char fn[] = "natural::divide";
-            
+            static const char     fn[] = "natural::divide";
+            static const library &apl  = library::instance();
             //------------------------------------------------------------------
             // check valid denominator
             //------------------------------------------------------------------
@@ -22,8 +22,8 @@ namespace upsylon
             //------------------------------------------------------------------
             switch(scmp(num,den))
             {
-                case __negative: assert(num<den);  return natural(0); // early return
-                case __zero:     assert(num==den); return natural(1); // early return
+                case __negative: assert(num<den);  return apl._0; // early return
+                case __zero:     assert(num==den); return apl._1; // early return
                 case __positive: assert(num>den);  break;
             }
 

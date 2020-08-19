@@ -1,5 +1,5 @@
 
-#include "y/yap/natural.hpp"
+#include "y/yap/library.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 #include <cerrno>
@@ -11,7 +11,8 @@ namespace upsylon
     {
         natural natural:: modulo(const natural &num, const natural &den)
         {
-            static const char fn[] = "natural::modulo";
+            static const char     fn[] = "natural::modulo";
+            static const library &apl  = library::instance();
 
             //------------------------------------------------------------------
             // check valid denominator
@@ -25,7 +26,7 @@ namespace upsylon
             switch(scmp(num,den))
             {
                 case __negative: assert(num<den);  return num;        // early return
-                case __zero:     assert(num==den); return natural(0); // early return
+                case __zero:     assert(num==den); return apl._0; // early return
                 case __positive: assert(num>den);  break;
             }
 
@@ -45,8 +46,7 @@ namespace upsylon
                         break;
 
                     case __zero:     assert(num==probe);
-                        return natural(0);
-                        //return exp2(nbits); // early return
+                        return apl._0; // early return
 
                     case __positive: assert(num>probe);
                         ++nbits;
@@ -76,7 +76,7 @@ namespace upsylon
                 {
                         // exact: early return
                     case __zero:
-                        return natural(0);
+                        return apl._0;
 
                         // probe=>lower
                     case __negative: assert(trial<num);

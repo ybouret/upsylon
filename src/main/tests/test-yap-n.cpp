@@ -1,4 +1,4 @@
-#include "y/yap/natural.hpp"
+#include "y/yap/library.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
@@ -564,6 +564,8 @@ Y_UTEST(yap_n)
     std::cerr << "word_bits=" << natural::word_bits << std::endl;
     Y_CHECK(natural::word_bits<=natural::core_bits/2);
     Y_CHECK((1<< natural::word_exp2)==natural::word_size);
+    yap::library &apl = yap::library::instance();
+    std::cerr <<  "apl.life_time=" << apl.life_time << std::endl;
 
     if(false)
     {
@@ -580,7 +582,6 @@ Y_UTEST(yap_n)
         test_bits();
     }
     test_div();
-    
     
 
 
