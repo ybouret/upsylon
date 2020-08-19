@@ -581,7 +581,7 @@ Y_UTEST(yap_n)
     yap::library &apl = yap::library::instance();
     std::cerr <<  "apl.life_time=" << apl.life_time << std::endl;
 
-    if(false)
+    if(true)
     {
         test_u2w();
         test_zero();
@@ -595,9 +595,9 @@ Y_UTEST(yap_n)
         test_bitwise();
         test_bits();
         test_div();
+        test_output();
     }
 
-    test_output();
 
     std::cerr << "---> test decimal" << std::endl;
     for(size_t iter=0;iter<ITER;++iter)
