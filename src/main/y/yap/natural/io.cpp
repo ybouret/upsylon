@@ -2,6 +2,7 @@
 #include "y/yap/library.hpp"
 #include "y/code/utils.hpp"
 #include "y/string.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -126,6 +127,140 @@ namespace upsylon
                 ans += fac*x;
             }
             return ans;
+        }
+
+        natural natural:: dec(const char *buffer, const size_t buflen)
+        {
+            static const char     fn[] = "natural::dec";
+            static const library &apl  = library::instance();
+            static const natural &ten  = apl._10;
+
+            assert(buffer);
+            if(buflen<=0) throw exception("%s(empty buffer)",fn);
+
+            natural ans;
+            for(size_t i=0;i<buflen;++i)
+            {
+                const char c = buffer[i];
+                ans *= ten;
+                switch(c)
+                {
+                    case '0': break;
+                    case '1': ans += apl._1; break;
+                    case '2': ans += apl._2; break;
+                    case '3': ans += apl._3; break;
+                    case '4': ans += apl._4; break;
+                    case '5': ans += apl._5; break;
+                    case '6': ans += apl._6; break;
+                    case '7': ans += apl._7; break;
+                    case '8': ans += apl._8; break;
+                    case '9': ans += apl._9; break;
+                    default:
+                        throw exception("%s(invalid buffer[%u]='%s')",fn,unsigned(i),cchars::visible[ uint8_t(c) ] );
+
+                }
+            }
+            return ans;
+        }
+
+        natural natural:: dec( const char *buffer )
+        {
+            return dec( buffer, length_of(buffer) );
+        }
+
+        natural natural:: dec( const string &buffer )
+        {
+            return dec( *buffer, buffer.size() );
+        }
+
+        natural natural:: hex(const char *buffer, const size_t buflen)
+        {
+            static const char     fn[] = "natural::hex";
+            static const library &apl  = library::instance();
+            static const natural &fac = apl._16;
+
+            assert(buffer);
+            if(buflen<=0) throw exception("%s(empty buffer)",fn);
+
+            natural ans;
+            for(size_t i=0;i<buflen;++i)
+            {
+                const char c = buffer[i];
+                ans *= fac;
+                switch(c)
+                {
+                    case '0': break;
+                    case '1': ans += apl._1; break;
+                    case '2': ans += apl._2; break;
+                    case '3': ans += apl._3; break;
+                    case '4': ans += apl._4; break;
+                    case '5': ans += apl._5; break;
+                    case '6': ans += apl._6; break;
+                    case '7': ans += apl._7; break;
+                    case '8': ans += apl._8; break;
+                    case '9': ans += apl._9; break;
+                    case 'a':
+                    case 'A': ans += apl._10; break;
+                    case 'b':
+                    case 'B': ans += apl._11; break;
+                    case 'c':
+                    case 'C': ans += apl._12; break;
+                    case 'd':
+                    case 'D': ans += apl._13; break;
+                    case 'e':
+                    case 'E': ans += apl._14; break;
+                    case 'f':
+                    case 'F': ans += apl._15; break;
+                    default:
+                        throw exception("%s(invalid buffer[%u]='%s')",fn,unsigned(i),cchars::visible[ uint8_t(c) ] );
+
+                }
+            }
+            return ans;
+        }
+
+        natural natural:: hex( const char *buffer )
+        {
+            return hex( buffer, length_of(buffer) );
+        }
+
+        natural natural:: hex( const string &buffer )
+        {
+            return hex( *buffer, buffer.size() );
+        }
+
+
+        natural natural:: parse(const char *buffer, const size_t buflen)
+        {
+            static const char     fn[] = "natural::parse";
+            assert(buffer);
+            switch(buflen)
+            {
+                case 0: throw exception("%s(empty buffer)",fn);
+                case 1:
+                case 2: return dec(buffer,buflen);
+                default:
+                    break;
+            }
+
+            if( buffer[0] == '0' && buffer[1] == 'x' )
+            {
+                return hex(buffer+2,buflen-2);
+            }
+            else
+            {
+                return dec(buffer,buflen);
+            }
+        }
+
+        natural natural:: parse(const char *buffer)
+        {
+            return parse(buffer,length_of(buffer));
+        }
+
+        natural natural:: parse(const string &buffer)
+        {
+            return parse( *buffer, buffer.size() );
         }
 
     }

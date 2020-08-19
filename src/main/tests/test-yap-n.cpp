@@ -25,7 +25,7 @@ namespace {
         Y_ASSERT(u==x);
     }
 
-#define ITER (1024)
+#define ITER (256)
 
     static inline
     void test_u2w()
@@ -520,7 +520,7 @@ namespace {
         }
 
         std::cerr << " |_divide by power of two" << std::endl;
-        for(size_t iter=0;iter<128;++iter)
+        for(size_t iter=0;iter<32;++iter)
         {
             const natural q(alea,alea.leq(200));
             for(size_t s=0;s<=8;++s)
@@ -558,6 +558,9 @@ namespace {
 }
 
 #include "y/string.hpp"
+#include "y/type/utils.hpp"
+#include "y/code/utils.hpp"
+#include <cmath>
 
 Y_UTEST(yap_n)
 {
@@ -584,26 +587,74 @@ Y_UTEST(yap_n)
         test_div();
     }
 
+    std::cerr << "---> test output" << std::endl;
     for(size_t i=0;i<1000;i+=alea.range(10,100))
     {
         const natural I = i;
         std::cerr << std::dec << i << " -> " << I << std::hex << " | " << i << " -> " << I << std::endl;
-        const string d = I.to_dec();
-        const string h = I.to_hex();
-        std::cerr << "|_" << d << " | " << h << std::endl;
     }
 
-
-    for(size_t i=0;i<8;++i)
+    std::cerr << "---> test decimal" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
     {
-        const natural a = alea.full<uint16_t>();
-        natural       b = alea.full<uint16_t>();
-        while(b<=0)   b = alea.full<uint16_t>();
-        std::cerr << a << " -> " << a.to_double() << std::endl;
-        std::cerr << b << " -> " << b.to_double() << std::endl;
-        std::cerr << "=> " << a.to_double()/b.to_double() << " | " << natural::ratio_of(a,b) << std::endl;
-
+        const natural a(alea,alea.leq(80));
+        const string  s = a.to_dec();
+        const natural b = natural::dec(s);
+        Y_ASSERT(a==b);
     }
+
+    std::cerr << "---> test hexadecimal" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const natural a(alea,alea.leq(2000));
+        const string  s = a.to_hex();
+        const natural b = natural::hex(s);
+        Y_ASSERT(a==b);
+    }
+
+    std::cerr << "---> test parse" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        {
+            string d;
+            d += alea.range<char>('1','9');
+            for(size_t i=1+alea.leq(10);i>0;--i)
+            {
+                d += alea.range<char>('0','9');
+            }
+            const natural a = natural::parse(d);
+            const string  s = a.to_dec();
+            Y_ASSERT(d==s);
+        }
+
+        {
+            string h = "0x";
+            h += hexadecimal::lowercase_word[ alea.range<unsigned>(1,15) ];
+            for(size_t i=1+alea.leq(10);i>0;--i)
+            {
+                h += hexadecimal::lowercase_word[ alea.range<unsigned>(0,15) ];
+            }
+            const natural a = natural::parse(h);
+            const string  s = "0x" + a.to_hex();
+            Y_ASSERT(h==s);
+        }
+    }
+
+
+    std::cerr << "---> test double" << std::endl;
+    for(size_t i=0;i<32;++i)
+    {
+        const natural a    = alea.full<uint16_t>();
+        natural       b    = alea.full<uint16_t>();
+        while(b<=0)   b    = alea.full<uint16_t>();
+        const double ad    = a.to_double();
+        const double bd    = b.to_double();
+        const double rd    = ad/bd;
+        const double r     = natural::ratio_of(a,b);
+        const double delta =  sqrt( square_of(rd-r) );
+        std::cerr << ' ' << delta;
+    }
+    std::cerr << std::endl;
 
 
     std::cerr << std::endl;

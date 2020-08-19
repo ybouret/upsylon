@@ -274,13 +274,21 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             static natural hex(const char *buffer, const size_t buflen);
             static natural hex(const char   *);
             static natural hex(const string &);
+            static natural parse(const char *buffer, const size_t buflen);
+            static natural parse(const char *buffer);
+            static natural parse(const string &);
 
             //__________________________________________________________________
             //
-            // other maths
+            // floating point
             //__________________________________________________________________
             double         to_double() const;
             static double  ratio_of(const natural &num, const natural &den);
+
+            //__________________________________________________________________
+            //
+            // arithmethic
+            //__________________________________________________________________
 
 
         private:
