@@ -482,6 +482,10 @@ namespace {
             Y_ASSERT(Q==0);
             const natural M = Num%Den;
             Y_ASSERT(M==Num);
+            natural q,r;
+            natural::divide(q,r,Num,Den);
+            Y_ASSERT(q==Q);
+            Y_ASSERT(r==M);
         }
 
         // q->1
@@ -494,6 +498,10 @@ namespace {
             Y_ASSERT(Q==1);
             const natural M = Num%Den;
             Y_ASSERT(M==0);
+            natural q,r;
+            natural::divide(q,r,Num,Den);
+            Y_ASSERT(q==Q);
+            Y_ASSERT(r==M);
         }
 
         std::cerr << " |_divide by one" << std::endl;
@@ -505,6 +513,10 @@ namespace {
             Y_ASSERT(Q==Num);
             const natural M = Num%Den;
             Y_ASSERT(M==0);
+            natural q,r;
+            natural::divide(q,r,Num,Den);
+            Y_ASSERT(q==Q);
+            Y_ASSERT(r==M);
         }
 
         std::cerr << " |_divide by power of two" << std::endl;
@@ -519,6 +531,10 @@ namespace {
                 Y_ASSERT(Q==q);
                 const natural M   = Num%Den;
                 Y_ASSERT(0==M);
+                natural q,r;
+                natural::divide(q,r,Num,Den);
+                Y_ASSERT(q==Q);
+                Y_ASSERT(r==M);
             }
         }
 
@@ -530,7 +546,10 @@ namespace {
             const natural Den(alea,alea.range<size_t>(1,384)); assert(Den>0);
             const natural Q = Num/Den;
             const natural M = Num%Den;
-            Y_ASSERT(Q*Den+M==Num);
+            natural q,r;
+            natural::divide(q,r,Num,Den);
+            Y_ASSERT(q==Q);
+            Y_ASSERT(r==M);
         }
 
     }

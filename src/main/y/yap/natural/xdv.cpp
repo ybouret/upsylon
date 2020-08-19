@@ -1,3 +1,4 @@
+
 #include "y/yap/natural.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
@@ -7,23 +8,34 @@ namespace upsylon
 {
     namespace yap
     {
-        natural natural:: divide(const natural &num, const natural &den)
+#define Y_APN_XDV() assert(q*den+r==num)
+
+        void natural:: divide(natural &q, natural &r, const natural &num, const natural &den)
         {
-            static const char fn[] = "natural::divide";
-            
+            static const char fn[] = "natural::divide_v2";
+
             //------------------------------------------------------------------
             // check valid denominator
             //------------------------------------------------------------------
             if(den.bytes<=0) throw libc::exception(EDOM,"%s by zero",fn);
             assert(den>0);
-            
+
             //------------------------------------------------------------------
             // initial status
             //------------------------------------------------------------------
             switch(scmp(num,den))
             {
-                case __negative: assert(num<den);  return natural(0); // early return
-                case __zero:     assert(num==den); return natural(1); // early return
+                case __negative: assert(num<den);
+                    q = 0;
+                    r = num;
+                    Y_APN_XDV();
+                    return; // early return
+
+                case __zero:     assert(num==den);
+                    q = 1;
+                    r = 0;
+                    Y_APN_XDV();
+                    return; // early return
                 case __positive: assert(num>den);  break;
             }
 
@@ -43,7 +55,12 @@ namespace upsylon
                         break;
 
                     case __zero:     assert(num==probe);
-                        return exp2(nbits); // early return
+                    {
+                        q = exp2(nbits);
+                        r = 0;
+                        Y_APN_XDV();
+                        return; // early return
+                    }
 
                     case __positive: assert(num>probe);
                         ++nbits;
@@ -67,31 +84,45 @@ namespace upsylon
 
             while(true)
             {
-                natural       probe = add(lower,upper);probe.shr(1);
-                const natural trial = probe * den;
+                natural probe = add(lower,upper);probe.shr(1);
+                natural trial = probe * den;
                 switch(scmp(trial,num))
                 {
                         // exact: early return
                     case __zero:
-                        return probe;
+                        q = probe;
+                        r = 0;
+                        Y_APN_XDV();
+                        return;
 
                         // probe=>lower
                     case __negative: assert(trial<num);
-                        if(probe==lower) return lower;
+                        if(probe==lower)
+                        {
+                            q = lower;
+                            r = num-trial;
+                            Y_APN_XDV();
+                            return;
+                        }
                         lower.xch(probe);
                         break;
 
                         // probe=>upper
                     case __positive: assert(num<trial);
-                        if(probe==upper) return lower;
+                        if(probe==upper)
+                        {
+                            trial = lower*den; assert(trial<num);
+                            q     = lower;
+                            r     = num-trial;
+                            Y_APN_XDV();
+                            return;
+                        }
                         upper.xch(probe);
                         break;
                 }
             }
         }
 
-     
-    }
-    
+     }
 }
 

@@ -14,7 +14,10 @@ namespace upsylon {
     }
 
     namespace yap {
-        
+
+
+//#define Y_YAP_FORCE16
+
         typedef memory::tight::quarry_allocator &memory_allocator; //!< alias
 
         //! constructor to hold MAX_BYTES
@@ -206,10 +209,21 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             Y_APN_WRAP_HL_API(natural,divide)
             Y_APN_WRAP_OPS(/,divide)
 
+            //__________________________________________________________________
+            //
+            // modulo
+            //__________________________________________________________________
+
             //! modulo algorithm
             static natural modulo(const natural &num, const natural &den);
             Y_APN_WRAP_HL_API(natural,modulo)
             Y_APN_WRAP_OPS(%,modulo)
+
+            //__________________________________________________________________
+            //
+            // decomposition
+            //__________________________________________________________________
+            static void divide(natural &q, natural &r, const natural &num, const natural &den);
 
             //__________________________________________________________________
             //

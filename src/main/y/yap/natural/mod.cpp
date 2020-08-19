@@ -91,7 +91,7 @@ namespace upsylon
                     case __positive: assert(num<trial);
                         if(probe==upper)
                         {
-                            trial = lower*den;
+                            trial = lower*den; assert(trial<num);
                             return num-trial;
                         }
                         upper.xch(probe);
