@@ -80,9 +80,9 @@ namespace upsylon
                 else
                 {
                     assert(num>0);
-                    const natural g = gcd(num,den);
-                    natural nn = num/g;
-                    natural dd = den/g;
+                    const natural g  = gcd(num,den);
+                    natural       nn = num/g;
+                    natural       dd = den/g;
                     nn.xch(num);
                     dd.xch(den);
                 }
