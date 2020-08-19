@@ -1,5 +1,6 @@
 #include "y/yap/natural.hpp"
 #include "y/exceptions.hpp"
+#include "y/type/utils.hpp"
 #include <cerrno>
 #include <iostream>
 
@@ -31,10 +32,10 @@ namespace upsylon
             // we look for num = q * den + rem
             // start with q = (1<<nbits)
             //------------------------------------------------------------------
-            size_t  nbits = 1;   // TODO: optimize
+            size_t       nbits    = max_of<size_t>(num.bits()-den.bits(),1);
             {
                 natural probe = den;
-                probe.shl(1);
+                probe.shl(nbits);
 
             FIND_PROBE:
                 switch(scmp(num,probe))

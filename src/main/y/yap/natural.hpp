@@ -196,15 +196,20 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             // division
             //__________________________________________________________________
 
+            //! higher level wrapper, requiring natural args
 #define Y_APN_WRAP_HL_API(RETURN,CALL) \
 static inline RETURN CALL(const natural &lhs, const utype    rhs) { const natural tmp(rhs); return CALL(lhs,tmp); }\
 static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natural tmp(lhs); return CALL(tmp,rhs); }\
 
-            //! division
+            //! divide algorithm
             static natural divide(const natural &num, const natural &den);
             Y_APN_WRAP_HL_API(natural,divide)
             Y_APN_WRAP_OPS(/,divide)
 
+            //! modulo algorithm
+            static natural modulo(const natural &num, const natural &den);
+            Y_APN_WRAP_HL_API(natural,modulo)
+            Y_APN_WRAP_OPS(%,modulo)
 
             //__________________________________________________________________
             //

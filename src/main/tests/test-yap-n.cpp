@@ -514,6 +514,14 @@ namespace {
             }
         }
 
+        std::cerr << " |_random..." << std::endl;
+
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const natural Num(alea,alea.leq(512));
+            const natural Den(alea,alea.range<size_t>(1,384)); assert(Den>0);
+            const natural Q = Num/Den;
+        }
 
     }
 
@@ -528,20 +536,18 @@ Y_UTEST(yap_n)
     Y_CHECK(natural::word_bits<=natural::core_bits/2);
     Y_CHECK((1<< natural::word_exp2)==natural::word_size);
 
-    if(false)
-    {
-        test_u2w();
-        test_zero();
-        test_set();
-        test_ran();
-        test_cmp();
-        test_add();
-        test_sub();
-        test_exp2();
-        test_mul();
-        test_bitwise();
-        test_bits();
-    }
+
+    test_u2w();
+    test_zero();
+    test_set();
+    test_ran();
+    test_cmp();
+    test_add();
+    test_sub();
+    test_exp2();
+    test_mul();
+    test_bitwise();
+    test_bits();
     test_div();
     
     
