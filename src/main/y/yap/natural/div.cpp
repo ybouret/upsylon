@@ -2,7 +2,6 @@
 #include "y/exceptions.hpp"
 #include "y/type/utils.hpp"
 #include <cerrno>
-#include <iostream>
 
 namespace upsylon
 {

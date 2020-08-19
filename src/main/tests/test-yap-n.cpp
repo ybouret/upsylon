@@ -480,6 +480,8 @@ namespace {
             const natural Den(alea,alea.range<size_t>(Num.bits()+1,512));
             const natural Q = Num/Den;
             Y_ASSERT(Q==0);
+            const natural M = Num%Den;
+            Y_ASSERT(M==Num);
         }
 
         // q->1
@@ -490,6 +492,8 @@ namespace {
             const natural Den(Num);
             const natural Q = Num/Den;
             Y_ASSERT(Q==1);
+            const natural M = Num%Den;
+            Y_ASSERT(M==0);
         }
 
         std::cerr << " |_divide by one" << std::endl;
@@ -499,6 +503,8 @@ namespace {
             const natural Den = 1;
             const natural Q = Num/Den;
             Y_ASSERT(Q==Num);
+            const natural M = Num%Den;
+            Y_ASSERT(M==0);
         }
 
         std::cerr << " |_divide by power of two" << std::endl;
@@ -511,6 +517,8 @@ namespace {
                 const natural Num = q * Den; Y_ASSERT(Num==q<<s);
                 const natural Q   = Num/Den;
                 Y_ASSERT(Q==q);
+                const natural M   = Num%Den;
+                Y_ASSERT(0==M);
             }
         }
 
@@ -521,6 +529,8 @@ namespace {
             const natural Num(alea,alea.leq(512));
             const natural Den(alea,alea.range<size_t>(1,384)); assert(Den>0);
             const natural Q = Num/Den;
+            const natural M = Num%Den;
+            Y_ASSERT(Q*Den+M==Num);
         }
 
     }
@@ -536,18 +546,20 @@ Y_UTEST(yap_n)
     Y_CHECK(natural::word_bits<=natural::core_bits/2);
     Y_CHECK((1<< natural::word_exp2)==natural::word_size);
 
-
-    test_u2w();
-    test_zero();
-    test_set();
-    test_ran();
-    test_cmp();
-    test_add();
-    test_sub();
-    test_exp2();
-    test_mul();
-    test_bitwise();
-    test_bits();
+    if(false)
+    {
+        test_u2w();
+        test_zero();
+        test_set();
+        test_ran();
+        test_cmp();
+        test_add();
+        test_sub();
+        test_exp2();
+        test_mul();
+        test_bitwise();
+        test_bits();
+    }
     test_div();
     
     
