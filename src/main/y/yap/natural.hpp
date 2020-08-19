@@ -209,6 +209,8 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             static natural divide(const natural &num, const natural &den);
             Y_APN_WRAP_HL_API(natural,divide)
             Y_APN_WRAP_OPS(/,divide)
+            static natural sqrt_of(const natural &x); //!< sqrt(x)^2 <= x
+            static natural sqrt_of(const utype    u); //!< sqrt(u)^2 <= u
 
             //__________________________________________________________________
             //

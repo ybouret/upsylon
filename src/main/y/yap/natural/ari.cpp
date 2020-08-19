@@ -9,6 +9,38 @@ namespace upsylon
     namespace yap
     {
 
+        natural natural:: sqrt_of(const natural &n)
+        {
+            if( n<=1 )
+            {
+                return n;
+            }
+            else
+            {
+                //natural x1 = (n>>1);
+                natural x1 = n;
+                (void) x1.shr(1);
+                while(true)
+                {
+                    const natural x0 = x1;
+                    //x1 = ((x0+n/x0)>>1);
+                    x1 = n/x0;
+                    x1 += x0;
+                    (void) x1.shr(1);
+                    if(x1>=x0)
+                    {
+                        return x0;
+                    }
+                }
+            }
+        }
+
+        natural natural:: sqrt_of(const utype u)
+        {
+            const natural _(u);
+            return sqrt_of(_);
+        }
+
         natural natural:: factorial(size_t n)
         {
             natural ans = 1;

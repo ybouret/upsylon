@@ -562,7 +562,6 @@ namespace {
             const natural I = i;
             std::cerr << std::dec << i << " -> " << I << std::hex << " | " << i << " -> " << I << std::endl;
         }
-
     }
 
 }
@@ -714,6 +713,22 @@ Y_UTEST(yap_n)
         //std::cerr << "gcd(" << a << "," << b << ")=" << g << std::endl;
         Y_ASSERT(a.is_divisible_by(g));
         Y_ASSERT(b.is_divisible_by(g));
+    }
+
+    std::cerr << " |_sqrt" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const natural a(alea,alea.leq(80));
+        {
+            const natural a2 = a*a;
+            const natural s  = natural::sqrt_of(a2);
+            Y_ASSERT(s==a);
+        }
+        {
+            const natural s = natural::sqrt_of(a);
+            Y_ASSERT(s*s<=a);
+        }
+
     }
 
     std::cerr << std::endl;
