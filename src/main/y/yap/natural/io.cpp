@@ -10,6 +10,13 @@ namespace upsylon
     namespace yap
     {
 
+        void natural:: cast_overflow(const char *which)
+        {
+            if(!which) which = "???";
+            throw exception("natural cast overflow for '%s'",which);
+        }
+
+
         static inline void output_top_byte(std::ostream &os, const uint8_t b)
         {
             const uint8_t hi = (b&0xf0)>>4;

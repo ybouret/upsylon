@@ -264,7 +264,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             
             //__________________________________________________________________
             //
-            // conversions
+            // parsing
             //__________________________________________________________________
             string to_dec() const; //!< to decimal string
             string to_hex() const; //!< to hexadecimal string
@@ -289,7 +289,42 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //
             // arithmethic
             //__________________________________________________________________
+            static natural factorial(size_t n);
+            static natural comb(const size_t n, const size_t k);
+            
+            //__________________________________________________________________
+            //
+            // conversion
+            //__________________________________________________________________
+            template <typename T> inline
+            bool to( T &target ) const throw()
+            {
+                static const T     tmax = limit_of<T>::maximum; assert(tmax>0);
+                static const utype umax(tmax);
+                if( *this > umax )
+                {
+                    return false;
+                }
+                else
+                {
+                    target = T(lsw());
+                    return true;
+                }
+            }
 
+            //! wrapper
+            template <typename T>
+            inline T cast_to(const char *when = 0) const
+            {
+                T ans(0);
+                if(!to<T>(ans))
+                {
+                    cast_overflow(when);
+                }
+                return ans;
+            }
+
+            static void cast_overflow(const char *when);
 
         private:
             size_t     bytes; //!< effective number of bytes

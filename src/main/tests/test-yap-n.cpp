@@ -554,6 +554,16 @@ namespace {
 
     }
 
+    static inline void test_output()
+    {
+        std::cerr << "---> test output" << std::endl;
+        for(size_t i=0;i<1000;i+=alea.range(10,100))
+        {
+            const natural I = i;
+            std::cerr << std::dec << i << " -> " << I << std::hex << " | " << i << " -> " << I << std::endl;
+        }
+
+    }
 
 }
 
@@ -587,12 +597,7 @@ Y_UTEST(yap_n)
         test_div();
     }
 
-    std::cerr << "---> test output" << std::endl;
-    for(size_t i=0;i<1000;i+=alea.range(10,100))
-    {
-        const natural I = i;
-        std::cerr << std::dec << i << " -> " << I << std::hex << " | " << i << " -> " << I << std::endl;
-    }
+    test_output();
 
     std::cerr << "---> test decimal" << std::endl;
     for(size_t iter=0;iter<ITER;++iter)
@@ -656,6 +661,50 @@ Y_UTEST(yap_n)
     }
     std::cerr << std::endl;
 
+    std::cerr << "---> test cast" << std::endl;
+    std::cerr << '[';
+    for(size_t bits=0;bits<=65;++bits)
+    {
+        std::cerr << '.';
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const natural a(alea,bits);
+            uint8_t  x8  = 0;
+            uint16_t x16 = 0;
+            uint32_t x32 = 0;
+            uint64_t x64 = 0;
+
+            if(bits<=8)  { Y_ASSERT(a.to(x8));  Y_ASSERT(a==x8);  } else { Y_ASSERT(!a.to(x8));  }
+            if(bits<=16) { Y_ASSERT(a.to(x16)); Y_ASSERT(a==x16); } else { Y_ASSERT(!a.to(x16)); }
+            if(bits<=32) { Y_ASSERT(a.to(x32)); Y_ASSERT(a==x32); } else { Y_ASSERT(!a.to(x32)); }
+            if(bits<=64) { Y_ASSERT(a.to(x64)); Y_ASSERT(a==x64); } else { Y_ASSERT(!a.to(x64)); }
+
+
+
+        }
+    }
+    std::cerr << ']' << std::endl;
+
+
+    std::cerr << "---> test arithmetic" << std::endl;
+    std::cerr << " |_factorial" << std::endl;
+    for(size_t n=0;n<=20;++n)
+    {
+        const natural f = natural::factorial(n);
+        std::cerr << std::dec << f <<  ' ';
+    }
+    std::cerr << std::endl;
+    std::cerr << " |_comb" << std::endl;
+    for(size_t n=0;n<=10;++n)
+    {
+        std::cerr << n << " :";
+        for(size_t k=0;k<=n;++k)
+        {
+            const natural cnk = natural::comb(n,k);
+            std::cerr << ' ' << cnk;
+        }
+        std::cerr << std::endl;
+    }
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;
