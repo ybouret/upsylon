@@ -705,6 +705,16 @@ Y_UTEST(yap_n)
         }
         std::cerr << std::endl;
     }
+    std::cerr << " |_gcd" << std::endl;
+    for(size_t iter=0;iter<ITER;++iter)
+    {
+        const natural a(alea,1+alea.leq(20));
+        const natural b(alea,1+alea.leq(20));
+        const natural g=natural::gcd(a,b);
+        //std::cerr << "gcd(" << a << "," << b << ")=" << g << std::endl;
+        Y_ASSERT(a.is_divisible_by(g));
+        Y_ASSERT(b.is_divisible_by(g));
+    }
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;

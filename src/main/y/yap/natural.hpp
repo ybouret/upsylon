@@ -220,12 +220,17 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             Y_APN_WRAP_HL_API(natural,modulo)
             Y_APN_WRAP_OPS(%,modulo)
 
+            bool is_divisible_by(const natural &) const; //!< test divisibility
+            bool is_divisible_by(const utype    ) const; //!< test divisibility
+
+
             //__________________________________________________________________
             //
             // decomposition
             //__________________________________________________________________
             //! num = q*den+r
             static void divide(natural &q, natural &r, const natural &num, const natural &den);
+
 
             //__________________________________________________________________
             //
@@ -291,7 +296,9 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //__________________________________________________________________
             static natural factorial(size_t n);
             static natural comb(const size_t n, const size_t k);
-            
+            static natural gcd(const natural &x, const natural &y);
+            Y_APN_WRAP_HL_API(natural,gcd)
+            static void    simplify(natural &num, natural &den);
             //__________________________________________________________________
             //
             // conversion
