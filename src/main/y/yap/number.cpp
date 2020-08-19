@@ -13,6 +13,27 @@ namespace upsylon {
         {
         }
 
+        sign_type number:: sign_of(const itype i) throw()
+        {
+            if(i<0)
+            {
+                return __negative;
+            }
+            else if(0<i)
+            {
+                return __positive;
+            }
+            else
+                return __zero;
+        }
+
+        number::utype number::  iabs_of(const itype i) throw()
+        {
+            return (i<0) ? utype(-i) : utype(i);
+        }
+
+
+
     }
 
 }
