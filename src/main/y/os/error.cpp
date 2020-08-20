@@ -101,37 +101,37 @@ namespace upsylon
             std::cerr << "** WIN32 CRITICAL ERROR @: " << msg  << std::endl;
             std::cerr << "** '" << buffer << "'" << std::endl;
             exit(-1);
-            }
-            }
+        }
+    }
 
-            void format_error( char buffer[], size_t length, error_type err ) throw()
-            {
+    void format_error( char buffer[], size_t length, error_type err ) throw()
+    {
 #if defined(Y_BSD)
-                libc::format_error(buffer,length,err);
+        libc::format_error(buffer,length,err);
 #endif
 
 #if defined(Y_WIN)
-                win32::format_error(buffer,length,err);
+        win32::format_error(buffer,length,err);
 #endif
-            }
+    }
 
-            void critical_error( error_type err, const char when[] ) throw()
-            {
+    void critical_error( error_type err, const char when[] ) throw()
+    {
 #if defined(Y_BSD)
-                libc::critical_error( err, when );
+        libc::critical_error( err, when );
 #endif
 
 #if defined(Y_WIN)
-                win32::critical_error( err, when );
+        win32::critical_error( err, when );
 #endif
-            }
+    }
 
 #if defined(Y_BSD)
-            const error_type error_invalid_data = EINVAL;
+    const error_type error_invalid_data = EINVAL;
 #endif
 
 #if defined(Y_WIN)
-            const error_type error_invalid_data = ERROR_INVALID_DATA;
+    const error_type error_invalid_data = ERROR_INVALID_DATA;
 #endif
-            }
+}
 

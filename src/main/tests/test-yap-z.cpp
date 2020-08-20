@@ -16,6 +16,7 @@ namespace {
     static inline
     void test_setup()
     {
+        std::cerr << "---> test setup" << std::endl;
         vector<integer> Z;
         {
             const integer zero;         std::cerr << "zero  = "  << zero  << std::endl;
@@ -70,6 +71,7 @@ namespace {
     static inline
     void test_cmp()
     {
+        std::cerr << "---> test cmp" << std::endl;
         static const int         data[] = { -7, -5, 0, 1, 12 };
         static const size_t      size = sizeof(data)/sizeof(data[0]);
         lightweight_array<int> a((int*)data,size);
@@ -117,9 +119,25 @@ namespace {
                 Y_ASSERT(A[j]>=a[i]);
             }
         }
+    }
 
-
-
+    static inline void test_add()
+    {
+        std::cerr << "---> test add" << std::endl;
+        for(int i=-10;i<=10;++i)
+        {
+            const integer I = i;
+            for(int j=-10;j<=10;++j)
+            {
+                const integer J = j;
+                const integer S = I+J;
+                Y_ASSERT(S==i+j);
+                Y_ASSERT(I+j==S);
+                Y_ASSERT(j+I==S);
+                Y_ASSERT(i+J==S);
+                Y_ASSERT(J+i==S);
+            }
+        }
     }
 }
 
@@ -128,7 +146,7 @@ Y_UTEST(yap_z)
 
     test_setup();
     test_cmp();
-
+    test_add();
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;

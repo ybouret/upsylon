@@ -40,6 +40,7 @@ namespace upsylon {
             integer(const integer &);                  //!< copy
             integer(const itype    );                  //!< build from integral type
             integer(const sign_type, const natural &); //!< build from natural
+            integer(const sign_type, const utype    ); //!< build from unsigned
             integer & operator=(const integer &);      //!< assign integer
             integer & operator=(const itype    );      //!< assign integral
 
@@ -115,14 +116,30 @@ Y_APZ_WRAP_CMP_PART(>=,cmp)
             //! for different sorting algorithms
             static inline int compare(const integer &lhs, const integer &rhs) throw() { return cmp(lhs,rhs); }
 
+            //__________________________________________________________________
+            //
+            // addition
+            //__________________________________________________________________
+#define Y_APZ_DECL(CALL)                                    \
+static integer CALL(const integer &lhs, const integer &rhs);\
+static integer CALL(const integer &lhs, const itype    rhs);\
+static integer CALL(const itype    lhs, const integer &rhs)
+
+#define Y_APZ_WRAP(OP,CALL)                                                                                          \
+inline friend integer operator OP (const integer &lhs, const integer &rhs) { return CALL(lhs,rhs); }                 \
+inline friend integer operator OP (const integer &lhs, const itype    rhs) { return CALL(lhs,rhs); }                 \
+inline friend integer operator OP (const itype    lhs, const integer &rhs) { return CALL(lhs,rhs); }                 \
+inline integer &      operator OP##= (const integer &rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; } \
+inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; }
+
+            Y_APZ_DECL(add);
+            Y_APZ_WRAP(+,add)
+
         private:
             void update() throw();
             Y_APZ_DECL_NO_THROW(bool,eq);
             Y_APZ_DECL_NO_THROW(bool,neq);
             Y_APZ_DECL_NO_THROW(int,cmp);
-
-
-
         };
 
     }

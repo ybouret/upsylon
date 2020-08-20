@@ -5,6 +5,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
 #include "y/randomized/bits.hpp"
+#include "y/os/error.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -13,6 +14,7 @@ namespace upsylon
     namespace yap
     {
 
+#define Y_APZ_CHECK(HOST) assert( ((HOST).s == __zero) || ((HOST).n>0) )
         //======================================================================
         //
         // C++/setup
@@ -25,19 +27,22 @@ namespace upsylon
             {
                 aliasing::_(s) = __zero;
             }
+            Y_APZ_CHECK(*this);
         }
 
         integer:: integer() : s(__zero), n()
         {
+            Y_APZ_CHECK(*this);
         }
 
         integer:: ~integer() throw()
         {
-            
+            Y_APZ_CHECK(*this);
         }
 
         integer:: integer(const itype i) : s( sign_of(i) ), n( iabs_of(i) )
         {
+            Y_APZ_CHECK(*this);
         }
 
         integer::integer(const integer &other) :
@@ -45,22 +50,39 @@ namespace upsylon
         s(other.s),
         n(other.n)
         {
-            
+            Y_APZ_CHECK(*this);
+        }
+
+        static inline
+        void check_manual_setup(const integer &i)
+        {
+            if(i.n<=0)
+            {
+                if(i.s!=__zero) throw exception("bad integer setup: zero value, non-zero sign!");
+            }
+            else
+            {
+                assert(i.n>0);
+                if(i.s==__zero) throw exception("bad integer setup: non-zero value, zero sign!");
+            }
         }
 
         integer:: integer(const sign_type S, const natural &N) :
         s(S), n(N)
         {
-            if(n<=0)
-            {
-                if(s!=__zero) throw exception("bad integer setup: zero value, non-zero sign!");
-            }
-            else
-            {
-                assert(n>0);
-                if(s==__zero) throw exception("bad integer setup: non-zero value, zero sign!");
-            }
+            check_manual_setup(*this);
+            Y_APZ_CHECK(*this);
         }
+
+        integer:: integer(const sign_type S, const utype U) :
+        s(S), n(U)
+        {
+            check_manual_setup(*this);
+            Y_APZ_CHECK(*this);
+        }
+
+
+
 
         integer:: integer(const sign_type S, randomized::bits &ran, const size_t nbits) :
         s(S), n(ran,nbits)
@@ -246,6 +268,7 @@ namespace upsylon
             return Y_APZ_SIGNS(l,r);
         }
 
+
         template <typename LHS, typename RHS> static inline
         int cmp_proto(const sign_type ls, const LHS &la,
                       const sign_type rs, const RHS &ra) throw()
@@ -277,7 +300,7 @@ namespace upsylon
                 default:
                     break;
             }
-
+            fatal_error("yap::integer::cmp_proto(corrupted signs)");
             return 0;
         }
 
@@ -298,7 +321,94 @@ namespace upsylon
             const utype la = iabs_of(lhs);
             return cmp_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
-        
+
+        //======================================================================
+        //
+        // addition
+        //
+        //======================================================================
+
+        template <typename LHS, typename RHS> static inline
+        integer add_proto(const sign_type ls, const LHS &la,
+                          const sign_type rs, const RHS &ra)
+        {
+            const unsigned flag = signs2flag( integer::sign2byte(ls), integer::sign2byte(rs) );
+            switch(flag)
+            {
+                    //----------------------------------------------------------
+                    // lhs<0
+                    //----------------------------------------------------------
+                case Y_APZ_SIGNS(integer::__n,integer::__n):
+                {
+                    const natural s = la+ra;
+                    return integer(__negative,s);
+                }
+                case Y_APZ_SIGNS(integer::__n,integer::__z):
+                {
+                    return integer(ls,la);
+                }
+                case Y_APZ_SIGNS(integer::__n,integer::__p):
+                {
+                    switch( natural::scmp(la,ra) )
+                    {
+                        case __negative: assert(la<ra); { const natural n=ra-la; return integer(__positive,n); }
+                        case __zero:     assert(la==ra);{                        return integer();             }
+                        case __positive: assert(ra<la); { const natural n=la-ra; return integer(__negative,n); }
+                    }
+                }
+
+                    //----------------------------------------------------------
+                    // lhs==0
+                    //----------------------------------------------------------
+                case Y_APZ_SIGNS(integer::__z,integer::__n): return  integer(rs,ra);
+                case Y_APZ_SIGNS(integer::__z,integer::__z): return  integer();
+                case Y_APZ_SIGNS(integer::__z,integer::__p): return  integer(rs,ra);
+
+                    //----------------------------------------------------------
+                    // lhs>0
+                    //----------------------------------------------------------
+                case Y_APZ_SIGNS(integer::__p,integer::__n):
+                {
+                    switch( natural::scmp(la,ra) )
+                    {
+                        case __negative: assert(la<ra); { const natural n=ra-la; return integer(__negative,n); }
+                        case __zero:     assert(la==ra); return integer();
+                        case __positive: assert(ra<la); { const natural n=la-ra; return integer(__positive,n); }
+                    }
+                }
+                case Y_APZ_SIGNS(integer::__p,integer::__z):
+                {
+                    return  integer(ls,la);
+                }
+                case Y_APZ_SIGNS(integer::__p,integer::__p):
+                {
+                    const natural s = la+ra;
+                    return integer(__positive,s);
+                }
+
+                default:
+                    break;
+            }
+            throw exception("yap::integer::add_proto(corrupted signs)");
+        }
+
+        integer integer:: add(const integer &lhs, const integer &rhs)
+        {
+            return add_proto(lhs.s,lhs.n,rhs.s,rhs.n);
+        }
+
+        integer integer::add(const integer &lhs, const itype rhs)
+        {
+            const utype ra = iabs_of(rhs);
+            return add_proto(lhs.s,lhs.n, sign_of(rhs),ra);
+        }
+
+        integer integer::add(const itype    lhs, const integer &rhs)
+        {
+            const utype la = iabs_of(lhs);
+            return add_proto(sign_of(lhs),la,rhs.s,rhs.n);
+        }
+
     }
 
 }

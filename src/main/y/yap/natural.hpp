@@ -149,6 +149,8 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
             //! for different sorting algorithms
             static inline int compare(const natural &lhs, const natural &rhs) throw() { return cmp(lhs,rhs); }
 
+            Y_APN_WRAP_NO_THROW(sign_type,scmp)
+
             //__________________________________________________________________
             //
             // additions
@@ -377,7 +379,6 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
 
             static sign_type scmp(const word_type *lhs, const size_t lnw,
                                   const word_type *rhs, const size_t rnw) throw();
-            Y_APN_WRAP_NO_THROW(sign_type,scmp)
 
             //! addition
             static natural add(const word_type *lhs, const size_t lnw,
