@@ -201,6 +201,152 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
         {
             return cmp_proto(lhs,rhs);
         }
+
+        //======================================================================
+        //
+        // addition
+        //
+        //======================================================================
+
+        rational rational::add(const rational &lhs, const rational &rhs)
+        {
+            const  integer Lnum = lhs.num.mul_by(rhs.den);
+            const  integer Rnum = rhs.num.mul_by(lhs.den);
+            const  integer Anum = Lnum+Rnum;
+            const  natural Aden = lhs.den * rhs.den;
+            return rational(Anum,Aden);
+        }
+
+        template <typename T>
+        static inline rational add_proto(const rational &lhs, const T &i)
+        {
+            const  rational rhs(i);
+            return rational::add(lhs,rhs);
+        }
+
+        template <typename T>
+        static inline rational add_proto(const T &i, const rational &rhs)
+        {
+            const  rational lhs(i);
+            return rational::add(lhs,rhs);
+        }
+
+        rational rational:: add(const rational &lhs, const integer &rhs)
+        {
+            return add_proto(lhs,rhs);
+        }
+
+        rational rational:: add(const rational &lhs, const itype rhs)
+        {
+            return add_proto(lhs,rhs);
+        }
+
+        rational rational:: add(const integer &lhs, const rational &rhs)
+        {
+            return add_proto(lhs,rhs);
+        }
+
+        rational rational:: add(const itype lhs, const rational &rhs)
+        {
+            return add_proto(lhs,rhs);
+        }
+
+        rational rational:: operator+() const
+        {
+            return *this;
+        }
+
+        rational & rational:: operator++()
+        {
+            rational tmp = add_proto(*this,i_one);
+            xch(tmp);
+            return *this;
+        }
+
+        rational   rational:: operator++(int)
+        {
+            rational ans = *this;
+            {
+                rational tmp = add_proto(*this,i_one);
+                xch(tmp);
+            }
+            return ans;
+        }
+
+
+
+        //======================================================================
+        //
+        // subtraction
+        //
+        //======================================================================
+
+        rational rational::sub(const rational &lhs, const rational &rhs)
+        {
+            const  integer Lnum = lhs.num.mul_by(rhs.den);
+            const  integer Rnum = rhs.num.mul_by(lhs.den);
+            const  integer Anum = Lnum-Rnum;
+            const  natural Aden = lhs.den * rhs.den;
+            return rational(Anum,Aden);
+        }
+
+        template <typename T>
+        static inline rational sub_proto(const rational &lhs, const T &i)
+        {
+            const  rational rhs(i);
+            return rational::sub(lhs,rhs);
+        }
+
+        template <typename T>
+        static inline rational lsub_proto(const T &i, const rational &rhs)
+        {
+            const  rational lhs(i);
+            return rational::sub(lhs,rhs);
+        }
+
+        rational rational:: sub(const rational &lhs, const integer &rhs)
+        {
+            return sub_proto(lhs,rhs);
+        }
+
+        rational rational:: sub(const rational &lhs, const itype rhs)
+        {
+            return sub_proto(lhs,rhs);
+        }
+
+        rational rational:: sub(const integer &lhs, const rational &rhs)
+        {
+            return sub_proto(lhs,rhs);
+        }
+
+        rational rational:: sub(const itype lhs, const rational &rhs)
+        {
+            return sub_proto(lhs,rhs);
+        }
+
+        rational rational:: operator-() const
+        {
+            const integer i = -num;
+            return rational(i,den);
+        }
+
+        rational & rational:: operator--()
+        {
+            rational tmp = sub_proto(*this,i_one);
+            xch(tmp);
+            return *this;
+        }
+
+        rational   rational:: operator--(int)
+        {
+            rational ans = *this;
+            {
+                rational tmp = sub_proto(*this,i_one);
+                xch(tmp);
+            }
+            return ans;
+        }
+
     }
 
 }

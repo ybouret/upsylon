@@ -523,6 +523,28 @@ namespace upsylon
             return mul_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
 
+        integer integer:: mul_by(const natural &rhs) const
+        {
+            if(rhs<=0)
+            {
+                return integer();
+            }
+            else
+            {
+                switch(s)
+                {
+                    case __zero:     return integer();
+                    case __negative:
+                    case __positive: break;
+                }
+                assert(rhs>0);
+                assert(n>0);
+                const natural p = rhs*n;
+                return integer(s,p);
+            }
+        }
+
+
         //======================================================================
         //
         // division

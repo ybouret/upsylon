@@ -118,6 +118,39 @@ Y_APQ_CMP_PARTIAL(>=)
 
             static int compare(const rational &lhs,const rational &rhs) { return cmp(lhs,rhs); }
 
+            //__________________________________________________________________
+            //
+            // additions
+            //__________________________________________________________________
+#define Y_APQ_WRAP_API(CALL)    Y_APQ_DECL(rational,CALL)
+#define Y_APQ_WRAP_OPS(OP,CALL) \
+inline friend rational  operator OP   (const rational &lhs, const rational &rhs) { return CALL(lhs,rhs); } \
+inline friend rational  operator OP   (const rational &lhs, const integer  &rhs) { return CALL(lhs,rhs); } \
+inline friend rational  operator OP   (const integer  &lhs, const rational &rhs) { return CALL(lhs,rhs); } \
+inline friend rational  operator OP   (const rational &lhs, const itype     rhs) { return CALL(lhs,rhs); } \
+inline friend rational  operator OP   (const itype     lhs, const rational &rhs) { return CALL(lhs,rhs); }\
+inline        rational &operator OP##=(const rational &rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline        rational &operator OP##=(const integer  &rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline        rational &operator OP##=(const itype     rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }
+
+            Y_APQ_WRAP_API(add);
+            Y_APQ_WRAP_OPS(+,add)
+
+            rational   operator+() const; //!< unary '+'
+            rational & operator++();      //!< prefix  ++ operator
+            rational   operator++(int);   //!< postfix ++ operator
+
+            //__________________________________________________________________
+            //
+            // subtraction
+            //__________________________________________________________________
+            Y_APQ_WRAP_API(sub);
+            Y_APQ_WRAP_OPS(-,sub)
+
+            rational   operator-() const; //!< unary '-'
+            rational & operator--();      //!< prefix  -- operator
+            rational   operator--(int);   //!< postfix -- operator
+
         private:
             void update();
             template <typename NUM,typename DEN>
