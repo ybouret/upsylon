@@ -41,6 +41,7 @@ namespace upsylon
         }
 
         integer::integer(const integer &other) :
+        number(),
         s(other.s),
         n(other.n)
         {
@@ -175,38 +176,62 @@ namespace upsylon
 
         //======================================================================
         //
-        // eq/neq
+        // eq
         //
         //======================================================================
-        
+
+        template <typename LHS, typename RHS> static inline
+        bool eq_proto(const sign_type ls, const LHS &la,
+                      const sign_type rs, const RHS &ra) throw()
+        {
+            return (ls==rs) && (la==ra);
+        }
+
         bool integer::eq(const integer &lhs, const integer &rhs) throw()
         {
-            return (lhs.s==rhs.s) && (lhs.n==rhs.n);
+            return eq_proto(lhs.s,lhs.n,rhs.s,rhs.n);
         }
         
         bool integer::eq(const integer &lhs, const itype rhs) throw()
         {
-            return (lhs.s==sign_of(rhs)) && (lhs.n==iabs_of(rhs));
+            const utype ra = iabs_of(rhs);
+            return eq_proto(lhs.s,lhs.n, sign_of(rhs),ra);
         }
         
         bool integer::eq(const itype    lhs, const integer &rhs) throw()
         {
-            return (sign_of(lhs)==rhs.s) && (iabs_of(lhs)==rhs.n);
+            const utype la = iabs_of(lhs);
+            return eq_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
+
+        //======================================================================
+        //
+        // neq
+        //
+        //======================================================================
         
+        template <typename LHS, typename RHS> static inline
+        bool neq_proto(const sign_type ls, const LHS &la,
+                       const sign_type rs, const RHS &ra) throw()
+        {
+            return (ls!=rs) || (la!=ra);
+        }
+
         bool integer::neq(const integer &lhs, const integer &rhs) throw()
         {
-            return !((lhs.s==rhs.s) && (lhs.n==rhs.n) );
+            return neq_proto(lhs.s,lhs.n,rhs.s,rhs.n);
         }
-        
+
         bool integer::neq(const integer &lhs, const itype rhs) throw()
         {
-            return !((lhs.s==sign_of(rhs)) && (lhs.n==iabs_of(rhs)));
+            const utype ra = iabs_of(rhs);
+            return neq_proto(lhs.s,lhs.n, sign_of(rhs),ra);
         }
-        
+
         bool integer::neq(const itype    lhs, const integer &rhs) throw()
         {
-            return !((sign_of(lhs)==rhs.s) && (iabs_of(lhs)==rhs.n));
+            const utype la = iabs_of(lhs);
+            return neq_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
         
         //======================================================================
@@ -214,54 +239,64 @@ namespace upsylon
         // comparison
         //
         //======================================================================
-       
+
 #define Y_APZ_SIGNS(A,B) ( (A<<8) | B )
         static unsigned signs2flag(const unsigned l, const unsigned r) throw()
         {
             return Y_APZ_SIGNS(l,r);
         }
+
+        template <typename LHS, typename RHS> static inline
+        int cmp_proto(const sign_type ls, const LHS &la,
+                      const sign_type rs, const RHS &ra) throw()
+        {
+            const unsigned flag = signs2flag( integer::sign2byte(ls), integer::sign2byte(rs) );
+            switch(flag)
+            {
+                    //----------------------------------------------------------
+                    // lhs<0
+                    //----------------------------------------------------------
+                case Y_APZ_SIGNS(integer::__n,integer::__n): return natural::cmp(ra,la);
+                case Y_APZ_SIGNS(integer::__n,integer::__z): return -1;
+                case Y_APZ_SIGNS(integer::__n,integer::__p): return -1;
+
+                    //----------------------------------------------------------
+                    // lhs==0
+                    //----------------------------------------------------------
+                case Y_APZ_SIGNS(integer::__z,integer::__n): return  1;
+                case Y_APZ_SIGNS(integer::__z,integer::__z): return  0;
+                case Y_APZ_SIGNS(integer::__z,integer::__p): return -1;
+
+                    //----------------------------------------------------------
+                    // lhs>0
+                    //----------------------------------------------------------
+                case Y_APZ_SIGNS(integer::__p,integer::__n): return  1;
+                case Y_APZ_SIGNS(integer::__p,integer::__z): return  1;
+                case Y_APZ_SIGNS(integer::__p,integer::__p): return natural::cmp(la,ra);
+
+                default:
+                    break;
+            }
+
+            return 0;
+        }
+
         
         int integer::cmp(const integer &lhs, const integer &rhs) throw()
         {
-            const unsigned flag = signs2flag( sign2byte(lhs.s), sign2byte(rhs.s) );
-            switch(flag)
-            {
-                case Y_APZ_SIGNS(__z,__z): return 0;
-                case Y_APZ_SIGNS(__z,__p): return -1;
-                
-            }
-            
-            switch(lhs.s)
-            {
-                case __negative:
-                    switch(rhs.s)
-                    {
-                        case __zero:     return  -1; // (lhs<0) < (rhs=0)
-                        case __negative: return   natural::cmp(rhs.n,lhs.n); // (lhs<0) ,  (rhs<0)
-                        case __positive: return  -1; // (lhs<0) <  (rhs>0)
-                    }
-                    break;
-                    
-                case __zero:
-                    switch(rhs.s)
-                    {
-                        case __zero:     return  0; // (lhs=0) == (rhs=0)
-                        case __negative: return  1; // (lhs=0) >  (rhs<0)
-                        case __positive: return -1; // (lhs=0) <  (rhs>0)
-                    }
-                    break;
-                    
-                case __positive:
-                    switch(rhs.s)
-                    {
-                        case __zero:     return   1; // (lhs>0) >  (rhs=0)
-                        case __negative: return   1; // (lhs>0) >  (rhs<0)
-                        case __positive: return  natural::cmp(lhs.n,rhs.n); // (lhs>0) ,  (rhs>0)
-                    }
-                    break;
-            }
-            
-            
+            return cmp_proto(lhs.s,lhs.n,rhs.s,rhs.n);
+        }
+
+        int integer::cmp(const integer &lhs, const itype rhs) throw()
+        {
+            const utype ra = iabs_of(rhs);
+            return cmp_proto(lhs.s,lhs.n, sign_of(rhs),ra);
+        }
+
+        int integer::cmp(const itype lhs, const integer &rhs) throw()
+        {
+            const utype la = iabs_of(lhs);
+            return cmp_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
         
     }

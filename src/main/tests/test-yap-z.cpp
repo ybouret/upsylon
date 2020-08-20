@@ -13,60 +13,122 @@ using namespace yap;
 
 namespace {
 
+    static inline
+    void test_setup()
+    {
+        vector<integer> Z;
+        {
+            const integer zero;         std::cerr << "zero  = "  << zero  << std::endl;
+            const integer one = 1;      std::cerr << "one   = "  << one   << std::endl;
+            const integer minus = -1;   std::cerr << "minus = "  << minus << std::endl;
+            Z.push_back(zero);
+            Z.push_back(one);
+            Z.push_back(minus);
+            integer tmp;
+            tmp = one; Z.push_back(tmp);
+            tmp =  5;   Z.push_back(tmp);
+            tmp = -7;  Z.push_back(tmp);
+        }
+        std::cerr << Z << std::endl;
+        for(size_t i=0;i<ITER;++i)
+        {
+            const integer z(alea,alea.leq(80));
+            Z.push_back(z);
+        }
+
+        {
+            size_t written = 0;
+            {
+                ios::ocstream fp("apz.dat");
+                for(size_t i=1;i<=Z.size();++i)
+                {
+                    written += Z[i].serialize(fp);
+                }
+            }
+            std::cerr << "written=" << written << std::endl;
+            size_t read = 0;
+            {
+                ios::icstream fp("apz.dat");
+                for(size_t i=1;i<=Z.size();++i)
+                {
+                    size_t delta = 0;
+                    const integer z = integer::read(fp, delta, "some integer");
+                    read += delta;
+                    if(z!=Z[i])
+                    {
+                        std::cerr << "read " << z << " for " << Z[i] << std::endl;
+                        throw exception("bad integer read");
+                    }
+                    Y_ASSERT(z==Z[i]);
+                    Y_ASSERT(!(z!=Z[i]));
+                }
+            }
+            Y_ASSERT(read==written);
+        }
+    }
+
+    static inline
+    void test_cmp()
+    {
+        static const int         data[] = { -7, -5, 0, 1, 12 };
+        static const size_t      size = sizeof(data)/sizeof(data[0]);
+        lightweight_array<int> a((int*)data,size);
+        std::cerr << "a=" << a << std::endl;
+        vector<integer>        A(size,as_capacity);
+        for(size_t i=1;i<=size;++i) { const integer tmp(a[i]); A.push_back_(tmp); }
+        std::cerr << "A=" << A << std::endl;
+
+        for(size_t i=1;i<=size;++i)
+        {
+            Y_ASSERT(a[i]==A[i]);
+            Y_ASSERT(A[i]==a[i]);
+            Y_ASSERT(A[i]==A[i]);
+
+            Y_ASSERT(!(a[i]!=A[i]));
+            Y_ASSERT(!(A[i]!=a[i]));
+            Y_ASSERT(!(A[i]!=A[i]));
+
+            Y_ASSERT(a[i]<=A[i]);
+            Y_ASSERT(A[i]<=a[i]);
+            Y_ASSERT(A[i]<=A[i]);
+
+            Y_ASSERT(a[i]>=A[i]);
+            Y_ASSERT(A[i]>=a[i]);
+            Y_ASSERT(A[i]>=A[i]);
+        }
+
+        for(size_t i=1;i<size;++i)
+        {
+            for(size_t j=i+1;j<=size;++j)
+            {
+                Y_ASSERT(A[i]<A[j]);
+                Y_ASSERT(A[i]<=A[j]);
+                Y_ASSERT(A[j]>A[i]);
+                Y_ASSERT(A[j]>=A[i]);
+
+                Y_ASSERT(a[i]<A[j]);
+                Y_ASSERT(a[i]<=A[j]);
+                Y_ASSERT(a[j]>A[i]);
+                Y_ASSERT(a[j]>=A[i]);
+
+                Y_ASSERT(A[i]<a[j]);
+                Y_ASSERT(A[i]<=a[j]);
+                Y_ASSERT(A[j]>a[i]);
+                Y_ASSERT(A[j]>=a[i]);
+            }
+        }
+
+
+
+    }
 }
 
 Y_UTEST(yap_z)
 {
 
-    vector<integer> Z;
-    {
-        const integer zero;         std::cerr << "zero  = "  << zero  << std::endl;
-        const integer one = 1;      std::cerr << "one   = "  << one   << std::endl;
-        const integer minus = -1;   std::cerr << "minus = "  << minus << std::endl;
-        Z.push_back(zero);
-        Z.push_back(one);
-        Z.push_back(minus);
-        integer tmp;
-        tmp = one; Z.push_back(tmp);
-        tmp = 5;   Z.push_back(tmp);
-        tmp = -7;  Z.push_back(tmp);
-    }
-    std::cerr << Z << std::endl;
-    for(size_t i=0;i<ITER;++i)
-    {
-        const integer z(alea,alea.leq(80));
-        Z.push_back(z);
-    }
+    test_setup();
+    test_cmp();
 
-    {
-        size_t written = 0;
-        {
-            ios::ocstream fp("apz.dat");
-            for(size_t i=1;i<=Z.size();++i)
-            {
-                written += Z[i].serialize(fp);
-            }
-        }
-        std::cerr << "written=" << written << std::endl;
-        size_t read = 0;
-        {
-            ios::icstream fp("apz.dat");
-            for(size_t i=1;i<=Z.size();++i)
-            {
-                size_t delta = 0;
-                const integer z = integer::read(fp, delta, "some integer");
-                read += delta;
-                if(z!=Z[i])
-                {
-                    std::cerr << "read " << z << " for " << Z[i] << std::endl;
-                    throw exception("bad integer read");
-                }
-                Y_ASSERT(z==Z[i]);
-                Y_ASSERT(!(z!=Z[i]));
-            }
-        }
-        Y_ASSERT(read==written);
-    }
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;
