@@ -59,7 +59,7 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // types and definitions
+            // members
             //__________________________________________________________________
             const integer num;
             const natural den;
