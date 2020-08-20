@@ -1,7 +1,7 @@
 
 #include "y/yap/integer.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/exception.hpp"
+#include "y/exceptions.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
 #include "y/randomized/bits.hpp"
@@ -543,6 +543,52 @@ namespace upsylon
                 return integer(s,p);
             }
         }
+
+        integer integer::square_of(const integer &x)
+        {
+            switch(x.s)
+            {
+                case __zero: break;
+                case __negative:
+                case __positive:
+                {
+                    const natural n2 = natural::square_of(x.n);
+                    return integer(__positive,n2);
+                }
+            }
+            return integer();
+        }
+
+        integer integer::abs_of(const integer &x)
+        {
+            switch(x.s)
+            {
+                case __zero: break;
+                case __negative:
+                case __positive:
+                {
+                    return integer(__positive,x.n);
+                }
+            }
+            return integer();
+        }
+
+        integer integer::sqrt_of(const integer &x)
+        {
+            switch(x.s)
+            {
+                case __zero: break;
+                case __negative: throw libc::exception(EDOM,"sqrt(negative integer)");
+                case __positive:
+                {
+                    const natural n = natural::sqrt_of(x.n);
+                    return integer(__positive,n);
+                }
+            }
+            return integer();
+        }
+
+
 
 
         //======================================================================

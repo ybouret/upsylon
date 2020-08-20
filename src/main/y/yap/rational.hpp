@@ -166,6 +166,9 @@ inline        rational &operator OP##=(const itype     rhs) { rational tmp = CAL
             //__________________________________________________________________
             Y_APQ_WRAP_API(mul); //!< aliases
             Y_APQ_WRAP_OPS(*,mul)
+            static rational square_of(const rational &q); //!< q^2
+            static rational abs_of(const rational &q);    //!< |q|
+            static rational sqrt_of(const rational &q);   //!< sqrt(q)
 
             //__________________________________________________________________
             //
@@ -195,6 +198,10 @@ inline        rational &operator OP##=(const itype     rhs) { rational tmp = CAL
     
     typedef yap::rational apq; //!< nickname
 
+    namespace mkl {
+        inline apq fabs_of(const apq &x) { return apq::abs_of(x); } //!< for use in mkl
+        //inline apq sqrt_of(const apq &x) { return apn::sqrt_of(x);   }
+    }
 }
 
 #endif

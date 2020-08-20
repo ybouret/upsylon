@@ -250,6 +250,7 @@ namespace {
     static inline void test_mulops()
     {
         std::cerr << "---> test mulops" << std::endl;
+        std::cerr << " |_std" << std::endl;
         for(size_t i=0;i<ITER;++i)
         {
             const integer a(alea,1+alea.leq(500));
@@ -259,6 +260,23 @@ namespace {
             const integer e = c/a;
             Y_ASSERT(d==a);
             Y_ASSERT(e==b);
+        }
+
+        std::cerr << " |_sqrt" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const integer a(__positive,alea,alea.leq(80));
+            {
+                const integer a2 = a*a;
+                const integer s  = integer::sqrt_of(a2);
+                Y_ASSERT(s==a);
+            }
+            
+            {
+                const integer s = integer::sqrt_of(a);
+                Y_ASSERT(s*s<=a);
+            }
+
         }
     }
 

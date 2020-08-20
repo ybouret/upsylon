@@ -404,6 +404,37 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
             return mul_proto(lhs,rhs);
         }
 
+        rational rational:: square_of(const rational &q)
+        {
+            const integer Anum = integer::square_of(q.num);
+            const natural Aden = natural::square_of(q.den);
+            return rational(Anum,Aden);
+        }
+
+        rational rational:: abs_of(const rational &q)
+        {
+            rational a(q);
+            aliasing::_(a.num.s) = number::product(a.num.s,a.num.s);
+            return a;
+        }
+
+        rational rational:: sqrt_of(const rational &q)
+        {
+            const integer Anum = integer::sqrt_of(q.num); assert(Anum*Anum<=q.num);
+            natural       Aden = natural::sqrt_of(q.den);
+            const integer Anum2 = integer::square_of(Anum);
+            const integer Amini = Anum2.mul_by(q.den);
+
+            while(true)
+            {
+                const natural Aden2 = natural::square_of(Aden);
+                const integer Acurr = q.num.mul_by(Aden2);
+                if(Acurr<Amini) ++Aden; else break;
+            }
+
+            return rational(Anum,Aden);
+        }
+
         //======================================================================
         //
         // division

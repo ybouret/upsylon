@@ -157,7 +157,10 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             Y_APZ_DECL(mul);           //!< aliases
             Y_APZ_WRAP(*,mul)
             integer mul_by(const natural &rhs) const; //!< optimized mul_by, for rational
-
+            static integer square_of(const integer &x); //!< x*x
+            static integer abs_of(const integer &x);    //!< |x|
+            static integer sqrt_of(const integer &x);   //!< sqrt(x)
+            
             //__________________________________________________________________
             //
             // division
@@ -176,6 +179,12 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
     }
 
     typedef yap::integer apz; //!< nickname
+
+    namespace mkl
+    {
+        inline apz fabs_of(const apz &x) { return apz::abs_of(x);  } //!< for use in mkl
+        inline apz sqrt_of(const apz &x) { return apz::sqrt_of(x); } //!< for use in mkl
+    }
 
 
 }

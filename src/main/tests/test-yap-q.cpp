@@ -226,8 +226,31 @@ namespace {
             Y_ASSERT(e==a);
         }
 
+        
+
     }
 
+    static inline void test_sqrt()
+    {
+        std::cerr << "---> test sqrt" << std::endl;
+        for(size_t iter=0;iter<16;++iter)
+        {
+            const rational q(alea,alea.leq(80),alea.leq(80));
+            const rational a = rational::abs_of(q); Y_ASSERT(a>=0);
+            {
+                const rational a2 = a*a;
+                const rational s  = rational::sqrt_of(a2);
+                Y_ASSERT(s==a);
+            }
+
+            {
+                const rational s = rational::sqrt_of(a);
+                std::cerr << a << " => " << s << std::endl;
+                Y_ASSERT(s*s<=a);
+            }
+
+        }
+    }
 
 }
 
@@ -237,6 +260,7 @@ Y_UTEST(yap_q)
     test_cmp();
     test_addops();
     test_mulops();
+    test_sqrt();
     std::cerr << "---> Memory Usage:" << std::endl;
     std::cerr << *natural::instance() << std::endl;
 }
