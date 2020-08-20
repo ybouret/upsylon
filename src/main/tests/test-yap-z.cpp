@@ -127,6 +127,10 @@ namespace {
         for(int i=-10;i<=10;++i)
         {
             const integer I = i;
+            {
+                const integer II = +i;
+                Y_ASSERT(II==I);
+            }
             for(int j=-10;j<=10;++j)
             {
                 const integer J = j;
@@ -138,6 +142,22 @@ namespace {
                 Y_ASSERT(J+i==S);
             }
         }
+        {
+            int value = -10;
+            for(integer i=-10;i<=10;++i,++value)
+            {
+                Y_ASSERT(i==value);
+            }
+        }
+        {
+            int value = -10;
+            for(integer i=-10;i<=10;i++,value++)
+            {
+                Y_ASSERT(i==value);
+            }
+        }
+
+
     }
 }
 

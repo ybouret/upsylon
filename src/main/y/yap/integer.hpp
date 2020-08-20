@@ -134,6 +134,9 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
 
             Y_APZ_DECL(add);
             Y_APZ_WRAP(+,add)
+            integer operator+() const; //!< unary '+'
+            integer & operator++();    //!< prefix++ operator
+            integer   operator++(int); //!< postfix++ operator
 
         private:
             void update() throw();

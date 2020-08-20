@@ -409,6 +409,31 @@ namespace upsylon
             return add_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
 
+
+        integer integer:: operator+() const
+        {
+            return integer(*this);
+        }
+
+        integer & integer:: operator++()
+        {
+            static const utype one = 1;
+            integer tmp = add_proto(s,n,__positive,one);
+            xch(tmp);
+            return *this;
+        }
+
+        integer  integer:: operator++(int)
+        {
+            static const utype one = 1;
+            const integer      ans(*this);
+            {
+                integer tmp = add_proto(s,n,__positive,one);
+                xch(tmp);
+            }
+            return ans;
+        }
+
     }
 
 }
