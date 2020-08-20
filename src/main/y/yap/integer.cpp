@@ -553,6 +553,7 @@ namespace upsylon
             const utype la = iabs_of(lhs);
             return div_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
+        
 
 
     }

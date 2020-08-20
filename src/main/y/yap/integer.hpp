@@ -134,21 +134,21 @@ inline friend integer operator OP (const itype    lhs, const integer &rhs) { ret
 inline integer &      operator OP##= (const integer &rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; } \
 inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; }
 
-            Y_APZ_DECL(add);           //!< aliases
+            Y_APZ_DECL(add);             //!< aliases
             Y_APZ_WRAP(+,add)
-            integer operator+() const; //!< unary '+'
-            integer & operator++();    //!< prefix  ++ operator
-            integer   operator++(int); //!< postfix ++ operator
+            integer   operator+() const; //!< unary '+'
+            integer & operator++();      //!< prefix  ++ operator
+            integer   operator++(int);   //!< postfix ++ operator
 
             //__________________________________________________________________
             //
             // subtraction
             //__________________________________________________________________
-            Y_APZ_DECL(sub);           //!< aliases
+            Y_APZ_DECL(sub);             //!< aliases
             Y_APZ_WRAP(-,sub)
-            integer operator-() const; //!< unary '-'
-            integer & operator--();    //!< prefix  -- operator
-            integer   operator--(int); //!< postfix -- operator
+            integer   operator-() const; //!< unary '-'
+            integer & operator--();      //!< prefix  -- operator
+            integer   operator--(int);   //!< postfix -- operator
 
             //__________________________________________________________________
             //
@@ -163,6 +163,7 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             //__________________________________________________________________
             Y_APZ_DECL(divide);           //!< aliases
             Y_APZ_WRAP(/,divide)
+
 
         private:
             void update() throw();
