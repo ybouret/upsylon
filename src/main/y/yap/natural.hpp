@@ -307,9 +307,9 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             static natural lcm(const natural &x, const natural &y);  //!< lcm(x>0,y>0) = x*y/gcd(x,y)
             Y_APN_WRAP_HL_API(natural,lcm)
             static void    simplify(natural &num, natural &den);                            //!< simplify fraction
-            static natural mod_inv(const natural &b, const natural &n);                     //!< modular inverse
+            static natural mod_inv(const natural &b, const natural &n);                     //!< modular inverse        (b^(-1))[n]
             static natural mod_exp(const natural &b, const natural &e, const natural &n);   //!< modular exponentiation (b^e)[n]
-            static bool    coprime(const natural &lhs,const natural &rhs);                  //!< 1==gcx(lhs,rhs)
+            static bool    coprime(const natural &lhs,const natural &rhs);                  //!< 1==gcd(lhs,rhs)
             Y_APN_WRAP_HL_API(bool,coprime)
 
             //__________________________________________________________________

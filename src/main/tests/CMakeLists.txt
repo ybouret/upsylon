@@ -320,9 +320,11 @@ ADD_TEST(counting:drawers  test-main drawers)
 
 SOURCE_GROUP(yap FILES
 test-yap-n.cpp
-test-yap-z.cpp)
+test-yap-z.cpp
+test-yap-q.cpp)
 ADD_TEST(yap:n test-main yap_n)
 ADD_TEST(yap:z test-main yap_z)
+ADD_TEST(yap:q test-main yap_q)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

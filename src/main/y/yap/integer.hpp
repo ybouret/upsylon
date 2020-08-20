@@ -1,6 +1,5 @@
-
-
 //! \file
+
 #ifndef Y_AP_INTEGER_INCLUDED
 #define Y_AP_INTEGER_INCLUDED 1
 
@@ -41,6 +40,7 @@ namespace upsylon {
             integer(const itype    );                  //!< build from integral type
             integer(const sign_type, const natural &); //!< build from natural
             integer(const sign_type, const utype    ); //!< build from unsigned
+            integer(const natural &);                  //!< build from unsigned
             integer & operator=(const integer &);      //!< assign integer
             integer & operator=(const itype    );      //!< assign integral
 

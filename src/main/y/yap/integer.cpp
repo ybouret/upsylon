@@ -74,6 +74,11 @@ namespace upsylon
             Y_APZ_CHECK(*this);
         }
 
+        integer:: integer(const natural &u) : s( (0==u) ? __zero : __positive ), n(u)
+        {
+        }
+        
+
         integer:: integer(const sign_type S, const utype U) :
         s(S), n(U)
         {
