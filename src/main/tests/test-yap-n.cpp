@@ -780,7 +780,7 @@ Y_UTEST(yap_n)
     yap::library &apl = yap::library::instance();
     std::cerr <<  "apl.life_time=" << apl.life_time << std::endl;
 
-    if(false)
+    if(true)
     {
         test_u2w();
         test_zero();
@@ -799,11 +799,12 @@ Y_UTEST(yap_n)
         test_double();
         test_cast();
         test_ari();
+        test_mod_inv();
+        test_rsa();
     }
 
 
-    test_mod_inv();
-    test_rsa();
+
 
 
 
