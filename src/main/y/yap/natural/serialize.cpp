@@ -9,7 +9,7 @@ namespace upsylon {
 
     namespace yap {
 
-        const char natural:: CLASS_NAME[] = "yapn";
+        const char natural:: CLASS_NAME[] = "apn";
 
         const char * natural:: className()       const throw() { return CLASS_NAME; }
 

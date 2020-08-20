@@ -38,8 +38,8 @@ namespace upsylon {
             typedef uint64_t utype; //!< user unsigned integral type
             typedef int64_t  itype; //!< user signed   integral type
 
-            static sign_type sign_of(const itype) throw();
-            static utype     iabs_of(const itype) throw();
+            static sign_type sign_of(const itype) throw(); //!< get sign
+            static utype     iabs_of(const itype) throw(); //!< get absolut value
 
             //__________________________________________________________________
             //

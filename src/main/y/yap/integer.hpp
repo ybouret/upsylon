@@ -12,53 +12,82 @@ namespace upsylon {
 
     namespace yap {
 
-        //! integer type
+        //______________________________________________________________________
+        //
+        //
+        //! drop in replacement for integer type
+        //
+        //______________________________________________________________________
         class integer : public number
         {
         public:
-            static const char    CLASS_NAME[];
-            static const unsigned __n = 0x01;
-            static const unsigned __z = 0x02;
-            static const unsigned __p = 0x04;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const char    CLASS_NAME[]; //!< "apz"
+            static const unsigned __n = 0x01;  //!< negative marker
+            static const unsigned __z = 0x02;  //!< zero     marker
+            static const unsigned __p = 0x04;  //!< positive marker
 
 
-            //C++
-            integer(); //!< 0
-            virtual ~integer() throw();
-            integer(const integer &);
-            integer(const itype    );
-            integer(const sign_type, const natural &);
-            integer & operator=(const integer &);
-            integer & operator=(const itype    );
+            //__________________________________________________________________
+            //
+            // C++ and setup
+            //__________________________________________________________________
+            virtual ~integer() throw();                //!< cleanup
+            integer();                                 //!< initialize to zero
+            integer(const integer &);                  //!< copy
+            integer(const itype    );                  //!< build from integral type
+            integer(const sign_type, const natural &); //!< build from natural
+            integer & operator=(const integer &);      //!< assign integer
+            integer & operator=(const itype    );      //!< assign integral
 
-            integer(const sign_type, randomized::bits &, const size_t nbits);
-            integer(randomized::bits &, const size_t nbits);
+            integer(const sign_type, randomized::bits &, const size_t nbits); //!< specific random
+            integer(randomized::bits &, const size_t nbits);                  //!< random with random sign
 
+            //__________________________________________________________________
+            //
             // methods
-            void xch(integer &) throw();
+            //__________________________________________________________________
+            void xch(integer &) throw(); //!< no-throw exchange
 
+            //__________________________________________________________________
+            //
             // serializable
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream &) const;
-            static  integer     read(ios::istream &, size_t &, const char *); //!< relaod
+            //__________________________________________________________________
+            virtual const char *className() const throw();                    //!< CLASS_NAME
+            virtual size_t      serialize(ios::ostream &) const;              //!< output
+            static  integer     read(ios::istream &, size_t &, const char *); //!< reload
 
+            //__________________________________________________________________
+            //
             // helpers
-            
-            static uint8_t   sign2byte(const sign_type) throw();
-            
+            //__________________________________________________________________
+            static uint8_t   sign2byte(const sign_type) throw(); //!< encoding signs
+
+            //__________________________________________________________________
+            //
             // members
-            const sign_type s;
-            const natural   n;
+            //__________________________________________________________________
+            const sign_type s; //!< sign
+            const natural   n; //!< absolute value
 
-            friend std::ostream & operator<<( std::ostream &, const integer &z);
+            //! display
+            friend std::ostream & operator<<(std::ostream &, const integer &);
 
+            //__________________________________________________________________
+            //
             // comparisons
-            
+            //__________________________________________________________________
+
+            //! complete API
 #define Y_APZ_DECL_NO_THROW(RETURN,CALL) \
 static RETURN CALL(const integer &lhs, const integer &rhs) throw();\
 static RETURN CALL(const integer &lhs, const itype    rhs) throw();\
 static RETURN CALL(const itype    lhs, const integer &rhs) throw()
-            
+
+            //! full comparison API
 #define Y_APZ_CMP_FULL(OP,CALL) \
 inline friend bool operator OP (const integer &lhs, const integer &rhs) throw() { return CALL(lhs,rhs); }\
 inline friend bool operator OP (const integer &lhs, const itype    rhs) throw() { return CALL(lhs,rhs); }\

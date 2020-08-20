@@ -114,7 +114,7 @@ namespace upsylon
         }
 
         
-        const char integer:: CLASS_NAME[] = "yapz";
+        const char integer:: CLASS_NAME[] = "apz";
 
         const char *integer:: className() const throw() { return CLASS_NAME; }
 

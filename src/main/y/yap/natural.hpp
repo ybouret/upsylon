@@ -45,7 +45,7 @@ word( acquire(count,width,shift) )
             //
             // types and definitions
             //__________________________________________________________________
-            static const char CLASS_NAME[]; //!< "yapn"
+            static const char CLASS_NAME[]; //!< "apn"
 
             //------------------------------------------------------------------
             // core type, to perform internal computations
