@@ -210,7 +210,24 @@ namespace {
         }
     }
 
-
+    static inline void test_mul()
+    {
+        std::cerr << "---> test mul" << std::endl;
+        for(int i=-10;i<=10;++i)
+        {
+            const integer I = i;
+            for(int j=-10;j<=10;++j)
+            {
+                const integer J = j;
+                const integer S = I*J;
+                Y_ASSERT(S==i*j);
+                Y_ASSERT(I*j==S);
+                Y_ASSERT(j*I==S);
+                Y_ASSERT(i*J==S);
+                Y_ASSERT(J*i==S);
+            }
+        }
+    }
 
 
 }
@@ -223,6 +240,7 @@ Y_UTEST(yap_z)
     test_add();
     test_sub();
     test_addops();
+    test_mul();
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;

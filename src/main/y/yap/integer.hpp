@@ -140,13 +140,22 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             integer & operator++();    //!< prefix  ++ operator
             integer   operator++(int); //!< postfix ++ operator
 
-
+            //__________________________________________________________________
+            //
+            // subtraction
+            //__________________________________________________________________
             Y_APZ_DECL(sub);           //!< aliases
             Y_APZ_WRAP(-,sub)
             integer operator-() const; //!< unary '-'
             integer & operator--();    //!< prefix  -- operator
             integer   operator--(int); //!< postfix -- operator
 
+            //__________________________________________________________________
+            //
+            // multiplication
+            //__________________________________________________________________
+            Y_APZ_DECL(mul);           //!< aliases
+            Y_APZ_WRAP(*,mul)
 
         private:
             void update() throw();

@@ -43,6 +43,33 @@ namespace upsylon {
             return __zero;
         }
 
+        sign_type number:: product(const sign_type a, const sign_type b) throw()
+        {
+            switch(a)
+            {
+                case __negative:
+                    switch(b)
+                    {
+                        case __negative: return __positive;
+                        case __zero:     break;
+                        case __positive: return __negative;
+                    }
+                    break;
+
+                case __zero: break;
+
+                case __positive:
+                    switch(b)
+                    {
+                        case __negative: return __negative;
+                        case __zero:     break;
+                        case __positive: return __positive;
+                    }
+                    break;
+            }
+            return __zero;
+        }
+
 
     }
 
