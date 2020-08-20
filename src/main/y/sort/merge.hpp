@@ -3,6 +3,7 @@
 #define Y_SORT_MERGE_INCLUDED 1
 
 #include "y/core/list.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -82,12 +83,12 @@ namespace upsylon
         
         static inline int compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
-            return int( static_cast<ptrdiff_t>(lhs-rhs) );
+            return int( aliasing::delta(rhs,lhs) );
         }
 
         static inline int compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
-            return int( static_cast<ptrdiff_t>(rhs-lhs) );
+            return int(  aliasing::delta(lhs,rhs) );
         }
     };
 }

@@ -205,7 +205,7 @@ namespace
             if( 0 == (n&15) )
             {
                 std::cerr.flush();
-                fprintf( stderr, "spead@%6u | heap: %7.3f | quick: %7.3f | y: %7.3f\n",  unsigned(n), hspd.back(), qspd.back(), yspd.back() );
+                fprintf( stderr, "speed@%6u | heap: %7.3f | quick: %7.3f | y: %7.3f\n",  unsigned(n), hspd.back(), qspd.back(), yspd.back() );
                 /*
                 std::cerr
                 << n

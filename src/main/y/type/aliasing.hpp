@@ -111,7 +111,7 @@ namespace upsylon {
         // helpers
         //_____________________________________________________________________
 
-        //! getting absolut bytes between object a->b
+        //! getting absolute bytes between object a->b
         template <typename T, typename U> static inline
         ptrdiff_t delta(const T *a, const U *b) throw()
         {

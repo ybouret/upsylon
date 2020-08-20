@@ -72,6 +72,12 @@ namespace {
                 Y_ASSERT(total==written);
             }
         }
+
+        for(size_t i=0;i<8;++i)
+        {
+            const rational q(alea,1+alea.leq(10),1+alea.leq(10));
+            std::cerr << q << " = " << q.to_double() << std::endl;
+        }
     }
 
     static inline void test_cmp()
@@ -127,7 +133,7 @@ namespace {
         {
             size_t count = 0;
             std::cerr << '[';
-            for(size_t i=0;i<256;++i)
+            for(size_t i=0;i<512;++i)
             {
                 if( 0==(++count%16) )
                 {
