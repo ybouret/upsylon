@@ -175,6 +175,9 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
 
     }
 
+    typedef yap::integer apz;
+
+
 }
 
 

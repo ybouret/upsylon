@@ -181,12 +181,11 @@ inline        rational &operator OP##=(const itype     rhs) { rational tmp = CAL
                 return (q.num!=n) || (q.den!=d);
             }
 
-         
-
-
-
         };
+
     }
+    
+    typedef yap::rational apq;
 
 }
 
