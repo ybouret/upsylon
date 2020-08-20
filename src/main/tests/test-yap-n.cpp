@@ -732,8 +732,39 @@ namespace {
                 const natural q = p%n;
                 Y_ASSERT(0==q||1==q);
             }
-
         }
+    }
+
+    static inline void test_rsa()
+    {
+        std::cerr << std::dec;
+        const natural p = 61;
+        const natural q = 53;
+        const natural n = p*q;
+        const natural pm = p-1;
+        const natural qm = q-1;
+        const natural lam = natural::lcm(pm,qm);
+        const natural e   = 65537;
+        const natural d   = natural::mod_inv(e,lam);
+        std::cerr << "p   = " << p   << std::endl;
+        std::cerr << "q   = " << q   << std::endl;
+        std::cerr << "n   = " << n   << std::endl;
+        std::cerr << "lam = " << lam << std::endl;
+        std::cerr << "e   = " << e   << std::endl;
+        std::cerr << "d   = " << d   << std::endl;
+
+        std::cerr << '[';
+        size_t count=0;
+        for(natural P=0;P<n;++P)
+        {
+            if(0==(++count%100)) std::cerr << '.';
+            const natural C = natural::mod_exp(P,e,n);
+            const natural D = natural::mod_exp(C,d,n);
+            Y_ASSERT(D==P);
+        }
+        std::cerr << ']' << std::endl;
+
+
     }
 
 }
@@ -772,7 +803,7 @@ Y_UTEST(yap_n)
 
 
     test_mod_inv();
-
+    test_rsa();
 
 
 

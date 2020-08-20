@@ -94,6 +94,15 @@ namespace upsylon
             return a;
         }
 
+        natural natural:: lcm(const natural &x, const natural &y)
+        {
+            assert(x>0);
+            assert(y>0);
+            const natural num = x*y;
+            const natural den = gcd(x,y); assert(den>0);
+            return num/den;
+        }
+
         bool natural:: coprime(const natural &lhs, const natural &rhs)
         {
             if(lhs.bytes>0&&rhs.bytes>0)
@@ -137,7 +146,6 @@ namespace upsylon
 
         natural  natural:: mod_inv( const natural &b, const natural &n )
         {
-            //std::cerr << "Computing " << b << "^(-1)[" << n << "]" << std::endl;
             natural n0 = n;
             natural b0 = b;
             natural t0 = 0;
@@ -172,57 +180,53 @@ namespace upsylon
             }
 
             // normally an error if b0 != 1
-            //std::cerr << b << "*" << t << "[" << n << "]=" << (b*t)%n << std::endl;
             return t;
         }
 
-#if 0
         natural natural:: mod_exp( const natural &B, const natural &E, const natural &N )
         {
-
-            if( N.bytes <= 0 )
+            if(N.bytes<=0)
                 throw libc::exception( EDOM, "natural::mod_exp %% 0");
 
-
             natural result = 1;
-            if( E.bytes > 0 )
+            if(E.bytes>0)
             {
-                assert( E.bits() > 0 );
+                assert(E.bits()>0);
                 natural        base  = B;
                 const size_t   nbit  = E.bits()-1;
-                const uint8_t *ebit  = E.byte;
+                //const uint8_t *ebit  = E.byte;
 
-                for( size_t i=0; i < nbit; ++i )
+                for(size_t i=0; i<nbit; ++i)
                 {
 
-                    if( ebit[i>>3] & bits_table::value[ (i&0x7) ] )
+                    //if( ebit[i>>3] & bits_table::value[ (i&0x7) ] )
+                    if( E.get(i>>3) & bits_table::value[ (i&0x7) ] )
                     {
                         //result = ( result * base ) % N;
                         const natural rb   = result * base;
-                        natural       tmp1 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
+                        natural       tmp1 = modulo(rb,N);//__mod( rb.byte, rb.bytes, N.byte, N.bytes );
                         tmp1.xch( result );
                     }
 
                     //base = ( base * base ) % N;
                     const natural bsq  = square_of(base);
-                    natural       tmp2 = __mod(bsq.byte,bsq.bytes,N.byte,N.bytes);
-                    base.xch( tmp2 );
+                    natural       tmp2 = modulo(bsq,N); //__mod(bsq.byte,bsq.bytes,N.byte,N.bytes);
+                    base.xch(tmp2);
                 }
 
                 //-- most significant bit !
-                assert( (ebit[nbit>>3] & bits_table::value[ (nbit&7) ]) != 0 );
+                assert( (E.get(nbit>>3) & bits_table::value[ (nbit&7) ]) != 0 );
 
                 //result = ( result * base ) % N;
                 {
                     const natural rb   = result * base;
-                    natural       tmp3 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
+                    natural       tmp3 = modulo(rb,N);//__mod( rb.byte, rb.bytes, N.byte, N.bytes );
                     tmp3.xch( result );
                 }
             }
 
             return result;
         }
-#endif
 
     }
 }

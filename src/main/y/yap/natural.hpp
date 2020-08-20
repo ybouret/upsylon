@@ -304,6 +304,8 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             static natural comb(const size_t n, const size_t k);     //!< n!/k!/(n-k)!
             static natural gcd(const natural &x, const natural &y);  //!< gcd(x>0,y>0)
             Y_APN_WRAP_HL_API(natural,gcd)
+            static natural lcm(const natural &x, const natural &y);  //!< lcm(x>0,y>0) = x*y/gcd(x,y)
+            Y_APN_WRAP_HL_API(natural,lcm)
             static void    simplify(natural &num, natural &den);                            //!< simplify fraction
             static natural mod_inv(const natural &b, const natural &n);                     //!< modular inverse
             static natural mod_exp(const natural &b, const natural &e, const natural &n);   //!< modular exponentiation (b^e)[n]
