@@ -152,8 +152,8 @@ namespace {
         std::cerr << "---> test addops" << std::endl;
         for(size_t iter=0;iter<ITER;++iter)
         {
-            const rational a(alea,100,100);
-            const rational b(alea,100,100);
+            const rational a(alea,alea.leq(100),alea.leq(100));
+            const rational b(alea,alea.leq(100),alea.leq(100));
             const rational c=a+b;
             const rational d=c-a;
             const rational e=c-b;
@@ -187,6 +187,41 @@ namespace {
 
     }
 
+    static inline void test_mulops()
+    {
+        std::cerr << "---> test mulops" << std::endl;
+        {
+            number::itype i = 1;
+            number::utype u = 2;
+            rational Q(i,u);
+            for(size_t iter=0;iter<ITER;++iter)
+            {
+                ++i;
+                ++u;
+                const rational q(i,u);
+                Q *= q;
+            }
+            Q*=u;
+            std::cerr << "Q=" << Q << std::endl;
+            Q=0;
+            Q/=10;
+            Y_ASSERT(0==Q);
+        }
+
+        const size_t w = 100;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const rational a(alea,1+alea.leq(w),1+alea.leq(w));
+            const rational b(alea,1+alea.leq(w),1+alea.leq(w));
+            const rational c=a*b;
+            const rational d=c/a;
+            const rational e=c/b;
+            Y_ASSERT(d==b);
+            Y_ASSERT(e==a);
+        }
+
+    }
+
 
 }
 
@@ -195,6 +230,7 @@ Y_UTEST(yap_q)
     test_setup();
     test_cmp();
     test_addops();
+    test_mulops();
     std::cerr << "---> Memory Usage:" << std::endl;
     std::cerr << *natural::instance() << std::endl;
 }

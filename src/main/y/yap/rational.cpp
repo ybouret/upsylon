@@ -307,7 +307,7 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
         }
 
         template <typename T>
-        static inline rational lsub_proto(const T &i, const rational &rhs)
+        static inline rational sub_proto(const T &i, const rational &rhs)
         {
             const  rational lhs(i);
             return rational::sub(lhs,rhs);
@@ -354,6 +354,101 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
                 xch(tmp);
             }
             return ans;
+        }
+
+
+        //======================================================================
+        //
+        // multiplication
+        //
+        //======================================================================
+
+        rational rational::mul(const rational &lhs, const rational &rhs)
+        {
+            const integer Anum = lhs.num * rhs.num;
+            const natural Aden = lhs.den * rhs.den;
+            return rational(Anum,Aden);
+        }
+
+        template <typename T>
+        static inline rational mul_proto(const rational &lhs, const T &i)
+        {
+            const  rational rhs(i);
+            return rational::mul(lhs,rhs);
+        }
+
+        template <typename T>
+        static inline rational mul_proto(const T &i, const rational &rhs)
+        {
+            const  rational lhs(i);
+            return rational::mul(lhs,rhs);
+        }
+
+        rational rational:: mul(const rational &lhs, const integer &rhs)
+        {
+            return mul_proto(lhs,rhs);
+        }
+
+        rational rational:: mul(const rational &lhs, const itype rhs)
+        {
+            return mul_proto(lhs,rhs);
+        }
+
+        rational rational:: mul(const integer &lhs, const rational &rhs)
+        {
+            return mul_proto(lhs,rhs);
+        }
+
+        rational rational:: mul(const itype lhs, const rational &rhs)
+        {
+            return mul_proto(lhs,rhs);
+        }
+
+        //======================================================================
+        //
+        // division
+        //
+        //======================================================================
+        rational rational::divide(const rational &lhs, const rational &rhs)
+        {
+            const integer Inum = lhs.num.mul_by(rhs.den);
+            const integer Iden = rhs.num.mul_by(lhs.den);
+            const integer Anum( product(Inum.s,Iden.s), Inum.n );
+            return rational(Anum,Iden.n);
+        }
+
+        template <typename T>
+        static inline rational div_proto(const rational &lhs, const T &i)
+        {
+            const  rational rhs(i);
+            return rational::divide(lhs,rhs);
+        }
+
+        template <typename T>
+        static inline rational div_proto(const T &i, const rational &rhs)
+        {
+            const  rational lhs(i);
+            return rational::divide(lhs,rhs);
+        }
+
+        rational rational:: divide(const rational &lhs, const integer &rhs)
+        {
+            return div_proto(lhs,rhs);
+        }
+
+        rational rational:: divide(const rational &lhs, const itype rhs)
+        {
+            return div_proto(lhs,rhs);
+        }
+
+        rational rational:: divide(const integer &lhs, const rational &rhs)
+        {
+            return div_proto(lhs,rhs);
+        }
+
+        rational rational:: divide(const itype lhs, const rational &rhs)
+        {
+            return div_proto(lhs,rhs);
         }
 
     }

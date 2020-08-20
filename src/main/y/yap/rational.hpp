@@ -45,7 +45,7 @@ namespace upsylon {
             rational(const integer &);                 //!< setup/1
             rational(const natural &);                 //!< setup/1
             rational(randomized::bits &,const size_t n, const size_t m);
-            
+
             //__________________________________________________________________
             //
             // serializable
@@ -151,6 +151,21 @@ inline        rational &operator OP##=(const itype     rhs) { rational tmp = CAL
             rational   operator-() const; //!< unary '-'
             rational & operator--();      //!< prefix  -- operator
             rational   operator--(int);   //!< postfix -- operator
+
+            //__________________________________________________________________
+            //
+            // multiplication
+            //__________________________________________________________________
+            Y_APQ_WRAP_API(mul);
+            Y_APQ_WRAP_OPS(*,mul)
+
+            //__________________________________________________________________
+            //
+            // division
+            //__________________________________________________________________
+            Y_APQ_WRAP_API(divide);
+            Y_APQ_WRAP_OPS(/,divide)
+
 
         private:
             void update();
