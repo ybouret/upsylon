@@ -44,7 +44,8 @@ namespace upsylon {
             rational(const itype);                     //!< setup/1
             rational(const integer &);                 //!< setup/1
             rational(const natural &);                 //!< setup/1
-
+            rational(randomized::bits &,const size_t n, const size_t m);
+            
             //__________________________________________________________________
             //
             // serializable

@@ -47,6 +47,15 @@ namespace upsylon {
 
         }
 
+        rational:: rational(randomized::bits &ran,const size_t n, const size_t m) :
+        number(),
+        num(ran,n),
+        den(ran, (m<1) ? 1 : m)
+        {
+            update();
+        }
+
+
         void rational:: update()
         {
             natural::simplify(aliasing::_(num.n), aliasing::_(den));
