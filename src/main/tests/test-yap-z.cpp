@@ -229,6 +229,39 @@ namespace {
         }
     }
 
+    static inline void test_div()
+    {
+        std::cerr << "---> test div" << std::endl;
+        for(int i=-100;i<=100;++i)
+        {
+            const integer I = i;
+            for(int j=-10;j<=10;++j)
+            {
+                if(0==j) continue;
+                const integer J = j;
+                const integer S = I/J;
+                Y_ASSERT(S==i/j);
+                Y_ASSERT(I/j==S);
+                Y_ASSERT(i/J==S);
+            }
+        }
+    }
+
+    static inline void test_mulops()
+    {
+        std::cerr << "---> test mulops" << std::endl;
+        for(size_t i=0;i<ITER;++i)
+        {
+            const integer a(alea,1+alea.leq(500));
+            const integer b(alea,1+alea.leq(500));
+            const integer c = a*b;
+            const integer d = c/b;
+            const integer e = c/a;
+            Y_ASSERT(d==a);
+            Y_ASSERT(e==b);
+        }
+    }
+
 
 }
 
@@ -241,6 +274,8 @@ Y_UTEST(yap_z)
     test_sub();
     test_addops();
     test_mul();
+    test_div();
+    test_mulops();
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;

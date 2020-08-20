@@ -157,6 +157,13 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             Y_APZ_DECL(mul);           //!< aliases
             Y_APZ_WRAP(*,mul)
 
+            //__________________________________________________________________
+            //
+            // division
+            //__________________________________________________________________
+            Y_APZ_DECL(divide);           //!< aliases
+            Y_APZ_WRAP(/,divide)
+
         private:
             void update() throw();
             Y_APZ_DECL_NO_THROW(bool,eq);
