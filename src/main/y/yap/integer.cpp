@@ -327,7 +327,6 @@ namespace upsylon
         // addition
         //
         //======================================================================
-
         template <typename LHS, typename RHS> static inline
         integer add_proto(const sign_type ls, const LHS &la,
                           const sign_type rs, const RHS &ra)
@@ -355,7 +354,7 @@ namespace upsylon
                         case __zero:     assert(la==ra);{                        return integer();             }
                         case __positive: assert(ra<la); { const natural n=la-ra; return integer(__negative,n); }
                     }
-                }
+                } break;
 
                     //----------------------------------------------------------
                     // lhs==0
@@ -375,7 +374,8 @@ namespace upsylon
                         case __zero:     assert(la==ra); return integer();
                         case __positive: assert(ra<la); { const natural n=la-ra; return integer(__positive,n); }
                     }
-                }
+                } break;
+
                 case Y_APZ_SIGNS(integer::__p,integer::__z):
                 {
                     return  integer(ls,la);
