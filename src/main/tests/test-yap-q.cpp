@@ -149,7 +149,7 @@ namespace {
 
     static inline void test_addops()
     {
-        std::cerr << "---> test cmp" << std::endl;
+        std::cerr << "---> test addops" << std::endl;
         for(size_t iter=0;iter<ITER;++iter)
         {
             const rational a(alea,100,100);
@@ -160,7 +160,31 @@ namespace {
             Y_ASSERT(d==b);
             Y_ASSERT(e==a);
         }
-        
+
+        {
+            const rational half(1,2);
+            for(rational i=-half;i<=10;++i)
+            {
+                std::cerr << ' ' << i;
+            }
+            std::cerr << std::endl;
+            for(rational i=-half;i<=10;i++)
+            {
+                std::cerr << ' ' << i;
+            }
+            std::cerr << std::endl;
+        }
+        for(rational i = +rational(17,3);i>0;--i)
+        {
+            std::cerr << ' ' << i;
+        }
+        std::cerr << std::endl;
+        for(rational i(17,3);i>0;i--)
+        {
+            std::cerr << ' ' << i;
+        }
+        std::cerr << std::endl;
+
     }
 
 
