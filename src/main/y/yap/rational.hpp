@@ -26,6 +26,8 @@ namespace upsylon {
             // types and definitions
             //__________________________________________________________________
             static const char    CLASS_NAME[]; //!< "apq"
+            static const itype   i_one = 1;
+            static const utype   u_one = 1;
 
             //__________________________________________________________________
             //
@@ -61,11 +63,48 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const integer num;
-            const natural den;
+            const integer num; //!< numerator
+            const natural den; //!< denominator
+
+            //__________________________________________________________________
+            //
+            // full comparision
+            //__________________________________________________________________
+#define Y_APQ_CMP_FULL(OP,CALL) \
+inline friend bool operator OP (const rational &lhs, const rational &rhs) throw() { return CALL(lhs,rhs.num,rhs.den); }\
+inline friend bool operator OP (const rational &lhs, const integer  &rhs) throw() { return CALL(lhs,rhs,u_one);       }\
+inline friend bool operator OP (const integer  &lhs, const rational &rhs) throw() { return CALL(rhs,lhs,u_one);       }\
+inline friend bool operator OP (const rational &lhs, const itype     rhs) throw() { return CALL(lhs,rhs,u_one);       }\
+inline friend bool operator OP (const itype     lhs, const rational &rhs) throw() { return CALL(rhs,lhs,u_one);       }\
+
+
+            Y_APQ_CMP_FULL(==,eq)
+            Y_APQ_CMP_FULL(!=,neq)
+
+            //__________________________________________________________________
+            //
+            // partial comparisons
+            //__________________________________________________________________
+            static int cmp(const rational &lhs, const rational &rhs);
+            
 
         private:
             void update();
+            template <typename NUM,typename DEN>
+            static inline bool eq(const rational &q, const NUM &n, const DEN &d) throw()
+            {
+                return (q.num==n) && (q.den==d);
+            }
+
+            template <typename NUM,typename DEN>
+            static inline bool neq(const rational &q, const NUM &n, const DEN &d) throw()
+            {
+                return (q.num!=n) || (q.den!=d);
+            }
+
+
+
+
         };
     }
 

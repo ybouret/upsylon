@@ -18,6 +18,14 @@ namespace {
     {
         std::cerr << "---> test setup" << std::endl;
         vector<rational> Q;
+        {
+            const int      n = -10;
+            const rational Q = n;
+            Y_ASSERT(Q==n);
+            Y_ASSERT(n==Q);
+            Y_ASSERT(!(Q!=n));
+            Y_ASSERT(!(n!=Q));
+        }
 
         for(size_t i=0;i<ITER;++i)
         {
@@ -58,7 +66,8 @@ namespace {
                     size_t nr = 0;
                     const rational q = rational::read(fp, nr, "q");
                     total += nr;
-
+                    Y_ASSERT(q==Q[i]);
+                    Y_ASSERT(!(q!=Q[i]));
                 }
                 Y_ASSERT(total==written);
             }

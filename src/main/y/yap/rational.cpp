@@ -1,11 +1,15 @@
 
 #include "y/yap/rational.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/os/error.hpp"
 
 namespace upsylon {
 
 
     namespace yap {
+
+        const number::itype rational::i_one;
+        const number::utype rational::u_one;
 
         rational:: rational() : num(0), den(1)
         {
@@ -34,7 +38,7 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
         rational:: rational(const natural &n) : num(n), den(1) {}
 
 
-        rational::rational(const rational &q) : num(q.num), den(q.den)
+        rational::rational(const rational &q) : number(), num(q.num), den(q.den)
         {
         }
 
@@ -83,6 +87,59 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
             aliasing::_(den).xch( aliasing::_(q.den) );
         }
 
+        //======================================================================
+        //
+        // comparison
+        //
+        //======================================================================
+        int rational:: cmp(const rational &lhs, const rational &rhs)
+        {
+            switch(lhs.num.s)
+            {
+
+                    // lhs < 0
+                case __negative:
+                    switch(rhs.num.s)
+                    {
+                        case __negative:
+                        {
+                            const natural L = lhs.num.n * rhs.den;
+                            const natural R = rhs.num.n * lhs.den;
+                            return natural::compare(R,L);
+                        }
+                        case __zero:
+                        case __positive: return -1;
+                    }
+                    break;
+
+                    // lhs = 0
+                case __zero:
+                    switch(rhs.num.s)
+                    {
+                        case __negative: return -1;
+                        case __zero:     return  0;
+                        case __positive: return  1;
+                    }
+                    break;
+
+                    // lhs > 0
+                case __positive:
+                    switch(rhs.num.s)
+                    {
+                        case __negative:
+                        case __zero:     return 1;
+                        case __positive:
+                        {
+                            const natural L = lhs.num.n * rhs.den;
+                            const natural R = rhs.num.n * lhs.den;
+                            return natural::compare(L,R);
+                        }
+                    }
+                    break;
+            }
+            fatal_error("rational corrupted sign");
+            return 0;
+        }
 
     }
 
