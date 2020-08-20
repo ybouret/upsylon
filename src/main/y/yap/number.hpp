@@ -40,6 +40,7 @@ namespace upsylon {
 
             static sign_type sign_of(const itype) throw(); //!< get sign
             static utype     iabs_of(const itype) throw(); //!< get absolut value
+            static sign_type opposite(const sign_type) throw(); //!< -sign
 
             //__________________________________________________________________
             //

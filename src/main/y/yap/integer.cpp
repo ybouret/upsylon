@@ -434,6 +434,54 @@ namespace upsylon
             return ans;
         }
 
+        //======================================================================
+        //
+        // subtraction
+        //
+        //======================================================================
+        integer integer:: sub(const integer &lhs, const integer &rhs)
+        {
+            return add_proto(lhs.s,lhs.n,opposite(rhs.s),rhs.n);
+        }
+
+        integer integer::sub(const integer &lhs, const itype rhs)
+        {
+            const utype ra = iabs_of(rhs);
+            return add_proto(lhs.s,lhs.n, opposite(sign_of(rhs)),ra);
+        }
+
+        integer integer::sub(const itype    lhs, const integer &rhs)
+        {
+            const utype la = iabs_of(lhs);
+            return add_proto(sign_of(lhs),la,opposite(rhs.s),rhs.n);
+        }
+
+
+        integer integer:: operator-() const
+        {
+            return integer(opposite(s),n);
+        }
+
+        integer & integer:: operator--()
+        {
+            static const utype one = 1;
+            integer tmp = add_proto(s,n,__negative,one);
+            xch(tmp);
+            return *this;
+        }
+
+        integer  integer:: operator--(int)
+        {
+            static const utype one = 1;
+            const integer      ans(*this);
+            {
+                integer tmp = add_proto(s,n,__negative,one);
+                xch(tmp);
+            }
+            return ans;
+        }
+
+
     }
 
 }

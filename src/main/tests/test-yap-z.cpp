@@ -156,9 +156,63 @@ namespace {
                 Y_ASSERT(i==value);
             }
         }
-
-
     }
+
+    static inline void test_sub()
+    {
+        std::cerr << "---> test sub" << std::endl;
+        for(int i=-10;i<=10;++i)
+        {
+            const integer I = i;
+            {
+                const integer II = -I;
+                Y_ASSERT(II==-i);
+            }
+            for(int j=-10;j<=10;++j)
+            {
+                const integer J = j;
+                const integer S = I-J;
+                //std::cerr << "(" << i << ") - (" << j << ") -> " << i-j << std::endl;
+                //std::cerr << "(" << I << ") - (" << J << ") -> " << S   << std::endl;
+                Y_ASSERT(S==i-j);
+                Y_ASSERT(I-j==S);
+                Y_ASSERT(i-J==S);
+            }
+        }
+        {
+            int value = 10;
+            for(integer i=10;i>=-10;--i,--value)
+            {
+                Y_ASSERT(i==value);
+            }
+        }
+        {
+            int value = 10;
+            for(integer i=10;i>=-10;i--,value--)
+            {
+                Y_ASSERT(i==value);
+            }
+        }
+    }
+
+    static inline void test_addops()
+    {
+        std::cerr << "---> test addops" << std::endl;
+        for(size_t i=0;i<ITER;++i)
+        {
+            const integer a(alea,alea.leq(5000));
+            const integer b(alea,alea.leq(5000));
+            const integer c = a+b;
+            const integer d = c-b;
+            const integer e = c-a;
+            Y_ASSERT(d==a);
+            Y_ASSERT(e==b);
+        }
+    }
+
+
+
+
 }
 
 Y_UTEST(yap_z)
@@ -167,6 +221,8 @@ Y_UTEST(yap_z)
     test_setup();
     test_cmp();
     test_add();
+    test_sub();
+    test_addops();
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;

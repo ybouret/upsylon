@@ -120,11 +120,13 @@ Y_APZ_WRAP_CMP_PART(>=,cmp)
             //
             // addition
             //__________________________________________________________________
+            //! function declaration
 #define Y_APZ_DECL(CALL)                                    \
 static integer CALL(const integer &lhs, const integer &rhs);\
 static integer CALL(const integer &lhs, const itype    rhs);\
 static integer CALL(const itype    lhs, const integer &rhs)
 
+            //! operators implementation
 #define Y_APZ_WRAP(OP,CALL)                                                                                          \
 inline friend integer operator OP (const integer &lhs, const integer &rhs) { return CALL(lhs,rhs); }                 \
 inline friend integer operator OP (const integer &lhs, const itype    rhs) { return CALL(lhs,rhs); }                 \
@@ -132,11 +134,19 @@ inline friend integer operator OP (const itype    lhs, const integer &rhs) { ret
 inline integer &      operator OP##= (const integer &rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; } \
 inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; }
 
-            Y_APZ_DECL(add);
+            Y_APZ_DECL(add);           //!< aliases
             Y_APZ_WRAP(+,add)
             integer operator+() const; //!< unary '+'
-            integer & operator++();    //!< prefix++ operator
-            integer   operator++(int); //!< postfix++ operator
+            integer & operator++();    //!< prefix  ++ operator
+            integer   operator++(int); //!< postfix ++ operator
+
+
+            Y_APZ_DECL(sub);           //!< aliases
+            Y_APZ_WRAP(-,sub)
+            integer operator-() const; //!< unary '-'
+            integer & operator--();    //!< prefix  -- operator
+            integer   operator--(int); //!< postfix -- operator
+
 
         private:
             void update() throw();

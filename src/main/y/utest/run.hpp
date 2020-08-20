@@ -28,9 +28,13 @@ std::cerr << "[PASSED]" << std::endl;                                    \
 } while(false)
 
 //! just assert
-#define Y_ASSERT(CODE) do {                                       \
-if(!(CODE)) throw upsylon::exception("*** [" #CODE "] FAILED");   \
-} while(false)
+#define Y_ASSERT(CODE)                                            \
+/**/do {                                                          \
+/**/    if(!(CODE)) {                                             \
+/**/        std::cerr << __FILE__ << ':' << __LINE__ << std::endl;\
+/**/        throw upsylon::exception("*** [" #CODE "] FAILED");   \
+/**/    }                                                         \
+/**/} while(false)
 
 #endif
 

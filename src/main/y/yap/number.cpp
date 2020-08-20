@@ -1,6 +1,6 @@
 #include "y/yap/number.hpp"
 #include "y/code/round.hpp"
-
+#include "y/os/error.hpp"
 namespace upsylon {
 
     namespace yap {
@@ -32,6 +32,16 @@ namespace upsylon {
             return (i<0) ? utype(-i) : utype(i);
         }
 
+        sign_type number:: opposite(const sign_type s) throw()
+        {
+            switch(s)
+            {
+                case __negative: return __positive;
+                case __zero:     break;
+                case __positive: return __negative;
+            }
+            return __zero;
+        }
 
 
     }
