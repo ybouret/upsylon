@@ -3,7 +3,10 @@
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
-
+#include "y/string.hpp"
+#include "y/type/utils.hpp"
+#include "y/code/utils.hpp"
+#include <cmath>
 
 using namespace upsylon;
 using namespace yap;
@@ -564,12 +567,178 @@ namespace {
         }
     }
 
+    static inline void test_parse()
+    {
+        std::cerr << "---> test decimal" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const natural a(alea,alea.leq(80));
+            const string  s = a.to_dec();
+            const natural b = natural::dec(s);
+            Y_ASSERT(a==b);
+        }
+
+        std::cerr << "---> test hexadecimal" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const natural a(alea,alea.leq(2000));
+            const string  s = a.to_hex();
+            const natural b = natural::hex(s);
+            Y_ASSERT(a==b);
+        }
+
+        std::cerr << "---> test parse" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            {
+                string d;
+                d += alea.range<char>('1','9');
+                for(size_t i=1+alea.leq(10);i>0;--i)
+                {
+                    d += alea.range<char>('0','9');
+                }
+                const natural a = natural::parse(d);
+                const string  s = a.to_dec();
+                Y_ASSERT(d==s);
+            }
+
+            {
+                string h = "0x";
+                h += hexadecimal::lowercase_word[ alea.range<unsigned>(1,15) ];
+                for(size_t i=1+alea.leq(10);i>0;--i)
+                {
+                    h += hexadecimal::lowercase_word[ alea.range<unsigned>(0,15) ];
+                }
+                const natural a = natural::parse(h);
+                const string  s = "0x" + a.to_hex();
+                Y_ASSERT(h==s);
+            }
+        }
+
+    }
+
+    static inline void test_double()
+    {
+
+        std::cerr << "---> test double" << std::endl;
+        for(size_t i=0;i<32;++i)
+        {
+            const natural a    = alea.full<uint16_t>();
+            natural       b    = alea.full<uint16_t>();
+            while(b<=0)   b    = alea.full<uint16_t>();
+            const double ad    = a.to_double();
+            const double bd    = b.to_double();
+            const double rd    = ad/bd;
+            const double r     = natural::ratio_of(a,b);
+            const double delta =  sqrt( square_of(rd-r) );
+            std::cerr << ' ' << delta;
+        }
+        std::cerr << std::endl;
+    }
+
+
+
+
+    static inline void test_cast()
+    {
+        std::cerr << "---> test cast" << std::endl;
+        std::cerr << '[';
+        for(size_t bits=0;bits<=65;++bits)
+        {
+            std::cerr << '.';
+            for(size_t iter=0;iter<ITER;++iter)
+            {
+                const natural a(alea,bits);
+                uint8_t  x8  = 0;
+                uint16_t x16 = 0;
+                uint32_t x32 = 0;
+                uint64_t x64 = 0;
+
+                if(bits<=8)  { Y_ASSERT(a.to(x8));  Y_ASSERT(a==x8);  } else { Y_ASSERT(!a.to(x8));  }
+                if(bits<=16) { Y_ASSERT(a.to(x16)); Y_ASSERT(a==x16); } else { Y_ASSERT(!a.to(x16)); }
+                if(bits<=32) { Y_ASSERT(a.to(x32)); Y_ASSERT(a==x32); } else { Y_ASSERT(!a.to(x32)); }
+                if(bits<=64) { Y_ASSERT(a.to(x64)); Y_ASSERT(a==x64); } else { Y_ASSERT(!a.to(x64)); }
+
+
+
+            }
+        }
+        std::cerr << ']' << std::endl;
+    }
+
+    static inline void test_ari()
+    {
+        std::cerr << "---> test arithmetic" << std::endl;
+        std::cerr << " |_factorial" << std::endl;
+        for(size_t n=0;n<=20;++n)
+        {
+            const natural f = natural::factorial(n);
+            std::cerr << std::dec << f <<  ' ';
+        }
+        std::cerr << std::endl;
+        std::cerr << " |_comb" << std::endl;
+        for(size_t n=0;n<=10;++n)
+        {
+            std::cerr << n << " :";
+            for(size_t k=0;k<=n;++k)
+            {
+                const natural cnk = natural::comb(n,k);
+                std::cerr << ' ' << cnk;
+            }
+            std::cerr << std::endl;
+        }
+        std::cerr << " |_gcd" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const natural a(alea,1+alea.leq(20));
+            const natural b(alea,1+alea.leq(20));
+            const natural g=natural::gcd(a,b);
+            //std::cerr << "gcd(" << a << "," << b << ")=" << g << std::endl;
+            Y_ASSERT(a.is_divisible_by(g));
+            Y_ASSERT(b.is_divisible_by(g));
+        }
+
+        std::cerr << " |_sqrt" << std::endl;
+        for(size_t iter=0;iter<ITER;++iter)
+        {
+            const natural a(alea,alea.leq(80));
+            {
+                const natural a2 = a*a;
+                const natural s  = natural::sqrt_of(a2);
+                Y_ASSERT(s==a);
+            }
+            {
+                const natural s = natural::sqrt_of(a);
+                Y_ASSERT(s*s<=a);
+            }
+
+        }
+    }
+
+    static inline void test_mod_inv()
+    {
+        std::cerr << "---> test mod_inv" << std::endl;
+        std::cerr << std::dec;
+        const unsigned nn[] = { 11, 2027, 7177 };
+        for(size_t i=0;i<sizeof(nn)/sizeof(nn[0]);++i)
+        {
+            const natural n = nn[i];
+            std::cerr << " |_" << n << std::endl;
+            for(size_t j=0;j<ITER;++j)
+            {
+                const natural b(alea,1+alea.leq(100));
+                const natural c = natural::mod_inv(b,n);
+                const natural p = b*c;
+                const natural q = p%n;
+                Y_ASSERT(0==q||1==q);
+            }
+
+        }
+    }
+
 }
 
-#include "y/string.hpp"
-#include "y/type/utils.hpp"
-#include "y/code/utils.hpp"
-#include <cmath>
+
 
 Y_UTEST(yap_n)
 {
@@ -580,7 +749,7 @@ Y_UTEST(yap_n)
     yap::library &apl = yap::library::instance();
     std::cerr <<  "apl.life_time=" << apl.life_time << std::endl;
 
-    if(true)
+    if(false)
     {
         test_u2w();
         test_zero();
@@ -595,141 +764,20 @@ Y_UTEST(yap_n)
         test_bits();
         test_div();
         test_output();
+        test_parse();
+        test_double();
+        test_cast();
+        test_ari();
     }
 
 
-    std::cerr << "---> test decimal" << std::endl;
-    for(size_t iter=0;iter<ITER;++iter)
-    {
-        const natural a(alea,alea.leq(80));
-        const string  s = a.to_dec();
-        const natural b = natural::dec(s);
-        Y_ASSERT(a==b);
-    }
-
-    std::cerr << "---> test hexadecimal" << std::endl;
-    for(size_t iter=0;iter<ITER;++iter)
-    {
-        const natural a(alea,alea.leq(2000));
-        const string  s = a.to_hex();
-        const natural b = natural::hex(s);
-        Y_ASSERT(a==b);
-    }
-
-    std::cerr << "---> test parse" << std::endl;
-    for(size_t iter=0;iter<ITER;++iter)
-    {
-        {
-            string d;
-            d += alea.range<char>('1','9');
-            for(size_t i=1+alea.leq(10);i>0;--i)
-            {
-                d += alea.range<char>('0','9');
-            }
-            const natural a = natural::parse(d);
-            const string  s = a.to_dec();
-            Y_ASSERT(d==s);
-        }
-
-        {
-            string h = "0x";
-            h += hexadecimal::lowercase_word[ alea.range<unsigned>(1,15) ];
-            for(size_t i=1+alea.leq(10);i>0;--i)
-            {
-                h += hexadecimal::lowercase_word[ alea.range<unsigned>(0,15) ];
-            }
-            const natural a = natural::parse(h);
-            const string  s = "0x" + a.to_hex();
-            Y_ASSERT(h==s);
-        }
-    }
-
-
-    std::cerr << "---> test double" << std::endl;
-    for(size_t i=0;i<32;++i)
-    {
-        const natural a    = alea.full<uint16_t>();
-        natural       b    = alea.full<uint16_t>();
-        while(b<=0)   b    = alea.full<uint16_t>();
-        const double ad    = a.to_double();
-        const double bd    = b.to_double();
-        const double rd    = ad/bd;
-        const double r     = natural::ratio_of(a,b);
-        const double delta =  sqrt( square_of(rd-r) );
-        std::cerr << ' ' << delta;
-    }
-    std::cerr << std::endl;
-
-    std::cerr << "---> test cast" << std::endl;
-    std::cerr << '[';
-    for(size_t bits=0;bits<=65;++bits)
-    {
-        std::cerr << '.';
-        for(size_t iter=0;iter<ITER;++iter)
-        {
-            const natural a(alea,bits);
-            uint8_t  x8  = 0;
-            uint16_t x16 = 0;
-            uint32_t x32 = 0;
-            uint64_t x64 = 0;
-
-            if(bits<=8)  { Y_ASSERT(a.to(x8));  Y_ASSERT(a==x8);  } else { Y_ASSERT(!a.to(x8));  }
-            if(bits<=16) { Y_ASSERT(a.to(x16)); Y_ASSERT(a==x16); } else { Y_ASSERT(!a.to(x16)); }
-            if(bits<=32) { Y_ASSERT(a.to(x32)); Y_ASSERT(a==x32); } else { Y_ASSERT(!a.to(x32)); }
-            if(bits<=64) { Y_ASSERT(a.to(x64)); Y_ASSERT(a==x64); } else { Y_ASSERT(!a.to(x64)); }
+    test_mod_inv();
 
 
 
-        }
-    }
-    std::cerr << ']' << std::endl;
 
 
-    std::cerr << "---> test arithmetic" << std::endl;
-    std::cerr << " |_factorial" << std::endl;
-    for(size_t n=0;n<=20;++n)
-    {
-        const natural f = natural::factorial(n);
-        std::cerr << std::dec << f <<  ' ';
-    }
-    std::cerr << std::endl;
-    std::cerr << " |_comb" << std::endl;
-    for(size_t n=0;n<=10;++n)
-    {
-        std::cerr << n << " :";
-        for(size_t k=0;k<=n;++k)
-        {
-            const natural cnk = natural::comb(n,k);
-            std::cerr << ' ' << cnk;
-        }
-        std::cerr << std::endl;
-    }
-    std::cerr << " |_gcd" << std::endl;
-    for(size_t iter=0;iter<ITER;++iter)
-    {
-        const natural a(alea,1+alea.leq(20));
-        const natural b(alea,1+alea.leq(20));
-        const natural g=natural::gcd(a,b);
-        //std::cerr << "gcd(" << a << "," << b << ")=" << g << std::endl;
-        Y_ASSERT(a.is_divisible_by(g));
-        Y_ASSERT(b.is_divisible_by(g));
-    }
 
-    std::cerr << " |_sqrt" << std::endl;
-    for(size_t iter=0;iter<ITER;++iter)
-    {
-        const natural a(alea,alea.leq(80));
-        {
-            const natural a2 = a*a;
-            const natural s  = natural::sqrt_of(a2);
-            Y_ASSERT(s==a);
-        }
-        {
-            const natural s = natural::sqrt_of(a);
-            Y_ASSERT(s*s<=a);
-        }
-
-    }
 
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;

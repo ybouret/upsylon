@@ -94,6 +94,20 @@ namespace upsylon
             return a;
         }
 
+        bool natural:: coprime(const natural &lhs, const natural &rhs)
+        {
+            if(lhs.bytes>0&&rhs.bytes>0)
+            {
+                assert(lhs>0); assert(rhs>0);
+                const natural g = gcd(lhs,rhs);
+                return g.bytes == 1 && g.word[0] == 1;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         void natural:: simplify(natural &num, natural &den)
         {
             static const library &apl = library::instance();
@@ -121,6 +135,94 @@ namespace upsylon
             }
         }
 
+        natural  natural:: mod_inv( const natural &b, const natural &n )
+        {
+            //std::cerr << "Computing " << b << "^(-1)[" << n << "]" << std::endl;
+            natural n0 = n;
+            natural b0 = b;
+            natural t0 = 0;
+            natural t  = 1;
+            natural q  = n0/b0;
+            natural r  = n0 - q*b0;
+
+            while( r>0 )
+            {
+                const natural lhs = t0;
+                const natural rhs = q*t;
+
+                t0 = t;
+
+                if( compare(lhs,rhs) >= 0 )
+                {
+                    assert(lhs>=rhs);
+                    t = ( (lhs-rhs) % n );
+                    assert(t<n);
+                }
+                else
+                {
+                    assert(rhs>lhs);
+                    t  = n - ( (rhs-lhs)%n );
+                    assert(t<=n);
+                }
+
+                n0 = b0;
+                b0 = r;
+                q  = n0/b0;
+                r  = n0 - q * b0;
+            }
+
+            // normally an error if b0 != 1
+            //std::cerr << b << "*" << t << "[" << n << "]=" << (b*t)%n << std::endl;
+            return t;
+        }
+
+#if 0
+        natural natural:: mod_exp( const natural &B, const natural &E, const natural &N )
+        {
+
+            if( N.bytes <= 0 )
+                throw libc::exception( EDOM, "natural::mod_exp %% 0");
+
+
+            natural result = 1;
+            if( E.bytes > 0 )
+            {
+                assert( E.bits() > 0 );
+                natural        base  = B;
+                const size_t   nbit  = E.bits()-1;
+                const uint8_t *ebit  = E.byte;
+
+                for( size_t i=0; i < nbit; ++i )
+                {
+
+                    if( ebit[i>>3] & bits_table::value[ (i&0x7) ] )
+                    {
+                        //result = ( result * base ) % N;
+                        const natural rb   = result * base;
+                        natural       tmp1 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
+                        tmp1.xch( result );
+                    }
+
+                    //base = ( base * base ) % N;
+                    const natural bsq  = square_of(base);
+                    natural       tmp2 = __mod(bsq.byte,bsq.bytes,N.byte,N.bytes);
+                    base.xch( tmp2 );
+                }
+
+                //-- most significant bit !
+                assert( (ebit[nbit>>3] & bits_table::value[ (nbit&7) ]) != 0 );
+
+                //result = ( result * base ) % N;
+                {
+                    const natural rb   = result * base;
+                    natural       tmp3 = __mod( rb.byte, rb.bytes, N.byte, N.bytes );
+                    tmp3.xch( result );
+                }
+            }
+
+            return result;
+        }
+#endif
 
     }
 }
