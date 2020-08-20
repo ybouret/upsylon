@@ -156,7 +156,7 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             //__________________________________________________________________
             Y_APZ_DECL(mul);           //!< aliases
             Y_APZ_WRAP(*,mul)
-            integer mul_by(const natural &rhs) const;
+            integer mul_by(const natural &rhs) const; //!< optimized mul_by, for rational
 
             //__________________________________________________________________
             //
@@ -175,7 +175,7 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
 
     }
 
-    typedef yap::integer apz;
+    typedef yap::integer apz; //!< nickname
 
 
 }

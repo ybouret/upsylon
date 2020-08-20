@@ -421,7 +421,7 @@ static inline natural      FCN(const word_type *lhs, const size_t lnw, const wor
 
     }
 
-    typedef yap::natural apn;
+    typedef yap::natural apn; //!< nickname
 
 }
 
