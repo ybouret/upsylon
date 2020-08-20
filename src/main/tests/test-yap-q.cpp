@@ -100,7 +100,6 @@ namespace {
         for(size_t i=1;i<size;++i)
         {
             const rational &lhs = Q[i];
-            //std::cerr << "lhs=" << lhs << std::endl;
             Y_ASSERT(lhs==lhs);
             Y_ASSERT(!(lhs!=lhs));
             Y_ASSERT(lower<lhs);
@@ -115,7 +114,6 @@ namespace {
             for(size_t j=i+1;j<=size;++j)
             {
                 const rational &rhs = Q[j];
-                //std::cerr << "\trhs=" << rhs << std::endl;
                 Y_ASSERT(lhs<rhs);
                 Y_ASSERT(lhs<=rhs);
                 Y_ASSERT(rhs>=lhs);
@@ -123,8 +121,30 @@ namespace {
             }
         }
 
-        alea.shuffle(*Q,Q.size());
+        
+
+        Q.free();
+        {
+            size_t count = 0;
+            std::cerr << '[';
+            for(size_t i=0;i<256;++i)
+            {
+                if( 0==(++count%16) )
+                {
+                    std::cerr << '.';
+                }
+                const integer  num(alea,alea.leq(100));
+                const natural  den(alea,1+alea.leq(100));
+                const rational q(num,den);
+                Q.push_back(q);
+            }
+            std::cerr << ']' << std::endl;
+        }
         hsort(Q,rational::compare);
+        for(size_t i=1;i<Q.size();++i)
+        {
+            Y_ASSERT(Q[i]<=Q[i+1]);
+        }
 
     }
 
