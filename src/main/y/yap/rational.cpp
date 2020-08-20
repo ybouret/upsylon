@@ -1,12 +1,39 @@
 
 #include "y/yap/rational.hpp"
+#include "y/yap/library.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/os/error.hpp"
+#include <iostream>
 
 namespace upsylon {
 
 
     namespace yap {
+
+        std::ostream & operator<<(std::ostream &os, const rational &q)
+        {
+            if(q.den==1)
+            {
+                os << q.num;
+            }
+            else
+            {
+                os << '(' << q.num << '/' << q.den << ')';
+            }
+            return os;
+        }
+
+        double rational:: to_double() const
+        {
+            switch(num.s)
+            {
+                case __negative:  return -natural::ratio_of(num.n,den);
+                case __zero:      break;
+                case __positive:  return natural::ratio_of(num.n,den);
+            }
+            return 0.0;
+        }
+
 
         const number::itype rational::i_one;
         const number::utype rational::u_one;
@@ -116,9 +143,9 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
                 case __zero:
                     switch(rhs.num.s)
                     {
-                        case __negative: return -1;
+                        case __negative: return  1;
                         case __zero:     return  0;
-                        case __positive: return  1;
+                        case __positive: return  -1;
                     }
                     break;
 
@@ -141,6 +168,39 @@ rational:: rational(const LHS n, const RHS d) : num(n), den(d) { update(); }
             return 0;
         }
 
+        template <typename T>
+        static inline int cmp_proto(const rational &lhs, const T &i)
+        {
+            const rational rhs(i);
+            return rational::cmp(lhs,rhs);
+        }
+
+        template <typename T>
+        static inline int cmp_proto(const T &i, const rational &rhs)
+        {
+            const rational lhs(i);
+            return rational::cmp(lhs,rhs);
+        }
+
+        int rational:: cmp(const rational &lhs, const integer &rhs)
+        {
+            return cmp_proto(lhs,rhs);
+        }
+
+        int rational:: cmp(const rational &lhs, const itype rhs)
+        {
+            return cmp_proto(lhs,rhs);
+        }
+
+        int rational:: cmp(const integer &lhs, const rational &rhs)
+        {
+            return cmp_proto(lhs,rhs);
+        }
+
+        int rational:: cmp(const itype lhs, const rational &rhs)
+        {
+            return cmp_proto(lhs,rhs);
+        }
     }
 
 }

@@ -295,7 +295,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //__________________________________________________________________
             double         to_double() const;                                //!< convert to a double value
             static double  ratio_of(const natural &num, const natural &den); //!< convert ratio to double
-
+            
             //__________________________________________________________________
             //
             // arithmethic

@@ -68,6 +68,13 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
+            // output
+            //__________________________________________________________________
+            friend std::ostream & operator<<(std::ostream &, const rational &);
+            double to_double() const;
+
+            //__________________________________________________________________
+            //
             // full comparision
             //__________________________________________________________________
 #define Y_APQ_CMP_FULL(OP,CALL) \
@@ -85,8 +92,31 @@ inline friend bool operator OP (const itype     lhs, const rational &rhs) throw(
             //
             // partial comparisons
             //__________________________________________________________________
-            static int cmp(const rational &lhs, const rational &rhs);
-            
+#define Y_APQ_DECL(RETURN,CALL) \
+static RETURN CALL (const rational &lhs, const rational &rhs);\
+static RETURN CALL (const rational &lhs, const integer  &rhs);\
+static RETURN CALL (const integer  &lhs, const rational &rhs);\
+static RETURN CALL (const rational &lhs, const itype     rhs);\
+static RETURN CALL (const itype     lhs, const rational &rhs)
+
+            Y_APQ_DECL(int,cmp);
+
+#define Y_APQ_CMP_PARTIAL(OP) \
+inline friend bool operator OP (const rational &lhs, const rational &rhs) { return cmp(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const rational &lhs, const integer  &rhs) { return cmp(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const integer  &lhs, const rational &rhs) { return cmp(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const rational &lhs, const itype     rhs) { return cmp(lhs,rhs) OP 0; }\
+inline friend bool operator OP (const itype     lhs, const rational &rhs) { return cmp(lhs,rhs) OP 0; }
+
+#define Y_APQ_CMP_PARTIAL_ALL()  \
+Y_APQ_CMP_PARTIAL(<)             \
+Y_APQ_CMP_PARTIAL(>)             \
+Y_APQ_CMP_PARTIAL(<=)            \
+Y_APQ_CMP_PARTIAL(>=)
+
+            Y_APQ_CMP_PARTIAL_ALL()
+
+            static int compare(const rational &lhs,const rational &rhs) { return cmp(lhs,rhs); }
 
         private:
             void update();
@@ -102,6 +132,7 @@ inline friend bool operator OP (const itype     lhs, const rational &rhs) throw(
                 return (q.num!=n) || (q.den!=d);
             }
 
+         
 
 
 

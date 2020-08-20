@@ -5,7 +5,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/type/utils.hpp"
-
+#include "y/sort/heap.hpp"
 
 using namespace upsylon;
 using namespace yap;
@@ -72,6 +72,59 @@ namespace {
                 Y_ASSERT(total==written);
             }
         }
+    }
+
+    static inline void test_cmp()
+    {
+        std::cerr << "---> test cmp" << std::endl;
+
+        const int      num[] = { -1, -1, 0,   1, 1 };
+        const unsigned den[] = { 2,   3, 100, 5, 4 };
+
+
+        vector<rational> Q;
+        for(size_t i=0;i<sizeof(num)/sizeof(num[0]);++i)
+        {
+            const rational q(num[i],den[i]);
+            Q.push_back(q);
+        }
+        std::cerr << "Q=" << Q << std::endl;
+        const size_t size = Q.size();
+
+        const int     lower = -1;
+        const int     upper =  1;
+        const integer Lower = lower;
+        const integer Upper = upper;
+        
+
+        for(size_t i=1;i<size;++i)
+        {
+            const rational &lhs = Q[i];
+            //std::cerr << "lhs=" << lhs << std::endl;
+            Y_ASSERT(lhs==lhs);
+            Y_ASSERT(!(lhs!=lhs));
+            Y_ASSERT(lower<lhs);
+            Y_ASSERT(lower<=lhs);
+            Y_ASSERT(Lower<lhs);
+            Y_ASSERT(Lower<=lhs);
+
+            Y_ASSERT(lhs<upper);
+            Y_ASSERT(lhs<Upper);
+            Y_ASSERT(lhs<=upper);
+            Y_ASSERT(lhs<=Upper);
+            for(size_t j=i+1;j<=size;++j)
+            {
+                const rational &rhs = Q[j];
+                //std::cerr << "\trhs=" << rhs << std::endl;
+                Y_ASSERT(lhs<rhs);
+                Y_ASSERT(lhs<=rhs);
+                Y_ASSERT(rhs>=lhs);
+                Y_ASSERT(rhs>lhs);
+            }
+        }
+
+        alea.shuffle(*Q,Q.size());
+        hsort(Q,rational::compare);
 
     }
 
@@ -80,9 +133,8 @@ namespace {
 Y_UTEST(yap_q)
 {
     test_setup();
-
-    std::cerr << std::endl;
-    std::cerr << "Memory Usage:" << std::endl;
+    test_cmp();
+    std::cerr << "---> Memory Usage:" << std::endl;
     std::cerr << *natural::instance() << std::endl;
 }
 Y_UTEST_DONE()
