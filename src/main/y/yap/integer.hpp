@@ -81,18 +81,24 @@ namespace upsylon {
             //
             // macros to overload calls
             //__________________________________________________________________
+            //! z,z
 #define Y_APZ_ARGS_Z_Z (const integer &lhs, const integer &rhs)
+            //! z,itype
 #define Y_APZ_ARGS_Z_I (const integer &lhs, const itype    rhs)
+            //! itype,z
 #define Y_APZ_ARGS_I_Z (const itype    lhs, const integer &rhs)
 
+            //! wrapper to declare no-throw methods
 #define Y_APZ_DECL_SAFE_METHOD(RETURN,CALL) \
-static RETURN CALL Y_APZ_ARGS_Z_Z throw();\
-static RETURN CALL Y_APZ_ARGS_Z_I throw();\
+static RETURN CALL Y_APZ_ARGS_Z_Z throw();  \
+static RETURN CALL Y_APZ_ARGS_Z_I throw();  \
 static RETURN CALL Y_APZ_ARGS_I_Z throw()
 
+            //! method implementation helper
 #define Y_APZ_IMPL_METHOD_(PREFIX,ARGS,SUFFIX) PREFIX ARGS SUFFIX
 
-#define Y_APZ_IMPL_METHODS(PREFIX,SUFFIX)      \
+            //! implement overloaded methods
+#define Y_APZ_IMPL_METHODS(PREFIX,SUFFIX)        \
 Y_APZ_IMPL_METHOD_(PREFIX,Y_APZ_ARGS_Z_Z,SUFFIX) \
 Y_APZ_IMPL_METHOD_(PREFIX,Y_APZ_ARGS_Z_I,SUFFIX) \
 Y_APZ_IMPL_METHOD_(PREFIX,Y_APZ_ARGS_I_Z,SUFFIX)
@@ -102,21 +108,26 @@ Y_APZ_IMPL_METHOD_(PREFIX,Y_APZ_ARGS_I_Z,SUFFIX)
             // total comparisons
             //__________________________________________________________________
 
-#define Y_APZ_IMPL_COMPARE_TOTAL(OP,CALL) Y_APZ_IMPL_METHODS(inline friend bool operator OP,throw() { return CALL(lhs,rhs);  })
-            Y_APZ_IMPL_COMPARE_TOTAL(==,eq)
-            Y_APZ_IMPL_COMPARE_TOTAL(!=,neq)
+            //! implement one total comparison
+#define Y_APZ_IMPL_COMPARE_TOTAL_(OP,CALL) Y_APZ_IMPL_METHODS(inline friend bool operator OP,throw() { return CALL(lhs,rhs);  })
 
+            //! implement all total comparions
+#define Y_APZ_IMPL_COMPARE_TOTAL() \
+Y_APZ_IMPL_COMPARE_TOTAL_(==,eq)   \
+Y_APZ_IMPL_COMPARE_TOTAL_(!=,neq)
 
+            //! implement one partial comparison
 #define Y_APZ_IMPL_COMPARE_PARTIAL_(OP) Y_APZ_IMPL_METHODS(inline friend bool operator OP, throw() { return cmp(lhs,rhs) OP 0; })
 
+            //! implement all partial comparions
 #define Y_APZ_IMPL_COMPARE_PARTIAL() \
 Y_APZ_IMPL_COMPARE_PARTIAL_(<)       \
 Y_APZ_IMPL_COMPARE_PARTIAL_(>)       \
 Y_APZ_IMPL_COMPARE_PARTIAL_(<=)      \
 Y_APZ_IMPL_COMPARE_PARTIAL_(>=)
 
+            Y_APZ_IMPL_COMPARE_TOTAL()
             Y_APZ_IMPL_COMPARE_PARTIAL()
-
 
             //! for different sorting algorithms
             static inline int compare(const integer &lhs, const integer &rhs) throw() { return cmp(lhs,rhs); }
@@ -137,6 +148,7 @@ Y_APZ_IMPL_METHODS(inline friend integer operator OP,{ return CALL(lhs,rhs); }) 
 inline integer &      operator OP##= (const integer &rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; } \
 inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; }
 
+            //! method+operator at once
 #define Y_APZ_STANDARD(OP,CALL) \
 Y_APZ_OVERLOAD(CALL);           \
 Y_APZ_OPERATOR(OP,CALL);
