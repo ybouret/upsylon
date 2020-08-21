@@ -1,4 +1,5 @@
 #include "y/yap/library.hpp"
+#include "y/ios/ostream.hpp"
 #include <iostream>
 
 namespace upsylon {
@@ -66,7 +67,6 @@ namespace upsylon {
                 if(n.is_divisible_by(p) || n.is_divisible_by(p.add_two) ) return false;
             }
 
-            assert(launch==5||(primes.tail&&(launch== 6+*(primes.tail) )));
 
             natural p = launch; assert(p.is_odd());
             while(true)
@@ -86,15 +86,63 @@ namespace upsylon {
 
         void library:: prefetch()
         {
+            assert(launch>=_5);
+            assert(launch.is_odd());
             natural guess = launch;
             while(!is_prime_(guess))
             {
                 guess += _2;
             }
-            natural next_launch = guess + _6;
+            natural start = launch;
+            while(start<=guess) start += _6;
+            
             primes.push_back( new prime(guess) );
-            launch.xch(next_launch);
-            std::cerr << "--> guess=" << guess << " | launch=" << launch << std::endl;
+            launch.xch(start);
+        }
+
+        void library:: prefetch(size_t n)
+        {
+            while(n-- > 0)
+            {
+                prefetch();
+            }
+        }
+
+        natural library:: next_prime_(const natural &n) const
+        {
+            if(n<=_1)
+            {
+                return _2;
+            }
+            else
+            {
+                natural p = n;
+                ++p |= _1; assert(p>n); assert(p.is_odd());
+                while(!is_prime_(p)) p += _2;
+                return p;
+            }
+        }
+
+        const char library:: CLASS_NAME[] = "yapl";
+
+        const char *library:: className() const throw() { return CLASS_NAME; }
+
+        size_t library:: serialize(ios::ostream &os) const
+        {
+            // write available primes
+            size_t  ans = os.write_upack(primes.size);
+            natural old = _3;
+            for(const prime *p=primes.head;p;p=p->next)
+            {
+                const natural &cur = *p;
+                natural        tmp = cur-old; assert(tmp>0); assert(tmp.is_even());
+                tmp.shr(1); assert(tmp>0);
+                --tmp;
+                assert(old+2*(tmp+1)==cur);
+                ans += tmp.serialize(os);
+                old = cur;
+            }
+            return ans;
         }
 
 

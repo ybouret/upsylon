@@ -27,7 +27,7 @@ namespace {
 
 
     private:
-
+        Y_DISABLE_COPY_AND_ASSIGN(dummy);
     };
 
     int dummy::counter = 0;

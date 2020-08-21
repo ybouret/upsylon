@@ -20,9 +20,10 @@ namespace upsylon {
         //! precompiled data
         //
         //______________________________________________________________________
-        class library : public singleton<library>
+        class library : public singleton<library>, public ios::serializable
         {
         public:
+            static const char CLASS_NAME[];
             Y_SINGLETON_DECL(library); //!< aliases
 
             const natural _0;  //!< 0x00
@@ -46,17 +47,17 @@ namespace upsylon {
             const integer  _z0; //!< int(0)
             const rational _q0; //!< (0/1)
 
-            void reset_primes() throw();                 //!< clean up content
-            bool is_prime_(const natural      &n) const; //!< sieve method
-            bool is_prime_(const number::utype u) const; //!< sieve method
-            bool next_prime_(const natural    &n) const; //!< using sieve
-
+            void    reset_primes() throw();                   //!< clean up content
+            bool    is_prime_(const natural        &n) const; //!< sieve method
+            bool    is_prime_(const number::utype   u) const; //!< sieve method
+            natural next_prime_(const natural      &n) const; //!< using sieve
+            natural next_prime_(const number::utype u) const; //!< using sieve
 
             void prefetch();           //!< prefetch next prime in primes list
             void prefetch(size_t n);   //!< prefetch next primes in primes list
-            void ensure(const size_t); //!< ensure list size
-
-
+            
+            virtual const char *className() const throw();
+            virtual size_t      serialize(ios::ostream &) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);

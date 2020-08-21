@@ -5,6 +5,7 @@
 #include "y/exceptions.hpp"
 #include "y/alea.hpp"
 #include <iostream>
+#include <iomanip>
 
 //! test prolog
 #define Y_UTEST(NAME)                                                 \

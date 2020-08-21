@@ -4,6 +4,9 @@
 #include "y/utest/sizeof.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/os/real-time-clock.hpp"
+#include "y/os/progress.hpp"
 
 using namespace upsylon;
 using namespace yap;
@@ -11,6 +14,8 @@ using namespace yap;
 #define ITER 128
 
 namespace {
+
+
 
 }
 
@@ -23,18 +28,61 @@ Y_UTEST(yap_p)
 
     apl.reset_primes();
 
-    for(natural i=0;i<=100;++i)
+    const size_t    n = 1024;
+    vector<natural> P(n,as_capacity);
+    progress        bar;
+
+    std::cerr << "Computing First " << n << " primes..." << std::endl;
+    uint64_t t0 = 0;
     {
-        if(apl.is_prime_(i))
+        bar.start();
+        natural p = 0;
+        for(size_t i=1;i<=n;++i)
         {
-            std::cerr << i << std::endl;
+            const uint64_t mark = real_time_clock::ticks();
+            p = apl.next_prime_(p);
+            t0 += real_time_clock::ticks()-mark;
+            P.push_back(p);
+            bar.update(i,n);
+            bar.display(std::cerr) << "\r";
         }
+        std::cerr << std::endl;
     }
 
-    for(size_t i=0;i<10;++i)
+    std::cerr << "Prefetching..." << std::endl;
+    apl.prefetch(100);
     {
-        apl.prefetch();
+        const size_t written = apl.save_to("apl.dat");
+        std::cerr << "#written=" << written << std::endl;
     }
+
+    std::cerr << "Computing First " << n << " primes v2..." << std::endl;
+    uint64_t t1 = 0;
+    {
+        bar.start();
+        natural p = 0;
+        for(size_t i=1;i<=n;++i)
+        {
+            const uint64_t mark = real_time_clock::ticks();
+            p = apl.next_prime_(p);
+            t1 += real_time_clock::ticks()-mark;
+            Y_ASSERT(p==P[i]);
+            bar.update(i,n);
+            bar.display(std::cerr) << "\r";
+        }
+        std::cerr << std::endl;
+    }
+
+    std::cerr << "t0: " << t0 << std::endl;
+    std::cerr << "t1: " << t1 << std::endl;
+
+
+
+
+
+
+
+
 
 
 
