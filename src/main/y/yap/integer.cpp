@@ -7,6 +7,7 @@
 #include "y/randomized/bits.hpp"
 #include "y/os/error.hpp"
 #include <iostream>
+#include <cerrno>
 
 namespace upsylon
 {

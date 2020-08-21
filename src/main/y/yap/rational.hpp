@@ -76,9 +76,38 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
+            // macro to overload
+            //__________________________________________________________________
+
+            //! q,q
+#define Y_APQ_ARGS_Q_Q (const rational &lhs, const rational &rhs)
+            //! q,z
+#define Y_APQ_ARGS_Q_Z (const rational &lhs, const integer  &rhs)
+            //! z,q
+#define Y_APQ_ARGS_Z_Q (const integer  &lhs, const rational &rhs)
+            //! q,itype
+#define Y_APQ_ARGS_Q_I (const rational &lhs, const itype     rhs)
+            //! itype,q
+#define Y_APQ_ARGS_I_Q (const itype     lhs, const rational &rhs)
+
+            //! method implementation helper
+#define Y_APQ_METHOD_(PREFIX,ARGS,SUFFIX) PREFIX ARGS SUFFIX
+
+            //! methods implementation helper
+#define Y_APQ_METHODS(PREFIX,SUFFIX) \
+Y_APQ_METHOD_(PREFIX,Y_APQ_ARGS_Q_Q,SUFFIX) \
+Y_APQ_METHOD_(PREFIX,Y_APQ_ARGS_Q_Z,SUFFIX) \
+Y_APQ_METHOD_(PREFIX,Y_APQ_ARGS_Z_Q,SUFFIX) \
+Y_APQ_METHOD_(PREFIX,Y_APQ_ARGS_Q_I,SUFFIX) \
+Y_APQ_METHOD_(PREFIX,Y_APQ_ARGS_I_Q,SUFFIX) \
+
+
+
+            //__________________________________________________________________
+            //
             // full comparision
             //__________________________________________________________________
-            //! implementing full comparison
+            //! implementing full comparison, specific
 #define Y_APQ_CMP_FULL(OP,CALL) \
 inline friend bool operator OP (const rational &lhs, const rational &rhs) throw() { return CALL(lhs,rhs.num,rhs.den); }\
 inline friend bool operator OP (const rational &lhs, const integer  &rhs) throw() { return CALL(lhs,rhs,u_one);       }\
@@ -95,22 +124,19 @@ inline friend bool operator OP (const itype     lhs, const rational &rhs) throw(
             // partial comparisons
             //__________________________________________________________________
             //! declaring functions
-#define Y_APQ_DECL(RETURN,CALL) \
-static RETURN CALL (const rational &lhs, const rational &rhs);\
-static RETURN CALL (const rational &lhs, const integer  &rhs);\
-static RETURN CALL (const integer  &lhs, const rational &rhs);\
-static RETURN CALL (const rational &lhs, const itype     rhs);\
-static RETURN CALL (const itype     lhs, const rational &rhs)
+#define Y_APQ_DECL(RETURN,CALL)    \
+static RETURN CALL Y_APQ_ARGS_Q_Q; \
+static RETURN CALL Y_APQ_ARGS_Q_Z; \
+static RETURN CALL Y_APQ_ARGS_Z_Q; \
+static RETURN CALL Y_APQ_ARGS_Q_I; \
+static RETURN CALL Y_APQ_ARGS_I_Q
 
             Y_APQ_DECL(int,cmp); //!< aliases to cmp
 
             //! implement a partial comparison
 #define Y_APQ_CMP_PARTIAL(OP) \
-inline friend bool operator OP (const rational &lhs, const rational &rhs) { return cmp(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const rational &lhs, const integer  &rhs) { return cmp(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const integer  &lhs, const rational &rhs) { return cmp(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const rational &lhs, const itype     rhs) { return cmp(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const itype     lhs, const rational &rhs) { return cmp(lhs,rhs) OP 0; }
+Y_APQ_METHODS(inline friend bool operator OP,{ return cmp(lhs,rhs) OP 0; })
+
 
             //! implement all partial comparisons
 #define Y_APQ_CMP_PARTIAL_ALL()  \
@@ -133,17 +159,15 @@ Y_APQ_CMP_PARTIAL(>=)
 
             //! implementing all operators
 #define Y_APQ_WRAP_OPS(OP,CALL) \
-inline friend rational  operator OP   (const rational &lhs, const rational &rhs) { return CALL(lhs,rhs); } \
-inline friend rational  operator OP   (const rational &lhs, const integer  &rhs) { return CALL(lhs,rhs); } \
-inline friend rational  operator OP   (const integer  &lhs, const rational &rhs) { return CALL(lhs,rhs); } \
-inline friend rational  operator OP   (const rational &lhs, const itype     rhs) { return CALL(lhs,rhs); } \
-inline friend rational  operator OP   (const itype     lhs, const rational &rhs) { return CALL(lhs,rhs); }\
-inline        rational &operator OP##=(const rational &rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }\
-inline        rational &operator OP##=(const integer  &rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }\
-inline        rational &operator OP##=(const itype     rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }
+Y_APQ_METHODS(inline friend rational  operator OP,{ return CALL(lhs,rhs); })\
+inline rational &operator OP##=(const rational &rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline rational &operator OP##=(const integer  &rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }\
+inline rational &operator OP##=(const itype     rhs) { rational tmp = CALL(*this,rhs); xch(tmp); return *this; }
 
-            Y_APQ_WRAP_API(add); //!< aliases
-            Y_APQ_WRAP_OPS(+,add)
+            //! implement one operator from a function
+#define Y_APQ_STANDARD(OP,CALL) Y_APQ_WRAP_API(CALL); Y_APQ_WRAP_OPS(OP,CALL)
+
+            Y_APQ_STANDARD(+,add)
 
             rational   operator+() const; //!< unary '+'
             rational & operator++();      //!< prefix  ++ operator
@@ -153,8 +177,7 @@ inline        rational &operator OP##=(const itype     rhs) { rational tmp = CAL
             //
             // subtraction
             //__________________________________________________________________
-            Y_APQ_WRAP_API(sub); //!< aliases
-            Y_APQ_WRAP_OPS(-,sub)
+            Y_APQ_STANDARD(-,sub)
 
             rational   operator-() const; //!< unary '-'
             rational & operator--();      //!< prefix  -- operator
@@ -164,8 +187,7 @@ inline        rational &operator OP##=(const itype     rhs) { rational tmp = CAL
             //
             // multiplication
             //__________________________________________________________________
-            Y_APQ_WRAP_API(mul); //!< aliases
-            Y_APQ_WRAP_OPS(*,mul)
+            Y_APQ_STANDARD(*,mul)
             static rational square_of(const rational &q); //!< q^2
             static rational abs_of(const rational &q);    //!< |q|
             static rational sqrt_of(const rational &q);   //!< sqrt(q)
@@ -174,8 +196,7 @@ inline        rational &operator OP##=(const itype     rhs) { rational tmp = CAL
             //
             // division
             //__________________________________________________________________
-            Y_APQ_WRAP_API(divide); //!< aliases
-            Y_APQ_WRAP_OPS(/,divide)
+            Y_APQ_STANDARD(/,divide)
 
 
         private:
