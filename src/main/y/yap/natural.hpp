@@ -237,8 +237,9 @@ Y_APN_OPERATOR_API(OP,CALL)
             static natural modulo(const natural &num, const natural &den);
             Y_APN_ADVANCED_API(%,modulo)
 
-            bool is_divisible_by(const natural &) const; //!< test divisibility
-            bool is_divisible_by(const utype    ) const; //!< test divisibility
+            static bool divisible(const natural &num, const natural &den); //!< test divisibility
+            bool        is_divisible_by(const natural &) const; //!< test divisibility
+            bool        is_divisible_by(const utype    ) const; //!< test divisibility
 
 
             //__________________________________________________________________

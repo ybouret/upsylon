@@ -85,16 +85,15 @@ Y_UTEST(yap_p)
     std::cerr << "t0: " << t0 << std::endl;
     std::cerr << "t1: " << t1 << std::endl;
 
+    while(apl.prefetch() < P.back() )
+    {
 
-
-
-
-
-
-
-
-
-
+    }
+    std::cerr << "Computed #" << apl.primes.size << " extra primes" << " up to " << *apl.primes.tail << "^2=" << apl.primes.tail->squared <<  std::endl;
+    {
+        const size_t written = apl.save_to("apl.dat");
+        std::cerr << "#written=" << written << std::endl;
+    }
 }
 Y_UTEST_DONE()
 

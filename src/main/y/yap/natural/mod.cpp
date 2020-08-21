@@ -102,25 +102,7 @@ namespace upsylon
 
         }
 
-        bool natural:: is_divisible_by(const natural &den) const
-        {
-            if(den.bytes<=0)
-            {
-                return false;
-            }
-            else
-            {
-                const natural m = modulo(*this,den);
-                return m.bytes<=0;
-            }
-        }
-
-        bool natural:: is_divisible_by(const utype u) const
-        {
-            const natural _(u);
-            return is_divisible_by(_);
-        }
-
+   
         
     }
 

@@ -501,6 +501,7 @@ namespace {
             Y_ASSERT(Q==1);
             const natural M = Num%Den;
             Y_ASSERT(M==0);
+            Y_ASSERT(Num.is_divisible_by(Den));
             natural q,r;
             natural::split(q,r,Num,Den);
             Y_ASSERT(q==Q);
@@ -516,6 +517,7 @@ namespace {
             Y_ASSERT(Q==Num);
             const natural M = Num%Den;
             Y_ASSERT(M==0);
+            Y_ASSERT(Num.is_divisible_by(Den));
             natural q,r;
             natural::split(q,r,Num,Den);
             Y_ASSERT(q==Q);
@@ -534,11 +536,22 @@ namespace {
                 Y_ASSERT(Q==q);
                 const natural M   = Num%Den;
                 Y_ASSERT(0==M);
+                Y_ASSERT(Num.is_divisible_by(Den));
                 natural q,r;
                 natural::split(q,r,Num,Den);
                 Y_ASSERT(q==Q);
                 Y_ASSERT(r==M);
             }
+        }
+
+        std::cerr << " |_divide with sub-multiples" << std::endl;
+        for(size_t i=0;i<=10000;i += 1 + alea.leq(100) )
+        {
+            const natural Den(alea,1+alea.leq(100));
+            const natural Num = Den*i;
+            const natural Q   = Num/Den;
+            Y_ASSERT(Q==i);
+            Y_ASSERT(Num.is_divisible_by(Den));
         }
 
         std::cerr << " |_random..." << std::endl;
@@ -670,14 +683,14 @@ namespace {
     {
         std::cerr << "---> test arithmetic" << std::endl;
         std::cerr << " |_factorial" << std::endl;
-        for(size_t n=0;n<=20;++n)
+        for(size_t n=0;n<=30;++n)
         {
             const natural f = natural::factorial(n);
             std::cerr << std::dec << f <<  ' ';
         }
         std::cerr << std::endl;
         std::cerr << " |_comb" << std::endl;
-        for(size_t n=0;n<=10;++n)
+        for(size_t n=0;n<=30;++n)
         {
             std::cerr << n << " :";
             for(size_t k=0;k<=n;++k)
