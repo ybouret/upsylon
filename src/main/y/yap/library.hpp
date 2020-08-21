@@ -46,20 +46,24 @@ namespace upsylon {
             const integer  _z0; //!< int(0)
             const rational _q0; //!< (0/1)
 
-            void reset_primes() throw();
-            bool is_prime_(const natural      &n) const;
-            bool is_prime_(const number::utype u) const;
-            bool next_prime_(const natural    &n) const;
+            void reset_primes() throw();                 //!< clean up content
+            bool is_prime_(const natural      &n) const; //!< sieve method
+            bool is_prime_(const number::utype u) const; //!< sieve method
+            bool next_prime_(const natural    &n) const; //!< using sieve
 
 
-            void prefetch();
+            void prefetch();           //!< prefetch next prime in primes list
+            void prefetch(size_t n);   //!< prefetch next primes in primes list
+            void ensure(const size_t); //!< ensure list size
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();
             virtual ~library() throw();
 
-            prime::list_type primes;
+            prime::list_type primes; //!< list of precomputed primes
             natural          launch; //!< 5 or last primes+6
 
         };

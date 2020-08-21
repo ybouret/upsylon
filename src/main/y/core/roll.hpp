@@ -90,6 +90,7 @@ assert((node)->next==NULL)
                 return false;
             }
 
+            //! fast pop_front
             NODE *pop_front() throw()
             {
                 assert(size>0);
@@ -110,11 +111,68 @@ assert((node)->next==NULL)
                 return node;
             }
 
+            //! reverse the roll
+            void reverse() throw()
+            {
+                roll_of tmp;
+                while(size) tmp.push_front(pop_front());
+                swap_with(tmp);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(roll_of);
         };
     }
 }
+
+#include "y/type/releasable.hpp"
+
+namespace upsylon
+{
+    namespace core
+    {
+        //! a node is a C++ object
+        template <typename NODE>
+        class roll_of_cpp : public roll_of<NODE>, public releasable
+        {
+        public:
+            //! constructor
+            explicit roll_of_cpp() throw() : roll_of<NODE>(), releasable() {}
+
+            //! delete content
+            inline virtual void release() throw()
+            {
+                release_();
+            }
+
+            //! clear on destructor
+            virtual ~roll_of_cpp() throw() { release_(); }
+
+            //! valid only if a copy ctor is defined for NODE
+            inline roll_of_cpp( const roll_of_cpp &other ) : roll_of<NODE>(), releasable()
+            {
+                try
+                {
+                    for(const NODE *node=other.head;node;node=node->next)
+                    {
+                        this->push_back( new NODE( *node ) );
+                    }
+                }
+                catch(...)
+                {
+                    release();
+                    throw;
+                }
+            }
+
+        private:
+            inline void release_() throw()
+            {
+                while(this->size) delete this->pop_front();
+            }
+        };
+    }
+}
+
 
 #endif

@@ -56,6 +56,21 @@ Y_UTEST(core_roll)
             Y_ASSERT(D.owns(d));
         }
         std::cerr << ']' << std::endl;
+
+        std::cerr << '[';
+        for(const dummy *d=D.head;d;d=d->next)
+        {
+            std::cerr << ':' << d->value;
+        }
+        std::cerr << ']' << std::endl;
+        D.reverse();
+
+        std::cerr << '[';
+        for(const dummy *d=D.head;d;d=d->next)
+        {
+            std::cerr << ':' << d->value;
+        }
+        std::cerr << ']' << std::endl;
         std::cerr << '[';
         while(D.size)
         {

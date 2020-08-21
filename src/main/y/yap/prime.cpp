@@ -1,5 +1,7 @@
 
 #include "y/yap/prime.hpp"
+#include "y/exception.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {
@@ -10,20 +12,26 @@ namespace upsylon
         {
         }
 
-        prime:: prime(const natural &n) :
-        natural(n),
-        squared( square_of(n) ),
-        add_two(n+2)
+
+        static inline void check_prime( const prime &p )
         {
-            assert(n>=5);
+            if(p<5)
+            {
+                const string s = p.to_dec();
+                throw exception("yap::prime(%s<5)",*s);
+            }
         }
 
-        prime:: prime(const utype n) :
-        natural(n),
-        squared( square_of(n) ),
-        add_two(n+2)
+#define Y_YAPRIME_CTOR(n) natural(n), next(0), prev(0), squared( square_of(n) ), add_two(n+2)
+
+        prime:: prime(const natural &n) : Y_YAPRIME_CTOR(n)
         {
-            assert(n>=5);
+            check_prime(*this);
+        }
+
+        prime:: prime(const utype n) : Y_YAPRIME_CTOR(n)
+        {
+            check_prime(*this);
         }
 
 
