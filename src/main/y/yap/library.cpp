@@ -62,7 +62,8 @@ namespace upsylon {
             for(const prime *node = primes.head; node; node=node->next)
             {
                 const prime &p = *node;
-                if( (p.squared>n) || n.is_divisible_by(p) || n.is_divisible_by(p.add_two) ) return false;
+                if( (p.squared>n) ) return true;
+                if(n.is_divisible_by(p) || n.is_divisible_by(p.add_two) ) return false;
             }
 
             assert(launch==5||(primes.tail&&(launch== 6+*(primes.tail) )));
@@ -86,7 +87,7 @@ namespace upsylon {
         void library:: prefetch()
         {
             natural guess = launch;
-            while(std::cerr << "?" << guess << std::endl,!is_prime_(guess))
+            while(!is_prime_(guess))
             {
                 guess += _2;
             }
