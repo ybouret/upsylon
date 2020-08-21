@@ -58,6 +58,7 @@ Y_UTEST(yap_p)
     {
 
     }
+    std::cerr << "Computed #" << apl.primes.size << " extra primes" << " up to " << *apl.primes.tail << "^2=" << apl.primes.tail->squared <<  std::endl;
     {
         const size_t written = apl.save_to("apl.dat");
         std::cerr << "#written=" << written << std::endl;
