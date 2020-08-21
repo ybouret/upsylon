@@ -398,7 +398,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             static natural mul(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
 
-            typedef word_type (*l_op)(const word_type,const word_type);
+            typedef word_type (*boolean_op)(const word_type,const word_type);
             
             //! implementing logical operators
 #define Y_APN_LOGICAL(FCN,OP) \
@@ -410,8 +410,8 @@ static inline natural      FCN(const word_type *lhs, const size_t lnw, const wor
             Y_APN_LOGICAL(_and,&) Y_APN_WRAP_API(natural,_and)
             Y_APN_LOGICAL(_xor,^) Y_APN_WRAP_API(natural,_xor)
 
-            //! logical operators
-            static natural logical(l_op op,
+            //! boolean operators
+            static natural logical(boolean_op op,
                                    const word_type *lhs, const size_t lnw,
                                    const word_type *rhs, const size_t rnw);
             

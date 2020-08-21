@@ -6,7 +6,7 @@ namespace upsylon
 {
     namespace yap
     {
-        natural natural:: logical(l_op op,
+        natural natural:: logical(boolean_op op,
                                   const word_type *lhs, const size_t lnw,
                                   const word_type *rhs, const size_t rnw)
         {
