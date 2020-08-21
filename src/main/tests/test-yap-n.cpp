@@ -486,7 +486,7 @@ namespace {
             const natural M = Num%Den;
             Y_ASSERT(M==Num);
             natural q,r;
-            natural::divide(q,r,Num,Den);
+            natural::split(q,r,Num,Den);
             Y_ASSERT(q==Q);
             Y_ASSERT(r==M);
         }
@@ -502,7 +502,7 @@ namespace {
             const natural M = Num%Den;
             Y_ASSERT(M==0);
             natural q,r;
-            natural::divide(q,r,Num,Den);
+            natural::split(q,r,Num,Den);
             Y_ASSERT(q==Q);
             Y_ASSERT(r==M);
         }
@@ -517,7 +517,7 @@ namespace {
             const natural M = Num%Den;
             Y_ASSERT(M==0);
             natural q,r;
-            natural::divide(q,r,Num,Den);
+            natural::split(q,r,Num,Den);
             Y_ASSERT(q==Q);
             Y_ASSERT(r==M);
         }
@@ -535,7 +535,7 @@ namespace {
                 const natural M   = Num%Den;
                 Y_ASSERT(0==M);
                 natural q,r;
-                natural::divide(q,r,Num,Den);
+                natural::split(q,r,Num,Den);
                 Y_ASSERT(q==Q);
                 Y_ASSERT(r==M);
             }
@@ -550,7 +550,7 @@ namespace {
             const natural Q = Num/Den;
             const natural M = Num%Den;
             natural q,r;
-            natural::divide(q,r,Num,Den);
+            natural::split(q,r,Num,Den);
             Y_ASSERT(q==Q);
             Y_ASSERT(r==M);
         }

@@ -44,7 +44,7 @@ namespace upsylon
                 natural q,r;
                 while(self>0)
                 {
-                    divide(q,r,self,ten);
+                    split(q,r,self,ten);
                     assert(r.bytes<=1);
                     assert(r.word[0]<10);
                     s += char('0'+r.word[0]);
@@ -120,7 +120,7 @@ namespace upsylon
             static const library &apl = library::instance();
             static const natural &ten = apl._10;
             natural q,r;
-            natural::divide(q, r, num, den);
+            natural::split(q, r, num, den);
             double ans = q.to_double();
 
             const size_t nd  = den.bits();
@@ -128,7 +128,7 @@ namespace upsylon
             for(size_t i=1;i<=nd;++i)
             {
                 const natural n = r*ten;
-                natural::divide(q,r,n,den);
+                natural::split(q,r,n,den);
                 fac *= 0.1;
                 const double x = q.to_double();
                 ans += fac*x;

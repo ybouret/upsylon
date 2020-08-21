@@ -10,14 +10,14 @@ namespace upsylon
     {
 #define Y_APN_XDV() assert(q*den+r==num)
 
-        void natural:: divide(natural &q, natural &r, const natural &num, const natural &den)
+        void natural:: split(natural &q, natural &r, const natural &num, const natural &den)
         {
-            static const char fn[] = "natural::divide_v2";
+            static const char fn[] = "natural::split";
 
             //------------------------------------------------------------------
             // check valid denominator
             //------------------------------------------------------------------
-            if(den.bytes<=0) throw libc::exception(EDOM,"%s by zero",fn);
+            if(den.bytes<=0) throw libc::exception(EDOM,"%s division by zero",fn);
             assert(den>0);
 
             //------------------------------------------------------------------

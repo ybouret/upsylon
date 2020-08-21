@@ -167,23 +167,34 @@ Y_APN_WRAP_CMP(>=)
 
             
             //! complete API
-#define Y_APN_WRAP_API(RETURN,CALL) \
-inline static RETURN CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
-inline static RETURN CALL(const utype    lhs, const natural &rhs) { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
-inline static RETURN CALL(const natural &lhs, const utype    rhs) { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
+#define Y_APN_OVERLOAD_API(CALL) \
+inline static natural CALL(const natural &lhs, const natural &rhs) { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
+inline static natural CALL(const utype    lhs, const natural &rhs) { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
+inline static natural CALL(const natural &lhs, const utype    rhs) { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
 
             //! complete binary operators
-#define Y_APN_WRAP_OPS(OP,CALL) \
+#define Y_APN_OPERATOR_API(OP,CALL) \
 inline natural & operator OP##=( const natural &rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
 inline natural & operator OP##=( const utype    rhs) { natural tmp = CALL(*this,rhs); xch(tmp); return *this; }\
-inline friend natural operator OP (const natural &lhs, const natural &rhs) { return CALL(lhs,rhs); }\
-inline friend natural operator OP (const utype    lhs, const natural &rhs) { return CALL(lhs,rhs); }\
-inline friend natural operator OP (const natural &lhs, const utype    rhs) { return CALL(lhs,rhs); }
+Y_APN_IMPL_METHODS(inline friend natural operator OP,{ return CALL(lhs,rhs); })
 
 
-            Y_APN_WRAP_API(natural,add)
-            Y_APN_WRAP_OPS(+,add)
+            //! higher level wrapper, requiring natural args
+#define Y_APN_OVERLOAD_HL(RETURN,CALL) \
+static inline RETURN CALL(const natural &lhs, const utype    rhs) { const natural tmp(rhs); return CALL(lhs,tmp); }\
+static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natural tmp(lhs); return CALL(tmp,rhs); }
 
+            //! implement methods and operator from call
+#define Y_APN_STANDARD_API(OP,CALL) \
+Y_APN_OVERLOAD_API(CALL)            \
+Y_APN_OPERATOR_API(OP,CALL)
+
+            //! implement methods and operator from call
+#define Y_APN_ADVANCED_API(OP,CALL) \
+Y_APN_OVERLOAD_HL(natural,CALL)     \
+Y_APN_OPERATOR_API(OP,CALL)
+
+            Y_APN_STANDARD_API(+,add)
             natural   operator+() const; //!< unary +
             natural & operator++();      //!< prefix++ operator
             natural   operator++(int);   //!< postfix++ operator
@@ -192,9 +203,7 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             //
             // subtraction, no unitary -
             //__________________________________________________________________
-            Y_APN_WRAP_API(natural,sub)
-            Y_APN_WRAP_OPS(-,sub)
-
+            Y_APN_STANDARD_API(-,sub)
             natural & operator--();      //!< prefix-- operator
             natural   operator--(int);   //!< postfix-- operator
 
@@ -203,9 +212,8 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             //
             // multiplication
             //__________________________________________________________________
-            Y_APN_WRAP_API(natural,mul)
-            Y_APN_WRAP_OPS(*,mul)
-            
+            Y_APN_STANDARD_API(*,mul)
+
             static natural square_of(const natural &x); //!< x*x
 
             //__________________________________________________________________
@@ -213,15 +221,10 @@ inline friend natural operator OP (const natural &lhs, const utype    rhs) { ret
             // division
             //__________________________________________________________________
 
-            //! higher level wrapper, requiring natural args
-#define Y_APN_WRAP_HL_API(RETURN,CALL) \
-static inline RETURN CALL(const natural &lhs, const utype    rhs) { const natural tmp(rhs); return CALL(lhs,tmp); }\
-static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natural tmp(lhs); return CALL(tmp,rhs); }\
 
             //! divide algorithm
             static natural divide(const natural &num, const natural &den);
-            Y_APN_WRAP_HL_API(natural,divide)
-            Y_APN_WRAP_OPS(/,divide)
+            Y_APN_ADVANCED_API(/,divide)
             static natural sqrt_of(const natural &x); //!< sqrt(x)^2 <= x
             static natural sqrt_of(const utype    u); //!< sqrt(u)^2 <= u
 
@@ -232,8 +235,7 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
 
             //! modulo algorithm
             static natural modulo(const natural &num, const natural &den);
-            Y_APN_WRAP_HL_API(natural,modulo)
-            Y_APN_WRAP_OPS(%,modulo)
+            Y_APN_ADVANCED_API(%,modulo)
 
             bool is_divisible_by(const natural &) const; //!< test divisibility
             bool is_divisible_by(const utype    ) const; //!< test divisibility
@@ -241,10 +243,10 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
 
             //__________________________________________________________________
             //
-            // decomposition
+            // split
             //__________________________________________________________________
             //! num = q*den+r
-            static void divide(natural &q, natural &r, const natural &num, const natural &den);
+            static void split(natural &q, natural &r, const natural &num, const natural &den);
 
 
             //__________________________________________________________________
@@ -264,9 +266,9 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //
             // bitwise logical
             //__________________________________________________________________
-            Y_APN_WRAP_OPS(|,_or)
-            Y_APN_WRAP_OPS(&,_and)
-            Y_APN_WRAP_OPS(^,_xor)
+            Y_APN_OPERATOR_API(|,_or)
+            Y_APN_OPERATOR_API(&,_and)
+            Y_APN_OPERATOR_API(^,_xor)
 
             
             //__________________________________________________________________
@@ -312,14 +314,14 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             static natural factorial(size_t n);                      //!< n!
             static natural comb(const size_t n, const size_t k);     //!< n!/k!/(n-k)!
             static natural gcd(const natural &x, const natural &y);  //!< gcd(x>0,y>0)
-            Y_APN_WRAP_HL_API(natural,gcd)
+            Y_APN_OVERLOAD_HL(natural,gcd)
             static natural lcm(const natural &x, const natural &y);  //!< lcm(x>0,y>0) = x*y/gcd(x,y)
-            Y_APN_WRAP_HL_API(natural,lcm)
+            Y_APN_OVERLOAD_HL(natural,lcm)
             static void    simplify(natural &num, natural &den);                            //!< simplify fraction
             static natural mod_inv(const natural &b, const natural &n);                     //!< modular inverse        (b^(-1))[n]
             static natural mod_exp(const natural &b, const natural &e, const natural &n);   //!< modular exponentiation (b^e)[n]
             static bool    coprime(const natural &lhs,const natural &rhs);                  //!< 1==gcd(lhs,rhs)
-            Y_APN_WRAP_HL_API(bool,coprime)
+            Y_APN_OVERLOAD_HL(bool,coprime)
 
             //__________________________________________________________________
             //
@@ -415,9 +417,9 @@ static inline word_type _##FCN(const word_type lhs, const word_type rhs) throw()
 static inline natural      FCN(const word_type *lhs, const size_t lnw, const word_type *rhs, const size_t rnw) \
 { return logical(_##FCN,lhs,lnw,rhs,rnw); }
             
-            Y_APN_LOGICAL(_or,|)  Y_APN_WRAP_API(natural,_or)
-            Y_APN_LOGICAL(_and,&) Y_APN_WRAP_API(natural,_and)
-            Y_APN_LOGICAL(_xor,^) Y_APN_WRAP_API(natural,_xor)
+            Y_APN_LOGICAL(_or,|)  Y_APN_OVERLOAD_API(_or)
+            Y_APN_LOGICAL(_and,&) Y_APN_OVERLOAD_API(_and)
+            Y_APN_LOGICAL(_xor,^) Y_APN_OVERLOAD_API(_xor)
 
             //! boolean operators
             static natural logical(boolean_op op,
