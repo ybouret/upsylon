@@ -55,10 +55,9 @@ namespace upsylon {
             static const size_t                                word_bits  = word_size << 3;               //!< word bits
             static const size_t                                word_exp2  = ilog2<word_size>::value;      //!< word_size = 1 << word_exp2
             static const size_t                                word_mask  = word_size-1;                  //!< word_size - 1 = least significant bits
-            static const core_type                             word_max   = limit_of<word_type>::maximum; //!< maxium  for core_type
-            static const core_type                             word_radix = core_type(1) << word_bits;    //!< radix   for core_type
-                                                                                                          //! number of words per utype
-            static const size_t                                words_per_utype = sizeof(utype)/word_size;
+            static const core_type                             word_max   = limit_of<word_type>::maximum; //!< maximum  for core_type
+            static const core_type                             word_radix = core_type(1) << word_bits;    //!< radix    for core_type
+            static const size_t                                words_per_utype = sizeof(utype)/word_size; //!< number of words per utype
 
             //__________________________________________________________________
             //
@@ -94,7 +93,7 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // comparisons
+            // macros for overloading
             //__________________________________________________________________
 
             //! inline utype -> word_type *
@@ -103,52 +102,62 @@ volatile utype   u  = (args);   \
 size_t           nw = 0;        \
 const word_type *pw = u2w(u,nw)
 
+            //! natural,natural
 #define Y_APN_ARGS_N_N (const natural &lhs, const natural &rhs)
+            //! utype,natural
 #define Y_APN_ARGS_U_N (const utype    lhs, const natural &rhs)
+            //! natural,utype
 #define Y_APN_ARGS_N_U (const natural &lhs, const utype    rhs)  
 
-            //! wrap a CALL from words operating function
+            //! overload a CALL from words operating function
 #define Y_APN_OVERLOAD_NO_THROW(RETURN,CALL) \
 inline static RETURN CALL Y_APN_ARGS_N_N throw() { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
 inline static RETURN CALL Y_APN_ARGS_U_N throw() { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
 inline static RETURN CALL Y_APN_ARGS_N_U throw() { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
 
+            //! implement one method
 #define Y_APN_IMPL_METHOD_(PREFIX,ARGS,SUFFIX) PREFIX ARGS SUFFIX
+
+            //! implement the method with different arguments
 #define Y_APN_IMPL_METHODS(PREFIX,CODE)\
 Y_APN_IMPL_METHOD_(PREFIX,Y_APN_ARGS_N_N,CODE)\
 Y_APN_IMPL_METHOD_(PREFIX,Y_APN_ARGS_U_N,CODE)\
 Y_APN_IMPL_METHOD_(PREFIX,Y_APN_ARGS_N_U,CODE)
 
-            //! build == and != operators from macros
-#define Y_APN_WRAP_CMP_FULL(OP,CALL)\
-inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }\
-inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }\
-inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() { return CALL(lhs,rhs); }
-
-            Y_APN_IMPL_METHODS(inline friend bool operator==,throw() { return eq(lhs,rhs);  })
-            Y_APN_IMPL_METHODS(inline friend bool operator!=,throw() { return neq(lhs,rhs); })
-
-
+            //__________________________________________________________________
+            //
+            // total comparisons
+            //__________________________________________________________________
+            //! call operator and function
+#define Y_APN_IMPL_COMPARE_TOTAL(OP,CALL) Y_APN_IMPL_METHODS(inline friend bool operator OP,throw() { return CALL(lhs,rhs);  })
+            Y_APN_IMPL_COMPARE_TOTAL(==,eq)
+            Y_APN_IMPL_COMPARE_TOTAL(!=,neq)
             Y_APN_OVERLOAD_NO_THROW(int,cmp)
 
+            //__________________________________________________________________
+            //
+            // partial comparison
+            //__________________________________________________________________
+
             //! build partial comparators
-#define Y_APN_WRAP_CMP_PART(OP,CALL)\
-inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() { return CALL(lhs,rhs) OP 0; }
+#define Y_APN_WRAP_CMP(OP) Y_APN_IMPL_METHODS(inline friend bool operator OP, throw() { return cmp(lhs,rhs) OP 0; })
 
             //! build all partial comparators
-#define Y_APN_WRAP_CMP_PART_ALL() \
-Y_APN_WRAP_CMP_PART(<,cmp)        \
-Y_APN_WRAP_CMP_PART(<=,cmp)       \
-Y_APN_WRAP_CMP_PART(>,cmp)        \
-Y_APN_WRAP_CMP_PART(>=,cmp)
+#define Y_APN_IMPL_COMPARE_PARTIAL() \
+Y_APN_WRAP_CMP(< )               \
+Y_APN_WRAP_CMP(<=)               \
+Y_APN_WRAP_CMP(> )               \
+Y_APN_WRAP_CMP(>=)
 
-            Y_APN_WRAP_CMP_PART_ALL()
+            Y_APN_IMPL_COMPARE_PARTIAL()
 
             //! for different sorting algorithms
             static inline int compare(const natural &lhs, const natural &rhs) throw() { return cmp(lhs,rhs); }
 
+            //__________________________________________________________________
+            //
+            // for fast branching
+            //__________________________________________________________________
             Y_APN_OVERLOAD_NO_THROW(sign_type,scmp)
 
             //__________________________________________________________________
