@@ -79,39 +79,44 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // comparisons
+            // macros to overload calls
+            //__________________________________________________________________
+#define Y_APZ_ARGS_Z_Z (const integer &lhs, const integer &rhs)
+#define Y_APZ_ARGS_Z_I (const integer &lhs, const itype    rhs)
+#define Y_APZ_ARGS_I_Z (const itype    lhs, const integer &rhs)
+
+#define Y_APZ_DECL_SAFE_METHOD(RETURN,CALL) \
+static RETURN CALL Y_APZ_ARGS_Z_Z throw();\
+static RETURN CALL Y_APZ_ARGS_Z_I throw();\
+static RETURN CALL Y_APZ_ARGS_I_Z throw()
+
+#define Y_APZ_IMPL_METHOD_(PREFIX,ARGS,SUFFIX) PREFIX ARGS SUFFIX
+
+#define Y_APZ_IMPL_METHODS(PREFIX,SUFFIX)      \
+Y_APZ_IMPL_METHOD_(PREFIX,Y_APZ_ARGS_Z_Z,SUFFIX) \
+Y_APZ_IMPL_METHOD_(PREFIX,Y_APZ_ARGS_Z_I,SUFFIX) \
+Y_APZ_IMPL_METHOD_(PREFIX,Y_APZ_ARGS_I_Z,SUFFIX)
+
+            //__________________________________________________________________
+            //
+            // total comparisons
             //__________________________________________________________________
 
-            //! complete API
-#define Y_APZ_DECL_NO_THROW(RETURN,CALL) \
-static RETURN CALL(const integer &lhs, const integer &rhs) throw();\
-static RETURN CALL(const integer &lhs, const itype    rhs) throw();\
-static RETURN CALL(const itype    lhs, const integer &rhs) throw()
+#define Y_APZ_IMPL_COMPARE_TOTAL(OP,CALL) Y_APZ_IMPL_METHODS(inline friend bool operator OP,throw() { return CALL(lhs,rhs);  })
+            Y_APZ_IMPL_COMPARE_TOTAL(==,eq)
+            Y_APZ_IMPL_COMPARE_TOTAL(!=,neq)
 
-            //! full comparison API
-#define Y_APZ_CMP_FULL(OP,CALL) \
-inline friend bool operator OP (const integer &lhs, const integer &rhs) throw() { return CALL(lhs,rhs); }\
-inline friend bool operator OP (const integer &lhs, const itype    rhs) throw() { return CALL(lhs,rhs); }\
-inline friend bool operator OP (const itype    lhs, const integer &rhs) throw() { return CALL(lhs,rhs); }
-  
-            Y_APZ_CMP_FULL(==,eq)
-            Y_APZ_CMP_FULL(!=,neq)
 
-            
-            //! build partial comparators
-#define Y_APZ_WRAP_CMP_PART(OP,CALL)\
-inline friend bool operator OP (const integer &lhs, const integer &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const itype    lhs, const integer &rhs) throw() { return CALL(lhs,rhs) OP 0; }\
-inline friend bool operator OP (const integer &lhs, const itype    rhs) throw() { return CALL(lhs,rhs) OP 0; }
+#define Y_APZ_IMPL_COMPARE_PARTIAL_(OP) Y_APZ_IMPL_METHODS(inline friend bool operator OP, throw() { return cmp(lhs,rhs) OP 0; })
 
-            //! build all partial comparators
-#define Y_APZ_WRAP_CMP_PART_ALL() \
-Y_APZ_WRAP_CMP_PART(<,cmp)        \
-Y_APZ_WRAP_CMP_PART(<=,cmp)       \
-Y_APZ_WRAP_CMP_PART(>,cmp)        \
-Y_APZ_WRAP_CMP_PART(>=,cmp)
+#define Y_APZ_IMPL_COMPARE_PARTIAL() \
+Y_APZ_IMPL_COMPARE_PARTIAL_(<)       \
+Y_APZ_IMPL_COMPARE_PARTIAL_(>)       \
+Y_APZ_IMPL_COMPARE_PARTIAL_(<=)      \
+Y_APZ_IMPL_COMPARE_PARTIAL_(>=)
 
-            Y_APZ_WRAP_CMP_PART_ALL()
+            Y_APZ_IMPL_COMPARE_PARTIAL()
+
 
             //! for different sorting algorithms
             static inline int compare(const integer &lhs, const integer &rhs) throw() { return cmp(lhs,rhs); }
@@ -121,21 +126,24 @@ Y_APZ_WRAP_CMP_PART(>=,cmp)
             // addition
             //__________________________________________________________________
             //! function declaration
-#define Y_APZ_DECL(CALL)                                    \
-static integer CALL(const integer &lhs, const integer &rhs);\
-static integer CALL(const integer &lhs, const itype    rhs);\
-static integer CALL(const itype    lhs, const integer &rhs)
+#define Y_APZ_OVERLOAD(CALL)        \
+static integer CALL Y_APZ_ARGS_Z_Z; \
+static integer CALL Y_APZ_ARGS_Z_I; \
+static integer CALL Y_APZ_ARGS_I_Z
 
-            //! operators implementation
-#define Y_APZ_WRAP(OP,CALL)                                                                                          \
-inline friend integer operator OP (const integer &lhs, const integer &rhs) { return CALL(lhs,rhs); }                 \
-inline friend integer operator OP (const integer &lhs, const itype    rhs) { return CALL(lhs,rhs); }                 \
-inline friend integer operator OP (const itype    lhs, const integer &rhs) { return CALL(lhs,rhs); }                 \
+            //! operator implementation
+#define Y_APZ_OPERATOR(OP,CALL) \
+Y_APZ_IMPL_METHODS(inline friend integer operator OP,{ return CALL(lhs,rhs); }) \
 inline integer &      operator OP##= (const integer &rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; } \
 inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*this,rhs); xch(tmp); return *this; }
 
-            Y_APZ_DECL(add);             //!< aliases
-            Y_APZ_WRAP(+,add)
+#define Y_APZ_STANDARD(OP,CALL) \
+Y_APZ_OVERLOAD(CALL);           \
+Y_APZ_OPERATOR(OP,CALL);
+
+
+
+            Y_APZ_STANDARD(+,add)
             integer   operator+() const; //!< unary '+'
             integer & operator++();      //!< prefix  ++ operator
             integer   operator++(int);   //!< postfix ++ operator
@@ -144,8 +152,7 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             //
             // subtraction
             //__________________________________________________________________
-            Y_APZ_DECL(sub);             //!< aliases
-            Y_APZ_WRAP(-,sub)
+            Y_APZ_STANDARD(-,sub)
             integer   operator-() const; //!< unary '-'
             integer & operator--();      //!< prefix  -- operator
             integer   operator--(int);   //!< postfix -- operator
@@ -154,8 +161,7 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             //
             // multiplication
             //__________________________________________________________________
-            Y_APZ_DECL(mul);           //!< aliases
-            Y_APZ_WRAP(*,mul)
+            Y_APZ_STANDARD(*,mul)
             integer mul_by(const natural &rhs) const; //!< optimized mul_by, for rational
             static integer square_of(const integer &x); //!< x*x
             static integer abs_of(const integer &x);    //!< |x|
@@ -165,15 +171,14 @@ inline integer &      operator OP##= (const itype    rhs) { integer tmp = CALL(*
             //
             // division
             //__________________________________________________________________
-            Y_APZ_DECL(divide);           //!< aliases
-            Y_APZ_WRAP(/,divide)
+            Y_APZ_STANDARD(/,divide)
 
 
         private:
             void update() throw();
-            Y_APZ_DECL_NO_THROW(bool,eq);
-            Y_APZ_DECL_NO_THROW(bool,neq);
-            Y_APZ_DECL_NO_THROW(int,cmp);
+            Y_APZ_DECL_SAFE_METHOD(bool,eq);
+            Y_APZ_DECL_SAFE_METHOD(bool,neq);
+            Y_APZ_DECL_SAFE_METHOD(int,cmp);
         };
 
     }
