@@ -63,7 +63,9 @@ ADD_TEST(type:decomp       test-main decomp)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp 
 test-code.cpp test-bits.cpp
-test-core-pool.cpp  test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
+test-core-pool.cpp  
+test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
+test-core-roll.cpp
 test-progress.cpp
  test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp
  test-meta-loop.cpp
@@ -74,6 +76,7 @@ ADD_TEST(core:code        test-main code)
 ADD_TEST(core:bits        test-main bits)
 ADD_TEST(core:pool        test-main core_pool)
 ADD_TEST(core:list        test-main core_list)
+ADD_TEST(core:roll        test-main core_roll)
 ADD_TEST(core:clist       test-main core_clist)
 ADD_TEST(core:stack       test-main core_stack)
 ADD_TEST(core:progress    test-main progress)
