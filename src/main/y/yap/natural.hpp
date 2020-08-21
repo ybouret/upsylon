@@ -356,8 +356,15 @@ Y_APN_OPERATOR_API(OP,CALL)
                 return ans;
             }
 
-
-
+            //__________________________________________________________________
+            //
+            // specific
+            //__________________________________________________________________
+            void make(const word_type w) throw();
+            bool is(const word_type w) const throw();
+            bool is_even() const throw();
+            bool is_odd()  const throw();
+            
         private:
             size_t     bytes; //!< effective number of bytes
             size_t     words; //!< effective number of words = words_for(bytes)

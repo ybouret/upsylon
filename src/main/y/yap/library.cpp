@@ -28,10 +28,22 @@ namespace upsylon {
         _13(13),
         _14(14),
         _15(15),
-        _16(16)
+        _16(16),
+        _z0(),
+        _q0(),
+        primes(),
+        launch(_5)
         {
+            primes.push_back( new prime(_2) );
+            primes.push_back( new prime(_3) );
         }
-        
+
+        void library:: reset_primes() throw()
+        {
+            while(primes.size>2) delete primes.pop_back();
+            launch.make(5);
+            assert(5==launch);
+        }
         
 
     }

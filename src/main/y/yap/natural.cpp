@@ -229,6 +229,38 @@ word( acquire(count,width,shift) )
             return (word_type *) &u;
         }
 
+
+        void natural:: make(const word_type w) throw()
+        {
+            ldz();
+            word[0] = w;
+            bytes   = word_size;
+            update();
+        }
+
+        bool natural:: is(const word_type w) const throw()
+        {
+            switch(words)
+            {
+                case 0: return 0==w;
+                case 1: return word[0] == w;
+                default:
+                    break;
+            }
+            return false;
+        }
+
+        bool natural:: is_even() const throw()
+        {
+            return 0 == (word[0]&0x1);
+        }
+
+        bool natural:: is_odd() const throw()
+        {
+            return 0 != (word[0]&0x1);
+        }
+
+
     }
 
 }

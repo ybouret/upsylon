@@ -221,6 +221,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(yap_n);
     Y_UTEST(yap_z);
     Y_UTEST(yap_q);
+    Y_UTEST(yap_p);
 }
 Y_UTEST_EXEC()
 

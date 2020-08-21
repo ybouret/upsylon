@@ -4,12 +4,15 @@
 #ifndef Y_AP_LIBRARY_INCLUDED
 #define Y_AP_LIBRARY_INCLUDED 1
 
-#include "y/yap/natural.hpp"
+#include "y/yap/rational.hpp"
+#include "y/yap/prime.hpp"
 
 namespace upsylon {
 
 
     namespace yap {
+
+        class integer;
 
         //______________________________________________________________________
         //
@@ -40,11 +43,19 @@ namespace upsylon {
             const natural _15; //!< 0x0f
             const natural _16; //!< 0x10
 
+            const integer  _z0; //!< int(0)
+            const rational _q0; //!< (0/1)
+
+            void reset_primes() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();
             virtual ~library() throw();
+
+            prime::list_type primes;
+            natural          launch; //!< 5 or last primes+6
+
         };
 
     }
