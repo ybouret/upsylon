@@ -27,7 +27,7 @@ CLI(y_grep)
 
 IF(NOT MSVC)
 # generate rsa keys with msys-openssl
-CLI(y_rsa_keys)
+#CLI(y_rsa_keys)
 ENDIF()
 
 IF(Y_DARWIN)
