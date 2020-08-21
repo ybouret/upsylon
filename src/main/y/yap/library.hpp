@@ -53,19 +53,22 @@ namespace upsylon {
             natural next_prime_(const natural      &n) const; //!< using sieve
             natural next_prime_(const number::utype u) const; //!< using sieve
 
-            void prefetch();           //!< prefetch next prime in primes list
-            void prefetch(size_t n);   //!< prefetch next primes in primes list
+            const prime & prefetch();           //!< prefetch next prime in primes list
+            const prime & prefetch(size_t n);   //!< prefetch next primes in primes list
             
             virtual const char *className() const throw();
             virtual size_t      serialize(ios::ostream &) const;
+
+
+
+            const prime::list_type primes; //!< list of precomputed primes
+            const natural          launch; //!< 5 or last primes+6
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();
             virtual ~library() throw();
 
-            prime::list_type primes; //!< list of precomputed primes
-            natural          launch; //!< 5 or last primes+6
 
         };
 

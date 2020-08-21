@@ -18,6 +18,7 @@ namespace {
 
 
 }
+#include "y/string/convert.hpp"
 
 Y_UTEST(yap_p)
 {
@@ -25,10 +26,13 @@ Y_UTEST(yap_p)
     Y_UTEST_SIZEOF(prime);
 
     library &apl = library::instance();
-
+    size_t    n = 2000;
+    if(argc>1)
+    {
+        n=string_convert::to<size_t>(argv[1],"n");
+    }
     apl.reset_primes();
 
-    const size_t    n = 1024;
     vector<natural> P(n,as_capacity);
     progress        bar;
 
@@ -49,8 +53,11 @@ Y_UTEST(yap_p)
         std::cerr << std::endl;
     }
 
-    std::cerr << "Prefetching..." << std::endl;
-    apl.prefetch(100);
+    std::cerr << "Prefetching to sqrt of " << P.back() << std::endl;
+    while( apl.prefetch().squared < P.back() )
+    {
+
+    }
     {
         const size_t written = apl.save_to("apl.dat");
         std::cerr << "#written=" << written << std::endl;

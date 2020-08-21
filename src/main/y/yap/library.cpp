@@ -1,6 +1,6 @@
 #include "y/yap/library.hpp"
 #include "y/ios/ostream.hpp"
-#include <iostream>
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -40,8 +40,8 @@ namespace upsylon {
 
         void library:: reset_primes() throw()
         {
-            primes.release();
-            launch.make(5);
+            aliasing::_(primes).release();
+            aliasing::_(launch).make(5);
             assert(5==launch);
         }
 
@@ -84,7 +84,7 @@ namespace upsylon {
             const natural _(u); return is_prime_(_);
         }
 
-        void library:: prefetch()
+        const prime &library:: prefetch()
         {
             assert(launch>=_5);
             assert(launch.is_odd());
@@ -96,16 +96,20 @@ namespace upsylon {
             natural start = launch;
             while(start<=guess) start += _6;
             
-            primes.push_back( new prime(guess) );
-            launch.xch(start);
+            aliasing::_(primes).push_back( new prime(guess) );
+            aliasing::_(launch).xch(start);
+
+            return *primes.tail;
         }
 
-        void library:: prefetch(size_t n)
+        const prime & library:: prefetch(size_t n)
         {
             while(n-- > 0)
             {
-                prefetch();
+                (void) prefetch();
             }
+            return *primes.tail;
+
         }
 
         natural library:: next_prime_(const natural &n) const
