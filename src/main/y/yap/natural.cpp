@@ -6,6 +6,15 @@
 namespace upsylon {
 
     namespace yap {
+        //! constructor to hold MAX_BYTES
+#define Y_APN_CTOR(MAX_BYTES)     \
+number(),                         \
+bytes(0),                         \
+words(0),                         \
+count( words_for(MAX_BYTES) ),    \
+width(0),                         \
+shift(0),                         \
+word( acquire(count,width,shift) )
 
 
         natural:: ~natural() throw()

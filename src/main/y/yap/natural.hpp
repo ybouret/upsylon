@@ -17,20 +17,9 @@ namespace upsylon {
     namespace yap {
 
 
-//#define Y_YAP_FORCE16
+        //#define Y_YAP_FORCE16
 
         typedef memory::tight::quarry_allocator &memory_allocator; //!< alias
-
-        //! constructor to hold MAX_BYTES
-#define Y_APN_CTOR(MAX_BYTES)     \
-number(),                         \
-bytes(0),                         \
-words(0),                         \
-count( words_for(MAX_BYTES) ),    \
-width(0),                         \
-shift(0),                         \
-word( acquire(count,width,shift) )
-
 
         //______________________________________________________________________
         //
@@ -67,8 +56,8 @@ word( acquire(count,width,shift) )
             static const size_t                                word_exp2  = ilog2<word_size>::value;      //!< word_size = 1 << word_exp2
             static const size_t                                word_mask  = word_size-1;                  //!< word_size - 1 = least significant bits
             static const core_type                             word_max   = limit_of<word_type>::maximum; //!< maxium  for core_type
-            static const core_type                             word_radix = core_type(1) << word_bits;    //!< radix  for core_type
-            //! number of words per utype
+            static const core_type                             word_radix = core_type(1) << word_bits;    //!< radix   for core_type
+                                                                                                          //! number of words per utype
             static const size_t                                words_per_utype = sizeof(utype)/word_size;
 
             //__________________________________________________________________
@@ -114,11 +103,15 @@ volatile utype   u  = (args);   \
 size_t           nw = 0;        \
 const word_type *pw = u2w(u,nw)
 
-            //! complete API from basic function
-#define Y_APN_WRAP_NO_THROW(RETURN,CALL) \
-inline static RETURN CALL(const natural &lhs, const natural &rhs) throw() { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
-inline static RETURN CALL(const utype    lhs, const natural &rhs) throw() { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
-inline static RETURN CALL(const natural &lhs, const utype    rhs) throw() { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
+#define Y_APN_ARGS_N_N (const natural &lhs, const natural &rhs)
+#define Y_APN_ARGS_U_N (const utype    lhs, const natural &rhs)
+#define Y_APN_ARGS_N_U (const natural &lhs, const utype    rhs)  
+
+            //! wrap a CALL from basic function
+#define Y_APN_IMPL_NO_THROW(RETURN,CALL) \
+inline static RETURN CALL Y_APN_ARGS_N_N throw() { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
+inline static RETURN CALL Y_APN_ARGS_U_N throw() { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
+inline static RETURN CALL Y_APN_ARGS_N_U throw() { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
 
             //! build == and != operators from macros
 #define Y_APN_WRAP_CMP_FULL(OP,CALL)\
@@ -129,7 +122,7 @@ inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() 
             Y_APN_WRAP_CMP_FULL(==,eq)
             Y_APN_WRAP_CMP_FULL(!=,neq)
 
-            Y_APN_WRAP_NO_THROW(int,cmp)
+            Y_APN_IMPL_NO_THROW(int,cmp)
 
             //! build partial comparators
 #define Y_APN_WRAP_CMP_PART(OP,CALL)\
@@ -149,7 +142,7 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
             //! for different sorting algorithms
             static inline int compare(const natural &lhs, const natural &rhs) throw() { return cmp(lhs,rhs); }
 
-            Y_APN_WRAP_NO_THROW(sign_type,scmp)
+            Y_APN_IMPL_NO_THROW(sign_type,scmp)
 
             //__________________________________________________________________
             //
@@ -372,16 +365,16 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //! test words equality
             static bool eq(const word_type *lhs, const size_t lnw,
                            const word_type *rhs, const size_t rnw) throw();
-            Y_APN_WRAP_NO_THROW(bool,eq)
+            Y_APN_IMPL_NO_THROW(bool,eq)
 
             //! test words difference
             static bool neq(const word_type *lhs, const size_t lnw,
                             const word_type *rhs, const size_t rnw) throw();
-            Y_APN_WRAP_NO_THROW(bool,neq)
+            Y_APN_IMPL_NO_THROW(bool,neq)
 
             //! comparison
-            static int  cmp(const word_type *lhs, const size_t lnw,
-                            const word_type *rhs, const size_t rnw) throw();
+            static int      cmp(const word_type *lhs, const size_t lnw,
+                                const word_type *rhs, const size_t rnw) throw();
 
             static sign_type scmp(const word_type *lhs, const size_t lnw,
                                   const word_type *rhs, const size_t rnw) throw();
