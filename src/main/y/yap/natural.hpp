@@ -107,11 +107,17 @@ const word_type *pw = u2w(u,nw)
 #define Y_APN_ARGS_U_N (const utype    lhs, const natural &rhs)
 #define Y_APN_ARGS_N_U (const natural &lhs, const utype    rhs)  
 
-            //! wrap a CALL from basic function
-#define Y_APN_IMPL_NO_THROW(RETURN,CALL) \
+            //! wrap a CALL from words operating function
+#define Y_APN_OVERLOAD_NO_THROW(RETURN,CALL) \
 inline static RETURN CALL Y_APN_ARGS_N_N throw() { return CALL(lhs.word,lhs.words,rhs.word,rhs.words);    }\
 inline static RETURN CALL Y_APN_ARGS_U_N throw() { Y_APN_U2W(lhs); return CALL(pw,nw,rhs.word,rhs.words); }\
 inline static RETURN CALL Y_APN_ARGS_N_U throw() { Y_APN_U2W(rhs); return CALL(lhs.word,lhs.words,pw,nw); }
+
+#define Y_APN_IMPL_METHOD_(PREFIX,ARGS,SUFFIX) PREFIX ARGS SUFFIX
+#define Y_APN_IMPL_METHODS(PREFIX,CODE)\
+Y_APN_IMPL_METHOD_(PREFIX,Y_APN_ARGS_N_N,CODE)\
+Y_APN_IMPL_METHOD_(PREFIX,Y_APN_ARGS_U_N,CODE)\
+Y_APN_IMPL_METHOD_(PREFIX,Y_APN_ARGS_N_U,CODE)
 
             //! build == and != operators from macros
 #define Y_APN_WRAP_CMP_FULL(OP,CALL)\
@@ -119,10 +125,11 @@ inline friend bool operator OP (const natural &lhs, const natural &rhs) throw() 
 inline friend bool operator OP (const utype    lhs, const natural &rhs) throw() { return CALL(lhs,rhs); }\
 inline friend bool operator OP (const natural &lhs, const utype    rhs) throw() { return CALL(lhs,rhs); }
 
-            Y_APN_WRAP_CMP_FULL(==,eq)
-            Y_APN_WRAP_CMP_FULL(!=,neq)
+            Y_APN_IMPL_METHODS(inline friend bool operator==,throw() { return eq(lhs,rhs);  })
+            Y_APN_IMPL_METHODS(inline friend bool operator!=,throw() { return neq(lhs,rhs); })
 
-            Y_APN_IMPL_NO_THROW(int,cmp)
+
+            Y_APN_OVERLOAD_NO_THROW(int,cmp)
 
             //! build partial comparators
 #define Y_APN_WRAP_CMP_PART(OP,CALL)\
@@ -142,7 +149,7 @@ Y_APN_WRAP_CMP_PART(>=,cmp)
             //! for different sorting algorithms
             static inline int compare(const natural &lhs, const natural &rhs) throw() { return cmp(lhs,rhs); }
 
-            Y_APN_IMPL_NO_THROW(sign_type,scmp)
+            Y_APN_OVERLOAD_NO_THROW(sign_type,scmp)
 
             //__________________________________________________________________
             //
@@ -365,12 +372,12 @@ static inline RETURN CALL(const utype    lhs, const natural &rhs) { const natura
             //! test words equality
             static bool eq(const word_type *lhs, const size_t lnw,
                            const word_type *rhs, const size_t rnw) throw();
-            Y_APN_IMPL_NO_THROW(bool,eq)
+            Y_APN_OVERLOAD_NO_THROW(bool,eq)
 
             //! test words difference
             static bool neq(const word_type *lhs, const size_t lnw,
                             const word_type *rhs, const size_t rnw) throw();
-            Y_APN_IMPL_NO_THROW(bool,neq)
+            Y_APN_OVERLOAD_NO_THROW(bool,neq)
 
             //! comparison
             static int      cmp(const word_type *lhs, const size_t lnw,
