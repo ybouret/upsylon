@@ -15,6 +15,7 @@ namespace upsylon
     stopwatch(),
     mark(0),
     bips(0),
+    last(0),
     percent(0),
     done(0),
     left(0),
@@ -26,6 +27,7 @@ namespace upsylon
     {
         mark=0;
         bips=0;
+        last=0;
         _bzset(percent);
         _bzset(done);
         _bzset(left);
@@ -35,6 +37,7 @@ namespace upsylon
     {
         mark             = ticks();
         bips             = 0;
+        last             = 0;
         _bzset(percent);
         _bzset(done);
         aliasing::_(left) = max_seconds;
@@ -45,7 +48,7 @@ namespace upsylon
         return ticks() - mark;
     }
 
-    void progress:: update( double ratio)
+    void progress:: update(double ratio)
     {
         ratio                = clamp<double>(0,ratio,1);
         aliasing::_(percent) = floor( ratio * 10000.0 + 0.5 ) / 100.0;
@@ -91,7 +94,7 @@ namespace upsylon
 
     }
 
-    std::ostream & progress:: display( std::ostream &os ) const
+    std::ostream & progress:: display(std::ostream &os) const
     {
         // running wheel selection
         static const char sym[] = { '-', '\\', '|', '/' };
@@ -113,6 +116,17 @@ namespace upsylon
         os << fmt;
         return os;
     }
+
+    void progress:: print(std::ostream &os,const double ratio,const double every)
+    {
+        update(ratio);
+        if(done-last>=every || ratio>=1.0)
+        {
+            display(os) << '\r';
+            last=done;
+        }
+    }
+
 
 
 }

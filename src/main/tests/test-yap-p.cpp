@@ -41,14 +41,15 @@ Y_UTEST(yap_p)
     {
         bar.start();
         natural p = 0;
+        bar.print(std::cerr,0,0);
         for(size_t i=1;i<=n;++i)
         {
             const uint64_t mark = real_time_clock::ticks();
             p = apl.next_prime_(p);
             t0 += real_time_clock::ticks()-mark;
             P.push_back(p);
-            bar.update(i,n);
-            bar.display(std::cerr) << "\r";
+            //bar.update(i,n);
+            bar.print(std::cerr,i,n,0.5);
         }
         std::cerr << std::endl;
     }
@@ -69,14 +70,14 @@ Y_UTEST(yap_p)
     {
         bar.start();
         natural p = 0;
+        bar.print(std::cerr,0,0);
         for(size_t i=1;i<=n;++i)
         {
             const uint64_t mark = real_time_clock::ticks();
             p = apl.next_prime_(p);
             t1 += real_time_clock::ticks()-mark;
             Y_ASSERT(p==P[i]);
-            bar.update(i,n);
-            bar.display(std::cerr) << "\r";
+            bar.print(std::cerr,i,n,0.5);
         }
         std::cerr << std::endl;
     }

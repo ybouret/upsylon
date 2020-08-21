@@ -23,24 +23,42 @@ namespace upsylon
         virtual uint64_t count() const;        //!< ticks from last start
         void             update(double ratio); //!< update predictions 0<=ratio<=1
 
+        template <typename T>
+        static inline double ratio_of(const T num, const T max)
+        {
+            return (num>=max) ? 1.0 : double(num)/double(max);
+        }
+
         //! wrapper to update
         template <typename T>
-        void update( const T num, const T max )
+        inline void update( const T num, const T max )
         {
-            update( double(num)/double(max) );
+            update( ratio_of(num,max) );
         }
 
         //! fmt size >= format_size!
         static void format(char *fmt, const double tmx);
 
         //! output
-        std::ostream &display( std::ostream & ) const;
+        std::ostream &display(std::ostream &) const;
+
+        //! print with minimal delay
+        void print(std::ostream &,const double ratio,const double every);
+
+        //! wrapper to print
+        template <typename T>
+        void print(std::ostream &os,const T num, const T max,const double every)
+        {
+            print(os,ratio_of(num,max),every);
+        }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(progress);
         uint64_t mark;
         uint64_t bips;
-
+        double   last;
+        
     public:
         const double     percent; //!< 0..100
         const double     done;    //!< ellapsed time so far
