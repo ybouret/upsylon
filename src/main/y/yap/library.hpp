@@ -47,6 +47,12 @@ namespace upsylon {
             const rational _q0; //!< (0/1)
 
             void reset_primes() throw();
+            bool is_prime_(const natural      &n) const;
+            bool is_prime_(const number::utype u) const;
+            bool next_prime_(const natural    &n) const;
+
+
+            void prefetch();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);

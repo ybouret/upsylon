@@ -12,16 +12,18 @@ namespace upsylon
 
         prime:: prime(const natural &n) :
         natural(n),
-        q( square_of(n) )
+        squared( square_of(n) ),
+        add_two(n+2)
         {
-            assert(n>=2);
+            assert(n>=5);
         }
 
         prime:: prime(const utype n) :
         natural(n),
-        q( square_of(n) )
+        squared( square_of(n) ),
+        add_two(n+2)
         {
-            assert(n>=2);
+            assert(n>=5);
         }
 
 

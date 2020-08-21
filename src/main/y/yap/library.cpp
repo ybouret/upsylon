@@ -1,5 +1,5 @@
 #include "y/yap/library.hpp"
-
+#include <iostream>
 
 namespace upsylon {
 
@@ -34,17 +34,68 @@ namespace upsylon {
         primes(),
         launch(_5)
         {
-            primes.push_back( new prime(_2) );
-            primes.push_back( new prime(_3) );
+
         }
 
         void library:: reset_primes() throw()
         {
-            while(primes.size>2) delete primes.pop_back();
+            primes.release();
             launch.make(5);
             assert(5==launch);
         }
-        
+
+        bool library:: is_prime_(const natural &n) const
+        {
+            switch(n.word[0])
+            {
+                case 0:
+                case 1:
+                    return false;
+                case 2:
+                case 3:
+                    return true;
+                default: if( n.is_divisible_by(_2) || n.is_divisible_by(_3) ) return false;
+
+            }
+            assert(n>=5);
+
+            for(const prime *node = primes.head; node; node=node->next)
+            {
+                const prime &p = *node;
+                if( (p.squared>n) || n.is_divisible_by(p) || n.is_divisible_by(p.add_two) ) return false;
+            }
+
+            assert(launch==5||(primes.tail&&(launch== 6+*(primes.tail) )));
+
+            natural p = launch; assert(p.is_odd());
+            while(true)
+            {
+                { const natural q = natural::square_of(p); if(q>n) return true; }
+                if( n.is_divisible_by(p) ) return false;
+                const natural   t = p+_2;
+                if( n.is_divisible_by(t) ) return false;
+                p += _6;
+            }
+        }
+
+        bool library:: is_prime_(const number::utype u) const
+        {
+            const natural _(u); return is_prime_(_);
+        }
+
+        void library:: prefetch()
+        {
+            natural guess = launch;
+            while(std::cerr << "?" << guess << std::endl,!is_prime_(guess))
+            {
+                guess += _2;
+            }
+            natural next_launch = guess + _6;
+            primes.push_back( new prime(guess) );
+            launch.xch(next_launch);
+            std::cerr << "--> guess=" << guess << " | launch=" << launch << std::endl;
+        }
+
 
     }
 

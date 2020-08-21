@@ -13,6 +13,7 @@ namespace upsylon
     namespace yap
     {
 
+        //! prime  >= 5
         class prime : public natural, public inode<prime>
         {
         public:
@@ -22,8 +23,8 @@ namespace upsylon
             explicit prime(const utype    );
             virtual ~prime() throw();
 
-            const natural q; //!< (*this)^2
-
+            const natural squared; //!< (*this)^2
+            const natural add_two; //!< (this)+2
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(prime);

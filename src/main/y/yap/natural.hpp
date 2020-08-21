@@ -15,7 +15,7 @@ namespace upsylon {
     }
 
     namespace yap {
-
+        class library;
 
         //#define Y_YAP_FORCE16
 
@@ -288,8 +288,8 @@ Y_APN_OPERATOR_API(OP,CALL)
             //
             // parsing
             //__________________________________________________________________
-            string to_dec() const;                            //!< to decimal string
-            string to_hex() const;                            //!< to hexadecimal string
+            string         to_dec() const;                    //!< to decimal string
+            string         to_hex() const;                    //!< to hexadecimal string
             static natural dec(const char *, const size_t);   //!< parse decimal
             static natural dec(const char   *);               //!< parse decimal
             static natural dec(const string &);               //!< parse decimal
@@ -433,7 +433,7 @@ static inline natural      FCN(const word_type *lhs, const size_t lnw, const wor
                                    const word_type *lhs, const size_t lnw,
                                    const word_type *rhs, const size_t rnw);
             
-
+            friend class library;
 
         };
 

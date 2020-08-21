@@ -23,6 +23,21 @@ Y_UTEST(yap_p)
 
     apl.reset_primes();
 
+    for(natural i=0;i<=100;++i)
+    {
+        if(apl.is_prime_(i))
+        {
+            std::cerr << i << std::endl;
+        }
+    }
+
+    for(size_t i=0;i<10;++i)
+    {
+        apl.prefetch();
+    }
+
+
+
 }
 Y_UTEST_DONE()
 
