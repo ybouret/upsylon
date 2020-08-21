@@ -15,12 +15,16 @@ ENDIF()
 FILE(GLOB srcs test-*.cpp)
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 
-ADD_CUSTOM_COMMAND( OUTPUT  ${HERE}/rsa-keys.inc
-COMMAND y_bin2dat ${HERE}/rsa-keys.bin ${HERE}/rsa-keys.inc
-DEPENDS y_bin2dat ${HERE}/rsa-keys.bin
-COMMENT "Generating Included RSA Keys" )
+#ADD_CUSTOM_COMMAND( OUTPUT  ${HERE}/rsa-keys.inc
+#COMMAND y_bin2dat ${HERE}/rsa-keys.bin ${HERE}/rsa-keys.inc
+#DEPENDS y_bin2dat ${HERE}/rsa-keys.bin
+#COMMENT "Generating Included RSA Keys" )
 
-ADD_EXECUTABLE(test-main main.cpp ${srcs} support.hpp rsa-keys.inc)
+ADD_EXECUTABLE(test-main 
+main.cpp ${srcs} 
+support.hpp 
+#rsa-keys.inc
+)
 TARGET_LINK_Y(test-main)
 
 ADD_LIBRARY(module MODULE module.cpp)
@@ -167,7 +171,8 @@ ADD_TEST(ios:conveyors   test-main conveyors)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp
-test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp test-rsa.cpp test-rsa-io.cpp test-mperf.cpp
+test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp 
+test-mperf.cpp
 test-pearson.cpp
 test-md.cpp)
 
@@ -179,12 +184,6 @@ ADD_TEST(crypto:kr_sc       test-main kr_sc)
 ADD_TEST(crypto:kr_bc       test-main kr_bc)
 ADD_TEST(crypto:uuid        test-main uuid)
 ADD_TEST(crypto:digest      test-main digest)
-ADD_TEST(crypto:rsa1        test-main rsa 11 3 3)
-ADD_TEST(crypto:rsa2        test-main rsa 62507 55487 65537)
-ADD_TEST(crypto:rsa3        test-main rsa 3935648537 3730255349 65537)
-ADD_TEST(crypto:rsa4        test-main rsa 18300546520784097569 16483490701427528033 65537)
-ADD_TEST(crypto:rsa_keys    test-main rsa_keys ${HERE}/rsa-keys.bin)
-ADD_TEST(crypto:rsa_io      test-main rsa_io 0)
 ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
 
 SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp)

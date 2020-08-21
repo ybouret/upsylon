@@ -124,9 +124,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(mp_simplify);
     Y_UTEST(ilog);
     Y_UTEST(mp_io);
-    Y_UTEST(rsa);
-    Y_UTEST(rsa_keys);
-    Y_UTEST(rsa_io);
     Y_UTEST(mp_mul);
     
 
