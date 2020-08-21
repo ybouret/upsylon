@@ -12,18 +12,35 @@ namespace upsylon
     namespace yap
     {
 
+        //______________________________________________________________________
+        //
+        //
         //! prime  >= 5
+        //
+        //______________________________________________________________________
         class prime : public natural
         {
         public:
-            typedef core::list_of_cpp<prime> list_type;
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
+            typedef core::list_of_cpp<prime> list_type; //!< to hold the primes
 
-            explicit prime(const natural &);
-            explicit prime(const utype    );
-            virtual ~prime() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit prime(const natural &); //!< initialize
+            explicit prime(const utype    ); //!< initialize
+            virtual ~prime() throw();        //!< cleanup
 
-            prime *       next;
-            prime *       prev;
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            prime *       next;    //!< for list
+            prime *       prev;    //!< for list
             const natural squared; //!< (*this)^2
             const natural add_two; //!< (this)+2
 

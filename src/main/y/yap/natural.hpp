@@ -360,10 +360,10 @@ Y_APN_OPERATOR_API(OP,CALL)
             //
             // specific
             //__________________________________________________________________
-            void make(const word_type w) throw();
-            bool is(const word_type w) const throw();
-            bool is_even() const throw();
-            bool is_odd()  const throw();
+            void make(const word_type w) throw();     //!< set to one word (safe)
+            bool is(const word_type w) const throw(); //!< check is one word with given value
+            bool is_even() const throw();             //!< check if even
+            bool is_odd()  const throw();             //!< check if odd
             
         private:
             size_t     bytes; //!< effective number of bytes

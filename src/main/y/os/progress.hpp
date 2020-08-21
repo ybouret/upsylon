@@ -23,6 +23,7 @@ namespace upsylon
         virtual uint64_t count() const;        //!< ticks from last start
         void             update(double ratio); //!< update predictions 0<=ratio<=1
 
+        //! helper
         template <typename T>
         static inline double ratio_of(const T num, const T max)
         {

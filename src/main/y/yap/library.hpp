@@ -12,8 +12,7 @@ namespace upsylon {
 
     namespace yap {
 
-        class integer;
-
+        
         //______________________________________________________________________
         //
         //
@@ -23,9 +22,38 @@ namespace upsylon {
         class library : public singleton<library>, public ios::serializable
         {
         public:
-            static const char CLASS_NAME[];
-            Y_SINGLETON_DECL(library); //!< aliases
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const char CLASS_NAME[]; //!< "yapl"
+            Y_SINGLETON_DECL(library);      //!< aliases
 
+            //__________________________________________________________________
+            //
+            // serializable
+            //__________________________________________________________________
+            virtual const char *className() const throw();       //!< className
+            virtual size_t      serialize(ios::ostream &) const; //!< encoded
+
+            //__________________________________________________________________
+            //
+            // primes handling
+            //__________________________________________________________________
+            void    reset_primes() throw();                   //!< clean up content
+            bool    is_prime_(const natural        &n) const; //!< sieve method
+            bool    is_prime_(const number::utype   u) const; //!< sieve method
+            natural next_prime_(const natural      &n) const; //!< using sieve
+            natural next_prime_(const number::utype u) const; //!< using sieve
+
+            const prime & prefetch();           //!< prefetch next prime in primes list
+            const prime & prefetch(size_t n);   //!< prefetch next primes in primes list
+
+
+            //__________________________________________________________________
+            //
+            // named constants
+            //__________________________________________________________________
             const natural _0;  //!< 0x00
             const natural _1;  //!< 0x01
             const natural _2;  //!< 0x02
@@ -47,20 +75,10 @@ namespace upsylon {
             const integer  _z0; //!< int(0)
             const rational _q0; //!< (0/1)
 
-            void    reset_primes() throw();                   //!< clean up content
-            bool    is_prime_(const natural        &n) const; //!< sieve method
-            bool    is_prime_(const number::utype   u) const; //!< sieve method
-            natural next_prime_(const natural      &n) const; //!< using sieve
-            natural next_prime_(const number::utype u) const; //!< using sieve
-
-            const prime & prefetch();           //!< prefetch next prime in primes list
-            const prime & prefetch(size_t n);   //!< prefetch next primes in primes list
-            
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream &) const;
-
-
-
+            //__________________________________________________________________
+            //
+            // primes db
+            //__________________________________________________________________
             const prime::list_type primes; //!< list of precomputed primes
             const natural          launch; //!< 5 or last primes+6
 

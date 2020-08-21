@@ -10,6 +10,8 @@ namespace upsylon
     {
         prime:: ~prime() throw()
         {
+            assert(NULL==next);
+            assert(NULL==prev);
         }
 
 
