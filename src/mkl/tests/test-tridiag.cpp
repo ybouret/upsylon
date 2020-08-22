@@ -1,4 +1,4 @@
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/mkl/kernel/tridiag.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
@@ -55,7 +55,7 @@ Y_UTEST(tridiag)
     do_test<double>();
     do_test< complex<float>  >();
     do_test< complex<double> >();
-    do_test<mpq>();
+    do_test<apq>();
 
 }
 Y_UTEST_DONE()

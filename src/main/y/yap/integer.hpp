@@ -243,6 +243,8 @@ Y_APZ_OPERATOR(OP,CALL);
     {
         inline apz fabs_of(const apz &x) { return apz::abs_of(x);  } //!< for use in mkl
         inline apz sqrt_of(const apz &x) { return apz::sqrt_of(x); } //!< for use in mkl
+        inline apz mod2_of(const apz &x) { return apz::square_of(x); } //!< for use un mkl
+
     }
 
 

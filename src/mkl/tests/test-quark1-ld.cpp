@@ -25,7 +25,7 @@ namespace {
         std::cerr << "\tCheck for " << type_name_of<ARRAY>() << std::endl;
         for(size_t i=arr.size();i>0;--i)
         {
-            Y_ASSERT( __mod2( arr[i] - value ) <= 0 );
+            Y_ASSERT( mod2_of( arr[i] - value ) <= 0 );
         }
     }
 
@@ -84,9 +84,9 @@ Y_UTEST(quark1_ld)
     doLD< complex<float> >(&loop);
     doLD< complex<double> >(&loop);
 
-    doLD<mpn>(NULL);
-    doLD<mpz>(NULL);
-    doLD<mpq>(NULL);
+    doLD<apn>(NULL);
+    doLD<apz>(NULL);
+    doLD<apq>(NULL);
 
 }
 Y_UTEST_DONE()

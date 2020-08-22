@@ -1,5 +1,5 @@
 
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
@@ -20,7 +20,7 @@ namespace {
         assert(context);
         for(size_t i=lhs.size();i>0;--i)
         {
-            const typename LHS::type delta =__mod2(lhs[i]-rhs[i]);
+            const typename LHS::type delta =mod2_of(lhs[i]-rhs[i]);
             if( !(delta<=0) )
             {
                 std::cerr << "found delta=" << delta << " for " << lhs[i] << " - " << rhs[i] << std::endl;
@@ -283,11 +283,11 @@ Y_UTEST(quark2)
     concurrent::simd loop;
     doMMUL<float,float,float>( &loop );
     doMMUL<float,unit_t,short>( &loop );
-    checkExact<mpz>();
+    checkExact<apz>();
 
     doMMUL_TRN<double,double,double>( &loop );
     doMMUL_TRN<double,int,double>( &loop );
-    checkExactTRN<mpz>();
+    checkExactTRN<apz>();
 
 }
 Y_UTEST_DONE()

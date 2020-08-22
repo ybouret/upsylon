@@ -1,5 +1,5 @@
 
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
@@ -27,7 +27,7 @@ namespace {
                 const T &L = lhs[r][c];
                 const T &R = rhs[r][c];
                 const T  delta = L-R;
-                if( __mod2(delta) > 0 )
+                if( mod2_of(delta) > 0 )
                 {
                     std::cerr << "[error for <" << type_name_of<T>() << "> '" << name << "']" << std::endl;
                     std::cerr << "L=" << L << "(" << binary(L) << "), R=" << R << "(" << binary(R) << ")" << ", delta=" << delta << "(" << binary(delta) << ")" << std::endl;
@@ -57,7 +57,7 @@ namespace {
             {
                 for(size_t c=1;c<=A.cols;++c)
                 {
-                    Y_ASSERT( __mod2(A[r][c]-B[r][c]) <= 0 );
+                    Y_ASSERT( mod2_of(A[r][c]-B[r][c]) <= 0 );
                 }
             }
             const real_type mod2A = quark::mmod2<T>::of(A);
@@ -69,7 +69,7 @@ namespace {
             }
 
             Y_ASSERT( fabs_of( mod2A - mod2B ) <= 0 );
-            Y_ASSERT( __mod2( quark::mmod2<T>::of(A,B) ) <= 0 );
+            Y_ASSERT( mod2_of( quark::mmod2<T>::of(A,B) ) <= 0 );
             if( loop )
             {
                 // summation is not in order guaranteed
@@ -182,13 +182,13 @@ Y_UTEST(quark3)
 
     doMOD2<float> ( &loop );
     doMOD2<double>( &loop );
-    doMOD2<mpz>   ( NULL  );
-    doMOD2<mpq>   ( NULL, 8 );
+    doMOD2<apz>   ( NULL  );
+    doMOD2<apq>   ( NULL, 8 );
 
     doMMUL<double,double,double>( &loop, false);
     doMMUL<float,float,float>   ( &loop, false);
     doMMUL<double,int,int>      ( &loop, false);
-    doMMUL<mpz,int,short>       ( NULL  );
+    doMMUL<apz,int,short>       ( NULL  );
 }
 Y_UTEST_DONE()
 

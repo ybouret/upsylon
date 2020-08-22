@@ -106,9 +106,9 @@ Y_UTEST(gram_schmidt)
     doGS<double>();
     doGS< complex<float> >();
     doGS< complex<double> >();
-    doGS< mpq >(4);
+    doGS< apq >(4);
     
-    doGSQ<mpq>(6);
+    doGSQ<apq>(6);
     doGSI<int16_t>(6);
     doGSI<int32_t>(6);
     doGSI<int64_t>(6);

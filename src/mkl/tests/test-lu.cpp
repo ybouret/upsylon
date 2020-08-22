@@ -94,13 +94,13 @@ Y_UTEST(LU)
     do_test< complex<float>  >();
     do_test< complex<double> >();
 
-    do_test<mpq>(5);
+    do_test<apq>(5);
 
     do_test_inv<float>();
     do_test_inv<double>();
     do_test_inv< complex<float> >();
     do_test_inv< complex<double> >();
-    do_test_inv<mpq>();
+    do_test_inv<apq>();
 
 }
 Y_UTEST_DONE()

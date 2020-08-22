@@ -1,4 +1,4 @@
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
@@ -33,7 +33,7 @@ namespace {
                 {
                     const T seqb = quark::dot<T>::of(v,u);
                     std::cerr << "\tdot   : " << seq << "," << seqb;
-                    Y_ASSERT( __mod2(seq-seqb) <= 0 );
+                    Y_ASSERT( mod2_of(seq-seqb) <= 0 );
                 }
                 if(loop)
                 {
@@ -91,7 +91,7 @@ Y_UTEST(quark1_dot)
     concurrent::simd loop;
     doDOT<float,float,float>( &loop );
     doDOT<double,unit_t,unit_t>( &loop );
-    doDOT<mpz,mpz,mpz>( NULL );
+    doDOT<apz,apz,apz>( NULL );
 }
 Y_UTEST_DONE()
 

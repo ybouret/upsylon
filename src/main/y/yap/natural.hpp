@@ -445,6 +445,7 @@ static inline natural      FCN(const word_type *lhs, const size_t lnw, const wor
     namespace mkl {
         inline apn fabs_of(const apn &x) { return x;                 } //!< for use in mkl
         inline apn sqrt_of(const apn &x) { return apn::sqrt_of(x);   } //!< for use in mkl
+        inline apn mod2_of(const apn &x) { return apn::square_of(x); } //!< for use un mkl
     }
 
 }

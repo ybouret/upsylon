@@ -220,8 +220,10 @@ inline rational &operator OP##=(const itype     rhs) { rational tmp = CALL(*this
     typedef yap::rational apq; //!< nickname
 
     namespace mkl {
-        inline apq fabs_of(const apq &x) { return apq::abs_of(x); } //!< for use in mkl
-        //inline apq sqrt_of(const apq &x) { return apn::sqrt_of(x);   }
+        inline apq fabs_of(const apq &x) { return apq::abs_of(x);  } //!< for use in mkl
+        inline apq sqrt_of(const apq &x) { return apq::sqrt_of(x); } //!< for use in mkl
+        inline apq mod2_of(const apq &x) { return apq::square_of(x); } //!< for use in mkl
+
     }
 }
 

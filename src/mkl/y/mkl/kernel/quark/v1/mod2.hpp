@@ -1,10 +1,10 @@
 //! \file
 
 //! mod2 addition
-#define Y_QUARK_mod2(I)      ans += __mod2( lhs[I] )
+#define Y_QUARK_mod2(I)      ans += mod2_of( lhs[I] )
 
 //! mod2 of delta addition
-#define Y_QUARK_mod2delta(I) ans += __mod2( lhs[I] - Y_QUARK_CAST(LHS,RHS,rhs[I]) )
+#define Y_QUARK_mod2delta(I) ans += mod2_of( lhs[I] - Y_QUARK_CAST(LHS,RHS,rhs[I]) )
 
 //! taking mod2 of arrays
 template <typename T>

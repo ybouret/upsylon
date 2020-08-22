@@ -27,7 +27,7 @@ namespace {
         const size_t n = seq.size();
         for(size_t i=1;i<=seq.size();++i)
         {
-            if(__mod2(seq[i]-par[i])>0)
+            if(mod2_of(seq[i]-par[i])>0)
             {
                 std::cerr << name << "@" << i << "/" << n << ":" << std::endl;
                 std::cerr << "lhs=" << lhs[i] << " (" << binary(lhs[i]) << ") rhs=" << rhs[i] << " (" << binary(rhs[i]) << ")" << std::endl;
@@ -156,7 +156,7 @@ Y_UTEST(quark1_add)
     doOPS<double,double,double>( &loop );
     doOPS<float,float,float>( &loop );
     doOPS<float,int,float>( &loop );
-    doOPS<mpz,int,mpz>(NULL);
+    doOPS<apz,int,apz>(NULL);
 
 }
 Y_UTEST_DONE()

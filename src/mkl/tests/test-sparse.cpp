@@ -101,8 +101,8 @@ Y_UTEST(sparse)
     do_spark<float>();
     do_spark<double>();
     do_spark<int>();
-    do_spark<mpz>();
-    do_spark<mpq>();
+    do_spark<apz>();
+    do_spark<apq>();
 }
 Y_UTEST_DONE()
 

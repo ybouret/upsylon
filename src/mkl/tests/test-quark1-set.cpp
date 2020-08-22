@@ -25,7 +25,7 @@ namespace {
     {
         for(size_t i=lhs.size();i>0;--i)
         {
-            Y_ASSERT( __mod2(lhs[i]-rhs[i]) <= 0 );
+            Y_ASSERT( mod2_of(lhs[i]-rhs[i]) <= 0 );
         }
     }
 
@@ -88,7 +88,7 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu = auto_cast<T,U>::_(u[i]);
-            if( __mod2(tt-uu) > 0)
+            if( mod2_of(tt-uu) > 0)
             {
                 const binary_format<T> lhs = tt;
                 const binary_format<T> rhs = uu;
@@ -105,7 +105,7 @@ if(loop) { __QUARK_SET_LOOP(tmp,ARR,*loop); }\
         {
             const T tt = t[i];
             const T uu =  x * auto_cast<T,U>::_(u[i]);
-            if( __mod2(tt-uu) > 0)
+            if( mod2_of(tt-uu) > 0)
             {
                 const binary_format<T> lhs = tt;
                 const binary_format<T> rhs = uu;
@@ -155,15 +155,15 @@ Y_UTEST(quark1_set)
     doSET< complex<float>  >(  &loop );
     doSET< complex<double> >(  &loop );
 
-    doSET< mpn >(NULL);
-    doSET< mpz >(NULL);
-    doSET< mpq >(NULL);
+    doSET< apn >(NULL);
+    doSET< apz >(NULL);
+    doSET< apq >(NULL);
 
     doSET2<float,short>( &loop );
     doSET2<double,int>(  &loop );
-    doSET2<mpn,unsigned>( NULL );
-    doSET2<mpz,int>( NULL );
-    doSET2<mpq,int>( NULL );
+    doSET2<apn,unsigned>( NULL );
+    doSET2<apz,int>( NULL );
+    doSET2<apq,int>( NULL );
 
 
 }

@@ -83,11 +83,11 @@ namespace upsylon {
         inline float  pow_of( const float  x, const float  p) throw() { return powf(x,p); } //!< pow
         inline double pow_of( const double x, const double p) throw() { return pow(x,p); }  //!< pow
         
-        inline float   __mod2(const float  x) throw() { return x*x; }               //!< |x|^2
-        inline double  __mod2(const double x) throw() { return x*x; }               //!< |x|^2
-        inline unit_t  __mod2(const unit_t x) throw() { return x*x; }               //!< |x|^2
-        inline float   __mod2(const complex<float>  x) throw() { return x.mod2(); } //!< |x|^2
-        inline double  __mod2(const complex<double> x) throw() { return x.mod2(); } //!< |x|^2
+        inline float   mod2_of(const float  x) throw() { return x*x; }               //!< |x|^2
+        inline double  mod2_of(const double x) throw() { return x*x; }               //!< |x|^2
+        inline unit_t  mod2_of(const unit_t x) throw() { return x*x; }               //!< |x|^2
+        inline float   mod2_of(const complex<float>  x) throw() { return x.mod2(); } //!< |x|^2
+        inline double  mod2_of(const complex<double> x) throw() { return x.mod2(); } //!< |x|^2
         
         inline float  floor_of( const float  x ) throw() { return floorf(x); } //!< floor
         inline double floor_of( const double x ) throw() { return floor(x);  } //!< floor

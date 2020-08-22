@@ -23,7 +23,7 @@ namespace {
     {
         for(size_t i=lhs.size();i>0;--i)
         {
-            Y_ASSERT( __mod2(lhs[i]-rhs[i]) <= 0 );
+            Y_ASSERT( mod2_of(lhs[i]-rhs[i]) <= 0 );
         }
     }
 
@@ -83,10 +83,10 @@ Y_UTEST(quark1_neg)
 
     doNEG<unit_t,int>( &loop );
     doNEG<double,float>( &loop );
-    doNEG<mpz,int>( NULL );
+    doNEG<apz,int>( NULL );
     checkExact<unit_t>();
-    checkExact<mpz>();
-    checkExact<mpq>();
+    checkExact<apz>();
+    checkExact<apq>();
 
 
 }

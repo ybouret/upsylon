@@ -1,4 +1,4 @@
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/mkl/kernel/cyclic.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -63,7 +63,7 @@ Y_UTEST(cyclic)
     do_cyclic<double>();
     do_cyclic< complex<float> >();
     do_cyclic< complex<double> >();
-    do_cyclic< mpq >(6,1);
+    do_cyclic< apq >(6,1);
 
 }
 Y_UTEST_DONE()

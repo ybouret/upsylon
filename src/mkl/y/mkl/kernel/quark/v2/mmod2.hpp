@@ -13,7 +13,7 @@ struct mmod2
         real_type ans = 0;
         for(size_t j=M.cols;j>0;--j)
         {
-            ans += __mod2( M[r][j] );
+            ans += mod2_of( M[r][j] );
         }
         return ans;
     }
@@ -25,7 +25,7 @@ struct mmod2
         real_type ans = 0;
         for(size_t i=M.rows;i>0;--i)
         {
-            ans += __mod2( M[i][c] );
+            ans += mod2_of( M[i][c] );
         }
         return ans;
     }
