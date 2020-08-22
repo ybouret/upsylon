@@ -1,6 +1,7 @@
 #include "y/counting/part.hpp"
 #include "y/utest/run.hpp"
 #include "y/counting/perm.hpp"
+#include "y/yap/natural.hpp"
 
 #include <iomanip>
 
@@ -36,7 +37,7 @@ Y_UTEST(part)
 
         pb.initialize();
         size_t count = 0;
-        mpn    mpBell = 0;
+        apn    mpBell = 0;
         size_t szBell = 0;
         do
         {
@@ -44,7 +45,7 @@ Y_UTEST(part)
             vecs.free();
             ++count;
             std::cerr << pb << " ->";
-            const mpn nc = pb.configs( counting::with_mp );
+            const apn nc = pb.configs( counting::with_ap );
             std::cerr << " +" << nc << std::endl;
             mpBell += nc;
             const size_t sz = pb.configs(counting::with_sz);
@@ -202,13 +203,13 @@ Y_UTEST(bell)
     size_t i64=0;
     for(size_t i=1;i<sizeof(BellTab)/sizeof(BellTab[0]);++i)
     {
-        const mpn BellNumber = mpn::parse(BellTab[i]);
+        const apn BellNumber = apn::parse(BellTab[i]);
         (std::cerr << std::setw(3) << i << ' ' << BellNumber << ' ').flush();
-        const mpn mpBell     = integer_partition::Bell<mpn>(i);
+        const apn mpBell     = integer_partition::Bell<apn>(i);
         Y_ASSERT(BellNumber==mpBell);
         uint32_t v32 = 0;
         uint64_t v64 = 0;
-        if( mpBell.as(v32) )
+        if( mpBell.to(v32) )
         {
             i32 = i;
             std::cerr  << '+';
@@ -217,7 +218,7 @@ Y_UTEST(bell)
         {
             std::cerr << '*';
         }
-        if( mpBell.as(v64) )
+        if( mpBell.to(v64) )
         {
             i64 = i;
             std::cerr << '+';

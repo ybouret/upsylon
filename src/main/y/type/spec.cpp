@@ -353,7 +353,7 @@ namespace upsylon {
 }
 
 #include "y/type/complex.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/type/point3d.hpp"
 #include "y/type/point1d.hpp"
 
@@ -403,9 +403,9 @@ namespace upsylon {
         TS(complex<double>);
         TS(complex<long double>);
 
-        TS(mpn);
-        TS(mpz);
-        TS(mpq);
+        TS(apn);
+        TS(apz);
+        TS(apq);
 
         TS(size_t);
         TS(unit_t);

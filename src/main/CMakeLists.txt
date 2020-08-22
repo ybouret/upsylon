@@ -228,30 +228,30 @@ SET(fft_srcs ${fft_decl} ${fft_code})
 SOURCE_GROUP( fft FILES ${fft_srcs} )
 INSTALL( FILES ${fft_decl} DESTINATION include/y/fft )
 
-FILE(GLOB mpl_decl y/mpl/*.hpp)
-FILE(GLOB mpl_code y/mpl/*.cpp)
-SET(mpl_srcs ${mpl_decl} ${mpl_code})
-SOURCE_GROUP( mpl FILES ${mpl_srcs} )
-INSTALL( FILES ${mpl_decl} DESTINATION include/y/mpl )
+#FILE(GLOB mpl_decl y/mpl/*.hpp)
+#FILE(GLOB mpl_code y/mpl/*.cpp)
+#SET(mpl_srcs ${mpl_decl} ${mpl_code})
+#SOURCE_GROUP( mpl FILES ${mpl_srcs} )
+#INSTALL( FILES ${mpl_decl} DESTINATION include/y/mpl )
 
 
-FILE(GLOB mpl_natural_decl y/mpl/natural/*.hpp)
-FILE(GLOB mpl_natural_code y/mpl/natural/*.cpp)
-SET(mpl_natural_srcs ${mpl_natural_decl} ${mpl_natural_code})
-SOURCE_GROUP( mpl/natural FILES ${mpl_natural_srcs} )
-INSTALL( FILES ${mpl_natural_decl} DESTINATION include/y/mpl/natural )
+#FILE(GLOB mpl_natural_decl y/mpl/natural/*.hpp)
+#FILE(GLOB mpl_natural_code y/mpl/natural/*.cpp)
+#SET(mpl_natural_srcs ${mpl_natural_decl} ${mpl_natural_code})
+#SOURCE_GROUP( mpl/natural FILES ${mpl_natural_srcs} )
+#INSTALL( FILES ${mpl_natural_decl} DESTINATION include/y/mpl/natural )
 
-FILE(GLOB mpl_prime_decl y/mpl/prime/*.hpp)
-FILE(GLOB mpl_prime_code y/mpl/prime/*.cpp)
-SET(mpl_prime_srcs ${mpl_prime_decl} ${mpl_prime_code})
-SOURCE_GROUP( mpl/prime FILES ${mpl_prime_srcs} )
-INSTALL( FILES ${mpl_prime_decl} DESTINATION include/y/mpl/prime )
+#FILE(GLOB mpl_prime_decl y/mpl/prime/*.hpp)
+#FILE(GLOB mpl_prime_code y/mpl/prime/*.cpp)
+#SET(mpl_prime_srcs ${mpl_prime_decl} ${mpl_prime_code})
+#SOURCE_GROUP( mpl/prime FILES ${mpl_prime_srcs} )
+#INSTALL( FILES ${mpl_prime_decl} DESTINATION include/y/mpl/prime )
 
-FILE(GLOB mpl_rsa_decl y/mpl/rsa/*.hpp)
-FILE(GLOB mpl_rsa_code y/mpl/rsa/*.cpp)
-SET(mpl_rsa_srcs ${mpl_rsa_decl} ${mpl_rsa_code})
-SOURCE_GROUP( mpl/rsa FILES ${mpl_rsa_srcs} )
-INSTALL( FILES ${mpl_rsa_decl} DESTINATION include/y/mpl/rsa )
+#FILE(GLOB mpl_rsa_decl y/mpl/rsa/*.hpp)
+#FILE(GLOB mpl_rsa_code y/mpl/rsa/*.cpp)
+#SET(mpl_rsa_srcs ${mpl_rsa_decl} ${mpl_rsa_code})
+#SOURCE_GROUP( mpl/rsa FILES ${mpl_rsa_srcs} )
+#INSTALL( FILES ${mpl_rsa_decl} DESTINATION include/y/mpl/rsa )
 
 
 
@@ -428,7 +428,7 @@ ${information_translator_run_length_srcs}
 ${information_translator_base64_srcs} 
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
-${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
+#${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
 ${math_srcs}
 ${functor_srcs}
 ${fs_srcs}
@@ -439,7 +439,6 @@ ${geometry_srcs} ${geometry_iso2d_srcs} ${geometry_iso3d_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
 ${counting_srcs}
-${oxide_srcs} ${oxide_field_srcs} ${oxide_grid_srcs} ${oxide_algo_srcs} ${oxide_mpi_srcs}
 ${jargon_srcs} 
 ${jargon_token_srcs} 
 ${jargon_pattern_srcs} 

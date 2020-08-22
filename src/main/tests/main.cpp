@@ -113,6 +113,7 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
+/*
     Y_UTEST(mpn);
     Y_UTEST(mpn_perf);
     Y_UTEST(mpn_fact);
@@ -126,7 +127,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(ilog);
     Y_UTEST(mp_io);
     Y_UTEST(mp_mul);
-    
+ */   
 
     Y_UTEST(hashing);
     Y_UTEST(mperf);

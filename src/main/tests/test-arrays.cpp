@@ -39,7 +39,7 @@ Y_UTEST(arrays)
     do_test<int>();
     do_test<double>();
     do_test<string>();
-    do_test<mpq>();
+    do_test<apq>();
 }
 Y_UTEST_DONE()
 

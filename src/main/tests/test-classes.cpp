@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 
 #include "y/sequence/vector.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 
 using namespace upsylon;
 
@@ -32,14 +32,14 @@ Y_UTEST(classes)
     vector<size_t> v;
     list<size_t>   l;
 
-    vector<mpn>    vn;
-    list<mpn>      ln;
+    vector<apn>    vn;
+    list<apn>      ln;
 
-    vector<mpz>    vz;
-    list<mpz>      lz;
+    vector<apz>    vz;
+    list<apz>      lz;
 
-    vector<mpq>    vq;
-    list<mpq>      lq;
+    vector<apq>    vq;
+    list<apq>      lq;
 
     for(size_t i=10+alea.leq(30);i>0;--i)
     {
@@ -47,7 +47,7 @@ Y_UTEST(classes)
         v.push_back( j );
         l.push_back( j );
         {
-            const mpn n = j;
+            const apn n = j;
             vn.push_back(n);
             ln.push_back(n);
         }
@@ -55,12 +55,12 @@ Y_UTEST(classes)
         {
             unit_t k = unit_t(j);
             if( alea.choice() ) k = -k;
-            const mpz z = k;
+            const apz z = k;
             vz.push_back(z);
             lz.push_back(z);
 
             const size_t d = 1+alea.leq(3);
-            const mpq q(k,d);
+            const apq q(k,d);
             vq.push_back(q);
             lq.push_back(q);
         }

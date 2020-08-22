@@ -3,12 +3,12 @@
 
 namespace upsylon
 {
-    memory::allocator & counting:: mem_instance()
+    memory::allocator & counting:: instance()
     {
         return memory::pooled::instance();
     }
 
-    memory::allocator & counting:: mem_location() throw()
+    memory::allocator & counting:: location() throw()
     {
         return memory::pooled::location();
     }

@@ -44,7 +44,7 @@ namespace upsylon {
         //______________________________________________________________________
 
         //! compute number of distinct permutations based on groups description
-        static mpl::natural compute(size_t &sum, const accessible<size_t> &groups, const with_mp_t &);
+        static yap::natural compute(size_t &sum, const accessible<size_t> &groups, const with_ap_t &);
 
         //! compute number of distinct permutations based on groups description
         static size_t       compute(size_t &sum,const accessible<size_t> &groups, const with_sz_t &);
@@ -99,7 +99,7 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
         //! destructor
         inline virtual ~permutations() throw()
         {
-            static memory::allocator &mgr = counting::mem_location();
+            static memory::allocator &mgr = counting::location();
             target = 0;
             source = 0;
             groups = 0;
@@ -254,7 +254,7 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
                 memory::embed::as(source,n),
                 memory::embed::as(groups,n)
             };
-            wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), counting::mem_instance(), wlen);
+            wksp = memory::embed::create(emb, sizeof(emb)/sizeof(emb[0]), counting::instance(), wlen);
         }
 
         template <typename U>

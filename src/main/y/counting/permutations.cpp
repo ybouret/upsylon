@@ -1,5 +1,5 @@
 #include "y/counting/permutations.hpp"
-#include "y/mpl/natural.hpp"
+#include "y/yap/natural.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/exceptions.hpp"
 #include <cerrno>
@@ -55,24 +55,24 @@ namespace upsylon {
         }
     }
 
-    mpl::natural permutations_:: compute(size_t &sum, const accessible<size_t> &groups, const with_mp_t &)
+    yap::natural permutations_:: compute(size_t &sum, const accessible<size_t> &groups, const with_ap_t &)
     {
         assert(0==sum);
-        mpn den = 1;
+        apn den = 1;
         for(size_t i=groups.size();i>0;--i)
         {
             const size_t m = groups[i];
-            const mpn    f = mpn::factorial(m);
+            const apn    f = apn::factorial(m);
             sum += m;
             den *= f;
         }
-        const mpn num = mpn::factorial(sum); assert(num.is_divisible_by(den));
+        const apn num = apn::factorial(sum); assert(num.is_divisible_by(den));
         return num/den;
     }
 
     size_t permutations_::compute(size_t &sum,const accessible<size_t> &groups, const with_sz_t &)
     {
-        const mpn ans = compute(sum,groups,with_mp);
+        const apn ans = compute(sum,groups,with_ap);
         return ans.cast_to<size_t>("permutations::compute");
     }
 

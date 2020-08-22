@@ -5,7 +5,7 @@
 
 #include "y/counting/counting.hpp"
 #include "y/sequence/accessible.hpp"
-#include "y/mpl/natural.hpp"
+//#include "y/yap/natural.hpp"
 
 namespace upsylon {
 
@@ -44,7 +44,7 @@ namespace upsylon {
         /**
          The number of combinations without repetitions
          */
-        mpn                    configs( const counting::with_mp_t &) const;
+        yap::natural           configs( const counting::with_ap_t &) const;
         size_t                 configs( const counting::with_sz_t &) const;   //!< with overflow check
 
         //______________________________________________________________________

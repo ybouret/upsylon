@@ -1,5 +1,5 @@
 #include "y/counting/perm.hpp"
-#include "y/mpl/natural.hpp"
+#include "y/yap/natural.hpp"
 #include "y/exception.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/counting/perm-ops.hpp"
@@ -11,17 +11,17 @@ namespace upsylon
 
     static const char fn[] = "permutation: ";
 
-    mpn permutation:: compute( const size_t N, const with_mp_t & )
+    apn permutation:: compute( const size_t N, const with_ap_t & )
     {
         if(N<=0) throw exception("%sN=0",fn);
-        return mpn::factorial(N);
+        return apn::factorial(N);
     }
 
     size_t permutation:: compute( const size_t N, const with_sz_t & )
     {
-        const mpn mp_count  = compute(N,with_mp);
-        size_t    res = 0;
-        if( !mp_count.as(res) ) throw exception("%soverflow for N=%lu",fn,static_cast<unsigned long>(N));
+        const apn count = compute(N,with_ap);
+        size_t    res   = 0;
+        if( !count.to(res) ) throw exception("%soverflow for N=%lu",fn,static_cast<unsigned long>(N));
         return res;
     }
 

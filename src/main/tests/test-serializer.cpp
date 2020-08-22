@@ -67,15 +67,15 @@ Y_UTEST(serializer)
     {
         ios::ocstream fp("srz.dat");
         total += do_srz<string>(fp);
-        total += do_srz<mpn>(fp);
-        total += do_srz<mpq>(fp);
+        total += do_srz<apn>(fp);
+        total += do_srz<apq>(fp);
     }
     std::cerr << "#written=" << total << std::endl;
     {
         ios::icstream fp("srz.dat");
         do_ld<string>(fp, string::read );
-        do_ld<mpn>(fp, mpn::read );
-        do_ld<mpq>(fp, mpq::read );
+        do_ld<apn>(fp, apn::read );
+        do_ld<apq>(fp, apq::read );
 
     }
 }

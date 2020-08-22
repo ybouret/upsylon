@@ -52,9 +52,9 @@ Y_UTEST(pq)
 
     doPQ<int>();
     doPQ<double>();
-    doPQ<mpn>();
-    doPQ<mpz>();
-    doPQ<mpq>();
+    doPQ<apn>();
+    doPQ<apz>();
+    doPQ<apq>();
     doPQ<string>();
 
 }

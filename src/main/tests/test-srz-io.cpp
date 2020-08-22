@@ -1,5 +1,5 @@
 #include "y/string.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
@@ -85,9 +85,9 @@ Y_UTEST(srz_io)
     vector<string> tid;
     vector<double> spd;
     doSRZ<string>(D,tid,spd);
-    doSRZ<mpn>(D,tid,spd);
-    doSRZ<mpz>(D,tid,spd);
-    doSRZ<mpq>(D,tid,spd);
+    doSRZ<apn>(D,tid,spd);
+    doSRZ<apz>(D,tid,spd);
+    doSRZ<apq>(D,tid,spd);
 
     for(size_t i=1;i<=tid.size();++i)
     {

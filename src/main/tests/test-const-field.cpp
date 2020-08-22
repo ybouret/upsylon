@@ -31,9 +31,9 @@ Y_UTEST(const_field)
     Y_ZF(complex<double>);
     Y_ZF(point2d<unit_t>);
     Y_ZF(string);
-    Y_ZF(mpn);
-    Y_ZF(mpz);
-    Y_ZF(mpq);
+    Y_ZF(apn);
+    Y_ZF(apz);
+    Y_ZF(apq);
 
     {
         const_field<string> cfs( "hello" );
@@ -41,12 +41,12 @@ Y_UTEST(const_field)
     }
 
     {
-        const_field<mpq> cfq(10);
+        const_field<apq> cfq(10);
         std::cerr << "cfq.value=[" << cfq.value << "]" << std::endl;
     }
     
     {
-        const_field<mpq> cfq(10,20);
+        const_field<apq> cfq(10,20);
         std::cerr << "cfq.value=[" << cfq.value << "]" << std::endl;
     }
 

@@ -88,9 +88,9 @@ Y_UTEST(matrix)
     do_test<int>();
     do_test<string>();
     std::cerr << std::hex;
-    do_test<mpn>();
-    do_test<mpz>();
-    do_test<mpq>();
+    do_test<apn>();
+    do_test<apz>();
+    do_test<apq>();
 }
 Y_UTEST_DONE()
 

@@ -48,7 +48,7 @@ Y_UTEST(core_stack)
     testStack<short>();
     testStack<const short>();
     testStack<string>();
-    testStack<const mpn>();
+    testStack<const apq>();
 }
 Y_UTEST_DONE()
 

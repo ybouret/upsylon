@@ -86,7 +86,7 @@ Y_UTEST(sparse_array)
         std::cerr << "sd2=" << sd2 << std::endl;
     }
 
-    sparse_array<mpq>    as(10);
+    sparse_array<apq>    as(10);
     sparse_array<double> ad(12);
 
     fill(as);

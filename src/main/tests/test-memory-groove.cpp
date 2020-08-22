@@ -90,7 +90,7 @@ namespace {
         doTest<double>(g,n);
         doTest<int32_t>(g,n);
         doTest<string>(g,n);
-        doTest<mpn>(g,n);
+        doTest<apn>(g,n);
     }
 
     
@@ -166,7 +166,7 @@ Y_UTEST(groove)
         }
 
         {
-            memory::groove_of<mpn> G(g,memory::storage::global,9);
+            memory::groove_of<apn> G(g,memory::storage::global,9);
             std::cerr << "size=" << G.size() << std::endl;
             std::cerr << G << std::endl;
             support::fill1D(G);
@@ -174,7 +174,7 @@ Y_UTEST(groove)
         }
 
         {
-            memory::groove_of<mpq> G(g,memory::storage::dyadic,11);
+            memory::groove_of<apq> G(g,memory::storage::dyadic,11);
             std::cerr << "size=" << G.size() << std::endl;
             std::cerr << G << std::endl;
             support::fill1D(G);

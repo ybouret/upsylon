@@ -239,7 +239,7 @@ Y_UTEST(tensors)
     doTest<int>();
     doTest<uint8_t>();
     doTest<string>();
-    doTest<mpn>();
+    doTest<apn>();
     
 }
 Y_UTEST_DONE()

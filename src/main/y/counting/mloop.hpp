@@ -113,7 +113,7 @@ wlen(0)
             //! cleanup
             inline virtual ~mloop() throw()
             {
-                static memory::allocator &mem = upsylon::counting::mem_location();
+                static memory::allocator &mem = upsylon::counting::location();
                 memset(wksp,0,wlen);
                 mem.release(wksp,wlen);
                 curr = 0;
@@ -242,7 +242,7 @@ wlen(0)
             //__________________________________________________________________
             inline void setup_memory()
             {
-                static memory::allocator &mem = this->mem_instance();
+                static memory::allocator &mem = this->instance();
                 {
                     memory::embed emb[] =
                     {

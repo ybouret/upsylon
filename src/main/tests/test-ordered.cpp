@@ -140,7 +140,7 @@ Y_UTEST(ordered)
     doOrdered<int>(128);
     doOrdered<double>(128);
     doOrdered<string>(32);
-    doOrdered<mpq>(8);
+    doOrdered<apq>(8);
 
 }
 Y_UTEST_DONE()

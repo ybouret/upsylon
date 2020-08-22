@@ -8,7 +8,7 @@
 namespace upsylon
 {
 
-    namespace mpl
+    namespace yap
     {
         class natural; //!< forward declaration
     }
@@ -32,9 +32,9 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
-        typedef type2type<mpl::natural> with_mp_t; //!< to use multiple precision
+        typedef type2type<yap::natural> with_ap_t; //!< to use multiple precision
         typedef type2type<size_t>       with_sz_t; //!< to use integral size
-        static  const with_mp_t         with_mp;   //!< alias
+        static  const with_ap_t         with_ap;   //!< alias
         static  const with_sz_t         with_sz;   //!< alias
 
 
@@ -75,8 +75,8 @@ namespace upsylon
         //
         // static methods/helpers
         //______________________________________________________________________
-        static memory::allocator &  mem_instance();                                //!< internal allocator instance
-        static memory::allocator &  mem_location() throw();                        //!< internal allocator location
+        static memory::allocator &  instance();                                //!< internal allocator instance
+        static memory::allocator &  location() throw();                        //!< internal allocator location
         static size_t *             acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)
         static void                 release_(size_t *&wksp,size_t &bytes) throw(); //!< release workspace
 

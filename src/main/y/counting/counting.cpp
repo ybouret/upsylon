@@ -35,7 +35,7 @@ namespace upsylon
 
     size_t * counting:: acquire_( size_t &bytes )
     {
-        static memory::allocator &mgr = mem_instance();
+        static memory::allocator &mgr = instance();
         assert(bytes>0);
         assert(0==(bytes%sizeof(size_t)));
         return static_cast<size_t *>( mgr.acquire(bytes) )-1;
@@ -43,7 +43,7 @@ namespace upsylon
 
     void counting:: release_( size_t * &comb, size_t &bytes ) throw()
     {
-        static memory::allocator &mgr = mem_location();
+        static memory::allocator &mgr = location();
         ++comb;
         mgr.release(*(void **)&comb,bytes);
         assert(0==comb);
@@ -51,7 +51,7 @@ namespace upsylon
     }
 
     const counting::with_sz_t counting::with_sz = {};
-    const counting::with_mp_t counting::with_mp = {};
+    const counting::with_ap_t counting::with_ap = {};
 
 }
 

@@ -101,7 +101,7 @@ namespace upsylon {
     
 }
 
-#include "y/mpl/rational.hpp"
+#include "y/yap/natural.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -126,45 +126,20 @@ namespace upsylon
     }
 
 
-    mpn  combination::  compute(const size_t N, const size_t K, const with_mp_t &)
+    apn  combination::  compute(const size_t N, const size_t K, const with_ap_t &)
     {
         if(N<=0) throw exception("%s(N=0)",fn);
         if(K<=0) throw exception("%s(K=0)",fn);
         if(K>N)  throw exception("%s(K=%lu>N=%lu)",fn,static_cast<unsigned long>(K), static_cast<unsigned long>(N));
 
-        mpq          q(1);
-        const size_t dlo = 1;
-        const size_t dhi = K;
-        const size_t nlo = N+1-K;
-        const size_t nhi = N;
-
-        size_t i=nlo;
-        size_t j=dlo;
-        while(i<=nhi&&j<=dhi)
-        {
-            q *= i++;
-            q /= j++;
-        }
-
-        while(j<=dhi)
-        {
-            q /= j++;
-        }
-
-        while(i<=nhi)
-        {
-            q *= i++;
-        }
-
-        if( ! q.den.is_byte(1) ) throw exception("%sFAILURE!",fn);
-        return q.num.n;
+        return apn::comb(N,K);
     }
 
     size_t combination:: compute(const size_t N, const size_t K, const with_sz_t &)
     {
-        const mpn mp_count = compute(N,K,with_mp);
-        size_t    res = 0;
-        if( ! mp_count.as(res) )
+        const apn count = compute(N,K,with_ap);
+        size_t    res   = 0;
+        if( ! count.to(res) )
         {
             throw exception("%s(%lu,%lu) overflow!",fn,static_cast<unsigned long>(N), static_cast<unsigned long>(K));
         }

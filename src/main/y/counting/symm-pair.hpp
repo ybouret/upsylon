@@ -44,7 +44,7 @@ namespace upsylon {
         //----------------------------------------------------------------------
         // helpers
         //----------------------------------------------------------------------
-        static mpl::natural compute(const size_t N, const with_mp_t &); //!< multi-precision count
+        static yap::natural compute(const size_t N, const with_ap_t &); //!< multi-precision count
         static size_t       compute(const size_t N, const with_sz_t &); //!< check overflow
 
     private:

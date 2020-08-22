@@ -60,7 +60,7 @@ Y_UTEST(addressable)
     doCreate<int>();
     doCreate<string>();
     doCreate<float>();
-    doCreate<mpq>();
+    doCreate<apq>();
 
 }
 Y_UTEST_DONE()

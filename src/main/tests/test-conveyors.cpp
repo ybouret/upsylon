@@ -122,7 +122,7 @@ Y_UTEST(conveyors)
     Y_UTEST_SIZEOF(ios::network_conveyor<char>);
     Y_UTEST_SIZEOF(ios::network_conveyor<int>);
     Y_UTEST_SIZEOF(ios::derived_conveyor<string>);
-    Y_UTEST_SIZEOF(ios::derived_conveyor<mpn>);
+    Y_UTEST_SIZEOF(ios::derived_conveyor<apn>);
     typedef ios::tuple_conveyor<complex,float,ios::primary_conveyor> complex_float_conveyer;
     Y_UTEST_SIZEOF(complex_float_conveyer);
     typedef ios::tuple_conveyor<point2d,double,ios::network_conveyor> point3d_double_conveyer;
@@ -138,14 +138,14 @@ Y_UTEST(conveyors)
     doTest< point3d<long long> >( IO.query<point3d,long long>(comms::homogeneous) );
     doTest< point3d<long long> >( IO.query<point3d,long long>(comms::distributed) );
     
-    doTest<mpn>( IO.query<mpn>(comms::homogeneous) );
-    doTest<mpn>( IO.query<mpn>(comms::distributed) );
+    doTest<apn>( IO.query<apn>(comms::homogeneous) );
+    doTest<apn>( IO.query<apn>(comms::distributed) );
     
-    doTest<mpz>( IO.query<mpz>(comms::homogeneous) );
-    doTest<mpz>( IO.query<mpz>(comms::distributed) );
+    doTest<apz>( IO.query<apz>(comms::homogeneous) );
+    doTest<apz>( IO.query<apz>(comms::distributed) );
     
-    doTest<mpq>( IO.query<mpq>(comms::homogeneous) );
-    doTest<mpq>( IO.query<mpq>(comms::distributed) );
+    doTest<apq>( IO.query<apq>(comms::homogeneous) );
+    doTest<apq>( IO.query<apq>(comms::distributed) );
     
     
 }

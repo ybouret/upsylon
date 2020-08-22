@@ -47,7 +47,7 @@ Y_UTEST(conveyor)
     ios::primary_conveyor<int>    ic; vector<int>    iv; DISPLAY_CNV(ic);
     ios::network_conveyor<double> dc; vector<double> dv; DISPLAY_CNV(dc);
     ios::derived_conveyor<string> sc; vector<string> sv; DISPLAY_CNV(sc);
-    ios::derived_conveyor<mpq>    qc; vector<mpq>    qv; DISPLAY_CNV(qc);
+    ios::derived_conveyor<apq>    qc; vector<apq>    qv; DISPLAY_CNV(qc);
     ios::tuple_conveyor<complex,float,ios::primary_conveyor>  cc; vector< complex<float> >  cv; DISPLAY_CNV(cc);
     ios::tuple_conveyor<point3d,double,ios::network_conveyor> pc; vector< point3d<double> > pv; DISPLAY_CNV(pc);
     
@@ -125,9 +125,9 @@ Y_UTEST(conveyor)
             continue;
         }
         
-        if( "mpq" == *tmark[i] )
+        if( "apq" == *tmark[i] )
         {
-            mpq q;
+            apq q;
             for(size_t i=1;i<=n;++i)
             {
                 if(++jq>qv.size()) throw exception("too many Qs");

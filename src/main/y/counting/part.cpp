@@ -4,6 +4,7 @@
 #include "y/type/cswap.hpp"
 #include "y/exceptions.hpp"
 #include "y/counting/comb.hpp"
+#include "y/yap/natural.hpp"
 
 #include <cerrno>
 
@@ -89,7 +90,7 @@ namespace upsylon {
         return now[i];
     }
 
-    mpn integer_partition:: configs(const counting::with_mp_t &) const
+    apn integer_partition:: configs(const counting::with_ap_t &) const
     {
         const accessible<size_t> &self = *this;
         assert(m==self.size());
@@ -98,13 +99,13 @@ namespace upsylon {
 
 
 #if 1
-        mpn nconf = 1;
+        apn nconf = 1;
 
         // compute all possible choices
         for(size_t i=1, remaining=n;i<=m;++i)
         {
             const size_t groupSize = self[i];
-            const mpn    numCombis = combination::compute(remaining,groupSize,counting::with_mp);
+            const apn    numCombis = combination::compute(remaining,groupSize,counting::with_ap);
             nconf     *= numCombis;
             remaining -= groupSize;
         }
@@ -126,7 +127,7 @@ namespace upsylon {
                 {
                     for(size_t j=2;j<=rep;++j)
                     {
-                        const mpn J = j;
+                        const apn J = j;
                         if( !nconf.is_divisible_by(J) ) throw exception("%sconfigs(***corrupted***)",fn);
                         nconf /= J;
                     }
@@ -140,8 +141,8 @@ namespace upsylon {
     size_t integer_partition:: configs(const counting::with_sz_t &)    const
     {
         size_t     ans = 0;
-        const  mpn nc  = configs(counting::with_mp);
-        if(!nc.as(ans)) throw exception("%sconfigurations overflow",fn);
+        const  apn nc  = configs(counting::with_ap);
+        if(!nc.to(ans)) throw exception("%sconfigurations overflow",fn);
         return ans;
     }
 

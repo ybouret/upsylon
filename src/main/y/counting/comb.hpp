@@ -59,7 +59,7 @@ namespace upsylon
         // internal counting
         //______________________________________________________________________
         //! compute the number of combinations using mpn
-        static mpl::natural compute(const size_t N, const size_t K, const with_mp_t &);
+        static yap::natural compute(const size_t N, const size_t K, const with_ap_t &);
 
         //! compute the integral number of combinations, with size check
         static size_t       compute(const size_t N, const size_t K, const with_sz_t &);

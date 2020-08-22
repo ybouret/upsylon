@@ -173,9 +173,9 @@ Y_UTEST(sparse_matrix)
     fill_sparse<double>();
     fill_sparse<int>();
     fill_sparse<string>();
-    fill_sparse<mpn>();
-    fill_sparse<mpz>();
-    fill_sparse<mpq>();
+    fill_sparse<apn>();
+    fill_sparse<apz>();
+    fill_sparse<apq>();
 
     std::cerr << std::endl;
     {

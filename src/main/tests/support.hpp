@@ -3,7 +3,7 @@
 #define SUPPORT_INCLUDED 1
 
 
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/type/complex.hpp"
 #include "y/type/point3d.hpp"
 #include "y/alea.hpp"
@@ -95,31 +95,21 @@ namespace {
     }
 
     template <>
-    inline mpn support:: get<mpn>()
+    inline apn support:: get<apn>()
     {
-        return mpn( alea.leq(30), alea );
+        return apn( alea,alea.leq(30) );
     }
     
     template <>
-    inline mpz support:: get<mpz>()
+    inline apz support:: get<apz>()
     {
-        const mpn n( alea.leq(30), alea );
-        return mpz( alea.choice() ? mpl::__negative : mpl::__positive, n );
+        return apz( alea, alea.leq(30) );
     }
     
     template <>
-    inline mpq support:: get<mpq>()
+    inline apq support:: get<apq>()
     {
-        const mpz num = support::get<mpz>();
-        while(true)
-        {
-            const mpn den = support::get<mpn>();
-            if( !den.is_zero() )
-            {
-                const mpq Q(num,den);
-                return Q;
-            }
-        }
+        return apq(alea,alea.leq(30),alea.leq(30));
     }
 
     template <>

@@ -1,5 +1,5 @@
 #include "y/counting/symm-pair.hpp"
-#include "y/mpl/natural.hpp"
+#include "y/yap/natural.hpp"
 #include "y/exception.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
@@ -9,20 +9,20 @@ namespace upsylon {
 
     static const char fn[] = "symm_pair: ";
 
-    mpn symm_pair::compute(const size_t n, const with_mp_t &)
+    apn symm_pair::compute(const size_t n, const with_ap_t &)
     {
         if(n<=0) throw exception("%snull width",fn);
-        const mpn _n0  = n;
-        const mpn _n1  = n+1;
-        mpn       prod = _n0*_n1;
+        const apn _n0  = n;
+        const apn _n1  = n+1;
+        apn       prod = _n0*_n1;
         return prod>>1;
     }
 
     size_t symm_pair:: compute( const size_t n, const with_sz_t & )
     {
-        const mpn mp_count  = compute(n,with_mp);
+        const apn ap_count  = compute(n,with_ap);
         size_t    res = 0;
-        if( !mp_count.as(res) ) throw exception("%soverflow for %lu",fn,static_cast<unsigned long>(n));
+        if( !ap_count.to(res) ) throw exception("%soverflow for %lu",fn,static_cast<unsigned long>(n));
         return res;
     }
 
