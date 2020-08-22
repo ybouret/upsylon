@@ -15,6 +15,12 @@ namespace upsylon
     namespace yap
     {
 
+        void integer:: cast_overflow(const char *which)
+        {
+            if(!which) which = "???";
+            throw exception("integer cast overflow for '%s'",which);
+        }
+        
 #define Y_APZ_CHECK(HOST) assert( ((HOST).s == __zero) || ((HOST).n>0) )
         //======================================================================
         //

@@ -187,12 +187,49 @@ Y_APZ_OPERATOR(OP,CALL);
 
             //__________________________________________________________________
             //
-            // division
+            // conversion
             //__________________________________________________________________
-            string to_dec() const;
+            string to_dec() const; //!< decimal string
+                                   //! convert to an integral type
+            template <typename T> inline
+            bool to( T &target ) const throw()
+            {
+                static const T     tmin = limit_of<T>::minimum;
+                static const T     tmax = limit_of<T>::maximum; assert(tmax>0);
+                static const itype vmax(tmax);
+                static const itype vmin(tmin);
+                if( (*this<vmin) || (*this>vmax) )
+                {
+                    return false;
+                }
+                else
+                {
+                    switch(s)
+                    {
+                        case __negative: target = T( -itype(n.lsw())); break;
+                        case __zero    : target = 0;                   break;
+                        case __positive: target = T( itype(n.lsw()) ); break;
+                    }
+                    return true;
+                }
+            }
+            
+            //! wrapper
+            template <typename T>
+            inline T cast_to(const char *when = 0) const
+            {
+                T ans(0);
+                if(!to<T>(ans))
+                {
+                    cast_overflow(when);
+                }
+                return ans;
+            }
             
         private:
             void update() throw();
+            static void cast_overflow(const char *which);
+            
             Y_APZ_DECL_SAFE_METHOD(bool,eq);
             Y_APZ_DECL_SAFE_METHOD(bool,neq);
             Y_APZ_DECL_SAFE_METHOD(int,cmp);

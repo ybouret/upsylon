@@ -4,7 +4,7 @@ namespace upsylon {
 
     namespace mkl {
 
-        bool GramSchmidt:: OrthoSimple( matrix<mpl::rational> &a )
+        bool GramSchmidt:: OrthoSimple( matrix<apq> &a )
         {
             if(! Ortho(a) ) return false;
             
@@ -13,14 +13,14 @@ namespace upsylon {
             const size_t cols = a.cols;
             for(size_t i=1;i<=rows;++i)
             {
-                addressable<mpq> &r   = a[i];
-                mpn              big = r[1].den;
+                addressable<apq> &r  = a[i];
+                apn              big = r[1].den;
                 for(size_t j=2;j<=a.cols;++j)
                 {
-                    const mpn  &tmp = r[j].den;
+                    const apn  &tmp = r[j].den;
                     if(tmp>big) big = tmp;
                 }
-                const mpq fac = big;
+                const apq fac = big;
                 quark::rescale(r,fac);
                 size_t np = 0;
                 size_t nm = 0;
@@ -29,9 +29,9 @@ namespace upsylon {
                 {
                     switch(r[j].num.s)
                     {
-                        case mpl::__positive: ++np; break;
-                        case mpl::__negative: ++nm; break;
-                        case mpl::__zero:     ++nz; break;
+                        case yap::__positive: ++np; break;
+                        case yap::__negative: ++nm; break;
+                        case yap::__zero:     ++nz; break;
                     }
                 }
                 assert(np+nm+nz==cols);
@@ -43,9 +43,9 @@ namespace upsylon {
                 {
                     for(size_t j=1;j<=cols;++j)
                     {
-                        const mpl::sign_type &s = r[j].num.s;
-                        if(mpl::__zero==s) continue;
-                        if(mpl::__negative==s)
+                        const yap::sign_type &s = r[j].num.s;
+                        if(yap::__zero==s) continue;
+                        if(yap::__negative==s)
                         {
                             quark::neg(r);
                             break;
