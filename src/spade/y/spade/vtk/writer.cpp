@@ -3,7 +3,7 @@
 #include "y/type/spec.hpp"
 #include "y/associative/be-key.hpp"
 #include "y/exception.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 
 namespace upsylon {
 
@@ -21,19 +21,19 @@ namespace upsylon {
 
         namespace {
 
-            class mpnWriter : public vtk::Writer
+            class apnWriter : public vtk::Writer
             {
             public:
-                inline explicit mpnWriter() throw() : vtk::Writer() {}
-                inline virtual ~mpnWriter() throw() {}
+                inline explicit apnWriter() throw() : vtk::Writer() {}
+                inline virtual ~apnWriter() throw() {}
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(mpnWriter);
+                Y_DISABLE_COPY_AND_ASSIGN(apnWriter);
                 inline virtual
                 ios::ostream & write( ios::ostream &fp, const void *addr ) const
                 {
                     assert(addr);
-                    const string s = static_cast<const mpn *>(addr)->to_decimal();
+                    const string s = static_cast<const apn *>(addr)->to_dec();
                     fp << s;
                     return fp;
                 }
@@ -43,19 +43,19 @@ namespace upsylon {
 
             };
 
-            class mpzWriter : public vtk::Writer
+            class apzWriter : public vtk::Writer
             {
             public:
-                inline explicit mpzWriter() throw() : vtk::Writer() {}
-                inline virtual ~mpzWriter() throw() {}
+                inline explicit apzWriter() throw() : vtk::Writer() {}
+                inline virtual ~apzWriter() throw() {}
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(mpzWriter);
+                Y_DISABLE_COPY_AND_ASSIGN(apzWriter);
                 inline virtual
                 ios::ostream & write( ios::ostream &fp, const void *addr ) const
                 {
                     assert(addr);
-                    const string s = static_cast<const mpz *>(addr)->to_decimal();
+                    const string s = static_cast<const apz *>(addr)->to_dec();
                     fp << s;
                     return fp;
                 }
@@ -63,26 +63,26 @@ namespace upsylon {
                 inline virtual const char *dataType()   const throw() { return vtk::TypeInt; }
             };
 
-            class mpqWriter : public vtk::Writer
+            class apqWriter : public vtk::Writer
             {
             public:
-                inline explicit mpqWriter( const vtk::Writer &w ) throw() : vtk::Writer(), dWriter(w)
+                inline explicit apqWriter( const vtk::Writer &w ) throw() : vtk::Writer(), dWriter(w)
                 {
                 }
 
-                inline virtual ~mpqWriter() throw()
+                inline virtual ~apqWriter() throw()
                 {
                 }
 
                 const vtk::Writer &dWriter;
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(mpqWriter);
+                Y_DISABLE_COPY_AND_ASSIGN(apqWriter);
                 inline virtual
                 ios::ostream & write( ios::ostream &fp, const void *addr ) const
                 {
                     assert(addr);
-                    const double q = static_cast<const mpq *>(addr)->to_real();
+                    const double q = static_cast<const apq *>(addr)->to_double();
                     return dWriter.write(fp,&q);
                 }
                 inline virtual unsigned    components() const throw() { return 1; }
@@ -107,9 +107,9 @@ namespace upsylon {
             tuples<point3d,unit_t>();
 
 
-            record<mpn>(new mpnWriter());
-            record<mpz>(new mpzWriter());
-            record<mpq>(new mpqWriter( getNative<double>()));
+            record<apn>(new apnWriter());
+            record<apz>(new apzWriter());
+            record<apq>(new apqWriter( getNative<double>()));
         }
 
 

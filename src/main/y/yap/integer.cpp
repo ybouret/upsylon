@@ -627,7 +627,27 @@ namespace upsylon
             const utype la = iabs_of(lhs);
             return div_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
-        
+    }
+}
+
+#include "y/string.hpp"
+
+namespace upsylon
+{
+
+    namespace yap
+    {
+        string integer:: to_dec() const
+        {
+            if(s==__negative)
+            {
+                return '-' + n.to_dec();
+            }
+            else
+            {
+                return n.to_dec();
+            }
+        }
 
 
     }

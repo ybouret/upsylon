@@ -84,6 +84,6 @@ Y_UTEST(field)
     doAll<char>();
     doAll<int>();
     doAll<string>();
-    doAll<mpn>();
+    doAll<apn>();
 }
 Y_UTEST_DONE()
