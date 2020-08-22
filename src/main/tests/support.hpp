@@ -97,19 +97,19 @@ namespace {
     template <>
     inline apn support:: get<apn>()
     {
-        return apn( alea,alea.leq(30) );
+        return apn( alea,alea.leq(20) );
     }
     
     template <>
     inline apz support:: get<apz>()
     {
-        return apz( alea, alea.leq(30) );
+        return apz( alea, alea.leq(20) );
     }
     
     template <>
     inline apq support:: get<apq>()
     {
-        return apq(alea,alea.leq(30),alea.leq(30));
+        return apq(alea,alea.leq(20),alea.leq(20));
     }
 
     template <>

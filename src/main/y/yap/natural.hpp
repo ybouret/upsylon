@@ -450,4 +450,5 @@ static inline natural      FCN(const word_type *lhs, const size_t lnw, const wor
 
 }
 
+
 #endif

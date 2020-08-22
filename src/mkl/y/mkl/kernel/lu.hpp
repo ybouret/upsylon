@@ -45,8 +45,8 @@ namespace upsylon {
                 //
                 // initializing scaling/pivot
                 //______________________________________________________________
-                const scalar_type amin = xnumeric<scalar_type>::abs_minimum();
-                const scalar_type one  = 1;
+                const scalar_type &amin = xnumeric<scalar_type>::abs_minimum();
+                const scalar_type  one  = 1;
                 for( size_t i=n;i>0;--i)
                 {
                     const accessible<T> & a_i = a[i];

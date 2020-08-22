@@ -68,7 +68,7 @@ namespace upsylon
 
 	}
 
-    template <> mkl::real_t xnumeric<mkl::real_t>::abs_minimum() { return mkl::numeric<mkl::real_t>::minimum; }
+    template <> const mkl::real_t & xnumeric<mkl::real_t>::abs_minimum() { return mkl::numeric<mkl::real_t>::minimum; }
 
 
 }

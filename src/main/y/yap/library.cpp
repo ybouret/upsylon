@@ -1,6 +1,7 @@
 #include "y/yap/library.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/type/xnumeric.hpp"
 
 namespace upsylon {
 
@@ -149,8 +150,25 @@ namespace upsylon {
             return ans;
         }
 
-
     }
 
+    template <> const apn & xnumeric<apn>:: abs_minimum()
+    {
+        const yap::library &apl = yap::library::instance();
+        return apl._0;
+    }
+    
+    template <> const apz & xnumeric<apz>:: abs_minimum()
+    {
+        const yap::library &apl = yap::library::instance();
+        return apl._z0;
+    }
+    
+    template <> const apq & xnumeric<apq>:: abs_minimum()
+    {
+        const yap::library &apl = yap::library::instance();
+        return apl._q0;
+    }
+    
 }
 

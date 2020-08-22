@@ -123,8 +123,8 @@ namespace upsylon {
                 assert(r.size()==this->size());
 
                 // initialize
-                const size_t      n    = this->size(); assert(n>0);
-                const scalar_type amin = xnumeric<scalar_type>::abs_minimum();
+                const size_t       n    = this->size(); assert(n>0);
+                const scalar_type &amin = xnumeric<scalar_type>::abs_minimum();
                 T piv = b[1];
                 {
                     const scalar_type apiv = fabs_of(piv);
