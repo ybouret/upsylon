@@ -82,6 +82,37 @@ namespace upsylon {
             const prime::list_type primes; //!< list of precomputed primes
             const natural          launch; //!< 5 or last primes+6
 
+            class iterator
+            {
+            public:
+                ~iterator() throw();
+                iterator(const iterator &) throw();
+                iterator & operator==( const iterator &) throw();
+                
+                bool          is_valid()  const throw();
+                const prime & operator*() const throw();
+                const prime * operator->() const throw();
+                iterator  & operator++();      //!< prefix++ operator
+                iterator    operator++(int);   //!< postfix++ operator
+                iterator  & operator+=(const size_t);
+                friend iterator operator+(const iterator &, const size_t);
+                friend iterator operator+(const size_t, const iterator &);
+                
+                friend bool operator==(const iterator &,const iterator &);
+                friend bool operator!=(const iterator &,const iterator &);
+
+            private:
+                const prime  *ptr;
+                library      &lib;
+                iterator(const prime *, library &) throw();
+                void next();
+                void next(size_t);
+                void prev();
+                friend class library;
+            };
+            
+            iterator begin() throw();
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();

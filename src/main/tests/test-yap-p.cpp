@@ -26,7 +26,7 @@ Y_UTEST(yap_p)
     Y_UTEST_SIZEOF(prime);
 
     library &apl = library::instance();
-    size_t    n = 2000;
+    size_t    n = 1000;
     if(argc>1)
     {
         n=string_convert::to<size_t>(argv[1],"n");
@@ -94,6 +94,24 @@ Y_UTEST(yap_p)
         const size_t written = apl.save_to("apl.dat");
         std::cerr << "#written=" << written << std::endl;
     }
+    
+    apl.reset_primes();
+    
+    std::cerr << "iterator:";
+    size_t old_bits = 0;
+    for(library::iterator i=apl.begin();i->bits()<=3;++i)
+    {
+        const size_t cur_bits=i->bits();
+        if(cur_bits>old_bits)
+        {
+            std::cerr << std::endl << "bits=" << cur_bits << std::endl;
+            old_bits=cur_bits;
+        }
+            
+        std::cerr << ' ' << *i;
+    }
+    std::cerr << std::endl;
+    std::cerr << "#primes: " << apl.primes.size << std::endl;
 }
 Y_UTEST_DONE()
 

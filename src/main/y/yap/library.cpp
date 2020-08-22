@@ -2,6 +2,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/xnumeric.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -150,6 +151,125 @@ namespace upsylon {
             return ans;
         }
 
+        library::iterator:: iterator(const prime *p, library &l) throw() :
+        ptr(p),
+        lib(l)
+        {
+        }
+        
+        library::iterator:: iterator(const iterator &it) throw() :
+        ptr(it.ptr),
+        lib(it.lib)
+        {
+        }
+        
+        library:: iterator:: ~iterator() throw()
+        {
+            ptr=0;
+        }
+        
+        library::iterator library::begin() throw()
+        {
+            if(primes.size)
+            {
+                return iterator(primes.head,*this);
+            }
+            else
+            {
+                return iterator(&prefetch(), *this);
+            }
+        }
+
+        void library::iterator:: next()
+        {
+            if(!ptr) throw exception("invalid library::iterator::next");
+            ptr=ptr->next;
+            if(!ptr)
+            {
+                ptr = & lib.prefetch();
+            }
+        }
+        
+        void library::iterator:: next(size_t n)
+        {
+            while(n-- > 0)
+            {
+                next();
+            }
+        }
+        
+        void library::iterator:: prev()
+        {
+            if(!ptr) throw exception("invalid library::iterator::prev");
+            ptr=ptr->prev;
+        }
+        
+        bool library:: iterator:: is_valid() const throw()
+        {
+            return NULL!=ptr;
+        }
+            
+        const prime * library::iterator:: operator->() const throw()
+        {
+            assert(NULL!=ptr);
+            return ptr;
+        }
+        
+        const prime & library:: iterator:: operator*() const throw()
+        {
+            assert(NULL!=ptr);
+            return *ptr;
+        }
+
+        library::iterator & library::iterator:: operator==( const iterator &other) throw()
+        {
+            ptr=other.ptr;
+            return *this;
+        }
+
+        library::iterator  & library::iterator:: operator++()
+        {
+            next();
+            return *this;
+        }
+        
+        library::iterator   library::iterator:: operator++(int)
+        {
+            const iterator ans(*this);
+            next();
+            return ans;
+        }
+        
+        library::iterator  & library::iterator::operator +=(const size_t n)
+        {
+            next(n);
+            return *this;
+        }
+        
+        library::iterator operator+( const library::iterator &lhs, const size_t n)
+        {
+            library::iterator ans(lhs);
+            ans.next(n);
+            return ans;
+        }
+        
+        library::iterator operator+( const size_t n, const library::iterator &rhs )
+        {
+            library::iterator ans(rhs);
+            ans.next(n);
+            return ans;
+        }
+        
+        bool operator==(const library::iterator &a, const library::iterator &b)
+        {
+            return (a.ptr==b.ptr);
+        }
+        
+        bool operator!=(const library::iterator &a,const library::iterator &b)
+        {
+            return (a.ptr!=b.ptr);
+        }
+        
     }
 
     template <> const apn & xnumeric<apn>:: abs_minimum()
@@ -170,5 +290,8 @@ namespace upsylon {
         return apl._q0;
     }
     
+    
+   
+
 }
 
