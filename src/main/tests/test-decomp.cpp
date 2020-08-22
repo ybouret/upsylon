@@ -1,6 +1,6 @@
 #include "y/code/decomp.hpp"
 #include "y/utest/run.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/type/spec.hpp"
 
 using namespace upsylon;
@@ -40,9 +40,9 @@ Y_UTEST(decomp)
     doDecomp<int16_t>();
     doDecomp<int>();
     doDecomp<uint64_t>();
-    doDecomp<mpn>();
-    doDecomp<mpz>();
-    doDecomp<mpq>();
+    doDecomp<apn>();
+    doDecomp<apz>();
+    doDecomp<apq>();
 }
 Y_UTEST_DONE()
 

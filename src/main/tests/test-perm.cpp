@@ -6,7 +6,7 @@
 #include "y/string/convert.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/type/ints-display.hpp"
-#include "y/mpl/natural.hpp"
+#include "y/yap/natural.hpp"
 
 #include <iomanip>
 
@@ -23,7 +23,7 @@ namespace {
         size_t       wksp[N];
         size_t       addr[N];
         size_t      *P     = aliasing::as<size_t>(wksp)-1;
-        const mpn    np    = mpn::factorial(N);
+        const apn    np    = apn::factorial(N);
         const size_t count = np.cast_to<size_t>("#perm");
         
         std::cerr << "count=" << count << std::endl;

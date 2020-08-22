@@ -4,7 +4,6 @@
 
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
-#include "y/mpl/rational.hpp"
 #include "support.hpp"
 #include "y/sort/sorted-sum.hpp"
 
@@ -61,6 +60,6 @@ Y_UTEST(groups)
 {
     doGroups<unsigned short>();
     doGroups<double>();
-    doGroups<mpq>();
+    doGroups<apq>();
 }
 Y_UTEST_DONE()

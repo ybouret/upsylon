@@ -3,7 +3,7 @@
 #include "y/string/display.hpp"
 #include "y/type/complex.hpp"
 #include "y/container/matrix.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 
 using namespace upsylon;
 
@@ -62,7 +62,7 @@ Y_UTEST(spec)
     TS(complex<double>);
 
     TS(matrix<float>);
-    TS(matrix<mpz>);
+    TS(matrix<apz>);
 
     type_spec::display(std::cerr);
 
