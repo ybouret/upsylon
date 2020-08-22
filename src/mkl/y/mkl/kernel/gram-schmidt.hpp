@@ -4,7 +4,7 @@
 #define Y_MKL_GRAM_SCHMIDT_INCLUDED 1
 
 #include "y/container/matrix.hpp"
-#include "y/mpl/rational.hpp"
+#include "y/yap/rational.hpp"
 #include "y/mkl/kernel/quark.hpp"
 
 namespace upsylon {
@@ -49,7 +49,7 @@ namespace upsylon {
              - minimum of minus signs
              - first not zero coordinate is positive
              */
-            static bool OrthoSimple( matrix<mpq> &a );
+            static bool OrthoSimple( matrix<apq> &a );
 
 
             //! build ortho from integer matrix
@@ -58,12 +58,12 @@ namespace upsylon {
             {
                 const size_t rows = a.rows;
                 const size_t cols = a.cols;
-                matrix<mpq> q(rows,cols);
+                matrix<apq> q(rows,cols);
                 for(size_t i=rows;i>0;--i)
                 {
                     for(size_t j=cols;j>0;--j)
                     {
-                        q[i][j] = static_cast<mpl::integer_t>(a[i][j]);
+                        q[i][j] = static_cast<yap::number::itype>(a[i][j]);
                     }
                 }
                 if(!OrthoSimple(q)) return false;
