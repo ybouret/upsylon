@@ -7,6 +7,7 @@
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
 #include <cmath>
+#include <cstdio>
 
 using namespace upsylon;
 using namespace yap;
@@ -382,6 +383,12 @@ namespace {
             Y_ASSERT(C==D);
         }
         std::cerr << " |_square_of" << std::endl;
+        for(unsigned i=0;i<=300;++i)
+        {
+            const natural I = i;
+            const natural I2 = square_of(I);
+            Y_ASSERT(i*i==I2);
+        }
         std::cerr << std::hex;
         for(size_t iter=0;iter<ITER;++iter)
         {
@@ -391,6 +398,7 @@ namespace {
             const natural  S = natural::square_of(A);
             Y_ASSERT(S.lsw()==s);
         }
+        
 
         for(size_t iter=0;iter<ITER;++iter)
         {
@@ -817,8 +825,24 @@ Y_UTEST(yap_n)
     }
 
 
+    if(false)
+    {
+        std::cerr << "-- square16" << std::endl;
+        std::cerr.flush();
+        
+        for(unsigned i=0;i<256;++i)
+        {
+            fprintf(stderr, " 0x%04x", i*i);
+            if(i<255) fprintf(stderr,",");
+            if(0==( (i+1)%8) )
+            {
+                fprintf(stderr, "\n");
+            }
+        }
+        fflush(stderr);
+        std::cerr << "-- square16" << std::endl;
 
-
+    }
 
 
 

@@ -20,8 +20,8 @@ namespace upsylon
                 cswap(small_data,large_data);
                 cswap(small_size,large_size);
             }
-            const size_t num   = large_size+1;
-            const size_t space = num << word_exp2;
+            const size_t num   = large_size+1;     // final number of words
+            const size_t space = num << word_exp2; // in bytes
             natural      ans(space,as_capacity); assert( check(ans,"zero@add") );
 
             
