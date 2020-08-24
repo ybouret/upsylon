@@ -99,7 +99,12 @@ Y_UTEST(yap_p)
 
     std::cerr << "-- prime iterator:" << std::endl;
     prime_iterator p( apl );
-    while(p->bits()<=12)
+    size_t  m = 12;
+    if(argc>2) m = string_convert::to<size_t>( argv[2], "max bits" );
+
+    const natural top   = natural::exp2(m);
+    size_t        count = 1;
+    while(p<top)
     {
         std::cerr << *p << std::endl;
         const prime_iterator q=p;
@@ -114,8 +119,25 @@ Y_UTEST(yap_p)
         Y_ASSERT(p!=1);
         Y_ASSERT(!(p==1));
         Y_ASSERT(!(1==p));
+
+        Y_ASSERT(p<top);
+        Y_ASSERT(p<=top);
+        Y_ASSERT(top>p);
+        Y_ASSERT(top>=p);
+
         ++p;
+        ++count;
+        Y_ASSERT(apl.primes.size+2==count);
+        if(apl.primes.size+2>=100) break;
     }
+    std::cerr << "last=" << *p << std::endl;
+
+    std::cerr << "#primes=" << apl.primes.size+2 << std::endl;
+    {
+        const size_t written = apl.save_to("apl.dat");
+        std::cerr << "#written=" << written << std::endl;
+    }
+
 
     
 }

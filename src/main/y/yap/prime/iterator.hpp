@@ -42,7 +42,20 @@ namespace upsylon
             inline friend bool operator!=(const prime_iterator &lhs, const utype rhs)           throw() { return neq(lhs,rhs); }
             inline friend bool operator!=(const utype lhs, const prime_iterator &rhs)           throw() { return neq(rhs,lhs); }
 
+#define Y_APP_ITER_CMP(OP) \
+inline friend bool operator OP (const prime_iterator &lhs, const prime_iterator &rhs) throw() { return *lhs OP *rhs; }\
+inline friend bool operator OP (const prime_iterator &lhs, const natural        &rhs) throw() { return *lhs OP  rhs; }\
+inline friend bool operator OP (const natural        &lhs, const prime_iterator &rhs) throw() { return lhs  OP *rhs; }\
+inline friend bool operator OP (const prime_iterator &lhs, const utype           rhs) throw() { return *lhs OP  rhs; }\
+inline friend bool operator OP (const utype           lhs, const prime_iterator &rhs) throw() { return lhs  OP *rhs; }\
 
+#define Y_APP_ITER_COMPARISONS() \
+Y_APP_ITER_CMP(<)                \
+Y_APP_ITER_CMP(>)                \
+Y_APP_ITER_CMP(<=)               \
+Y_APP_ITER_CMP(>=)
+
+            Y_APP_ITER_COMPARISONS()
 
         private:
             const prime   *ptr;

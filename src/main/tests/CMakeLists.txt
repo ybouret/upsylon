@@ -324,11 +324,13 @@ SOURCE_GROUP(yap FILES
 test-yap-n.cpp
 test-yap-z.cpp
 test-yap-q.cpp
-test-yap-p.cpp)
+test-yap-p.cpp
+test-yap-prm.cpp)
 ADD_TEST(yap:n test-main yap_n)
 ADD_TEST(yap:z test-main yap_z)
 ADD_TEST(yap:q test-main yap_q)
 ADD_TEST(yap:p test-main yap_p)
+ADD_TEST(yap:prm test-main yap_prm ${HERE}/1000.txt)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
