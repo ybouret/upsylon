@@ -29,12 +29,15 @@ namespace upsylon {
             // C++
             //__________________________________________________________________
             explicit prime_factor(const natural &prm, const size_t xpn);
+            explicit prime_factor(const utype    prm, const size_t xpn);
             virtual ~prime_factor() throw();
             prime_factor(const prime_factor &) throw();
             prime_factor & operator=(const prime_factor &) throw();
 
+            prime_factor *next;
             const natural p;
             const size_t  n;
+
             //__________________________________________________________________
             //
             // serializable
@@ -52,6 +55,8 @@ namespace upsylon {
             friend bool operator!=(const prime_factor &lhs, const prime_factor &rhs) throw();
             friend std::ostream & operator<<( std::ostream &os, const prime_factor &f);
 
+        private:
+            void setup() throw();
         };
 
     }

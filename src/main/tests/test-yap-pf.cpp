@@ -1,5 +1,5 @@
 
-#include "y/yap/prime/factor.hpp"
+#include "y/yap/prime/factors.hpp"
 #include "y/yap/prime/iterator.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -20,9 +20,7 @@ namespace {
 
 Y_UTEST(yap_pf)
 {
-    Y_UTEST_SIZEOF(natural);
-    Y_UTEST_SIZEOF(prime);
-    Y_UTEST_SIZEOF(prime_factor);
+
 
     prime_iterator       p( library::instance() );
     vector<prime_factor> pf;
@@ -57,6 +55,10 @@ Y_UTEST(yap_pf)
     {
         std::cerr << pf[i] << " = " << pf[i].value() << std::endl;
     }
+    Y_UTEST_SIZEOF(natural);
+    Y_UTEST_SIZEOF(prime);
+    Y_UTEST_SIZEOF(prime_factor);
+    Y_UTEST_SIZEOF(prime_factors);
 
 }
 Y_UTEST_DONE()

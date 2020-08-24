@@ -10,12 +10,29 @@ namespace upsylon {
 
     namespace yap {
 
-        prime_factor :: prime_factor(const natural &prm, const size_t xpn) :
-        p(prm),
-        n(xpn)
+        void prime_factor:: setup() throw()
         {
-            assert(NULL!=p);
+            if(1==p) aliasing::_(n)=1;
+        }
+
+
+#define Y_APPF_CTOR()\
+next(0), \
+p(prm),  \
+n(xpn)
+
+        prime_factor :: prime_factor(const natural &prm, const size_t xpn) :
+        Y_APPF_CTOR()
+        {
             assert(n>0);
+            setup();
+        }
+
+        prime_factor :: prime_factor(const utype prm, const size_t xpn) :
+        Y_APPF_CTOR()
+        {
+            assert(n>0);
+            setup();
         }
 
         prime_factor:: ~prime_factor() throw()
@@ -94,7 +111,7 @@ namespace upsylon {
             if(xpn<=0) throw exception("%scorrupted exponent for '%s'",fn,which);
             size_t        prm_delta = 0;
             const natural prm       = natural::read(fp,prm_delta, which);
-            if(prm<2)  throw exception("%scorrupted possible prime for '%s'",fn,which);
+            if(prm==0)  throw exception("%scorrupted possible prime for '%s'",fn,which);
             delta = xpn_delta + prm_delta;
             return prime_factor(prm,xpn);
         }
