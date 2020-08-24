@@ -15,11 +15,14 @@ namespace upsylon {
     }
 
     namespace yap {
-        class library;
-
+        //______________________________________________________________________
+        //
+        // declarations
+        //______________________________________________________________________
         //#define Y_YAP_FORCE16
+        class library;                                            //!< forward declaration
+        typedef memory::tight::quarry_allocator memory_allocator; //!< alias
 
-        typedef memory::tight::quarry_allocator &memory_allocator; //!< alias
 
         //______________________________________________________________________
         //
