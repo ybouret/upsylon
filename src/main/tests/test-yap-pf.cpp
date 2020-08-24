@@ -63,9 +63,9 @@ Y_UTEST(yap_pf)
     if(argc>1)
     {
         const natural n = natural::parse( argv[1] );
-        std::cerr << "n=" << n << std::endl;
+        (std::cerr << "n=" << n << "=" ).flush();
         const prime_factors F = n;
-        std::cerr << "->" << F << std::endl;
+        std::cerr << F << std::endl;
         const natural p = F.value();
         Y_ASSERT(n==p);
         {
@@ -75,6 +75,32 @@ Y_UTEST(yap_pf)
                 ios::icstream fp("apfd.dat");
 
             }
+        }
+
+        if(argc>2)
+        {
+            const natural       m = natural::parse( argv[2] );
+            (std::cerr << "m=" << m << "=" ).flush();
+            const prime_factors G = m;
+            std::cerr << G << std::endl;
+
+            const prime_factors P = prime_factors::mul(F,G);
+            std::cerr << "P=" << P << std::endl;
+            const natural p = m*n;
+            Y_ASSERT(P.value()==p);
+        }
+
+    }
+
+    std::cerr << "factorial decomposition:" << std::endl;
+    {
+        prime_factors P(1);
+        for(size_t n=2;n<=30;++n)
+        {
+            const prime_factors tmp(n);
+            prime_factors prod = prime_factors::mul(tmp,P);
+            P.xch(prod);
+            std::cerr << n << "! = " << P << std::endl;
         }
     }
 

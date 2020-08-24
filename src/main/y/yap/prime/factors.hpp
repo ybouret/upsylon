@@ -33,6 +33,7 @@ namespace upsylon {
             //__________________________________________________________________
             prime_factors() throw();                           //!< zero
             prime_factors(const natural &n);                   //!< decompose
+            prime_factors(const utype    u);                   //!< decompose
             prime_factors(const prime_factors &);              //!< copy
             prime_factors & operator=( const prime_factors &); //!< assign
             virtual ~prime_factors() throw();                  //!< cleanup
@@ -50,13 +51,25 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-            natural value() const;
+            natural value() const;                //!< compute value
+            void    xch(prime_factors &) throw(); //!< no-throw
+
+            //__________________________________________________________________
+            //
+            // multiplication
+            //__________________________________________________________________
+            static  prime_factors mul(const prime_factors &lhs, const prime_factors &rhs);
+
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const factors_type factors;
+
+        private:
+            void make(const natural &n);
+
         };
 
     }

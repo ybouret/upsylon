@@ -119,6 +119,27 @@ assert((node)->next==NULL)
                 swap_with(tmp);
             }
 
+            //! append another list content
+            inline void merge_back( roll_of &other ) throw()
+            {
+                assert( this != &other );
+                while( other.size )
+                {
+                    push_back( other.pop_front() );
+                }
+            }
+
+
+            //! prepend another list content
+            inline void merge_front( roll_of &other ) throw()
+            {
+                assert( this != &other );
+                while( other.size )
+                {
+                    push_front( other.pop_back() );
+                }
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(roll_of);
         };
@@ -164,6 +185,22 @@ namespace upsylon
                     throw;
                 }
             }
+
+            //! copy and merge_back
+            inline void merge_back_copy( const roll_of_cpp &other)
+            {
+                roll_of_cpp tmp(other);
+                this->merge_back(tmp);
+            }
+
+            //! copy and merge front
+            inline void merge_front_copy( const roll_of_cpp &other)
+            {
+                roll_of_cpp tmp(other);
+                this->merge_front(tmp);
+            }
+
+            
 
         private:
             inline void release_() throw()

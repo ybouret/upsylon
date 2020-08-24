@@ -49,6 +49,11 @@ namespace upsylon {
             return os;
         }
 
+        void prime_factors::xch(prime_factors &other) throw()
+        {
+            aliasing::_(factors).swap_with( aliasing::_(other.factors) );
+        }
+
         natural prime_factors:: value() const
         {
             if(factors.size<=0)
@@ -82,10 +87,9 @@ namespace upsylon {
             return *this;
         }
 
-        prime_factors:: prime_factors(const natural &n) :
-        factors()
+        void prime_factors:: make(const natural &n)
         {
-            static library &apl = library::instance();
+            static library       &apl  = library::instance();
             static const natural &one  = apl._1;
             static const natural &zero = apl._0;
             if(n==zero)
@@ -130,7 +134,19 @@ namespace upsylon {
                     }
                 }
             }
+        }
 
+        prime_factors:: prime_factors(const utype u) :
+        factors()
+        {
+            const natural n(u);
+            make(n);
+        }
+        
+        prime_factors:: prime_factors(const natural &n) :
+        factors()
+        {
+            make(n);
         }
 
         const char prime_factors:: CLASS_NAME[] = "yapF";
@@ -145,6 +161,51 @@ namespace upsylon {
                 ans += f->serialize(fp);
             }
             return ans;
+        }
+
+
+        prime_factors prime_factors:: mul(const prime_factors &lhs, const prime_factors &rhs)
+        {
+            const factors_type &l = lhs.factors; const size_t nl = l.size;
+            const factors_type &r = rhs.factors; const size_t nr = r.size;
+
+            if(nl<=0||nr<=0)
+            {
+                return prime_factors();
+            }
+            else
+            {
+                assert(nl>0);
+                assert(nr>0);
+                prime_factors       p;
+                factors_type       &P = aliasing::_(p.factors);
+                const prime_factor *L = l.head;
+                const prime_factor *R = r.head;
+
+                while(L&&R)
+                {
+                    switch(natural::scmp(L->p,R->p))
+                    {
+                        case __negative: P.push_back( new prime_factor(*L) ); L=L->next; break;
+                        case __zero:     P.push_back( new prime_factor(L->p,L->n+R->n) ); L=L->next; R=R->next; break;
+                        case __positive: P.push_back( new prime_factor(*R) ); R=R->next; break;
+                    }
+                }
+
+                assert(NULL==L||NULL==R);
+                while(L)
+                {
+                    P.push_back( new prime_factor(*L) ); L=L->next;
+                }
+                while(R)
+                {
+                    P.push_back( new prime_factor(*R) ); R=R->next;
+                }
+
+
+                return p;
+            }
+
         }
 
     }
