@@ -58,7 +58,23 @@ namespace upsylon {
             //
             // multiplication
             //__________________________________________________________________
-            static  prime_factors mul(const prime_factors &lhs, const prime_factors &rhs);
+            static  prime_factors mul(const prime_factors &lhs, const prime_factors &rhs); //!< multiplication
+            static  prime_factors mul(const prime_factors &lhs, const natural       &rhs); //!< multipication wrapper
+            static  prime_factors mul(const prime_factors &lhs, const utype          rhs); //!< multiplication wrapper
+
+            inline friend prime_factors operator*(const prime_factors &lhs, const prime_factors &rhs) { return mul(lhs,rhs); }
+            inline friend prime_factors operator*(const prime_factors &lhs, const natural       &rhs) { return mul(lhs,rhs); }
+            inline friend prime_factors operator*(const prime_factors &lhs, const utype          rhs) { return mul(lhs,rhs); }
+            inline friend prime_factors operator*(const natural       &lhs, const prime_factors &rhs) { return mul(rhs,lhs); }
+            inline friend prime_factors operator*(const utype          lhs, const prime_factors &rhs) { return mul(rhs,lhs); }
+
+            inline prime_factors & operator*=(const prime_factors &rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; }
+            inline prime_factors & operator*=(const natural       &rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; }
+            inline prime_factors & operator*=(const utype          rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; }
+
+
+
+
 
 
             //__________________________________________________________________

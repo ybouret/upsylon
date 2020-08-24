@@ -166,8 +166,10 @@ namespace upsylon {
 
         prime_factors prime_factors:: mul(const prime_factors &lhs, const prime_factors &rhs)
         {
-            const factors_type &l = lhs.factors; const size_t nl = l.size;
-            const factors_type &r = rhs.factors; const size_t nr = r.size;
+            static library       &apl  = library::instance();
+            static const natural &one  = apl._1;
+            const factors_type   &l    = lhs.factors; const size_t nl = l.size;
+            const factors_type   &r    = rhs.factors; const size_t nr = r.size;
 
             if(nl<=0||nr<=0)
             {
@@ -202,11 +204,29 @@ namespace upsylon {
                     P.push_back( new prime_factor(*R) ); R=R->next;
                 }
 
+                if(P.size>1&&one==P.head->p)
+                {
+                    assert(1==P.head->n);
+                    delete P.pop_front();
+                }
+
 
                 return p;
             }
-
         }
+
+        prime_factors prime_factors:: mul(const prime_factors &lhs, const natural &rhs)
+        {
+            const prime_factors _(rhs);
+            return mul(lhs,_);
+        }
+
+        prime_factors prime_factors:: mul(const prime_factors &lhs, const utype rhs)
+        {
+            const prime_factors _(rhs);
+            return mul(lhs,_);
+        }
+
 
     }
 

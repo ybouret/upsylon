@@ -95,11 +95,9 @@ Y_UTEST(yap_pf)
     std::cerr << "factorial decomposition:" << std::endl;
     {
         prime_factors P(1);
-        for(size_t n=2;n<=30;++n)
+        for(size_t n=1;n<=30;++n)
         {
-            const prime_factors tmp(n);
-            prime_factors prod = prime_factors::mul(tmp,P);
-            P.xch(prod);
+            P *= n;
             std::cerr << n << "! = " << P << std::endl;
         }
     }
