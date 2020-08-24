@@ -106,7 +106,8 @@ Y_UTEST(yap_p)
     size_t        count = 1;
     while(p<top)
     {
-        std::cerr << *p << std::endl;
+        std::cerr << ' ' << *p;
+        if(0==(count%8)) std::cerr << std::endl;
         const prime_iterator q=p;
         Y_ASSERT(p==q);
         Y_ASSERT(!(p!=q));
@@ -128,8 +129,8 @@ Y_UTEST(yap_p)
         ++p;
         ++count;
         Y_ASSERT(apl.primes.size+2==count);
-        if(apl.primes.size+2>=100) break;
     }
+    std::cerr << std::endl;
     std::cerr << "last=" << *p << std::endl;
 
     std::cerr << "#primes=" << apl.primes.size+2 << std::endl;

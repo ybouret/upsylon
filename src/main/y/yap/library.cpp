@@ -93,7 +93,7 @@ namespace upsylon {
         {
             assert(launch>=_5);
             assert(launch.is_odd());
-            natural guess = launch;
+            natural guess = primes.tail ? (*primes.tail)+_2 : launch;
             while(!is_prime_(guess))
             {
                 guess += _2;
