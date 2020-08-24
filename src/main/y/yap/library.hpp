@@ -94,8 +94,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();
             virtual ~library() throw();
-
-
+            
         };
 
     }

@@ -179,20 +179,25 @@ namespace upsylon {
                 {
                     throw exception("yap::library::load: missing prime #%lu",(unsigned long)i);
                 }
-                shift += delta;
+                shift += bytes;
                 ++delta;
                 delta <<= 1;
                 guess += delta;
-                if(guess.is_odd()) throw exception("...invalid prime");
+               // if(!guess.is_odd()) throw exception("...invalid prime");
                 plist.push_back( new prime(guess) );
             }
+            
             natural top = pstart;
             if(available)
             {
             FIND_TOP:
                 top += _2;
                 const natural del = top - pstart;
-                if(!top.is_divisible_by(_6)) goto FIND_TOP;
+                if(!del.is_divisible_by(_6))
+                {
+                    top += _2;
+                    goto FIND_TOP;
+                }
             }
             
             // ok
@@ -218,7 +223,7 @@ namespace upsylon {
             switch(primes.size)
             {
                 case 0: return false;
-                case 1: aliasing::_(launch)=pstart; aliasing::_(primes).release(); return true;;
+                case 1: aliasing::_(launch)=pstart; aliasing::_(primes).release(); return true;
                 default:
                     break;
             }
