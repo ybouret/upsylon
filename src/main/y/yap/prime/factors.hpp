@@ -24,7 +24,7 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static const char CLASS_NAME[]; //!< "yapF";
+            static const char CLASS_NAME[];                       //!< "yapF";
             typedef core::roll_of_cpp<prime_factor> factors_type; //!< alias
 
             //__________________________________________________________________
@@ -38,6 +38,7 @@ namespace upsylon {
             prime_factors & operator=( const prime_factors &); //!< assign
             virtual ~prime_factors() throw();                  //!< cleanup
 
+            //! display
             friend std::ostream & operator<<(std::ostream &os, const prime_factors &F);
 
             //__________________________________________________________________
@@ -62,26 +63,22 @@ namespace upsylon {
             static  prime_factors mul(const prime_factors &lhs, const natural       &rhs); //!< multipication wrapper
             static  prime_factors mul(const prime_factors &lhs, const utype          rhs); //!< multiplication wrapper
 
-            inline friend prime_factors operator*(const prime_factors &lhs, const prime_factors &rhs) { return mul(lhs,rhs); }
-            inline friend prime_factors operator*(const prime_factors &lhs, const natural       &rhs) { return mul(lhs,rhs); }
-            inline friend prime_factors operator*(const prime_factors &lhs, const utype          rhs) { return mul(lhs,rhs); }
-            inline friend prime_factors operator*(const natural       &lhs, const prime_factors &rhs) { return mul(rhs,lhs); }
-            inline friend prime_factors operator*(const utype          lhs, const prime_factors &rhs) { return mul(rhs,lhs); }
+            inline friend prime_factors operator*(const prime_factors &lhs, const prime_factors &rhs) { return mul(lhs,rhs); } //!< multiplication
+            inline friend prime_factors operator*(const prime_factors &lhs, const natural       &rhs) { return mul(lhs,rhs); } //!< multiplication
+            inline friend prime_factors operator*(const prime_factors &lhs, const utype          rhs) { return mul(lhs,rhs); } //!< multiplication
+            inline friend prime_factors operator*(const natural       &lhs, const prime_factors &rhs) { return mul(rhs,lhs); } //!< multiplication
+            inline friend prime_factors operator*(const utype          lhs, const prime_factors &rhs) { return mul(rhs,lhs); } //!< multiplication
 
-            inline prime_factors & operator*=(const prime_factors &rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; }
-            inline prime_factors & operator*=(const natural       &rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; }
-            inline prime_factors & operator*=(const utype          rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; }
-
-
-
-
+            inline prime_factors & operator*=(const prime_factors &rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; } //!< in-place multiplication
+            inline prime_factors & operator*=(const natural       &rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; } //!< in-place multiplication
+            inline prime_factors & operator*=(const utype          rhs) { prime_factors tmp = mul(*this,rhs); xch(tmp); return *this; } //!< in-place multiplication
 
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const factors_type factors;
+            const factors_type factors; //!< list of factors, increasing
 
         private:
             void make(const natural &n);

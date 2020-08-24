@@ -190,7 +190,8 @@ Y_APZ_OPERATOR(OP,CALL);
             // conversion
             //__________________________________________________________________
             string to_dec() const; //!< decimal string
-                                   //! convert to an integral type
+
+            //! convert to an integral type
             template <typename T> inline
             bool to( T &target ) const throw()
             {

@@ -27,9 +27,9 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static const char CLASS_NAME[]; //!< "yapl"
-            Y_SINGLETON_DECL(library);      //!< aliases
-            typedef auto_ptr<const prime> pprime;
+            static const char CLASS_NAME[];        //!< "yapl"
+            Y_SINGLETON_DECL(library);             //!< aliases
+            typedef auto_ptr<const prime> pprime;  //!< alias
             //__________________________________________________________________
             //
             // serializable
@@ -80,11 +80,11 @@ namespace upsylon {
             //
             // primes db
             //__________________________________________________________________
-            const natural         &pstart; //! _5
+            const natural         &pstart; //!< _5
             const prime::list_type primes; //!< list of precomputed primes
-            const natural          launch; //!< 5 or last primes+6
-            const pprime           p2;
-            const pprime           p3;
+            const natural          launch; //!< 5 or next multiple of 6 above last prime
+            const pprime           p2;     //!< 2 as prime
+            const pprime           p3;     //!< 3 as prime
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);

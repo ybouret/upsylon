@@ -55,10 +55,7 @@ Y_UTEST(yap_pf)
     {
         std::cerr << pf[i] << " = " << pf[i].value() << std::endl;
     }
-    Y_UTEST_SIZEOF(natural);
-    Y_UTEST_SIZEOF(prime);
-    Y_UTEST_SIZEOF(prime_factor);
-    Y_UTEST_SIZEOF(prime_factors);
+
 
     if(argc>1)
     {
@@ -100,8 +97,12 @@ Y_UTEST(yap_pf)
             P *= n;
             std::cerr << n << "! = " << P << std::endl;
         }
+        
     }
-
+    Y_UTEST_SIZEOF(natural);
+    Y_UTEST_SIZEOF(prime);
+    Y_UTEST_SIZEOF(prime_factor);
+    Y_UTEST_SIZEOF(prime_factors);
 }
 Y_UTEST_DONE()
 
