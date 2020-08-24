@@ -42,7 +42,7 @@ inline prime_ratio(const LHS lhs, const RHS rhs) : num(lhs), den(rhs) { check();
             Y_APPQ_CTOR(utype   ,natural&)
             Y_APPQ_CTOR(natural &,utype  )
             Y_APPQ_CTOR(utype    ,utype  )
-
+            Y_APPQ_CTOR(prime_factors&,prime_factors&)
 
             //__________________________________________________________________
             //
@@ -67,7 +67,7 @@ inline prime_ratio(const LHS lhs, const RHS rhs) : num(lhs), den(rhs) { check();
 
         private:
             void check()  const;
-            void update() throw();
+            void update();
         };
     }
 }

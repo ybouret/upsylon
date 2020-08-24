@@ -74,7 +74,7 @@ namespace upsylon {
             return os;
         }
 
-        void prime_ratio:: update() throw()
+        void prime_ratio:: update()
         {
             assert(!den.is_zero());
 
@@ -105,12 +105,38 @@ namespace upsylon {
                         case __positive: D.push_back( d.pop_front() ); break;
                         case __zero:
                         {
-                            if(n.head->n<d.head->n)
+                            const size_t n_power = n.head->n;
+                            const size_t d_power = d.head->n;
+                            delete n.pop_front();
+                            prime_factor *f = d.pop_front();
+                            if(n_power<d_power)
                             {
-                                
+                                aliasing::_(f->n) = d_power-n_power;
+                                D.push_back(f);
+                            }
+                            else
+                            {
+                                if(n_power>d_power)
+                                {
+                                    aliasing::_(f->n) = n_power-d_power;
+                                    N.push_back(f);
+                                }
+                                else
+                                {
+                                    assert(n_power==d_power);
+                                    delete f;
+                                }
                             }
                         } break;
                     }
+                }
+                N.merge_back(n);
+                D.merge_back(d);
+                n.swap_with(N);
+                d.swap_with(D);
+                if(d.size<=0)
+                {
+                    d.push_back( new prime_factor(1,1) );
                 }
             }
 

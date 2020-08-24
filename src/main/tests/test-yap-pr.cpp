@@ -20,8 +20,22 @@ namespace {
 
 Y_UTEST(yap_pr)
 {
-    prime_ratio q(100,20);
-    std::cerr << q << std::endl;
+    for(size_t i=0;i<10;++i)
+    {
+        const natural       num(alea,alea.leq(15));
+        std::cerr << "num=" << num << std::endl;
+        const prime_factors pfn = num;
+        std::cerr << "pfn=" << pfn << std::endl;
+
+        const natural       den(alea,1+alea.lt(15));
+        std::cerr << "den=" << den << std::endl;
+        const prime_factors pfd = den;
+        std::cerr << "pfd=" << pfd << std::endl;
+        const prime_ratio   q(pfn,pfd);
+        std::cerr << "[" << num << "=" << pfn << "]/[" << den << "=" << pfd << "]";
+        std::cerr.flush();
+        std::cerr << "=" << q << std::endl;
+    }
 }
 Y_UTEST_DONE()
 
