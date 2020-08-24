@@ -41,6 +41,8 @@ n(xpn)
         }
 
         prime_factor:: prime_factor(const prime_factor &f) throw() :
+        number(),
+        next(0),
         p(f.p),
         n(f.n)
         {

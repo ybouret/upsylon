@@ -60,6 +60,24 @@ Y_UTEST(yap_pf)
     Y_UTEST_SIZEOF(prime_factor);
     Y_UTEST_SIZEOF(prime_factors);
 
+    if(argc>1)
+    {
+        const natural n = natural::parse( argv[1] );
+        std::cerr << "n=" << n << std::endl;
+        const prime_factors F = n;
+        std::cerr << "->" << F << std::endl;
+        const natural p = F.value();
+        Y_ASSERT(n==p);
+        {
+            const size_t written = F.save_to("apfd.dat");
+            std::cerr << "written=" << written << std::endl;
+            {
+                ios::icstream fp("apfd.dat");
+
+            }
+        }
+    }
+
 }
 Y_UTEST_DONE()
 
