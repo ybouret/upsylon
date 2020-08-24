@@ -352,10 +352,10 @@ namespace upsylon {
 }
 
 #include "y/type/complex.hpp"
-#include "y/yap/rational.hpp"
 #include "y/type/point3d.hpp"
 #include "y/type/point1d.hpp"
 
+#include "y/yap/rational.hpp"
 
 namespace upsylon {
 
