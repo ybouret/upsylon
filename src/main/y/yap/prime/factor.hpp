@@ -37,7 +37,8 @@ namespace upsylon {
             prime_factor *next; //!< for pool/roll
             const natural p;    //!< prime number
             const size_t  n;    //!< exponent
-
+            prime_factor *make_one() throw();
+            
             //__________________________________________________________________
             //
             // serializable

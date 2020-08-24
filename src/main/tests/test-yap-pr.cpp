@@ -20,22 +20,30 @@ namespace {
 
 Y_UTEST(yap_pr)
 {
-    for(size_t i=0;i<10;++i)
+    library &apl = library::instance();
+    apl.prefetch(100);
+    
+    if(argc>1)
     {
-        const natural       num(alea,alea.leq(15));
-        std::cerr << "num=" << num << std::endl;
-        const prime_factors pfn = num;
-        std::cerr << "pfn=" << pfn << std::endl;
-
-        const natural       den(alea,1+alea.lt(15));
-        std::cerr << "den=" << den << std::endl;
-        const prime_factors pfd = den;
-        std::cerr << "pfd=" << pfd << std::endl;
-        const prime_ratio   q(pfn,pfd);
-        std::cerr << "[" << num << "=" << pfn << "]/[" << den << "=" << pfd << "]";
-        std::cerr.flush();
-        std::cerr << "=" << q << std::endl;
+        natural num = natural::parse(argv[1]);
+        natural den = 1;
+        if(argc>2)
+        {
+            den = natural::parse(argv[2]);
+        }
+        std::cerr << "num = " << num << std::endl;
+        std::cerr << "den = " << den << std::endl;
+        const prime_factors Fn = num;
+        std::cerr << "Fn  = " << Fn << std::endl;
+        const prime_factors Fd = den;
+        std::cerr << "Fd  = " << Fd << std::endl;
+        const prime_ratio Q(Fn,Fd);
+        std::cerr << "Q   = " << Q.num << "/" << Q.den << " = " << Q << std::endl;
     }
+
+    
+    
+   
 }
 Y_UTEST_DONE()
 

@@ -1,5 +1,6 @@
 #include "y/yap/library.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/xnumeric.hpp"
 #include "y/exception.hpp"
@@ -148,11 +149,59 @@ namespace upsylon {
                 tmp.shr(1); assert(tmp>0);
                 --tmp;
                 assert(old+2*(tmp+1)==cur);
+#if 0
                 ans += tmp.serialize(os);
+#else
+                ans += os.write_upack( tmp.cast_to<size_t>("prime code") );
+#endif
                 old = cur;
             }
             return ans;
         }
+        
+        
+        
+        void library:: load(ios::istream &fp,const size_t nmax)
+        {
+            size_t available = 0;
+            size_t shift     = 0;
+            if( !fp.query_upack(available,shift) ) throw exception("yap::library::load: missing #available");
+            if(nmax>0&&nmax<available) available=nmax;
+            
+            
+            prime::list_type plist;
+            natural          guess = *p3;
+            for(size_t i=1;i<=available;++i)
+            {
+                size_t delta = 0;
+                size_t bytes = 0;
+                if( !fp.query_upack(delta,bytes) )
+                {
+                    throw exception("yap::library::load: missing prime #%lu",(unsigned long)i);
+                }
+                shift += delta;
+                ++delta;
+                delta <<= 1;
+                guess += delta;
+                if(guess.is_odd()) throw exception("...invalid prime");
+                plist.push_back( new prime(guess) );
+            }
+            natural top = pstart;
+            if(available)
+            {
+            FIND_TOP:
+                top += _2;
+                const natural del = top - pstart;
+                if(!top.is_divisible_by(_6)) goto FIND_TOP;
+            }
+            
+            // ok
+            aliasing::_(launch).xch(top);
+            aliasing::_(primes).swap_with(plist);
+            
+        }
+
+        
 
         const prime & library:: upper() const throw()
         {
@@ -174,14 +223,14 @@ namespace upsylon {
                     break;
             }
             assert(primes.size>=2);
-            natural top = *(primes.tail->prev);
-            ++top;
+            natural top = *(primes.tail->prev); assert(top.is_odd());
+            top += _2;
             FIND_TOP:
             {
                 const natural delta = top-_5;
                 if(!delta.is_divisible_by(_6))
                 {
-                    ++top;
+                    top += _2;
                     goto FIND_TOP;
                 }
             }

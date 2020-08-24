@@ -61,6 +61,14 @@ n(xpn)
             return ans;
         }
 
+        prime_factor * prime_factor:: make_one() throw()
+        {
+            aliasing::_(p).make(1);
+            aliasing::_(n)=1;
+            return this;
+        }
+
+        
 
         bool operator==(const prime_factor &lhs, const prime_factor &rhs) throw()
         {

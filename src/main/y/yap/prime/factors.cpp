@@ -120,12 +120,10 @@ namespace upsylon {
                     {
                         size_t         xpn = 0;
                         const natural &den = *it;
-                        //std::cerr << "|_testing " << num << "/" << den << std::endl;
                         assert(den<=num);
                         while(true)
                         {
                             natural::split(q,r,num,den);
-                            //std::cerr << " |_q=" << q << ", r=" << r << std::endl;
                             if(r==zero)
                             {
                                 ++xpn;
