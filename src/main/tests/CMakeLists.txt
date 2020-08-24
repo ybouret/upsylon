@@ -334,7 +334,7 @@ ADD_TEST(yap:q test-main yap_q)
 ADD_TEST(yap:p test-main yap_p)
 ADD_TEST(yap:prm test-main yap_prm ${HERE}/1000.txt)
 ADD_TEST(yap:pf test-main yap_pf 6666 5789)
-ADD_TEST(yap:db test-main yap_db)
+ADD_TEST(yap:db test-main yap_db 5000)
 
 
 ADD_CUSTOM_TARGET(utest-main
