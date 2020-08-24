@@ -15,9 +15,9 @@ namespace
         std::cerr << "sizeof(real)=" << sizeof(T) << std::endl;
         typedef complex<T> cplx;
         hashing::sha1 H;
-        for(size_t n=1;n<=8192;n*=2)
+        for(size_t n=1;n<=16384;n*=2)
         {
-            std::cerr << "n=" << n << " : "; std::cerr.flush();
+            std::cerr << "n=" << std::setw(5) << n << " : "; std::cerr.flush();
             vector<cplx> v0(n);
             vector<cplx> v(n);
             for(size_t iter=0;iter<10;++iter)
@@ -58,12 +58,22 @@ namespace
 
     static inline void save_indices(ios::ostream &src, const array<size_t> &indices)
     {
+        bool ret=false;
         for(size_t i=1;i<=indices.size();++i)
         {
-            src("%u",(unsigned)indices[i]);
+            src("0x%x",(unsigned)indices[i]);
             if(i<indices.size()) src << ',';
+            if(0==(i%16))
+            {
+                src << '\n';
+                ret = true;
+            }
+            else
+            {
+                ret=false;
+            }
         }
-        src << '\n';
+        if(!ret) src << '\n';
     }
 
     static inline void generate(const size_t   size,
@@ -100,8 +110,8 @@ namespace
             const size_t nx = idx.size();
             assert(jdx.size()==idx.size());
             std::cerr << "\tnx=" << nx << std::endl;
-            imp("case %u:", (unsigned)size);
-            im2("case %u:", (unsigned)size);
+            imp("case %5u:", (unsigned)size);
+            im2("case %5u:", (unsigned)size);
             if(nx>0)
             {
                 hdr("static const size_t indx%u[%u];//!< first  index\n",(unsigned)size,unsigned(nx));
@@ -116,8 +126,8 @@ namespace
                 save_indices(src,jdx);
                 src("};\n\n");
 
-                imp(" for(size_t i=0;i<%u;++i) Y_XBITREV_SWAP(indx%u[i],jndx%u[i]); ", unsigned(nx), unsigned(size), unsigned(size) );
-                im2(" for(size_t i=0;i<%u;++i) Y_XBITREV_SWAP2(indx%u[i],jndx%u[i]) ", unsigned(nx), unsigned(size), unsigned(size) );
+                imp(" for(size_t i=0;i<%5u;++i) Y_XBITREV_SWAP(indx%u[i],jndx%u[i]); ", unsigned(nx), unsigned(size), unsigned(size) );
+                im2(" for(size_t i=0;i<%5u;++i) Y_XBITREV_SWAP2(indx%u[i],jndx%u[i]) ", unsigned(nx), unsigned(size), unsigned(size) );
 
             }
             imp("break;\n");
@@ -141,7 +151,7 @@ Y_UTEST(xbitrev)
         ios::ocstream src("xbitrev-data.cxx");
 
         generate(0,hdr,imp,src,im2);
-        for(size_t size=1;size<=4096;size*=2)
+        for(size_t size=1;size<=8192;size<<=1)
         {
             generate(size,hdr,imp,src,im2);
         }

@@ -31,3 +31,6 @@ static const size_t jndx2048[992];//!< second index
 static const size_t indx4096[2016];//!< first  index
 static const size_t jndx4096[2016];//!< second index
 
+static const size_t indx8192[4032];//!< first  index
+static const size_t jndx8192[4032];//!< second index
+
