@@ -154,7 +154,42 @@ namespace upsylon {
             return ans;
         }
 
-       
+        const prime & library:: upper() const throw()
+        {
+            return (primes.size<=0) ? (*p3) : *(primes.tail);
+        }
+
+        size_t library:: size()  const throw()
+        {
+            return 2+primes.size;
+        }
+
+        bool library:: prune()
+        {
+            switch(primes.size)
+            {
+                case 0: return false;
+                case 1: aliasing::_(launch)=pstart; aliasing::_(primes).release(); return true;;
+                default:
+                    break;
+            }
+            assert(primes.size>=2);
+            natural top = *(primes.tail->prev);
+            ++top;
+            FIND_TOP:
+            {
+                const natural delta = top-_5;
+                if(!delta.is_divisible_by(_6))
+                {
+                    ++top;
+                    goto FIND_TOP;
+                }
+            }
+            aliasing::_(launch).xch(top);
+            delete aliasing::_(primes).pop_back();
+            return true;
+        }
+
         
     }
 

@@ -37,6 +37,7 @@ namespace upsylon {
             virtual const char *className() const throw();       //!< className
             virtual size_t      serialize(ios::ostream &) const; //!< encoded
 
+
             //__________________________________________________________________
             //
             // primes handling
@@ -85,7 +86,10 @@ namespace upsylon {
             const natural          launch; //!< 5 or next multiple of 6 above last prime
             const pprime           p2;     //!< 2 as prime
             const pprime           p3;     //!< 3 as prime
-            
+            const prime           &upper() const throw(); //!< upper prime
+            bool                   prune();               //!< try to prune last prime
+            size_t                 size()  const throw(); //!< 2+primes.count
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();
