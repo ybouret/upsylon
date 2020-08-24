@@ -17,7 +17,7 @@ namespace upsylon
 
         static inline void check_prime( const prime &p )
         {
-            if(p<5)
+            if(p<2)
             {
                 const string s = p.to_dec();
                 throw exception("yap::prime(%s<5)",*s);

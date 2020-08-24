@@ -1,5 +1,5 @@
 
-#include "y/yap/library.hpp"
+#include "y/yap/prime/iterator.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/ios/ocstream.hpp"
@@ -96,22 +96,28 @@ Y_UTEST(yap_p)
     }
     
     apl.reset_primes();
-    
-    std::cerr << "iterator:";
-    size_t old_bits = 0;
-    for(library::iterator i=apl.begin();i->bits()<=3;++i)
+
+    std::cerr << "-- prime iterator:" << std::endl;
+    prime_iterator p( apl );
+    while(p->bits()<=12)
     {
-        const size_t cur_bits=i->bits();
-        if(cur_bits>old_bits)
-        {
-            std::cerr << std::endl << "bits=" << cur_bits << std::endl;
-            old_bits=cur_bits;
-        }
-            
-        std::cerr << ' ' << *i;
+        std::cerr << *p << std::endl;
+        const prime_iterator q=p;
+        Y_ASSERT(p==q);
+        Y_ASSERT(!(p!=q));
+        const natural &one = apl._1;
+        Y_ASSERT(!(p==one));
+        Y_ASSERT(!(one==p));
+        Y_ASSERT(p!=one);
+        Y_ASSERT(one!=p);
+        Y_ASSERT(1!=p);
+        Y_ASSERT(p!=1);
+        Y_ASSERT(!(p==1));
+        Y_ASSERT(!(1==p));
+        ++p;
     }
-    std::cerr << std::endl;
-    std::cerr << "#primes: " << apl.primes.size << std::endl;
+
+    
 }
 Y_UTEST_DONE()
 

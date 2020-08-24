@@ -396,6 +396,13 @@ SOURCE_GROUP( yap/natural FILES ${yap_natural_srcs} )
 INSTALL( FILES ${yap_natural_decl} DESTINATION include/y/yap/natural )
 
 
+FILE(GLOB yap_prime_decl y/yap/prime/*.hpp)
+FILE(GLOB yap_prime_code y/yap/prime/*.cpp)
+SET(yap_prime_srcs ${yap_prime_decl} ${yap_prime_code})
+SOURCE_GROUP( yap/prime FILES ${yap_prime_srcs} )
+INSTALL( FILES ${yap_prime_decl} DESTINATION include/y/yap/prime )
+
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -428,7 +435,6 @@ ${information_translator_run_length_srcs}
 ${information_translator_base64_srcs} 
 ${codec_srcs} ${lzo_srcs}
 ${fft_srcs}
-#${mpl_srcs} ${mpl_natural_srcs} ${mpl_prime_srcs} ${mpl_rsa_srcs}
 ${math_srcs}
 ${functor_srcs}
 ${fs_srcs}
@@ -446,7 +452,7 @@ ${jargon_pattern_basic_srcs}
 ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
 ${tensor_srcs}
-${yap_srcs} ${yap_natural_srcs}
+${yap_srcs} ${yap_natural_srcs} ${yap_prime_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

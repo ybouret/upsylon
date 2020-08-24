@@ -6,6 +6,7 @@
 
 #include "y/yap/rational.hpp"
 #include "y/yap/prime.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
@@ -28,7 +29,7 @@ namespace upsylon {
             //__________________________________________________________________
             static const char CLASS_NAME[]; //!< "yapl"
             Y_SINGLETON_DECL(library);      //!< aliases
-
+            typedef auto_ptr<const prime> pprime;
             //__________________________________________________________________
             //
             // serializable
@@ -79,39 +80,11 @@ namespace upsylon {
             //
             // primes db
             //__________________________________________________________________
+            const natural         &pstart; //! _5
             const prime::list_type primes; //!< list of precomputed primes
             const natural          launch; //!< 5 or last primes+6
-
-            class iterator
-            {
-            public:
-                ~iterator() throw();
-                iterator(const iterator &) throw();
-                iterator & operator==( const iterator &) throw();
-                
-                bool          is_valid()  const throw();
-                const prime & operator*() const throw();
-                const prime * operator->() const throw();
-                iterator  & operator++();      //!< prefix++ operator
-                iterator    operator++(int);   //!< postfix++ operator
-                iterator  & operator+=(const size_t);
-                friend iterator operator+(const iterator &, const size_t);
-                friend iterator operator+(const size_t, const iterator &);
-                
-                friend bool operator==(const iterator &,const iterator &);
-                friend bool operator!=(const iterator &,const iterator &);
-
-            private:
-                const prime  *ptr;
-                library      &lib;
-                iterator(const prime *, library &) throw();
-                void next();
-                void next(size_t);
-                void prev();
-                friend class library;
-            };
-            
-            iterator begin() throw();
+            const pprime           p2;
+            const pprime           p3;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);
