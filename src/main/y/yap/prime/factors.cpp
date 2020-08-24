@@ -20,7 +20,7 @@ namespace upsylon {
 
         std::ostream & operator<<(std::ostream &os, const prime_factors &F)
         {
-            const prime_factors::factors_type fac = F.factors;
+            const pf_list &fac = F.factors;
             switch (fac.size)
             {
                 case 0: os << '0'; break;
@@ -47,6 +47,16 @@ namespace upsylon {
             }
 
             return os;
+        }
+
+        bool   prime_factors:: is_zero() const throw()
+        {
+            return factors.size<=0;
+        }
+
+        bool prime_factors:: is_one() const throw()
+        {
+            return 1==factors.size && (1==factors.head->p);
         }
 
         void prime_factors::xch(prime_factors &other) throw()
@@ -82,7 +92,7 @@ namespace upsylon {
 
         prime_factors & prime_factors:: operator=( const prime_factors &other )
         {
-            factors_type tmp(other.factors);
+            pf_list tmp(other.factors);
             aliasing::_(factors).swap_with(tmp);
             return *this;
         }
@@ -168,8 +178,8 @@ namespace upsylon {
         {
             static library       &apl  = library::instance();
             static const natural &one  = apl._1;
-            const factors_type   &l    = lhs.factors; const size_t nl = l.size;
-            const factors_type   &r    = rhs.factors; const size_t nr = r.size;
+            const pf_list        &l    = lhs.factors; const size_t nl = l.size;
+            const pf_list        &r    = rhs.factors; const size_t nr = r.size;
 
             if(nl<=0||nr<=0)
             {
@@ -180,7 +190,7 @@ namespace upsylon {
                 assert(nl>0);
                 assert(nr>0);
                 prime_factors       p;
-                factors_type       &P = aliasing::_(p.factors);
+                pf_list            &P = aliasing::_(p.factors);
                 const prime_factor *L = l.head;
                 const prime_factor *R = r.head;
 

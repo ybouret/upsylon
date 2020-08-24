@@ -13,6 +13,12 @@ namespace upsylon {
 
         //______________________________________________________________________
         //
+        // common definition
+        //______________________________________________________________________
+        typedef core::roll_of_cpp<prime_factor> pf_list; //!< alias
+
+        //______________________________________________________________________
+        //
         //
         //! a prime factors decomposition
         //
@@ -25,7 +31,6 @@ namespace upsylon {
             // types and definitions
             //__________________________________________________________________
             static const char CLASS_NAME[];                       //!< "yapF";
-            typedef core::roll_of_cpp<prime_factor> factors_type; //!< alias
 
             //__________________________________________________________________
             //
@@ -54,6 +59,8 @@ namespace upsylon {
             //__________________________________________________________________
             natural value() const;                //!< compute value
             void    xch(prime_factors &) throw(); //!< no-throw
+            bool    is_zero() const throw();      //!< check is zero
+            bool    is_one()  const throw();      //!< check is one
 
             //__________________________________________________________________
             //
@@ -78,7 +85,7 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const factors_type factors; //!< list of factors, increasing
+            const pf_list factors; //!< list of factors, increasing
 
         private:
             void make(const natural &n);

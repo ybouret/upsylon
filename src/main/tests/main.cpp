@@ -227,6 +227,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(yap_prm);
     Y_UTEST(yap_pf);
     Y_UTEST(yap_db);
+    Y_UTEST(yap_pr);
 }
 Y_UTEST_EXEC()
 
