@@ -39,6 +39,7 @@ namespace upsylon {
         }
 
         prime_ratio:: prime_ratio(const prime_ratio &other) :
+        number(),
         num(other.num),
         den(other.den)
         {
