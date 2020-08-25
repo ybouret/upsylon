@@ -53,36 +53,36 @@ namespace upsylon {
 
         bool library:: is_prime_(const natural &n) const
         {
-            switch(n.word[0])
+
+            if(n<=_3)
             {
-                case 0:
-                case 1:
+                // may be 0,1,2,3
+                return (n>_1);
+            }
+            else
+            {
+                if( n.is_divisible_by(_2) || n.is_divisible_by(_3) )
+                {
                     return false;
-                case 2:
-                case 3:
-                    return true;
-                default: if( n.is_divisible_by(_2) || n.is_divisible_by(_3) ) return false;
+                }
+                else
+                {
+                    assert(n>=5);
 
+                    natural p = _5; assert(p.is_odd());
+                    while(true)
+                    {
+                        { const natural q = natural::square_of(p); if(q>n) return true; }
+                        if( n.is_divisible_by(p) ) return false;
+                        const natural   t = p+_2;
+                        if( n.is_divisible_by(t) ) return false;
+                        p += _6;
+                    }
+                    
+                }
             }
-            assert(n>=5);
-
-            for(const prime *node = primes.head; node; node=node->next)
-            {
-                const prime &p = *node;
-                if( (p.squared>n) ) return true;
-                if(n.is_divisible_by(p) || n.is_divisible_by(p.add_two) ) return false;
-            }
 
 
-            natural p = launch; assert(p.is_odd());
-            while(true)
-            {
-                { const natural q = natural::square_of(p); if(q>n) return true; }
-                if( n.is_divisible_by(p) ) return false;
-                const natural   t = p+_2;
-                if( n.is_divisible_by(t) ) return false;
-                p += _6;
-            }
         }
 
         bool library:: is_prime_(const number::utype u) const
@@ -187,21 +187,11 @@ namespace upsylon {
                 plist.push_back( new prime(guess) );
             }
             
-            natural top = pstart;
-            if(available)
-            {
-            FIND_TOP:
-                top += _2;
-                const natural del = top - pstart;
-                if(!del.is_divisible_by(_6))
-                {
-                    top += _2;
-                    goto FIND_TOP;
-                }
-            }
-            
-            // ok
-            aliasing::_(launch).xch(top);
+
+            // find launch, may throw
+            find_launch(plist.size? *(plist.tail) : _3);
+
+            // no-throw swap list
             aliasing::_(primes).swap_with(plist);
             
         }
@@ -218,6 +208,22 @@ namespace upsylon {
             return 2+primes.size;
         }
 
+        void library:: find_launch(const natural &from)
+        {
+            assert(from.is_odd());
+            assert(from>=_3);
+            natural top = from + _2;
+        FIND_TOP:
+            assert( top.is_odd() );
+            const natural del = top - pstart; assert( del.is_even() );
+            if(!del.is_divisible_by(_6) )
+            {
+                top += _2;
+                goto FIND_TOP;
+            }
+            aliasing::_(launch).xch(top);
+        }
+
         bool library:: prune()
         {
             switch(primes.size)
@@ -228,18 +234,7 @@ namespace upsylon {
                     break;
             }
             assert(primes.size>=2);
-            natural top = *(primes.tail->prev); assert(top.is_odd());
-            top += _2;
-            FIND_TOP:
-            {
-                const natural delta = top-_5;
-                if(!delta.is_divisible_by(_6))
-                {
-                    top += _2;
-                    goto FIND_TOP;
-                }
-            }
-            aliasing::_(launch).xch(top);
+            find_launch( *(primes.tail->prev) );
             delete aliasing::_(primes).pop_back();
             return true;
         }

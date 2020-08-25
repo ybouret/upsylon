@@ -94,6 +94,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();
             virtual ~library() throw();
+            void     find_launch(const natural &from);
             
         };
 
