@@ -1,6 +1,7 @@
 
 
 #include "y/yap/archon.hpp"
+#include "y/object-parameters.hpp"
 
 
 namespace upsylon {
@@ -16,8 +17,13 @@ namespace upsylon {
         archon:: archon() throw() :
         singleton<archon>(),
         memory::tight::quarry(),
-        memory::tight::quarry_allocator(access,*this)
+        memory::tight::twain_allocator(access,
+                                       *this,
+                                       Y_CHUNK_SIZE,
+                                       a_lower_size,
+                                       a_limit_size)
         {
+            
         }
 
     }

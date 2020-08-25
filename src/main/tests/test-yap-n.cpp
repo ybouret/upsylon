@@ -852,6 +852,10 @@ Y_UTEST(yap_n)
     std::cerr << "Memory Usage:" << std::endl;
     std::cerr << *natural::instance() << std::endl;
 
+    std::cerr << std::endl;
+    std::cerr << "allocator lower_size=" << natural::instance().lower_size << std::endl;
+    std::cerr << "allocator limit_size=" << natural::instance().limit_size << std::endl;
+
 
 
 }

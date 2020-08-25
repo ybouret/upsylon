@@ -4,7 +4,7 @@
 #define Y_AP_NATURAL_INCLUDED 1
 
 #include "y/yap/number.hpp"
-#include "y/memory/tight/quarry-allocator.hpp"
+#include "y/memory/tight/twain-allocator.hpp"
 #include "y/strfwd.hpp"
 
 namespace upsylon {
@@ -21,7 +21,7 @@ namespace upsylon {
         //______________________________________________________________________
         //#define Y_YAP_FORCE16
         class library;                                            //!< forward declaration
-        typedef memory::tight::quarry_allocator memory_allocator; //!< alias
+        typedef memory::tight::twain_allocator memory_allocator; //!< alias
 
 
         //______________________________________________________________________
