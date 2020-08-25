@@ -9,7 +9,7 @@ Y_UTEST(yap_db)
 {
     if(argc>1)
     {
-        library      &apl = apl.instance();
+        library      &apl = library::instance();
         const natural top = natural::parse(argv[1]);
         std::cerr << "--> " << top << std::endl;
         prime_iterator p(apl);
