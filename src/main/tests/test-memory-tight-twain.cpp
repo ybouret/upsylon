@@ -73,6 +73,13 @@ Y_UTEST(tight_twain)
         twa.release(blk[i].addr, blk[i].size, blk[i].exp2);
     }
 
+    twa.gc();
+    twa.optimize();
+
+    for(size_t i=num/2;i<num;++i)
+    {
+        twa.release(blk[i].addr, blk[i].size, blk[i].exp2);
+    }
 
 
 

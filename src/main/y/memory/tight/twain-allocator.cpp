@@ -178,14 +178,18 @@ namespace upsylon
             {
                 try
                 {
+                    //----------------------------------------------------------
                     // check bytes
+                    //----------------------------------------------------------
                     bytes = max_of<size_t>(1,bytes);
                     if(bytes>vein::max_size)
                     {
                         throw libc::exception(EDOM,"twain_allocator overflow");
                     }
 
+                    //----------------------------------------------------------
                     // compute parameters
+                    //----------------------------------------------------------
                     {
                         size_t n = lower_size;
                         size_t s = lower_exp2;
@@ -199,17 +203,23 @@ namespace upsylon
                         shift = s;
                     }
 
+                    //----------------------------------------------------------
                     // acquire memory
+                    //----------------------------------------------------------
                     if(shift<=limit_exp2)
                     {
+                        //------------------------------------------------------
                         // use arena
+                        //------------------------------------------------------
                         arena *a = static_cast<arena *>(A) + shift;
                         assert(a->block_size==bytes);
                         return a->acquire();
                     }
                     else
                     {
+                        //------------------------------------------------------
                         // use quarry
+                        //------------------------------------------------------
                         vein &V = Q[shift]; assert(V.block_size==bytes);
                         void *p = V.acquire();
                         memset(p,0,bytes);
@@ -228,7 +238,27 @@ namespace upsylon
 
             void  twain_allocator:: release(void *&addr, size_t &bytes, size_t &shift) throw()
             {
-                
+                assert(addr);
+                assert(bytes>=lower_size);
+                assert(size_t(1)<<shift==bytes);
+                if(shift<=limit_exp2)
+                {
+                    //------------------------------------------------------
+                    // use arena
+                    //------------------------------------------------------
+                    arena *a = static_cast<arena *>(A) + shift;
+                    assert(a->block_size==bytes);
+                    a->release(addr);
+                }
+                else
+                {
+                    vein &V = Q[shift]; assert(V.block_size==bytes);
+                    V.release(addr);
+                }
+                addr  = 0;
+                bytes = 0;
+                shift = 0;
+
             }
 
         }
