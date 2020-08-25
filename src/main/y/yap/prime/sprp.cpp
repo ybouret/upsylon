@@ -2,6 +2,7 @@
 #include "y/yap/prime/sprp.hpp"
 #include "y/yap/library.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -11,6 +12,7 @@ namespace upsylon
 
         sprp:: ~sprp() throw()
         {
+            aliasing::_(s) = 0;
         }
 
 #define Y_SPRP_CTOR(x) \
@@ -19,15 +21,25 @@ m(n-1), \
 d(m),   \
 s(0)
 
+        void sprp::check() const
+        {
+            if(n.is_even())
+            {
+                throw exception("SPRP(even natural)");
+            }
+        }
+
         sprp:: sprp(const natural &x) :
         Y_SPRP_CTOR(x)
         {
+            check();
             make();
         }
 
         sprp:: sprp(const number::utype x) :
         Y_SPRP_CTOR(x)
         {
+            check();
             make();
         }
 
@@ -38,6 +50,7 @@ s(0)
                 aliasing::_(d).shr(1);
                 ++aliasing::_(s);
             }
+            
         }
 
         bool sprp:: is(const number::utype u) const

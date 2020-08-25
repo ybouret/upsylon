@@ -12,6 +12,12 @@ namespace upsylon
         namespace tight
         {
 
+            //______________________________________________________________________
+            //
+            //
+            //! mixed allocator to factorize small blocks
+            //
+            //______________________________________________________________________
             class twain_allocator : public exp2_allocator
             {
             public:
@@ -19,12 +25,21 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
+                //! setup
+                /**
+                 \param usr_access shared access
+                 \param usr_quarry shared quarry
+                 \param usr_chunk_size default chunk size for arena/cache...
+                 \param usr_lower_size lower number of allocated byte
+                 \param usr_limit_size uses arena below this value, quarry above
+                 */
                 explicit twain_allocator(lockable    &usr_access,
                                          quarry      &usr_quarry,
                                          const size_t usr_chunk_size,
                                          const size_t usr_lower_size,
                                          const size_t usr_limit_size);
 
+                //! cleanup
                 virtual ~twain_allocator() throw();
 
 

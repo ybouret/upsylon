@@ -15,6 +15,12 @@ namespace upsylon
         {
             class quarry; //! forward declaration
 
+            //______________________________________________________________________
+            //
+            //
+            //! base class for power of two allocators
+            //
+            //______________________________________________________________________
             class exp2_allocator
             {
             public:
@@ -22,6 +28,7 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
+                //! cleanup
                 virtual ~exp2_allocator() throw();
 
                 //______________________________________________________________
@@ -104,6 +111,7 @@ namespace upsylon
                 }
 
             protected:
+                //!setup
                 explicit exp2_allocator(lockable &, quarry &) throw();
 
                 lockable &L; //!< shared access
