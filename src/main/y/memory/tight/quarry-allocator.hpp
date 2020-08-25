@@ -45,8 +45,10 @@ namespace upsylon {
                 //! release a previously allocated block
                 virtual void  release(void *&addr, size_t &bytes, size_t &shift) throw();
 
-                //! do nothing
-                virtual void gc() throw();
+
+                virtual void   gc()                 throw(); //!< do nothing
+                virtual size_t get_min_size() const throw(); //!< min_size=vein::min_size
+                virtual size_t get_min_exp2() const throw(); //!< min_exp2=vein::min_exp2
 
 
             private:

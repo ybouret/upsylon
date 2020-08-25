@@ -35,9 +35,8 @@ namespace upsylon {
         _16(16),
         _z0(),
         _q0(),
-        pstart(_5),
         primes(),
-        launch(pstart),
+        launch(_5),
         p2( new prime(2) ),
         p3( new prime(3) )
         {
@@ -78,7 +77,7 @@ namespace upsylon {
                         if( n.is_divisible_by(t) ) return false;
                         p += _6;
                     }
-                    
+
                 }
             }
 
@@ -215,7 +214,7 @@ namespace upsylon {
             natural top = from + _2;
         FIND_TOP:
             assert( top.is_odd() );
-            const natural del = top - pstart; assert( del.is_even() );
+            const natural del = top - _5; assert( del.is_even() );
             if(!del.is_divisible_by(_6) )
             {
                 top += _2;
@@ -229,7 +228,7 @@ namespace upsylon {
             switch(primes.size)
             {
                 case 0: return false;
-                case 1: aliasing::_(launch)=pstart; aliasing::_(primes).release(); return true;
+                case 1: aliasing::_(launch)=_5; aliasing::_(primes).release(); return true;
                 default:
                     break;
             }

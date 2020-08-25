@@ -19,6 +19,17 @@ namespace upsylon
         namespace tight
         {
 
+
+            size_t twain_allocator:: get_min_size() const throw()
+            {
+                return lower_size;
+            }
+
+            size_t twain_allocator:: get_min_exp2() const throw()
+            {
+                return lower_exp2;
+            }
+
             typedef zcache<chunk> zchunks;
 
 

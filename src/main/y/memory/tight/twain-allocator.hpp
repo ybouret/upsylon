@@ -39,13 +39,10 @@ namespace upsylon
                 //! release a previously allocated block
                 virtual void  release(void *&addr, size_t &bytes, size_t &shift) throw();
 
-                //! garbage collection
-                virtual void gc() throw();
 
-                //______________________________________________________________
-                //
-                // specific methods
-                //______________________________________________________________
+                virtual void   gc()                 throw(); //!< garbage collection for chunks
+                virtual size_t get_min_size() const throw(); //!< min_size=lower_size
+                virtual size_t get_min_exp2() const throw(); //!< min_exp2=lower_exp2
 
                 //______________________________________________________________
                 //

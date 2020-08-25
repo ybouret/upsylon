@@ -35,8 +35,14 @@ namespace upsylon
                 //! release a previously allocated block
                 virtual void  release(void *&addr, size_t &bytes, size_t &shift) throw() = 0;
 
-                //! optional garbace collection
+                //! optional garbage collection
                 virtual void gc() throw() = 0;
+
+                //! get min allocated size
+                virtual size_t get_min_size() const throw() = 0;
+
+                //! get min allocated exp2
+                virtual size_t get_min_exp2() const throw() = 0;
 
                 //______________________________________________________________
                 //

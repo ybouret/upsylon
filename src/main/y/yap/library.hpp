@@ -81,7 +81,6 @@ namespace upsylon {
             //
             // primes db
             //__________________________________________________________________
-            const natural         &pstart; //!< _5
             const prime::list_type primes; //!< list of precomputed primes
             const natural          launch; //!< 5 or next multiple of 6 above last prime
             const pprime           p2;     //!< 2 as prime

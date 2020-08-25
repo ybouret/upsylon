@@ -12,6 +12,17 @@ namespace upsylon {
         namespace tight {
 
 
+            size_t quarry_allocator:: get_min_size() const throw()
+            {
+                return vein::min_size;
+            }
+
+            size_t quarry_allocator:: get_min_exp2() const throw()
+            {
+                return vein::min_exp2;
+            }
+
+
             void quarry_allocator:: gc() throw()
             {
 
