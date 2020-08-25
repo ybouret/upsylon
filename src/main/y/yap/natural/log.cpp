@@ -21,9 +21,9 @@ namespace upsylon
             }
             const size_t  p = nbits-1;
             const natural den = exp2(p);
-            assert(n>=exp2(p));
+            assert(n>=den);
             assert(n<exp2(p+1));
-            const double  approx = log(2.0) * ( double(p) + clamp<double>(0.0,ratio_of(n,den),1.0) );
+            const double  approx = log(2.0) * ( double(p) + (ratio_of(n,den)-1.0) );
             std::cerr << "approx=" << approx << std::endl;
             return natural();
         }
