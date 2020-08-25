@@ -37,21 +37,21 @@ namespace upsylon {
             prime_factor *next; //!< for pool/roll
             const natural p;    //!< prime number
             const size_t  n;    //!< exponent
-            prime_factor *make_one() throw();
-            
+
             //__________________________________________________________________
             //
             // serializable
             //__________________________________________________________________
             virtual const char   *className() const throw();                    //!< CLASS_NAME
             virtual size_t        serialize(ios::ostream &) const;              //!< [n+p]
-            static  prime_factor  read(ios::istream &, size_t &, const char *); //!< relaod
+            static  prime_factor  read(ios::istream &, size_t &, const char *); //!< reload
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            natural value() const; //!< explicit computation
+            natural       value() const;      //!< explicit computation
+            prime_factor *ld1() throw(); //!< transform into 1^1, no-throw
             friend bool operator==(const prime_factor &lhs, const prime_factor &rhs) throw(); //!< ==
             friend bool operator!=(const prime_factor &lhs, const prime_factor &rhs) throw(); //!< !=
             //! display

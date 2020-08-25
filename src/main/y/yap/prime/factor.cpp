@@ -61,7 +61,7 @@ n(xpn)
             return ans;
         }
 
-        prime_factor * prime_factor:: make_one() throw()
+        prime_factor * prime_factor:: ld1() throw()
         {
             aliasing::_(p).make(1);
             aliasing::_(n)=1;

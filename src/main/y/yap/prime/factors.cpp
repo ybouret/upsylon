@@ -4,10 +4,14 @@
 #include "y/type/aliasing.hpp"
 #include <iostream>
 #include "y/ios/ostream.hpp"
+#include "y/ios/istream.hpp"
+#include "y/exception.hpp"
 
-namespace upsylon {
+namespace upsylon
+{
 
-    namespace yap {
+    namespace yap
+    {
 
         prime_factors:: prime_factors() throw() :
         factors()
@@ -169,6 +173,25 @@ namespace upsylon {
                 ans += f->serialize(fp);
             }
             return ans;
+        }
+
+        prime_factors prime_factors:: read(ios::istream &fp, size_t &shift, const char *which)
+        {
+            static const char fn[] = "prime_factors::read: ";
+            assert(which);
+            size_t nf = 0;
+            shift     = 0;
+            if(!fp.query_upack(nf,shift) ) throw exception("%smissing #factors for '%s'",fn,which);
+            prime_factors     F;
+            pf_list          &l = aliasing::_(F.factors);
+            for(size_t i=1;i<=nf;++i)
+            {
+                size_t delta = 0;
+                const prime_factor f = prime_factor::read(fp,delta,which);
+                shift+=delta;
+                l.push_back( new prime_factor(f) );
+            }
+            return F;
         }
 
 

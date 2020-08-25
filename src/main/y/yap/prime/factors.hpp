@@ -50,8 +50,9 @@ namespace upsylon {
             //
             // serialize
             //__________________________________________________________________
-            virtual const char *className() const throw();       //!< CLASS_NAME
-            virtual size_t      serialize(ios::ostream &) const; //!< binary save
+            virtual const char   *className() const throw();                    //!< CLASS_NAME
+            virtual size_t        serialize(ios::ostream &) const;              //!< binary save
+            static  prime_factors read(ios::istream &, size_t &, const char *); //!< relaod
 
             //__________________________________________________________________
             //

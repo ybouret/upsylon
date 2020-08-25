@@ -163,9 +163,10 @@ namespace upsylon {
         
         void library:: load(ios::istream &fp,const size_t nmax)
         {
+            static const char fn[]= "yap::library::load: ";
             size_t available = 0;
             size_t shift     = 0;
-            if( !fp.query_upack(available,shift) ) throw exception("yap::library::load: missing #available");
+            if( !fp.query_upack(available,shift) ) throw exception("%smissing #available",fn);
             if(nmax>0&&nmax<available) available=nmax;
             
             
@@ -177,13 +178,12 @@ namespace upsylon {
                 size_t bytes = 0;
                 if( !fp.query_upack(delta,bytes) )
                 {
-                    throw exception("yap::library::load: missing prime #%lu",(unsigned long)i);
+                    throw exception("%smissing prime #%lu",fn,(unsigned long)i);
                 }
                 shift += bytes;
                 ++delta;
                 delta <<= 1;
                 guess += delta;
-               // if(!guess.is_odd()) throw exception("...invalid prime");
                 plist.push_back( new prime(guess) );
             }
             

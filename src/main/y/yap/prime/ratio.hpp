@@ -30,11 +30,12 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-            explicit prime_ratio();
-            prime_ratio(const prime_ratio &);
-            prime_ratio & operator=(const prime_ratio &);
-            virtual ~prime_ratio() throw();
+            explicit prime_ratio();                       //!< setup 0/1
+            prime_ratio(const prime_ratio &);             //!< copy
+            prime_ratio & operator=(const prime_ratio &); //!< assign
+            virtual ~prime_ratio() throw();               //!< cleanup
 
+            //! implementing a constructor
 #define Y_APPQ_CTOR(LHS,RHS) \
 inline prime_ratio(const LHS lhs, const RHS rhs) : num(lhs), den(rhs) { check(); update(); }
 
@@ -48,22 +49,22 @@ inline prime_ratio(const LHS lhs, const RHS rhs) : num(lhs), den(rhs) { check();
             //
             // serializable
             //__________________________________________________________________
-            virtual const char * className() const throw();
-            virtual size_t       serialize(ios::ostream &) const;
+            virtual const char * className() const throw();        //!< CLASS_NAME
+            virtual size_t       serialize(ios::ostream &) const;  //!< save
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            friend std::ostream & operator<<(std::ostream &, const prime_ratio &);
-            void xch( prime_ratio &) throw();
+            friend std::ostream & operator<<(std::ostream &, const prime_ratio &); //!< display
+            void xch( prime_ratio &) throw(); //!< no-throw exchange
             
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const prime_factors num;
-            const prime_factors den;
+            const prime_factors num; //!< numerator
+            const prime_factors den; //!< denominator
 
         private:
             void check()  const;

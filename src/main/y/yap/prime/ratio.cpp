@@ -48,7 +48,6 @@ namespace upsylon {
         
         prime_ratio & prime_ratio:: operator=( const prime_ratio &other )
         {
-            
             prime_ratio tmp(other);
             xch(tmp);
             return *this;
@@ -81,8 +80,14 @@ namespace upsylon {
             
             if(num.is_zero())
             {
+                //--------------------------------------------------------------
+                //
+                // num = 0, ensures den=1
+                //
+                //--------------------------------------------------------------
+                assert(den.factors.size>=1);
                 while(den.factors.size>1) delete aliasing::_(den.factors).pop_front();
-                (void) aliasing::_(den.factors.head)->make_one();
+                (void) aliasing::_(den.factors.head)->ld1();
                 assert(den.is_one());
             }
             else
@@ -144,14 +149,14 @@ namespace upsylon {
                     if(src_den.size<=0)
                     {
                         assert(garbage.size>=1);
-                        src_den.push_back(garbage.pop_front()->make_one());
+                        src_den.push_back(garbage.pop_front()->ld1());
                         assert(den.is_one());
                     }
                     
                     if(src_num.size<=0)
                     {
                         assert(garbage.size>=1);
-                        src_num.push_back(garbage.pop_front()->make_one());
+                        src_num.push_back(garbage.pop_front()->ld1());
                         assert(num.is_one());
                     }
                     

@@ -34,9 +34,9 @@ namespace upsylon {
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();       //!< className
-            virtual size_t      serialize(ios::ostream &) const; //!< encoded
-            void                load(ios::istream &,const size_t nmax);
+            virtual const char *className() const throw();              //!< className
+            virtual size_t      serialize(ios::ostream &) const;        //!< encode
+            void                load(ios::istream &,const size_t nmax); //!< reload
 
             //__________________________________________________________________
             //
