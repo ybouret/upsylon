@@ -7,6 +7,7 @@
 #include "y/code/base2.hpp"
 #include "y/memory/marker.hpp"
 #include <iostream>
+#include <cstring>
 
 namespace upsylon
 {
@@ -56,14 +57,14 @@ namespace upsylon
                 release_W();
             }
 
-            twain_allocator:: twain_allocator(lockable    &sync,
+            twain_allocator:: twain_allocator(lockable    &usr_access,
+                                              quarry      &usr_quarry,
                                               const size_t usr_chunk_size,
                                               const size_t usr_limit_size) :
+            exp2_allocator(usr_access,usr_quarry),
             limit_size(vein::min_size),
             limit_exp2(vein::min_exp2),
             num_arenas(1+limit_exp2),
-            L(sync),
-            Q(),
             A(0),
             Z(0),
             workspace(0),
@@ -146,6 +147,18 @@ namespace upsylon
                 }
 
             }
+
+
+            void * twain_allocator:: acquire(size_t &bytes, size_t &shift)
+            {
+
+            }
+
+            void  twain_allocator:: release(void *&addr, size_t &bytes, size_t &shift) throw()
+            {
+                
+            }
+
         }
     }
 }

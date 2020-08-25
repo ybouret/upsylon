@@ -26,10 +26,10 @@ Y_UTEST(tight_twain)
 
 
     concurrent::fake_lock sync;
+    tight::quarry         Q;
 
 
-
-    tight::twain_allocator twa(sync,chunk_size,limit_size);
+    tight::twain_allocator twa(sync,Q,chunk_size,limit_size);
 
     std::cerr << "sizeof(arena)=" << sizeof(tight::arena) << std::endl;
     std::cerr << "sizeof(twain_allocator)=" << sizeof(tight::twain_allocator) << std::endl;
