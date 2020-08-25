@@ -42,8 +42,7 @@ namespace upsylon
             prime *       next;    //!< for list
             prime *       prev;    //!< for list
             const natural squared; //!< (*this)^2
-            const natural add_two; //!< (this)+2
-
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(prime);

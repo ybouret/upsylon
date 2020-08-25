@@ -26,7 +26,6 @@ Y_UTEST(yap_db)
         }
         if(apl.prune()) std::cerr << "--> pruned" << std::endl;
         const size_t nw = apl.save_to("apdb.dat");
-        std::cerr << ".." << count << "@" << *p << " (wrote:" << nw << ")" << std::endl;
         std::cerr << std::endl;
         std::cerr << "#primes=" << apl.primes.size+2;
         if(apl.primes.size) std::cerr<< " -> " << *(apl.primes.tail);

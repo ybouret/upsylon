@@ -56,6 +56,7 @@ Y_UTEST(yap_prm)
             Y_ASSERT(n==p);
         }
         std::cerr << std::endl;
+        std::cerr << "matched " << plist.size() << " primes" << std::endl;
     }
 }
 Y_UTEST_DONE()

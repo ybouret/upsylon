@@ -20,11 +20,12 @@ namespace upsylon
             if(p<2)
             {
                 const string s = p.to_dec();
-                throw exception("yap::prime(%s<5)",*s);
+                throw exception("yap::prime(%s<2)",*s);
             }
         }
 
-#define Y_YAPRIME_CTOR(n) natural(n), next(0), prev(0), squared( square_of(n) ), add_two(n+2)
+#define Y_YAPRIME_CTOR(n) natural(n), next(0), prev(0), squared( square_of(n) )
+        //, add_two(n+2)
 
         prime:: prime(const natural &n) : Y_YAPRIME_CTOR(n)
         {

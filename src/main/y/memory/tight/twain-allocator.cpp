@@ -127,9 +127,6 @@ namespace upsylon
                 }
                 aliasing::_(num_arenas) = 1+limit_exp2-lower_exp2;
 
-
-                std::cerr << "#arenas=" << num_arenas << " from " << lower_size << "=2^" << lower_exp2 << " to " << limit_size << "=2^" << limit_exp2 << std::endl;
-
                 //--------------------------------------------------------------
                 //
                 // allocating memory for arenas and zchunks
@@ -140,12 +137,9 @@ namespace upsylon
                     marker zm( am, sizeof(zchunks) );
                     const size_t work_size  = next_power_of_two( zm.next_offset() );
                     aliasing:: _(work_exp2) = max_of<size_t>(integer_log2(work_size),vein::min_exp2);
-                    std::cerr << "request: " << work_size << "<=2^" << work_exp2 << std::endl;
-                    std::cerr << "|_arena: " << am.length << std::endl;
-                    std::cerr << "|_zombi: " << zm.length << std::endl;
                     workspace = static_cast<char *>(Q[work_exp2].acquire());
                     A         = (workspace + am.offset) - lower_exp2 * sizeof(arena);
-                    Z         = workspace + zm.offset;
+                    Z         =  workspace + zm.offset;
                 }
 
                 //--------------------------------------------------------------

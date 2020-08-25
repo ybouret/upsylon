@@ -36,7 +36,8 @@ namespace upsylon {
         _z0(),
         _q0(),
         primes(),
-        launch(_5),
+        mul6m1(_5),
+        mul6p1(_7),
         p2( new prime(2) ),
         p3( new prime(3) )
         {
@@ -46,8 +47,8 @@ namespace upsylon {
         void library:: reset_primes() throw()
         {
             aliasing::_(primes).release();
-            aliasing::_(launch).make(5);
-            assert(5==launch);
+            aliasing::_(mul6m1).make(5);   assert(_5==mul6m1);
+            aliasing::_(mul6p1).make(7);   assert(_7==mul6p1);
         }
 
         bool library:: is_prime_(const natural &n) const
@@ -68,14 +69,22 @@ namespace upsylon {
                 {
                     assert(n>=5);
 
-                    natural p = _5; assert(p.is_odd());
+                    for(const prime *prm = primes.head;prm;prm=prm->next)
+                    {
+                        if(prm->squared>n) return true;
+                        if(n.is_divisible_by(*prm)) return false;
+                    }
+
+
+                    natural p = mul6m1;
+                    natural q = mul6p1;
                     while(true)
                     {
-                        { const natural q = natural::square_of(p); if(q>n) return true; }
+                        { const natural s = natural::square_of(p); if(s>n) return true; }
                         if( n.is_divisible_by(p) ) return false;
-                        const natural   t = p+_2;
-                        if( n.is_divisible_by(t) ) return false;
+                        if( n.is_divisible_by(q) ) return false;
                         p += _6;
+                        q += _6;
                     }
 
                 }
@@ -91,18 +100,22 @@ namespace upsylon {
 
         const prime &library:: prefetch()
         {
-            assert(launch>=_5);
-            assert(launch.is_odd());
-            natural guess = primes.tail ? (*primes.tail)+_2 : launch;
-            while(!is_prime_(guess))
+            natural guess = primes.tail ? (*primes.tail+_2) : _5;
+            while( !is_prime_(guess) )
             {
                 guess += _2;
             }
-            natural start = launch;
-            while(start<=guess) start += _6;
-            
             aliasing::_(primes).push_back( new prime(guess) );
-            aliasing::_(launch).xch(start);
+            try
+            {
+                configure(guess);
+                return *primes.tail;
+            }
+            catch(...)
+            {
+                delete aliasing::_(primes).pop_back();
+                throw;
+            }
 
             return *primes.tail;
         }
@@ -187,8 +200,8 @@ namespace upsylon {
             }
             
 
-            // find launch, may throw
-            find_launch(plist.size? *(plist.tail) : _3);
+            // find mul6xx, may throw
+            configure(plist.size? *(plist.tail) : _3);
 
             // no-throw swap list
             aliasing::_(primes).swap_with(plist);
@@ -207,20 +220,25 @@ namespace upsylon {
             return 2+primes.size;
         }
 
-        void library:: find_launch(const natural &from)
+        void library:: configure(const natural &from)
         {
-            assert(from.is_odd());
-            assert(from>=_3);
-            natural top = from + _2;
-        FIND_TOP:
-            assert( top.is_odd() );
-            const natural del = top - _5; assert( del.is_even() );
-            if(!del.is_divisible_by(_6) )
+            assert(from>=_3); assert(from.is_odd());
+
+            natural lo = from + _2; assert(lo.is_odd());
+        FIND_LO:
+            const natural del = lo - _5; assert(del.is_even());
+            if(!del.is_divisible_by(_6))
             {
-                top += _2;
-                goto FIND_TOP;
+                lo += _2;
+                goto FIND_LO;
             }
-            aliasing::_(launch).xch(top);
+            natural up = lo + _2;
+            assert( (lo-_5)%_6 == 0 );
+            assert( (up-_7)%_6 == 0 );
+
+            aliasing::_(mul6m1).xch(lo);
+            aliasing::_(mul6p1).xch(up);
+
         }
 
         bool library:: prune()
@@ -228,12 +246,12 @@ namespace upsylon {
             switch(primes.size)
             {
                 case 0: return false;
-                case 1: aliasing::_(launch)=_5; aliasing::_(primes).release(); return true;
+                case 1: reset_primes(); return true;
                 default:
                     break;
             }
             assert(primes.size>=2);
-            find_launch( *(primes.tail->prev) );
+            configure( *(primes.tail->prev) );
             delete aliasing::_(primes).pop_back();
             return true;
         }
@@ -260,7 +278,7 @@ namespace upsylon {
     }
     
     
-   
+
 
 }
 

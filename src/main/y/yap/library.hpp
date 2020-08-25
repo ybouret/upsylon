@@ -82,7 +82,8 @@ namespace upsylon {
             // primes db
             //__________________________________________________________________
             const prime::list_type primes; //!< list of precomputed primes
-            const natural          launch; //!< 5 or next multiple of 6 above last prime
+            const natural          mul6m1; //!< 6*k-1, k>=1 after highest prime
+            const natural          mul6p1; //!< 6*k+1, k>=1 after highest prime
             const pprime           p2;     //!< 2 as prime
             const pprime           p3;     //!< 3 as prime
             const prime           &upper() const throw(); //!< upper prime
@@ -93,7 +94,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(library);
             explicit library();
             virtual ~library() throw();
-            void     find_launch(const natural &from);
+            void     configure(const natural &from); //!< find mul6..
             
         };
 
