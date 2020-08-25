@@ -46,6 +46,8 @@ namespace upsylon {
                 //! release a previously allocated block
                 virtual void  release(void *&addr, size_t &bytes, size_t &shift) throw();
 
+                //! do nothing
+                virtual void gc() throw();
 
 
             private:

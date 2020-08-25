@@ -12,6 +12,11 @@ namespace upsylon {
         namespace tight {
 
 
+            void quarry_allocator:: gc() throw()
+            {
+
+            }
+
             quarry_allocator:: ~quarry_allocator() throw()
             {
             }

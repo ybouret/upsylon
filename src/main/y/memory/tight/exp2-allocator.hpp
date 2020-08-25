@@ -34,6 +34,9 @@ namespace upsylon
                 //! release a previously allocated block
                 virtual void  release(void *&addr, size_t &bytes, size_t &shift) throw() = 0;
 
+                //! optional garbace collection
+                virtual void gc() throw() = 0;
+
                 //______________________________________________________________
                 //
                 // non-virtual interface

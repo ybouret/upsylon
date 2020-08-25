@@ -22,6 +22,7 @@ namespace upsylon
                 explicit twain_allocator(lockable    &usr_access,
                                          quarry      &usr_quarry,
                                          const size_t usr_chunk_size,
+                                         const size_t usr_lower_size,
                                          const size_t usr_limit_size);
 
                 virtual ~twain_allocator() throw();
@@ -38,11 +39,20 @@ namespace upsylon
                 //! release a previously allocated block
                 virtual void  release(void *&addr, size_t &bytes, size_t &shift) throw();
 
-                
+                //! garbage collection
+                virtual void gc() throw();
+
+                //______________________________________________________________
+                //
+                // specific methods
+                //______________________________________________________________
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
+                const size_t lower_size; //!< minimal allocated size
+                const size_t lower_exp2; //!< lower_size = 1 << lower_exp2
                 const size_t limit_size; //!< size under which an arena is used
                 const size_t limit_exp2; //!< limit_size = 1 << limit_exp2
                 const size_t num_arenas; //!< 1+limit_exp2
