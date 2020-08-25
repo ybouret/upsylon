@@ -103,6 +103,7 @@ test-memory-tight-vein.cpp
 test-memory-tight-quarry.cpp
 test-memory-tight-object.cpp
 test-memory-tight-wedge.cpp
+test-memory-tight-twain.cpp
 test-memory-zblock.cpp
 )
 ADD_TEST(mem:alloc         test-main alloc)

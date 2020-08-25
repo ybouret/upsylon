@@ -20,13 +20,13 @@ namespace upsylon {
             size_t offset; //!< the offset
             size_t length; //!< the lenght
 
-            marker()                               throw(); //!< offset=0,length=0
-            ~marker()                              throw(); //!< cleanup
-            marker(const marker&)                  throw(); //!< copy
-            marker & operator=(const marker &)     throw(); //!< assign
-            marker(const size_t)                   throw(); //!< 0,length
-            marker(const size_t,const size_t)      throw(); //!< offset,length
-            marker(const marker &, const size_t t) throw(); //!< automatic offset from other marker,length
+            marker()                               throw();  //!< offset=0,length=0
+            ~marker()                              throw();  //!< cleanup
+            marker(const marker&)                  throw();  //!< copy
+            marker & operator=(const marker &)     throw();  //!< assign
+            marker(const size_t)                   throw();  //!< 0,length
+            marker(const size_t,const size_t)      throw();  //!< offset,length
+            marker(const marker &, const size_t t) throw();  //!< automatic offset from other marker,length
             size_t next_offset()              const throw(); //!< alignment for next marker
 
             //! MPI type splitting

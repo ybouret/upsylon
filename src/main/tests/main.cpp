@@ -51,6 +51,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(tight_quarry);
     Y_UTEST(tight_object);
     Y_UTEST(tight_wedge);
+    Y_UTEST(tight_twain);
 
     Y_UTEST(joint_section);
     Y_UTEST(joint_ward);
