@@ -19,193 +19,60 @@
 
 
 \begin{document}
-\title{Integer Logarithm approximation}
-\maketitle
+\title{Integer Logarithm Approximation}
 
-\section{Dyadic Majoration}
-We evaluate $\log(x)$ on the set of $x_i=2^i$.
-Since the function is slowly varying, we use self similar cubic approximation:
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	L_i(x)  & = & \ln(x_i) + \left(\dfrac{x-x_i}{x_i}\right) - b \left(\dfrac{x-x_i}{x_i}\right)^2 + c\left(\dfrac{x-x_i}{x_i}\right)^3\\
-	\\
-	L_i'(x) & = & \dfrac{1}{x_i} - 2\dfrac{b}{x_i} \left(\dfrac{x-x_i}{x_i}\right) + 3 \dfrac{c}{x_i^2}  \left(\dfrac{x-x_i}{x_i}\right)^2 \\
-\end{array}
-\right.
-\end{equation}
-leading to:
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\ln(x_{i+1})       & = & L(x_{i_1})\\
-	\dfrac{1}{x_{i+1}} & = & L'(x_{i+1}) \\
-\end{array}
-\right.
-\end{equation}
+\section{Bracketing}
 
+We have 
 \begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-a & = & \ln(2) \\
-\\
-b & = & \dfrac{5}{2}-3\ln(2)\\
-\\
-c & = & \dfrac{3}{2}-2\ln(2)\\
-\end{array}
-\right.
-\end{equation}
-and
-\begin{equation}
-\boxed{
-\forall x\in[2^i,2^{i+1}], \;\; \ln(x) \leq L_i(x) 
-}
-\end{equation}
-
-
-\begin{equation}
-	L_i(x) = \dfrac{
-	i\cdot2^{3i}a
-	+ 2^{2i}\left(x-2^i\right)
-	- b 2^{i}\left(x-2^i\right)^2
-	+ c      \left(x-2^i\right)^3
-	}
-	{2^{3i}} 
-\end{equation}
-We find that the maximum of $L_i(x)-\ln(x)$ is for 
-\begin{equation}
-	\dfrac{x_{i,max}-2^i}{2^i} = \dfrac{12\ln(2)-8}{9-12\ln(2)}
-\end{equation}
-and the value is independent of $i$
-\begin{equation}
-	\forall i, \;\; \max\lbrace L_i(x)-\ln(x)\rbrace \simeq 0.003642013011295071
-\end{equation}
-We define 
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-A_p & = & \myceil{a 2^p} \\
-\\
-B_p & = & \myfloor{b 2^p}\\
-\\
-C_p & = & \myceil{c 2^p} \\
-\end{array}
-\right.
+	2^p \leq x < 2^{p+1}
 \end{equation}
 so that
 \begin{equation}
-	\forall p, L_i(x) \leq 
-	\Lambda_i(x,p) =
-	 \dfrac{
-	i\cdot2^{3i}A_p
-	+ 2^{2i+p}\left(x-2^i\right)
-	- B_p 2^{i}\left(x-2^i\right)^2
-	+ C_p      \left(x-2^i\right)^3
-	 }{2^{3i+p}}
+	p\ln(2) \leq \log(x) < (p+1) \ln(2)
 \end{equation}
-or
+
+\section{Minimisation}
+We have
 \begin{equation}
-\Lambda_i(x,p) =
-	 \dfrac{
-	i\cdot2^{3i}A_p
-	+ \left(x-2^i\right) 
-	\left[
-		2^{2i+p}
-		+ \left(x-2^i\right) 
-		\left[
-		\left(x-2^i\right) C_p - B_p 2^i
-		\right]
-	\right]
-	 }{2^{3i+p}}
-\end{equation}
-We got
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\Lambda_i(x_{i+1},p) & = & \left[ i \cdot A_p + 2^p - B_p + C_p \right] 2^{-p}\\
-	\\
-	\Lambda_{i+1}(x_{i+1},p) & = & \left[  (i+1) \cdot A_p \right] 2^{-p} \\
-\end{array}
-\right.
+\forall x \in [a:b], \;\; \ln(x) \geq \ln(a) + \dfrac{x-a}{b-a} \left( \ln(b) - \ln(a) \right)
 \end{equation}
 so that
 \begin{equation}
-	\Lambda_i(x_{i+1},p) \leq \Lambda_{i+1}(x_{i+1},p) \Rightarrow \delta\Lambda_p = 2^p + C_p - (A_p+B_p) \leq 0
+\forall x \in [2^p:2^{p+1}],  \;\; \ln(x) \geq \ln(2) \left[ p + \left( \dfrac{x}{2^p}-1 \right) \right]
 \end{equation}
 
-\end{document}
+\section{Maximisation}
 
-Let us use a binary level $2^p$
 \begin{equation}
-	L_i(x) \leq \Lambda_i(x,p) = 
-	\dfrac{ i \cdot 2^{3i} \myceil{2^p \ln(2)} 
-	+ 2^{2i+p} \left(x-2^i\right)
-	- \myfloor{2^p b} 2^{i}\left(x-2^i\right)^2 + \myceil{2^p c} \left(x-2^i\right)^3
-	}
-	{2^{3i+p}}
+	f(x) = \ln(a) + \dfrac{1}{a}  (x-a) + \alpha (x-a)^2 + \beta (x-a)^3
 \end{equation}
-We compute
+
+\begin{equation}
+	 f'(x) = \dfrac{1}{a} + 2 \alpha (x-a) + 3 \beta (x-a)^2
+\end{equation}
+
 \begin{equation}
 \left\lbrace
-\begin{array}{rcl}
-	\Lambda_i(2^{i+1},p) & = & \left( i\myceil{2^p \ln(2)} + 2^p - \myfloor{2^p b} + \myceil{2^p c} \right) 2^{-p}\\
-	\Lambda_{i+1}(2^{i+1},p) & = & \left( (i+1) \myceil{2^p \ln(2)} \right) 2^{-p}\\
-\end{array}
+	\begin{array}{rcl}
+	\ln(b) & = & \ln(a) + \dfrac{1}{a} (b-a) + \alpha (b-a)^2 + \beta (b-a)^3\\
+	\\
+	\dfrac{1}{b} & = & \dfrac{1}{a} + 2\alpha(b-a) + 3\beta(b-a)^2\\
+	\end{array}
 \right.
 \end{equation}
-To be coherent
-\begin{equation}
-	\left\lbrace
-\begin{array}{rl}
-	 & \Lambda_i(2^{i+1},p)  \leq  \Lambda_{i+1}(2^{i+1},p)\\
-\Leftrightarrow & 2^p + \myceil{2^p c} - (\myceil{2^p \ln(2)} + \myfloor{2^p b}) \leq 0 \\
-\end{array}
-\right.
-\end{equation}
-and we find a reduced set of solutions, overriding multiple values:
-\begin{equation}
-	p \in \lbrace 11,13,14,16,17 \rbrace
-\end{equation}
 
-\begin{equation}
-\begin{array}{cccc}
-p & \myceil{2^p \ln(2)} &  \myfloor{2^p b} & \myceil{2^p c}\\
-11 & 1420 & 861 & 233\\
-13 & 5679 & 3445 & 932\\
-14 & 11357 & 6890 & 1863\\
-16 & 45427 & 27561 & 7452\\
-17 & 90853 & 55123 & 14904\\
-\end{array}
-\end{equation}
-
-\section{Dyadic Minoration}
-Using the convexity
-\begin{equation}
- 	\ln(x) \geq C_i(x) = \ln(x_i) + \dfrac{x-x_i}{x_{i+1}-{x_i}} \left[ \ln(x_{i+1}) - \ln(x_i)\right] + A_i (x_{i+1}-x)(x-x_{i})
-\end{equation}
-We want
-\begin{equation}
-D_i(x)=\ln(x)-C_i(x)\geq0
-\end{equation}
-The two boundaries conditions are
-\begin{equation}
-D_i'(x_i)\geq 0 \text{ and } D_i'(x_{i+1})\leq0
-\end{equation}
-\begin{equation}
-	D_i'(x) = \dfrac{1}{x} - \left[ \underbrace{\dfrac{\ln(x_{i+1}) - \ln(x_i)}{x_{i+1}-x_i}}_{\sigma_i} + A_i \left(x_{i+1}+x_i-2x\right)\right]
-\end{equation}
 \begin{equation}
 \left\lbrace
-\begin{array}{rcl}
-\dfrac{1}{x_i}     - \left[\sigma_i + A_i\left(x_{i+1}-x_i\right)\right] & \geq & 0 \\
-\dfrac{1}{x_{i+1}} - \left[\sigma_i - A_i\left(x_{i+1}-x_i\right)\right] & \leq & 0 \\
-\end{array}
+	\begin{array}{rcl}
+	\alpha (b-a) + \beta (b-a)^2 & = & \dfrac{\ln(b) - \ln(a)}{b-a} - \dfrac{1}{a}\\
+	\\
+	2\alpha(b-a)  + 3\beta(b-a)^2  & = & \dfrac{1}{a}-\dfrac{1}{b}  \\
+	\end{array}
 \right.
 \end{equation}
-which provides
-\begin{equation}
-	A_i = \dfrac{\ln(2)-\frac{1}{2}}{2^{2i}}
-\end{equation}
+
+
 
 \end{document}
 
