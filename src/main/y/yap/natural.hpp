@@ -368,7 +368,13 @@ Y_APN_OPERATOR_API(OP,CALL)
             bool is(const word_type w) const throw(); //!< check is one word with given value
             bool is_even() const throw();             //!< check if even
             bool is_odd()  const throw();             //!< check if odd
-            
+
+            //__________________________________________________________________
+            //
+            // logarithm
+            //__________________________________________________________________
+            static natural log_of(const natural &);
+
         private:
             size_t     bytes; //!< effective number of bytes
             size_t     words; //!< effective number of words = words_for(bytes)
