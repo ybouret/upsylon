@@ -43,13 +43,17 @@ Y_UTEST(yap_prm)
 
         library         &apl = library::instance();
         prime_iterator p(apl);
+        size_t meta = 0;
         for(size_t i=1;i<=plist.size();++i,++p)
         {
             const natural &n = plist[i];
-            std::cerr << '.';
-            std::cerr.flush();
+            if(0==(i%100))
+            {
+                std::cerr << '.';
+                std::cerr.flush();
+                if(0==(++meta%10)) std::cerr << std::endl;
+            }
             Y_ASSERT(n==p);
-            if( (0==(i%64) ) ) std::cerr << std::endl;
         }
         std::cerr << std::endl;
     }

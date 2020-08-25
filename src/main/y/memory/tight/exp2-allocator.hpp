@@ -5,6 +5,7 @@
 #define Y_MEMORY_TIGHT_EXP2_ALLOCATOR_INCLUDED 1
 
 #include "y/lockable.hpp"
+#include "y/type/args.hpp"
 
 namespace upsylon
 {
@@ -105,6 +106,51 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(exp2_allocator);
             };
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! smart pointer for a field
+            //
+            //__________________________________________________________________
+            template <typename T>
+            class exp2_field
+            {
+            public:
+                Y_DECL_ARGS(T,type); //!< aliasing
+
+                //! acquire resource, keep track of allocator
+                inline explicit exp2_field(exp2_allocator &mgr,const size_t required) :
+                guest(mgr),
+                count(required),
+                bytes(0),
+                shift(0),
+                field( guest.acquire_field<mutable_type>(count, bytes, shift) )
+                {
+                }
+
+                //! release resource
+                inline virtual ~exp2_field() throw()
+                {
+                    guest.release_field(field,count,bytes,shift);
+                }
+
+                //! access to memory field
+                inline type *       operator*() throw()       { return field; }
+
+                //! access to memory field, const
+                inline const_type * operator*() const throw() { return field; }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(exp2_field);
+                exp2_allocator   &guest;
+                size_t            count;
+                size_t            bytes;
+                size_t            shift;
+                mutable_type     *field;
+            };
+
         }
     }
 }

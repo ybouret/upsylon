@@ -107,7 +107,7 @@ namespace upsylon
             }
         }
         
-        typedef memory::tight::quarry_field<cplx_t> complexes;
+        typedef memory::tight::exp2_field<cplx_t> complexes;
         
         natural natural:: mul(const word_type *lhs, const size_t lnw,
                               const word_type *rhs, const size_t rnw)
