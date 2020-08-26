@@ -16,7 +16,7 @@ namespace upsylon {
         //! a fully qualified contex: tag+line+column
         //
         //______________________________________________________________________
-        class Context : public Tag
+        class Context
         {
         public:
             //__________________________________________________________________
@@ -34,7 +34,9 @@ namespace upsylon {
             //! generic constructor
             template <typename T>
             inline explicit Context(const T &args) :
-            Tag(Tags::Make(args)), line(init_line), column(init_column)
+            tag(Tags::Make(args)),
+            line(init_line),
+            column(init_column)
             {
             }
 
@@ -45,6 +47,7 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
+            const Tag tag;    //!< identifier
             const int line;   //!< current line
             const int column; //!< current column
 

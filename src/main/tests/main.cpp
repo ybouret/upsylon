@@ -235,6 +235,7 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(jive_char);
     Y_UTEST(jive_tags);
+    Y_UTEST(jive_module);
 }
 Y_UTEST_EXEC()
 

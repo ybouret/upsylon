@@ -22,7 +22,7 @@ namespace upsylon {
 
         Char:: Char(const Char &other) throw() :
         inode<Char>(),
-        Context(other),
+        Context( static_cast<const Context&>(other) ),
         code(other.code)
         {
         }
@@ -61,6 +61,11 @@ namespace upsylon {
             return os;
         }
 
+        void Char:: Reserve(const size_t n)
+        {
+            static Supply &mgr = Supply::instance();
+            mgr.reserve(n);
+        }
 
 
         //======================================================================

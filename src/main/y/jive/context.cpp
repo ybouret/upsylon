@@ -15,7 +15,7 @@ namespace upsylon {
         }
 
         Context:: Context(const Context &other) throw() :
-        Tag(other),
+        tag(other.tag),
         line(other.line),
         column(other.column)
         {

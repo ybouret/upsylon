@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_JIVE_CHAR_INCLUDED
@@ -29,6 +28,7 @@ namespace upsylon {
             static Char *Acquire(const Context &, const uint8_t);           //!< create
             static void  Release(Char *) throw();                           //!< delete
             static Char *Copycat(const Char &);                             //!< copy
+            static void  Reserve(const size_t);                             //!< get memory from system
             friend std::ostream & operator<<(std::ostream &, const Char &); //!< display
 
             //__________________________________________________________________
