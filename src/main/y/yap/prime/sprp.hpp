@@ -22,16 +22,24 @@ namespace upsylon
         class sprp
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+
+            //! internal precomputed exponent
             class dnode : public natural
             {
             public:
-                explicit dnode(const natural &);
-                virtual ~dnode() throw();
-                dnode(const dnode &);
-                dnode *next; //!< for list
+                explicit dnode(const natural &); //!< setup
+                virtual ~dnode() throw();        //!< cleanup
+                dnode(const dnode &);            //!< copy for list
+                dnode *next;                     //!< for list
             private:
                 Y_DISABLE_ASSIGN(dnode);
             };
+
+            //! alias
             typedef core::roll_of_cpp<dnode> dlist;
 
             //__________________________________________________________________
@@ -52,8 +60,7 @@ namespace upsylon
 
             const natural n; //!< should be an odd number
             const natural m; //!< n-1 is even
-           // const natural d; //!< odd part
-            const dlist   l; //!< odd part at head, shifted then
+            const dlist   l; //!< odd part 'd' at head, shifted then
             const size_t  s; //!< exponent part, m=2^s*d
 
             //__________________________________________________________________
