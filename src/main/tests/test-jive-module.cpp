@@ -36,6 +36,7 @@ Y_UTEST(jive_module)
             chars << ch;
         }
         std::cerr << "#chars=" << chars.size << std::endl;
+        std::cerr << chars << std::endl;
     }
 
 }
