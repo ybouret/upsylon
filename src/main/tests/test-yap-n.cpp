@@ -1,5 +1,6 @@
 #include "y/yap/library.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
@@ -856,6 +857,7 @@ Y_UTEST(yap_n)
     std::cerr << "allocator lower_size=" << natural::instance().lower_size << std::endl;
     std::cerr << "allocator limit_size=" << natural::instance().limit_size << std::endl;
 
+    Y_UTEST_SIZEOF(natural);
 
 
 }

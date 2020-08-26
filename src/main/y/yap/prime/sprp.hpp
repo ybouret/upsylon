@@ -5,6 +5,7 @@
 #define Y_AP_SPRP_INCLUDED 1
 
 #include "y/yap/natural.hpp"
+#include "y/core/roll.hpp"
 
 namespace upsylon
 {
@@ -21,6 +22,18 @@ namespace upsylon
         class sprp
         {
         public:
+            class dnode : public natural
+            {
+            public:
+                explicit dnode(const natural &);
+                virtual ~dnode() throw();
+                dnode(const dnode &);
+                dnode *next; //!< for list
+            private:
+                Y_DISABLE_ASSIGN(dnode);
+            };
+            typedef core::roll_of_cpp<dnode> dlist;
+
             //__________________________________________________________________
             //
             // C++
@@ -39,7 +52,8 @@ namespace upsylon
 
             const natural n; //!< should be an odd number
             const natural m; //!< n-1 is even
-            const natural d; //!< odd part
+           // const natural d; //!< odd part
+            const dlist   l; //!< odd part at head, shifted then
             const size_t  s; //!< exponent part, m=2^s*d
 
             //__________________________________________________________________
@@ -52,7 +66,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(sprp);
             void check() const;
-            void make() throw();
+            void make();
         };
 
         

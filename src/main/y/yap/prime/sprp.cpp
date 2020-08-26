@@ -12,6 +12,13 @@ namespace upsylon
     namespace yap
     {
 
+        sprp:: dnode::  dnode(const natural &value ) : natural(value), next(0) {}
+        sprp:: dnode::  dnode(const dnode   &other ) : natural(other), next(0) {}
+        sprp:: dnode:: ~dnode() throw()
+        {
+            assert(0==next);
+        }
+
         sprp:: ~sprp() throw()
         {
             aliasing::_(s) = 0;
@@ -20,7 +27,7 @@ namespace upsylon
 #define Y_SPRP_CTOR(x) \
 n(x),   \
 m(n-1), \
-d(m),   \
+l(),    \
 s(0)
 
         void sprp::check() const
@@ -45,12 +52,25 @@ s(0)
             make();
         }
 
-        void sprp:: make() throw()
+        void sprp:: make()
         {
+            dlist   &data = aliasing::_(l);
+
+            // building first node: n=2^s * d
+            natural &d    = *data.push_back( new dnode(m) );
             while(d.is_even())
             {
                 aliasing::_(d).shr(1);
                 ++aliasing::_(s);
+            }
+
+
+            // building following nodes
+            for(size_t r=1;r<s;++r)
+            {
+                const natural e = (*data.tail) << 1;
+                assert(d<<r==e);
+                (void) data.push_back(new dnode(e) );
             }
             
         }
@@ -67,39 +87,21 @@ s(0)
             static const library &apl = library::instance();
             static const natural  one = apl._1;
 
-            if(one==natural::mod_exp(a,d,n))
+            const dnode   *d = l.head;
+            const natural first = natural::mod_exp(a,*d,n);
+            if(first==one||first==m)
             {
                 return true;
             }
             else
             {
-                natural e = d;
-                size_t  r = s;
-#ifndef NDEBUG
-                size_t  count=0;
-                assert(d<<count==e);
-#endif
-                if(m==natural::mod_exp(a,e,n))
+                for(d=d->next;d;d=d->next)
                 {
-                    return true;
-                }
-                else
-                {
-                    while(--r>0)
+                    if(m==natural::mod_exp(a,*d,n))
                     {
-                        e.shl(1);
-#ifndef NDEBUG
-                        ++count;
-                        assert(count<s);
-                        assert(d<<count==e);
-#endif
-                        if(m==natural::mod_exp(a,e,n))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
-
                 return false;
             }
 
@@ -109,7 +111,7 @@ s(0)
         sprp:: sprp(const sprp &other) :
         n(other.n),
         m(other.m),
-        d(other.d),
+        l(other.l),
         s(other.s)
         {
         }

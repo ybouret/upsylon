@@ -19,7 +19,7 @@ Y_UTEST(yap_sprp)
     Y_CHECK( sprp( 781).base(5)  );
     Y_CHECK( sprp( 25) .base(7)   );
 
-    for(size_t bits=1;bits<=100;++bits)
+    for(size_t bits=1;bits<=100;bits += 1+alea.leq(10) )
     {
         const natural n(alea,bits);
         const natural b = sprp::end(n);
@@ -31,16 +31,16 @@ Y_UTEST(yap_sprp)
     {
         const natural x = natural::parse(argv[1]);
         sprp s(x);
-        std::cerr << s.n << " = " << "2^" << s.s << "*" << s.d << "+1" << std::endl;
+        std::cerr << s.n << " = " << "2^" << s.s << "*" << *s.l.head << "+1" << std::endl;
 
         for(int i=2;i<argc;++i)
         {
             const natural a = natural::parse(argv[i]);
             std::cerr << a << "-SPRP(" << x << ") : " << s.base(a) << std::endl;
         }
-
-
     }
+
+    
 }
 Y_UTEST_DONE()
 
