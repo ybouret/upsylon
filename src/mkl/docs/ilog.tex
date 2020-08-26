@@ -35,9 +35,26 @@ so that
 \section{Minimisation}
 We have
 \begin{equation}
-\forall x \in [a:b], \;\; \ln(x) \geq \ln(a) + \dfrac{x-a}{b-a} \left( \ln(b) - \ln(a) \right)
+\forall x \in [a:b], \;\; \ln(x) \geq \ln(a) + \dfrac{x-a}{b-a} \left( \ln(b) - \ln(a) \right) = f(x), \;\; \sigma =  \dfrac{\ln(b) - \ln(a)}{b-a}
 \end{equation}
-so that
+We define
+\begin{equation}
+\forall x \in [a:b], \;\; g(x) = \ln(x) - f(x) \geq 0
+\end{equation}
+and we ge
+\begin{equation}
+	g'(x) = \dfrac{1}{x}-\sigma
+\end{equation}
+with
+\begin{equation}
+	g'(a) = \dfrac{1}{a} - \dfrac{\ln(b) - \ln(a)}{b-a}
+\end{equation}
+We may add a second order term by matching the right slope:
+\begin{equation}
+	f(x) = \ln(a) + \sigma (x-a) + (x-a) (b-x) \dfrac{\left(\sigma - \dfrac{1}{b}\right)}{b-a}
+\end{equation}
+
+For a power of two bracketing:
 \begin{equation}
 \forall x \in [2^p:2^{p+1}],  \;\; \ln(x) \geq \ln(2) \left[ p + 2\left( \dfrac{x}{2^p}-1 \right) \right]
 \end{equation}

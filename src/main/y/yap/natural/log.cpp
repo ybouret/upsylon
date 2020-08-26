@@ -23,7 +23,8 @@ namespace upsylon
             const natural den = exp2(p);
             assert(n>=den);
             assert(n<exp2(p+1));
-            const double  approx = log(2.0) * ( double(p) + (ratio_of(n,den)-1.0) );
+            //const double  approx = log(2.0) * ( double(p) + (ratio_of(n,den)-1.0) );
+            const double approx = log(2.0) * double(p) + log( ratio_of(n,den) );
             std::cerr << "approx=" << approx << std::endl;
             return natural();
         }
