@@ -61,7 +61,8 @@ namespace upsylon {
             }
             else
             {
-                if( n.is_divisible_by(_2) || n.is_divisible_by(_3) )
+                //if( n.is_divisible_by(_2) || n.is_divisible_by(_3) )
+                if( n.is_even() || n.is_divisible_by(_3) )
                 {
                     return false;
                 }

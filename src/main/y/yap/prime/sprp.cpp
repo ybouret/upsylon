@@ -3,6 +3,8 @@
 #include "y/yap/library.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/exception.hpp"
+#include "y/type/utils.hpp"
+#include <cmath>
 
 namespace upsylon
 {
@@ -53,14 +55,14 @@ s(0)
             
         }
 
-        bool sprp:: is(const number::utype u) const
+        bool sprp:: base(const number::utype u) const
         {
             const natural _(u);
-            return is(_);
+            return base(_);
         }
 
 
-        bool sprp:: is(const natural &a) const
+        bool sprp:: base(const natural &a) const
         {
             static const library &apl = library::instance();
             static const natural  one = apl._1;
@@ -112,7 +114,26 @@ s(0)
         {
         }
         
+        natural sprp:: end(const natural &n)
+        {
+            const double        dvalue = ceil( 2.0 * square_of(natural::log_of(n)) );
+            const number::utype uvalue(dvalue);
+            const natural       guess = uvalue;
+            if(guess<=n)
+            {
+                return guess;
+            }
+            else
+            {
+                return n;
+            }
+        }
 
+        natural sprp:: end(const number::utype u)
+        {
+            const natural _(u);
+            return end(_);
+        }
 
     }
 

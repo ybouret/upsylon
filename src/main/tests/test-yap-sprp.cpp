@@ -14,10 +14,18 @@ using namespace yap;
 
 Y_UTEST(yap_sprp)
 {
-    Y_CHECK( sprp(2047).is(2) );
-    Y_CHECK( sprp(121).is(3)  );
-    Y_CHECK( sprp(781).is(5)  );
-    Y_CHECK( sprp(25).is(7)   );
+    Y_CHECK( sprp(2047).base(2) );
+    Y_CHECK( sprp( 121).base(3)  );
+    Y_CHECK( sprp( 781).base(5)  );
+    Y_CHECK( sprp( 25) .base(7)   );
+
+    for(size_t bits=1;bits<=100;++bits)
+    {
+        const natural n(alea,bits);
+        const natural b = sprp::end(n);
+        std::cerr << "Miller's end(" << n << ") = " << b << std::endl;
+
+    }
 
     if(argc>1)
     {
@@ -28,7 +36,7 @@ Y_UTEST(yap_sprp)
         for(int i=2;i<argc;++i)
         {
             const natural a = natural::parse(argv[i]);
-            std::cerr << a << "-SPRP(" << x << ") : " << s.is(a) << std::endl;
+            std::cerr << a << "-SPRP(" << x << ") : " << s.base(a) << std::endl;
         }
 
 

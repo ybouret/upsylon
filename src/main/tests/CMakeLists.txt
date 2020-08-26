@@ -332,6 +332,7 @@ test-yap-db.cpp
 test-yap-pr.cpp
 test-yap-sprp.cpp
 test-yap-log.cpp
+test-yap-pt.cpp
 )
 ADD_TEST(yap:n    test-main yap_n)
 ADD_TEST(yap:z    test-main yap_z)
@@ -343,6 +344,7 @@ ADD_TEST(yap:db   test-main yap_db 5000)
 ADD_TEST(yap:pr   test-main yap_pr)
 ADD_TEST(yap:sprp test-main yap_sprp)
 ADD_TEST(yap:log  test-main yap_log)
+ADD_TEST(yap:pt   test-main yap_pt)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

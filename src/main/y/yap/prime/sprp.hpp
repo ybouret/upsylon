@@ -34,18 +34,28 @@ namespace upsylon
             //
             // check functions
             //__________________________________________________________________
-            bool is(const natural      &a) const; //!< check a-SPRP
-            bool is(const number::utype a) const; //!< check a-SPRP
+            bool base(const natural      &a) const; //!< check a-SPRP
+            bool base(const number::utype a) const; //!< check a-SPRP
 
             const natural n; //!< should be an odd number
             const natural m; //!< n-1 is even
             const natural d; //!< odd part
             const size_t  s; //!< exponent part, m=2^s*d
+
+            //__________________________________________________________________
+            //
+            // helper
+            //__________________________________________________________________
+            static natural end(const natural      &n); //!< compute Miller's Test 2(log(n)^2)
+            static natural end(const number::utype n); //!< compute Miller's Test 2(log(n)^2)
+
         private:
             Y_DISABLE_ASSIGN(sprp);
             void check() const;
             void make() throw();
         };
+
+        
 
     }
 }
