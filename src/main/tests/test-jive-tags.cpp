@@ -25,6 +25,7 @@ Y_UTEST(jive_tags)
         std::cerr << "dyn=" << dyn << std::endl;
     }
 
+    Tags::Display();
 }
 Y_UTEST_DONE()
 

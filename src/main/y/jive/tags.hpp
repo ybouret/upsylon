@@ -34,6 +34,7 @@ namespace upsylon {
 
             static void Display();
 
+            const size_t maxLength;
 
         private:
             Y_SINGLETON_DECL(Tags);

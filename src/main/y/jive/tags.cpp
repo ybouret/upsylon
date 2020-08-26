@@ -2,6 +2,8 @@
 #include "y/jive/tags.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/exception.hpp"
+#include "y/code/utils.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon {
 
@@ -10,7 +12,7 @@ namespace upsylon {
     namespace Jive
     {
 
-        Tags:: Tags() : singleton<Tags>(), TagsTree()
+        Tags:: Tags() : singleton<Tags>(), TagsTree(), maxLength(0)
         {
 
         }
@@ -35,6 +37,7 @@ namespace upsylon {
                 {
                     throw exception("Jive::Tags(unexpected failure for '%s')", **p);
                 }
+                aliasing::_(maxLength) = max_of(maxLength,buflen);
                 return p;
             }
         }
@@ -65,12 +68,28 @@ namespace upsylon {
             return get( &C, 1 );
         }
 
+        static inline
+        bool DisplayCallback(const suffix_path &path,
+                             const Tag         &tag)
+        {
+            const size_t len = Tags::location().maxLength;
+            std::cerr << '\t' << '<' << tag << '>' << ' ';
+            for(size_t i=tag->size();i<len;++i) std::cerr << ' ';
+            std::cerr << '(';
+            for(suffix_path::const_iterator i=path.begin();i!=path.end();++i)
+            {
+                std::cerr << cchars::visible[*i];
+            }
+            std::cerr << ')' << std::endl;
+            return true;
+        }
+
         void Tags:: Display()
         {
-
-
-
-            
+            static const TagsTree &tree = Tags::instance();
+            std::cerr << "<Jive::Tags count=\"" << tree.entries() << "\">" << std::endl;
+            tree.for_each(DisplayCallback);
+            std::cerr << "<Jive::Tags/>" << std::endl;
         }
 
 
