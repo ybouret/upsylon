@@ -104,46 +104,7 @@ namespace upsylon
             return os;
         }
 
-        double natural:: to_double() const
-        {
-#if 0
-            double ans = 0;
-            for(size_t i=bytes;i>0;)
-            {
-                ans *= 256.0;
-                ans += get(--i);
-            }
-            return ans;
-#endif
-            double ans = 0;
-            for(size_t i=words;i>0;)
-            {
-                ans *= word_radix;
-                ans += word[--i];
-            }
-            return ans;
-        }
-
-        double natural:: ratio_of(const natural &num,const natural &den)
-        {
-            static const library &apl = library::instance();
-            static const natural &ten = apl._10;
-            natural q,r;
-            natural::split(q, r, num, den);
-            double ans = q.to_double();
-
-            const size_t nd  = den.bits();
-            double       fac = 1;
-            for(size_t i=1;i<=nd;++i)
-            {
-                const natural n = r*ten;
-                natural::split(q,r,n,den);
-                fac *= 0.1;
-                const double x = q.to_double();
-                ans += fac*x;
-            }
-            return ans;
-        }
+       
 
         natural natural:: dec(const char *buffer, const size_t buflen)
         {
