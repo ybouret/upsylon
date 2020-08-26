@@ -33,13 +33,12 @@ Y_UTEST(yap_log)
         }
     }
 
-    for(unsigned bits=1;bits<=10;++bits)
+    for(unsigned bits=1;bits<=100;++bits)
     {
         for(unsigned iter=0;iter<4;++iter)
         {
             const natural n(alea,bits); Y_ASSERT(bits==n.bits());
-            std::cerr << n << " ";
-            const natural l = natural::log_of(n);
+            std::cerr << "log(" << n <<  ") = " << natural::log_of(n) << std::endl;
         }
     }
 

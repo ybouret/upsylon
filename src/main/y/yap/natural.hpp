@@ -373,7 +373,7 @@ Y_APN_OPERATOR_API(OP,CALL)
             //
             // logarithm
             //__________________________________________________________________
-            static natural log_of(const natural &);
+            static double log_of(const natural &);
 
         private:
             size_t     bytes; //!< effective number of bytes

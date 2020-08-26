@@ -106,11 +106,20 @@ namespace upsylon
 
         double natural:: to_double() const
         {
+#if 0
             double ans = 0;
             for(size_t i=bytes;i>0;)
             {
                 ans *= 256.0;
                 ans += get(--i);
+            }
+            return ans;
+#endif
+            double ans = 0;
+            for(size_t i=words;i>0;)
+            {
+                ans *= word_radix;
+                ans += word[--i];
             }
             return ans;
         }
