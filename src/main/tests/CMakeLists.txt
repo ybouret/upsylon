@@ -346,6 +346,14 @@ ADD_TEST(yap:sprp test-main yap_sprp)
 ADD_TEST(yap:log  test-main yap_log)
 ADD_TEST(yap:pt   test-main yap_pt)
 
+
+SOURCE_GROUP(jive FILES
+test-jive-tags.cpp
+test-jive-char.cpp
+)
+ADD_TEST(jive:tags    test-main jive:tags)
+ADD_TEST(jive:char    test-main jive:char)
+
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-main)

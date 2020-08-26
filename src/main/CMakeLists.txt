@@ -403,6 +403,13 @@ SOURCE_GROUP( yap/prime FILES ${yap_prime_srcs} )
 INSTALL( FILES ${yap_prime_decl} DESTINATION include/y/yap/prime )
 
 
+FILE(GLOB jive_decl y/jive/*.hpp)
+FILE(GLOB jive_code y/jive/*.cpp)
+SET(jive_srcs ${jive_decl} ${jive_code})
+SOURCE_GROUP( jive FILES ${jive_srcs} )
+INSTALL( FILES ${jive_decl} DESTINATION include/y/jive )
+
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -453,6 +460,7 @@ ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
 ${tensor_srcs}
 ${yap_srcs} ${yap_natural_srcs} ${yap_prime_srcs}
+${jive_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

@@ -96,7 +96,6 @@ const at_exit::longevity TYPE::life_time = (LIFE_TIME)
             // Double Check Pattern
             //------------------------------------------------------------------
             Y_LOCK(access);
-            if ( !instance_ )
             {
                 Y_LOCK(access);
                 if ( !instance_ )
