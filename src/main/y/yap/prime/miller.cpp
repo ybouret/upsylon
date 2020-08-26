@@ -41,7 +41,14 @@ namespace upsylon
 
             }
 
-        };
+        }
+
+        bool Miller:: is_prime(const number::utype u)
+        {
+            const natural _(u);
+            return is_prime(_);
+        }
+
     }
 
 }

@@ -12,9 +12,11 @@ namespace upsylon
     namespace yap
     {
 
+        //! implementing Miller's test
         struct Miller
         {
-            static bool is_prime(const natural &);
+            static bool is_prime(const natural     &); //!< check
+            static bool is_prime(const number::utype); //!< check wrapper
         };
     }
 
