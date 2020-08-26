@@ -10,25 +10,44 @@ namespace upsylon {
     namespace Jive
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! a fully qualified contex: tag+line+column
+        //
+        //______________________________________________________________________
         class Context : public Tag
         {
         public:
-            static const int init_line   = 1;
-            static const int init_column = 1;
-            const int line;
-            const int column;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const int init_line   = 1; //!< default line
+            static const int init_column = 1; //!< default column
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            
+            //! generic constructor
             template <typename T>
             inline explicit Context(const T &args) :
-            Tag(Tags::Make(args)),
-            line(init_line),
-            column(init_column)
+            Tag(Tags::Make(args)), line(init_line), column(init_column)
             {
             }
 
+            explicit Context(const Context &) throw();  //!< copy constructor
+            virtual ~Context() throw();                 //!< cleanup
 
-            explicit Context(const Context &) throw();
-            virtual ~Context() throw();
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const int line;   //!< current line
+            const int column; //!< current column
+
         private:
             Y_DISABLE_ASSIGN(Context);
         };

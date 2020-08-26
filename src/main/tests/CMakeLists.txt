@@ -351,8 +351,8 @@ SOURCE_GROUP(jive FILES
 test-jive-tags.cpp
 test-jive-char.cpp
 )
-ADD_TEST(jive:tags    test-main jive:tags)
-ADD_TEST(jive:char    test-main jive:char)
+ADD_TEST(jive:tags    test-main jive_tags)
+ADD_TEST(jive:char    test-main jive_char)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

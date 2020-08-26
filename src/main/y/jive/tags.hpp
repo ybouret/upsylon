@@ -11,20 +11,31 @@ namespace upsylon {
 
     namespace Jive
     {
-
+        //______________________________________________________________________
+        //
+        //
         //! base type for Tags
+        //
+        //______________________________________________________________________
         typedef suffix_tree<Tag> TagsTree;
 
+        //______________________________________________________________________
+        //
+        //
+        //! database of reusable tags
+        //
+        //______________________________________________________________________
         class Tags : public singleton<Tags>, public TagsTree
         {
         public:
-            const string * get(const char *buffer, const size_t buflen );
-            const string * get(const char *buffer);
-            const string * get(const char);
-            const string * get(const string &);
-            const string * get(const string *);
-            const string * get(const Tag    &);
+            const string * get(const char *buffer, const size_t buflen); //!< get/create
+            const string * get(const char *buffer); //!< get/create
+            const string * get(const char);         //!< get/create
+            const string * get(const string &);     //!< get/create
+            const string * get(const string *);     //!< get/create
+            const string * get(const Tag    &);     //!< get/create
 
+            //! generic helper
             template <typename T> static inline
             const string * Make(const T &id)
             {
@@ -32,8 +43,10 @@ namespace upsylon {
                 return tags.get(id);
             }
 
+            //! show content
             static void Display();
 
+            //! helper to show
             const size_t maxLength;
 
         private:

@@ -24,13 +24,13 @@ namespace upsylon {
                 // C++
                 //______________________________________________________________
                 explicit xcache(objects &, const size_t block_size); //!< extract access and shared arena
-                virtual ~xcache() throw();                           //! cleanup
+                virtual ~xcache() throw();                           //!< cleanup
 
                 //______________________________________________________________
                 //
                 // methods
                 //______________________________________________________________
-                size_t block_size() const throw();      //! shared.block_size
+                size_t block_size() const throw();      //!< shared.block_size
                 void * acquire();                       //!< locked acquire
                 void   release(void *) throw();         //!< locked release
                 void * acquire_unlocked();              //!< for multiple acquires

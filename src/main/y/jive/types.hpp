@@ -11,8 +11,7 @@ namespace upsylon {
     namespace Jive
     {
 
-        typedef object                Object;
-        typedef arc_ptr<const string> Tag;
+        typedef arc_ptr<const string> Tag; //!< reusable tag
         
     }
 

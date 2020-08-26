@@ -1,5 +1,6 @@
 
 #include "y/jive/context.hpp"
+#include "y/type/block/zset.hpp"
 
 namespace upsylon {
 
@@ -8,6 +9,9 @@ namespace upsylon {
 
         Context:: ~Context() throw()
         {
+            _bzset(line);
+            _bzset(column);
+
         }
 
         Context:: Context(const Context &other) throw() :
