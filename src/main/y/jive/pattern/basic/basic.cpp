@@ -40,5 +40,10 @@ namespace upsylon {
                 }
             }
         }
+
+        bool Basic:: feeble() const throw()
+        {
+            return false;
+        }
     }
 }

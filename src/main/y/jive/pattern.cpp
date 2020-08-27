@@ -27,7 +27,11 @@ namespace upsylon {
             return fp.write_nbo(uuid);
         }
 
-        
+        bool Pattern::  strong() const throw()
+        {
+            return !feeble();
+        }
+
     }
 
 }

@@ -29,7 +29,8 @@ namespace upsylon {
              return Finished if no more char!
              */
             virtual  Result accept(Y_PATTERN_ACCEPT_ARGS) const;
-
+            virtual  bool   feeble() const throw(); //!< false, always strong
+            
             //__________________________________________________________________
             //
             // C++

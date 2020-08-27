@@ -50,8 +50,15 @@ namespace upsylon {
             // virtual interface
             //__________________________________________________________________
             virtual Result   accept(Y_PATTERN_ACCEPT_ARGS) const = 0;
+            virtual bool     feeble() const throw()              = 0; //!< may accept an empty token
             virtual Pattern *clone() const                       = 0;
             virtual void     start(FirstChars &) const           = 0;
+
+            //__________________________________________________________________
+            //
+            // non-virtual interface
+            //__________________________________________________________________
+            bool strong() const throw();
 
             //__________________________________________________________________
             //

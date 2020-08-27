@@ -44,7 +44,9 @@ namespace {
 
         FirstChars fc;
         motif->start(fc);
-        std::cerr << "#first chars: " << fc.size() << std::endl;
+        std::cerr << "is feeble   : " << motif->feeble() << std::endl;
+        std::cerr << "is strong   : " << motif->strong() << std::endl;
+        std::cerr << "#first chars: " << fc.size()       << std::endl;
 
         std::cerr << "<" << cls_name << "/>" << std::endl << std::endl;
 
