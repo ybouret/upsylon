@@ -10,17 +10,34 @@ namespace upsylon {
 
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Basic pattern: accept 0 or 1 char, by isValid
+        //
+        //______________________________________________________________________
         class Basic : public Pattern
         {
         public:
-            virtual ~Basic() throw();
 
-
+            //__________________________________________________________________
+            //
+            // common pattern API
+            //__________________________________________________________________
+            //! accept 0 or 1 char
+            /**
+             return Finished if no more char!
+             */
             virtual  Result accept(Y_PATTERN_ACCEPT_ARGS) const;
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~Basic()               throw(); //!< cleanup
         protected:
-            explicit Basic(const uint32_t) throw();
-            explicit Basic(const Basic  &) throw();
+            explicit Basic(const uint32_t) throw(); //!< setup
+            explicit Basic(const Basic  &) throw(); //!< copy
 
         private:
             Y_DISABLE_ASSIGN(Basic);
