@@ -57,6 +57,12 @@ namespace upsylon {
             const uint32_t     uuid;
             const void * const self;
 
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
+            static const Pattern *Load(ios::istream &);
+
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid
             explicit Pattern(const Pattern &) throw(); //!< copy  uuid...

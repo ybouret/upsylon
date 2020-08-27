@@ -2,6 +2,7 @@
 #include "y/jive/pattern/basic/all.hpp"
 #include "y/utest/run.hpp"
 #include "y/string/convert.hpp"
+#include "y/ios/icstream.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -27,6 +28,11 @@ namespace {
         {
             const string savename = basename+ ".bin";
             motif->save_to(savename);
+            {
+                ios::icstream fp(savename);
+                const Motif reloaded = Pattern::Load(fp);
+                Y_CHECK(reloaded->to_binary()==bin);
+            }
         }
 
         std::cerr << "<" << cls_name << "/>" << std::endl << std::endl;
