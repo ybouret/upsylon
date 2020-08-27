@@ -15,7 +15,8 @@ namespace upsylon
         {
         }
 
-        FirstChars:: FirstChars(const FirstChars &other) : fcOrdered(other)
+        FirstChars:: FirstChars(const FirstChars &other) :
+        collection(), fcOrdered(other)
         {
         }
 

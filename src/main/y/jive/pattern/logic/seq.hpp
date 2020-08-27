@@ -10,6 +10,12 @@ namespace upsylon {
 
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //
+        //! for Sequential operations
+        //
+        //______________________________________________________________________
         class Sequential : public Logical
         {
         public:

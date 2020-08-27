@@ -48,7 +48,8 @@ namespace upsylon {
             virtual ~Single() throw();
 
             const uint8_t code;
-
+            const uint8_t priv;
+            
         private:
             Y_DISABLE_ASSIGN(Single);
             explicit Single(const uint8_t ) throw();

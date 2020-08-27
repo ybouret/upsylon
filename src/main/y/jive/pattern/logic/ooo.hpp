@@ -9,6 +9,12 @@ namespace upsylon {
 
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //
+        //! for Out Of Order operations
+        //
+        //______________________________________________________________________
         class OutOfOrder : public Logical
         {
         public:

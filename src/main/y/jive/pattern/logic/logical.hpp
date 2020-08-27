@@ -16,7 +16,6 @@ namespace upsylon {
         //! logical operands
         //
         //______________________________________________________________________
-
         class Logical : public Pattern
         {
         public:

@@ -9,8 +9,17 @@ namespace upsylon {
         Y_PATTERN_CLID(Single);
 
         Single:: ~Single() throw() {}
-        Single::  Single(const uint8_t c) throw() : Basic(UUID), code(c)   { Y_PATTERN_SELF(Single);}
-        Single::  Single(const Single &_) throw() : Basic(_), code(_.code) { assert(UUID==uuid); Y_PATTERN_SELF(Single);}
+        Single::  Single(const uint8_t c) throw() :
+        Basic(UUID),
+        code(c),
+        priv(0)
+        { Y_PATTERN_SELF(Single);}
+        
+        Single::  Single(const Single &_) throw() :
+        Basic(_),
+        code(_.code),
+        priv(0)
+        { assert(UUID==uuid); Y_PATTERN_SELF(Single);}
 
         Pattern *Single:: clone() const
         {
