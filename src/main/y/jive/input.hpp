@@ -12,12 +12,24 @@ namespace upsylon
 
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //
+        //! shared input definition
+        //
+        //______________________________________________________________________
         typedef arc_ptr<ios::istream> Input;
 
+        //______________________________________________________________________
+        //
+        //
+        //! returning an input stream
+        //
+        //______________________________________________________________________
         struct MakeInput
         {
-            static ios::istream * FromFile(const string &filename);
-            static ios::istream * FromData(const void *data, const size_t size);
+            static ios::istream * FromFile(const string &filename);              //!< ios::icstream
+            static ios::istream * FromData(const void *data, const size_t size); //!< ios::imstream
         };
 
     }

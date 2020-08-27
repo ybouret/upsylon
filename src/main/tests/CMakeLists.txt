@@ -69,6 +69,7 @@ test-core-roll.cpp
 test-progress.cpp
  test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp
  test-meta-loop.cpp
+test-core-nodes.cpp
  )
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
@@ -87,6 +88,7 @@ ADD_TEST(core:isqrt       test-main isqrt)
 ADD_TEST(core:zfi         test-main zfi)
 ADD_TEST(core:binary      test-main binary)
 ADD_TEST(core:metaloop    test-main metaloop)
+ADD_TEST(core:nodes       test-main core_nodes)
 
 SOURCE_GROUP(mem FILES test-alloc.cpp 
 test-object.cpp test-embed.cpp
@@ -351,10 +353,15 @@ SOURCE_GROUP(jive FILES
 test-jive-tags.cpp
 test-jive-char.cpp
 test-jive-module.cpp
+test-jive-source.cpp
+test-jive-token.cpp
 )
 ADD_TEST(jive:tags    test-main jive_tags)
 ADD_TEST(jive:char    test-main jive_char)
 ADD_TEST(jive:module  test-main jive_module)
+ADD_TEST(jive:source  test-main jive_source)
+ADD_TEST(jive:token   test-main jive_token)
+
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

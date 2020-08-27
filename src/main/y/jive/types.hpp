@@ -11,8 +11,19 @@ namespace upsylon {
     namespace Jive
     {
 
-        typedef arc_ptr<const string> Tag;    //!< reusable tag
-        typedef object                Object; //!< base class
+        typedef arc_ptr<const string> Tag;     //!< reusable tag
+        typedef object                Object;  //!< base class
+        typedef counted               Counted; //!< alias
+
+        class   CountedObject : public Object, public Counted
+        {
+        public:
+            explicit CountedObject() throw();
+            virtual ~CountedObject() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(CountedObject);
+        };
     }
 
 }

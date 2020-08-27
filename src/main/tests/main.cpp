@@ -29,6 +29,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(core_clist);
     Y_UTEST(core_stack);
     Y_UTEST(core_roll);
+    Y_UTEST(core_nodes);
 
 
     Y_UTEST(isqrt);
@@ -236,6 +237,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(jive_char);
     Y_UTEST(jive_tags);
     Y_UTEST(jive_module);
+    Y_UTEST(jive_token);
+    Y_UTEST(jive_source);
 }
 Y_UTEST_EXEC()
 
