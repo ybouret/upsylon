@@ -68,25 +68,26 @@ namespace upsylon {
             return ans;
         }
 
-        Pattern::Result And:: accept(Y_PATTERN_ACCEPT_ARGS) const
+        bool And:: accept(Y_PATTERN_ACCEPT_ARGS) const
         {
             assert(0==token.size);
             Token cat;
             for(const Pattern *op=operands.head;op;op=op->next)
             {
-                Token        tmp;
-                const Result res = op->accept(tmp,source);
-                switch(res)
+                Token tmp;
+                if(op->accept(tmp,source))
                 {
-                    case Accepted: cat.merge_back(tmp); break;
-                    case Rejected:
-                    case Finished:
-                        source.unget(cat);
-                        return res;
+                    cat.merge_back(tmp);
+                }
+                else
+                {
+                    assert(0==tmp.size);
+                    source.unget(cat);
+                    return false;
                 }
             }
             token.swap_with(cat);
-            return Accepted;
+            return true;
         }
 
 

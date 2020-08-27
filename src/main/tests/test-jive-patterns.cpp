@@ -11,7 +11,7 @@ using namespace Jive;
 namespace {
 
 
-    static inline void test_pattern( const Pattern *p )
+    static inline void test_pattern( const Pattern *p, Source &source )
     {
         const Motif  motif    = p;
         const string cls_name = motif->className();
@@ -38,17 +38,29 @@ namespace {
             }
         }
 
+        // check graphviz
         {
             const string dotname = basename + ".dot";
             motif->graphViz(dotname);
         }
 
-        FirstChars fc;
-        motif->start(fc);
+        // test string/feeble
         std::cerr << "is feeble   : " << motif->feeble() << std::endl;
         std::cerr << "is strong   : " << motif->strong() << std::endl;
-        std::cerr << "#first chars: " << fc.size()       << std::endl;
-        std::cerr << fc << std::endl;
+
+        // find first char
+        FirstChars fc;
+        motif->start(fc);
+        FirstChars bc;
+        bc.opposite(fc);
+        std::cerr << "#first chars: " << fc.size() << std::endl;
+        //std::cerr << fc << std::endl;
+        std::cerr << "#other chars: " << bc.size() << std::endl;
+        //std::cerr << bc << std::endl;
+
+        std::cerr << "\t<testing>" << std::endl;
+        motif->test(source);
+        std::cerr << "\t<testing/>" << std::endl;
         std::cerr << "<" << cls_name << "/>" << std::endl << std::endl;
 
     }
@@ -71,16 +83,19 @@ namespace {
 
 Y_UTEST(jive_patterns)
 {
-    test_pattern( Any :: Create()    );
-    test_pattern( newSingle() );
-    test_pattern( newRange()  );
-    test_pattern( newExclude() );
+    const char data[] = "abcdefghijklmnopqrstuvwxyz";
+    Source     source( Module::OpenData("data",data) );
+
+    test_pattern( Any :: Create(),source );
+    test_pattern( newSingle()    ,source );
+    test_pattern( newRange()     ,source );
+    test_pattern( newExclude()   ,source );
 
     {
         arc_ptr<And> p = And::Create();
         p->add( newSingle() );
         p->add( newRange()  );
-        test_pattern( & *p );
+        test_pattern( & *p, source);
     }
 
     Y_UTEST_SIZEOF(Pattern);

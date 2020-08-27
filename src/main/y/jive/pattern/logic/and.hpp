@@ -33,7 +33,7 @@ namespace upsylon {
             static  And     *Create();                  //!< new
             virtual Pattern *clone() const;             //!< copy
             virtual void     start(FirstChars &) const; //!< merge until strong op
-            virtual Result   accept(Y_PATTERN_ACCEPT_ARGS) const; //!< all
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< all
             virtual bool     feeble() const throw();    //!< all are feeble
 
             //__________________________________________________________________

@@ -16,13 +16,18 @@ namespace upsylon
         typedef sorted_vector<uint8_t,fcComparator,fcAllocator> fcSequence;
         typedef ordered_single<fcSequence>                      fcOrdered;
 
+
         class FirstChars : public fcOrdered
         {
         public:
+
+
             explicit FirstChars();
             virtual ~FirstChars() throw();
+            FirstChars(const FirstChars &);
 
-            void fulfill();
+            void complete();
+            void opposite(const FirstChars &fc);
 
             friend std::ostream & operator<<(std::ostream &, const FirstChars &fc );
 

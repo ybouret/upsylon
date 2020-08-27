@@ -15,9 +15,12 @@ namespace upsylon
         {
         }
 
-        
+        FirstChars:: FirstChars(const FirstChars &other) : fcOrdered(other)
+        {
+        }
 
-        void FirstChars:: fulfill()
+
+        void FirstChars:: complete()
         {
             if(capacity()<256)
             {
@@ -29,6 +32,29 @@ namespace upsylon
                 insert( uint8_t(i) );
             }
 
+        }
+
+        void FirstChars:: opposite(const FirstChars &fc)
+        {
+            if(this==&fc || size() >= 256)
+            {
+                free();
+            }
+            else
+            {
+                const size_t n   = fc.size();
+                const size_t num = 256-n;
+                free(); ensure(num);
+                for(unsigned i=0;i<256;++i)
+                {
+                    const uint8_t value = uint8_t(i);
+                    if( !fc.search(value) )
+                    {
+                        insert(value);
+                    }
+                }
+                assert( size() == num );
+            }
         }
 
         std::ostream & operator<<(std::ostream &os, const FirstChars &fc )
@@ -46,6 +72,8 @@ namespace upsylon
             os << '}';
             return os;
         }
+
+        
 
     }
 

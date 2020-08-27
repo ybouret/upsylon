@@ -18,25 +18,25 @@ namespace upsylon {
         }
 
 
-        Pattern::Result Basic::accept(Y_PATTERN_ACCEPT_ARGS) const
+       bool Basic::accept(Y_PATTERN_ACCEPT_ARGS) const
         {
             assert(0==token.size);
             Char *ch = source.get();
             if(!ch)
             {
-                return Finished;
+                return false;
             }
             else
             {
                 if( isValid(ch->code) )
                 {
                     token << ch;
-                    return Accepted;
+                    return true;
                 }
                 else
                 {
                     source.unget(ch);
-                    return Rejected;
+                    return false;
                 }
             }
         }

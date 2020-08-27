@@ -32,12 +32,7 @@ namespace upsylon {
         class Pattern : public CountedObject, public Serializable, public Vizible
         {
         public:
-            enum Result
-            {
-                Accepted,
-                Rejected,
-                Finished
-            };
+
 
             typedef core::roll_of_cpp<Pattern> List;
             
@@ -52,7 +47,7 @@ namespace upsylon {
             //
             // virtual interface
             //__________________________________________________________________
-            virtual Result   accept(Y_PATTERN_ACCEPT_ARGS) const = 0;
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const = 0;
             virtual bool     feeble() const throw()              = 0; //!< may accept an empty token
             virtual Pattern *clone() const                       = 0;
             virtual void     start(FirstChars &) const           = 0;
@@ -76,6 +71,8 @@ namespace upsylon {
             // helpers
             //__________________________________________________________________
             static Pattern *Load(ios::istream &);
+            void   test(Source &source) const;
+
 
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid

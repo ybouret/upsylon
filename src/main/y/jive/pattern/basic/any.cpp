@@ -53,7 +53,8 @@ namespace upsylon {
 
         void Any:: start(FirstChars &fc) const
         {
-            fc.fulfill();
+            assert(0==fc.size());
+            fc.complete();
         }
 
     }

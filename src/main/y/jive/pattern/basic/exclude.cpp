@@ -49,7 +49,7 @@ namespace upsylon {
         void Exclude:: start(FirstChars &fc) const
         {
             assert(0==fc.size());
-            fc.fulfill();
+            fc.complete();
             fc.no(code);
         }
     }

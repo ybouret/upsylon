@@ -11,7 +11,7 @@ Y_UTEST(jive_fc)
 {
 
     FirstChars fc;
-    fc.fulfill();
+    fc.complete();
     //std::cerr << "fc=" << fc << std::endl;
 }
 Y_UTEST_DONE()
