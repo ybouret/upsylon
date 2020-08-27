@@ -22,11 +22,15 @@ namespace upsylon {
         {
         }
 
-        size_t   Pattern:: emit_uuid(ios::ostream&fp) const
+        size_t   Pattern:: id(ios::ostream&fp) const
         {
             return fp.write_nbo(uuid);
         }
 
+        ios::ostream & Pattern:: gv(ios::ostream&fp) const
+        {
+            return fp.viz( static_cast<const Pattern*>(this) );
+        }
 
     }
 

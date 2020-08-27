@@ -38,7 +38,7 @@ namespace upsylon {
 
         size_t Any:: serialize(ios::ostream &fp) const
         {
-            return emit_uuid(fp);
+            return id(fp);
         }
 
         bool Any:: isValid(const uint8_t) const throw()

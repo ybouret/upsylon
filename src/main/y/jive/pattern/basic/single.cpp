@@ -30,7 +30,7 @@ namespace upsylon {
 
         size_t Single:: serialize(ios::ostream &fp) const
         {
-            const size_t ans = emit_uuid(fp);
+            const size_t ans = id(fp);
             fp.write(code);
             return ans + 1;
         }

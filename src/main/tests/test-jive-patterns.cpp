@@ -18,6 +18,7 @@ namespace {
         Y_CHECK(motif->self != NULL);
         string       basename = cls_name;string_convert::to_lower(basename);
         const string bin      = motif->to_binary();
+
         // check cloning
         {
             const Motif  motif_copy = motif->clone();
@@ -25,6 +26,7 @@ namespace {
             Y_CHECK(motif_copy->self        != NULL);
         }
 
+        // check IO
         {
             const string savename = basename+ ".bin";
             motif->save_to(savename);

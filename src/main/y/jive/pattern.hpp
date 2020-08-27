@@ -67,8 +67,8 @@ namespace upsylon {
             explicit Pattern(const uint32_t) throw();  //!< setup uuid
             explicit Pattern(const Pattern &) throw(); //!< copy  uuid...
 
-            size_t   emit_uuid(ios::ostream&) const;
-
+            size_t         id(ios::ostream&) const;
+            ios::ostream & gv(ios::ostream&) const;
         private:
             Y_DISABLE_ASSIGN(Pattern);
         };
