@@ -359,7 +359,7 @@ test-jive-token.cpp
 ADD_TEST(jive:tags    test-main jive_tags)
 ADD_TEST(jive:char    test-main jive_char)
 ADD_TEST(jive:module  test-main jive_module)
-ADD_TEST(jive:source  test-main jive_source)
+ADD_TEST(jive:source  test-main jive_source ${HERE}/1000.txt ${HERE}/10000.txt)
 ADD_TEST(jive:token   test-main jive_token)
 
 

@@ -33,7 +33,7 @@ namespace upsylon {
             
             //! generic constructor
             template <typename T>
-            inline explicit Context(const T &args) :
+            inline Context(const T &args) :
             tag(Tags::Make(args)),
             line(init_line),
             column(init_column)

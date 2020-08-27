@@ -9,7 +9,6 @@ using namespace Jive;
 
 Y_UTEST(jive_char)
 {
-    //concurrent::singleton::verbose = true;
     Y_UTEST_SIZEOF(Context);
     Y_UTEST_SIZEOF(Char);
 
