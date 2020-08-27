@@ -7,6 +7,7 @@
 #include "y/jive/source.hpp"
 #include "y/jive/pattern/first-chars.hpp"
 #include "y/ios/serializable.hpp"
+#include "y/ios/tools/vizible.hpp"
 #include "y/type/fourcc.hpp"
 
 namespace upsylon {
@@ -15,6 +16,7 @@ namespace upsylon {
     {
 
         typedef ios::serializable Serializable;
+        typedef ios::vizible      Vizible;
 
 #define Y_PATTERN_CLID(CLASS) const char CLASS::CLID[] = Y_FOURCC_CHAR8(CLASS::UUID)
 #define Y_PATTERN_ACCEPT_ARGS Token &token, Source &source
@@ -26,7 +28,7 @@ namespace upsylon {
         //! pattern recognition API
         //
         //______________________________________________________________________
-        class Pattern : public CountedObject, public Serializable
+        class Pattern : public CountedObject, public Serializable, public Vizible
         {
         public:
             enum Result
@@ -68,7 +70,6 @@ namespace upsylon {
             explicit Pattern(const Pattern &) throw(); //!< copy  uuid...
 
             size_t         id(ios::ostream&) const;
-            ios::ostream & gv(ios::ostream&) const;
         private:
             Y_DISABLE_ASSIGN(Pattern);
         };

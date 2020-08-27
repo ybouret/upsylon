@@ -46,5 +46,10 @@ namespace upsylon {
             return true;
         }
 
+        void Any:: vizCore(ios::ostream &fp) const
+        {
+            endl(fp << "[label=\"ANY\",shape=circle]");
+        }
+
     }
 }

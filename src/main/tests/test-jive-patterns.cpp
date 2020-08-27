@@ -37,6 +37,11 @@ namespace {
             }
         }
 
+        {
+            const string dotname = basename + ".dot";
+            motif->graphViz(dotname);
+        }
+
         std::cerr << "<" << cls_name << "/>" << std::endl << std::endl;
 
     }

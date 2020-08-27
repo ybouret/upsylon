@@ -40,5 +40,9 @@ namespace upsylon {
             return c==code;
         }
 
+        void Single:: vizCore(ios::ostream &fp) const
+        {
+            endl(fp << "[label=\"" << cchars::printable[code] << "\",shape=square]");
+        }
     }
 }

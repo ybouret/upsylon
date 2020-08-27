@@ -42,7 +42,6 @@ namespace upsylon {
         private:
             Y_DISABLE_ASSIGN(Basic);
             virtual bool isValid(const uint8_t code) const throw() = 0;
-
         };
     }
 }

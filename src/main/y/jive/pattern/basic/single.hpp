@@ -35,11 +35,16 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // types and definition
+            // serializable
             //__________________________________________________________________
             virtual const char *className() const throw();
             virtual size_t      serialize(ios::ostream&fp) const;
 
+            //__________________________________________________________________
+            //
+            // vizible
+            //__________________________________________________________________
+            
             //__________________________________________________________________
             //
             // C++
@@ -52,7 +57,8 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Single);
             explicit Single(const uint8_t ) throw();
             explicit Single(const Single&) throw();
-            virtual bool isValid(const uint8_t) const throw();
+            virtual bool isValid(const uint8_t)  const throw();
+            virtual void vizCore(ios::ostream &) const;
         };
     }
 }
