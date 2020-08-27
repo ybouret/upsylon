@@ -18,6 +18,8 @@ namespace upsylon {
 
 #define Y_PATTERN_CLID(CLASS) const char CLASS::CLID[] = Y_FOURCC_CHAR8(CLASS::UUID)
 #define Y_PATTERN_ACCEPT_ARGS Token &token, Source &source
+#define Y_PATTERN_SELF(CLASS) *(const void **)&self = static_cast<const void *>(static_cast<const CLASS *>(this))
+
         //______________________________________________________________________
         //
         //
@@ -52,7 +54,8 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const uint32_t uuid;
+            const uint32_t     uuid;
+            const void * const self;
 
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid
@@ -64,6 +67,7 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Pattern);
         };
 
+        typedef arc_ptr<const Pattern> Motif;
     }
 
 }

@@ -8,8 +8,17 @@ namespace upsylon {
         Y_PATTERN_CLID(Any);
 
         Any:: ~Any() throw() {}
-        Any::  Any() throw() : Basic(UUID) {}
-        Any::  Any(const Any &_) throw() : Basic(_) { assert(UUID==uuid); }
+
+        Any::  Any() throw() : Basic(UUID)
+        {
+            Y_PATTERN_SELF(Any);
+        }
+
+        Any::  Any(const Any &_) throw() : Basic(_)
+        {
+            assert(UUID==uuid);
+            Y_PATTERN_SELF(Any);
+        }
 
         Pattern *Any:: clone() const
         {
