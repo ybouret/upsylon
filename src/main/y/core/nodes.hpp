@@ -19,7 +19,7 @@ namespace upsylon {
         class singly : public T
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type);                         //!< aliases
             explicit singly() : T(), next(0)          {} //!< initialize, default
             virtual ~singly() throw() { assert(!next); } //!< cleanup
             singly  *next;                               //!< for linked
@@ -48,7 +48,7 @@ namespace upsylon {
         class doubly : public T
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type);                                        //!< aliases
             explicit doubly() : T(), next(0), prev(0) {}                //!< initialize, default
             virtual ~doubly() throw() { assert(!next); assert(!prev); } //!< cleanup
             doubly  *next;                                              //!< for linked

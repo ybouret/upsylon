@@ -20,18 +20,26 @@ namespace upsylon {
         class Source : public CountedObject
         {
         public:
-            explicit Source(Module *) throw();
-            virtual ~Source() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Source(Module *) throw(); //!< setup with default module
+            virtual ~Source() throw();         //!< cleanup
 
-            void push(Module *);
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void push(Module *); //!< push a new module for reading
 
-            Char  *get();
-            void   unget(Char *) throw();
-            void   unget(Char::List &) throw();
-            void   uncpy(const Char::List &);
-            size_t depth() const throw();
-            size_t in_cache() const throw();
-            bool   alive();
+            Char  *get();                      //!< get next char within cache/modules
+            void   unget(Char *) throw();      //!< unget a char
+            void   unget(Char::List &) throw();//!< unget a char list
+            void   uncpy(const Char::List &);  //!< unget a copy of a char list
+            size_t depth() const throw();      //!< sizeof history
+            size_t in_cache() const throw();   //!< cache.size
+            bool   alive();                    //!< found a readable char
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);

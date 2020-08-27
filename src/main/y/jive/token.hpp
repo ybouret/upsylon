@@ -23,16 +23,16 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-            explicit Token() throw();
-            virtual ~Token() throw();
-            Token(const Token &);
-            Token & operator=(const Token &);
+            explicit Token() throw(); //!< create empty
+            virtual ~Token() throw(); //!< cleanup
+            Token(const Token &);     //!< copy
+            Token & operator=(const Token &); //!< assign by copy/swap
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            string toString() const;
+            string toString() const; //!< codes->chars
         };
 
     }
