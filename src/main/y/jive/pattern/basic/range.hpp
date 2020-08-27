@@ -31,6 +31,7 @@ namespace upsylon {
             //__________________________________________________________________
             static  Range   *Create(const uint8_t,const uint8_t);
             virtual Pattern *clone() const;
+            virtual void     start(FirstChars &) const; //!< insert range
 
             //__________________________________________________________________
             //

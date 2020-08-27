@@ -43,7 +43,8 @@ namespace {
         }
 
         FirstChars fc;
-        std::cerr << "fc.capacity=" << fc.capacity() << std::endl;
+        motif->start(fc);
+        std::cerr << "#first chars: " << fc.size() << std::endl;
 
         std::cerr << "<" << cls_name << "/>" << std::endl << std::endl;
 

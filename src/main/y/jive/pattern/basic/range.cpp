@@ -63,5 +63,15 @@ namespace upsylon {
         {
             endl(fp << "[label=\"" << cchars::printable[lower] << '-' << cchars::printable[upper] <<  "\",shape=box]");
         }
+
+        void Range:: start(FirstChars &fc) const
+        {
+            assert(fc.size()==0);
+            const unsigned Upper = upper;
+            for(unsigned i=lower;i<=Upper;++i)
+            {
+                fc.insert( uint8_t(i) );
+            }
+        }
     }
 }

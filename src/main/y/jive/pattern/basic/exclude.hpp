@@ -31,7 +31,8 @@ namespace upsylon {
             //__________________________________________________________________
             static  Exclude  *Create(const uint8_t);
             virtual Pattern  *clone() const;
-
+            virtual void      start(FirstChars&) const; //!< all but code
+            
             //__________________________________________________________________
             //
             // serializable

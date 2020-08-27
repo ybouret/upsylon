@@ -51,6 +51,7 @@ namespace upsylon {
             //__________________________________________________________________
             virtual Result   accept(Y_PATTERN_ACCEPT_ARGS) const = 0;
             virtual Pattern *clone() const                       = 0;
+            virtual void     start(FirstChars &) const           = 0;
 
             //__________________________________________________________________
             //

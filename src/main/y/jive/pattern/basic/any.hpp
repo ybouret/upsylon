@@ -29,8 +29,9 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  Any     *Create();
-            virtual Pattern *clone() const;
+            static  Any     *Create();                  //!< new
+            virtual Pattern *clone() const;             //!< copy
+            virtual void     start(FirstChars &) const; //!< all
 
             //__________________________________________________________________
             //

@@ -32,6 +32,7 @@ namespace upsylon {
             //__________________________________________________________________
             static  Single  *Create(const uint8_t);
             virtual Pattern *clone() const;
+            virtual void     start(FirstChars &) const; //!< only c
 
             //__________________________________________________________________
             //

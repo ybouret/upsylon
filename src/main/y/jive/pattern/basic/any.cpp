@@ -51,5 +51,10 @@ namespace upsylon {
             endl(fp << "[label=\"ANY\",shape=circle]");
         }
 
+        void Any:: start(FirstChars &fc) const
+        {
+            fc.fulfill();
+        }
+
     }
 }

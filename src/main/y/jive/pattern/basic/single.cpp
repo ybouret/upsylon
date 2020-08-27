@@ -44,5 +44,11 @@ namespace upsylon {
         {
             endl(fp << "[label=\"" << cchars::printable[code] << "\",shape=square]");
         }
+
+        void Single:: start(FirstChars &fc) const
+        {
+            assert( fc.size() == 0);
+            fc.insert(code);
+        }
     }
 }
