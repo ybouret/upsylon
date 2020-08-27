@@ -3,7 +3,7 @@
 #ifndef Y_CORE_NODES_INCLUDED
 #define Y_CORE_NODES_INCLUDED 1
 
-#include "y/type/traits.hpp"
+#include "y/type/args.hpp"
 
 namespace upsylon {
 
@@ -19,9 +19,10 @@ namespace upsylon {
         class singly : public T
         {
         public:
-            explicit singly() : T(), next(0) {} //!< initialize, default
-            virtual ~singly() throw()        {} //!< cleanup
-            singly  *next;                      //!< for linked
+            Y_DECL_ARGS(T,type);
+            explicit singly() : T(), next(0)          {} //!< initialize, default
+            virtual ~singly() throw() { assert(!next); } //!< cleanup
+            singly  *next;                               //!< for linked
 
             //! for 1-arg constructors
             template <typename U> static inline
@@ -47,10 +48,11 @@ namespace upsylon {
         class doubly : public T
         {
         public:
-            explicit doubly() : T(), next(0), prev(0) {} //!< initialize, default
-            virtual ~doubly() throw()                 {} //!< cleanup
-            doubly  *next;                               //!< for linked
-            doubly  *prev;                               //!< for linked
+            Y_DECL_ARGS(T,type);
+            explicit doubly() : T(), next(0), prev(0) {}                //!< initialize, default
+            virtual ~doubly() throw() { assert(!next); assert(!prev); } //!< cleanup
+            doubly  *next;                                              //!< for linked
+            doubly  *prev;                                              //!< for linked
 
             //! for 1-arg constructors
             template <typename U> static inline

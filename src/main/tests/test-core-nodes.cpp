@@ -77,7 +77,6 @@ Y_UTEST(core_nodes)
         }
 
         l.push_back( dnode::from<int16_t>( alea.full<int16_t>() ) );
-
     }
 
 }
