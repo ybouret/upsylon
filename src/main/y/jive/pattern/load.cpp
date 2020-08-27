@@ -19,6 +19,22 @@ namespace upsylon
                 return Single::Create( uint8_t(C) );
             }
 
+            template <>
+            const Pattern *__load<Range>(ios::istream&fp)
+            {
+                static const char fn[] ="Jive::Pattern::Load.Range: ";
+                char C = 0;
+                if(!fp.query(C)) throw exception("%smissing lower",fn);
+                const uint8_t lower = uint8_t(C);
+                if(!fp.query(C)) throw exception("%smissing upper",fn);
+                const uint8_t upper = uint8_t(C);
+                if(upper<lower)
+                {
+                    throw exception("%scorrupted!",fn);
+                }
+                return Range::Create(lower,upper);
+            }
+
         }
 
 #define Y_PATTERN_LOAD(CLASS) case CLASS::UUID: return __load<CLASS>(fp)
@@ -37,6 +53,7 @@ namespace upsylon
             {
                     Y_PATTERN_LOAD(Any);
                     Y_PATTERN_LOAD(Single);
+                    Y_PATTERN_LOAD(Range);
                 default:
                     break;
             }
