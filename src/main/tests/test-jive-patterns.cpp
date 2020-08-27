@@ -49,9 +49,10 @@ namespace {
 
 Y_UTEST(jive_patterns)
 {
-    test_pattern( Any::Create()    );
-    test_pattern( Single::Create(alea.range('a','z') ) );
-    test_pattern( Range::Create(alea.range('a','z'),alea.range('a','z') ) );
+    test_pattern( Any    :: Create()    );
+    test_pattern( Single :: Create(alea.range('a','z') ) );
+    test_pattern( Range  :: Create(alea.range('a','z'),alea.range('a','z') ) );
+    test_pattern( Exclude:: Create(alea.range('a','z') ) );
 
 }
 Y_UTEST_DONE()
