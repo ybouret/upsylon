@@ -42,6 +42,9 @@ namespace {
             motif->graphViz(dotname);
         }
 
+        FirstChars fc;
+        std::cerr << "fc.capacity=" << fc.capacity() << std::endl;
+
         std::cerr << "<" << cls_name << "/>" << std::endl << std::endl;
 
     }

@@ -74,7 +74,7 @@ namespace upsylon {
         //
         //======================================================================
         Char:: Supply:: Supply() :
-        xchars(object::supply::instance()),
+        xchars(object::proto()),
         zchars()
         {
         }

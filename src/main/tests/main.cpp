@@ -239,6 +239,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(jive_module);
     Y_UTEST(jive_token);
     Y_UTEST(jive_source);
+    Y_UTEST(jive_fc);
     Y_UTEST(jive_patterns);
 }
 Y_UTEST_EXEC()
