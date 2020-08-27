@@ -11,15 +11,15 @@ namespace upsylon {
         {
         }
 
-        Logical:: Logical(const uint32_t t) throw() : Pattern(t), operands()
+        Logical:: Logical(const uint32_t t) throw() : Pattern(t), Pattern::List()
         {
         }
 
-        Logical:: Logical(const Logical &_) : Pattern(_), operands()
+        Logical:: Logical(const Logical &_) : Pattern(_), Pattern::List()
         {
-            for(const Pattern *op=_.operands.head;op;op=op->next)
+            for(const Pattern *op=_.head;op;op=op->next)
             {
-                operands.push_back( op->clone() );
+                 push_back( op->clone() );
             }
         }
 
@@ -27,38 +27,32 @@ namespace upsylon {
         {
             size_t ans=0;
             ans += id(fp);
-            ans += fp.write_upack(operands.size);
-            for(const Pattern *op=operands.head;op;op=op->next)
+            ans += fp.write_upack(size);
+            for(const Pattern *op=head;op;op=op->next)
             {
                 ans += op->serialize(fp);
             }
             return ans;
         }
 
-        void Logical:: add(Pattern *p) throw()
-        {
-            assert(p);
-            assert(0==p->next);
-            operands.push_back(p);
-        }
 
 
         void Logical:: load(ios::istream &fp)
         {
             static const char fn[] = "Jive::Logical::Load: ";
-            assert(0==operands.size);
+            assert(0==size);
             size_t shift = 0;
             size_t nops  = 0;
             if( !fp.query_upack(nops,shift) ) throw exception("%s missing #ops for %s", fn, className() );
             while(nops-- > 0 )
             {
-                add( Load(fp) );
+                push_back( Load(fp) );
             }
         }
 
         void Logical:: vizLink(ios::ostream &fp) const
         {
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 op->vizSave(fp);
                 vizName(fp);

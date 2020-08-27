@@ -48,7 +48,7 @@ namespace upsylon {
         void And:: start(FirstChars &fc) const
         {
             assert(0==fc.size());
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 FirstChars sub;
                 op->start(sub);
@@ -61,7 +61,7 @@ namespace upsylon {
         bool And:: feeble() const throw()
         {
             bool ans = true;
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 if(op->strong()) return false;
             }
@@ -72,7 +72,7 @@ namespace upsylon {
         {
             assert(0==token.size);
             Token cat;
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 Token tmp;
                 if(op->accept(tmp,source))

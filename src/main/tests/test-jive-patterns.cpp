@@ -93,8 +93,8 @@ Y_UTEST(jive_patterns)
 
     {
         arc_ptr<And> p = And::Create();
-        p->add( newSingle() );
-        p->add( newRange()  );
+        p->push_back( newSingle() );
+        p->push_back( newRange()  );
         test_pattern( & *p, source);
     }
 
