@@ -61,11 +61,18 @@ namespace upsylon
             template <>
             Pattern *__load<And>(ios::istream &fp)
             {
-                auto_ptr<And> p = And::Create();
+                auto_ptr<Logical> p = And::Create();
                 p->load(fp);
                 return p.yield();
             }
 
+            template <>
+            Pattern *__load<Or>(ios::istream &fp)
+            {
+                auto_ptr<Or> p = Or::Create();
+                p->load(fp);
+                return p.yield();
+            }
 
         }
 
@@ -88,6 +95,7 @@ namespace upsylon
                     Y_PATTERN_LOAD(Exclude);
 
                     Y_PATTERN_LOAD(And);
+                    Y_PATTERN_LOAD(Or);
 
                 default:
                     break;

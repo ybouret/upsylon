@@ -10,12 +10,12 @@ namespace upsylon {
 
         And:: ~And() throw() {}
 
-        And::  And() throw() : Logical(UUID)
+        And::  And() throw() : Sequential(UUID)
         {
             Y_PATTERN_SELF(And);
         }
 
-        And::  And(const And &_) throw() : Logical(_)
+        And::  And(const And &_) throw() : Sequential(_)
         {
             assert(UUID==uuid);
             Y_PATTERN_SELF(And);
@@ -48,7 +48,7 @@ namespace upsylon {
         void And:: start(FirstChars &fc) const
         {
             assert(0==fc.size());
-            for(const Pattern *op=head;op;op=op->next)
+            for(const Pattern *op=operands.head;op;op=op->next)
             {
                 FirstChars sub;
                 op->start(sub);
@@ -60,19 +60,18 @@ namespace upsylon {
 
         bool And:: feeble() const throw()
         {
-            bool ans = true;
-            for(const Pattern *op=head;op;op=op->next)
+            for(const Pattern *op=operands.head;op;op=op->next)
             {
                 if(op->strong()) return false;
             }
-            return ans;
+            return true;
         }
 
         bool And:: accept(Y_PATTERN_ACCEPT_ARGS) const
         {
             assert(0==token.size);
             Token cat;
-            for(const Pattern *op=head;op;op=op->next)
+            for(const Pattern *op=operands.head;op;op=op->next)
             {
                 Token tmp;
                 if(op->accept(tmp,source))

@@ -3,7 +3,7 @@
 #ifndef Y_PATTERN_LOGIC_AND_INCLUDED
 #define Y_PATTERN_LOGIC_AND_INCLUDED 1
 
-#include "y/jive/pattern/logic/logical.hpp"
+#include "y/jive/pattern/logic/seq.hpp"
 
 namespace upsylon {
 
@@ -16,7 +16,7 @@ namespace upsylon {
         //! accept a sequence of patterns
         //
         //______________________________________________________________________
-        class And : public Logical
+        class And : public Sequential
         {
         public:
             //__________________________________________________________________

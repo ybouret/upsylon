@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_PATTERN_LOGICAL_INCLUDED
@@ -17,15 +16,19 @@ namespace upsylon {
         //! logical operands
         //
         //______________________________________________________________________
-        class Logical : public Pattern, public Pattern::List
+
+        class Logical : public Pattern
         {
         public:
+            typedef Pattern::List Operands;
+
             //__________________________________________________________________
             //
             // common serializable
             //__________________________________________________________________
             virtual size_t serialize(ios::ostream &fp) const; //!< uuid+operangs
             void           load(ios::istream &p);             //!< read operands from stream
+
             
             //__________________________________________________________________
             //
@@ -33,15 +36,23 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~Logical() throw();
 
+            virtual void add( Pattern *p ) throw() = 0;
+            virtual void harden()                  = 0;
+
         protected:
             explicit Logical(const uint32_t) throw(); //!< setup
             explicit Logical(const Logical &);        //!< copy
             void vizLink(ios::ostream&) const;        //!< write operands and links
-            
+
+            Operands operands;
+
         private:
             Y_DISABLE_ASSIGN(Logical);
 
         };
+
+     
+
 
     }
 

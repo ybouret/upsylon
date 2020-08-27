@@ -9,7 +9,7 @@
 #include "y/ios/serializable.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/type/fourcc.hpp"
-#include "y/core/roll.hpp"
+#include "y/core/list.hpp"
 
 namespace upsylon {
 
@@ -33,8 +33,7 @@ namespace upsylon {
         {
         public:
 
-
-            typedef core::roll_of_cpp<Pattern> List;
+            typedef core::list_of_cpp<Pattern> List;
             
             //__________________________________________________________________
             //
@@ -65,6 +64,7 @@ namespace upsylon {
             const uint32_t     uuid;
             const void * const self;
             Pattern *          next;
+            Pattern *          prev;
 
             //__________________________________________________________________
             //
