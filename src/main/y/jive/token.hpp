@@ -27,6 +27,7 @@ namespace upsylon {
             virtual ~Token() throw(); //!< cleanup
             Token(const Token &);     //!< copy
             Token & operator=(const Token &); //!< assign by copy/swap
+            
 
             //__________________________________________________________________
             //

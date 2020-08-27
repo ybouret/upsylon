@@ -1,21 +1,22 @@
 //! \file
 
-#ifndef Y_PATTERN_BASIC_RANGE_INCLUDED
-#define Y_PATTERN_BASIC_RANGE_INCLUDED 1
+#ifndef Y_PATTERN_LOGIC_AND_INCLUDED
+#define Y_PATTERN_LOGIC_AND_INCLUDED 1
 
-#include "y/jive/pattern/basic/basic.hpp"
+#include "y/jive/pattern/logic/logical.hpp"
 
 namespace upsylon {
 
     namespace Jive
     {
+
         //______________________________________________________________________
         //
         //
-        //! Accept one matching char
+        //! accept a sequence of patterns
         //
         //______________________________________________________________________
-        class Range : public Basic
+        class And : public Logical
         {
         public:
             //__________________________________________________________________
@@ -23,41 +24,39 @@ namespace upsylon {
             // types and definition
             //__________________________________________________________________
             static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('R','N','G','_');
+            static const uint32_t UUID = Y_FOURCC('A','N','D','_');
 
             //__________________________________________________________________
             //
             // pattern API
             //__________________________________________________________________
-            static  Range   *Create(const uint8_t,const uint8_t);
-            virtual Pattern *clone() const;
-            virtual void     start(FirstChars &) const; //!< insert range
+            static  And     *Create();                  //!< new
+            virtual Pattern *clone() const;             //!< copy
+            virtual void     start(FirstChars &) const; //!< merge until strong op
+            virtual Result   accept(Y_PATTERN_ACCEPT_ARGS) const; //!< all
+            virtual bool     feeble() const throw();    //!< all are feeble
 
             //__________________________________________________________________
             //
             // serializable
             //__________________________________________________________________
             virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream&fp) const;
             
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Range() throw();
-
-            const uint8_t lower;
-            const uint8_t upper;
+            virtual ~And() throw();
 
         private:
-            Y_DISABLE_ASSIGN(Range);
-            explicit Range(const uint8_t, const uint8_t) throw();
-            explicit Range(const Range&) throw();
-            virtual bool isValid(const uint8_t)  const throw();
+            Y_DISABLE_ASSIGN(And);
+            explicit And() throw();
+            explicit And(const And&) throw();
             virtual void vizCore(ios::ostream &) const;
         };
-    }
-}
 
+    }
+
+}
 
 #endif

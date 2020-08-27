@@ -1,5 +1,6 @@
 #include "y/jive/pattern/all.hpp"
 #include "y/exception.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -9,7 +10,7 @@ namespace upsylon
         namespace {
             static const char fn[] = "Jive::Pattern::Load: ";
 
-            template <typename T> const Pattern * __load( ios::istream &);
+            template <typename T>  Pattern * __load( ios::istream &);
 
             //==================================================================
             //
@@ -17,11 +18,11 @@ namespace upsylon
             //
             //==================================================================
 
-            template <> const Pattern *__load<Any>(ios::istream&)
+            template <> Pattern *__load<Any>(ios::istream&)
             { return Any::Create(); }
 
             template <>
-            const Pattern *__load<Single>(ios::istream&fp)
+            Pattern *__load<Single>(ios::istream&fp)
             {
                 char C = 0;
                 if(!fp.query(C)) throw exception("%sSingle: missing code",fn);
@@ -29,7 +30,7 @@ namespace upsylon
             }
 
             template <>
-            const Pattern *__load<Range>(ios::istream&fp)
+            Pattern *__load<Range>(ios::istream&fp)
             {
                 static const char sub[] ="Range: ";
                 char C = 0;
@@ -45,18 +46,32 @@ namespace upsylon
             }
 
             template <>
-            const Pattern *__load<Exclude>(ios::istream&fp)
+            Pattern *__load<Exclude>(ios::istream&fp)
             {
                 char C = 0;
                 if(!fp.query(C)) throw exception("%sExclude: missing code",fn);
                 return Exclude::Create( uint8_t(C) );
             }
 
+            //==================================================================
+            //
+            // Logical
+            //
+            //==================================================================
+            template <>
+            Pattern *__load<And>(ios::istream &fp)
+            {
+                auto_ptr<And> p = And::Create();
+                p->load(fp);
+                return p.yield();
+            }
+
+
         }
 
 #define Y_PATTERN_LOAD(CLASS) case CLASS::UUID: return __load<CLASS>(fp)
 
-        const Pattern * Pattern:: Load(ios::istream &fp )
+        Pattern * Pattern:: Load(ios::istream &fp )
         {
             uint32_t uuid  = 0;
             size_t   shift = 0;
@@ -71,6 +86,9 @@ namespace upsylon
                     Y_PATTERN_LOAD(Single);
                     Y_PATTERN_LOAD(Range);
                     Y_PATTERN_LOAD(Exclude);
+
+                    Y_PATTERN_LOAD(And);
+
                 default:
                     break;
             }

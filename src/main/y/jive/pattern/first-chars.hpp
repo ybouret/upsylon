@@ -24,6 +24,8 @@ namespace upsylon
 
             void fulfill();
 
+            friend std::ostream & operator<<(std::ostream &, const FirstChars &fc );
+
         private:
             Y_DISABLE_ASSIGN(FirstChars);
 

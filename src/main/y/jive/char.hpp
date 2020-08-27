@@ -107,8 +107,7 @@ namespace upsylon {
                 //______________________________________________________________
                 List & operator<<(Char *) throw();         //!< helper
                 List & add(const Context &,const uint8_t); //!< helper
-                List & operator<<(const List &other);      //!< copy/merge
-
+                
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const List &);
 

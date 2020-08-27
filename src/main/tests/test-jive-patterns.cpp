@@ -1,6 +1,7 @@
 
-#include "y/jive/pattern/basic/all.hpp"
+#include "y/jive/pattern/all.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/string/convert.hpp"
 #include "y/ios/icstream.hpp"
 
@@ -47,18 +48,48 @@ namespace {
         std::cerr << "is feeble   : " << motif->feeble() << std::endl;
         std::cerr << "is strong   : " << motif->strong() << std::endl;
         std::cerr << "#first chars: " << fc.size()       << std::endl;
-
+        std::cerr << fc << std::endl;
         std::cerr << "<" << cls_name << "/>" << std::endl << std::endl;
 
+    }
+
+    static inline Pattern * newSingle()
+    {
+        return Single :: Create(alea.range('a','z'));
+    }
+
+    static inline Pattern * newExclude()
+    {
+        return Exclude :: Create(alea.range('a','z'));
+    }
+
+    static inline Pattern * newRange()
+    {
+        return  Range  :: Create(alea.range('a','z'),alea.range('a','z') );
     }
 }
 
 Y_UTEST(jive_patterns)
 {
-    test_pattern( Any    :: Create()    );
-    test_pattern( Single :: Create(alea.range('a','z') ) );
-    test_pattern( Range  :: Create(alea.range('a','z'),alea.range('a','z') ) );
-    test_pattern( Exclude:: Create(alea.range('a','z') ) );
+    test_pattern( Any :: Create()    );
+    test_pattern( newSingle() );
+    test_pattern( newRange()  );
+    test_pattern( newExclude() );
+
+    {
+        arc_ptr<And> p = And::Create();
+        p->add( newSingle() );
+        p->add( newRange()  );
+        test_pattern( & *p );
+    }
+
+    Y_UTEST_SIZEOF(Pattern);
+    Y_UTEST_SIZEOF(Any);
+    Y_UTEST_SIZEOF(Single);
+    Y_UTEST_SIZEOF(Range);
+    Y_UTEST_SIZEOF(Exclude);
+    Y_UTEST_SIZEOF(Logical);
+
 
 }
 Y_UTEST_DONE()

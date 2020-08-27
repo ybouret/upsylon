@@ -13,12 +13,12 @@ namespace upsylon {
         }
 
         Pattern:: Pattern(const uint32_t t) throw() :
-        uuid(t), self(0)
+        uuid(t), self(0), next(0)
         {
         }
 
         Pattern:: Pattern(const Pattern &other) throw() :
-        uuid(other.uuid), self(0)
+        uuid(other.uuid), self(0), next(0)
         {
         }
 
