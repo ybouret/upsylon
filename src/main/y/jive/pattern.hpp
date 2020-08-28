@@ -105,10 +105,10 @@ namespace upsylon {
             //! check type
             template <typename T> inline bool is() const throw() { return T::UUID == uuid; }
 
-            //! equality (TODO: optimize!!!)
-            static bool Eq(const Pattern &, const Pattern &);
-            friend bool operator==(const Pattern &, const Pattern&);
-            friend bool operator!=(const Pattern &, const Pattern&);
+
+            static bool Eq(const Pattern &, const Pattern &);        //!< equality (TODO: optimize!!!)
+            friend bool operator==(const Pattern &, const Pattern&); //!< uses Eq
+            friend bool operator!=(const Pattern &, const Pattern&); //!< uses Eq
 
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid

@@ -25,30 +25,30 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('R','N','G','_');
+            static const char     CLID[];                           //!< CLID
+            static const uint32_t UUID = Y_FOURCC('R','N','G','_'); //!< UUID
 
             //__________________________________________________________________
             //
             // pattern API
             //__________________________________________________________________
-            static  Range   *Create(const uint8_t,const uint8_t);
-            virtual Pattern *clone() const;
-            virtual void     start(FirstChars &) const;         //!< insert range
-            virtual void     update(Entropy &)  const throw();  //!< with boundaries
+            static  Range   *Create(const uint8_t,const uint8_t); //!< create with boundaries
+            virtual Pattern *clone() const;                       //!< copy
+            virtual void     start(FirstChars &) const;           //!< insert range
+            virtual void     update(Entropy &)  const throw();    //!< with boundaries
 
             //__________________________________________________________________
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream&fp) const;
+            virtual const char *className() const throw();          //!< CLID
+            virtual size_t      serialize(ios::ostream&fp) const;   //!< id+boundaries
             
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Range() throw();
+            virtual ~Range() throw(); //!< cleanup
 
             //! display
             friend std::ostream & operator<<(std::ostream &, const Range &);  
@@ -58,8 +58,8 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const uint8_t lower;
-            const uint8_t upper;
+            const uint8_t lower; //!< lower boundary
+            const uint8_t upper; //!< upper boundary
 
         private:
             Y_DISABLE_ASSIGN(Range);

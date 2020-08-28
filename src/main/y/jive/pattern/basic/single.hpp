@@ -25,15 +25,15 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('S','N','G','L');
+            static const char     CLID[];                           //!< CLID
+            static const uint32_t UUID = Y_FOURCC('S','N','G','L'); //!< UUID
 
             //__________________________________________________________________
             //
             // pattern API
             //__________________________________________________________________
-            static  Single  *Create(const uint8_t);
-            virtual Pattern *clone() const;
+            static  Single  *Create(const uint8_t);             //!< create
+            virtual Pattern *clone() const;                     //!< copy
             virtual void     start(FirstChars &) const;         //!< only code
             virtual void     update(Entropy &)  const throw();  //!< with code
 
@@ -41,23 +41,24 @@ namespace upsylon {
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream&fp) const;
+            virtual const char *className() const throw();         //!< CLID
+            virtual size_t      serialize(ios::ostream&fp) const;  //!< id+code
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Single() throw();
+            virtual ~Single() throw(); //!< cleanup
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const Single &);
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const uint8_t code;
-            const uint8_t priv;
+            const uint8_t code; //!< matching code
+            const uint8_t priv; //!< private byte
             
         private:
             Y_DISABLE_ASSIGN(Single);

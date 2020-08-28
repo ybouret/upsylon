@@ -33,13 +33,14 @@ namespace upsylon {
     namespace Jive
     {
 
+#if 0
         static int byIncreasingEntropy(const Pattern *lhs, const Pattern * rhs, void *) throw()
         {
             const double L = lhs->entropy();
             const double R = rhs->entropy();
             return comparison::increasing(L,R);
         }
-
+#endif
         void OutOfOrder:: rework() throw()
         {
             Operands strongList;
@@ -57,7 +58,7 @@ namespace upsylon {
             }
 
             Rework::Compact(strongList);
-            merging<Pattern>::sort(strongList,byIncreasingEntropy,NULL);
+            //merging<Pattern>::sort(strongList,byIncreasingEntropy,NULL);
             swap_with(strongList);
             merge_back(feebleList);
         }

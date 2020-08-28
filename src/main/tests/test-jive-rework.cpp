@@ -14,13 +14,13 @@ Y_UTEST(jive_rework)
         auto_ptr<OutOfOrder> p = Or::Create();
         auto_ptr<OutOfOrder> q = Or::Create();
 
-        p->push_back( And::Create() );
         p->push_back( Single::Create('a') );
         p->push_back( Single::Create('a') );
         p->push_back( Single::Create('b') );
         p->push_back( Single::Create('c') );
         p->push_back( Range::Create('e','k') );
         p->push_back( Single::Create('h') );
+        p->push_back( And::Create() );
         p->push_back( Single::Create('l') );
 
         p->push_back( Range::Create('q','z') );

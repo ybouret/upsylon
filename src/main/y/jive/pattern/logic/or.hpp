@@ -23,18 +23,18 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('_','O','R','_');
+            static const char     CLID[];                           //!< CLID
+            static const uint32_t UUID = Y_FOURCC('_','O','R','_'); //!< UUID
 
             //__________________________________________________________________
             //
             // pattern API
             //__________________________________________________________________
-            static  Or      *Create();                  //!< new
-            virtual Pattern *clone() const;             //!< copy
-            virtual void     start(FirstChars &) const; //!< merge until strong op
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< one
-            virtual bool     feeble() const throw();    //!< one is feeble
+            static  Or      *Create();                            //!< new
+            virtual Pattern *clone() const;                       //!< copy
+            virtual void     start(FirstChars &) const;           //!< merge until strong op
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< one of the operands
+            virtual bool     feeble() const throw();              //!< one is feeble
 
             //__________________________________________________________________
             //

@@ -24,14 +24,14 @@ namespace upsylon
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('R','E','P','_');
+            static const char     CLID[];                             //!< CLID minCount>1
+            static const uint32_t UUID = Y_FOURCC('R','E','P','_');   //!< UUID minCount>1
 
-            static const char     CLID_ZOM[];
-            static const uint32_t UUID_ZOM = Y_FOURCC('Z','O','M','_');
+            static const char     CLID_ZOM[];                           //!< CLID minCount=0
+            static const uint32_t UUID_ZOM = Y_FOURCC('Z','O','M','_'); //!< UUID minCount=0
 
-            static const char     CLID_OOM[];
-            static const uint32_t UUID_OOM = Y_FOURCC('O','O','M','_');
+            static const char     CLID_OOM[];                           //!< CLID minCount=1
+            static const uint32_t UUID_OOM = Y_FOURCC('O','O','M','_'); //!< CLID minCount=1
 
             //__________________________________________________________________
             //
@@ -46,20 +46,20 @@ namespace upsylon
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream&fp) const;
+            virtual const char *className() const throw();          //!< depends on minCount
+            virtual size_t      serialize(ios::ostream&fp) const;   //!< depends on minCount
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const size_t minCount;
+            const size_t minCount; //!< minimal count to accept
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Repeating() throw();
+            virtual ~Repeating() throw(); //!< cleanup
 
         private:
             Y_DISABLE_ASSIGN(Repeating);
