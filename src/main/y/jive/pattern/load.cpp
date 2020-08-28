@@ -93,6 +93,15 @@ namespace upsylon
                 return Optional::Create( Pattern::Load(fp) );
             }
 
+            template <>
+            Pattern * __load<Repeating>(ios::istream &fp)
+            {
+                size_t shift = 0;
+                size_t minCount = 0;
+                if( !fp.query_upack(minCount,shift) ) throw exception("%sRepeating: missing minCount",fn);
+                return Repeating::Create( Pattern::Load(fp), minCount);
+            }
+
         }
 
 #define Y_PATTERN_LOAD(CLASS) case CLASS::UUID: return __load<CLASS>(fp)
@@ -118,6 +127,7 @@ namespace upsylon
                     Y_PATTERN_LOAD(None);
 
                     Y_PATTERN_LOAD(Optional);
+                    Y_PATTERN_LOAD(Repeating);
 
                 default:
                     break;
