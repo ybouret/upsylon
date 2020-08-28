@@ -8,6 +8,9 @@ namespace upsylon {
 
     namespace Jive
     {
+        const char Repeating::CLID_ZOM[] = Y_FOURCC_CHAR8(Repeating::UUID_ZOM);
+        const char Repeating::CLID_OOM[] = Y_FOURCC_CHAR8(Repeating::UUID_OOM);
+
         Y_PATTERN_CLID(Repeating);
 
         Repeating:: ~Repeating() throw() {}
@@ -41,20 +44,44 @@ namespace upsylon {
 
         const char *Repeating:: className() const throw()
         {
+            switch(minCount)
+            {
+                case 0: return CLID_ZOM;
+                case 1: return CLID_OOM;
+                default:
+                    break;
+            }
             return CLID;
+
         }
 
         size_t Repeating:: serialize(ios::ostream &fp) const
         {
-            size_t ans = id(fp);
-            ans += fp.write_upack(minCount);
+            size_t ans = 0;
+            switch(minCount)
+            {
+                case 0:  ans = fp.write_nbo(UUID_ZOM); break;
+                case 1:  ans = fp.write_nbo(UUID_OOM); break;
+                default:
+                    ans  = fp.write_nbo(UUID);
+                    ans += fp.write_upack(minCount);
+                    break;
+            }
             return ans + motif->serialize(fp);
         }
 
 
         void Repeating:: vizCore(ios::ostream &fp) const
         {
-            endl(fp("[label=\">=%u\",shape=diamond]",unsigned(minCount)));
+            fp << "[label=\"";
+            switch(minCount)
+            {
+                case 0:  fp << '*'; break;
+                case 1:  fp << '+'; break;
+                default: fp(">=%u",unsigned(minCount)); break;
+            }
+            fp << "\",shape=diamond]";
+            endl(fp);
             vizLink(fp);
         }
 
@@ -88,7 +115,6 @@ namespace upsylon {
                     break;
                 }
             }
-            //std::cerr << "<Repeating #" << num << "/" << minCount << ">" << std::endl;
             if(num>=minCount)
             {
                 token.swap_with(cat);

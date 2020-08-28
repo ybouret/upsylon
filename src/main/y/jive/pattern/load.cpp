@@ -143,6 +143,9 @@ namespace upsylon
                     Y_PATTERN_LOAD(Repeating);
                     Y_PATTERN_LOAD(Counting);
 
+                case Repeating::UUID_ZOM: return Repeating::Create( Load(fp), 0 );
+                case Repeating::UUID_OOM: return Repeating::Create( Load(fp), 1 );
+
                 default:
                     break;
             }

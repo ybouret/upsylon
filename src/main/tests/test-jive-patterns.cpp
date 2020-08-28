@@ -85,7 +85,7 @@ namespace {
 
 Y_UTEST(jive_patterns)
 {
-    const char data[] = "abcdefghijklmnopqrstuvwxyz";
+    const char data[] = "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz";
     Source     source( Module::OpenData("data",data) );
 
     test_pattern( Any :: Create(),source );

@@ -27,6 +27,12 @@ namespace upsylon
             static const char     CLID[];
             static const uint32_t UUID = Y_FOURCC('R','E','P','_');
 
+            static const char     CLID_ZOM[];
+            static const uint32_t UUID_ZOM = Y_FOURCC('Z','O','M','_');
+
+            static const char     CLID_OOM[];
+            static const uint32_t UUID_OOM = Y_FOURCC('O','O','M','_');
+
             //__________________________________________________________________
             //
             // pattern API
