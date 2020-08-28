@@ -60,15 +60,33 @@ namespace upsylon
 
         std::ostream & operator<<(std::ostream &os, const FirstChars &fc )
         {
+            static const char quote = '\'';
             os << '{';
             const size_t n=fc.size();
             if(n>0)
             {
-                os << cchars::visible[ fc[1] ];
-                for(size_t i=2;i<=n;++i)
+                size_t i =1;
+                while(i<=n)
                 {
-                    os << ' ' << cchars::visible[ fc[i] ];
+                    os << ' ';
+                    size_t   a=fc[i];
+                    size_t   d=1;
+                    size_t   j=i+1;
+                    for(;j<=n;++j,++d)
+                    {
+                        if(a+d!=fc[j]) break;
+                    }
+                    i=j;
+                    if(1==d)
+                    {
+                        os << quote << cchars::visible[a] << quote;
+                    }
+                    else
+                    {
+                        os << '[' <<quote << cchars::visible[a] << quote << '-' << quote << cchars::visible[ fc[--j] ] << quote << ']';
+                    }
                 }
+                os << ' ';
             }
             os << '}';
             return os;
