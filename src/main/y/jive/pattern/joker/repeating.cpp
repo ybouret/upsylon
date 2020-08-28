@@ -32,7 +32,7 @@ namespace upsylon {
             return new Repeating(*this);
         }
 
-        Repeating     * Repeating:: Create(const Pattern *p, const size_t n)
+        Repeating     * Repeating:: Create(Pattern *p, const size_t n)
         {
             const Motif m(p);
             return new Repeating(m,n);

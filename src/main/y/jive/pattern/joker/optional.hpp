@@ -32,7 +32,7 @@ namespace upsylon
             //
             // pattern API
             //__________________________________________________________________
-            static  Optional *Create(const Pattern *p);            //!< new
+            static  Optional *Create(Pattern *p);                  //!< new
             virtual Pattern  *clone()             const;           //!< copy
             virtual bool      feeble()    const throw();           //!< true
             virtual bool      accept(Y_PATTERN_ACCEPT_ARGS) const; //!< motif or true

@@ -120,6 +120,11 @@ Y_UTEST(jive_patterns)
     test_pattern( Repeating::Create( newSingle(),1 ), source );
     test_pattern( Repeating::Create( newSingle(),2 ), source );
 
+    test_pattern( Counting::Create( newSingle(),0,0 ), source );
+    test_pattern( Counting::Create( newSingle(),0,1 ), source );
+    test_pattern( Counting::Create( newSingle(),0,2 ), source );
+    test_pattern( Counting::Create( newSingle(),1,2 ), source );
+
 
 
     Y_UTEST_SIZEOF(Pattern);
@@ -135,6 +140,7 @@ Y_UTEST(jive_patterns)
 
     Y_UTEST_SIZEOF(Optional);
     Y_UTEST_SIZEOF(Repeating);
+    Y_UTEST_SIZEOF(Counting);
 
 
 

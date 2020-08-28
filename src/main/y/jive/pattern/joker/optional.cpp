@@ -27,7 +27,7 @@ namespace upsylon {
             return new Optional(*this);
         }
 
-        Optional     * Optional:: Create(const Pattern *p)
+        Optional     * Optional:: Create(Pattern *p)
         {
             const Motif m(p);
             return new Optional(m);

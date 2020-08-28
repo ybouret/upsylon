@@ -102,6 +102,19 @@ namespace upsylon
                 return Repeating::Create( Pattern::Load(fp), minCount);
             }
 
+
+            template <>
+            Pattern * __load<Counting>(ios::istream &fp)
+            {
+                static const char sub[] ="Counting: ";
+                size_t shift    = 0;
+                size_t minCount = 0;
+                size_t maxCount = 0;
+                if( !fp.query_upack(minCount,shift) ) throw exception("%s%smissing minCount",fn,sub);
+                if( !fp.query_upack(maxCount,shift) ) throw exception("%s%smissing maxCount",fn,sub);
+                return Counting::Create( Pattern::Load(fp), minCount, maxCount);
+            }
+
         }
 
 #define Y_PATTERN_LOAD(CLASS) case CLASS::UUID: return __load<CLASS>(fp)
@@ -128,6 +141,7 @@ namespace upsylon
 
                     Y_PATTERN_LOAD(Optional);
                     Y_PATTERN_LOAD(Repeating);
+                    Y_PATTERN_LOAD(Counting);
 
                 default:
                     break;

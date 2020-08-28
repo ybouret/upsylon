@@ -31,7 +31,7 @@ namespace upsylon
             //
             // pattern API
             //__________________________________________________________________
-            static  Repeating *Create(const Pattern *p, const size_t); //!< new
+            static  Repeating *Create(Pattern *p, const size_t);       //!< new
             virtual Pattern   *clone()             const;              //!< copy
             virtual bool       feeble()    const throw();              //!< true if at least 0 or motif is feeble
             virtual bool       accept(Y_PATTERN_ACCEPT_ARGS) const;    //!< at least motif
