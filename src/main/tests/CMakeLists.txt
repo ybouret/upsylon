@@ -357,6 +357,7 @@ test-jive-source.cpp
 test-jive-token.cpp
 test-jive-patterns.cpp
 test-jive-fc.cpp
+test-jive-rework.cpp
 )
 ADD_TEST(jive:tags     test-main jive_tags)
 ADD_TEST(jive:char     test-main jive_char)
@@ -365,6 +366,7 @@ ADD_TEST(jive:source   test-main jive_source ${HERE}/1000.txt ${HERE}/10000.txt)
 ADD_TEST(jive:token    test-main jive_token)
 ADD_TEST(jive:fc       test-main jive_fc)
 ADD_TEST(jive:patterns test-main jive_patterns)
+ADD_TEST(jive:rework   test-main jive_rework)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
