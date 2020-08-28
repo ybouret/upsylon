@@ -66,7 +66,8 @@ namespace upsylon {
             virtual Pattern *clone() const                       = 0; //!< clone API
             virtual void     start(FirstChars &) const           = 0; //!< collect first chars
             virtual void     update(Entropy &)   const throw()   = 0; //!< update entropy
-
+            virtual void     optimize()                 throw()  = 0; //!< sub-optimize
+            
             //__________________________________________________________________
             //
             // non-virtual interface
@@ -87,8 +88,9 @@ namespace upsylon {
             //
             // helpers
             //__________________________________________________________________
-            static Pattern *Load(ios::istream &); //!< load pattern from stream
-            void   test(Source &source) const;    //!< perform test on source
+            static Pattern *Load(ios::istream &);         //!< load pattern from stream
+            static Pattern *Optimize(Pattern  *) throw(); //!< optimize pattern
+            void   test(Source &source) const;            //!< perform test on source
 
             //! cast
             template <typename T> inline T *as() throw()

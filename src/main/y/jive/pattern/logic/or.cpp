@@ -76,6 +76,11 @@ namespace upsylon {
             return false;
         }
 
+        void Or:: optimize() throw()
+        {
+            applyOptimize();
+        }
+
     }
 
 }

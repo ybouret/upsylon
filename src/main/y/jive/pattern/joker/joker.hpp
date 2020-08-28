@@ -26,6 +26,7 @@ namespace upsylon
             //__________________________________________________________________
             virtual void     start(FirstChars &) const;         //!< from motif
             virtual void     update(Entropy &)   const throw(); //!< from motif
+            virtual void     optimize() throw();                //!< motif->optimize
 
             //__________________________________________________________________
             //

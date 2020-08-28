@@ -50,8 +50,8 @@ namespace upsylon {
             explicit Logical(const uint32_t) throw(); //!< setup
             explicit Logical(const Logical &);        //!< copy
             void vizLink(ios::ostream&) const;        //!< write operands and links
-
-
+            void applyOptimize() throw();             //!< optimize all operands
+            
         private:
             Y_DISABLE_ASSIGN(Logical);
 

@@ -90,7 +90,11 @@ namespace upsylon {
             return true;
         }
 
-
+        void And:: optimize() throw()
+        {
+            applyOptimize();
+            
+        }
     }
 }
 

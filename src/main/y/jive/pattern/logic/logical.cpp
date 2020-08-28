@@ -74,6 +74,16 @@ namespace upsylon
             }
         }
 
+        void Logical:: applyOptimize() throw()
+        {
+            Operands tmp;
+            while(size)
+            {
+                tmp.push_back( Optimize( pop_front() ) );
+            }
+            swap_with(tmp);
+        }
+
     }
 
 }

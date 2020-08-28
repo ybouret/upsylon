@@ -30,6 +30,7 @@ namespace upsylon {
              */
             virtual  bool   accept(Y_PATTERN_ACCEPT_ARGS) const;
             virtual  bool   feeble() const throw(); //!< false, always strong
+            virtual void     optimize()    throw(); //!< do nothing
             
             //__________________________________________________________________
             //

@@ -35,6 +35,7 @@ namespace upsylon {
             virtual void     start(FirstChars &) const; //!< merge until strong op
             virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< all operands
             virtual bool     feeble() const throw();              //!< all are feeble
+            virtual void     optimize() throw();                  //!< applyOptimize, merge alike
 
             //__________________________________________________________________
             //

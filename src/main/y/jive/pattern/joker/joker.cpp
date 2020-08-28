@@ -41,6 +41,12 @@ namespace upsylon
             motif->start(fc);
         }
 
+        void Joker:: optimize() throw()
+        {
+            Pattern &p = aliasing::_(*motif);
+            p.optimize();
+        }
+
     }
 
 }

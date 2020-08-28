@@ -45,5 +45,10 @@ namespace upsylon {
         {
             return false;
         }
+
+        void Basic:: optimize() throw()
+        {
+            
+        }
     }
 }
