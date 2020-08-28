@@ -14,6 +14,7 @@ Y_UTEST(jive_rework)
         auto_ptr<OutOfOrder> p = Or::Create();
         auto_ptr<OutOfOrder> q = Or::Create();
 
+        p->push_back( And::Create() );
         p->push_back( Single::Create('a') );
         p->push_back( Single::Create('a') );
         p->push_back( Single::Create('b') );
@@ -31,6 +32,7 @@ Y_UTEST(jive_rework)
 
         p->push_back( Range::Create('N','R') );
         p->push_back( Range::Create('S','X') );
+
 
 
         q->merge_back_copy(*p);
