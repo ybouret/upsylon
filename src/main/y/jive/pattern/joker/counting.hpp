@@ -25,8 +25,8 @@ namespace upsylon
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('C','N','T','_');
+            static const char     CLID[];                           //!< CLID
+            static const uint32_t UUID = Y_FOURCC('C','N','T','_'); //!< UUID
 
             //__________________________________________________________________
             //
@@ -41,21 +41,21 @@ namespace upsylon
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream&fp) const;
+            virtual const char *className() const throw();         //!< CLID
+            virtual size_t      serialize(ios::ostream&fp) const;  //!< id+count+motif
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const size_t minCount;
-            const size_t maxCount;
+            const size_t minCount; //!< minimal count to accept
+            const size_t maxCount; //!< maximal count to accept
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Counting() throw();
+            virtual ~Counting() throw(); //!< cleanup
 
         private:
             Y_DISABLE_ASSIGN(Counting);

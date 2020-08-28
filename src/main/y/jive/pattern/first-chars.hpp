@@ -11,24 +11,39 @@ namespace upsylon
 
     namespace Jive
     {
-        typedef increasing_comparator<uint8_t>                  fcComparator;
-        typedef memory::pooled                                  fcAllocator;
-        typedef sorted_vector<uint8_t,fcComparator,fcAllocator> fcSequence;
-        typedef ordered_single<fcSequence>                      fcOrdered;
+        //______________________________________________________________________
+        //
+        //
+        // types used in first chars
+        //
+        //______________________________________________________________________
+        typedef increasing_comparator<uint8_t>                  fcComparator; //!< alias
+        typedef memory::pooled                                  fcAllocator;  //!< alias
+        typedef sorted_vector<uint8_t,fcComparator,fcAllocator> fcSequence;   //!< alias
+        typedef ordered_single<fcSequence>                      fcOrdered;    //!< alias
 
 
+        //______________________________________________________________________
+        //
+        //
+        //! First possible chars to start with for a pattern
+        //
+        //______________________________________________________________________
         class FirstChars : public fcOrdered
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit FirstChars();          //!< setup
+            virtual ~FirstChars() throw();  //!< cleanup
+            FirstChars(const FirstChars &); //!< copy
 
+            void complete();                     //!< set all 256 possibilites
+            void opposite(const FirstChars &fc); //!< opposite chars
 
-            explicit FirstChars();
-            virtual ~FirstChars() throw();
-            FirstChars(const FirstChars &);
-
-            void complete();
-            void opposite(const FirstChars &fc);
-
+            //! smart display
             friend std::ostream & operator<<(std::ostream &, const FirstChars &fc );
 
         private:

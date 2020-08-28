@@ -13,18 +13,29 @@
 
 namespace upsylon {
 
-    namespace Information {
-        class Entropy;
+    namespace Information
+    {
+        class Entropy; //!< forward declaration
     }
 
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //
+        // types used in first chars
+        //
+        //______________________________________________________________________
+        typedef ios::serializable Serializable; //!< alias
+        typedef ios::vizible      Vizible;      //!< alias
 
-        typedef ios::serializable Serializable;
-        typedef ios::vizible      Vizible;
-
+        //! make a name from an UUID
 #define Y_PATTERN_CLID(CLASS) const char CLASS::CLID[] = Y_FOURCC_CHAR8(CLASS::UUID)
+
+        //! accept proto
 #define Y_PATTERN_ACCEPT_ARGS Token &token, Source &source
+
+        //! internal info for operations
 #define Y_PATTERN_SELF(CLASS) *(const void **)&self = static_cast<const void *>(static_cast<const CLASS *>(this))
 
         //______________________________________________________________________
@@ -36,9 +47,8 @@ namespace upsylon {
         class Pattern : public CountedObject, public Serializable, public Vizible
         {
         public:
-            typedef Information::Entropy Entropy;
-
-            typedef core::list_of_cloneable<Pattern> List;
+            typedef Information::Entropy             Entropy; //!< alias
+            typedef core::list_of_cloneable<Pattern> List;    //!< alias
             
             //__________________________________________________________________
             //
@@ -51,47 +61,51 @@ namespace upsylon {
             //
             // virtual interface
             //__________________________________________________________________
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const = 0;
-            virtual bool     feeble() const throw()              = 0; //!< may accept an empty token
-            virtual Pattern *clone() const                       = 0;
-            virtual void     start(FirstChars &) const           = 0;
-            virtual void     update(Entropy &)   const throw()   = 0;
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const = 0; //!< accept a token (empty on input)
+            virtual bool     feeble() const throw()              = 0; //!< may accept an empty token ?
+            virtual Pattern *clone() const                       = 0; //!< clone API
+            virtual void     start(FirstChars &) const           = 0; //!< collect first chars
+            virtual void     update(Entropy &)   const throw()   = 0; //!< update entropy
 
             //__________________________________________________________________
             //
             // non-virtual interface
             //__________________________________________________________________
-            bool   strong()  const throw();
-            double entropy() const throw();
+            bool   strong()  const throw(); //!< !feeble()
+            double entropy() const throw(); //!< compute internal entropy
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const uint32_t     uuid;
-            const void * const self;
-            Pattern *          next;
-            Pattern *          prev;
+            const uint32_t     uuid; //!< Unique User IDentrifier
+            const void * const self; //!< derived class pointer
+            Pattern *          next; //!< for list
+            Pattern *          prev; //!< for list
         
             //__________________________________________________________________
             //
             // helpers
             //__________________________________________________________________
-            static Pattern *Load(ios::istream &);
-            void   test(Source &source) const;
+            static Pattern *Load(ios::istream &); //!< load pattern from stream
+            void   test(Source &source) const;    //!< perform test on source
 
+            //! cast
             template <typename T> inline T *as() throw()
             {
                 assert(uuid==T::UUID); assert(self); return (T*)self;
             }
 
+            //! cast
             template <typename T> inline const T *as() const throw()
             {
                 assert(uuid==T::UUID); assert(self); return static_cast<const T*>(self);
             }
 
+            //! check type
             template <typename T> inline bool is() const throw() { return T::UUID == uuid; }
 
+            //! equality (TODO: optimize!!!)
             static bool Eq(const Pattern &, const Pattern &);
             friend bool operator==(const Pattern &, const Pattern&);
             friend bool operator!=(const Pattern &, const Pattern&);
@@ -99,13 +113,13 @@ namespace upsylon {
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid
             explicit Pattern(const Pattern &) throw(); //!< copy  uuid...
+            size_t         id(ios::ostream&) const;    //!< emit default uuid
 
-            size_t         id(ios::ostream&) const;
         private:
             Y_DISABLE_ASSIGN(Pattern);
         };
 
-        typedef arc_ptr<const Pattern> Motif;
+        typedef arc_ptr<const Pattern> Motif; //!< alias
     }
 
 }

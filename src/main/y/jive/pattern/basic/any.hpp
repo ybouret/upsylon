@@ -22,8 +22,8 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('A','N','Y','1');
+            static const char     CLID[];                           //!< CLID
+            static const uint32_t UUID = Y_FOURCC('A','N','Y','1'); //!< UUID
 
             //__________________________________________________________________
             //
@@ -31,21 +31,23 @@ namespace upsylon {
             //__________________________________________________________________
             static  Any     *Create();                          //!< new
             virtual Pattern *clone()             const;         //!< copy
-            virtual void     start(FirstChars &) const;         //!< all
+            virtual void     start(FirstChars &) const;         //!< complete!
             virtual void     update(Entropy &)   const throw(); //!< do nothing
 
             //__________________________________________________________________
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream&fp) const;
+            virtual const char *className() const throw();         //!< CLID
+            virtual size_t      serialize(ios::ostream&fp) const;  //!< only id
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Any() throw();
+            virtual ~Any() throw(); //!< cleanup
+
+            //! display
             friend std::ostream & operator<<(std::ostream &, const Any&);
 
         private:

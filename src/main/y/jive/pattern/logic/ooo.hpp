@@ -18,12 +18,12 @@ namespace upsylon {
         class OutOfOrder : public Logical
         {
         public:
-            virtual ~OutOfOrder() throw();
-            virtual void rework() throw();
+            virtual ~OutOfOrder() throw(); //!< cleanup
+            virtual void rework() throw(); //!< compact operanfs
             
         protected:
             explicit OutOfOrder(const uint32_t) throw(); //!< setup
-            explicit OutOfOrder(const OutOfOrder&);
+            explicit OutOfOrder(const OutOfOrder&);      //!< copy
 
         private:
             Y_DISABLE_ASSIGN(OutOfOrder);

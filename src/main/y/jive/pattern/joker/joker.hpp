@@ -37,14 +37,14 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            virtual ~Joker() throw();
+            virtual ~Joker() throw(); //!< cleanup
 
             
 
 
         protected:
-            explicit Joker(const uint32_t, const Motif &) throw();
-            explicit Joker(const Joker&);
+            explicit Joker(const uint32_t, const Motif &) throw(); //!< setup
+            explicit Joker(const Joker&);                          //!< copy
 
             //! write motif and link to it
             void vizLink(ios::ostream &) const;

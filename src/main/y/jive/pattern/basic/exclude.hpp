@@ -24,8 +24,8 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('E','X','C','L');
+            static const char     CLID[];                            //!< CLID
+            static const uint32_t UUID = Y_FOURCC('E','X','C','L');  //!< UUID
 
             //__________________________________________________________________
             //
@@ -40,14 +40,14 @@ namespace upsylon {
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
-            virtual size_t      serialize(ios::ostream&fp) const;
+            virtual const char *className() const throw();        //!< CLID
+            virtual size_t      serialize(ios::ostream&fp) const; //!< id+code
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Exclude() throw();
+            virtual ~Exclude() throw(); //!< cleanup
 
             //! display
             friend  std::ostream & operator<<(std::ostream &, const Exclude &);
@@ -56,8 +56,8 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const uint8_t code;
-            const uint8_t priv;
+            const uint8_t code; //!< the excluded code
+            const uint8_t priv; //!< private byte
             
         private:
             Y_DISABLE_ASSIGN(Exclude);

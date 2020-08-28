@@ -19,11 +19,11 @@ namespace upsylon {
         class Sequential : public Logical
         {
         public:
-            virtual ~Sequential() throw();
+            virtual ~Sequential() throw(); //!< cleanup
             
         protected:
             explicit Sequential(const uint32_t) throw(); //!< setup
-            explicit Sequential(const Sequential&);
+            explicit Sequential(const Sequential&);      //!< copy
 
         private:
             Y_DISABLE_ASSIGN(Sequential);

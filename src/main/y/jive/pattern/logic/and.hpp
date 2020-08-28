@@ -23,8 +23,8 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('A','N','D','_');
+            static const char     CLID[];                           //!< CLID
+            static const uint32_t UUID = Y_FOURCC('A','N','D','_'); //!< UUID
 
             //__________________________________________________________________
             //
@@ -33,20 +33,20 @@ namespace upsylon {
             static  And     *Create();                  //!< new
             virtual Pattern *clone() const;             //!< copy
             virtual void     start(FirstChars &) const; //!< merge until strong op
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< all
-            virtual bool     feeble() const throw();    //!< all are feeble
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< all operands
+            virtual bool     feeble() const throw();              //!< all are feeble
 
             //__________________________________________________________________
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
+            virtual const char *className() const throw(); //!< CLID
             
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~And() throw();
+            virtual ~And() throw(); //!< cleanup
 
         private:
             Y_DISABLE_ASSIGN(And);

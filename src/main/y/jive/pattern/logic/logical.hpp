@@ -10,7 +10,7 @@ namespace upsylon {
     namespace Jive
     {
 
-        typedef Pattern::List Operands;
+        typedef Pattern::List Operands; //!< alias
 
         //______________________________________________________________________
         //
@@ -31,19 +31,19 @@ namespace upsylon {
             virtual void   update(Entropy &)  const throw();  //!< gather
 
             void add(const uint8_t code);                       //!< add single
-            void add(const uint8_t lower, const uint8_t upper); //! add range
+            void add(const uint8_t lower, const uint8_t upper); //!< add range
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Logical() throw();
+            virtual ~Logical() throw(); //!< cleanup
 
-            static Pattern *Among(const string &);
-            static Pattern *Among(const char   *);
+            static Pattern *Among(const string &); //!< Or(...)
+            static Pattern *Among(const char   *); //!< Or(...)
 
-            static Pattern *Equal(const string &);
-            static Pattern *Equal(const char   *);
+            static Pattern *Equal(const string &); //!< And(...)
+            static Pattern *Equal(const char   *); //!< And(...)
 
 
         protected:

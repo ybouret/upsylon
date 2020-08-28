@@ -10,13 +10,19 @@ namespace upsylon {
 
     namespace Jive
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! reworking out of order logical
+        //
+        //______________________________________________________________________
         class Rework
         {
         public:
             //! compact out of order operands
             static void Compact( Pattern::List &ops ) throw();
 
+            //! in-place transformation of a Single into a Range
             static Pattern *Single2Range(Single *p, const uint8_t lower, const uint8_t upper) throw();
 
 

@@ -24,30 +24,30 @@ namespace upsylon {
             //
             // types and definition
             //__________________________________________________________________
-            static const char     CLID[];
-            static const uint32_t UUID = Y_FOURCC('N','O','N','E');
+            static const char     CLID[];                            //!< CLID
+            static const uint32_t UUID = Y_FOURCC('N','O','N','E');  //!< UUID
 
             //__________________________________________________________________
             //
             // pattern API
             //__________________________________________________________________
-            static  None    *Create();                  //!< new
-            virtual Pattern *clone() const;             //!< copy
-            virtual void     start(FirstChars &) const; //!< complete and remove ops
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!<
-            virtual bool     feeble() const throw();    //!< false,
+            static  None    *Create();                            //!< new
+            virtual Pattern *clone() const;                       //!< copy
+            virtual void     start(FirstChars &) const;           //!< complete and remove ops
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< single afte none of operangs
+            virtual bool     feeble() const throw();              //!< false
 
             //__________________________________________________________________
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
+            virtual const char *className() const throw(); //!< CLID
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~None() throw();
+            virtual ~None() throw(); //!< cleanup
 
         private:
             Y_DISABLE_ASSIGN(None);
