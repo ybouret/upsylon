@@ -35,7 +35,7 @@ namespace upsylon {
             virtual Pattern *clone() const;             //!< copy
             virtual void     start(FirstChars &) const; //!< complete and remove ops
             virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!<
-            virtual bool     feeble() const throw();    //!< ...
+            virtual bool     feeble() const throw();    //!< false,
 
             //__________________________________________________________________
             //

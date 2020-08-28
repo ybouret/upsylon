@@ -8,6 +8,8 @@
 
 namespace upsylon {
 
+    class exception;
+
     namespace Jive
     {
         //______________________________________________________________________
@@ -33,7 +35,10 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-            string toString() const; //!< codes->chars
+            string toString()       const; //!< codes->chars
+            string toVisible()      const; //!< codes->visible
+            string toPrintable()    const; //!< codes->printable
+            exception & cat(exception &) const; //!< append to exception
         };
 
     }

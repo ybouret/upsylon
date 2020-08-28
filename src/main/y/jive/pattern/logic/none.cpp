@@ -58,28 +58,31 @@ namespace upsylon {
 
         bool None:: feeble() const throw()
         {
-#if 0
-            for(const Pattern *op=operands.head;op;op=op->next)
-            {
-                if(op->feeble()) return true;
-            }
-#endif
             return false;
         }
 
         bool None:: accept(Y_PATTERN_ACCEPT_ARGS) const
         {
             assert(0==token.size);
-#if 0
             for(const Pattern *op=operands.head;op;op=op->next)
             {
-                if(op->accept(token,source))
+                Token tmp;
+                if(op->accept(tmp,source))
                 {
-                    return true;
+                    source.unget(tmp);
+                    return false;
                 }
             }
-#endif
-            return false;
+            Char *ch = source.get();
+            if(ch)
+            {
+                token << ch;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
 
