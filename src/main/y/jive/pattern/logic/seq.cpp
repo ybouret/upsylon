@@ -20,14 +20,6 @@ namespace upsylon {
         {
         }
 
-        void Sequential:: append(Pattern *p) throw()
-        {
-            operands.push_back(p);
-        }
-
-        void Sequential:: harden() throw()
-        {
-        }
         
     }
 

@@ -10,16 +10,17 @@ namespace upsylon {
     namespace Jive
     {
 
+        typedef Pattern::List Operands;
+
         //______________________________________________________________________
         //
         //
         //! logical operands
         //
         //______________________________________________________________________
-        class Logical : public Pattern
+        class Logical : public Pattern, public Operands
         {
         public:
-            typedef Pattern::List Operands;
 
             //__________________________________________________________________
             //
@@ -28,19 +29,7 @@ namespace upsylon {
             virtual size_t serialize(ios::ostream &fp) const; //!< uuid+operangs
             void           load(ios::istream &p);             //!< read operands from stream
 
-            //__________________________________________________________________
-            //
-            // virtual interface
-            //__________________________________________________________________
-            virtual void append( Pattern *p ) throw() = 0;
-            virtual void harden()             throw() = 0;
-
-            //__________________________________________________________________
-            //
-            // non-virtual interface
-            //__________________________________________________________________
-            Logical & operator<<(Pattern *);
-
+            
             //__________________________________________________________________
             //
             // C++
@@ -54,7 +43,6 @@ namespace upsylon {
             explicit Logical(const Logical &);        //!< copy
             void vizLink(ios::ostream&) const;        //!< write operands and links
 
-            Operands operands; //!< list of operand patterns
 
         private:
             Y_DISABLE_ASSIGN(Logical);

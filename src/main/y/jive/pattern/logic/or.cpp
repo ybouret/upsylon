@@ -46,7 +46,7 @@ namespace upsylon {
         void Or:: start(FirstChars &fc) const
         {
             assert(0==fc.size());
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 FirstChars sub;
                 op->start(sub);
@@ -56,7 +56,7 @@ namespace upsylon {
 
         bool Or:: feeble() const throw()
         {
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 if(op->feeble()) return true;
             }
@@ -66,7 +66,7 @@ namespace upsylon {
         bool Or:: accept(Y_PATTERN_ACCEPT_ARGS) const
         {
             assert(0==token.size);
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 if(op->accept(token,source))
                 {

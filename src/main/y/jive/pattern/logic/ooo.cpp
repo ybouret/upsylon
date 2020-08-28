@@ -22,32 +22,26 @@ namespace upsylon {
         {
         }
 
-        void OutOfOrder:: append(Pattern *p) throw()
-        {
-            assert(p);
-            operands.push_back(p);
-            harden();
-        }
 
-        void OutOfOrder:: harden() throw()
+        void OutOfOrder:: rework() throw()
         {
             Operands strongList;
             Operands feebleList;
-            while(operands.size)
+            while(size)
             {
-                if(operands.head->feeble())
+                if(head->feeble())
                 {
-                    feebleList.push_back( operands.pop_front() );
+                    feebleList.push_back( pop_front() );
                 }
                 else
                 {
-                    strongList.push_back( operands.pop_front() );
+                    strongList.push_back( pop_front() );
                 }
             }
 
             Rework::Compact(strongList);
-            operands.swap_with(strongList);
-            operands.merge_back(feebleList);
+            swap_with(strongList);
+            merge_back(feebleList);
         }
     }
 

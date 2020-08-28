@@ -19,8 +19,7 @@ namespace upsylon {
         {
         public:
             virtual ~OutOfOrder() throw();
-            virtual void append(Pattern *) throw();
-            virtual void harden()          throw();
+            virtual void rework() throw();
             
         protected:
             explicit OutOfOrder(const uint32_t) throw(); //!< setup

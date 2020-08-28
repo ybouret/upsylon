@@ -48,7 +48,7 @@ namespace upsylon {
         {
             assert(0==fc.size());
             fc.complete();
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 FirstChars sub;
                 op->start(sub);
@@ -64,7 +64,7 @@ namespace upsylon {
         bool None:: accept(Y_PATTERN_ACCEPT_ARGS) const
         {
             assert(0==token.size);
-            for(const Pattern *op=operands.head;op;op=op->next)
+            for(const Pattern *op=head;op;op=op->next)
             {
                 Token tmp;
                 if(op->accept(tmp,source))

@@ -93,17 +93,26 @@ Y_UTEST(jive_patterns)
 
     {
         arc_ptr<Logical> p = And::Create();
-        p->append( newSingle() );
-        p->append( newRange()  );
+        p->push_back( newSingle() );
+        p->push_back( newRange()  );
         test_pattern( & *p, source);
     }
 
     {
         arc_ptr<Logical> p = Or::Create();
-        *p << newSingle();
-        *p << newRange();
+        p->push_back( newSingle() );
+        p->push_back( newRange()  );
         test_pattern( & *p, source);
     }
+
+
+    {
+        arc_ptr<Logical> p = None::Create();
+        p->push_back( newSingle() );
+        p->push_back( newRange()  );
+        test_pattern( & *p, source);
+    }
+
 
 
 
@@ -115,6 +124,7 @@ Y_UTEST(jive_patterns)
     Y_UTEST_SIZEOF(Logical);
     Y_UTEST_SIZEOF(And);
     Y_UTEST_SIZEOF(Or);
+    Y_UTEST_SIZEOF(None);
 
 
 }
