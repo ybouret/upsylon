@@ -76,6 +76,33 @@ namespace upsylon {
             return false;
         }
 
+    }
 
+}
+
+#include "y/jive/pattern/basic/single.hpp"
+#include "y/ptr/auto.hpp"
+namespace upsylon
+{
+
+    namespace Jive
+    {
+
+        Pattern * Logical:: Among(const string &s)
+        {
+            auto_ptr<OutOfOrder> p = Or::Create();
+            for(size_t i=s.size();i>0;)
+            {
+                p->push_front( Single::Create(s[--i]) );
+            }
+            p->rework();
+            return p.yield();
+        }
+
+        Pattern * Logical:: Among( const char *s )
+        {
+            const string _(s);
+            return Among(_);
+        }
     }
 }

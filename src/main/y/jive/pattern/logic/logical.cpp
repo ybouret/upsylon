@@ -4,7 +4,8 @@
 #include "y/ios/istream.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon {
+namespace upsylon
+{
 
     namespace Jive
     {
@@ -72,6 +73,28 @@ namespace upsylon {
                 endl(fp);
             }
         }
+
+    }
+
+}
+#include "y/jive/pattern/basic/all.hpp"
+
+namespace upsylon
+{
+
+    namespace Jive
+    {
+        void Logical:: add(const uint8_t code)
+        {
+            push_back( Single::Create(code) );
+        }
+
+
+        void Logical:: add(const uint8_t a, const uint8_t b)
+        {
+            push_back( Range::Create(a,b) );
+        }
+
 
     }
 

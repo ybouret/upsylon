@@ -30,12 +30,20 @@ namespace upsylon {
             void           load(ios::istream &p);             //!< read operands from stream
             virtual void   update(Entropy &)  const throw();  //!< gather
 
+            void add(const uint8_t code);                       //!< add single
+            void add(const uint8_t lower, const uint8_t upper); //! add range
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             virtual ~Logical() throw();
+
+            static Pattern *Among(const string &);
+            static Pattern *Among(const char   *);
+
+            static Pattern *Equal(const string &);
+            static Pattern *Equal(const char   *);
 
 
         protected:

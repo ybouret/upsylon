@@ -93,3 +93,29 @@ namespace upsylon {
 
     }
 }
+
+#include "y/jive/pattern/basic/single.hpp"
+#include "y/ptr/auto.hpp"
+namespace upsylon
+{
+
+    namespace Jive
+    {
+
+        Pattern * Logical:: Equal(const string &s)
+        {
+            auto_ptr<Logical> p = And::Create();
+            for(size_t i=s.size();i>0;)
+            {
+                p->push_front( Single::Create(s[--i]) );
+            }
+            return p.yield();
+        }
+
+        Pattern * Logical:: Equal( const char *s )
+        {
+            const string _(s);
+            return Among(_);
+        }
+    }
+}
