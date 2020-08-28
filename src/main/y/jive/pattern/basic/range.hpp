@@ -9,6 +9,9 @@ namespace upsylon {
 
     namespace Jive
     {
+
+        class Rework;
+
         //______________________________________________________________________
         //
         //
@@ -51,10 +54,13 @@ namespace upsylon {
 
         private:
             Y_DISABLE_ASSIGN(Range);
+            friend class Rework;
+
             explicit Range(const uint8_t, const uint8_t) throw();
             explicit Range(const Range&) throw();
             virtual bool isValid(const uint8_t)  const throw();
             virtual void vizCore(ios::ostream &) const;
+
         };
     }
 }

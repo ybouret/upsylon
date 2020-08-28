@@ -73,6 +73,17 @@ namespace upsylon {
             static Pattern *Load(ios::istream &);
             void   test(Source &source) const;
 
+            template <typename T> inline T *as() throw()
+            {
+                assert(uuid==T::UUID); assert(self); return (T*)self;
+            }
+
+            template <typename T> inline const T *as() const throw()
+            {
+                assert(uuid==T::UUID); assert(self); return static_cast<const T*>(self);
+            }
+
+            template <typename T> inline bool is() const throw() { return T::UUID == uuid; }
 
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid

@@ -4,5 +4,6 @@
 
 #include "y/jive/pattern/logic/and.hpp"
 #include "y/jive/pattern/logic/or.hpp"
+#include "y/jive/pattern/logic/none.hpp"
 
 #endif

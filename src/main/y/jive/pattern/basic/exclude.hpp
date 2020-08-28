@@ -9,6 +9,8 @@ namespace upsylon {
 
     namespace Jive
     {
+        class Rework;
+
         //______________________________________________________________________
         //
         //
@@ -47,11 +49,14 @@ namespace upsylon {
             virtual ~Exclude() throw();
 
             const uint8_t code;
-
+            const uint8_t priv;
+            
         private:
             Y_DISABLE_ASSIGN(Exclude);
-            explicit Exclude(const uint8_t ) throw();
-            explicit Exclude(const Exclude&) throw();
+            friend class Rework;
+
+            explicit     Exclude(const uint8_t ) throw();
+            explicit     Exclude(const Exclude&) throw();
             virtual bool isValid(const uint8_t)  const throw();
             virtual void vizCore(ios::ostream &) const;
         };

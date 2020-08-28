@@ -10,8 +10,19 @@ namespace upsylon {
         Y_PATTERN_CLID(Exclude);
 
         Exclude:: ~Exclude() throw() {}
-        Exclude::  Exclude(const uint8_t c)  throw() : Basic(UUID), code(c)   { Y_PATTERN_SELF(Exclude);}
-        Exclude::  Exclude(const Exclude &_) throw() : Basic(_), code(_.code) { assert(UUID==uuid); Y_PATTERN_SELF(Exclude);}
+        Exclude::  Exclude(const uint8_t c)  throw() :
+        Basic(UUID),
+        code(c),
+        priv(0)
+        {
+            Y_PATTERN_SELF(Exclude);
+        }
+
+        Exclude::  Exclude(const Exclude &_) throw() :
+        Basic(_),
+        code(_.code),
+        priv(0)
+        { assert(UUID==uuid); Y_PATTERN_SELF(Exclude);}
 
         Pattern *Exclude:: clone() const
         {

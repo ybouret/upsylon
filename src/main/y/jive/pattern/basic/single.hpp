@@ -10,6 +10,8 @@ namespace upsylon {
 
     namespace Jive
     {
+        class Rework;
+
         //______________________________________________________________________
         //
         //
@@ -52,6 +54,8 @@ namespace upsylon {
             
         private:
             Y_DISABLE_ASSIGN(Single);
+            friend class Rework;
+
             explicit Single(const uint8_t ) throw();
             explicit Single(const Single&) throw();
             virtual bool isValid(const uint8_t)  const throw();

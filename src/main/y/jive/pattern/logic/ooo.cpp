@@ -1,6 +1,7 @@
 
 
 #include "y/jive/pattern/logic/ooo.hpp"
+#include "y/jive/pattern/basic/rework.hpp"
 
 namespace upsylon {
 
@@ -25,35 +26,29 @@ namespace upsylon {
         {
             assert(p);
             operands.push_back(p);
-            if(p->strong())
-            {
-                while(p->prev&&p->prev->feeble())
-                {
-                    operands.move_to_front(p);
-                }
-            }
+            harden();
         }
 
-#if 1
         void OutOfOrder:: harden() throw()
         {
-            Operands s,f;
+            Operands strongList;
+            Operands feebleList;
             while(operands.size)
             {
                 if(operands.head->feeble())
                 {
-                    f.push_back( operands.pop_front() );
+                    feebleList.push_back( operands.pop_front() );
                 }
                 else
                 {
-                    s.push_back( operands.pop_front() );
+                    strongList.push_back( operands.pop_front() );
                 }
             }
 
-            operands.swap_with(s);
-            operands.merge_back(f);
+            Rework::Compact(strongList);
+            operands.swap_with(strongList);
+            operands.merge_back(feebleList);
         }
-#endif
     }
 
 }
