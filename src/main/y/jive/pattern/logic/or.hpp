@@ -40,13 +40,22 @@ namespace upsylon {
             //
             // serializable
             //__________________________________________________________________
-            virtual const char *className() const throw();
+            virtual const char *className() const throw(); //!< CLID
+
+
+            //__________________________________________________________________
+            //
+            // reworking
+            //__________________________________________________________________
+            virtual void rework() throw();
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Or() throw();
+            virtual ~Or() throw(); //!< cleanup
+
+
 
         private:
             Y_DISABLE_ASSIGN(Or);

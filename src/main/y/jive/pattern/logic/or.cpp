@@ -80,6 +80,36 @@ namespace upsylon {
 
 }
 
+#include "y/jive/pattern/basic/rework.hpp"
+namespace upsylon {
+
+    namespace Jive
+    {
+
+        void Or:: rework() throw()
+        {
+            Operands strongList;
+            Operands feebleList;
+            while(size)
+            {
+                if(head->feeble())
+                {
+                    feebleList.push_back( pop_front() );
+                }
+                else
+                {
+                    strongList.push_back( pop_front() );
+                }
+            }
+
+            Rework::Compact(strongList);
+            swap_with(strongList);
+            merge_back(feebleList);
+        }
+    }
+}
+
+
 #include "y/jive/pattern/basic/single.hpp"
 #include "y/ptr/auto.hpp"
 namespace upsylon

@@ -19,9 +19,7 @@ namespace upsylon {
         {
         public:
             virtual ~OutOfOrder() throw(); //!< cleanup
-
-
-            virtual void rework() throw(); //!< compact operand TODO: different for Or/None!!!
+            virtual void rework() throw() = 0; //!< reworking
             
         protected:
             explicit OutOfOrder(const uint32_t) throw(); //!< setup

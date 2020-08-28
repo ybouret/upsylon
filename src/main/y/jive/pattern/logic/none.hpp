@@ -34,7 +34,7 @@ namespace upsylon {
             static  None    *Create();                            //!< new
             virtual Pattern *clone() const;                       //!< copy
             virtual void     start(FirstChars &) const;           //!< complete and remove ops
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< single afte none of operangs
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< single after none of operands
             virtual bool     feeble() const throw();              //!< false
 
             //__________________________________________________________________
@@ -43,6 +43,12 @@ namespace upsylon {
             //__________________________________________________________________
             virtual const char *className() const throw(); //!< CLID
 
+            //__________________________________________________________________
+            //
+            // reworking
+            //__________________________________________________________________
+            virtual void rework() throw();
+            
             //__________________________________________________________________
             //
             // C++
