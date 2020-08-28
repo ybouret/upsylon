@@ -28,14 +28,14 @@ namespace upsylon {
             //__________________________________________________________________
             virtual size_t serialize(ios::ostream &fp) const; //!< uuid+operangs
             void           load(ios::istream &p);             //!< read operands from stream
+            virtual void   update(Entropy &)  const throw();  //!< gather
 
-            
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             virtual ~Logical() throw();
-
 
 
         protected:

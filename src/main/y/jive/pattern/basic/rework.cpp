@@ -6,14 +6,16 @@ namespace upsylon {
 
     namespace Jive
     {
+        
 
         Pattern * Rework:: Single2Range(Single *p, const uint8_t lower, const uint8_t upper) throw()
         {
             assert(p!=NULL);
             assert(lower<=upper);
             p->~Single();
-            new (p) Range(lower,upper);
-            return p;
+            Range *r = new (p) Range(lower,upper);
+            std::cerr << "---> merging to " << *r << std::endl;
+            return r;
         }
 
 
@@ -33,7 +35,9 @@ namespace upsylon {
             const int R = rhs->code;
             switch(L-R)
             {
-                case  0: return lhs;
+                case  0:
+                    std::cerr << "---> remove duplicate " << *lhs << std::endl;
+                    return lhs;
                 case -1: return Rework::Single2Range(lhs,lhs->code,rhs->code);
                 case  1: return Rework::Single2Range(lhs,rhs->code,lhs->code);
                 default:
@@ -58,18 +62,23 @@ namespace upsylon {
             const int Ch = rhs->code;
             if(Ch==Lo-1)
             {
+                std::cerr << "---> " << *lhs << " => ";
                 --aliasing::_(lhs->lower);
+                std::cerr << *lhs << std::endl;
                 return lhs;
             }
 
             if(Ch==Up+1)
             {
+                std::cerr << "---> " << *lhs << " => ";
                 ++aliasing::_(lhs->upper);
+                std::cerr << *lhs << std::endl;
                 return lhs;
             }
 
             if(Lo<=Ch&&Ch<=Up)
             {
+                std::cerr << "---> remove included " << *rhs << std::endl;
                 return lhs;
             }
 
@@ -83,6 +92,35 @@ namespace upsylon {
         {
             assert(lhs);
             assert(rhs);
+            const Range *a = lhs;
+            const Range *b = rhs;
+
+            if(a->lower>b->lower)
+            {
+                cswap(a,b);
+            }
+            assert(a->lower<=b->lower);
+
+            if(b->upper<=a->upper)
+            {
+                std::cerr << "---> remove included " << *b << " in " << *a << std::endl;
+                aliasing::_(lhs->lower) = a->lower;
+                aliasing::_(lhs->upper) = a->upper;
+                return lhs;
+            }
+            assert(b->upper>a->upper);
+
+            const int a_up = a->upper;
+            const int b_lo = b->lower;
+            if(b_lo<=a_up+1)
+            {
+                std::cerr << "---> gathering intersection " << *a << " and " << *b << std::endl;
+                aliasing::_(lhs->lower) = a->lower;
+                aliasing::_(lhs->upper) = b->upper;
+                return lhs;
+            }
+
+            // distinct
             return NULL;
         }
 
@@ -100,6 +138,8 @@ namespace upsylon {
                 if(rhs->is<Range>())
                 {
                     cswap(lhs,rhs);
+                    assert(lhs->is<Range >());
+                    assert(rhs->is<Single>());
                     return Merge( lhs->as<Range>(), rhs->as<Single>() );
                 }
             }
@@ -109,8 +149,7 @@ namespace upsylon {
             {
                 if(rhs->is<Single>())
                 {
-                    cswap(lhs,rhs);
-                    return Merge( lhs->as<Single>(), rhs->as<Single>() );
+                    return Merge( lhs->as<Range>(), rhs->as<Single>() );
                 }
 
                 if(rhs->is<Range>())
@@ -145,6 +184,7 @@ namespace upsylon {
             }
 
             // no merge
+            plist.swap_with(tmp);
             plist.push_back(rhs);
             return 0x00;
         }

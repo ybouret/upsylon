@@ -1,7 +1,5 @@
-
-
-
 #include "y/jive/pattern/basic/exclude.hpp"
+#include "y/information/entropy.hpp"
 
 namespace upsylon {
 
@@ -62,6 +60,17 @@ namespace upsylon {
             assert(0==fc.size());
             fc.complete();
             fc.no(code);
+        }
+
+        void Exclude:: update(Entropy &E) const throw()
+        {
+            ++E[code];
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Exclude &p)
+        {
+            os << '[' << '^' << cchars::visible[p.code] << ']';
+            return os;
         }
     }
 }

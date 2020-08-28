@@ -1,7 +1,5 @@
-
-
-
 #include "y/jive/pattern/basic/range.hpp"
+#include "y/information/entropy.hpp"
 
 namespace upsylon {
 
@@ -72,6 +70,18 @@ namespace upsylon {
             {
                 fc.insert( uint8_t(i) );
             }
+        }
+
+        void Range:: update(Entropy &E) const throw()
+        {
+            ++E[lower];
+            ++E[upper];
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Range &p)
+        {
+            os << '[' << cchars::visible[p.lower] << '-' << cchars::visible[p.upper] << ']';
+            return os;
         }
     }
 }

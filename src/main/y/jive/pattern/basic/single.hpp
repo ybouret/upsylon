@@ -34,7 +34,8 @@ namespace upsylon {
             //__________________________________________________________________
             static  Single  *Create(const uint8_t);
             virtual Pattern *clone() const;
-            virtual void     start(FirstChars &) const; //!< only c
+            virtual void     start(FirstChars &) const;         //!< only code
+            virtual void     update(Entropy &)  const throw();  //!< with code
 
             //__________________________________________________________________
             //
@@ -49,6 +50,12 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~Single() throw();
 
+            friend std::ostream & operator<<(std::ostream &, const Single &);
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const uint8_t code;
             const uint8_t priv;
             

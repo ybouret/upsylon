@@ -54,9 +54,8 @@ namespace {
         FirstChars bc;
         bc.opposite(fc);
         std::cerr << "#first chars: " << fc.size() << std::endl;
-        //std::cerr << fc << std::endl;
         std::cerr << "#other chars: " << bc.size() << std::endl;
-        //std::cerr << bc << std::endl;
+        std::cerr << "entropy     : " << motif->entropy() << std::endl;
 
         std::cerr << "\t<testing>" << std::endl;
         motif->test(source);

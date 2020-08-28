@@ -1,5 +1,6 @@
 
 #include "y/jive/pattern/logic/logical.hpp"
+#include "y/information/entropy.hpp"
 #include "y/ios/istream.hpp"
 #include "y/exception.hpp"
 
@@ -7,6 +8,14 @@ namespace upsylon {
 
     namespace Jive
     {
+        void  Logical:: update(Entropy &E)  const throw()
+        {
+            for(const Pattern *op=head;op;op=op->next)
+            {
+                op->update(E);
+            }
+        }
+
         Logical:: ~Logical() throw()
         {
         }
@@ -19,12 +28,9 @@ namespace upsylon {
 
 
         Logical:: Logical(const Logical &_) :
-        Pattern(_), Operands()
+        Pattern(_), Operands(_)
         {
-            for(const Pattern *op=_.head;op;op=op->next)
-            {
-                  push_back( op->clone() );
-            }
+            
         }
 
         size_t Logical:: serialize(ios::ostream &fp) const

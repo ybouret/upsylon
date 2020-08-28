@@ -1,5 +1,6 @@
 
 #include "y/jive/pattern/basic/any.hpp"
+#include "y/information/entropy.hpp"
 
 namespace upsylon {
 
@@ -41,6 +42,11 @@ namespace upsylon {
             return id(fp);
         }
 
+        void Any:: update(Entropy &) const throw()
+        {
+            return;
+        }
+
         bool Any:: isValid(const uint8_t) const throw()
         {
             return true;
@@ -57,5 +63,10 @@ namespace upsylon {
             fc.complete();
         }
 
+        std::ostream & operator<<(std::ostream &os, const Any &)
+        {
+            os << "<any>";
+            return os;
+        }
     }
 }

@@ -2,6 +2,7 @@
 #include "y/jive/pattern.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/information/entropy.hpp"
 
 namespace upsylon {
 
@@ -30,6 +31,27 @@ namespace upsylon {
         bool Pattern::  strong() const throw()
         {
             return !feeble();
+        }
+
+        bool Pattern:: Eq(const Pattern &lhs, const Pattern &rhs)
+        {
+            if(lhs.uuid!=rhs.uuid)
+            {
+                return false;
+            }
+            else
+            {
+                const string L = lhs.to_binary();
+                const string R = rhs.to_binary();
+                return L==R;
+            }
+        }
+
+        double Pattern:: entropy() const throw()
+        {
+            Entropy E;
+            update(E);
+            return *E;
         }
 
     }

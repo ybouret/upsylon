@@ -1,7 +1,6 @@
 
 
 #include "y/jive/pattern/logic/ooo.hpp"
-#include "y/jive/pattern/basic/rework.hpp"
 
 namespace upsylon {
 
@@ -22,6 +21,24 @@ namespace upsylon {
         {
         }
 
+    }
+
+}
+
+#include "y/jive/pattern/basic/rework.hpp"
+#include "y/sort/merge.hpp"
+
+namespace upsylon {
+
+    namespace Jive
+    {
+
+        static int byIncreasingEntropy(const Pattern *lhs, const Pattern * rhs, void *) throw()
+        {
+            const double L = lhs->entropy();
+            const double R = rhs->entropy();
+            return comparison::increasing(L,R);
+        }
 
         void OutOfOrder:: rework() throw()
         {
@@ -40,6 +57,7 @@ namespace upsylon {
             }
 
             Rework::Compact(strongList);
+            merging<Pattern>::sort(strongList,byIncreasingEntropy,NULL);
             swap_with(strongList);
             merge_back(feebleList);
         }

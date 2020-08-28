@@ -31,10 +31,11 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  Exclude  *Create(const uint8_t);
-            virtual Pattern  *clone() const;
-            virtual void      start(FirstChars&) const; //!< all but code
-            
+            static  Exclude  *Create(const uint8_t);             //!< create
+            virtual Pattern  *clone()            const;          //!< copy
+            virtual void      start(FirstChars&) const;          //!< all but code
+            virtual void      update(Entropy &)  const throw();  //!< with code
+
             //__________________________________________________________________
             //
             // serializable
@@ -48,6 +49,13 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~Exclude() throw();
 
+            //! display
+            friend  std::ostream & operator<<(std::ostream &, const Exclude &);
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const uint8_t code;
             const uint8_t priv;
             

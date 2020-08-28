@@ -13,6 +13,10 @@
 
 namespace upsylon {
 
+    namespace Information {
+        class Entropy;
+    }
+
     namespace Jive
     {
 
@@ -32,8 +36,9 @@ namespace upsylon {
         class Pattern : public CountedObject, public Serializable, public Vizible
         {
         public:
+            typedef Information::Entropy Entropy;
 
-            typedef core::list_of_cpp<Pattern> List;
+            typedef core::list_of_cloneable<Pattern> List;
             
             //__________________________________________________________________
             //
@@ -50,12 +55,14 @@ namespace upsylon {
             virtual bool     feeble() const throw()              = 0; //!< may accept an empty token
             virtual Pattern *clone() const                       = 0;
             virtual void     start(FirstChars &) const           = 0;
+            virtual void     update(Entropy &)   const throw()   = 0;
 
             //__________________________________________________________________
             //
             // non-virtual interface
             //__________________________________________________________________
-            bool strong() const throw();
+            bool   strong()  const throw();
+            double entropy() const throw();
 
             //__________________________________________________________________
             //
@@ -65,7 +72,7 @@ namespace upsylon {
             const void * const self;
             Pattern *          next;
             Pattern *          prev;
-
+        
             //__________________________________________________________________
             //
             // helpers
@@ -84,6 +91,10 @@ namespace upsylon {
             }
 
             template <typename T> inline bool is() const throw() { return T::UUID == uuid; }
+
+            static bool Eq(const Pattern &, const Pattern &);
+            friend bool operator==(const Pattern &, const Pattern&);
+            friend bool operator!=(const Pattern &, const Pattern&);
 
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid

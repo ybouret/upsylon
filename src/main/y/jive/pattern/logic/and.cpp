@@ -58,6 +58,7 @@ namespace upsylon {
             }
         }
 
+
         bool And:: feeble() const throw()
         {
             for(const Pattern *op=head;op;op=op->next)

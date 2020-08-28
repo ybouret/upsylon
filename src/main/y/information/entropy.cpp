@@ -105,6 +105,16 @@ namespace upsylon {
             reset(); return *( *this << buff );
         }
 
+        size_t & Entropy:: operator[](const uint8_t u) throw()
+        {
+            return frequency[u];
+        }
+
+        const size_t & Entropy:: operator[](const uint8_t u) const throw()
+        {
+            return frequency[u];
+        }
+
     }
 
 }

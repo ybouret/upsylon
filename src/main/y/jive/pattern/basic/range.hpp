@@ -34,7 +34,8 @@ namespace upsylon {
             //__________________________________________________________________
             static  Range   *Create(const uint8_t,const uint8_t);
             virtual Pattern *clone() const;
-            virtual void     start(FirstChars &) const; //!< insert range
+            virtual void     start(FirstChars &) const;         //!< insert range
+            virtual void     update(Entropy &)  const throw();  //!< with boundaries
 
             //__________________________________________________________________
             //
@@ -49,6 +50,14 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~Range() throw();
 
+            //! display
+            friend std::ostream & operator<<(std::ostream &, const Range &);  
+
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const uint8_t lower;
             const uint8_t upper;
 

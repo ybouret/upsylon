@@ -1,6 +1,5 @@
-
-
 #include "y/jive/pattern/basic/single.hpp"
+#include "y/information/entropy.hpp"
 
 namespace upsylon {
 
@@ -59,5 +58,17 @@ namespace upsylon {
             assert( fc.size() == 0);
             fc.insert(code);
         }
+
+        void Single:: update(Entropy &E) const throw()
+        {
+            ++E[code];
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Single &p)
+        {
+            os << '\'' << cchars::visible[p.code] << '\'';
+            return os;
+        }
+
     }
 }

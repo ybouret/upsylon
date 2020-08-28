@@ -29,9 +29,10 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  Any     *Create();                  //!< new
-            virtual Pattern *clone() const;             //!< copy
-            virtual void     start(FirstChars &) const; //!< all
+            static  Any     *Create();                          //!< new
+            virtual Pattern *clone()             const;         //!< copy
+            virtual void     start(FirstChars &) const;         //!< all
+            virtual void     update(Entropy &)   const throw(); //!< do nothing
 
             //__________________________________________________________________
             //
@@ -45,6 +46,7 @@ namespace upsylon {
             // C++
             //__________________________________________________________________
             virtual ~Any() throw();
+            friend std::ostream & operator<<(std::ostream &, const Any&);
 
         private:
             Y_DISABLE_ASSIGN(Any);
