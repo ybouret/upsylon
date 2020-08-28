@@ -39,6 +39,12 @@ namespace upsylon {
             return ans;
         }
 
+        Logical & Logical:: operator<<(Pattern *p)
+        {
+            append(p);
+            return *this;
+        }
+
 
 
         void Logical:: load(ios::istream &fp)

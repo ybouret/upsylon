@@ -21,7 +21,7 @@ namespace upsylon {
         {
         }
 
-        void OutOfOrder:: add(Pattern *p) throw()
+        void OutOfOrder:: append(Pattern *p) throw()
         {
             assert(p);
             operands.push_back(p);
@@ -34,7 +34,8 @@ namespace upsylon {
             }
         }
 
-        void OutOfOrder:: harden()
+#if 1
+        void OutOfOrder:: harden() throw()
         {
             Operands s,f;
             while(operands.size)
@@ -51,8 +52,8 @@ namespace upsylon {
 
             operands.swap_with(s);
             operands.merge_back(f);
-
         }
+#endif
     }
 
 }

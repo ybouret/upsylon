@@ -28,22 +28,33 @@ namespace upsylon {
             virtual size_t serialize(ios::ostream &fp) const; //!< uuid+operangs
             void           load(ios::istream &p);             //!< read operands from stream
 
-            
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            virtual void append( Pattern *p ) throw() = 0;
+            virtual void harden()             throw() = 0;
+
+            //__________________________________________________________________
+            //
+            // non-virtual interface
+            //__________________________________________________________________
+            Logical & operator<<(Pattern *);
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             virtual ~Logical() throw();
 
-            virtual void add( Pattern *p ) throw() = 0;
-            virtual void harden()                  = 0;
+
 
         protected:
             explicit Logical(const uint32_t) throw(); //!< setup
             explicit Logical(const Logical &);        //!< copy
             void vizLink(ios::ostream&) const;        //!< write operands and links
 
-            Operands operands;
+            Operands operands; //!< list of operand patterns
 
         private:
             Y_DISABLE_ASSIGN(Logical);

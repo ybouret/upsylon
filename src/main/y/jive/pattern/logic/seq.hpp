@@ -20,9 +20,9 @@ namespace upsylon {
         {
         public:
             virtual ~Sequential() throw();
-            virtual void add(Pattern *) throw();
-            virtual void harden();
-            
+            virtual void append(Pattern *) throw();
+            virtual void harden()          throw();
+
         protected:
             explicit Sequential(const uint32_t) throw(); //!< setup
             explicit Sequential(const Sequential&);

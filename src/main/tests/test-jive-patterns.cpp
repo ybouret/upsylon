@@ -93,15 +93,15 @@ Y_UTEST(jive_patterns)
 
     {
         arc_ptr<Logical> p = And::Create();
-        p->add( newSingle() );
-        p->add( newRange()  );
+        p->append( newSingle() );
+        p->append( newRange()  );
         test_pattern( & *p, source);
     }
 
     {
         arc_ptr<Logical> p = Or::Create();
-        p->add( newSingle() );
-        p->add( newRange()  );
+        *p << newSingle();
+        *p << newRange();
         test_pattern( & *p, source);
     }
 
