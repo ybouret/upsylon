@@ -30,6 +30,16 @@ namespace upsylon
             endl( motif->vizName(vizName(fp) << " -> ") );
         }
 
+        void Joker:: update(Entropy &E) const throw()
+        {
+            motif->update(E);
+        }
+
+        void Joker:: start(FirstChars &fc) const
+        {
+            assert(0==fc.size());
+            motif->start(fc);
+        }
 
     }
 

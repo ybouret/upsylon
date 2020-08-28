@@ -82,6 +82,17 @@ namespace upsylon
                 return p.yield();
             }
 
+            //==================================================================
+            //
+            // Joker
+            //
+            //==================================================================
+            template <>
+            Pattern * __load<Optional>(ios::istream &fp)
+            {
+                return Optional::Create( Pattern::Load(fp) );
+            }
+
         }
 
 #define Y_PATTERN_LOAD(CLASS) case CLASS::UUID: return __load<CLASS>(fp)
@@ -105,6 +116,8 @@ namespace upsylon
                     Y_PATTERN_LOAD(And);
                     Y_PATTERN_LOAD(Or);
                     Y_PATTERN_LOAD(None);
+
+                    Y_PATTERN_LOAD(Optional);
 
                 default:
                     break;
