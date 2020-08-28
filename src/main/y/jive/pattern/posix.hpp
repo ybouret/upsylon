@@ -36,10 +36,17 @@ namespace upsylon {
             static Pattern *endl();   //!< \verbatim\n|\r|\r\n\endverbatim
             static Pattern *dot();    //!< \verbatim^endl\endverbatim
             static Pattern *core();   //!< core 7-bits string content, minus quote, dquote  and backslash
-
-            static Pattern *get(const string &id); //!< get from internal database
-            static Pattern *get(const char   *id); //!< get from internal database
-            static Pattern *query(const string &id); //!< query from internal database, NULL if not found
+            
+            //------------------------------------------------------------------
+            //
+            // query
+            //
+            //------------------------------------------------------------------
+            static bool     exists(const string &id);
+            static bool     exists(const char   *id);
+            static Pattern *create(const string &id);
+            static Pattern *create(const char   *id);
+            static const Vizible &root();
         };
 
     }

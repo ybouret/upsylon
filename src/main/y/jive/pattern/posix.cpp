@@ -18,9 +18,10 @@ namespace upsylon {
 
         Pattern * posix:: alpha()
         {
-            auto_ptr<Logical> p = Or::Create();
+            auto_ptr<Or> p = Or::Create();
             p->push_back( lower() );
             p->push_back( upper() );
+            p->rework();
             return p.yield();
         }
 
@@ -31,29 +32,32 @@ namespace upsylon {
 
         Pattern * posix:: alnum()
         {
-            auto_ptr<Logical> p = Or::Create();
+            auto_ptr<Or> p = Or::Create();
             p->push_back( lower() );
             p->push_back( upper() );
             p->push_back( digit() );
+            p->rework();
             return p.yield();
         }
 
         Pattern * posix:: word()
         {
-            auto_ptr<Logical> p = Or::Create();
+            auto_ptr<Or> p = Or::Create();
             p->push_back( lower() );
             p->push_back( upper() );
             p->push_back( digit() );
             p->add(  '_'  );
+            p->rework();
             return p.yield();
         }
 
         Pattern * posix:: xdigit()
         {
-            auto_ptr<Logical> p = Or::Create();
+            auto_ptr<Or> p = Or::Create();
             p->push_back( digit() );
             p->add('a','f');
             p->add('A','F');
+            p->rework();
             return p.yield();
         }
 
@@ -81,26 +85,29 @@ namespace upsylon {
 
         Pattern * posix:: endl()
         {
-            auto_ptr<Logical> p = Or::Create();
+            auto_ptr<Or> p = Or::Create();
             __fill_endl(*p);
+            p->rework();
             return p.yield();
         }
 
         Pattern * posix:: dot()
         {
-            auto_ptr<Logical> p = None::Create();
+            auto_ptr<None> p = None::Create();
             __fill_endl(*p);
+            p->rework();
             return p.yield();
         }
 
         Pattern * posix:: core()
         {
-            auto_ptr<Logical> p = Or::Create();
+            auto_ptr<Or> p = Or::Create();
             p->add( 0x20 );
             p->add( 0x21 );
             p->add( 0x23,0x26 );
             p->add( 0x28,0x5B );
             p->add( 0x5D,0x7F );
+            p->rework();
             return p.yield();
         }
     }

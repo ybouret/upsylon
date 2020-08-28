@@ -50,6 +50,11 @@ namespace upsylon {
             }
         }
 
+        bool  operator==(const Pattern &lhs, const Pattern &rhs)
+        {
+            return Pattern::Eq(lhs,rhs);
+        }
+
         double Pattern:: entropy() const throw()
         {
             Entropy E;
