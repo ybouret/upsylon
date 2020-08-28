@@ -19,6 +19,9 @@ namespace upsylon {
         }
 
         Pattern:: Pattern(const Pattern &other) throw() :
+        CountedObject(),
+        Serializable(),
+        Vizible(),
         uuid(other.uuid), self(0), next(0), prev(0)
         {
         }
