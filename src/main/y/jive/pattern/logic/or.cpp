@@ -66,19 +66,29 @@ namespace upsylon {
         bool Or:: accept(Y_PATTERN_ACCEPT_ARGS) const
         {
             assert(0==token.size);
+            bool accepted = false;
             for(const Pattern *op=head;op;op=op->next)
             {
                 if(op->accept(token,source))
                 {
-                    return true;
+                    if(token.size>0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        assert(op->feeble());
+                        accepted = true;
+                    }
                 }
             }
-            return false;
+            return  accepted;
         }
 
         void Or:: optimize() throw()
         {
             applyOptimize();
+            
         }
 
     }

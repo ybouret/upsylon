@@ -40,7 +40,7 @@ namespace upsylon
             static  Repeating *Create(Pattern *p, const size_t);       //!< new
             virtual Pattern   *clone()             const;              //!< copy
             virtual bool       feeble()    const throw();              //!< true if at least 0 or motif is feeble
-            virtual bool       accept(Y_PATTERN_ACCEPT_ARGS) const;    //!< at least motif
+            virtual bool       accept(Y_PATTERN_ACCEPT_ARGS) const;    //!< at least minCount motif
 
             //__________________________________________________________________
             //

@@ -33,10 +33,16 @@ namespace upsylon {
             static  Or      *Create();                            //!< new
             virtual Pattern *clone() const;                       //!< copy
             virtual void     start(FirstChars &) const;           //!< merge until strong op
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< one of the operands
             virtual bool     feeble() const throw();              //!< one is feeble
             virtual void     optimize() throw();                  //!< applyOptimize, merge alike, rework
 
+            //! accept one of the operands
+            /**
+             give its chance to operands after a matchin feeble!
+             */
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; 
+
+            
             //__________________________________________________________________
             //
             // serializable

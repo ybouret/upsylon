@@ -19,7 +19,7 @@ namespace upsylon {
         class Rework
         {
         public:
-            //! compact out of order operands
+            //! compact basic operands of rewritable
             static void Compact( Pattern::List &ops ) throw();
 
             //! in-place transformation of a Single into a Range

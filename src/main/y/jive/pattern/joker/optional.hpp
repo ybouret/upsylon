@@ -35,7 +35,7 @@ namespace upsylon
             static  Optional *Create(Pattern *p);                  //!< new
             virtual Pattern  *clone()             const;           //!< copy
             virtual bool      feeble()    const throw();           //!< true
-            virtual bool      accept(Y_PATTERN_ACCEPT_ARGS) const; //!< motif or true
+            virtual bool      accept(Y_PATTERN_ACCEPT_ARGS) const; //!< motif or empty, always true
 
             //__________________________________________________________________
             //

@@ -1,5 +1,5 @@
 #include "y/jive/pattern/basic/rework.hpp"
-#include "y/jive/pattern/logic/all.hpp"
+#include "y/jive/pattern/all.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
@@ -47,6 +47,24 @@ Y_UTEST(jive_rework)
         alea.shuffle( static_cast<core::list_of<Pattern>& >(*q) );
         q->rework();
         q->graphViz("bis.dot");
+    }
+    
+    {
+        auto_ptr<Or> p = Or::Create();
+        p->add('a','d');
+        p->add('e');
+        p->push_back( Optional::Create( Single::Create('f')) );
+        p->add('z');
+        p->add('k');
+        p->push_back( Repeating::Create( Single::Create('p'), 0));
+        p->add('y');
+        
+        p->graphViz("raw2.dot");
+        p->save_to("raw2.bin");
+        
+        p->rework();
+        p->graphViz("opt2.dot");
+        p->save_to("opt2.bin");
     }
 
 }

@@ -51,6 +51,7 @@ namespace upsylon {
             explicit Logical(const Logical &);        //!< copy
             void vizLink(ios::ostream&) const;        //!< write operands and links
             void applyOptimize() throw();             //!< optimize all operands
+            void mergeSameUUID() throw();             //!< merge operands with same UUID
             
         private:
             Y_DISABLE_ASSIGN(Logical);
