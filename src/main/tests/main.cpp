@@ -243,6 +243,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(jive_patterns);
     Y_UTEST(jive_rework);
     Y_UTEST(jive_posix);
+    Y_UTEST(jive_opt);
+
 }
 Y_UTEST_EXEC()
 

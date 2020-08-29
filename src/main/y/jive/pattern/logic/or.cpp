@@ -88,7 +88,8 @@ namespace upsylon {
         void Or:: optimize() throw()
         {
             applyOptimize();
-            
+            mergeSameUUID();
+            rework();
         }
 
     }

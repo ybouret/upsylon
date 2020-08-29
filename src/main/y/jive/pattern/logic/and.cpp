@@ -93,7 +93,7 @@ namespace upsylon {
         void And:: optimize() throw()
         {
             applyOptimize();
-            
+            mergeSameUUID();
         }
     }
 }

@@ -36,7 +36,7 @@ namespace upsylon {
             virtual void     start(FirstChars &) const;           //!< complete and remove ops
             virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< single after none of operands
             virtual bool     feeble() const throw();              //!< false
-            virtual void     optimize() throw();                  //!< applyOptimize...
+            virtual void     optimize() throw();                  //!< applyOptimize, rework
 
             //__________________________________________________________________
             //

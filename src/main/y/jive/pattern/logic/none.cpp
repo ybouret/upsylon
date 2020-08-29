@@ -88,7 +88,7 @@ namespace upsylon {
         void None:: optimize() throw()
         {
             applyOptimize();
-
+            rework();
         }
 
     }
