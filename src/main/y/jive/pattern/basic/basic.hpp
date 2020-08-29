@@ -26,7 +26,7 @@ namespace upsylon {
             //__________________________________________________________________
             //! accept 0 or 1 char
             /**
-             return Finished if no more char!
+             return false on end of stream of not matching
              */
             virtual  bool   accept(Y_PATTERN_ACCEPT_ARGS) const;
             virtual  bool   feeble() const throw(); //!< false, always strong

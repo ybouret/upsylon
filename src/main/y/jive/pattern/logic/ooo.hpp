@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_PATTERN_LOGICAL_OOO_INCLUDED
-#define Y_PATTERN_LOGICAL_OOO_INCLUDED 1
+#ifndef Y_PATTERN_LOGICAL_REV_INCLUDED
+#define Y_PATTERN_LOGICAL_REV_INCLUDED 1
 
 #include "y/jive/pattern/logic/logical.hpp"
 
@@ -12,21 +12,21 @@ namespace upsylon {
         //______________________________________________________________________
         //
         //
-        //! for Out Of Order operations
+        //! for reworkable operations
         //
         //______________________________________________________________________
-        class OutOfOrder : public Logical
+        class Reworkable : public Logical
         {
         public:
-            virtual ~OutOfOrder() throw(); //!< cleanup
+            virtual ~Reworkable() throw(); //!< cleanup
             virtual void rework() throw() = 0; //!< reworking
             
         protected:
-            explicit OutOfOrder(const uint32_t) throw(); //!< setup
-            explicit OutOfOrder(const OutOfOrder&);      //!< copy
+            explicit Reworkable(const uint32_t) throw(); //!< setup
+            explicit Reworkable(const Reworkable&);      //!< copy
 
         private:
-            Y_DISABLE_ASSIGN(OutOfOrder);
+            Y_DISABLE_ASSIGN(Reworkable);
         };
 
     }
