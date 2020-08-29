@@ -8,12 +8,12 @@ namespace upsylon {
 
         Or:: ~Or() throw() {}
 
-        Or::  Or() throw() : OutOfOrder(UUID)
+        Or::  Or() throw() : Reworkable(UUID)
         {
             Y_PATTERN_SELF(Or);
         }
 
-        Or::  Or(const Or &_) throw() : OutOfOrder(_)
+        Or::  Or(const Or &_) throw() : Reworkable(_)
         {
             assert(UUID==uuid);
             Y_PATTERN_SELF(Or);
@@ -125,7 +125,7 @@ namespace upsylon
 
         Pattern * Logical:: Among(const string &s)
         {
-            auto_ptr<OutOfOrder> p = Or::Create();
+            auto_ptr<Or> p = Or::Create();
             for(size_t i=s.size();i>0;)
             {
                 p->push_front( Single::Create(s[--i]) );

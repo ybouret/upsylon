@@ -11,8 +11,8 @@ Y_UTEST(jive_rework)
 {
 
     {
-        auto_ptr<OutOfOrder> p = Or::Create();
-        auto_ptr<OutOfOrder> q = Or::Create();
+        auto_ptr<Or> p = Or::Create();
+        auto_ptr<Or> q = Or::Create();
 
         p->push_back( Single::Create('a') );
         p->push_back( Single::Create('a') );

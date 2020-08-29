@@ -9,12 +9,12 @@ namespace upsylon {
 
         None:: ~None() throw() {}
 
-        None::  None() throw() : OutOfOrder(UUID)
+        None::  None() throw() : Reworkable(UUID)
         {
             Y_PATTERN_SELF(None);
         }
 
-        None::  None(const None &_) throw() : OutOfOrder(_)
+        None::  None(const None &_) throw() : Reworkable(_)
         {
             assert(UUID==uuid);
             Y_PATTERN_SELF(None);

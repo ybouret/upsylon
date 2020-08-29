@@ -3,7 +3,7 @@
 #ifndef Y_PATTERN_LOGIC_OR_INCLUDED
 #define Y_PATTERN_LOGIC_OR_INCLUDED 1
 
-#include "y/jive/pattern/logic/ooo.hpp"
+#include "y/jive/pattern/logic/rev.hpp"
 
 namespace upsylon {
 
@@ -16,7 +16,7 @@ namespace upsylon {
         //! accept a pattern among a sequence
         //
         //______________________________________________________________________
-        class Or : public OutOfOrder
+        class Or : public Reworkable
         {
         public:
             //__________________________________________________________________

@@ -33,9 +33,14 @@ namespace upsylon {
             static  And     *Create();                  //!< new
             virtual Pattern *clone() const;             //!< copy
             virtual void     start(FirstChars &) const; //!< merge until strong op
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< all operands
             virtual bool     feeble() const throw();              //!< all are feeble
             virtual void     optimize() throw();                  //!< applyOptimize, merge alike
+            
+            //! accept all operands or none
+            /**
+             the produced token is the catenation of all produced by operangss
+             */
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const;
 
             //__________________________________________________________________
             //

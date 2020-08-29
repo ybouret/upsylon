@@ -4,7 +4,7 @@
 #ifndef Y_PATTERN_LOGIC_NONE_INCLUDED
 #define Y_PATTERN_LOGIC_NONE_INCLUDED 1
 
-#include "y/jive/pattern/logic/ooo.hpp"
+#include "y/jive/pattern/logic/rev.hpp"
 
 namespace upsylon {
 
@@ -17,7 +17,7 @@ namespace upsylon {
         //! accept a pattern among a sequence
         //
         //______________________________________________________________________
-        class None : public OutOfOrder
+        class None : public Reworkable
         {
         public:
             //__________________________________________________________________
