@@ -172,6 +172,11 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 p->push_front( posix::dot() );
                                 break;
                                 
+                                
+                            case  LBRACE:
+                                braces(*p);
+                                break;
+                                
                                 //----------------------------------------------
                                 //
                                 // escape sequences
@@ -220,6 +225,32 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     if(ops.size<=0) throw exception("%sno previous pattern before '%c' in '%s'",fn,*curr,expr);
                     ++curr;
                     return ops.pop_back();
+                }
+                
+                //--------------------------------------------------------------
+                //
+                //
+                // braces
+                //
+                //
+                //--------------------------------------------------------------
+                void braces(Logical &p)
+                {
+                    assert(*curr==LBRACE);
+                    const char *org = ++curr;
+                    while(curr<last)
+                    {
+                        if(RBRACE== *curr)
+                        {
+                            ++curr;
+                            const string ctx(org,curr-org);
+                            throw exception("TODO: braces");
+                        }
+                        ++curr;
+                    }
+                    
+                    throw exception("%sunfinished braces in '%s'",fn,expr);
+                    
                 }
                 
                 //--------------------------------------------------------------
