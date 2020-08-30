@@ -83,5 +83,11 @@ namespace upsylon {
             os << '[' << cchars::visible[p.lower] << '-' << cchars::visible[p.upper] << ']';
             return os;
         }
+        
+        void Range::express(ios::ostream &fp) const
+        {
+            Code(Code(fp,lower) << '-',upper);
+        }
+
     }
 }

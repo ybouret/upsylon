@@ -33,7 +33,8 @@ namespace upsylon {
             virtual Pattern *clone()             const;         //!< copy
             virtual void     start(FirstChars &) const;         //!< complete!
             virtual void     update(Entropy &)   const throw(); //!< do nothing
-
+            virtual void     express(ios::ostream &) const;     //!< full range
+            
             //__________________________________________________________________
             //
             // serializable

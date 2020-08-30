@@ -67,6 +67,13 @@ namespace upsylon {
             else
                 return true;
         }
+        
+        void Optional::express(ios::ostream &fp) const
+        {
+            motif->express(fp);
+            fp << '?';
+        }
+
 
 
 #if 0

@@ -97,6 +97,13 @@ namespace upsylon {
                 return false;
             }
         }
+        
+        void Counting::express(ios::ostream &fp) const
+        {
+            motif->express(fp);
+            fp("{%lu,%lu}",(unsigned long)minCount, (unsigned long)maxCount);
+        }
+
 
     }
 }

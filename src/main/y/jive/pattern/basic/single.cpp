@@ -70,5 +70,10 @@ namespace upsylon {
             return os;
         }
 
+        void Single::express(ios::ostream &fp) const
+        {
+            Code(fp,code);
+        }
+
     }
 }

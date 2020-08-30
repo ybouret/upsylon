@@ -36,6 +36,7 @@ namespace upsylon {
             virtual Pattern *clone() const;                       //!< copy
             virtual void     start(FirstChars &) const;           //!< insert range
             virtual void     update(Entropy &)  const throw();    //!< with boundaries
+            virtual void     express(ios::ostream &) const;       //!< escaped range
 
             //__________________________________________________________________
             //

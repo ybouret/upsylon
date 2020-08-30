@@ -67,6 +67,8 @@ namespace upsylon {
             virtual void     start(FirstChars &) const           = 0; //!< collect first chars
             virtual void     update(Entropy &)   const throw()   = 0; //!< update entropy
             virtual void     optimize()                 throw()  = 0; //!< sub-optimize
+            virtual void     express(ios::ostream &) const       = 0; //!< as regular-expression
+            
             
             //__________________________________________________________________
             //
@@ -74,7 +76,8 @@ namespace upsylon {
             //__________________________________________________________________
             bool   strong()  const throw(); //!< !feeble()
             double entropy() const throw(); //!< compute internal entropy
-
+            string toRegExp() const;        //!< uses express
+            
             //__________________________________________________________________
             //
             // members
@@ -91,7 +94,8 @@ namespace upsylon {
             static Pattern *Load(ios::istream &);         //!< load pattern from stream
             static Pattern *Optimize(Pattern  *) throw(); //!< optimize pattern
             void   test(Source &source) const;            //!< perform test on source
-
+            static ios::ostream &Code(ios::ostream &fp, const uint8_t);
+           
             //! cast
             template <typename T> inline T *as() throw()
             {

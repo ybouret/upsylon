@@ -3,6 +3,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/information/entropy.hpp"
+#include "y/ios/osstream.hpp"
 
 namespace upsylon {
 
@@ -62,6 +63,32 @@ namespace upsylon {
             return *E;
         }
 
+        ios::ostream & Pattern::Code(ios::ostream &fp, const uint8_t code)
+        {
+            if(
+               ( (code>='0') && (code<='9') ) |
+               ( (code>='a') && (code<='z') ) |
+               ( (code>='A') && (code<='Z') )
+               )
+            {
+                fp << char(code);
+            }
+            else
+            {
+                fp << "\\x" << hexadecimal::lowercase[code];
+            }
+            return fp;
+        }
+        
+        string Pattern:: toRegExp() const
+        {
+            string        ans;
+            {
+                ios::osstream fp(ans);
+                express(fp);
+            }
+            return ans;
+        }
     }
 
 }

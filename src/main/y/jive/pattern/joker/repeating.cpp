@@ -126,6 +126,13 @@ namespace upsylon {
                 return false;
             }
         }
+        
+        void Repeating::express(ios::ostream &fp) const
+        {
+            motif->express(fp);
+            fp("{%lu}",(unsigned long)minCount);
+        }
+
 
     }
 }

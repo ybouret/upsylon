@@ -37,6 +37,7 @@ namespace upsylon {
             virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< single after none of operands
             virtual bool     feeble() const throw();              //!< false
             virtual void     optimize() throw();                  //!< applyOptimize, rework
+            virtual void     express(ios::ostream &) const;       //!< with alternation/tilde
 
             //__________________________________________________________________
             //

@@ -95,6 +95,24 @@ namespace upsylon {
             applyOptimize();
             mergeSameUUID();
         }
+        
+        void And::express(ios::ostream &fp) const
+        {
+            if(size>1)
+            {
+                fp << '(';
+            }
+            for(const Pattern *op=head;op;op=op->next)
+            {
+                op->express(fp);
+            }
+            if(size>1)
+            {
+                fp << ')';
+            }
+        }
+
+        
     }
 }
 

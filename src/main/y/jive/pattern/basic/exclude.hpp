@@ -35,6 +35,7 @@ namespace upsylon {
             virtual Pattern  *clone()            const;          //!< copy
             virtual void      start(FirstChars&) const;          //!< all but code
             virtual void      update(Entropy &)  const throw();  //!< with code
+            virtual void      express(ios::ostream &) const;     //!< escaped
 
             //__________________________________________________________________
             //

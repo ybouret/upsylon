@@ -72,5 +72,10 @@ namespace upsylon {
             os << '[' << '^' << cchars::visible[p.code] << ']';
             return os;
         }
+        
+        void Exclude::express(ios::ostream &fp) const
+        {
+            Code(fp,code) << '~';
+        }
     }
 }

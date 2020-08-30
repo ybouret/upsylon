@@ -30,12 +30,13 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  And     *Create();                  //!< new
-            virtual Pattern *clone() const;             //!< copy
-            virtual void     start(FirstChars &) const; //!< merge until strong op
-            virtual bool     feeble() const throw();              //!< all are feeble
-            virtual void     optimize() throw();                  //!< applyOptimize, merge alike
-            
+            static  And     *Create();                          //!< new
+            virtual Pattern *clone() const;                     //!< copy
+            virtual void     start(FirstChars &) const;         //!< merge until strong op
+            virtual bool     feeble() const throw();            //!< all are feeble
+            virtual void     optimize() throw();                //!< applyOptimize, merge alike
+            virtual void     express(ios::ostream &) const;     //!< escaped
+
             //! accept all operands or none
             /**
              the produced token is the catenation of all produced by operangss

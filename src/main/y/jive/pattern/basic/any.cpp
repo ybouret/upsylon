@@ -68,5 +68,11 @@ namespace upsylon {
             os << "<any>";
             return os;
         }
+        
+        void Any::express(ios::ostream &fp) const
+        {
+            fp << "[^]";
+        }
+
     }
 }

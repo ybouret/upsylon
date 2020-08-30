@@ -90,6 +90,33 @@ namespace upsylon {
             applyOptimize();
             rework();
         }
+        
+        void None::express(ios::ostream &fp) const
+        {
+            if(size>1)
+            {
+                fp << '(';
+            }
+            for(const Pattern *op=head;;)
+            {
+                op->express(fp);
+                op=op->next;
+                if(op)
+                {
+                    fp << ',';
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if(size>1)
+            {
+                fp << ')';
+            }
+            fp << '~';
+        }
 
     }
 }

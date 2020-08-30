@@ -36,6 +36,7 @@ namespace upsylon
             virtual Pattern   *clone()             const;           //!< copy
             virtual bool       feeble()    const throw();           //!< true if minCount<=0 or motif is feeble
             virtual bool       accept(Y_PATTERN_ACCEPT_ARGS) const; //!< count is ok
+            virtual void       express(ios::ostream &) const;       //!< motif+somethong
 
             //__________________________________________________________________
             //
