@@ -14,7 +14,7 @@ namespace upsylon
          
             
 #define Y_RX_PRINTLN(OUTPUT) \
-do { if(RegExpCompiler::Verbose) { indent(std::cerr << '|') << OUTPUT << std::endl; } } while(false)
+do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::endl; } } while(false)
             
             static const char fn[] = "Jive::RegExp: ";
             
@@ -39,7 +39,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << '|') << OUTPUT << std::en
                 const Dictionary *dict; //!< optional dictionary
                 
                 inline std::ostream & indent(std::ostream &os) const {
-                    unsigned r = rank; while(r-- >0) std::cerr << ' ';
+                    unsigned r = rank; while(r-- >0) std::cerr << "__";
                     return os;
                 }
                 
@@ -71,20 +71,47 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << '|') << OUTPUT << std::en
                 
                 //--------------------------------------------------------------
                 //
+                //
                 // main entry point: gathering patterns
+                //
                 //
                 //--------------------------------------------------------------
                 Logical * compile()
                 {
                     //----------------------------------------------------------
+                    //
                     // create a new pattern
+                    //
                     //----------------------------------------------------------
                     Y_RX_PRINTLN("<compile@" << rank <<">");
                     auto_ptr<Logical> p = And::Create();
                     
+                    //----------------------------------------------------------
+                    //
+                    // main RX loop
+                    //
+                    //----------------------------------------------------------
+                    while(curr<last)
+                    {
+                        
+                        const char C = *curr;
+                        switch(C)
+                        {
+                               
+                            default:
+                                //----------------------------------------------
+                                Y_RX_PRINTLN("<single '" << cchars::visible[uint8_t(C)] << "'>");
+                                //----------------------------------------------
+                                p->add(*(curr++));
+                                break;
+                        }
+                        
+                    }
                     
                     //----------------------------------------------------------
-                    // done so far
+                    //
+                    // end of current expression
+                    //
                     //----------------------------------------------------------
                     Y_RX_PRINTLN("<compile@" << rank <<"/>");
                     return p.yield();
