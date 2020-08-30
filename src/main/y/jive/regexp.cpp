@@ -1,5 +1,7 @@
 #include "y/jive/pattern/all.hpp"
 #include "y/jive/pattern/dictionary.hpp"
+#include "y/jive/pattern/posix.hpp"
+
 #include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
 
@@ -163,6 +165,21 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 p->push_front( q.yield() );
                             } break;
                                 
+                            case '.':
+                                ++curr;
+                                p->push_front( posix::dot() );
+                                break;
+                                
+                                //----------------------------------------------
+                                //
+                                // escape sequences
+                                //
+                                //----------------------------------------------
+                            case '\\':
+                                p->push_back( esc() );
+                                break;
+                            
+                                
                                 //----------------------------------------------
                                 //
                                 // default
@@ -189,12 +206,92 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                      return p.yield();
                 }
                 
+                //--------------------------------------------------------------
+                //
+                //
+                // get the previous pattern
+                //
+                //
+                //--------------------------------------------------------------
                 Pattern * get_previous(Logical &ops)
                 {
-                    if(ops.size<=0) throw exception("%sno previous pattern befor '%c' in '%s'",fn,*curr,expr);
+                    if(ops.size<=0) throw exception("%sno previous pattern before '%c' in '%s'",fn,*curr,expr);
                     ++curr;
                     return ops.pop_back();
                 }
+                
+                //--------------------------------------------------------------
+                //
+                //
+                // escape sequences
+                //
+                //
+                //--------------------------------------------------------------
+                
+                //--------------------------------------------------------------
+                //
+                // hexadecimal
+                //
+                //--------------------------------------------------------------
+                
+                Pattern *escHexa()
+                {
+                    assert('x' ==curr[-1]);
+                    assert('\\'==curr[-2]);
+                    // get hi
+                    if(curr>=last) throw exception("%smissing first escaped hexa in '%s'",fn,expr);
+                    const int hi = hexadecimal::to_decimal(*curr);
+                    if(hi<0) throw exception("%sinvalid first escaped hexa '%s' in '%s'",fn, cchars::visible[uint8_t(*curr)],expr);
+                    
+                    // get lo
+                    if(++curr>=last) throw exception("%smissing second escaped hexa in '%s'",fn,expr);
+                    const int lo = hexadecimal::to_decimal(*curr);
+                    if(lo<0) throw exception("%sinvalid second escaped hexa '%s' in '%s'",fn, cchars::visible[uint8_t(*curr)],expr);
+
+                    // skip lo
+                    ++curr;
+                    
+                    return Single::Create( (hi<<4) | lo );
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // macro for indirect escape
+                //
+                //--------------------------------------------------------------
+                
+#define TRY_ESCAPE()                   \
+case 'n': return Single::Create('\n'); \
+case 'r': return Single::Create('\r'); \
+case 't': return Single::Create('\t')
+                
+                Pattern *esc()
+                {
+                    assert(*curr=='\\');
+                    if(++curr>=last) throw exception("%sunfinished escaped sequence in '%s'",fn,expr);
+                    const char C = *(curr++);
+                    switch(C)
+                    {
+                        case  'x': return escHexa();
+                        case '\\':
+                        case  '+':
+                        case  '*':
+                        case  '?':
+                        case  '~':
+                        case  '.':
+                        case  LPAREN:
+                        case  RPAREN:
+                            return Single::Create(C);
+                            
+                            TRY_ESCAPE();
+                            
+                        default: break;
+                    }
+                    
+                    throw exception("%sunknown escape sequence \\x%s... in '%s'",fn,cchars::visible[ uint8_t(C) ],expr);
+                }
+                
+                
                 
                 
             private:
