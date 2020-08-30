@@ -234,24 +234,56 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //
                 //
                 //--------------------------------------------------------------
+               
                 void braces(Logical &p)
                 {
                     assert(*curr==LBRACE);
+                    //----------------------------------------------------------
+                    // look for closing right brace
+                    //----------------------------------------------------------
                     const char *org = ++curr;
                     while(curr<last)
                     {
                         if(RBRACE== *curr)
                         {
-                            ++curr;
                             const string ctx(org,curr-org);
-                            throw exception("TODO: braces");
+                            ++curr; //skip rbrace
+                            
+                            std::cerr << "found braces: <" << ctx << ">" << std::endl;
+                            //--------------------------------------------------
+                            // process
+                            //--------------------------------------------------
+                            if(ctx.size()<=0) throw exception("%sempty braces in '%s'",fn,expr);
+                            if(isDigit(ctx[0]))
+                            {
+                                //----------------------------------------------
+                                // counting
+                                //----------------------------------------------
+                            }
+                            else
+                            {
+                                //----------------------------------------------
+                                // alias
+                                //----------------------------------------------
+                                if(!dict) throw exception("%sno dictionary for alias '%s' in '%s'",fn,*ctx,expr);
+                                const Motif *ppp = dict->search_by(ctx);
+                                if(!ppp)  throw exception("%sno entry '%s' in dictionary for '%s'",fn,*ctx,expr);
+                                p.push_back( (**ppp).clone() );
+                            }
+                            return;
                         }
                         ++curr;
                     }
-                    
                     throw exception("%sunfinished braces in '%s'",fn,expr);
-                    
                 }
+                
+                static inline bool isDigit(const char C) throw()
+                {
+                    return (C>='0'&&C<='9');
+                }
+                
+                
+                
                 
                 //--------------------------------------------------------------
                 //

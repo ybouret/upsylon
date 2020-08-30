@@ -33,7 +33,15 @@ namespace upsylon {
             //__________________________________________________________________
             explicit Dictionary();         //!< setup
             virtual ~Dictionary() throw(); //!< cleanup
-
+            
+            template <typename NAME>
+            bool insert(const NAME &id, Pattern *p)
+            {
+                assert(p);
+                const Motif m(p);
+                return insert_by(id,m);
+            }
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dictionary);

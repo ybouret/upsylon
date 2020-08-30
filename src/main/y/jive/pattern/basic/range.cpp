@@ -86,7 +86,7 @@ namespace upsylon {
         
         void Range::express(ios::ostream &fp) const
         {
-            Code(Code(fp,lower) << '-',upper);
+            Code(Code(fp << '[',lower) << '-',upper) << ']';
         }
 
     }
