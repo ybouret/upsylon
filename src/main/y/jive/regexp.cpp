@@ -17,6 +17,8 @@ namespace upsylon
 #define LPAREN '('
 #define RPAREN ')'
 #define ALT    '|'
+#define LBRACE '{'
+#define RBRACE '}'
             
 #define Y_RX_PRINTLN(OUTPUT) \
 do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::endl; } } while(false)
@@ -281,6 +283,8 @@ case 't': return Single::Create('\t')
                         case  '.':
                         case  LPAREN:
                         case  RPAREN:
+                        case  LBRACE:
+                        case  RBRACE:
                             return Single::Create(C);
                             
                             TRY_ESCAPE();
