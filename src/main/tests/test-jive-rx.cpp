@@ -16,6 +16,10 @@ Y_UTEST(jive_rx)
         p->graphViz("rx.dot");
         const string expr = p->toRegExp();
         std::cerr << "expr='" << expr << "'" << std::endl;
+        auto_ptr<Pattern> q = RegExp(expr,0);
+        q->save_to("rx2.bin");
+        q->graphViz("rx2.dot");
+        Y_CHECK(*p==*q);
     }
     
 }

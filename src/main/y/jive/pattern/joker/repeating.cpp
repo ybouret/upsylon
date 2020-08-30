@@ -130,9 +130,14 @@ namespace upsylon {
         void Repeating::express(ios::ostream &fp) const
         {
             motif->express(fp);
-            fp("{%lu}",(unsigned long)minCount);
+            
+            switch(minCount)
+            {
+                case 0:  fp << '*'; break;
+                case 1:  fp << '+'; break;
+                default: fp("{%lu}",(unsigned long)minCount); break;
+            }
         }
-
 
     }
 }

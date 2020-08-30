@@ -14,6 +14,7 @@ namespace upsylon
             
 #define LPAREN '('
 #define RPAREN ')'
+#define ALT    '|'
             
 #define Y_RX_PRINTLN(OUTPUT) \
 do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::endl; } } while(false)
@@ -111,8 +112,8 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 //----------------------------------------------
                                 Y_RX_PRINTLN("<sub-compile>");
                                 //----------------------------------------------
-                                ++curr;
-                                ++rank;
+                                ++curr; // skip LPAREN
+                                ++rank; // increase rank
                                 p->push_back( compile() );
                                 break;
                                 
@@ -120,11 +121,47 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 //----------------------------------------------
                                 Y_RX_PRINTLN("<sub-compile/>");
                                 //----------------------------------------------
-                                --rank;
-                                ++curr;
+                                --rank; // decrease rank
+                                ++curr; // skip RPAREN
                                 goto COMPILED;
                                 
+                                //----------------------------------------------
+                                //
+                                // alternation
+                                //
+                                //----------------------------------------------
+                            case ALT: {
+                                //----------------------------------------------
+                                Y_RX_PRINTLN("<alternation>");
+                                //----------------------------------------------
+                                ++curr; // skip ALT
+                                auto_ptr<Logical> alt = Or::Create();
+                                alt->push_front(p.yield());
+                                alt->push_back(compile());
+                                return alt.yield(); }
                                 
+                                //----------------------------------------------
+                                //
+                                // jokers
+                                //
+                                //----------------------------------------------
+                            case '*':
+                                p->push_back( Repeating::Create( get_previous(*p), 0) );
+                                break;
+                                
+                            case '+':
+                                p->push_back( Repeating::Create( get_previous(*p), 1) );
+                                break;
+                                
+                            case '?':
+                                p->push_back( Optional::Create( get_previous(*p) ) );
+                                break;
+                                
+                            case '~': {
+                                auto_ptr<Logical> q = None::Create();
+                                q->push_back( get_previous(*p) );
+                                p->push_front( q.yield() );
+                            } break;
                                 
                                 //----------------------------------------------
                                 //
@@ -148,14 +185,16 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     //
                     //----------------------------------------------------------
                     Y_RX_PRINTLN("<compile@" << rank <<"/>");
-                    if(p->size<=0)
-                    {
-                        throw exception("%sempty expression in '%s'",fn,expr);
-                    }
-                    return p.yield();
+                    if(p->size<=0) throw exception("%sempty expression in '%s'",fn,expr);
+                     return p.yield();
                 }
                 
-                
+                Pattern * get_previous(Logical &ops)
+                {
+                    if(ops.size<=0) throw exception("%sno previous pattern befor '%c' in '%s'",fn,*curr,expr);
+                    ++curr;
+                    return ops.pop_back();
+                }
                 
                 
             private:
@@ -164,7 +203,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
             
             //==================================================================
             
-            bool RegExpCompiler::Verbose = true;
+            bool RegExpCompiler::Verbose = false;
             
         }
         
@@ -177,7 +216,8 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
             {
                 throw exception("%sunfinished expression '%s'",fn,ini);
             }
-            return ptr.yield();
+            ptr->graphViz("regexp.dot");
+            return Pattern::Optimize(ptr.yield());
         }
         
         Pattern * RegExp(const char *text, const Dictionary *dict)

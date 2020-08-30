@@ -104,7 +104,7 @@ namespace upsylon {
                 op=op->next;
                 if(op)
                 {
-                    fp << ',';
+                    fp << '|';
                     continue;
                 }
                 else
