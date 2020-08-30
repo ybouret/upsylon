@@ -11,7 +11,9 @@ namespace upsylon
         
         namespace
         {
-         
+            
+#define LPAREN '('
+#define RPAREN ')'
             
 #define Y_RX_PRINTLN(OUTPUT) \
 do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::endl; } } while(false)
@@ -32,11 +34,12 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 // members
                 //
                 //--------------------------------------------------------------
-                static bool       Verbose;
-                const char       *curr; //!< current position
-                const char       *last; //!< invalid position
-                unsigned          rank; //!< current recursivity level
-                const Dictionary *dict; //!< optional dictionary
+                static bool        Verbose;
+                const char        *curr; //!< current position
+                const char        *last; //!< invalid position
+                unsigned           rank; //!< current recursivity level
+                const Dictionary  *dict; //!< optional dictionary
+                const char * const expr; //!< initial expression
                 
                 inline std::ostream & indent(std::ostream &os) const {
                     unsigned r = rank; while(r-- >0) std::cerr << "__";
@@ -48,7 +51,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 // C++
                 //
                 //--------------------------------------------------------------
-
+                
                 //! cleanup
                 inline ~RegExpCompiler() throw()
                 {
@@ -64,7 +67,8 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 curr(ini),
                 last(end),
                 rank(0),
-                dict(usr)
+                dict(usr),
+                expr(ini)
                 {
                     
                 }
@@ -97,7 +101,36 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                         const char C = *curr;
                         switch(C)
                         {
-                               
+                                
+                                //----------------------------------------------
+                                //
+                                // sub-expressions
+                                //
+                                //----------------------------------------------
+                            case LPAREN:
+                                //----------------------------------------------
+                                Y_RX_PRINTLN("<sub-compile>");
+                                //----------------------------------------------
+                                ++curr;
+                                ++rank;
+                                p->push_back( compile() );
+                                break;
+                                
+                            case RPAREN:
+                                //----------------------------------------------
+                                Y_RX_PRINTLN("<sub-compile/>");
+                                //----------------------------------------------
+                                --rank;
+                                ++curr;
+                                goto COMPILED;
+                                
+                                
+                                
+                                //----------------------------------------------
+                                //
+                                // default
+                                //
+                                //----------------------------------------------
                             default:
                                 //----------------------------------------------
                                 Y_RX_PRINTLN("<single '" << cchars::visible[uint8_t(C)] << "'>");
@@ -108,18 +141,23 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                         
                     }
                     
+                COMPILED:
                     //----------------------------------------------------------
                     //
                     // end of current expression
                     //
                     //----------------------------------------------------------
                     Y_RX_PRINTLN("<compile@" << rank <<"/>");
+                    if(p->size<=0)
+                    {
+                        throw exception("%sempty expression in '%s'",fn,expr);
+                    }
                     return p.yield();
                 }
                 
                 
                 
-                    
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RegExpCompiler);
             };
