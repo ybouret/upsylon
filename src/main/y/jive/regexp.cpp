@@ -164,7 +164,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                             case '~': {
                                 auto_ptr<Logical> q = None::Create();
                                 q->push_back( get_previous(*p) );
-                                p->push_front( q.yield() );
+                                p->push_back( q.yield() );
                             } break;
                                 
                             case '.':
@@ -210,7 +210,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     //----------------------------------------------------------
                     Y_RX_PRINTLN("<compile@" << rank <<"/>");
                     if(p->size<=0) throw exception("%sempty expression in '%s'",fn,expr);
-                     return p.yield();
+                    return p.yield();
                 }
                 
                 //--------------------------------------------------------------
@@ -239,37 +239,76 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 {
                     assert(*curr==LBRACE);
                     //----------------------------------------------------------
+                    //
                     // look for closing right brace
+                    //
                     //----------------------------------------------------------
                     const char *org = ++curr;
                     while(curr<last)
                     {
                         if(RBRACE== *curr)
                         {
-                            const string ctx(org,curr-org);
-                            ++curr; //skip rbrace
-                            
-                            std::cerr << "found braces: <" << ctx << ">" << std::endl;
                             //--------------------------------------------------
-                            // process
+                            //
+                            // <process>
+                            //
                             //--------------------------------------------------
+                            const char  *rbrace = curr++;     // skip rbrace
+                            const string ctx(org,rbrace-org);
+
+                            Y_RX_PRINTLN("<braces: {" << ctx <<"}>");
+
                             if(ctx.size()<=0) throw exception("%sempty braces in '%s'",fn,expr);
+
                             if(isDigit(ctx[0]))
                             {
                                 //----------------------------------------------
-                                // counting
+                                //
+                                // counting/repeating
+                                //
                                 //----------------------------------------------
+                                if(p.size<=0) throw exception("%sno pattern before braces in '%s'",fn,expr);
+                                const char *coma = strchr(org, ',');
+                                if(coma)
+                                {
+                                    //------------------------------------------
+                                    //  counting
+                                    //------------------------------------------
+                                    const string minStr(org,coma-org); ++coma;
+                                    const string maxStr(coma,rbrace-coma);
+                                    Y_RX_PRINTLN("--> min=<" << minStr << ">(#" << minStr.size() <<") | max=<" << maxStr << ">(#" << maxStr.size() << ")");
+                                    const size_t minCount = string2count(minStr,"minCount");
+                                    const size_t maxCount = string2count(maxStr,"maxCount");
+                                    p.push_back( Counting::Create( p.pop_back(), minCount, maxCount));
+                                }
+                                else
+                                {
+                                    //------------------------------------------
+                                    //  repeating
+                                    //------------------------------------------
+                                    const string & minStr = ctx;
+                                    Y_RX_PRINTLN("--> min=<" << minStr << ">(#" << minStr.size() <<")");
+                                    const size_t minCount = string2count(minStr,"minCount");
+                                    p.push_back( Repeating::Create( p.pop_back(), minCount) );
+                                }
                             }
                             else
                             {
                                 //----------------------------------------------
+                                //
                                 // alias
+                                //
                                 //----------------------------------------------
                                 if(!dict) throw exception("%sno dictionary for alias '%s' in '%s'",fn,*ctx,expr);
                                 const Motif *ppp = dict->search_by(ctx);
                                 if(!ppp)  throw exception("%sno entry '%s' in dictionary for '%s'",fn,*ctx,expr);
                                 p.push_back( (**ppp).clone() );
                             }
+                            //--------------------------------------------------
+                            //
+                            // <process/>
+                            //
+                            //--------------------------------------------------
                             return;
                         }
                         ++curr;
@@ -280,6 +319,22 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 static inline bool isDigit(const char C) throw()
                 {
                     return (C>='0'&&C<='9');
+                }
+
+                inline size_t string2count(const string &s, const char *id)
+                {
+                    assert(id);
+                    size_t ans = 0;
+                    const size_t n = s.size();
+                    if(n<=0) throw exception("%sempty %s in '%s'",fn,id,expr);
+                    for(size_t i=0;i<n;++i)
+                    {
+                        const char c = s[i];
+                        if(!isDigit(c)) throw exception("%sinvalid digit '%s' in <%s> from '%s'",fn, cchars::visible[ uint8_t(c) ], *s, expr);
+                        ans *= 10;
+                        ans += c-'0';
+                    }
+                    return ans;
                 }
                 
                 
@@ -369,6 +424,11 @@ case 't': return Single::Create('\t')
             
             bool RegExpCompiler::Verbose = false;
             
+        }
+
+        bool & RegExpVerbose() throw()
+        {
+            return RegExpCompiler::Verbose;
         }
         
         Pattern * RegExp(const string &rx, const Dictionary *dict)

@@ -17,7 +17,8 @@ namespace upsylon {
       
         //! expression to pattern, wrapper
         Pattern * RegExp(const char   *rx, const Dictionary *);
-        
+
+        bool & RegExpVerbose() throw();
         
     }
     

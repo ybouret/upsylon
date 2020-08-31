@@ -12,6 +12,7 @@ using namespace Jive;
 Y_UTEST(jive_rx)
 {
     Dictionary dict;
+   // RegExpVerbose() = true;
     if(!dict.insert( "INT", Repeating::Create( posix::digit(), 1) ))
     {
         throw exception("couldn't insert INT");
