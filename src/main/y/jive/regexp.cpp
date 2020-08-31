@@ -1,4 +1,5 @@
 #include "y/jive/pattern/all.hpp"
+#include "y/jive/pattern/basic/rework.hpp"
 #include "y/jive/pattern/dictionary.hpp"
 #include "y/jive/pattern/posix.hpp"
 
@@ -378,7 +379,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //
                 //--------------------------------------------------------------
                 
-                inline Pattern *hexadecimalEscape()
+                inline Single *hexadecimalEscape()
                 {
                     assert('x' ==curr[-1]);
                     assert('\\'==curr[-2]);
@@ -418,7 +419,7 @@ case 'n': return Single::Create('\n'); \
 case 'r': return Single::Create('\r'); \
 case 't': return Single::Create('\t')
                 
-                inline Pattern *compileEscape()
+                inline Single *compileEscape()
                 {
                     assert(*curr=='\\');
                     if(++curr>=last) throw exception("%sunfinished escaped sequence in '%s'",fn,expr);
@@ -503,6 +504,21 @@ case 't': return Single::Create('\t')
                                 break;
 
                                 //----------------------------------------------
+                                // range
+                                //----------------------------------------------
+                            case DASH: {
+                                if( p->size<=0)        throw exception("%s no previous pattern for range in '%s'",fn,expr);
+                                if( !p->tail->is<Single>() ) throw exception("%s left side of range is not a character in '%s'",fn,expr);
+                                uint8_t lower = p->tail->as<Single>()->code;
+                                delete p->pop_back();
+                                auto_ptr<Single> rhs = clusterRangeRHS();
+                                uint8_t upper = rhs->code;
+                                if(lower>upper) cswap(lower,upper);
+                                p->push_back(  Rework::Single2Range( rhs.yield(), lower, upper) );
+                            } break;
+
+
+                                //----------------------------------------------
                                 // escape sequence
                                 //----------------------------------------------
                             case '\\':
@@ -539,7 +555,7 @@ case 't': return Single::Create('\t')
                 //
                 //
                 //--------------------------------------------------------------
-                inline Pattern *clusterEscape()
+                inline Single *clusterEscape()
                 {
                     assert(*curr=='\\');
                     if(++curr>=last) throw exception("%sunfinished escaped sequence in '%s'",fn,expr);
@@ -560,7 +576,37 @@ case 't': return Single::Create('\t')
                         default: break;
                     }
 
-                    throw exception("%sunknown escape sequence \\x%s... in '%s'",fn,cchars::visible[ uint8_t(C) ],expr);
+                    throw exception("%sunknown escape sequence \\x%s... in '%s'",fn,cchars::to_visible(C),expr);
+                }
+
+                //--------------------------------------------------------------
+                //
+                //
+                // cluster escape
+                //
+                //
+                //--------------------------------------------------------------
+                inline Single *clusterRangeRHS()
+                {
+
+                    assert(DASH==*curr);
+                    if(++curr>=last) throw exception("%sunfinished range in '%s'",fn,expr);
+                    const char C = *(curr++);
+                    switch(C)
+                    {
+                        case '\\':  return clusterEscape();
+
+                        case DASH:
+                        case LBRACK:
+                        case RBRACK:
+                        case CARET:
+                            throw exception("%sinvalid right hand side '%s' for range in '%s'",fn,cchars::to_visible(C),expr);
+
+                        default: break;
+                    }
+
+                    return Single::Create(C);
+
                 }
 
                 //--------------------------------------------------------------
