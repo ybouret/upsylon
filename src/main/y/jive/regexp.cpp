@@ -22,6 +22,7 @@ namespace upsylon
 #define RBRACE '}'
 #define LBRACK '['
 #define RBRACK ']'
+#define IGN    '&'
 
 #define CARET  '^'
 #define DASH   '-'
@@ -175,9 +176,14 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                             } break;
                                 
                             case '.':
-                                ++curr;
+                                ++curr; //! skip dot
                                 p->push_front( posix::dot() );
                                 break;
+
+                            case IGN: {
+                                auto_ptr<Pattern> arg = get_previous(*p);
+                                p->push_back( Pattern::IgnoreCase( & *arg ) );
+                            } break;
                                 
                                 
                             case  LBRACE:
