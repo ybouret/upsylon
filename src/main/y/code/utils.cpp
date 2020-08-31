@@ -163,5 +163,10 @@ namespace upsylon
 #include "encoded.hxx"
     };
 
+    const char *cchars:: to_visible(const char C) throw()
+    {
+        return visible[ uint8_t(C) ];
+    }
+
     
 }

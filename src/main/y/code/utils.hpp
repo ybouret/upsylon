@@ -36,6 +36,7 @@ namespace upsylon
         static const char *visible[256];   //!< human readable chars
         static const char *printable[256]; //!< for external programs/compilation
         static const char *encoded[256];   //!< C-string version
+        static const char *to_visible(const char C) throw(); //!< visible char
     };
     
    

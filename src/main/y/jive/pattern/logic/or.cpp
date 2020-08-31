@@ -98,7 +98,7 @@ namespace upsylon {
             {
                 fp << '(';
             }
-            for(const Pattern *op=head;;)
+            for(const Pattern *op=head;op;)
             {
                 op->express(fp);
                 op=op->next;

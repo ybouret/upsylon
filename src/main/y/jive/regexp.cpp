@@ -19,7 +19,13 @@ namespace upsylon
 #define ALT    '|'
 #define LBRACE '{'
 #define RBRACE '}'
-            
+#define LBRACK '['
+#define RBRACK ']'
+
+#define CARET  '^'
+#define DASH   '-'
+#define COLON  ':'
+
 #define Y_RX_PRINTLN(OUTPUT) \
 do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::endl; } } while(false)
             
@@ -66,9 +72,9 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     dict = 0;
                 }
                 
-                explicit RegExpCompiler(const char       *ini,
-                                        const char       *end,
-                                        const Dictionary *usr) :
+                inline  RegExpCompiler(const char       *ini,
+                                       const char       *end,
+                                       const Dictionary *usr) :
                 curr(ini),
                 last(end),
                 rank(0),
@@ -85,7 +91,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //
                 //
                 //--------------------------------------------------------------
-                Logical * compile()
+                inline Logical * compile()
                 {
                     //----------------------------------------------------------
                     //
@@ -185,7 +191,16 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                             case '\\':
                                 p->push_back( compileEscape() );
                                 break;
-                            
+
+                                //----------------------------------------------
+                                //
+                                // clusters
+                                //
+                                //----------------------------------------------
+                            case LBRACK:
+                                p->push_back( cluster() );
+                                assert(curr[-1]==RBRACK);
+                                break;
                                 
                                 //----------------------------------------------
                                 //
@@ -220,7 +235,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //
                 //
                 //--------------------------------------------------------------
-                Pattern * get_previous(Logical &ops)
+                inline Pattern * get_previous(Logical &ops)
                 {
                     if(ops.size<=0) throw exception("%sno previous pattern before '%c' in '%s'",fn,*curr,expr);
                     ++curr;
@@ -234,7 +249,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //
                 //
                 //--------------------------------------------------------------
-                void braces(Logical &p)
+                inline void braces(Logical &p)
                 {
                     assert(*curr==LBRACE);
                     //----------------------------------------------------------
@@ -314,12 +329,24 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     }
                     throw exception("%sunfinished braces in '%s'",fn,expr);
                 }
-                
+
+
+                //--------------------------------------------------------------
+                //
+                // helper
+                //
+                //--------------------------------------------------------------
                 static inline bool isDigit(const char C) throw()
                 {
                     return (C>='0'&&C<='9');
                 }
 
+
+                //--------------------------------------------------------------
+                //
+                // helper
+                //
+                //--------------------------------------------------------------
                 inline size_t string2count(const string &s, const char *id)
                 {
                     assert(id);
@@ -353,7 +380,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //
                 //--------------------------------------------------------------
                 
-                Pattern *hexadecimalEscape()
+                inline Pattern *hexadecimalEscape()
                 {
                     assert('x' ==curr[-1]);
                     assert('\\'==curr[-2]);
@@ -393,7 +420,7 @@ case 'n': return Single::Create('\n'); \
 case 'r': return Single::Create('\r'); \
 case 't': return Single::Create('\t')
                 
-                Pattern *compileEscape()
+                inline Pattern *compileEscape()
                 {
                     assert(*curr=='\\');
                     if(++curr>=last) throw exception("%sunfinished escaped sequence in '%s'",fn,expr);
@@ -411,6 +438,8 @@ case 't': return Single::Create('\t')
                         case  RPAREN:
                         case  LBRACE:
                         case  RBRACE:
+                        case  LBRACK:
+                        case  RBRACK:
                             return Single::Create(C);
                             
                             TRY_ESCAPE();
@@ -420,8 +449,63 @@ case 't': return Single::Create('\t')
                     
                     throw exception("%sunknown escape sequence \\x%s... in '%s'",fn,cchars::visible[ uint8_t(C) ],expr);
                 }
-                
-                
+
+                //--------------------------------------------------------------
+                //
+                //
+                // building clusters
+                //
+                //
+                //--------------------------------------------------------------
+                inline Logical *cluster()
+                {
+                    auto_ptr<Logical> p = 0;
+                    Y_RX_PRINTLN("<cluster>");
+                    assert(*curr==LBRACK);
+                    //----------------------------------------------------------
+                    //
+                    // get first char
+                    //
+                    //----------------------------------------------------------
+                    {
+                        if(++curr>=last) throw exception("%sunfinished cluster in '%s'",fn,expr);
+                        const char C = *curr;
+                        switch(C)
+                        {
+                            case CARET: p = None::Create(); ++curr; break;
+                            case DASH:  p = Or::Create(); p->add(DASH); ++curr; break;
+                            default:    p = Or::Create(); break;
+                        }
+                    }
+                    assert(p.is_valid());
+
+                    //----------------------------------------------------------
+                    //
+                    // loop
+                    //
+                    //----------------------------------------------------------
+                    while(curr<last)
+                    {
+                        const char C = *curr;
+                        switch(C)
+                        {
+                            case RBRACK:
+                                ++curr;
+                                goto END_OF_CLUSTER;
+
+                            default:
+                                Y_RX_PRINTLN("add '" << cchars::to_visible(C)<< "'");
+                                p->add( C );
+                                ++curr;
+                                break;
+                        }
+                    }
+                    throw exception("%sunfinished cluster in '%s'",fn,expr);
+
+                END_OF_CLUSTER:
+                    Y_RX_PRINTLN("<cluster/>");
+                    return p.yield();
+                }
                 
                 
             private:

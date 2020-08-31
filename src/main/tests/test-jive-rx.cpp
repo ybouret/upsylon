@@ -11,19 +11,24 @@ using namespace Jive;
 
 Y_UTEST(jive_rx)
 {
-    Dictionary dict;
-   // RegExpVerbose() = true;
+    Dictionary  dict;
+    RegExpVerbose() = true;
     if(!dict.insert( "INT", Repeating::Create( posix::digit(), 1) ))
     {
         throw exception("couldn't insert INT");
     }
     if(argc>1)
     {
+        std::cerr << "---> compiling" << std::endl;
         auto_ptr<Pattern> p = RegExp(argv[1],&dict);
+        std::cerr << "---> save to binary" << std::endl;
         p->save_to("rx.bin");
+        std::cerr << "---> save to graphViz" << std::endl;
         p->graphViz("rx.dot");
+        std::cerr << "---> build expression" << std::endl;
         const string expr = p->toRegExp();
         std::cerr << "expr='" << expr << "'" << std::endl;
+        std::cerr << "---> recompile expression" << std::endl;
         auto_ptr<Pattern> q = RegExp(expr,0);
         q->save_to("rx2.bin");
         q->graphViz("rx2.dot");
