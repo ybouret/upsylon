@@ -59,8 +59,8 @@ namespace upsylon {
             
             friend std::ostream & operator<<( std::ostream &, const LeadingChars &);
 
-            void insert(const uint8_t c);
-            void remove(const uint8_t c);
+            bool insert(const uint8_t c);
+            bool remove(const uint8_t c);
             void release() throw();
             void complete();
             //void opposite();
@@ -71,7 +71,7 @@ namespace upsylon {
         private:
             Leading::List lead;
             bool check() const;
-
+            bool removeFrom(Leading *node, const uint8_t c);
         };
         
         

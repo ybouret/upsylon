@@ -44,6 +44,7 @@ Y_UTEST(jive_leading)
     L.complete();
     std::cerr << "L=" << L << std::endl;
    
+    for(size_t iter=0;iter<8;++iter)
     {
         L.release();
         uint8_t ch[256];
@@ -54,9 +55,14 @@ Y_UTEST(jive_leading)
         alea.shuffle(ch,256);
         for(int i=0;i<256;++i)
         {
-            L.insert(ch[i]);
+            Y_ASSERT(L.insert(ch[i]));
         }
         std::cerr << "L=" << L << std::endl;
+        alea.shuffle(ch,256);
+        for(int i=0;i<256;++i)
+        {
+            Y_ASSERT(L.remove(ch[i]));
+        }
     }
     
     

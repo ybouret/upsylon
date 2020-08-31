@@ -270,7 +270,7 @@ namespace upsylon {
             return os;
         }
         
-        void LeadingChars:: insert(const uint8_t c)
+        bool LeadingChars:: insert(const uint8_t c)
         {
             assert(check());
             
@@ -287,10 +287,10 @@ namespace upsylon {
                     assert(1==size);
                     assert(1==lead.size);
                     assert(lead.head->owns(c));
-                    return;
+                    return true;
                     
                 case 256:
-                    return;
+                    return false;
                     
                 default:
                     break;
@@ -305,7 +305,7 @@ namespace upsylon {
             Leading *curr = lead.head;
             switch(curr->whose(c))
             {
-                case OwnedByThis: assert(curr->owns(c)); return; // already inserted
+                case OwnedByThis: assert(curr->owns(c)); return false; // already inserted
                 case OwnedByNext: break;  // after head
                 case OwnedByPrev: {
                     const Leading *lhs = lead.push_front( new Leading(c) );
@@ -323,7 +323,7 @@ namespace upsylon {
                     }
                     ++aliasing::_(size);
                     assert( check() );
-                } return;
+                } return true;
             }
             
             
@@ -337,7 +337,7 @@ namespace upsylon {
             {
                 switch(next->whose(c))
                 {
-                    case OwnedByThis: assert(next->owns(c)); return; // already inserted
+                    case OwnedByThis: assert(next->owns(c)); return false; // already inserted
                     case OwnedByNext: break;  // step forward
                         
                     case OwnedByPrev:
@@ -350,7 +350,7 @@ namespace upsylon {
                         Leading::Compact3(lead,curr,node,next);
                         ++aliasing::_(size);
                         assert(check());
-                    } return;
+                    } return true;
                 }
                 curr = next;
                 next = next->next;
@@ -378,7 +378,7 @@ namespace upsylon {
                 ++aliasing::_(size);
                 assert( check() );
             }
-            
+            return true;
         }
 
        
@@ -396,9 +396,34 @@ namespace upsylon {
             aliasing::_(size) = 1;
         }
         
-        void LeadingChars:: remove(const uint8_t c)
+        bool LeadingChars:: remove(const uint8_t c)
         {
+            if(lead.size>0)
+            {
+                for(Leading *node=lead.head;node;node=node->next)
+                {
+                    switch(node->whose(c))
+                    {
+                        case OwnedByPrev: return false; //!< too low or already checked
+                        case OwnedByThis: return removeFrom(node,c);
+                        case OwnedByNext: break;
+                    }
+                }
+                return false; // too high
+                
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        bool LeadingChars:: removeFrom(Leading *node, const uint8_t c )
+        {
+            assert(node);
+            assert(node->owns(c));
             
+            return true;
         }
 
         
