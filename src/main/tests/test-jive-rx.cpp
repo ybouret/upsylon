@@ -45,6 +45,11 @@ Y_UTEST(jive_rx)
         q->save_to("rx2.bin");
         q->graphViz("rx2.dot");
         Y_CHECK(*p==*q);
+        std::cerr << "---> ignore case" << std::endl;
+        auto_ptr<Pattern> r = Pattern::IgnoreCase(p.content());
+        r->save_to("ign.bin");
+        r->graphViz("ign.dot");
+
     }
     
 }

@@ -56,6 +56,7 @@ namespace upsylon {
                 return pMotif ? & (**pMotif) : NULL;
             }
 
+            //! auto generation of patterns
             template <typename NAME,typename REGEXP> inline
             bool use(const NAME &id, const REGEXP &rx)
             {
