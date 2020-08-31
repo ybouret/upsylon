@@ -42,11 +42,13 @@ namespace upsylon {
             // query
             //
             //------------------------------------------------------------------
-            static bool     exists(const string &id); //!< query internal database
-            static bool     exists(const char   *id); //!< query internal database
-            static Pattern *create(const string &id); //!< create a new pattern
-            static Pattern *create(const char   *id); //!< create a new pattern
-            static const Vizible &root();             //!< root node of internal database
+            static bool     exists(const string &id) throw(); //!< query internal database
+            static bool     exists(const char   *id) throw(); //!< query internal database
+            static Pattern *create(const string &id);         //!< create a new pattern
+            static Pattern *create(const char   *id);         //!< create a new pattern
+            static Pattern *query(const string &id);          //!< try to create a new pattern
+            static Pattern *query(const char   *id);          //!< try to create a new pattern
+            static const Vizible &root();                     //!< root node of internal database
         };
 
     }

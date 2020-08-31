@@ -457,7 +457,7 @@ case 't': return Single::Create('\t')
                 //
                 //
                 //--------------------------------------------------------------
-                inline Logical *cluster()
+                inline Pattern *cluster()
                 {
                     auto_ptr<Logical> p = 0;
                     Y_RX_PRINTLN("<cluster>");
@@ -472,6 +472,7 @@ case 't': return Single::Create('\t')
                         const char C = *curr;
                         switch(C)
                         {
+                            case COLON: return Posix();
                             case CARET: p = None::Create(); ++curr; break;
                             case DASH:  p = Or::Create(); p->add(DASH); ++curr; break;
                             default:    p = Or::Create(); break;
@@ -506,7 +507,48 @@ case 't': return Single::Create('\t')
                     Y_RX_PRINTLN("<cluster/>");
                     return p.yield();
                 }
-                
+
+                //--------------------------------------------------------------
+                //
+                //
+                // get a posix patter
+                //
+                //
+                //--------------------------------------------------------------
+                Pattern *Posix()
+                {
+                    assert(curr[-1]==LBRACK);
+                    assert(curr[ 0]==COLON);
+
+                    //----------------------------------------------------------
+                    //
+                    // loop to end of id
+                    //
+                    //----------------------------------------------------------
+
+                    const char *org  = ++curr;
+                    const char *next = curr+1;
+                    while(next<last)
+                    {
+                        if( (COLON==*curr) && (RBRACK==*next) )
+                        {
+                            //--------------------------------------------------
+                            // found
+                            //--------------------------------------------------
+                            const string id(org,curr-org);
+                            Y_RX_PRINTLN("<posix ID=:" << id << ":>");
+                            Pattern *p = posix::query(id);
+                            if(!p) throw exception("%sno posix [:%s:] in '%s'",fn,*id,expr);
+                            curr += 2;
+                            return p;
+                        }
+                        ++curr;
+                        ++next;
+                    }
+                    throw exception("%sunfinished posix ID in '%s",fn,expr);
+
+                }
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RegExpCompiler);

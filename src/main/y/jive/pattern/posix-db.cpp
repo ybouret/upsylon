@@ -62,17 +62,18 @@ namespace upsylon {
         }
         Y_SINGLETON_IMPL(Jive::PosixDB);
 
-        bool posix:: exists(const string &id)
+        bool posix:: exists(const string &id) throw()
         {
             static const PosixDB &db = PosixDB::instance();
             Y_LOCK(db.access);
             return db.search_by(id);
         }
 
-        bool posix:: exists(const char *id)
+        bool posix:: exists(const char *id) throw()
         {
-            const string _(id);
-            return exists(_);
+            static const PosixDB &db = PosixDB::instance();
+            Y_LOCK(db.access);
+            return db.search_by(id);
         }
 
 
@@ -97,6 +98,30 @@ namespace upsylon {
             static const PosixDB &db = PosixDB::instance();
             return db.get_root();
         }
+
+        Pattern *posix:: query(const string &id)
+        {
+            static const PosixDB &db = PosixDB::instance();
+            Y_LOCK(db.access);
+            const creator *proc = db.search_by(id);
+            if(!proc)
+            {
+                return NULL;
+            }
+            else
+            {
+                assert(*proc);
+                return (*proc)();
+            }
+        }
+
+        Pattern *posix:: query(const char *id)
+        {
+            const string _(id);
+            return query(_);
+        }
+
+
     }
 
 }
