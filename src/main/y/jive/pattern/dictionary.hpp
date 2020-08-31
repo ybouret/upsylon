@@ -3,7 +3,7 @@
 #ifndef Y_JIVE_PATTERN_DICT_INCLUDED
 #define Y_JIVE_PATTERN_DICT_INCLUDED 1
 
-#include "y/jive/pattern.hpp"
+#include "y/jive/regexp.hpp"
 #include "y/associative/suffix/tree.hpp"
 
 namespace upsylon {
@@ -40,7 +40,7 @@ namespace upsylon {
             //__________________________________________________________________
 
             //! generic secured insertion of a new pattern
-            template <typename NAME>
+            template <typename NAME> inline
             bool insert(const NAME &id, Pattern *p)
             {
                 assert(p);
@@ -49,16 +49,23 @@ namespace upsylon {
             }
 
             //! search const pattern
-            template <typename NAME>
+            template <typename NAME> inline
             const Pattern *search(const NAME &id) const throw()
             {
                 const Motif *pMotif = search_by(id);
                 return pMotif ? & (**pMotif) : NULL;
             }
 
+            template <typename NAME,typename REGEXP> inline
+            bool use(const NAME &id, const REGEXP &rx)
+            {
+                return insert(id, RegExp(rx,this) );
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dictionary);
+
         };
 
     }

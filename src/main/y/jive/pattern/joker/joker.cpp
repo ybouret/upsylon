@@ -43,8 +43,10 @@ namespace upsylon
 
         void Joker:: optimize() throw()
         {
-            Pattern &p = aliasing::_(*motif);
-            p.optimize();
+            Pattern *p = & aliasing::_(*motif);
+            p->optimize();
+            const Motif opt = Optimize( p );
+            aliasing::_(motif) = opt;
         }
 
     }

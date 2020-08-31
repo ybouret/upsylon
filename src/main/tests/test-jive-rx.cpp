@@ -1,5 +1,4 @@
 
-#include "y/jive/regexp.hpp"
 #include "y/jive/pattern/dictionary.hpp"
 #include "y/jive/pattern/all.hpp"
 #include "y/jive/pattern/posix.hpp"
@@ -20,9 +19,13 @@ Y_UTEST(jive_rx)
         q->optimize();
         q->graphViz("endl2.dot");
     }
-    Dictionary  dict;
+    Dictionary        dict;
     RegExpVerbose() = true;
-    if(!dict.insert( "INT", Repeating::Create( posix::digit(), 1) ))
+    if(!dict.use("DIGIT","[:digit:]"))
+    {
+        throw exception("couldn't insert DIGIT");
+    }
+    if(!dict.use("INT","{DIGIT}+"))
     {
         throw exception("couldn't insert INT");
     }
