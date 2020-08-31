@@ -58,7 +58,7 @@ Y_UTEST(jive_rx)
         {
             const string  fileName = argv[2];
             const string  baseName = vfs::get_base_name(fileName);
-            ios::icstream fp(argv[2]);
+            ios::icstream fp(fileName);
             string        line;
             unsigned      iline=1;
             while( (std::cerr << "> ").flush(),fp.gets(line) )
