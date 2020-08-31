@@ -91,10 +91,10 @@ namespace upsylon {
             //
             // helpers
             //__________________________________________________________________
-            static Pattern *Load(ios::istream &);         //!< load pattern from stream
-            static Pattern *Optimize(Pattern  *) throw(); //!< optimize pattern
-            void   test(Source &source) const;            //!< perform test on source
-            static ios::ostream &Code(ios::ostream &fp, const uint8_t);
+            static Pattern *Load(ios::istream &);                       //!< load pattern from stream
+            static Pattern *Optimize(Pattern  *) throw();               //!< optimize pattern
+            void   test(Source &source) const;                          //!< perform test on source
+            static ios::ostream &Code(ios::ostream &fp, const uint8_t); //!< emity visible code
            
             //! cast
             template <typename T> inline T *as() throw()

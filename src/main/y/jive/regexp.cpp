@@ -299,9 +299,9 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 //
                                 //----------------------------------------------
                                 if(!dict) throw exception("%sno dictionary for alias '%s' in '%s'",fn,*ctx,expr);
-                                const Motif *ppp = dict->search_by(ctx);
-                                if(!ppp)  throw exception("%sno entry '%s' in dictionary for '%s'",fn,*ctx,expr);
-                                p.push_back( (**ppp).clone() );
+                                const Pattern *alias = dict->search(ctx);
+                                if(!alias)  throw exception("%sno entry '%s' in dictionary for '%s'",fn,*ctx,expr);
+                                p.push_back( alias->clone() );
                             }
                             //--------------------------------------------------
                             //

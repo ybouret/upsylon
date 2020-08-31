@@ -33,7 +33,13 @@ namespace upsylon {
             //__________________________________________________________________
             explicit Dictionary();         //!< setup
             virtual ~Dictionary() throw(); //!< cleanup
-            
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
+            //! generic secured insertion of a new pattern
             template <typename NAME>
             bool insert(const NAME &id, Pattern *p)
             {
@@ -41,7 +47,15 @@ namespace upsylon {
                 const Motif m(p);
                 return insert_by(id,m);
             }
-            
+
+            //! search const pattern
+            template <typename NAME>
+            const Pattern *search(const NAME &id) const throw()
+            {
+                const Motif *pMotif = search_by(id);
+                return pMotif ? & (**pMotif) : NULL;
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Dictionary);
