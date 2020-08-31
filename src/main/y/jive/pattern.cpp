@@ -37,24 +37,18 @@ namespace upsylon {
             return !feeble();
         }
 
-        bool Pattern:: Eq(const Pattern &lhs, const Pattern &rhs)
-        {
-            if(lhs.uuid!=rhs.uuid)
-            {
-                return false;
-            }
-            else
-            {
-                const string L = lhs.to_binary();
-                const string R = rhs.to_binary();
-                return L==R;
-            }
-        }
+    
 
         bool  operator==(const Pattern &lhs, const Pattern &rhs)
         {
-            return Pattern::Eq(lhs,rhs);
+            return Pattern::AreEqual(lhs,rhs);
         }
+
+        bool  operator!=(const Pattern &lhs, const Pattern &rhs)
+        {
+            return !Pattern::AreEqual(lhs,rhs);
+        }
+
 
         double Pattern:: entropy() const throw()
         {

@@ -74,9 +74,9 @@ namespace upsylon {
             //
             // non-virtual interface
             //__________________________________________________________________
-            bool   strong()  const throw(); //!< !feeble()
-            double entropy() const throw(); //!< compute internal entropy
-            string toRegExp() const;        //!< uses express
+            bool     strong()  const throw(); //!< !feeble()
+            double   entropy() const throw(); //!< compute internal entropy
+            string   toRegExp() const;        //!< uses express
             
             //__________________________________________________________________
             //
@@ -113,9 +113,9 @@ namespace upsylon {
             template <typename T> inline bool is() const throw() { return T::UUID == uuid; }
 
 
-            static bool Eq(const Pattern &, const Pattern &);        //!< equality (TODO: optimize!!!)
-            friend bool operator==(const Pattern &, const Pattern&); //!< uses Eq
-            friend bool operator!=(const Pattern &, const Pattern&); //!< uses Eq
+            friend bool operator==(const Pattern &, const Pattern&); //!< uses AreEqual
+            friend bool operator!=(const Pattern &, const Pattern&); //!< uses AreEqual
+            static bool AreEqual(const Pattern &, const Pattern &); //!< equality (TODO: optimize!!!)
 
         protected:
             explicit Pattern(const uint32_t) throw();  //!< setup uuid
