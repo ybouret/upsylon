@@ -341,7 +341,7 @@ head = tail = node; increase_size()
             }
 
             //! insertion of yours after mine
-            inline void insert_after(NODE *mine, NODE *yours) throw()
+            inline NODE * insert_after(NODE *mine, NODE *yours) throw()
             {
                 assert( size>0     );
                 assert( owns(mine) );
@@ -359,10 +359,11 @@ head = tail = node; increase_size()
                     next->prev = yours; yours->next = next;
                     increase_size();
                 }
+                return yours; // which is mine, now
             }
 
             //! insertion of yours before mine
-            inline void insert_before(NODE *mine, NODE *yours) throw()
+            inline NODE *insert_before(NODE *mine, NODE *yours) throw()
             {
                 assert( size>0     );
                 assert( owns(mine) );
@@ -380,6 +381,7 @@ head = tail = node; increase_size()
                     prev->next = yours; yours->prev = prev;
                     increase_size();
                 }
+                return yours; // which is mine now
             }
 
             //! move toward tail

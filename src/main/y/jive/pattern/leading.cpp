@@ -221,28 +221,66 @@ namespace upsylon {
             //------------------------------------------------------------------
             // check if before first node
             //------------------------------------------------------------------
-
-            const Leading *node = lead.head;
-            switch(node->whose(c))
+            Leading *curr = lead.head;
+            switch(curr->whose(c))
             {
                 case OwnedByThis: return; // already inserted
                 case OwnedByNext: break;  // after head
                 case OwnedByPrev: {
                     const Leading *lhs = lead.push_front( new Leading(c) );
-                    Leading       *mrg = Leading::TryMerge(lhs,node);
+                    Leading       *mrg = Leading::TryMerge(lhs,curr);
                     if(mrg)
                     {
                         assert(lead.size>=2);
                         delete lead.pop_front();
                         delete lead.pop_front();
                         lead.push_front(mrg);
-                        ++aliasing::_(size);
                     }
+                    ++aliasing::_(size);
                 } return;
             }
             
             
-            
+            //------------------------------------------------------------------
+            // bracket
+            //------------------------------------------------------------------
+            assert( curr==lead.head );
+            assert( ! curr->owns(c) );
+            Leading *next = curr->next;
+            while(next)
+            {
+                switch(next->whose(c))
+                {
+                    case OwnedByThis: return; // already inserted
+                    case OwnedByNext: break;  // step forward
+                        
+                    case OwnedByPrev:
+                    {
+                        Leading *node = lead.insert_after(curr,new Leading(c));
+                        assert(node->prev==curr);
+                        assert(curr->next==node);
+                        assert(node->next==next);
+                        assert(next->prev==node);
+                        ++aliasing::_(size);
+                    } return;
+                }
+                curr = next;
+                next = next->next;
+            }
+
+            assert(curr==lead.tail);
+            {
+                const Leading *rhs = lead.push_back( new Leading(c) );
+                Leading       *mrg = Leading::TryMerge(curr,rhs);
+                if(mrg)
+                {
+                    assert(lead.size>=2);
+                    delete lead.pop_back();
+                    delete lead.pop_back();
+                    lead.push_back(mrg);
+                }
+                ++aliasing::_(size);
+            }
             
         }
 
