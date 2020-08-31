@@ -505,6 +505,15 @@ case 't': return Single::Create('\t')
 
                 END_OF_CLUSTER:
                     Y_RX_PRINTLN("<cluster/>");
+                    if(p->size<=0)
+                    {
+                        switch(p->uuid)
+                        {
+                            case None::UUID: return Any::Create();
+                            default: break;
+                        }
+                        throw exception("%sillegal empty cluster in '%s'",fn,expr);
+                    }
                     return p.yield();
                 }
 
