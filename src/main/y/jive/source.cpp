@@ -94,6 +94,22 @@ namespace upsylon {
             }
         }
 
+        void Source:: skip() throw()
+        {
+            assert(cache.size>0);
+            Char::Release( cache.pop_front() );
+        }
+
+        void Source:: skip(size_t n) throw()
+        {
+            assert(cache.size>=n);
+            while(n-- > 0 )
+            {
+                assert(cache.size>0);
+                Char::Release( cache.pop_front() );
+            }
+        }
+
 
     }
 

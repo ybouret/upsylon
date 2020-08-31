@@ -88,7 +88,6 @@ namespace upsylon
         
     private:
         Y_DISABLE_ASSIGN(ordered);
-        //virtual const_type & getObjectAt(const size_t indx) const throw() = 0;
     };
     
     //! use an ordered container to build a multiple ordered container

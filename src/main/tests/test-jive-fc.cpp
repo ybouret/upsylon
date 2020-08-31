@@ -7,6 +7,11 @@
 using namespace upsylon;
 using namespace Jive;
 
+namespace {
+
+
+}
+
 Y_UTEST(jive_fc)
 {
 
@@ -16,5 +21,6 @@ Y_UTEST(jive_fc)
     fc.free();
     std::cerr << "fc=" << fc << std::endl;
 
+    
 }
 Y_UTEST_DONE()

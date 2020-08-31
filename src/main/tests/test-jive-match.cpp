@@ -25,7 +25,9 @@ Y_UTEST(jive_match)
             while( (std::cerr << "> ").flush(),fp.gets(line) )
             {
                 const string dataName = baseName + vformat(":%u: ",iline);
-                Source       source( Module::OpenData(dataName,line) );
+                std::cerr << "---> " << line << std::endl;
+                std::cerr << "|_exactly: " << match.exactly(dataName,line) << std::endl;
+
                 ++iline;
             }
         }

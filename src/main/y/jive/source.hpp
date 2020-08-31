@@ -11,6 +11,9 @@ namespace upsylon {
 
     namespace Jive
     {
+
+        class FirstChars; //!< forward declaration
+
         //______________________________________________________________________
         //
         //
@@ -40,6 +43,9 @@ namespace upsylon {
             size_t depth() const throw();      //!< sizeof history
             size_t in_cache() const throw();   //!< cache.size
             bool   alive();                    //!< found a readable char
+            void   skip() throw();             //!< assert(cache.size>0);
+            void   skip(size_t n) throw();     //!< assert(cache.size>=n);
+            bool   find(const FirstChars &);   //!< forward up to firt Chars
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);
