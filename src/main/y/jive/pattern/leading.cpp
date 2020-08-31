@@ -81,7 +81,7 @@ namespace upsylon {
             return os;
         }
         
-        bool Leading:: owns(const char c) const throw()
+        bool Leading:: owns(const uint8_t c) const throw()
         {
             switch(kind)
             {
@@ -94,7 +94,7 @@ namespace upsylon {
             return false;
         }
 
-        OwnerShip Leading:: whose(const char c) const throw()
+        OwnerShip Leading:: whose(const uint8_t c) const throw()
         {
             switch(kind)
             {
@@ -135,7 +135,7 @@ namespace upsylon {
         
         }
         
-#define YJL_STATUS(A,B) ( (A<<Leading::SHL) | B )
+#define YJL_STATUS(A,B) ( ( unsigned(A)<<Leading::SHL) | unsigned(B) )
         Leading *Leading:: TryMerge(const Leading *lhs, const Leading *rhs)
         {
             assert(lhs);
@@ -180,6 +180,38 @@ namespace upsylon {
             }
             return NULL;
         }
+        
+        bool Leading::AreApart(const Leading *lhs, const Leading *rhs) throw()
+        {
+            assert(lhs);
+            assert(rhs);
+            switch( YJL_STATUS(lhs->kind,rhs->kind) )
+            {
+                case YJL_STATUS(Byte,Byte):
+                    assert(lhs->code<rhs->code);
+                    return rhs->code-lhs->code>1;
+                    
+                case YJL_STATUS(Byte,Tier):
+                    assert(lhs->code<rhs->lower);
+                    return rhs->lower-lhs->code>1;
+                    
+                    
+                case YJL_STATUS(Tier,Byte):
+                    assert(lhs->upper<rhs->code);
+                    return rhs->code-lhs->upper>1;
+                    
+                    
+                case YJL_STATUS(Tier,Tier):
+                    assert(lhs->upper<rhs->lower);
+                    return rhs->lower-rhs->upper>1;
+                    
+                default:
+                    assert( die("never get here") );
+                    break;
+            }
+            return true;
+        }
+
         
         void Leading::Compact3(Leading::List &L, Leading *a, Leading *b, Leading *c)
         {
@@ -242,13 +274,19 @@ namespace upsylon {
         {
             assert(check());
             
+            //------------------------------------------------------------------
+            // study status
+            //------------------------------------------------------------------
             switch(size)
             {
                 case 0:
                     assert(0==lead.size);
-                    lead.push_back( new Leading(c) );
+                    lead.push_front( new Leading(c) );
                     ++aliasing::_(size);
                     assert( check() );
+                    assert(1==size);
+                    assert(1==lead.size);
+                    assert(lead.head->owns(c));
                     return;
                     
                 case 256:
@@ -267,7 +305,7 @@ namespace upsylon {
             Leading *curr = lead.head;
             switch(curr->whose(c))
             {
-                case OwnedByThis: return; // already inserted
+                case OwnedByThis: assert(curr->owns(c)); return; // already inserted
                 case OwnedByNext: break;  // after head
                 case OwnedByPrev: {
                     const Leading *lhs = lead.push_front( new Leading(c) );
@@ -278,6 +316,10 @@ namespace upsylon {
                         delete lead.pop_front();
                         delete lead.pop_front();
                         lead.push_front(mrg);
+                    }
+                    else
+                    {
+                        assert( Leading::AreApart(lhs,curr) );
                     }
                     ++aliasing::_(size);
                     assert( check() );
@@ -295,7 +337,7 @@ namespace upsylon {
             {
                 switch(next->whose(c))
                 {
-                    case OwnedByThis: return; // already inserted
+                    case OwnedByThis: assert(next->owns(c)); return; // already inserted
                     case OwnedByNext: break;  // step forward
                         
                     case OwnedByPrev:
@@ -313,7 +355,11 @@ namespace upsylon {
                 curr = next;
                 next = next->next;
             }
-
+            
+            //------------------------------------------------------------------
+            // append after tail
+            //------------------------------------------------------------------
+            
             assert(curr==lead.tail);
             {
                 const Leading *rhs = lead.push_back( new Leading(c) );
@@ -324,6 +370,10 @@ namespace upsylon {
                     delete lead.pop_back();
                     delete lead.pop_back();
                     lead.push_back(mrg);
+                }
+                else
+                {
+                    assert( Leading::AreApart(curr,rhs) );
                 }
                 ++aliasing::_(size);
                 assert( check() );
@@ -336,7 +386,21 @@ namespace upsylon {
         {
             lead.release();
             aliasing::_(size) = 0;
+            assert(lead.size<=0);
         }
+        
+        void LeadingChars:: complete()
+        {
+            release();
+            lead.push_back( new Leading(0x00,0xff) );
+            aliasing::_(size) = 1;
+        }
+        
+        void LeadingChars:: remove(const uint8_t c)
+        {
+            
+        }
+
         
     }
     

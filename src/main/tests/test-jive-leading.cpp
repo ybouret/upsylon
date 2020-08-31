@@ -39,6 +39,26 @@ Y_UTEST(jive_leading)
     }
     std::cerr << "L=" << L << std::endl;
     
+    L.release();
+    std::cerr << "L=" << L << std::endl;
+    L.complete();
+    std::cerr << "L=" << L << std::endl;
+   
+    {
+        L.release();
+        uint8_t ch[256];
+        for(int i=0;i<256;++i)
+        {
+            ch[i] = uint8_t(i);
+        }
+        alea.shuffle(ch,256);
+        for(int i=0;i<256;++i)
+        {
+            L.insert(ch[i]);
+        }
+        std::cerr << "L=" << L << std::endl;
+    }
+    
     
 }
 Y_UTEST_DONE()
