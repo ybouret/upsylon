@@ -183,7 +183,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 //
                                 //----------------------------------------------
                             case '\\':
-                                p->push_back( esc() );
+                                p->push_back( compileEscape() );
                                 break;
                             
                                 
@@ -230,11 +230,10 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //--------------------------------------------------------------
                 //
                 //
-                // braces
+                // braces joker
                 //
                 //
                 //--------------------------------------------------------------
-               
                 void braces(Logical &p)
                 {
                     assert(*curr==LBRACE);
@@ -354,23 +353,32 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 //
                 //--------------------------------------------------------------
                 
-                Pattern *escHexa()
+                Pattern *hexadecimalEscape()
                 {
                     assert('x' ==curr[-1]);
                     assert('\\'==curr[-2]);
+                    //----------------------------------------------------------
                     // get hi
+                    //----------------------------------------------------------
                     if(curr>=last) throw exception("%smissing first escaped hexa in '%s'",fn,expr);
                     const int hi = hexadecimal::to_decimal(*curr);
                     if(hi<0) throw exception("%sinvalid first escaped hexa '%s' in '%s'",fn, cchars::visible[uint8_t(*curr)],expr);
-                    
+
+                    //----------------------------------------------------------
                     // get lo
+                    //----------------------------------------------------------
                     if(++curr>=last) throw exception("%smissing second escaped hexa in '%s'",fn,expr);
                     const int lo = hexadecimal::to_decimal(*curr);
                     if(lo<0) throw exception("%sinvalid second escaped hexa '%s' in '%s'",fn, cchars::visible[uint8_t(*curr)],expr);
 
-                    // skip lo
+                    //----------------------------------------------------------
+                    // skip lo char
+                    //----------------------------------------------------------
                     ++curr;
-                    
+
+                    //----------------------------------------------------------
+                    // build code
+                    //----------------------------------------------------------
                     return Single::Create( (hi<<4) | lo );
                 }
                 
@@ -385,14 +393,14 @@ case 'n': return Single::Create('\n'); \
 case 'r': return Single::Create('\r'); \
 case 't': return Single::Create('\t')
                 
-                Pattern *esc()
+                Pattern *compileEscape()
                 {
                     assert(*curr=='\\');
                     if(++curr>=last) throw exception("%sunfinished escaped sequence in '%s'",fn,expr);
                     const char C = *(curr++);
                     switch(C)
                     {
-                        case  'x': return escHexa();
+                        case  'x': return hexadecimalEscape();
                         case '\\':
                         case  '+':
                         case  '*':
