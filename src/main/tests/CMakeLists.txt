@@ -372,7 +372,7 @@ ADD_TEST(jive:patterns test-main jive_patterns)
 ADD_TEST(jive:rework   test-main jive_rework)
 ADD_TEST(jive:posix    test-main jive_posix)
 ADD_TEST(jive:opt      test-main jive_opt)
-ADD_TEST(jive:rx       test-main jive_rx)
+ADD_TEST(jive:rx       test-main jive_rx "{INT}" ${HERE}/1000.txt)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
