@@ -1,6 +1,7 @@
 
 
 #include "y/jive/pattern/joker/optional.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
@@ -10,7 +11,7 @@ namespace upsylon {
 
         Optional:: ~Optional() throw() {}
 
-        Optional::  Optional(const Motif &m) throw() : Joker(UUID,m)
+        Optional::  Optional(const Pattern *m) throw() : Joker(UUID,m)
         {
             Y_PATTERN_SELF(Optional);
         }
@@ -29,8 +30,10 @@ namespace upsylon {
 
         Optional     * Optional:: Create(Pattern *p)
         {
-            const Motif m(p);
-            return new Optional(m);
+            auto_ptr<Pattern> guard(p);
+            Optional *ans = new Optional(p);
+            guard.dismiss();
+            return ans;
         }
 
 

@@ -32,7 +32,7 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Motif motif; //!< the motif which is tested
+            const Pattern * const motif; //!< the motif which is tested
 
             //__________________________________________________________________
             //
@@ -44,7 +44,7 @@ namespace upsylon
 
 
         protected:
-            explicit Joker(const uint32_t, const Motif &) throw(); //!< setup
+            explicit Joker(const uint32_t, const Pattern *) throw(); //!< setup
             explicit Joker(const Joker&);                          //!< copy
 
             //! write motif and link to it

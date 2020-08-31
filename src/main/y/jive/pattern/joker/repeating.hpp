@@ -64,7 +64,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(Repeating);
-            explicit Repeating(const Motif     &, const size_t) throw();
+            explicit Repeating(const Pattern   *, const size_t) throw();
             explicit Repeating(const Repeating &) throw();
             virtual void vizCore(ios::ostream  &) const;
         };

@@ -10,7 +10,7 @@ namespace upsylon {
 
         Counting:: ~Counting() throw() {}
 
-        Counting::  Counting(const Motif &m, const size_t nmin, const size_t nmax) throw() :
+        Counting::  Counting(const Pattern *m, const size_t nmin, const size_t nmax) throw() :
         Joker(UUID,m),
         minCount(nmin),
         maxCount(nmax)
@@ -139,8 +139,9 @@ namespace upsylon {
                         break;
                 }
             }
-            const Motif m( q.yield() );
-            return new Counting(m,nmin,nmax);
+            Counting *ans = new Counting(p,nmin,nmax);
+            q.dismiss();
+            return ans;
 
         }
 

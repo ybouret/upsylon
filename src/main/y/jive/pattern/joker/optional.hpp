@@ -54,7 +54,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(Optional);
-            explicit Optional(const Motif   &) throw();
+            explicit Optional(const Pattern *) throw();
             explicit Optional(const Optional&) throw();
             virtual void vizCore(ios::ostream &) const;
         };

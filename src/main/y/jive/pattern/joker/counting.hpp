@@ -60,7 +60,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(Counting);
-            explicit Counting(const Motif     &, const size_t, const size_t) throw();
+            explicit Counting(const Pattern *, const size_t, const size_t) throw();
             explicit Counting(const Counting   &) throw();
             virtual void vizCore(ios::ostream  &) const;
         };

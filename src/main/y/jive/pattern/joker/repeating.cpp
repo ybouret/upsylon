@@ -3,6 +3,7 @@
 
 #include "y/jive/pattern/joker/repeating.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon {
 
@@ -15,7 +16,7 @@ namespace upsylon {
 
         Repeating:: ~Repeating() throw() {}
 
-        Repeating::  Repeating(const Motif &m, const size_t n) throw() :
+        Repeating::  Repeating(const Pattern *m, const size_t n) throw() :
         Joker(UUID,m),
         minCount(n)
         {
@@ -37,8 +38,10 @@ namespace upsylon {
 
         Repeating     * Repeating:: Create(Pattern *p, const size_t n)
         {
-            const Motif m(p);
-            return new Repeating(m,n);
+            auto_ptr<Pattern> guard(p);
+            Repeating *ans = new Repeating(p,n);
+            guard.dismiss();
+            return ans;
         }
 
 

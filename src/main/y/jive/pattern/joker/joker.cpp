@@ -8,10 +8,12 @@ namespace upsylon
     {
         Joker:: ~Joker() throw()
         {
-
+            assert(motif);
+            delete (Pattern *)motif;
+            aliasing::_(motif) = 0;
         }
 
-        Joker:: Joker(const uint32_t t, const Motif &m) throw() :
+        Joker:: Joker(const uint32_t t, const Pattern *m) throw() :
         Pattern(t),
         motif(m)
         {
@@ -43,10 +45,7 @@ namespace upsylon
 
         void Joker:: optimize() throw()
         {
-            Pattern *p = & aliasing::_(*motif);
-            p->optimize();
-            const Motif opt = Optimize( p );
-            aliasing::_(motif) = opt;
+            aliasing::_(motif) = Optimize( (Pattern *)motif );
         }
 
     }
