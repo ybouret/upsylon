@@ -546,11 +546,11 @@ case 't': return Single::Create('\t')
                     const char C = *(curr++);
                     switch(C)
                     {
-                        case  'x': return hexadecimalEscape();
-                        case '\\':
-                        case  CARET:
-                        case  DASH:
-                        case  COLON:
+                        case  'x'   : return hexadecimalEscape();
+                        case '\\'   :
+                        case  CARET :
+                        case  DASH  :
+                        case  COLON :
                         case  LBRACK:
                         case  RBRACK:
                             return Single::Create(C);
@@ -580,7 +580,6 @@ case 't': return Single::Create('\t')
                     // loop to end of id
                     //
                     //----------------------------------------------------------
-
                     const char *org  = ++curr;
                     const char *next = curr+1;
                     while(next<last)
@@ -601,7 +600,6 @@ case 't': return Single::Create('\t')
                         ++next;
                     }
                     throw exception("%sunfinished posix ID in '%s",fn,expr);
-
                 }
 
                 
