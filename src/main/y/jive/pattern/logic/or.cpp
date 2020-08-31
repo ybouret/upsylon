@@ -161,21 +161,27 @@ namespace upsylon
     namespace Jive
     {
 
+        Pattern * Logical:: Among(const char *buffer, size_t buflen)
+        {
+            assert(!(NULL==buffer&&buflen>0));
+
+            auto_ptr<Or> p = Or::Create();
+            while(buflen-- > 0 )
+            {
+                p->push_back( Single::Create(*(buffer++)) );
+            }
+            return Optimize( p.yield() );
+        }
+
+
         Pattern * Logical:: Among(const string &s)
         {
-            auto_ptr<Or> p = Or::Create();
-            for(size_t i=s.size();i>0;)
-            {
-                p->push_front( Single::Create(s[--i]) );
-            }
-            p->rework();
-            return p.yield();
+            return Among(*s,s.size());
         }
 
         Pattern * Logical:: Among( const char *s )
         {
-            const string _(s);
-            return Among(_);
+            return Among(s,length_of(s));
         }
     }
 }

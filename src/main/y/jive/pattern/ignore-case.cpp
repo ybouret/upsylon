@@ -11,6 +11,8 @@ namespace upsylon {
 
         namespace {
 
+
+
             template <typename T> Pattern * __ign(const T *p);
 
 
@@ -33,7 +35,6 @@ namespace upsylon {
             {
                 for(const Pattern *op=source.head;op;op=op->next)
                 {
-                    //target.push_back( op->clone() );
                     target.push_back( Pattern::IgnoreCase(op) );
                 }
             }
@@ -45,7 +46,16 @@ namespace upsylon {
                 return Pattern::Optimize( q.yield() );
             }
 
-
+            static inline void fill_ign( Operands &ops, const char C )
+            {
+                ops.push_back( Single::Create(C) );
+                switch(cchars::case_of(C))
+                {
+                    case lowercase: ops.push_back( Single::Create( cchars::to_upper(C) ) ); break;
+                    case uppercase: ops.push_back( Single::Create( cchars::to_lower(C) ) ); break;
+                    case case_none: break;
+                }
+            }
 
         }
 
@@ -59,19 +69,32 @@ namespace upsylon {
             {
                 case Any   :: UUID: return p->clone();
 
-                case Single:: UUID: {
-                    auto_ptr<Or> q = Or::Create();
-                    const char   C = p->as<Single>()->code;
-                    q->add( char(tolower(C)) );
-                    q->add( char(toupper(C)) );
-                    return Pattern::Optimize(q.yield()); }
+                case Single:: UUID:
+                {
+                    const Single *my = p->as<Single>();
+                    const char    C  = my->code;
+                    char          ch[4] = { C,0,0,0 };
+                    switch(cchars::case_of(C))
+                    {
+                        case case_none: return p->clone();
+                        case lowercase: ch[1] = cchars::to_upper(C); break;
+                        case uppercase: ch[1] = cchars::to_lower(C); break;
+                    }
+                    return Logical::Among(ch,2);
+                }
 
                 case Exclude:: UUID: {
-                    auto_ptr<None> q = None::Create();
-                    const char     C = p->as<Exclude>()->code;
-                    q->add( char(tolower(C)) );
-                    q->add( char(toupper(C)) );
-                    return Pattern::Optimize(q.yield()); }
+                    const Exclude *my = p->as<Exclude>();
+                    const char     C  = my->code;
+                    char           ch[4] = { C,0,0,0 };
+                    switch(cchars::case_of(C))
+                    {
+                        case case_none: return p->clone();
+                        case lowercase: ch[1] = cchars::to_upper(C); break;
+                        case uppercase: ch[1] = cchars::to_lower(C); break;
+                    }
+                    return Logical::Avoid(ch,2);
+                }
 
                 case Range:: UUID: {
                     auto_ptr<Or> q = Or::Create();
@@ -79,10 +102,10 @@ namespace upsylon {
                     const int hi = p->as<Range>()->upper;
                     for(int code=lo;code<=hi;++code)
                     {
-                        q->add( char(tolower(code)) );
-                        q->add( char(toupper(code)) );
+                        fill_ign(*q,char(code));
                     }
-                    return Pattern::Optimize(q.yield()); }
+                    return Pattern::Optimize(q.yield());
+                }
 
                     Y_JIVE_IGN_LOGIC(And);
                     Y_JIVE_IGN_LOGIC(Or);

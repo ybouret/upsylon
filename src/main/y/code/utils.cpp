@@ -168,5 +168,42 @@ namespace upsylon
         return visible[ uint8_t(C) ];
     }
 
-    
+    case_type cchars:: case_of(const char C) throw()
+    {
+        if(C>='a'&&C<='z')
+        {
+            return lowercase;
+        }
+        else if(C>='A'&&C<='Z')
+        {
+            return uppercase;
+        }
+        else
+            return case_none;
+    }
+
+    char cchars::to_lower(const char C) throw()
+    {
+        if(C>='A'&&C<='Z')
+        {
+            return 'a' + (C-'A');
+        }
+        else
+        {
+            return C;
+        }
+    }
+
+    char cchars::to_upper(const char C) throw()
+    {
+        if(C>='a'&&C<='z')
+        {
+            return 'A' + (C-'a');
+        }
+        else
+        {
+            return C;
+        }
+    }
+
 }

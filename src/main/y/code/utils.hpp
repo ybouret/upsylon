@@ -30,6 +30,14 @@ namespace upsylon
         static char digit(const unsigned fourBits);
     };
 
+    //! detecting case
+    enum case_type
+    {
+        lowercase, //!< islower
+        uppercase, //!< isupper
+        case_none  //!< neutral
+    };
+
     //! some different translation tables
     struct cchars
     {
@@ -37,6 +45,9 @@ namespace upsylon
         static const char *printable[256]; //!< for external programs/compilation
         static const char *encoded[256];   //!< C-string version
         static const char *to_visible(const char C) throw(); //!< visible char
+        static case_type   case_of(const char C)    throw(); //!< check case
+        static char        to_lower(const char C)   throw(); //!< to lowercase
+        static char        to_upper(const char C)   throw(); //!< to uppercase
     };
     
    

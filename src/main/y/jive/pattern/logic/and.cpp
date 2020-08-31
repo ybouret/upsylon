@@ -124,20 +124,27 @@ namespace upsylon
     namespace Jive
     {
 
+        
+        Pattern * Logical:: Equal(const char *buffer, size_t buflen)
+        {
+            assert(!(NULL==buffer&&buflen>0));
+
+            auto_ptr<And> p = And::Create();
+            while(buflen-- > 0 )
+            {
+                p->push_back( Single::Create(*(buffer++)) );
+            }
+            return Optimize( p.yield() );
+        }
+
         Pattern * Logical:: Equal(const string &s)
         {
-            auto_ptr<Logical> p = And::Create();
-            for(size_t i=s.size();i>0;)
-            {
-                p->push_front( Single::Create(s[--i]) );
-            }
-            return p.yield();
+            return Equal(*s,s.size());
         }
 
         Pattern * Logical:: Equal( const char *s )
         {
-            const string _(s);
-            return Equal(_);
+            return Equal(s,length_of(s));
         }
     }
 }

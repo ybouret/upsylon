@@ -85,11 +85,7 @@ namespace upsylon {
             }
         }
 
-        void None:: optimize() throw()
-        {
-            applyOptimize();
-            rework();
-        }
+
         
         void None::express(ios::ostream &fp) const
         {
@@ -158,5 +154,75 @@ namespace upsylon {
         }
     }
 
+}
+
+#include "y/ptr/auto.hpp"
+namespace upsylon
+{
+
+    namespace Jive
+    {
+
+        Pattern * Logical:: Avoid(const char *buffer, size_t buflen)
+        {
+            assert(!(NULL==buffer&&buflen>0));
+
+            auto_ptr<None> p = None::Create();
+            while(buflen-- > 0 )
+            {
+                p->push_back( Single::Create(*(buffer++)) );
+            }
+            return Optimize( p.yield() );
+        }
+
+        Pattern * Logical:: Avoid(const string &s)
+        {
+            return Avoid(*s,s.size());
+        }
+
+        Pattern * Logical:: Avoid( const char *s )
+        {
+            return Avoid(s,length_of(s));
+        }
+    }
+}
+
+#include "y/jive/pattern/logic/or.hpp"
+
+namespace upsylon
+{
+
+    namespace Jive
+    {
+
+        void None:: optimize() throw()
+        {
+            // optimize all operands
+            applyOptimize();
+
+            // merge OR
+            {
+                Operands tmp;
+                while(size)
+                {
+                    Pattern *op = pop_front();
+                    if(Or::UUID==op->uuid)
+                    {
+                        tmp.merge_back( *( op->as<Or>() ) );
+                        delete op;
+                    }
+                    else
+                    {
+                        tmp.push_back(op);
+                    }
+                }
+                swap_with(tmp);
+            }
+
+            // rework
+            rework();
+        }
+
+    }
 }
 

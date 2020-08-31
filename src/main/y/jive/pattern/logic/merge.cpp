@@ -20,7 +20,6 @@ namespace upsylon
                     {
                         case Or ::UUID:  ops.merge_back( * op->as<Or>()   );  break;
                         case And::UUID:  ops.merge_back( * op->as<And>()   ); break;
-                        case None::UUID: ops.merge_back( * op->as<None>() );  break;
                         default:
                             fatal_error("Jive:Logical: corrupted uuid!!!");
                             break;

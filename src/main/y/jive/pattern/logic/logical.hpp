@@ -39,11 +39,17 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~Logical() throw(); //!< cleanup
 
+            static Pattern *Among(const char *, size_t); //!< Or(...)
             static Pattern *Among(const string &); //!< Or(...)
             static Pattern *Among(const char   *); //!< Or(...)
 
-            static Pattern *Equal(const string &); //!< And(...)
-            static Pattern *Equal(const char   *); //!< And(...)
+            static Pattern *Equal(const char *, size_t); //!< And(...)
+            static Pattern *Equal(const string &);       //!< And(...)
+            static Pattern *Equal(const char   *);       //!< And(...)
+
+            static Pattern *Avoid(const char *, size_t); //!< None(...)
+            static Pattern *Avoid(const string &);       //!< Non(...)
+            static Pattern *Avoid(const char   *);       //!< None(...)
 
 
         protected:
@@ -56,7 +62,7 @@ namespace upsylon {
             //__________________________________________________________________
             void         vizLink(ios::ostream&) const;        //!< write operands and links
             void         applyOptimize() throw();             //!< optimize all operands
-            void         mergeSameUUID() throw();             //!< merge operands with same UUID
+            void         mergeSameUUID() throw();             //!< merge operands with same UUID (And/Or)
             
         private:
             Y_DISABLE_ASSIGN(Logical);
