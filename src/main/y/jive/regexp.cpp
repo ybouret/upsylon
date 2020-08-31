@@ -362,9 +362,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     }
                     return ans;
                 }
-                
-                
-                
+
                 
                 //--------------------------------------------------------------
                 //
@@ -460,7 +458,6 @@ case 't': return Single::Create('\t')
                 inline Pattern *cluster()
                 {
                     auto_ptr<Logical> p = 0;
-                    Y_RX_PRINTLN("<cluster>");
                     assert(*curr==LBRACK);
                     //----------------------------------------------------------
                     //
@@ -479,7 +476,8 @@ case 't': return Single::Create('\t')
                         }
                     }
                     assert(p.is_valid());
-
+                    Y_RX_PRINTLN("<cluster>");
+                    
                     //----------------------------------------------------------
                     //
                     // loop
@@ -490,9 +488,26 @@ case 't': return Single::Create('\t')
                         const char C = *curr;
                         switch(C)
                         {
+                                //----------------------------------------------
+                                // end of cluster
+                                //----------------------------------------------
                             case RBRACK:
                                 ++curr;
                                 goto END_OF_CLUSTER;
+
+                                //----------------------------------------------
+                                // recursive nested cluster
+                                //----------------------------------------------
+                            case LBRACK:
+                                p->push_back( cluster() );
+                                break;
+
+                                //----------------------------------------------
+                                // escape sequence
+                                //----------------------------------------------
+                            case '\\':
+                                p->push_back(clusterEscape());
+                                break;
 
                             default:
                                 Y_RX_PRINTLN("add '" << cchars::to_visible(C)<< "'");
@@ -520,11 +535,42 @@ case 't': return Single::Create('\t')
                 //--------------------------------------------------------------
                 //
                 //
+                // cluster escape
+                //
+                //
+                //--------------------------------------------------------------
+                inline Pattern *clusterEscape()
+                {
+                    assert(*curr=='\\');
+                    if(++curr>=last) throw exception("%sunfinished escaped sequence in '%s'",fn,expr);
+                    const char C = *(curr++);
+                    switch(C)
+                    {
+                        case  'x': return hexadecimalEscape();
+                        case '\\':
+                        case  CARET:
+                        case  DASH:
+                        case  COLON:
+                        case  LBRACK:
+                        case  RBRACK:
+                            return Single::Create(C);
+
+                            TRY_ESCAPE();
+
+                        default: break;
+                    }
+
+                    throw exception("%sunknown escape sequence \\x%s... in '%s'",fn,cchars::visible[ uint8_t(C) ],expr);
+                }
+
+                //--------------------------------------------------------------
+                //
+                //
                 // get a posix patter
                 //
                 //
                 //--------------------------------------------------------------
-                Pattern *Posix()
+                inline Pattern *Posix()
                 {
                     assert(curr[-1]==LBRACK);
                     assert(curr[ 0]==COLON);

@@ -11,6 +11,15 @@ using namespace Jive;
 
 Y_UTEST(jive_rx)
 {
+    if(false)
+    {
+        auto_ptr<Pattern> p = posix::endl();
+        p->graphViz("endl.dot");
+        auto_ptr<And> q = And::Create();
+        q->push_back( p.yield() );
+        q->optimize();
+        q->graphViz("endl2.dot");
+    }
     Dictionary  dict;
     RegExpVerbose() = true;
     if(!dict.insert( "INT", Repeating::Create( posix::digit(), 1) ))

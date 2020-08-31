@@ -137,7 +137,7 @@ namespace upsylon
         Pattern * Logical:: Equal( const char *s )
         {
             const string _(s);
-            return Among(_);
+            return Equal(_);
         }
     }
 }
