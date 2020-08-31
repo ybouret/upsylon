@@ -439,6 +439,7 @@ case 't': return Single::Create('\t')
                         case  '?':
                         case  '~':
                         case  '.':
+                        case  IGN:
                         case  LPAREN:
                         case  RPAREN:
                         case  LBRACE:
