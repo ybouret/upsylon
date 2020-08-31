@@ -53,6 +53,19 @@ namespace upsylon {
         }
         
         
+        size_t Leading:: count() const throw()
+        {
+            switch(kind)
+            {
+                case Byte: return 1;
+                case Tier: return 1+size_t(upper)-size_t(lower);
+                default:
+                    break;
+            }
+            // never get here
+            return 0;
+        }
+
         std::ostream & operator<<(std::ostream &os, const Leading &l)
         {
             switch(l.kind)
@@ -168,6 +181,34 @@ namespace upsylon {
             return NULL;
         }
         
+        void Leading::Compact3(Leading::List &L, Leading *a, Leading *b, Leading *c)
+        {
+            Leading *ab = TryMerge(a,b);
+            if(ab)
+            {
+                delete L.unlink(a);
+                delete L.replace(b,ab);
+                assert(ab->next==c);
+                assert(c->prev==ab);
+                Leading *abc = TryMerge(ab,c);
+                if(abc)
+                {
+                    delete L.unlink(ab);
+                    delete L.replace(c,abc);
+                }
+            }
+            else
+            {
+                // a and b are disjoint
+                Leading *bc = TryMerge(b,c);
+                if(bc)
+                {
+                    delete L.unlink(b);
+                    delete L.replace(c,bc);
+                }
+            }
+        }
+        
         LeadingChars:: LeadingChars() throw() :
         size(0),
         lead()
@@ -199,16 +240,18 @@ namespace upsylon {
         
         void LeadingChars:: insert(const uint8_t c)
         {
+            assert(check());
+            
             switch(size)
             {
                 case 0:
                     assert(0==lead.size);
                     lead.push_back( new Leading(c) );
                     ++aliasing::_(size);
+                    assert( check() );
                     return;
                     
                 case 256:
-                    //assert(1==lead.size);
                     return;
                     
                 default:
@@ -237,6 +280,7 @@ namespace upsylon {
                         lead.push_front(mrg);
                     }
                     ++aliasing::_(size);
+                    assert( check() );
                 } return;
             }
             
@@ -261,7 +305,9 @@ namespace upsylon {
                         assert(curr->next==node);
                         assert(node->next==next);
                         assert(next->prev==node);
+                        Leading::Compact3(lead,curr,node,next);
                         ++aliasing::_(size);
+                        assert(check());
                     } return;
                 }
                 curr = next;
@@ -280,12 +326,41 @@ namespace upsylon {
                     lead.push_back(mrg);
                 }
                 ++aliasing::_(size);
+                assert( check() );
             }
             
         }
 
+       
+        void LeadingChars:: release() throw()
+        {
+            lead.release();
+            aliasing::_(size) = 0;
+        }
         
     }
     
 }
 
+#include "y/exception.hpp"
+
+namespace upsylon {
+    
+    namespace Jive {
+        
+        bool LeadingChars:: check() const
+        {
+            size_t ans = 0;
+            for(const Leading *node=lead.head;node;node=node->next)
+            {
+                ans += node->count();
+            }
+            if(ans!=size)
+            {
+                throw exception("found #%lu instead of %lu", (unsigned long)ans, (unsigned long)size );
+            }
+            return true;
+        }
+        
+    }
+}

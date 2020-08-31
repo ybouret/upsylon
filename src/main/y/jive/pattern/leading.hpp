@@ -40,8 +40,11 @@ namespace upsylon {
             
             bool       owns(const char)  const throw();
             OwnerShip  whose(const char) const throw();
+            size_t     count()           const throw();
             
             static Leading *TryMerge(const Leading *lhs, const Leading *rhs);
+            static void     Compact3(Leading::List &L, Leading *a, Leading *b, Leading *c);
+            
             
         private:
             Y_DISABLE_ASSIGN(Leading);
@@ -57,12 +60,18 @@ namespace upsylon {
             friend std::ostream & operator<<( std::ostream &, const LeadingChars &);
 
             void insert(const uint8_t c);
+            void remove(const uint8_t c);
+            void release() throw();
+            void complete();
+            void opposite();
             
             const size_t size;
             
+            
         private:
             Leading::List lead;
-            
+            bool check() const;
+
         };
         
         

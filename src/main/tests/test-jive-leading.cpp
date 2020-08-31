@@ -27,6 +27,18 @@ Y_UTEST(jive_leading)
     L.insert('k');
     std::cerr << "L=" << L << std::endl;
 
+    L.insert('m');
+    std::cerr << "L=" << L << std::endl;
+    
+    L.insert('l');
+    std::cerr << "L=" << L << std::endl;
+    
+    for(int i='0';i<='z';++i)
+    {
+        L.insert(uint8_t(i));
+    }
+    std::cerr << "L=" << L << std::endl;
+    
     
 }
 Y_UTEST_DONE()
