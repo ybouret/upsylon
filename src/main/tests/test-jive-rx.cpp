@@ -4,6 +4,8 @@
 #include "y/jive/pattern/posix.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/ios/icstream.hpp"
+#include "y/fs/vfs.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -20,7 +22,7 @@ Y_UTEST(jive_rx)
         q->graphViz("endl2.dot");
     }
     Dictionary        dict;
-    RegExpVerbose() = true;
+    //RegExpVerbose() = true;
     if(!dict.use("DIGIT","[:digit:]"))
     {
         throw exception("couldn't insert DIGIT");
@@ -40,16 +42,34 @@ Y_UTEST(jive_rx)
         std::cerr << "---> build expression" << std::endl;
         const string expr = p->toRegExp();
         std::cerr << "expr='" << expr << "'" << std::endl;
-        std::cerr << "---> recompile expression" << std::endl;
-        auto_ptr<Pattern> q = RegExp(expr,0);
-        q->save_to("rx2.bin");
-        q->graphViz("rx2.dot");
-        Y_CHECK(*p==*q);
-        std::cerr << "---> ignore case" << std::endl;
-        auto_ptr<Pattern> r = Pattern::IgnoreCase(p.content());
-        r->save_to("ign.bin");
-        r->graphViz("ign.dot");
+        {
+            std::cerr << "---> recompile expression" << std::endl;
+            auto_ptr<Pattern> q = RegExp(expr,0);
+            q->save_to("rx2.bin");
+            q->graphViz("rx2.dot");
+            Y_CHECK(*p==*q);
+            std::cerr << "---> ignore case" << std::endl;
+            auto_ptr<Pattern> r = Pattern::IgnoreCase(p.content());
+            r->save_to("ign.bin");
+            r->graphViz("ign.dot");
+        }
 
+        if(argc>2)
+        {
+            const string  fileName = argv[2];
+            const string  baseName = vfs::get_base_name(fileName);
+            ios::icstream fp(argv[2]);
+            string        line;
+            unsigned      iline=1;
+            while( (std::cerr << "> ").flush(),fp.gets(line) )
+            {
+                const string dataName = baseName + vformat(":%u: ",iline);
+                Source       source( Module::OpenData(dataName,line) );
+                p->test(source);
+                ++iline;
+            }
+
+        }
     }
     
 }
