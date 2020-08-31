@@ -362,6 +362,7 @@ test-jive-posix.cpp
 test-jive-opt.cpp
 test-jive-rx.cpp
 test-jive-match.cpp
+test-jive-leading.cpp
 )
 ADD_TEST(jive:tags     test-main jive_tags)
 ADD_TEST(jive:char     test-main jive_char)
@@ -375,6 +376,7 @@ ADD_TEST(jive:posix    test-main jive_posix)
 ADD_TEST(jive:opt      test-main jive_opt)
 ADD_TEST(jive:rx       test-main jive_rx "{INT}" ${HERE}/1000.txt)
 ADD_TEST(jive:match    test-main jive_match)
+ADD_TEST(jive:leading  test-main jive_leading)
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
