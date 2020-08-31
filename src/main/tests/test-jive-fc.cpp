@@ -4,6 +4,7 @@
 #include "y/utest/sizeof.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/code/utils.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -31,6 +32,8 @@ namespace {
 
         virtual Ownership whose(const uint8_t c) const throw() = 0;
         virtual Leading  *clone() const  = 0;
+        virtual void      display( std::ostream &os ) const    = 0;
+
 
         bool owns(const uint8_t c) const throw()
         {
@@ -64,7 +67,10 @@ namespace {
         const uint8_t code;
         const uint8_t priv;
 
-
+        virtual void display( std::ostream &os ) const
+        {
+            os << cchars::visible[code];
+        }
 
         virtual Ownership whose(const uint8_t c) const throw()
         {
@@ -131,6 +137,11 @@ namespace {
         virtual Leading *clone() const
         {
             return new LeadingTier(lower,upper);
+        }
+
+        virtual void display( std::ostream &os ) const
+        {
+            os << cchars::visible[lower] << '-' << cchars::visible[upper];
         }
 
 
@@ -206,6 +217,27 @@ namespace {
             ++aliasing::_(size);
         }
 
+        void display(std::ostream &os) const
+        {
+            os << '{';
+            if(lead.size>0)
+            {
+                const Leading *node = lead.head;
+                node->display(os);
+                for(node=node->next;node;node=node->next)
+                {
+                    node->display(os << ' ');
+                }
+            }
+            os << '}';
+        }
+
+        friend inline std::ostream & operator<<(std::ostream &os, const LeadingChars &lc)
+        {
+            lc.display(os);
+            return os;
+        }
+
     private:
         Leading::List lead;
 
@@ -252,6 +284,7 @@ Y_UTEST(jive_fc)
         }
     }
     Y_CHECK(256==lc.size);
+    std::cerr << lc << std::endl;
 
 }
 Y_UTEST_DONE()
