@@ -5,16 +5,17 @@
 
 #include "y/jive/char.hpp"
 
-namespace upsylon {
+namespace upsylon
+{
 
-    class exception;
+    class exception; //!< forward declaration
 
     namespace Jive
     {
         //______________________________________________________________________
         //
         //
-        //! a token is am evolved Char::List
+        //! a token is an evolved Char::List
         //
         //______________________________________________________________________
         class Token : public CountedObject, public Char::List
@@ -25,7 +26,7 @@ namespace upsylon {
             // types and definition
             //__________________________________________________________________
             typedef arc_ptr<Token> Handle; //!< alias
-            
+
             //__________________________________________________________________
             //
             // C++
@@ -34,7 +35,7 @@ namespace upsylon {
             virtual ~Token() throw();         //!< cleanup
             Token(const Token &);             //!< copy
             Token & operator=(const Token &); //!< assign by copy/swap
-            
+
 
             //__________________________________________________________________
             //
