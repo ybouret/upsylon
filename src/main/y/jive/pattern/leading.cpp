@@ -502,3 +502,44 @@ namespace upsylon {
         
     }
 }
+
+#include "y/jive/source.hpp"
+
+namespace upsylon {
+
+    namespace Jive {
+
+        bool   Source:: find(const Leading &fc)
+        {
+            //------------------------------------------------------------------
+            // look up in cache
+            //------------------------------------------------------------------
+            while(cache.size>0)
+            {
+                if( fc.search(cache.head->code) )
+                {
+                    return true;
+                }
+                Char::Release( cache.pop_front() );
+            }
+
+            //------------------------------------------------------------------
+            // look up in new char
+            //------------------------------------------------------------------
+        PROBE:
+            assert(cache.size==0);
+            Char *ch = probe();
+            if(!ch) return false;
+            if( fc.search(ch->code) )
+            {
+                assert(cache.size==0);
+                cache.push_back(ch);
+                return true;
+            }
+            goto PROBE;
+
+        }
+
+    }
+
+}

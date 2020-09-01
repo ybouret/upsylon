@@ -12,6 +12,8 @@ namespace upsylon {
     namespace Jive
     {
 
+        class Leading; //!< forward declaration
+
         //______________________________________________________________________
         //
         //
@@ -43,7 +45,8 @@ namespace upsylon {
             bool   alive();                    //!< found a readable char
             void   skip() throw();             //!< assert(cache.size>0);
             void   skip(size_t n) throw();     //!< assert(cache.size>=n);
-            
+            bool   find(const Leading &);      //!< skip until first char is found
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);
             typedef core::singly<Module::Handle>  MetaModule;
