@@ -36,34 +36,30 @@ namespace upsylon {
             return ans;
         }
 
-        string Token:: toVisible() const
+        string Token:: translate(const char * table[]) const
         {
             string ans(4*size,as_capacity,false);
             for(const Char *ch=head;ch;ch=ch->next)
             {
-                ans += cchars::visible[ch->code];
+                ans += table[ch->code];
             }
             return ans;
+        }
+
+
+        string Token:: toVisible() const
+        {
+            return translate(cchars::visible);
         }
 
         string Token:: toPrintable() const
         {
-            string ans(4*size,as_capacity,false);
-            for(const Char *ch=head;ch;ch=ch->next)
-            {
-                ans += cchars::printable[ch->code];
-            }
-            return ans;
+            return translate(cchars::printable);
         }
 
         string Token:: toEncoded() const
         {
-            string ans(4*size,as_capacity,false);
-            for(const Char *ch=head;ch;ch=ch->next)
-            {
-                ans += cchars::encoded[ch->code];
-            }
-            return ans;
+            return translate(cchars::encoded);
         }
 
 

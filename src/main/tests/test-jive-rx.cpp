@@ -2,6 +2,7 @@
 #include "y/jive/pattern/dictionary.hpp"
 #include "y/jive/pattern/all.hpp"
 #include "y/jive/pattern/posix.hpp"
+#include "y/jive/common-regexp.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/ios/icstream.hpp"
@@ -12,15 +13,21 @@ using namespace Jive;
 
 Y_UTEST(jive_rx)
 {
-    if(false)
-    {
-        auto_ptr<Pattern> p = posix::endl();
-        p->graphViz("endl.dot");
-        auto_ptr<And> q = And::Create();
-        q->push_back( p.yield() );
-        q->optimize();
-        q->graphViz("endl2.dot");
-    }
+    
+
+#define COM_RX(NAME) do {\
+std::cerr << "compiling " << #NAME << std::endl;  \
+const Motif  m  = RegExp( RegExpFor::NAME,NULL); \
+m->save_to(  #NAME ".bin" );\
+m->graphViz( #NAME ".dot" );\
+std::cerr << "|_feeble: " << m->feeble() << std::endl;\
+} while(false)
+
+
+    COM_RX(Identifier);
+    COM_RX(Unsigned);
+    COM_RX(Integer);
+
     Dictionary        dict;
     //RegExpVerbose() = true;
     if(!dict.use("DIGIT","[:digit:]"))

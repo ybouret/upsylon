@@ -598,7 +598,7 @@ case 't': return Single::Create('\t')
 
                     assert(DASH==*curr);
                     if(++curr>=last) throw exception("%sunfinished range in '%s'",fn,expr);
-                    const char C = *(curr++);
+                    const char C = *curr;
                     switch(C)
                     {
                         case '\\':  return clusterEscape();
@@ -611,7 +611,7 @@ case 't': return Single::Create('\t')
 
                         default: break;
                     }
-
+                    ++curr;
                     return Single::Create(C);
 
                 }
@@ -680,7 +680,7 @@ case 't': return Single::Create('\t')
             {
                 throw exception("%sunfinished expression '%s'",fn,ini);
             }
-            ptr->graphViz("regexp.dot");
+            //ptr->graphViz("regexp.dot");
             return Pattern::Optimize(ptr.yield());
         }
         

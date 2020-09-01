@@ -13,12 +13,21 @@ namespace upsylon {
         class Dictionary; //! < forward declaration
         
         //! expression to pattern
+        /**
+         - special: '.'=[:dot:]
+         - jokers :
+         -- '*'=zero or more
+         -- '+'=one or more
+         -- '?'=optional
+         -- '~'=none
+         -- '&'=ignore case
+         */
         Pattern * RegExp(const string &rx, const Dictionary *);
       
         //! expression to pattern, wrapper
         Pattern * RegExp(const char   *rx, const Dictionary *);
 
-        //! compiler verbosity, mostly to debug
+        //! compiler verbosity, to debug
         bool & RegExpVerbose() throw();
         
     }
