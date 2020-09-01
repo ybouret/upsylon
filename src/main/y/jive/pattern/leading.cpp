@@ -7,222 +7,116 @@ namespace upsylon {
     
     namespace Jive {
 
-        Leading:: ~Leading() throw()
+        Interval:: ~Interval() throw()
         {
             assert(0==prev);
             assert(0==next);
-            _bzset(kind);
-            _bzset(code);
             _bzset(lower);
             _bzset(upper);
             
         }
         
-        Leading::Leading(const uint8_t c) throw() :
+        Interval::Interval(const uint8_t c) throw() :
         Object(),
         next(0),
         prev(0),
-        kind(Byte),
-        code(c),
-        lower(0),
-        upper(0)
+        lower(c),
+        upper(c)
         {
         }
         
-        Leading::Leading(const uint8_t lo, const uint8_t up) throw() :
+        Interval::Interval(const uint8_t lo, const uint8_t up) throw() :
         Object(),
         next(0),
         prev(0),
-        kind(Tier),
-        code(0),
         lower(lo),
         upper(up)
         {
             assert(lower<upper);
         }
         
-        Leading:: Leading(const Leading &other) throw() :
-        Object(),
-        next(0),
-        prev(0),
-        kind(other.kind),
-        code(other.code),
-        lower(other.lower),
-        upper(other.upper)
-        {
-        }
         
         
-        size_t Leading:: count() const throw()
+        size_t Interval:: width() const throw()
         {
-            switch(kind)
-            {
-                case Byte: return 1;
-                case Tier: return 1+size_t(upper)-size_t(lower);
-                default:
-                    break;
-            }
-            // never get here
-            return 0;
+            return 1+size_t(upper)-size_t(lower);
         }
 
-        std::ostream & operator<<(std::ostream &os, const Leading &l)
+        std::ostream & operator<<(std::ostream &os, const Interval &l)
         {
-            switch(l.kind)
+            assert(l.lower<=l.upper);
+            if(l.lower<l.upper)
             {
-                case Leading::Byte:
-                    os << cchars::visible[l.code];
-                    break;
-                    
-                case Leading::Tier:
-                    os << cchars::visible[l.lower] << '-' << cchars::visible[l.upper];
-                    break;
+                os << cchars::visible[l.lower] << '-' << cchars::visible[l.upper];
             }
+            else
+            {
+                os << cchars::visible[l.lower];
+            }
+
             return os;
         }
         
-        bool Leading:: owns(const uint8_t c) const throw()
+        bool Interval:: owns(const uint8_t c) const throw()
         {
-            switch(kind)
-            {
-                case Byte: return c == code;
-                case Tier: return lower<=c && c<=upper;
-                default:
-                    break;
-            }
-            // never get here
-            return false;
+
+            return lower<=c && c<=upper;
         }
 
-        OwnerShip Leading:: whose(const uint8_t c) const throw()
+        OwnerShip Interval:: whose(const uint8_t c) const throw()
         {
-            switch(kind)
+
+            if(c<lower)
             {
-                case Byte:
-                    if(c<code)
-                    {
-                        return OwnedByPrev;
-                    }
-                    else if(code<c)
-                    {
-                        return OwnedByNext;
-                    }
-                    else
-                    {
-                        assert(owns(c));
-                        return OwnedByThis;
-                    }
-                    
-                case Tier:
-                    if(c<lower)
-                    {
-                        return OwnedByPrev;
-                    }
-                    else if(upper<c)
-                    {
-                        return OwnedByNext;
-                    }
-                    else
-                    {
-                        assert(owns(c));
-                        return OwnedByThis;
-                    }
-                default:
-                    break;
+                return OwnedByPrev;
             }
-            //never get here
-            return OwnedByNext;
-        
+            else if(upper<c)
+            {
+                return OwnedByNext;
+            }
+            else
+            {
+                assert(owns(c));
+                return OwnedByThis;
+            }
+
+
         }
         
-#define YJL_STATUS(A,B) ( ( unsigned(A)<<Leading::SHL) | unsigned(B) )
-        Leading *Leading:: TryMerge(const Leading *lhs, const Leading *rhs)
+        Interval *Interval:: TryMerge(const Interval *lhs, const Interval *rhs)
         {
             assert(lhs);
             assert(rhs);
-            switch( YJL_STATUS(lhs->kind,rhs->kind) )
+
+            assert(lhs->upper<rhs->lower);
+            if(lhs->upper+1==rhs->lower)
             {
-                case YJL_STATUS(Byte,Byte):
-                    assert(lhs->code<rhs->code);
-                    if(lhs->code+1==rhs->code)
-                    {
-                        return new Leading(lhs->code,rhs->code);
-                    }
-                    break;
-                    
-                case YJL_STATUS(Byte,Tier):
-                    assert(lhs->code<rhs->lower);
-                    if(lhs->code+1==rhs->lower)
-                    {
-                        return new Leading(lhs->code,rhs->upper);
-                    }
-                    break;
-                    
-                case YJL_STATUS(Tier,Byte):
-                    assert(lhs->upper<rhs->code);
-                    if(lhs->upper+1==rhs->code)
-                    {
-                        return new Leading(lhs->lower,rhs->code);
-                    }
-                    break;
-                    
-                case YJL_STATUS(Tier,Tier):
-                    assert(lhs->upper<rhs->lower);
-                    if(lhs->upper+1==rhs->lower)
-                    {
-                        return new Leading(lhs->lower,rhs->upper);
-                    }
-                    break;
-                    
-                default:
-                    assert( die("never get here") );
-                    break;
+                return new Interval(lhs->lower,rhs->upper);
             }
-            return NULL;
+            else
+            {
+                return NULL;
+            }
+
         }
         
-        bool Leading::AreApart(const Leading *lhs, const Leading *rhs) throw()
+        bool Interval::AreApart(const Interval *lhs, const Interval *rhs) throw()
         {
-            assert(lhs);
-            assert(rhs);
-            switch( YJL_STATUS(lhs->kind,rhs->kind) )
-            {
-                case YJL_STATUS(Byte,Byte):
-                    assert(lhs->code<rhs->code);
-                    return rhs->code-lhs->code>1;
-                    
-                case YJL_STATUS(Byte,Tier):
-                    assert(lhs->code<rhs->lower);
-                    return rhs->lower-lhs->code>1;
-                    
-                    
-                case YJL_STATUS(Tier,Byte):
-                    assert(lhs->upper<rhs->code);
-                    return rhs->code-lhs->upper>1;
-                    
-                    
-                case YJL_STATUS(Tier,Tier):
-                    assert(lhs->upper<rhs->lower);
-                    return rhs->lower-rhs->upper>1;
-                    
-                default:
-                    assert( die("never get here") );
-                    break;
-            }
-            return true;
+            assert(lhs->upper<rhs->lower);
+            return lhs->upper+1<rhs->lower;
         }
 
         
-        void Leading::Compact3(Leading::List &L, Leading *a, Leading *b, Leading *c)
+        void Interval::Compact3(List &L, Interval *a, Interval *b, Interval *c)
         {
-            Leading *ab = TryMerge(a,b);
+            Interval *ab = TryMerge(a,b);
             if(ab)
             {
                 delete L.unlink(a);
                 delete L.replace(b,ab);
                 assert(ab->next==c);
                 assert(c->prev==ab);
-                Leading *abc = TryMerge(ab,c);
+                Interval *abc = TryMerge(ab,c);
                 if(abc)
                 {
                     delete L.unlink(ab);
@@ -232,7 +126,7 @@ namespace upsylon {
             else
             {
                 // a and b are disjoint
-                Leading *bc = TryMerge(b,c);
+                Interval *bc = TryMerge(b,c);
                 if(bc)
                 {
                     delete L.unlink(b);
@@ -243,7 +137,7 @@ namespace upsylon {
         
         LeadingChars:: LeadingChars() throw() :
         size(0),
-        lead()
+        parts()
         {
         }
         
@@ -257,16 +151,16 @@ namespace upsylon {
         std::ostream & operator<<( std::ostream &os, const LeadingChars &lc)
         {
             os << '{';
-            if(lc.lead.size>0)
+            if(lc.parts.size>0)
             {
-                const Leading *node = lc.lead.head;
+                const Interval *node = lc.parts.head;
                 os << *node;
                 for(node=node->next;node;node=node->next)
                 {
                     os << ' ' << *node;
                 }
             }
-            os << '}' << '#' << lc.size << "/" << lc.lead.size;
+            os << '}' << '#' << lc.size << "/" << lc.parts.size;
             return os;
         }
         
@@ -280,13 +174,13 @@ namespace upsylon {
             switch(size)
             {
                 case 0:
-                    assert(0==lead.size);
-                    lead.push_front( new Leading(c) );
+                    assert(0==parts.size);
+                    parts.push_front( new Interval(c) );
                     ++aliasing::_(size);
                     assert( check() );
                     assert(1==size);
-                    assert(1==lead.size);
-                    assert(lead.head->owns(c));
+                    assert(1==parts.size);
+                    assert(parts.head->owns(c));
                     return true;
                     
                 case 256:
@@ -297,29 +191,29 @@ namespace upsylon {
             }
             assert(size>0);
             assert(size<256);
-            assert(lead.size>0);
+            assert(parts.size>0);
             
             //------------------------------------------------------------------
             // check if before first node
             //------------------------------------------------------------------
-            Leading *curr = lead.head;
+            Interval *curr = parts.head;
             switch(curr->whose(c))
             {
                 case OwnedByThis: assert(curr->owns(c)); return false; // already inserted
                 case OwnedByNext: break;  // after head
                 case OwnedByPrev: {
-                    const Leading *lhs = lead.push_front( new Leading(c) );
-                    Leading       *mrg = Leading::TryMerge(lhs,curr);
+                    const Interval *lhs = parts.push_front( new Interval(c) );
+                    Interval       *mrg = Interval::TryMerge(lhs,curr);
                     if(mrg)
                     {
-                        assert(lead.size>=2);
-                        delete lead.pop_front();
-                        delete lead.pop_front();
-                        lead.push_front(mrg);
+                        assert(parts.size>=2);
+                        delete parts.pop_front();
+                        delete parts.pop_front();
+                        parts.push_front(mrg);
                     }
                     else
                     {
-                        assert( Leading::AreApart(lhs,curr) );
+                        assert( Interval::AreApart(lhs,curr) );
                     }
                     ++aliasing::_(size);
                     assert( check() );
@@ -330,9 +224,9 @@ namespace upsylon {
             //------------------------------------------------------------------
             // bracket
             //------------------------------------------------------------------
-            assert( curr==lead.head );
+            assert( curr==parts.head );
             assert( ! curr->owns(c) );
-            Leading *next = curr->next;
+            Interval *next = curr->next;
             while(next)
             {
                 switch(next->whose(c))
@@ -342,12 +236,12 @@ namespace upsylon {
                         
                     case OwnedByPrev:
                     {
-                        Leading *node = lead.insert_after(curr,new Leading(c));
+                        Interval *node = parts.insert_after(curr,new Interval(c));
                         assert(node->prev==curr);
                         assert(curr->next==node);
                         assert(node->next==next);
                         assert(next->prev==node);
-                        Leading::Compact3(lead,curr,node,next);
+                        Interval::Compact3(parts,curr,node,next);
                         ++aliasing::_(size);
                         assert(check());
                     } return true;
@@ -360,20 +254,20 @@ namespace upsylon {
             // append after tail
             //------------------------------------------------------------------
             
-            assert(curr==lead.tail);
+            assert(curr==parts.tail);
             {
-                const Leading *rhs = lead.push_back( new Leading(c) );
-                Leading       *mrg = Leading::TryMerge(curr,rhs);
+                const Interval *rhs = parts.push_back( new Interval(c) );
+                Interval       *mrg = Interval::TryMerge(curr,rhs);
                 if(mrg)
                 {
-                    assert(lead.size>=2);
-                    delete lead.pop_back();
-                    delete lead.pop_back();
-                    lead.push_back(mrg);
+                    assert(parts.size>=2);
+                    delete parts.pop_back();
+                    delete parts.pop_back();
+                    parts.push_back(mrg);
                 }
                 else
                 {
-                    assert( Leading::AreApart(curr,rhs) );
+                    assert( Interval::AreApart(curr,rhs) );
                 }
                 ++aliasing::_(size);
                 assert( check() );
@@ -381,26 +275,26 @@ namespace upsylon {
             return true;
         }
 
-       
+
         void LeadingChars:: release() throw()
         {
-            lead.release();
+            parts.release();
             aliasing::_(size) = 0;
-            assert(lead.size<=0);
+            assert(parts.size<=0);
         }
         
         void LeadingChars:: complete()
         {
             release();
-            lead.push_back( new Leading(0x00,0xff) );
+            parts.push_back( new Interval(0x00,0xff) );
             aliasing::_(size) = 1;
         }
         
         bool LeadingChars:: remove(const uint8_t c)
         {
-            if(lead.size>0)
+            if(parts.size>0)
             {
-                for(Leading *node=lead.head;node;node=node->next)
+                for(Interval *node=parts.head;node;node=node->next)
                 {
                     switch(node->whose(c))
                     {
@@ -418,7 +312,7 @@ namespace upsylon {
             }
         }
         
-        bool LeadingChars:: removeFrom(Leading *node, const uint8_t c )
+        bool LeadingChars:: removeFrom(Interval *node, const uint8_t c )
         {
             assert(node);
             assert(node->owns(c));
@@ -440,9 +334,9 @@ namespace upsylon {
         bool LeadingChars:: check() const
         {
             size_t ans = 0;
-            for(const Leading *node=lead.head;node;node=node->next)
+            for(const Interval *node=parts.head;node;node=node->next)
             {
-                ans += node->count();
+                ans += node->width();
             }
             if(ans!=size)
             {

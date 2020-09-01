@@ -7,7 +7,7 @@ using namespace Jive;
 
 Y_UTEST(jive_leading)
 {
-    Y_UTEST_SIZEOF(Leading);
+    Y_UTEST_SIZEOF(Interval);
     
     LeadingChars L;
     std::cerr << "L=" << L << std::endl;
