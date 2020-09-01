@@ -378,6 +378,42 @@ namespace upsylon {
             return n;
         }
 
+        void Leading:: include(const Leading &other)
+        {
+            if(this!=&other)
+            {
+                for(const Interval *node=other.parts.head;node;node=node->next)
+                {
+                    const unsigned top = node->upper;
+                    for(unsigned i=node->lower;i<=top;++i)
+                    {
+                        (void) insert( uint8_t(i) );
+                    }
+                }
+            }
+        }
+
+        void Leading:: exclude(const Leading &other)
+        {
+            if(this!=&other)
+            {
+                for(const Interval *node=other.parts.head;node;node=node->next)
+                {
+                    const unsigned top = node->upper;
+                    for(unsigned i=node->lower;i<=top;++i)
+                    {
+                        (void) remove( uint8_t(i) );
+                    }
+                }
+            }
+            else
+            {
+                release();
+            }
+
+        }
+
+
     }
     
 }

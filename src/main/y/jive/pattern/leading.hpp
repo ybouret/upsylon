@@ -57,33 +57,51 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            Interval      *next;
-            Interval      *prev;
-            const uint8_t  lower;
-            const uint8_t  upper;
+            Interval      *next;  //!< for list
+            Interval      *prev;  //!< for list
+            const uint8_t  lower; //!< lower bound
+            const uint8_t  upper; //!< upper bound
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Interval);
         };
-        
+
+        //______________________________________________________________________
+        //
+        //! possible leading bytes
+        //______________________________________________________________________
         class Leading
         {
         public:
-            explicit Leading() throw();
-            virtual ~Leading() throw();
-            Leading(const Leading &);
-            
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Leading() throw(); //!< setup empty
+            virtual ~Leading() throw(); //!< cleanup
+            Leading(const Leading &);   //!< copy
+
+            //! display
             friend std::ostream & operator<<( std::ostream &, const Leading &);
 
-            bool   insert(const uint8_t c);
-            bool   remove(const uint8_t c);
-            size_t insert(const uint8_t lo,const uint8_t hi);
-            void   release() throw();
-            void   complete();
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            bool   insert(const uint8_t c);             //!< insert a byte, true if new
+            bool   remove(const uint8_t c);             //!< remove a byte, true if found
+            size_t insert(const uint8_t,const uint8_t); //!< insert a range, return number of new bytes
+            void   release() throw();                   //!< release all
+            void   complete();                          //!< set full interval
+            void   include(const Leading &);            //!< include another
+            void   exclude(const Leading &);            //!< exclude another
             
-            const size_t size;
-            
-            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const size_t size; //!< 0..256 leading bytes
+
         private:
             Interval::List parts;
             bool check() const;
