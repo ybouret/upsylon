@@ -43,14 +43,14 @@ namespace upsylon {
             vizLink(fp);
         }
 
-        void Or:: start(FirstChars &fc) const
+        void Or:: start(Leading &fc) const
         {
-            assert(0==fc.size());
+            assert(0==fc.size);
             for(const Pattern *op=head;op;op=op->next)
             {
-                FirstChars sub;
+                Leading sub;
                 op->start(sub);
-                fc.merge(sub);
+                fc.include(sub);
             }
         }
 

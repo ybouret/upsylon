@@ -57,9 +57,9 @@ namespace upsylon {
             endl(fp << "[label=\"ANY\",shape=circle]");
         }
 
-        void Any:: start(FirstChars &fc) const
+        void Any:: start(Leading &fc) const
         {
-            assert(0==fc.size());
+            assert(0==fc.size);
             fc.complete();
         }
 

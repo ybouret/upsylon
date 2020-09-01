@@ -44,15 +44,15 @@ namespace upsylon {
             vizLink(fp);
         }
 
-        void None:: start(FirstChars &fc) const
+        void None:: start(Leading &fc) const
         {
-            assert(0==fc.size());
+            assert(0==fc.size);
             fc.complete();
             for(const Pattern *op=head;op;op=op->next)
             {
-                FirstChars sub;
+                Leading sub;
                 op->start(sub);
-                fc.strip(sub);
+                fc.exclude(sub);
             }
         }
 

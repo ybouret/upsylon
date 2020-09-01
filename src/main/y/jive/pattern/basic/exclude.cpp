@@ -55,11 +55,11 @@ namespace upsylon {
             endl(fp << "[label=\"" << cchars::printable[code] << "\",shape=triangle]");
         }
 
-        void Exclude:: start(FirstChars &fc) const
+        void Exclude:: start(Leading &fc) const
         {
-            assert(0==fc.size());
+            assert(0==fc.size);
             fc.complete();
-            fc.no(code);
+            fc.remove(code);
         }
 
         void Exclude:: update(Entropy &E) const throw()

@@ -356,7 +356,6 @@ test-jive-module.cpp
 test-jive-source.cpp
 test-jive-token.cpp
 test-jive-patterns.cpp
-test-jive-fc.cpp
 test-jive-rework.cpp
 test-jive-posix.cpp
 test-jive-opt.cpp
@@ -369,7 +368,6 @@ ADD_TEST(jive:char     test-main jive_char)
 ADD_TEST(jive:module   test-main jive_module)
 ADD_TEST(jive:source   test-main jive_source ${HERE}/1000.txt ${HERE}/10000.txt)
 ADD_TEST(jive:token    test-main jive_token)
-ADD_TEST(jive:fc       test-main jive_fc)
 ADD_TEST(jive:patterns test-main jive_patterns)
 ADD_TEST(jive:rework   test-main jive_rework)
 ADD_TEST(jive:posix    test-main jive_posix)

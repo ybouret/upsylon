@@ -33,7 +33,7 @@ namespace upsylon {
             //__________________________________________________________________
             static  None    *Create();                            //!< new
             virtual Pattern *clone() const;                       //!< copy
-            virtual void     start(FirstChars &) const;           //!< complete and remove ops
+            virtual void     start(Leading &) const;              //!< complete and remove ops
             virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< single after none of operands
             virtual bool     feeble() const throw();              //!< false
             virtual void     optimize() throw();                  //!< applyOptimize, rework

@@ -93,8 +93,10 @@ namespace upsylon {
             size_t insert(const uint8_t,const uint8_t); //!< insert a range, return number of new bytes
             void   release() throw();                   //!< release all
             void   complete();                          //!< set full interval
+            void   opposite(const Leading &);           //!< complete and exclude
             void   include(const Leading &);            //!< include another
             void   exclude(const Leading &);            //!< exclude another
+            bool   search(const uint8_t) const throw(); //!< search for owned
             
             //__________________________________________________________________
             //

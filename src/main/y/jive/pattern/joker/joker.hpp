@@ -24,7 +24,7 @@ namespace upsylon
             //
             // pattern common interface
             //__________________________________________________________________
-            virtual void     start(FirstChars &) const;         //!< from motif
+            virtual void     start(Leading &) const;            //!< from motif
             virtual void     update(Entropy &)   const throw(); //!< from motif
             virtual void     optimize() throw();                //!< motif->optimize
 

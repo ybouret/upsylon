@@ -55,7 +55,7 @@ namespace upsylon {
 
                 }
 
-                Y_SINGLETON_DECL_WITH(memory::pooled::life_time-1,PosixDB);
+                Y_SINGLETON_DECL_WITH(object::life_time-2,PosixDB);
             };
 
 

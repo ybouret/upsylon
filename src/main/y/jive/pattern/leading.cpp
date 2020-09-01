@@ -2,6 +2,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/code/utils.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon {
     
@@ -410,9 +411,70 @@ namespace upsylon {
             {
                 release();
             }
-
         }
 
+        void Leading:: opposite(const Leading &other)
+        {
+            Leading tmp;
+            tmp.complete();
+            tmp.exclude(other);
+
+            _cswap(size,tmp.size);
+            tmp.parts.swap_with(parts);
+        }
+
+        bool Leading:: search(const uint8_t c) const throw()
+        {
+            if(parts.size>0)
+            {
+                const Interval *incr = parts.head;
+                const Interval *decr = parts.tail;
+
+            CYCLE:
+                switch( incr->whose(c) )
+                {
+                    case OwnedByPrev: return false; // too low
+                    case OwnedByThis: return true;  // OK!
+                    case OwnedByNext: break;
+                }
+
+                switch( decr->whose(c) )
+                {
+                    case OwnedByNext: return false; // too high
+                    case OwnedByThis: return true;  // OK!
+                    case OwnedByPrev: break;
+                }
+
+                assert(decr!=incr);
+                {
+                    const Interval *temp = incr;
+                    incr=incr->next;
+                    if(incr==decr)
+                    {
+                        return false; // already test
+                    }
+                    else
+                    {
+                        decr=decr->prev;
+                        if(decr==temp)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            goto CYCLE;
+                        }
+                    }
+                }
+
+
+            }
+            else
+            {
+                assert(size==0);
+                return false;
+            }
+        }
 
     }
     

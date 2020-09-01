@@ -34,7 +34,7 @@ namespace upsylon {
             //__________________________________________________________________
             static  Single  *Create(const uint8_t);             //!< create
             virtual Pattern *clone() const;                     //!< copy
-            virtual void     start(FirstChars &) const;         //!< only code
+            virtual void     start(Leading &)   const;          //!< only code
             virtual void     update(Entropy &)  const throw();  //!< with code
             virtual void     express(ios::ostream &) const;     //!< escaped
 

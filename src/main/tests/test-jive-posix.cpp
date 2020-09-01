@@ -20,7 +20,7 @@ namespace {
         Y_CHECK(*p==*q);
         const string dotName = id + ".dot";
         p->graphViz(dotName);
-        FirstChars fc;
+        Leading fc;
         p->start(fc);
         std::cerr << "first chars: " << fc << std::endl;
         if( !dict.insert_by(id,p) )

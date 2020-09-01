@@ -37,9 +37,9 @@ namespace upsylon
             motif->update(E);
         }
 
-        void Joker:: start(FirstChars &fc) const
+        void Joker:: start(Leading &fc) const
         {
-            assert(0==fc.size());
+            assert(0==fc.size);
             motif->start(fc);
         }
 

@@ -12,8 +12,6 @@ namespace upsylon {
     namespace Jive
     {
 
-        class FirstChars; //!< forward declaration
-
         //______________________________________________________________________
         //
         //
@@ -45,8 +43,7 @@ namespace upsylon {
             bool   alive();                    //!< found a readable char
             void   skip() throw();             //!< assert(cache.size>0);
             void   skip(size_t n) throw();     //!< assert(cache.size>=n);
-            bool   find(const FirstChars &);   //!< forward up to firt Chars
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);
             typedef core::singly<Module::Handle>  MetaModule;

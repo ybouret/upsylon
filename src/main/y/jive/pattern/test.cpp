@@ -9,7 +9,7 @@ namespace upsylon {
         void Pattern:: test(Source &source) const
         {
             Char::List content;
-            FirstChars fc;
+            Leading    fc;
             start(fc);
 
             while(source.alive())

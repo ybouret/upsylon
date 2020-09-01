@@ -49,15 +49,16 @@ namespace {
         std::cerr << "is strong   : " << motif->strong() << std::endl;
 
         // find first char
-        FirstChars fc;
+        Leading fc;
         motif->start(fc);
-        FirstChars bc;
-        bc.opposite(fc);
-        std::cerr << "#first chars: " << fc.size() << std::endl;
+        Leading bc;
+        bc.complete();
+        bc.exclude(fc);
+        std::cerr << "#first chars: " << fc.size << std::endl;
         std::cerr << fc << std::endl;
-        std::cerr << "#other chars: " << bc.size() << std::endl;
+        std::cerr << "#other chars: " << bc.size << std::endl;
         std::cerr << bc << std::endl;
-        Y_ASSERT(256==fc.size()+bc.size());
+        Y_ASSERT(256==fc.size+bc.size);
         std::cerr << "entropy     : " << motif->entropy() << std::endl;
 
         std::cerr << "\t<testing>" << std::endl;
