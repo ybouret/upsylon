@@ -43,19 +43,41 @@ namespace upsylon
             const Pattern &p = **this;
             if( source.find(firstChars) )
             {
-#if 1
                 assert( source.in_cache() > 0);
                 if( !p.accept(token,source) )
                 {
                     throw exception("Jive::Matching::Somehow(corrupted firstChars)");
                 }
-#endif
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+
+        size_t Matching:: collect_( sequence<Token::Handle> &tokens, Module *module) const
+        {
+            Source         source(module);
+            const Pattern &p = **this;
+            size_t         n = 0;
+            while( source.find(firstChars) )
+            {
+                assert(source.in_cache() > 0);
+                Token::Handle h = new Token();
+                if( !p.accept(*h,source) )
+                {
+                    throw exception("Jive::Matching::Somehow(corrupted firstChars)");
+                }
+                tokens.push_back(h);
+                ++n;
+                if(h->size<=0)
+                {
+                    assert(p.feeble());
+                    source.skip();
+                }
+            }
+            return n;
         }
 
 

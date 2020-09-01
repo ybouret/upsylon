@@ -4,6 +4,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/fs/vfs.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -38,6 +39,10 @@ Y_UTEST(jive_match)
                 {
                     std::cerr << "none" << std::endl;
                 }
+                vector<Token::Handle> tokens;
+                const size_t n = match.collect(tokens,dataName,line);
+                std::cerr << "|_collect: " << tokens << std::endl;
+                std::cerr << " |_" << n << std::endl;
                 ++iline;
             }
         }

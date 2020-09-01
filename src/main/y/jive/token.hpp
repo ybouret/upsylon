@@ -21,13 +21,15 @@ namespace upsylon {
         class Token : public CountedObject, public Char::List
         {
         public:
+            typedef arc_ptr<Token> Handle;
+            
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit Token() throw(); //!< create empty
-            virtual ~Token() throw(); //!< cleanup
-            Token(const Token &);     //!< copy
+            explicit Token() throw();         //!< create empty
+            virtual ~Token() throw();         //!< cleanup
+            Token(const Token &);             //!< copy
             Token & operator=(const Token &); //!< assign by copy/swap
             
 
