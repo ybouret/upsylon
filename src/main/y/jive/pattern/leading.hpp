@@ -8,37 +8,59 @@
 namespace upsylon {
  
     namespace Jive {
-        
+
+        //______________________________________________________________________
+        //
+        //! testing ownership
+        //______________________________________________________________________
         enum OwnerShip
         {
-            OwnedByPrev,
-            OwnedByThis,
-            OwnedByNext
+            OwnedByPrev, //!< in prev interval
+            OwnedByThis, //!< got it
+            OwnedByNext  //!< in next interval
         };
-        
+
+        //______________________________________________________________________
+        //
+        //! interval of bytes
+        //______________________________________________________________________
         class Interval : public Object
         {
         public:
-            typedef core::list_of_cpp<Interval> List;
-            
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef core::list_of_cpp<Interval> List; //!< alias
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            Interval(const uint8_t) throw();                 //!< setup
+            Interval(const uint8_t,const uint8_t) throw();   //!< setup
+            virtual ~Interval() throw();                     //!< cleanup
+            friend std::ostream & operator<<(std::ostream &, const Interval &); //!< display
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            bool             owns(const uint8_t)  const throw();                         //!< check insidie
+            OwnerShip        whose(const uint8_t) const throw();                         //!< hint for owner
+            size_t           width()              const throw();                         //!< interval widht
+            static Interval *TryMerge(const Interval *, const Interval *);               //!< possible merge
+            static void      Compact3(List &L, Interval *a, Interval *b, Interval *c);   //!< all posible merges
+            static bool      AreApart(const Interval *lhs, const Interval *rhs) throw(); //!< to debug
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             Interval      *next;
             Interval      *prev;
             const uint8_t  lower;
             const uint8_t  upper;
-            
-            Interval(const uint8_t) throw();
-            Interval(const uint8_t,const uint8_t) throw();
-            virtual ~Interval() throw();
-            
-            friend std::ostream & operator<<( std::ostream &, const Interval &);
-            
-            bool       owns(const uint8_t)  const throw();
-            OwnerShip  whose(const uint8_t) const throw();
-            size_t     width()              const throw();
-            
-            static Interval *TryMerge(const Interval *lhs, const Interval *rhs);
-            static void      Compact3(List &L, Interval *a, Interval *b, Interval *c);
-            static bool      AreApart(const Interval *lhs, const Interval *rhs) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Interval);

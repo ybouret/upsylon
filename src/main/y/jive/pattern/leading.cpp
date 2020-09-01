@@ -286,7 +286,7 @@ namespace upsylon {
         {
             release();
             parts.push_back( new Interval(0x00,0xff) );
-            aliasing::_(size) = 1;
+            aliasing::_(size) = 256;
         }
         
         bool Leading:: remove(const uint8_t c)
@@ -351,9 +351,8 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // num_upper>0 and num_lower>0
                     //----------------------------------------------------------
-                    const uint8_t lhs_lower = node->lower;
                     const uint8_t lhs_upper = c-1;
-                    assert(lhs_lower<=lhs_upper);
+                    assert(node->lower<=lhs_upper);
 
                     const uint8_t rhs_lower = c+1;
                     const uint8_t rhs_upper = node->upper;
