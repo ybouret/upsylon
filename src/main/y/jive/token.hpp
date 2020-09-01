@@ -40,7 +40,7 @@ namespace upsylon {
             string toString()       const; //!< codes->chars
             string toVisible()      const; //!< codes->visible
             string toPrintable()    const; //!< codes->printable
-            exception & cat(exception &) const; //!< append to exception
+            exception & cat(exception &) const throw(); //!< append to exception
         };
 
     }

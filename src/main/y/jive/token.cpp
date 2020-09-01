@@ -57,12 +57,13 @@ namespace upsylon {
             return ans;
         }
 
-        exception & Token:: cat(exception &excp) const
+        exception & Token:: cat(exception &excp) const throw()
         {
-            const string s = toVisible();
-            excp.cat("'%s'",*s);
+            for(const Char *ch=head;ch;ch=ch->next)
+            {
+                excp.cat("%s",cchars::encoded[ch->code]);
+            }
             return excp;
-
         }
 
     }

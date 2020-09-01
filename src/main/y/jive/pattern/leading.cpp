@@ -528,6 +528,11 @@ namespace upsylon {
         bool   Source:: find(const Leading &fc)
         {
             //------------------------------------------------------------------
+            // temporary cache, released upon success, restored upon failure
+            //------------------------------------------------------------------
+            Char::List temp;
+
+            //------------------------------------------------------------------
             // look up in cache
             //------------------------------------------------------------------
             while(cache.size>0)
@@ -536,7 +541,7 @@ namespace upsylon {
                 {
                     return true;
                 }
-                Char::Release( cache.pop_front() );
+                temp.push_back( cache.pop_front() );
             }
 
             //------------------------------------------------------------------
@@ -545,7 +550,11 @@ namespace upsylon {
         PROBE:
             assert(cache.size==0);
             Char *ch = probe();
-            if(!ch) return false;
+            if(!ch)
+            {
+                cache.swap_with(temp);
+                return false;
+            }
 
             if( fc.search(ch->code) )
             {
@@ -553,7 +562,7 @@ namespace upsylon {
                 cache.push_back(ch);
                 return true;
             }
-            Char::Release(ch);
+            temp.push_back(ch);
             goto PROBE;
 
         }
