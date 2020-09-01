@@ -373,7 +373,7 @@ ADD_TEST(jive:rework   test-main jive_rework)
 ADD_TEST(jive:posix    test-main jive_posix)
 ADD_TEST(jive:opt      test-main jive_opt)
 ADD_TEST(jive:rx       test-main jive_rx "{INT}" ${HERE}/1000.txt)
-ADD_TEST(jive:match    test-main jive_match)
+ADD_TEST(jive:match    test-main jive_match "[:word:]+" ${HERE}/1000.txt)
 ADD_TEST(jive:leading  test-main jive_leading)
 
 ADD_CUSTOM_TARGET(utest-main
