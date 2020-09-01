@@ -14,7 +14,8 @@ Y_UTEST(jive_match)
     if(argc>1)
     {
         Matching match = argv[1];
-
+        std::cerr << "firstChars:" << match.firstChars << std::endl;
+        
         if( argc>2 )
         {
             const string  fileName = argv[2];
@@ -27,7 +28,16 @@ Y_UTEST(jive_match)
                 const string dataName = baseName + vformat(":%u: ",iline);
                 std::cerr << "---> " << line << std::endl;
                 std::cerr << "|_exactly: " << match.exactly(dataName,line) << std::endl;
-
+                Token token;
+                std::cerr << "|_somehow: ";
+                if(match.somehow(token,dataName,line))
+                {
+                    std::cerr  << "'" << token << "'" << std::endl;
+                }
+                else
+                {
+                    std::cerr << "none" << std::endl;
+                }
                 ++iline;
             }
         }

@@ -39,7 +39,8 @@ namespace upsylon {
             //__________________________________________________________________
             Interval(const uint8_t) throw();                 //!< setup
             Interval(const uint8_t,const uint8_t) throw();   //!< setup
-            virtual ~Interval() throw();                     //!< cleanup
+            Interval(const Interval &) throw();              //!< copy
+            ~Interval() throw();                             //!< cleanup
             friend std::ostream & operator<<(std::ostream &, const Interval &); //!< display
 
             //__________________________________________________________________
@@ -63,7 +64,7 @@ namespace upsylon {
             const uint8_t  upper; //!< upper bound
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Interval);
+            Y_DISABLE_ASSIGN(Interval);
         };
 
         //______________________________________________________________________

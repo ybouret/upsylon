@@ -35,6 +35,14 @@ namespace upsylon {
         {
         }
         
+        Interval:: Interval(const Interval &I ) throw() :
+        Object(),
+        next(0),
+        prev(0),
+        lower(I.lower),
+        upper(I.upper)
+        {
+        }
         
         
         size_t Interval:: width() const throw()
@@ -140,7 +148,15 @@ namespace upsylon {
         parts()
         {
         }
+
+        Leading:: Leading( const Leading &other ) :
+        size(other.size),
+        parts(other.parts)
+        {
+        }
         
+
+
         Leading:: ~Leading() throw()
         {
             _bzset(size);
@@ -524,18 +540,20 @@ namespace upsylon {
             }
 
             //------------------------------------------------------------------
-            // look up in new char
+            // look up in probe
             //------------------------------------------------------------------
         PROBE:
             assert(cache.size==0);
             Char *ch = probe();
             if(!ch) return false;
+
             if( fc.search(ch->code) )
             {
                 assert(cache.size==0);
                 cache.push_back(ch);
                 return true;
             }
+            Char::Release(ch);
             goto PROBE;
 
         }

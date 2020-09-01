@@ -23,15 +23,17 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             virtual ~Matching() throw();             //!< cleanup
-            Matching(const Matching &other) throw(); //!< shared copy
+            Matching(const Matching &);              
 
             //! build from an acceptable regular expression
             template <typename REGEXP> inline
             Matching(const REGEXP &rx, const Dictionary *dict =0 ) :
-            Motif( RegExp(rx,dict) )
+            Motif( RegExp(rx,dict) ), firstChars()
             {
+                setup();
             }
 
+            
 
             //__________________________________________________________________
             //
@@ -54,9 +56,15 @@ namespace upsylon
                  return somehow_(token,Module::OpenData(dataName,data));
             }
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Leading firstChars;
 
         private:
             Y_DISABLE_ASSIGN(Matching);
+            void setup();
         };
 
     }
