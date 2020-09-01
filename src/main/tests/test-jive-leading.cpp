@@ -9,7 +9,7 @@ Y_UTEST(jive_leading)
 {
     Y_UTEST_SIZEOF(Interval);
     
-    LeadingChars L;
+    Leading L;
     std::cerr << "L=" << L << std::endl;
     L.insert('c');
     std::cerr << "L=" << L << std::endl;

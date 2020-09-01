@@ -44,14 +44,14 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(Interval);
         };
         
-        class LeadingChars
+        class Leading
         {
         public:
-            explicit LeadingChars() throw();
-            virtual ~LeadingChars() throw();
-            LeadingChars( const LeadingChars &);
+            explicit Leading() throw();
+            virtual ~Leading() throw();
+            Leading( const Leading &);
             
-            friend std::ostream & operator<<( std::ostream &, const LeadingChars &);
+            friend std::ostream & operator<<( std::ostream &, const Leading &);
 
             bool insert(const uint8_t c);
             bool remove(const uint8_t c);

@@ -135,20 +135,20 @@ namespace upsylon {
             }
         }
         
-        LeadingChars:: LeadingChars() throw() :
+        Leading:: Leading() throw() :
         size(0),
         parts()
         {
         }
         
-        LeadingChars:: ~LeadingChars() throw()
+        Leading:: ~Leading() throw()
         {
             _bzset(size);
         }
         
         
         
-        std::ostream & operator<<( std::ostream &os, const LeadingChars &lc)
+        std::ostream & operator<<( std::ostream &os, const Leading &lc)
         {
             os << '{';
             if(lc.parts.size>0)
@@ -164,7 +164,7 @@ namespace upsylon {
             return os;
         }
         
-        bool LeadingChars:: insert(const uint8_t c)
+        bool Leading:: insert(const uint8_t c)
         {
             assert(check());
             
@@ -276,21 +276,21 @@ namespace upsylon {
         }
 
 
-        void LeadingChars:: release() throw()
+        void Leading:: release() throw()
         {
             parts.release();
             aliasing::_(size) = 0;
             assert(parts.size<=0);
         }
         
-        void LeadingChars:: complete()
+        void Leading:: complete()
         {
             release();
             parts.push_back( new Interval(0x00,0xff) );
             aliasing::_(size) = 1;
         }
         
-        bool LeadingChars:: remove(const uint8_t c)
+        bool Leading:: remove(const uint8_t c)
         {
             if(parts.size>0)
             {
@@ -312,7 +312,7 @@ namespace upsylon {
             }
         }
         
-        bool LeadingChars:: removeFrom(Interval *node, const uint8_t c )
+        bool Leading:: removeFrom(Interval *node, const uint8_t c )
         {
             assert(node);
             assert(node->owns(c));
@@ -331,7 +331,7 @@ namespace upsylon {
     
     namespace Jive {
         
-        bool LeadingChars:: check() const
+        bool Leading:: check() const
         {
             size_t ans = 0;
             for(const Interval *node=parts.head;node;node=node->next)
