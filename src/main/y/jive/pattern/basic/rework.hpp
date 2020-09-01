@@ -21,11 +21,9 @@ namespace upsylon {
         public:
             //! compact basic operands of rewritable
             static void Compact( Pattern::List &ops ) throw();
-
+            
             //! in-place transformation of a Single into a Range
             static Pattern *Single2Range(Single *p, const uint8_t lower, const uint8_t upper) throw();
-
-
         };
 
     }

@@ -13,7 +13,7 @@ namespace upsylon
         }
 
         Matching::Matching(const Matching &m):
-        Motif(m), firstChars(m.firstChars)
+        Motif(m), Token(), firstChars(m.firstChars)
         {
         }
 

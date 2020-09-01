@@ -150,7 +150,7 @@ namespace upsylon {
         // Char List
         //
         //======================================================================
-        Char:: List:: List() throw() : ListType()
+        Char:: List:: List() throw() : ListType(), releasable()
         {
         }
 
@@ -168,7 +168,7 @@ namespace upsylon {
             }
         }
 
-        Char:: List:: List( const List &other ) :   ListType()
+        Char:: List:: List( const List &other ) :   ListType(), releasable()
         {
             static Supply &mgr = Supply::location();
             List           tmp;

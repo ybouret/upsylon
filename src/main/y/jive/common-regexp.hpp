@@ -10,14 +10,19 @@ namespace upsylon {
 
     namespace Jive
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! common regular expression
+        //
+        //______________________________________________________________________
         struct RegExpFor
         {
-            static const char * const Identifier;
-            static const char * const Unsigned;
-            static const char * const Integer;
-            static const char * const Double;
-            static const char * const Float;
+            static const char * const Identifier; //!< C identifier
+            static const char * const Unsigned;   //!< unsigned value
+            static const char * const Integer;    //!< integer value
+            static const char * const Double;     //!< full double
+            static const char * const Float;      //!< full float
         };
     }
 

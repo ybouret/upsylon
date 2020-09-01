@@ -28,7 +28,7 @@ namespace upsylon
             //! build from an acceptable regular expression
             template <typename REGEXP> inline
             Matching(const REGEXP &rx, const Dictionary *dict =0 ) :
-            Motif( RegExp(rx,dict) ), firstChars()
+            Motif( RegExp(rx,dict) ), Token(), firstChars()
             {
                 setup();
             }
