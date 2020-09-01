@@ -1,6 +1,5 @@
 
 #include "y/jive/token.hpp"
-//#include "y/code/utils.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -56,6 +55,18 @@ namespace upsylon {
             }
             return ans;
         }
+
+        string Token:: toEncoded() const
+        {
+            string ans(4*size,as_capacity,false);
+            for(const Char *ch=head;ch;ch=ch->next)
+            {
+                ans += cchars::encoded[ch->code];
+            }
+            return ans;
+        }
+
+
 
         exception & Token:: cat(exception &excp) const throw()
         {

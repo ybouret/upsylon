@@ -28,12 +28,12 @@ Y_UTEST(jive_match)
             {
                 const string dataName = baseName + vformat(":%u: ",iline);
                 std::cerr << "---> " << line << std::endl;
-                std::cerr << "|_exactly: " << match.exactly(dataName,line) << std::endl;
-                Token token;
-                std::cerr << "|_somehow: ";
-                if(match.somehow(token,dataName,line))
+                std::cerr << "|_exactly: " << (NULL!=match.isExactly(dataName,line)) << std::endl;
+                std::cerr << "|_foundIn: ";
+                const Token *token = match.isFoundIn(dataName,line);
+                if(token)
                 {
-                    std::cerr  << "'" << token << "'" << std::endl;
+                    std::cerr  << "'" << *token << "'" << std::endl;
                 }
                 else
                 {

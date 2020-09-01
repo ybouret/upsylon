@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_JIVE_TOKEN_INCLUDED
@@ -21,7 +20,11 @@ namespace upsylon {
         class Token : public CountedObject, public Char::List
         {
         public:
-            typedef arc_ptr<Token> Handle;
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
+            typedef arc_ptr<Token> Handle; //!< alias
             
             //__________________________________________________________________
             //
@@ -37,9 +40,10 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-            string toString()       const; //!< codes->chars
-            string toVisible()      const; //!< codes->visible
-            string toPrintable()    const; //!< codes->printable
+            string       toString()       const; //!< codes->chars
+            string       toVisible()      const; //!< codes->visible
+            string       toPrintable()    const; //!< codes->printable
+            string       toEncoded()      const; //!< codes->encoded
             exception & cat(exception &) const throw(); //!< append to exception
         };
 

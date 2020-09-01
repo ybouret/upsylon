@@ -12,10 +12,10 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! mathing APU
+        //! mathing API
         //
         //______________________________________________________________________
-        class Matching : public Motif
+        class Matching : public Motif, public Token
         {
         public:
             //__________________________________________________________________
@@ -39,27 +39,43 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            bool   exactly_(Module *) const;          //!< full module content must be accepted
-            bool   somehow_(Token &, Module *) const; //!< first accepted token
-            size_t collect_(sequence<Token::Handle> &, Module *) const; //!< collect all tokens
+            const Token *exactly_(Module *);          //!< full module content must be accepted
+            const Token *foundIn_(Module *); //!< first accepted token
+            size_t       collect_(sequence<Token::Handle> &, Module *); //!< collect all tokens
 
             //! wrapper
             template <typename DATANAME, typename DATATYPE> inline
-            bool exactly( const DATANAME &dataName, const DATATYPE &data ) const
+            const Token * isExactly( const DATANAME &dataName, const DATATYPE &data )
             {
                 return exactly_( Module::OpenData(dataName,data) );
             }
 
             //! wrapper
-            template <typename DATANAME,typename DATATYPE> inline
-            bool somehow(Token &token, const DATANAME &dataName, const DATATYPE &data ) const
+            template <typename DATANAME>
+            const Token *isExactly( const DATANAME &dataName )
             {
-                 return somehow_(token,Module::OpenData(dataName,data));
+                return exactly_( Module::OpenData(dataName) );
             }
 
             //! wrapper
             template <typename DATANAME,typename DATATYPE> inline
-            size_t collect(sequence<Token::Handle> &tokens, const DATANAME &dataName, const DATATYPE &data ) const
+            const Token *isFoundIn(const DATANAME &dataName, const DATATYPE &data )
+            {
+                 return foundIn_(Module::OpenData(dataName,data));
+            }
+
+            //! wrapper
+            template <typename DATANAME> inline
+            const Token *isFoundIn(const DATANAME &dataName )
+            {
+                return foundIn_(Module::OpenData(dataName));
+            }
+
+            
+
+            //! wrapper
+            template <typename DATANAME,typename DATATYPE> inline
+            size_t collect(sequence<Token::Handle> &tokens, const DATANAME &dataName, const DATATYPE &data )
             {
                 return collect_(tokens,Module::OpenData(dataName,data));
             }

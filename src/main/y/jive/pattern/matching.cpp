@@ -22,25 +22,28 @@ namespace upsylon
             (**this).start( aliasing::_(firstChars) );
         }
 
-        bool Matching:: exactly_(Module *module) const
+        const Token *Matching:: exactly_(Module *module)
         {
             Source         source(module);
-            Token          token;
-            const Pattern &p = **this;
+            Token         &token = *this;
+            const Pattern &p     = **this;
+            token.release();
             if(p.accept(token,source))
             {
-                return !source.alive();
+                return source.alive() ? NULL : this;
             }
             else
             {
-                return false;
+                return NULL;
             }
         }
 
-        bool Matching:: somehow_(Token &token, Module *module) const
+        const Token *Matching:: foundIn_(Module *module)
         {
             Source         source(module);
-            const Pattern &p = **this;
+            Token         &token = *this;
+            const Pattern &p     = **this;
+            token.release();
             if( source.find(firstChars) )
             {
                 assert( source.in_cache() > 0);
@@ -48,19 +51,21 @@ namespace upsylon
                 {
                     throw exception("Jive::Matching::Somehow(corrupted firstChars)");
                 }
-                return true;
+                return this;
             }
             else
             {
-                return false;
+                return NULL;
             }
         }
 
-        size_t Matching:: collect_( sequence<Token::Handle> &tokens, Module *module) const
+        size_t Matching:: collect_(sequence<Token::Handle> &tokens, Module *module)
         {
             Source         source(module);
-            const Pattern &p = **this;
-            size_t         n = 0;
+            const Pattern &p     = **this;
+            Token         &token = *this;
+            size_t         n     = 0;
+            token.release();
             while( source.find(firstChars) )
             {
                 assert(source.in_cache() > 0);

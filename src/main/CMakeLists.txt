@@ -413,25 +413,25 @@ FILE(GLOB jive_pattern_decl y/jive/pattern/*.hpp)
 FILE(GLOB jive_pattern_code y/jive/pattern/*.cpp)
 SET(jive_pattern_srcs ${jive_pattern_decl} ${jive_pattern_code})
 SOURCE_GROUP( jive/pattern FILES ${jive_pattern_srcs} )
-INSTALL( FILES ${jive_pattern_decl} DESTINATION include/y/pattern/jive )
+INSTALL( FILES ${jive_pattern_decl} DESTINATION include/y/jive/pattern )
 
 FILE(GLOB jive_pattern_basic_decl y/jive/pattern/basic/*.hpp)
 FILE(GLOB jive_pattern_basic_code y/jive/pattern/basic/*.cpp)
 SET(jive_pattern_basic_srcs ${jive_pattern_basic_decl} ${jive_pattern_basic_code})
 SOURCE_GROUP( jive/pattern/basic FILES ${jive_pattern_basic_srcs} )
-INSTALL( FILES ${jive_pattern_basic_decl} DESTINATION include/y/pattern/basic/jive )
+INSTALL( FILES ${jive_pattern_basic_decl} DESTINATION include/y/jive/pattern/basic )
 
 FILE(GLOB jive_pattern_logic_decl y/jive/pattern/logic/*.hpp)
 FILE(GLOB jive_pattern_logic_code y/jive/pattern/logic/*.cpp)
 SET(jive_pattern_logic_srcs ${jive_pattern_logic_decl} ${jive_pattern_logic_code})
 SOURCE_GROUP( jive/pattern/logic FILES ${jive_pattern_logic_srcs} )
-INSTALL( FILES ${jive_pattern_logic_decl} DESTINATION include/y/pattern/logic/jive )
+INSTALL( FILES ${jive_pattern_logic_decl} DESTINATION include/y/jive/pattern/logic )
 
 FILE(GLOB jive_pattern_joker_decl y/jive/pattern/joker/*.hpp)
 FILE(GLOB jive_pattern_joker_code y/jive/pattern/joker/*.cpp)
 SET(jive_pattern_joker_srcs ${jive_pattern_joker_decl} ${jive_pattern_joker_code})
 SOURCE_GROUP( jive/pattern/joker FILES ${jive_pattern_joker_srcs} )
-INSTALL( FILES ${jive_pattern_joker_decl} DESTINATION include/y/pattern/joker/jive )
+INSTALL( FILES ${jive_pattern_joker_decl} DESTINATION include/y/jive/pattern/joker )
 
 
 ADD_LIBRARY(y STATIC 

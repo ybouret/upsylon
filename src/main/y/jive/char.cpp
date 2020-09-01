@@ -156,6 +156,11 @@ namespace upsylon {
 
         Char:: List:: ~List() throw()
         {
+            release();
+        }
+
+        void Char:: List:: release() throw()
+        {
             while(size)
             {
                 static Supply &mgr = Supply::location();

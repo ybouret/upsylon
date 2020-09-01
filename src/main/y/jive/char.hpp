@@ -88,7 +88,7 @@ namespace upsylon {
             //
             //! list of Chars
             //__________________________________________________________________
-            class List : public ListType
+            class List : public ListType, public releasable
             {
             public:
                 //______________________________________________________________
@@ -107,6 +107,7 @@ namespace upsylon {
                 //______________________________________________________________
                 List & operator<<(Char *) throw();         //!< helper
                 List & add(const Context &,const uint8_t); //!< helper
+                virtual void release() throw();            //!< erase!
                 
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const List &);

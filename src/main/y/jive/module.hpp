@@ -83,6 +83,14 @@ namespace upsylon {
                 return OpenData(dataname,(const char *)buffer.ro(),buffer.length());
             }
 
+            //! self open
+            template <typename DATANAME> static inline
+            Module * OpenData(const DATANAME &dataname )
+            {
+                const Tag   tag = new string(dataname);
+                const Input inp = MakeInput::FromData( **tag, tag->size() );
+                return new Module(tag,inp,FromData);
+            }
 
             
         private:

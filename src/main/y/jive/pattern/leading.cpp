@@ -539,8 +539,11 @@ namespace upsylon {
             {
                 if( fc.search(cache.head->code) )
                 {
+                    // forget previously read
                     return true;
                 }
+
+                // save in case of failure
                 temp.push_back( cache.pop_front() );
             }
 
@@ -552,6 +555,7 @@ namespace upsylon {
             Char *ch = probe();
             if(!ch)
             {
+                // restore what was read
                 cache.swap_with(temp);
                 return false;
             }
@@ -559,9 +563,12 @@ namespace upsylon {
             if( fc.search(ch->code) )
             {
                 assert(cache.size==0);
+                // forget temporary !
                 cache.push_back(ch);
                 return true;
             }
+
+            // save in case of failure
             temp.push_back(ch);
             goto PROBE;
 
