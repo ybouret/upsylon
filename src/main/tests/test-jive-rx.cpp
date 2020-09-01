@@ -27,6 +27,8 @@ std::cerr << "|_feeble: " << m->feeble() << std::endl;\
     COM_RX(Identifier);
     COM_RX(Unsigned);
     COM_RX(Integer);
+    COM_RX(Double);
+    COM_RX(Float);
 
     Dictionary        dict;
     //RegExpVerbose() = true;

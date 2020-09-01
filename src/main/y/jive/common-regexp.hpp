@@ -16,6 +16,8 @@ namespace upsylon {
             static const char * const Identifier;
             static const char * const Unsigned;
             static const char * const Integer;
+            static const char * const Double;
+            static const char * const Float;
         };
     }
 
