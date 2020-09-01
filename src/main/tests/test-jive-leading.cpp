@@ -43,7 +43,17 @@ Y_UTEST(jive_leading)
     std::cerr << "L=" << L << std::endl;
     L.complete();
     std::cerr << "L=" << L << std::endl;
-   
+
+    L.release();
+
+
+    L.insert('a','c');std::cerr << L << std::endl;
+    L.remove('a');    std::cerr << L << std::endl;
+    L.insert('a','c');std::cerr << L << std::endl;
+    L.remove('c');    std::cerr << L << std::endl;
+    L.insert('a','c');std::cerr << L << std::endl;
+    L.remove('b');    std::cerr << L << std::endl;
+
     for(size_t iter=0;iter<8;++iter)
     {
         L.release();
@@ -63,6 +73,7 @@ Y_UTEST(jive_leading)
         {
             Y_ASSERT(L.remove(ch[i]));
         }
+        std::cerr << "L=" << L << std::endl;
     }
     
     

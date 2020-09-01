@@ -49,14 +49,15 @@ namespace upsylon {
         public:
             explicit Leading() throw();
             virtual ~Leading() throw();
-            Leading( const Leading &);
+            Leading(const Leading &);
             
             friend std::ostream & operator<<( std::ostream &, const Leading &);
 
-            bool insert(const uint8_t c);
-            bool remove(const uint8_t c);
-            void release() throw();
-            void complete();
+            bool   insert(const uint8_t c);
+            bool   remove(const uint8_t c);
+            size_t insert(const uint8_t lo,const uint8_t hi);
+            void   release() throw();
+            void   complete();
             
             const size_t size;
             

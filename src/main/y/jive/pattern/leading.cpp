@@ -32,7 +32,6 @@ namespace upsylon {
         lower(lo),
         upper(up)
         {
-            assert(lower<upper);
         }
         
         
@@ -312,15 +311,74 @@ namespace upsylon {
             }
         }
         
-        bool Leading:: removeFrom(Interval *node, const uint8_t c )
+        bool Leading:: removeFrom(Interval *node, const uint8_t c)
         {
             assert(node);
             assert(node->owns(c));
-            
+            const unsigned num_lower = c-node->lower;
+            const unsigned num_upper = node->upper-c;
+            if(num_lower<=0)
+            {
+                if(num_upper<=0)
+                {
+                    //----------------------------------------------------------
+                    // num_lower=0 and num_upper=0
+                    //----------------------------------------------------------
+                    delete parts.unlink(node);
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    // num_lower=0 and num_upper>0
+                    //----------------------------------------------------------
+                    assert(num_upper>0);
+                    ++aliasing::_(node->lower);
+                }
+            }
+            else
+            {
+                assert(num_lower>0);
+                if(num_upper<=0)
+                {
+                    //----------------------------------------------------------
+                    // num_lower>0 and num_upper<=0
+                    //----------------------------------------------------------
+                    --aliasing::_(node->upper);
+                }
+                else
+                {
+                    assert(num_upper>0);
+                    //----------------------------------------------------------
+                    // num_upper>0 and num_lower>0
+                    //----------------------------------------------------------
+                    const uint8_t lhs_lower = node->lower;
+                    const uint8_t lhs_upper = c-1;
+                    assert(lhs_lower<=lhs_upper);
+
+                    const uint8_t rhs_lower = c+1;
+                    const uint8_t rhs_upper = node->upper;
+                    assert(rhs_lower<=rhs_upper);
+                    parts.insert_after(node, new Interval(rhs_lower,rhs_upper) );
+                    aliasing::_(node->upper) = lhs_upper;
+                }
+            }
+
+            --aliasing::_(size);
             return true;
         }
 
-        
+        size_t Leading:: insert(const uint8_t lo,const uint8_t hi)
+        {
+            unsigned lower=lo,upper=hi;
+            if(lower>upper) cswap(lower,upper);
+            size_t n = 0;
+            for(size_t i=lower;i<=upper;++i)
+            {
+                if(insert(uint8_t(i))) ++n;
+            }
+            return n;
+        }
+
     }
     
 }
