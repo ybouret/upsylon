@@ -8,6 +8,18 @@ namespace upsylon {
 
         namespace Lexical {
 
+            void Scanner:: nothing(const Token &) const throw()
+            {
+
+            }
+
+            void Scanner:: newLine(const Token &) throw()
+            {
+                assert(from);
+                
+                
+            }
+
             const char * Scanner:: AtEOSText(const AtEOS eos) throw()
             {
                 switch (eos) {
@@ -36,7 +48,7 @@ namespace upsylon {
 
 #define YJS_PRINTLN(CODE) do { if(Scanner::Verbose) { std::cerr<< CODE << std::endl; } } while(false)
 
-            void Scanner:: add(Rule *r)
+            const Rule &Scanner:: add(Rule *r)
             {
                 //--------------------------------------------------------------
                 //
@@ -44,14 +56,14 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 assert(r);
-                rules.push_back(r);
+                aliasing::_(rules).push_back(r);
                 const string & ruleName = *(r->label);
                 try
                 {
                     //----------------------------------------------------------
                     // insert into database
                     //----------------------------------------------------------
-                    if(!rdb.insert_by(ruleName,r))
+                    if(!aliasing::_(hoard).insert_by(ruleName,r))
                     {
                         throw exception("Jive::Lexical::Scanner(multiple rule '%s')", *ruleName);
                     }
@@ -61,7 +73,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // cleanup
                     //----------------------------------------------------------
-                    delete rules.pop_back();
+                    delete aliasing::_(rules).pop_back();
                     throw;
                 }
 
@@ -72,17 +84,17 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 try
                 {
-                    Leading cfc(rfc);     // current fc
-                    Leading lfc;          // local first chars
-                    r->motif->start(lfc); // find them
-                    cfc.include(lfc);     // include to current first chars
-                    table.record(r,lfc);  // include in table of rules
-                    cfc.commute(rfc);     // done, no-throw
+                    Leading cfc(intro);              // current fc
+                    Leading lfc;                     // local first chars
+                    r->motif->start(lfc);            // find them
+                    cfc.include(lfc);                // include to current first chars
+                    table.record(r,lfc);             // include in table of rules
+                    cfc.commute(aliasing::_(intro)); // done, no-throw
                 }
                 catch(...)
                 {
-                    (void)rdb.remove_by(ruleName);
-                    delete rules.pop_back();
+                    aliasing::_(hoard).remove_by(ruleName);
+                    delete aliasing::_(rules).pop_back();
                     table.remove(r);
                     throw;
                 }
@@ -93,6 +105,7 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
 
+                return *r;
             }
 
 

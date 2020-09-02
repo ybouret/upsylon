@@ -110,6 +110,10 @@ namespace upsylon {
             }
         }
 
+        void   Source:: newLine() throw()
+        {
+            handle->newLine();
+        }
 
     }
 

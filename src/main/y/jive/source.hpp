@@ -47,6 +47,8 @@ namespace upsylon {
             void   skip(size_t n) throw();     //!< assert(cache.size>=n);
             bool   find(const Leading &);      //!< skip until first char is found
 
+            void   newLine() throw();          //!< send newLine to module
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);
             typedef core::singly<Module::Handle>  MetaModule;
