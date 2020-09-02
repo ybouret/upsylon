@@ -8,6 +8,17 @@ namespace upsylon {
     
     namespace Jive {
 
+
+        const Interval * Leading:: head() const throw()
+        {
+            return parts.head;
+        }
+
+        const Interval * Leading:: tail() const throw()
+        {
+            return parts.tail;
+        }
+
         Interval:: ~Interval() throw()
         {
             assert(0==prev);

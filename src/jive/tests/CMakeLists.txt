@@ -6,6 +6,7 @@ TARGET_LINK_Y(test-jive jive)
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ENABLE_TESTING()
 ADD_TEST(scanner test-jive scanner)
+ADD_TEST(scatter test-jive scatter)
 
 ADD_CUSTOM_TARGET(utest-jive
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

@@ -9,8 +9,6 @@ Y_UTEST(scanner)
 {
     Y_UTEST_SIZEOF(Lexical::Rule);
     Y_UTEST_SIZEOF(Lexical::Scanner);
-    Y_UTEST_SIZEOF(Scatter::Node);
-    Y_UTEST_SIZEOF(Scatter);
     
 }
 Y_UTEST_DONE()

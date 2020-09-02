@@ -75,7 +75,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rules        rules; //!< list of rules
                 RulesDB      rdb;   //!< database of rules
-                Leading      rfc;   //!<
+                Leading      rfc;   //!< database of first chars
             };
         }
     }

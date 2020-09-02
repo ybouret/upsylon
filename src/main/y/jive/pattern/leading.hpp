@@ -99,6 +99,10 @@ namespace upsylon {
             void   exclude(const Leading &);            //!< exclude another
             void   commute(Leading &) throw();          //!< no-throw exchange
             bool   search(const uint8_t) const throw(); //!< search for owned
+
+            const Interval *head() const throw(); //!< head interval
+            const Interval *tail() const throw(); //!< tail interval
+
             //__________________________________________________________________
             //
             // members
