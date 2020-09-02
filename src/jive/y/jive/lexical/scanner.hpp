@@ -5,6 +5,7 @@
 
 #include "y/jive/lexical/rule.hpp"
 #include "y/jive/lexical/events.hpp"
+#include "y/jive/scatter.hpp"
 #include "y/ptr/intr.hpp"
 
 namespace upsylon
