@@ -14,6 +14,7 @@ namespace upsylon {
         namespace Lexical {
 
             //------------------------------------------------------------------
+            //
             //! base class for rules
             /**
              trigger and event uppon motif

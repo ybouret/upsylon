@@ -429,14 +429,18 @@ namespace upsylon {
             }
         }
 
+        void Leading:: commute(Leading &tmp) throw()
+        {
+            _cswap(size,tmp.size);
+            tmp.parts.swap_with(parts);
+        }
+
         void Leading:: opposite(const Leading &other)
         {
             Leading tmp;
             tmp.complete();
             tmp.exclude(other);
-
-            _cswap(size,tmp.size);
-            tmp.parts.swap_with(parts);
+            commute(tmp);
         }
 
         bool Leading:: search(const uint8_t c) const throw()

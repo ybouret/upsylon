@@ -97,8 +97,8 @@ namespace upsylon {
             void   opposite(const Leading &);           //!< complete and exclude
             void   include(const Leading &);            //!< include another
             void   exclude(const Leading &);            //!< exclude another
+            void   commute(Leading &) throw();          //!< no-throw exchange
             bool   search(const uint8_t) const throw(); //!< search for owned
-            
             //__________________________________________________________________
             //
             // members
