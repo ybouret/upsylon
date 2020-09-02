@@ -14,14 +14,23 @@ namespace upsylon
     {
         namespace Lexical
         {
-
+            //__________________________________________________________________
+            //
             //! directive for Lexer during probe
             /**
              a directive is emitted when a control event (jump/call/back) is
              triggered
              */
+            //__________________________________________________________________
+
             typedef const ControlEvent *Directive;
 
+            //__________________________________________________________________
+            //
+            //
+            //! detect and apply best rule to produce a token or a directive
+            //
+            //__________________________________________________________________
             class Scanner : public CountedObject
             {
             public:
@@ -44,9 +53,12 @@ namespace upsylon
                 //
                 // C++
                 //
-                //------------------------------------------------------------------
-                virtual ~Scanner() throw();                                   //!< cleanup
+                //--------------------------------------------------------------
 
+                //! cleanup
+                virtual ~Scanner() throw();
+
+                //! setup using Tags
                 template <typename ID> inline
                 explicit Scanner(const ID &id, const AtEOS which=RejectEOS) :
                 label(Tags::Make(id)),
@@ -58,24 +70,38 @@ namespace upsylon
                 }
 
 
+                //--------------------------------------------------------------
+                //
+                // methods
+                //
+                //--------------------------------------------------------------
+
+                //! rule full registration
+                /**
+                 - r is added to internal rules
+                 - the first chars of r->motifs are included in first chars db
+                 - r is scattered into the table for all its first chars
+                 */
                 void           add(Rule *r);
-                const string & key() const throw(); //!< for Pointer
+
+
+                const string & key()    const throw();  //!< get key for pointer
+                const char   * getEOS() const throw();  //!< named atEOS
 
                 //--------------------------------------------------------------
                 //
-                // generic method
+                // methods
                 //
-                //------------------------------------------------------------------
-                const char   *getEOS() const throw();                //!< named endOfStream
-
-                const Tag    label;
-                const AtEOS  atEOS;
+                //--------------------------------------------------------------
+                const Tag    label; //!< label for this rule
+                const AtEOS  atEOS; //!< what happens if EOS is met
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Rules        rules; //!< list of rules
                 RulesDB      rdb;   //!< database of rules
                 Leading      rfc;   //!< database of first chars
+                Scatter      table; //!< table of rules
             };
         }
     }

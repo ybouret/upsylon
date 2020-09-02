@@ -46,8 +46,14 @@ namespace upsylon {
                 // C++
                 //
                 //--------------------------------------------------------------
-                virtual ~Event() throw();
-                virtual  const void *self() const throw() = 0;
+                virtual ~Event() throw();  //!< cleanup
+
+                //--------------------------------------------------------------
+                //
+                // methods
+                //
+                //--------------------------------------------------------------
+                virtual  const void *self() const throw() = 0; //!< derive class address
 
                 //--------------------------------------------------------------
                 //

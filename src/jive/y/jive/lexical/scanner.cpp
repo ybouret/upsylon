@@ -76,14 +76,23 @@ namespace upsylon {
                     Leading lfc;          // local first chars
                     r->motif->start(lfc); // find them
                     cfc.include(lfc);     // include to current first chars
+                    table.record(r,lfc);  // include in table of rules
                     cfc.commute(rfc);     // done, no-throw
                 }
                 catch(...)
                 {
                     (void)rdb.remove_by(ruleName);
                     delete rules.pop_back();
+                    table.remove(r);
                     throw;
                 }
+
+                //--------------------------------------------------------------
+                //
+                // ok, full rule registration
+                //
+                //--------------------------------------------------------------
+
             }
 
 

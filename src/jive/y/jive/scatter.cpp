@@ -93,7 +93,20 @@ namespace upsylon {
             }
         }
 
-        
+        void Scatter:: remove(const void *addr) throw()
+        {
+            for(size_t i=0;i<256;++i)
+            {
+                Slot &slot = slots[i];
+                while(slot->addr==addr)
+                {
+                    Node *node = slot;
+                    slot = node->next;
+                    object::release1(node);
+                }
+            }
+        }
+
 
 
     }
