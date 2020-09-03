@@ -27,7 +27,13 @@ namespace upsylon {
                 Node       *next; //!< next node for storage
             };
 
-            typedef Node *Slot; //!< alias
+            struct Slot
+            {
+                Node *head;
+                Node *tail;
+                Node *push(Node *) throw(); //!< at end
+                Node *pop() throw();        //!< remove head
+            };
 
             //__________________________________________________________________
             //
@@ -43,7 +49,7 @@ namespace upsylon {
             //! display with optional callback
             void display(std::ostream&, void (*proc)(std::ostream&,const void*) ) const;
 
-            const Node * operator[](const uint8_t code) const throw(); //!< get entry
+            const Slot  &operator[](const uint8_t code) const throw(); //!< get entry
             size_t       operator()(const uint8_t code) const throw(); //!< get entries
 
         private:

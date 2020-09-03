@@ -3,6 +3,7 @@
 #include "y/jive/scatter.hpp"
 #include "y/code/base2.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/block/swap.hpp"
 #include "y/code/utils.hpp"
 #include "y/code/ilog2.hpp"
 #include <iomanip>
@@ -12,6 +13,41 @@ namespace upsylon {
 
     namespace Jive
     {
+
+        Scatter::Node *Scatter::Slot:: push(Node *node) throw()
+        {
+
+            assert(node);
+            assert(0==node->next);
+            if(!head)
+            {
+                assert(!tail);
+                head = tail = node;
+            }
+            else
+            {
+                assert(tail);
+                tail = tail->next = node;
+            }
+            return node;
+        }
+
+        Scatter::Node *Scatter::Slot:: pop() throw()
+        {
+            assert(head);
+            assert(tail);
+            Node *node=head;
+            if(head!=tail)
+            {
+                head=node->next;
+                node->next = 0;
+            }
+            else
+            {
+                head=tail=0;
+            }
+            return node;
+        }
 
 
         static const size_t          ScatterBlockSize = 256* sizeof(Scatter::Slot);
@@ -27,19 +63,18 @@ namespace upsylon {
             std::cerr << "bytes=" << ScatterBlockSize << std::endl;
         }
 
-        const Scatter::Node * Scatter:: operator[](const uint8_t code) const throw()
+        const Scatter::Slot &Scatter:: operator[](const uint8_t code) const throw()
         {
             return slots[code];
         }
 
         size_t      Scatter::  operator()(const uint8_t code) const throw()
         {
-            const Node *node = slots[code];
+            const Slot &slot  = slots[code];
             size_t      count = 0;
-            while(node)
+            for(const Node *node=slot.head;node;node=node->next)
             {
                 ++count;
-                node=node->next;
             }
             return count;
         }
@@ -52,12 +87,13 @@ namespace upsylon {
             for(size_t i=0;i<256;++i)
             {
                 Slot &slot = slots[i];
-                while(slot)
+                while(slot.head)
                 {
-                    Node *node = slot;
-                    slot = node->next;
+                    Node *node = slot.pop();
                     object::release1(node);
                 }
+                assert(0==slot.head);
+                assert(0==slot.tail);
             }
 
             object::dyadic_release(slots,ScatterBlockExp2);
@@ -66,11 +102,7 @@ namespace upsylon {
 
         void Scatter:: record(const void *p, const uint8_t c)
         {
-            Node * node = object::acquire1<Node>();
-            node->addr  = p;
-            Slot & slot = slots[c];
-            node->next  = slot;
-            slot        = node;
+            slots[c].push( object::acquire1<Node>() )->addr = p;
         }
 
         static inline
@@ -85,13 +117,14 @@ namespace upsylon {
             os << "<Scatter>"<< std::endl;
             for(size_t i=0;i<256;++i)
             {
-                const Node *node = slots[i];
+                const Slot &slot = slots[i];
+                const Node *node = slot.head;
                 if(node)
                 {
                     os << "[" << cchars::visible[i] << "] : ";
                     while(node)
                     {
-                         proc(os << ' ',node->addr);
+                        proc(os << ' ',node->addr);
                         node=node->next;
                     }
                     os << std::endl;
@@ -121,12 +154,20 @@ namespace upsylon {
             for(size_t i=0;i<256;++i)
             {
                 Slot &slot = slots[i];
-                while(slot->addr==addr)
+                Slot  temp = { NULL, NULL };
+                while(slot.head)
                 {
-                    Node *node = slot;
-                    slot = node->next;
-                    object::release1(node);
+                    Node *node = slot.pop();
+                    if(addr==node->addr)
+                    {
+                        object::release1(node);
+                    }
+                    else
+                    {
+                        temp.push(node);
+                    }
                 }
+                bswap(slot,temp);
             }
         }
 

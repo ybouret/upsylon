@@ -51,6 +51,8 @@ Y_UTEST(scatter)
         }
 
         table.display(std::cerr,dispMotif);
+        table.remove(m2.content());
+        table.display(std::cerr,dispMotif);
     }
 
     Y_UTEST_SIZEOF(Scatter::Node);

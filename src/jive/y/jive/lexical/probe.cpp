@@ -102,7 +102,7 @@ namespace upsylon {
                     //------------------------------------------------------
                     source.unget(ch);
                     const uint8_t      code = ch->code;
-                    const RuleNode    *node = (const RuleNode *)( table[code] );
+                    const RuleNode    *node = (const RuleNode *)( table[code].head );
                     if(node)
                     {
                         //------------------------------------------------------
