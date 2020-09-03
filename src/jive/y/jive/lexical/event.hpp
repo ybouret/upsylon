@@ -40,7 +40,8 @@ namespace upsylon {
                     Regular, //!< [Forward|Discard]
                     Control  //!< [Jump|Call|Back]
                 };
-
+                static const char *KindText(const Kind) throw();
+                
                 //--------------------------------------------------------------
                 //
                 // C++
@@ -53,7 +54,8 @@ namespace upsylon {
                 // methods
                 //
                 //--------------------------------------------------------------
-                virtual  const void *self() const throw() = 0; //!< derive class address
+                virtual  const void *self()     const throw() = 0; //!< derive class address
+                const  char         *kindText() const throw();     //!< KindText(kind)
 
                 //--------------------------------------------------------------
                 //

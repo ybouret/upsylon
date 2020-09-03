@@ -34,6 +34,8 @@ Y_UTEST(scanner)
     Y_UTEST_SIZEOF(Lexical::Rule);
     Y_UTEST_SIZEOF(Lexical::Scanner);
 
+    Lexical::Scanner::Verbose = true;
+
     MyScanner scan;
 
 

@@ -20,7 +20,20 @@ namespace upsylon {
             {
             }
 
+            const  char * Event:: kindText() const throw()
+            {
+                return KindText(kind);
+            }
 
+            const char * Event::KindText(const Kind k) throw()
+            {
+                switch (k)
+                {
+                    case Regular: return "Regular";
+                    case Control: return "Control";
+                }
+                return "";
+            }
         }
 
     }

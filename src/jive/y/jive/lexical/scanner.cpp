@@ -65,7 +65,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     if(!aliasing::_(hoard).insert_by(ruleName,r))
                     {
-                        throw exception("Jive::Lexical::Scanner(multiple rule '%s')", *ruleName);
+                        throw exception("Jive::Lexical::Scanner(multiple rule <%s>)", *ruleName);
                     }
                 }
                 catch(...)
@@ -87,6 +87,17 @@ namespace upsylon {
                     Leading cfc(intro);              // current fc
                     Leading lfc;                     // local first chars
                     r->motif->start(lfc);            // find them
+                    if(Verbose)
+                    {
+                        std::cerr << "[" << label << "] + " << r->event->kindText() << " <" << ruleName << ">";
+                        for(size_t i=ruleName.size();i<=12;++i)
+                        {
+                            std::cerr << ' ';
+                        }
+                        const string rxm = r->motif->toRegExp();
+                        std::cerr << "= " << rxm << " => " << lfc;
+                        std::cerr << std::endl;
+                    }
                     cfc.include(lfc);                // include to current first chars
                     table.record(r,lfc);             // include in table of rules
                     cfc.commute(aliasing::_(intro)); // done, no-throw
