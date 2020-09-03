@@ -230,12 +230,49 @@ namespace upsylon {
                 return unit;
             }
 
-            exception Scanner:: syntaxError(const Source &source) const
+            exception Scanner:: syntaxError(Source &source) const
             {
+                assert(source.in_cache());
+
+                static const char delim[] = " \t\n\r";
+
                 exception excp;
-                source.context().cat(excp);
+                {
+                    Token     token;
+
+                    // put the first char, initialize exception with its context
+                    token.push_back( source.get() )->cat(excp);
+
+                    // try to read until next delim
+                    while(true)
+                    {
+                        Char *ch = source.get();
+                        if(!ch)
+                        {
+                            break;
+                        }
+                        if( strchr(delim, ch->code) )
+                        {
+                            source.unget(ch);
+                            break;
+                        }
+                        token.push_back(ch);
+
+                        if(token.size>=32)
+                        {
+                            break;
+                        }
+
+                    }
 
 
+                    excp.cat("%s syntax error '",**label);
+                    token.cat(excp).cat("'");
+
+
+                    source.unget(token);
+
+                }
                 return excp;
             }
 

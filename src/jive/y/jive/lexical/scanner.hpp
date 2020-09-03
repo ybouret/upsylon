@@ -315,7 +315,7 @@ namespace upsylon
 
                 Unit     *endOfStream(const Source &) const;
                 Unit     *tokenToUnit(Token  &, const Tag &) const;
-                exception syntaxError(const Source &) const;
+                exception syntaxError(Source &) const;
 
             public:
                 const Dictionary *dict; //!< shared dictionary
