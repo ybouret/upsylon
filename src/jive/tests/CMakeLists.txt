@@ -7,6 +7,7 @@ SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ENABLE_TESTING()
 ADD_TEST(scanner test-jive scanner ${HERE}/../../main/tests/words.db)
 ADD_TEST(scatter test-jive scatter)
+ADD_TEST(lexer   test-jive lexer)
 
 ADD_CUSTOM_TARGET(utest-jive
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
