@@ -24,8 +24,9 @@ namespace upsylon {
             char C = 0;
             if(input->query(C))
             {
+                Char *ch = Char::Acquire(*this,C);
                 ++aliasing::_(column);
-                return Char::Acquire(*this,C);
+                return ch;
             }
             else
             {

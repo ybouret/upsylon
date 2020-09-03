@@ -55,16 +55,15 @@ namespace upsylon {
                     throw exception("%s<%s> failed to accept stream!",fn,**(rule.label));
                 }
                 source.uncpy(token);
-                if(Scanner::Verbose) { std::cerr << "|_<" << rule.label << "> => '" << token << "'" << std::endl; }
             }
 
             Unit * Scanner:: probe(Source &source, Directive &directive)
             {
-                const Linker      link(source,&origin); assert(origin==&source);
+                const Linker link(source,&origin); assert(origin==&source);
                 YJS_PRINTLN("probe " << source.context().tag );
                 assert(0==directive);
 
-            //PROBE:
+            PROBE:
                 Char *ch = source.get();
                 if(!ch)
                 {
@@ -91,8 +90,8 @@ namespace upsylon {
                             throw excp;
                         }
                     }
-                    throw exception("%scorrupted code at line %d!",fn,__LINE__);
-                }
+                    // NEVER GET HERE
+                 }
                 else
                 {
                     //------------------------------------------------------
@@ -150,11 +149,55 @@ namespace upsylon {
                         assert( source.in_cache() >= bestUnit.size );
                         source.skip(bestUnit.size);
 
+
                         //------------------------------------------------------
-                        // take action
+                        //
+                        // get event
+                        //
                         //------------------------------------------------------
                         const Event &event = *(bestRule->event);
 
+                        //------------------------------------------------------
+                        // apply action
+                        //------------------------------------------------------
+                        aliasing::_(event.action)(bestUnit);
+
+                        //------------------------------------------------------
+                        // apply policy
+                        //------------------------------------------------------
+                        switch(event.kind)
+                        {
+
+                                //----------------------------------------------
+                                // REGULAR
+                                //----------------------------------------------
+                            case Event::Regular: {
+                                const RegularEvent *regularEvent = static_cast<const RegularEvent *>( event.self() ); assert(regularEvent!=NULL);
+                                switch(regularEvent->type)
+                                {
+                                    case RegularEvent::Forward: {
+                                        YJS_PRINTLN("forwarding <" << bestRule->label << "> = '" << bestUnit << "'" );
+                                        Unit *unit = new Unit( *(bestUnit.head),bestRule->label);
+                                        unit->swap_with(bestUnit);
+                                        return unit;
+                                    }
+
+                                    case RegularEvent::Discard:
+                                        YJS_PRINTLN("discarding <" << bestRule->label << ">" );
+                                        goto PROBE;
+                                }
+                                // NEVER GET HERE
+                            } break;
+
+                                //----------------------------------------------
+                                // CONTROL
+                                //----------------------------------------------
+                            case Event::Control:
+                                YJS_PRINTLN("directive  <" << bestRule->label << ">" );
+                                directive = static_cast<const ControlEvent *>( event.self() );
+                                return NULL;
+                        }
+                        // NEVER GET HERE
 
 
                     }

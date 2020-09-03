@@ -13,20 +13,33 @@ namespace upsylon {
 
         namespace Lexical {
 
-            //! a unit is created by a lexical rule
+            //__________________________________________________________________
+            //
+            //
+            //! a unit is produced by a lexical rule
+            //
+            //__________________________________________________________________
             class Unit : public Token, public Context, public inode<Unit>
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
                 typedef core::list_of_cpp<Unit> List; //!< alias for Lexemes
 
-                virtual ~Unit() throw(); //!< cleanup
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~Unit() throw();                             //!< cleanup
+                explicit Unit(const Context &, const Tag &) throw(); //!< setup
 
-                //! setup
-                explicit Unit(const Context &,
-                              const Tag     &) throw();
-
-
-                const Tag label;                         //!< creating rule label
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Tag label; //!< creating rule label
                 
                 
             private:

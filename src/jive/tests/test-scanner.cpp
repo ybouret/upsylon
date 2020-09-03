@@ -16,9 +16,12 @@ namespace {
         {
             emit("INT",    RegExpFor::Integer);
             emit("UINT",   RegExpFor::Unsigned);
-
+            emit("ID",     RegExpFor::Identifier);
             drop("blanks","[:blank:]+");
             endl("endl",  "[:endl:]");
+
+            jump("comment", "#", this, & Scanner::nothing );
+
         }
 
         virtual ~MyScanner() throw()
@@ -38,16 +41,33 @@ Y_UTEST(scanner)
 
     Lexical::Scanner::Verbose = true;
 
-    MyScanner scan;
+    Lexemes   lexemes;
 
-    if(argc>1)
     {
+        MyScanner scan;
+
+        if(argc>1)
+        {
         Source             source( Module::OpenFile(argv[1]) );
-        Lexical::Directive directive = 0;
-        scan.probe(source,directive);
-        
+            Lexical::Directive directive = 0;
+            {
+                Lexeme *lx = 0;
+                while( (lx=scan.probe(source,directive)) )
+                {
+                    lexemes.push_back(lx);
+                }
+            }
+        }
     }
 
+    Tags::Display();
+
+    std::cerr << "<Lexemes>" << std::endl;
+    for(const Lexeme *lx=lexemes.head;lx;lx=lx->next)
+    {
+        std::cerr << '<' << lx->label << '>' << " = " << "'" << *lx << "'" << "@" << lx->tag << ":" << lx->line << ":" << lx->column << std::endl;
+    }
+    std::cerr << "<Lexemes/>" << std::endl;
 
 
 }
