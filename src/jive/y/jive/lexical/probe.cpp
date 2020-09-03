@@ -38,8 +38,7 @@ namespace upsylon {
                     RuleNode   *next;
                 };
 
-                static const char fn[] = "Jive::Scanner::probe: ";
-
+                
             }
 
 #define YJS_PRINTLN(CODE) do { if(Scanner::Verbose) { std::cerr << "[" << label << "] " << CODE << std::endl; } } while(false)

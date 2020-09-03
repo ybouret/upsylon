@@ -114,7 +114,10 @@ namespace upsylon {
                 // ok, full rule registration
                 //
                 //--------------------------------------------------------------
-
+                {
+                    const size_t l = r->label->size();
+                    if(l>lmax) aliasing::_(lmax) = l;
+                }
                 return *r;
             }
 

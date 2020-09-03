@@ -69,7 +69,9 @@ namespace upsylon
                 hoard(),
                 intro(),
                 table(),
-                origin(0)
+                origin(0),
+                lmax(0),
+                dict(0)
                 {
                 }
 
@@ -318,6 +320,7 @@ namespace upsylon
                 exception syntaxError(Source &) const;
 
             public:
+                const size_t      lmax; //!< max rule label length
                 const Dictionary *dict; //!< shared dictionary
             };
         }

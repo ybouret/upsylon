@@ -19,6 +19,9 @@ namespace {
             emit("ID",     RegExpFor::Identifier);
             emit("FLT",    RegExpFor::Float);
             emit("DBL",    RegExpFor::Double);
+            emit("QUOTE", "'");
+            emit("DQUOTE", "\"");
+            emit("DOT",    "[.]");
 
             drop("blanks","[:blank:]+");
             endl("endl",  "[:endl:]");
@@ -45,19 +48,21 @@ Y_UTEST(scanner)
     Lexical::Scanner::Verbose = true;
 
     Lexemes   lexemes;
-
+    size_t    maxLen = 0;
+    size_t    maxLab = 0;
     {
         MyScanner scan;
-
+        maxLab = scan.lmax;
         if(argc>1)
         {
-        Source             source( Module::OpenFile(argv[1]) );
+            Source             source( Module::OpenFile(argv[1]) );
             Lexical::Directive directive = 0;
             {
                 Lexeme *lx = 0;
                 while( (lx=scan.probe(source,directive)) )
                 {
                     lexemes.push_back(lx);
+                    if(lx->size>maxLen) maxLen = lx->size;
                 }
             }
         }
@@ -68,7 +73,12 @@ Y_UTEST(scanner)
     std::cerr << "<Lexemes>" << std::endl;
     for(const Lexeme *lx=lexemes.head;lx;lx=lx->next)
     {
-        std::cerr << '<' << lx->label << '>' << " = " << "'" << *lx << "'" << "@" << lx->tag << ":" << lx->line << ":" << lx->column << std::endl;
+        std::cerr << '<' << lx->label << '>';
+        for(size_t i=lx->label->size();i<=maxLab;++i) std::cerr << ' ';
+        std::cerr << "= " << "'" << *lx << "'";
+        for(size_t i=lx->size;i<=maxLen;++i) std::cerr << ' ';
+
+        std::cerr << "@" << lx->tag << ":" << lx->line << ":" << lx->column << std::endl;
     }
     std::cerr << "<Lexemes/>" << std::endl;
 
