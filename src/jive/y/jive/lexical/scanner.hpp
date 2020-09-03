@@ -63,7 +63,7 @@ namespace upsylon
                 //! setup using Tags
                 template <typename ID> inline
                 explicit Scanner(const ID &id, const AtEOS which=AcceptEOS) :
-                label(Tags::Make(id)),
+                label( Tags::Make(id) ),
                 atEOS(which),
                 rules(),
                 hoard(),
