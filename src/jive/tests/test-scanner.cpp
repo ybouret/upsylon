@@ -1,6 +1,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/jive/lexical/scanner.hpp"
+#include "y/jive/lexemes.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -37,6 +38,15 @@ Y_UTEST(scanner)
     Lexical::Scanner::Verbose = true;
 
     MyScanner scan;
+
+    if(argc>1)
+    {
+        Source             source( Module::OpenFile(argv[1]) );
+        Lexical::Directive directive = 0;
+        scan.probe(source,directive);
+        
+    }
+
 
 
 }

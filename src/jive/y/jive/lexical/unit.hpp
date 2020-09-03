@@ -28,7 +28,7 @@ namespace upsylon {
 
                 const Tag label;                         //!< creating rule label
                 
-
+                
             private:
                 Y_DISABLE_ASSIGN(Unit);
             };
