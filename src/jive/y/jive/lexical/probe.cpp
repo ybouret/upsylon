@@ -38,6 +38,22 @@ namespace upsylon {
                     RuleNode   *next;
                 };
 
+
+
+                static inline bool tryAccept(const Rule &rule, Token &token, Source &source)
+                {
+                    assert(0==token.size);
+                    if(rule.motif->accept(token,source))
+                    {
+                        source.uncpy(token);
+                        return true;
+                    }
+                    else
+                    {
+                        assert(0==token.size);
+                        return false;
+                    }
+                }
                 
             }
 
@@ -45,20 +61,6 @@ namespace upsylon {
 
 
 
-            static inline bool tryAccept(const Rule &rule, Token &token, Source &source)
-            {
-                assert(0==token.size);
-                if(rule.motif->accept(token,source))
-                {
-                    source.uncpy(token);
-                    return true;
-                }
-                else
-                {
-                    assert(0==token.size);
-                    return false;
-                }
-            }
 
             Unit * Scanner:: endOfStream(const Source &source) const
             {
@@ -125,7 +127,7 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 //
                 // check possible production level2
-                YJS_PRINTLN("probe #rule=" << table(code) << " which may start with '" << cchars::visible[code] << "'" );
+                //YJS_PRINTLN("probe #rule=" << table(code) << " which may start with '" << cchars::visible[code] << "'" );
                 //
                 //--------------------------------------------------------------
 
