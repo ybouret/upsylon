@@ -33,6 +33,8 @@ namespace upsylon {
                     Forward, //!< will produce a lexeme
                     Discard  //!< will be discarded after action
                 };
+
+                //! convert type to text
                 static const char * TypeText(const Type) throw();
 
                 //--------------------------------------------------------------

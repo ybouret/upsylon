@@ -40,6 +40,8 @@ namespace upsylon {
                     Regular, //!< [Forward|Discard]
                     Control  //!< [Jump|Call|Back]
                 };
+
+                //! convert kind to text
                 static const char *KindText(const Kind) throw();
                 
                 //--------------------------------------------------------------

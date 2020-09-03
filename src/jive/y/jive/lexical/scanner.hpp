@@ -5,6 +5,7 @@
 
 #include "y/jive/lexical/rule.hpp"
 #include "y/jive/lexical/events.hpp"
+#include "y/jive/lexical/unit.hpp"
 #include "y/jive/regexp.hpp"
 #include "y/jive/scatter.hpp"
 #include "y/ptr/intr.hpp"
@@ -248,6 +249,21 @@ namespace upsylon
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
 
+                //------------------------------------------------------------------
+                //
+                //! the flex-like probing function
+                //
+                /**
+                 - if != NULL: a unit is produced
+                 - if NULL   :
+                 -- if Directive==NULL, EOF
+                 -- otherwise follow directive!
+                 */
+                //------------------------------------------------------------------
+                Unit *probe(Source &, Directive &);
+
+
+
                 const Rules   rules; //!< list of rules
                 const RulesDB hoard; //!< database of rules
                 const Leading intro; //!< all possible first chars
@@ -298,7 +314,7 @@ namespace upsylon
                 }
 
             public:
-                const Dictionary *dict;
+                const Dictionary *dict; //!< shared dictionary
             };
         }
     }

@@ -33,6 +33,8 @@ namespace upsylon {
                     Back, //!< back from a sub scanner
                     Jump  //!< jump to a new scanner
                 };
+
+                //! convert type to text
                 static const char * TypeText(const Type) throw();
 
                 //--------------------------------------------------------------
