@@ -62,14 +62,14 @@ namespace upsylon
 
                 //! setup using Tags
                 template <typename ID> inline
-                explicit Scanner(const ID &id, const AtEOS which=RejectEOS) :
+                explicit Scanner(const ID &id, const AtEOS which=AcceptEOS) :
                 label(Tags::Make(id)),
                 atEOS(which),
                 rules(),
                 hoard(),
                 intro(),
                 table(),
-                from(0)
+                origin(0)
                 {
                 }
 
@@ -270,8 +270,8 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
-                Scatter      table; //!< table of rules
-                Source      *from;   //!< currently processed source
+                Scatter       table;  //!< table of rules
+                Source       *origin; //!< currently processed source
 
                 // create a regular rule
                 template <

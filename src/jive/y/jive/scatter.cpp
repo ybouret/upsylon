@@ -27,6 +27,25 @@ namespace upsylon {
             std::cerr << "bytes=" << ScatterBlockSize << std::endl;
         }
 
+        const Scatter::Node * Scatter:: operator[](const uint8_t code) const throw()
+        {
+            return slots[code];
+        }
+
+        size_t      Scatter::  operator()(const uint8_t code) const throw()
+        {
+            const Node *node = slots[code];
+            size_t      count = 0;
+            while(node)
+            {
+                ++count;
+                node=node->next;
+            }
+            return count;
+        }
+
+
+
         Scatter:: ~Scatter() throw()
         {
 

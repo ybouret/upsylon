@@ -20,6 +20,7 @@ namespace upsylon
         //! aligned internal space
         static const size_t max_length = 512-sizeof(std::exception);
 
+        explicit exception() throw();                //!< setup empty
         exception( const exception &other ) throw(); //!< copy constructor
         virtual            ~exception()  throw();    //!< destructor
         virtual const char *what() const throw();    //!< overrides std::exception::what()
@@ -39,7 +40,6 @@ namespace upsylon
 
         
     protected:
-        explicit exception() throw();                   //!< ""
         void     format(const char *, void *) throw(); //!< common formatting
         char     when_[ max_length ];                   //!< user's formatted string
 

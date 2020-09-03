@@ -7,6 +7,8 @@
 
 namespace upsylon {
 
+    class exception; //!< forward declaration
+
     namespace Jive
     {
 
@@ -42,6 +44,8 @@ namespace upsylon {
 
             explicit Context(const Context &) throw();  //!< copy constructor
             virtual ~Context() throw();                 //!< cleanup
+
+            exception & cat(exception &excp) const throw();
 
             //__________________________________________________________________
             //

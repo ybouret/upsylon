@@ -43,6 +43,9 @@ namespace upsylon {
             //! display with optional callback
             void display(std::ostream&, void (*proc)(std::ostream&,const void*) ) const;
 
+            const Node * operator[](const uint8_t code) const throw(); //!< get entry
+            size_t       operator()(const uint8_t code) const throw(); //!< get entries
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Scatter);
             Slot   *slots;

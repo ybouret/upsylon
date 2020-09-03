@@ -15,9 +15,8 @@ namespace upsylon {
 
             void Scanner:: newLine(const Token &) throw()
             {
-                assert(from);
-                
-                
+                assert(origin);
+                origin->newLine();
             }
 
             const char * Scanner:: AtEOSText(const AtEOS eos) throw()

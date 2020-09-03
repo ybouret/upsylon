@@ -36,18 +36,19 @@ namespace upsylon {
             //__________________________________________________________________
             void push(Module *); //!< push a new module for reading
 
-            Char  *get();                      //!< get next char within cache/modules
-            void   unget(Char *) throw();      //!< unget a char
-            void   unget(Char::List &) throw();//!< unget a char list
-            void   uncpy(const Char::List &);  //!< unget a copy of a char list
-            size_t depth() const throw();      //!< sizeof history
-            size_t in_cache() const throw();   //!< cache.size
-            bool   alive();                    //!< found a readable char
-            void   skip() throw();             //!< assert(cache.size>0);
-            void   skip(size_t n) throw();     //!< assert(cache.size>=n);
-            bool   find(const Leading &);      //!< skip until first char is found
-
-            void   newLine() throw();          //!< send newLine to module
+            Char  *        get();                       //!< get next char within cache/modules
+            size_t         depth()       const throw(); //!< sizeof history
+            size_t         in_cache()    const throw(); //!< cache.size
+            const Char *   peek()        const throw(); //!< first code in cache
+            const Context &context()     const throw(); //!< current context
+            void           unget(Char *)       throw(); //!< unget a char
+            void           unget(Char::List &) throw(); //!< unget a char list
+            void           skip()              throw(); //!< assert(cache.size>0);
+            void           skip(size_t n)      throw(); //!< assert(cache.size>=n);
+            void           newLine()           throw(); //!< send newLine to module
+            void           uncpy(const Char::List &);   //!< unget a copy of a char list
+            bool           find(const Leading &);       //!< skip until first char is found
+            bool           alive();                     //!< found a readable char
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);

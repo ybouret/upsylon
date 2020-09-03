@@ -11,13 +11,11 @@ namespace {
     class MyScanner : public Lexical::Scanner
     {
     public:
-        explicit MyScanner() : Lexical::Scanner("MyScanner")
+        explicit MyScanner() : Lexical::Scanner("MyScanner", AcceptEOS)
         {
-
             emit("INT",   "[:digit:]+");
             drop("blanks","[:blank:]+");
             endl("endl",  "[:endl:]");
-
         }
 
         virtual ~MyScanner() throw()

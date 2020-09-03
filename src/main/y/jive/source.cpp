@@ -37,6 +37,17 @@ namespace upsylon {
             return cache.size ? cache.pop_front() : probe();
         }
 
+        const Char * Source:: peek() const throw()
+        {
+            assert(cache.size>0);
+            return cache.head;
+        }
+
+        const Context & Source:: context() const throw()
+        {
+            return *handle;
+        }
+        
         Char * Source:: probe()
         {
         PROBE:
