@@ -33,6 +33,7 @@ namespace upsylon {
                     Forward, //!< will produce a lexeme
                     Discard  //!< will be discarded after action
                 };
+                static const char * TypeText(const Type) throw();
 
                 //--------------------------------------------------------------
                 //
@@ -40,6 +41,7 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 virtual ~RegularEvent() throw(); //!< destructor
+                virtual  const char *typeText() const throw();
 
                 //--------------------------------------------------------------
                 //

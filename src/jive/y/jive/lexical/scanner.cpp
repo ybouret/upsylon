@@ -89,7 +89,7 @@ namespace upsylon {
                     r->motif->start(lfc);            // find them
                     if(Verbose)
                     {
-                        std::cerr << "[" << label << "] + " << r->event->kindText() << " <" << ruleName << ">";
+                        std::cerr << "[" << label << "] + " << r->event->kindText() << '.' << r->event->typeText() << " <" << ruleName << ">";
                         for(size_t i=ruleName.size();i<=12;++i)
                         {
                             std::cerr << ' ';

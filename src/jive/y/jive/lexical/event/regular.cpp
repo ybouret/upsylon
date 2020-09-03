@@ -23,7 +23,20 @@ namespace upsylon {
                 return static_cast<const RegularEvent *>(this);
             }
 
+            const char *RegularEvent:: TypeText(const Type t) throw()
+            {
+                switch(t)
+                {
+                    case Forward: return "Forward";
+                    case Discard: return "Discard";
+                }
+                return "";
+            }
 
+            const char * RegularEvent:: typeText() const throw()
+            {
+                return TypeText(type);
+            }
 
         }
 

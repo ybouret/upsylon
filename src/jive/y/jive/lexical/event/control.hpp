@@ -22,6 +22,9 @@ namespace upsylon {
             class ControlEvent : public Event
             {
             public:
+                //--------------------------------------------------------------
+                // types and definitions
+                //--------------------------------------------------------------
 
                 //! category of control event
                 enum Type
@@ -30,9 +33,19 @@ namespace upsylon {
                     Back, //!< back from a sub scanner
                     Jump  //!< jump to a new scanner
                 };
+                static const char * TypeText(const Type) throw();
+
+                //--------------------------------------------------------------
+                // C++
+                //--------------------------------------------------------------
+                virtual ~ControlEvent() throw();
+                virtual  const char *typeText() const throw();
+
+                //--------------------------------------------------------------
+                // members
+                //--------------------------------------------------------------
                 const Type      type;    //!< category of control event
                 const Tag       label;   //!< name to jump/call to, info for back
-                virtual ~ControlEvent() throw();
 
             protected:
                 //! initialize call/jump

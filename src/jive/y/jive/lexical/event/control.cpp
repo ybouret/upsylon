@@ -35,6 +35,22 @@ namespace upsylon {
                 return static_cast<const ControlEvent *>(this);
             }
 
+            const char * ControlEvent:: TypeText(const Type t) throw()
+            {
+                switch(t)
+                {
+                    case Jump: return "Jump";
+                    case Call: return "Call";
+                    case Back: return "Back";
+                }
+                return "";
+            }
+
+            const char * ControlEvent:: typeText() const throw()
+            {
+                return TypeText(type);
+            }
+
         }
 
     }

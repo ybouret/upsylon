@@ -55,7 +55,9 @@ namespace upsylon {
                 //
                 //--------------------------------------------------------------
                 virtual  const void *self()     const throw() = 0; //!< derive class address
+                virtual  const char *typeText() const throw() = 0; //!< derived type
                 const  char         *kindText() const throw();     //!< KindText(kind)
+
 
                 //--------------------------------------------------------------
                 //
