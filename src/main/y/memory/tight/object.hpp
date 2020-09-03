@@ -128,7 +128,23 @@ namespace upsylon {
                     static objects &self = supply::instance();
                     return self;
                 }
-                
+
+                //! acquire 1<<block_exp2
+                static inline void *dyadic_acquire(const size_t block_exp2)
+                {
+                    static supply &mgr = supply::instance();
+                    return mgr.dyadic_acquire(block_exp2);
+                }
+
+                //! release 1<<exp2
+                static inline void dyadic_release(void *addr,const size_t block_exp2) throw()
+                {
+                    assert(supply::exists());
+                    assert(NULL!=addr);
+                    static supply &mgr = supply::location();
+                    mgr.dyadic_release(addr,block_exp2);
+                }
+
                 //______________________________________________________________
                 //
                 //! parametric singleton

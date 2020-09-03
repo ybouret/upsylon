@@ -45,7 +45,6 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Scatter);
-            size_t  bytes;
             Slot   *slots;
         };
 

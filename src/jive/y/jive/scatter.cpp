@@ -1,10 +1,10 @@
 
 
 #include "y/jive/scatter.hpp"
-#include "y/memory/allocator/global.hpp"
 #include "y/code/base2.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
+#include "y/code/ilog2.hpp"
 #include <iomanip>
 
 
@@ -13,18 +13,22 @@ namespace upsylon {
     namespace Jive
     {
 
-        typedef memory::global ScatterAllocator;
+
+        static const size_t          ScatterBlockSize = 256* sizeof(Scatter::Slot);
+        static const size_t          ScatterBlockExp2 = ilog2<ScatterBlockSize>::value;
+        static inline Scatter::Slot *ScatterAcquire()
+        {
+            return static_cast<Scatter::Slot *>(object::dyadic_acquire(ScatterBlockExp2));
+        }
 
         Scatter:: Scatter() :
-        bytes( 256* sizeof(Slot) ),
-        slots( static_cast<Slot *>(ScatterAllocator::instance().acquire(bytes)) )
+        slots( ScatterAcquire() )
         {
-            std::cerr << "bytes=" << bytes << std::endl;
+            std::cerr << "bytes=" << ScatterBlockSize << std::endl;
         }
 
         Scatter:: ~Scatter() throw()
         {
-            static ScatterAllocator &mgr = ScatterAllocator::location();
 
             for(size_t i=0;i<256;++i)
             {
@@ -37,8 +41,8 @@ namespace upsylon {
                 }
             }
 
-
-            mgr.release( *(void **)&slots, bytes);
+            object::dyadic_release(slots,ScatterBlockExp2);
+            slots=0;
         }
 
         void Scatter:: record(const void *p, const uint8_t c)
