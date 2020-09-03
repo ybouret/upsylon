@@ -2,6 +2,7 @@
 #include "y/utest/sizeof.hpp"
 #include "y/jive/lexical/scanner.hpp"
 #include "y/jive/lexemes.hpp"
+#include "y/jive/common-regexp.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -13,7 +14,9 @@ namespace {
     public:
         explicit MyScanner() : Lexical::Scanner("MyScanner", AcceptEOS)
         {
-            emit("INT",   "[:digit:]+");
+            emit("INT",    RegExpFor::Integer);
+            emit("UINT",   RegExpFor::Unsigned);
+
             drop("blanks","[:blank:]+");
             endl("endl",  "[:endl:]");
         }
