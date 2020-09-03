@@ -161,7 +161,7 @@ namespace upsylon {
                         cswap(tempRule,bestRule);
                     }
                 }
-                YJS_PRINTLN("found <" << bestRule->label << "> = '" << bestUnit << "'");
+                //YJS_PRINTLN("found <" << bestRule->label << "> = '" << bestUnit << "'");
 
                 //--------------------------------------------------------------
                 // check unit size
