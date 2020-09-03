@@ -12,8 +12,8 @@ namespace upsylon {
 
     namespace Jive {
 
-        typedef Lexical::Unit Lexeme;
-        typedef Lexeme::List  Lexemes;
+        typedef Lexical::Unit Lexeme;  //!< alias
+        typedef Lexeme::List  Lexemes; //!< alias
 
     }
 

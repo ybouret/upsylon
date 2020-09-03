@@ -45,6 +45,7 @@ namespace upsylon {
             explicit Context(const Context &) throw();  //!< copy constructor
             virtual ~Context() throw();                 //!< cleanup
 
+            //! mark as "tag:line:column: "
             exception & cat(exception &excp) const throw();
 
             //__________________________________________________________________

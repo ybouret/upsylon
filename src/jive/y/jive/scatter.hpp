@@ -27,10 +27,11 @@ namespace upsylon {
                 Node       *next; //!< next node for storage
             };
 
+            //! basic slot to hold in-order nodes
             struct Slot
             {
-                Node *head;
-                Node *tail;
+                Node *head;                 //!< head
+                Node *tail;                 //!< tail
                 Node *push(Node *) throw(); //!< at end
                 Node *pop() throw();        //!< remove head
             };
@@ -39,12 +40,12 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-            explicit Scatter();         //!< acquire 256 * sizeof(Node *)
+            explicit Scatter();         //!< acquire 256 * sizeof(Slot)
             virtual ~Scatter() throw(); //!< release all
 
             void record(const void *, const uint8_t);   //!< record address at code
             void record(const void *, const Leading &); //!< record address for all codes
-            void remove(const void *addr) throw();      //!< remove just appended address
+            void remove(const void *addr) throw();      //!< remove from all slots
 
             //! display with optional callback
             void display(std::ostream&, void (*proc)(std::ostream&,const void*) ) const;
