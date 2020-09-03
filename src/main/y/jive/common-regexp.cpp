@@ -18,7 +18,7 @@ namespace upsylon {
         const char * const RegExpFor::Unsigned   = Y_JIVE_RX_UPART;
         const char * const RegExpFor::Integer    = Y_JIVE_RX_IPART;
         const char * const RegExpFor::Double     = Y_JIVE_RX_DBL;
-        const char * const RegExpFor::Float      = Y_JIVE_RX_DBL "f?";
+        const char * const RegExpFor::Float      = Y_JIVE_RX_DBL "f";
 
 
     }

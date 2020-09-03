@@ -4,6 +4,7 @@
 #define Y_JIVE_CONTEXT_INCLUDED 1
 
 #include "y/jive/tags.hpp"
+#include "y/string.hpp"
 
 namespace upsylon {
 
@@ -33,15 +34,9 @@ namespace upsylon {
             // C++
             //__________________________________________________________________
             
-            //! generic constructor
-            template <typename T>
-            inline Context(const T &args) :
-            tag(Tags::Make(args)),
-            line(init_line),
-            column(init_column)
-            {
-            }
-
+            explicit Context(const char    *);          //!< setup
+            explicit Context(const string  &);          //!< setup
+            explicit Context(const Tag     &) throw();  //!< setup
             explicit Context(const Context &) throw();  //!< copy constructor
             virtual ~Context() throw();                 //!< cleanup
 

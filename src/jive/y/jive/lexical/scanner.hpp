@@ -313,6 +313,10 @@ namespace upsylon
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
 
+                Unit     *endOfStream(const Source &) const;
+                Unit     *tokenToUnit(Token  &, const Tag &) const;
+                exception syntaxError(const Source &) const;
+
             public:
                 const Dictionary *dict; //!< shared dictionary
             };

@@ -14,9 +14,12 @@ namespace {
     public:
         explicit MyScanner() : Lexical::Scanner("MyScanner", AcceptEOS)
         {
-            emit("INT",    RegExpFor::Integer);
             emit("UINT",   RegExpFor::Unsigned);
+            emit("INT",    RegExpFor::Integer);
             emit("ID",     RegExpFor::Identifier);
+            emit("FLT",    RegExpFor::Float);
+            emit("DBL",    RegExpFor::Double);
+
             drop("blanks","[:blank:]+");
             endl("endl",  "[:endl:]");
 

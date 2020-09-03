@@ -45,7 +45,14 @@ namespace upsylon {
 
         const Context & Source:: context() const throw()
         {
-            return *handle;
+            if(cache.size)
+            {
+                return *cache.head;
+            }
+            else
+            {
+                return *handle;
+            }
         }
         
         Char * Source:: probe()
