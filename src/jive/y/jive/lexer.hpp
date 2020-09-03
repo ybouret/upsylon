@@ -8,7 +8,29 @@ namespace upsylon {
 
     namespace Jive
     {
-        
+        class Lexer : public Lexical::Scanner
+        {
+        public:
+            typedef Lexer::Scanner                Scanner;
+            typedef suffix_tree<Scanner::Pointer> ScannerTree;
+
+            virtual ~Lexer() throw();
+
+            template <typename ID> inline
+            explicit Lexer(const ID &id) :
+            Scanner(id,AcceptEOS),
+            db()
+            {
+                initialize();
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Lexer);
+            ScannerTree db;
+            void initialize();
+            
+        };
     }
 
 }

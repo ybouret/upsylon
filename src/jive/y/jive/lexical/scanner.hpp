@@ -8,7 +8,7 @@
 #include "y/jive/lexical/unit.hpp"
 #include "y/jive/regexp.hpp"
 #include "y/jive/scatter.hpp"
-#include "y/ptr/intr.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -38,9 +38,9 @@ namespace upsylon
             public:
 
                 static  bool                     Verbose; //!< global lexical verbosity
-                typedef intr_ptr<string,Scanner> Pointer;  //!< for database
-                typedef suffix_tree<Rule*>       RulesDB;  //!< rules database
-
+                typedef suffix_tree<Rule*>       RulesDB; //!< rules database
+                typedef arc_ptr<Scanner>         Pointer; //!< for lexer
+                
                 //! what happens when End of Stream if met during a call
                 enum AtEOS
                 {
