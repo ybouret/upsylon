@@ -273,7 +273,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Scatter       table;  //!< table of rules
-                Source       *origin; //!< currently processed source
+
 
                 // create a regular rule
                 template <
@@ -319,9 +319,11 @@ namespace upsylon
                 Unit     *tokenToUnit(Token  &, const Tag &) const;
                 exception syntaxError(Source &) const;
 
+            protected:
+                Source           *origin; //!< currently processed source
             public:
-                const size_t      lmax; //!< max rule label length
-                const Dictionary *dict; //!< shared dictionary
+                const size_t      lmax;   //!< max rule label length
+                const Dictionary *dict;   //!< shared dictionary
             };
         }
     }
