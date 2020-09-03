@@ -69,7 +69,7 @@ Y_UTEST(scanner)
     }
 
     Tags::Display();
-
+    
     std::cerr << "<Lexemes>" << std::endl;
     for(const Lexeme *lx=lexemes.head;lx;lx=lx->next)
     {

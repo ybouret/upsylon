@@ -46,6 +46,9 @@ namespace upsylon {
             //! show content
             static void Display();
 
+            //! remove maximum
+            static void Release() throw();
+
             //! helper to show
             const size_t maxLength;
 

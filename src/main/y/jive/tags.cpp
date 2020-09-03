@@ -92,6 +92,11 @@ namespace upsylon {
             std::cerr << "<Jive::Tags/>" << std::endl;
         }
 
+        void Tags:: Release() throw()
+        {
+            static TagsTree &tree = Tags::instance();
+            tree.release_all();
+        }
 
     }
 
