@@ -19,7 +19,7 @@ namespace {
             emit("ID",     RegExpFor::Identifier);
             emit("FLT",    RegExpFor::Float);
             emit("DBL",    RegExpFor::Double);
-            emit("QUOTE", "'");
+            emit("QUOTE",  "'");
             emit("DQUOTE", "\"");
             emit("DOT",    "[.]");
 
