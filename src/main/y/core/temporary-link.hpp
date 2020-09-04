@@ -9,12 +9,17 @@ namespace upsylon {
 
     namespace core
     {
+        //______________________________________________________________________
+        //
+        //! make a temporary link...
+        //______________________________________________________________________
         template <typename T>
         class temporary_link
         {
         public:
-            Y_DECL_ARGS(T,type);
+            Y_DECL_ARGS(T,type); //!< aliasses
 
+            //! handle = &source
             inline explicit temporary_link(type  &source,
                                            type **handle) :
             linked(handle)
@@ -24,10 +29,8 @@ namespace upsylon {
                 *linked = &source;
             }
 
-            inline ~temporary_link() throw()
-            {
-                *linked = 0;
-            }
+            //! handle = NULL
+            inline ~temporary_link() throw() { assert(linked); *linked = 0; }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(temporary_link);

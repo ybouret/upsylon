@@ -18,8 +18,8 @@ namespace upsylon
     {
     public:
         //! aligned internal space
-        static const size_t alignement = 512-sizeof(std::exception);
-        static const size_t max_length = alignement-1;
+        static const size_t alignement = 512-sizeof(std::exception); //!< alignment size
+        static const size_t max_length = alignement-1;               //!< max message length
         
         explicit exception() throw();                //!< setup empty
         exception( const exception &other ) throw(); //!< copy constructor

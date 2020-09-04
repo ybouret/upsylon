@@ -19,7 +19,6 @@ namespace upsylon {
          using different lexical scanners/plugins
          */
         //______________________________________________________________________
-
         class Lexer : public Lexical::Scanner
         {
         public:
@@ -29,8 +28,8 @@ namespace upsylon {
             //__________________________________________________________________
             typedef Lexer::Scanner                Scanner;      //!< alias
             typedef suffix_tree<Scanner::Pointer> ScannerTree;  //!< alias
-            typedef Scanner *HScan;
-            typedef list<HScan> History;
+            typedef Scanner                      *HScan;        //!< alias for history
+            typedef list<HScan>                   History;      //!< history type
 
             //__________________________________________________________________
             //
@@ -67,7 +66,7 @@ namespace upsylon {
             void    unget(Lexemes &) throw();  //!< unget lexemes
             void    reset()          throw();  //!< cleanup
             void    prefetch(Source &,size_t); //!< try to grow IO cache
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             Scanner    *scan;
