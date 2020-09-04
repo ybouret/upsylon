@@ -36,10 +36,12 @@ namespace upsylon
                 const string P; //!< entering  pattern
                 Queue       &Q; //!< destination queue
 
+                //! when called by another scanner: OnInit()
                 void Initialize(const Token &);
 
 
             protected:
+                //! initialize label,P,Q
                 template <typename ID, typename RX>
                 inline explicit Plugin(const ID &id,
                                        const RX &p,
@@ -49,11 +51,10 @@ namespace upsylon
                 Q(q)
                 {
                 }
-
-                virtual void OnInit(const Token &) = 0;
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Plugin);
+                virtual void OnInit(const Token &) = 0;
             };
 
         }

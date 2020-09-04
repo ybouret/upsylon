@@ -258,6 +258,7 @@ namespace upsylon
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
 
+                //! create the call to a plugin with its Initialize method
                 const Rule &call(Plugin &);
 
                 //------------------------------------------------------------------

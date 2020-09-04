@@ -27,9 +27,9 @@ namespace upsylon
                 // C++
                 //
                 //--------------------------------------------------------------
-                virtual ~MultiLinesComments() throw();
+                virtual ~MultiLinesComments() throw(); //!< cleanup
 
-
+                //! setup with enter/leave regexp
                 template <typename ID, typename ENTER, typename LEAVE>
                 explicit MultiLinesComments(const ID       &id,
                                             const ENTER    &enter,
@@ -65,6 +65,7 @@ class NAME : public Y_JIVE_LEXICAL_MULTI_LINES_COMMENTS {\
 /**/    Y_DISABLE_COPY_AND_ASSIGN(NAME);\
 }
 
+            //! implement C style comments
             Y_JIVE_LEXICAL_ML_COMMENTS(C_Comments,"/\\*","\\*/");
         }
     }

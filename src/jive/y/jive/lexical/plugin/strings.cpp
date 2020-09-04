@@ -15,9 +15,12 @@ namespace upsylon
             void String:: setup()
             {
                 back(delimiter,this,&String::OnQuit);
-                discard("char", "[:core:]", this, &String::OnChar);
-
-
+                discard("char", "[:core:]", this, &String::OnCore);
+                {
+                    const char rx[4] = { '\\', '\\', delimiter,0};
+                    discard("dlm",rx,this, &String::OnDelim);
+                }
+                
             }
 
             void String:: OnInit(const Token &t)
@@ -34,9 +37,16 @@ namespace upsylon
                 Q.push(unit);
             }
 
-            void String:: OnChar(const Token &t)
+            void String:: OnCore(const Token &t)
             {
                 s << t;
+            }
+
+            void String:: OnDelim(const Token &t)
+            {
+                assert(t.size==2);
+                Char *ch = Char::Copycat(*t.tail);
+                s << ch;
             }
 
 

@@ -59,7 +59,10 @@ class NAME : public Y_JIVE_LEXICAL_SINGLE_LINE_COMMENTS {\
 
         }
 
+        //! implement shell type comments
         Y_JIVE_LEXICAL_SL_COMMENTS(ShellComments,'#');
+
+        //! implement C++ type comments
         Y_JIVE_LEXICAL_SL_COMMENTS(CppComments,"//");
     }
 }
