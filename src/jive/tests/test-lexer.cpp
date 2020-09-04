@@ -3,6 +3,7 @@
 #include "y/jive/lexer.hpp"
 #include "y/jive/common-regexp.hpp"
 #include "y/jive/lexical/plugin/comments.hpp"
+#include "y/jive/lexical/plugin/strings.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -39,6 +40,8 @@ namespace {
 
             call( plug<Lexical::MultiLinesComments>("xmlComments","<--!","-->"));
             call( plug<Lexical::C_Comments>("C_Comments") );
+
+            call( plug<Lexical::String>("my_string",'"') );
 
         }
 

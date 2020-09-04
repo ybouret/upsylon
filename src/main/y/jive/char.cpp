@@ -198,6 +198,13 @@ namespace upsylon {
             return (*this) << Char::Acquire(context,code);
         }
 
+        Char::List & Char::List:: operator<<(const List &other)
+        {
+            List tmp(other);
+            merge_back(tmp);
+            return *this;
+        }
+
 
         std::ostream & operator<<(std::ostream &os, const Char::List &L)
         {
