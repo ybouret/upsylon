@@ -35,7 +35,7 @@ namespace upsylon
                                             const ENTER    &enter,
                                             const LEAVE    &leave,
                                             Lexical::Queue &q) :
-                Plugin(id,enter,q)
+                Plugin(id,enter,q,RejectEOS)
                 {
                     back(leave,this,&Scanner::nothing);
                     setup();

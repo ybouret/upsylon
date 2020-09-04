@@ -45,8 +45,9 @@ namespace upsylon
                 template <typename ID, typename RX>
                 inline explicit Plugin(const ID &id,
                                        const RX &p,
-                                       Queue    &q) :
-                Scanner(id),
+                                       Queue    &q,
+                                       AtEOS     which) :
+                Scanner(id,which),
                 P(p),
                 Q(q)
                 {

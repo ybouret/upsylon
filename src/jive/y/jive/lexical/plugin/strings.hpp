@@ -29,7 +29,7 @@ namespace upsylon
                 //! setup
                 template <typename ID>
                 explicit String_(const ID &id, const char C, Queue &q) :
-                Plugin(id,C,q),
+                Plugin(id,C,q,RejectEOS),
                 delimiter(C),
                 s()
                 {

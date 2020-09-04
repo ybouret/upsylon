@@ -31,7 +31,7 @@ namespace upsylon
                 //! setup
                 template <typename ID, typename RX>
                 explicit SingleLineComments(const ID &id, const RX &rx, Lexical::Queue &q) :
-                Plugin(id,rx,q)
+                Plugin(id,rx,q,AcceptEOS)
                 {
                     setup();
                 }
