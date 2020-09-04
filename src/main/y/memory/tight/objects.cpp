@@ -101,7 +101,7 @@ namespace upsylon {
                 if(block_exp2<vein::min_exp2)
                 {
                     arena **     ppA = &little[block_exp2];
-                    if(!(*ppA)) *ppA = &Blocks[1<<block_exp2];
+                    if(!(*ppA)) *ppA = &Blocks[size_t(1)<<block_exp2];
                     return    (**ppA).acquire();
                 }
                 else

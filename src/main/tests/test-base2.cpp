@@ -25,7 +25,7 @@ Y_UTEST(base2)
     show2<uint32_t>();
     show2<int32_t>();
 
-    for(int i=1;i<=1000; i += 1+alea.leq(30) )
+    for(int i=1;i<=1000; i += 1+int(alea.leq(30)) )
     {
         std::cerr << prev_power_of_two(i) << " : " << i << " : " << next_power_of_two(i) << " =>" << integer_log2(i) << std::endl;
     }
