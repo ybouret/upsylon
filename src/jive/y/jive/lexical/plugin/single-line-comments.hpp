@@ -26,8 +26,9 @@ namespace upsylon
                 // C++
                 //
                 //--------------------------------------------------------------
-                virtual ~SingleLineComments() throw();
+                virtual ~SingleLineComments() throw(); //!< cleanup
 
+                //! setup
                 template <typename ID, typename RX>
                 explicit SingleLineComments(const ID &id, const RX &rx, Lexical::Queue &q) :
                 Plugin(id,rx,q)
@@ -41,8 +42,10 @@ namespace upsylon
                 void         setup();
             };
 
+            //! alias
 #define Y_JIVE_LEXICAL_SINGLE_LINE_COMMENTS upsylon::Jive::Lexical::SingleLineComments
 
+            //! create a single line comments class
 #define Y_JIVE_LEXICAL_SL_COMMENTS(NAME,REGEXP) \
 class NAME : public Y_JIVE_LEXICAL_SINGLE_LINE_COMMENTS {\
 /**/public:\

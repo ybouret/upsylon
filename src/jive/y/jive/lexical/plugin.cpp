@@ -19,6 +19,12 @@ namespace upsylon
                 OnInit(_);
             }
 
+
+            const Rule & Scanner:: call(Plugin &plg)
+            {
+               return call(plg.label,plg.P, &plg, &Plugin::Initialize);
+            }
+
         }
 
     }

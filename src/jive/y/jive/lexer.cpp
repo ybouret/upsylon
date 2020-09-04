@@ -82,6 +82,7 @@ namespace upsylon {
             {
                 Lexical::Directive directive = 0;
                 Lexeme            *lexeme    = scan->probe(source,directive);
+                assert(0==origin);
                 if(lexeme)
                 {
                     return lexeme;
@@ -91,7 +92,8 @@ namespace upsylon {
                     if(directive)
                     {
                         // do something
-                        origin = &source;
+                        const core::temporary_link<Source> link(source,&origin);
+                        assert(0!=origin);
                         switch( directive->type )
                         {
                             case Lexical::ControlEvent::Jump:

@@ -16,6 +16,9 @@ namespace upsylon
     {
         namespace Lexical
         {
+
+            class Plugin; //!< forward declaration
+
             //__________________________________________________________________
             //
             //! directive for Lexer during probe
@@ -254,6 +257,8 @@ namespace upsylon
                     const Event::Handle ruleEvent = new OnBack(ruleAction,label);
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
+
+                const Rule &call(Plugin &);
 
                 //------------------------------------------------------------------
                 //

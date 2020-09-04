@@ -2,8 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/jive/lexer.hpp"
 #include "y/jive/common-regexp.hpp"
-#include "y/jive/lexical/plugin/single-line-comments.hpp"
-#include "y/jive/lexical/plugin/multi-lines-comments.hpp"
+#include "y/jive/lexical/plugin/comments.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -20,22 +19,26 @@ namespace {
             emit("ID",     RegExpFor::Identifier);
             drop("blanks","[:blank:]+");
             endl("endl",  "[:endl:]");
-            jump("com1", "%", this, & Scanner::nothing );
+            jump("com1", "%",  this, & Scanner::nothing);
             call("com2", "--", this, & Scanner::nothing);
 
             Scanner &com1 = decl( "com1" );
             com1.drop("chars",".");
-            com1.jump( "Lexer", "[:endl:]", this, & Scanner::newLine );
+            com1.jump( "Lexer", "[:endl:]", &com1, & Scanner::newLine );
 
 
             Scanner &com2 = decl( "com2" );
             com2.drop("chars",".");
-            com2.back("[:endl:]", this, & Scanner::newLine );
+            com2.back("[:endl:]", &com2, & Scanner::newLine );
 
-            plug<ShellComments>("shellComments");
-            plug<Lexical::SingleLineComments>("texComments",'%');
+            call( plug<ShellComments>("shellComments") );
+            call( plug<CppComments>("cppComments") );
 
-            plug<Lexical::MultiLinesComments>("xmlComments","<--!","-->");
+            //call( plug<Lexical::SingleLineComments>("texComments",'%') );
+            //call( plug<LuaComments>("luaComments") );
+
+            call( plug<Lexical::MultiLinesComments>("xmlComments","<--!","-->"));
+            call( plug<Lexical::C_Comments>("C_Comments") );
 
         }
 
@@ -76,6 +79,13 @@ Y_UTEST(lexer)
             lexemes.push_back(lx);
         }
     }
+
+    std::cerr << "<Lexemes>" << std::endl;
+    for(const Lexeme *lx=lexemes.head;lx;lx=lx->next)
+    {
+        std::cerr << "\t<" << lx->label << "> '" << *lx << "' @" << lx->tag << ":" << lx->line << ":" << lx->column << std::endl;
+    }
+    std::cerr << "<Lexemes/>" << std::endl;
 
     
 

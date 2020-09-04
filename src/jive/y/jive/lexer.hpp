@@ -54,7 +54,7 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // methods
+            // methods for scanners
             //__________________________________________________________________
 
             //! declare a new scanner
@@ -64,6 +64,11 @@ namespace upsylon {
                 const Tag l = Tags::Make(id);
                 return newScanner(l);
             }
+
+            //__________________________________________________________________
+            //
+            // methods for plugins
+            //__________________________________________________________________
 
             //! create plugin with no args
             template <typename PLUGIN,typename ID>

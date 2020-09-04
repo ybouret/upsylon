@@ -50,6 +50,22 @@ namespace upsylon
 
             };
 
+            //! alias
+#define Y_JIVE_LEXICAL_MULTI_LINES_COMMENTS upsylon::Jive::Lexical::MultiLinesComments
+
+            //! create a single line comments class
+#define Y_JIVE_LEXICAL_ML_COMMENTS(NAME,ENTER,LEAVE) \
+class NAME : public Y_JIVE_LEXICAL_MULTI_LINES_COMMENTS {\
+/**/public:\
+/**/    template <typename ID> inline\
+/**/    explicit NAME(const ID &id, Lexical::Queue &q):\
+/**/    Y_JIVE_LEXICAL_MULTI_LINES_COMMENTS(id,ENTER,LEAVE,q) {}\
+/**/    inline virtual ~NAME() throw() {}\
+/**/private:\
+/**/    Y_DISABLE_COPY_AND_ASSIGN(NAME);\
+}
+
+            Y_JIVE_LEXICAL_ML_COMMENTS(C_Comments,"/\\*","\\*/");
         }
     }
 }
