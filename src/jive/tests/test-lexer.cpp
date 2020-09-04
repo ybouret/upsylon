@@ -66,5 +66,8 @@ Y_UTEST(lexer)
             lexemes.push_back(lx);
         }
     }
+
+    
+
 }
 Y_UTEST_DONE()

@@ -80,6 +80,37 @@ namespace upsylon
 
     }
 
+    void exception:: add(const char *buffer, const size_t buflen) throw()
+    {
+        assert( !(NULL==buffer && buflen>0) );
+        size_t pos = strlen(when_);
+        if(pos<max_length)
+        {
+            const size_t m = max_length-pos;
+            const size_t n = (m<buflen) ? m : buflen;
+            for(size_t i=0;i<n;)
+            {
+                when_[pos++] = buffer[i++];
+            }
+            when_[pos] = 0;
+        }
+
+    }
+
+    void exception:: add(const char C) throw()
+    {
+        add(&C,1);
+    }
+
+    void exception:: add(const char *text) throw()
+    {
+        if(text)
+        {
+            add(text,strlen(text));
+        }
+    }
+
+
     const char *exception:: what() const throw()
     {
         return "exception";
@@ -90,6 +121,16 @@ namespace upsylon
         return when_;
     }
 
+    exception & exception:: operator<<(const char  C) throw()
+    {
+        add(C);
+        return *this;
+    }
 
+    exception & exception:: operator<<(const char *C) throw()
+    {
+        add(C);
+        return *this;
+    }
 
 }

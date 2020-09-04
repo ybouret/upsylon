@@ -1,6 +1,6 @@
-
 #include "y/jive/lexical/scanner.hpp"
 #include "y/exception.hpp"
+#include "y/core/temporary-link.hpp"
 
 namespace upsylon {
 
@@ -10,28 +10,8 @@ namespace upsylon {
 
             namespace {
 
-                class Linker
-                {
-                public:
-                    Source **h;
 
-                    inline Linker(Source  &source,
-                                  Source **handle ) throw() :
-                    h(handle)
-                    {
-                        *h = &source;
-                    }
-
-                    inline ~Linker() throw()
-                    {
-                        *h = NULL;
-                    }
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Linker);
-
-                };
-
+                //! mapping scatter node
                 struct RuleNode
                 {
                     const Rule *rule;
@@ -39,7 +19,7 @@ namespace upsylon {
                 };
 
 
-
+                //! try accept and restore source
                 static inline bool tryAccept(const Rule &rule, Token &token, Source &source)
                 {
                     assert(0==token.size);
@@ -60,20 +40,18 @@ namespace upsylon {
 #define YJS_PRINTLN(CODE) do { if(Scanner::Verbose) { std::cerr << "[" << label << "] " << CODE << std::endl; } } while(false)
 
 
-
-
             Unit * Scanner:: endOfStream(const Source &source) const
             {
                 //--------------------------------------------------------------
                 //
-                YJS_PRINTLN("<EOS> " << source.context().tag );
+                /*--*/ YJS_PRINTLN("<EOS> " << source.context().tag );
                 //
                 //--------------------------------------------------------------
                 switch(atEOS)
                 {
                     case RejectEOS: {
                         //------------------------------------------------------
-                        YJS_PRINTLN("rejected!!!");
+                        /*--*/ YJS_PRINTLN("rejected!!!");
                         //------------------------------------------------------
                         exception excp;
                         source.context().cat(excp).cat("[%s] unexpected end of stream",**label);
@@ -82,7 +60,7 @@ namespace upsylon {
 
                     case AcceptEOS:
                         //------------------------------------------------------
-                        YJS_PRINTLN("accepted => return NULL");
+                        /*--*/ YJS_PRINTLN("accepted => return NULL");
                         //------------------------------------------------------
                         break;
                 }
@@ -94,8 +72,7 @@ namespace upsylon {
 
             Unit * Scanner:: probe(Source &source, Directive &directive)
             {
-                const Linker link(source,&origin); assert(origin==&source);
-                YJS_PRINTLN("probe " << source.context().tag );
+                const core::temporary_link<Source> link(source,&origin);
                 assert(0==directive);
 
             PROBE:
@@ -127,7 +104,6 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 //
                 // check possible production level2
-                //YJS_PRINTLN("probe #rule=" << table(code) << " which may start with '" << cchars::visible[code] << "'" );
                 //
                 //--------------------------------------------------------------
 
@@ -161,7 +137,6 @@ namespace upsylon {
                         cswap(tempRule,bestRule);
                     }
                 }
-                //YJS_PRINTLN("found <" << bestRule->label << "> = '" << bestUnit << "'");
 
                 //--------------------------------------------------------------
                 // check unit size
@@ -240,38 +215,40 @@ namespace upsylon {
                 {
                     Token     token;
 
+                    //----------------------------------------------------------
                     // put the first char, initialize exception with its context
+                    //----------------------------------------------------------
                     token.push_back( source.get() )->cat(excp);
 
+                    //----------------------------------------------------------
                     // try to read until next delim
+                    //----------------------------------------------------------
+                    bool add_extra = false;
                     while(true)
                     {
                         Char *ch = source.get();
-                        if(!ch)
-                        {
-                            break;
-                        }
+                        if(!ch) break;
                         if( strchr(delim, ch->code) )
                         {
                             source.unget(ch);
                             break;
                         }
                         token.push_back(ch);
-
                         if(token.size>=32)
                         {
+                            add_extra = true;
                             break;
                         }
-
                     }
-
-
-                    excp.cat("%s syntax error '",**label);
-                    token.cat(excp).cat("'");
-
-
+                    excp.cat("%s syntax error ",**label);
+                    excp << '\'';
+                    token.cat(excp);
+                    if(add_extra)
+                    {
+                        excp << "...";
+                    }
+                    excp << '\'';
                     source.unget(token);
-
                 }
                 return excp;
             }

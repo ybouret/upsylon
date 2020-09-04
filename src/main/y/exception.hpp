@@ -18,8 +18,9 @@ namespace upsylon
     {
     public:
         //! aligned internal space
-        static const size_t max_length = 512-sizeof(std::exception);
-
+        static const size_t alignement = 512-sizeof(std::exception);
+        static const size_t max_length = alignement-1;
+        
         explicit exception() throw();                //!< setup empty
         exception( const exception &other ) throw(); //!< copy constructor
         virtual            ~exception()  throw();    //!< destructor
@@ -38,14 +39,22 @@ namespace upsylon
         //! prepend to when using printf syntax
         void     hdr(const char *fmt,...)       throw() Y_PRINTF_CHECK(2,3);
 
-        
+
+        void add(const char *, const size_t) throw();  //!< add some chars
+        void add(const char C) throw();                //!< add one char
+        void add(const char *text) throw();            //!< add text
+        exception & operator<<(const char  C) throw(); //!< add(C)
+        exception & operator<<(const char *C) throw(); //!< add(C)
+
+
     protected:
         void     format(const char *, void *) throw(); //!< common formatting
-        char     when_[ max_length ];                   //!< user's formatted string
+        char     when_[ alignement ];                  //!< user's formatted string
 
     private:
         Y_DISABLE_ASSIGN(exception);
 
+        
     };
 }
 
