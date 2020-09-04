@@ -60,6 +60,7 @@ Y_UTEST(lexer)
     if(argc>1)
     {
         Source source( Module::OpenFile(argv[1]));
+        lexer.prefetch(source,8);
         Lexeme *lx = 0;
         while( (lx=lexer.get(source)) )
         {

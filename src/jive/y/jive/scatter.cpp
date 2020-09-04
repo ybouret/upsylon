@@ -60,7 +60,6 @@ namespace upsylon {
         Scatter:: Scatter() :
         slots( ScatterAcquire() )
         {
-            std::cerr << "bytes=" << ScatterBlockSize << std::endl;
         }
 
         const Scatter::Slot &Scatter:: operator[](const uint8_t code) const throw()

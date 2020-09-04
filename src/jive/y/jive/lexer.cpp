@@ -16,6 +16,14 @@ namespace upsylon {
             }
         }
 
+
+        void Lexer:: reset() throw()
+        {
+            scan = this;
+            hist.free();
+            io.release();
+        }
+
         void Lexer:: initialize()
         {
             withhold();
@@ -112,6 +120,39 @@ namespace upsylon {
             }
 
         }
+
+
+        void Lexer:: unget(Lexeme *lexeme) throw()
+        {
+            assert(lexeme);
+            io.push_front(lexeme);
+        }
+
+        void Lexer:: unget( Lexemes &lexemes ) throw()
+        {
+            io.merge_front(lexemes);
+        }
+
+        void Lexer:: prefetch(Source &source, size_t n)
+        {
+            Lexemes backup;
+            backup.swap_with(io);
+            try {
+                while(n-- > 0)
+                {
+                    Lexeme *lexeme = get(source);
+                    if(!lexeme) break;
+                    backup.push_back(lexeme);
+                }
+                backup.swap_with(io);
+            }
+            catch(...)
+            {
+                backup.swap_with(io);
+                throw;
+            }
+        }
+
 
     }
 

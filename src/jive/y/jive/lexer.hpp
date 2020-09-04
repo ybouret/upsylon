@@ -48,6 +48,11 @@ namespace upsylon {
                 initialize();
             }
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
             //! declare a new scanner
             template <typename ID> inline
             Scanner &decl(const ID &id)
@@ -56,11 +61,13 @@ namespace upsylon {
                 return newScanner(l);
             }
 
-            //! get using scanner
-            Lexeme *get(Source &source);
 
-
-
+            Lexeme *get(Source &);             //!< get new lexemes
+            void    unget(Lexeme  *) throw();  //!< unget lexeme
+            void    unget(Lexemes &) throw();  //!< unget lexemes
+            void    reset()          throw();  //!< cleanup
+            void    prefetch(Source &,size_t); //!< try to grow IO cache
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             Scanner    *scan;
