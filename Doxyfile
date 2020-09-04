@@ -825,8 +825,6 @@ WARN_LOGFILE           =
 
 INPUT                  = src/main/y \
                          src/mkl/y \
-                         src/jargon/y \
-                         src/json/y \
                          src/graphic/y \
                          src/chem/y \
 			src/jive/y \

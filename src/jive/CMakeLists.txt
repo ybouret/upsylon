@@ -21,13 +21,20 @@ SET( lexical_event_srcs ${lexical_event_decl} ${lexical_event_impl})
 INSTALL( FILES ${lexical_event_decl} DESTINATION include/y/jive/lexical/event )
 SOURCE_GROUP( jive/lexical/event FILES ${lexical_event_srcs} )
 
+FILE( GLOB lexical_plugin_decl y/jive/lexical/plugin/*.hpp)
+FILE( GLOB lexical_plugin_impl y/jive/lexical/plugin/*.cpp)
+SET( lexical_plugin_srcs ${lexical_plugin_decl} ${lexical_plugin_impl})
+INSTALL( FILES ${lexical_plugin_decl} DESTINATION include/y/jive/lexical/plugin )
+SOURCE_GROUP( jive/lexical/plugin FILES ${lexical_plugin_srcs} )
+
+
+
 
 INCLUDE_DIRECTORIES( . ../main )
 
 ADD_LIBRARY( y-jive STATIC
  ${srcs}
- ${lexical_srcs} ${lexical_event_srcs}
- ${dialect_srcs}
+ ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs}
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 

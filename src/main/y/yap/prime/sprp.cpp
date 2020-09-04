@@ -119,8 +119,8 @@ s(0)
         natural sprp:: end(const natural &n)
         {
             const double        dvalue = ceil( 2.0 * square_of(natural::log_of(n)) );
-            const number::utype uvalue(dvalue);
-            const natural       guess = uvalue;
+            const number::utype uvalue = number::utype(dvalue);
+            const natural       guess  = uvalue;
             if(guess<=n)
             {
                 return guess;

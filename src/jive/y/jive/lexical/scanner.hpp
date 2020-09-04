@@ -36,7 +36,11 @@ namespace upsylon
             class Scanner : public CountedObject
             {
             public:
-
+                //--------------------------------------------------------------
+                //
+                // types and defintions
+                //
+                //--------------------------------------------------------------
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef suffix_tree<Rule*>       RulesDB; //!< rules database
                 typedef arc_ptr<Scanner>         Pointer; //!< for lexer
