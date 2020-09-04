@@ -110,7 +110,6 @@ namespace upsylon {
             virtual ~conveyors() throw();
             explicit conveyors();
             Y_DISABLE_COPY_AND_ASSIGN(conveyors);
-            friend class singleton<conveyors>;
             void throw_invalid_infra() const;
             void throw_missing_class(const std::type_info &) const;
 
