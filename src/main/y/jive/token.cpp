@@ -66,11 +66,50 @@ namespace upsylon {
 
         exception & Token:: cat(exception &excp) const throw()
         {
+            excp << '\'';
             for(const Char *ch=head;ch;ch=ch->next)
             {
-                excp.cat("%s",cchars::encoded[ch->code]);
+                excp << cchars::encoded[ch->code];
             }
+            excp << '\'';
             return excp;
+        }
+
+        Token & Token:: skip(size_t n) throw()
+        {
+            if(n>=size)
+            {
+                release();
+            }
+            else
+            {
+                while(n-- >0 )
+                {
+                    Char::Release(pop_front());
+                }
+            }
+            return *this;
+        }
+
+        Token & Token:: trim(size_t n) throw()
+        {
+            if(n>=size)
+            {
+                release();
+            }
+            else
+            {
+                while(n-- >0 )
+                {
+                    Char::Release(pop_back());
+                }
+            }
+            return *this;
+        }
+
+        Token & Token:: chop(size_t n) throw()
+        {
+            return trim(n).skip(n);
         }
 
     }

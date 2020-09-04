@@ -46,7 +46,9 @@ namespace upsylon
             string       toPrintable()    const; //!< codes->printable
             string       toEncoded()      const; //!< codes->encoded
             exception & cat(exception &) const throw(); //!< append to exception
-
+            Token       &skip(size_t n) throw(); //!< skip n chars
+            Token       &trim(size_t n) throw(); //!< skip n chars
+            Token       &chop(size_t n) throw(); //!< trim(n).skip(n)
         private:
             string translate(const char * table[]) const;
         };

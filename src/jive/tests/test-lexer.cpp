@@ -41,7 +41,8 @@ namespace {
             call( plug<Lexical::MultiLinesComments>("xmlComments","<--!","-->"));
             call( plug<Lexical::C_Comments>("C_Comments") );
 
-            call( plug<Lexical::String>("my_string",'"') );
+            call( plug<Lexical::jString>("jstring")   );
+            call( plug<Lexical::rString>("rstring") );
 
         }
 

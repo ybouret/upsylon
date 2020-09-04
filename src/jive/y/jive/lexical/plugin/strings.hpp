@@ -19,16 +19,16 @@ namespace upsylon
             //! finding string between delimiters
             //
             //__________________________________________________________________
-            class String : public Plugin
+            class String_ : public Plugin
             {
             public:
                 const char delimiter; //!< the delimiter
 
-                virtual ~String() throw(); //!< cleanup
+                virtual ~String_() throw(); //!< cleanup
 
                 //! setup
                 template <typename ID>
-                explicit String(const ID &id, const char C, Queue &q) :
+                explicit String_(const ID &id, const char C, Queue &q) :
                 Plugin(id,C,q),
                 delimiter(C),
                 s()
@@ -38,14 +38,53 @@ namespace upsylon
 
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(String);
+                Y_DISABLE_COPY_AND_ASSIGN(String_);
                 Token s;
                 void  setup();
                 virtual void OnInit(const  Token &);
                 void         OnQuit(const  Token &);
                 void         OnCore(const  Token &);
+
                 void         OnDelim(const Token &);
+                void         OnHexa(const  Token &);
+                void         OnEsc(const   Token &);
+                
+                void         OnError(const Token &);
             };
+
+            class jString : public String_
+            {
+            public:
+                virtual ~jString() throw();
+
+                template <typename ID>
+                explicit jString(const ID &id, Queue &q) :
+                String_(id, '"' , q)
+                {
+                }
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(jString);
+            };
+
+
+            class rString : public String_
+            {
+            public:
+                virtual ~rString() throw();
+
+                template <typename ID>
+                explicit rString(const ID &id, Queue &q) :
+                String_(id, '\'' , q)
+                {
+                }
+                
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(rString);
+            };
+
 
         }
 

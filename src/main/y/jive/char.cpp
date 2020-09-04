@@ -55,6 +55,15 @@ namespace upsylon {
             return mgr.copycat(other);
         }
 
+
+        Char * Char:: Copyset(const Char &other, const uint8_t C)
+        {
+            Char *ch = Copycat(other);
+            aliasing::_(ch->code) = C;
+            return ch;
+        }
+
+
         std::ostream & operator<<(std::ostream &os, const Char &ch)
         {
             os << cchars::visible[ch.code];
