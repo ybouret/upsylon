@@ -11,6 +11,18 @@ namespace upsylon
             {
             }
 
+
+            void SingleLineComments:: OnInit(const Token &)
+            {
+                
+            }
+
+            void SingleLineComments:: setup()
+            {
+                back("[:endl:]",this, & Scanner::newLine);
+                drop("dot",".");
+            }
+
         }
 
     }

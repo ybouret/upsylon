@@ -30,9 +30,24 @@ namespace upsylon
                 virtual ~MultiLinesComments() throw();
 
 
+                template <typename ID, typename ENTER, typename LEAVE>
+                explicit MultiLinesComments(const ID       &id,
+                                            const ENTER    &enter,
+                                            const LEAVE    &leave,
+                                            Lexical::Queue &q) :
+                Plugin(id,enter,q)
+                {
+                    back(leave,this,&Scanner::nothing);
+                    setup();
+                }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(MultiLinesComments);
+                virtual void OnInit(const Token &);
+                void         setup();
+
             };
 
         }

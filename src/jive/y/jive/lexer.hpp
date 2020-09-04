@@ -2,14 +2,16 @@
 #ifndef Y_JIVE_LEXER_INCLUDED
 #define Y_JIVE_LEXER_INCLUDED 1
 
-#include "y/jive/lexical/scanner.hpp"
+#include "y/jive/lexical/plugin.hpp"
 #include "y/jive/lexemes.hpp"
+
 #include "y/sequence/list.hpp"
 
 namespace upsylon {
 
     namespace Jive
     {
+
         //______________________________________________________________________
         //
         //
@@ -19,15 +21,18 @@ namespace upsylon {
          using different lexical scanners/plugins
          */
         //______________________________________________________________________
-        class Lexer : public Lexical::Scanner
+        class Lexer : public Lexical::Queue, public Lexical::Scanner
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef Lexer::Scanner                Scanner;      //!< alias
+            typedef Lexical::Scanner              Scanner;      //!< alias
             typedef suffix_tree<Scanner::Pointer> ScannerTree;  //!< alias
+            typedef Lexical::Plugin               Plugin;       //!< alias
+            typedef suffix_tree<Plugin::Pointer>  PluginTree;   //!< alias
+
             typedef Scanner                      *HScan;        //!< alias for history
             typedef list<HScan>                   History;      //!< history type
 
@@ -42,7 +47,7 @@ namespace upsylon {
             //! setup
             template <typename ID> inline
             explicit Lexer(const ID &id) :
-            Scanner(id,AcceptEOS), scan(this), hist(), io(), db()
+            Lexical::Queue(), Scanner(id,AcceptEOS), scan(this), hist(), io(), db()
             {
                 initialize();
             }
@@ -60,23 +65,53 @@ namespace upsylon {
                 return newScanner(l);
             }
 
+            //! create plugin with no args
+            template <typename PLUGIN,typename ID>
+            PLUGIN &plug(const ID &id)
+            {
+                PLUGIN * p = new PLUGIN(id,*this);
+                newPlugin( p );
+                return *p;
+            }
+
+            //! create plugin with one arg
+            template <typename PLUGIN,typename ID,typename RX>
+            PLUGIN &plug(const ID &id, const RX &rx)
+            {
+                PLUGIN * p = new PLUGIN(id,rx,*this);
+                newPlugin( p );
+                return *p;
+            }
+
+            //! create plugin with two arg
+            template <typename PLUGIN,typename ID,typename ENTER,typename LEAVE>
+            PLUGIN &plug(const ID &id, const ENTER &enter, const LEAVE &leave)
+            {
+                PLUGIN * p = new PLUGIN(id,enter,leave,*this);
+                newPlugin( p );
+                return *p;
+            }
+
 
             Lexeme *get(Source &);             //!< get new lexemes
             void    unget(Lexeme  *) throw();  //!< unget lexeme
             void    unget(Lexemes &) throw();  //!< unget lexemes
             void    reset()          throw();  //!< cleanup
-            void    prefetch(Source &,size_t); //!< try to grow IO cache
+            void    ready(Source &,size_t);    //!< try to grow IO cache
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             Scanner    *scan;
             History     hist;
-            Lexemes     io;
-            ScannerTree db;
+            Lexemes     io;    // I/O
+            ScannerTree db;    // scanners
+            PluginTree  ex;    // extensions
 
-            void      initialize();
-            Scanner & newScanner(const Tag &t);
-            void      jmp(const Tag &);
+            void         initialize();
+            Scanner &    newScanner(const Tag &t);
+            void         newPlugin( Plugin *plg );
+            void         jmp(const Tag &);
+            virtual void push(Lexeme *) throw();
 
         };
     }

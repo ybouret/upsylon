@@ -446,6 +446,14 @@ namespace upsylon {
             return search_by(buffer.ro(),buffer.length());
         }
 
+        //! ensure no item
+        template <typename ID>
+        inline void no(const ID &id) throw()
+        {
+            while( remove_by(id) )
+                ;
+        }
+
         //! for_each func(suffix_key,data)
         template <typename FUNC>
         inline bool for_each( FUNC &func ) const

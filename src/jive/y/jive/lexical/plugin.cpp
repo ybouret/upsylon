@@ -13,6 +13,12 @@ namespace upsylon
             {
 
             }
+
+            void Plugin:: Initialize(const Token &_)
+            {
+                OnInit(_);
+            }
+
         }
 
     }

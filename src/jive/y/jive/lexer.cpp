@@ -7,6 +7,13 @@ namespace upsylon {
 
     namespace Jive
     {
+        void Lexer::push( Lexical::Unit *unit) throw()
+        {
+            assert(unit);
+            assert(io.size<=0);
+            io.push_back(unit);
+        }
+
         Lexer:: ~Lexer() throw()
         {
             db.release_all();
@@ -133,7 +140,7 @@ namespace upsylon {
             io.merge_front(lexemes);
         }
 
-        void Lexer:: prefetch(Source &source, size_t n)
+        void Lexer:: ready(Source &source, size_t n)
         {
             Lexemes backup;
             backup.swap_with(io);
@@ -153,6 +160,32 @@ namespace upsylon {
             }
         }
 
+
+        void Lexer:: newPlugin(Plugin *plg)
+        {
+            assert(plg);
+            const Plugin::Pointer  thePlugin  = plg; assert( &(thePlugin->Q)==this);
+            const Scanner::Pointer theScanner = plg;
+            const string          &name       = *(plg->label);
+
+            if( !ex.insert_by(name,thePlugin))
+            {
+                throw exception("[%s] multiple plugin [%s]", **label, *name);
+            }
+
+            try
+            {
+                if( !db.insert_by(name,theScanner))
+                {
+                    throw exception("[%s] plugin [%s] collides with scanner", **label, *name);
+                }
+            }
+            catch(...)
+            {
+                ex.no(name);
+                throw;
+            }
+        }
 
     }
 
