@@ -52,12 +52,19 @@ namespace upsylon
                 void         OnError(const Token &);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! Jive String, betweeen double quotes
+            //
+            //__________________________________________________________________
             class jString : public String_
             {
             public:
-                virtual ~jString() throw();
+                virtual ~jString() throw(); //!< cleanup
 
-                template <typename ID>
+                //! setup
+                template <typename ID> inline
                 explicit jString(const ID &id, Queue &q) :
                 String_(id, '"' , q)
                 {
@@ -68,13 +75,20 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(jString);
             };
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! raw strings, between single quotes
+            //
+            //__________________________________________________________________
             class rString : public String_
             {
             public:
+                //! cleanup
                 virtual ~rString() throw();
 
-                template <typename ID>
+                //! setup
+                template <typename ID> inline
                 explicit rString(const ID &id, Queue &q) :
                 String_(id, '\'' , q)
                 {
