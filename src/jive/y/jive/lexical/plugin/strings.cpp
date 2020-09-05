@@ -32,12 +32,10 @@ namespace upsylon
             void String_:: OnInit(const Token &)
             {
                 s.release();
-                //s << t;
             };
 
             void String_:: OnQuit(const Token &)
             {
-                //s << t;
                 Unit *unit = new Unit(*(s.head),label);
                 unit->swap_with(s);
                 Q.push(unit);
