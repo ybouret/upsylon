@@ -32,7 +32,7 @@ namespace upsylon
             {
                 assert(t.size>0);
                 origin->newLine();
-                block << Char::Copyset((*t.head),'\n');
+                block << Char::Copyset(t.first(),'\n');
             }
             
             

@@ -214,6 +214,17 @@ namespace upsylon {
             return *this;
         }
 
+        const Char &  Char::List :: first() const throw()
+        {
+            assert(size>0);
+            return *head;
+        }
+        
+        const Char &  Char::List :: final() const throw()
+        {
+            assert(size>0);
+            return *tail;
+        }
 
         std::ostream & operator<<(std::ostream &os, const Char::List &L)
         {
