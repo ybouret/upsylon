@@ -1,5 +1,5 @@
 
-#include "y/jive/lexical/plugin/strings.hpp"
+#include "y/jive/lexical/plugin/string_.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -108,14 +108,7 @@ namespace upsylon
                 }
             }
 
-            jString:: ~jString() throw()
-            {
-            }
-
-            rString:: ~rString() throw()
-            {
-            }
-
+            
         }
 
     }

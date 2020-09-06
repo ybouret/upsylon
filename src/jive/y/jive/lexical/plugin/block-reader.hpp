@@ -1,0 +1,47 @@
+
+
+//! \file
+
+#ifndef Y_JIVE_LEXICAL_PLUGIN_BLOCK_READER_INCLUDED
+#define Y_JIVE_LEXICAL_PLUGIN_BLOCK_READER_INCLUDED 1
+
+#include "y/jive/lexical/plugin.hpp"
+
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Lexical
+        {
+
+            class BlockReader : public Plugin
+            {
+            public:
+                virtual ~BlockReader() throw();
+                
+                //! setup with enter/leave regexp
+                template <typename ID, typename ENTER, typename LEAVE>
+                explicit BlockReader(const ID       &id,
+                                     const ENTER    &enter,
+                                     const LEAVE    &leave,
+                                     Lexical::Queue &q) :
+                Plugin(id,enter,q,RejectEOS)
+                {
+                    back(leave,this, &BlockReader::OnQuit);
+                    setup();
+                }
+                
+            private:
+                Token block;
+                Y_DISABLE_COPY_AND_ASSIGN(BlockReader);
+                void         setup();
+                virtual void OnInit(const Token &);
+                void         OnQuit(const Token &);
+                
+            };
+        }
+    }
+}
+
+#endif
+
