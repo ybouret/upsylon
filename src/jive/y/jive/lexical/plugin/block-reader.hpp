@@ -38,6 +38,9 @@ namespace upsylon
                 virtual void OnInit(const Token &);
                 void         OnQuit(const Token &);
                 
+                void         OnEndl(const Token &);
+                void         OnChar(const Token &);
+                
             };
         }
     }
