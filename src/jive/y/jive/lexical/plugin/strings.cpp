@@ -14,6 +14,7 @@ namespace upsylon
                 aliasing::_(delimiter)=0;
             }
 
+            
             void String_:: setup()
             {
                 back(delimiter,this,&String_::OnQuit);
@@ -22,9 +23,10 @@ namespace upsylon
                     const char rx[4] = { '\\', '\\', delimiter,0};
                     discard("dlm",rx,this, &String_::OnDelim);
                 }
-                discard("hexa","\\\\x[:xdigit:][:xdigit:]",this,&String_::OnHexa);
-                discard("herr","\\\\x[^[:xdigit:]][^[:xdigit:]]?",this,&String_::OnHerr);
-                discard("esc","\\\\[^]",this,&String_::OnEsc);
+                discard("hexa", "\\\\x[:xdigit:][:xdigit:]",this,&String_::OnHexa);
+                discard("herr1", "\\\\x[^[:xdigit:]][^]?",this,&String_::OnHerr);
+                discard("herr2", "\\\\x[:xdigit:][^[:xdigit:]]",this,&String_::OnHerr);
+                discard("esc",  "\\\\[^]",this,&String_::OnEsc);
                 discard("error","[^]",this,&String_::OnError);
                 
             }
