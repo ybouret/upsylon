@@ -23,8 +23,8 @@ namespace upsylon
                     discard("dlm",rx,this, &String_::OnDelim);
                 }
                 discard("hexa","\\\\x[:xdigit:][:xdigit:]",this,&String_::OnHexa);
+                discard("herr","\\\\x[^[:xdigit:]][^[:xdigit:]]?",this,&String_::OnHerr);
                 discard("esc","\\\\[^]",this,&String_::OnEsc);
-
                 discard("error","[^]",this,&String_::OnError);
                 
             }
@@ -63,7 +63,17 @@ namespace upsylon
                 t.cat(excp);                        // token
                 throw excp;
             }
-
+            
+            void String_:: OnHerr(const Token &t)
+            {
+                assert(t.size>0);
+                exception   excp;
+                t.head->cat(excp);                  // context
+                excp.cat("[%s] invalid hexadecimal sequence ",**label);  // message
+                t.cat(excp);                        // token
+                throw excp;
+            }
+            
             void String_:: OnHexa(const Token &t)
             {
                 assert(4==t.size);

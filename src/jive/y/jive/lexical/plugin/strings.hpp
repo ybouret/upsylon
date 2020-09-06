@@ -47,6 +47,7 @@ namespace upsylon
 
                 void         OnDelim(const Token &);
                 void         OnHexa(const  Token &);
+                void         OnHerr(const  Token &);
                 void         OnEsc(const   Token &);
                 
                 void         OnError(const Token &);
