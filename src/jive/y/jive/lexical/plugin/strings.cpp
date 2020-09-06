@@ -23,18 +23,17 @@ namespace upsylon
                     const char rx[4] = { '\\', '\\', delimiter,0};
                     discard("dlm",rx,this, &String_::OnDelim);
                 }
-                discard("hexa", "\\\\x[:xdigit:][:xdigit:]",this,&String_::OnHexa);
-                discard("herr1", "\\\\x[^[:xdigit:]][^]?",this,&String_::OnHerr);
-                discard("herr2", "\\\\x[:xdigit:][^[:xdigit:]]",this,&String_::OnHerr);
-                discard("esc",  "\\\\[^]",this,&String_::OnEsc);
-                discard("error","[^]",this,&String_::OnError);
-                
+                discard("hexa",  "\\\\x[:xdigit:][:xdigit:]",   this, &String_::OnHexa);
+                discard("herr1", "\\\\x[^[:xdigit:]][^]?",      this, &String_::OnHerr);
+                discard("herr2", "\\\\x[:xdigit:][^[:xdigit:]]",this, &String_::OnHerr);
+                discard("esc",   "\\\\[^]",                     this, &String_::OnEsc);
+                discard("error", "[^]",                         this, &String_::OnError);
             }
 
             void String_:: OnInit(const Token &)
             {
                 s.release();
-            };
+            }
 
             void String_:: OnQuit(const Token &)
             {
