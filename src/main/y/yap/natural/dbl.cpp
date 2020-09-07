@@ -1,7 +1,5 @@
 
 #include "y/yap/library.hpp"
-#include "y/sort/merge.hpp"
-#include "y/comparison.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -27,10 +25,6 @@ namespace upsylon
                 dnode     *next;
                 dnode     *prev;
                 double     value;
-                static int compare(const dnode *lhs, const dnode *rhs, void *) throw()
-                {
-                    return comparison::decreasing(lhs->value,rhs->value);
-                }
             };
 
             class dlist : public core::list_of<dnode>
@@ -51,11 +45,7 @@ namespace upsylon
                     push_back( object::acquire1<dnode>() )->value = value;
                 }
 
-                void sort()
-                {
-                    merging<dnode>::sort(*this, dnode::compare, 0);
-                }
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(dlist);
             };

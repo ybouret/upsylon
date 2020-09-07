@@ -1,10 +1,10 @@
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
- #include "y/jargon/pattern/matcher.hpp"
+#include "y/jive/pattern/matching.hpp"
 #include "y/program.hpp"
 
 using namespace upsylon;
-using namespace Jargon;
+using namespace Jive;
 
 Y_PROGRAM_START()
 {
