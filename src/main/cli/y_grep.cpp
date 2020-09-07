@@ -11,7 +11,7 @@ Y_PROGRAM_START()
     if( argc > 1 )
     {
         Token        token;
-        Matcher      keep = argv[1];
+        Matching     keep = argv[1];
         keep->save_to( "grep.bin" );
         const string      fileName = (argc > 2) ? argv[2] : Y_STDIN;
         ios::icstream     input(  fileName     );
@@ -19,7 +19,7 @@ Y_PROGRAM_START()
         string            line;
         while( input.gets(line) )
         {
-            if( keep.matchesSomehow(line) )
+            if( keep.isFoundIn(line) )
             {
                 output << line << '\n';
             }

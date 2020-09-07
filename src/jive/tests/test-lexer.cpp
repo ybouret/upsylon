@@ -70,13 +70,15 @@ namespace {
             std::cerr << "<COM1 @" << token << ">";
         }
 
+#if 0
         void LeaveCom1(const Token &)
         {
             assert(origin);
             std::cerr << "<COM1/>";
             origin->newLine();
          }
-
+#endif
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(MyLexer);
     };
