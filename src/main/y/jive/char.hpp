@@ -110,8 +110,8 @@ namespace upsylon {
                 List & add(const Context &,const uint8_t); //!< helper
                 List & operator<<(const List &);           //!< helper
                 virtual void release() throw();            //!< erase!
-                const Char & first() const throw();        //!< *head for size>0
-                const Char & final() const throw();        //!< *tail for size>0
+                const Char & head_char() const throw();    //!< *head for size>0
+                const Char & tail_char() const throw();    //!< *tail for size>0
                 
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const List &);

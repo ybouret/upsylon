@@ -14,6 +14,15 @@ namespace upsylon
         namespace Lexical
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! Read block between Enter/Leave
+            /**
+             verbatim, but replace all [:endl:] by '\n'
+             */
+            //
+            //__________________________________________________________________
             class BlockReader : public Plugin
             {
             public:

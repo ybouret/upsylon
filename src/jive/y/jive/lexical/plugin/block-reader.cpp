@@ -25,14 +25,14 @@ namespace upsylon
             
             void BlockReader:: OnQuit(const Token &)
             {
-                //block.release();
+                
             }
             
             void BlockReader:: OnEndl(const Token &t)
             {
                 assert(t.size>0);
                 origin->newLine();
-                block << Char::Copyset(t.first(),'\n');
+                block << Char::Copyset(t.head_char(),'\n');
             }
             
             
