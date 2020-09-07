@@ -228,32 +228,6 @@ SET(fft_srcs ${fft_decl} ${fft_code})
 SOURCE_GROUP( fft FILES ${fft_srcs} )
 INSTALL( FILES ${fft_decl} DESTINATION include/y/fft )
 
-#FILE(GLOB mpl_decl y/mpl/*.hpp)
-#FILE(GLOB mpl_code y/mpl/*.cpp)
-#SET(mpl_srcs ${mpl_decl} ${mpl_code})
-#SOURCE_GROUP( mpl FILES ${mpl_srcs} )
-#INSTALL( FILES ${mpl_decl} DESTINATION include/y/mpl )
-
-
-#FILE(GLOB mpl_natural_decl y/mpl/natural/*.hpp)
-#FILE(GLOB mpl_natural_code y/mpl/natural/*.cpp)
-#SET(mpl_natural_srcs ${mpl_natural_decl} ${mpl_natural_code})
-#SOURCE_GROUP( mpl/natural FILES ${mpl_natural_srcs} )
-#INSTALL( FILES ${mpl_natural_decl} DESTINATION include/y/mpl/natural )
-
-#FILE(GLOB mpl_prime_decl y/mpl/prime/*.hpp)
-#FILE(GLOB mpl_prime_code y/mpl/prime/*.cpp)
-#SET(mpl_prime_srcs ${mpl_prime_decl} ${mpl_prime_code})
-#SOURCE_GROUP( mpl/prime FILES ${mpl_prime_srcs} )
-#INSTALL( FILES ${mpl_prime_decl} DESTINATION include/y/mpl/prime )
-
-#FILE(GLOB mpl_rsa_decl y/mpl/rsa/*.hpp)
-#FILE(GLOB mpl_rsa_code y/mpl/rsa/*.cpp)
-#SET(mpl_rsa_srcs ${mpl_rsa_decl} ${mpl_rsa_code})
-#SOURCE_GROUP( mpl/rsa FILES ${mpl_rsa_srcs} )
-#INSTALL( FILES ${mpl_rsa_decl} DESTINATION include/y/mpl/rsa )
-
-
 
 FILE(GLOB math_decl y/mkl/*.hpp)
 FILE(GLOB math_code y/mkl/*.cpp)
@@ -340,7 +314,7 @@ SET(counting_srcs ${counting_decl} ${counting_code})
 SOURCE_GROUP( counting FILES ${counting_srcs} )
 INSTALL( FILES ${counting_decl} DESTINATION include/y/counting )
 
-
+IF(FALSE)
 FILE(GLOB jargon_decl y/jargon/*.hpp)
 FILE(GLOB jargon_code y/jargon/*.cpp)
 SET(jargon_srcs ${jargon_decl} ${jargon_code})
@@ -376,6 +350,7 @@ FILE(GLOB jargon_pattern_joker_code y/jargon/pattern/joker/*.cpp)
 SET(jargon_pattern_joker_srcs ${jargon_pattern_joker_decl} ${jargon_pattern_joker_code})
 SOURCE_GROUP( jargon/pattern/joker FILES ${jargon_pattern_joker_srcs} )
 INSTALL( FILES ${jargon_pattern_joker_decl} DESTINATION include/y/jargon/pattern/joker )
+ENDIF()
 
 FILE(GLOB tensor_decl y/tensor/*.hpp)
 FILE(GLOB tensor_code y/tensor/*.cpp)
