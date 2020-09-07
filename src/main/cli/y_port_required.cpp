@@ -12,80 +12,104 @@ using namespace upsylon;
 
 namespace
 {
-    typedef memory::pooled           Allocator;
-    typedef vector<string,Allocator> Strings;
-    typedef suffix_tree<string>      Deps;
+    typedef memory::pooled           Allocator; //!< local memory
+    typedef vector<string,Allocator> Strings;   //!< temporary strings
+    typedef suffix_tree<string>      Deps;      //!< database of deps
 
 
     class Node : public object, public inode<Node>
     {
     public:
         typedef core::list_of_cpp<Node> List;
-        const Node  *root;
         const string portName;
         List         children;
-
-        inline explicit Node(const Node   *node,
+        
+        //----------------------------------------------------------------------
+        //
+        //! create a new node with a root
+        //
+        //----------------------------------------------------------------------
+        inline explicit Node(Deps         &deps,
                              const string &name,
                              const string &vars ) :
-        root(node),
         portName(name),
         children()
         {
-            Deps           deps;
+            //------------------------------------------------------------------
+            // find local dependencies
+            //------------------------------------------------------------------
+            Deps localDeps;
             {
-                string         cmd = "port deps " + portName + vars;
-                Strings        lines;
-                ios::posix_command::query(lines,cmd);
-                for(size_t i=lines.size();i>0;--i)
+                const string cmd = "port deps " + portName + vars;
+                parseDeps(localDeps,cmd);
+            }
+            
+            //------------------------------------------------------------------
+            // remove already gathered
+            //------------------------------------------------------------------
+            alreadyInstalled(localDeps,deps);
+            
+            //------------------------------------------------------------------
+            // check currently installed
+            //------------------------------------------------------------------
+            checkInstalled(localDeps);
+            
+            //------------------------------------------------------------------
+            // merge
+            //------------------------------------------------------------------
+            for(Deps::iterator i=localDeps.begin();i!=localDeps.end();++i)
+            {
+                const string &dep = *i;
+                std::cerr << "|_" << dep << std::endl;
+                if(!deps.insert_by(dep,dep))
                 {
-                    processLine(lines[i],deps);
+                    throw exception("unexpected multiple '%s'", *dep);
                 }
             }
-
-            deps.sort_with(string::compare);
-            checkInstalled(deps);
-
+            
+            //------------------------------------------------------------------
+            // process
+            //------------------------------------------------------------------
+            for(Deps::iterator i=localDeps.begin();i!=localDeps.end();++i)
             {
-                Strings already;
-                for(Deps::iterator i=deps.begin();i!=deps.end();++i)
-                {
-                    const string &dep = *i;
-                    if(root&&root->find(dep))
-                    {
-                        already.push_back(dep);
-                    }
-                }
-                std::cerr << "already " << already << std::endl;
-                for(size_t i=already.size();i>0;--i)
-                {
-                    deps.no(already[i]);
-                }
+                const string &dep = *i;
+                children.push_back( new Node(deps,dep,vars) );
             }
-
-
-
-
+            
         }
 
-
-        bool find(const string &id) const throw()
+        void alreadyInstalled(Deps &localDeps, const Deps &deps)
         {
-            for(const Node *node=children.head;node;node=node->next)
+            Strings already;
+            for(Deps::iterator i=localDeps.begin();i!=localDeps.end();++i)
             {
-                if(node->find(id)) return true;
+                const string &dep = *i;
+                if(deps.has(dep)) already.push_back(dep);
             }
-            return id==portName;
+            while( already.size() )
+            {
+                localDeps.no( already.back() );
+            }
         }
-
+      
 
         inline virtual ~Node() throw()
         {
 
         }
 
-
-        inline void processLine(const string &line, Deps &deps)
+        inline void parseDeps(Deps &deps, const string &cmd)
+        {
+            Strings output;
+            ios::posix_command::query(output,cmd);
+            for(size_t i=output.size();i>0;--i)
+            {
+                addDeps(deps,output[i]);
+            }
+            deps.sort_with(string::compare);
+        }
+        
+        inline void addDeps(Deps &deps, const string &line)
         {
             static const char   dep[] = "Dependencies:";
             static const size_t len   = sizeof(dep)/sizeof(dep[0])-1;
@@ -127,7 +151,6 @@ namespace
                 {
                     cmd << ' ' << *i;
                 }
-                std::cerr << "executing " << cmd << std::endl;
                 Strings lines;
                 ios::posix_command::query(lines,cmd);
                 for(size_t i=lines.size();i>1;--i)
@@ -136,11 +159,9 @@ namespace
                     if( tkn.next_with(' ') )
                     {
                         const string guess(tkn.token(),tkn.units());
-                        //std::cerr << "found <" << guess << ">" << std::endl;
-                        (void) deps.remove_by(guess);
+                        deps.no(guess);
                     }
                 }
-                std::cerr << "#remaining: " << deps.entries() << std::endl;
             }
         }
 
@@ -167,8 +188,11 @@ Y_PROGRAM_START()
         }
         const string portFull =  portName + portVars;
         std::cerr << "looking for " << portFull << std::endl;
-        auto_ptr<Node> root = new Node(NULL,portName,portVars);
-
+        Deps           deps;
+        {
+            auto_ptr<Node> root = new Node(deps,portName,portVars);
+        }
+        
     }
 
 }
