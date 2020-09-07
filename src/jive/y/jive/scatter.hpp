@@ -1,3 +1,5 @@
+//! \file
+
 #ifndef Y_JIVE_SCATTER_INCLUDED
 #define Y_JIVE_SCATTER_INCLUDED 1
 

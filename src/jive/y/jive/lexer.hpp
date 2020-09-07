@@ -1,3 +1,4 @@
+//! \file
 
 #ifndef Y_JIVE_LEXER_INCLUDED
 #define Y_JIVE_LEXER_INCLUDED 1
@@ -105,6 +106,7 @@ namespace upsylon {
                 return NULL != ex.search_by(id);
             }
 
+            //! get a plugin by ID
             template <typename ID>
             Plugin &getPlugin(const ID &id)
             {
