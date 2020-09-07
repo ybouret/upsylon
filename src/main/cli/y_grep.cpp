@@ -12,7 +12,7 @@ Y_PROGRAM_START()
     {
         Token        token;
         Matching     keep = argv[1];
-        keep->save_to( "grep.bin" );
+        keep.motif->save_to( "grep.bin" );
         const string      fileName = (argc > 2) ? argv[2] : Y_STDIN;
         ios::icstream     input(  fileName     );
         ios::ocstream     output( ios::cstdout );

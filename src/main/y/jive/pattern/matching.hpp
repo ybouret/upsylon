@@ -12,10 +12,10 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! mathing API
+        //! mathing API, acts as a clone pointer
         //
         //______________________________________________________________________
-        class Matching : public Motif, public Token
+        class Matching : public CountedObject
         {
         public:
             //__________________________________________________________________
@@ -28,19 +28,23 @@ namespace upsylon
             //! build from an acceptable regular expression
             template <typename REGEXP> inline
             Matching(const REGEXP &rx, const Dictionary *dict =0 ) :
-            Motif( RegExp(rx,dict) ), Token(), firstChars()
+            CountedObject(),
+            motif( RegExp(rx,dict) ),  token(), firstChars()
             {
                 setup();
             }
 
-            
+            //! build from a pattern
+            Matching(Pattern *);
+
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            const Token *exactly_(Module *);          //!< full module content must be accepted
-            const Token *foundIn_(Module *); //!< first accepted token
+            void         commute(Matching &other) throw(); //! commute with other
+            const Token *exactly_(Module *);               //!< full module content must be accepted
+            const Token *foundIn_(Module *);               //!< first accepted token
             size_t       collect_(sequence<Token::Handle> &, Module *); //!< collect all tokens
 
             //! wrapper
@@ -84,11 +88,14 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Leading firstChars; //!< compiled firstChars
+            const Pattern * const motif;
+            Token                 token;
+            const Leading         firstChars; //!< compiled firstChars
 
         private:
             Y_DISABLE_ASSIGN(Matching);
             void setup();
+            void cleanup() throw();
         };
 
     }

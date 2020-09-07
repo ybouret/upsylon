@@ -13,24 +13,43 @@ namespace upsylon
         }
 
         Matching::Matching(const Matching &m):
-        Motif(m), Token(), firstChars(m.firstChars)
+        CountedObject(),
+        motif( m.motif->clone() ),
+        token(),
+        firstChars()
         {
+            try
+            {
+                Leading temp(m.firstChars);
+                aliasing::_(firstChars).commute(temp);
+            }
+            catch(...)
+            {
+                cleanup();
+                throw;
+            }
         }
 
         void Matching:: setup()
         {
-            (**this).start( aliasing::_(firstChars) );
+            try
+            {
+                motif->start( aliasing::_(firstChars) );
+            }
+            catch(...)
+            {
+                cleanup();
+                throw;
+            }
         }
 
         const Token *Matching:: exactly_(Module *module)
         {
             Source         source(module);
-            Token         &token = *this;
-            const Pattern &p     = **this;
             token.release();
-            if(p.accept(token,source))
+            if(motif->accept(token,source))
             {
-                return source.alive() ? NULL : this;
+                return source.alive() ? NULL : &token;
             }
             else
             {
@@ -41,17 +60,15 @@ namespace upsylon
         const Token *Matching:: foundIn_(Module *module)
         {
             Source         source(module);
-            Token         &token = *this;
-            const Pattern &p     = **this;
             token.release();
             if( source.find(firstChars) )
             {
                 assert( source.in_cache() > 0);
-                if( !p.accept(token,source) )
+                if( !motif->accept(token,source) )
                 {
                     throw exception("Jive::Matching::Somehow(corrupted firstChars)");
                 }
-                return this;
+                return &token;
             }
             else
             {
@@ -62,15 +79,13 @@ namespace upsylon
         size_t Matching:: collect_(sequence<Token::Handle> &tokens, Module *module)
         {
             Source         source(module);
-            const Pattern &p     = **this;
-            Token         &token = *this;
             size_t         n     = 0;
             token.release();
             while( source.find(firstChars) )
             {
                 assert(source.in_cache() > 0);
                 Token::Handle h = new Token();
-                if( !p.accept(*h,source) )
+                if( !motif->accept(*h,source) )
                 {
                     throw exception("Jive::Matching::Somehow(corrupted firstChars)");
                 }
@@ -78,13 +93,34 @@ namespace upsylon
                 ++n;
                 if(h->size<=0)
                 {
-                    assert(p.feeble());
+                    assert(motif->feeble());
                     source.skip();
                 }
             }
             return n;
         }
 
+
+        Matching:: Matching(Pattern *p) :
+        CountedObject(),
+        motif(p), token(), firstChars()
+        {
+            setup();
+        }
+
+        void Matching:: commute(Matching &other) throw()
+        {
+            _cswap(motif,other.motif);
+            token.swap_with(other.token);
+            aliasing::_(firstChars).commute( aliasing::_(other.firstChars) );
+        }
+
+        void Matching:: cleanup() throw()
+        {
+            assert(motif);
+            delete aliasing::_(motif);
+            aliasing::_(motif) = 0;
+        }
 
     }
 
