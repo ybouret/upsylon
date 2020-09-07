@@ -66,12 +66,10 @@ namespace upsylon {
 
         exception & Token:: cat(exception &excp) const throw()
         {
-            excp << '\'';
             for(const Char *ch=head;ch;ch=ch->next)
             {
                 excp << cchars::encoded[ch->code];
             }
-            excp << '\'';
             return excp;
         }
 
