@@ -292,15 +292,13 @@ namespace upsylon
 }
 
 
-#include "y/jargon/pattern/regexp.hpp"
-#include "y/jargon/pattern.hpp"
-
+#include "y/jive/pattern/matching.hpp"
 #include "y/exception.hpp"
 #include <cctype>
 
 namespace upsylon {
 
-    using namespace Jargon;
+    using namespace Jive;
     
     string vfs:: snake_to_camel(const string &name)
     {
@@ -311,20 +309,24 @@ namespace upsylon {
         }
         else
         {
+            throw exception("not implemented");
             string       result;
+
+            // first char: would skip underscore
             size_t       i      = 0;
             if('_' != name[0] )
             {
                 result << char( toupper(name[0]) );
                 i=1;
             }
-            
-            Source source(Module::OpenData(name,*name+i,name.size()-i) );
-            Token  token;
-            Motif  motif = RegularExpression::Compile("_[:lower:]");
-            while( source.isAlive() )
+
+            Source      source(Module::OpenData(name,*name+i,name.size()-i) );
+            const Motif motif = RegExp("_[:lower:]",NULL);
+
+            while(source.alive())
             {
-                if( motif->match(token,source) )
+                Token token;
+                if(motif->accept(token,source))
                 {
                     assert(2==token.size);
                     assert('_'==token.head->code);
@@ -333,14 +335,14 @@ namespace upsylon {
                 }
                 else
                 {
-                    char C=0;
-                    if(!source.query(C)) throw exception("vfs::snake_to_camel unexpected failure!!!");
-                    result << C;
+                    assert(source.in_cache()>0);
+                    result <<  char(source.peek()->code);
+                    source.skip();
                 }
             }
 
-
             return result;
+
         }
     }
 
