@@ -4,6 +4,7 @@
 #include "y/jive/common-regexp.hpp"
 #include "y/jive/lexical/plugin/comments.hpp"
 #include "y/jive/lexical/plugin/strings.hpp"
+#include "y/jive/lexical/plugin/block-reader.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -43,6 +44,17 @@ namespace {
 
             call( plug<Lexical::jString>("jstring")   );
             call( plug<Lexical::rString>("rstring") );
+
+
+            {
+                Y_CHECK( hasPlugin("jstring") );
+                const string rstring = "rstring";
+                Y_CHECK( hasPlugin(rstring) );
+                Plugin &xmlComments = getPlugin("xmlComments");
+                Y_CHECK(*xmlComments.label=="xmlComments");
+            }
+
+            call( plug<Lexical::BlockReader>("block","\\{", "\\}"));
 
         }
 

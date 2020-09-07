@@ -98,6 +98,26 @@ namespace upsylon {
                 return *p;
             }
 
+            //! check is a plugin is registerer
+            template <typename ID>
+            bool hasPlugin(const ID &id) const throw()
+            {
+                return NULL != ex.search_by(id);
+            }
+
+            template <typename ID>
+            Plugin &getPlugin(const ID &id)
+            {
+                const Plugin::Pointer *ppPlugin = ex.search_by(id);
+                if(!ppPlugin) noPlugin(id);
+                return (Plugin&)(**ppPlugin);
+            }
+
+            //__________________________________________________________________
+            //
+            // I/O methods
+            //__________________________________________________________________
+
 
             Lexeme *get(Source &);             //!< get new lexemes
             void    unget(Lexeme  *) throw();  //!< unget lexeme
@@ -118,7 +138,8 @@ namespace upsylon {
             void         newPlugin( Plugin *plg );
             void         jmp(const Tag &);
             virtual void push(Lexeme *) throw();
-
+            void         noPlugin(const string &s) const;
+            void         noPlugin(const char   *s) const;
         };
     }
 

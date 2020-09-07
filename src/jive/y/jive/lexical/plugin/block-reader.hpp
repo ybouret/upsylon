@@ -1,11 +1,10 @@
-
-
 //! \file
 
 #ifndef Y_JIVE_LEXICAL_PLUGIN_BLOCK_READER_INCLUDED
 #define Y_JIVE_LEXICAL_PLUGIN_BLOCK_READER_INCLUDED 1
 
 #include "y/jive/lexical/plugin.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -26,6 +25,7 @@ namespace upsylon
             class BlockReader : public Plugin
             {
             public:
+                //! cleanup
                 virtual ~BlockReader() throw();
                 
                 //! setup with enter/leave regexp
@@ -34,14 +34,15 @@ namespace upsylon
                                      const ENTER    &enter,
                                      const LEAVE    &leave,
                                      Lexical::Queue &q) :
-                Plugin(id,enter,q,RejectEOS)
+                Plugin(id,enter,q,RejectEOS),
+                block(NULL)
                 {
                     back(leave,this, &BlockReader::OnQuit);
                     setup();
                 }
                 
             private:
-                Token block;
+                auto_ptr<Unit> block;
                 Y_DISABLE_COPY_AND_ASSIGN(BlockReader);
                 void         setup();
                 virtual void OnInit(const Token &);

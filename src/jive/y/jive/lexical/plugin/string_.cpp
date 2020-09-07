@@ -30,28 +30,31 @@ namespace upsylon
                 discard("error", "[^]",                         this, &String_::OnError);
             }
 
-            void String_:: OnInit(const Token &)
+            void String_:: OnInit(const Token &t)
             {
-                s.release();
+                assert(t.size>0);
+                unit = NULL;
+                unit = new Unit(t.head_char(),label);
             }
 
             void String_:: OnQuit(const Token &)
             {
-                Unit *unit = new Unit(*(s.head),label);
-                unit->swap_with(s);
-                Q.push(unit);
+                assert(unit.is_valid());
+                Q.push(unit.yield());
             }
 
             void String_:: OnCore(const Token &t)
             {
-                s << t;
+                assert(unit.is_valid());
+                *unit << t;
             }
 
             void String_:: OnDelim(const Token &t)
             {
                 assert(t.size==2);
-                Char *ch = Char::Copycat(*t.tail);
-                s << ch;
+                assert(unit.is_valid());
+                Char *ch = Char::Copycat(t.tail_char());
+                *unit << ch;
             }
 
 
@@ -81,10 +84,10 @@ namespace upsylon
                 const int  lo = hexadecimal::to_decimal(t.tail->code);
                 const int  hi = hexadecimal::to_decimal(t.tail->prev->code);
                 const int  ch = (hi<<4) | lo;
-                s << Char::Copyset(*t.head, ch);
+                *unit << Char::Copyset(t.head_char(), ch);
             }
 
-#define YLP_ESC(A,B) case A : s << Char::Copyset(*t.head,B); break
+#define YLP_ESC(A,B) case A : *unit << Char::Copyset(*t.head,B); break
 
             void String_:: OnEsc(const Token &t)
             {
@@ -95,7 +98,7 @@ namespace upsylon
                     case '\\':
                     case '"':
                     case '\'':
-                        s << Char::Copyset(*t.head,C);
+                        *unit << Char::Copyset(t.head_char(),C);
                         break;
 
                         YLP_ESC('n','\n');

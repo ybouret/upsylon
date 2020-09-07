@@ -189,6 +189,17 @@ namespace upsylon {
             }
         }
 
+        void Lexer:: noPlugin(const string &s) const
+        {
+            noPlugin(*s);
+        }
+
+        void Lexer:: noPlugin(const char   *s) const
+        {
+            assert(s);
+            throw exception("[%s] no plugin <%s>", **label, s);
+        }
+
     }
 
 }
