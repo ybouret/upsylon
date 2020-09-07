@@ -58,7 +58,8 @@ namespace {
             while( w.still_available )
             {
                 std::cerr << '+';
-                reg[num++] = w.acquire();
+                type *ptr = reg[num++] = w.acquire();
+                new (ptr) type();
             }
             std::cerr << ']';
             std::cerr << std::endl;
@@ -67,6 +68,8 @@ namespace {
             for(size_t i=0;i<num;++i)
             {
                 std::cerr << '-';
+                type *ptr = reg[i];
+                ptr->~type();
                 w.release(reg[i]);
             }
             std::cerr << ']';
