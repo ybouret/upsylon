@@ -21,12 +21,14 @@ namespace {
             emit("ID",     RegExpFor::Identifier);
             drop("blanks","[:blank:]+");
             endl("endl",  "[:endl:]");
-            jump("com1", "%",  this, & Scanner::nothing);
+            jump("com1", "%",  this, & MyLexer::EnterCom1);
             call("com2", "--", this, & Scanner::nothing);
 
-            Scanner &com1 = decl( "com1" );
-            com1.drop("chars",".");
-            com1.jump( "Lexer", "[:endl:]", &com1, & Scanner::newLine );
+            {
+                Scanner &com1 = decl( "com1" );
+                com1.drop("chars",".");
+                com1.jump( "Lexer", "[:endl:]", &com1, & MyLexer::newLine );
+            }
 
 
             Scanner &com2 = decl( "com2" );
