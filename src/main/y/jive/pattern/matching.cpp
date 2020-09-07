@@ -10,6 +10,7 @@ namespace upsylon
 
         Matching:: ~Matching() throw()
         {
+            cleanup();
         }
 
         Matching::Matching(const Matching &m):
