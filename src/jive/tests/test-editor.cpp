@@ -85,7 +85,6 @@ Y_UTEST_DONE()
 
 Y_UTEST(editor64)
 {
-    
     Ed64 prog;
     if(argc>1)
     {
@@ -93,7 +92,6 @@ Y_UTEST(editor64)
         ios::ocstream fp( ios::cstdout );
         prog.run(fp,source);
     }
-    
 }
 Y_UTEST_DONE()
 

@@ -5,10 +5,11 @@ TARGET_LINK_Y(test-jive jive)
 
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ENABLE_TESTING()
-ADD_TEST(scanner test-jive scanner ${HERE}/../../main/tests/words.db)
-ADD_TEST(scatter test-jive scatter)
-ADD_TEST(lexer   test-jive lexer)
-ADD_TEST(editor  test-jive editor ${HERE}/../../main/tests/words.db)
+ADD_TEST(scanner   test-jive scanner ${HERE}/../../main/tests/words.db)
+ADD_TEST(scatter   test-jive scatter)
+ADD_TEST(lexer     test-jive lexer)
+ADD_TEST(editor    test-jive editor   ${HERE}/../../main/tests/words.db)
+ADD_TEST(editor64  test-jive editor64 ${HERE}/../../main/tests/words.db)
 
 ADD_CUSTOM_TARGET(utest-jive
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
