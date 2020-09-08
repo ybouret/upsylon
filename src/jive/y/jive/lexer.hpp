@@ -49,7 +49,8 @@ namespace upsylon {
             template <typename ID> inline
             explicit Lexer(const ID &id) :
             Lexical::Queue(), Scanner(id,AcceptEOS),
-            scan(this), hist(), io(), db(), ex()
+            scan(this), hist(), io(), db(), ex(),
+            dictionary()
             {
                 initialize();
             }
