@@ -58,6 +58,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(quark3);
 
     Y_UTEST(k_means);
+    Y_UTEST(jacobian);
 }
 Y_UTEST_EXEC()
 

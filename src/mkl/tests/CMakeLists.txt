@@ -22,7 +22,7 @@ ADD_TEST(mkl:tridiag  test-mkl tridiag)
 ADD_TEST(mkl:cyclic   test-mkl cyclic)
 ADD_TEST(mkl:sparse   test-mkl sparse)
 ADD_TEST(mkl:gram-schmidt test-mkl gram_schmidt)
-
+ADD_TEST(mkl:jacobian  test-nkl jacobian)
 
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
@@ -37,11 +37,12 @@ SOURCE_GROUP(opt FILES test-bracket.cpp test-min.cpp)
 ADD_TEST(opt:bracket     test-mkl bracket)
 ADD_TEST(opt:minimize    test-mkl min)
 
-SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zroot.cpp)
-ADD_TEST(fcn:drvs    test-mkl drvs)
-ADD_TEST(fcn:intg    test-mkl intg)
-ADD_TEST(fcn:func    test-mkl functions)
-ADD_TEST(fcn:zroot   test-mkl zroot)
+SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zroot.cpp test-jacobian.cpp)
+ADD_TEST(fcn:drvs     test-mkl drvs)
+ADD_TEST(fcn:intg     test-mkl intg)
+ADD_TEST(fcn:func     test-mkl functions)
+ADD_TEST(fcn:zroot    test-mkl zroot)
+ADD_TEST(fcn:jacobian test-mkl jacobian)
 
 SOURCE_GROUP(sig FILES test-bspl.cpp test-extend.cpp test-linear.cpp test-smooth.cpp test-spline.cpp)
 ADD_TEST(sig:linear      test-mkl linear)
