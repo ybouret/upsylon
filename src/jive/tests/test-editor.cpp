@@ -95,3 +95,46 @@ Y_UTEST(editor64)
 }
 Y_UTEST_DONE()
 
+namespace {
+ 
+    class Snake : public Lexical::Editor::Program
+    {
+    public:
+        
+        Snake()
+        {
+            on("_[:lower:]",this, & Snake::OnLower );
+            on("_[:upper:]",this, & Snake::OnUpper);
+
+        }
+        
+        virtual ~Snake() throw()
+        {
+        }
+        
+        
+        void OnLower(ios::ostream &fp, const Token &t)
+        {
+            fp << toupper(t.tail->code);
+        }
+        
+        void OnUpper(ios::ostream &fp, const Token &t)
+        {
+            fp << t.tail->code;
+        }
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(Snake);
+    };
+    
+}
+
+Y_UTEST(ed_snake)
+{
+    Snake ed;
+    const string src = "hello_world_You";
+    const string tgt = ed.run(src);
+    std::cerr << "src=" << src << " => " << tgt << std::endl;
+}
+Y_UTEST_DONE()
+
