@@ -52,7 +52,10 @@ namespace upsylon
 
                     //! apply all instructions by in-order best match
                     void run(ios::ostream &, Source &);
-
+                    
+                    //! edit a string
+                    string run(const string &);
+                    
                     //! add a new instruction
                     void add(Instruction *instr);
 

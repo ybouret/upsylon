@@ -20,6 +20,7 @@ namespace upsylon
                 Program:: Program(const EndlPolicy how) :
                 exe(),
                 xfc(),
+                tbl(),
                 org(0)
                 {
                     switch (how)
@@ -205,6 +206,34 @@ namespace upsylon
 
             }
 
+        }
+    }
+}
+
+#include "y/ios/osstream.hpp"
+
+namespace upsylon
+{
+    
+    namespace Jive
+    {
+        
+        namespace Lexical
+        {
+            
+            namespace Editor
+            {
+                string Program:: run(const string &src)
+                {
+                    string tgt;
+                    {
+                        ios::osstream target(tgt);
+                        Source        source( Module::OpenData(src) );
+                        run(target,source);
+                    }
+                    return tgt;
+                }
+            }
         }
     }
 }
