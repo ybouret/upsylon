@@ -19,30 +19,44 @@ namespace upsylon
 
             namespace Editor
             {
-
+                //______________________________________________________________
+                //
+                //! policy for end of line
+                //______________________________________________________________
                 enum EndlPolicy
                 {
-                    EndlCopy,
-                    EndlToLF
+                    EndlCopy, //!< copy
+                    EndlToLF  //!< replace by '\n'
                 };
 
+                //______________________________________________________________
+                //
+                //
+                //! set of instructions
+                //
+                //______________________________________________________________
                 class Program : public CountedObject
                 {
                 public:
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
+                    virtual ~Program() throw();                      //!< cleanup
+                    explicit Program(const EndlPolicy how=EndlCopy); //!< setup
 
-                    typedef Instruction::List          Instructions;
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
 
-                    const Instructions exe; //!< EXEcutable instructions
-                    const Leading      xfc; //!< eXecutable First Chars
-                    const Scatter      tbl;
-
-                    virtual ~Program() throw();
-                    explicit Program(const EndlPolicy how=EndlCopy);
-
+                    //! apply all instructions by in-order best match
                     void run(ios::ostream &, Source &);
 
+                    //! add a new instruction
                     void add(Instruction *instr);
 
+                    //! build a new instruction
                     template <typename REGEXP,
                     typename OBJECT_POINTER,
                     typename METHOD_POINTER>
@@ -55,13 +69,18 @@ namespace upsylon
                         const  Code  code(hObject,hMethod);
                         return add( new Instruction(motif,code) );
                     }
-                    
 
-                protected:
-                    Source *org; //!< temporary address of source
+                    //__________________________________________________________
+                    //
+                    // members
+                    //__________________________________________________________
+                    const Instruction::List exe; //!< EXEcutable instructions
+                    const Leading           xfc; //!< eXecutable First Chars
+                    const Scatter           tbl; //!< table of scattered instructions
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Program);
+                    Source *org; //!< temporary address of source
                     void endl_copy(ios::ostream &, const Token&);
                     void endl_toLF(ios::ostream &, const Token&);
                 };

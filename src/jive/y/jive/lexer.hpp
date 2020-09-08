@@ -143,7 +143,7 @@ namespace upsylon {
             void         noPlugin(const string &s) const;
             void         noPlugin(const char   *s) const;
         public:
-            Dictionary   dictionary;
+            Dictionary   dictionary; //!< shared dictionary for all scanners
         };
     }
 

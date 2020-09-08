@@ -16,19 +16,31 @@ namespace upsylon {
 
             namespace Editor {
 
+                //______________________________________________________________
+                //
+                //
+                //! alias to process a matched token to an output stream
+                //
+                //______________________________________________________________
                 typedef functor<void,TL2(ios::ostream&,const Token&)> Code;
 
+                //______________________________________________________________
+                //
+                //
+                //! pattern and code holder
+                //
+                //______________________________________________________________
                 class Instruction : public Object, public inode<Instruction>
                 {
                 public:
-                    typedef core::list_of_cpp<Instruction> List;
+                    virtual ~Instruction() throw();                    //!< cleanup
+                    explicit Instruction(const Motif &, const Code &); //!< setup
+
+                    const Motif motif; //!< compiled pattern
+                    const Code  code;  //!< what to do with the accepted token
+
+                    typedef core::list_of_cpp<Instruction> List; //!< alias
                     
-                    virtual ~Instruction() throw();
-                    explicit Instruction(const Motif &m, const Code &c);
-
-                    const Motif motif;
-                    const Code  code;
-
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Instruction);
 
