@@ -47,6 +47,7 @@ namespace upsylon {
                 (void) liberate();
                 throw;
             }
+            aliasing::_(dict) = &dictionary;
         }
 
         Lexical::Scanner & Lexer:: newScanner( const Tag &t )
@@ -56,6 +57,7 @@ namespace upsylon {
             {
                 throw exception("[%s] multiple scanners [%s]", **label, **(handle->label));
             }
+            aliasing::_(handle->dict) = &dictionary;
             return *handle;
         }
 

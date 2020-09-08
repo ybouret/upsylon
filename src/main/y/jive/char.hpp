@@ -31,6 +31,7 @@ namespace upsylon {
             static Char *Copyset(const Char &, const uint8_t);              //!< copy with another byte
             static void  Reserve(const size_t);                             //!< get memory from system
             friend std::ostream & operator<<(std::ostream &, const Char &); //!< display
+            friend ios::ostream & operator<<(ios::ostream &, const Char &); //!< append to ostream
 
             //__________________________________________________________________
             //
@@ -115,6 +116,9 @@ namespace upsylon {
                 
                 //! display
                 friend std::ostream & operator<<(std::ostream &, const List &);
+
+                //! append to ios
+                friend ios::ostream & operator<<(ios::ostream &, const List &);
 
             };
 

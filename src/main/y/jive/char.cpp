@@ -1,4 +1,3 @@
-
 #include "y/jive/char.hpp"
 #include "y/type/block/zset.hpp"
 
@@ -68,6 +67,12 @@ namespace upsylon {
         {
             os << cchars::visible[ch.code];
             return os;
+        }
+
+        ios::ostream & operator<<(ios::ostream &fp, const Char &ch)
+        {
+            fp << char(ch.code);
+            return fp;
         }
 
         void Char:: Reserve(const size_t n)
@@ -234,6 +239,15 @@ namespace upsylon {
                 os << *ch;
             }
             return os;
+        }
+
+        ios::ostream & operator<<(ios::ostream &fp, const Char::List &L)
+        {
+            for(const Char *ch=L.head;ch;ch=ch->next)
+            {
+                fp << *ch;
+            }
+            return fp;
         }
 
     }

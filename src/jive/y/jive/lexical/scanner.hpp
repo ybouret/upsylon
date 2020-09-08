@@ -330,10 +330,10 @@ namespace upsylon
                 exception syntaxError(Source &) const;
 
             protected:
-                Source           *origin; //!< currently processed source
+                Source                  *origin; //!< currently processed source
             public:
-                const size_t      lmax;   //!< max rule label length
-                const Dictionary *dict;   //!< shared dictionary
+                const size_t             lmax;   //!< max rule label length
+                const Dictionary * const dict;   //!< shared dictionary
             };
         }
     }

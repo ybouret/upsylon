@@ -1,5 +1,6 @@
 
 #include "y/jive/lexical/editor/program.hpp"
+#include "y/core/temporary-link.hpp"
 
 namespace upsylon
 {
@@ -16,9 +17,41 @@ namespace upsylon
                 {
                 }
 
-                Program:: Program() : exe(), idb(), xfc()
+                Program:: Program(const EndlPolicy how) :
+                exe(),
+                xfc(),
+                org(0)
                 {
+                    switch (how)
+                    {
+                        case EndlCopy:
+                            on( "[:endl:]", this, & Program::endl_copy);
+                            break;
+
+                        case EndlToLF:
+                            on( "[:endl:]", this, & Program::endl_toLF);
+                            break;
+                    }
                 }
+
+
+
+                void Program::endl_copy(ios::ostream &fp, const Token &t)
+                {
+                    assert(org);
+                    org->newLine();
+                    fp << t;
+                }
+
+                void Program::endl_toLF(ios::ostream &fp, const Token &)
+                {
+                    assert(org);
+                    org->newLine();
+                    fp << '\n';
+                }
+
+
+
 
                 namespace
                 {
@@ -44,10 +77,41 @@ namespace upsylon
                     }
                 }
 
+                void Program:: add(Instruction *instr)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // append instruction
+                    //
+                    //----------------------------------------------------------
+                    assert(instr);
+                    aliasing::_(exe).push_back(instr);
 
+                    try
+                    {
+                        Leading tfc(xfc);                   // copy xfc
+                        Leading lfc;                        // build local first chars
+                        instr->motif->start(lfc);           // from intruction motif
+                        aliasing::_(tbl).record(instr,lfc); // dispatch instruction
+                        tfc.include(lfc);                   // included
+                        tfc.commute( aliasing::_(xfc) );    // new state!
+                    }
+                    catch(...)
+                    {
+                        delete aliasing::_(exe).pop_back();
+                        aliasing::_(tbl).remove(instr);
+                        throw;
+                    }
+
+                }
+
+
+                
 
                 void Program:: run(ios::ostream &fp, Source &source)
                 {
+                    const core::temporary_link<Source> link(source,&org);
+
                     for(Char *ch = source.get();ch!=NULL;ch=source.get())
                     {
                         //------------------------------------------------------

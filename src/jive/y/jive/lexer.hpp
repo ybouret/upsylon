@@ -5,7 +5,7 @@
 
 #include "y/jive/lexical/plugin.hpp"
 #include "y/jive/lexemes.hpp"
-
+#include "y/jive/pattern/dictionary.hpp"
 #include "y/sequence/list.hpp"
 
 namespace upsylon {
@@ -142,6 +142,8 @@ namespace upsylon {
             virtual void push(Lexeme *) throw();
             void         noPlugin(const string &s) const;
             void         noPlugin(const char   *s) const;
+        public:
+            Dictionary   dictionary;
         };
     }
 
