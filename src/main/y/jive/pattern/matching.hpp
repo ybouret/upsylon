@@ -42,7 +42,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void         commute(Matching &other) throw(); //! commute with other
+            void         commute(Matching &other) throw(); //!< commute with other
             const Token *exactly_(Module *);               //!< full module content must be accepted
             const Token *foundIn_(Module *);               //!< first accepted token
             size_t       collect_(sequence<Token::Handle> &, Module *); //!< collect all tokens
@@ -88,8 +88,8 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Pattern * const motif;
-            Token                 token;
+            const Pattern * const motif;      //!< const motif
+            Token                 token;      //!< local token
             const Leading         firstChars; //!< compiled firstChars
 
         private:
