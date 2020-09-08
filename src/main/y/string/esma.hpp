@@ -48,7 +48,6 @@
 
                 while (j<n)
                 {
-                    //while( (i > -1) && (x[i] != y[j]) ) i = k[i];
                     while( (i >= 0) && (x[i] != y[j]) ) i = k[i];
                     ++i; ++j;
                     if(i>=m)
