@@ -27,7 +27,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef typename numeric<T>::vector_field field_type;
+            typedef typename numeric<T>::vector_field field_type; //!< alias
 
 
             inline explicit znewt() :
@@ -82,10 +82,12 @@ namespace upsylon
 
             matrix<T> J;     //!< jacobian matrix
             array<T> &step;  //!< full Newton's step
-            array<T> &xtry;
+            array<T> &xtry;  //!< trial position
             
         private:
-            
+            inline T g_(T lam)
+            {
+            }
         };
 
 
