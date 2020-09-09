@@ -45,7 +45,7 @@ namespace {
 Y_UTEST(znewt)
 {
 
-    mysys                         mySys = { 30, 2 };
+    mysys                         mySys = { 2, 1 };
     if(argc>1)
     {
         mySys.nu    = string_convert::to<double>(argv[1],"nu");
