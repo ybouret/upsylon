@@ -71,9 +71,10 @@ Y_UTEST(znewt)
     znewt<double> solver;
 
     //! run
+    size_t count = 0;
     while(!solver.step(F,X,f,fjac))
     {
-
+        if(++count>1000) break;
     }
     std::cerr << std::endl;
     std::cerr << "kappa = " << 1.0 + X[2] / 1000.0 << std::endl;
