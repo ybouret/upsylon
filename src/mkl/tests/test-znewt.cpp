@@ -40,10 +40,23 @@ namespace {
 
 }
 
+#include "y/string/convert.hpp"
+
 Y_UTEST(znewt)
 {
 
     mysys                         mySys = { 30, 2 };
+    if(argc>1)
+    {
+        mySys.nu    = string_convert::to<double>(argv[1],"nu");
+    }
+
+    if(argc>2)
+    {
+        mySys.d7ini = string_convert::to<double>(argv[2],"d7ini");
+    }
+
+
     numeric<double>::vector_field f     = mySys;
     derivative<double>::pointer   drvs  = new derivative<double>();
     djacobian<double>             fjac(f,drvs);
