@@ -1,0 +1,38 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+\usepackage{bookman}
+
+%%  
+\newcommand{\trn}[1]{{#1}^{\mathtt{t}}}
+ 
+\begin{document}
+
+Let us assume that $\vec{F}(\vec{X})$ is derivable at $\vec{X}$.
+Since:
+\begin{equation}
+	\vec{F}(\vec{X}+\delta\vec{X}) \simeq \vec{F}(\vec{X}) + \bm{J} \delta\vec{X}
+\end{equation}
+the full Newton's step is:
+\begin{equation}
+	\vec{p} = - \bm{J}^{-1} \vec{F}
+\end{equation}
+We define
+\begin{equation}
+	g(\lambda) = \dfrac{1}{2} \trn{\vec{F}}  \vec{F} (\vec{X}+\lambda \vec{p})
+\end{equation}
+
+\begin{equation}
+	\vec{\nabla}g = \trn{J}\vec{F}
+\end{equation}
+and we want
+\begin{equation}
+	g(\lambda) \leq g_0 + \alpha \lambda \underbrace{\vec{\nabla}g_0 \cdot \vec{p}}_{-2g_0^2}
+\end{equation}
+
+\end{document}

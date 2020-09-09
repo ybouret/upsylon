@@ -25,8 +25,12 @@ namespace upsylon
         class djacobian : public jacobian<T>
         {
         public:
-            typedef typename numeric<T>::vector_field field_type;
-            typedef typename derivative<T>::pointer   derivator;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef typename numeric<T>::vector_field field_type; //!< alias
+            typedef typename derivative<T>::pointer   derivator;  //!< alias
 
             //! cleanup
             virtual ~djacobian() throw() {}

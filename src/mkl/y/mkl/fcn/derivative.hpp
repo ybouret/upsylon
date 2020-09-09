@@ -13,10 +13,11 @@ namespace upsylon {
 
         namespace kernel {
 
+            //! commmon functions fo derivative
             struct derivative
             {
-                static void underflow();
-                static void invalid_at(const double x);
+                static void underflow();                 //!< raise exception
+                static void invalid_at(const double x);  //!< raise exception
             };
 
         }
@@ -34,8 +35,11 @@ namespace upsylon {
         class derivative : public object, public counted
         {
         public:
-
-            typedef arc_ptr<derivative> pointer;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef arc_ptr<derivative> pointer; //!< alias
 
             //! constructor
             inline explicit derivative(const size_t table_size=16) :

@@ -13,15 +13,27 @@ namespace upsylon
     namespace mkl
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! a Newton's method
+        //
+        //______________________________________________________________________
         template <typename T>
         class znewt
         {
         public:
-
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef typename numeric<T>::vector_field field_type;
 
 
-            inline explicit znewt() : J()
+            inline explicit znewt() :
+            J(),
+            step( J.r_aux1 ),
+            xtry( J.r_aux2 )
             {
             }
 
@@ -30,10 +42,10 @@ namespace upsylon
             }
 
             //! start from f(F,X)
-            inline bool step(addressable<T> &F,
-                             addressable<T> &X,
-                             field_type     &f,
-                             jacobian<T>    &fjac )
+            inline bool cycle(addressable<T> &F,
+                              addressable<T> &X,
+                              field_type     &f,
+                              jacobian<T>    &fjac )
             {
                 static const T ftol = numeric<T>::ftol;
                 assert(F.size()==X.size());
@@ -42,15 +54,13 @@ namespace upsylon
                 // initialize
                 //--------------------------------------------------------------
                 const size_t n = X.size();
-                //std::cerr << F << "@" << X;
-                J.make(n,n);
+                J.make(n,n); assert(step.size()==n); assert(xtry.size()==n);
                 fjac(J,X);
 
                 //--------------------------------------------------------------
                 // compute Newton's step
                 //--------------------------------------------------------------
                 if( !LU::build(J) ) return false;
-                array<T> &step = J.r_aux1; assert(step.size()==X.size());
                 quark::neg(step,F);
                 LU::solve(J,step);
 
@@ -67,16 +77,15 @@ namespace upsylon
                 }
 
                 f(F,X);
-                //std::cerr << " => " << F << "@" << X << std::endl;
                 return converged;
             }
 
-            matrix<T> J;
-
-
+            matrix<T> J;     //!< jacobian matrix
+            array<T> &step;  //!< full Newton's step
+            array<T> &xtry;
+            
         private:
-
-
+            
         };
 
 

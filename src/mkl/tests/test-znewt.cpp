@@ -43,14 +43,15 @@ namespace {
 
 
     static inline
-    double solve( addressable<double> &F, addressable<double> &X,
+    double solve(addressable<double> &F,
+                 addressable<double> &X,
                  numeric<double>::vector_field &f,
                  jacobian<double>              &fjac)
     {
         znewt<double> solver;
         f(F,X);
         size_t count = 0;
-        while(!solver.step(F,X,f,fjac))
+        while(!solver.cycle(F,X,f,fjac))
         {
             if(++count>1000) break;
         }
