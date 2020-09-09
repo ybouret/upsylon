@@ -21,7 +21,7 @@ namespace upsylon
             typedef typename numeric<T>::vector_field field_type;
 
 
-            inline explicit znewt()
+            inline explicit znewt() : J()
             {
             }
 
@@ -37,15 +37,26 @@ namespace upsylon
             {
                 static const T ftol = numeric<T>::ftol;
                 assert(F.size()==X.size());
+
+                //--------------------------------------------------------------
+                // initialize
+                //--------------------------------------------------------------
                 const size_t n = X.size();
                 std::cerr << F << "@" << X;
                 J.make(n,n);
                 fjac(J,X);
+
+                //--------------------------------------------------------------
+                // compute Newton's step
+                //--------------------------------------------------------------
                 if( !LU::build(J) ) return false;
                 array<T> &step = J.r_aux1; assert(step.size()==X.size());
                 quark::neg(step,F);
                 LU::solve(J,step);
 
+                //--------------------------------------------------------------
+                // take full step whilst checking convergence
+                //--------------------------------------------------------------
                 bool converged = true;
                 for(size_t i=n;i>0;--i)
                 {
