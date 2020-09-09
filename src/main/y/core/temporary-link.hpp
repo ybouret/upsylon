@@ -21,7 +21,7 @@ namespace upsylon {
 
             //! handle = &source
             inline explicit temporary_link(type  &source,
-                                           type **handle) :
+                                           type **handle) throw():
             linked(handle)
             {
                 assert(linked);

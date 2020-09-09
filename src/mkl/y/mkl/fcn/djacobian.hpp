@@ -7,6 +7,7 @@
 #include "y/mkl/fcn/jacobian.hpp"
 #include "y/mkl/fcn/derivative.hpp"
 #include "y/core/temporary-link.hpp"
+#include "y/core/temporary-value.hpp"
 
 namespace upsylon
 {
@@ -36,7 +37,9 @@ namespace upsylon
             F(func),
             D(drvs),
             i(0),
-            j(0)
+            j(0),
+            pV(0),
+            pX(0)
             {
             }
 
@@ -45,8 +48,8 @@ namespace upsylon
             //! compute the jacobian: J[i][j] = dF_i/d_X[j]
             virtual void operator()(matrix<T> &J,  const accessible<T> &X)
             {
-                pV = &J.c_aux1;
-                pX = &X;
+                core::temporary_link<const accessible<T> > xlink(X,&pX); assert(pX);
+                core::temporary_link<addressable<T> >      vlink(J.c_aux1,&pV); assert(pV);
                 const size_t r = J.rows;
                 const size_t c = J.cols;
                 for(i=r;i>0;--i)
@@ -64,22 +67,11 @@ namespace upsylon
             {
                 assert(pV);
                 assert(pX);
-                addressable<T>      &V    = *pV;
-                const accessible<T> &X    = *pX;
-                T                   &x    = aliasing::_(X[j]);
-                const T              xsav = x;
-                try
-                {
-                    x=xtry;
-                    F(V,X);
-                    x=xsav;
-                    return V[i];
-                }
-                catch(...)
-                {
-                    x=xsav;
-                    throw;
-                }
+                addressable<T>          &V    = *pV;
+                const accessible<T>     &X    = *pX;
+                core::temporary_value<T> S( aliasing::_(X[j]),xtry);
+                F(V,X);
+                return V[i];
             }
 
 

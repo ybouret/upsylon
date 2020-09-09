@@ -27,7 +27,16 @@ namespace
 Y_UTEST(jacobian)
 {
 
+    {
+        int x = 1;
+        std::cerr << "x=" << x << std::endl;
+        {
+            core::temporary_value<int> temp(x,2);
+            std::cerr << "x=" << x << std::endl;
+        }
+        std::cerr << "x=" << x << std::endl;
 
+    }
 
 
     {
