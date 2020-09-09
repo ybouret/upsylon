@@ -51,11 +51,10 @@ namespace upsylon {
             static const T      huge;       //!< \f$10^{max_{10}exp}\f$
             static const T      gold;       //!< golden ratio
             static const T      inv_gold;   //!< 1/gold=gold-1
-            typedef functor<T,TL1(T)>                     function;            //!< 1-argument function wrapper
-            typedef functor<T,TL1(const array<T>&)>       scalar_field;        //!< scalar field (for gradient)
-            typedef functor<T,TL2(T,const array<T>&)>     parametric_function; //!< parametric function
-            typedef functor<array<T>,TL1(const array<T>)> vector_field;        //!< vector field
-            
+            typedef functor<T,TL1(T)>                                      function;            //!< 1-argument function wrapper
+            typedef functor<T,TL1(const accessible<T>&)>                   scalar_field;        //!< scalar field (for gradient)
+            typedef functor<void,TL2(addressable<T>&,const accessible<T>)> vector_field;        //!< vector field
+            typedef functor<T,TL2(T,const accessible<T>&)>                 parametric_function; //!< parametric function
             
         };
         

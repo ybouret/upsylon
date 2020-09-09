@@ -4,24 +4,43 @@
 
 #include "y/mkl/timings.hpp"
 #include "y/container/matrix.hpp"
-#include "y/exceptions.hpp"
-#include <cerrno>
+
+#include "y/ptr/arc.hpp"
 
 namespace upsylon {
 
     namespace mkl {
-        
+
+        namespace kernel {
+
+            struct derivative
+            {
+                static void underflow();
+                static void invalid_at(const double x);
+            };
+
+        }
+
         //! step size reduction control
 #define Y_MATH_DRVS_CTRL 1.414213
 
+        //______________________________________________________________________
+        //
+        //
         //! derivative computation
-        template <typename T,const size_t NTAB=16>
-        class derivative
+        //
+        //______________________________________________________________________
+        template <typename T>
+        class derivative : public object, public counted
         {
         public:
 
+            typedef arc_ptr<derivative> pointer;
+
             //! constructor
-            inline explicit derivative() : a(NTAB,NTAB) {}
+            inline explicit derivative(const size_t table_size=16) :
+            object(), counted(), ntab(table_size), a(ntab,ntab)
+            {}
 
             //! destructor
             inline virtual ~derivative() throw() {}
@@ -32,7 +51,7 @@ namespace upsylon {
                 assert(h>=0);
                 volatile T temp = x+h;
                 const    T step = temp-x;
-                if( step<=0 ) throw libc::exception(EDOM,"derivative underflow");
+                if( step<=0 ) kernel::derivative::underflow();
                 return step;
             }
 
@@ -59,7 +78,7 @@ namespace upsylon {
                 T    ans = a[1][1] = (f(x+hh)-f(x-hh))/ww;
                 bool ini = true;
                 err      = -1;
-                for(size_t i=2,im=1;i<=NTAB;++i,++im)
+                for(size_t i=2,im=1;i<=ntab;++i,++im)
                 {
                     hh      = regularize(x,hh/CON);
                     ww      = hh+hh;
@@ -72,7 +91,7 @@ namespace upsylon {
                         const T errt=max_of<T>(fabs_of(a[j][i]-a[jm][i]),fabs_of(a[j][i]-a[jm][im]));
                         if(!(errt>=0))
                         {
-                            throw libc::exception(EDOM, "invalid derivative @%.15g", double(x));
+                            kernel::derivative::invalid_at(double(x));
                         }
                         if( ini || (errt<=err) )
                         {
@@ -124,7 +143,7 @@ namespace upsylon {
                 T    ans = a[1][1] = ( (f(x+hh)-f0)+(f(x-hh)-f0))/ww;
                 bool ini = true;
                 err      = -1;
-                for(size_t i=2,im=1;i<=NTAB;++i,++im)
+                for(size_t i=2,im=1;i<=ntab;++i,++im)
                 {
                     hh      = regularize(x,hh/CON);
                     ww      = hh*hh;
@@ -174,7 +193,8 @@ namespace upsylon {
             }
 
         private:
-            matrix<T> a;
+            const size_t ntab;
+            matrix<T>    a;
             Y_DISABLE_COPY_AND_ASSIGN(derivative);
         };
     }

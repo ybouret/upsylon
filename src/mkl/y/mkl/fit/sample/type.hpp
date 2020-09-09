@@ -7,6 +7,7 @@
 #include "y/mkl/fit/sequential/function.hpp"
 #include "y/mkl/fit/sequential/gradient.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/exceptions.hpp"
 
 namespace upsylon {
 
