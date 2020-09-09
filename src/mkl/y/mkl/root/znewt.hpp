@@ -42,7 +42,7 @@ namespace upsylon
                 // initialize
                 //--------------------------------------------------------------
                 const size_t n = X.size();
-                std::cerr << F << "@" << X;
+                //std::cerr << F << "@" << X;
                 J.make(n,n);
                 fjac(J,X);
 
@@ -67,7 +67,7 @@ namespace upsylon
                 }
 
                 f(F,X);
-                std::cerr << " => " << F << "@" << X << std::endl;
+                //std::cerr << " => " << F << "@" << X << std::endl;
                 return converged;
             }
 
