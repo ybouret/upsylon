@@ -7,7 +7,7 @@
 #include "y/mkl/fcn/jacobian.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/quark.hpp"
-
+#include "y/core/temporary-link.hpp"
 namespace upsylon
 {
     namespace mkl
@@ -80,13 +80,15 @@ namespace upsylon
                 return converged;
             }
 
-            matrix<T> J;     //!< jacobian matrix
-            array<T> &step;  //!< full Newton's step
-            array<T> &xtry;  //!< trial position
+            matrix<T>       J;     //!< jacobian matrix
+            array<T>       &step;  //!< full Newton's step
+            array<T>       &xtry;  //!< trial position
+            addressable<T> *pX;
             
         private:
             inline T g_(T lam)
             {
+                quark::muladd(xtry,*pX,lam,step);
             }
         };
 
