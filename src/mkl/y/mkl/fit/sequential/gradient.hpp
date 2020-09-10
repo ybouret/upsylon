@@ -4,7 +4,7 @@
 #define Y_MKL_FIT_SEQUENTIAL_GRADIENT_INCLUDED 1
 
 #include "y/mkl/fit/sequential.hpp"
-#include "y/mkl/fcn/derivatives.hpp"
+#include "y/mkl/fcn/derivative.hpp"
 #include "y/mkl/kernel/quark.hpp"
 
 namespace upsylon {
