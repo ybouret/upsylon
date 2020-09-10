@@ -176,10 +176,10 @@ namespace upsylon
                     }
                 }
                 Y_MKL_ZNEWT_PRINTLN("lambda="<<lambda);
-
                 bool converged = true;
                 for(size_t i=nvar;i>0;--i)
                 {
+                    // update variables
                     {
                         const T x_old = X[i];
                         const T x_new = (X[i] = Xtry[i]);
@@ -190,11 +190,11 @@ namespace upsylon
                         }
                     }
 
+                    // update functions
                     {
                         F[i] = Ftry[i];
                     }
                 }
-                
 
 
                 return converged;
