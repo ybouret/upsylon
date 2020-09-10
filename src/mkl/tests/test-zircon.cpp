@@ -1,7 +1,7 @@
 
 
 #include "y/utest/run.hpp"
-#include "y/mkl/root/znl.hpp"
+#include "y/mkl/root/zircon.hpp"
 #include "y/mkl/fcn/djacobian.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/sequence.hpp"
@@ -32,10 +32,27 @@ namespace {
 
     }
 
+    template <typename T>
+    struct mysys
+    {
+        T charge;
+        void compute( addressable<T> &F, const accessible<T> &X )
+        {
+            F[1] = X[1] * X[2] - 1e-14;
+            F[2] = X[1] - X[2] + charge;
+        }
+
+        void jacobian( matrix<T> &J, const accessible<T> &X)
+        {
+            J[1][1] = X[2]; J[1][2] = X[1];
+            J[2][1] = 1;    J[2][1] = -1;
+        }
+    };
+
 }
 
 
-Y_UTEST(znl)
+Y_UTEST(zircon)
 {
     matrix<double> J(2,2);
     J[1][1] = 0; J[1][2] = 0;
@@ -48,6 +65,8 @@ Y_UTEST(znl)
     }
     doZNL(J);
 
-
+    zircon<double> znl;
+    mysys<double>  sys = { 0.0 };
+    numeric<double>::vector_field f(&sys, &mysys<double>::compute);
 }
 Y_UTEST_DONE()

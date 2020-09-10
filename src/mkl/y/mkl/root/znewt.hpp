@@ -52,9 +52,10 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef typename numeric<T>::vector_field field_type; //!< alias
+            typedef typename numeric<T>::vector_field ftype;      //!< alias
             typedef typename numeric<T>::function     function1d; //!< alias
             typedef lightweight_array<T>              array_type; //!< alias
+            typedef typename jacobian<T>::type        jtype;      //!< alias
             inline explicit znewt() :
             J(),
             A(5),
@@ -76,8 +77,8 @@ namespace upsylon
             //! start from f(F,X)
             inline bool cycle(addressable<T> &F,
                               addressable<T> &X,
-                              field_type     &f,
-                              jacobian<T>    &fjac)
+                              ftype          &f,
+                              jtype         &fjac)
             {
                 static const T ftol       = numeric<T>::ftol;
                 static const T one        = 1;
@@ -91,7 +92,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 core::temporary_value<size_t>          nlink(nvar,X.size());
                 core::temporary_link< addressable<T> > xlink(X,&_X);
-                core::temporary_link< field_type     > flink(f,&_f);
+                core::temporary_link<ftype>            flink(f,&_f);
                 assert(nvar==X.size());
                 J.make(nvar,nvar);
                 A.acquire(nvar);
@@ -211,7 +212,7 @@ namespace upsylon
             array_type     &Xtry; //!< trial position
             array_type     &Ftry; //!< trial f
             array_type     &Fsqr; //!< temporary square
-            field_type     *_f;   //!< temporaty current field
+            ftype          *_f;   //!< temporaty current field
             addressable<T> *_X;   //!< temporary current position
             function1d       g;
 

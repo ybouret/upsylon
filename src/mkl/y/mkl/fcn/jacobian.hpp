@@ -4,6 +4,7 @@
 #define Y_MATH_FCN_JACOBIAN_INCLUDED 1
 
 #include "y/container/matrix.hpp"
+#include "y/functor.hpp"
 
 namespace upsylon
 {
@@ -16,23 +17,10 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T>
-        class jacobian
+        struct jacobian
         {
-        public:
-            //! cleanup
-            inline virtual ~jacobian() throw() {}
-
-            //! interface: compute jacobian at X
-            virtual void operator()( matrix<T> &J, const accessible<T> &X) = 0;
-
-        protected:
-            //! setup
-            inline explicit jacobian() throw() {}
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(jacobian);
+            typedef functor<void,TL2(matrix<T>&,const accessible<T> &)> type;
         };
-
        
     }
 }

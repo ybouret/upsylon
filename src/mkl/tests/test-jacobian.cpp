@@ -50,7 +50,7 @@ Y_UTEST(jacobian)
         matrix<double> J(1,2);
         mkl::djacobian<double> Jacobian(F,D);
         
-        Jacobian(J,X);
+        Jacobian.compute(J,X);
         std::cerr << "X=" << X << std::endl;
         std::cerr << "J=" << J << std::endl;
     }
@@ -67,7 +67,7 @@ Y_UTEST(jacobian)
         matrix<float> J(2,3);
         mkl::djacobian<float> Jacobian(F,D);
 
-        Jacobian(J,X);
+        Jacobian.compute(J,X);
         std::cerr << "X=" << X << std::endl;
         std::cerr << "J=" << J << std::endl;
     }

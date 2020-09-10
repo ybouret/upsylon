@@ -22,7 +22,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T>
-        class djacobian : public jacobian<T>
+        class djacobian
         {
         public:
             //__________________________________________________________________
@@ -50,7 +50,7 @@ namespace upsylon
             T h; //!< scale for all variables
 
             //! compute the jacobian: J[i][j] = dF_i/d_X[j]
-            virtual void operator()(matrix<T> &J,  const accessible<T> &X)
+            inline void compute(matrix<T> &J,  const accessible<T> &X)
             {
                 core::temporary_link<const accessible<T> > xlink(X,&pX); assert(pX);
                 core::temporary_link<addressable<T> >      vlink(J.c_aux1,&pV); assert(pV);

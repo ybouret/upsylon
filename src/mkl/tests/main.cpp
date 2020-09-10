@@ -60,7 +60,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(k_means);
     Y_UTEST(jacobian);
     Y_UTEST(znewt);
-    Y_UTEST(znl);
+    Y_UTEST(zircon);
     
 }
 Y_UTEST_EXEC()

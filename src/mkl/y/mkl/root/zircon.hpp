@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_MATH_FCN_ZNL_INCLUDED
-#define Y_MATH_FCN_ZNL_INCLUDED 1
+#ifndef Y_MATH_FCN_ZIRCON_INCLUDED
+#define Y_MATH_FCN_ZIRCON_INCLUDED 1
 
 #include "y/mkl/fcn/jacobian.hpp"
 #include "y/mkl/kernel/svd.hpp"
@@ -19,27 +19,31 @@ namespace upsylon
     {
         namespace kernel
         {
-            class znl
+            class zircon
             {
             public:
+                static const char CLID[];
 
             private:
                 
             };
         }
 
+#define Y_ZIRCON_PRINTLN(MSG) \
+do { if(this->verbose) { std::cerr << '[' << CLID << ']' << MSG << std::endl; } } while(false)
 
         template <typename T>
-        class znl
+        class zircon : public kernel::zircon
         {
 
         public:
-            typedef typename numeric<T>::vector_field field_type; //!< alias
+            typedef typename numeric<T>::vector_field ftype; //!< alias
+            typedef typename jacobian<T>::type        jtype; //!, alias
             typedef typename numeric<T>::function     function1d; //!< alias
             typedef lightweight_array<T>              array_type; //!< alias
 
 
-            inline explicit znl() :
+            inline explicit zircon() :
             nvar(0),
             A(8),
             J(),
@@ -51,20 +55,24 @@ namespace upsylon
             {
             }
 
-            inline virtual ~znl() throw()
+            inline virtual ~zircon() throw()
             {
             }
 
             //! starting with f(F,X) precomputed
-            bool cycle( addressable<T> &F, addressable<T> &X, field_type &f, jacobian<T> &fjac )
+            bool cycle( addressable<T> &F, addressable<T> &X, ftype &f, jtype &fjac )
             {
                 assert( F.size() == X.size() );
                 //--------------------------------------------------------------
                 // prepare topology
                 //--------------------------------------------------------------
                 core::temporary_value<size_t>         nlink(nvar,X.size());
-                core::temporary_link<field_type>      flink(f,&f_);
+                core::temporary_link<ftype>           flink(f,&f_);
                 core::temporary_link<addressable<T> > xlink(X,&X_);
+
+                Y_ZIRCON_PRINTLN("<cycle>");
+                Y_ZIRCON_PRINTLN("X="<<X);
+                Y_ZIRCON_PRINTLN("F="<<F);
 
                 A.acquire(nvar);
                 J.make(nvar,nvar);
@@ -75,6 +83,7 @@ namespace upsylon
                 u.assign(J);
                 if(!svd::build(u,w,v))
                 {
+                    Y_ZIRCON_PRINTLN("svd failure");
                     return false;
                 }
 
@@ -82,20 +91,25 @@ namespace upsylon
                 // study solutions
                 //--------------------------------------------------------------
                 const size_t ker = __find<T>::truncate(w);
-
+                Y_ZIRCON_PRINTLN("#ker="<<ker);
+                if(ker>=nvar)
+                {
+                    Y_ZIRCON_PRINTLN("singular matrix");
+                    return false;
+                }
 
                 return false;
             }
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(znl);
+            Y_DISABLE_COPY_AND_ASSIGN(zircon);
             size_t           nvar;
             arrays<T>        A;
             matrix<T>        J;
             matrix<T>        u;
             matrix<T>        v;
             array_type      &w;
-            field_type      *f_;
+            ftype           *f_;
             addressable<T>  *X_;
 
 

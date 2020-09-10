@@ -46,7 +46,7 @@ namespace {
     double solve(addressable<double> &F,
                  addressable<double> &X,
                  numeric<double>::vector_field &f,
-                 jacobian<double>              &fjac)
+                 jacobian<double>::type        &fjac)
     {
         znewt<double> solver;
         solver.verbose = true;
@@ -82,7 +82,8 @@ Y_UTEST(znewt)
 
     numeric<double>::vector_field f( &mySys, & mysys::compute);
     derivative<double>::pointer   drvs  = new derivative<double>();
-    djacobian<double>             fjac(f,drvs);
+    djacobian<double>             djac(f,drvs);
+    jacobian<double>::type        fjac(&djac,&djacobian<double>::compute);
 
     vector<double> F(2,0);
     vector<double> X(2,0);
