@@ -96,6 +96,8 @@ Y_UTEST(znewt)
         std::cerr << "t2    = " << X[1] << std::endl;
     }
 
+    return 0;
+
     const double nu_fac[] = { 0.9, 1.1 };
     const double d7_fac[] = { 0.9, 1.1 };
 
