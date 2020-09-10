@@ -5,6 +5,7 @@
 #include "y/sparse/dok.hpp"
 #include "y/container/const-field.hpp"
 #include "y/comparison.hpp"
+#include "y/sequence/accessible.hpp"
 
 namespace upsylon
 {
@@ -90,7 +91,7 @@ namespace upsylon
 
         //----------------------------------------------------------------------
         //
-        // setup and access
+        // C++
         //
         //----------------------------------------------------------------------
 
@@ -105,13 +106,31 @@ namespace upsylon
         inline explicit sparse_matrix( const sparse_matrix &other ) :
         sparse::matrix_info(other), const_field<T>(), items(other.items), core(items)
         {
-            
+
+
         }
 
+        //! build a diagonal matrix
+        template <typename U>
+        inline explicit sparse_matrix( const accessible<U> &diag ) :
+        sparse::matrix_info(diag.size(),diag.size()), const_field<T>(), items(), core(items)
+        {
+            sparse_matrix &self = *this;
+            for(size_t i=1;i<=diag.size();++i)
+            {
+                self(i,i) = diag[i];
+            }
+        }
 
 
         //! destructor
         inline virtual ~sparse_matrix() throw() {}
+
+        //----------------------------------------------------------------------
+        //
+        // access operators
+        //
+        //----------------------------------------------------------------------
 
         //! raw insertion
         inline type & create_at(const key_type &k, param_type v)

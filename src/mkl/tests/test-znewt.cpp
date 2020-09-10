@@ -138,13 +138,9 @@ namespace {
         matrix<double> u = J;
         vector<double> w(2,0);
         matrix<double> v(2,2);
-        sparse_matrix<double> W(2,2);
 
         Y_CHECK(svd::build(u,w,v));
-        for(size_t i=1;i<=w.size();++i)
-        {
-            W(i,i) = w[i];
-        }
+        sparse_matrix<double> W(w);
         std::cerr << "J=" << J << std::endl;
         std::cerr << "u=" << u << std::endl;
         std::cerr << "w=" << W << std::endl;
