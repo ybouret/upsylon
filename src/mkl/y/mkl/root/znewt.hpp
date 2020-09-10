@@ -81,7 +81,7 @@ namespace upsylon
             {
                 static const T ftol       = numeric<T>::ftol;
                 static const T one        = 1;
-                static const T alpha      = 0.6;
+                static const T alpha      = 1e-4;
                 static const T lambda_min = 0.1;
 
                 assert(F.size()==X.size());
