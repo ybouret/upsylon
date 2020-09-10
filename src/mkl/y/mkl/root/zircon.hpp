@@ -131,8 +131,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                         return false;
                     }
 
-                    //if(!reducedSpanStep(img)) return false;
-                    if(!inNullSpaceStep(ker)) return false;
+                    if(!reducedSpanStep(img)) return false;
+                    //if(!inNullSpaceStep(ker)) return false;
 
                 }
                 else
@@ -152,9 +152,9 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 {
                     const string fn = vformat("zircon%u.dat",unsigned(ker));
                     ios::ocstream fp(fn);
-                    for(int i=-20;i<=100;++i)
+                    for(int i=-1000;i<=1000;++i)
                     {
-                        const T x = T(i)/100;
+                        const T x = T(i)/1000;
                         fp("%g %g\n",x,g(x));
                     }
                 }
