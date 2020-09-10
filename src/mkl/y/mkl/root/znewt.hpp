@@ -11,12 +11,30 @@
 #include "y/core/temporary-link.hpp"
 #include "y/core/temporary-value.hpp"
 #include "y/comparison.hpp"
-
+#include "y/ios/ocstream.hpp"
 
 namespace upsylon
 {
     namespace mkl
     {
+
+        namespace kernel
+        {
+
+            class znewt
+            {
+            public:
+                virtual ~znewt() throw();
+                explicit znewt() throw();
+
+                bool verbose;
+                static const char CLID[]; //!< "znewt"
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(znewt);
+            };
+        };
+
+#define Y_MKL_ZNEWT_PRINTLN(MSG) do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::endl; } } while(false)
 
         //______________________________________________________________________
         //
@@ -25,7 +43,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T>
-        class znewt
+        class znewt : public kernel::znewt
         {
         public:
             //__________________________________________________________________
@@ -57,9 +75,13 @@ namespace upsylon
             inline bool cycle(addressable<T> &F,
                               addressable<T> &X,
                               field_type     &f,
-                              jacobian<T>    &fjac )
+                              jacobian<T>    &fjac)
             {
-                static const T ftol = numeric<T>::ftol;
+                static const T ftol       = numeric<T>::ftol;
+                static const T one        = 1;
+                static const T alpha      = 0.8;
+                static const T lambda_min = 0.1;
+
                 assert(F.size()==X.size());
 
                 //--------------------------------------------------------------
@@ -71,19 +93,77 @@ namespace upsylon
                 assert(nvar==X.size());
                 J.make(nvar,nvar);
                 A.acquire(nvar);
+
                 //--------------------------------------------------------------
                 // compute Newton's step
                 //--------------------------------------------------------------
                 fjac(J,X);
-                std::cerr << "F    = " << F << std::endl;
-                std::cerr << "J    = " << J << std::endl;
+                Y_MKL_ZNEWT_PRINTLN("X="<<X);
+                Y_MKL_ZNEWT_PRINTLN("F="<<F);
+                Y_MKL_ZNEWT_PRINTLN("J="<<J);
+
                 if( !LU::build(J) ) return false;
                 quark::neg(step,F);
                 LU::solve(J,step);
+                Y_MKL_ZNEWT_PRINTLN("step="<<step);
+
+                //--------------------------------------------------------------
+                // compute global decreasing setup
+                //--------------------------------------------------------------
+                const T g0    = g(0);
+                Y_MKL_ZNEWT_PRINTLN("g0="<<g0);
+                if(g0<=0)
+                {
+                    Y_MKL_ZNEWT_PRINTLN("spurious success");
+                    return true;
+                }
+                const T slope = g0+g0; // - g'(0)
+                const T sigma = alpha*slope;
+                Y_MKL_ZNEWT_PRINTLN("slope="<<slope);
+                //--------------------------------------------------------------
+                // ensure g(lamba) <= g0 - sigma*lambda, sigma=alpha*slope
+                //--------------------------------------------------------------
 
 
-                std::cerr << "step = " << step << std::endl;
-                std::cerr << "g    = " << g(0) << std::endl;
+                T lambda = 1;
+                while(true)
+                {
+                    T gtry   = g(lambda);
+                    if(gtry<=g0-sigma*lambda)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        const T beta = (gtry - g0*(one-(lambda+lambda) ))/(lambda*lambda);
+                        Y_MKL_ZNEWT_PRINTLN("backtracking: beta   = "<<beta);
+                        if(beta<=0)
+                        {
+                            Y_MKL_ZNEWT_PRINTLN("spurious failure");
+                            return false;
+                        }
+                        lambda = (slope*(one-alpha))/beta;
+                        Y_MKL_ZNEWT_PRINTLN("backtracking: lambda = "<<lambda);
+                        if(lambda<=lambda_min)
+                        {
+                            lambda = lambda_min;
+                            (void) g(lambda);
+                            break;
+                        }
+                        if(true)
+                        {
+
+                            ios::ocstream fp("znewt.dat");
+                            for(int i=0;i<=100;++i)
+                            {
+                                const T x = T(i)/100;
+                                fp("%.15e %.15e\n", x,g(x));
+                            }
+                            exit(1);
+                        }
+                    }
+                }
+                Y_MKL_ZNEWT_PRINTLN("lambda="<<lambda);
 
 
 
@@ -106,6 +186,7 @@ namespace upsylon
 
 
         private:
+            Y_DISABLE_COPY_AND_ASSIGN(znewt);
             matrix<T>       J;    //!< jacobian matrix
             arrays<T>       A;    //!< localarrays
             size_t          nvar; //!< temporary nvar
@@ -140,6 +221,7 @@ namespace upsylon
                 (*_f)(Ftry,Xtry);
                 return __g(Ftry);
             }
+
         };
 
 

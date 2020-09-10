@@ -32,7 +32,22 @@ We define
 \end{equation}
 and we want
 \begin{equation}
-	g(\lambda) \leq g_0 + \alpha \lambda \underbrace{\vec{\nabla}g_0 \cdot \vec{p}}_{-2g_0^2}
+	g(\lambda) \leq g_0 + \alpha \lambda \underbrace{\vec{\nabla}g_0 \cdot \vec{p}}_{-2g_0}
 \end{equation}
+rewritten as
+\begin{equation}
+	g(\lambda) \leq g_0 -\lambda 2 \alpha g_0
+\end{equation}
+
+With a guess $\lambda$:
+\begin{itemize}
+\item if $g(\lambda) \leq g_0 - \lambda 2 \alpha g_0$, accept.
+\item $g(\lambda)\simeq g_0 (1- 2\lambda) + \beta \lambda^2$
+$$\beta = \dfrac{g(\lambda)-g_0(1-2\lambda)}{\lambda^2}$$
+\item $g_0 (1-2\alpha\mu)  =  g_0 (1- 2\mu) + \beta \mu^2$
+$$
+	\mu = \dfrac{2g_0(1-\alpha)}{\beta}
+$$
+\end{itemize}
 
 \end{document}

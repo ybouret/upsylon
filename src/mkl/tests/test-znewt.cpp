@@ -49,6 +49,7 @@ namespace {
                  jacobian<double>              &fjac)
     {
         znewt<double> solver;
+        solver.verbose = true;
         f(F,X);
         size_t count = 0;
         while(!solver.cycle(F,X,f,fjac))
@@ -96,8 +97,7 @@ Y_UTEST(znewt)
         std::cerr << "t2    = " << X[1] << std::endl;
     }
 
-    return 0;
-
+    
     const double nu_fac[] = { 0.9, 1.1 };
     const double d7_fac[] = { 0.9, 1.1 };
 
