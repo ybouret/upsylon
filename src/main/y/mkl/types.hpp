@@ -10,6 +10,8 @@
 
 namespace upsylon {
 
+    template <typename> class matrix;
+
     namespace mkl {
 
         //! corresponding real type
@@ -55,7 +57,7 @@ namespace upsylon {
             typedef functor<T,TL1(const accessible<T>&)>                   scalar_field;        //!< scalar field (for gradient)
             typedef functor<void,TL2(addressable<T>&,const accessible<T>)> vector_field;        //!< vector field
             typedef functor<T,TL2(T,const accessible<T>&)>                 parametric_function; //!< parametric function
-            
+            typedef functor<void,TL2(matrix<T>&,const accessible<T>&)>     jacobian;            //!< jacobian type
         };
         
         

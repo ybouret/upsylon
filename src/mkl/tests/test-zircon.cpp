@@ -65,8 +65,19 @@ Y_UTEST(zircon)
     }
     doZNL(J);
 
-    zircon<double> znl;
+    zircon<double> zrc;
+    zrc.verbose  = true;
+    
     mysys<double>  sys = { 0.0 };
     numeric<double>::vector_field f(&sys, &mysys<double>::compute);
+    jacobian<double>::type        fjac(&sys,&mysys<double>::jacobian);
+
+    vector<double> F(2,0);
+    vector<double> X(2,0);
+
+    f(F,X);
+    zrc.cycle(F,X,f,fjac);
+
+
 }
 Y_UTEST_DONE()

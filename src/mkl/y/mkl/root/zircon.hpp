@@ -23,9 +23,15 @@ namespace upsylon
             {
             public:
                 static const char CLID[];
+                bool              verbose;
+
+                virtual ~zircon() throw();
+
+            protected:
+                explicit zircon() throw();
 
             private:
-                
+                Y_DISABLE_COPY_AND_ASSIGN(zircon);
             };
         }
 
@@ -90,7 +96,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << MSG << std::endl; } 
                 //--------------------------------------------------------------
                 // study solutions
                 //--------------------------------------------------------------
-                const size_t ker = __find<T>::truncate(w);
+                const size_t ker = __find<T>::truncate(*w,nvar);
                 Y_ZIRCON_PRINTLN("#ker="<<ker);
                 if(ker>=nvar)
                 {

@@ -4,7 +4,6 @@
 #ifndef Y_MATH_FCN_DJACOBIAN_INCLUDED
 #define Y_MATH_FCN_DJACOBIAN_INCLUDED 1
 
-#include "y/mkl/fcn/jacobian.hpp"
 #include "y/mkl/fcn/derivative.hpp"
 #include "y/core/temporary-link.hpp"
 #include "y/core/temporary-value.hpp"

@@ -91,26 +91,26 @@ namespace upsylon {
             {
                 return min_within( seq, __abs<typename SEQUENCE::type> );
             }
-            
+
             //! truncate and return number of 'zero' values
             /**
              - compute tol = epsilon * n * max(|seq|).
              - set seq[i] to to 0 if |seq[i]|<=tol
              \return the number of almost zero, a.k.a the numeric kernel size.
              */
-            template <typename SEQUENCE> static inline
-            size_t truncate( SEQUENCE &seq )
+            template <typename ITERATOR> static inline
+            size_t truncate(const ITERATOR curr, const ITERATOR last )
             {
-                size_t       n    = 0;
                 mutable_type vmax = 0;
-                for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i, ++n )
+                size_t       n    = 0;
+                for(ITERATOR i=curr;i!=last;++i,++n)
                 {
                     const_type tmp = fabs_of(*i);
                     if(tmp>vmax) vmax=tmp;
                 }
                 const_type tol = numeric<type>::epsilon * type(n) * vmax;
                 size_t     ker = 0;
-                for( typename SEQUENCE::iterator i=seq.begin(); i != seq.end(); ++i )
+                for(ITERATOR i=curr;i!=last;++i)
                 {
                     type &v = *i;
                     if( fabs_of(v) <= tol )
@@ -120,6 +120,19 @@ namespace upsylon {
                     }
                 }
                 return ker;
+            }
+
+            //! truncate wrapper
+            template <typename SEQUENCE> static inline
+            size_t truncate( SEQUENCE &seq )
+            {
+                return truncate( seq.begin(), seq.end() );
+            }
+
+            template <typename ITERATOR> static inline
+            size_t truncate( const ITERATOR curr, const size_t size )
+            {
+                return truncate(curr,curr+size);
             }
             
             //! truncate and return number of 'zero' values
