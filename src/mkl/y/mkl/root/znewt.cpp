@@ -9,7 +9,8 @@ namespace upsylon
         namespace kernel
         {
             const char znewt::CLID[] = "znewt";
-            
+            const char znewt::BACK[] = "backtracking: ";
+
             znewt:: znewt() throw() : verbose(false)
             {
             }

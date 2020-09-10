@@ -29,6 +29,8 @@ namespace upsylon
 
                 bool verbose;
                 static const char CLID[]; //!< "znewt"
+                static const char BACK[]; //!< "backtracking: "
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(znewt);
             };
@@ -79,7 +81,7 @@ namespace upsylon
             {
                 static const T ftol       = numeric<T>::ftol;
                 static const T one        = 1;
-                static const T alpha      = 0.8;
+                static const T alpha      = 0.6;
                 static const T lambda_min = 0.1;
 
                 assert(F.size()==X.size());
@@ -110,20 +112,32 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // compute global decreasing setup
                 //--------------------------------------------------------------
-                const T g0    = g(0);
+                const T g0    = __g(F);
                 Y_MKL_ZNEWT_PRINTLN("g0="<<g0);
                 if(g0<=0)
                 {
-                    Y_MKL_ZNEWT_PRINTLN("spurious success");
+                    Y_MKL_ZNEWT_PRINTLN("|F|^2<=0");
                     return true;
                 }
-                const T slope = g0+g0; // - g'(0)
-                const T sigma = alpha*slope;
+                const T slope = g0+g0;        // - g'(0)
+                const T sigma = alpha*slope;  // constraint
                 Y_MKL_ZNEWT_PRINTLN("slope="<<slope);
+
                 //--------------------------------------------------------------
                 // ensure g(lamba) <= g0 - sigma*lambda, sigma=alpha*slope
+                // starting at lambda=1
                 //--------------------------------------------------------------
 
+                if(false)
+                {
+
+                    ios::ocstream fp("znewt.dat");
+                    for(int i=0;i<=100;++i)
+                    {
+                        const T x = T(i)/100;
+                        fp("%.15e %.15e\n", x,g(x));
+                    }
+                }
 
                 T lambda = 1;
                 while(true)
@@ -131,55 +145,58 @@ namespace upsylon
                     T gtry   = g(lambda);
                     if(gtry<=g0-sigma*lambda)
                     {
+                        Y_MKL_ZNEWT_PRINTLN("accept lambda=" << lambda);
                         break;
                     }
                     else
                     {
                         const T beta = (gtry - g0*(one-(lambda+lambda) ))/(lambda*lambda);
-                        Y_MKL_ZNEWT_PRINTLN("backtracking: beta   = "<<beta);
                         if(beta<=0)
                         {
-                            Y_MKL_ZNEWT_PRINTLN("spurious failure");
+                            Y_MKL_ZNEWT_PRINTLN("invalid local curvature");
                             return false;
                         }
-                        lambda = (slope*(one-alpha))/beta;
-                        Y_MKL_ZNEWT_PRINTLN("backtracking: lambda = "<<lambda);
+                        const T lambda_try = (slope*(one-alpha))/beta;
+                        Y_MKL_ZNEWT_PRINTLN( BACK << "curvature  = "<<beta);
+                        Y_MKL_ZNEWT_PRINTLN( BACK << "lambda_try = "<<lambda_try);
+                        if(lambda_try>=lambda)
+                        {
+                            Y_MKL_ZNEWT_PRINTLN( BACK << "stalled!");
+                            return false;
+                        }
+                        lambda = lambda_try;
                         if(lambda<=lambda_min)
                         {
+                            Y_MKL_ZNEWT_PRINTLN( BACK << "reached minimum");
                             lambda = lambda_min;
                             (void) g(lambda);
                             break;
                         }
-                        if(true)
-                        {
 
-                            ios::ocstream fp("znewt.dat");
-                            for(int i=0;i<=100;++i)
-                            {
-                                const T x = T(i)/100;
-                                fp("%.15e %.15e\n", x,g(x));
-                            }
-                            exit(1);
-                        }
                     }
                 }
                 Y_MKL_ZNEWT_PRINTLN("lambda="<<lambda);
 
-
-
-                //--------------------------------------------------------------
-                // take full step whilst checking convergence
-                //--------------------------------------------------------------
                 bool converged = true;
                 for(size_t i=nvar;i>0;--i)
                 {
-                    const T x_old = X[i];
-                    const T x_new = (X[i]  += step[i]);
-                    const T dx    = fabs_of(x_new-x_old);
-                    if( dx > ftol * fabs_of(x_new) ) converged=false;
-                }
+                    {
+                        const T x_old = X[i];
+                        const T x_new = (X[i] = Xtry[i]);
+                        const T dx    = fabs_of(x_new-x_old);
+                        if( (dx+dx) > ftol * ( fabs_of(x_new) + fabs_of(x_old) ) )
+                        {
+                            converged = false;
+                        }
+                    }
 
-                f(F,X);
+                    {
+                        F[i] = Ftry[i];
+                    }
+                }
+                
+
+
                 return converged;
             }
 
@@ -198,7 +215,7 @@ namespace upsylon
             addressable<T> *_X;   //!< temporary current position
             function1d       g;
 
-            inline T __g(const array_type &F) const throw()
+            inline T __g(const accessible<T> &F) const throw()
             {
                 assert(F.size()==nvar);
                 for(size_t i=nvar;i>0;--i)
