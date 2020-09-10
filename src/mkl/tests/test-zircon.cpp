@@ -35,25 +35,68 @@ namespace {
     template <typename T>
     struct mysys
     {
-        T charge;
+        T Ca;
+        T Ka;
         void compute( addressable<T> &F, const accessible<T> &X )
         {
-            F[1] = X[1] * X[2] - 1e-14;
-            F[2] = X[1] - X[2] + charge;
+            const T Kw = 1e-14;
+            const T h  = X[1];
+            const T w  = X[2];
+            const T AH = X[3];
+            const T Am = X[4];
+
+            F[1] = h*w   - Kw;
+            F[2] = AH*Ka - h*Am;
+            F[3] = AH+Am - Ca;
+            F[4] = h - w - Am;
         }
 
         void jacobian( matrix<T> &J, const accessible<T> &X)
         {
-            J[1][1] = X[2]; J[1][2] = X[1];
-            J[2][1] = 1;    J[2][1] = -1;
+            const T h  = X[1];
+            const T w  = X[2];
+            //const T AH = X[3];
+            const T Am = X[4];
+            J.ld(0);
+            {
+                array<T> &dF1 = J[1];
+                dF1[1] = w; dF1[2] = h;
+            }
+
+
+            {
+                array<T> &dF2 = J[2];
+                dF2[1] = -Am; dF2[3] = Ka; dF2[4] = -h;
+            }
+
+            {
+                array<T> &dF3 = J[3];
+                dF3[3] = 1;
+                dF3[4] = 1;
+            }
+
+            {
+                array<T> &dF4 = J[4];
+                dF4[1] = 1; dF4[2]= -1; dF4[4] = -1;
+            }
+
         }
     };
 
 }
 
+#include "y/string/convert.hpp"
 
 Y_UTEST(zircon)
 {
+
+    mysys<double>  sys = { 0.00, pow(10.0,-4.8) };
+
+    if(argc>1)
+    {
+        sys.Ca = string_convert::to<double>( argv[1], "Ca" );
+    }
+
     matrix<double> J(2,2);
     J[1][1] = 0; J[1][2] = 0;
     J[2][1] = 1; J[2][2] = -1;
@@ -68,15 +111,19 @@ Y_UTEST(zircon)
     zircon<double> zrc;
     zrc.verbose  = true;
     
-    mysys<double>  sys = { 0.0 };
     numeric<double>::vector_field f(&sys, &mysys<double>::compute);
-    jacobian<double>::type        fjac(&sys,&mysys<double>::jacobian);
+    numeric<double>::jacobian     fjac(&sys,&mysys<double>::jacobian);
 
-    vector<double> F(2,0);
-    vector<double> X(2,0);
+    vector<double> F(4,0);
+    vector<double> X(4,0);
 
     f(F,X);
     zrc.cycle(F,X,f,fjac);
+
+    X[1] = 1e-7 * alea.to<double>();
+    f(F,X);
+    zrc.cycle(F,X,f,fjac);
+
 
 
 }

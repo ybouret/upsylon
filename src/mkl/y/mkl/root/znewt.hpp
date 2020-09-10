@@ -4,7 +4,6 @@
 #ifndef Y_MATH_FCN_ZNEWT_INCLUDED
 #define Y_MATH_FCN_ZNEWT_INCLUDED 1
 
-#include "y/mkl/fcn/jacobian.hpp"
 #include "y/sequence/arrays.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/quark.hpp"
@@ -55,7 +54,7 @@ namespace upsylon
             typedef typename numeric<T>::vector_field ftype;      //!< alias
             typedef typename numeric<T>::function     function1d; //!< alias
             typedef lightweight_array<T>              array_type; //!< alias
-            typedef typename jacobian<T>::type        jtype;      //!< alias
+            typedef typename numeric<T>::jacobian     jtype;      //!< alias
             inline explicit znewt() :
             J(),
             A(5),

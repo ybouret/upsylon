@@ -8,6 +8,11 @@
 Y_QUARK_V2(mul,Y_QUARK_MUL_CHECK)
 #undef Y_QUARK_mul
 
+//! mulneg with cast
+#define Y_QUARK_mulneg(R) lhs[R] = -dot< typename LHS::type >::of( M[R], rhs )
+Y_QUARK_V2(mulneg,Y_QUARK_MUL_CHECK)
+#undef Y_QUARK_mulneg
+
 //! mul_add with casts
 #define Y_QUARK_mul_add(R) lhs[R] += dot< typename LHS::type >::of( M[R], rhs )
 Y_QUARK_V2(mul_add,Y_QUARK_MUL_CHECK)

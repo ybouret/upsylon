@@ -23,7 +23,7 @@ namespace upsylon {
              the transpose v') is output as v[1..n][1..n].
              */
             template <typename T> static inline
-            bool build(matrix<T> &a, array<T> &w, matrix<T> &v)
+            bool build(matrix<T> &a, addressable<T> &w, matrix<T> &v)
             {
                 const size_t m = a.rows;
                 const size_t n = a.cols;
@@ -269,11 +269,11 @@ namespace upsylon {
              No input quantities are destroyed, so the routine may be called sequentially with different b’s.
              */
             template <typename T> static inline
-            void solve(const matrix<T> &u,
-                       const array<T>  &w,
-                       const matrix<T> &v,
-                       const array<T>  &b,
-                       array<T>        &x)
+            void solve(const matrix<T>      &u,
+                       const accessible<T>  &w,
+                       const matrix<T>      &v,
+                       const accessible<T>  &b,
+                       addressable<T>       &x)
             {
                 const size_t m = u.rows;
                 const size_t n = u.cols;
