@@ -130,9 +130,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                         Y_ZIRCON_PRINTLN("singular matrix");
                         return false;
                     }
-
-                    if(!reducedSpanStep(img)) return false;
-                    //if(!inNullSpaceStep(ker)) return false;
+                    if(!reducedSpanStep(img,ker)) return false;
 
                 }
                 else
@@ -152,10 +150,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 {
                     const string fn = vformat("zircon%u.dat",unsigned(ker));
                     ios::ocstream fp(fn);
-                    for(int i=-1000;i<=1000;++i)
+                    for(int i=-2000;i<=20000;++i)
                     {
                         const T x = T(i)/1000;
-                        fp("%g %g\n",x,g(x));
+                        fp("%g %g\n",x,sqrt(g(x)/g0));
                     }
                 }
 
@@ -210,47 +208,13 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Y_ZIRCON_PRINTLN("step="<<step);
             }
 
-            inline bool inNullSpaceStep(const size_t ker)
-            {
-                matrix<T> S(nvar,ker);
-                for(size_t i=1,s=1;i<=nvar;++i)
-                {
-                    if(fabs_of(w[i])<=0)
-                    {
-                        for(size_t k=nvar;k>0;--k)
-                        {
-                            S[k][s] = v[k][i];
-                        }
-                        ++s;
-                    }
-                }
-                __find<T>::truncate(S);
-                Y_ZIRCON_PRINTLN("S="<<S);
-                matrix<T> tSJS(ker,ker);
-                matrix<T> tS(S,matrix_transpose);
-                matrix<T> JS(nvar,ker);
-                quark::mmul(JS,J,S);
-                quark::mmul(tSJS,tS,JS);
-                Y_ZIRCON_PRINTLN("tSJS=" << tSJS);
-                if(!LU::build(tSJS))
-                {
-                    Y_ZIRCON_PRINTLN("invalid reduced problem");
-                    return false;
-                }
-                vector<double> mu(ker,0);
-                quark::mulneg(mu,tS,*F_);
-                LU::solve(tSJS,mu);
-                Y_ZIRCON_PRINTLN("mu=" <<mu);
-                quark::mul(step,S,mu);
-                Y_ZIRCON_PRINTLN("step=" << step);
-                return true;
-            }
 
-
-            inline bool reducedSpanStep(const size_t img)
+            inline bool reducedSpanStep(const size_t img, const size_t ker)
             {
+                assert(nvar==img+ker);
                 matrix<T> S(nvar,img);
-                for(size_t i=1,s=1;i<=nvar;++i)
+                matrix<T> Z(nvar,ker);
+                for(size_t i=1,s=1,z=1;i<=nvar;++i)
                 {
                     if(fabs_of(w[i])>0)
                     {
@@ -260,9 +224,19 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                         }
                         ++s;
                     }
+                    else
+                    {
+                        for(size_t k=nvar;k>0;--k)
+                        {
+                            Z[k][z] = v[k][i];
+                        }
+                        ++z;
+                    }
                 }
                 __find<T>::truncate(S);
+                __find<T>::truncate(Z);
                 Y_ZIRCON_PRINTLN("S="<<S);
+                Y_ZIRCON_PRINTLN("Z="<<Z);
                 matrix<T> tSJS(img,img);
                 matrix<T> tS(S,matrix_transpose);
                 matrix<T> JS(nvar,img);
@@ -274,12 +248,23 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     Y_ZIRCON_PRINTLN("invalid reduced problem");
                     return false;
                 }
-                vector<double> mu(img,0);
-                quark::mulneg(mu,tS,*F_);
-                LU::solve(tSJS,mu);
-                Y_ZIRCON_PRINTLN("mu=" <<mu);
-                quark::mul(step,S,mu);
+                vector<double> lam(img,0);
+                quark::mulneg(lam,tS,*F_);
+                LU::solve(tSJS,lam);
+                Y_ZIRCON_PRINTLN("lam=" <<lam);
+                quark::mul(step,S,lam);
                 Y_ZIRCON_PRINTLN("step=" << step);
+                for(size_t i=nvar;i>0;--i)
+                {
+                    step[i] = fabs_of(step[i]);
+                }
+                vector<T> zs(ker,0);
+                quark::mul_trn(zs,Z,step);
+                Y_ZIRCON_PRINTLN("zs=" << zs);
+                quark::mul(step,Z,zs);
+                Y_ZIRCON_PRINTLN("step=" << step);
+
+
                 return true;
             }
 
