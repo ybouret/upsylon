@@ -14,24 +14,7 @@ using namespace mkl;
 namespace {
 
     
-    static inline void doZNL(const matrix<double> &J)
-    {
-        matrix<double> u = J;
-        vector<double> w(2,0);
-        matrix<double> v(2,2);
 
-        Y_CHECK(svd::build(u,w,v));
-        sparse_matrix<double> W(w);
-        std::cerr << "J=" << J << std::endl;
-        std::cerr << "u=" << u << std::endl;
-        std::cerr << "w=" << W << std::endl;
-        std::cerr << "v=" << v << std::endl;
-
-        const size_t ker = __find<double>::truncate(w);
-        std::cerr << "Ker=" << ker << std::endl;
-        std::cerr << "w=" << w << std::endl;
-
-    }
 
     template <typename T>
     struct mysys
@@ -119,17 +102,7 @@ Y_UTEST(zircon)
             sys.Ca = string_convert::to<double>( argv[1], "Ca" );
         }
 
-        if(false)
-        {
-            matrix<double> J(2,2);
-            J[1][1] = 0; J[1][2] = 0;
-            J[2][1] = 1; J[2][2] = -1;
-            doZNL(J);
-
-            const double r = alea.symm<double>();
-            J[1][1] = r; J[1][2] = r;
-            doZNL(J);
-        }
+        
 
 
 
@@ -158,6 +131,9 @@ Y_UTEST(zircon)
 
         vector<double> F(2,0);
         vector<double> X(2,0);
+
+        X[1] = alea.to<double>();
+        X[2] = alea.to<double>();
 
         f(F,X);
         zrc.cycle(F,X,f,fjac);

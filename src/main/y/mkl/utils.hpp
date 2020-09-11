@@ -17,7 +17,8 @@ namespace upsylon {
         struct __find
         {
             Y_DECL_ARGS(T,type); //!< aliases
-            
+
+
             //! max_of(i,i<last,FUNC(*i)),
             template <typename ITERATOR, typename FUNC> static inline
             type max_within( ITERATOR i, const ITERATOR last, FUNC &f)
@@ -298,6 +299,35 @@ namespace upsylon {
                 {
                     dividers[i] = simplify(M[i]);
                 }
+            }
+
+            static inline
+            bool convergence( addressable<T> &X, const accessible<T> &Xtry ) throw()
+            {
+                static const_type ftol = numeric<mutable_type>::ftol;
+                assert(X.size()<=Xtry.size());
+                
+                bool   converged = true;
+                size_t i         = X.size();
+                for(;i>0;--i)
+                {
+
+                    const T x_old = X[i];
+                    const T x_new = (X[i] = Xtry[i]);
+                    const T dx    = fabs_of(x_new-x_old);
+                    if( (dx+dx) > ftol * ( fabs_of(x_new) + fabs_of(x_old) ) )
+                    {
+                        converged = false;
+                        break;
+                    }
+                }
+
+                for(;i>0;--i)
+                {
+                    X[i] = Xtry[i];
+                }
+
+                return converged;
             }
         };
         
