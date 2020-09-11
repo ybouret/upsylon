@@ -63,8 +63,8 @@ namespace upsylon
             Xtry( A.next() ),
             Ftry( A.next() ),
             Fsqr( A.next() ),
-            _f(0),
-            _X(0),
+            f_(0),
+            X_(0),
             g(this, & znewt::g_ )
             {
             }
@@ -90,8 +90,8 @@ namespace upsylon
                 // initialize
                 //--------------------------------------------------------------
                 core::temporary_value<size_t>          nlink(nvar,X.size());
-                core::temporary_link< addressable<T> > xlink(X,&_X);
-                core::temporary_link<ftype>            flink(f,&_f);
+                core::temporary_link< addressable<T> > xlink(X,&X_);
+                core::temporary_link<ftype>            flink(f,&f_);
                 assert(nvar==X.size());
                 J.make(nvar,nvar);
                 A.acquire(nvar);
@@ -211,9 +211,9 @@ namespace upsylon
             array_type     &Xtry; //!< trial position
             array_type     &Ftry; //!< trial f
             array_type     &Fsqr; //!< temporary square
-            ftype          *_f;   //!< temporaty current field
-            addressable<T> *_X;   //!< temporary current position
-            function1d       g;
+            ftype          *f_;   //!< temporaty current field
+            addressable<T> *X_;   //!< temporary current position
+            function1d      g;
 
             inline T __g(const accessible<T> &F) const throw()
             {
@@ -233,9 +233,9 @@ namespace upsylon
 
             inline T g_(T lam)
             {
-                assert(_X);
-                quark::muladd(Xtry,*_X,lam,step);
-                (*_f)(Ftry,Xtry);
+                assert(X_);
+                quark::muladd(Xtry,*X_,lam,step);
+                (*f_)(Ftry,Xtry);
                 return __g(Ftry);
             }
 
