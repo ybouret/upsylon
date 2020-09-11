@@ -118,22 +118,30 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Y_ZIRCON_PRINTLN("g0   = "<<g0);
                 Y_ZIRCON_PRINTLN("g1   = "<<g1);
 
+
+
                 if(g1<g0)
                 {
+                    Y_ZIRCON_PRINTLN("expand");
                     bracket::expand(g,U,G);
                 }
                 else
                 {
+                    Y_ZIRCON_PRINTLN("inside");
                     bracket::inside(g,U,G);
                 }
                 const T lambda = max_of<T>(minimize::run(g,U,G),0);
                 const T gm     = g(lambda);
                 Y_ZIRCON_PRINTLN("lam  = "<<lambda);
                 Y_ZIRCON_PRINTLN("gm   = "<<gm);
+                Y_ZIRCON_PRINTLN("Xtry = "<<Xtry);
+                Y_ZIRCON_PRINTLN("Ftry = "<<Ftry);
 
                 // check convergence
                 const bool xcvg = __find<T>::convergence(X,Xtry);
                 const bool fcvg = __find<T>::convergence(F,Ftry);
+                Y_ZIRCON_PRINTLN("xcvg = "<<xcvg);
+                Y_ZIRCON_PRINTLN("fcvg = "<<fcvg);
 
                 return xcvg||fcvg;
             }
@@ -152,12 +160,12 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             addressable<T>  *X_;
             function1d       g;
 
-            inline T __g(const accessible<T> &F) const throw()
+            inline T __g(const accessible<T> &FF) const throw()
             {
-                assert(F.size()==nvar);
+                assert(FF.size()==nvar);
                 for(size_t i=nvar;i>0;--i)
                 {
-                    Fsqr[i] = square_of(F[i]);
+                    Fsqr[i] = square_of(FF[i]);
                 }
                 hsort(Fsqr,comparison::decreasing<T>);
                 T sum = 0;
@@ -168,9 +176,9 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return T(0.5) * sum;
             }
 
-            inline T _g(const T lambda)
+            inline T _g(const T u)
             {
-                quark::muladd(Xtry,*X_,lambda,step);
+                quark::muladd(Xtry,*X_,u,step);
                 (*f_)(Ftry,Xtry);
                 return __g(Ftry);
             }

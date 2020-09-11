@@ -5,12 +5,12 @@
 #define Y_MATH_FCN_ZNEWT_INCLUDED 1
 
 #include "y/sequence/arrays.hpp"
+#include "y/mkl/utils.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/core/temporary-link.hpp"
 #include "y/core/temporary-value.hpp"
 #include "y/comparison.hpp"
-#include "y/ios/ocstream.hpp"
 
 namespace upsylon
 {
@@ -133,16 +133,7 @@ namespace upsylon
                 // starting at lambda=1
                 //--------------------------------------------------------------
 
-                if(false)
-                {
-
-                    ios::ocstream fp("znewt.dat");
-                    for(int i=0;i<=100;++i)
-                    {
-                        const T x = T(i)/100;
-                        fp("%.15e %.15e\n", x,g(x));
-                    }
-                }
+                
 
                 T lambda = 1;
                 while(true)
@@ -181,28 +172,10 @@ namespace upsylon
                     }
                 }
                 Y_MKL_ZNEWT_PRINTLN("lambda="<<lambda);
-                bool converged = true;
-                for(size_t i=nvar;i>0;--i)
-                {
-                    // update variables
-                    {
-                        const T x_old = X[i];
-                        const T x_new = (X[i] = Xtry[i]);
-                        const T dx    = fabs_of(x_new-x_old);
-                        if( (dx+dx) > ftol * ( fabs_of(x_new) + fabs_of(x_old) ) )
-                        {
-                            converged = false;
-                        }
-                    }
-
-                    // update functions
-                    {
-                        F[i] = Ftry[i];
-                    }
-                }
-
-
-                return converged;
+                // check convergence
+                const bool xcvg = __find<T>::convergence(X,Xtry);
+                const bool fcvg = __find<T>::convergence(F,Ftry);
+                return xcvg||fcvg;
             }
 
 

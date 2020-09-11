@@ -81,12 +81,13 @@ namespace {
         void jacobian(matrix<T> &J, const accessible<T> &X)
         {
             J[1][1] = 2*X[1]; J[1][2] = 2*X[2];
-            J[2][1] = 1;      J[2][2] = -1;
+            J[2][1] = -1;     J[2][2] = 1;
         }
     };
 }
 
 #include "y/string/convert.hpp"
+#include "y/ios/ocstream.hpp"
 
 Y_UTEST(zircon)
 {
@@ -134,9 +135,17 @@ Y_UTEST(zircon)
 
         X[1] = alea.to<double>();
         X[2] = alea.to<double>();
+        const string fn = "inter.dat";
 
         f(F,X);
-        zrc.cycle(F,X,f,fjac);
+
+        ios::ocstream::overwrite(fn);
+        ios::ocstream::echo(fn,"%g %g\n",X[1],X[2]);
+
+        while( !zrc.cycle(F,X,f,fjac) )
+        {
+            ios::ocstream::echo(fn,"%g %g\n",X[1],X[2]);
+        }
 
     }
 
