@@ -7,7 +7,7 @@
 
 namespace upsylon {
 
-    Y_SINGLETON_IMPL_WITH(memory::pooled::life_time-1,Jive::Tags);
+    Y_SINGLETON_IMPL_WITH(object::life_time-1,Jive::Tags);
 
     namespace Jive
     {

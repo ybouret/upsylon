@@ -22,7 +22,7 @@ ADD_TEST(mkl:tridiag  test-mkl tridiag)
 ADD_TEST(mkl:cyclic   test-mkl cyclic)
 ADD_TEST(mkl:sparse   test-mkl sparse)
 ADD_TEST(mkl:gram-schmidt test-mkl gram_schmidt)
-ADD_TEST(mkl:jacobian  test-nkl jacobian)
+ADD_TEST(mkl:jacobian  test-mkl jacobian)
 
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp

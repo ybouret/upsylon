@@ -170,6 +170,8 @@ namespace {
 
 Y_UTEST(k_means)
 {
+    //concurrent::singleton::verbose=true;
+
     kernel::centroid<1> c1; std::cerr << c1 << std::endl;
     kernel::centroid<2> c2; std::cerr << c2 << std::endl;
     kernel::centroid<3> c3; std::cerr << c3 << std::endl;
