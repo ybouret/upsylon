@@ -96,6 +96,9 @@ namespace upsylon
                 J.make(nvar,nvar);
                 A.acquire(nvar);
 
+
+
+
                 //--------------------------------------------------------------
                 // compute Newton's step
                 //--------------------------------------------------------------
@@ -103,6 +106,8 @@ namespace upsylon
                 Y_MKL_ZNEWT_PRINTLN("X="<<X);
                 Y_MKL_ZNEWT_PRINTLN("F="<<F);
                 Y_MKL_ZNEWT_PRINTLN("J="<<J);
+
+
 
                 if( !LU::build(J) ) return false;
                 quark::neg(step,F);

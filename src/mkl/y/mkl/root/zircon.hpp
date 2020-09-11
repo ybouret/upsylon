@@ -14,6 +14,7 @@
 #include "y/comparison.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
+#include "y/mkl/kernel/diag-symm.hpp"
 
 namespace upsylon
 {
@@ -100,6 +101,23 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Y_ZIRCON_PRINTLN("F="<<F);
                 Y_ZIRCON_PRINTLN("J="<<J);
                 u.assign(J);
+
+
+
+                {
+                    matrix<T> J2(nvar,nvar);
+                    quark::mmul_rtrn(J2,J,J);
+                    std::cerr << "J2=" << J2 << std::endl;
+                    matrix<T> V(nvar,nvar);
+                    vector<T> D(nvar);
+                    if(!diag_symm::build(J2,D,V))
+                    {
+                        return false;
+                    }
+                    std::cerr << "D=" << D << std::endl;
+                    std::cerr << "V=" << V << std::endl;
+
+                }
 
                 //--------------------------------------------------------------
                 //

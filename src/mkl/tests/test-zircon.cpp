@@ -13,6 +13,7 @@ using namespace mkl;
 
 namespace {
 
+    
     static inline void doZNL(const matrix<double> &J)
     {
         matrix<double> u = J;
@@ -99,16 +100,18 @@ Y_UTEST(zircon)
         sys.Ca = string_convert::to<double>( argv[1], "Ca" );
     }
 
-    matrix<double> J(2,2);
-    J[1][1] = 0; J[1][2] = 0;
-    J[2][1] = 1; J[2][2] = -1;
-
-    doZNL(J);
+    if(false)
     {
+        matrix<double> J(2,2);
+        J[1][1] = 0; J[1][2] = 0;
+        J[2][1] = 1; J[2][2] = -1;
+        doZNL(J);
+
         const double r = alea.symm<double>();
         J[1][1] = r; J[1][2] = r;
+        doZNL(J);
     }
-    doZNL(J);
+
 
     zircon<double> zrc;
     zrc.verbose  = true;
