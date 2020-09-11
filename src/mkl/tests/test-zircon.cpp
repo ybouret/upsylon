@@ -126,7 +126,11 @@ Y_UTEST(zircon)
     if(true)
     {
         inter<double> Inter = { 0.1 };
-
+        if(argc>1)
+        {
+            Inter.a = string_convert::to<double>( argv[1], "a" );
+        }
+        
         numeric<double>::vector_field f(&Inter, &inter<double>::compute);
         numeric<double>::jacobian     fjac(&Inter,&inter<double>::jacobian);
 
