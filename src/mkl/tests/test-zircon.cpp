@@ -82,54 +82,88 @@ namespace {
             }
 
         }
+
     };
 
+    template <typename T>
+    struct inter
+    {
+        T a;
+        void compute( addressable<T> &F, const accessible<T> &X )
+        {
+            F[1] = X[1]*X[1] + X[2]*X[2] - 1.0;
+            F[2] = X[2]-(X[1]+a);
+        }
+
+        void jacobian(matrix<T> &J, const accessible<T> &X)
+        {
+            J[1][1] = 2*X[1]; J[1][2] = 2*X[2];
+            J[2][1] = 1;      J[2][2] = -1;
+        }
+    };
 }
 
 #include "y/string/convert.hpp"
 
 Y_UTEST(zircon)
 {
-    
-    //concurrent::singleton::verbose = true;
-
-    mysys<double>  sys = { 0.00, pow(10.0,-4.8) };
-
-    if(argc>1)
-    {
-        sys.Ca = string_convert::to<double>( argv[1], "Ca" );
-    }
+    zircon<double> zrc;
+    zrc.verbose  = true;
 
     if(false)
     {
-        matrix<double> J(2,2);
-        J[1][1] = 0; J[1][2] = 0;
-        J[2][1] = 1; J[2][2] = -1;
-        doZNL(J);
+        mysys<double>  sys = { 0.00, pow(10.0,-4.8) };
 
-        const double r = alea.symm<double>();
-        J[1][1] = r; J[1][2] = r;
-        doZNL(J);
+        if(argc>1)
+        {
+            sys.Ca = string_convert::to<double>( argv[1], "Ca" );
+        }
+
+        if(false)
+        {
+            matrix<double> J(2,2);
+            J[1][1] = 0; J[1][2] = 0;
+            J[2][1] = 1; J[2][2] = -1;
+            doZNL(J);
+
+            const double r = alea.symm<double>();
+            J[1][1] = r; J[1][2] = r;
+            doZNL(J);
+        }
+
+
+
+
+        numeric<double>::vector_field f(&sys, &mysys<double>::compute);
+        numeric<double>::jacobian     fjac(&sys,&mysys<double>::jacobian);
+
+        vector<double> F(4,0);
+        vector<double> X(4,0);
+
+        f(F,X);
+        zrc.cycle(F,X,f,fjac);
+
+        X[1] = 1e-7 * alea.to<double>();
+        f(F,X);
+        zrc.cycle(F,X,f,fjac);
+
     }
 
+    if(true)
+    {
+        inter<double> Inter = { 0.1 };
 
-    zircon<double> zrc;
-    zrc.verbose  = true;
-    
-    numeric<double>::vector_field f(&sys, &mysys<double>::compute);
-    numeric<double>::jacobian     fjac(&sys,&mysys<double>::jacobian);
+        numeric<double>::vector_field f(&Inter, &inter<double>::compute);
+        numeric<double>::jacobian     fjac(&Inter,&inter<double>::jacobian);
 
-    vector<double> F(4,0);
-    vector<double> X(4,0);
+        vector<double> F(2,0);
+        vector<double> X(2,0);
 
-    f(F,X);
-    zrc.cycle(F,X,f,fjac);
+        f(F,X);
+        zrc.cycle(F,X,f,fjac);
 
-    X[1] = 1e-7 * alea.to<double>();
-    f(F,X);
-    zrc.cycle(F,X,f,fjac);
+    }
 
-    //exit(1);
     
 }
 Y_UTEST_DONE()

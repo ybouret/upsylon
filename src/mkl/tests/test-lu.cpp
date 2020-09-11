@@ -89,6 +89,8 @@ namespace
 
 Y_UTEST(LU)
 {
+    concurrent::singleton::verbose=true;
+    
     do_test<float>();
     do_test<double>();
     do_test< complex<float>  >();

@@ -103,7 +103,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 u.assign(J);
 
 
-
+#if 0
                 {
                     matrix<T> J2(nvar,nvar);
                     quark::mmul_rtrn(J2,J,J);
@@ -116,8 +116,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     }
                     std::cerr << "D=" << D << std::endl;
                     std::cerr << "V=" << V << std::endl;
-
                 }
+#endif
 
                 //--------------------------------------------------------------
                 //
