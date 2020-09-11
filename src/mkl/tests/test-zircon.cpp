@@ -89,6 +89,8 @@ namespace {
 
 Y_UTEST(zircon)
 {
+    
+    //concurrent::singleton::verbose = true;
 
     mysys<double>  sys = { 0.00, pow(10.0,-4.8) };
 
@@ -124,7 +126,7 @@ Y_UTEST(zircon)
     f(F,X);
     zrc.cycle(F,X,f,fjac);
 
-
-
+    //exit(1);
+    
 }
 Y_UTEST_DONE()

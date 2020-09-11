@@ -24,8 +24,8 @@ namespace upsylon {
     public:
         void        restart() throw(); //!< reset wall time
         double      seconds();         //!< seconds from last (re)start
-        const char *ellapsed();        //!< formatted output
-
+        uint64_t    micro_s();         //!< micro seconds from last (re)start
+        
         std::ostream &     get(const run_time_level);        //!< get stream with header
         static const char *id(const run_time_level) throw(); //!< translation
 

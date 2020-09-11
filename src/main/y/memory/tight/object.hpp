@@ -153,7 +153,7 @@ namespace upsylon {
                 {
                 public:
                     static const char * const       call_sign; //! =id
-                    static const at_exit::longevity life_time = at_exit::uttermost-1; //!< before global
+                    static const at_exit::longevity life_time = at_exit::uttermost-3; //!< before global
                     
                 private:
                     friend class singleton<supply>;

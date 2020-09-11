@@ -2,15 +2,16 @@
 #include "y/os/run-time-log.hpp"
 #include "y/type/ints.hpp"
 #include "y/os/progress.hpp"
+#include "y/code/hr-ints.hpp"
 #include <cstring>
 #include <iostream>
+#include <cmath>
 
 namespace upsylon
 {
     namespace {
 
         static uint64_t rtl_mark = 0;
-        static char     rtl_time[ progress::format_size ];
         std::ostream   *rtl_os   = 0;
     }
 
@@ -19,7 +20,6 @@ namespace upsylon
     run_time_log:: run_time_log() : real_time_clock()
     {
         restart();
-        rtl_mark = ticks();
         rtl_os   = & std::cerr;
     }
 
@@ -30,8 +30,7 @@ namespace upsylon
 
     void run_time_log:: restart() throw()
     {
-        rtl_mark = 0;
-        memset(rtl_time,0,sizeof(rtl_time));
+        rtl_mark = ticks();
     }
 
     double run_time_log:: seconds()
@@ -39,6 +38,15 @@ namespace upsylon
         const uint64_t now = ticks();
         return (*this)(now-rtl_mark);
     }
+
+
+    uint64_t run_time_log:: micro_s()
+    {
+        const uint64_t now = ticks();
+        const double ell = (*this)(now-rtl_mark);
+        return uint64_t( floor(1.0e6 * ell +0.5) );
+    }
+
 
     const char * run_time_log:: id(const run_time_level level) throw()
     {
@@ -51,18 +59,14 @@ namespace upsylon
         return "???";
     }
 
-    const char *run_time_log:: ellapsed()
-    {
-        progress::format(rtl_time,seconds());
-        return rtl_time;
-    }
+    
 
     std::ostream & run_time_log:: get(const run_time_level level)
     {
         assert(rtl_os);
         std::ostream &os = *rtl_os;
         os << "***";
-        os << '[' << ellapsed() << ']';
+        os << '[' << human_readable( micro_s() ) << "mu" << ']';
         os << '<' << id(level)  << '>';
         os << ' ';
         return os;
