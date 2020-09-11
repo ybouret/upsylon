@@ -33,9 +33,10 @@ ADD_TEST(ode:rk4         test-mkl rk4)
 ADD_TEST(ode:expl        test-mkl ode_expl)
 ADD_TEST(ode:impl        test-mkl ode_impl)
 
-SOURCE_GROUP(opt FILES test-bracket.cpp test-min.cpp)
+SOURCE_GROUP(opt FILES test-bracket.cpp test-min.cpp test-opt.cpp)
 ADD_TEST(opt:bracket     test-mkl bracket)
 ADD_TEST(opt:minimize    test-mkl min)
+ADD_TEST(opt:optimize    test-mkl opt)
 
 SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zroot.cpp test-jacobian.cpp test-znewt.cpp test-zircon.cpp)
 ADD_TEST(fcn:drvs     test-mkl drvs)

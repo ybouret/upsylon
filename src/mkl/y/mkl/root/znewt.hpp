@@ -79,7 +79,6 @@ namespace upsylon
                               ftype          &f,
                               jtype         &fjac)
             {
-                static const T ftol       = numeric<T>::ftol;
                 static const T one        = 1;
                 static const T alpha      = 1e-4;
                 static const T lambda_min = 0.1;

@@ -53,7 +53,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
             inline explicit zircon() :
             nvar(0),
-            A(5),
+            A(4),
             J(),
             step( A.next() ),
             Ftry( A.next() ),
@@ -62,7 +62,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             f_(0),
             F_(0),
             X_(0),
-            g(this, & zircon::_g)
+            g(this,&zircon::_g)
             {
             }
 
@@ -73,6 +73,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             //! starting with f(F,X) precomputed
             bool cycle( addressable<T> &F, addressable<T> &X, ftype &f, jtype &fjac )
             {
+                static const T lambda_min = 0.1;
                 assert( F.size() == X.size() );
                 //--------------------------------------------------------------
                 //
@@ -84,9 +85,18 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 core::temporary_link<addressable<T> > Xlink(X,&X_);
                 core::temporary_link<addressable<T> > Flink(F,&F_);
 
-
-
+                //--------------------------------------------------------------
+                //
+                // prepare jacobian
+                //
+                //--------------------------------------------------------------
                 A.acquire(nvar);
+                const T    g0 = __g(F);
+                if(g0<=0)
+                {
+                    Y_ZIRCON_PRINTLN("null rms");
+                    return true;
+                }
                 J.make(nvar,nvar);
                 fjac(J,X);
 
@@ -101,24 +111,27 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     return false;
                 }
 
+                //--------------------------------------------------------------
+                //
+                // compute full newton's step
+                //
+                //--------------------------------------------------------------
                 quark::neg(step,F);
                 LU::solve(J,step);
                 Y_ZIRCON_PRINTLN("step = "<<J);
 
-                const T    g0 = __g(F);
-                if(g0<=0)
-                {
-                    Y_ZIRCON_PRINTLN("null rms");
-                    return true;
-                }
+
+                //--------------------------------------------------------------
+                //
+                // local minimize
+                //
+                //--------------------------------------------------------------
                 const T    g1 = g(1);
                 triplet<T> U  = { 0,   1,  1 };
                 triplet<T> G  = { g0, g1, g1 };
 
                 Y_ZIRCON_PRINTLN("g0   = "<<g0);
                 Y_ZIRCON_PRINTLN("g1   = "<<g1);
-
-
 
                 if(g1<g0)
                 {
@@ -130,14 +143,18 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     Y_ZIRCON_PRINTLN("inside");
                     bracket::inside(g,U,G);
                 }
-                const T lambda = max_of<T>(minimize::run(g,U,G),0);
+                const T lambda = max_of<T>(minimize::run(g,U,G),lambda_min);
                 const T gm     = g(lambda);
                 Y_ZIRCON_PRINTLN("lam  = "<<lambda);
                 Y_ZIRCON_PRINTLN("gm   = "<<gm);
                 Y_ZIRCON_PRINTLN("Xtry = "<<Xtry);
                 Y_ZIRCON_PRINTLN("Ftry = "<<Ftry);
 
+                //--------------------------------------------------------------
+                //
                 // check convergence
+                //
+                //--------------------------------------------------------------
                 const bool xcvg = __find<T>::convergence(X,Xtry);
                 const bool fcvg = __find<T>::convergence(F,Ftry);
                 Y_ZIRCON_PRINTLN("xcvg = "<<xcvg);

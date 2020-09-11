@@ -28,6 +28,7 @@ Y_UTEST_INIT(64)
 
     Y_UTEST(bracket);
     Y_UTEST(min);
+    Y_UTEST(opt);
     
 
     Y_UTEST(linear);
