@@ -12,8 +12,11 @@ namespace {
     template <typename T>
     static inline void do_test()
     {
+        const unsigned bits = sizeof(T)*8;
+
+        std::cerr << "Bessel" << bits << std::endl;
         {
-            const string  fn = vformat("bessel%d.dat",int(sizeof(T))*8);
+            const string  fn = vformat("bessel%u.dat",bits);
             ios::ocstream fp(fn);
             for(T x=T(0.01);x<=T(5);x+=T(0.01))
             {
@@ -21,8 +24,9 @@ namespace {
             }
         }
 
+        std::cerr << "(I)Erf" << bits << std::endl;
         {
-            const string fn = vformat("erf%d.dat",int(sizeof(T))*8);
+            const string fn = vformat("erf%u.dat",bits);
             ios::ocstream fp(fn);
             for(T x=T(-2);x<=T(2);x+=T(0.01))
             {
