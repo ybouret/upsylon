@@ -4,6 +4,7 @@
 #include "y/type/complex.hpp"
 #include "y/container/matrix.hpp"
 #include "y/yap/rational.hpp"
+#include "y/concurrent/singleton.hpp"
 
 using namespace upsylon;
 
@@ -22,7 +23,7 @@ struct Dummy
 
 Y_UTEST(spec)
 {
-
+    concurrent::singleton::verbose = true;
     std::cerr << "sizeof(type_spec)=" << sizeof(type_spec) << std::endl;
 
     TS(uint8_t);

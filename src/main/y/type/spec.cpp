@@ -244,7 +244,7 @@ namespace upsylon {
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(type_specs);
-        Y_SINGLETON_DECL_WITH(at_exit::uttermost-3,type_specs);
+        Y_SINGLETON_DECL_WITH(object::life_time-1,type_specs);
         //friend class singleton<type_specs>;
 
         inline virtual ~type_specs() throw() {}
