@@ -91,7 +91,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 //
                 //--------------------------------------------------------------
                 A.acquire(nvar);
-                const T    g0 = __g(F);
+                const T g0 = __g(F);
                 if(g0<=0)
                 {
                     Y_ZIRCON_PRINTLN("null rms");
@@ -118,7 +118,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 //--------------------------------------------------------------
                 quark::neg(step,F);
                 LU::solve(J,step);
-                Y_ZIRCON_PRINTLN("step = "<<J);
+                Y_ZIRCON_PRINTLN("step = "<<step);
 
 
                 //--------------------------------------------------------------
@@ -133,17 +133,30 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Y_ZIRCON_PRINTLN("g0   = "<<g0);
                 Y_ZIRCON_PRINTLN("g1   = "<<g1);
 
+                T lambda = 1;
                 if(g1<g0)
                 {
                     Y_ZIRCON_PRINTLN("expand");
-                    bracket::expand(g,U,G);
+                    U.c = numeric<T>::gold;
+                    G.c = g(U.c);
+                    if(G.c<g1)
+                    {
+                        // still decreasing, don't go too fast!
+                    }
+                    else
+                    {
+                        // little backtrack
+                        bracket::inside(g,U,G);
+                        lambda = minimize::run(g,U,G);
+                    }
                 }
                 else
                 {
                     Y_ZIRCON_PRINTLN("inside");
+                    // constrained backtrack
                     bracket::inside(g,U,G);
+                    lambda = max_of<T>(minimize::run(g,U,G),lambda_min);
                 }
-                const T lambda = max_of<T>(minimize::run(g,U,G),lambda_min);
                 const T gm     = g(lambda);
                 Y_ZIRCON_PRINTLN("lam  = "<<lambda);
                 Y_ZIRCON_PRINTLN("gm   = "<<gm);

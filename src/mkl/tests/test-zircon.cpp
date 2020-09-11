@@ -137,18 +137,21 @@ Y_UTEST(zircon)
         vector<double> F(2,0);
         vector<double> X(2,0);
 
-        X[1] = alea.to<double>();
-        X[2] = alea.to<double>();
+        X[1] = alea.symm<double>();
+        X[2] = alea.symm<double>();
         const string fn = "inter.dat";
 
         f(F,X);
 
         ios::ocstream::overwrite(fn);
-        ios::ocstream::echo(fn,"%g %g\n",X[1],X[2]);
+        ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], quark::mod2<double>::of(F)/2);
 
+        int cycle = 0;
         while( !zrc.cycle(F,X,f,fjac) )
         {
-            ios::ocstream::echo(fn,"%g %g\n",X[1],X[2]);
+            ++cycle;
+            ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
+            if(cycle>20) break;
         }
 
     }
