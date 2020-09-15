@@ -115,6 +115,12 @@ Y_UTEST(zircon)
         vector<double> X(4,0);
 
         f(F,X);
+
+        zrc.cycle2(F, X, f, fjac);
+        zrc.cycle2(F, X, f, fjac);
+
+        return 0;
+
         zrc.cycle(F,X,f,fjac);
 
         X[1] = 1e-7 * alea.to<double>();
@@ -141,17 +147,27 @@ Y_UTEST(zircon)
         X[2] = alea.symm<double>();
         const string fn = "inter.dat";
 
+        X[1]=1;
+        X[2]=-1;
+
+        X[1] = 0;
+        X[2] = 0;
+
         f(F,X);
 
         ios::ocstream::overwrite(fn);
         ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], quark::mod2<double>::of(F)/2);
 
         int cycle = 0;
-        while( !zrc.cycle(F,X,f,fjac) )
+        //zrc.cycle2(F, X, f, fjac);
+        //zrc.cycle2(F,X,f,fjac);
+        //return 0;
+
+        while( !zrc.cycle2(F,X,f,fjac) )
         {
             ++cycle;
             ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
-            if(cycle>20) break;
+            if(cycle>0) break;
         }
 
     }
