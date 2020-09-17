@@ -5,7 +5,7 @@
 #define Y_MATH_FCN_ZIRCON_INCLUDED 1
 
 #include "y/mkl/kernel/lu.hpp"
-#include "y/mkl/kernel/svd.hpp"
+#include "y/mkl/kernel/diag-symm.hpp"
 #include "y/mkl/utils.hpp"
 #include "y/sequence/arrays.hpp"
 #include "y/mkl/kernel/quark.hpp"
@@ -57,10 +57,6 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             nvar(0),
             A(5),
             J(),
-            U(),
-            V(),
-            Z(),
-            W(    A.next() ),
             step( A.next() ),
             Ftry( A.next() ),
             Xtry( A.next() ),
@@ -183,7 +179,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             }
 
             //! starting with f(F,X) precomputed
-            inline bool cycle2( addressable<T> &F, addressable<T> &X, ftype &f, jtype &fjac )
+            inline bool cycle2(addressable<T> &F,
+                               addressable<T> &X,
+                               ftype &f,
+                               jtype &fjac)
             {
                 //static const T lambda_min = 0.1;
                 assert( F.size() == X.size() );
@@ -211,58 +210,32 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     return true;
                 }
                 J.make(nvar,nvar);
-                U.make(nvar,nvar);
-                V.make(nvar,nvar);
+                
                 fjac(J,X);
                 Y_ZIRCON_PRINTLN("g0="<<g0);
                 Y_ZIRCON_PRINTLN("X="<<X);
                 Y_ZIRCON_PRINTLN("F="<<F);
                 Y_ZIRCON_PRINTLN("J="<<J);
-
-                U.assign(J);
-                if(!svd::build(U,W,V))
-                {
-                    Y_ZIRCON_PRINTLN("svd failure");
-                    return true;
-                }
-                const size_t ker = __find<T>::truncate(*W,nvar); assert(ker<=nvar);
-                const size_t img = nvar-ker;
-                Y_ZIRCON_PRINTLN("ker=" << ker);
-                Y_ZIRCON_PRINTLN("img=" << img);
-                if(img<=0)
-                {
-                    Y_ZIRCON_PRINTLN("null jacobian");
-                    return false;
-                }
                 
-                if(ker>0)
+                matrix<T> tJ(J,matrix_transpose);
+                matrix<T> J2(nvar,nvar);
+                quark::mmul_rtrn(J2,J,J);
+                Y_ZIRCON_PRINTLN("J2="<<J2);
+                vector<T> W(nvar,0);
+                matrix<T> P(nvar,nvar);
+                if(!diag_symm::build(J2,W,P))
                 {
-                    reducedStep(ker,img);
-#if 1
-                    ios::ocstream fp("zircon_ker.dat");
-                    for(int i=-100;i<=100;++i)
-                    {
-                        const T x = T(i)/100;
-                        fp("%g %g\n",x,g(x));
-                    }
-                    const T g1 = g(1);
-                    std::cerr << "g1=" << g1 << std::endl;
-#endif
-                    (void) g(1);
-                    quark::set(X,Xtry);
-                    quark::set(F,Ftry);
+                    Y_ZIRCON_PRINTLN("unable to diag_symm");
                     return false;
                 }
-                else
-                {
-                    svd::solve(U,W,V,F,step);
-                    quark::neg(step);
-                    Y_ZIRCON_PRINTLN("step=" << step);
-                    return false;
-                }
-
-
-
+                Y_ZIRCON_PRINTLN("W="<<W);
+                Y_ZIRCON_PRINTLN("P="<<P);
+                matrix<T> tP(P,matrix_transpose);
+                quark::mulneg(step,tP,F);
+                Y_ZIRCON_PRINTLN("rhs="<<step);
+                const size_t ker = __find<T>::truncate(W);
+                Y_ZIRCON_PRINTLN("ker="<<ker);
+                
                 return false;
             }
 
@@ -272,10 +245,6 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             size_t           nvar;
             arrays<T>        A;
             matrix<T>        J;
-            matrix<T>        U;
-            matrix<T>        V;
-            matrix<T>        Z;
-            array_type      &W;
             array_type      &step;
             array_type      &Ftry;
             array_type      &Xtry;
@@ -308,59 +277,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return __g(Ftry);
             }
 
-            bool reducedStep(const size_t ker, const size_t img)
-            {
-                assert(ker>0);
-                assert(img>0);
-                matrix<double> S(nvar,img);
-                //matrix<double> Z(nvar,ker);
-                Z.make(nvar,ker);
-                for(size_t i=1,z=0,s=0;i<=nvar;++i)
-                {
-                    if( fabs_of(W[i])<=0 )
-                    {
-                        ++z;
-                        for(size_t k=nvar;k>0;--k)
-                        {
-                            Z[k][z] = V[k][i];
-                        }
-                    }
-                    else
-                    {
-                        ++s;
-                        for(size_t k=nvar;k>0;--k)
-                        {
-                            S[k][s] = V[k][i];
-                        }
-                    }
-                }
-                matrix<T> tS(S,matrix_transpose);
-                matrix<T> JS(nvar,img);
-                matrix<T> tSJS(img,img);
-                quark::mmul(JS,J,S);
-                quark::mmul(tSJS,tS,JS);
-                Y_ZIRCON_PRINTLN("Z    = " <<Z);
-                Y_ZIRCON_PRINTLN("S    = " <<S);
-                Y_ZIRCON_PRINTLN("tS   = " <<tS);
-                Y_ZIRCON_PRINTLN("JS   = " <<JS);
-                Y_ZIRCON_PRINTLN("tSJS = " <<tSJS);
-                if(!LU::build(tSJS))
-                {
-                    Y_ZIRCON_PRINTLN("singular image space");
-                    return false;
-                }
-                vector<T> lam(img,0);
-                quark::mulneg(lam,tS,*F_);
-                Y_ZIRCON_PRINTLN("tSF   = -" <<lam);
-                LU::solve(tSJS,lam);
-                Y_ZIRCON_PRINTLN("lam   = "  <<lam);
-                quark::mul(step,S,lam);
-                Y_ZIRCON_PRINTLN("step  = " << step);
-                
-
-                return true;
-            }
-
+            
 
         };
 
