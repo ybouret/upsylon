@@ -34,6 +34,11 @@ SET( lexical_editor_srcs ${lexical_editor_decl} ${lexical_editor_impl})
 INSTALL( FILES ${lexical_editor_decl} DESTINATION include/y/jive/lexical/editor )
 SOURCE_GROUP( jive/lexical/editor FILES ${lexical_editor_srcs} )
 
+FILE( GLOB syntax_decl y/jive/syntax/*.hpp)
+FILE( GLOB syntax_impl y/jive/syntax/*.cpp)
+SET( syntax_srcs ${syntax_decl} ${syntax_impl})
+INSTALL( FILES ${syntax_decl} DESTINATION include/y/jive/syntax )
+SOURCE_GROUP( jive/syntax FILES ${syntax_srcs} )
 
 INCLUDE_DIRECTORIES( . ../main )
 
@@ -41,6 +46,7 @@ ADD_LIBRARY( y-jive STATIC
  ${srcs}
  ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs}
  ${lexical_editor_srcs}
+ ${syntax_srcs}
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 
