@@ -13,7 +13,7 @@ namespace upsylon
         {
             
             
-            class XNode : public inode<XNode>
+            class SNode : public inode<SNode>
             {
             public:
                 enum Kind
@@ -32,15 +32,20 @@ namespace upsylon
                 // types for XNode::Supply
                 //__________________________________________________________________
                 typedef memory::tight::xcache           XCache_; //!< base class for XCache
-                typedef memory::tight::xcache_of<XNode> XCache;  //!< memory cache of Char
-                typedef core::pool_of<XNode>            ZCache;  //!< local cache type
+                typedef memory::tight::xcache_of<SNode> XCache;  //!< memory cache of Char
+                typedef core::pool_of<SNode>            ZCache;  //!< local cache type
                 
                 class Supply : public singleton<Supply>
                 {
                 public:
                     
                 private:
-                    
+                    Y_SINGLETON_DECL(Supply);
+                    Y_DISABLE_COPY_AND_ASSIGN(Supply);
+                    explicit Supply();
+                    virtual ~Supply() throw();
+                    XCache   xchars; //!< global memory for zombi chars
+                    ZCache   zchars; //!< local pool of zombi chars
                 };
             };
             
