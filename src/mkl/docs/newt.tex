@@ -9,7 +9,7 @@
 \usepackage{bookman}
 
 %%  
-\newcommand{\trn}[1]{{#1}^{\mathtt{t}}}
+\newcommand{\trn}[1]{{#1}^{\mathtt{T}}}
  
 \begin{document}
 
@@ -18,60 +18,35 @@ Since:
 \begin{equation}
 	\vec{F}(\vec{X}+\delta\vec{X}) \simeq \vec{F}_0 + \bm{J} \delta\vec{X}
 \end{equation}
+The associated optimisation problem is to minimise:
+\begin{equation}
+	g(\vec{X}) = \dfrac{1}{2} \vec{F}^2
+\end{equation}
 
-\begin{itemize}
-\item If $\bm{J}$ is invertible, then...
-\item If $\bm{J}$ is not invertible and $\bm{J}$ is not zero, them we look for
-$$
-	\delta\vec{X} = \bm{S} \vec{\lambda}
-$$
-where the columns of $\bm{S}$ are in $\mathrm{Img\,} \bm{J}$.\\
-We also compute $\bm{Z}$ with its   columns   in $\mathrm{Ker\,} J$.\\
-So
-$$
-	\vec{F}(\vec{X}+\delta\vec{X}) \simeq \vec{F}_0 + \bm{J} \bm{S} \vec{\lambda}
-$$
-and we compute a regularised step
-$$
-	\delta\vec{X} = -\bm{S}\left(\trn{\bm{S}}\bm{J}\bm{S}\right)^{-1}\trn{\bm{S}}\vec{F} 
-$$
-with no guarantee that this is a decreasing step.
-Let us compute $$\vec{F}_1=\vec{F}(\vec{X}+\delta\vec{X})$$
-\end{itemize}
+\begin{equation}
+	g(\vec{X}+\delta\vec{X}) = g_0 + \trn{\vec{\nabla}g} \delta\vec{X} + \dfrac{1}{2} \trn{\delta\vec{X}} \bm{H} \delta\vec{X}
+\end{equation}
 
+\begin{equation}
+	\vec{\nabla}g_j = \sum_i F_i \dfrac{\partial F_i}{\partial X_j} \; \Leftrightarrow \; \vec{\nabla}g = \trn{\bm{J}} \vec{F}
+\end{equation}
 
-
-
-%the full Newton's step is:
-%\begin{equation}
-%	\vec{p} = - \bm{J}^{-1} \vec{F}
-%\end{equation}
-%We define
-%\begin{equation}
-%	g(\lambda) = \dfrac{1}{2} \trn{\vec{F}}  \vec{F} (\vec{X}+\lambda \vec{p})
-%\end{equation}
-%
-%\begin{equation}
-%	\vec{\nabla}g = \trn{J}\vec{F}
-%\end{equation}
-%and we want
-%\begin{equation}
-%	g(\lambda) \leq g_0 + \alpha \lambda \underbrace{\vec{\nabla}g_0 \cdot \vec{p}}_{-2g_0}
-%\end{equation}
-%rewritten as
-%\begin{equation}
-%	g(\lambda) \leq g_0 -\lambda 2 \alpha g_0
-%\end{equation}
-%
-%With a guess $\lambda$:
-%\begin{itemize}
-%\item if $g(\lambda) \leq g_0 - \lambda 2 \alpha g_0$, accept.
-%\item $g(\lambda)\simeq g_0 (1- 2\lambda) + \beta \lambda^2$
-%$$\beta = \dfrac{g(\lambda)-g_0(1-2\lambda)}{\lambda^2}$$
-%\item $g_0 (1-2\alpha\mu)  =  g_0 (1- 2\mu) + \beta \mu^2$
-%$$
-%	\mu = \dfrac{2g_0(1-\alpha)}{\beta}
-%$$
-%\end{itemize}
+\begin{equation}
+	\bm{H}_{jk} = \partial_{X_k} \vec{\nabla}g_j 
+	= 
+	\left( \sum_i F_i \dfrac{\partial^2 F_i}{\partial X_j \partial X_k} \right)
+	+ \left( \sum_i \dfrac{\partial F_i}{\partial X_j} \dfrac{\partial F_i}{\partial X_k}\right)
+\end{equation}
+We define
+\begin{equation}
+	\bm{H}_\alpha 
+	= 
+	\left\lbrace
+	\begin{array}{rcl}
+	\forall k\not=j, &  \bm{H}_{\alpha,jk} & =   \sum_i (\partial_{X_j} F_i)( \partial_{X_k} F_i)\\
+	                &  \bm{H}_{\alpha,jj} &  =  (1+\alpha) \sum_i (\partial_{X_j} F_i)^2\\
+	\end{array}
+	\right.
+\end{equation}
 
 \end{document}
