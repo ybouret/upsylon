@@ -44,6 +44,14 @@ namespace upsylon
             };
         }
 
+        enum zircon_status
+        {
+            zircon_success,
+            zircon_running,
+            zircon_failure
+        };
+
+
         //______________________________________________________________________
         //
         //! inline verbose output
@@ -203,10 +211,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             }
 
             //! starting with f(F,X) precomputed
-            inline bool cycle2(addressable<T> &F,
-                               addressable<T> &X,
-                               ftype &f,
-                               jtype &fjac)
+            inline zircon_status cycle2(addressable<T> &F,
+                                        addressable<T> &X,
+                                        ftype &f,
+                                        jtype &fjac)
             {
                 //static const T lambda_min = 0.1;
                 assert( F.size() == X.size() );
@@ -231,7 +239,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 if(g0<=0)
                 {
                     Y_ZIRCON_PRINTLN("null rms");
-                    return true;
+                    return zircon_success;
                 }
                 J.make(nvar,nvar);
                 tJ.make(nvar,nvar);
@@ -260,7 +268,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 if(!diag_symm::build(H,eigw,P,sort_eigv_by_module))
                 {
                     Y_ZIRCON_PRINTLN("unable to diagonalize");
-                    return false;
+                    return zircon_failure;
                 }
                 Y_ZIRCON_PRINTLN("P="<<P);
                 Y_ZIRCON_PRINTLN("w="<<eigw);
@@ -270,18 +278,24 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                 if(ker<=0)
                 {
-                    return tryNewtonStep(g0);
+                    if(ker>=nvar)
+                    {
+                        Y_ZIRCON_PRINTLN("null jacobian");
+                        return zircon_failure;
+                    }
+                    else
+                    {
+                        return tryRegularStep(g0);
+                    }
+
                 }
                 else
                 {
-                    Y_ZIRCON_PRINTLN("singular");
-                    return false;
+                    return trySingularStep(g0,ker);
                 }
 
 
-                
-                return false;
-            }
+             }
 
 
         private:
@@ -332,12 +346,15 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                 const bool xcvg = __find<T>::convergence(*X_,Xtry);
                 const bool fcvg = __find<T>::convergence(*F_,Ftry);
+                std::cerr  << *X_ << "=>" << Xtry << std::endl;
+                std::cerr  << *F_ << "=>" << Ftry << std::endl;
+
                 Y_ZIRCON_PRINTLN("# <convergence> variables=" << xcvg << " | functions=" << fcvg);
                 return xcvg || fcvg;
             }
 
 
-            bool tryNewtonStep(const T g0)
+            zircon_status tryRegularStep(const T g0)
             {
                 //--------------------------------------------------------------
                 // compute the newton's step from decomposition
@@ -345,7 +362,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 array_type &tmp = Fsqr;
                 quark::mul(tmp,tP,grad);
                 const T coherence = eigw[nvar]/eigw[1];
-                Y_ZIRCON_PRINTLN("coherence="<<coherence);
+                Y_ZIRCON_PRINTLN("# <regular step> coherence="<<coherence);
                 for(size_t i=nvar;i>0;--i)
                 {
                     tmp[i] /= -eigw[i];
@@ -416,7 +433,15 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     Y_ZIRCON_PRINTLN("#g(" << uopt <<")=" << gopt);
                 }
 
-                return converged();
+                return converged() ? zircon_success : zircon_running;
+            }
+
+
+            zircon_status trySingularStep(const T g0, const size_t ker)
+            {
+                const size_t img = nvar - ker;
+                Y_ZIRCON_PRINTLN("# <singular step> dim(Ker)=" << ker << " | dim(Img)=" << img);
+                return zircon_failure;
             }
 
         };

@@ -148,7 +148,7 @@ Y_UTEST(zircon)
 
         //X[1]=1; X[2]=-1;
 
-        X[1] = 0; X[2] = 0;
+        //X[1] = 0; X[2] = 0;
 
         f(F,X);
 
@@ -157,7 +157,7 @@ Y_UTEST(zircon)
 
         int cycle = 0;
 
-        while( !zrc.cycle2(F,X,f,fjac) )
+        while( zircon_running == zrc.cycle2(F,X,f,fjac) )
         {
             ++cycle;
             ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
