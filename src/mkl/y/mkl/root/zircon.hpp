@@ -274,8 +274,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Y_ZIRCON_PRINTLN("P="<<P);
                 Y_ZIRCON_PRINTLN("w="<<eigw);
                 tP.assign_transpose(P);
-                const size_t ker = __find<T>::truncate(*eigw,nvar);
-                Y_ZIRCON_PRINTLN("ker="<<ker);
+                const size_t ker = compute_kernel();
 
                 if(ker<=0)
                 {
@@ -340,6 +339,30 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 quark::muladd(Xtry,*X_,u,step);
                 (*f_)(Ftry,Xtry);
                 return __g(Ftry);
+            }
+
+            inline size_t compute_kernel() throw()
+            {
+                // initial kernel
+                size_t ker = __find<T>::truncate(*eigw,nvar);
+                Y_ZIRCON_PRINTLN("# ker=" << ker << " | w=" << eigw);
+                while(ker<nvar)
+                {
+                    const size_t img     = nvar-ker;
+                    const T      scaling = fabs_of(eigw[img])/fabs_of(eigw[1]);
+                    Y_ZIRCON_PRINTLN("# ker=" << ker << " | scaling=" << scaling);
+                    if(scaling<1e-3)
+                    {
+                        ++ker;
+                        eigw[img] = 0;
+                        Y_ZIRCON_PRINTLN("# ker=" << ker << " | w=" << eigw);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                return ker;
             }
 
             inline bool converged() throw()
@@ -461,12 +484,44 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                         memcpy( &Z[k][1], &P[k][1+img], bytes);
                     }
                 }
-
                 Y_ZIRCON_PRINTLN("S=" << S);
                 Y_ZIRCON_PRINTLN("Z=" << Z);
 
 
-                return zircon_failure;
+                matrix<T> tS(S,matrix_transpose);
+                matrix<T> HS(nvar,img);
+                matrix<T> tSHS(img,img);
+                vector<T> lambda(img,0);
+                quark::mmul(HS,H,S);
+                quark::mmul(tSHS,tS,HS);       Y_ZIRCON_PRINTLN("tSHS=" << tSHS);
+                quark::mulneg(lambda,tS,grad);
+
+
+
+                if( !LU::build(tSHS) )
+                {
+                    Y_ZIRCON_PRINTLN("singular image");
+                    return zircon_failure;
+                }
+                LU::solve(tSHS,lambda);     Y_ZIRCON_PRINTLN("lambda = " << lambda);
+                quark::mul(step,S,lambda);  Y_ZIRCON_PRINTLN("step   = " << step);
+
+                const T g1 = g(1);
+                std::cerr << "g1=" << g1 << std::endl;
+
+                {
+                    ios::ocstream fp("zircon_ker.dat");
+                    for(int i=-100;i<=200;++i)
+                    {
+                        const T x = T(i)/100;
+                        fp("%g %g\n", x, g(x) );
+                    }
+                }
+                g(1);
+                quark::set(*X_,Xtry);
+                quark::set(*F_,Ftry);
+
+                return zircon_running;
             }
 
         };
