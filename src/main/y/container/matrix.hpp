@@ -25,7 +25,7 @@ namespace upsylon
     //
     //! constructor helper
     //__________________________________________________________________________
-#define Y_MATRIX_CTOR(NR,NC) object(), matrix_(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
+#define Y_MATRIX_CTOR(NR,NC) matrix_(NR,NC,sizeof(T)), row_ptr(0), r_aux1(), c_aux1(), r_aux2(), c_aux2()
 
     //__________________________________________________________________________
     //
@@ -117,7 +117,7 @@ namespace upsylon
         //______________________________________________________________________
 
         //! release memory
-        inline void release() throw() { matrix _; swap_with(_); }
+        inline virtual void release() throw() { matrix _; swap_with(_); }
 
 
         //! temporary array of all items

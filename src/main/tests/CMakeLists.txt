@@ -67,9 +67,10 @@ test-core-pool.cpp
 test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
 test-core-roll.cpp
 test-progress.cpp
- test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp
- test-meta-loop.cpp
+test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp
+test-meta-loop.cpp
 test-core-nodes.cpp
+test-core-temp.cpp
  )
 ADD_TEST(core:ppty     test-main ppty)
 ADD_TEST(core:lockable test-main lockable)
@@ -89,6 +90,7 @@ ADD_TEST(core:zfi         test-main zfi)
 ADD_TEST(core:binary      test-main binary)
 ADD_TEST(core:metaloop    test-main metaloop)
 ADD_TEST(core:nodes       test-main core_nodes)
+ADD_TEST(core:temp        test-main core_temp)
 
 SOURCE_GROUP(mem FILES test-alloc.cpp 
 test-object.cpp test-embed.cpp

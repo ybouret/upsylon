@@ -55,9 +55,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
             inline explicit zircon() :
             nvar(0),
-            A(5),
+            A(6),
             J(),
             grad( A.next() ),
+            eigw( A.next() ),
             step( A.next() ),
             Ftry( A.next() ),
             Xtry( A.next() ),
@@ -212,6 +213,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 }
                 J.make(nvar,nvar);
                 tJ.make(nvar,nvar);
+                H.make(nvar,nvar);
                 P.make(nvar,nvar);
                 tP.make(nvar,nvar);
                 fjac(J,X);
@@ -233,16 +235,15 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Y_ZIRCON_PRINTLN("H="<<H);
 
 
-                if(!diag_symm::build(H,w,P))
+                if(!diag_symm::build(H,eigw,P,sort_eigv_by_module))
                 {
                     Y_ZIRCON_PRINTLN("unable to diagonalize");
                     return false;
                 }
-                diag_symm::eigsrtA(w,P);
                 Y_ZIRCON_PRINTLN("P="<<P);
-                Y_ZIRCON_PRINTLN("w="<<w);
+                Y_ZIRCON_PRINTLN("w="<<eigw);
                 matrix<T>    tP(P,matrix_transpose);
-                const size_t ker = __find<T>::truncate(*w,nvar);
+                const size_t ker = __find<T>::truncate(*eigw,nvar);
                 Y_ZIRCON_PRINTLN("ker="<<ker);
 
                 if(ker<=0)
@@ -271,7 +272,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             matrix<T>        P;
             matrix<T>        tP;
             array_type      &grad;
-            array_type      &w;
+            array_type      &eigw;
             array_type      &step;
             array_type      &Ftry;
             array_type      &Xtry;
@@ -310,7 +311,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 quark::mul(tmp,tP,grad);
                 for(size_t i=nvar;i>0;--i)
                 {
-                    tmp[i] /= -w[i];
+                    tmp[i] /= -eigw[i];
                 }
                 quark::mul(step, P, tmp);
                 Y_ZIRCON_PRINTLN("step="<<step);

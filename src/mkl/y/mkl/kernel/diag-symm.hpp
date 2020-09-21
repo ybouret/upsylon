@@ -8,10 +8,19 @@
 namespace upsylon {
     
     namespace mkl {
-        
+
+        enum sort_eigv_by
+        {
+            sort_eigv_none,
+            sort_eigv_by_value,
+            sort_eigv_by_module
+        };
+
         //! diagonalisation of symmetric matrices
         struct diag_symm
         {
+
+
             static const size_t min_iter = 4;  //!< for tolerance scaling
             static const size_t max_iter = 64; //!< algorithm should converge before
             //! Jacobi rotation
@@ -25,7 +34,7 @@ namespace upsylon {
              \return a =  v'* d * v
              */
             template <typename T> static inline
-            bool build( matrix<T> &a, addressable<T> &d, matrix<T> &v )
+            bool build( matrix<T> &a, addressable<T> &d, matrix<T> &v, sort_eigv_by kind = sort_eigv_none )
             {
                 assert(a.rows>0);
                 assert(a.is_square);
@@ -142,6 +151,12 @@ namespace upsylon {
                     {
                         a[i][j] = a[j][i];
                     }
+                }
+                switch(kind)
+                {
+                    case sort_eigv_none:                    break;
+                    case sort_eigv_by_value:  eigsrt(d,v);  break;
+                    case sort_eigv_by_module: eigsrtA(d,v); break;
                 }
                 return success;
                 

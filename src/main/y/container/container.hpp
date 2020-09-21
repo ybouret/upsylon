@@ -9,7 +9,7 @@ namespace upsylon
 {
 
     //! interface for containers
-    class container : public dynamic
+    class container : public dynamic, public releasable
     {
     public:
         virtual ~container() throw();
@@ -20,8 +20,7 @@ namespace upsylon
         //______________________________________________________________________
         //! free active items
         virtual void free()    throw() = 0;
-        //! free active items and release all attached memory
-        virtual void release() throw() = 0;
+        
         //! reserve memory for n items
         virtual void reserve(const size_t n) = 0;
 

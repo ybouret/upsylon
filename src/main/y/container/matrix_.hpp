@@ -15,7 +15,7 @@ namespace upsylon {
     //! data for matrix layout, whith enough space for algebra
     //
     //__________________________________________________________________________
-    class matrix_ : public counted_object
+    class matrix_ :   public object, public counted, public releasable
     {
     public:
         //______________________________________________________________________
