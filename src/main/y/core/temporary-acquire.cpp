@@ -26,6 +26,9 @@ namespace upsylon {
             assert(num>0);
         }
 
+
+        
+
         void temporary_acquire_:: record(releasable &obj) throw()
         {
             assert(size<capa);

@@ -19,9 +19,10 @@ namespace upsylon {
         class temporary_acquire_
         {
         public:
-            virtual ~temporary_acquire_() throw();      //!< release() for all recorded objects
+            virtual ~temporary_acquire_() throw();      //!< release_all() and cleanup
             void     record(releasable &obj) throw();   //!< record a new object
 
+            
         protected:
             //! setup from user's defined memory
             explicit temporary_acquire_(releasable **arr, const size_t num) throw();

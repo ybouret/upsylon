@@ -94,7 +94,7 @@ Y_UTEST(zircon)
     zircon<double> zrc;
     zrc.verbose  = true;
 
-    if(false)
+    if(true)
     {
         mysys<double>  sys = { 0.00, pow(10.0,-4.8) };
 
@@ -115,20 +115,26 @@ Y_UTEST(zircon)
         vector<double> X(4,0);
 
         f(F,X);
+        const string fn = "chem.dat";
+        ios::ocstream::overwrite(fn);
+        ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], quark::mod2<double>::of(F)/2);
+        
+        int cycle = 0;
 
-        zrc.cycle2(F, X, f, fjac);
-
-        return 0;
-
-        zrc.cycle(F,X,f,fjac);
+        while( zircon_running == zrc.cycle2(F,X,f,fjac) )
+        {
+            ++cycle;
+            ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
+            if(cycle>32) break;
+        }
 
         X[1] = 1e-7 * alea.to<double>();
         f(F,X);
-        zrc.cycle(F,X,f,fjac);
+        //zrc.cycle(F,X,f,fjac);
 
     }
 
-    if(true)
+    if(false)
     {
         inter<double> Inter = { 0.1 };
         if(argc>1)
@@ -146,7 +152,7 @@ Y_UTEST(zircon)
         X[2] = alea.symm<double>();
         const string fn = "inter.dat";
 
-        //X[1]=1; X[2]=-1;
+        X[1]=1; X[2]=-1;
 
         //X[1] = 0; X[2] = 0;
 

@@ -11,6 +11,7 @@
 #include "y/mkl/kernel/quark.hpp"
 #include "y/core/temporary-link.hpp"
 #include "y/core/temporary-value.hpp"
+#include "y/core/temporary-acquire.hpp"
 #include "y/comparison.hpp"
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
@@ -441,6 +442,30 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             {
                 const size_t img = nvar - ker;
                 Y_ZIRCON_PRINTLN("# <singular step> dim(Ker)=" << ker << " | dim(Img)=" << img);
+
+                matrix<T> S(nvar,img);
+                matrix<T> Z(nvar,ker);
+
+                {
+                    const size_t bytes = img * sizeof(T);
+                    for(size_t k=nvar;k>0;--k)
+                    {
+                        memcpy( &S[k][1], &P[k][1], bytes);
+                    }
+                }
+
+                {
+                    const size_t bytes = ker * sizeof(T);
+                    for(size_t k=nvar;k>0;--k)
+                    {
+                        memcpy( &Z[k][1], &P[k][1+img], bytes);
+                    }
+                }
+
+                Y_ZIRCON_PRINTLN("S=" << S);
+                Y_ZIRCON_PRINTLN("Z=" << Z);
+
+
                 return zircon_failure;
             }
 
