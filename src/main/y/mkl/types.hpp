@@ -35,24 +35,25 @@ namespace upsylon {
         //! numeric definitions
         template <typename T> struct numeric
         {
-            static const T      minimum;    //!< minimum representable value
-            static const T      maximum;    //!< maximum representable value
-            static const T      epsilon;    //!< \f$1+\epsilon\simeq1\f$
-            static const size_t mant_dig;   //!< mantissa digit
-            static const T      pi;         //!< \f$\pi\f$
-            static const T      two_pi;     //!< \f$2\pi\f$
-            static const T      half_pi;    //!< \f$\pi/2\f$
-            static const T      min_exp;    //!< minimal exponent
-            static const T      max_exp;    //!< maximal exponent
-            static const size_t dig;        //!< significant digits
-            static const T      ftol;       //!< \f$10^{-dig}\f$
-            static const T      sqrt_ftol;  //!< \f$10^{-dig/2-1}\f$
-            static const int    min_10_exp; //!< minimal 10 exponent
-            static const int    max_10_exp; //!< maximal 10 exponent
-            static const T      tiny;       //!< \f$10^{min_{10}exp}\f$
-            static const T      huge;       //!< \f$10^{max_{10}exp}\f$
-            static const T      gold;       //!< golden ratio
-            static const T      inv_gold;   //!< 1/gold=gold-1
+            static const T        minimum;    //!< minimum representable value
+            static const T        maximum;    //!< maximum representable value
+            static const T        epsilon;    //!< \f$1+\epsilon\simeq1\f$
+            static const unsigned mant_dig;   //!< mantissa digit
+            static const T        pi;         //!< \f$\pi\f$
+            static const T        two_pi;     //!< \f$2\pi\f$
+            static const T        half_pi;    //!< \f$\pi/2\f$
+            static const T        min_exp;    //!< minimal exponent
+            static const T        max_exp;    //!< maximal exponent
+            static const unsigned dig;        //!< significant digits
+            static const T        ftol;       //!< \f$10^{-dig}\f$
+            static const unsigned sqrt_dig;   //!< dig/2+1
+            static const T        sqrt_ftol;  //!< \f$10^{-dig/2-1}\f$
+            static const int      min_10_exp; //!< minimal 10 exponent
+            static const int      max_10_exp; //!< maximal 10 exponent
+            static const T        tiny;       //!< \f$10^{min_{10}exp}\f$
+            static const T        huge;       //!< \f$10^{max_{10}exp}\f$
+            static const T        gold;       //!< golden ratio
+            static const T        inv_gold;   //!< 1/gold=gold-1
             typedef functor<T,TL1(T)>                                      function;            //!< 1-argument function wrapper
             typedef functor<T,TL1(const accessible<T>&)>                   scalar_field;        //!< scalar field (for gradient)
             typedef functor<void,TL2(addressable<T>&,const accessible<T>)> vector_field;        //!< vector field

@@ -107,198 +107,6 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             {
             }
 
-            //! starting with f(F,X) precomputed
-            bool cycle( addressable<T> &F, addressable<T> &X, ftype &f, jtype &fjac )
-            {
-                static const T lambda_min = 0.1;
-                assert( F.size() == X.size() );
-                //--------------------------------------------------------------
-                //
-                // prepare topology
-                //
-                //--------------------------------------------------------------
-                core::temporary_value<size_t>         nlink(nvar,X.size());
-                core::temporary_link<ftype>           flink(f,&f_);
-                core::temporary_link<addressable<T> > Xlink(X,&X_);
-                core::temporary_link<addressable<T> > Flink(F,&F_);
-
-                //--------------------------------------------------------------
-                //
-                // prepare jacobian
-                //
-                //--------------------------------------------------------------
-                A.acquire(nvar);
-                const T g0 = __g(F);
-                if(g0<=0)
-                {
-                    Y_ZIRCON_PRINTLN("null rms");
-                    return true;
-                }
-                J.make(nvar,nvar);
-                fjac(J,X);
-
-                Y_ZIRCON_PRINTLN("<cycle>");
-                Y_ZIRCON_PRINTLN("X    = "<<X);
-                Y_ZIRCON_PRINTLN("F    = "<<F);
-                Y_ZIRCON_PRINTLN("J    = "<<J);
-
-                if(!LU::build(J))
-                {
-                    Y_ZIRCON_PRINTLN("singular jacobian");
-                    return false;
-                }
-
-                //--------------------------------------------------------------
-                //
-                // compute full newton's step
-                //
-                //--------------------------------------------------------------
-                quark::neg(step,F);
-                LU::solve(J,step);
-                Y_ZIRCON_PRINTLN("step = "<<step);
-
-
-                //--------------------------------------------------------------
-                //
-                // local minimize
-                //
-                //--------------------------------------------------------------
-                const T    g1 = g(1);
-                triplet<T> U  = { 0,   1,  1 };
-                triplet<T> G  = { g0, g1, g1 };
-
-                Y_ZIRCON_PRINTLN("g0   = "<<g0);
-                Y_ZIRCON_PRINTLN("g1   = "<<g1);
-
-                T lambda = 1;
-                if(g1<g0)
-                {
-                    Y_ZIRCON_PRINTLN("expand");
-                    U.c = numeric<T>::gold;
-                    G.c = g(U.c);
-                    if(G.c<g1)
-                    {
-                        // still decreasing, don't go too fast!
-                    }
-                    else
-                    {
-                        // little backtrack
-                        bracket::inside(g,U,G);
-                        lambda = minimize::run(g,U,G);
-                    }
-                }
-                else
-                {
-                    Y_ZIRCON_PRINTLN("inside");
-                    // constrained backtrack
-                    bracket::inside(g,U,G);
-                    lambda = max_of<T>(minimize::run(g,U,G),lambda_min);
-                }
-                const T gm     = g(lambda);
-                Y_ZIRCON_PRINTLN("lam  = "<<lambda);
-                Y_ZIRCON_PRINTLN("gm   = "<<gm);
-                Y_ZIRCON_PRINTLN("Xtry = "<<Xtry);
-                Y_ZIRCON_PRINTLN("Ftry = "<<Ftry);
-
-                //--------------------------------------------------------------
-                //
-                // check convergence
-                //
-                //--------------------------------------------------------------
-                const bool xcvg = __find<T>::convergence(X,Xtry);
-                const bool fcvg = __find<T>::convergence(F,Ftry);
-                Y_ZIRCON_PRINTLN("xcvg = "<<xcvg);
-                Y_ZIRCON_PRINTLN("fcvg = "<<fcvg);
-
-                return xcvg||fcvg;
-            }
-
-
-            //! starting with f(F,X) precomputed
-            inline zircon_status cycle2(addressable<T> &F,
-                                        addressable<T> &X,
-                                        ftype &f,
-                                        jtype &fjac)
-            {
-                //static const T lambda_min = 0.1;
-                assert( F.size() == X.size() );
-                //--------------------------------------------------------------
-                //
-                // prepare topology
-                //
-                //--------------------------------------------------------------
-                core::temporary_value<size_t>         nlink(nvar,X.size());
-                core::temporary_link<ftype>           flink(f,&f_);
-                core::temporary_link<addressable<T> > Xlink(X,&X_);
-                core::temporary_link<addressable<T> > Flink(F,&F_);
-
-                //--------------------------------------------------------------
-                //
-                // prepare jacobian
-                //
-                //--------------------------------------------------------------
-
-                A.acquire(nvar);
-                const T g0 = __g(F);
-                if(g0<=0)
-                {
-                    Y_ZIRCON_PRINTLN("null rms");
-                    return zircon_success;
-                }
-                J.make(nvar,nvar);
-                tJ.make(nvar,nvar);
-                H.make(nvar,nvar);
-                P.make(nvar,nvar);
-                tP.make(nvar,nvar);
-                fjac(J,X);
-                Y_ZIRCON_PRINTLN("g0="<<g0);
-                Y_ZIRCON_PRINTLN("X="<<X);
-                Y_ZIRCON_PRINTLN("F="<<F);
-                Y_ZIRCON_PRINTLN("J="<<J);
-
-                //--------------------------------------------------------------
-                //
-                // prepare gradient and H
-                //
-                //--------------------------------------------------------------
-                tJ.assign_transpose(J);
-                quark::mul(grad,tJ,F);
-                quark::mmul(H,tJ,J);
-
-                Y_ZIRCON_PRINTLN("grad="<<grad);
-                Y_ZIRCON_PRINTLN("H="<<H);
-
-
-                if(!diag_symm::build(H,eigw,P,sort_eigv_by_module))
-                {
-                    Y_ZIRCON_PRINTLN("unable to diagonalize");
-                    return zircon_failure;
-                }
-                Y_ZIRCON_PRINTLN("P="<<P);
-                Y_ZIRCON_PRINTLN("w="<<eigw);
-                tP.assign_transpose(P);
-                const size_t ker = compute_kernel();
-
-                if(ker<=0)
-                {
-                    if(ker>=nvar)
-                    {
-                        Y_ZIRCON_PRINTLN("null jacobian");
-                        return zircon_failure;
-                    }
-                    else
-                    {
-                        return tryRegularStep(g0);
-                    }
-
-                }
-                else
-                {
-                    return trySingularStep(g0,ker);
-                }
-
-
-             }
 
             //! starting with f(F,X) precomputed
             inline zircon_status cycle3(addressable<T> &F,
@@ -363,22 +171,31 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                 //--------------------------------------------------------------
                 //
-                // regularizing
+                // regularizing by condition monitoring
                 //
                 //--------------------------------------------------------------
                 T   lam = 0;
-                int p   = -5;
+                int p   = -int(numeric<T>::sqrt_dig);
                 while(true)
                 {
+                    //----------------------------------------------------------
+                    //
                     // build approx matrix
+                    //
+                    //----------------------------------------------------------
                     const T fac = 1.0 + lam;
                     H.assign(H0);
                     for(size_t i=nvar;i>0;--i)
                     {
                         H[i][i] *= fac;
                     }
-
                     Y_ZIRCON_PRINTLN("H="<<H);
+
+                    //----------------------------------------------------------
+                    //
+                    // eigenvalues/vectors
+                    //
+                    //----------------------------------------------------------
                     if( !diag_symm::build(H,eigw,P,sort_eigv_by_module))
                     {
                         Y_ZIRCON_PRINTLN("diagonalize failure");
@@ -386,14 +203,26 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     }
                     Y_ZIRCON_PRINTLN("w="<<eigw);
 
+                    //----------------------------------------------------------
+                    //
+                    // guess kernel
+                    //
+                    //----------------------------------------------------------
                     const size_t ker = __find<T>::truncate(*eigw,nvar);
                     if( ker> 0)
                     {
+                        //------------------------------------------------------
+                        // zero matrix
+                        //------------------------------------------------------
                         if(ker>=nvar)
                         {
                             Y_ZIRCON_PRINTLN("null jacobian");
                             return zircon_failure;
                         }
+
+                        //------------------------------------------------------
+                        // singular: try to regularize
+                        //------------------------------------------------------
                         if(!increase(lam,p))
                         {
                             return zircon_failure;
@@ -401,6 +230,11 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                         continue;
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    // monitor scaling
+                    //
+                    //----------------------------------------------------------
                     const T      scaling = fabs_of(eigw[nvar])/fabs_of(eigw[1]);
                     Y_ZIRCON_PRINTLN("scaling="<<scaling);
                     if(scaling<1e-3)
@@ -452,7 +286,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     }
                 }
 
-                if(g1>g0)
+                if(g1>=g0)
                 {
                     triplet<T> U = { 0,  -1,  1 };
                     triplet<T> G = { g0, -1, g1 };
@@ -460,12 +294,46 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     const T u_opt = minimize::run(g,U,G);
                     const T g_opt = g(u_opt);
                     Y_ZIRCON_PRINTLN("# <shrinking> g(" << u_opt << ")=" << g_opt);
-                    return zircon_running;
                 }
                 else
                 {
-                    return converged() ? zircon_success : zircon_running;
+                    assert(g1<g0);
+                    // try inside step
+                    const T u_ins = numeric<T>::inv_gold;
+                    const T g_ins = g(u_ins);
+                    Y_ZIRCON_PRINTLN("# <probe:damping> g(" << u_ins << ")=" << g_ins);
+
+                    if(g_ins<=g1)
+                    {
+                        triplet<T> U     = { 0,  u_ins,  1 };
+                        triplet<T> G     = { g0, g_ins, g1 };
+                        const T    u_opt = minimize::run(g,U,G);
+                        const T    g_opt = g(u_opt);
+                        Y_ZIRCON_PRINTLN("# <damping> g(" << u_opt << ")=" << g_opt);
+                    }
+                    else
+                    {
+                        // try outside
+                        const T u_ext = numeric<T>::gold;
+                        const T g_ext = g(u_ext);
+                        Y_ZIRCON_PRINTLN("# <probe:growing> g(" << u_ext << ")=" << g_ext);
+                        if(g1<=g_ext)
+                        {
+                            triplet<T> U = { 0,  1,  u_ext };
+                            triplet<T> G = { g0, g1, g_ext };
+                            const T u_opt = minimize::run(g,U,G);
+                            const T g_opt = g(u_opt);
+                            Y_ZIRCON_PRINTLN("# <growing> g(" << u_opt << ")=" << g_opt);
+
+                        }
+                        else
+                        {
+                            (void) g(1);
+                        }
+                    }
+                    
                 }
+                return converged() ? zircon_success : zircon_running;
 
             }
 
@@ -516,6 +384,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
             bool increase( T &lam, int p)
             {
+                static const int pmax = int(numeric<T>::dig);
                 if(lam<=0)
                 {
                     if(p>=0)
@@ -533,7 +402,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 {
                     ++p;
                     lam *= 10;
-                    if(p <= 5)
+                    if(p <= pmax)
                     {
                         Y_ZIRCON_PRINTLN("lam="<<lam);
                         return true;
@@ -546,188 +415,18 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 }
             }
 
-            inline size_t compute_kernel() throw()
-            {
-                // initial kernel
-                size_t ker = __find<T>::truncate(*eigw,nvar);
-                Y_ZIRCON_PRINTLN("# ker=" << ker << " | w=" << eigw);
-                while(ker<nvar)
-                {
-                    const size_t img     = nvar-ker;
-                    const T      scaling = fabs_of(eigw[img])/fabs_of(eigw[1]);
-                    Y_ZIRCON_PRINTLN("# ker=" << ker << " | scaling=" << scaling);
-                    if(scaling<1e-3)
-                    {
-                        ++ker;
-                        eigw[img] = 0;
-                        Y_ZIRCON_PRINTLN("# ker=" << ker << " | w=" << eigw);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                return ker;
-            }
+
 
             inline bool converged() throw()
             {
-
                 const bool xcvg = __find<T>::convergence(*X_,Xtry);
                 const bool fcvg = __find<T>::convergence(*F_,Ftry);
-                //std::cerr  << *X_ << "=>" << Xtry << std::endl;
-                //std::cerr  << *F_ << "=>" << Ftry << std::endl;
-
                 Y_ZIRCON_PRINTLN("# <convergence> variables=" << xcvg << " | functions=" << fcvg);
                 return xcvg || fcvg;
             }
 
 
-            zircon_status tryRegularStep(const T g0)
-            {
-                //--------------------------------------------------------------
-                // compute the newton's step from decomposition
-                //--------------------------------------------------------------
-                array_type &tmp = Fsqr;
-                quark::mul(tmp,tP,grad);
-                const T coherence = eigw[nvar]/eigw[1];
-                Y_ZIRCON_PRINTLN("# <regular step> coherence="<<coherence);
-                for(size_t i=nvar;i>0;--i)
-                {
-                    tmp[i] /= -eigw[i];
-                }
-                quark::mul(step, P, tmp);
-                Y_ZIRCON_PRINTLN("step="<<step);
 
-                //--------------------------------------------------------------
-                // check where we landed
-                //--------------------------------------------------------------
-                const T    g1 = g(1);
-                Y_ZIRCON_PRINTLN("g1="<<g1);
-                {
-                    ios::ocstream fp("zircon.dat");
-                    for(int i=-100;i<=200;++i)
-                    {
-                        const T x = T(i)/100;
-                        fp("%g %g\n", x, g(x) );
-                    }
-                }
-
-
-
-                if(g1<g0)
-                {
-                    const T u_ins = numeric<T>::inv_gold;
-                    const T g_ins = g(u_ins);
-                    Y_ZIRCON_PRINTLN("#decreasing");
-                    Y_ZIRCON_PRINTLN("# <probing> g_ins=" << g_ins << "@" << u_ins);
-                    if(g_ins<=g1)
-                    {
-                        triplet<T> U    = { 0,  u_ins,  1 };
-                        triplet<T> G    = { g0, g_ins, g1 };
-                        const T    uopt = minimize::run(g,U,G);
-                        const T    gopt = g(uopt);
-                        Y_ZIRCON_PRINTLN("# <shrinking> g(" << uopt <<")=" << gopt);
-                    }
-                    else
-                    {
-                        const T u_out = numeric<T>::gold;
-                        const T g_out = g(u_out);
-                        Y_ZIRCON_PRINTLN("# <probing> g_out=" << g_out << "@" << u_out);
-                        if(g_out>=g1)
-                        {
-
-                            triplet<T> U    = { 0,   1, u_out };
-                            triplet<T> G    = { g0, g1, g_out };
-                            const T    uopt = minimize::run(g,U,G);
-                            const T    gopt = g(uopt);
-                            Y_ZIRCON_PRINTLN("# <expanding> g(" << uopt <<")=" << gopt);
-                        }
-                        else
-                        {
-                            Y_ZIRCON_PRINTLN("# <full step>");
-                            (void) g(1);
-                        }
-                    }
-                }
-                else
-                {
-                    assert(g1>=g0);
-                    Y_ZIRCON_PRINTLN("#backtracking");
-                    triplet<T> U = { 0,  -1,  1 };
-                    triplet<T> G = { g0, -1, g1 };
-                    bracket::inside(g,U,G);
-                    const T    uopt = minimize::run(g,U,G);
-                    const T    gopt = g(uopt);
-                    Y_ZIRCON_PRINTLN("#g(" << uopt <<")=" << gopt);
-                }
-
-                return converged() ? zircon_success : zircon_running;
-            }
-
-
-            zircon_status trySingularStep(const T g0, const size_t ker)
-            {
-                const size_t img = nvar - ker;
-                Y_ZIRCON_PRINTLN("# <singular step> dim(Ker)=" << ker << " | dim(Img)=" << img);
-
-                matrix<T> S(nvar,img);
-                matrix<T> Z(nvar,ker);
-
-                {
-                    const size_t bytes = img * sizeof(T);
-                    for(size_t k=nvar;k>0;--k)
-                    {
-                        memcpy( &S[k][1], &P[k][1], bytes);
-                    }
-                }
-
-                {
-                    const size_t bytes = ker * sizeof(T);
-                    for(size_t k=nvar;k>0;--k)
-                    {
-                        memcpy( &Z[k][1], &P[k][1+img], bytes);
-                    }
-                }
-                Y_ZIRCON_PRINTLN("S=" << S);
-                Y_ZIRCON_PRINTLN("Z=" << Z);
-
-
-                matrix<T> tS(S,matrix_transpose);
-                matrix<T> HS(nvar,img);
-                matrix<T> tSHS(img,img);
-                vector<T> lambda(img,0);
-                quark::mmul(HS,H,S);
-                quark::mmul(tSHS,tS,HS);       Y_ZIRCON_PRINTLN("tSHS=" << tSHS);
-                quark::mulneg(lambda,tS,grad);
-
-
-
-                if( !LU::build(tSHS) )
-                {
-                    Y_ZIRCON_PRINTLN("singular image");
-                    return zircon_failure;
-                }
-                LU::solve(tSHS,lambda);     Y_ZIRCON_PRINTLN("lambda = " << lambda);
-                quark::mul(step,S,lambda);  Y_ZIRCON_PRINTLN("step   = " << step);
-
-                const T g1 = g(1);
-                std::cerr << "g1=" << g1 << std::endl;
-
-                {
-                    ios::ocstream fp("zircon_ker.dat");
-                    for(int i=-100;i<=200;++i)
-                    {
-                        const T x = T(i)/100;
-                        fp("%g %g\n", x, g(x) );
-                    }
-                }
-                g(1);
-                quark::set(*X_,Xtry);
-                quark::set(*F_,Ftry);
-
-                return zircon_running;
-            }
 
         };
 
