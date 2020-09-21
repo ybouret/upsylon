@@ -211,7 +211,9 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     return true;
                 }
                 J.make(nvar,nvar);
-                
+                tJ.make(nvar,nvar);
+                P.make(nvar,nvar);
+                tP.make(nvar,nvar);
                 fjac(J,X);
                 Y_ZIRCON_PRINTLN("g0="<<g0);
                 Y_ZIRCON_PRINTLN("X="<<X);
@@ -223,15 +225,13 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 // prepare gradient and H
                 //
                 //--------------------------------------------------------------
-                matrix<T> H(nvar,nvar);
-                matrix<T> tJ(J,matrix_transpose);
+
                 quark::mul(grad,tJ,F);
                 quark::mmul(H,tJ,J);
 
                 Y_ZIRCON_PRINTLN("grad="<<grad);
                 Y_ZIRCON_PRINTLN("H="<<H);
-                matrix<T> P(nvar,nvar);
-                vector<T> w(nvar,0);
+
 
                 if(!diag_symm::build(H,w,P))
                 {
@@ -247,14 +247,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                 if(ker<=0)
                 {
-                    array_type &tmp = Fsqr;
-                    quark::mul(tmp,tP,grad);
-                    for(size_t i=nvar;i>0;--i)
-                    {
-                        tmp[i] /= -w[i];
-                    }
-                    quark::mul(step, P, tmp);
-                    Y_ZIRCON_PRINTLN("step="<<step);
+                    return tryNewtonStep();
 
                 }
                 else
@@ -273,7 +266,12 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             size_t           nvar;
             arrays<T>        A;
             matrix<T>        J;
+            matrix<T>        tJ;
+            matrix<T>        H;
+            matrix<T>        P;
+            matrix<T>        tP;
             array_type      &grad;
+            array_type      &w;
             array_type      &step;
             array_type      &Ftry;
             array_type      &Xtry;
@@ -306,7 +304,21 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return __g(Ftry);
             }
 
-            
+            bool tryNewtonStep()
+            {
+                array_type &tmp = Fsqr;
+                quark::mul(tmp,tP,grad);
+                for(size_t i=nvar;i>0;--i)
+                {
+                    tmp[i] /= -w[i];
+                }
+                quark::mul(step, P, tmp);
+                Y_ZIRCON_PRINTLN("step="<<step);
+
+                const T    g1 = g(1);
+                Y_ZIRCON_PRINTLN("g1="<<g1);
+
+            }
 
         };
 

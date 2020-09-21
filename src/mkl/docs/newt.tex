@@ -13,6 +13,8 @@
  
 \begin{document}
 
+\section{Notations}
+
 Let us assume that $\vec{F}(\vec{X})$ is derivable at $\vec{X}$.
 Since:
 \begin{equation}
@@ -37,21 +39,26 @@ The associated optimisation problem is to minimise:
 	\left( \sum_i F_i \dfrac{\partial^2 F_i}{\partial X_j \partial X_k} \right)
 	+ \left( \sum_i \dfrac{\partial F_i}{\partial X_j} \dfrac{\partial F_i}{\partial X_k}\right)
 \end{equation}
-We define
+We define the curvature $\bm{C}$ such that
 \begin{equation}
-	\bm{H}_\alpha 
-	= 
-	\left\lbrace
-	\begin{array}{rcl}
-	\forall k\not=j, &  \bm{H}_{\alpha,jk} & =   \sum_i (\partial_{X_j} F_i)( \partial_{X_k} F_i)\\
-	                &  \bm{H}_{\alpha,jj} &  =  (1+\alpha) \sum_i (\partial_{X_j} F_i)^2\\
-	\end{array}
-	\right.
+		\bm{C}_{jk} =   \sum_i \dfrac{\partial F_i}{\partial X_j} \dfrac{\partial F_i}{\partial X_k} \; \Leftrightarrow \;
+		\bm{C} = \trn{\bm{J}}\bm{J}
 \end{equation}
 
 Locally, we want to minimise
 \begin{equation}
-	g_0 +  \trn{\vec{\nabla}g} \delta\vec{X} + \dfrac{1}{2} \trn{\delta\vec{X}} \bm{H}_\alpha \delta\vec{X}
+	g_0 +  \trn{\vec{\nabla}g} \delta\vec{X} + \dfrac{1}{2} \trn{\delta\vec{X}} \bm{C} \delta\vec{X}
 \end{equation}
+
+\section{Regular curvature}
+The minimum is given by solving:
+\begin{equation}
+\bm{C} \delta\vec{X} = -\vec{\nabla}g  \; \Leftrightarrow \;  \delta\vec{X} = - \bm{J}^{-1} \vec{F}
+\end{equation}
+which is the Newton's step.
+
+
+
+
 
 \end{document}
