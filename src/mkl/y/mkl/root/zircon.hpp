@@ -12,12 +12,10 @@
 #include "y/core/temporary-link.hpp"
 #include "y/core/temporary-value.hpp"
 #include "y/core/temporary-acquire.hpp"
-#include "y/comparison.hpp"
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/core/ipower.hpp"
 
-#include "y/ios/ocstream.hpp"
 
 namespace upsylon
 {
@@ -84,14 +82,21 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             //__________________________________________________________________
             inline explicit zircon() :
             nvar(0),
-            A(6),
+            A(8),
             J(),
+            tJ(),
+            H0(),
+            H(),
+            P(),
+            tP(),
             grad( A.next() ),
             eigw( A.next() ),
             step( A.next() ),
             Ftry( A.next() ),
             Xtry( A.next() ),
             Fsqr( A.next() ),
+            X1(   A.next() ),
+            F1(   A.next() ),
             f_(0),
             F_(0),
             X_(0),
@@ -151,6 +156,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Rlink << H.  make(nvar,nvar);
                 Rlink << P.  make(nvar,nvar);
                 Rlink << tP. make(nvar,nvar);
+
                 fjac(J,X);
                 Y_ZIRCON_PRINTLN("g0="<<g0);
                 Y_ZIRCON_PRINTLN("X="<<X);
@@ -193,7 +199,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                     //----------------------------------------------------------
                     //
-                    // eigenvalues/vectors
+                    // spectral decomposition
                     //
                     //----------------------------------------------------------
                     if( !diag_symm::build(H,eigw,P,sort_eigv_by_module))
@@ -277,34 +283,34 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 const T g1 = g(1);
                 Y_ZIRCON_PRINTLN("g1="<<g1);
 
-                {
-                    ios::ocstream fp("zircon.dat");
-                    for(int i=-100;i<=200;++i)
-                    {
-                        const T x = T(i)/100;
-                        fp("%g %g\n", x, g(x) );
-                    }
-                }
 
                 if(g1>=g0)
                 {
-                    triplet<T> U = { 0,  -1,  1 };
-                    triplet<T> G = { g0, -1, g1 };
+                    //----------------------------------------------------------
+                    // need to shrink
+                    //----------------------------------------------------------
+                    triplet<T> U     = { 0,  -1,  1 };
+                    triplet<T> G     = { g0, -1, g1 };
                     bracket::inside(g,U,G);
-                    const T u_opt = minimize::run(g,U,G);
-                    const T g_opt = g(u_opt);
+                    const T    u_opt = minimize::run(g,U,G);
+                    const T    g_opt = g(u_opt);
                     Y_ZIRCON_PRINTLN("# <shrinking> g(" << u_opt << ")=" << g_opt);
                 }
                 else
                 {
-                    assert(g1<g0);
+                    quark::set(X1,Xtry);
+                    quark::set(F1,Ftry);
+                    //----------------------------------------------------------
                     // try inside step
+                    //----------------------------------------------------------
                     const T u_ins = numeric<T>::inv_gold;
                     const T g_ins = g(u_ins);
                     Y_ZIRCON_PRINTLN("# <probe:damping> g(" << u_ins << ")=" << g_ins);
-
                     if(g_ins<=g1)
                     {
+                        //------------------------------------------------------
+                        // need to damp!
+                        //------------------------------------------------------
                         triplet<T> U     = { 0,  u_ins,  1 };
                         triplet<T> G     = { g0, g_ins, g1 };
                         const T    u_opt = minimize::run(g,U,G);
@@ -313,26 +319,35 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     }
                     else
                     {
+                        //------------------------------------------------------
                         // try outside
+                        //------------------------------------------------------
                         const T u_ext = numeric<T>::gold;
                         const T g_ext = g(u_ext);
                         Y_ZIRCON_PRINTLN("# <probe:growing> g(" << u_ext << ")=" << g_ext);
                         if(g1<=g_ext)
                         {
-                            triplet<T> U = { 0,  1,  u_ext };
-                            triplet<T> G = { g0, g1, g_ext };
-                            const T u_opt = minimize::run(g,U,G);
-                            const T g_opt = g(u_opt);
+                            //--------------------------------------------------
+                            // need to relax
+                            //--------------------------------------------------
+                            triplet<T> U     = { 0,  1,  u_ext };
+                            triplet<T> G     = { g0, g1, g_ext };
+                            const T    u_opt = minimize::run(g,U,G);
+                            const T    g_opt = g(u_opt);
                             Y_ZIRCON_PRINTLN("# <growing> g(" << u_opt << ")=" << g_opt);
 
                         }
                         else
                         {
-                            (void) g(1);
+                            //--------------------------------------------------
+                            // take default step
+                            //--------------------------------------------------
+                            quark::set(Ftry,F1);
+                            quark::set(Xtry,X1);
                         }
                     }
-                    
                 }
+
                 return converged() ? zircon_success : zircon_running;
 
             }
@@ -354,11 +369,14 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             array_type      &Ftry;
             array_type      &Xtry;
             array_type      &Fsqr;
+            array_type      &X1;
+            array_type      &F1;
             ftype           *f_;
             addressable<T>  *F_;
             addressable<T>  *X_;
             function1d       g;
 
+            //! local computation of |FF|^2/2
             inline T __g(const accessible<T> &FF) const throw()
             {
                 assert(FF.size()==nvar);
@@ -375,6 +393,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return T(0.5) * sum;
             }
 
+            //! wrapper to g(X+u*step)
             inline T _g(const T u)
             {
                 quark::muladd(Xtry,*X_,u,step);
@@ -382,6 +401,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return __g(Ftry);
             }
 
+            //! increase lambda for regularizing
             bool increase( T &lam, int p)
             {
                 static const int pmax = int(numeric<T>::dig);
@@ -416,7 +436,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             }
 
 
-
+            //! check local convergence
             inline bool converged() throw()
             {
                 const bool xcvg = __find<T>::convergence(*X_,Xtry);
