@@ -117,7 +117,6 @@ Y_UTEST(zircon)
         f(F,X);
 
         zrc.cycle2(F, X, f, fjac);
-        zrc.cycle2(F, X, f, fjac);
 
         return 0;
 
@@ -147,11 +146,9 @@ Y_UTEST(zircon)
         X[2] = alea.symm<double>();
         const string fn = "inter.dat";
 
-        X[1]=1;
-        X[2]=-1;
+        //X[1]=1; X[2]=-1;
 
-        //X[1] = 0;
-        //X[2] = 0;
+        //X[1] = 0; X[2] = 0;
 
         f(F,X);
 

@@ -25,7 +25,7 @@ namespace upsylon {
              \return a =  v'* d * v
              */
             template <typename T> static inline
-            bool build( matrix<T> &a, array<T> &d, matrix<T> &v )
+            bool build( matrix<T> &a, addressable<T> &d, matrix<T> &v )
             {
                 assert(a.rows>0);
                 assert(a.is_square);
@@ -150,7 +150,7 @@ namespace upsylon {
             
             //! sort eigenvalues/vectors by DECREASING value
             template <typename T> static inline
-            void  eigsrt( array<T> &d, matrix<T> &v) throw()
+            void  eigsrt( addressable<T> &d, matrix<T> &v) throw()
             {
                 const size_t n = v.rows;
                 assert( d.size() >= v.rows );
@@ -174,9 +174,9 @@ namespace upsylon {
                 }
             }
             
-            //! sort by DECREASING ABSOLUTE valye
+            //! sort by DECREASING ABSOLUTE value
             template <typename T> static inline
-            void eigsrtA( array<T> &d, matrix<T> &v) throw()
+            void eigsrtA( addressable<T> &d, matrix<T> &v) throw()
             {
                 const size_t n = v.rows;
                 assert( d.size() >= v.rows );
