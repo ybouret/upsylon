@@ -20,13 +20,14 @@ namespace upsylon
         namespace kernel
         {
 
+            //! base class for znewt
             class znewt
             {
             public:
-                virtual ~znewt() throw();
-                explicit znewt() throw();
+                virtual ~znewt() throw(); //!< cleanup
+                explicit znewt() throw(); //!< setup
 
-                bool verbose;
+                bool verbose;             //!< verbosity
                 static const char CLID[]; //!< "znewt"
                 static const char BACK[]; //!< "backtracking: "
 
@@ -35,6 +36,7 @@ namespace upsylon
             };
         };
 
+        //! inline verbose
 #define Y_MKL_ZNEWT_PRINTLN(MSG) do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::endl; } } while(false)
 
         //______________________________________________________________________

@@ -130,6 +130,7 @@ namespace upsylon {
                 return truncate( seq.begin(), seq.end() );
             }
 
+            //! truncate wrapper
             template <typename ITERATOR> static inline
             size_t truncate( const ITERATOR curr, const size_t size )
             {
@@ -226,11 +227,9 @@ namespace upsylon {
                     }
                 }
                 indexing::make(I,comparison::increasing<type>,v);
-                //std::cerr << "I=" << I << std::endl;
                 for(size_t i=n-sz;i>0;--i)
                 {
                     const size_t j = I[i];
-                    //std::cerr << "set 0@" << j << std::endl;
                     typename SEQUENCE::iterator k = seq.begin() + (j-1);
                     ((mutable_type &) *k) = 0;
                 }
@@ -301,6 +300,7 @@ namespace upsylon {
                 }
             }
 
+            //! check convergence while setting X=Xtry
             static inline
             bool convergence( addressable<T> &X, const accessible<T> &Xtry ) throw()
             {

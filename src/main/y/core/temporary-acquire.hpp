@@ -10,13 +10,20 @@ namespace upsylon {
     namespace core
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! base class to localy release objects
+        //
+        //______________________________________________________________________
         class temporary_acquire_
         {
         public:
-            virtual ~temporary_acquire_() throw();
-            void     record(releasable &obj) throw();
+            virtual ~temporary_acquire_() throw();      //!< release() for all recorded objects
+            void     record(releasable &obj) throw();   //!< record a new object
 
         protected:
+            //! setup from user's defined memory
             explicit temporary_acquire_(releasable **arr, const size_t num) throw();
 
         private:
@@ -28,18 +35,27 @@ namespace upsylon {
 
         };
 
+
+        //______________________________________________________________________
+        //
+        //
+        //! fixed count local temporary acquired
+        //
+        //______________________________________________________________________
         template <size_t N>
         class temporary_acquire : public temporary_acquire_
         {
         public:
-            static const size_t capacity = N;
+            static const size_t capacity = N; //!< alias
 
+            //! cleanup
             inline virtual ~temporary_acquire() throw() {}
 
+            //! setup
             inline explicit temporary_acquire() throw() :
             temporary_acquire_(prv,capacity)
             {}
-            
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(temporary_acquire);

@@ -12,7 +12,7 @@ namespace upsylon
         namespace Syntax
         {
             
-            
+            //! todo
             class SNode : public inode<SNode>
             {
             public:
@@ -34,7 +34,8 @@ namespace upsylon
                 typedef memory::tight::xcache           XCache_; //!< base class for XCache
                 typedef memory::tight::xcache_of<SNode> XCache;  //!< memory cache of Char
                 typedef core::pool_of<SNode>            ZCache;  //!< local cache type
-                
+
+                //! todo
                 class Supply : public singleton<Supply>
                 {
                 public:

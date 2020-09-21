@@ -9,11 +9,12 @@ namespace upsylon {
     
     namespace mkl {
 
+        //! post diagonalisation sorting kind
         enum sort_eigv_by
         {
-            sort_eigv_none,
-            sort_eigv_by_value,
-            sort_eigv_by_module
+            sort_eigv_none,       //!< no sorting
+            sort_eigv_by_value,   //!< sort by decreasing value
+            sort_eigv_by_module   //!< sort by decreasing module
         };
 
         //! diagonalisation of symmetric matrices
@@ -28,9 +29,10 @@ namespace upsylon {
 
             //! Jacobi reduction
             /**
-             \param a is a symetric matrix, REGENERATED at the end...
-             \param d are the eigenvalues
-             \param v columns are the eigenvectors
+             \param a    is a symetric matrix, REGENERATED at the end...
+             \param d    are the eigenvalues
+             \param v    columns are the eigenvectors
+             \param kind how to sort vectors/values afterwards
              \return a =  v'* d * v
              */
             template <typename T> static inline
@@ -49,7 +51,7 @@ namespace upsylon {
                 //==============================================================
                 // initialize eigenvectors and workspace
                 //==============================================================
-                for(size_t ip=1;ip<=n; ++ip)
+                for(size_t ip=1;ip<=n;++ip)
                 {
                     {
                         addressable<T> &v_ip = v[ip];

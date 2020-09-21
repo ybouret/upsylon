@@ -156,15 +156,12 @@ Y_UTEST(zircon)
         ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], quark::mod2<double>::of(F)/2);
 
         int cycle = 0;
-        //zrc.cycle2(F, X, f, fjac);
-        //zrc.cycle2(F,X,f,fjac);
-        //return 0;
 
         while( !zrc.cycle2(F,X,f,fjac) )
         {
             ++cycle;
             ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
-            if(cycle>0) break;
+            if(cycle>32) break;
         }
 
     }

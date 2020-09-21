@@ -22,37 +22,55 @@ namespace upsylon
     {
         namespace kernel
         {
+
+            //__________________________________________________________________
+            //
+            //
+            //! base class for zircon
+            //
+            //__________________________________________________________________
             class zircon
             {
             public:
-                static const char CLID[];
-
-                bool              verbose;
-
-                virtual ~zircon() throw();
+                static const char CLID[];  //!< "zircon"
+                bool              verbose; //!< verbosity
+                virtual ~zircon() throw(); //!< cleanup
 
             protected:
-                explicit zircon() throw();
+                explicit zircon() throw(); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(zircon);
             };
         }
 
+        //______________________________________________________________________
+        //
+        //! inline verbose output
+        //______________________________________________________________________
 #define Y_ZIRCON_PRINTLN(MSG) \
 do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::endl; } } while(false)
 
+        //______________________________________________________________________
+        //
+        //
+        //! zircon solver
+        //
+        //______________________________________________________________________
         template <typename T>
         class zircon : public kernel::zircon
         {
 
         public:
-            typedef typename numeric<T>::vector_field ftype; //!< alias
-            typedef typename numeric<T>::jacobian     jtype; //!, alias
+            typedef typename numeric<T>::vector_field ftype;      //!< alias
+            typedef typename numeric<T>::jacobian     jtype;      //!< alias
             typedef typename numeric<T>::function     function1d; //!< alias
             typedef lightweight_array<T>              array_type; //!< alias
 
-
+            //__________________________________________________________________
+            //
+            //! setup
+            //__________________________________________________________________
             inline explicit zircon() :
             nvar(0),
             A(6),
@@ -70,6 +88,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             {
             }
 
+            //__________________________________________________________________
+            //
+            //! cleanup
+            //__________________________________________________________________
             inline virtual ~zircon() throw()
             {
             }
@@ -227,7 +249,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 // prepare gradient and H
                 //
                 //--------------------------------------------------------------
-
+                tJ.assign_transpose(J);
                 quark::mul(grad,tJ,F);
                 quark::mmul(H,tJ,J);
 
@@ -242,18 +264,18 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 }
                 Y_ZIRCON_PRINTLN("P="<<P);
                 Y_ZIRCON_PRINTLN("w="<<eigw);
-                matrix<T>    tP(P,matrix_transpose);
+                tP.assign_transpose(P);
                 const size_t ker = __find<T>::truncate(*eigw,nvar);
                 Y_ZIRCON_PRINTLN("ker="<<ker);
 
                 if(ker<=0)
                 {
-                    return tryNewtonStep();
-
+                    return tryNewtonStep(g0);
                 }
                 else
                 {
-
+                    Y_ZIRCON_PRINTLN("singular");
+                    return false;
                 }
 
 
@@ -305,10 +327,25 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return __g(Ftry);
             }
 
-            bool tryNewtonStep()
+            inline bool converged() throw()
             {
+
+                const bool xcvg = __find<T>::convergence(*X_,Xtry);
+                const bool fcvg = __find<T>::convergence(*F_,Ftry);
+                Y_ZIRCON_PRINTLN("# <convergence> variables=" << xcvg << " | functions=" << fcvg);
+                return xcvg || fcvg;
+            }
+
+
+            bool tryNewtonStep(const T g0)
+            {
+                //--------------------------------------------------------------
+                // compute the newton's step from decomposition
+                //--------------------------------------------------------------
                 array_type &tmp = Fsqr;
                 quark::mul(tmp,tP,grad);
+                const T coherence = eigw[nvar]/eigw[1];
+                Y_ZIRCON_PRINTLN("coherence="<<coherence);
                 for(size_t i=nvar;i>0;--i)
                 {
                     tmp[i] /= -eigw[i];
@@ -316,9 +353,70 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 quark::mul(step, P, tmp);
                 Y_ZIRCON_PRINTLN("step="<<step);
 
+                //--------------------------------------------------------------
+                // check where we landed
+                //--------------------------------------------------------------
                 const T    g1 = g(1);
                 Y_ZIRCON_PRINTLN("g1="<<g1);
+                {
+                    ios::ocstream fp("zircon.dat");
+                    for(int i=-100;i<=200;++i)
+                    {
+                        const T x = T(i)/100;
+                        fp("%g %g\n", x, g(x) );
+                    }
+                }
 
+
+
+                if(g1<g0)
+                {
+                    const T u_ins = numeric<T>::inv_gold;
+                    const T g_ins = g(u_ins);
+                    Y_ZIRCON_PRINTLN("#decreasing");
+                    Y_ZIRCON_PRINTLN("# <probing> g_ins=" << g_ins << "@" << u_ins);
+                    if(g_ins<=g1)
+                    {
+                        triplet<T> U    = { 0,  u_ins,  1 };
+                        triplet<T> G    = { g0, g_ins, g1 };
+                        const T    uopt = minimize::run(g,U,G);
+                        const T    gopt = g(uopt);
+                        Y_ZIRCON_PRINTLN("# <shrinking> g(" << uopt <<")=" << gopt);
+                    }
+                    else
+                    {
+                        const T u_out = numeric<T>::gold;
+                        const T g_out = g(u_out);
+                        Y_ZIRCON_PRINTLN("# <probing> g_out=" << g_out << "@" << u_out);
+                        if(g_out>=g1)
+                        {
+
+                            triplet<T> U    = { 0,   1, u_out };
+                            triplet<T> G    = { g0, g1, g_out };
+                            const T    uopt = minimize::run(g,U,G);
+                            const T    gopt = g(uopt);
+                            Y_ZIRCON_PRINTLN("# <expanding> g(" << uopt <<")=" << gopt);
+                        }
+                        else
+                        {
+                            Y_ZIRCON_PRINTLN("# <full step>");
+                            (void) g(1);
+                        }
+                    }
+                }
+                else
+                {
+                    assert(g1>=g0);
+                    Y_ZIRCON_PRINTLN("#backtracking");
+                    triplet<T> U = { 0,  -1,  1 };
+                    triplet<T> G = { g0, -1, g1 };
+                    bracket::inside(g,U,G);
+                    const T    uopt = minimize::run(g,U,G);
+                    const T    gopt = g(uopt);
+                    Y_ZIRCON_PRINTLN("#g(" << uopt <<")=" << gopt);
+                }
+
+                return converged();
             }
 
         };

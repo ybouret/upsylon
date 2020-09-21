@@ -11,6 +11,7 @@ namespace upsylon {
 
     namespace mkl {
 
+        //! automatic optimize
         template <typename T, typename FUNC> inline
         T optimize(FUNC &func, const T x0, const T x1, const T ftol = 0)
         {
