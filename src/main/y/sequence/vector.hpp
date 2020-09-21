@@ -93,7 +93,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         }
 
         //! make a vector of size n with same values
-        inline void make(const size_t n, param_type v)
+        inline vector & make(const size_t n, param_type v)
         {
             free();
             this->ensure(n);
@@ -101,6 +101,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             {
                 push_back_(v);
             }
+            return *this;
         }
 
         //! vector with construction of each item with func(1...n)

@@ -35,6 +35,12 @@ namespace upsylon {
             addr[aliasing::_(size)++] = &obj;
         }
 
+        temporary_acquire_ & temporary_acquire_:: operator<<( releasable &obj) throw()
+        {
+            record(obj);
+            return *this;
+        }
+
 
 
     }

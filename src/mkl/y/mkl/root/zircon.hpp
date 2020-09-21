@@ -15,6 +15,8 @@
 #include "y/comparison.hpp"
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
+#include "y/core/ipower.hpp"
+
 #include "y/ios/ocstream.hpp"
 
 namespace upsylon
@@ -211,6 +213,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return xcvg||fcvg;
             }
 
+
             //! starting with f(F,X) precomputed
             inline zircon_status cycle2(addressable<T> &F,
                                         addressable<T> &X,
@@ -297,6 +300,175 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
              }
 
+            //! starting with f(F,X) precomputed
+            inline zircon_status cycle3(addressable<T> &F,
+                                        addressable<T> &X,
+                                        ftype          &f,
+                                        jtype          &fjac)
+            {
+                assert( F.size() == X.size() );
+                //--------------------------------------------------------------
+                //
+                // prepare topology
+                //
+                //--------------------------------------------------------------
+                core::temporary_value<size_t>         nlink(nvar,X.size());
+                core::temporary_link<ftype>           flink(f,&f_);
+                core::temporary_link<addressable<T> > Xlink(X,&X_);
+                core::temporary_link<addressable<T> > Flink(F,&F_);
+                core::temporary_acquire<8>            Rlink;
+
+                //--------------------------------------------------------------
+                //
+                // prepare memory
+                //
+                //--------------------------------------------------------------
+
+                A.acquire(nvar);
+                const T g0 = __g(F);
+                if(g0<=0)
+                {
+                    Y_ZIRCON_PRINTLN("null rms");
+                    return zircon_success;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // prepare jacobian
+                //
+                //--------------------------------------------------------------
+                Rlink << J.  make(nvar,nvar);
+                Rlink << tJ. make(nvar,nvar);
+                Rlink << H0. make(nvar,nvar);
+                Rlink << H.  make(nvar,nvar);
+                Rlink << P.  make(nvar,nvar);
+                Rlink << tP. make(nvar,nvar);
+                fjac(J,X);
+                Y_ZIRCON_PRINTLN("g0="<<g0);
+                Y_ZIRCON_PRINTLN("X="<<X);
+                Y_ZIRCON_PRINTLN("F="<<F);
+                Y_ZIRCON_PRINTLN("J="<<J);
+
+                //--------------------------------------------------------------
+                //
+                // prepare gradient and H
+                //
+                //--------------------------------------------------------------
+                tJ.assign_transpose(J);
+                quark::mul(grad,tJ,F);
+                quark::mmul(H0,tJ,J);
+
+                Y_ZIRCON_PRINTLN("grad="<<grad);
+                Y_ZIRCON_PRINTLN("H0="<<H0);
+
+                //--------------------------------------------------------------
+                //
+                // regularizing
+                //
+                //--------------------------------------------------------------
+                T   lam = 0;
+                int p   = -5;
+                while(true)
+                {
+                    // build approx matrix
+                    const T fac = 1.0 + lam;
+                    H.assign(H0);
+                    for(size_t i=nvar;i>0;--i)
+                    {
+                        H[i][i] *= fac;
+                    }
+
+                    Y_ZIRCON_PRINTLN("H="<<H);
+                    if( !diag_symm::build(H,eigw,P,sort_eigv_by_module))
+                    {
+                        Y_ZIRCON_PRINTLN("diagonalize failure");
+                        return zircon_failure;
+                    }
+                    Y_ZIRCON_PRINTLN("w="<<eigw);
+
+                    const size_t ker = __find<T>::truncate(*eigw,nvar);
+                    if( ker> 0)
+                    {
+                        if(ker>=nvar)
+                        {
+                            Y_ZIRCON_PRINTLN("null jacobian");
+                            return zircon_failure;
+                        }
+                        if(!increase(lam,p))
+                        {
+                            return zircon_failure;
+                        }
+                        continue;
+                    }
+
+                    const T      scaling = fabs_of(eigw[nvar])/fabs_of(eigw[1]);
+                    Y_ZIRCON_PRINTLN("scaling="<<scaling);
+                    if(scaling<1e-3)
+                    {
+                        if(!increase(lam,p))
+                        {
+                            return zircon_failure;
+                        }
+                        continue;
+                    }
+
+                    break;
+                }
+                Y_ZIRCON_PRINTLN("# <forward with lambda=" << lam << ">" );
+
+                //--------------------------------------------------------------
+                //
+                // compute trial step
+                //
+                //--------------------------------------------------------------
+                tP.assign_transpose(P);
+                {
+
+                    addressable<T> &tPgrad = Fsqr;
+                    quark::mul(tPgrad,tP,grad);
+                    for(size_t i=nvar;i>0;--i)
+                    {
+                        tPgrad[i] /= -eigw[i];
+                    }
+                    quark::mul(step,P,tPgrad);
+                }
+                Y_ZIRCON_PRINTLN("step="<<step);
+
+
+                //--------------------------------------------------------------
+                //
+                // optimize this computation
+                //
+                //--------------------------------------------------------------
+                const T g1 = g(1);
+                Y_ZIRCON_PRINTLN("g1="<<g1);
+
+                {
+                    ios::ocstream fp("zircon.dat");
+                    for(int i=-100;i<=200;++i)
+                    {
+                        const T x = T(i)/100;
+                        fp("%g %g\n", x, g(x) );
+                    }
+                }
+
+                if(g1>g0)
+                {
+                    triplet<T> U = { 0,  -1,  1 };
+                    triplet<T> G = { g0, -1, g1 };
+                    bracket::inside(g,U,G);
+                    const T u_opt = minimize::run(g,U,G);
+                    const T g_opt = g(u_opt);
+                    Y_ZIRCON_PRINTLN("# <shrinking> g(" << u_opt << ")=" << g_opt);
+                    return zircon_running;
+                }
+                else
+                {
+                    return converged() ? zircon_success : zircon_running;
+                }
+
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zircon);
@@ -304,6 +476,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             arrays<T>        A;
             matrix<T>        J;
             matrix<T>        tJ;
+            matrix<T>        H0;
             matrix<T>        H;
             matrix<T>        P;
             matrix<T>        tP;
@@ -341,6 +514,38 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return __g(Ftry);
             }
 
+            bool increase( T &lam, int p)
+            {
+                if(lam<=0)
+                {
+                    if(p>=0)
+                    {
+                        lam = ipower<T>(10,p);
+                    }
+                    else
+                    {
+                        lam = ipower<T>(0.1,-p);
+                    }
+                    Y_ZIRCON_PRINTLN("lam="<<lam);
+                    return true;
+                }
+                else
+                {
+                    ++p;
+                    lam *= 10;
+                    if(p <= 5)
+                    {
+                        Y_ZIRCON_PRINTLN("lam="<<lam);
+                        return true;
+                    }
+                    else
+                    {
+                        Y_ZIRCON_PRINTLN("singular topology");
+                        return false;
+                    }
+                }
+            }
+
             inline size_t compute_kernel() throw()
             {
                 // initial kernel
@@ -370,8 +575,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                 const bool xcvg = __find<T>::convergence(*X_,Xtry);
                 const bool fcvg = __find<T>::convergence(*F_,Ftry);
-                std::cerr  << *X_ << "=>" << Xtry << std::endl;
-                std::cerr  << *F_ << "=>" << Ftry << std::endl;
+                //std::cerr  << *X_ << "=>" << Xtry << std::endl;
+                //std::cerr  << *F_ << "=>" << Ftry << std::endl;
 
                 Y_ZIRCON_PRINTLN("# <convergence> variables=" << xcvg << " | functions=" << fcvg);
                 return xcvg || fcvg;
