@@ -85,8 +85,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             A(8),
             J(),
             tJ(),
-            H0(),
-            H(),
+            C0(),
+            C(),
             P(),
             tP(),
             grad( A.next() ),
@@ -152,8 +152,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 //--------------------------------------------------------------
                 Rlink << J.  make(nvar,nvar);
                 Rlink << tJ. make(nvar,nvar);
-                Rlink << H0. make(nvar,nvar);
-                Rlink << H.  make(nvar,nvar);
+                Rlink << C0. make(nvar,nvar);
+                Rlink << C.  make(nvar,nvar);
                 Rlink << P.  make(nvar,nvar);
                 Rlink << tP. make(nvar,nvar);
 
@@ -170,10 +170,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 //--------------------------------------------------------------
                 tJ.assign_transpose(J);
                 quark::mul(grad,tJ,F);
-                quark::mmul(H0,tJ,J);
+                quark::mmul(C0,tJ,J);
 
                 Y_ZIRCON_PRINTLN("grad="<<grad);
-                Y_ZIRCON_PRINTLN("H0="<<H0);
+                Y_ZIRCON_PRINTLN("C0="<<C0);
 
                 //--------------------------------------------------------------
                 //
@@ -190,19 +190,19 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     //
                     //----------------------------------------------------------
                     const T fac = 1.0 + lam;
-                    H.assign(H0);
+                    C.assign(C0);
                     for(size_t i=nvar;i>0;--i)
                     {
-                        H[i][i] *= fac;
+                        C[i][i] *= fac;
                     }
-                    Y_ZIRCON_PRINTLN("H="<<H);
+                    Y_ZIRCON_PRINTLN("C="<<C);
 
                     //----------------------------------------------------------
                     //
                     // spectral decomposition
                     //
                     //----------------------------------------------------------
-                    if( !diag_symm::build(H,eigw,P,sort_eigv_by_module))
+                    if( !diag_symm::build(C,eigw,P,sort_eigv_by_module))
                     {
                         Y_ZIRCON_PRINTLN("diagonalize failure");
                         return zircon_failure;
@@ -298,8 +298,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 }
                 else
                 {
-                    quark::set(X1,Xtry);
-                    quark::set(F1,Ftry);
+                    push_trial();
                     //----------------------------------------------------------
                     // try inside step
                     //----------------------------------------------------------
@@ -342,8 +341,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                             //--------------------------------------------------
                             // take default step
                             //--------------------------------------------------
-                            quark::set(Ftry,F1);
-                            quark::set(Xtry,X1);
+                            pull_trial();
                         }
                     }
                 }
@@ -359,8 +357,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             arrays<T>        A;
             matrix<T>        J;
             matrix<T>        tJ;
-            matrix<T>        H0;
-            matrix<T>        H;
+            matrix<T>        C0;
+            matrix<T>        C;
             matrix<T>        P;
             matrix<T>        tP;
             array_type      &grad;
@@ -399,6 +397,24 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 quark::muladd(Xtry,*X_,u,step);
                 (*f_)(Ftry,Xtry);
                 return __g(Ftry);
+            }
+
+            inline void push_trial()
+            {
+                for(size_t i=nvar;i>0;--i)
+                {
+                    F1[i] = Ftry[i];
+                    X1[i] = Xtry[i];
+                }
+            }
+
+            inline void pull_trial()
+            {
+                for(size_t i=nvar;i>0;--i)
+                {
+                    F1[i] = Ftry[i];
+                    X1[i] = Xtry[i];
+                }
             }
 
             //! increase lambda for regularizing

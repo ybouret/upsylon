@@ -47,18 +47,64 @@ We define the curvature $\bm{C}$ such that
 
 Locally, we want to minimise
 \begin{equation}
+	\label{eq:min}
 	g_0 +  \trn{\vec{\nabla}g} \delta\vec{X} + \dfrac{1}{2} \trn{\delta\vec{X}} \bm{C} \delta\vec{X}
 \end{equation}
+
+
 
 \section{Regular curvature}
 The minimum is given by solving:
 \begin{equation}
 \bm{C} \delta\vec{X} = -\vec{\nabla}g  \; \Leftrightarrow \;  \delta\vec{X} = - \bm{J}^{-1} \vec{F}
 \end{equation}
-which is the Newton's step.
+which is the Newton's step, formally setting \eqref{eq:min} to zero.
 
+\section{Generic case}
+We define $\bm{C}_\lambda$ a regularised matrix from $\bm{C}$.
+The diagonal terms of $\bm{C}$ are
+\begin{equation}
+	\forall j, \; \bm{C}_{jj} = \sum_i \left(\partial_{X_j} F_i\right)^2
+\end{equation}
+We compute
+\begin{equation}
+	d_j = \bm{C}_{jj} (1+\omega_j \lambda)
+\end{equation}
+so that:
+\begin{equation}
+	d_j \approx \bm{C}_{jj} \omega_j \lambda
+\end{equation}
+Let us choose some weights that increase lower values:
+\begin{equation}
+	\omega_j = \dfrac{ (1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{jj}}{\beta}
+\end{equation}
+\begin{equation}
+	\dfrac{\bm{C}_{jj}\omega_j}{C_{max}^2} 
+	= \dfrac{\bm{C}_{jj}}{\bm{C}_{max}}\dfrac{ (1+\sin^2\alpha) - \dfrac{\bm{C}_{jj}}{\bm{C}_{max}} }{\beta}
+	= \dfrac{1}{\beta} \phi_\alpha(x)
+\end{equation}
+with
+\begin{equation}
+	\phi_\alpha(x) = x \left[  (1+\sin^2\alpha) - x \right]
+\end{equation}
 
-
+\begin{equation}
+\begin{array}{c|ccc}
+x & 0 & \frac{1+\sin^2\alpha}{2} & 1\\
+\hline
+\\
+\phi_\alpha(x) & 0 &  \left(\frac{1+\sin^2\alpha}{2}\right)^2 & \sin^2\alpha\\
+\end{array}
+\end{equation}
+Thus we may adjust $\alpha\in[0:\frac{\pi}{2}]$ to minimise the amplitude of 
+\begin{equation}
+\bm{C}_{jj}\left[(1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{jj}\right]
+\end{equation}
+ and we choose
+ \begin{equation}
+  \beta = (1+\sin^2\alpha) \bm{C}_{max}-\bm{C}_{min}
+ \end{equation}
+ 
 
 
 \end{document}

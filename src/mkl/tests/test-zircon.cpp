@@ -6,6 +6,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/sort/sequence.hpp"
 #include "y/sparse/matrix.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -84,15 +85,49 @@ namespace {
             J[2][1] = -1;     J[2][2] = 1;
         }
     };
+
+    static inline
+    void simulate(const size_t n)
+    {
+        vector<double> C(n,0);
+        for(size_t i=1;i<=n;++i)
+        {
+            C[i] = alea.to<double>();
+        }
+        hsort(C,comparison::increasing<double>);
+        std::cerr << "C=" << C << std::endl;
+        const double Cmin = C[1];
+        const double Cmax = C[n];
+        const double rho  = Cmin/Cmax;
+        std::cerr << "rho=" << rho << std::endl;
+
+        vector<double> d(n,0);
+        ios::ocstream  fp("alpha.txt");
+        const double alpha_step = 0.01;
+        for(double alpha=0;alpha<=1.57;alpha+=alpha_step)
+        {
+            const double fac = 1.0 + square_of( sin(alpha) );
+            for(size_t i=n;i>0;--i)
+            {
+                d[i] = C[i] * ( fac * Cmax - C[i]);
+            }
+            hsort(d,comparison::increasing<double>);
+            const double opt = d[n]-d[1];
+            fp("%g %g\n",alpha,opt);
+        }
+
+
+    }
 }
 
 #include "y/string/convert.hpp"
-#include "y/ios/ocstream.hpp"
 
 Y_UTEST(zircon)
 {
     zircon<double> zrc;
     zrc.verbose  = true;
+
+    simulate(2);
 
     if(false)
     {
@@ -134,7 +169,7 @@ Y_UTEST(zircon)
 
     }
 
-    if(true)
+    if(false)
     {
         inter<double> Inter = { 0.1 };
         if(argc>1)
