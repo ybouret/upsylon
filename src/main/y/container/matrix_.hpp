@@ -6,6 +6,7 @@
 #include "y/ptr/counted.hpp"
 #include "y/sequence/array.hpp"
 #include "y/memory/marker.hpp"
+#include "y/type/releasable.hpp"
 
 namespace upsylon {
 

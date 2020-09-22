@@ -5,12 +5,13 @@
 #include "y/sequence/array.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/releasable.hpp"
 
 namespace upsylon {
 
     //! multiple arrays of same length
     template <typename T,typename ALLOCATOR = memory::global>
-    class arrays
+    class arrays : public releasable
     {
     public:
         Y_DECL_ARGS(T,type);                     //!< type alias
@@ -48,14 +49,14 @@ namespace upsylon {
         }
 
         //! release current memory, reset arrays
-        inline void release() throw()
+        inline virtual void release() throw()
         {
             __release();
             format();
         }
 
         //! acquire new memory, reset arrays
-        inline void acquire(const size_t array_size)
+        inline arrays &acquire(const size_t array_size)
         {
             // release old memory
             release();
@@ -95,6 +96,7 @@ namespace upsylon {
 
             // format arrays
             format();
+            return *this;
         }
 
         //! one time raw get new array
