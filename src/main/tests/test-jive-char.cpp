@@ -36,7 +36,7 @@ Y_UTEST(jive_char)
     }
 
     Char::Supply &cc = Char::Supply::instance();
-    std::cerr << "#zchars: " << cc.zCache().size << std::endl;
+    std::cerr << "#zchars: " << cc.prefetched() << std::endl;
 
 }
 Y_UTEST_DONE()

@@ -87,33 +87,26 @@ namespace upsylon {
         // Char Supply
         //
         //======================================================================
-        Char:: Supply:: Supply() :
-        xchars(object::proto()),
-        zchars()
+        Char:: Supply:: Supply() : SupplyType()
         {
         }
 
-        Char:: Supply:: ~Supply() throw()
+        Char:: Supply:: ~Supply() throw() 
         {
-            Y_LOCK(access);
-            Y_LOCK(xchars.access);
-            while(zchars.size)
-            {
-                xchars.release_unlocked( zchars.query() );
-            }
+
         }
 
         Char * Char::Supply:: acquire(const Context &context,
                                       const uint8_t  code)
         {
             Y_LOCK(access);
-            Char *ch = zchars.size ? zchars.query() : xchars.acquire();
+            Char *ch = zquery();
             try {
                 return new(ch) Char(context,code);
             }
             catch(...)
             {
-                zchars.store(ch);
+                zstore(ch);
                 throw;
             }
         }
@@ -121,13 +114,13 @@ namespace upsylon {
         Char * Char::Supply:: copycat(const Char &other)
         {
             Y_LOCK(access);
-            Char *ch = zchars.size ? zchars.query() : xchars.acquire();
+            Char *ch = zquery();
             try {
                 return new(ch) Char(other);
             }
             catch(...)
             {
-                zchars.store(ch);
+                zstore(ch);
                 throw;
             }
         }
@@ -139,25 +132,16 @@ namespace upsylon {
             assert(ch->is_single());
             ch->~Char();
             bzset(*ch);
-            zchars.store(ch);
+            zstore(ch);
         }
 
         void  Char:: Supply:: reserve(size_t n)
         {
             Y_LOCK(access);
-            Y_LOCK(xchars.access);
-            while(n-- > 0) zchars.store( xchars.acquire() );
+            fetch(n);
         }
 
-        const Char::XCache_ & Char::Supply:: xCache() const throw()
-        {
-            return xchars;
-        }
 
-        const Char::ZCache & Char::Supply:: zCache() const throw()
-        {
-            return zchars;
-        }
 
         //======================================================================
         //

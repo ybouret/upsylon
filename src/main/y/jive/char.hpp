@@ -4,7 +4,7 @@
 #define Y_JIVE_CHAR_INCLUDED 1
 
 #include "y/jive/context.hpp"
-#include "y/memory/tight/xcache.hpp"
+#include "y/memory/tight/supply.hpp"
 
 namespace upsylon {
 
@@ -46,19 +46,13 @@ namespace upsylon {
             virtual ~Char() throw();
 
         public:
-            //__________________________________________________________________
-            //
-            // types for Char::Supply
-            //__________________________________________________________________
-            typedef memory::tight::xcache          XCache_; //!< base class for XCache
-            typedef memory::tight::xcache_of<Char> XCache;  //!< memory cache of Char
-            typedef core::pool_of<Char>            ZCache;  //!< local cache type
+            typedef memory::tight::supply_of<Char> SupplyType;
 
             //__________________________________________________________________
             //
             //! thread safe specialized Char::Supply
             //__________________________________________________________________
-            class Supply : public singleton<Supply>
+            class Supply : public singleton<Supply>, public SupplyType
             {
             public:
 
@@ -68,16 +62,11 @@ namespace upsylon {
                 void  reserve(size_t);              //!< query from system
                 Char *copycat(const Char&);         //!< copy
 
-                const XCache_ & xCache() const throw(); //!< access to xchars
-                const ZCache  & zCache() const throw(); //!< access to zchars
-
             private:
                 Y_SINGLETON_DECL(Supply);
                 Y_DISABLE_COPY_AND_ASSIGN(Supply);
                 explicit Supply();
                 virtual ~Supply() throw();
-                XCache   xchars; //!< global memory for zombi chars
-                ZCache   zchars; //!< local pool of zombi chars
             };
 
             //__________________________________________________________________
