@@ -11,32 +11,46 @@ namespace upsylon
         
         namespace Syntax
         {
-            
-            //! todo
-            class SNode : public inode<SNode>
+            class Axiom; //!< forward declaration
+
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! flexible syntax node
+            //
+            //__________________________________________________________________
+            class Node : public inode<Node>
             {
             public:
-                enum Kind
+                //! Node classification
+                enum  Kind
                 {
-                    IsTerminal,
-                    IsInternal
+                    IsTerminal, //!< for a  terminal node
+                    IsInternal  //!< for an internal node
                 };
+                typedef core::list_of<Node> ListType;
+                class List : public ListType
+                {
+                public:
+                    explicit List() throw();
+                    virtual ~List() throw();
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(List);
+                };
+                const Kind kind;
+
                 
-                
-                
+
             private:
                 
             public:
-                //__________________________________________________________________
-                //
-                // types for XNode::Supply
-                //__________________________________________________________________
-                typedef memory::tight::xcache           XCache_; //!< base class for XCache
-                typedef memory::tight::xcache_of<SNode> XCache;  //!< memory cache of Char
-                typedef core::pool_of<SNode>            ZCache;  //!< local cache type
+                typedef memory::tight::supply_of<Node> SupplyType; //!< alias
 
                 //! todo
-                class Supply : public singleton<Supply>
+                class Supply : public singleton<Supply>, public SupplyType
                 {
                 public:
                     
@@ -45,8 +59,6 @@ namespace upsylon
                     Y_DISABLE_COPY_AND_ASSIGN(Supply);
                     explicit Supply();
                     virtual ~Supply() throw();
-                    XCache   xchars; //!< global memory for zombi chars
-                    ZCache   zchars; //!< local pool of zombi chars
                 };
             };
             

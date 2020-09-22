@@ -2,6 +2,7 @@
 #include "y/memory/tight/supply.hpp"
 #include "y/object.hpp"
 #include "y/type/utils.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -10,9 +11,7 @@ namespace upsylon
         namespace tight
         {
             supply::supply(const size_t block_size) :
-            xnodes(upsylon::object::proto(),
-                   max_of(block_size,sizeof(node_type))
-                   ),
+            xnodes(upsylon::object::proto(), max_of(block_size,sizeof(node_type)) ),
             znodes()
             {
             }
@@ -49,7 +48,6 @@ namespace upsylon
             {
                 return sizeof(node_type);
             }
-
 
             size_t supply:: prefetched() const throw()
             {
