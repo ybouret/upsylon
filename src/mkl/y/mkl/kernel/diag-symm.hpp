@@ -71,7 +71,7 @@ namespace upsylon {
                     T sm = 0;
                     for(size_t ip=1;ip<n;++ip) {
                         for(size_t iq=ip+1;iq<=n; ++iq)
-                            sm += fabs_of(a[ip][iq]);
+                        sm += fabs_of(a[ip][iq]);
                     }
                     if (sm <= numeric<T>::minimum )
                     {
@@ -154,13 +154,20 @@ namespace upsylon {
                         a[i][j] = a[j][i];
                     }
                 }
-                switch(kind)
+                if(success)
                 {
-                    case sort_eigv_none:                    break;
-                    case sort_eigv_by_value:  eigsrt(d,v);  break;
-                    case sort_eigv_by_module: eigsrtA(d,v); break;
+                    switch(kind)
+                    {
+                        case sort_eigv_none:                    break;
+                        case sort_eigv_by_value:  eigsrt(d,v);  break;
+                        case sort_eigv_by_module: eigsrtA(d,v); break;
+                    }
+                    return true;
                 }
-                return success;
+                else
+                {
+                    return false;
+                }
                 
                 
             }
