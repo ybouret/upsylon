@@ -18,7 +18,7 @@ namespace
         for(size_t i=1;i<=n;++i)
         {
             curv[i][i] = 10 * alea.to<double>();
-            //curv[i][i] = 1 - 1.0/(1000+i);
+            //curv[i][i] = 1 - 1.0/(1000.0+i);
         }
         preconditioning<T> precond;
         //used[2] = false;

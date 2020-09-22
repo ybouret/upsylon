@@ -33,7 +33,9 @@ namespace upsylon
             nvar(0),
             dmin(0),
             dmax(0),
+            del0(0),
             used_(0),
+            diag_(0),
             wksp_(0),
             delta(this, & preconditioning::_delta)
             {
@@ -94,9 +96,14 @@ namespace upsylon
                 hsort(diag,comparison::increasing<T>);
                 const core::temporary_value<T> kdmin(dmin,diag[1]);
                 const core::temporary_value<T> kdmax(dmax,diag[nrun]);
+                const core::temporary_value<T> kdel0(del0,dmax-dmin);
 
                 std::cerr << "curv=" << curvature << std::endl;
                 std::cerr << "diag=" << diag << std::endl;
+                std::cerr << "dmin=" << dmin << std::endl;
+                std::cerr << "dmax=" << dmax << std::endl;
+                std::cerr << "del0=" << del0 << std::endl;
+
 
                 if(dmin<=0)
                 {
@@ -105,6 +112,9 @@ namespace upsylon
                 }
 
                 std::cerr << "inv_cond0=" << dmax/dmin << std::endl;
+
+                const T s2min = numeric<T>::epsilon * del0 / dmax;
+                std::cerr << "s2min=" << s2min << std::endl;
 
                 //--------------------------------------------------------------
                 //
@@ -116,9 +126,16 @@ namespace upsylon
 
                 {
                     ios::ocstream fp("precond.dat");
-                    for(T s2=0;s2<=1.0;s2+=0.01)
+                    const T s2max = 1.0;
+                    const T l2min = log(s2min);
+                    const T l2max = log(s2max);
+                    const T l2amp = l2max - l2min;
+                    for(int i=0;i<=1000;++i)
                     {
-                        fp("%g %g\n",s2,delta(s2));
+                        const T l2 = l2min + (i*l2amp)/1000;
+                        const T s2 = exp(l2);
+                        const T d2 = delta(s2);
+                        fp("%.15g %.15g %.15g\n",s2,d2,log(_omega0(s2)));
                     }
                 }
 
@@ -127,23 +144,18 @@ namespace upsylon
                 // find optimal distribution
                 //
                 //--------------------------------------------------------------
-                triplet<T> S2 = { 0,           -1, 1           };
+
+                triplet<T> S2 = { s2min,       -1, 1           };
                 triplet<T> D2 = { delta(S2.a), -1, delta(S2.c) };
                 bracket::inside(delta, S2, D2);
                 const T    s2 = minimize::run(delta, S2, D2);
                 std::cerr << "s2=" << s2 << std::endl;
-                const T    fac  = (1+s2);
-                const T    beta = 1;
 
+                for(size_t i=1;i<=nvar;++i)
                 {
-                    //size_t j = 0;
-                    for(size_t i=1;i<=nvar;++i)
+                    if(used[i])
                     {
-                        if(used[i])
-                        {
-                            //++j;
-                            weight[i] = (fac * dmax - curvature[i][i])/beta;
-                        }
+                        weight[i] = _omega(s2,curvature[i][i]);
                     }
                 }
                 std::cerr << "weight=" << weight << std::endl;
@@ -160,10 +172,30 @@ namespace upsylon
             size_t          nvar;
             T               dmin;
             T               dmax;
+            T               del0;
             flags_type     *used_;
             array_type     *diag_;
             array_type     *wksp_;
             function1d      delta;
+
+            inline T _omega(const double s2, const double dj) throw()
+            {
+                static const T one = T(1);
+                static const T cut = numeric<T>::tiny;
+
+                assert(dj>=dmin);
+                assert(dj<=dmax);
+                const double del = clamp<T>(0,dj-dmin,del0);
+                return one - del/(cut+del0+s2*dmax);
+            }
+
+            inline T _omega0(const double s2) throw()
+            {
+                static const T one = T(1);
+                static const T cut = numeric<T>::tiny;
+                return one - del0/(cut+del0+s2*dmax);
+            }
+
 
             inline T _delta(const T s2) throw()
             {
@@ -172,25 +204,21 @@ namespace upsylon
                 assert(wksp_);
                 assert(diag_->size()==wksp_->size());
 
-                static const T    one  = T(1);
-                const T           fac  = one + s2;
-                const flags_type &used = *used_;
+                //static const T    one  = T(1);
+                //const T           fac  = one + s2;
                 array_type       &wksp = *wksp_;
                 const array_type &diag = *diag_;
-                size_t            j    = 0;
+                const size_t      nrun = wksp.size();
 
-                for(size_t i=1;i<=nvar;++i)
+                for(size_t j=nrun;j>0;--j)
                 {
-                    if(used[i])
-                    {
-                        ++j;
-                        const T dj = diag[j];
-                        wksp[j]    = dj * ( fac * dmax - dj );
-                    }
+                    const T dj = diag[j];
+                    const T wj = _omega(s2,dj);
+                    wksp[j]    = dj * wj;
+
                 }
-                assert(j==wksp.size());
                 hsort(wksp,comparison::increasing<T>);
-                return fabs_of(wksp[1]-wksp[j]);
+                return fabs_of(wksp[nrun]-wksp[1]);
             }
 
 
