@@ -64,6 +64,7 @@ namespace upsylon
             void  supply:: store_block(void *args) throw()
             {
                 assert(args);
+                memset(args,0,sizeof(node_type));
                 znodes.store( static_cast<node_type *>(args) );
             }
 

@@ -12,25 +12,31 @@ namespace upsylon
     {
         namespace tight
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //! interface to create local supplies
+            //
+            //__________________________________________________________________
             class supply
             {
             public:
-                virtual ~supply() throw();
-
-                size_t node_bytes() const throw();
-                size_t block_size() const throw();
-                size_t prefetched() const throw();
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                size_t   node_bytes() const throw(); //!< internal sizeof(node_type)
+                size_t   block_size() const throw(); //!< effective xcache block size
+                size_t   prefetched() const throw(); //!< local avalaible blocks
+                virtual ~supply()           throw(); //!< cleanup
 
             protected:
+                //! setup from object::proto and block_size
                 explicit supply(const size_t block_size);
-
-                void prune() throw();
-                void fetch(size_t n);
-
-                void *query_block();
-                void  store_block(void *) throw();
-
+                void  prune() throw();             //!< return local blocks to system cache
+                void  fetch(size_t n);             //!< prefetch local blocks
+                void *query_block();               //!< query a zeroed block
+                void  store_block(void *) throw(); //!< release a block
 
             private:
                 struct node_type { node_type *next; };
@@ -39,23 +45,32 @@ namespace upsylon
                 zcache znodes;
             };
 
+
+            //__________________________________________________________________
+            //
+            //
+            //! generic supply to provide zquery/zstore
+            //
+            //__________________________________________________________________
             template <typename T>
             class supply_of : public supply
             {
             public:
-                Y_DECL_ARGS(T,type);
+                Y_DECL_ARGS(T,type); //!< aliases
 
-                inline virtual ~supply_of() throw()
-                {
-                }
+                //! cleanup
+                inline virtual ~supply_of() throw() {}
 
+                //! setup from sizeof(type)
                 inline explicit supply_of() : supply( sizeof(type) )
                 {
                 }
                 
 
             protected:
+                //! return a zeroed object
                 inline mutable_type *zquery() { return static_cast<mutable_type*>( query_block() ); }
+                //! store a previously allocated object
                 inline void          zstore(mutable_type *args) throw() { assert(args); store_block(args); }
 
 

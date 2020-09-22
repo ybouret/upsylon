@@ -46,11 +46,12 @@ namespace upsylon
             };
         }
 
+        //! status to perform cycle
         enum zircon_status
         {
-            zircon_success,
-            zircon_running,
-            zircon_failure
+            zircon_success, //!< converged/blocked
+            zircon_running, //!< may run again
+            zircon_failure  //!< singularity
         };
 
 

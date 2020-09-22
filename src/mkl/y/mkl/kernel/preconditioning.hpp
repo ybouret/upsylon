@@ -21,6 +21,7 @@ namespace upsylon
     namespace mkl
     {
 
+        //! preconditioning matrices
         template <typename T>
         class preconditioning
         {
@@ -29,6 +30,7 @@ namespace upsylon
             typedef const accessible<bool>          flags_type; //!< alias
             typedef typename numeric<T>::function   function1d; //!< alias
 
+            //! setup
             inline explicit preconditioning() :
             nvar(0),
             dmin(0),
@@ -41,10 +43,12 @@ namespace upsylon
             {
             }
 
+            //! cleanup
             inline virtual ~preconditioning() throw()
             {
             }
 
+            //! find diagonal weight
             bool run(addressable<T>         &weight,
                      const matrix<T>        &curvature,
                      flags_type             &used)

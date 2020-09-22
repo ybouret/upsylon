@@ -46,7 +46,7 @@ namespace upsylon {
             virtual ~Char() throw();
 
         public:
-            typedef memory::tight::supply_of<Char> SupplyType;
+            typedef memory::tight::supply_of<Char> SupplyType; //!< alias
 
             //__________________________________________________________________
             //
