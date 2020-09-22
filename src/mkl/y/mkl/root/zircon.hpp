@@ -227,9 +227,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     // guess kernel
                     //
                     //----------------------------------------------------------
-
                     const size_t ker = __find<T>::truncate(*eigw,nvar);
-                    if( ker> 0)
+                    if(ker>0)
                     {
                         //------------------------------------------------------
                         // zero matrix
@@ -250,7 +249,14 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                         continue;
                     }
 
-                    
+                    //----------------------------------------------------------
+                    //
+                    // monitor condition
+                    //
+                    //----------------------------------------------------------
+
+
+
                     break;
                 }
                 Y_ZIRCON_PRINTLN("# <forward with lambda=" << lam << ">" );
@@ -424,7 +430,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 dmax = diag[nvar]; assert(dmax>=0);
                 if(dmin<=0)
                 {
-                    Y_ZIRCON_PRINTLN("singular jacobian level-1");
+                    Y_ZIRCON_PRINTLN("singular jacobian");
                     return false;
                 }
 
