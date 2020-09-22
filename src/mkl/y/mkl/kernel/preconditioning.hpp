@@ -12,6 +12,9 @@
 #include "y/core/temporary-acquire.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/mkl/utils.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/mkl/opt/bracket.hpp"
+#include "y/mkl/opt/minimize.hpp"
 
 namespace upsylon
 {
@@ -22,17 +25,17 @@ namespace upsylon
         class preconditioning
         {
         public:
-            typedef lightweight_array<T>   array_type; //!< alias
-            typedef const accessible<bool> flags_type; //!< alias
+            typedef lightweight_array<T>            array_type; //!< alias
+            typedef const accessible<bool>          flags_type; //!< alias
+            typedef typename numeric<T>::function   function1d; //!< alias
 
             inline explicit preconditioning() :
             nvar(0),
-            nrun(0),
             dmin(0),
             dmax(0),
             used_(0),
-            diag_(0),
-            temp_(0)
+            wksp_(0),
+            delta(this, & preconditioning::_delta)
             {
             }
 
@@ -41,47 +44,58 @@ namespace upsylon
             }
 
             bool run(addressable<T>         &weight,
-                     const matrix<T>        &curv,
+                     const matrix<T>        &curvature,
                      flags_type             &used)
             {
                 assert(weight.size()==used.size());
-                assert(weight.size()==curv.rows);
-                assert(weight.size()==curv.cols);
+                assert(weight.size()==curvature.rows);
+                assert(weight.size()==curvature.cols);
 
+                //--------------------------------------------------------------
+                //
                 // initialize
-                typename matrix<T>::row                &fdiag = aliasing::_(curv.r_aux1);
+                //
+                //--------------------------------------------------------------
+                array_type                             &fdiag = aliasing::_(curvature.r_aux1);
+                array_type                             &fwksp = aliasing::_(curvature.r_aux2);
                 const core::temporary_value<size_t>     nlink(nvar,weight.size());
                 const core::temporary_link<flags_type>  ulink(used,&used_);
 
+                //--------------------------------------------------------------
+                //
                 // capture active diagonal components
-                size_t active = 0;
-                for(size_t i=nvar;i>0;--i)
+                //
+                //--------------------------------------------------------------
+                size_t nrun = 0;
+                for(size_t i=1;i<=nvar;++i)
                 {
+                    weight[i] = 0;
                     if(used[i])
                     {
-                        ++active;
-                        weight[i]      = 0;
-                        fdiag[active] = fabs_of(curv[i][i]);
+                        ++nrun;
+                        fdiag[nrun] = curvature[i][i];
                     }
-                    else
-                    {
-                        weight[i] = 1;
-                    }
+
                 }
-                if(active<=0)
+
+                if(nrun<=0)
                 {
                     return true;
                 }
 
-                // find dmin and dmax
-                const core::temporary_value<size_t>    alink(nrun,active);
-                array_type                             diag(*fdiag,nrun);
-                const core::temporary_link<array_type> dlink(diag,&diag_);
-                hsort(diag,comparison::increasing<T>);
-                const core::temporary_value<T>         kdmin(dmin,diag[1]);
-                const core::temporary_value<T>         kdmax(dmax,diag[nrun]);
+                //--------------------------------------------------------------
+                //
+                // find dmin and dmax using adapted diag[1..nrun]
+                //
+                //--------------------------------------------------------------
+                array_type                              diag(*fdiag,nrun);
+                const core::temporary_link<array_type>  dlink(diag,&diag_);
 
-                std::cerr << "curv=" << curv << std::endl;
+                hsort(diag,comparison::increasing<T>);
+                const core::temporary_value<T> kdmin(dmin,diag[1]);
+                const core::temporary_value<T> kdmax(dmax,diag[nrun]);
+
+                std::cerr << "curv=" << curvature << std::endl;
                 std::cerr << "diag=" << diag << std::endl;
 
                 if(dmin<=0)
@@ -90,40 +104,93 @@ namespace upsylon
                     return false;
                 }
 
-                
+                std::cerr << "inv_cond0=" << dmax/dmin << std::endl;
+
+                //--------------------------------------------------------------
+                //
+                // prepare workspace
+                //
+                //--------------------------------------------------------------
+                array_type                              wksp(*fwksp,nrun);
+                const core::temporary_link<array_type>  wlink(wksp,&wksp_);
+
+                {
+                    ios::ocstream fp("precond.dat");
+                    for(T s2=0;s2<=1.0;s2+=0.01)
+                    {
+                        fp("%g %g\n",s2,delta(s2));
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                // find optimal distribution
+                //
+                //--------------------------------------------------------------
+                triplet<T> S2 = { 0,           -1, 1           };
+                triplet<T> D2 = { delta(S2.a), -1, delta(S2.c) };
+                bracket::inside(delta, S2, D2);
+                const T    s2 = minimize::run(delta, S2, D2);
+                std::cerr << "s2=" << s2 << std::endl;
+                const T    fac  = (1+s2);
+                const T    beta = 1;
+
+                {
+                    //size_t j = 0;
+                    for(size_t i=1;i<=nvar;++i)
+                    {
+                        if(used[i])
+                        {
+                            //++j;
+                            weight[i] = (fac * dmax - curvature[i][i])/beta;
+                        }
+                    }
+                }
+                std::cerr << "weight=" << weight << std::endl;
+
+                delta(s2);
+                std::cerr << "inv_cond=" << wksp[nrun]/wksp[1] << std::endl;
 
 
                 return true;
-
-
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(preconditioning);
             size_t          nvar;
-            size_t          nrun;
             T               dmin;
             T               dmax;
             flags_type     *used_;
             array_type     *diag_;
-            array_type     *temp_;
+            array_type     *wksp_;
+            function1d      delta;
 
-            inline void find_dmin_and_dmax()
+            inline T _delta(const T s2) throw()
             {
-                assert(dmax<=0);
-                T vmax=(*diag_)[1],vmin=vmax;
-                for(size_t i=nrun;i>1;--i)
+                assert(used_); assert(used_->size()==nvar);
+                assert(diag_);
+                assert(wksp_);
+                assert(diag_->size()==wksp_->size());
+
+                static const T    one  = T(1);
+                const T           fac  = one + s2;
+                const flags_type &used = *used_;
+                array_type       &wksp = *wksp_;
+                const array_type &diag = *diag_;
+                size_t            j    = 0;
+
+                for(size_t i=1;i<=nvar;++i)
                 {
-                    const T tmp = (*diag_)[i];
-                    if(tmp>vmax)
+                    if(used[i])
                     {
-                        vmax = tmp;
-                    }
-                    else if(tmp<vmin)
-                    {
-                        vmin = tmp;
+                        ++j;
+                        const T dj = diag[j];
+                        wksp[j]    = dj * ( fac * dmax - dj );
                     }
                 }
+                assert(j==wksp.size());
+                hsort(wksp,comparison::increasing<T>);
+                return fabs_of(wksp[1]-wksp[j]);
             }
 
 
