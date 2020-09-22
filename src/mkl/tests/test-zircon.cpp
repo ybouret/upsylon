@@ -190,7 +190,7 @@ Y_UTEST(zircon)
         X[2] = alea.symm<double>();
         const string fn = "inter.dat";
 
-        //X[1]=1; X[2]=-1;
+        X[1]=1; X[2]=-1;
 
         //X[1] = 0; X[2] = 0;
 
