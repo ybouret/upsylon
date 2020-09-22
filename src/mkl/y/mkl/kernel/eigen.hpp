@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_MKL_DIAG_SYMM_INCLUDED
-#define Y_MKL_DIAG_SYMM_INCLUDED 1
+#ifndef Y_MKL_EIGEN_INCLUDED
+#define Y_MKL_EIGEN_INCLUDED 1
 
 #include "y/container/matrix.hpp"
 #include "y/mkl/types.hpp"
@@ -18,7 +18,7 @@ namespace upsylon {
         };
 
         //! diagonalisation of symmetric matrices
-        struct diag_symm
+        struct eigen
         {
 
 

@@ -5,7 +5,7 @@
 #define Y_MATH_FCN_ZIRCON_INCLUDED 1
 
 #include "y/mkl/kernel/lu.hpp"
-#include "y/mkl/kernel/diag-symm.hpp"
+#include "y/mkl/kernel/eigen.hpp"
 #include "y/mkl/utils.hpp"
 #include "y/sequence/arrays.hpp"
 #include "y/mkl/kernel/quark.hpp"
@@ -15,6 +15,7 @@
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/core/ipower.hpp"
+#include "y/ios/ocstream.hpp"
 
 
 namespace upsylon
@@ -82,25 +83,29 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             //__________________________________________________________________
             inline explicit zircon() :
             nvar(0),
-            A(8),
+            A(10),
             J(),
             tJ(),
             C0(),
             C(),
             P(),
-            tP(),
-            grad( A.next() ),
-            eigw( A.next() ),
-            step( A.next() ),
-            Ftry( A.next() ),
-            Xtry( A.next() ),
-            Fsqr( A.next() ),
-            X1(   A.next() ),
-            F1(   A.next() ),
+            dmin(0),
+            dmax(0),
+            grad( A.next()  ),
+            eigw( A.next()  ),
+            step( A.next()  ),
+            diag( A.next()  ),
+            omeg( A.next() ),
+            Ftry( A.next()  ),
+            Xtry( A.next()  ),
+            Fsqr( A.next()  ),
+            X1(   A.next()  ),
+            F1(   A.next()  ),
             f_(0),
             F_(0),
             X_(0),
-            g(this,&zircon::_g)
+            g(this,&zircon::_g),
+            cond(this,&zircon::_cond)
             {
             }
 
@@ -155,7 +160,6 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Rlink << C0. make(nvar,nvar);
                 Rlink << C.  make(nvar,nvar);
                 Rlink << P.  make(nvar,nvar);
-                Rlink << tP. make(nvar,nvar);
 
                 fjac(J,X);
                 Y_ZIRCON_PRINTLN("g0="<<g0);
@@ -175,13 +179,23 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 Y_ZIRCON_PRINTLN("grad="<<grad);
                 Y_ZIRCON_PRINTLN("C0="<<C0);
 
+
                 //--------------------------------------------------------------
                 //
-                // regularizing by condition monitoring
+                // pre-conditioner
                 //
                 //--------------------------------------------------------------
+                if(!compute_omega())
+                {
+                    return zircon_failure;
+                }
+                Y_ZIRCON_PRINTLN("omega="<<omeg);
+
+
                 T   lam = 0;
                 int p   = -int(numeric<T>::sqrt_dig);
+
+
                 while(true)
                 {
                     //----------------------------------------------------------
@@ -189,11 +203,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     // build approx matrix
                     //
                     //----------------------------------------------------------
-                    const T fac = 1.0 + lam;
                     C.assign(C0);
                     for(size_t i=nvar;i>0;--i)
                     {
-                        C[i][i] *= fac;
+                        C[i][i] *= (1.0+omeg[i]*lam);
                     }
                     Y_ZIRCON_PRINTLN("C="<<C);
 
@@ -202,7 +215,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     // spectral decomposition
                     //
                     //----------------------------------------------------------
-                    if( !diag_symm::build(C,eigw,P,sort_eigv_by_module))
+                    if( !eigen::build(C,eigw,P,sort_eigv_by_module))
                     {
                         Y_ZIRCON_PRINTLN("diagonalize failure");
                         return zircon_failure;
@@ -214,6 +227,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     // guess kernel
                     //
                     //----------------------------------------------------------
+
                     const size_t ker = __find<T>::truncate(*eigw,nvar);
                     if( ker> 0)
                     {
@@ -236,22 +250,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                         continue;
                     }
 
-                    //----------------------------------------------------------
-                    //
-                    // monitor scaling
-                    //
-                    //----------------------------------------------------------
-                    const T      scaling = fabs_of(eigw[nvar])/fabs_of(eigw[1]);
-                    Y_ZIRCON_PRINTLN("scaling="<<scaling);
-                    if(scaling<1e-3)
-                    {
-                        if(!increase(lam,p))
-                        {
-                            return zircon_failure;
-                        }
-                        continue;
-                    }
-
+                    
                     break;
                 }
                 Y_ZIRCON_PRINTLN("# <forward with lambda=" << lam << ">" );
@@ -261,11 +260,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 // compute trial step
                 //
                 //--------------------------------------------------------------
-                tP.assign_transpose(P);
                 {
 
                     addressable<T> &tPgrad = Fsqr;
-                    quark::mul(tPgrad,tP,grad);
+                    quark::mul_trn(tPgrad,P,grad);
                     for(size_t i=nvar;i>0;--i)
                     {
                         tPgrad[i] /= -eigw[i];
@@ -360,10 +358,13 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             matrix<T>        C0;
             matrix<T>        C;
             matrix<T>        P;
-            matrix<T>        tP;
+            T                dmin;
+            T                dmax;
             array_type      &grad;
             array_type      &eigw;
             array_type      &step;
+            array_type      &diag;
+            array_type      &omeg;
             array_type      &Ftry;
             array_type      &Xtry;
             array_type      &Fsqr;
@@ -373,6 +374,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             addressable<T>  *F_;
             addressable<T>  *X_;
             function1d       g;
+            function1d       cond;
+
 
             //! local computation of |FF|^2/2
             inline T __g(const accessible<T> &FF) const throw()
@@ -397,6 +400,62 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 quark::muladd(Xtry,*X_,u,step);
                 (*f_)(Ftry,Xtry);
                 return __g(Ftry);
+            }
+
+            //! compute limite condition indicator
+            inline T _cond(const T s2)
+            {
+                array_type &d  = Fsqr;
+                const T    fac = T(1)+s2;
+                for(size_t i=nvar;i>0;--i)
+                {
+                    d[i] = diag[i] * ( fac*dmax - diag[i] );
+                }
+                hsort(d,comparison::increasing<T>);
+                return fabs_of(d[nvar]-d[1]);
+            }
+
+            bool compute_omega()
+            {
+                // initialize diagonal terms
+                for(size_t i=nvar;i>0;--i) diag[i] = C0[i][i];
+                hsort(diag,comparison::increasing<T>);
+                dmin = diag[1];    assert(dmin>=0);
+                dmax = diag[nvar]; assert(dmax>=0);
+                if(dmin<=0)
+                {
+                    Y_ZIRCON_PRINTLN("singular jacobian level-1");
+                    return false;
+                }
+
+                {
+                    ios::ocstream fp("omega.dat");
+                    for(T s2=0;s2<=1.0;s2+=0.01)
+                    {
+                        fp("%g %g\n",s2,cond(s2));
+                    }
+                }
+
+                if(dmax<=dmin)
+                {
+                    quark::ld(omeg,1);
+                }
+                else
+                {
+                    // prepare optim
+                    triplet<T> S2 = { 0, -1, 1 };
+                    triplet<T> CC = { cond(S2.a), -1, cond(S2.c) };
+                    bracket::inside(cond,S2,CC);
+                    const T    s2 = minimize::run(cond,S2,CC);
+                    std::cerr << "s2=" << s2 << std::endl;
+                    const T    fac  = (1.0+s2) * dmax;
+                    const T    beta = fac - dmin;
+                    for(size_t i=nvar;i>0;--i)
+                    {
+                        omeg[i] = (fac - C0[i][i])/beta;
+                    }
+                }
+                return true;
             }
 
             inline void push_trial()

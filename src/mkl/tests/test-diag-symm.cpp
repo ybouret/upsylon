@@ -1,4 +1,4 @@
-#include "y/mkl/kernel/diag-symm.hpp"
+#include "y/mkl/kernel/eigen.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
@@ -27,15 +27,15 @@ namespace
             }
             
             std::cerr << "a=" << a << std::endl;
-            if( !diag_symm::build(a,d,v) )
+            if( !eigen::build(a,d,v) )
             {
                 std::cerr << "diag_symm failure" << std::endl;
             }
-            diag_symm::eigsrt(d,v);
+            eigen::eigsrt(d,v);
             std::cerr << "d=" << d << std::endl;
             std::cerr << "v=" << v << std::endl;
             
-            diag_symm::eigsrtA(d,v);
+            eigen::eigsrtA(d,v);
             std::cerr << "d=" << d << std::endl;
             std::cerr << "v=" << v << std::endl;
             

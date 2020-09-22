@@ -127,7 +127,10 @@ Y_UTEST(zircon)
     zircon<double> zrc;
     zrc.verbose  = true;
 
-    simulate(2);
+    if(false)
+    {
+        simulate(10);
+    }
 
     if(false)
     {
@@ -169,7 +172,7 @@ Y_UTEST(zircon)
 
     }
 
-    if(false)
+    if(true)
     {
         inter<double> Inter = { 0.1 };
         if(argc>1)
@@ -187,7 +190,7 @@ Y_UTEST(zircon)
         X[2] = alea.symm<double>();
         const string fn = "inter.dat";
 
-        X[1]=1; X[2]=-1;
+        //X[1]=1; X[2]=-1;
 
         //X[1] = 0; X[2] = 0;
 
