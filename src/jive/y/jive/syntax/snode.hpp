@@ -40,11 +40,13 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(List);
                 };
-                const Kind kind;
-
+                const Kind   kind;
+                const Axiom &axiom;
                 
 
             private:
+                explicit Node(const Axiom&) throw();
+                virtual ~Node() throw();
                 
             public:
                 typedef memory::tight::supply_of<Node> SupplyType; //!< alias
