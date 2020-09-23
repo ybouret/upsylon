@@ -35,6 +35,7 @@ namespace upsylon
             nvar(0),
             dmin(0),
             dmax(0),
+            drho(0),
             used_(0),
             diag_(0),
             wksp_(0),
@@ -123,9 +124,11 @@ namespace upsylon
                     for(T p=1.1*dmax;p<=3*dmax;p+=0.001)
                     {
                         const T d = delta(p);
-                        fp("%.20g %.20g\n",p,d);
+                        fp("%.20g %.20g\n",p/dmax,d);
                     }
                 }
+
+
 
                 return true;
             }
@@ -177,6 +180,7 @@ namespace upsylon
                     wksp[j]    = dj * wj;
                 }
                 hsort(wksp,comparison::increasing<T>);
+                return log(wksp[nrun]/wksp[1]);
                 return fabs_of(wksp[nrun]-wksp[1]);
             }
 
