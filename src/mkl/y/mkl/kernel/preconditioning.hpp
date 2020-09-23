@@ -85,16 +85,18 @@ namespace upsylon
 
                 switch(nrun)
                 {
-                    case 0: return true;
+                    case 0: return true; // early return
+                        
                     case 1: {
                         for(size_t i=nvar;i>0;--i)
                         {
                             if(used[i]) {
-                                weight[i] = one;
+                                weight[i] = one; // set unique weight to 1
                                 break;
                             }
                         }
                     } return true;
+
                     default: break;
                 }
 
@@ -117,11 +119,7 @@ namespace upsylon
                 std::cerr << "drho=" << drho << std::endl;
 
 
-                if(dmin<=0)
-                {
-                    // singular curvature
-                    return false;
-                }
+                if(dmin<=0) return false; // singular curvature
 
                 std::cerr << "inv_cond0=" << dmax/dmin << std::endl;
                 array_type                              wksp(*fwksp,nrun);
