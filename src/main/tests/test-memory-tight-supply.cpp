@@ -46,8 +46,7 @@ Y_UTEST(tight_supply)
 
     drepo.reserve(100);
 
-    std::cerr << "block_size=" << drepo.block_size() << std::endl;
-    std::cerr << "node_bytes=" << drepo.node_bytes() << std::endl;
+    std::cerr << "block_size=" << drepo.block_size   << std::endl;
     std::cerr << "prefetched=" << drepo.prefetched() << std::endl;
 
 }

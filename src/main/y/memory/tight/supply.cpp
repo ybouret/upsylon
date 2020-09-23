@@ -12,7 +12,8 @@ namespace upsylon
         {
             supply::supply(const size_t block_size) :
             xnodes(upsylon::object::proto(), max_of(block_size,sizeof(node_type)) ),
-            znodes()
+            znodes(),
+            block_size( xnodes.block_size() )
             {
             }
 
@@ -21,14 +22,7 @@ namespace upsylon
                 prune();
             }
 
-            void supply:: prune() throw()
-            {
-                Y_LOCK(xnodes.access);
-                while(znodes.size>0)
-                {
-                    xnodes.release_unlocked( znodes.query() );
-                }
-            }
+
 
             void supply:: fetch(size_t n)
             {
@@ -39,14 +33,18 @@ namespace upsylon
                 }
             }
 
-            size_t supply:: block_size() const throw()
+            void supply:: limit(const size_t n)
             {
-                return xnodes.block_size();
+                Y_LOCK(xnodes.access);
+                while(znodes.size>n)
+                {
+                    xnodes.release_unlocked( znodes.query() );
+                }
             }
 
-            size_t supply:: node_bytes() const throw()
+            void supply:: prune() throw()
             {
-                return sizeof(node_type);
+                limit(0);
             }
 
             size_t supply:: prefetched() const throw()
@@ -56,7 +54,16 @@ namespace upsylon
 
             void * supply:: query_block()
             {
-                return ( znodes.size>0 ) ? znodes.query() : xnodes.acquire();
+                if(znodes.size>0)
+                {
+                    void *blk = znodes.query();
+                    memset(blk,0,block_size);
+                    return blk;
+                }
+                else
+                {
+                    return xnodes.acquire();
+                }
             }
 
             void  supply:: store_block(void *args) throw()

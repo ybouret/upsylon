@@ -25,24 +25,25 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                size_t   node_bytes() const throw(); //!< internal sizeof(node_type)
-                size_t   block_size() const throw(); //!< effective xcache block size
                 size_t   prefetched() const throw(); //!< local avalaible blocks
                 virtual ~supply()           throw(); //!< cleanup
 
             protected:
                 //! setup from object::proto and block_size
                 explicit supply(const size_t block_size);
-                void  prune() throw();             //!< return local blocks to system cache
-                void  fetch(size_t n);             //!< prefetch local blocks
-                void *query_block();               //!< query a zeroed block
-                void  store_block(void *) throw(); //!< release a block
+                void     prune() throw();             //!< return local blocks to system cache
+                void     fetch(size_t n);             //!< prefetch local blocks
+                void     limit(const size_t);         //!< limit local blocks
+                void    *query_block();               //!< query a zeroed block
+                void     store_block(void *) throw(); //!< release a block
 
             private:
                 struct node_type { node_type *next; };
                 typedef core::pool_of<node_type> zcache;
-                xcache xnodes;
-                zcache znodes;
+                xcache       xnodes;
+                zcache       znodes;
+            public:
+                const size_t block_size;
             };
 
 

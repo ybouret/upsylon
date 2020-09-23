@@ -40,13 +40,19 @@ SET( syntax_srcs ${syntax_decl} ${syntax_impl})
 INSTALL( FILES ${syntax_decl} DESTINATION include/y/jive/syntax )
 SOURCE_GROUP( jive/syntax FILES ${syntax_srcs} )
 
+FILE( GLOB syntax_axiom_decl y/jive/syntax/axiom/*.hpp)
+FILE( GLOB syntax_axiom_impl y/jive/syntax/axiom/*.cpp)
+SET( syntax_axiom_srcs ${syntax_axiom_decl} ${syntax_axiom_impl})
+INSTALL( FILES ${syntax_axiom_decl} DESTINATION include/y/jive/syntax/axiom )
+SOURCE_GROUP( jive/syntax/axiom FILES ${syntax_axiom_srcs} )
+
 INCLUDE_DIRECTORIES( . ../main )
 
 ADD_LIBRARY( y-jive STATIC
  ${srcs}
  ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs}
  ${lexical_editor_srcs}
- ${syntax_srcs}
+ ${syntax_srcs} ${syntax_axiom_srcs}
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 

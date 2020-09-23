@@ -55,6 +55,7 @@ namespace upsylon {
             class Supply : public singleton<Supply>, public SupplyType
             {
             public:
+                Y_SINGLETON_DECL(Supply);
 
                 Char *acquire(const Context &context,
                               const uint8_t  code); //!< zeroed memory for Char
@@ -62,8 +63,8 @@ namespace upsylon {
                 void  reserve(size_t);              //!< query from system
                 Char *copycat(const Char&);         //!< copy
 
+
             private:
-                Y_SINGLETON_DECL(Supply);
                 Y_DISABLE_COPY_AND_ASSIGN(Supply);
                 explicit Supply();
                 virtual ~Supply() throw();
