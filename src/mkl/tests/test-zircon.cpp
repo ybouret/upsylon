@@ -90,32 +90,29 @@ namespace {
     void simulate(const size_t n)
     {
         vector<double> C(n,0);
-        for(size_t i=1;i<=n;++i)
-        {
-            C[i] = alea.to<double>();
-        }
-        hsort(C,comparison::increasing<double>);
-        std::cerr << "C=" << C << std::endl;
-        const double Cmin = C[1];
-        const double Cmax = C[n];
-        const double rho  = Cmin/Cmax;
-        std::cerr << "rho=" << rho << std::endl;
 
-        vector<double> d(n,0);
-        ios::ocstream  fp("alpha.txt");
-        const double alpha_step = 0.01;
-        for(double alpha=0;alpha<=1.57;alpha+=alpha_step)
+
+
+
+#if 1
+        ios::ocstream fp("sim.dat");
+        for(int iter=0;iter<100;++iter)
         {
-            const double fac = 1.0 + square_of( sin(alpha) );
-            for(size_t i=n;i>0;--i)
+            for(size_t i=1;i<=n;++i)
             {
-                d[i] = C[i] * ( fac * Cmax - C[i]);
+                C[i] = alea.to<double>();
             }
-            hsort(d,comparison::increasing<double>);
-            const double opt = d[n]-d[1];
-            fp("%g %g\n",alpha,opt);
+            hsort(C,comparison::increasing<double>);
+            double sum  = 0;
+            double sum2 = 0;
+            for(size_t i=1;i<=n;++i)
+            {
+                sum  += C[i];
+                sum2 += square_of(C[i]);
+            }
+            fp("%d %g %g %g\n",iter,sum2/sum,sum/n,sum2/n);
         }
-
+#endif
 
     }
 }
@@ -127,9 +124,9 @@ Y_UTEST(zircon)
     zircon<double> zrc;
     zrc.verbose  = true;
 
-    if(false)
+    if(true)
     {
-        simulate(10);
+        simulate(3);
     }
 
     if(false)

@@ -64,61 +64,36 @@ which is the Newton's step, formally setting \eqref{eq:min} to zero.
 We define $\bm{C}_\lambda$ a regularised matrix from $\bm{C}$.
 The diagonal terms of $\bm{C}$ are
 \begin{equation}
-	\forall j, \; \bm{C}_{jj} = \sum_i \left(\partial_{X_j} F_i\right)^2
+	\forall j, \; d_j = \bm{C}_{jj} = \sum_i \left(\partial_{X_j} F_i\right)^2
 \end{equation}
 We compute
 \begin{equation}
-	d_j = \bm{C}_{jj} (1+\omega_j \lambda)
+	d'_j = d_j (1+\omega_j \lambda)
 \end{equation}
 so that:
 \begin{equation}
-	d_j \approx \bm{C}_{jj} \omega_j \lambda
+	d'_j \approx d_j \omega_j \lambda
 \end{equation}
-Let us choose some weights that increase lower values:
+We compute $\omega_j$ using a pivot value $p>d_{max}$ such that
 \begin{equation}
-	\omega_j = \dfrac{ (1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{jj}}{\beta}
+	\omega_j = \dfrac{p-d_j}{\beta}
 \end{equation}
+ We compute
 \begin{equation}
-	\dfrac{\bm{C}_{jj}\omega_j}{C_{max}^2} 
-	= \dfrac{\bm{C}_{jj}}{\bm{C}_{max}}\dfrac{ (1+\sin^2\alpha) - \dfrac{\bm{C}_{jj}}{\bm{C}_{max}} }{\beta}
-	= \dfrac{1}{\beta} \phi_\alpha(x)
+	<\omega> = \dfrac{1}{\beta}\left[p-<d>\right]
 \end{equation}
-with
+and
 \begin{equation}
-	\phi_\alpha(x) = x \left[  (1+\sin^2\alpha) - x \right]
+	<d\omega> = \dfrac{1}{\beta} \left[ p <d> - <d^2>\right]
 \end{equation}
-
+We conserve the average coefficients:
 \begin{equation}
-\begin{array}{c|ccc}
-x & 0 & \frac{1+\sin^2\alpha}{2} & 1\\
-\hline
-\\
-\phi_\alpha(x) & 0 &  \left(\frac{1+\sin^2\alpha}{2}\right)^2 & \sin^2\alpha\\
-\end{array}
+	\dfrac{1}{\beta} \left[ p <d> - <d^2>\right] = <d>
 \end{equation}
-Thus we may adjust $\alpha\in[0:\frac{\pi}{2}]$ to minimise the amplitude of 
-\begin{equation}
-\bm{C}_{jj}\left[(1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{jj}\right]
-\end{equation}
- and we choose
+ so that
  \begin{equation}
-  \beta = (1+\sin^2\alpha) \bm{C}_{max}-\bm{C}_{min}
+ 	\beta = p - \dfrac{<d^2>}{<d>}
  \end{equation}
  
- \begin{equation}
- \omega_j  = \dfrac{ (1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{jj}}{ (1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{min}}
- \end{equation}
- using 
- \begin{equation}
- 	\bm{C}_{jj}= \delta_j + \bm{C}_{min} \text{ and } \delta_0 = \bm{C}_{max}- \bm{C}_{min}
- \end{equation}
  
-\begin{equation}
-\omega_j  = \dfrac{ (1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{min}- \delta_j }{ (1+\sin^2\alpha) \bm{C}_{max}- \bm{C}_{min}}
-\end{equation}
-\begin{equation}
-\omega_j  = 1 - \dfrac{ \delta_j }{  \delta_0 + \bm{C}_{max}\sin^2\alpha }
-\end{equation}
-
-
 \end{document}
