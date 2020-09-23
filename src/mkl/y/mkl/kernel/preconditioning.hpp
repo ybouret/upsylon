@@ -81,12 +81,21 @@ namespace upsylon
                         ++nrun;
                         fdiag[nrun] = curvature[i][i];
                     }
-
                 }
 
-                if(nrun<=0)
+                switch(nrun)
                 {
-                    return true; // early return
+                    case 0: return true;
+                    case 1: {
+                        for(size_t i=nvar;i>0;--i)
+                        {
+                            if(used[i]) {
+                                weight[i] = one;
+                                break;
+                            }
+                        }
+                    } return true;
+                    default: break;
                 }
 
                 //--------------------------------------------------------------
@@ -127,9 +136,8 @@ namespace upsylon
                     }
                 }
 
-                triplet<T> P = { 1,-1,2 };
-                triplet<T> D = { delta(P.a), -1, delta(P.c) };
-                bracket::inside(delta,P,D);
+                triplet<T> P    = { dmax,-1,dmax+dmax };
+                triplet<T> D    = { delta(P.a), -1, delta(P.c) }; bracket::inside(delta,P,D);
                 const T    p    = minimize::run(delta,P,D);
                 const T    beta = cut+ max_of(p-drho,zero);
                 std::cerr << "p=" << p << std::endl;
@@ -141,7 +149,6 @@ namespace upsylon
                         weight[i] = max_of(p-curvature[i][i],zero)/beta;
                     }
                 }
-                std::cerr << "weight=" << weight << std::endl;
 
 
                 return true;
@@ -170,7 +177,7 @@ namespace upsylon
                     sum  += d;
                     sum2 += square_of(d);
                 }
-                return sum2/sum;
+                return min_of(sum2/sum,dmax);
             }
 
 
@@ -183,7 +190,7 @@ namespace upsylon
                 assert(diag_->size()==wksp_->size());
 
 
-                const T           beta = cut+ max_of(p-drho,zero);
+                const T           beta = cut+max_of(p-drho,zero);
                 array_type       &wksp = *wksp_;
                 const array_type &diag = *diag_;
                 const size_t      nrun = wksp.size();

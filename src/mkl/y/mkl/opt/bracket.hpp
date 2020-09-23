@@ -202,8 +202,8 @@ namespace upsylon {
                     f.b = func(x.b);
 
                     unsigned    flag = 0x00;
-                    if(f.b>f.c) flag |= GTC;
-                    if(f.b>f.a) flag |= GTA;
+                    if(f.b>f.c) flag |= GTC; else { assert(f.b<=f.c); }
+                    if(f.b>f.a) flag |= GTA; else { assert(f.b<=f.a); }
 
                     switch(flag)
                     {

@@ -19,13 +19,15 @@ namespace
         {
             curv[i][i] = 10 * alea.to<double>();
             curv[i][i] = 1 - 1.0/(1000.0+i);
-            //curv[i][i] = 1;
+            curv[i][i] = 1;
         }
         preconditioning<T> precond;
-        //used[2] = false;
-        
-        precond.run(omega,curv,used);
+        used[2] = false;
+        used[3] = false;
+        used[4] = false;
 
+        precond.run(omega,curv,used);
+        std::cerr << "omega=" << omega << std::endl;
 
 
     }
