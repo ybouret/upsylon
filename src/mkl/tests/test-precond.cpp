@@ -9,7 +9,7 @@ namespace
     template <typename T>
     void do_precond()
     {
-        size_t n = 3;
+        size_t n = 4;
 
         matrix<T>    curv(n,n);
         vector<T>    omega(n,0);
