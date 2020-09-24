@@ -95,20 +95,21 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             C0(),
             C(),
             P(),
-            grad( A.next()  ),
-            eigw( A.next()  ),
-            step( A.next()  ),
-            diag( A.next()  ),
-            omeg( A.next() ),
-            Ftry( A.next()  ),
-            Xtry( A.next()  ),
-            Fsqr( A.next()  ),
-            X1(   A.next()  ),
-            F1(   A.next()  ),
+            grad(  A.next()  ),
+            w(     A.next()  ),
+            step(  A.next()  ),
+            diag(  A.next()  ),
+            omega( A.next() ),
+            Ftry(  A.next()  ),
+            Xtry(  A.next()  ),
+            Fsqr(  A.next()  ),
+            X1(    A.next()  ),
+            F1(    A.next()  ),
             f_(0),
             F_(0),
             X_(0),
-            g(this,&zircon::_g)
+            g(this,&zircon::_g),
+            precond()
             {
             }
 
@@ -145,7 +146,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 //
                 //--------------------------------------------------------------
 
-                A.acquire(nvar);
+                Rlink << A.acquire(nvar);
                 const T g0 = __g(F);
                 if(g0<=0)
                 {
@@ -185,22 +186,23 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                 //--------------------------------------------------------------
                 //
-                // pre-conditioner
+                // curvature pre-conditioner
                 //
                 //--------------------------------------------------------------
                 T   quality = 0;
-                if(!precond(omeg,C0,NULL,quality))
+                if(!precond(omega,C0,NULL,quality))
                 {
                     Y_ZIRCON_PRINTLN("singular pre-condition");
                     return zircon_failure;
                 }
-                Y_ZIRCON_PRINTLN("omega="<<omeg);
+                Y_ZIRCON_PRINTLN("omega="<<omega);
+                Y_ZIRCON_PRINTLN("quality="<<quality);
 
-                exit(1);
+                const T minimal_q = quality / 1000;
+
 
                 T   lam = 0;
                 int p   = -int(numeric<T>::sqrt_dig);
-
 
                 while(true)
                 {
@@ -212,30 +214,33 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     C.assign(C0);
                     for(size_t i=nvar;i>0;--i)
                     {
-                        C[i][i] *= (1.0+omeg[i]*lam);
+                        C[i][i] *= (1.0+omega[i]*lam);
                     }
-                    Y_ZIRCON_PRINTLN("C="<<C);
+
 
                     //----------------------------------------------------------
                     //
                     // spectral decomposition
                     //
                     //----------------------------------------------------------
-                    if( !eigen::build(C,eigw,P,sort_eigv_by_module))
+                    if( !eigen::build(C,w,P,sort_eigv_by_module))
                     {
                         Y_ZIRCON_PRINTLN("diagonalize failure");
                         return zircon_failure;
                     }
-                    Y_ZIRCON_PRINTLN("w="<<eigw);
+
+
 
                     //----------------------------------------------------------
                     //
                     // guess kernel
                     //
                     //----------------------------------------------------------
-                    const size_t ker = __find<T>::truncate(*eigw,nvar);
+                    const size_t ker = __find<T>::truncate(*w,nvar);
                     if(ker>0)
                     {
+                        Y_ZIRCON_PRINTLN("ker="<<ker);
+
                         //------------------------------------------------------
                         // zero matrix
                         //------------------------------------------------------
@@ -257,19 +262,29 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
                     //----------------------------------------------------------
                     //
-                    // monitor condition
+                    // monitor qualitu
                     //
                     //----------------------------------------------------------
-
-
-
+                    const T q = w[nvar]/w[1];
+                    if(q<minimal_q)
+                    {
+                        if(!increase(lam,p))
+                        {
+                            return zircon_failure;
+                        }
+                        continue;
+                    }
                     break;
                 }
                 Y_ZIRCON_PRINTLN("# <forward with lambda=" << lam << ">" );
+                Y_ZIRCON_PRINTLN("C="<<C);
+                Y_ZIRCON_PRINTLN("w="<<w);
+                Y_ZIRCON_PRINTLN("q="<<w[nvar]/w[1]);
+
 
                 //--------------------------------------------------------------
                 //
-                // compute trial step
+                // compute (quasi-)Newton trial step
                 //
                 //--------------------------------------------------------------
                 {
@@ -278,7 +293,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     quark::mul_trn(tPgrad,P,grad);
                     for(size_t i=nvar;i>0;--i)
                     {
-                        tPgrad[i] /= -eigw[i];
+                        tPgrad[i] /= -w[i];
                     }
                     quark::mul(step,P,tPgrad);
                 }
@@ -371,10 +386,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             matrix<T>          C;      //!< modified curvature
             matrix<T>          P;      //!< otrhonormal matrix for eigen
             array_type        &grad;
-            array_type        &eigw;
+            array_type        &w;
             array_type        &step;
             array_type        &diag;
-            array_type        &omeg;
+            array_type        &omega;
             array_type        &Ftry;
             array_type        &Xtry;
             array_type        &Fsqr;
@@ -447,7 +462,6 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     {
                         lam = ipower<T>(0.1,-p);
                     }
-                    Y_ZIRCON_PRINTLN("lam="<<lam);
                     return true;
                 }
                 else
@@ -456,7 +470,6 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                     lam *= 10;
                     if(p <= pmax)
                     {
-                        Y_ZIRCON_PRINTLN("lam="<<lam);
                         return true;
                     }
                     else

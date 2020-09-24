@@ -11,9 +11,8 @@
 #include "y/core/temporary-value.hpp"
 #include "y/core/temporary-acquire.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/mkl/utils.hpp"
 #include "y/mkl/triplet.hpp"
-//#include "y/ios/ocstream.hpp"
+#include "y/mkl/types.hpp"
 
 namespace upsylon
 {
@@ -140,16 +139,7 @@ namespace upsylon
                 array_type                              wksp(*fwksp,nrun);
                 const core::temporary_link<array_type>  wlink(wksp,&wksp_);
 
-#if 0
-                {
-                    ios::ocstream fp("omega.dat");
-                    for(T p=dmax;p<=3*dmax;p+=0.001)
-                    {
-                        const T d = delta(p);
-                        fp("%.20g %.20g %.20g\n",p/dmax,d,p);
-                    }
-                }
-#endif
+
 
                 //--------------------------------------------------------------
                 //
@@ -236,7 +226,6 @@ namespace upsylon
 
                 (void) delta(p);
                 quality = wksp[1]/wksp[nrun];
-                std::cerr << "quality=" << quality << " / " << dmin/dmax << std::endl;
                 return true;
             }
 

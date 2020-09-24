@@ -1,5 +1,6 @@
 #include "y/mkl/kernel/preconditioning.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 using namespace mkl;

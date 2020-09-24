@@ -138,11 +138,6 @@ Y_UTEST(zircon)
             sys.Ca = string_convert::to<double>( argv[1], "Ca" );
         }
 
-        
-
-
-
-
         numeric<double>::vector_field f(&sys, &mysys<double>::compute);
         numeric<double>::jacobian     fjac(&sys,&mysys<double>::jacobian);
 
@@ -168,8 +163,7 @@ Y_UTEST(zircon)
         //zrc.cycle(F,X,f,fjac);
 
     }
-
-    if(true)
+    else
     {
         inter<double> Inter = { 0.1 };
         if(argc>1)
@@ -183,8 +177,8 @@ Y_UTEST(zircon)
         vector<double> F(2,0);
         vector<double> X(2,0);
 
-        X[1] = alea.symm<double>();
-        X[2] = alea.symm<double>();
+        X[1] = 1.5*alea.symm<double>();
+        X[2] = 1.5*alea.symm<double>();
         const string fn = "inter.dat";
 
         X[1]=1; X[2]=-1;
