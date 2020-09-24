@@ -43,7 +43,7 @@ namespace
 
         for(size_t i=1;i<=n;++i)
         {
-            curv[i][i] = amplitude * alea.to<double>();
+            curv[i][i] = amplitude * alea.to<T>();
         }
         do_precond(curv,omega,used);
 
