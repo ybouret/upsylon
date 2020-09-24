@@ -55,13 +55,12 @@ namespace upsylon {
             class Supply : public singleton<Supply>, public SupplyType
             {
             public:
-                Y_SINGLETON_DECL(Supply);
+                Y_SINGLETON_DECL(Supply);          //!< aliases
 
-                Char *acquire(const Context &context,
-                              const uint8_t  code); //!< zeroed memory for Char
-                void  release(Char *ch) throw();    //!< return memory
-                void  reserve(size_t);              //!< query from system
-                Char *copycat(const Char&);         //!< copy
+                Char *acquire(const Context &, const uint8_t); //!< built from supply
+                void  release(Char *ch) throw();               //!< return memory
+                void  reserve(size_t);                         //!< query from system
+                Char *copycat(const Char&);                    //!< copy
 
 
             private:
@@ -87,7 +86,6 @@ namespace upsylon {
                 //
                 // C++
                 //______________________________________________________________
-
                 explicit List() throw();        //!< setup empty
                 virtual ~List() throw();        //!< cleanup
                 List( const List &);            //!< copy

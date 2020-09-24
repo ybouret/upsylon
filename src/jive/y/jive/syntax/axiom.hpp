@@ -25,11 +25,15 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                static const uint32_t TerminalUUID = Y_FOURCC('T','E','R','M');
-                virtual ~Axiom() throw();
+                static const uint32_t TermUUID = Y_FOURCC('T','E','R','M'); //!< forward value
 
-                bool   isTerminal() const throw();
-                bool   isInternal() const throw();
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                virtual ~Axiom()            throw(); //!< cleanup
+                bool     isTerminal() const throw(); //!< uuid == TerminalUUID
+                bool     isInternal() const throw(); //!< uuid != TerminalUUID
 
                 //______________________________________________________________
                 //

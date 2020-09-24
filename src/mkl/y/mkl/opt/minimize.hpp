@@ -13,11 +13,12 @@ namespace upsylon {
         //! function to minimize
         struct minimize
         {
+            //! pre-processing of input
             enum bracketing
             {
-                direct,
-                inside,
-                expand
+                direct, //!< assume already bracketed
+                inside, //!< bracket::inside before call
+                expand  //!< bracket::expand before call
             };
 
             //! 1 step minimize an ordered x triplet with associated values

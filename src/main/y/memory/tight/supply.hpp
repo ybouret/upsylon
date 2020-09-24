@@ -29,8 +29,8 @@ namespace upsylon
                 virtual ~supply()           throw(); //!< cleanup
 
             protected:
-                //! setup from object::proto and block_size
-                explicit supply(const size_t block_size);
+
+                explicit supply(const size_t);        //!< setup from object::proto and block_size
                 void     prune() throw();             //!< return local blocks to system cache
                 void     fetch(size_t n);             //!< prefetch local blocks
                 void     limit(const size_t);         //!< limit local blocks
@@ -43,7 +43,7 @@ namespace upsylon
                 xcache       xnodes;
                 zcache       znodes;
             public:
-                const size_t block_size;
+                const size_t block_size; //!< the unique block_size of this supply
             };
 
 

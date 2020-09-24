@@ -10,7 +10,8 @@ namespace upsylon
         {
             Axiom:: ~Axiom() throw()
             {
-                
+                aliasing::_(uuid) = 0;
+                aliasing::_(self) = 0;
             }
 
             Axiom:: Axiom(const uint32_t u, const string *s) throw() :
@@ -29,12 +30,12 @@ namespace upsylon
 
             bool Axiom:: isTerminal() const throw()
             {
-                return TerminalUUID == uuid;
+                return TermUUID == uuid;
             }
 
             bool Axiom:: isInternal() const throw()
             {
-                return TerminalUUID != uuid;
+                return TermUUID != uuid;
             }
 
 

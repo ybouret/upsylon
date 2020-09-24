@@ -25,35 +25,58 @@ namespace upsylon
             class Node : public inode<Node>
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+
+                //! kind of node
                 enum Kind
                 {
-                    IsTerminal,
-                    IsInternal
+                    IsTerminal, //!< a terminal, got a lexeme
+                    IsInternal  //!< an internal, got child(ren)
                 };
+
                 //! base class for a list of code
                 typedef core::list_of<Node> ListType;
 
+                //! dedicated list for child(ren)
                 class List : public ListType
                 {
                 public:
-                    explicit List() throw();
-                    virtual ~List() throw();
+                    explicit List() throw(); //!< setup
+                    virtual ~List() throw(); //!< cleanup
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(List);
                 };
 
-                const Axiom &axiom;
-                const Kind   kind;
 
-                static Node *  Acquire(const Terminal &, Lexeme *lx); //!< new terminal node
-                static Node *  Acquire(const Internal &);             //!< new internal node
-                static void    Release(Node *node) throw();           //!< release memory
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+
                 const Lexeme * lexeme()   const    throw();           //!< access lexeme
                 List         & children()          throw();           //!< access children
                 const List   & children() const    throw();           //!< access children
 
-                static void    ReturnTo(Lexer &lexer, Node *node) throw(); //!< 
+                //______________________________________________________________
+                //
+                // static methods
+                //______________________________________________________________
+                static Node *  Acquire(const Terminal &, Lexeme *); //!< new terminal node
+                static Node *  Acquire(const Internal &);           //!< new internal node
+                static void    Release(Node *)           throw();   //!< release memory
+                static void    ReturnTo(Lexer &, Node *) throw();   //!< return node to lexer
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                
+                const Axiom &axiom; //!< creator
+                const Kind   kind;  //!< kind
 
             private:
                 explicit Node(const Internal&) throw();
@@ -79,13 +102,17 @@ namespace upsylon
             public:
                 typedef memory::tight::supply_of<Node> SupplyType; //!< alias
 
-                //! todo
+                //______________________________________________________________
+                //
+                //
+                //! dedicated supply for Nodes
+                //
+                //______________________________________________________________
                 class Supply : public singleton<Supply>, public SupplyType
                 {
                 public:
-                    Y_SINGLETON_DECL(Supply);
-
-                    void  release(Node *) throw();
+                    Y_SINGLETON_DECL(Supply);      //!< aliases
+                    void  release(Node *) throw(); //!< destruct and store node
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Supply);
@@ -97,7 +124,7 @@ namespace upsylon
             
         }
 
-        typedef Syntax::Node  XNode;
+        typedef Syntax::Node  XNode; //!< alias
     }
 }
     

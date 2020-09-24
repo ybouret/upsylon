@@ -12,13 +12,22 @@ namespace upsylon
         namespace Syntax
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! a terminal Axiom
+            //
+            //__________________________________________________________________
             class Terminal : public Axiom
             {
             public:
-                static const uint32_t UUID = TerminalUUID;
+                //! identifier
+                static const uint32_t UUID = TermUUID;
 
+                //! cleanup
                 virtual ~Terminal() throw();
 
+                //! setup
                 template <typename ID> inline
                 explicit Terminal(const ID &id) :
                 Axiom(UUID,Tags::Make(id))
