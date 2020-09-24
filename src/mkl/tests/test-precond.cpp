@@ -6,6 +6,29 @@ using namespace mkl;
 
 namespace
 {
+
+    template <typename T> static inline
+    void do_precond(const matrix<T>        &curv,
+                    addressable<T>         &omega,
+                    const accessible<bool> &used)
+    {
+        preconditioning<T> precond;
+        T                  quality = 0;
+
+        std::cerr << "curv=" << curv << std::endl;
+        std::cerr << "used=" << used << std::endl;
+        if(precond.run(omega,curv,&used,quality))
+        {
+            std::cerr << "omega  =" << omega   << std::endl;
+            std::cerr << "quality=" << quality << std::endl;
+        }
+        else
+        {
+            std::cerr << "singular matrix" << std::endl;
+        }
+        std::cerr << std::endl;
+    }
+
     template <typename T>
     void do_precond()
     {
@@ -15,23 +38,27 @@ namespace
         vector<T>    omega(n,0);
         vector<bool> used(n,true);
 
+        const T amplitude = T(10);
+
         for(size_t i=1;i<=n;++i)
         {
-            curv[i][i] = 10 * alea.to<double>();
-            curv[i][i] = 1 - 1.0/(100.0+i);
-            //curv[i][i] = 1;
+            curv[i][i] = amplitude * alea.to<double>();
         }
-        preconditioning<T> precond;
-        // used[2] = false;
-        // used[3] = false;
-        // used[4] = false;
+        do_precond(curv,omega,used);
 
-        precond.run(omega,curv,&used);
-        std::cerr << "omega=" << omega << std::endl;
+        for(size_t i=1;i<=n;++i)
+        {
+            curv[i][i] = amplitude*( T(1) - T(1)/(T(1000)+T(i)));
+        }
+        do_precond(curv,omega,used);
 
-        //precond.run(omega,curv,NULL);
-        //std::cerr << "omega=" << omega << std::endl;
-        
+        for(size_t i=1;i<=n;++i)
+        {
+            curv[i][i] = amplitude;
+        }
+        do_precond(curv,omega,used);
+
+
     }
 
 }
@@ -40,7 +67,7 @@ Y_UTEST(precond)
 {
 
     do_precond<float>();
-    //do_precond<double>();
+    do_precond<double>();
 
 }
 Y_UTEST_DONE()

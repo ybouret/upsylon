@@ -12,15 +12,20 @@
 #include "y/core/temporary-acquire.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/mkl/utils.hpp"
-#include "y/ios/ocstream.hpp"
-#include "y/mkl/opt/minimize.hpp"
+#include "y/mkl/triplet.hpp"
+//#include "y/ios/ocstream.hpp"
 
 namespace upsylon
 {
     namespace mkl
     {
 
-        //! preconditioning matrices
+        //______________________________________________________________________
+        //
+        //
+        //! preconditioning curvature matrices
+        //
+        //______________________________________________________________________
         template <typename T>
         class preconditioning
         {
@@ -29,32 +34,34 @@ namespace upsylon
             typedef typename numeric<T>::function   function1d; //!< alias
 
             //! setup
-            inline explicit preconditioning() :
-            nvar(0),
+            inline explicit preconditioning() throw():
             dmin(0),
             dmax(0),
             drho(0),
             diag_(0),
             wksp_(0),
-            delta(this, & preconditioning::_delta),
             cut( numeric<T>::tiny ),
             one(1),
             zero(0),
             ctol(numeric<T>::ftol),
-            xtol(numeric<T>::sqrt_ftol)
+            xtol(numeric<T>::sqrt_ftol),
+            half(0.5)
             {
             }
 
             //! cleanup
-            inline virtual ~preconditioning() throw()
-            {
-            }
+            inline virtual ~preconditioning() throw() {}
 
 
             //! find diagonal weights
+            /**
+             for algorithm where curvature[i][i] -> curvature[i][i] * (1+weight[i]*lambda),
+             then weights are computed to improve the quality of the quasi-inverse
+             */
             bool run(addressable<T>         &weight,
                      const matrix<T>        &curvature,
-                     const accessible<bool> *used)
+                     const accessible<bool> *used,
+                     T                      &quality)
             {
                 assert(!used||(used->size()==weight.size()));
                 assert(weight.size()==curvature.rows);
@@ -62,16 +69,16 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // initialize
+                // initialize, using auxilairy arrays in matrix
                 //
                 //--------------------------------------------------------------
-                array_type                             &cdiag = aliasing::_(curvature.r_aux1);
-                array_type                             &fwksp = aliasing::_(curvature.r_aux2);
-                const core::temporary_value<size_t>     nlink(nvar,weight.size());
+                array_type  &cdiag = aliasing::_(curvature.r_aux1);
+                array_type  &fwksp = aliasing::_(curvature.r_aux2);
+                const size_t nvar  = weight.size();
 
                 //--------------------------------------------------------------
                 //
-                // capture active diagonal components
+                // capture active diagonal components in nrun
                 //
                 //--------------------------------------------------------------
                 const  bool full = (NULL==used);
@@ -79,7 +86,7 @@ namespace upsylon
                 for(size_t i=1;i<=nvar;++i)
                 {
                     weight[i] = zero;
-                    if(full || (*used)[i])
+                    if( full || (*used)[i] )
                     {
                         ++nrun;
                         cdiag[nrun] = curvature[i][i];
@@ -90,7 +97,7 @@ namespace upsylon
                 {
 
                     case  1: set_active(weight,used); /* FALLTHRU */
-                    case  0: return true;             // early return
+                    case  0: quality=0;  return true; // early return
                     default: break;
                 }
 
@@ -105,16 +112,10 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // early returns
+                // check status
                 //
                 //--------------------------------------------------------------
-                std::cerr << "curv=" << curvature << std::endl;
-                std::cerr << "diag=" << diag      << std::endl;
-                std::cerr << "dmin=" << dmin      << std::endl;
-                std::cerr << "dmax=" << dmax      << std::endl;
-                std::cerr << "q0  =" << dmin/dmax << std::endl;
-                std::cerr << "ctol=" << ctol << std::endl;
-
+                quality = dmin / dmax;
                 if(dmin<=0)
                 {
                     return false; // singular curvature
@@ -164,11 +165,12 @@ namespace upsylon
                     static const unsigned B_GT_C  = 0x02;
                     assert(x.a<=x.c);
                     assert(width>=0);
-                    f.b = ( delta( x.b = 0.5*(x.a+x.c) ) );
+                    f.b = ( delta( x.b = half*(x.a+x.c) ) );
                     if( f.b <= ctol )
                     {
                         break; // numerical convergence
                     }
+
                     unsigned    flag  = 0x00;
                     if(f.b>f.a) flag |= B_GT_A;
                     if(f.b>f.c) flag |= B_GT_C;
@@ -217,7 +219,6 @@ namespace upsylon
 
                 const T    p    = x.b;
                 const T    beta = cut+ max_of(p-drho,zero);
-                std::cerr << "p=" << p << std::endl;
 
 
                 for(size_t i=nvar;i>0;--i)
@@ -229,22 +230,19 @@ namespace upsylon
                 }
 
                 (void) delta(p);
-                const T q = wksp[1]/wksp[nrun];
-                std::cerr << "q=" << q << " / " << dmin/dmax << std::endl;
-                
+                quality = wksp[1]/wksp[nrun];
+                std::cerr << "quality=" << quality << " / " << dmin/dmax << std::endl;
                 return true;
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(preconditioning);
-            size_t          nvar;
             T               dmin;
             T               dmax;
             T               drho;
             array_type     *diag_;
             array_type     *wksp_;
-            function1d      delta;
-            const T         cut,one,zero,ctol,xtol;
+            const T         cut,one,zero,ctol,xtol,half;
 
             inline T _drho() throw()
             {
@@ -263,7 +261,7 @@ namespace upsylon
 
 
 
-            inline T _delta(const T p) throw()
+            inline T delta(const T p) throw()
             {
 
                 assert(diag_);
