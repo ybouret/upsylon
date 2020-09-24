@@ -12,23 +12,37 @@ namespace upsylon
         namespace Syntax
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! base class for Axiom
+            //
+            //__________________________________________________________________
             class Axiom : public CountedObject, public inode<Axiom>
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
                 static const uint32_t TerminalUUID = Y_FOURCC('T','E','R','M');
                 virtual ~Axiom() throw();
 
                 bool   isTerminal() const throw();
                 bool   isInternal() const throw();
 
-                const uint32_t    uuid;
-                const Tag         name;
-                const void *const self;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const uint32_t    uuid; //!< identifier
+                const Tag         name; //!< axiom name
+                const void *const self; //!< derived class
 
 
             protected:
-                explicit Axiom(const uint32_t, const string *) throw();
-                void     I_am(const void *)    throw();
+                explicit Axiom(const uint32_t, const string *) throw(); //!< setup
+                void     I_am(const void *)    throw();                 //!< set derived class
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);

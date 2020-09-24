@@ -217,6 +217,11 @@ namespace upsylon
                     width = new_width;
                 }
 
+                //--------------------------------------------------------------
+                //
+                // compute weights an optimial quality
+                //
+                //--------------------------------------------------------------
                 const T    p    = x.b;
                 const T    beta = cut+ max_of(p-drho,zero);
 
