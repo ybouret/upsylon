@@ -3,6 +3,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/fs/local/fs.hpp"
+#include "y/fs/disk/file.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -19,8 +20,8 @@ namespace {
         Ed() :
         count(0)
         {
-            integer_("integer *::");
             integer_("integer *\\( *4 *\\)");
+            integer_("integer *\\( *int_code *\\)");
         }
 
         inline void integer_(const char *rx)
@@ -53,6 +54,7 @@ namespace {
     void Patch(const string &fileName,
                Ed           &ed)
     {
+        vfs & fs = local_fs::instance();
         std::cerr << "<" << fileName << ">" << std::endl;
         Source        source( Module::OpenFile(fileName) );
         const string  destName = vfs::with_new_extension(fileName,"tmp");
@@ -62,6 +64,26 @@ namespace {
             ed.run(target,source);
         }
         std::cerr << "\tcount=" << ed.count << std::endl;
+        if(ed.count)
+        {
+            const string fileDir = vfs::get_file_dir(fileName) + "backup/";
+            fs.create_sub_dir(fileDir);
+            const string fileSave = fileDir + vfs::get_base_name(fileName);
+            std::cerr << "\tfileSave =" << fileSave << std::endl;
+            if(fs.is_reg(fileSave))
+            {
+                throw exception("<%s> is already patched!",*fileName);
+            }
+            ios::disk_file::copy(fileSave,fileName,false);
+            fs.remove_file(fileName);
+            ios::disk_file::copy(fileName,destName,false);
+            fs.remove_file(destName);
+        }
+        else
+        {
+            std::cerr << "\tclean!" << std::endl;
+            fs.try_remove_file(destName);
+        }
         std::cerr << "<" << fileName << "/>" << std::endl;
         std::cerr << std::endl;
     }
