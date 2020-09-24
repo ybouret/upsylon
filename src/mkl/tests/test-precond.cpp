@@ -23,12 +23,14 @@ namespace
         }
         preconditioning<T> precond;
        // used[2] = false;
-       // used[3] = false;
+    // used[3] = false;
        // used[4] = false;
 
-        precond.run(omega,curv,used);
+        precond.run(omega,curv,&used);
         std::cerr << "omega=" << omega << std::endl;
 
+        precond.run(omega,curv,NULL);
+        std::cerr << "omega=" << omega << std::endl;
 
     }
 

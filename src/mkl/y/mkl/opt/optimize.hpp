@@ -19,15 +19,8 @@ namespace upsylon {
             const T f1 = func(x1);
             triplet<T> x = { x0, x1, x1 };
             triplet<T> f = { f0, f1, f1 };
-            if( f1<f0 )
-            {
-                bracket::expand(func,x,f);
-            }
-            else
-            {
-                bracket::inside(func,x,f);
-            }
-            return minimize::run(func,x,f,ftol);
+            const  minimize::bracketing how = (f1<f0) ? minimize::expand : minimize::inside;
+            return minimize::run(func,x,f,how,ftol);
         }
 
     }

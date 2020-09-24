@@ -40,7 +40,8 @@ namespace upsylon
             delta(this, & preconditioning::_delta),
             cut( numeric<T>::tiny ),
             one(1),
-            zero(0)
+            zero(0),
+            ctol(numeric<T>::ftol)
             {
             }
 
@@ -52,9 +53,9 @@ namespace upsylon
             //! find diagonal weight
             bool run(addressable<T>         &weight,
                      const matrix<T>        &curvature,
-                     const accessible<bool> &used)
+                     const accessible<bool> *used)
             {
-                assert(weight.size()==used.size());
+                assert(!used||(used->size()==weight.size()));
                 assert(weight.size()==curvature.rows);
                 assert(weight.size()==curvature.cols);
 
@@ -63,7 +64,7 @@ namespace upsylon
                 // initialize
                 //
                 //--------------------------------------------------------------
-                array_type                             &fdiag = aliasing::_(curvature.r_aux1);
+                array_type                             &cdiag = aliasing::_(curvature.r_aux1);
                 array_type                             &fwksp = aliasing::_(curvature.r_aux2);
                 const core::temporary_value<size_t>     nlink(nvar,weight.size());
 
@@ -72,31 +73,23 @@ namespace upsylon
                 // capture active diagonal components
                 //
                 //--------------------------------------------------------------
-                size_t nrun = 0;
+                const  bool full = (NULL==used);
+                size_t      nrun = 0;
                 for(size_t i=1;i<=nvar;++i)
                 {
-                    weight[i] = 0;
-                    if(used[i])
+                    weight[i] = zero;
+                    if(full || (*used)[i])
                     {
                         ++nrun;
-                        fdiag[nrun] = curvature[i][i];
+                        cdiag[nrun] = curvature[i][i];
                     }
                 }
 
                 switch(nrun)
                 {
-                    case 0: return true; // early return
-                        
-                    case 1: {
-                        for(size_t i=nvar;i>0;--i)
-                        {
-                            if(used[i]) {
-                                weight[i] = one; // set unique weight to 1
-                                break;
-                            }
-                        }
-                    } return true;
 
+                    case  1: set_active(weight,used); /* FALLTHRU */
+                    case  0: return true;             // early return
                     default: break;
                 }
 
@@ -105,23 +98,50 @@ namespace upsylon
                 // find dmin and dmax using adapted diag[1..nrun]
                 //
                 //--------------------------------------------------------------
-                array_type diag(*fdiag,nrun);
-                hsort(diag,comparison::increasing<T>);
-                const core::temporary_link<array_type>  dlink(diag,&diag_);
-                const core::temporary_value<T>          kdmin(dmin,diag[1]);
-                const core::temporary_value<T>          kdmax(dmax,diag[nrun]);
-                const core::temporary_value<T>          kdrho(drho,_drho());
+                array_type                     diag(*cdiag,nrun); sort(diag);
+                const core::temporary_value<T> kdmin(dmin,diag[1]);
+                const core::temporary_value<T> kdmax(dmax,diag[nrun]);
+
+                //--------------------------------------------------------------
+                //
+                // early returns
+                //
+                //--------------------------------------------------------------
 
                 std::cerr << "curv=" << curvature << std::endl;
-                std::cerr << "diag=" << diag << std::endl;
-                std::cerr << "dmin=" << dmin << std::endl;
-                std::cerr << "dmax=" << dmax << std::endl;
+                std::cerr << "diag=" << diag      << std::endl;
+                std::cerr << "dmin=" << dmin      << std::endl;
+                std::cerr << "dmax=" << dmax      << std::endl;
+                std::cerr << "q0  =" << dmin/dmax << std::endl;
+
+                if(dmin<=0)
+                {
+                    return false; // singular curvature
+                }
+
+                if(fabs_of(dmin/dmax-one)<=ctol)
+                {
+                    set_active(weight,used);
+                    return true;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // look up
+                //
+                //--------------------------------------------------------------
+                const core::temporary_link<array_type>  dlink(diag,&diag_);
+                const core::temporary_value<T>          kdrho(drho,_drho());
+
+
                 std::cerr << "drho=" << drho << std::endl;
 
+                //--------------------------------------------------------------
+                //
+                // find dmin and dmax using adapted diag[1..nrun]
+                //
+                //--------------------------------------------------------------
 
-                if(dmin<=0) return false; // singular curvature
-
-                std::cerr << "inv_cond0=" << dmax/dmin << std::endl;
                 array_type                              wksp(*fwksp,nrun);
                 const core::temporary_link<array_type>  wlink(wksp,&wksp_);
 
@@ -130,7 +150,7 @@ namespace upsylon
                     for(T p=dmax;p<=3*dmax;p+=0.001)
                     {
                         const T d = delta(p);
-                        fp("%.20g %.20g\n",p/dmax,d);
+                        fp("%.20g %.20g %.20g\n",p/dmax,d,p);
                     }
                 }
 
@@ -140,13 +160,18 @@ namespace upsylon
                 const T    beta = cut+ max_of(p-drho,zero);
                 std::cerr << "p=" << p << std::endl;
 
+
                 for(size_t i=nvar;i>0;--i)
                 {
-                    if(used[i])
+                    if(full || (*used)[i])
                     {
                         weight[i] = max_of(p-curvature[i][i],zero)/beta;
                     }
                 }
+
+
+
+
 
 
                 return true;
@@ -161,7 +186,7 @@ namespace upsylon
             array_type     *diag_;
             array_type     *wksp_;
             function1d      delta;
-            const T         cut,one,zero;
+            const T         cut,one,zero,ctol;
 
             inline T _drho() throw()
             {
@@ -203,6 +228,34 @@ namespace upsylon
                 return fabs_of(one-wksp[1]/wksp[nrun]);
             }
 
+            inline void set_active(addressable<T>         &w,
+                                   const accessible<bool> *used ) throw()
+            {
+                if(used)
+                {
+                    const accessible<bool> &u = *used;
+                    assert(u.size()==w.size());
+                    for(size_t i=w.size();i>0;--i)
+                    {
+                        if( u[i] )
+                        {
+                            w[i] = one;
+                        }
+                    }
+                }
+                else
+                {
+                    for(size_t i=w.size();i>0;--i)
+                    {
+                        w[i] = one;
+                    }
+                }
+            }
+
+            static inline void sort(addressable<T> &arr)
+            {
+                hsort(arr,comparison::increasing<T>);
+            }
 
         };
     }

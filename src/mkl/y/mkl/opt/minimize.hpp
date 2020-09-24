@@ -2,7 +2,7 @@
 #ifndef Y_MKL_MINIMIZE_INCLUDED
 #define Y_MKL_MINIMIZE_INCLUDED 1
 
-#include "y/mkl/triplet.hpp"
+#include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/types.hpp"
 #include <iostream>
 
@@ -13,6 +13,13 @@ namespace upsylon {
         //! function to minimize
         struct minimize
         {
+            enum bracketing
+            {
+                direct,
+                inside,
+                expand
+            };
+
             //! 1 step minimize an ordered x triplet with associated values
             template <typename T, typename FUNC> static inline
             void __step(FUNC       &func,
@@ -76,23 +83,50 @@ namespace upsylon {
             }
 
             //! run minimisation steps until convergence
+            /**
+             \param func a 1d function
+             \param x    initial variables
+             \param f    initial f(x)
+             \param how  pre-processing:
+             - direct: x,f are ready
+             - inside: bracket inside (x.a,x.c)
+             - expand: bracket expand frin (x.a,x.b)
+             \param xtol stop at xtol
+             */
             template <typename T, typename FUNC> static inline
-            T run(FUNC       &func,
-                  triplet<T> &x,
-                  triplet<T> &f,
-                  T           xtol = 0
+            T run(FUNC            &func,
+                  triplet<T>      &x,
+                  triplet<T>      &f,
+                  const bracketing how  = direct,
+                  T                xtol = 0
                   )
             {
+                //______________________________________________________________
+                //
+                // constants
+                //______________________________________________________________
                 static const T ftol     = numeric<T>::ftol;
                 static const T xtol_min = numeric<T>::sqrt_ftol;
                 xtol = max_of( fabs_of(xtol), xtol_min );
 
+                //______________________________________________________________
+                //
+                // pre-process ?
+                //______________________________________________________________
+                switch(how)
+                {
+                    case direct: break;
+                    case inside: bracket::inside(func,x,f); break;
+                    case expand: bracket::expand(func,x,f); break;
+                }
+
+                //______________________________________________________________
+                //
+                // setup triplets
+                //______________________________________________________________
                 assert(x.is_ordered());
-                x.co_sort(f);
-                assert(x.a<=x.b);
-                assert(x.b<=x.c);
-                assert(f.b<=f.a);
-                assert(f.b<=f.c);
+                x.co_sort(f); assert(x.a<=x.b); assert(x.b<=x.c); assert(f.b<=f.a); assert(f.b<=f.c);
+
 
                 T dx_prev = fabs_of(x.c-x.a);
                 for(;;)
@@ -130,6 +164,9 @@ namespace upsylon {
                 }
                 return x.b;
             }
+
+
+
 
         };
 
