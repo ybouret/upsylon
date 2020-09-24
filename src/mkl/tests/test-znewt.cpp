@@ -1,6 +1,8 @@
 
 #include "y/utest/run.hpp"
 #include "y/mkl/root/znewt.hpp"
+#include "y/mkl/root/zircon.hpp"
+
 #include "y/mkl/fcn/djacobian.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/sequence.hpp"
@@ -43,8 +45,8 @@ namespace {
 
 
     static inline
-    double solve(addressable<double> &F,
-                 addressable<double> &X,
+    double solve_newt(addressable<double>           &F,
+                 addressable<double>           &X,
                  numeric<double>::vector_field &f,
                  numeric<double>::jacobian     &fjac)
     {
@@ -58,6 +60,26 @@ namespace {
         }
         return X[2];
     }
+
+    static inline
+    double solve_zircon(addressable<double>           &F,
+                        addressable<double>           &X,
+                        numeric<double>::vector_field &f,
+                        numeric<double>::jacobian     &fjac)
+    {
+        zircon<double> zrc;
+        zrc.verbose = true;
+        f(F,X);
+        size_t        count  = 0;
+        zircon_status status = zircon_failure;
+        while( zircon_running == (status=zrc(F,X,f,fjac) ) )
+        {
+            ++count;
+        }
+        return X[2];
+    }
+
+
 
 }
 
@@ -91,14 +113,15 @@ Y_UTEST(znewt)
     // initialize
     X[1] = 30;
     X[2] = 10;
-    const double k0 = solve(F,X,f,fjac);
+    //const double k0 = solve_newt(F,X,f,fjac);
+    const double k0 = solve_zircon(F,X,f,fjac);
     {
         std::cerr << std::endl;
         std::cerr << "kappa = " << 1.0 + k0 / scale << std::endl;
         std::cerr << "t2    = " << X[1] << std::endl;
     }
 
-    
+
     const double nu_fac[] = { 0.9, 1.1 };
     const double d7_fac[] = { 0.9, 1.1 };
 
@@ -112,7 +135,7 @@ Y_UTEST(znewt)
         for(size_t j=0;j<2;++j)
         {
             mySys.d7ini = d7 * d7_fac[j];
-            const double k = solve(F,X,f,fjac);
+            const double k = solve_zircon(F,X,f,fjac);
             ks.push_back(k);
         }
     }
