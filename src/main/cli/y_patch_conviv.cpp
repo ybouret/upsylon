@@ -2,28 +2,47 @@
 #include "y/jive/lexical/editor/program.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/fs/local/fs.hpp"
 
 using namespace upsylon;
 using namespace Jive;
 
 namespace {
 
+    static const char integer_text[] = "integer(KIND=int_code)";
+
     class Ed : public Lexical::Editor::Program
     {
     public:
-        Ed()
+        unsigned count;
+
+        Ed() :
+        count(0)
         {
-            on("integer *::",this, & Ed::OnNakedInteger);
+            integer_("integer *::");
+            integer_("integer *\\( *4 *\\)");
         }
+
+        inline void integer_(const char *rx)
+        {
+            on(rx,this,&Ed::OnInteger);
+        }
+
 
         virtual ~Ed() throw()
         {
         }
 
-
-        void OnNakedInteger(ios::ostream &fp, const Token &)
+        void reset()
         {
-            fp << "integer::";
+            count=0;
+        }
+
+        void OnInteger(ios::ostream &fp, const Token &t)
+        {
+            std::cerr << "|_replacing '" << t << "'"  << std::endl;
+            fp << integer_text;
+            ++count;
         }
 
     private:
@@ -34,9 +53,17 @@ namespace {
     void Patch(const string &fileName,
                Ed           &ed)
     {
+        std::cerr << "<" << fileName << ">" << std::endl;
         Source        source( Module::OpenFile(fileName) );
-        ios::ocstream target( ios::cstdout );
-        ed.run(target,source);
+        const string  destName = vfs::with_new_extension(fileName,"tmp");
+        {
+            ios::ocstream target( destName );
+            ed.reset();
+            ed.run(target,source);
+        }
+        std::cerr << "\tcount=" << ed.count << std::endl;
+        std::cerr << "<" << fileName << "/>" << std::endl;
+        std::cerr << std::endl;
     }
 
 }
@@ -44,9 +71,9 @@ namespace {
 Y_PROGRAM_START()
 {
     Ed ed;
-    if(argc>1)
+    for(int i=1;i<argc;++i)
     {
-        const string fn = argv[1];
+        const string fn = argv[i];
         Patch(fn,ed);
     }
 }
