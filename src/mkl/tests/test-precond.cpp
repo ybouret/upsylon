@@ -18,20 +18,20 @@ namespace
         for(size_t i=1;i<=n;++i)
         {
             curv[i][i] = 10 * alea.to<double>();
-            //curv[i][i] = 1 - 1.0/(1000.0+i);
+            curv[i][i] = 1 - 1.0/(100.0+i);
             //curv[i][i] = 1;
         }
         preconditioning<T> precond;
-       // used[2] = false;
-    // used[3] = false;
-       // used[4] = false;
+        // used[2] = false;
+        // used[3] = false;
+        // used[4] = false;
 
         precond.run(omega,curv,&used);
         std::cerr << "omega=" << omega << std::endl;
 
-        precond.run(omega,curv,NULL);
-        std::cerr << "omega=" << omega << std::endl;
-
+        //precond.run(omega,curv,NULL);
+        //std::cerr << "omega=" << omega << std::endl;
+        
     }
 
 }
@@ -40,8 +40,7 @@ Y_UTEST(precond)
 {
 
     do_precond<float>();
-    
-    
+    //do_precond<double>();
 
 }
 Y_UTEST_DONE()

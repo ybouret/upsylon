@@ -179,6 +179,11 @@ namespace upsylon {
                 T width = x.c-x.a; assert(width>=0);
                 for(;;)
                 {
+                    //__________________________________________________________
+                    //
+                    // choose x.b
+                    //__________________________________________________________
+
                     if(f.a < f.c )
                     {
                         x.b = clamp<T>(x.a,x.a + SHRINK*(x.c-x.a),x.c);
@@ -201,7 +206,7 @@ namespace upsylon {
                     assert(x.is_ordered());
                     f.b = func(x.b);
 
-                    unsigned    flag = 0x00;
+                    unsigned    flag  = 0x00;
                     if(f.b>f.c) flag |= GTC; else { assert(f.b<=f.c); }
                     if(f.b>f.a) flag |= GTA; else { assert(f.b<=f.a); }
 
@@ -245,7 +250,7 @@ namespace upsylon {
                             assert(f.b<=f.a);
                             assert(f.b<=f.c);
                             // early return
-                            return;
+                            return ;
                     }
 
                     const T new_width = x.c-x.a;
@@ -269,7 +274,6 @@ namespace upsylon {
                     x.b = x.a = x.c;
                     f.b = f.a = f.c;
                 }
-
             }
 
 

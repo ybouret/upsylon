@@ -13,7 +13,6 @@
 #include "y/type/aliasing.hpp"
 #include "y/mkl/utils.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
 
 namespace upsylon
@@ -41,7 +40,8 @@ namespace upsylon
             cut( numeric<T>::tiny ),
             one(1),
             zero(0),
-            ctol(numeric<T>::ftol)
+            ctol(numeric<T>::ftol),
+            xtol(numeric<T>::sqrt_ftol)
             {
             }
 
@@ -50,7 +50,8 @@ namespace upsylon
             {
             }
 
-            //! find diagonal weight
+
+            //! find diagonal weights
             bool run(addressable<T>         &weight,
                      const matrix<T>        &curvature,
                      const accessible<bool> *used)
@@ -107,23 +108,19 @@ namespace upsylon
                 // early returns
                 //
                 //--------------------------------------------------------------
-
                 std::cerr << "curv=" << curvature << std::endl;
                 std::cerr << "diag=" << diag      << std::endl;
                 std::cerr << "dmin=" << dmin      << std::endl;
                 std::cerr << "dmax=" << dmax      << std::endl;
                 std::cerr << "q0  =" << dmin/dmax << std::endl;
+                std::cerr << "ctol=" << ctol << std::endl;
 
                 if(dmin<=0)
                 {
                     return false; // singular curvature
                 }
 
-                if(fabs_of(dmin/dmax-one)<=ctol)
-                {
-                    set_active(weight,used);
-                    return true;
-                }
+
 
                 //--------------------------------------------------------------
                 //
@@ -134,17 +131,15 @@ namespace upsylon
                 const core::temporary_value<T>          kdrho(drho,_drho());
 
 
-                std::cerr << "drho=" << drho << std::endl;
-
                 //--------------------------------------------------------------
                 //
-                // find dmin and dmax using adapted diag[1..nrun]
+                // prepare a workspace to compute new values
                 //
                 //--------------------------------------------------------------
-
                 array_type                              wksp(*fwksp,nrun);
                 const core::temporary_link<array_type>  wlink(wksp,&wksp_);
 
+#if 0
                 {
                     ios::ocstream fp("omega.dat");
                     for(T p=dmax;p<=3*dmax;p+=0.001)
@@ -153,10 +148,74 @@ namespace upsylon
                         fp("%.20g %.20g %.20g\n",p/dmax,d,p);
                     }
                 }
+#endif
 
-                triplet<T> P    = { dmax,-1,dmax+dmax };
-                triplet<T> D    = { delta(P.a), -1, delta(P.c) }; bracket::inside(delta,P,D);
-                const T    p    = minimize::run(delta,P,D);
+                //--------------------------------------------------------------
+                //
+                // built-in bracket/minimize
+                //
+                //--------------------------------------------------------------
+                triplet<T> x     = { dmax,       -1, dmax+dmax  };
+                triplet<T> f     = { delta(x.a), -1, delta(x.c) };
+                T          width = fabs_of(x.c-x.a);
+                while(true)
+                {
+                    static const unsigned B_GT_A  = 0x01;
+                    static const unsigned B_GT_C  = 0x02;
+                    assert(x.a<=x.c);
+                    assert(width>=0);
+                    f.b = ( delta( x.b = 0.5*(x.a+x.c) ) );
+                    if( f.b <= ctol )
+                    {
+                        break; // numerical convergence
+                    }
+                    unsigned    flag  = 0x00;
+                    if(f.b>f.a) flag |= B_GT_A;
+                    if(f.b>f.c) flag |= B_GT_C;
+                    switch(flag)
+                    {
+                        case B_GT_A:
+                            // f.b>f.a, f.b<=f.c
+                            // move c to b
+                            x.c = x.b;
+                            f.c = f.b;
+                            break;
+
+                        case B_GT_C:
+                            // f.c > f.c, f.b<=f.c
+                            // move a to b
+                            x.a = x.b;
+                            f.a = f.b;
+                            break;
+
+                        case B_GT_A|B_GT_C:
+                            // got to make a choice..
+                            if(f.a<=f.c)
+                            {
+                                x.c = x.b;
+                                f.c = f.b;
+                            }
+                            else
+                            {
+                                x.a=x.b;
+                                f.a=f.b;
+                            }
+                            break;
+
+                        default:
+                            // bracketed
+                            break;
+                    }
+                    const T new_width = fabs_of(x.c-x.a);
+                    const T max_width = fabs_of(xtol * x.b);
+                    if(new_width>=width || width <= max_width )
+                    {
+                        break;
+                    }
+                    width = new_width;
+                }
+
+                const T    p    = x.b;
                 const T    beta = cut+ max_of(p-drho,zero);
                 std::cerr << "p=" << p << std::endl;
 
@@ -169,11 +228,10 @@ namespace upsylon
                     }
                 }
 
-
-
-
-
-
+                (void) delta(p);
+                const T q = wksp[1]/wksp[nrun];
+                std::cerr << "q=" << q << " / " << dmin/dmax << std::endl;
+                
                 return true;
             }
 
@@ -186,7 +244,7 @@ namespace upsylon
             array_type     *diag_;
             array_type     *wksp_;
             function1d      delta;
-            const T         cut,one,zero,ctol;
+            const T         cut,one,zero,ctol,xtol;
 
             inline T _drho() throw()
             {
@@ -224,7 +282,7 @@ namespace upsylon
                     const T wj = max_of(p-dj,zero)/beta;
                     wksp[j]    = dj * wj;
                 }
-                hsort(wksp,comparison::increasing<T>);
+                sort(wksp);
                 return fabs_of(one-wksp[1]/wksp[nrun]);
             }
 
