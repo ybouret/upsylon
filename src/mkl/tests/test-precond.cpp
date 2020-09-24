@@ -17,7 +17,7 @@ namespace
 
         std::cerr << "curv=" << curv << std::endl;
         std::cerr << "used=" << used << std::endl;
-        if(precond.run(omega,curv,&used,quality))
+        if(precond(omega,curv,&used,quality))
         {
             std::cerr << "omega  =" << omega   << std::endl;
             std::cerr << "quality=" << quality << std::endl;

@@ -58,10 +58,10 @@ namespace upsylon
              for algorithm where curvature[i][i] -> curvature[i][i] * (1+weight[i]*lambda),
              then weights are computed to improve the quality of the quasi-inverse
              */
-            bool run(addressable<T>         &weight,
-                     const matrix<T>        &curvature,
-                     const accessible<bool> *used,
-                     T                      &quality)
+            bool operator()(addressable<T>         &weight,
+                            const matrix<T>        &curvature,
+                            const accessible<bool> *used,
+                            T                      &quality)
             {
                 assert(!used||(used->size()==weight.size()));
                 assert(weight.size()==curvature.rows);

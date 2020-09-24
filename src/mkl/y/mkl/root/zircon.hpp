@@ -4,18 +4,23 @@
 #ifndef Y_MATH_FCN_ZIRCON_INCLUDED
 #define Y_MATH_FCN_ZIRCON_INCLUDED 1
 
+#include "y/mkl/utils.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/eigen.hpp"
-#include "y/mkl/utils.hpp"
-#include "y/sequence/arrays.hpp"
 #include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/kernel/preconditioning.hpp"
+
+#include "y/sequence/arrays.hpp"
 #include "y/core/temporary-link.hpp"
 #include "y/core/temporary-value.hpp"
 #include "y/core/temporary-acquire.hpp"
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/core/ipower.hpp"
+
 #include "y/ios/ocstream.hpp"
+
+
 
 
 namespace upsylon
@@ -90,8 +95,6 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             C0(),
             C(),
             P(),
-            dmin(0),
-            dmax(0),
             grad( A.next()  ),
             eigw( A.next()  ),
             step( A.next()  ),
@@ -105,8 +108,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             f_(0),
             F_(0),
             X_(0),
-            g(this,&zircon::_g),
-            cond(this,&zircon::_cond)
+            g(this,&zircon::_g)
             {
             }
 
@@ -128,7 +130,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 assert( F.size() == X.size() );
                 //--------------------------------------------------------------
                 //
-                // prepare topology
+                // prepare context
                 //
                 //--------------------------------------------------------------
                 core::temporary_value<size_t>         nlink(nvar,X.size());
@@ -186,12 +188,15 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 // pre-conditioner
                 //
                 //--------------------------------------------------------------
-                if(!compute_omega())
+                T   quality = 0;
+                if(!precond(omeg,C0,NULL,quality))
                 {
+                    Y_ZIRCON_PRINTLN("singular pre-condition");
                     return zircon_failure;
                 }
                 Y_ZIRCON_PRINTLN("omega="<<omeg);
 
+                exit(1);
 
                 T   lam = 0;
                 int p   = -int(numeric<T>::sqrt_dig);
@@ -358,30 +363,28 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zircon);
-            size_t           nvar;
-            arrays<T>        A;
-            matrix<T>        J;
-            matrix<T>        tJ;
-            matrix<T>        C0;
-            matrix<T>        C;
-            matrix<T>        P;
-            T                dmin;
-            T                dmax;
-            array_type      &grad;
-            array_type      &eigw;
-            array_type      &step;
-            array_type      &diag;
-            array_type      &omeg;
-            array_type      &Ftry;
-            array_type      &Xtry;
-            array_type      &Fsqr;
-            array_type      &X1;
-            array_type      &F1;
-            ftype           *f_;
-            addressable<T>  *F_;
-            addressable<T>  *X_;
-            function1d       g;
-            function1d       cond;
+            size_t             nvar;   //!< num variables
+            arrays<T>          A;      //!< arrays memory
+            matrix<T>          J;      //!< Jacobian
+            matrix<T>          tJ;     //!< Jacobian transpose
+            matrix<T>          C0;     //!< initial  curvature
+            matrix<T>          C;      //!< modified curvature
+            matrix<T>          P;      //!< otrhonormal matrix for eigen
+            array_type        &grad;
+            array_type        &eigw;
+            array_type        &step;
+            array_type        &diag;
+            array_type        &omeg;
+            array_type        &Ftry;
+            array_type        &Xtry;
+            array_type        &Fsqr;
+            array_type        &X1;
+            array_type        &F1;
+            ftype             *f_;
+            addressable<T>    *F_;
+            addressable<T>    *X_;
+            function1d         g;
+            preconditioning<T> precond;
 
 
             //! local computation of |FF|^2/2
@@ -409,61 +412,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 return __g(Ftry);
             }
 
-            //! compute limite condition indicator
-            inline T _cond(const T s2)
-            {
-                array_type &d  = Fsqr;
-                const T    fac = T(1)+s2;
-                for(size_t i=nvar;i>0;--i)
-                {
-                    d[i] = diag[i] * ( fac*dmax - diag[i] );
-                }
-                hsort(d,comparison::increasing<T>);
-                return fabs_of(d[nvar]-d[1]);
-            }
 
-            bool compute_omega()
-            {
-                // initialize diagonal terms
-                for(size_t i=nvar;i>0;--i) diag[i] = C0[i][i];
-                hsort(diag,comparison::increasing<T>);
-                dmin = diag[1];    assert(dmin>=0);
-                dmax = diag[nvar]; assert(dmax>=0);
-                if(dmin<=0)
-                {
-                    Y_ZIRCON_PRINTLN("singular jacobian");
-                    return false;
-                }
 
-                {
-                    ios::ocstream fp("omega.dat");
-                    for(T s2=0;s2<=1.0;s2+=0.01)
-                    {
-                        fp("%g %g\n",s2,cond(s2));
-                    }
-                }
-
-                if(dmax<=dmin)
-                {
-                    quark::ld(omeg,1);
-                }
-                else
-                {
-                    // prepare optim
-                    triplet<T> S2 = { 0, -1, 1 };
-                    triplet<T> CC = { cond(S2.a), -1, cond(S2.c) };
-                    bracket::inside(cond,S2,CC);
-                    const T    s2 = minimize::run(cond,S2,CC);
-                    std::cerr << "s2=" << s2 << std::endl;
-                    const T    fac  = (1.0+s2) * dmax;
-                    const T    beta = fac - dmin;
-                    for(size_t i=nvar;i>0;--i)
-                    {
-                        omeg[i] = (fac - C0[i][i])/beta;
-                    }
-                }
-                return true;
-            }
 
             inline void push_trial()
             {
