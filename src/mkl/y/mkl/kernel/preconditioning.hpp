@@ -44,7 +44,7 @@ namespace upsylon
             zero(0),
             ctol(numeric<T>::ftol),
             xtol(numeric<T>::sqrt_ftol),
-            half(0.5)
+            half( T(0.5) )
             {
             }
 

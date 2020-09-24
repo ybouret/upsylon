@@ -36,7 +36,7 @@ namespace upsylon
 
             //! setup
             explicit djacobian( field_type &func, const derivator &drvs) :
-            h(1e-4),
+            h(T(1e-4)),
             F(func),
             D(drvs),
             i(0),
