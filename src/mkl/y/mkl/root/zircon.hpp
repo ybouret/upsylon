@@ -123,10 +123,10 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
 
 
             //! starting with f(F,X) precomputed
-            inline zircon_status cycle3(addressable<T> &F,
-                                        addressable<T> &X,
-                                        ftype          &f,
-                                        jtype          &fjac)
+            inline zircon_status operator()(addressable<T> &F,
+                                            addressable<T> &X,
+                                            ftype          &f,
+                                            jtype          &fjac)
             {
                 assert( F.size() == X.size() );
                 //--------------------------------------------------------------

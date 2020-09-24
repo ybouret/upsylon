@@ -151,7 +151,7 @@ Y_UTEST(zircon)
         
         int cycle = 0;
 
-        while( zircon_running == zrc.cycle3(F,X,f,fjac) )
+        while( zircon_running == zrc(F,X,f,fjac) )
         {
             ++cycle;
             ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
@@ -192,7 +192,7 @@ Y_UTEST(zircon)
 
         int cycle = 0;
 
-        while( std::cerr << std::endl, zircon_running == zrc.cycle3(F,X,f,fjac) )
+        while( std::cerr << std::endl, zircon_running == zrc(F,X,f,fjac) )
         {
             ++cycle;
             ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
