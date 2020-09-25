@@ -18,7 +18,6 @@ namespace upsylon {
              only the upper part of a is required, and
              the result is stored in the lower triangle,
              put the diagonal into diag.
-             a MUST have some extra memory
              */
             template <typename T> static inline
             bool build( matrix<T> &a ) throw()

@@ -58,7 +58,7 @@ namespace  {
                 std::cerr << '<' << RMS << '>';
             }
         }
-        // std::cerr << std::endl;
+        std::cerr << std::endl;
     }
 }
 
@@ -66,6 +66,29 @@ Y_UTEST(cholesky)
 {
     do_test<float>();
     do_test<double>();
+
+    {
+        size_t n=4;
+        matrix<double> J(n,n);
+    build:
+        for(size_t i=1;i<=n;++i)
+        {
+            for(size_t j=1;j<=n;++j)
+            {
+                J[i][j] = alea.symm<double>();
+            }
+        }
+        matrix<double> J2(n,n);
+        quark::mmul_rtrn(J2,J,J);
+        std::cerr << "J="  << J  << std::endl;
+        std::cerr << "J2=" << J2 << std::endl;
+        if( !cholesky::build(J2) )
+            goto build;
+
+
+        std::cerr << "L=" << J2 << std::endl;
+
+    }
 
 }
 Y_UTEST_DONE()
