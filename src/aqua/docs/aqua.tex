@@ -1,0 +1,30 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+\usepackage{bookman}
+
+%%  
+\newcommand{\trn}[1]{{#1}^{\mathtt{T}}}
+\newcommand{\conc}[1]{{\left[#1\right]}}
+ 
+\begin{document}
+\section{Species and Equilibria}
+Let us consider an aqueous system with $M$ species $A_1,\ldots,A_M$.
+Those $M$ species are involved in $N$ equilibria:
+\begin{equation}
+	\forall j\in[1:N], \; \sum_{i=1}^M \nu_{j,i} \conc{A_i} = 0,
+	 \;\; K_j = \prod_{i=1}^M \conc{A_i}^{\nu_{ji}}
+\end{equation}
+
+\section{Chemical Extent}
+We consider the chemical topology matrix:
+\begin{equation}
+	\bm{\nu} \in \mathcal{M}
+\end{equation}
+
+\end{document}
