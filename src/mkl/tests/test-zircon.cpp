@@ -138,8 +138,8 @@ Y_UTEST(zircon)
             sys.Ca = string_convert::to<double>( argv[1], "Ca" );
         }
 
-        numeric<double>::vector_field f(&sys, &mysys<double>::compute);
-        numeric<double>::jacobian     fjac(&sys,&mysys<double>::jacobian);
+        numeric<double>::vector_field f(   &sys, &mysys<double>::compute);
+        numeric<double>::jacobian     fjac(&sys, &mysys<double>::jacobian);
 
         vector<double> F(4,0);
         vector<double> X(4,0);
