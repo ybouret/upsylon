@@ -17,14 +17,32 @@
 Let us consider an aqueous system with $M$ species $A_1,\ldots,A_M$.
 Those $M$ species are involved in $N$ equilibria:
 \begin{equation}
-	\forall j\in[1:N], \; \sum_{i=1}^M \nu_{j,i} \conc{A_i} = 0,
-	 \;\; K_j = \prod_{i=1}^M \conc{A_i}^{\nu_{ji}}
+	\forall i\in[1:N], \; \sum_{j=1}^M \nu_{i,j} \conc{A_j} = 0,
+	 \;\; K_i = \prod_{j=1}^M \conc{A_j}^{\nu_{ij}}
 \end{equation}
 
-\section{Chemical Extent}
+\section{Chemical Topology and Extent}
 We consider the chemical topology matrix:
 \begin{equation}
-	\bm{\nu} \in \mathcal{M}
+	\bm{\nu} \in \mathcal{M}_{N,M}
 \end{equation}
+and a chemical extent:
+\begin{equation}
+	\vec{\xi} \in \mathbb{R}^{N}
+\end{equation}
+so that a set of concentrations $\vec{C}\in\mathbb{R}^M$ is described by:
+\begin{equation}
+	\vec{C} = \vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
+\end{equation}
+
+\section{Regularising from Products and Reactants}
+We define an equilibria condition:
+\begin{equation}
+	Q_i =  \underbrace{\left(K_i \prod_{j,\nu_{ij}<0} \conc{A_j}^{-\nu_{ij}}\right)}_{\text{reactants}} 
+	- \underbrace{\left( \prod_{j,\nu_{ij}>0} \conc{A_j}^{\nu_{ij}}\right)}_{\text{products}}
+	= \left(K_i \prod_{j} \conc{A_j}^{\nu^r_{ij}}\right)
+	- \left( \prod_{j} \conc{A_j}^{\nu^p_{ij}}\right)  
+\end{equation}
+ 
 
 \end{document}
