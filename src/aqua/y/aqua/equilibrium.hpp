@@ -6,6 +6,7 @@
 #include "y/aqua/species.hpp"
 #include "y/core/list.hpp"
 #include "y/core/inode.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon {
 
@@ -49,6 +50,9 @@ namespace upsylon {
             double K(const double t) const;
             void   validate() const;
 
+            //! fill topology row
+            void   fillNu(addressable<double> &nu) const throw();
+            
 
         protected:
             template <typename ID> inline

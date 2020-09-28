@@ -138,6 +138,22 @@ namespace upsylon {
             return Keq;
         }
 
+      
+
+        void Equilibrium:: fillNu(addressable<double> &nu) const throw()
+        {
+            for(size_t i=nu.size();i>0;--i)
+            {
+                nu[i] = 0;
+            }
+            for(const Component *c=components.head;c;c=c->next)
+            {
+                assert(c->sp.indx>0);
+                assert(c->sp.indx<=nu.size());
+                nu[c->sp.indx] = c->nu;
+            }
+        }
+
     }
 
 }
