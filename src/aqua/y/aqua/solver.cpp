@@ -13,13 +13,17 @@ namespace upsylon
 
         Solver:: Solver() :
         N(0),
-        M(0)
+        M(0),
+        nu(),
+        arr(10),
+        Ctry( arr.next() )
         {
         }
 
         void Solver:: quit() throw()
         {
-            nu. release();
+            arr. release();
+            nu.  release();
             aliasing::_(M) = 0;
             aliasing::_(N) = 0;
         }
@@ -40,6 +44,8 @@ namespace upsylon
                     nu.make(N,M);
                     eqs.fillNu(nu);
                 }
+
+                
 
             }
             catch(...)

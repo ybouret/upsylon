@@ -5,6 +5,7 @@
 
 #include "y/aqua/equilibria.hpp"
 #include "y/aqua/library.hpp"
+#include "y/sequence/arrays.hpp"
 
 namespace upsylon
 {
@@ -12,6 +13,8 @@ namespace upsylon
     namespace Aqua
     {
 
+        typedef arrays<double> Arrays;
+        typedef lightweight_array<double> Array;
 
         class Solver
         {
@@ -22,10 +25,11 @@ namespace upsylon
             void init(Library &lib, Equilibria &eqs);
             void quit() throw();
 
-            const size_t N;  //!< equilibria
-            const size_t M;  //!< species
-            Matrix       nu; //!< topology [NxM]
-
+            const size_t N;    //!< equilibria
+            const size_t M;    //!< species
+            Matrix       nu;   //!< topology [NxM]
+            Arrays       arr;  //!< linear data
+            Array       &Ctry; //!< trial C [M]
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
