@@ -29,9 +29,12 @@ namespace upsylon {
 
             std::ostream        & display(std::ostream &) const;            //! display
             friend std::ostream & operator<<(std::ostream&,const Library&); //!< display
+            void buildIndices() throw();
 
             // members
             const size_t maxNameSize; //!< for names alignment
+
+
 
         private:
             Y_DISABLE_ASSIGN(Library);

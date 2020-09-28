@@ -57,6 +57,12 @@ namespace upsylon {
             aliasing::_(d_nu) += nu;
             assert(d_nu_p-d_nu_r==d_nu);
             maxCompSize = max_of(maxCompSize,sp.name.size());
+
+            for(Component *c=components.head;c;c=c->next)
+            {
+                aliasing::_(c->sp.indx) = 0;
+            }
+
         }
 
         void Equilibrium:: display_list(std::ostream &os, const Components &l) const
@@ -114,6 +120,10 @@ namespace upsylon {
                     Z += c->nu * c->sp.Z;
                 }
                 if( Z!= 0 ) throw exception("<%s> does not conserve charge!",id);
+            }
+
+            {
+                // todo: gcd
             }
         }
 

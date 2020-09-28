@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_AQUA_EQUILIBRIUM_INCLUDED
@@ -32,16 +31,16 @@ namespace upsylon {
         class Equilibrium : public Object, public Counted
         {
         public:
-            typedef Component::List Components;
-
+            typedef Component::List      Components;
+            typedef arc_ptr<Equilibrium> Pointer;
             virtual ~Equilibrium() throw();
-
-
-
+            
             const string name;
             const int    d_nu;
             const int    d_nu_r;
             const int    d_nu_p;
+
+            //! insert and reset all species indices
             void operator()(const Species &sp, const int nu);
 
             std::ostream & display(std::ostream &os, const size_t width) const;

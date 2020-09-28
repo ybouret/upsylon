@@ -29,12 +29,14 @@ namespace upsylon {
             Object(), Counted(),
             name(id),
             Z(z),
+            indx(0),
             data()
             {
             }
 
             const string name;  //!< global name
             const int    Z;     //!< formal charge
+            const size_t indx;  //!< index
             Groove       data;  //!< extra data
 
         private:

@@ -52,6 +52,16 @@ namespace upsylon {
             return lib.display(os);
         }
 
+        void Library:: buildIndices() throw()
+        {
+            size_t i=0;
+            for(iterator it=begin();it!=end();++it)
+            {
+                aliasing::_( (**it).indx ) = ++i;
+            }
+        }
+
+
 
     }
 }
