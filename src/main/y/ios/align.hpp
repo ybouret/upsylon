@@ -9,29 +9,31 @@ namespace upsylon {
 
     namespace ios
     {
-
+        //! ligth weight class to align strings
         class align
         {
         public:
+            //! justification
             enum justify
             {
-                left,
-                center,
-                right
+                left,   //!< left
+                center, //!< center
+                right   //!< right
             };
 
-            const char     *text;
-            const size_t    size;
-            const justify   kind;
-            const size_t    width;
+            const char     *text;  //!< persistent text
+            const size_t    size;  //!< persistent size
+            const justify   kind;  //!< kind of justification
+            const size_t    width; //!< larger width
 
-            virtual ~align() throw();
-            align(const align &) throw();
-            align(const char   *, const size_t, const justify, const size_t) throw();
-            align(const char   *, const justify, const size_t) throw();
-            align(const string &, const justify, const size_t) throw();
-            align(const char   &, const justify, const size_t) throw();
+            ~align() throw();              //!< cleanup
+            align(const align &) throw();  //!< no-throw copy
+            align(const char   *, const size_t, const justify, const size_t) throw(); //!< setup
+            align(const char   *, const justify, const size_t) throw();               //!< setup
+            align(const string &, const justify, const size_t) throw();               //!< setup
+            align(const char   &, const justify, const size_t) throw();               //!< setup
 
+            //! output
             template <typename OSTREAM>
             friend inline OSTREAM & operator<<(OSTREAM &os, const align &a)
             {

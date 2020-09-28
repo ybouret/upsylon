@@ -8,7 +8,7 @@ using namespace Aqua;
 
 Y_UTEST(eqs)
 {
-
+    
 
 
 }

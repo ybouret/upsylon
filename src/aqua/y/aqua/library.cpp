@@ -3,6 +3,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/utils.hpp"
 #include "y/exception.hpp"
+#include "y/ios/align.hpp"
 #include <iomanip>
 
 namespace upsylon {
@@ -37,8 +38,8 @@ namespace upsylon {
             {
                 os << '\t' << '{' << ' ';
                 const Species &sp = **it;
-                os << sp.name; for(size_t j=sp.name.size();j<=maxNameSize;++j) os << ' ';
-                os << ':' << ' ';
+                os << ios::align(sp.name,ios::align::left,maxNameSize);
+                os << ' ' << ':' << ' ';
                 os << std::setw(3) << sp.Z;
                 os << '}' << std::endl;
             }
