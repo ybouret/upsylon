@@ -113,10 +113,8 @@ namespace upsylon {
                 {
                     Z += c->nu * c->sp.Z;
                 }
-                if( Z!= 0 ) throw exception("<%s> does not conserve charge!",id)
-
+                if( Z!= 0 ) throw exception("<%s> does not conserve charge!",id);
             }
-
         }
 
 
