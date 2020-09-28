@@ -226,6 +226,13 @@ namespace upsylon
         }
 #endif
 
+#if defined(Y_WIN)
+		if (!::MoveFile(*old_path, *new_path))
+		{
+			throw win32::exception(::GetLastError(), "MoveFile(%s,%s)", *old_path, *new_path);
+		}
+#endif
+
     }
 
 
