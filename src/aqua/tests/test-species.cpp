@@ -12,7 +12,7 @@ Y_UTEST(species)
     std::cerr << h->name << std::endl;
     std::cerr << w->name << std::endl;
 
-    h->make<double>( memory::storage::shared );
+    h->data.make<double>( memory::storage::shared );
 
 }
 Y_UTEST_DONE()

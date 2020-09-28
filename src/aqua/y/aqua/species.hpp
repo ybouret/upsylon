@@ -14,7 +14,7 @@ namespace upsylon {
         typedef memory::groove Groove;   //!< alias for local storage
 
         //! mandatory data for a species
-        class Species : public Object, public Counted, public Groove
+        class Species : public Object, public Counted
         {
         public:
             // types and definition
@@ -26,14 +26,16 @@ namespace upsylon {
             //! setup from an ID and a charge
             template <typename ID>
             Species(const ID &id, const int z) :
-            Object(), Counted(), Groove(),
+            Object(), Counted(),
             name(id),
-            Z(z)
+            Z(z),
+            data()
             {
             }
 
-            const string name;
-            const int    Z;
+            const string name;  //!< global name
+            const int    Z;     //!< formal charge
+            Groove       data;  //!< extra data
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
