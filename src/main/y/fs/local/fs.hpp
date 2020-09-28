@@ -18,6 +18,7 @@ namespace upsylon
         virtual void     remove_file( const string &filename );
         virtual scanner *new_scanner( const string &dirname ) const;
         virtual uint64_t get_file_size( const string &path ) const;
+        virtual void     rename_path(const string&,const string &) const;
 
     private:
         explicit local_fs() throw();

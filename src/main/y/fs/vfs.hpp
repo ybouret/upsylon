@@ -132,7 +132,11 @@ namespace upsylon {
         
         //! get a regular file size
         virtual uint64_t         get_file_size(const string &path)  const = 0;
-        
+
+        //! rename a path
+        virtual void             rename_path(const string &old_path, const string &new_path) const = 0;
+
+
         //======================================================================
         //
         // non virtual interface

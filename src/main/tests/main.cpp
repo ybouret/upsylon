@@ -132,7 +132,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(conveyor);
     Y_UTEST(conveyors);
     Y_UTEST(ios_align);
-    
+    Y_UTEST(rename);
+
     // assoc
     Y_UTEST(associative);
     Y_UTEST(map);

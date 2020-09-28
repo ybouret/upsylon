@@ -216,4 +216,17 @@ namespace upsylon
     }
 
 
+    void local_fs:: rename_path(const string &old_path, const string &new_path) const
+    {
+        Y_GIANT_LOCK();
+#if defined(Y_BSD)
+        if( 0 != rename(*old_path,*new_path) )
+        {
+            throw libc::exception(errno,"rename(%s,%s)",*old_path,*new_path);
+        }
+#endif
+
+    }
+
+
 }
