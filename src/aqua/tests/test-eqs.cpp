@@ -13,11 +13,11 @@ Y_UTEST(eqs)
     Species::Pointer AH = new Species("AH",0);
     Species::Pointer Am = new Species("A-",-1);
 
-    Equilibrium water( "water" );
+    ConstEquilibrium water( "water", 1e-14);
     water(*h,1);
     water(*w,2);
 
-    Equilibrium acid( "acid" );
+    ConstEquilibrium acid( "acid", pow(10,-4.8));
     acid(*h,1);
     acid(*Am,1);
     acid(*AH,-1);

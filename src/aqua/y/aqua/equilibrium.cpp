@@ -83,6 +83,7 @@ namespace upsylon {
             display_list(os,reactants);
             os << " <=>";
             display_list(os,products);
+            os << " (" << K(0) << ")";
             os << " | d_nu=" << d_nu;
             os << " | d_nu_r=" << d_nu_r;
             os << " | d_nu_p=" << d_nu_p;
@@ -94,6 +95,24 @@ namespace upsylon {
         {
             return eq.display(os,0);
         }
+
+        double Equilibrium:: K(const double t) const
+        {
+            const double value = getK(t);
+            if(value<=0) throw exception("<%s> negative constante",*name);
+            return value;
+        }
+
+        ConstEquilibrium:: ~ConstEquilibrium() throw()
+        {
+            aliasing::_(Keq) = 0;
+        }
+
+        double ConstEquilibrium:: getK(const double) const
+        {
+            return Keq;
+        }
+
     }
 
 }

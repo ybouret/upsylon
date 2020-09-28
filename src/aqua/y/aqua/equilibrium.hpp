@@ -36,6 +36,20 @@ namespace upsylon {
 
             virtual ~Equilibrium() throw();
 
+
+
+            const string name;
+            const int    d_nu;
+            const int    d_nu_r;
+            const int    d_nu_p;
+            void operator()(const Species &sp, const int nu);
+
+            std::ostream & display(std::ostream &os, const size_t width) const;
+            friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq);
+
+            double K(const double t) const;
+
+        protected:
             template <typename ID> inline
             explicit Equilibrium(const ID &id) :
             name(id),
@@ -49,15 +63,6 @@ namespace upsylon {
             {
             }
 
-            const string name;
-            const int    d_nu;
-            const int    d_nu_r;
-            const int    d_nu_p;
-            void operator()(const Species &sp, const int nu);
-
-            std::ostream & display(std::ostream &os, const size_t width) const;
-            friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq);
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             Components components;
@@ -65,8 +70,30 @@ namespace upsylon {
             Components products;
             size_t     maxCompSize;
             void display_list(std::ostream &os, const Components &l) const;
+            virtual double getK(const double t) const = 0;
+
         };
 
+
+        class ConstEquilibrium : public Equilibrium
+        {
+        public:
+            const double Keq;
+
+            virtual ~ConstEquilibrium() throw();
+
+
+            template <typename ID> inline
+            explicit ConstEquilibrium(const ID &id, const double Kvalue) :
+            Equilibrium(id),
+            Keq(Kvalue){}
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
+            virtual double getK(const double t) const;
+
+        };
 
     }
 
