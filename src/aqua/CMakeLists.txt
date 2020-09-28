@@ -9,15 +9,15 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( aqua FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/aqua )
  
-FILE(GLOB eqs_decl y/aqua/eqs/*.hpp)
-FILE(GLOB eqs_code y/aqua/eqs/*.cpp)
-SET(eqs_srcs ${eqs_decl} ${eqs_code})
-SOURCE_GROUP( aqua FILES ${eqs_srcs} )
-INSTALL( FILES ${eqs_decl} DESTINATION include/y/aqua/eqs )
+FILE(GLOB solver_decl y/aqua/solver/*.hpp)
+FILE(GLOB solver_code y/aqua/solver/*.cpp)
+SET(solver_srcs ${solver_decl} ${solver_code})
+SOURCE_GROUP( aqua/solver FILES ${solver_srcs} )
+INSTALL( FILES ${solver_decl} DESTINATION include/y/aqua/solver )
 
 ADD_LIBRARY(y-aqua STATIC 
 ${main_srcs}
-${eqs_srcs} )
+${solver_srcs} )
 INSTALL( TARGETS y-aqua ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)

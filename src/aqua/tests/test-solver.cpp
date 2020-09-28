@@ -37,7 +37,7 @@ Y_UTEST(solver)
     Solver cs;
     cs.init(lib,eqs);
     std::cerr << "nu=" << cs.nu << std::endl;
-
+    std::cerr << "used=" << cs.used << std::endl;
 }
 Y_UTEST_DONE()
 
