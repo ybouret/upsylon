@@ -44,6 +44,7 @@ namespace {
     };
 
 
+#if 0
     static inline
     double solve_newt(addressable<double>           &F,
                  addressable<double>           &X,
@@ -60,6 +61,7 @@ namespace {
         }
         return X[2];
     }
+#endif
 
     static inline
     double solve_zircon(addressable<double>           &F,

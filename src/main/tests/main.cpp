@@ -117,21 +117,7 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
-/*
-    Y_UTEST(mpn);
-    Y_UTEST(mpn_perf);
-    Y_UTEST(mpn_fact);
-    Y_UTEST(mpz);
-    Y_UTEST(mpq);
-    Y_UTEST(mprm);
-    Y_UTEST(mprm1000);
-    Y_UTEST(prime_factor);
-    Y_UTEST(prime_ratio);
-    Y_UTEST(mp_simplify);
-    Y_UTEST(ilog);
-    Y_UTEST(mp_io);
-    Y_UTEST(mp_mul);
- */   
+
 
     Y_UTEST(hashing);
     Y_UTEST(mperf);
@@ -145,7 +131,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(md);
     Y_UTEST(conveyor);
     Y_UTEST(conveyors);
-
+    Y_UTEST(ios_align);
+    
     // assoc
     Y_UTEST(associative);
     Y_UTEST(map);

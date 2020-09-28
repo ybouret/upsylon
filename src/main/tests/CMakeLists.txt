@@ -160,6 +160,7 @@ test-srz-io.cpp
 test-upacker.cpp
 test-conveyor.cpp
 test-conveyors.cpp
+test-ios-align.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams ${HERE}/words.db)
@@ -178,6 +179,7 @@ ADD_TEST(ios:srz_io      test-main srz_io)
 ADD_TEST(ios:upacker     test-main upacker)
 ADD_TEST(ios:conveyor    test-main conveyor)
 ADD_TEST(ios:conveyors   test-main conveyors)
+ADD_TEST(ios:align       test-main ios_align)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp

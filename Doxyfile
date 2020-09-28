@@ -827,6 +827,7 @@ INPUT                  = src/main/y \
                          src/mkl/y \
                          src/graphic/y \
                          src/chem/y \
+                         src/aqua/y \
 			src/jive/y \
 		   	src/spade/y \
                          src/mpi++/y \

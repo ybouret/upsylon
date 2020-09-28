@@ -71,12 +71,12 @@ namespace upsylon
         namespace Syntax
         {
 
-            Node::Lx::Lx(Lexeme *lx) throw() :
+            Node::Lptr::Lptr(Lexeme *lx) throw() :
             lexeme(lx)
             {
             }
 
-            Node:: Lx:: ~Lx() throw()
+            Node:: Lptr:: ~Lptr() throw()
             {
                 if(lexeme)
                 {
@@ -88,26 +88,26 @@ namespace upsylon
             
             const Lexeme * Node::lexeme() const throw()
             {
-                return lptr().lexeme;
+                return _Lptr().lexeme;
             }
 
-            Node::List & Node::children() throw()
+            Node::List & Node::leaves() throw()
             {
-                return chld();
+                return _List();
             }
 
-            const Node::List & Node::children() const throw()
+            const Node::List & Node::leaves() const throw()
             {
-                return chld();
+                return _List();
             }
 
-            Node::Lx   & Node:: lptr() const throw()
+            Node::Lptr  & Node:: _Lptr() const throw()
             {
                 assert(IsTerminal==kind);
-                return *static_cast<Lx *>( (void *)aliasing::anonymous(wksp) );
+                return *static_cast<Lptr *>( (void *)aliasing::anonymous(wksp) );
             }
 
-            Node::List   & Node:: chld() const throw()
+            Node::List   & Node:: _List() const throw()
             {
                 assert(IsInternal==kind);
                 return *static_cast<List *>( (void*)aliasing::anonymous(wksp) );
@@ -119,11 +119,11 @@ namespace upsylon
                 switch(kind)
                 {
                     case IsTerminal:
-                        lptr().~Lx();
+                        self_destruct(_Lptr());
                         break;
 
                     case IsInternal:
-                        chld().~List();
+                        self_destruct(_List());
                         break;
                 }
             }
@@ -141,7 +141,7 @@ namespace upsylon
             wksp()
             {
                 setup();
-                new ( aliasing::anonymous(wksp) ) Lx(lx);
+                new ( aliasing::anonymous(wksp) ) Lptr(lx);
             }
 
             Node:: Node(const Internal &in) throw() :
@@ -184,13 +184,13 @@ namespace upsylon
                 switch(node->kind)
                 {
                     case IsTerminal: {
-                        Lx & lx = node->lptr(); assert(lx.lexeme);
+                        Lptr & lx = node->_Lptr(); assert(lx.lexeme);
                         lexer.unget(lx.lexeme);
                         lx.lexeme = 0;
                     } break;
 
                     case IsInternal: {
-                        List &L = node->chld();
+                        List &L = node->_List();
                         while(L.size)
                         {
                             ReturnTo(lexer,L.pop_back());

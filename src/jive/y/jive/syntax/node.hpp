@@ -40,7 +40,7 @@ namespace upsylon
                 //! base class for a list of code
                 typedef core::list_of<Node> ListType;
 
-                //! dedicated list for child(ren)
+                //! dedicated list for leaves
                 class List : public ListType
                 {
                 public:
@@ -57,9 +57,9 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
 
-                const Lexeme * lexeme()   const    throw();           //!< access lexeme
-                List         & children()          throw();           //!< access children
-                const List   & children() const    throw();           //!< access children
+                const Lexeme * lexeme() const    throw();         //!< access lexeme
+                List         & leaves()          throw();           //!< access leaves
+                const List   & leaves() const    throw();           //!< access leaves
 
                 //______________________________________________________________
                 //
@@ -84,20 +84,21 @@ namespace upsylon
                 virtual ~Node() throw();
                 void     setup() throw();
 
-                class Lx
+                class Lptr
                 {
                 public:
-                    Lx(Lexeme *) throw();
-                    ~Lx() throw();
+                    Lptr(Lexeme *) throw();
+                    ~Lptr() throw();
                     Lexeme  *lexeme;
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Lx);
+                    Y_DISABLE_COPY_AND_ASSIGN(Lptr);
                 };
+
                 uint64_t wksp[Y_U64_FOR_ITEM(List)];
-
-                Lx   & lptr() const throw();
-                List & chld() const throw();
-
+                
+                Lptr & _Lptr() const throw();
+                List & _List() const throw();
+                
 
             public:
                 typedef memory::tight::supply_of<Node> SupplyType; //!< alias
