@@ -1,3 +1,4 @@
+//! \file
 
 #ifndef Y_AQUA_LIBRARY_INCLUDED
 #define Y_AQUA_LIBRARY_INCLUDED 1
