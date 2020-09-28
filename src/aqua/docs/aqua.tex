@@ -36,6 +36,7 @@ so that a set of concentrations $\vec{C}\in\mathbb{R}^M$ is described by:
 \end{equation}
 
 \section{Regularising from Products and Reactants}
+
 We define an equilibria condition:
 \begin{equation}
 	Q_i =  \underbrace{\left(K_i \prod_{j,\nu_{ij}<0} \conc{A_j}^{-\nu_{ij}}\right)}_{\text{reactants}} 
@@ -65,5 +66,34 @@ with
 \item $Q_i$ is a concentration to the $\Delta_r \nu_p$.
 \item $J_{ij}$ is a concentration to the $\Delta_r \nu_p-1$.
 \end{itemize}
+
+
+\section{Balancing active concentration}
+Let us start from $\vec{C}_0$ with may be invalid due to an algebraic operation (namely an active concentration is negative).
+We want to minimise:
+\begin{equation}
+	E(\vec{C}) = \sum_j \left\lbrace
+	\begin{array}{rcl}
+	\dfrac{1}{2} C_j^2 & \text{ if } & C_j < 0\\
+	0 & \text{ if } & C_j \geq 0\\
+	\end{array}
+	\right.
+\end{equation}
+using
+\begin{equation}
+	\vec{C}=\vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
+\end{equation}
+so that the search direction is:
+\begin{equation}
+	-\partial_{\vec{\xi}} E = \bm{\nu}
+	\begin{bmatrix}
+		\vdots\\
+		\max(0,-C_j)\\
+		\vdots\\
+	\end{bmatrix}
+\end{equation}
+and for each step the {\it minimal} length is computed.
+
+
 
 \end{document}
