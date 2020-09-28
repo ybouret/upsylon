@@ -28,7 +28,7 @@ namespace upsylon
             const size_t N;    //!< equilibria
             const size_t M;    //!< species
 
-            iMatrix      Nu;   //!< topology [NxM]
+            iMatrix      Nu;   //!< topology   [NxM]
             iMatrix      tNu;  //!< transposed [MxN]
             Matrix       W;    //!< [NxN]
             Arrays       arrN; //!< linear data
