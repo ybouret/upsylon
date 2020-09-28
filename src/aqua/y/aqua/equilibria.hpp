@@ -12,6 +12,7 @@ namespace upsylon {
 
     namespace Aqua
     {
+        typedef matrix<int>    iMatrix;
         typedef matrix<double> Matrix;
 
         class Equilibria : public suffix_tree<Equilibrium::Pointer>
@@ -25,7 +26,7 @@ namespace upsylon {
             std::ostream & display( std::ostream &) const;
             friend std::ostream & operator<<(std::ostream &, const Equilibria & );
 
-            void fillNu( Matrix &nu ) const throw();
+            void fillNu( iMatrix &nu ) const throw();
             void validate() const;
             
             template <typename ID>

@@ -1,6 +1,7 @@
 
 #include "y/aqua/solver.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 using namespace Aqua;
@@ -36,8 +37,19 @@ Y_UTEST(solver)
 
     Solver cs;
     cs.init(lib,eqs);
-    std::cerr << "nu=" << cs.nu << std::endl;
+    std::cerr << "nu="   << cs.Nu   << std::endl;
     std::cerr << "used=" << cs.used << std::endl;
+
+    vector<double> C(cs.M+2,0);
+
+    for(size_t j=C.size();j>0;--j)
+    {
+        C[j] = alea.symm<double>();
+    }
+
+    cs.balance(C);
+
+
 }
 Y_UTEST_DONE()
 

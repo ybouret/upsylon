@@ -140,7 +140,7 @@ namespace upsylon {
 
       
 
-        void Equilibrium:: fillNu(addressable<double> &nu) const throw()
+        void Equilibrium:: fillNu(addressable<int> &nu) const throw()
         {
             for(size_t i=nu.size();i>0;--i)
             {

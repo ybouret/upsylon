@@ -51,7 +51,7 @@ namespace upsylon {
             void   validate() const;
 
             //! fill topology row
-            void   fillNu(addressable<double> &nu) const throw();
+            void   fillNu(addressable<int> &nu) const throw();
             
 
         protected:

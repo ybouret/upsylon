@@ -15,13 +15,17 @@ namespace upsylon
         Solver:: Solver() :
         N(0),
         M(0),
-        nu(),
-        arr(10),
-        Corg( arr.next() ),
-        Caux( arr.next() ),
-        Ctry( arr.next() ),
-        Cstp( arr.next() ),
-        Cusr( arr.next() ),
+        Nu(),
+        tNu(),
+        W(),
+        arrN(10),
+        xi( arrN.next() ),
+        arrM(10),
+        Corg( arrM.next() ),
+        Caux( arrM.next() ),
+        Ctry( arrM.next() ),
+        Cstp( arrM.next() ),
+        Cusr( arrM.next() ),
         used()
         {
         }
@@ -29,11 +33,16 @@ namespace upsylon
         void Solver:: quit() throw()
         {
             new (&used) Booleans();
-            arr. release();
-            nu.  release();
+
+            arrM. release();
+            arrN. release();
+            W.    release();
+            tNu.  release();
+            Nu.   release();
             aliasing::_(M) = 0;
             aliasing::_(N) = 0;
         }
+
 
         void Solver:: init(Library &lib, Equilibria &eqs)
         {
@@ -48,18 +57,23 @@ namespace upsylon
 
                 if(N>0)
                 {
-                    nu.make(N,M);
-                    eqs.fillNu(nu);
+                    Nu.   make(N,M);
+                    tNu.  make(M,N);
+                    W.    make(N,N);
+                    arrN. acquire(N);
+                    
+                    eqs.fillNu(Nu);
+                    tNu.assign_transpose(Nu);
                 }
 
                 if(M>0)
                 {
-                    arr.acquire(M);
+                    arrM.acquire(M);
                     new (&used) Booleans( aliasing::as<bool,double>(*Cusr), M );
                     mkl::quark::ld(used,false);
                     for(size_t i=N;i>0;--i)
                     {
-                        const accessible<double> &nu_i = nu[i];
+                        const accessible<int> &nu_i = Nu[i];
                         for(size_t j=M;j>0;--j)
                         {
                             if( nu_i[j] != 0) used[j] = true;
