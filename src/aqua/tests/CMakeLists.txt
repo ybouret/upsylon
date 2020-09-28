@@ -10,6 +10,7 @@ ENABLE_TESTING()
 ADD_TEST(species test-aqua species)
 ADD_TEST(library test-aqua library)
 ADD_TEST(eqs     test-aqua eqs)
+ADD_TEST(solver  test-aqua solver)
 
 ADD_CUSTOM_TARGET(utest-aqua
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
