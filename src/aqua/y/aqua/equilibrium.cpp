@@ -103,6 +103,23 @@ namespace upsylon {
             return value;
         }
 
+        void Equilibrium:: validate() const
+        {
+            const char *id = *name;
+            if(components.size<=0) throw exception("<%s> no components!",id);
+            {
+                int Z = 0;
+                for(const Component *c=components.head;c;c=c->next)
+                {
+                    Z += c->nu * c->sp.Z;
+                }
+                if( Z!= 0 ) throw exception("<%s> does not conserve charge!",id)
+
+            }
+
+        }
+
+
         ConstEquilibrium:: ~ConstEquilibrium() throw()
         {
             aliasing::_(Keq) = 0;

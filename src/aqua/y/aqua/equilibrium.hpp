@@ -48,6 +48,8 @@ namespace upsylon {
             friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq);
 
             double K(const double t) const;
+            void   validate() const;
+
 
         protected:
             template <typename ID> inline

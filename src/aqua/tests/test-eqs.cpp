@@ -15,7 +15,7 @@ Y_UTEST(eqs)
 
     ConstEquilibrium water( "water", 1e-14);
     water(*h,1);
-    water(*w,2);
+    water(*w,1);
 
     ConstEquilibrium acid( "acid", pow(10,-4.8));
     acid(*h,1);
@@ -24,6 +24,9 @@ Y_UTEST(eqs)
 
     std::cerr << water << std::endl;
     std::cerr << acid  << std::endl;
+
+    water.validate();
+    acid.validate();
 
 }
 Y_UTEST_DONE()
