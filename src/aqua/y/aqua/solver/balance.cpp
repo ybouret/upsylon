@@ -192,12 +192,14 @@ namespace upsylon
                         if(B1<B0)
                         {
                             std::cerr << "expand" << std::endl;
+                            std::cerr << x << " => " << B << std::endl;
                             while(true)
                             {
-                                x.c += 1.0;
-                                B.c  = F(x.c);
-                                std::cerr << "B(" << x.c << ")=" << B.c << "/" << B1 << std::endl;
-                                if(B.c>=B1)
+                                assert(B.b<=B.a);
+                                x.shift( x.c+1  );
+                                B.shift( F(x.c) );
+                                std::cerr << x << " => " << B << std::endl;
+                                if(B.c>=B.b)
                                     break;
                             }
                             B1 = F( x1 = minimize::run(F,x,B,minimize::direct) );
@@ -216,7 +218,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     std::cerr << "B1=" << B1 << "@" << x1 << std::endl;
                     std::cerr << "Ctry=" << Ctry << std::endl;
-
+                    
                     if(B1>0)
                     {
                         // check C convergence and update
