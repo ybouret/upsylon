@@ -43,6 +43,8 @@ namespace upsylon
             Array       &Cusr; //!< for used    [M]
             Booleans     used; //!< active C    [M]
 
+            bool         balanceVerbose;
+
             bool balance( addressable<double> &C ) throw();
 
         private:

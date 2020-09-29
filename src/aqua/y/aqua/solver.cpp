@@ -28,7 +28,8 @@ namespace upsylon
         Ctry( arrM.next() ),
         Cstp( arrM.next() ),
         Cusr( arrM.next() ),
-        used()
+        used(),
+        balanceVerbose(false)
         {
         }
 

@@ -43,13 +43,20 @@ Y_UTEST(solver)
 
     vector<double> C(cs.M+2,0);
 
-    for(size_t j=C.size();j>0;--j)
+    cs.balanceVerbose = true;
+
+    for(size_t iter=0;iter<1000;++iter)
     {
-        C[j] = alea.symm<double>() * pow(10.0,-4*alea.to<double>());
+
+        for(size_t j=C.size();j>0;--j)
+        {
+            C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+        }
+        std::cerr << "C=" << C << std::endl;
+        lib.show(std::cerr,C);
+        cs.balance(C);
+
     }
-
-    cs.balance(C);
-
 
 }
 Y_UTEST_DONE()

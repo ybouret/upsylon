@@ -13,6 +13,10 @@ namespace upsylon
     {
         using namespace mkl;
 
+
+        static const char fn[] = "[balance] ";
+#define Y_AQUA_PRINTLN(MSG) do { if(balanceVerbose) { std::cerr << fn << MSG << std::endl; } } while(false)
+
         double Solver::Norm2(const Array &C) throw()
         {
             assert(C.size() == M);
@@ -97,6 +101,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // trivial case
                 //--------------------------------------------------------------
+                Y_AQUA_PRINTLN("no equilibrium");
                 return true;
             }
             else
@@ -117,7 +122,7 @@ namespace upsylon
                         Corg[i] = 0;
                     }
                 }
-
+                
                 //--------------------------------------------------------------
                 //
                 // evaluate value and initial step
@@ -126,7 +131,7 @@ namespace upsylon
                 double B0 = Bdrvs(Corg);
                 if(B0<=0)
                 {
-                    std::cerr << "already good" << std::endl;
+                    Y_AQUA_PRINTLN("already");
                     goto SUCCESS;
                 }
                 else
@@ -139,12 +144,10 @@ namespace upsylon
                     // at this point, B0 and unscaled Cstp are evaluated, B0>0
                     //
                     //----------------------------------------------------------
-                    std::cerr << "B0=" << B0 << " / " << Bfunc(Corg) << std::endl;
-
-                    std::cerr << "C   =" << C    << std::endl;
-                    std::cerr << "Corg=" << Corg << std::endl;
-                    std::cerr << "drvs=" << Ctry << std::endl;
-                    std::cerr << "delB=" << Cstp << std::endl;
+                    Y_AQUA_PRINTLN("B0="<<B0);
+                    Y_AQUA_PRINTLN("Corg="<<Corg);
+                    //Y_AQUA_PRINTLN("drvs=" << Ctry);
+                    //Y_AQUA_PRINTLN("delB=" << Cstp);
 
                     //----------------------------------------------------------
                     //
@@ -153,28 +156,26 @@ namespace upsylon
                     //----------------------------------------------------------
                     {
                         const double S2 = Norm2(Cstp);
-                        std::cerr << "S2=" << S2 << std::endl;
                         if(S2<=0)
                         {
-                            std::cerr << "unable to balance" << std::endl;
+                            Y_AQUA_PRINTLN("unable!");
                             return false;
                         }
                         const double C2 = Norm2(Corg);
-                        std::cerr << "C2=" << C2 << std::endl;
                         const double fac = sqrt(C2/S2);
                         for(size_t j=M;j>0;--j)
                         {
                             Cstp[j] *= fac;
                         }
                     }
-
-                    std::cerr << "Cstp=" << Cstp << std::endl;
+                    Y_AQUA_PRINTLN("Cstp=" << Cstp);
 
                     //----------------------------------------------------------
                     //
                     // optimize
                     //
                     //----------------------------------------------------------
+                    if(false)
                     {
                         ios::ocstream fp("balance.dat");
                         for(double x=0;x<=2.0;x+=0.01)
@@ -191,14 +192,12 @@ namespace upsylon
                         triplet<double> B  = { B0, B1, B1 };
                         if(B1<B0)
                         {
-                            std::cerr << "expand" << std::endl;
-                            std::cerr << x << " => " << B << std::endl;
+                            Y_AQUA_PRINTLN("expanding");
                             while(true)
                             {
                                 assert(B.b<=B.a);
                                 x.shift( x.c+1  );
                                 B.shift( F(x.c) );
-                                std::cerr << x << " => " << B << std::endl;
                                 if(B.c>=B.b)
                                     break;
                             }
@@ -206,7 +205,7 @@ namespace upsylon
                         }
                         else
                         {
-                            std::cerr << "shrink" << std::endl;
+                            Y_AQUA_PRINTLN("shrinking");
                             B1 = F( x1 = minimize::run(F,x,B,minimize::inside) );
                         }
                     }
@@ -216,19 +215,18 @@ namespace upsylon
                     // check result
                     //
                     //----------------------------------------------------------
-                    std::cerr << "B1=" << B1 << "@" << x1 << std::endl;
-                    std::cerr << "Ctry=" << Ctry << std::endl;
+                    Y_AQUA_PRINTLN("B1   = " << B1 << "@" << x1);
+                    Y_AQUA_PRINTLN("Ctry = " << Ctry);
                     
                     if(B1>0)
                     {
                         // check C convergence and update
                         const bool   ccvg = __find<double>::convergence(Corg,Ctry);
 
-                        // check B convergence and update
+                        // check B convergence
                         const double dB   = fabs(B1-B0);
                         const bool   bcvg = (dB+dB) <= numeric<double>::ftol * (B0+B1);
-                        std::cerr << "ccvg=" << ccvg << std::endl;
-                        std::cerr << "bcvg=" << bcvg << std::endl;
+                        Y_AQUA_PRINTLN( "ccvg=" << ccvg << " | bcvg=" << bcvg);
 
                         if(ccvg||bcvg)
                         {
@@ -236,6 +234,7 @@ namespace upsylon
                             exit(1);
                         }
 
+                        // update B0 and unscaled Cstp
                         B0 = Bdrvs(Corg);
                         goto CYCLE;
                     }
@@ -244,7 +243,7 @@ namespace upsylon
                         //------------------------------------------------------
                         // success
                         //------------------------------------------------------
-                        std::cerr << "success" << std::endl;
+                        Y_AQUA_PRINTLN("success");
                         B0 = 0;
                         quark::set(Corg,Ctry);
                         goto SUCCESS;
@@ -266,7 +265,6 @@ namespace upsylon
                         C[i] = max_of(Corg[i],0.0);
                     }
                 }
-                std::cerr << "C=" << C << std::endl;
                 return true;
             }
             

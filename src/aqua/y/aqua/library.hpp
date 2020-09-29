@@ -34,6 +34,8 @@ namespace upsylon {
             // members
             const size_t maxNameSize; //!< for names alignment
 
+            void show(std::ostream &os, const accessible<double> &C) const;
+
 
 
         private:

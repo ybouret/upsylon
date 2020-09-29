@@ -61,6 +61,20 @@ namespace upsylon {
             }
         }
 
+        void Library:: show(std::ostream &os, const accessible<double> &C) const
+        {
+            os << '{' << std::endl;
+            for(const_iterator it=begin();it!=end();++it)
+            {
+                const Species &sp = **it;
+                assert(sp.indx>0);
+                assert(sp.indx<=C.size());
+                os << ' ' << '[' << ios::align(sp.name,ios::align::left,maxNameSize) << ']' << ' ' << '=' << ' ';
+                os << C[sp.indx] << std::endl;
+            }
+            os << '}' << std::endl;
+        }
+
 
 
     }
