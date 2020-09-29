@@ -19,30 +19,33 @@ namespace upsylon
         M(0),
         Nu(),
         tNu(),
+        Nu2(),
         W(),
-        arrN(10),
-        xi( arrN.next() ),
-        arrM(10),
-        Corg( arrM.next() ),
-        Caux( arrM.next() ),
-        Ctry( arrM.next() ),
-        Cstp( arrM.next() ),
-        Cusr( arrM.next() ),
+        aN(2),
+        B(  aN.next() ),
+        xi( aN.next() ),
+        aM(5),
+        Corg( aM.next() ),
+        Caux( aM.next() ),
+        Ctry( aM.next() ),
+        Cstp( aM.next() ),
+        Cusr( aM.next() ),
         used(),
+        clr(),
         balanceVerbose(false)
         {
+            clr << Nu;
+            clr << tNu;
+            clr << Nu2;
+            clr << W;
+            clr << aN;
+            clr << aM;
         }
 
         void Solver:: quit() throw()
         {
             new (&used) Booleans();
-
-            arrM. release();
-            arrN. release();
-            W.    release();
-            Nu2.  release();
-            tNu.  release();
-            Nu.   release();
+            clr.release_all();
             aliasing::_(M) = 0;
             aliasing::_(N) = 0;
         }
@@ -61,20 +64,20 @@ namespace upsylon
 
                 if(N>0)
                 {
-                    Nu.   make(N,M);
-                    tNu.  make(M,N);
-                    Nu2.  make(M,M);
-                    W.    make(N,N);
-                    arrN. acquire(N);
-                    
+                    Nu.    make(N,M);
+                    tNu.   make(M,N);
+                    Nu2.   make(M,M);
+                    W.     make(N,N);
+                    aN.    acquire(N);
                     eqs.fillNu(Nu);
                     tNu.assign_transpose(Nu);
                     quark::mmul(Nu2, tNu, Nu);
+
                 }
 
                 if(M>0)
                 {
-                    arrM.acquire(M);
+                    aM.acquire(M);
                     new (&used) Booleans( aliasing::as<bool,double>(*Cusr), M );
                     quark::ld(used,false);
                     for(size_t i=N;i>0;--i)

@@ -51,6 +51,8 @@ namespace {
             v.make(10,1.0f);
             std::cerr << "#recorded=" << link.size << std::endl;
         }
+        Y_CHECK(0==m.rows);
+        Y_CHECK(0==v.size());
 
     }
 

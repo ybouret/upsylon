@@ -9,12 +9,18 @@ namespace upsylon {
     {
         temporary_acquire_:: ~temporary_acquire_() throw()
         {
+            release_all();
+            addr=0;
+            _bzset(capa);
+        }
+
+
+        void  temporary_acquire_:: release_all() throw()
+        {
             while(size>0)
             {
                 addr[--aliasing::_(size)]->release();
             }
-            addr=0;
-            _bzset(capa);
         }
 
         temporary_acquire_:: temporary_acquire_(releasable **arr, const size_t num) throw() :

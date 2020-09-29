@@ -22,7 +22,9 @@ namespace upsylon {
             virtual ~temporary_acquire_() throw();      //!< release_all() and cleanup
             void     record(releasable &obj) throw();   //!< record a new object
             temporary_acquire_ & operator<<( releasable &obj) throw(); //!< helper
-            
+
+            void release_all() throw();
+
         protected:
             //! setup from user's defined memory
             explicit temporary_acquire_(releasable **arr, const size_t num) throw();

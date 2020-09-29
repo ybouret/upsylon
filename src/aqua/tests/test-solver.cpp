@@ -45,6 +45,7 @@ Y_UTEST(solver)
 
     cs.balanceVerbose = true;
 
+
     for(size_t iter=0;iter<1000;++iter)
     {
 
@@ -55,7 +56,6 @@ Y_UTEST(solver)
         std::cerr << "C=" << C << std::endl;
         lib.show(std::cerr,C);
         cs.balance(C);
-
     }
 
 }

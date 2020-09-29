@@ -17,80 +17,115 @@ namespace upsylon
         static const char fn[] = "[balance] ";
 #define Y_AQUA_PRINTLN(MSG) do { if(balanceVerbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 
-        double Solver::Norm2(const Array &C) throw()
+        double Solver::sumCaux() throw()
         {
-            assert(C.size() == M);
+            hsort(Caux,comparison::decreasing<double>);
+            double ans = 0;
+            for(size_t j=M;j>0;--j)
+            {
+                ans += Caux[j];
+            }
+            return ans;
+        }
 
+        double Solver::  B_only(const Array &C) throw()
+        {
+
+            for(size_t j=M;j>0;--j)
+            {
+                const double Cj = C[j];
+                if(Cj<0)
+                {
+                    Caux[j] = -Cj;
+                }
+                else
+                {
+                    Caux[j] = 0;
+                }
+            }
+            return sumCaux();
+        }
+
+        double Solver:: B_drvs(const Array &C) throw()
+        {
+            for(size_t j=M;j>0;--j)
+            {
+                const double Cj = C[j];
+                if(Cj<0)
+                {
+                    Caux[j] = -Cj;
+                    Ctry[j] =  1;
+                }
+                else
+                {
+                    Caux[j] = 0;
+                    Ctry[j] = 0;
+                }
+            }
+            quark::mul(Cstp,Nu2,Ctry);
+            return sumCaux();
+        }
+
+
+        
+        double Solver:: NormSq(const Array &C) throw()
+        {
             for(size_t j=M;j>0;--j)
             {
                 Caux[j] = square_of(C[j]);
             }
-            hsort(Caux,comparison::decreasing<double>);
-            double C2 = 0;
-            for(size_t j=M;j>0;--j)
-            {
-                C2 += Caux[j];
-            }
-            return C2;
+            return sumCaux();
         }
 
-        static double b_func(const double x) throw()
-        {
-            return x<=0 ? -x : 0;
-        }
 
-        static int b_drvs(const double x) throw()
+        bool Solver::rescale() throw()
         {
-            return x<0 ? -1 : 0;
-        }
-
-        double Solver:: Bfunc(const Array &C) throw()
-        {
-            double B = 0;
-            for(size_t j=M;j>0;--j)
+            const double S2 = NormSq(Cstp);
+            Y_AQUA_PRINTLN("S2="<<S2);
+            if(S2<=0)
             {
-                Caux[j] = b_func(C[j]);
+                Y_AQUA_PRINTLN("blocked@"<<Corg);
+                return false;
             }
-            hsort(Caux,comparison::decreasing<double>);
-            for(size_t j=M;j>0;--j)
+            else
             {
-                B += Caux[j];
-            }
-            return B;
-        }
-
-        double Solver:: Bdrvs(const Array &C) throw()
-        {
-            // compute for B and B'
-            for(size_t j=M;j>0;--j)
-            {
-                const double Cj =  C[j];
-                Caux[j]         =  b_func(Cj);
-                Ctry[j]         = -b_drvs(Cj);
-            }
-            hsort(Caux,comparison::decreasing<double>);
-            double B  = 0;
-            for(size_t j=M;j>0;--j)
-            {
-                B  += Caux[j];
+                for(size_t j=M;j>0;--j)
+                {
+                    const double Cj = Corg[j];
+                    if(Cj<0)
+                    {
+                        Caux[j] = square_of(Cj);
+                    }
+                    else
+                    {
+                        Caux[j] = 0;
+                    }
+                }
+                const double C2 = sumCaux();
+                Y_AQUA_PRINTLN("C2="<<C2);
+                const double factor = sqrt(C2/S2);
+                for(size_t j=M;j>0;--j)
+                {
+                    Cstp[j] *= factor;
+                }
+                Y_AQUA_PRINTLN("Cstp=" << Cstp);
+                return true;
             }
 
-            // compute unscaled step
-            quark::mul(Cstp,Nu2,Ctry);
-
-            return B;
         }
 
-        double Solver:: Bcall(const double x) throw()
-        {
-            quark::muladd(Ctry,Corg,x,Cstp);
-            return Bfunc(Ctry);
-        }
-
-        double Solver:: BalanceProxy:: operator()(const double x) throw()
+        double Solver:: B_proxy:: operator()(const double x) throw()
         {
             assert(self);
-            return self->Bcall(x);
+            return self->B_call(x);
+            
+        }
+
+        double Solver:: B_call(const double x) throw()
+        {
+            quark::muladd(Ctry, Corg, x, Cstp);
+            //std::cerr << "Ctry@" << x << "=" << Ctry << std::endl;
+            return B_only(Ctry);
         }
 
         bool Solver:: balance(addressable<double> &C) throw()
@@ -99,7 +134,9 @@ namespace upsylon
             if(N<=0)
             {
                 //--------------------------------------------------------------
+                //
                 // trivial case
+                //
                 //--------------------------------------------------------------
                 Y_AQUA_PRINTLN("no equilibrium");
                 return true;
@@ -108,166 +145,176 @@ namespace upsylon
             {
                 //--------------------------------------------------------------
                 //
-                // initialize, keeping only active components
+                // setup
                 //
                 //--------------------------------------------------------------
-                for(size_t i=M;i>0;--i)
+
+                // copy values
+                for(size_t j=M;j>0;--j)
                 {
-                    if(used[i])
+                    if(used[j])
                     {
-                        Corg[i] = C[i];
+                        Corg[j] = C[j];
                     }
                     else
                     {
-                        Corg[i] = 0;
+                        Corg[j] = 0;
                     }
                 }
-                
-                //--------------------------------------------------------------
-                //
-                // evaluate value and initial step
-                //
-                //--------------------------------------------------------------
-                double B0 = Bdrvs(Corg);
+
+                // initialize B0 and full step
+                double B0 = B_drvs(Corg);
+                Y_AQUA_PRINTLN("Corg=" << Corg);
+                Y_AQUA_PRINTLN("drvs=" << Ctry);
+                Y_AQUA_PRINTLN("step=" << Cstp);
+                Y_AQUA_PRINTLN("B0  =" << B0  );
                 if(B0<=0)
                 {
+                    //----------------------------------------------------------
+                    //
+                    // no need to look up
+                    //
+                    //----------------------------------------------------------
                     Y_AQUA_PRINTLN("already");
                     goto SUCCESS;
                 }
                 else
                 {
-                    BalanceProxy F = { this };
-
+                    B_proxy F = { this };
                 CYCLE:
                     //----------------------------------------------------------
                     //
-                    // at this point, B0 and unscaled Cstp are evaluated, B0>0
+                    // compute effective rescaled step
                     //
                     //----------------------------------------------------------
-                    Y_AQUA_PRINTLN("B0="<<B0);
-                    Y_AQUA_PRINTLN("Corg="<<Corg);
-                    //Y_AQUA_PRINTLN("drvs=" << Ctry);
-                    //Y_AQUA_PRINTLN("delB=" << Cstp);
+                    if(!rescale())
+                        return false;
 
                     //----------------------------------------------------------
                     //
-                    // rescaling
+                    // initialize withh full step
                     //
                     //----------------------------------------------------------
-                    {
-                        const double S2 = Norm2(Cstp);
-                        if(S2<=0)
-                        {
-                            Y_AQUA_PRINTLN("unable!");
-                            return false;
-                        }
-                        const double C2 = Norm2(Corg);
-                        const double fac = sqrt(C2/S2);
-                        for(size_t j=M;j>0;--j)
-                        {
-                            Cstp[j] *= fac;
-                        }
-                    }
-                    Y_AQUA_PRINTLN("Cstp=" << Cstp);
+                    double x1 = 1;
+                    double B1 = F(x1);
+                    Y_AQUA_PRINTLN("B1  =" << B1  );
 
-                    //----------------------------------------------------------
-                    //
-                    // optimize
-                    //
-                    //----------------------------------------------------------
-                    if(false)
+#if 1
+                    ios::ocstream::overwrite("balance.dat");
+                    if(true)
                     {
                         ios::ocstream fp("balance.dat");
-                        for(double x=0;x<=2.0;x+=0.01)
+                        for(double x=0;x<=3.0;x+=0.001)
                         {
                             fp("%g %g\n",x,F(x));
                         }
-
                     }
+#endif
 
-                    double          x1 = 1;
-                    double          B1 = F(1);
+                    //----------------------------------------------------------
+                    //
+                    // minimisation
+                    //
+                    //----------------------------------------------------------
                     {
-                        triplet<double> x  = { 0,  x1, x1 };
-                        triplet<double> B  = { B0, B1, B1 };
-                        if(B1<B0)
+                        triplet<double> x = { 0,  x1, x1 };
+                        triplet<double> B = { B0, B1, B1 };
+
+                        if(B1>=B0)
                         {
-                            Y_AQUA_PRINTLN("expanding");
-                            while(true)
-                            {
-                                assert(B.b<=B.a);
-                                x.shift( x.c+1  );
-                                B.shift( F(x.c) );
-                                if(B.c>=B.b)
-                                    break;
-                            }
-                            B1 = F( x1 = minimize::run(F,x,B,minimize::direct) );
+                            //--------------------------------------------------
+                            // with inside bracketing
+                            //--------------------------------------------------
+                            Y_AQUA_PRINTLN(" # => shrinking");
+                            B1 = F( x1 = minimize::run(F,x,B,minimize::inside) );
                         }
                         else
                         {
-                            Y_AQUA_PRINTLN("shrinking");
-                            B1 = F( x1 = minimize::run(F,x,B,minimize::inside) );
+                            //--------------------------------------------------
+                            // B1 < B0 : local expansion
+                            //--------------------------------------------------
+                            Y_AQUA_PRINTLN(" # => expanding");
+                            while(true)
+                            {
+                                x.b = x.c;
+                                B.b = B.c;
+                                x.c += 1.0;
+                                B.c  = F(x.c);
+                                if(B.c>=B.b)
+                                {
+                                    break;
+                                }
+                            }
+                            B1 = F( x1 = minimize::run(F,x,B,minimize::direct) );
                         }
+                        Y_AQUA_PRINTLN("B1  = " << B1  << " @ " << x1);
                     }
 
+
                     //----------------------------------------------------------
                     //
-                    // check result
+                    // backtracking : find the smallest step
                     //
                     //----------------------------------------------------------
-                    Y_AQUA_PRINTLN("B1   = " << B1 << "@" << x1);
-                    Y_AQUA_PRINTLN("Ctry = " << Ctry);
-                    
-                    if(B1>0)
+                    double x0 = 0;
+                    while(true)
                     {
-                        // check C convergence and update
-                        const bool   ccvg = __find<double>::convergence(Corg,Ctry);
-
-                        // check B convergence
-                        const double dB   = fabs(B1-B0);
-                        const bool   bcvg = (dB+dB) <= numeric<double>::ftol * (B0+B1);
-                        Y_AQUA_PRINTLN( "ccvg=" << ccvg << " | bcvg=" << bcvg);
-
-                        if(ccvg||bcvg)
+                        const double xm = 0.5*(x0+x1);
+                        const double Bm = F(xm);
+                        if(Bm>B1)
                         {
-                            std::cerr << "converged..." << std::endl;
-                            exit(1);
+                            x0 = xm;
                         }
-
-                        // update B0 and unscaled Cstp
-                        B0 = Bdrvs(Corg);
-                        goto CYCLE;
+                        else
+                        {
+                            x1 = xm;
+                        }
+                        if( fabs(x1-x0) <= 1e-4 ) break;
                     }
-                    else
+
+                    //----------------------------------------------------------
+                    //
+                    // finalizing
+                    //
+                    //----------------------------------------------------------
+                    B1 = F(x1);
+                    Y_AQUA_PRINTLN("B1  = " << B1  << " @ " << x1);
+
+                    if(B1<=0)
                     {
                         //------------------------------------------------------
-                        // success
+                        // exact numeric success
                         //------------------------------------------------------
-                        Y_AQUA_PRINTLN("success");
-                        B0 = 0;
+                        Y_AQUA_PRINTLN("success!");
                         quark::set(Corg,Ctry);
                         goto SUCCESS;
                     }
+                    else
+                    {
 
+                        //------------------------------------------------------
+                        // test convergence
+                        //------------------------------------------------------
+                        
+                        quark::set(Corg,Ctry);
+                        B0 = B_drvs(Corg);
+                        goto CYCLE;
+                    }
+
+                    return false;
                 }
 
-                //--------------------------------------------------------------
-                //
-                // numeric success
-                //
-                //--------------------------------------------------------------
             SUCCESS:
-                assert(B0<=0);
-                for(size_t i=M;i>0;--i)
+                Y_AQUA_PRINTLN("Cend="<<Corg);
+                for(size_t j=M;j>0;--j)
                 {
-                    if(used[i])
+                    if(used[j])
                     {
-                        C[i] = max_of(Corg[i],0.0);
+                        C[j] = max_of(0.0,Corg[j]);
                     }
                 }
                 return true;
             }
-            
         }
         
     }

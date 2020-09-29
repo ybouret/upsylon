@@ -6,19 +6,24 @@
 #include "y/aqua/equilibria.hpp"
 #include "y/aqua/library.hpp"
 #include "y/sequence/arrays.hpp"
+#include "y/core/temporary-acquire.hpp"
+
 namespace upsylon
 {
 
     namespace Aqua
     {
 
-        typedef arrays<double>            Arrays;
-        typedef lightweight_array<double> Array;
-        typedef lightweight_array<bool>   Booleans;
+        typedef arrays<double>              Arrays;
+        typedef lightweight_array<double>   Array;
+        typedef lightweight_array<bool>     Booleans;
+        typedef matrix<bool>                bMatrix;
 
         class Solver
         {
         public:
+            typedef core::temporary_acquire<16> Collector;
+
             explicit Solver();
             virtual ~Solver() throw();
 
@@ -31,30 +36,36 @@ namespace upsylon
             iMatrix      Nu;   //!< topology   [NxM]
             iMatrix      tNu;  //!< transposed [MxN]
             iMatrix      Nu2;  //!< tNu*Nu     [MxM]
-            Matrix       W;    //!< [NxN]
-            Arrays       arrN; //!< linear data
-            Array       &xi;   //!< xi [N]
+            Matrix       W;    //!<            [NxN]
+            Arrays       aN;   //!< linear data
+            Array       &B;    //!< balance indicators [N]
+            Array       &xi;   //!< extent             [N]
 
-            Arrays       arrM; //!< linear data
+            Arrays       aM;   //!< linear data
             Array       &Corg; //!< original  C [M]
             Array       &Caux; //!< auxiliary C [M]
             Array       &Ctry; //!< trial     C [M]
             Array       &Cstp; //!< step  for C [M]
             Array       &Cusr; //!< for used    [M]
             Booleans     used; //!< active C    [M]
+            Collector    clr;
 
-            bool         balanceVerbose;
 
             bool balance( addressable<double> &C ) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
-            double Bfunc(const Array &C) throw(); //!< compute B(C)
-            double Bdrvs(const Array &C) throw(); //!< compute B(C) using Cayx, and unscaled Cstp using Ctry
-            double Norm2(const Array &C) throw(); //!< |C|^2 using Caux
-            double Bcall(const double x) throw(); //!< B(Ctry=Corg+x*Cstp)
+            double B_only(const Array &C) throw(); //!< balance from C, use Caux
+            double B_drvs(const Array &C) throw(); //!< balance from C, unscaled step in Cstp
+            double B_call(const double x) throw(); //!< B_only(Ctry=Corg+x*Cstp)
+            double NormSq(const Array &C) throw(); //!< square norm, use Caux
+            bool   rescale() throw();              //!< rescale Cstp
+            double sumCaux() throw();              //!< sorted sum of Caux
+            
+            struct B_proxy { Solver *self; double operator()(const double) throw(); };
 
-            struct BalanceProxy { Solver *self; double operator()(const double) throw(); };
+        public:
+            bool         balanceVerbose;
         };
 
     }

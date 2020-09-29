@@ -90,7 +90,7 @@ with:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	x\geq & \Leftrightarrow & b(x) = 0\\
+	x\geq 0 & \Leftrightarrow & b(x) = 0\\
 	x<0   & \Leftrightarrow & b(x) > 0\\
 \end{array}
 \right.
@@ -119,10 +119,10 @@ leading to a step
 \end{equation}
 and we look for the minimum of
 \begin{equation}
-	B\left(\vec{C}_0 - x \delta\vec{C}\right)
+	B\left(\vec{C}_0 + x \delta\vec{C}\right)
 \end{equation}
  \begin{equation}
-	\delta\vec{C} = \sqrt{\dfrac{\sum_j \left(\mathbb{A}_j  C_j\right)^2}{\vec{\delta}_b^2}} \vec{\delta}_b
+	\delta\vec{C} = \sqrt{\dfrac{\vec{C_0}^2}{\vec{\delta}_b^2}} \vec{\delta}_b
 \end{equation}
 
 \end{document}
