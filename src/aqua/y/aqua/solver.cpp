@@ -8,6 +8,8 @@ namespace upsylon
 
     namespace Aqua
     {
+        using namespace mkl;
+
         Solver:: ~Solver() throw()
         {
         }
@@ -37,6 +39,7 @@ namespace upsylon
             arrM. release();
             arrN. release();
             W.    release();
+            Nu2.  release();
             tNu.  release();
             Nu.   release();
             aliasing::_(M) = 0;
@@ -59,18 +62,20 @@ namespace upsylon
                 {
                     Nu.   make(N,M);
                     tNu.  make(M,N);
+                    Nu2.  make(M,M);
                     W.    make(N,N);
                     arrN. acquire(N);
                     
                     eqs.fillNu(Nu);
                     tNu.assign_transpose(Nu);
+                    quark::mmul(Nu2, tNu, Nu);
                 }
 
                 if(M>0)
                 {
                     arrM.acquire(M);
                     new (&used) Booleans( aliasing::as<bool,double>(*Cusr), M );
-                    mkl::quark::ld(used,false);
+                    quark::ld(used,false);
                     for(size_t i=N;i>0;--i)
                     {
                         const accessible<int> &nu_i = Nu[i];

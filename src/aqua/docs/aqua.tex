@@ -71,32 +71,58 @@ with
 \subsection{Single reaction}
 We solve a single reaction...
 
-\section{Balancing active concentration}
-Let us start from $\vec{C}_0$ with may be invalid due to an algebraic operation (namely an active concentration is negative).
-We want to minimise:
+\section{Balancing active concentrations}
+We define $\mathbb{A}$ the set of active indices, and 
 \begin{equation}
-	E(\vec{C}) = \sum_j \left\lbrace
-	\begin{array}{rcl}
-	\dfrac{1}{2} C_j^2 & \text{ if } & C_j < 0\\
-	0 & \text{ if } & C_j \geq 0\\
-	\end{array}
-	\right.
+\left\lbrace
+\begin{array}{rccl}
+\mathbb{A}_j & = & 1  & \text{for active species}\\
+\mathbb{A}_j & = & 0  & \text{for passive species}\\
+\end{array}
+\right.
 \end{equation}
-using
+Let us start from $\vec{C}_0$ with may be invalid due to an algebraic operation (namely an active concentration is negative).
+We want to minimise a global function $B$ defined by a local function $b$:
+\begin{equation}
+	B(\vec{C}) = \sum_{j } \mathbb{A}_j b(C_j) 
+\end{equation}
+with:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	x\geq & \Leftrightarrow & b(x) = 0\\
+	x<0   & \Leftrightarrow & b(x) > 0\\
+\end{array}
+\right.
+\end{equation}
+and:
 \begin{equation}
 	\vec{C}=\vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
 \end{equation}
-so that the search direction is:
+so that the search direction w.r.t. $\xi$ is:
 \begin{equation}
-	-\partial_{\vec{\xi}} E = \bm{\nu}
+	-\partial_{\vec{\xi}} B = \bm{\nu}
 	\begin{bmatrix}
 		\vdots\\
-		\max(0,-C_j)\\
+		-\mathbb{A}_j b'(C_j)\\
 		\vdots\\
 	\end{bmatrix}
 \end{equation}
-and for each step the {\it minimal} length is computed.
-
-
+leading to a step
+\begin{equation}
+	\vec{\delta}_b= \trn{\bm{\nu}} \bm{\nu}
+		 \begin{bmatrix}
+		\vdots\\
+		\mathbb{A}_j b'(C_j)\\
+		\vdots\\
+	\end{bmatrix}
+\end{equation}
+and we look for the minimum of
+\begin{equation}
+	B\left(\vec{C}_0 - x \delta\vec{C}\right)
+\end{equation}
+ \begin{equation}
+	\delta\vec{C} = \sqrt{\dfrac{\sum_j \left(\mathbb{A}_j  C_j\right)^2}{\vec{\delta}_b^2}} \vec{\delta}_b
+\end{equation}
 
 \end{document}

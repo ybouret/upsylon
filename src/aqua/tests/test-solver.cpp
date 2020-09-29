@@ -37,14 +37,15 @@ Y_UTEST(solver)
 
     Solver cs;
     cs.init(lib,eqs);
-    std::cerr << "nu="   << cs.Nu   << std::endl;
-    std::cerr << "used=" << cs.used << std::endl;
+    std::cerr << "Nu ="   << cs.Nu   << std::endl;
+    std::cerr << "Nu2="   << cs.Nu2  << std::endl;
+    std::cerr << "used="  << cs.used << std::endl;
 
     vector<double> C(cs.M+2,0);
 
     for(size_t j=C.size();j>0;--j)
     {
-        C[j] = alea.symm<double>();
+        C[j] = alea.symm<double>() * pow(10.0,-4*alea.to<double>());
     }
 
     cs.balance(C);

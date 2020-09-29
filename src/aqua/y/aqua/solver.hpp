@@ -30,6 +30,7 @@ namespace upsylon
 
             iMatrix      Nu;   //!< topology   [NxM]
             iMatrix      tNu;  //!< transposed [MxN]
+            iMatrix      Nu2;  //!< tNu*Nu     [MxM]
             Matrix       W;    //!< [NxN]
             Arrays       arrN; //!< linear data
             Array       &xi;   //!< xi [N]
@@ -46,16 +47,12 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
-            double  ob_fast(const Array &) const throw(); //!< object balance function
-            double  ob_call(const double ) const throw();   //!< ob_(Corg+u*Cstp)
-            double  ob_step(const Array &) const throw(); //!< objective balance step
+            double Bfunc(const Array &C) throw(); //!< compute B(C)
+            double Bdrvs(const Array &C) throw(); //!< compute B(C) using Cayx, and unscaled Cstp using Ctry
+            double Norm2(const Array &C) throw(); //!< |C|^2 using Caux
+            double Bcall(const double x) throw(); //!< B(Ctry=Corg+x*Cstp)
 
-            struct BalanceProxy
-            {
-                Solver *self;
-                double operator()( const double ) throw();
-            };
-
+            struct BalanceProxy { Solver *self; double operator()(const double) throw(); };
         };
 
     }
