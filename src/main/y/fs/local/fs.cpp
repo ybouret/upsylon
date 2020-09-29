@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <cerrno>
 #include <cstring>
+#include <cstdio>
 #endif
 
 #if defined(Y_WIN)
@@ -227,9 +228,9 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
-		if (!::MoveFile(*old_path, *new_path))
+		if (! ::MoveFile(*old_path, *new_path))
 		{
-			throw win32::exception(::GetLastError(), "MoveFile(%s,%s)", *old_path, *new_path);
+			throw win32::exception( ::GetLastError(), "MoveFile(%s,%s)", *old_path, *new_path);
 		}
 #endif
 

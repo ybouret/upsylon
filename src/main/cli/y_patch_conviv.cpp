@@ -55,13 +55,17 @@ namespace {
                Ed           &ed)
     {
         vfs & fs = local_fs::instance();
-        std::cerr << "<" << fileName << ">" << std::endl;
-        Source        source( Module::OpenFile(fileName) );
         const string  destName = vfs::with_new_extension(fileName,"tmp");
+        std::cerr << "<" << fileName << "> -> <" << destName << ">" << std::endl;
+
+        // perform patch fileName -> destName
         {
-            ios::ocstream target( destName );
-            ed.reset();
-            ed.run(target,source);
+            Source        source( Module::OpenFile(fileName) );
+            {
+                ios::ocstream target( destName );
+                ed.reset();
+                ed.run(target,source);
+            }
         }
         std::cerr << "\tcount=" << ed.count << std::endl;
         if(ed.count)
