@@ -61,7 +61,7 @@ namespace upsylon
             double NormSq(const Array &C) throw(); //!< square norm, use Caux
             bool   rescale() throw();              //!< rescale Cstp
             double sumCaux() throw();              //!< sorted sum of Caux
-            
+            double delta_C() const throw();        //!< max-min of Corg
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
 
         public:

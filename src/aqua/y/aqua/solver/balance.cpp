@@ -2,9 +2,7 @@
 #include "y/mkl/kernel/quark.hpp"
 #include "y/sort/heap.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
-#include "y/mkl/utils.hpp"
 
 namespace upsylon
 {
@@ -128,6 +126,28 @@ namespace upsylon
             return B_only(Ctry);
         }
 
+        double Solver:: delta_C() const throw()
+        {
+            double Cmin=Corg[1], Cmax=Cmin;
+            for(size_t j=M;j>1;--j)
+            {
+                const double Cj = Corg[j];
+                if(Cj<Cmin)
+                {
+                    Cmin = Cj;
+                }
+                else
+                {
+                    if(Cj>Cmax)
+                    {
+                        Cmax=Cj;
+                    }
+                }
+
+            }
+            return Cmax-Cmin;
+        }
+
         bool Solver:: balance(addressable<double> &C) throw()
         {
             assert(C.size()>=M);
@@ -199,7 +219,7 @@ namespace upsylon
                     double B1 = F(x1);
                     Y_AQUA_PRINTLN("B1  =" << B1  );
 
-#if 1
+#if 0
                     ios::ocstream::overwrite("balance.dat");
                     if(true)
                     {
@@ -291,12 +311,28 @@ namespace upsylon
                     }
                     else
                     {
-
                         //------------------------------------------------------
                         // test convergence
                         //------------------------------------------------------
-                        
-                        quark::set(Corg,Ctry);
+                        Y_AQUA_PRINTLN("Corg="<<Corg);
+                        const double amplitude = delta_C();
+                        const double threshold = numeric<double>::sqrt_ftol * amplitude;
+                        bool cvg = true;
+                        for(size_t j=M;j>0;--j)
+                        {
+                            const double old = Corg[j];
+                            const double now = Ctry[j];
+                            const double err = fabs(old-now);
+                            if( err > threshold ) cvg = false;
+                            Corg[j] = now;
+                            Caux[j] = err;
+                        }
+                        Y_AQUA_PRINTLN("Cerr="<<Caux);
+                        Y_AQUA_PRINTLN("converged:"<<cvg);
+                        if(cvg)
+                        {
+                            exit(1);
+                        }
                         B0 = B_drvs(Corg);
                         goto CYCLE;
                     }
