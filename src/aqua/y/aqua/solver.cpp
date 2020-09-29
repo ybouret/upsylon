@@ -19,11 +19,11 @@ namespace upsylon
         M(0),
         Nu(),
         tNu(),
-        Nu2(),
         W(),
-        aN(2),
-        B(  aN.next() ),
-        xi( aN.next() ),
+        aN(3),
+        B(   aN.next()  ),
+        xi(  aN.next()  ),
+        nu2( aN.next()  ),
         aM(5),
         Corg( aM.next() ),
         Caux( aM.next() ),
@@ -36,7 +36,6 @@ namespace upsylon
         {
             clr << Nu;
             clr << tNu;
-            clr << Nu2;
             clr << W;
             clr << aN;
             clr << aM;
@@ -66,13 +65,18 @@ namespace upsylon
                 {
                     Nu.    make(N,M);
                     tNu.   make(M,N);
-                    Nu2.   make(M,M);
                     W.     make(N,N);
                     aN.    acquire(N);
                     eqs.fillNu(Nu);
                     tNu.assign_transpose(Nu);
-                    quark::mmul(Nu2, tNu, Nu);
 
+                    for(size_t i=N;i>0;--i)
+                    {
+                        int sum = 0;
+                        const accessible<int>  &Nu_i = Nu[i];
+                        for(size_t j=M;j>0;--j) sum += square_of(Nu_i[j]);
+                        nu2[i] = double(sum);
+                    }
                 }
 
                 if(M>0)

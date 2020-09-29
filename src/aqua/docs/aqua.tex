@@ -72,57 +72,29 @@ with
 We solve a single reaction...
 
 \section{Balancing active concentrations}
-We define $\mathbb{A}$ the set of active indices, and 
+We define $\mathbb{A}_j=1$ for and active species, $\mathbb{A}_j=0$ otherwise.
+Let us balance a set of invalid concentrations starting from $\vec{C}_0$.
+We define the global excess:
 \begin{equation}
-\left\lbrace
-\begin{array}{rccl}
-\mathbb{A}_j & = & 1  & \text{for active species}\\
-\mathbb{A}_j & = & 0  & \text{for passive species}\\
-\end{array}
-\right.
+	B\left(\vec{C}\right) = \dfrac{1}{2} \left( \sum_j \mathbb{A}_j \max(0,-C_j)^2 \right)
 \end{equation}
-Let us start from $\vec{C}_0$ with may be invalid due to an algebraic operation (namely an active concentration is negative).
-We want to minimise a global function $B$ defined by a local function $b$:
+so that
 \begin{equation}
-	B(\vec{C}) = \sum_{j } \mathbb{A}_j b(C_j) 
-\end{equation}
-with:
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	x\geq 0 & \Leftrightarrow & b(x) = 0\\
-	x<0   & \Leftrightarrow & b(x) > 0\\
-\end{array}
-\right.
-\end{equation}
-and:
-\begin{equation}
-	\vec{C}=\vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
-\end{equation}
-so that the search direction w.r.t. $\xi$ is:
-\begin{equation}
-	-\partial_{\vec{\xi}} B = \bm{\nu}
-	\begin{bmatrix}
+	\vec{\nabla}_{\vec{C}} B = 
+	\begin{pmatrix}
 		\vdots\\
-		-\mathbb{A}_j b'(C_j)\\
+		\mathbb{A}_j \times (C_j\leq0) \times C_j \\
 		\vdots\\
-	\end{bmatrix}
+	\end{pmatrix}
 \end{equation}
-leading to a step
+We search for
 \begin{equation}
-	\vec{\delta}_b= \trn{\bm{\nu}} \bm{\nu}
-		 \begin{bmatrix}
-		\vdots\\
-		\mathbb{A}_j b'(C_j)\\
-		\vdots\\
-	\end{bmatrix}
+	\vec{C} = \vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
 \end{equation}
-and we look for the minimum of
+We got
 \begin{equation}
-	B\left(\vec{C}_0 + x \delta\vec{C}\right)
+	\vec{\nabla}_{\vec{\xi}} B = \bm{\nu} \vec{\nabla}_{\vec{C}} B
 \end{equation}
- \begin{equation}
-	\delta\vec{C} = \sqrt{\dfrac{\vec{C_0}^2}{\vec{\delta}_b^2}} \vec{\delta}_b
-\end{equation}
+
 
 \end{document}

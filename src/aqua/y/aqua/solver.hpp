@@ -35,12 +35,11 @@ namespace upsylon
 
             iMatrix      Nu;   //!< topology   [NxM]
             iMatrix      tNu;  //!< transposed [MxN]
-            iMatrix      Nu2;  //!< tNu*Nu     [MxM]
             Matrix       W;    //!<            [NxN]
             Arrays       aN;   //!< linear data
             Array       &B;    //!< balance indicators [N]
             Array       &xi;   //!< extent             [N]
-
+            Array       &nu2;  //!< scaling            [N]
             Arrays       aM;   //!< linear data
             Array       &Corg; //!< original  C [M]
             Array       &Caux; //!< auxiliary C [M]
@@ -55,13 +54,11 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
-            double B_only(const Array &C) throw(); //!< balance from C, use Caux
-            double B_drvs(const Array &C) throw(); //!< balance from C, unscaled step in Cstp
-            double B_call(const double x) throw(); //!< B_only(Ctry=Corg+x*Cstp)
-            double NormSq(const Array &C) throw(); //!< square norm, use Caux
-            bool   rescale() throw();              //!< rescale Cstp
-            double sumCaux() throw();              //!< sorted sum of Caux
-            double delta_C() const throw();        //!< max-min of Corg
+            double B_only( const Array &C ) throw(); //!< uses Caux
+            double B_drvs( const Array &C ) throw(); //!< uses Caux for drvs
+            double B_call( const double x ) throw(); //!< B_only(Ctry=Corg+x*Cstp)
+            double sumCaux()                throw(); //!< sorted sum of Caux
+            
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
 
         public:
