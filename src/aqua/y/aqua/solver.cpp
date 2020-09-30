@@ -26,13 +26,8 @@ namespace upsylon
         Nu(),
         tNu(),
         Nu2(),
-        aNu2(),
-        Proj(),
-        NGS(),
-        Rho(),
         W(),
         aN(3),
-        B(   aN.next()  ),
         xi(  aN.next()  ),
         nu2( aN.next()  ),
         aM(5),
@@ -41,17 +36,13 @@ namespace upsylon
         Ctry( aM.next() ),
         Cstp( aM.next() ),
         tmp_( aM.next() ),
-        used(),
+        active(),
         clr(),
         balanceVerbose(false)
         {
             clr << Nu;
             clr << tNu;
             clr << Nu2;
-            clr << aNu2;
-            clr << Proj;
-            clr << NGS;
-            clr << Rho;
             clr << W;
             clr << aN;
             clr << aM;
@@ -59,7 +50,7 @@ namespace upsylon
 
         void Solver:: quit() throw()
         {
-            new (&used) Booleans();
+            new ( &aliasing::_(active) ) Booleans();
             clr.release_all();
             aliasing::_(dNu2) = 0;
             aliasing::_(P)    = 0;
@@ -88,9 +79,6 @@ namespace upsylon
                     Nu.    make(N,M);
                     tNu.   make(M,N);
                     Nu2.   make(N,N);
-                    aNu2.  make(N,N);
-                    Proj.  make(M,M);
-                    NGS.   make(N,M);
                     W.     make(N,N);
                     aN.    acquire(N);
                     eqs.fillNu(Nu);
@@ -101,57 +89,41 @@ namespace upsylon
                     {
                         throw exception("Aqua::Solver(singular equilibria)");
                     }
-                    iadjoint(aNu2,Nu2);
-                    {
-                        iMatrix aNu3(N,M);
-                        quark::mmul(aNu3,aNu2,Nu);
-                        quark::mmul(Proj,tNu,aNu3);
-                    }
 
                     for(size_t i=N;i>0;--i)
                     {
-                        int sum = 0;
-                        const accessible<int>  &Nu_i = Nu[i];
-                        for(size_t j=M;j>0;--j) sum += square_of(Nu_i[j]);
-                        nu2[i] = double(sum);
+                        double sum = 0;
+                        for(size_t j=M;j>0;--j)
+                        {
+                            sum += square_of(Nu[i][j]);
+                        }
+                        nu2[i] = sum;
                     }
+
                 }
 
                 if(M>0)
                 {
                     aM.acquire(M);
-                    new (&used) Booleans( aliasing::as<bool,double>(*tmp_), M );
-                    quark::ld(used,false);
+                    Booleans &act = aliasing::_(active);
+                    new (&act) Booleans( aliasing::as<bool,double>(*tmp_), M );
+                    quark::ld(act,false);
                     for(size_t i=N;i>0;--i)
                     {
                         const accessible<int> &nu_i = Nu[i];
                         for(size_t j=M;j>0;--j)
                         {
-                            if( nu_i[j] != 0) used[j] = true;
+                            if( nu_i[j] != 0) act[j] = true;
                         }
                     }
+                    assert(A<=0);
                     for(size_t j=M;j>0;--j)
                     {
-                        if(used[j]) ++aliasing::_(A);
+                        if(act[j]) ++aliasing::_(A);
                     }
                 }
 
-                if(P>0)
-                {
-                    Rho.make(P,M);
-                    iMatrix I(M,M);
-                    for(size_t i=N;i>0;--i) quark::set(I[i],Nu[i]);
-                    for(size_t i=M;i>N;--i) I[i][i] = 1;
-                    if(!GramSchmidt::iOrtho(I)) throw exception("%scannot find partial orthogonal basis",fn);
-                    for(size_t i=P;i>0;--i) quark::set(Rho[i],I[N+i]);
-                    for(size_t i=N;i>0;--i) quark::set(NGS[i],I[i]);
-
-                }
-                else
-                {
-                    NGS.assign(Nu);
-                    if(!GramSchmidt::iOrtho(NGS)) throw exception("%scannot find full orthogonal basis",fn);
-                }
+                
                 
 
             }

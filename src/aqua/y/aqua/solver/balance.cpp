@@ -21,7 +21,7 @@ namespace upsylon
             return B_only(Ctry);
         }
 
-
+        
         double Solver:: B_proxy :: operator()(const double x) throw()
         {
             assert(self);
@@ -34,20 +34,10 @@ namespace upsylon
             double sum = 0;
             for(size_t j=M;j>0;--j)
             {
+                assert(Caux[j]>=0);
                 sum += Caux[j];
             }
             return sum;
-        }
-
-
-        double Solver:: maxCaux() const throw()
-        {
-            double ans = 0;
-            for(size_t j=M;j>0;--j)
-            {
-                ans = max_of(ans,Caux[j]);
-            }
-            return ans;
         }
 
 
@@ -76,6 +66,7 @@ namespace upsylon
         double Solver:: B_drvs(Array &C) throw()
         {
             static const double Cmin = numeric<double>::tiny;
+
             for(size_t j=M;j>0;--j)
             {
                 Caux[j] = 0;
@@ -94,6 +85,7 @@ namespace upsylon
                     }
                 }
             }
+
             quark::mul(xi,Nu,Ctry);
             quark::mul(Cstp,tNu,xi);
 
@@ -107,6 +99,9 @@ namespace upsylon
 
         bool Solver:: rescale() throw()
         {
+            //------------------------------------------------------------------
+            // compute step scaling
+            //------------------------------------------------------------------
             const double S2 = quark::mod2<double>::of(Cstp);
             Y_AQUA_PRINTLN("S2   = "<<S2);
 
@@ -116,6 +111,9 @@ namespace upsylon
                 return false;
             }
 
+            //------------------------------------------------------------------
+            // compute concentrations scaling
+            //------------------------------------------------------------------
             double C2 = 0;
             for(size_t j=M;j>0;--j)
             {
@@ -155,10 +153,10 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
 
-                // copy values
+                // copy active values
                 for(size_t j=M;j>0;--j)
                 {
-                    if(used[j])
+                    if(active[j])
                     {
                         Corg[j] = C[j];
                     }
@@ -315,7 +313,7 @@ namespace upsylon
                         Y_AQUA_PRINTLN("success   @ " << Corg);
                         for(size_t j=M;j>0;--j)
                         {
-                            if(used[j])
+                            if(active[j])
                             {
                                 C[j] = Corg[j];
                             }
