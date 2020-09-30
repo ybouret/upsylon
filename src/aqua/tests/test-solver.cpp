@@ -60,7 +60,7 @@ Y_UTEST(solver)
 
     //cs.balanceVerbose = true;
 
-    for(size_t iter=0;iter<10;++iter)
+    for(size_t iter=0;iter<100;++iter)
     {
 
         for(size_t j=C.size();j>0;--j)
