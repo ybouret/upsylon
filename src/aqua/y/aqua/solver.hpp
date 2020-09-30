@@ -58,16 +58,15 @@ namespace upsylon
 
 
             bool balance( addressable<double> &C ) throw();
-            bool balance2( addressable<double> &C ) throw();
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
-            double B_only( const Array &C ) throw(); //!< uses Caux
-            double B_drvs( const Array &C ) throw(); //!< uses Caux for drvs
-            double B_call( const double x ) throw(); //!< B_only(Ctry=Corg+x*Cstp)
-            double sumCaux()                throw(); //!< sorted sum of Caux
-            double maxCaux()          const throw(); //!< maximum of Caux
-            bool   rescale()                throw(); //!< rescale step
+            double B_only(Array &C)       throw(); //!< uses Caux
+            double B_drvs(Array &C)       throw(); //!< uses Caux for drvs
+            double B_call(const double x) throw(); //!< B_only(Ctry=Corg+x*Cstp)
+            double sumCaux()              throw(); //!< sorted sum of Caux
+            double maxCaux()        const throw(); //!< maximum of Caux
+            bool   rescale()              throw(); //!< rescale step
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
 
         public:

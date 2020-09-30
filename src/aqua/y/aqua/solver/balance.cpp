@@ -51,42 +51,56 @@ namespace upsylon
         }
 
 
-
-        double Solver:: B_only(const Array &C) throw()
+        double Solver:: B_only(Array &C) throw()
         {
+            static const double Cmin = numeric<double>::tiny;
             for(size_t j=M;j>0;--j)
             {
-                const double Cj = C[j];
-                if(Cj<0)
+                Caux[j] = 0;
+                const double Cj = -C[j];
+                if(Cj>0)
                 {
-                    Caux[j]  = -Cj;
-                }
-                else
-                {
-                    Caux[j] = 0;
+                    if(Cj<=Cmin)
+                    {
+                        C[j] = 0;
+                    }
+                    else
+                    {
+                        Caux[j] = Cj;
+                    }
                 }
             }
             return sumCaux();
         }
 
-        double Solver:: B_drvs(const Array &C) throw()
+        double Solver:: B_drvs(Array &C) throw()
         {
+            static const double Cmin = numeric<double>::tiny;
             for(size_t j=M;j>0;--j)
             {
-                const double Cj = C[j];
-                if(Cj<0)
+                Caux[j] = 0;
+                Ctry[j] = 0;
+                const double Cj = -C[j];
+                if(Cj>0)
                 {
-                    Caux[j]  = -Cj;
-                    Ctry[j]  = 1;
-                }
-                else
-                {
-                    Caux[j] = 0;
-                    Ctry[j] = 0;
+                    if(Cj<=Cmin)
+                    {
+                        C[j] = 0;
+                    }
+                    else
+                    {
+                        Caux[j]  = Cj;
+                        Ctry[j]  = 1;
+                    }
                 }
             }
             quark::mul(xi,Nu,Ctry);
             quark::mul(Cstp,tNu,xi);
+
+            for(size_t j=M;j>0;--j)
+            {
+                if(fabs(Cstp[j])<=Cmin) Cstp[j] = 0;
+            }
 
             return sumCaux();
         }
@@ -98,35 +112,23 @@ namespace upsylon
 
             if(S2<=0)
             {
-                Y_AQUA_PRINTLN("blockded");
+                Y_AQUA_PRINTLN("# blocked!");
                 return false;
             }
 
-
-            double CC = 0;
+            double C2 = 0;
+            for(size_t j=M;j>0;--j)
             {
-                size_t j=M;
-                while(j>0)
+                const double Cj = Corg[j];
+                if(Cj<0)
                 {
-                    const double Cj = Corg[j--];
-                    if(Cj<0)
-                    {
-                        CC = -Cj;
-                        break;
-                    }
-                }
-
-                while(j>0)
-                {
-                    const double Cj = Corg[j--];
-                    if(Cj<0)
-                    {
-                        CC = min_of(-Cj,CC);
-                    }
+                    C2 += Cj*Cj;
                 }
             }
-            const double fac  = CC/sqrt(S2);
-            Y_AQUA_PRINTLN("CC   = "<<CC);
+
+
+            const double fac  = sqrt(C2/S2);
+            Y_AQUA_PRINTLN("C2   = "<<C2);
             Y_AQUA_PRINTLN("fac  = "<<fac);
             quark::rescale(Cstp,fac);
             return true;
@@ -195,7 +197,7 @@ namespace upsylon
                     //----------------------------------------------------------
                 CYCLE:
                     ++cycle;
-                    Y_AQUA_PRINTLN(" #\t<cycle " << cycle << " >");
+                    Y_AQUA_PRINTLN("#\t<cycle " << cycle << " >");
                     if(!rescale())
                     {
                         //------------------------------------------------------
@@ -211,7 +213,7 @@ namespace upsylon
                         Y_AQUA_PRINTLN("Corg = "<<Corg);
                         Y_AQUA_PRINTLN("Cstp = "<<Cstp);
 
-                        if(true)
+                        if(false)
                         {
                             ios::ocstream fp("balance.dat");
                             for(double x=0;x<=3.0;x+=0.01)
@@ -226,15 +228,14 @@ namespace upsylon
 
                         if(B1>=B0)
                         {
-                            Y_AQUA_PRINTLN("#shrink");
+                            Y_AQUA_PRINTLN("#shrink...");
                             Triplet x = {0,x1,x1};
                             Triplet B = {B0,B1,B1};
                             B1 = F( x1 = minimize::run(F,x,B,minimize::inside) );
                         }
                         else
                         {
-                            // B1 < B0
-                            Y_AQUA_PRINTLN("#expand");
+                            Y_AQUA_PRINTLN("#expand...");
                             Triplet x = {0,x1,x1*numeric<double>::gold};
                             Triplet B = {B0,B1,F(x.c)};
                             if(B.c>=B.b)
@@ -245,8 +246,8 @@ namespace upsylon
                             else
                             {
                                 Y_AQUA_PRINTLN("#forward");
-                                B1 = B.c; //!< and Ctry is computed
-                                x1 = x.c; //!< at this value
+                                B1 = B.c; // and Ctry is computed
+                                x1 = x.c; // at this value
                             }
                         }
                         Y_AQUA_PRINTLN("B1   = "<<B1 << " # @" << x1);
@@ -284,16 +285,26 @@ namespace upsylon
                             // test convergence and update for next cycle
                             //--------------------------------------------------
                             Y_AQUA_PRINTLN("#testing");
+                            bool Ccvg = true;
                             for(size_t j=M;j>0;--j)
                             {
                                 const double old = Corg[j];
                                 const double now = Ctry[j];
                                 const double err = fabs(old-now);
+                                if( Ccvg && (err>numeric<double>::ftol * max_of( fabs(old), fabs(now) )) )
+                                {
+                                    Ccvg = false;
+                                }
                                 Corg[j] = now;
                             }
                             const double dB   = fabs(B1-B0);
                             const bool   Bcvg = (dB <= numeric<double>::ftol * max_of(B1,B0));
-                            Y_AQUA_PRINTLN("dB   = "<<dB << " #cvg : " << Bcvg);
+                            Y_AQUA_PRINTLN("dB   = "<<dB);
+                            Y_AQUA_PRINTLN("#convergence: C:" << Ccvg << " B:" << Bcvg);
+                            if(Bcvg||Ccvg)
+                            {
+                                goto CONVERGED;
+                            }
                             B0 = B_drvs(Corg);
                             goto CYCLE;
                         }
@@ -301,7 +312,7 @@ namespace upsylon
 
                     SUCCESS:
                         assert(B0<=0);
-                        Y_AQUA_PRINTLN("success @ " << Corg);
+                        Y_AQUA_PRINTLN("success   @ " << Corg);
                         for(size_t j=M;j>0;--j)
                         {
                             if(used[j])
@@ -310,6 +321,40 @@ namespace upsylon
                             }
                         }
                         return true;
+
+                    CONVERGED:
+                        Y_AQUA_PRINTLN("converged @ " << Corg);
+                        //------------------------------------------------------
+                        // compute ctol = epsilon * A * max|Corg|
+                        //------------------------------------------------------
+                        double ctol = 0;
+                        for(size_t j=M;j>0;--j)
+                        {
+                            ctol = max_of(ctol,fabs(C[j]));
+                        }
+                        ctol *= numeric<double>::epsilon;
+                        ctol *= A;
+                        //Y_AQUA_PRINTLN("ctol=" << ctol);
+
+                        //------------------------------------------------------
+                        // check that negative values are garbage
+                        //------------------------------------------------------
+                        for(size_t j=M;j>0;--j)
+                        {
+                            const double Cj = Corg[j];
+                            if(Cj<0)
+                            {
+                                if(fabs(Cj)>ctol)
+                                {
+                                    // not a garbage...
+                                    return false;
+                                }
+                                Corg[j]=0;
+                            }
+                        }
+                        B0=0;
+                        goto SUCCESS;
+
                     }
                 }
             }

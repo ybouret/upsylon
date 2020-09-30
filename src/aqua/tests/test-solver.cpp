@@ -51,7 +51,7 @@ Y_UTEST(solver)
 
     vector<double> C(cs.M+2,0);
 
-    cs.balanceVerbose = true;
+    //cs.balanceVerbose = true;
 
 
 
@@ -62,8 +62,6 @@ Y_UTEST(solver)
 
     lib.show(std::cerr << "ini=",C);
 
-    cs.balance(C);
-    return 0;
 
     if(cs.balance(C))
     {
