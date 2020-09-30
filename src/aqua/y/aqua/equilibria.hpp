@@ -26,7 +26,10 @@ namespace upsylon {
             std::ostream & display( std::ostream &) const;
             friend std::ostream & operator<<(std::ostream &, const Equilibria & );
 
-            void fillNu( iMatrix &nu ) const throw();
+            void fillNu(iMatrix &nu ) const throw();
+            void fillK(addressable<double> &K, const double t) const;
+            void fillPhi(Matrix &Phi, const accessible<double> &K, const accessible<double> &C) const throw();
+            void fillQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw();
             void validate() const;
             
             template <typename ID>

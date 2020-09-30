@@ -114,21 +114,6 @@ namespace upsylon
             //------------------------------------------------------------------
             // compute concentrations scaling
             //------------------------------------------------------------------
-#if 0
-            double C2 = 0;
-            for(size_t j=M;j>0;--j)
-            {
-                const double Cj = Corg[j];
-                if(Cj<0)
-                {
-                    C2 += Cj*Cj;
-                }
-            }
-
-
-            const double fac  = sqrt(C2/S2);
-            Y_AQUA_PRINTLN("C2   = "<<C2);
-#endif
             const double fac  = fabs(B0)/sqrt(S2);
             Y_AQUA_PRINTLN("fac  = "<<fac);
             quark::rescale(Cstp,fac);

@@ -56,12 +56,53 @@ namespace upsylon {
             }
         }
 
+        void Equilibria:: fillK(addressable<double> &K, const double t) const
+        {
+            assert(K.size()==entries());
+            size_t i=0;
+            for(const_iterator it=begin();it!=end();++it)
+            {
+                K[++i] = (**it).K(t);
+            }
+        }
+
         void Equilibria:: validate() const
         {
             for(const_iterator it=begin();it!=end();++it)
             {
                 (**it).validate();
             }
+        }
+
+        void Equilibria:: fillPhi(Matrix                   &Phi,
+                                  const accessible<double> &K,
+                                  const accessible<double> &C) const throw()
+        {
+            assert(Phi.rows==entries());
+            assert(K.size()==entries());
+            assert(C.size()>=Phi.cols);
+
+            size_t i=0;
+            for(const_iterator it=begin();it!=end();++it)
+            {
+                ++i;
+                (**it).fillPhi(Phi[i],K[i],C);
+            }
+
+        }
+
+        void Equilibria:: fillQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw()
+        {
+            assert(Q.size()==entries());
+            assert(K.size()==entries());
+            assert(C.size()>=entries());
+            size_t i=0;
+            for(const_iterator it=begin();it!=end();++it)
+            {
+                ++i;
+                Q[i] = (**it).computeQ(K[i],C);
+            }
+
         }
 
 

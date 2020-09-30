@@ -82,6 +82,12 @@ Y_UTEST(solver)
         }
     }
 
+    cs.computeK(eqs,0);
+    std::cerr << "K=" << cs.K <<  std::endl;
+    cs.forward(eqs,C);
+
+    
+
 }
 Y_UTEST_DONE()
 

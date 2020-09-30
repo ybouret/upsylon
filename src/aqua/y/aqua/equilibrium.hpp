@@ -16,9 +16,11 @@ namespace upsylon {
         class Component : public Object, public inode<Component>
         {
         public:
-            const Species &sp;
-            const int      nu;
-
+            const Species &sp;  //!< species
+            const int      nu;  //!< coef
+            const size_t   p;   //!< |nu|
+            const size_t   pm1; //!< p-1
+            
             explicit Component(const Species &, const int) throw();
             virtual ~Component() throw();
             Component(const Component &) throw();
@@ -50,9 +52,10 @@ namespace upsylon {
             double K(const double t) const;
             void   validate() const;
 
-            //! fill topology row
-            void   fillNu(addressable<int> &nu) const throw();
-            
+
+            void   fillNu(addressable<int> &nu) const throw();  //! fill topology row
+            void   fillPhi(addressable<double> &Phi, const double K0, const accessible<double> &C0) const throw();
+            double computeQ(const double K0, const accessible<double> &C0) const throw();
 
         protected:
             template <typename ID> inline

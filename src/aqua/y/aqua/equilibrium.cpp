@@ -4,6 +4,7 @@
 #include "y/type/utils.hpp"
 #include <iomanip>
 #include "y/ios/align.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon {
 
@@ -15,7 +16,9 @@ namespace upsylon {
 
         Component::Component(const Species &sp_, const int nu_) throw() :
         sp(sp_),
-        nu(nu_)
+        nu(nu_),
+        p( abs_of(nu) ),
+        pm1( p-1 )
         {
         }
 
@@ -152,6 +155,99 @@ namespace upsylon {
                 assert(c->sp.indx<=nu.size());
                 nu[c->sp.indx] = c->nu;
             }
+        }
+
+        double Equilibrium:: computeQ(const double K0, const accessible<double> &C) const throw()
+        {
+            double q = 0;
+            
+            if(products.size)
+            {
+                double prod = -1;
+                for(const Component *c = products.head;c;c=c->next)
+                {
+                    assert(c->sp.indx>0);
+                    assert(c->sp.indx<=C.size());
+                    assert(c->nu>0);
+                    assert(c->p>0);
+                    prod *= ipower<double>(C[c->sp.indx],c->p);
+                }
+                q = prod;
+            }
+
+            if(reactants.size)
+            {
+                double prod = K0;
+                for(const Component *c = reactants.head;c;c=c->next)
+                {
+                    assert(c->sp.indx>0);
+                    assert(c->sp.indx<=C.size());
+                    assert(c->nu>0);
+                    assert(c->p>0);
+                    prod *= ipower<double>(C[c->sp.indx],c->p);
+                }
+                q += prod;
+            }
+
+            return q;
+        }
+
+
+        void  Equilibrium:: fillPhi(addressable<double>      &Phi,
+                                    const double              K0,
+                                    const accessible<double> &C) const throw()
+        {
+            const size_t M = Phi.size(); assert(C.size()>=Phi.size());
+            for(size_t j=M;j>0;--j)
+            {
+                Phi[j] = 0;
+            }
+
+            for(const Component *c=products.head;c;c=c->next)
+            {
+                assert(c->sp.indx>0);
+                assert(c->sp.indx<=Phi.size());
+                assert(c->nu>0);
+                assert(c->p>0);
+                const size_t j     = c->sp.indx;
+                double       prod  = -ipower<double>(C[j],c->pm1) * (c->p);
+
+                // sub loop
+                for(const Component *s=products.head;s!=c;s=s->next)
+                {
+                    prod *= ipower<double>(C[s->sp.indx],c->p);
+                }
+
+                for(const Component *s=c->next;s;s=s->next)
+                {
+                    prod *= ipower<double>(C[s->sp.indx],c->p);
+                }
+                Phi[j] = prod;
+            }
+
+            for(const Component *c=reactants.head;c;c=c->next)
+            {
+                assert(c->sp.indx>0);
+                assert(c->sp.indx<=Phi.size());
+                assert(c->nu>0);
+                assert(c->p>0);
+                const size_t j     = c->sp.indx;
+                double       prod  = K0 * ipower<double>(C[j],c->pm1) * (c->p);
+
+                // sub loop
+                for(const Component *s=reactants.head;s!=c;s=s->next)
+                {
+                    prod *= ipower<double>(C[s->sp.indx],c->p);
+                }
+
+                for(const Component *s=c->next;s;s=s->next)
+                {
+                    prod *= ipower<double>(C[s->sp.indx],c->p);
+                }
+                Phi[j] = prod;
+            }
+
+
         }
 
     }

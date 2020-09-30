@@ -26,15 +26,19 @@ namespace upsylon
         Nu(),
         tNu(),
         Nu2(),
+        Phi(),
         W(),
-        aN(3),
+        aN(4),
+        K(   aN.next()  ),
+        Q(   aN.next()  ),
         xi(  aN.next()  ),
         nu2( aN.next()  ),
-        aM(5),
+        aM(6),
         Corg( aM.next() ),
         Caux( aM.next() ),
         Ctry( aM.next() ),
         Cstp( aM.next() ),
+        Cfwd( aM.next() ),
         tmp_( aM.next() ),
         active(),
         clr(),
@@ -43,6 +47,7 @@ namespace upsylon
             clr << Nu;
             clr << tNu;
             clr << Nu2;
+            clr << Phi;
             clr << W;
             clr << aN;
             clr << aM;
@@ -79,6 +84,7 @@ namespace upsylon
                     Nu.    make(N,M);
                     tNu.   make(M,N);
                     Nu2.   make(N,N);
+                    Phi.   make(N,M);
                     W.     make(N,N);
                     aN.    acquire(N);
                     eqs.fillNu(Nu);
@@ -135,6 +141,27 @@ namespace upsylon
 
         }
 
+        void Solver:: computeK(const Equilibria &eqs, const double t)
+        {
+            eqs.fillK(K,t);
+        }
+
+        void Solver:: computePhi(const Equilibria         &eqs,
+                                 const accessible<double> &C) throw()
+        {
+            eqs.fillPhi(Phi,K,C);
+        }
+
+        bool Solver:: computeW() throw()
+        {
+            quark::mmul_rtrn(W,Phi,Nu);
+            return LU::build(W);
+        }
+
+        void Solver:: computeQ(const Equilibria &eqs, const accessible<double> &C) throw()
+        {
+            eqs.fillQ(Q,K,C);
+        }
 
     }
 
