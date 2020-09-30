@@ -71,7 +71,9 @@ and a descent direction:
 \end{equation}
 which allows a search along
 \begin{equation}
-	\delta \vec{C} = \left(\sqrt{\dfrac{\sum_j\left[\mathbb{A}_j \max(0,-C_j)\right]^2}{\vec{\delta}_b^2}}\right)
+	\delta \vec{C} = %\left(\sqrt{\dfrac{\sum_j\left[\mathbb{A}_j \max(0,-C_j)\right]^2}{\vec{\delta}_b^2}}\right)
+	\dfrac{B(\vec{C})}
+	{\sqrt{\vec{\delta}_b^2}}
 	 \vec{\delta}_b
 \end{equation}
 
