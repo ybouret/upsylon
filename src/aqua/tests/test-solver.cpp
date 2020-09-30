@@ -60,17 +60,17 @@ Y_UTEST(solver)
 
     //cs.balanceVerbose = true;
 
-
-
-    for(size_t j=C.size();j>0;--j)
-    {
-        C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
-    }
-
-    lib.show(std::cerr << "ini=",C);
-
     for(size_t iter=0;iter<10;++iter)
     {
+
+        for(size_t j=C.size();j>0;--j)
+        {
+            C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+        }
+
+        lib.show(std::cerr << "ini=",C);
+
+
         if(cs.balance(C))
         {
             lib.show(std::cerr << "end=",C);
