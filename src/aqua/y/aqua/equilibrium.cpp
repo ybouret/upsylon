@@ -159,37 +159,34 @@ namespace upsylon {
 
         double Equilibrium:: computeQ(const double K0, const accessible<double> &C) const throw()
         {
-            double q = 0;
+            double rhs = 1;
             
             if(products.size)
             {
-                double prod = -1;
                 for(const Component *c = products.head;c;c=c->next)
                 {
                     assert(c->sp.indx>0);
                     assert(c->sp.indx<=C.size());
                     assert(c->nu>0);
                     assert(c->p>0);
-                    prod *= ipower<double>(C[c->sp.indx],c->p);
+                    rhs *= ipower<double>(C[c->sp.indx],c->p);
                 }
-                q = prod;
             }
 
+            double lhs = K0;
             if(reactants.size)
             {
-                double prod = K0;
                 for(const Component *c = reactants.head;c;c=c->next)
                 {
                     assert(c->sp.indx>0);
                     assert(c->sp.indx<=C.size());
                     assert(c->nu>0);
                     assert(c->p>0);
-                    prod *= ipower<double>(C[c->sp.indx],c->p);
+                    lhs *= ipower<double>(C[c->sp.indx],c->p);
                 }
-                q += prod;
             }
 
-            return q;
+            return lhs-rhs;
         }
 
 
