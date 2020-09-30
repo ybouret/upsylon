@@ -15,6 +15,18 @@ namespace upsylon
         static const char fn[] = "[balance] ";
 #define Y_AQUA_PRINTLN(MSG) do { if(balanceVerbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 
+        double Solver:: B_call(const double x) throw()
+        {
+            quark::muladd(Ctry, Corg,x, Cstp);
+            return B_only(Ctry);
+        }
+
+
+        double Solver:: B_proxy :: operator()(const double x) throw()
+        {
+            assert(self);
+            return self->B_call(x);
+        }
 
         double Solver:: sumCaux() throw()
         {
@@ -27,6 +39,128 @@ namespace upsylon
             return sum;
         }
 
+        double Solver:: B_only(const Array &C) throw()
+        {
+            for(size_t j=M;j>0;--j)
+            {
+                const double Cj = C[j];
+                if(Cj<0)
+                {
+                    Caux[j]  = -Cj;
+                }
+                else
+                {
+                    Caux[j] = 0;
+                }
+            }
+            return sumCaux();
+        }
+
+        double Solver:: B_drvs(const Array &C) throw()
+        {
+            for(size_t j=M;j>0;--j)
+            {
+                const double Cj = C[j];
+                if(Cj<0)
+                {
+                    Caux[j]  = -Cj;
+                    Ctry[j]  = 1;
+                }
+                else
+                {
+                    Caux[j] = 0;
+                    Ctry[j] = 0;
+                }
+            }
+            quark::mul(xi,Nu,Ctry);
+            quark::mul(Cstp,tNu,xi);
+            return sumCaux();
+        }
+
+        bool Solver:: rescale() throw()
+        {
+            const double S2 = quark::mod2<double>::of(Cstp);
+            Y_AQUA_PRINTLN("S2   = "<<S2);
+
+            if(S2<=0)
+            {
+                Y_AQUA_PRINTLN("blockded");
+                return false;
+            }
+
+
+            return true;
+        }
+
+        bool Solver:: balance(addressable<double> &C) throw()
+        {
+            assert(C.size()>=M);
+            if(N<=0)
+            {
+                //--------------------------------------------------------------
+                //
+                // trivial case
+                //
+                //--------------------------------------------------------------
+                Y_AQUA_PRINTLN("no equilibrium");
+                return true;
+            }
+            else
+            {
+                //--------------------------------------------------------------
+                //
+                // setup
+                //
+                //--------------------------------------------------------------
+
+                // copy values
+                for(size_t j=M;j>0;--j)
+                {
+                    if(used[j])
+                    {
+                        Corg[j] = C[j];
+                    }
+                    else
+                    {
+                        Corg[j] = 0;
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
+                double B0 = B_drvs(Corg);
+                Y_AQUA_PRINTLN("Corg = "<<Corg);
+                Y_AQUA_PRINTLN("B0   = "<<B0 << "/" << B_only(Corg));
+                Y_AQUA_PRINTLN("G0   = "<<Ctry);
+                Y_AQUA_PRINTLN("Cstp = "<<Cstp);
+
+                if(B0<=0)
+                {
+                    Y_AQUA_PRINTLN("#already!");
+                    return true;
+                }
+                else
+                {
+                    if(!rescale())
+                    {
+                        return false; //!blocked
+                    }
+                    else
+                    {
+
+                        return false;
+                    }
+                }
+            }
+
+        }
+
+
+
+#if 0
         double Solver:: B_only(const Array &C) throw()
         {
             static const double c2min = numeric<double>::tiny;
@@ -76,20 +210,11 @@ namespace upsylon
 
             return sumCaux();
         }
-
-        double Solver:: B_call(const double x) throw()
-        {
-            quark::muladd(Ctry, Corg,x, Cstp);
-            return B_only(Ctry);
-        }
+#endif
 
 
-        double Solver:: B_proxy :: operator()(const double x) throw()
-        {
-            assert(self);
-            return self->B_call(x);
-        }
 
+#if 0
         bool Solver:: balance(addressable<double> &C) throw()
         {
             assert(C.size()>=M);
@@ -168,7 +293,6 @@ namespace upsylon
 
                     Y_AQUA_PRINTLN("B1   = "<<B1 << " @ " << x1);
 
-#if 0
                     //----------------------------------------------------------
                     // backtracking
                     //----------------------------------------------------------
@@ -191,7 +315,6 @@ namespace upsylon
                     }
                     B1 = F(x1);
                     Y_AQUA_PRINTLN("B1   = "<<B1 << " @ " << x1);
-#endif
 
                     if(B1<=0)
                     {
@@ -287,115 +410,8 @@ namespace upsylon
             }
         }
 
-
-        double Solver:: BB_from(const Array &C) throw()
-        {
-            double cmax = 0;
-            for(size_t j=M;j>0;--j)
-            {
-                const double Cj = C[j];
-                if(Cj<0)
-                {
-                    const double ctmp = -Cj;
-                    if(ctmp>cmax)
-                    {
-                        cmax = ctmp;
-                    }
-                }
-            }
-            return cmax;
-        }
-
-        double Solver:: BB_call(const double x) throw()
-        {
-            quark::muladd(Ctry,Corg,x,Cstp);
-            return BB_from(Ctry);
-        }
-
-        double Solver:: BB_this :: operator()(const double x) throw()
-        {
-            assert(self);
-            return self->BB_call(x);
-        }
-
-        bool Solver:: balance2( addressable<double> &C ) throw()
-        {
-            assert(C.size()>=M);
-            if(N<=0)
-            {
-                //--------------------------------------------------------------
-                //
-                // trivial case
-                //
-                //--------------------------------------------------------------
-                Y_AQUA_PRINTLN("no equilibrium");
-                return true;
-            }
-            else
-            {
-                //--------------------------------------------------------------
-                //
-                // setup
-                //
-                //--------------------------------------------------------------
-
-
-
-                // copy values
-                for(size_t j=M;j>0;--j)
-                {
-                    if(used[j])
-                    {
-                        Corg[j] = C[j];
-                    }
-                    else
-                    {
-                        Corg[j] = 0;
-                    }
-                }
-
-                double B0 = BB_from(Corg);
-                Y_AQUA_PRINTLN("B0   = " << B0);
-
-
-                {
-                    BB_this F = { this };
-
-                    Y_AQUA_PRINTLN("Corg = " << Corg);
-                    for(size_t j=M;j>0;--j)
-                    {
-                        const double Cj = Corg[j];
-                        if(Cj<0)
-                        {
-                            Ctry[j] = -Cj;
-                        }
-                        else
-                        {
-                            Ctry[j] = 0;
-                        }
-                    }
-                    Y_AQUA_PRINTLN("Cdel = " << Ctry);
-                    quark::mul(Cstp,Proj,Ctry);
-                    for(size_t j=M;j>0;--j)
-                    {
-                        Cstp[j] /= dNu2;
-                    }
-                    Y_AQUA_PRINTLN("Cstp = " << Cstp);
-
-                    double x1 = 1;
-                    double B1 = F(x1);
-                    Y_AQUA_PRINTLN("Ctry = " << Ctry);
-                    Y_AQUA_PRINTLN("B1   = " << B1);
-
-                }
-
-
-
-                return false;
-
-            }
-        }
-
+#endif
+        
 
     }
     

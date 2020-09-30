@@ -66,12 +66,8 @@ namespace upsylon
             double B_drvs( const Array &C ) throw(); //!< uses Caux for drvs
             double B_call( const double x ) throw(); //!< B_only(Ctry=Corg+x*Cstp)
             double sumCaux()                throw(); //!< sorted sum of Caux
-            
+            bool   rescale()                throw(); //!< rescale step
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
-
-            double BB_from(const Array &C) throw(); //!< max_of( max_of(0,-Cj) )
-            double BB_call(const double x) throw(); //!< BB_from(Corg+x*Cstp)
-            struct BB_this { Solver *self; double operator()(const double) throw(); };
 
         public:
             bool         balanceVerbose;

@@ -62,8 +62,7 @@ Y_UTEST(solver)
 
     lib.show(std::cerr << "ini=",C);
 
-    cs.balance2(C);
-    
+    cs.balance(C);
     return 0;
 
     if(cs.balance(C))
