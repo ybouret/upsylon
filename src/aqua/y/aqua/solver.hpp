@@ -30,23 +30,27 @@ namespace upsylon
             void init(Library &lib, Equilibria &eqs);
             void quit() throw();
 
-            const size_t N;    //!< equilibria
-            const size_t M;    //!< species
-
-            iMatrix      Nu;   //!< topology   [NxM]
-            iMatrix      tNu;  //!< transposed [MxN]
-            Matrix       W;    //!<            [NxN]
-            Arrays       aN;   //!< linear data
-            Array       &B;    //!< balance indicators [N]
-            Array       &xi;   //!< extent             [N]
-            Array       &nu2;  //!< scaling            [N]
-            Arrays       aM;   //!< linear data
-            Array       &Corg; //!< original  C [M]
-            Array       &Caux; //!< auxiliary C [M]
-            Array       &Ctry; //!< trial     C [M]
-            Array       &Cstp; //!< step  for C [M]
-            Array       &Cusr; //!< for used    [M]
-            Booleans     used; //!< active C    [M]
+            const size_t N;      //!< equilibria
+            const size_t M;      //!< species
+            const size_t A;      //!< active species
+            const size_t P;      //!< parameters = M-N
+            const int    det;    //!< det(Nu2)
+            iMatrix      Nu;     //!< topology   [NxM]
+            iMatrix      tNu;    //!< transposed [MxN]
+            iMatrix      Nu2;    //!< Nu*tNu     [NxN]
+            iMatrix      R;      //!< orthogonal [PxM]
+            Matrix       W;      //!<            [NxN]
+            Arrays       aN;     //!< linear data
+            Array       &B;      //!< balance indicators [N]
+            Array       &xi;     //!< extent             [N]
+            Array       &nu2;    //!< scaling            [N]
+            Arrays       aM;     //!< linear data
+            Array       &Corg;   //!< original  C [M]
+            Array       &Caux;   //!< auxiliary C [M]
+            Array       &Ctry;   //!< trial     C [M]
+            Array       &Cstp;   //!< step  for C [M]
+            Array       &tmp_;   //!< for used    [M]
+            Booleans     used;   //!< active C    [M]
             Collector    clr;
 
 

@@ -3,7 +3,7 @@ INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
 
 ADD_EXECUTABLE(test-aqua main.cpp ${srcs} )
-TARGET_LINK_Y(test-aqua aqua)
+TARGET_LINK_Y(test-aqua aqua mkl)
 
 SET( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 ENABLE_TESTING()
