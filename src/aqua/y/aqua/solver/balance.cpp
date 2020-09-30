@@ -88,7 +88,19 @@ namespace upsylon
                 return false;
             }
 
-
+            double C2 = 0;
+            for(size_t j=M;j>0;--j)
+            {
+                const double Cj = Corg[j];
+                if(Cj<0)
+                {
+                    C2 += Cj*Cj;
+                }
+            }
+            const double fac  = sqrt(C2/S2);
+            Y_AQUA_PRINTLN("C2  = "<<C2);
+            Y_AQUA_PRINTLN("fac = "<<fac);
+            quark::rescale(Cstp,fac);
             return true;
         }
 
@@ -133,23 +145,54 @@ namespace upsylon
                 //--------------------------------------------------------------
                 double B0 = B_drvs(Corg);
                 Y_AQUA_PRINTLN("Corg = "<<Corg);
-                Y_AQUA_PRINTLN("B0   = "<<B0 << "/" << B_only(Corg));
+                Y_AQUA_PRINTLN("B0   = "<<B0);
                 Y_AQUA_PRINTLN("G0   = "<<Ctry);
                 Y_AQUA_PRINTLN("Cstp = "<<Cstp);
 
                 if(B0<=0)
                 {
+                    //----------------------------------------------------------
+                    // early return
+                    //----------------------------------------------------------
                     Y_AQUA_PRINTLN("#already!");
                     return true;
                 }
                 else
                 {
+                    B_proxy F = { this };
+
+                    //----------------------------------------------------------
+                    // B0 and unscaled step are computed
+                    //----------------------------------------------------------
                     if(!rescale())
                     {
                         return false; //!blocked
                     }
                     else
                     {
+                        Y_AQUA_PRINTLN("Cstp = "<<Cstp);
+
+                        if(true)
+                        {
+                            ios::ocstream fp("balance.dat");
+                            for(double x=0;x<=3.0;x+=0.01)
+                            {
+                                fp("%g %g\n",x,F(x));
+                            }
+                        }
+
+                        double x1 = 1;
+                        double B1 = F(x1);
+                        Y_AQUA_PRINTLN("B1   = "<<B1);
+
+                        if(B1>=B0)
+                        {
+                            Y_AQUA_PRINTLN("#shrink");
+                        }
+                        else
+                        {
+                            Y_AQUA_PRINTLN("#expand");
+                        }
 
                         return false;
                     }
