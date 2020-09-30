@@ -14,11 +14,11 @@ namespace upsylon
     namespace Aqua
     {
 
-        typedef arrays<double>              Arrays;
-        typedef lightweight_array<double>   Array;
-        typedef lightweight_array<bool>     Booleans;
-        typedef matrix<bool>                bMatrix;
+        typedef arrays<double>              Arrays;     //!< alias
+        typedef array<double>               Array;      //!< alias
+        typedef lightweight_array<bool>     Booleans;   //!< alias
 
+        //! solver
         class Solver
         {
         public:
