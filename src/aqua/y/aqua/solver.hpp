@@ -66,6 +66,7 @@ namespace upsylon
             double B_drvs( const Array &C ) throw(); //!< uses Caux for drvs
             double B_call( const double x ) throw(); //!< B_only(Ctry=Corg+x*Cstp)
             double sumCaux()                throw(); //!< sorted sum of Caux
+            double maxCaux()          const throw(); //!< maximum of Caux
             bool   rescale()                throw(); //!< rescale step
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
 
