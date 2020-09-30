@@ -97,7 +97,7 @@ namespace upsylon
             return sumCaux();
         }
 
-        bool Solver:: rescale() throw()
+        bool Solver:: rescale(const double B0) throw()
         {
             //------------------------------------------------------------------
             // compute step scaling
@@ -114,6 +114,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // compute concentrations scaling
             //------------------------------------------------------------------
+#if 0
             double C2 = 0;
             for(size_t j=M;j>0;--j)
             {
@@ -127,6 +128,8 @@ namespace upsylon
 
             const double fac  = sqrt(C2/S2);
             Y_AQUA_PRINTLN("C2   = "<<C2);
+#endif
+            const double fac  = fabs(B0)/sqrt(S2);
             Y_AQUA_PRINTLN("fac  = "<<fac);
             quark::rescale(Cstp,fac);
             return true;
@@ -191,12 +194,12 @@ namespace upsylon
                     B_proxy F = { this };
                     size_t  cycle = 0;
                     //----------------------------------------------------------
-                    // at this point: B0 and unscaled step are computed
+                    // at this point: B0>0 and unscaled step are computed
                     //----------------------------------------------------------
                 CYCLE:
                     ++cycle;
                     Y_AQUA_PRINTLN("#\t<cycle " << cycle << " >");
-                    if(!rescale())
+                    if(!rescale(B0))
                     {
                         //------------------------------------------------------
                         // realy blocked

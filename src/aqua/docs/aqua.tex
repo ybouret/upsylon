@@ -35,6 +35,46 @@ so that a set of concentrations $\vec{C}\in\mathbb{R}^M$ is described by:
 	\vec{C} = \vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
 \end{equation}
 
+
+\section{Balancing active concentrations}
+We define $\mathbb{A}_j=1$ for and active species, $\mathbb{A}_j=0$ otherwise.
+Let us balance a set of invalid concentrations starting from $\vec{C}_0$.
+We define the global excess:
+\begin{equation}
+	B\left(\vec{C}\right) = \sum_j \mathbb{A}_j \max(0,-C_j)
+\end{equation}
+so that
+\begin{equation}
+	\vec{\nabla}_{\vec{C}} B = 
+	\begin{pmatrix}
+		\vdots\\
+		-\mathbb{A}_j \times (C_j<0) \\
+		\vdots\\
+	\end{pmatrix}
+\end{equation}
+We search for
+\begin{equation}
+	\vec{C} = \vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
+\end{equation}
+We got
+\begin{equation}
+	\vec{\nabla}_{\vec{\xi}} B = \bm{\nu} \vec{\nabla}_{\vec{C}} B
+\end{equation}
+and a descent direction:
+\begin{equation}
+	\vec{\delta}_b = \trn{\nu}\nu  
+	\begin{pmatrix}
+		\vdots\\
+		\mathbb{A}_j \times (C_j<0) \\
+		\vdots\\
+	\end{pmatrix}
+\end{equation}
+which allows a search along
+\begin{equation}
+	\delta \vec{C} = \left(\sqrt{\dfrac{\sum_j\left[\mathbb{A}_j \max(0,-C_j)\right]^2}{\vec{\delta}_b^2}}\right)
+	 \vec{\delta}_b
+\end{equation}
+
 \section{Regularising from Products and Reactants}
 
 \subsection{Generic case}
@@ -55,11 +95,11 @@ Starting from $\vec{C}_0$, the equilibria will lead to
 \end{equation}
 We approximate
 \begin{equation}
-	\vec{0} \approx \vec{Q}_0 + \bm{J} \trn{\bm{\nu}} \vec{\xi}
+	\vec{0} \approx \vec{Q}_0 + \bm{\Phi} \trn{\bm{\nu}} \vec{\xi}
 \end{equation}
 with
 \begin{equation}
-	\bm{J}_i = \partial_{\vec{C}} Q_i,\; \bm{J}_{ij}= \partial_{C_j} Q_i
+	\bm{\Phi}_i = \partial_{\vec{C}} Q_i,\; \bm{\Phi}_{ij}= \partial_{C_j} Q_i
 \end{equation}
 
 \begin{itemize}
@@ -70,31 +110,6 @@ with
 
 \subsection{Single reaction}
 We solve a single reaction...
-
-\section{Balancing active concentrations}
-We define $\mathbb{A}_j=1$ for and active species, $\mathbb{A}_j=0$ otherwise.
-Let us balance a set of invalid concentrations starting from $\vec{C}_0$.
-We define the global excess:
-\begin{equation}
-	B\left(\vec{C}\right) = \dfrac{1}{2} \left( \sum_j \mathbb{A}_j \max(0,-C_j)^2 \right)
-\end{equation}
-so that
-\begin{equation}
-	\vec{\nabla}_{\vec{C}} B = 
-	\begin{pmatrix}
-		\vdots\\
-		\mathbb{A}_j \times (C_j\leq0) \times C_j \\
-		\vdots\\
-	\end{pmatrix}
-\end{equation}
-We search for
-\begin{equation}
-	\vec{C} = \vec{C}_0 + \trn{\bm{\nu}} \vec{\xi}
-\end{equation}
-We got
-\begin{equation}
-	\vec{\nabla}_{\vec{\xi}} B = \bm{\nu} \vec{\nabla}_{\vec{C}} B
-\end{equation}
 
 
 \end{document}
