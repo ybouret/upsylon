@@ -2,7 +2,7 @@
 #include "y/aqua/solver.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/mkl/kernel/quark.hpp"
-#include "y/mkl/kernel/determinant.hpp"
+#include "y/mkl/kernel/adjoint.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
 #include "y/exception.hpp"
 
@@ -22,11 +22,14 @@ namespace upsylon
         M(0),
         A(0),
         P(0),
-        det(0),
+        dNu2(0),
         Nu(),
         tNu(),
         Nu2(),
-        R(),
+        aNu2(),
+        Proj(),
+        NGS(),
+        Rho(),
         W(),
         aN(3),
         B(   aN.next()  ),
@@ -45,7 +48,10 @@ namespace upsylon
             clr << Nu;
             clr << tNu;
             clr << Nu2;
-            clr << R;
+            clr << aNu2;
+            clr << Proj;
+            clr << NGS;
+            clr << Rho;
             clr << W;
             clr << aN;
             clr << aM;
@@ -55,11 +61,11 @@ namespace upsylon
         {
             new (&used) Booleans();
             clr.release_all();
-            aliasing::_(det) = 0;
-            aliasing::_(P)   = 0;
-            aliasing::_(A)   = 0;
-            aliasing::_(M)   = 0;
-            aliasing::_(N)   = 0;
+            aliasing::_(dNu2) = 0;
+            aliasing::_(P)    = 0;
+            aliasing::_(A)    = 0;
+            aliasing::_(M)    = 0;
+            aliasing::_(N)    = 0;
         }
 
 
@@ -82,16 +88,26 @@ namespace upsylon
                     Nu.    make(N,M);
                     tNu.   make(M,N);
                     Nu2.   make(N,N);
+                    aNu2.  make(N,N);
+                    Proj.  make(M,M);
+                    NGS.   make(N,M);
                     W.     make(N,N);
                     aN.    acquire(N);
                     eqs.fillNu(Nu);
                     tNu.assign_transpose(Nu);
                     quark::mmul(Nu2,Nu,tNu);
-                    aliasing::_(det) = ideterminant(Nu2);
-                    if(0==det)
+                    aliasing::_(dNu2) = ideterminant(Nu2);
+                    if(0==dNu2)
                     {
                         throw exception("Aqua::Solver(singular equilibria)");
                     }
+                    iadjoint(aNu2,Nu2);
+                    {
+                        iMatrix aNu3(N,M);
+                        quark::mmul(aNu3,aNu2,Nu);
+                        quark::mmul(Proj,tNu,aNu3);
+                    }
+
                     for(size_t i=N;i>0;--i)
                     {
                         int sum = 0;
@@ -122,24 +138,19 @@ namespace upsylon
 
                 if(P>0)
                 {
-                    R.make(P,M);
+                    Rho.make(P,M);
                     iMatrix I(M,M);
-                    for(size_t i=N;i>0;--i)
-                    {
-                        quark::set(I[i],Nu[i]);
-                    }
-                    for(size_t i=M;i>N;--i)
-                    {
-                        I[i][i] = 1;
-                    }
-                    if(!GramSchmidt::iOrtho(I))
-                    {
-                        throw exception("%scannot find orthogonal basis",fn);
-                    }
-                    for(size_t i=P;i>0;--i)
-                    {
-                        quark::set(R[i],I[N+i]);
-                    }
+                    for(size_t i=N;i>0;--i) quark::set(I[i],Nu[i]);
+                    for(size_t i=M;i>N;--i) I[i][i] = 1;
+                    if(!GramSchmidt::iOrtho(I)) throw exception("%scannot find partial orthogonal basis",fn);
+                    for(size_t i=P;i>0;--i) quark::set(Rho[i],I[N+i]);
+                    for(size_t i=N;i>0;--i) quark::set(NGS[i],I[i]);
+
+                }
+                else
+                {
+                    NGS.assign(Nu);
+                    if(!GramSchmidt::iOrtho(NGS)) throw exception("%scannot find full orthogonal basis",fn);
                 }
                 
 

@@ -286,7 +286,117 @@ namespace upsylon
                 return true;
             }
         }
-        
+
+
+        double Solver:: BB_from(const Array &C) throw()
+        {
+            double cmax = 0;
+            for(size_t j=M;j>0;--j)
+            {
+                const double Cj = C[j];
+                if(Cj<0)
+                {
+                    const double ctmp = -Cj;
+                    if(ctmp>cmax)
+                    {
+                        cmax = ctmp;
+                    }
+                }
+            }
+            return cmax;
+        }
+
+        double Solver:: BB_call(const double x) throw()
+        {
+            quark::muladd(Ctry,Corg,x,Cstp);
+            return BB_from(Ctry);
+        }
+
+        double Solver:: BB_this :: operator()(const double x) throw()
+        {
+            assert(self);
+            return self->BB_call(x);
+        }
+
+        bool Solver:: balance2( addressable<double> &C ) throw()
+        {
+            assert(C.size()>=M);
+            if(N<=0)
+            {
+                //--------------------------------------------------------------
+                //
+                // trivial case
+                //
+                //--------------------------------------------------------------
+                Y_AQUA_PRINTLN("no equilibrium");
+                return true;
+            }
+            else
+            {
+                //--------------------------------------------------------------
+                //
+                // setup
+                //
+                //--------------------------------------------------------------
+
+
+
+                // copy values
+                for(size_t j=M;j>0;--j)
+                {
+                    if(used[j])
+                    {
+                        Corg[j] = C[j];
+                    }
+                    else
+                    {
+                        Corg[j] = 0;
+                    }
+                }
+
+                double B0 = BB_from(Corg);
+                Y_AQUA_PRINTLN("B0   = " << B0);
+
+
+                {
+                    BB_this F = { this };
+
+                    Y_AQUA_PRINTLN("Corg = " << Corg);
+                    for(size_t j=M;j>0;--j)
+                    {
+                        const double Cj = Corg[j];
+                        if(Cj<0)
+                        {
+                            Ctry[j] = -Cj;
+                        }
+                        else
+                        {
+                            Ctry[j] = 0;
+                        }
+                    }
+                    Y_AQUA_PRINTLN("Cdel = " << Ctry);
+                    quark::mul(Cstp,Proj,Ctry);
+                    for(size_t j=M;j>0;--j)
+                    {
+                        Cstp[j] /= dNu2;
+                    }
+                    Y_AQUA_PRINTLN("Cstp = " << Cstp);
+
+                    double x1 = 1;
+                    double B1 = F(x1);
+                    Y_AQUA_PRINTLN("Ctry = " << Ctry);
+                    Y_AQUA_PRINTLN("B1   = " << B1);
+
+                }
+
+
+
+                return false;
+
+            }
+        }
+
+
     }
     
 }

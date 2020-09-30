@@ -34,12 +34,15 @@ namespace upsylon
             const size_t M;      //!< species
             const size_t A;      //!< active species
             const size_t P;      //!< parameters = M-N
-            const int    det;    //!< det(Nu2)
-            iMatrix      Nu;     //!< topology   [NxM]
-            iMatrix      tNu;    //!< transposed [MxN]
-            iMatrix      Nu2;    //!< Nu*tNu     [NxN]
-            iMatrix      R;      //!< orthogonal [PxM]
-            Matrix       W;      //!<            [NxN]
+            const int    dNu2;   //!< det(Nu2)
+            iMatrix      Nu;     //!< topology      [NxM]
+            iMatrix      tNu;    //!< transposed    [MxN]
+            iMatrix      Nu2;    //!< Nu*tNu        [NxN]
+            iMatrix      aNu2;   //!< adjoint(Nu2)  [NxN]
+            iMatrix      Proj;   //!< tNu*aNu2*Nu   [MxM]
+            iMatrix      NGS;    //!< orthogonal Nu [NxM]
+            iMatrix      Rho;    //!< orthogonal    [PxM]
+            Matrix       W;      //!<               [NxN]
             Arrays       aN;     //!< linear data
             Array       &B;      //!< balance indicators [N]
             Array       &xi;     //!< extent             [N]
@@ -55,6 +58,7 @@ namespace upsylon
 
 
             bool balance( addressable<double> &C ) throw();
+            bool balance2( addressable<double> &C ) throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
@@ -64,6 +68,10 @@ namespace upsylon
             double sumCaux()                throw(); //!< sorted sum of Caux
             
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
+
+            double BB_from(const Array &C) throw(); //!< max_of( max_of(0,-Cj) )
+            double BB_call(const double x) throw(); //!< BB_from(Corg+x*Cstp)
+            struct BB_this { Solver *self; double operator()(const double) throw(); };
 
         public:
             bool         balanceVerbose;
