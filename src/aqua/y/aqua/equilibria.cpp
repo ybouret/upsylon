@@ -56,7 +56,7 @@ namespace upsylon {
             }
         }
 
-        void Equilibria:: fillK(addressable<double> &K, const double t) const
+        void Equilibria:: computeK(addressable<double> &K, const double t) const
         {
             assert(K.size()==entries());
             size_t i=0;
@@ -74,9 +74,9 @@ namespace upsylon {
             }
         }
 
-        void Equilibria:: fillPhi(Matrix                   &Phi,
-                                  const accessible<double> &K,
-                                  const accessible<double> &C) const throw()
+        void Equilibria:: computePhi(Matrix                   &Phi,
+                                     const accessible<double> &K,
+                                     const accessible<double> &C) const throw()
         {
             assert(Phi.rows==entries());
             assert(K.size()==entries());
@@ -86,12 +86,12 @@ namespace upsylon {
             for(const_iterator it=begin();it!=end();++it)
             {
                 ++i;
-                (**it).fillPhi(Phi[i],K[i],C);
+                (**it).computePhi(Phi[i],K[i],C);
             }
 
         }
 
-        void Equilibria:: fillQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw()
+        void Equilibria:: computeQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw()
         {
             assert(Q.size()==entries());
             assert(K.size()==entries());

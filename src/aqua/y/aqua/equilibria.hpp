@@ -12,26 +12,49 @@ namespace upsylon {
 
     namespace Aqua
     {
-        typedef matrix<int>    iMatrix;
-        typedef matrix<double> Matrix;
+        typedef matrix<int>    iMatrix; //!< alias
+        typedef matrix<double> Matrix;  //!< alias
 
+        //______________________________________________________________________
+        //
+        //
+        //! a database of equilibria
+        //
+        //______________________________________________________________________
         class Equilibria : public suffix_tree<Equilibrium::Pointer>
         {
         public:
-            explicit Equilibria();
-            virtual ~Equilibria() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Equilibria();         //!< setup
+            virtual ~Equilibria() throw(); //!< cleanup
 
-            Equilibrium & operator()( Equilibrium *eq );
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            Equilibrium & operator()( Equilibrium * );                             //!< insert a new equilibrium
+            std::ostream & display( std::ostream &) const;                         //!< display
+            friend std::ostream & operator<<(std::ostream &, const Equilibria & ); //!< display
 
-            std::ostream & display( std::ostream &) const;
-            friend std::ostream & operator<<(std::ostream &, const Equilibria & );
+            //! fill topology matrix
+            void fillNu(iMatrix &nu) const throw();
 
-            void fillNu(iMatrix &nu ) const throw();
-            void fillK(addressable<double> &K, const double t) const;
-            void fillPhi(Matrix &Phi, const accessible<double> &K, const accessible<double> &C) const throw();
-            void fillQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw();
+            //! compute all constants
+            void computeK(addressable<double> &K, const double t) const;
+
+            //! compute all equilibria indicators
+            void computeQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw();
+
+            //! compute Jacobian matrix
+            void computePhi(Matrix &Phi, const accessible<double> &K, const accessible<double> &C) const throw();
+
+            //! validate all equilibria
             void validate() const;
-            
+
+            //! create a constant equilibrium 'id'
             template <typename ID>
             Equilibrium & constant( const ID &id, const double K )
             {

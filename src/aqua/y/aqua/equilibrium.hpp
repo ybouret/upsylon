@@ -13,51 +13,98 @@ namespace upsylon {
     namespace Aqua
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! a species with its coefficient
+        //
+        //______________________________________________________________________
         class Component : public Object, public inode<Component>
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef core::list_of_cpp<Component> List; //!< alias
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Component(const Species &, const int) throw(); //!< setup
+            virtual ~Component() throw();                           //!< cleanup
+            Component(const Component &) throw();                   //!< copy
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const Species &sp;  //!< species
             const int      nu;  //!< coef
             const size_t   p;   //!< |nu|
             const size_t   pm1; //!< p-1
-            
-            explicit Component(const Species &, const int) throw();
-            virtual ~Component() throw();
-            Component(const Component &) throw();
 
-            typedef core::list_of_cpp<Component> List;
-            
         private:
             Y_DISABLE_ASSIGN(Component);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! a generic equilibrium
+        //
+        //______________________________________________________________________
         class Equilibrium : public Object, public Counted
         {
         public:
-            typedef Component::List      Components;
-            typedef arc_ptr<Equilibrium> Pointer;
-            virtual ~Equilibrium() throw();
-            
-            const string name;
-            const int    d_nu;
-            const int    d_nu_r;
-            const int    d_nu_p;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef Component::List      Components; //!< alias
+            typedef arc_ptr<Equilibrium> Pointer;    //!< alias
+
+
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            virtual ~Equilibrium() throw(); //!< cleanup
 
             //! insert and reset all species indices
             void operator()(const Species &sp, const int nu);
 
+            //! display
             std::ostream & display(std::ostream &os, const size_t width) const;
+
+            //! display
             friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq);
 
-            double K(const double t) const;
-            void   validate() const;
+            double K(const double t) const; //!< call getK(t)
+            void   validate() const;        //!< check validity
 
 
-            void   fillNu(addressable<int> &nu) const throw();  //! fill topology row
-            void   fillPhi(addressable<double> &Phi, const double K0, const accessible<double> &C0) const throw();
+            void   fillNu(addressable<int> &nu) const throw();  //!< fill topology row
+
+            //! compute indicator
             double computeQ(const double K0, const accessible<double> &C0) const throw();
 
+            //! compute gradient of Q
+            void   computePhi(addressable<double> &Phi, const double K0, const accessible<double> &C0) const throw();
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const string name;     //!< unique name
+            const int    d_nu;     //!< sum nu
+            const int    d_nu_r;   //!< sum (-(nu<0))
+            const int    d_nu_p;   //!< sum (nu>0)
+
         protected:
+            //! setup
             template <typename ID> inline
             explicit Equilibrium(const ID &id) :
             name(id),
@@ -83,19 +130,32 @@ namespace upsylon {
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //! a constant equilibrium, K(t)==Keq
+        //
+        //______________________________________________________________________
         class ConstEquilibrium : public Equilibrium
         {
         public:
-            const double Keq;
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~ConstEquilibrium() throw(); //!< cleanup
 
-            virtual ~ConstEquilibrium() throw();
-
-
+            //! setup by name+value
             template <typename ID> inline
             explicit ConstEquilibrium(const ID &id, const double Kvalue) :
             Equilibrium(id),
             Keq(Kvalue){}
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const double Keq; //!< returned by getK()
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);

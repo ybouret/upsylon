@@ -190,9 +190,9 @@ namespace upsylon {
         }
 
 
-        void  Equilibrium:: fillPhi(addressable<double>      &Phi,
-                                    const double              K0,
-                                    const accessible<double> &C) const throw()
+        void  Equilibrium:: computePhi(addressable<double>      &Phi,
+                                       const double              K0,
+                                       const accessible<double> &C) const throw()
         {
             const size_t M = Phi.size(); assert(C.size()>=Phi.size());
             for(size_t j=M;j>0;--j)

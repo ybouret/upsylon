@@ -143,13 +143,13 @@ namespace upsylon
 
         void Solver:: computeK(const Equilibria &eqs, const double t)
         {
-            eqs.fillK(K,t);
+            eqs.computeK(K,t);
         }
 
         void Solver:: computePhi(const Equilibria         &eqs,
                                  const accessible<double> &C) throw()
         {
-            eqs.fillPhi(Phi,K,C);
+            eqs.computePhi(Phi,K,C);
         }
 
         bool Solver:: computeW() throw()
@@ -160,7 +160,7 @@ namespace upsylon
 
         void Solver:: computeQ(const Equilibria &eqs, const accessible<double> &C) throw()
         {
-            eqs.fillQ(Q,K,C);
+            eqs.computeQ(Q,K,C);
         }
 
     }
