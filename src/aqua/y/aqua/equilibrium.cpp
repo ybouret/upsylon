@@ -46,7 +46,7 @@ namespace upsylon {
                     products.push_back( new Component(sp,nu) );
                 }
                 catch(...) { delete components.pop_back(); throw; }
-                aliasing::_(d_nu_p) += nu;
+                aliasing::_(dp) += nu;
             }
             else
             {
@@ -55,10 +55,11 @@ namespace upsylon {
                     reactants.push_back( new Component(sp,-nu) );
                 }
                 catch(...) { delete components.pop_back(); throw; }
-                aliasing::_(d_nu_r) -= nu;
+                aliasing::_(dr) -= nu;
             }
-            aliasing::_(d_nu) += nu;
-            assert(d_nu_p-d_nu_r==d_nu);
+            aliasing::_(dn) += nu;
+            aliasing::_(idn) = dn!=0 ? 1.0/dn : 1;
+            assert(dp-dr==dn);
             maxCompSize = max_of(maxCompSize,sp.name.size());
 
             for(Component *c=components.head;c;c=c->next)
@@ -93,9 +94,9 @@ namespace upsylon {
             os << " <=>";
             display_list(os,products);
             os << " (" << K(0) << ")";
-            os << " | d_nu=" << d_nu;
-            os << " | d_nu_r=" << d_nu_r;
-            os << " | d_nu_p=" << d_nu_p;
+            os << " | dn=" << dn;
+            os << " | dr=" << dr;
+            os << " | dp=" << dp;
 
             return os;
         }
@@ -107,9 +108,16 @@ namespace upsylon {
 
         double Equilibrium:: K(const double t) const
         {
-            const double value = getK(t);
-            if(value<=0) throw exception("<%s> negative constante",*name);
-            return value;
+            //double      &C0 = (aliasing::_(Cbar) = 1);
+            const double K0 = getK(t);
+            if(K0<=0) throw exception("<%s> negative constante",*name);
+#if 0
+            if(d_nu_r>0)
+            {
+                C0 = pow(K0,1.0/d_nu_r);
+            }
+#endif
+            return K0;
         }
 
         void Equilibrium:: validate() const

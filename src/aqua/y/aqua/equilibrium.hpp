@@ -82,7 +82,7 @@ namespace upsylon {
             //! display
             friend std::ostream & operator<<(std::ostream &os, const Equilibrium &eq);
 
-            double K(const double t) const; //!< call getK(t)
+            double K(const double t) const; //!< call getK(t), set internal scaling
             void   validate() const;        //!< check validity
 
 
@@ -98,19 +98,21 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const string name;     //!< unique name
-            const int    d_nu;     //!< sum nu
-            const int    d_nu_r;   //!< sum (-(nu<0))
-            const int    d_nu_p;   //!< sum (nu>0)
+            const string name;    //!< unique name
+            const int    dn;      //!< sum nu
+            const int    dr;      //!< sum (-(nu<0))
+            const int    dp;      //!< sum (nu>0)
+            const double idn;     //!< 1.0/dn if exists
 
         protected:
             //! setup
             template <typename ID> inline
             explicit Equilibrium(const ID &id) :
             name(id),
-            d_nu(0),
-            d_nu_r(0),
-            d_nu_p(0),
+            dn(0),
+            dr(0),
+            dp(0),
+            idn(0),
             components(),
             reactants(),
             products(),

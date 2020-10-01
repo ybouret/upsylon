@@ -80,7 +80,7 @@ namespace upsylon
 
 
             //! balance C[1..M]
-            bool balance(addressable<double> &) throw();
+            bool balance(addressable<double> &, size_t &cycles) throw();
 
             //! forward C[1..M]
             bool forward(addressable<double> &) throw();
@@ -107,8 +107,14 @@ namespace upsylon
             double B_drvs(Array &C)         throw(); //!< uses Caux for drvs
             double B_call(const double x)   throw(); //!< B_only(Ctry=Corg+x*Cstp)
             double sumCaux()                throw(); //!< sorted sum of Caux
-            bool   rescale(const double B0) throw(); //!< rescale step
+            bool   rescale(const double B0) throw(); //!< rescale balancing step
+
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
+
+            double Q_only(const Array &C) throw(); //!< objective function of Q
+            double Q_call(const double x) throw(); //!< Q_only(Ctry=Cini+x*Cstp)
+            struct Q_proxy { Solver *self; double operator()(const double) throw(); };
+
 
         public:
             bool         balanceVerbose; //!< display status while balancing

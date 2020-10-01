@@ -120,9 +120,11 @@ namespace upsylon
             return true;
         }
 
-        bool Solver:: balance(addressable<double> &C) throw()
+
+        bool Solver:: balance(addressable<double> &C, size_t &cycles) throw()
         {
             assert(C.size()>=M);
+            cycles=0;
             if(N<=0)
             {
                 //--------------------------------------------------------------
@@ -177,18 +179,18 @@ namespace upsylon
                 {
                     typedef  triplet<double>  Triplet;
                     B_proxy F = { this };
-                    size_t  cycle = 0;
                     //----------------------------------------------------------
                     // at this point: B0>0 and unscaled step are computed
                     //----------------------------------------------------------
                 CYCLE:
-                    ++cycle;
-                    Y_AQUA_PRINTLN("#\t<cycle " << cycle << " >");
+                    ++cycles;
+                    Y_AQUA_PRINTLN("#\t<cycle " << cycles << " >");
                     if(!rescale(B0))
                     {
                         //------------------------------------------------------
                         // realy blocked
                         //------------------------------------------------------
+
                         return false; //!blocked
                     }
                     else
@@ -303,6 +305,7 @@ namespace upsylon
                         {
                             if(active[j])
                             {
+                                assert(Corg[j]>=0);
                                 C[j] = Corg[j];
                             }
                         }

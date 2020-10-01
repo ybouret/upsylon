@@ -70,11 +70,11 @@ Y_UTEST(solver)
 
         lib.show(std::cerr << "ini=",C);
 
-
-        if(cs.balance(C))
+        size_t balanceCycles=0;
+        if(cs.balance(C,balanceCycles))
         {
             lib.show(std::cerr << "end=",C);
-
+            std::cerr << "in #cycle=" << balanceCycles << std::endl;
             break;
         }
         else
@@ -83,6 +83,7 @@ Y_UTEST(solver)
         }
     }
 
+    
     cs.computeK(0);
     std::cerr << "K=" << cs.K <<  std::endl;
     cs.forward(C);

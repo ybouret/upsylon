@@ -13,6 +13,30 @@ namespace upsylon
     namespace Aqua
     {
         using namespace mkl;
+
+
+        double Solver:: Q_only(const Array &C) throw()
+        {
+            computeQ(C);
+            return quark::mod2<double>::of(Q);
+        }
+
+        double Solver:: Q_call(const double x) throw()
+        {
+            for(size_t j=M;j>0;--j)
+            {
+                Ctry[j] = max_of(0.0,Cini[j]+x*Cstp[j]);
+            }
+            return Q_only(Ctry);
+        }
+
+        double Solver:: Q_proxy ::operator()(const double x) throw()
+        {
+            assert(self);
+            return self->Q_call(x);
+        }
+
+
         static const char fn[] = "[forward] ";
 #define Y_AQUA_PRINTLN(MSG) do { if(forwardVerbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 
@@ -29,6 +53,7 @@ namespace upsylon
             {
                 if(active[j])
                 {
+                    assert(C[j]>=0);
                     Cini[j] = C[j];
                 }
                 else
@@ -37,22 +62,24 @@ namespace upsylon
                 }
             }
 
+            Q_proxy F  = { this };
+
+
             //------------------------------------------------------------------
             //
             // cycle
             //
             //------------------------------------------------------------------
-            size_t cycle = 0;
+            size_t cycles = 0;
             while(true)
             {
-                ++cycle;
-
+                ++cycles;
                 //--------------------------------------------------------------
                 //
                 // compute status: Q and Phi
                 //
                 //--------------------------------------------------------------
-                Y_AQUA_PRINTLN("#\t<cycle " << cycle << ">");
+                Y_AQUA_PRINTLN("#\t<cycle " << cycles << ">");
                 Y_AQUA_PRINTLN("Cini = "<<Cini);
                 computeS(Cini);
                 if(!computeW())
@@ -60,8 +87,9 @@ namespace upsylon
                     Y_AQUA_PRINTLN("singular system!");
                     return false;
                 }
-                Y_AQUA_PRINTLN("Q   = "<<Q);
-                //Y_AQUA_PRINTLN("Phi = "<<Phi);
+                const double Q0 = Q_only(Cini);
+                Y_AQUA_PRINTLN("Q    = " << Q);
+                Y_AQUA_PRINTLN("Q0   = " << Q0);
 
                 //--------------------------------------------------------------
                 //
@@ -76,29 +104,120 @@ namespace upsylon
                 // compute new position
                 //
                 //--------------------------------------------------------------
-                for(size_t i=N;i>0;--i)
+                for(size_t j=M;j>0;--j)
                 {
-                    Cend[i] = Cini[i] + quark::dot<double>::of(tNu[i],xi);
+                    Cend[j] = Cini[j] + quark::dot<double>::of(tNu[j],xi);
                 }
                 Y_AQUA_PRINTLN("Ctmp = "<<Cend);
-                if(!balance(Cend))
+
+                //--------------------------------------------------------------
+                //
+                // balance new position
+                //
+                //--------------------------------------------------------------
+                size_t balanceCycles = 0;
+                if(!balance(Cend,balanceCycles))
                 {
+                    Y_AQUA_PRINTLN("unable to balance");
                     return false;
                 }
                 Y_AQUA_PRINTLN("Cend = "<<Cend);
-                const bool cvg = __find<double>::convergence(Cini,Cend);
-                if(cvg)
+
+
+                //--------------------------------------------------------------
+                //
+                // checking where we landed
+                //
+                //--------------------------------------------------------------
+                if(balanceCycles>0)
                 {
-                    Y_AQUA_PRINTLN("converged");
+                    //----------------------------------------------------------
+                    // very sensitive point
+                    //----------------------------------------------------------
+                    Y_AQUA_PRINTLN("# <<balanceCycles=" << balanceCycles << ">>");
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    // more regular point: don't overshoot!
+                    //----------------------------------------------------------
+                    double x1 = 1;
+                    double Q1 = Q_only(Cend);
+                    if(Q1>=Q0)
+                    {
+                        // prepare step to probe
+                        quark::sub(Cstp, Cend, Cini);
+                        {
+                            ios::ocstream fp("backward.dat");
+                            for(double x=0;x<=1.0;x+=0.01)
+                            {
+                                fp("%.20g %.20g\n",x,F(x));
+                            }
+                        }
+
+                        // probe
+                        {
+                            triplet<double> x  = { 0,  x1, x1 };
+                            triplet<double> f  = { Q0, Q1, Q1};
+                            Q1 = F( x1 = minimize::run(F,x,f,minimize::inside) );
+                        }
+
+                        // update
+                        quark::set(Cend,Ctry);
+                    }
+                    Y_AQUA_PRINTLN("Q1    = " << Q1 << " @ " << x1 );
+
+                    if(Q1<=0)
+                    {
+                        Y_AQUA_PRINTLN("converged Q=" << Q << " @ " << Cend);
+                        break;
+                    }
+                }
+
+
+
+                //--------------------------------------------------------------
+                //
+                // check concentrations convergence
+                //
+                //--------------------------------------------------------------
+                bool converged = true;
+                for(size_t j=M;j>0;--j)
+                {
+                    const double old = Cini[j]; assert(old>=0);
+                    const double now = Cend[j]; assert(now>=0);
+                    const double err = fabs(old-now);
+                    if( err < numeric<double>::tiny )
+                    {
+                        // don't move, keep Cini
+                    }
+                    else
+                    {
+                        // check status
+                        if(converged && (err > numeric<double>::ftol * max_of(old,now)) )
+                        {
+                            converged = false;
+                        }
+                        Cini[j] = now;
+                    }
+                }
+
+
+                if(converged)
+                {
+                    Y_AQUA_PRINTLN("converged C @ "<<Cend);
                     break;
                 }
+
+                
             }
 
             for(size_t j=M;j>0;--j)
             {
                 if(active[j])
                 {
-                    C[j] = Cini[j];
+                    assert(Cend[j]>=0);
+                    C[j] = Cend[j];
                 }
             }
 
