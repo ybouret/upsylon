@@ -1,7 +1,6 @@
 #include "y/aqua/solver.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/sort/heap.hpp"
-#include "y/ios/ocstream.hpp"
 #include "y/mkl/opt/minimize.hpp"
 
 namespace upsylon
@@ -129,7 +128,9 @@ namespace upsylon
             {
                 //--------------------------------------------------------------
                 //
+                //
                 // trivial case
+                //
                 //
                 //--------------------------------------------------------------
                 Y_AQUA_PRINTLN("no equilibrium");
@@ -139,11 +140,11 @@ namespace upsylon
             {
                 //--------------------------------------------------------------
                 //
-                // setup
+                //
+                // setup: copy active values
+                //
                 //
                 //--------------------------------------------------------------
-
-                // copy active values
                 for(size_t j=M;j>0;--j)
                 {
                     if(active[j])
@@ -158,7 +159,9 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // initialize
+                //
+                // initialize excess of negative concentrations+unscaled Cstp
+                //
                 //
                 //--------------------------------------------------------------
                 double B0 = B_drvs(Corg);
@@ -170,7 +173,11 @@ namespace upsylon
                 if(B0<=0)
                 {
                     //----------------------------------------------------------
+                    //
+                    //
                     // early return
+                    //
+                    //
                     //----------------------------------------------------------
                     Y_AQUA_PRINTLN("#already!");
                     return true;
@@ -180,7 +187,11 @@ namespace upsylon
                     typedef  triplet<double>  Triplet;
                     B_proxy F = { this };
                     //----------------------------------------------------------
+                    //
+                    //
                     // at this point: B0>0 and unscaled step are computed
+                    //
+                    //
                     //----------------------------------------------------------
                 CYCLE:
                     ++cycles;
@@ -188,27 +199,21 @@ namespace upsylon
                     if(!rescale(B0))
                     {
                         //------------------------------------------------------
+                        //
                         // realy blocked
+                        //
                         //------------------------------------------------------
-
-                        return false; //!blocked
+                        return false;
                     }
                     else
                     {
                         //------------------------------------------------------
+                        //
                         // probe
+                        //
                         //------------------------------------------------------
                         Y_AQUA_PRINTLN("Corg = "<<Corg);
                         Y_AQUA_PRINTLN("Cstp = "<<Cstp);
-
-                        if(false)
-                        {
-                            ios::ocstream fp("balance.dat");
-                            for(double x=0;x<=3.0;x+=0.01)
-                            {
-                                fp("%.20g %.20g\n",x,F(x));
-                            }
-                        }
 
                         double x1 = 1;
                         double B1 = F(x1);
@@ -216,24 +221,36 @@ namespace upsylon
 
                         if(B1>=B0)
                         {
+                            //--------------------------------------------------
+                            //
                             Y_AQUA_PRINTLN("#shrink...");
+                            //
+                            //--------------------------------------------------
                             Triplet x = {0,x1,x1};
                             Triplet B = {B0,B1,B1};
                             B1 = F( x1 = minimize::run(F,x,B,minimize::inside) );
                         }
                         else
                         {
+                            //--------------------------------------------------
+                            //
                             Y_AQUA_PRINTLN("#expand...");
+                            //
+                            //--------------------------------------------------
                             Triplet x = {0,x1,x1*numeric<double>::gold};
                             Triplet B = {B0,B1,F(x.c)};
                             if(B.c>=B.b)
                             {
+                                //----------------------------------------------
                                 Y_AQUA_PRINTLN("#found optimum");
+                                //----------------------------------------------
                                 B1 = F( x1 = minimize::run(F,x,B,minimize::direct) );
                             }
                             else
                             {
+                                //----------------------------------------------
                                 Y_AQUA_PRINTLN("#forward");
+                                //----------------------------------------------
                                 B1 = B.c; // and Ctry is computed
                                 x1 = x.c; // at this value
                             }
@@ -243,7 +260,9 @@ namespace upsylon
                         if(B1<=0)
                         {
                             //--------------------------------------------------
+                            //
                             // backward
+                            //
                             //--------------------------------------------------
                             {
                                 Y_AQUA_PRINTLN("#backtrack");
@@ -270,7 +289,9 @@ namespace upsylon
                         else
                         {
                             //--------------------------------------------------
+                            //
                             // test convergence and update for next cycle
+                            //
                             //--------------------------------------------------
                             Y_AQUA_PRINTLN("#testing");
                             bool Ccvg = true;

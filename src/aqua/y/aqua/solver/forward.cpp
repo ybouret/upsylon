@@ -3,7 +3,6 @@
 #include "y/mkl/kernel/quark.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/sort/heap.hpp"
-#include "y/ios/ocstream.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/mkl/utils.hpp"
 
