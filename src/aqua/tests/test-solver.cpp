@@ -2,6 +2,7 @@
 #include "y/aqua/solver.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/mkl/kernel/quark.hpp"
 
 using namespace upsylon;
 using namespace Aqua;
@@ -100,8 +101,22 @@ Y_UTEST(solver)
         }
     }
 
-    
+    {
+        mkl::quark::ld(C,0);
+        cs.forwardVerbose = true;
+        size_t forwardCycles = 0;
 
+        lib.show(std::cerr << "ini=",C);
+        if(cs.forward(C,forwardCycles))
+        {
+            lib.show(std::cerr << "forward=",C);
+            std::cerr << "in #forwardCycle=" << forwardCycles << std::endl;
+        }
+        else
+        {
+            std::cerr << "couldn't forward!" << std::endl;
+        }
+    }
 }
 Y_UTEST_DONE()
 
