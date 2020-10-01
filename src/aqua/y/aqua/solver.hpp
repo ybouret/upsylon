@@ -84,9 +84,16 @@ namespace upsylon
             //! forward C[1..M]
             bool forward(addressable<double> &) throw();
 
+            //! compute K[1..N] at time t
             void computeK(const double t);
+
+            //! compute Q[1..N] from K and C
             void computeQ(const accessible<double> &C) throw();
+
+            //! compute Phi[NxM] from K and C
             void computePhi(const accessible<double> &C) throw();
+
+            //! compute Phi*tNu, return LU result
             bool computeW() throw();
 
         private:
