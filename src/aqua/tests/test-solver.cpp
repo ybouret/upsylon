@@ -59,6 +59,7 @@ Y_UTEST(solver)
     vector<double> C(cs.M+2,0);
 
     //cs.balanceVerbose = true;
+    cs.forwardVerbose = true;
 
     while(true)
     {

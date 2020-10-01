@@ -70,12 +70,13 @@ namespace upsylon
         private:
             Arrays         aM;         //!< linear data   [M]...
         public:
-            Array         &Corg;       //!< original  C [M]
-            Array         &Caux;       //!< auxiliary C [M]
-            Array         &Ctry;       //!< trial     C [M]
-            Array         &Cstp;       //!< step  for C [M]
-            Array         &Cfwd;       //!< for forward [M]
-            const Booleans active;     //!< active C    [M]
+            Array         &Corg;       //!< original  C   [M]
+            Array         &Caux;       //!< auxiliary C   [M]
+            Array         &Ctry;       //!< trial     C   [M]
+            Array         &Cstp;       //!< step  for C   [M]
+            Array         &Cini;       //!< for forward   [M]
+            Array         &Cend;       //!< forward trial [M]
+            const Booleans active;     //!< active C      [M]
 
 
             //! balance C[1..M]
@@ -111,6 +112,7 @@ namespace upsylon
 
         public:
             bool         balanceVerbose; //!< display status while balancing
+            bool         forwardVerbose; //!< display status while forwarding
         };
 
     }

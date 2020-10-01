@@ -34,16 +34,18 @@ namespace upsylon
         Q(   aN.next()  ),
         xi(  aN.next()  ),
         nu2( aN.next()  ),
-        aM(6),
+        aM(7),
         Corg( aM.next() ),
         Caux( aM.next() ),
         Ctry( aM.next() ),
         Cstp( aM.next() ),
-        Cfwd( aM.next() ),
+        Cini( aM.next() ),
+        Cend( aM.next() ),
         active(),
         extra( aM.next() ),
         keeper(),
-        balanceVerbose(false)
+        balanceVerbose(false),
+        forwardVerbose(false)
         {
             keeper << aliasing::_(equilibria);
             keeper << aliasing::_(Nu);
@@ -180,7 +182,6 @@ namespace upsylon
             {
                 K[i] = equilibria[i]->K(t);
             }
-            
         }
 
         void Solver:: computeS(const accessible<double> &C) throw()
