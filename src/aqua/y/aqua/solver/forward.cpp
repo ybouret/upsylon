@@ -40,15 +40,18 @@ namespace upsylon
         static const char fn[] = "[forward] ";
 #define Y_AQUA_PRINTLN(MSG) do { if(forwardVerbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 
-        bool Solver:: forward(addressable<double> &C) throw()
+        bool Solver:: forward(addressable<double> &C, size_t &cycles) throw()
         {
             assert(C.size()>=M);
 
             //------------------------------------------------------------------
             //
+            //
             // initialize Cfwd with active concentrations
             //
+            //
             //------------------------------------------------------------------
+            cycles = 0;
             for(size_t j=M;j>0;--j)
             {
                 if(active[j])
@@ -67,16 +70,19 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // cycle
+            //
+            // cycles
+            //
             //
             //------------------------------------------------------------------
-            size_t cycles = 0;
             while(true)
             {
                 ++cycles;
                 //--------------------------------------------------------------
                 //
+                //
                 // compute status: Q and Phi
+                //
                 //
                 //--------------------------------------------------------------
                 Y_AQUA_PRINTLN("#\t<cycle " << cycles << ">");
@@ -93,7 +99,9 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // compute extenet
+                //
+                // compute extent
+                //
                 //
                 //--------------------------------------------------------------
                 quark::neg(xi,Q);
@@ -101,7 +109,9 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
+                //
                 // compute new position
+                //
                 //
                 //--------------------------------------------------------------
                 for(size_t j=M;j>0;--j)
@@ -112,7 +122,9 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
+                //
                 // balance new position
+                //
                 //
                 //--------------------------------------------------------------
                 size_t balanceCycles = 0;
@@ -126,43 +138,48 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
+                //
                 // checking where we landed
+                //
                 //
                 //--------------------------------------------------------------
                 if(balanceCycles>0)
                 {
                     //----------------------------------------------------------
-                    // very sensitive point
+                    //
+                    // started from a very sensitive point
+                    //
                     //----------------------------------------------------------
                     Y_AQUA_PRINTLN("# <<balanceCycles=" << balanceCycles << ">>");
                 }
                 else
                 {
                     //----------------------------------------------------------
+                    //
                     // more regular point: don't overshoot!
+                    //
                     //----------------------------------------------------------
                     double x1 = 1;
                     double Q1 = Q_only(Cend);
                     if(Q1>=Q0)
                     {
+                        //------------------------------------------------------
                         // prepare step to probe
+                        //------------------------------------------------------
                         quark::sub(Cstp, Cend, Cini);
-                        {
-                            ios::ocstream fp("backward.dat");
-                            for(double x=0;x<=1.0;x+=0.01)
-                            {
-                                fp("%.20g %.20g\n",x,F(x));
-                            }
-                        }
 
+                        //------------------------------------------------------
                         // probe
+                        //------------------------------------------------------
                         {
                             triplet<double> x  = { 0,  x1, x1 };
                             triplet<double> f  = { Q0, Q1, Q1};
                             Q1 = F( x1 = minimize::run(F,x,f,minimize::inside) );
                         }
 
+                        //------------------------------------------------------
                         // update
+                        //------------------------------------------------------
                         quark::set(Cend,Ctry);
                     }
                     Y_AQUA_PRINTLN("Q1    = " << Q1 << " @ " << x1 );
@@ -178,7 +195,9 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
+                //
                 // check concentrations convergence
+                //
                 //
                 //--------------------------------------------------------------
                 bool converged = true;
@@ -189,11 +208,15 @@ namespace upsylon
                     const double err = fabs(old-now);
                     if( err < numeric<double>::tiny )
                     {
+                        //------------------------------------------------------
                         // don't move, keep Cini
+                        //------------------------------------------------------
                     }
                     else
                     {
+                        //------------------------------------------------------
                         // check status
+                        //------------------------------------------------------
                         if(converged && (err > numeric<double>::ftol * max_of(old,now)) )
                         {
                             converged = false;
@@ -205,13 +228,26 @@ namespace upsylon
 
                 if(converged)
                 {
-                    Y_AQUA_PRINTLN("converged C @ "<<Cend);
+                    Y_AQUA_PRINTLN("converged Q=" << Q << " @ " << Cend);
                     break;
                 }
-
+                //--------------------------------------------------------------
+                //
+                //
+                // ready for next cycle, Cini=Cend
+                //
+                //
+                //--------------------------------------------------------------
                 
             }
 
+            //------------------------------------------------------------------
+            //
+            //
+            // update initial concentrations
+            //
+            //
+            //------------------------------------------------------------------
             for(size_t j=M;j>0;--j)
             {
                 if(active[j])
@@ -220,7 +256,6 @@ namespace upsylon
                     C[j] = Cend[j];
                 }
             }
-
             return true;
         }
 

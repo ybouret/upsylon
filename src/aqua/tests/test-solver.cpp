@@ -59,34 +59,46 @@ Y_UTEST(solver)
     vector<double> C(cs.M+2,0);
 
     //cs.balanceVerbose = true;
-    cs.forwardVerbose = true;
+    //cs.forwardVerbose = true;
 
-    while(true)
+    for(size_t iter=0;iter<10;++iter)
     {
-        for(size_t j=C.size();j>0;--j)
+        while(true)
         {
-            C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+            for(size_t j=C.size();j>0;--j)
+            {
+                C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+            }
+
+            lib.show(std::cerr << "ini=",C);
+
+            size_t balanceCycles=0;
+            if(cs.balance(C,balanceCycles))
+            {
+                lib.show(std::cerr << "balance=",C);
+                std::cerr << "in #balanceCycle=" << balanceCycles << std::endl;
+                break;
+            }
+            else
+            {
+                std::cerr << "couldnt' balance!" <<std::endl;
+            }
         }
 
-        lib.show(std::cerr << "ini=",C);
 
-        size_t balanceCycles=0;
-        if(cs.balance(C,balanceCycles))
+        size_t forwardCycles = 0;
+        cs.computeK(0);
+        std::cerr << "K=" << cs.K <<  std::endl;
+        if(cs.forward(C,forwardCycles))
         {
-            lib.show(std::cerr << "end=",C);
-            std::cerr << "in #cycle=" << balanceCycles << std::endl;
-            break;
+            lib.show(std::cerr << "forward=",C);
+            std::cerr << "in #forwardCycle=" << forwardCycles << std::endl;
         }
         else
         {
-            std::cerr << "couldnt' balance!" <<std::endl;
+            std::cerr << "couldn't forward!" << std::endl;
         }
     }
-
-    
-    cs.computeK(0);
-    std::cerr << "K=" << cs.K <<  std::endl;
-    cs.forward(C);
 
     
 

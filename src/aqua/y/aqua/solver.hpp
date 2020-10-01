@@ -83,7 +83,7 @@ namespace upsylon
             bool balance(addressable<double> &, size_t &cycles) throw();
 
             //! forward C[1..M]
-            bool forward(addressable<double> &) throw();
+            bool forward(addressable<double> &, size_t &cycles) throw();
 
             //! compute K[1..N] at time t
             void computeK(const double t);
