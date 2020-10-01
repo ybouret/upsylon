@@ -19,11 +19,10 @@ namespace upsylon {
         class temporary_acquire_
         {
         public:
-            virtual ~temporary_acquire_() throw();      //!< release_all() and cleanup
-            void     record(releasable &obj) throw();   //!< record a new object
-            temporary_acquire_ & operator<<( releasable &obj) throw(); //!< helper
-
-            void release_all() throw();
+            virtual ~temporary_acquire_() throw();                 //!< release_all() and cleanup
+            void     record(releasable &) throw();                 //!< record a new object
+            temporary_acquire_ & operator<<(releasable &) throw(); //!< helper
+            void release_all()                            throw(); //!< release all in reverse recorded order
 
         protected:
             //! setup from user's defined memory
@@ -35,7 +34,6 @@ namespace upsylon {
             const size_t   capa;
         public:
             const size_t   size; //!< current number or recorded objects
-
         };
 
 

@@ -22,14 +22,30 @@ namespace upsylon
         class Solver
         {
         public:
-            typedef core::temporary_acquire<16> Collector;
+            //__________________________________________________________________
+            //
+            // types and defintiions
+            //__________________________________________________________________
+            typedef core::temporary_acquire<16> Collector; //!< alias
 
-            explicit Solver();
-            virtual ~Solver() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Solver();          //!< setup
+            virtual ~Solver() throw();  //!< cleanup
 
-            void init(Library &lib, Equilibria &eqs);
-            void quit() throw();
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void init(Library &lib, Equilibria &eqs); //!< initialize
+            void quit() throw();                      //!< release all
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             const size_t   N;      //!< equilibria
             const size_t   M;      //!< species
             const size_t   A;      //!< active species
@@ -51,12 +67,12 @@ namespace upsylon
             Array         &Ctry;   //!< trial     C [M]
             Array         &Cstp;   //!< step  for C [M]
             Array         &Cfwd;   //!< for forward [M]
-            Array         &tmp_;   //!< for used    [M]
             const Booleans active; //!< active C    [M]
-            Collector      clr;
 
 
-            bool balance( addressable<double> &C ) throw();
+            //! balance C[1..M]
+            bool balance(addressable<double> &) throw();
+
             bool forward(const Equilibria &eqs, addressable<double> &C ) throw();
 
             void computeK(const Equilibria &eqs, const double t);
@@ -66,6 +82,10 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
+            Array         &extra;  //!< for used    [M]
+            Collector      keeper; //!< to keep all tidy
+
+
             double B_only(Array &C)         throw(); //!< uses Caux
             double B_drvs(Array &C)         throw(); //!< uses Caux for drvs
             double B_call(const double x)   throw(); //!< B_only(Ctry=Corg+x*Cstp)
@@ -74,7 +94,7 @@ namespace upsylon
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
 
         public:
-            bool         balanceVerbose;
+            bool         balanceVerbose; //!< display status while balancing
         };
 
     }

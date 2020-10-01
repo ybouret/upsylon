@@ -13,14 +13,25 @@ namespace upsylon {
         typedef counted        Counted;  //!< alias for base classes
         typedef memory::groove Groove;   //!< alias for local storage
 
+        //______________________________________________________________________
+        //
+        //
         //! mandatory data for a species
+        //
+        //______________________________________________________________________
         class Species : public Object, public Counted
         {
         public:
+            //__________________________________________________________________
+            //
             // types and definition
+            //__________________________________________________________________
             typedef arc_ptr<Species> Pointer; //!< alias for Library
 
-
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~Species() throw(); //!< cleanup
 
             //! setup from an ID and a charge
@@ -34,6 +45,10 @@ namespace upsylon {
             {
             }
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const string name;  //!< global name
             const int    Z;     //!< formal charge
             const size_t indx;  //!< index

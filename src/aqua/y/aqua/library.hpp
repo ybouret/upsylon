@@ -11,12 +11,26 @@ namespace upsylon {
     namespace Aqua
     {
 
+        //______________________________________________________________________
+        //
+        //
         //! a library of species
+        //
+        //______________________________________________________________________
         class Library : public suffix_tree<Species::Pointer>
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~Library() throw(); //!< cleanup
             explicit Library();         //!< setup
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
 
             //! create a new species
             template <typename ID>
@@ -26,16 +40,12 @@ namespace upsylon {
                 return create(sp);
             }
 
-
-            std::ostream        & display(std::ostream &) const;            //! display
+            std::ostream        & display(std::ostream &) const;            //!< display
             friend std::ostream & operator<<(std::ostream&,const Library&); //!< display
-            void buildIndices() throw();
+            void buildIndices() throw();                                    //!< build indices for species
+            void show(std::ostream &, const accessible<double> &) const;    //!< readable concentrations
 
-            // members
             const size_t maxNameSize; //!< for names alignment
-
-            void show(std::ostream &os, const accessible<double> &C) const;
-
 
 
         private:

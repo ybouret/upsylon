@@ -39,24 +39,24 @@ namespace upsylon
         Ctry( aM.next() ),
         Cstp( aM.next() ),
         Cfwd( aM.next() ),
-        tmp_( aM.next() ),
         active(),
-        clr(),
+        extra( aM.next() ),
+        keeper(),
         balanceVerbose(false)
         {
-            clr << Nu;
-            clr << tNu;
-            clr << Nu2;
-            clr << Phi;
-            clr << W;
-            clr << aN;
-            clr << aM;
+            keeper << Nu;
+            keeper << tNu;
+            keeper << Nu2;
+            keeper << Phi;
+            keeper << W;
+            keeper << aN;
+            keeper << aM;
         }
 
         void Solver:: quit() throw()
         {
             new ( &aliasing::_(active) ) Booleans();
-            clr.release_all();
+            keeper.release_all();
             aliasing::_(dNu2) = 0;
             aliasing::_(P)    = 0;
             aliasing::_(A)    = 0;
@@ -112,7 +112,7 @@ namespace upsylon
                 {
                     aM.acquire(M);
                     Booleans &act = aliasing::_(active);
-                    new (&act) Booleans( aliasing::as<bool,double>(*tmp_), M );
+                    new (&act) Booleans( aliasing::as<bool,double>(*extra), M );
                     quark::ld(act,false);
                     for(size_t i=N;i>0;--i)
                     {
@@ -127,10 +127,7 @@ namespace upsylon
                     {
                         if(act[j]) ++aliasing::_(A);
                     }
-                }
-
-                
-                
+                }                
 
             }
             catch(...)
