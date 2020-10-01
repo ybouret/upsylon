@@ -46,9 +46,9 @@ namespace upsylon
         balanceVerbose(false)
         {
             keeper << aliasing::_(equilibria);
-            keeper << Nu;
-            keeper << tNu;
-            keeper << Nu2;
+            keeper << aliasing::_(Nu);
+            keeper << aliasing::_(tNu);
+            keeper << aliasing::_(Nu2);
             keeper << Phi;
             keeper << W;
             keeper << aN;
@@ -101,9 +101,9 @@ namespace upsylon
 
                 if(N>0)
                 {
-                    Nu.    make(N,M);
-                    tNu.   make(M,N);
-                    Nu2.   make(N,N);
+                    aliasing::_(Nu).  make(N,M);
+                    aliasing::_(tNu). make(M,N);
+                    aliasing::_(Nu2).  make(N,N);
                     Phi.   make(N,M);
                     W.     make(N,N);
                     aN.    acquire(N);
@@ -113,14 +113,18 @@ namespace upsylon
                     //----------------------------------------------------------
                     for(size_t i=N;i>0;--i)
                     {
-                        equilibria[i]->fillNu(Nu[i]);
+                        equilibria[i]->fillNu(aliasing::_(Nu[i]));
                     }
 
                     //----------------------------------------------------------
-                    // build transpoed matrix
+                    // build transposed and Gram's matrix
                     //----------------------------------------------------------
-                    tNu.assign_transpose(Nu);
-                    quark::mmul(Nu2,Nu,tNu);
+                    aliasing::_(tNu).assign_transpose(Nu);
+                    quark::mmul(aliasing::_(Nu2),Nu,tNu);
+
+                    //----------------------------------------------------------
+                    // check independant matrices
+                    //----------------------------------------------------------
                     aliasing::_(det) = ideterminant(Nu2);
                     if(0==det)
                     {

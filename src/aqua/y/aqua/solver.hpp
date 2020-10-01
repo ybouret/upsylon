@@ -54,9 +54,9 @@ namespace upsylon
             const size_t   A;          //!< active species
             const size_t   P;          //!< parameters = M-N
             const EqVector equilibria; //!< validated equilibria [N]
-            iMatrix        Nu;         //!< topology             [NxM]
-            iMatrix        tNu;        //!< transposed           [MxN]
-            iMatrix        Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
+            const iMatrix  Nu;         //!< topology             [NxM]
+            const iMatrix  tNu;        //!< transposed           [MxN]
+            const iMatrix  Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
             const int      det;        //!< det(Nu2), check independant equilibria
             Matrix         Phi;        //!< Jacobian      [NxM]
             Matrix         W;          //!< Phi*tNu       [NxN]
