@@ -96,7 +96,7 @@ namespace upsylon
         }
 
 
-        static const char fn[] = "[ sweep ] ";
+        static const char fn[] = "[ sweep factor] ";
 
 #define Y_AQUA_PRINTLN(MSG) do { if(verbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 

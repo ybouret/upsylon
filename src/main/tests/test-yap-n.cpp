@@ -863,3 +863,15 @@ Y_UTEST(yap_n)
 }
 Y_UTEST_DONE()
 
+#include "y/string/convert.hpp"
+
+Y_UTEST(factorial)
+{
+    for(int i=1;i<argc;++i)
+    {
+        const size_t n = string_convert::to<size_t>(argv[i],"n");
+        std::cerr << n << "! = " << apn::factorial(n) << std::endl;
+    }
+}
+Y_UTEST_DONE()
+
