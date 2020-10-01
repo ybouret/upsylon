@@ -37,8 +37,8 @@ namespace upsylon
                 const double maximum;
 
                 inline extent(const accessible<double> &C,
-                                const Component::List    &components,
-                                double                    arr[]) throw() :
+                              const Component::List    &components,
+                              double                    arr[]) throw() :
                 limited(components.size>0),
                 maximum(limited ? find_maximum_extent(C,components,arr) : 0)
                 {
@@ -96,7 +96,7 @@ namespace upsylon
         }
 
 
-        static const char fn[] = "[ sweep factor] ";
+        static const char fn[] = "[ sweep ] ";
 
 #define Y_AQUA_PRINTLN(MSG) do { if(verbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 
@@ -108,9 +108,9 @@ namespace upsylon
         {
             Y_AQUA_PRINTLN("sweep <" << name << ">");
 
-            const extent fwd(C0,reactants,arr); Y_AQUA_PRINTLN( "\tforward: " << fwd);
-            const extent rev(C0,products,arr);  Y_AQUA_PRINTLN( "\treverse: " << rev);
-
+            const extent fwd(C0,reactants,arr);
+            const extent rev(C0,products,arr);
+            Y_AQUA_PRINTLN( "\tforward: " << fwd << " | reverse: " << rev);
             static const unsigned FWD_LIMITED   = 0x01;
             static const unsigned FWD_UNLIMITED = 0x02;
             static const unsigned REV_LIMITED   = 0x04;
@@ -133,7 +133,7 @@ namespace upsylon
                 case FWD_LIMITED | REV_LIMITED:
                     if(fwd.maximum<=0&&rev.maximum<=0)
                     {
-                        Y_AQUA_PRINTLN("<<blocked>>");
+                        Y_AQUA_PRINTLN("\t<<blocked>>");
                         return false;
                     }
                     else
@@ -155,12 +155,11 @@ namespace upsylon
                     break;
 
                 default:
-                    Y_AQUA_PRINTLN("!!corrupted!!");
+                    Y_AQUA_PRINTLN("\t!!corrupted!!");
                     return false;
             }
 
-            Y_AQUA_PRINTLN("\tF(" << xmin << ")=" << Fmin);
-            Y_AQUA_PRINTLN("\tF(" << xmax << ")=" << Fmax);
+            Y_AQUA_PRINTLN("\tF(" << xmin << ")=" << Fmin << " | F(" << xmax << ")=" << Fmax);
 
             triplet<double>   x = { xmin, 0, xmax };
             triplet<double>   f = { Fmin, 0, Fmax };
@@ -173,8 +172,7 @@ namespace upsylon
             }
 
             quark::set(C0,C1);
-            Y_AQUA_PRINTLN("\treached@" << x.b << "=> Q=" << f.b);
-            Y_AQUA_PRINTLN("Ceq="     << C0);
+            Y_AQUA_PRINTLN("<" << name << "> = " << f.b << " @ " << C0);
 
 
             return true;
