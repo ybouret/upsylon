@@ -39,7 +39,7 @@ namespace upsylon
         static const char fn[] = "[forward] ";
 #define Y_AQUA_PRINTLN(MSG) do { if(forwardVerbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 
-        bool Solver:: forward(addressable<double> &C, size_t &cycles) throw()
+        bool Solver:: forward(addressable<double> &C) throw()
         {
             assert(C.size()>=M);
 
@@ -50,7 +50,7 @@ namespace upsylon
             //
             //
             //------------------------------------------------------------------
-            cycles = 0;
+            lastForwardCycles = 0;
             for(size_t j=M;j>0;--j)
             {
                 if(active[j])
@@ -76,7 +76,7 @@ namespace upsylon
             //------------------------------------------------------------------
             while(true)
             {
-                ++cycles;
+                ++lastForwardCycles;
                 //--------------------------------------------------------------
                 //
                 //
@@ -84,7 +84,7 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                Y_AQUA_PRINTLN("#\t<cycle " << cycles << ">");
+                Y_AQUA_PRINTLN("#\t<cycle " << lastForwardCycles << ">");
                 Y_AQUA_PRINTLN("Cini = "<<Cini);
                 computeS(Cini);
                 if(!computeW())
@@ -126,8 +126,7 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                size_t balanceCycles = 0;
-                if(!balance(Cend,balanceCycles))
+                 if(!balance(Cend))
                 {
                     Y_AQUA_PRINTLN("unable to balance");
                     return false;
@@ -142,14 +141,14 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                if(balanceCycles>0)
+                if(lastBalanceCycles>0)
                 {
                     //----------------------------------------------------------
                     //
                     // started from a very sensitive point
                     //
                     //----------------------------------------------------------
-                    Y_AQUA_PRINTLN("# <<balanceCycles=" << balanceCycles << ">>");
+                    Y_AQUA_PRINTLN("# <<balanceCycles=" << lastBalanceCycles << ">>");
                 }
                 else
                 {

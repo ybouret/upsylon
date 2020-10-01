@@ -73,11 +73,10 @@ Y_UTEST(solver)
 
             lib.show(std::cerr << "ini=",C);
 
-            size_t balanceCycles=0;
-            if(cs.balance(C,balanceCycles))
+            if(cs.balance(C))
             {
                 lib.show(std::cerr << "balance=",C);
-                std::cerr << "in #balanceCycle=" << balanceCycles << std::endl;
+                std::cerr << "in #balanceCycle=" << cs.lastBalanceCycles << std::endl;
                 break;
             }
             else
@@ -87,13 +86,12 @@ Y_UTEST(solver)
         }
 
 
-        size_t forwardCycles = 0;
         cs.computeK(0);
         std::cerr << "K=" << cs.K <<  std::endl;
-        if(cs.forward(C,forwardCycles))
+        if(cs.forward(C))
         {
             lib.show(std::cerr << "forward=",C);
-            std::cerr << "in #forwardCycle=" << forwardCycles << std::endl;
+            std::cerr << "in #forwardCycle=" << cs.lastForwardCycles << std::endl;
         }
         else
         {
@@ -104,13 +102,12 @@ Y_UTEST(solver)
     {
         mkl::quark::ld(C,0);
         cs.forwardVerbose = true;
-        size_t forwardCycles = 0;
 
         lib.show(std::cerr << "ini=",C);
-        if(cs.forward(C,forwardCycles))
+        if(cs.forward(C))
         {
             lib.show(std::cerr << "forward=",C);
-            std::cerr << "in #forwardCycle=" << forwardCycles << std::endl;
+            std::cerr << "in #forwardCycle=" << cs.lastForwardCycles << std::endl;
         }
         else
         {

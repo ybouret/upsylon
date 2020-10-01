@@ -120,10 +120,10 @@ namespace upsylon
         }
 
 
-        bool Solver:: balance(addressable<double> &C, size_t &cycles) throw()
+        bool Solver:: balance(addressable<double> &C) throw()
         {
             assert(C.size()>=M);
-            cycles=0;
+            lastBalanceCycles=0;
             if(N<=0)
             {
                 //--------------------------------------------------------------
@@ -194,8 +194,8 @@ namespace upsylon
                     //
                     //----------------------------------------------------------
                 CYCLE:
-                    ++cycles;
-                    Y_AQUA_PRINTLN("#\t<cycle " << cycles << " >");
+                    ++lastBalanceCycles;
+                    Y_AQUA_PRINTLN("#\t<cycle " << lastBalanceCycles << " >");
                     if(!rescale(B0))
                     {
                         //------------------------------------------------------

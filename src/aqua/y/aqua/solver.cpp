@@ -45,7 +45,9 @@ namespace upsylon
         extra( aM.next() ),
         keeper(),
         balanceVerbose(false),
-        forwardVerbose(false)
+        lastBalanceCycles(0),
+        forwardVerbose(false),
+        lastForwardCycles(0)
         {
             keeper << aliasing::_(equilibria);
             keeper << aliasing::_(Nu);

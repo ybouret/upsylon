@@ -80,10 +80,10 @@ namespace upsylon
 
 
             //! balance C[1..M]
-            bool balance(addressable<double> &, size_t &cycles) throw();
+            bool balance(addressable<double> &) throw();
 
             //! forward C[1..M]
-            bool forward(addressable<double> &, size_t &cycles) throw();
+            bool forward(addressable<double> &) throw();
 
             //! compute K[1..N] at time t
             void computeK(const double t);
@@ -117,8 +117,10 @@ namespace upsylon
 
 
         public:
-            bool         balanceVerbose; //!< display status while balancing
-            bool         forwardVerbose; //!< display status while forwarding
+            bool         balanceVerbose;     //!< display status while balancing
+            size_t       lastBalanceCycles;  //!< last cycles in balance
+            bool         forwardVerbose;     //!< display status while forwarding
+            size_t       lastForwardCycles;  //!< last cycles in forward, >=1
         };
 
     }
