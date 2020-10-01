@@ -94,6 +94,18 @@ namespace upsylon {
             //! compute gradient of Q, return Q
             double computeQ(addressable<double> &Phi, const double K0, const accessible<double> &C0) const throw();
 
+            //! try to solve
+            /**
+             \param K0      precomputed constant
+             \param C0      concentrations to move, size=M
+             \param arr     [0...M-1] array, helper
+             \param verbose for verbosity
+             */
+            bool   sweep(const double K0, addressable<double> &C0, double arr[], const bool verbose) const;
+
+            //! compute  Ctry = C0 + x * nu, truncated
+            void evolve(addressable<double> &Ctry, const accessible<double> &C0, const double x) const throw();
+
             //__________________________________________________________________
             //
             // members

@@ -89,7 +89,17 @@ namespace upsylon
                 computeS(Cini);
                 if(!computeW())
                 {
-                    Y_AQUA_PRINTLN("singular system!");
+                    Y_AQUA_PRINTLN("<<singular system>>");
+                    if(swept(Cini))
+                    {
+                        Y_AQUA_PRINTLN("<<retry>>");
+                        continue;
+                    }
+                    else
+                    {
+                        Y_AQUA_PRINTLN("<<pinned>>");
+                    }
+
                     return false;
                 }
                 const double Q0 = Q_only(Cini);

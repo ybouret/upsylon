@@ -100,6 +100,18 @@ Y_UTEST(solver)
     }
 
     {
+
+        for(size_t j=C.size();j>0;--j)
+        {
+            C[j] = alea.to<double>() * pow(10.0,-8*alea.to<double>());
+        }
+        lib.show(std::cerr << "SWEEP=",C);
+
+        for(size_t i=1;i<=cs.N;++i)
+        {
+            cs.equilibria[i]->sweep(cs.K[i],C,*cs.Caux,true);
+        }
+
         mkl::quark::ld(C,0);
         cs.forwardVerbose = true;
 
@@ -113,6 +125,46 @@ Y_UTEST(solver)
         {
             std::cerr << "couldn't forward!" << std::endl;
         }
+        
+        for(size_t i=1;i<=cs.N;++i)
+        {
+            (void)cs.equilibria[i]->sweep(cs.K[i],C,*cs.Caux,true);
+        }
+
+
+        if( cs.swept(C) )
+        {
+            std::cerr << "swept!" << std::endl;
+        }
+
+        mkl::quark::ld(C,0);
+        if( cs.swept(C) )
+        {
+            std::cerr << "swept!" << std::endl;
+            if(cs.forward(C))
+            {
+                lib.show(std::cerr << "forward=",C);
+                std::cerr << "in #forwardCycle=" << cs.lastForwardCycles << std::endl;
+            }
+            else
+            {
+                std::cerr << "couldn't forward!" << std::endl;
+            }
+        }
+
+        mkl::quark::ld(C,0);
+        if(cs.forward(C))
+        {
+            lib.show(std::cerr << "forward=",C);
+            std::cerr << "in #forwardCycle=" << cs.lastForwardCycles << std::endl;
+        }
+        else
+        {
+            std::cerr << "couldn't forward!" << std::endl;
+        }
+
+
+
     }
 }
 Y_UTEST_DONE()

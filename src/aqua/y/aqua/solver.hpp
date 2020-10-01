@@ -76,6 +76,7 @@ namespace upsylon
             Array         &Cstp;       //!< step  for C   [M]
             Array         &Cini;       //!< for forward   [M]
             Array         &Cend;       //!< forward trial [M]
+            Array         &Cswp;       //!< to sweep
             const Booleans active;     //!< active C      [M]
 
 
@@ -96,6 +97,16 @@ namespace upsylon
 
             //! compute Phi*tNu, return LU result
             bool computeW() throw();
+
+            //! try to sweep equilibrium i in [1..N]
+            bool sweep(addressable<double> &C, const size_t i) throw();
+
+            //! try to move equilibria by sweeping
+            /**
+             try all permutations ?
+             */
+            bool swept(addressable<double> &C) throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
