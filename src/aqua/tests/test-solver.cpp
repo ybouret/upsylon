@@ -51,7 +51,7 @@ Y_UTEST(solver)
     cs.init(lib,eqs);
     std::cerr << "Nu      = " << cs.Nu      << std::endl;
     std::cerr << "Nu2     = " << cs.Nu2     << std::endl;
-    std::cerr << "dNu2    = " << cs.dNu2    << std::endl;
+    std::cerr << "dNu2    = " << cs.det     << std::endl;
     std::cerr << "active  = " << cs.active  << std::endl;
     std::cerr << "A       = " << cs.A       << " #/ " << cs.M << std::endl;
     std::cerr << "P       = " << cs.P       << std::endl;
@@ -82,9 +82,9 @@ Y_UTEST(solver)
         }
     }
 
-    cs.computeK(eqs,0);
+    cs.computeK(0);
     std::cerr << "K=" << cs.K <<  std::endl;
-    cs.forward(eqs,C);
+    cs.forward(C);
 
     
 

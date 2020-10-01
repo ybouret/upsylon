@@ -39,6 +39,7 @@ namespace upsylon {
             std::ostream & display( std::ostream &) const;                         //!< display
             friend std::ostream & operator<<(std::ostream &, const Equilibria & ); //!< display
 
+#if 0
             //! fill topology matrix
             void fillNu(iMatrix &nu) const throw();
 
@@ -53,7 +54,8 @@ namespace upsylon {
 
             //! validate all equilibria
             void validate() const;
-
+#endif
+            
             //! create a constant equilibrium 'id'
             template <typename ID>
             Equilibrium & constant( const ID &id, const double K )

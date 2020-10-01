@@ -7,6 +7,7 @@
 #include "y/aqua/library.hpp"
 #include "y/sequence/arrays.hpp"
 #include "y/core/temporary-acquire.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -14,9 +15,10 @@ namespace upsylon
     namespace Aqua
     {
 
-        typedef arrays<double>              Arrays;     //!< alias
-        typedef array<double>               Array;      //!< alias
-        typedef lightweight_array<bool>     Booleans;   //!< alias
+        typedef arrays<double>                     Arrays;     //!< alias
+        typedef array<double>                      Array;      //!< alias
+        typedef lightweight_array<bool>            Booleans;   //!< alias
+        typedef vector<const Equilibrium::Pointer> EqVector;   //!< alias
 
         //! solver
         class Solver
@@ -27,6 +29,7 @@ namespace upsylon
             // types and defintiions
             //__________________________________________________________________
             typedef core::temporary_acquire<16> Collector; //!< alias
+
 
             //__________________________________________________________________
             //
@@ -39,45 +42,51 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void init(Library &lib, Equilibria &eqs); //!< initialize
-            void quit() throw();                      //!< release all
+            void init(Library &lib, const Equilibria &eqs); //!< initialize
+            void quit() throw();                            //!< release all
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            const size_t   N;      //!< equilibria
-            const size_t   M;      //!< species
-            const size_t   A;      //!< active species
-            const size_t   P;      //!< parameters = M-N
-            const int      dNu2;   //!< det(Nu2)
-            iMatrix        Nu;     //!< topology      [NxM]
-            iMatrix        tNu;    //!< transposed    [MxN]
-            iMatrix        Nu2;    //!< Nu*tNu        [NxN]
-            Matrix         Phi;    //!< Jacobian      [NxM]
-            Matrix         W;      //!<               [NxN]
-            Arrays         aN;     //!< linear data   [N]...
-            Array         &K;      //!< constants     [N]
-            Array         &Q;      //!< indicators    [N]
-            Array         &xi;     //!< extent        [N]
-            Array         &nu2;    //!< sum(Nu_i^2)   [N]
-            Arrays         aM;     //!< linear data   [M]...
-            Array         &Corg;   //!< original  C [M]
-            Array         &Caux;   //!< auxiliary C [M]
-            Array         &Ctry;   //!< trial     C [M]
-            Array         &Cstp;   //!< step  for C [M]
-            Array         &Cfwd;   //!< for forward [M]
-            const Booleans active; //!< active C    [M]
+            const size_t   N;          //!< equilibria
+            const size_t   M;          //!< species
+            const size_t   A;          //!< active species
+            const size_t   P;          //!< parameters = M-N
+            const EqVector equilibria; //!< validated equilibria [N]
+            iMatrix        Nu;         //!< topology             [NxM]
+            iMatrix        tNu;        //!< transposed           [MxN]
+            iMatrix        Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
+            const int      det;        //!< det(Nu2), check independant equilibria
+            Matrix         Phi;        //!< Jacobian      [NxM]
+            Matrix         W;          //!< Phi*tNu       [NxN]
+        private:
+            Arrays         aN;         //!< linear data   [N]...
+        public:
+            Array         &K;          //!< constants     [N]
+            Array         &Q;          //!< indicators    [N]
+            Array         &xi;         //!< extent        [N]
+            Array         &nu2;        //!< sum(Nu_i^2)   [N]
+        private:
+            Arrays         aM;         //!< linear data   [M]...
+        public:
+            Array         &Corg;       //!< original  C [M]
+            Array         &Caux;       //!< auxiliary C [M]
+            Array         &Ctry;       //!< trial     C [M]
+            Array         &Cstp;       //!< step  for C [M]
+            Array         &Cfwd;       //!< for forward [M]
+            const Booleans active;     //!< active C    [M]
 
 
             //! balance C[1..M]
             bool balance(addressable<double> &) throw();
 
-            bool forward(const Equilibria &eqs, addressable<double> &C ) throw();
+            //! forward C[1..M]
+            bool forward(addressable<double> &) throw();
 
-            void computeK(const Equilibria &eqs, const double t);
-            void computeQ(const Equilibria &eqs, const accessible<double> &C) throw();
-            void computePhi(const Equilibria &eqs, const accessible<double> &C) throw();
+            void computeK(const double t);
+            void computeQ(const accessible<double> &C) throw();
+            void computePhi(const accessible<double> &C) throw();
             bool computeW() throw();
 
         private:

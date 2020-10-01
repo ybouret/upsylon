@@ -22,10 +22,11 @@ namespace upsylon
         M(0),
         A(0),
         P(0),
-        dNu2(0),
+        equilibria(),
         Nu(),
         tNu(),
         Nu2(),
+        det(0),
         Phi(),
         W(),
         aN(4),
@@ -44,6 +45,7 @@ namespace upsylon
         keeper(),
         balanceVerbose(false)
         {
+            keeper << aliasing::_(equilibria);
             keeper << Nu;
             keeper << tNu;
             keeper << Nu2;
@@ -57,7 +59,7 @@ namespace upsylon
         {
             new ( &aliasing::_(active) ) Booleans();
             keeper.release_all();
-            aliasing::_(dNu2) = 0;
+            aliasing::_(det)  = 0;
             aliasing::_(P)    = 0;
             aliasing::_(A)    = 0;
             aliasing::_(M)    = 0;
@@ -65,19 +67,37 @@ namespace upsylon
         }
 
 
-        void Solver:: init(Library &lib, Equilibria &eqs)
+        void Solver:: init(Library &lib, const Equilibria &eqs)
         {
             static const char fn[] = "Aqua::Solver: ";
             quit();
             try
             {
+                //--------------------------------------------------------------
+                // prepare counts
+                //--------------------------------------------------------------
                 lib.buildIndices();
-                eqs.validate();
-
                 aliasing::_(N) = eqs.entries();
                 aliasing::_(M) = lib.entries();
                 if(N>M) throw exception("%stoo many equilibria",fn);
                 aliasing::_(P) = M-N;
+
+                //--------------------------------------------------------------
+                // load eqs
+                //--------------------------------------------------------------
+                assert(equilibria.size()<=0);
+                EqVector &EQS = aliasing::_(equilibria);
+                EQS.ensure(N);
+                {
+                    size_t i=1;
+                    for(Equilibria::const_iterator it=eqs.begin();i<=N;++i,++it)
+                    {
+                        const Equilibrium::Pointer &eq = *it;
+                        eq->validate();
+                        EQS.push_back_(eq);
+                    }
+                }
+
 
                 if(N>0)
                 {
@@ -87,11 +107,22 @@ namespace upsylon
                     Phi.   make(N,M);
                     W.     make(N,N);
                     aN.    acquire(N);
-                    eqs.fillNu(Nu);
+
+                    //----------------------------------------------------------
+                    // build topology
+                    //----------------------------------------------------------
+                    for(size_t i=N;i>0;--i)
+                    {
+                        equilibria[i]->fillNu(Nu[i]);
+                    }
+
+                    //----------------------------------------------------------
+                    // build transpoed matrix
+                    //----------------------------------------------------------
                     tNu.assign_transpose(Nu);
                     quark::mmul(Nu2,Nu,tNu);
-                    aliasing::_(dNu2) = ideterminant(Nu2);
-                    if(0==dNu2)
+                    aliasing::_(det) = ideterminant(Nu2);
+                    if(0==det)
                     {
                         throw exception("Aqua::Solver(singular equilibria)");
                     }
@@ -138,15 +169,22 @@ namespace upsylon
 
         }
 
-        void Solver:: computeK(const Equilibria &eqs, const double t)
+        void Solver:: computeK(const double t)
         {
-            eqs.computeK(K,t);
+            assert(N==equilibria.size());
+            for(size_t i=N;i>0;--i)
+            {
+                K[i] = equilibria[i]->K(t);
+            }
+            
         }
 
-        void Solver:: computePhi(const Equilibria         &eqs,
-                                 const accessible<double> &C) throw()
+        void Solver:: computePhi(const accessible<double> &C) throw()
         {
-            eqs.computePhi(Phi,K,C);
+            for(size_t i=N;i>0;--i)
+            {
+                equilibria[i]->computePhi(Phi[i], K[i], C);
+            }
         }
 
         bool Solver:: computeW() throw()
@@ -155,9 +193,12 @@ namespace upsylon
             return LU::build(W);
         }
 
-        void Solver:: computeQ(const Equilibria &eqs, const accessible<double> &C) throw()
+        void Solver:: computeQ(const accessible<double> &C) throw()
         {
-            eqs.computeQ(Q,K,C);
+            for(size_t i=N;i>0;--i)
+            {
+                Q[i] = equilibria[i]->computeQ(K[i],C);
+            }
         }
 
     }

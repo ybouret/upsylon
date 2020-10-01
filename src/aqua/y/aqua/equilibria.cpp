@@ -46,6 +46,7 @@ namespace upsylon {
             return eqs.display(os);
         }
 
+#if 0
         void Equilibria:: fillNu( iMatrix &nu ) const throw()
         {
             assert(nu.rows==entries());
@@ -104,7 +105,7 @@ namespace upsylon {
             }
 
         }
-
+#endif
 
     }
 

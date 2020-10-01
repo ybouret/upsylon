@@ -13,8 +13,7 @@ namespace upsylon
     {
         using namespace mkl;
 
-        bool Solver:: forward(const Equilibria    &eqs,
-                              addressable<double> &C) throw()
+        bool Solver:: forward(addressable<double> &C) throw()
         {
             assert(C.size()>=M);
 
@@ -33,13 +32,13 @@ namespace upsylon
 
             for(size_t cycle=0;cycle<10;++cycle)
             {
-                computePhi(eqs,Cfwd);
+                computePhi(Cfwd);
                 if(!computeW())
                 {
                     return false;
                 }
 
-                computeQ(eqs,Cfwd);
+                computeQ(Cfwd);
                 std::cerr << "Q=" << Q << std::endl;
 
                 quark::neg(xi,Q);
