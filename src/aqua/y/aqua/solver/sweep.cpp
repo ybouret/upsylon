@@ -44,7 +44,7 @@ namespace upsylon
                 {
                 }
 
-                inline ~extent()
+                inline ~extent() throw()
                 {
 
                 }
@@ -85,7 +85,8 @@ namespace upsylon
 
         }
 
-        void   Equilibrium:: evolve(addressable<double> &Ctry, const accessible<double> &C0, const double x) const throw()
+        void   Equilibrium:: evolve(addressable<double>      &Ctry,
+                                    const accessible<double> &C0, const double x) const throw()
         {
             quark::set(Ctry,C0);
             for(const Component *c=components.head;c;c=c->next)
@@ -106,11 +107,12 @@ namespace upsylon
                                  double               arr[],
                                  const bool           verbose) const
         {
-            Y_AQUA_PRINTLN("sweep <" << name << ">");
+            Y_AQUA_PRINTLN("<" << name << ">");
 
             const extent fwd(C0,reactants,arr);
             const extent rev(C0,products,arr);
             Y_AQUA_PRINTLN( "\tforward: " << fwd << " | reverse: " << rev);
+
             static const unsigned FWD_LIMITED   = 0x01;
             static const unsigned FWD_UNLIMITED = 0x02;
             static const unsigned REV_LIMITED   = 0x04;
@@ -133,7 +135,7 @@ namespace upsylon
                 case FWD_LIMITED | REV_LIMITED:
                     if(fwd.maximum<=0&&rev.maximum<=0)
                     {
-                        Y_AQUA_PRINTLN("\t<<blocked>>");
+                        //Y_AQUA_PRINTLN("\t<<blocked>>");
                         return false;
                     }
                     else
