@@ -183,11 +183,11 @@ namespace upsylon
             
         }
 
-        void Solver:: computePhi(const accessible<double> &C) throw()
+        void Solver:: computeS(const accessible<double> &C) throw()
         {
             for(size_t i=N;i>0;--i)
             {
-                equilibria[i]->computePhi(Phi[i], K[i], C);
+                Q[i] = equilibria[i]->computeQ(Phi[i], K[i], C);
             }
         }
 

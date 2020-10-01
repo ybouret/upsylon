@@ -90,8 +90,8 @@ namespace upsylon
             //! compute Q[1..N] from K and C
             void computeQ(const accessible<double> &C) throw();
 
-            //! compute Phi[NxM] from K and C
-            void computePhi(const accessible<double> &C) throw();
+            //! compute Q[1..N] and Phi[NxM] from K and C
+            void computeS(const accessible<double> &C) throw();
 
             //! compute Phi*tNu, return LU result
             bool computeW() throw();

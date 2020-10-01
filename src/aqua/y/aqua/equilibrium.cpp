@@ -190,15 +190,17 @@ namespace upsylon {
         }
 
 
-        void  Equilibrium:: computePhi(addressable<double>      &Phi,
+        double  Equilibrium:: computeQ(addressable<double>      &Phi,
                                        const double              K0,
                                        const accessible<double> &C) const throw()
         {
-            const size_t M = Phi.size(); assert(C.size()>=Phi.size());
-            for(size_t j=M;j>0;--j)
+            assert(C.size()>=Phi.size());
+            for(size_t j=Phi.size();j>0;--j)
             {
                 Phi[j] = 0;
             }
+
+            double rhs=1;
 
             for(const Component *c=products.head;c;c=c->next)
             {
@@ -207,21 +209,25 @@ namespace upsylon {
                 assert(c->nu>0);
                 assert(c->p>0);
                 const size_t j     = c->sp.indx;
-                double       prod  = -ipower<double>(C[j],c->pm1) * (c->p);
+                const double Cj    = C[j];
+                double       prod  = ipower<double>(Cj,c->pm1);
+                rhs  *= prod * Cj; //!< Cj^nu
+                prod *= c->p;
 
-                // sub loop
+                // sub loops
                 for(const Component *s=products.head;s!=c;s=s->next)
                 {
                     prod *= ipower<double>(C[s->sp.indx],c->p);
                 }
-
+                
                 for(const Component *s=c->next;s;s=s->next)
                 {
                     prod *= ipower<double>(C[s->sp.indx],c->p);
                 }
-                Phi[j] = prod;
+                Phi[j] = -prod;
             }
 
+            double lhs = K0;
             for(const Component *c=reactants.head;c;c=c->next)
             {
                 assert(c->sp.indx>0);
@@ -229,7 +235,10 @@ namespace upsylon {
                 assert(c->nu>0);
                 assert(c->p>0);
                 const size_t j     = c->sp.indx;
-                double       prod  = K0 * ipower<double>(C[j],c->pm1) * (c->p);
+                const double Cj    = C[j];
+                double       prod  =  ipower<double>(Cj,c->pm1);
+                lhs  *= prod*Cj;
+                prod *= K0 * (c->p);
 
                 // sub loop
                 for(const Component *s=reactants.head;s!=c;s=s->next)
@@ -244,6 +253,7 @@ namespace upsylon {
                 Phi[j] = prod;
             }
 
+            return lhs-rhs;
 
         }
 

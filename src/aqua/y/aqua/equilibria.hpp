@@ -38,23 +38,6 @@ namespace upsylon {
             Equilibrium & operator()( Equilibrium * );                             //!< insert a new equilibrium
             std::ostream & display( std::ostream &) const;                         //!< display
             friend std::ostream & operator<<(std::ostream &, const Equilibria & ); //!< display
-
-#if 0
-            //! fill topology matrix
-            void fillNu(iMatrix &nu) const throw();
-
-            //! compute all constants
-            void computeK(addressable<double> &K, const double t) const;
-
-            //! compute all equilibria indicators
-            void computeQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw();
-
-            //! compute Jacobian matrix
-            void computePhi(Matrix &Phi, const accessible<double> &K, const accessible<double> &C) const throw();
-
-            //! validate all equilibria
-            void validate() const;
-#endif
             
             //! create a constant equilibrium 'id'
             template <typename ID>

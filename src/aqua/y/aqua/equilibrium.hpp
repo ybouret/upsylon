@@ -88,11 +88,11 @@ namespace upsylon {
 
             void   fillNu(addressable<int> &nu) const throw();  //!< fill topology row
 
-            //! compute indicator
+            //! compute indicators only
             double computeQ(const double K0, const accessible<double> &C0) const throw();
 
-            //! compute gradient of Q
-            void   computePhi(addressable<double> &Phi, const double K0, const accessible<double> &C0) const throw();
+            //! compute gradient of Q, return Q
+            double computeQ(addressable<double> &Phi, const double K0, const accessible<double> &C0) const throw();
 
             //__________________________________________________________________
             //

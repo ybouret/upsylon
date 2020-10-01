@@ -46,67 +46,7 @@ namespace upsylon {
             return eqs.display(os);
         }
 
-#if 0
-        void Equilibria:: fillNu( iMatrix &nu ) const throw()
-        {
-            assert(nu.rows==entries());
-            size_t i=0;
-            for(const_iterator it=begin();it!=end();++it)
-            {
-                (**it).fillNu(nu[++i]);
-            }
-        }
-
-        void Equilibria:: computeK(addressable<double> &K, const double t) const
-        {
-            assert(K.size()==entries());
-            size_t i=0;
-            for(const_iterator it=begin();it!=end();++it)
-            {
-                K[++i] = (**it).K(t);
-            }
-        }
-
-        void Equilibria:: validate() const
-        {
-            for(const_iterator it=begin();it!=end();++it)
-            {
-                (**it).validate();
-            }
-        }
-
-        void Equilibria:: computePhi(Matrix                   &Phi,
-                                     const accessible<double> &K,
-                                     const accessible<double> &C) const throw()
-        {
-            assert(Phi.rows==entries());
-            assert(K.size()==entries());
-            assert(C.size()>=Phi.cols);
-
-            size_t i=0;
-            for(const_iterator it=begin();it!=end();++it)
-            {
-                ++i;
-                (**it).computePhi(Phi[i],K[i],C);
-            }
-
-        }
-
-        void Equilibria:: computeQ(addressable<double> &Q, const accessible<double> &K, const accessible<double> &C) const throw()
-        {
-            assert(Q.size()==entries());
-            assert(K.size()==entries());
-            assert(C.size()>=entries());
-            size_t i=0;
-            for(const_iterator it=begin();it!=end();++it)
-            {
-                ++i;
-                Q[i] = (**it).computeQ(K[i],C);
-            }
-
-        }
-#endif
-
+        
     }
 
 }

@@ -32,14 +32,14 @@ namespace upsylon
 
             for(size_t cycle=0;cycle<10;++cycle)
             {
-                computePhi(Cfwd);
+                computeS(Cfwd);
                 if(!computeW())
                 {
                     return false;
                 }
 
-                computeQ(Cfwd);
                 std::cerr << "Q=" << Q << std::endl;
+
 
                 quark::neg(xi,Q);
                 LU::solve(W,xi);
