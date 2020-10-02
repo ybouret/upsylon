@@ -22,19 +22,21 @@ namespace upsylon
             //! flexible syntax node
             //
             //__________________________________________________________________
-            class Node : public inode<Node>, public Vizible
+            class Node :
+            public inode<Node>,
+            public Vizible,
+            public Serializable
             {
             public:
                 //______________________________________________________________
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef memory::tight::supply_of<Node> SupplyType; //!< alias
+                //! alias
+                typedef memory::tight::supply_of<Node> SupplyType;
                 
-                //______________________________________________________________
-                //
+                
                 //! dedicated supply for Nodes
-                //______________________________________________________________
                 class Supply : public singleton<Supply>, public SupplyType
                 {
                 public:
@@ -69,13 +71,20 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(List);
                 };
-
-
+                
+                static const char CLID[]; //!< "XNode"
+                
+                //______________________________________________________________
+                //
+                // serializable
+                //______________________________________________________________
+                virtual size_t      serialize(ios::ostream &) const;
+                virtual const char *className() const throw(); //!< CLID
+                
                 //______________________________________________________________
                 //
                 // methods
                 //______________________________________________________________
-
                 const Lexeme * lexeme() const    throw();         //!< access lexeme
                 List         & leaves()          throw();         //!< access leaves
                 const List   & leaves() const    throw();         //!< access leaves

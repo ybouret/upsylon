@@ -26,6 +26,11 @@ namespace upsylon
                 zstore(node);
             }
 
+            void Node::Supply:: reserve(const size_t n)
+            {
+                Y_LOCK(access);
+                fetch(n);
+            }
 
 
 
@@ -204,7 +209,7 @@ namespace upsylon
                 switch (kind)
                 {
                     case IsTerminal:
-                        fp << "[label=\"" << *axiom.name << "\"];";
+                        fp << "[label=\"" << *axiom.name << "\",shape=box];";
                         break;
                         
                     case IsInternal:
@@ -216,7 +221,20 @@ namespace upsylon
                 }
                 
             }
-
+            
+            const char Node::CLID[] = "XNode";
+            
+            const char * Node:: className() const throw()
+            {
+                return CLID;
+            }
+            
+            size_t Node:: serialize(ios::ostream &fp) const
+            {
+                
+                return 0;
+            }
+            
         }
 
     }

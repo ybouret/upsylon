@@ -8,6 +8,9 @@ using namespace Jive;
 
 Y_UTEST(axiom)
 {
+    Syntax::Node::Supply &mgr = Syntax::Node::Supply::instance();
+    mgr.reserve(64);
+    
     Syntax::Terminal term("word");
     Syntax::Dull     dull("dull");
 
