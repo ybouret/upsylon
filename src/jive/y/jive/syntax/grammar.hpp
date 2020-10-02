@@ -31,6 +31,12 @@ namespace upsylon
                 
                 void add(Axiom *axiom);
                 
+                template <typename ID> inline
+                const Axiom *query( const ID &id )
+                {
+                    return registry.search_by(id);
+                }
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
