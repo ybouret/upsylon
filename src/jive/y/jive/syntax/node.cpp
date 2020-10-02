@@ -9,15 +9,15 @@ namespace upsylon
         namespace Syntax
         {
             Y_SINGLETON_IMPL_WITH(Char::Supply::life_time-1,Node::Supply);
-
+            
             Node::Supply:: Supply()
             {
             }
-
+            
             Node::Supply:: ~Supply() throw()
             {
             }
-
+            
             void Node:: Supply:: release(Node *node) throw()
             {
                 Y_LOCK(access);
@@ -25,15 +25,15 @@ namespace upsylon
                 node->~Node();
                 zstore(node);
             }
-
+            
             void Node::Supply:: reserve(const size_t n)
             {
                 Y_LOCK(access);
                 fetch(n);
             }
-
-
-
+            
+            
+            
         }
     }
 }
@@ -44,11 +44,11 @@ namespace upsylon
     {
         namespace Syntax
         {
-
+            
             Node:: List:: List() throw() : ListType()
             {
             }
-
+            
             Node:: List:: ~List() throw()
             {
                 while(size)
@@ -58,9 +58,9 @@ namespace upsylon
                     mgr.release( pop_back() );
                 }
             }
-
+            
         }
-
+        
     }
 }
 
@@ -75,12 +75,12 @@ namespace upsylon
     {
         namespace Syntax
         {
-
+            
             Node::Lptr::Lptr(Lexeme *lx) throw() :
             lexeme(lx)
             {
             }
-
+            
             Node:: Lptr:: ~Lptr() throw()
             {
                 if(lexeme)
@@ -89,36 +89,36 @@ namespace upsylon
                     lexeme = 0;
                 }
             }
-
+            
             
             const Lexeme * Node::lexeme() const throw()
             {
                 return _Lptr().lexeme;
             }
-
+            
             Node::List & Node::leaves() throw()
             {
                 return _List();
             }
-
+            
             const Node::List & Node::leaves() const throw()
             {
                 return _List();
             }
-
+            
             Node::Lptr  & Node:: _Lptr() const throw()
             {
                 assert(IsTerminal==kind);
                 return *static_cast<Lptr *>( (void *)aliasing::anonymous(wksp) );
             }
-
+            
             Node::List   & Node:: _List() const throw()
             {
                 assert(IsInternal==kind);
                 return *static_cast<List *>( (void*)aliasing::anonymous(wksp) );
             }
-
-
+            
+            
             Node:: ~Node() throw()
             {
                 switch(kind)
@@ -126,20 +126,20 @@ namespace upsylon
                     case IsTerminal:
                         self_destruct(_Lptr());
                         break;
-
+                        
                     case IsInternal:
                         self_destruct(_List());
                         break;
                 }
                 setup();
             }
-
+            
             void Node:: setup() throw()
             {
                 memset(wksp,0,sizeof(wksp));
             }
-
-
+            
+            
             Node:: Node(const Terminal &term, Lexeme *lx) throw() :
             axiom(term),
             kind(IsTerminal),
@@ -148,7 +148,7 @@ namespace upsylon
                 setup();
                 new ( aliasing::anonymous(wksp) ) Lptr(lx);
             }
-
+            
             Node:: Node(const Internal &in) throw() :
             axiom(in),
             kind(IsInternal),
@@ -157,8 +157,8 @@ namespace upsylon
                 setup();
                 new ( aliasing::anonymous(wksp) ) List();
             }
-
-
+            
+            
             void Node:: Release(Node *node) throw()
             {
                 assert(node);
@@ -166,21 +166,21 @@ namespace upsylon
                 static Supply &mgr = Supply::location();
                 mgr.release(node);
             }
-
+            
             Node * Node::Acquire(const Terminal &term, Lexeme *lx)
             {
                 auto_ptr<Lexeme>  guard(lx);
                 static Supply    &mgr  = Supply::instance();
                 return new(mgr.zquery()) Node(term,guard.yield());
             }
-
-
+            
+            
             Node * Node::Acquire(const Internal &in)
             {
                 static Supply    &mgr = Supply::instance();
                 return new(mgr.zquery()) Node(in);
             }
-
+            
             void Node:: ReturnTo(Lexer &lexer, Node *node) throw()
             {
                 assert(node);
@@ -191,7 +191,7 @@ namespace upsylon
                         lexer.unget(lx.lexeme);
                         lx.lexeme = 0;
                     } break;
-
+                        
                     case IsInternal: {
                         List &L = node->_List();
                         while(L.size)
@@ -229,15 +229,53 @@ namespace upsylon
                 return CLID;
             }
             
+            static inline size_t emitMaker(ios::ostream &fp,
+                                           const uint8_t mk)
+            {
+                fp.write(mk);
+                return 1;
+            }
+            
             size_t Node:: serialize(ios::ostream &fp) const
             {
+                size_t written = axiom.name->serialize(fp);
+                switch (kind)
+                {
+                    case IsTerminal: {
+                        written += emitMaker(fp,TerminalMarker);
+                        const Lexeme *lx = lexeme();
+                        if( lx )
+                        {
+                            written += fp.write_upack( lx->size );
+                            for(const Char *ch=lexeme()->head;ch;ch=ch->next)
+                            {
+                                fp.write(ch->code);
+                                ++written;
+                            }
+                        }
+                        else
+                        {
+                            fp.write(0);
+                            ++written;
+                        }
+                    } break;
+                        
+                    case IsInternal: {
+                        written += emitMaker(fp,TerminalMarker);
+                        written += fp.write_upack( leaves().size );
+                        for(const Node *node=leaves().head;node;node=node->next)
+                        {
+                            written += node->serialize(fp);
+                        }
+                    } break;
+                }
                 
-                return 0;
+                return written;
             }
             
         }
-
+        
     }
-
+    
 }
 

@@ -72,8 +72,10 @@ namespace upsylon
                     Y_DISABLE_COPY_AND_ASSIGN(List);
                 };
                 
-                static const char CLID[]; //!< "XNode"
-                
+                static const char    CLID[];                //!< "XNode"
+                static const uint8_t TerminalMarker = 0x00; //!< for serialize
+                static const uint8_t InternalMarker = 0x01; //!< for serialize
+
                 //______________________________________________________________
                 //
                 // serializable

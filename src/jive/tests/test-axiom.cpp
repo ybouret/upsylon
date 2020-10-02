@@ -25,8 +25,11 @@ Y_UTEST(axiom)
     
     L.tail->leaves().push_back( Syntax::Node::Acquire(term,NULL) );
     L.tail->leaves().push_back( Syntax::Node::Acquire(term,NULL) );
-
     L.tail->graphViz("dull.dot");
+    
+    const size_t written = L.tail->save_to("dull.bin");
+    std::cerr << "#written=" << written << std::endl;
+    
     
 }
 Y_UTEST_DONE()
