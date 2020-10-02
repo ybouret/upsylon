@@ -99,7 +99,8 @@ namespace upsylon
                 static Node *  Acquire(const Internal &);           //!< new internal node
                 static void    Release(Node *)           throw();   //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();   //!< return node to lexer
-
+                static Node *  Load(Module *module);                //!< from serialized
+                
                 //______________________________________________________________
                 //
                 // members
