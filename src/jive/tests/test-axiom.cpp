@@ -19,6 +19,12 @@ Y_UTEST(axiom)
     Syntax::Node::List L;
     L.push_back( Syntax::Node::Acquire(term,NULL) );
     L.push_back( Syntax::Node::Acquire(dull) );
+    
+    L.tail->leaves().push_back( Syntax::Node::Acquire(term,NULL) );
+    L.tail->leaves().push_back( Syntax::Node::Acquire(term,NULL) );
+
+    L.tail->graphViz("dull.dot");
+    
 }
 Y_UTEST_DONE()
 

@@ -126,12 +126,12 @@ namespace upsylon
                         self_destruct(_List());
                         break;
                 }
+                setup();
             }
 
             void Node:: setup() throw()
             {
                 memset(wksp,0,sizeof(wksp));
-                std::cerr << "setup Node : " << sizeof(wksp) << std::endl;
             }
 
 
@@ -164,18 +164,16 @@ namespace upsylon
 
             Node * Node::Acquire(const Terminal &term, Lexeme *lx)
             {
-                auto_ptr<Lexeme> guard(lx);
-                static Supply    &mgr = Supply::instance();
-                Node *node = mgr.zquery();
-                return new(node) Node(term,guard.yield());
+                auto_ptr<Lexeme>  guard(lx);
+                static Supply    &mgr  = Supply::instance();
+                return new(mgr.zquery()) Node(term,guard.yield());
             }
 
 
             Node * Node::Acquire(const Internal &in)
             {
                 static Supply    &mgr = Supply::instance();
-                Node *node = mgr.zquery();
-                return new(node) Node(in);
+                return new(mgr.zquery()) Node(in);
             }
 
             void Node:: ReturnTo(Lexer &lexer, Node *node) throw()
@@ -199,7 +197,25 @@ namespace upsylon
                 }
                 Release(node);
             }
-
+            
+            void Node:: vizCore(ios::ostream &fp) const
+            {
+                
+                switch (kind)
+                {
+                    case IsTerminal:
+                        fp << "[label=\"" << *axiom.name << "\"];";
+                        break;
+                        
+                    case IsInternal:
+                        fp << "[label=\"" << *axiom.name << "\"];";
+                        for(const Node *node=leaves().head;node;node=node->next) {
+                            node->vizSave(fp);
+                            endl(vizJoin(fp,node));
+                        }  break;
+                }
+                
+            }
 
         }
 

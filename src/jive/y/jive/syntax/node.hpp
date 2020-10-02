@@ -22,21 +22,40 @@ namespace upsylon
             //! flexible syntax node
             //
             //__________________________________________________________________
-            class Node : public inode<Node>
+            class Node : public inode<Node>, public Vizible
             {
             public:
                 //______________________________________________________________
                 //
                 // types and definitions
                 //______________________________________________________________
-
+                typedef memory::tight::supply_of<Node> SupplyType; //!< alias
+                
+                //______________________________________________________________
+                //
+                //! dedicated supply for Nodes
+                //______________________________________________________________
+                class Supply : public singleton<Supply>, public SupplyType
+                {
+                public:
+                    Y_SINGLETON_DECL(Supply);      //!< aliases
+                    void  release(Node *) throw(); //!< destruct and store node
+                    void  reserve(const size_t);   //!< reserve extra nodes
+                    
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Supply);
+                    explicit Supply();
+                    virtual ~Supply() throw();
+                    friend class Node;
+                };
+                
                 //! kind of node
                 enum Kind
                 {
                     IsTerminal, //!< a terminal, got a lexeme
                     IsInternal  //!< an internal, got child(ren)
                 };
-
+                
                 //! base class for a list of code
                 typedef core::list_of<Node> ListType;
 
@@ -58,8 +77,8 @@ namespace upsylon
                 //______________________________________________________________
 
                 const Lexeme * lexeme() const    throw();         //!< access lexeme
-                List         & leaves()          throw();           //!< access leaves
-                const List   & leaves() const    throw();           //!< access leaves
+                List         & leaves()          throw();         //!< access leaves
+                const List   & leaves() const    throw();         //!< access leaves
 
                 //______________________________________________________________
                 //
@@ -74,16 +93,17 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                
                 const Axiom &axiom; //!< creator
                 const Kind   kind;  //!< kind
 
             private:
-                explicit Node(const Internal&) throw();
-                explicit Node(const Terminal&, Lexeme *lx) throw();
-                virtual ~Node() throw();
-                void     setup() throw();
-
+                explicit     Node(const Internal&) throw();
+                explicit     Node(const Terminal&, Lexeme *lx) throw();
+                virtual     ~Node()  throw();
+                void         setup() throw();
+                virtual void vizCore(ios::ostream &) const;
+                
+                //! lexeme pointer wrapper
                 class Lptr
                 {
                 public:
@@ -93,34 +113,12 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Lptr);
                 };
-
-                uint64_t wksp[Y_U64_FOR_ITEM(List)];
                 
-                Lptr & _Lptr() const throw();
-                List & _List() const throw();
+                Lptr & _Lptr() const throw(); //!< if terminal
+                List & _List() const throw(); //!< if internal
                 
-
-            public:
-                typedef memory::tight::supply_of<Node> SupplyType; //!< alias
-
-                //______________________________________________________________
-                //
-                //
-                //! dedicated supply for Nodes
-                //
-                //______________________________________________________________
-                class Supply : public singleton<Supply>, public SupplyType
-                {
-                public:
-                    Y_SINGLETON_DECL(Supply);      //!< aliases
-                    void  release(Node *) throw(); //!< destruct and store node
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Supply);
-                    explicit Supply();
-                    virtual ~Supply() throw();
-                    friend class Node;
-                };
+                uint64_t wksp[Y_U64_FOR_ITEM(List)]; //!< memory
+                
             };
             
         }
