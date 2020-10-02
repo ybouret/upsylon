@@ -91,7 +91,7 @@ namespace upsylon {
             return cache.size;
         }
 
-        bool Source:: alive()
+        bool Source:: is_active()
         {
             if(cache.size)
             {
@@ -133,6 +133,27 @@ namespace upsylon {
             handle->newLine();
         }
 
+        
+        bool Source:: query(char &C)
+        {
+            Char *ch = get();
+            if(ch)
+            {
+                C = ch->code;
+                Char::Release(ch);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        void Source:: store(char C)
+        {
+            cache.push_front( Char::Acquire(*handle,C) );
+            
+        }
     }
 
 }

@@ -12,7 +12,7 @@ namespace upsylon {
             Leading    fc;
             start(fc);
 
-            while(source.alive())
+            while(source.is_active())
             {
                 Token token;
                 if( accept(token,source) )
@@ -36,7 +36,7 @@ namespace upsylon {
                             std::cerr << std::endl;
                             throw exception("a strong pattern accepted an empty token!!");
                         }
-                        assert(source.alive());
+                        assert(source.is_active());
                         Char *ch = source.get();
                         content.push_back(ch);
                         std::cerr << cchars::visible[ch->code];

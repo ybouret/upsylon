@@ -15,7 +15,8 @@ namespace upsylon
             class Axiom;    //!< forward declaration
             class Terminal; //!< forward declaration
             class Internal; //!< forward declaration
-
+            typedef suffix_tree<const Axiom *> AxiomsDB;
+            
             //__________________________________________________________________
             //
             //
@@ -99,7 +100,7 @@ namespace upsylon
                 static Node *  Acquire(const Internal &);           //!< new internal node
                 static void    Release(Node *)           throw();   //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();   //!< return node to lexer
-                static Node *  Load(Module *module);                //!< from serialized
+                static Node *  Load(Module *,const AxiomsDB &);     //!< from serialized
                 
                 //______________________________________________________________
                 //

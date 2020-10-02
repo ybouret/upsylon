@@ -50,7 +50,7 @@ namespace upsylon
             token.release();
             if(motif->accept(token,source))
             {
-                return source.alive() ? NULL : &token;
+                return source.is_active() ? NULL : &token;
             }
             else
             {

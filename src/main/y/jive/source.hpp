@@ -20,7 +20,7 @@ namespace upsylon {
         //! smart, buffering pointer for a module
         //
         //______________________________________________________________________
-        class Source : public CountedObject
+        class Source : public ios::istream
         {
         public:
             //__________________________________________________________________
@@ -48,8 +48,15 @@ namespace upsylon {
             void           newLine()           throw(); //!< send newLine to module
             void           uncpy(const Char::List &);   //!< unget a copy of a char list
             bool           find(const Leading &);       //!< skip until first char is found
-            bool           alive();                     //!< found a readable char
-
+            
+            //__________________________________________________________________
+            //
+            // istream interface
+            //__________________________________________________________________
+            virtual bool is_active();                   //!< found a readable char
+            virtual bool query(char &C);
+            virtual void store(const char C);
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Source);
             typedef core::singly<Module::Handle>  MetaModule;

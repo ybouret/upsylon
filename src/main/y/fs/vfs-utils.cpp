@@ -323,7 +323,7 @@ namespace upsylon {
             Source      source(Module::OpenData(name,*name+i,name.size()-i) );
             const Motif motif = RegExp("_[:lower:]",NULL);
 
-            while(source.alive())
+            while(source.is_active())
             {
                 Token token;
                 if(motif->accept(token,source))
