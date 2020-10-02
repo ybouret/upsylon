@@ -26,7 +26,8 @@ namespace upsylon
                 // types and definitions
                 //______________________________________________________________
                 static const uint32_t TermUUID = Y_FOURCC('T','E','R','M'); //!< forward value
-
+                typedef core::list_of_cpp<Axiom> List; //!< alias
+                
                 //______________________________________________________________
                 //
                 // methods

@@ -13,9 +13,9 @@ namespace upsylon
         namespace Syntax
         {
             class Axiom;    //!< forward declaration
-            class Terminal; //!< forward declaration
-            class Internal; //!< forward declaration
-            typedef suffix_tree<const Axiom *> AxiomsDB;
+            //class Terminal; //!< forward declaration
+            //class Internal; //!< forward declaration
+            class Grammar;  //!< forward declaration
             
             //__________________________________________________________________
             //
@@ -96,11 +96,11 @@ namespace upsylon
                 //
                 // static methods
                 //______________________________________________________________
-                static Node *  Acquire(const Terminal &, Lexeme *); //!< new terminal node
-                static Node *  Acquire(const Internal &);           //!< new internal node
+                static Node *  Acquire(const Axiom &, Lexeme *); //!< new terminal node
+                static Node *  Acquire(const Axiom &);           //!< new internal node
                 static void    Release(Node *)           throw();   //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();   //!< return node to lexer
-                static Node *  Load(Module *,const AxiomsDB &);     //!< from serialized
+                
                 
                 //______________________________________________________________
                 //
@@ -110,8 +110,8 @@ namespace upsylon
                 const Kind   kind;  //!< kind
 
             private:
-                explicit     Node(const Internal&) throw();
-                explicit     Node(const Terminal&, Lexeme *lx) throw();
+                explicit     Node(const Axiom&) throw();
+                explicit     Node(const Axiom&, Lexeme *lx) throw();
                 virtual     ~Node()  throw();
                 void         setup() throw();
                 virtual void vizCore(ios::ostream &) const;

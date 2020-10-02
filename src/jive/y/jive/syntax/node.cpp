@@ -140,7 +140,7 @@ namespace upsylon
             }
             
             
-            Node:: Node(const Terminal &term, Lexeme *lx) throw() :
+            Node:: Node(const Axiom &term, Lexeme *lx) throw() :
             axiom(term),
             kind(IsTerminal),
             wksp()
@@ -149,7 +149,7 @@ namespace upsylon
                 new ( aliasing::anonymous(wksp) ) Lptr(lx);
             }
             
-            Node:: Node(const Internal &in) throw() :
+            Node:: Node(const Axiom &in) throw() :
             axiom(in),
             kind(IsInternal),
             wksp()
@@ -167,7 +167,7 @@ namespace upsylon
                 mgr.release(node);
             }
             
-            Node * Node::Acquire(const Terminal &term, Lexeme *lx)
+            Node * Node:: Acquire(const Axiom &term, Lexeme *lx)
             {
                 auto_ptr<Lexeme>  guard(lx);
                 static Supply    &mgr  = Supply::instance();
@@ -175,7 +175,7 @@ namespace upsylon
             }
             
             
-            Node * Node::Acquire(const Internal &in)
+            Node * Node::Acquire(const Axiom &in)
             {
                 static Supply    &mgr = Supply::instance();
                 return new(mgr.zquery()) Node(in);
