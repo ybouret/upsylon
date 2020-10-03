@@ -126,7 +126,7 @@ namespace upsylon
             double xmax = 0;
             lightweight_array<double> C1(arr,C0.size());
 
-            E_proxy F = { this, &C0, &C1, K0 };
+            E_proxy F    = { this, &C0, &C1, K0 };
             double  Fmin = 0;
             double  Fmax = 0;
 
@@ -135,14 +135,12 @@ namespace upsylon
                 case FWD_LIMITED | REV_LIMITED:
                     if(fwd.maximum<=0&&rev.maximum<=0)
                     {
-                        //Y_AQUA_PRINTLN("\t<<blocked>>");
                         return false;
                     }
                     else
                     {
                         xmin = -rev.maximum; Fmin = F(xmin);
                         xmax =  fwd.maximum; Fmax = F(xmax);
-
                     }
                     break;
 
