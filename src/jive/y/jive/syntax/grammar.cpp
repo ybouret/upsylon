@@ -11,7 +11,7 @@ namespace upsylon
             Grammar:: ~Grammar() throw()
             {}
             
-            void Grammar:: add(Axiom *axiom)
+            void Grammar:: declare(Axiom *axiom)
             {
                 assert(axiom!=NULL);
                 axioms.push_back(axiom);

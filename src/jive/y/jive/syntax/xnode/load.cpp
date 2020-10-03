@@ -17,6 +17,8 @@ namespace upsylon
                 const string  which     = *grammar.name + " axiom name";
                 const string  axiomName = string::read(source,shift,*which);
                 const Axiom  *axiom     = grammar.query(axiomName);
+                if(!axiom)    throw exception("%s has no Axiom <%s>",**grammar.name,*axiomName);
+                return NULL;
             };
         }
         

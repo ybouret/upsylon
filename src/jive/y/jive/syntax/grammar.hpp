@@ -30,8 +30,16 @@ namespace upsylon
                 
 
                 //! append axiom to list and registry
-                void add(Axiom *axiom);
-                
+                void declare(Axiom *axiom);
+
+                //! append axiom
+                template <typename AXIOM> inline
+                AXIOM & add( AXIOM *axiom )
+                {
+                    declare(axiom);
+                    return *axiom;
+                }
+
                 template <typename ID> inline
                 const Axiom *query( const ID &id ) const throw()
                 {

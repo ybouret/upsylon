@@ -8,7 +8,7 @@
 using namespace upsylon;
 using namespace Jive;
 
-Y_UTEST(axiom)
+Y_UTEST(grammar)
 {
     
 
