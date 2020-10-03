@@ -28,13 +28,22 @@ namespace upsylon
                 {
                 }
                 
-                
+
+                //! append axiom to list and registry
                 void add(Axiom *axiom);
                 
                 template <typename ID> inline
-                const Axiom *query( const ID &id )
+                const Axiom *query( const ID &id ) const throw()
                 {
-                    return registry.search_by(id);
+                    const AxiomPointer *ppA = registry.search_by(id);
+                    if(ppA)
+                    {
+                        return *ppA;
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
                 }
                 
                 
