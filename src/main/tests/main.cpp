@@ -55,6 +55,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(tight_wedge);
     Y_UTEST(tight_twain);
     Y_UTEST(tight_supply);
+    Y_UTEST(magazine);
 
     Y_UTEST(joint_section);
     Y_UTEST(joint_ward);

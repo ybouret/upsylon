@@ -110,6 +110,7 @@ test-memory-tight-wedge.cpp
 test-memory-tight-twain.cpp
 test-memory-zblock.cpp
 test-memory-tight-supply.cpp
+test-memory-magazine.cpp
 )
 ADD_TEST(mem:alloc         test-main alloc)
 ADD_TEST(mem:object0       test-main object0)
@@ -134,6 +135,7 @@ ADD_TEST(mem:tight:supply  test-main tight_supply)
 ADD_TEST(mem:joint:section test-main joint_section)
 ADD_TEST(mem:joint:ward    test-main joint_ward)
 ADD_TEST(mem:joint:compact test-main joint_compact)
+ADD_TEST(mem:magazine      test-main magazine)
 
 SOURCE_GROUP(par FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp)
 ADD_TEST(par:parallel    test-main parallel)
