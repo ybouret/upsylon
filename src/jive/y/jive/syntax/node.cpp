@@ -8,7 +8,7 @@ namespace upsylon
     {
         namespace Syntax
         {
-            Y_SINGLETON_IMPL_WITH(Char::Supply::life_time-1,Node::Supply);
+            Y_SINGLETON_IMPL_WITH(Lexeme::Supply::life_time-1,Node::Supply);
             
             Node::Supply:: Supply()
             {
