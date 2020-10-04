@@ -4,7 +4,6 @@
 #define Y_JIVE_LEXICAL_PLUGIN_BLOCK_READER_INCLUDED 1
 
 #include "y/jive/lexical/plugin.hpp"
-#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -42,7 +41,8 @@ namespace upsylon
                 }
                 
             private:
-                auto_ptr<Unit> block;
+                Unit::Pointer block;
+                
                 Y_DISABLE_COPY_AND_ASSIGN(BlockReader);
                 void         setup();
                 virtual void OnInit(const Token &);

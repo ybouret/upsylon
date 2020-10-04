@@ -202,7 +202,7 @@ namespace upsylon {
             Unit * Scanner:: tokenToUnit(Token &token, const Tag &which) const
             {
                 assert(token.size>0);
-                Unit *unit = new Unit(*token.head,which);
+                Unit *unit = Unit::Create(*token.head,which);
                 unit->swap_with(token);
                 return unit;
             }

@@ -26,14 +26,43 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef core::list_of_cpp<Unit> List; //!< alias for Lexemes
+               
+                //! dedicated smart pointer
+                class Pointer : public ptr<Unit>
+                {
+                public:
+                    explicit Pointer(Unit*) throw();     //!< setup
+                    virtual ~Pointer() throw();          //!< cleanup
+                    Unit    *yield() throw();            //!< yield content
+                    Pointer & operator=(Unit *) throw(); //!< auto setup
+                    
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Pointer);
+                    void zap() throw();
+                };
+                
+                typedef core::list_of<Unit> ListType; //!< alias for Lexemes
 
+                //! List, using Supply for operations
+                class List : public ListType, public releasable
+                {
+                public:
+                    explicit List() throw();
+                    virtual ~List() throw();
+                    virtual void release() throw();
+                    
+                private:
+                    Y_DISABLE_ASSIGN(List);
+                    void clr() throw();
+                };
+                
                 //______________________________________________________________
                 //
-                // C++
+                // types and definitions
                 //______________________________________________________________
-                virtual ~Unit() throw();                             //!< cleanup
-                explicit Unit(const Context &, const Tag &) throw(); //!< setup
+                static Unit *Create(const Context &, const Tag &); //!< using supply
+                static void  Delete(Unit *) throw();               //!< using supply
+                
 
                 //______________________________________________________________
                 //
@@ -43,7 +72,31 @@ namespace upsylon {
                 
                 
             private:
-                Y_DISABLE_ASSIGN(Unit);
+                Y_DISABLE_COPY_AND_ASSIGN(Unit);
+                virtual ~Unit() throw();                             //!< cleanup
+                explicit Unit(const Context &, const Tag &) throw(); //!< setup
+                
+            public:
+                typedef memory::tight::supply_of<Unit> SupplyType; //!< alias
+
+                //__________________________________________________________________
+                //
+                //! thread safe specialized Char::Supply
+                //__________________________________________________________________
+                class Supply : public singleton<Supply>, public SupplyType
+                {
+                public:
+                    Y_SINGLETON_DECL(Supply);                     //!< aliases
+                    Unit *acquire(const Context &, const Tag &); //!< built from supply
+                    void  release(Unit *) throw();               //!< return memory
+                    void  reserve(size_t);                       //!< query from system
+                    
+                    
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Supply);
+                    explicit Supply();
+                    virtual ~Supply() throw();
+                };
             };
 
         }

@@ -22,7 +22,7 @@ namespace upsylon
             {
                 assert(t.size>0);
                 block = NULL;
-                block = new Unit(t.head_char(),label);
+                block = Unit::Create(t.head_char(),label);
             }
             
             void BlockReader:: OnQuit(const Token &)

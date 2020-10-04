@@ -139,7 +139,7 @@ namespace upsylon {
             io.push_front(lexeme);
         }
 
-        void Lexer:: unget( Lexemes &lexemes ) throw()
+        void Lexer:: unget(Lexemes &lexemes) throw()
         {
             io.merge_front(lexemes);
         }

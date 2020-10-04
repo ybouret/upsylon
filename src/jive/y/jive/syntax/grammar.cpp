@@ -28,6 +28,11 @@ namespace upsylon
                 }
             }
 
+            const Axiom * Grammar:: getRoot() const throw()
+            {
+                return axioms.head;
+            }
+
         }
         
     }

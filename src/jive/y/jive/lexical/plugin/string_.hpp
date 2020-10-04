@@ -5,7 +5,7 @@
 #define Y_JIVE_LEXICAL_PLUGIN_STRING__INCLUDED 1
 
 #include "y/jive/lexical/plugin.hpp"
-#include "y/ptr/auto.hpp"
+ 
 namespace upsylon
 {
     namespace Jive
@@ -39,7 +39,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(String_);
-                auto_ptr<Unit> unit;
+                Unit::Pointer unit;
 
                 void  setup();
                 virtual void OnInit(const  Token &);

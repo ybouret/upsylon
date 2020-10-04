@@ -76,9 +76,9 @@ namespace upsylon
                 class Pointer : public ptr<Node>
                 {
                 public:
-                    explicit Pointer(Node*) throw();
-                    virtual ~Pointer() throw();
-                    Node    *yield() throw();
+                    explicit Pointer(Node*) throw(); //!< setup
+                    virtual ~Pointer() throw();      //!< cleanup
+                    Node    *yield() throw();        //!< yield content
                     
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Pointer);
@@ -128,16 +128,7 @@ namespace upsylon
                 void         setup() throw();
                 virtual void vizCore(ios::ostream &) const;
                 
-                //! lexeme pointer wrapper
-                class Lptr
-                {
-                public:
-                    Lptr(Lexeme *) throw();
-                    ~Lptr() throw();
-                    Lexeme  *lexeme;
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Lptr);
-                };
+                typedef Lexeme::Pointer Lptr;
                 
                 Lptr & _Lptr() const throw(); //!< if terminal
                 List & _List() const throw(); //!< if internal

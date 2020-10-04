@@ -44,7 +44,7 @@ namespace upsylon
                         {
                             throw exception("%s: cannot read #chars for <%s>",**grammar.name,*axiomName);
                         }
-                        Pointer          ptr( Node::Acquire(axiom,new Lexeme(source.context(),axiom.name)));
+                        Pointer          ptr( Node::Acquire(axiom,  Lexeme::Create(source.context(),axiom.name)));
                         Lexeme          &lex = aliasing::_(*(ptr->lexeme()));
                         while(num_chars-- > 0)
                         {

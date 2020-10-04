@@ -115,24 +115,11 @@ namespace upsylon
         namespace Syntax
         {
             
-            Node::Lptr::Lptr(Lexeme *lx) throw() :
-            lexeme(lx)
-            {
-            }
-            
-            Node:: Lptr:: ~Lptr() throw()
-            {
-                if(lexeme)
-                {
-                    delete lexeme;
-                    lexeme = 0;
-                }
-            }
             
             
             const Lexeme * Node::lexeme() const throw()
             {
-                return _Lptr().lexeme;
+                return _Lptr().content();
             }
             
             Node::List & Node::leaves() throw()
@@ -208,7 +195,7 @@ namespace upsylon
             
             Node * Node:: Acquire(const Axiom &term, Lexeme *lx)
             {
-                auto_ptr<Lexeme>  guard(lx);
+                Lexeme::Pointer   guard(lx);
                 static Supply    &mgr  = Supply::instance();
                 return new(mgr.zquery()) Node(term,guard.yield());
             }
@@ -226,9 +213,8 @@ namespace upsylon
                 switch(node->kind)
                 {
                     case IsTerminal: {
-                        Lptr & lx = node->_Lptr(); assert(lx.lexeme);
-                        lexer.unget(lx.lexeme);
-                        lx.lexeme = 0;
+                        Lptr & lx = node->_Lptr(); assert(lx.is_valid());
+                        lexer.unget(lx.yield());
                     } break;
                         
                     case IsInternal: {

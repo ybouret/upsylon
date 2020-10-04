@@ -34,7 +34,7 @@ namespace upsylon
             {
                 assert(t.size>0);
                 unit = NULL;
-                unit = new Unit(t.head_char(),label);
+                unit = Unit::Create(t.head_char(),label);
             }
 
             void String_:: OnQuit(const Token &)
