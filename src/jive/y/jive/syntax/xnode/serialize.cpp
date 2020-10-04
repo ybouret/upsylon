@@ -46,7 +46,7 @@ namespace upsylon
                     } break;
                         
                     case IsInternal: {
-                        written += emitMaker(fp,TerminalMarker);
+                        written += emitMaker(fp,InternalMarker);
                         written += fp.write_upack( leaves().size );
                         for(const Node *node=leaves().head;node;node=node->next)
                         {

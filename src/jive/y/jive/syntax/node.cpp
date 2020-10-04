@@ -44,6 +44,45 @@ namespace upsylon
     {
         namespace Syntax
         {
+            Node:: Pointer:: Pointer(Node *node) throw() :
+            ptr<Node>(node)
+            {
+            }
+            
+            void Node::Pointer:: zap() throw()
+            {
+                if(pointee)
+                {
+                    static Supply &mgr = Supply::location();
+                    mgr.release(pointee);
+                    pointee=0;
+                }
+            }
+            
+            Node:: Pointer:: ~Pointer() throw()
+            {
+                zap();
+            }
+            
+            Node    * Node::Pointer:: yield() throw()
+            {
+                Node *node = pointee;
+                pointee    = 0;
+                return node;
+            }
+
+            
+        }
+    }
+}
+
+
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Syntax
+        {
             
             Node:: List:: List() throw() : ListType()
             {

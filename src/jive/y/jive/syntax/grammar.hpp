@@ -24,7 +24,7 @@ namespace upsylon
                 
                 template <typename ID> inline
                 explicit Grammar( const ID &id ) :
-                name(id)
+                name( Tags::Make(id) )
                 {
                 }
                 

@@ -4,6 +4,7 @@
 
 #include "y/jive/lexer.hpp"
 #include "y/code/round.hpp"
+#include "y/ptr/ptr.hpp"
 
 namespace upsylon
 {
@@ -71,6 +72,19 @@ namespace upsylon
                     Y_DISABLE_COPY_AND_ASSIGN(List);
                 };
                 
+                //! dedicated smart pointer
+                class Pointer : public ptr<Node>
+                {
+                public:
+                    explicit Pointer(Node*) throw();
+                    virtual ~Pointer() throw();
+                    Node    *yield() throw();
+                    
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Pointer);
+                    void zap() throw();
+                };
+                
                 static const char    CLID[];                //!< "XNode"
                 static const uint8_t TerminalMarker = 0x00; //!< for serialize
                 static const uint8_t InternalMarker = 0x01; //!< for serialize
@@ -94,11 +108,11 @@ namespace upsylon
                 //
                 // static methods
                 //______________________________________________________________
-                static Node *  Acquire(const Axiom &, Lexeme *);    //!< new terminal node
-                static Node *  Acquire(const Axiom &);              //!< new internal node
-                static void    Release(Node *)           throw();   //!< release memory
-                static void    ReturnTo(Lexer &, Node *) throw();   //!< return node to lexer
-                static Node *  Load(Module *,const Grammar &);      //!< reload a node
+                static Node *  Acquire(const Axiom &, Lexeme *);     //!< new terminal node
+                static Node *  Acquire(const Axiom &);               //!< new internal node
+                static void    Release(Node *)           throw();    //!< release memory
+                static void    ReturnTo(Lexer &, Node *) throw();    //!< return node to lexer
+                static Node *  Load(Source &source,const Grammar &); //!< reload a node
                 
                 //______________________________________________________________
                 //
