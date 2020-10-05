@@ -47,3 +47,23 @@ Y_UTEST(comb)
 Y_UTEST_DONE()
 
 
+
+
+Y_UTEST(Comb)
+{
+    size_t n = 1;
+    size_t k = 1;
+
+    if(argc>1)
+    {
+        n = string_convert::to<size_t>(argv[1],"n");
+    }
+    if(argc>2)
+    {
+        k = string_convert::to<size_t>(argv[2],"k");
+    }
+    combination comb(n,k);
+    std::cerr << "Comb(" << n << "," << k << ")=" << comb.count << std::endl;
+
+}
+Y_UTEST_DONE()

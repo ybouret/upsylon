@@ -62,7 +62,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(joint_compact);
 
     Y_UTEST(mloops);
-    Y_UTEST(comb);
+    Y_UTEST(comb); Y_UTEST(Comb);
     Y_UTEST(perm);
     Y_UTEST(permutations);
     Y_UTEST(part);

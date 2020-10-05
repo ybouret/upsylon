@@ -1,5 +1,6 @@
 
 #include "y/aqua/solver.hpp"
+#include "y/aqua/boot.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/kernel/quark.hpp"
@@ -163,6 +164,17 @@ Y_UTEST(solver)
             std::cerr << "couldn't forward!" << std::endl;
         }
 
+        Boot boot;
+        boot.electroneutrality(lib);
+        boot.conserve(0,ah,am);
+        boot.conserve(0,NH4,NH3);
+
+        for(const Constraint *cc=boot.head;cc;cc=cc->next)
+        {
+            std::cerr << *cc << std::endl;
+        }
+
+        boot.init(lib);
 
 
     }
