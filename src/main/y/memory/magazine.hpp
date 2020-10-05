@@ -150,9 +150,19 @@ namespace upsylon
                 //
                 // helpers
                 //______________________________________________________________
-                inline list_ & operator<<(type *obj)
+
+                //! insert a valid pointer
+                inline list_ & operator<<(type *obj) throw()
                 {
                     this->push_back( (mutable_type*) obj );
+                    return *this;
+                }
+
+                //! append a copy of the list
+                inline list_ & operator<<( const list_ &other )
+                {
+                    list_ cpy(other);
+                    this->merge_back(cpy);
                     return *this;
                 }
 

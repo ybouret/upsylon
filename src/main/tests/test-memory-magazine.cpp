@@ -27,7 +27,7 @@ namespace {
     class dummy : public inode<dummy>
     {
     public:
-        int a;
+        int      a;
         inline   dummy() throw() : inode<dummy>(), a(0) {}
         inline   dummy(int x)    : a(x) { if(0==x) throw exception("dummy(0)"); }
         inline   dummy(const dummy &other) throw() : inode<dummy>(), a(other.a) {}
@@ -127,6 +127,7 @@ Y_UTEST(magazine)
             }
             dummy::list L2(L);
 
+            L << mgr.acquire();
         }
 
         std::cerr << "#prefetched: " << mgr.prefetched() << std::endl;
