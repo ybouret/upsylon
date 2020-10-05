@@ -134,6 +134,11 @@ and
 \end{equation}
 and
 \begin{equation}
-	\vec{C} = \trn{\bm{P}} \left(\bm{P} \trn{\bm{P}}\right)^{-1} \vec{\Lambda}+ \trn{\bm{S}} \vec{v}
+	\vec{C} = \underbrace{\trn{\bm{P}} \left(\bm{P} \trn{\bm{P}}\right)^{-1} \vec{\Lambda}}_{\vec{C}^\star} + \trn{\bm{S}} \vec{v}
 \end{equation}
+So we must solve:
+\begin{equation}
+	\vec{Q} \left( \vec{C}^\star + \trn{\bm{S}}\vec{v} \right) = \vec{0}
+\end{equation}
+
 \end{document}
