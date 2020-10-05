@@ -1,5 +1,15 @@
 #include "y/jive/lexical/unit.hpp"
 
+namespace upsylon
+{
+    namespace memory {
+
+        Y_SINGLETON_TEMPLATE_WITH(Jive::Char::Supply::life_time-1,Jive::Lexical::Unit::Supply);
+
+    }
+
+}
+
 
 namespace upsylon
 {
@@ -38,13 +48,4 @@ namespace upsylon
 
 
 
-namespace upsylon
-{
-    namespace memory {
-
-        Y_SINGLETON_TEMPLATE_WITH(Jive::Char::Supply::life_time-1,Jive::Lexical::Unit::Supply);
-        
-    }
-
-}
 

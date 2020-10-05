@@ -1,112 +1,18 @@
 
-#include "y/jive/syntax/node.hpp"
-#include "y/ptr/auto.hpp"
-
-namespace upsylon
-{
-    namespace Jive
-    {
-        namespace Syntax
-        {
-            Y_SINGLETON_IMPL_WITH(Lexeme::Supply::life_time-1,Node::Supply);
-            
-            Node::Supply:: Supply()
-            {
-            }
-            
-            Node::Supply:: ~Supply() throw()
-            {
-            }
-            
-            void Node:: Supply:: release(Node *node) throw()
-            {
-                Y_LOCK(access);
-                assert(node);
-                node->~Node();
-                zstore(node);
-            }
-            
-            void Node::Supply:: reserve(const size_t n)
-            {
-                Y_LOCK(access);
-                fetch(n);
-            }
-            
-            
-            
-        }
-    }
-}
-
-namespace upsylon
-{
-    namespace Jive
-    {
-        namespace Syntax
-        {
-            Node:: Pointer:: Pointer(Node *node) throw() :
-            ptr<Node>(node)
-            {
-            }
-            
-            void Node::Pointer:: zap() throw()
-            {
-                if(pointee)
-                {
-                    static Supply &mgr = Supply::location();
-                    mgr.release(pointee);
-                    pointee=0;
-                }
-            }
-            
-            Node:: Pointer:: ~Pointer() throw()
-            {
-                zap();
-            }
-            
-            Node    * Node::Pointer:: yield() throw()
-            {
-                Node *node = pointee;
-                pointee    = 0;
-                return node;
-            }
-
-            
-        }
-    }
-}
-
-
-namespace upsylon
-{
-    namespace Jive
-    {
-        namespace Syntax
-        {
-            
-            Node:: List:: List() throw() : ListType()
-            {
-            }
-            
-            Node:: List:: ~List() throw()
-            {
-                while(size)
-                {
-                    assert(Supply::exists());
-                    static Supply &mgr = Supply::location();
-                    mgr.release( pop_back() );
-                }
-            }
-            
-        }
-        
-    }
-}
 
 
 #include "y/jive/syntax/axiom/terminal.hpp"
 #include "y/jive/syntax/axiom/internal.hpp"
 #include "y/type/aliasing.hpp"
+
+namespace upsylon
+{
+    namespace memory
+    {
+        Y_SINGLETON_TEMPLATE_WITH(Jive::Lexical::Unit::Supply::life_time-1,Jive::XNode::Supply);
+
+    }
+}
 
 namespace upsylon
 {
@@ -197,14 +103,15 @@ namespace upsylon
             {
                 Lexeme::Pointer   guard(lx);
                 static Supply    &mgr  = Supply::instance();
-                return new(mgr.zquery()) Node(term,guard.yield());
+                return mgr.acquire<const Axiom&>(term);
+                //return mgr.acquire<const Axiom &,const Lexeme *>(term,lx);
             }
             
             
             Node * Node::Acquire(const Axiom &in)
             {
                 static Supply    &mgr = Supply::instance();
-                return new(mgr.zquery()) Node(in);
+                return mgr.acquire<const Axiom&>(in);
             }
             
             void Node:: ReturnTo(Lexer &lexer, Node *node) throw()

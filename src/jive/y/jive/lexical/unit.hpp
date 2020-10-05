@@ -27,9 +27,9 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef memory::magazine<Unit> Supply;
-                typedef Supply::auto_ptr       Pointer;
-                typedef Supply::list_          List;
+                typedef memory::magazine<Unit> Supply;  //!< alias
+                typedef Supply::auto_ptr       Pointer; //!< alias
+                typedef Supply::list_          List;    //!< alias
 
                 //______________________________________________________________
                 //
@@ -55,6 +55,12 @@ namespace upsylon {
             };
 
         }
+    }
+
+    namespace memory
+    {
+        //! make available to instance
+        template <> const char * const magazine<Jive::Lexical::Unit>::call_sign;
     }
 
 }

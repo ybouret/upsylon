@@ -32,24 +32,9 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                //! alias
-                typedef memory::tight::supply_of<Node> SupplyType;
-                
-                
-                //! dedicated supply for Nodes
-                class Supply : public singleton<Supply>, public SupplyType
-                {
-                public:
-                    Y_SINGLETON_DECL(Supply);      //!< aliases
-                    void  release(Node *) throw(); //!< destruct and store node
-                    void  reserve(const size_t);   //!< reserve extra nodes
-                    
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Supply);
-                    explicit Supply();
-                    virtual ~Supply() throw();
-                    friend class Node;
-                };
+                typedef memory::magazine<Node> Supply;  //!< alias
+                typedef Supply::list_          List;    //!< alias
+                typedef Supply::auto_ptr       Pointer; //!< alias
                 
                 //! kind of node
                 enum Kind
@@ -58,33 +43,8 @@ namespace upsylon
                     IsInternal  //!< an internal, got child(ren)
                 };
                 
-                //! base class for a list of code
-                typedef core::list_of<Node> ListType;
 
-                //! dedicated list for leaves
-                class List : public ListType
-                {
-                public:
-                    explicit List() throw(); //!< setup
-                    virtual ~List() throw(); //!< cleanup
 
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(List);
-                };
-                
-                //! dedicated smart pointer
-                class Pointer : public ptr<Node>
-                {
-                public:
-                    explicit Pointer(Node*) throw(); //!< setup
-                    virtual ~Pointer() throw();      //!< cleanup
-                    Node    *yield() throw();        //!< yield content
-                    
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Pointer);
-                    void zap() throw();
-                };
-                
                 static const char    CLID[];                //!< "XNode"
                 static const uint8_t TerminalMarker = 0x00; //!< for serialize
                 static const uint8_t InternalMarker = 0x01; //!< for serialize
@@ -127,6 +87,7 @@ namespace upsylon
                 virtual     ~Node()  throw();
                 void         setup() throw();
                 virtual void vizCore(ios::ostream &) const;
+                friend class memory::magazine<Node>;
                 
                 typedef Lexeme::Pointer Lptr;
                 
@@ -140,6 +101,12 @@ namespace upsylon
         }
 
         typedef Syntax::Node  XNode; //!< alias
+    }
+
+    namespace memory
+    {
+        //! make instance available
+        template <> const char * const magazine<Jive::XNode>::call_sign;
     }
 }
     

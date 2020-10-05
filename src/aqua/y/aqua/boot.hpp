@@ -13,47 +13,41 @@ namespace upsylon {
 
     namespace Aqua
     {
-        class Library; //!< forward declaration
+        class Library;              //!< forward declaration
+        typedef matrix<int> iMatrix;//!< forward declaration
 
-        typedef matrix<int> iMatrix;
-        
+        //! a linear constraint
         class Constraint : public inode<Constraint>
         {
         public:
-            typedef core::list_of_cpp<Constraint> List;
+            typedef core::list_of_cpp<Constraint> List; //!< alias
 
             //! an actor
             class Actor : public inode<Actor>
             {
             public:
-                typedef core::list_of_cpp<Actor> List;
-                explicit Actor(const Species &s,
-                               const int      w) throw();
-                virtual ~Actor() throw();
+                typedef core::list_of_cpp<Actor> List; //!< alias
 
-                const Species &species;
-                const int      weight;
+                explicit Actor(const Species &, const int) throw();//!< setup
+                virtual ~Actor() throw();                          //!< cleanup
+                friend std::ostream & operator<<(std::ostream &, const Actor &); //!< display
 
-                friend std::ostream & operator<<(std::ostream &os, const Actor &a);
-
+                const Species &species; //!< persistent species
+                const int      weight;  //!< integer weight
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Actor);
             };
 
 
-            explicit Constraint(const double) throw();
-            virtual ~Constraint() throw();
+            explicit Constraint(const double) throw();    //!< setup value
+            virtual ~Constraint() throw();                //!< cleanup
+            void add(const Species &, const int);         //!< add an actor
+            void fill(addressable<int> &P) const throw(); //!< fill a row of constraint matrix
+            friend std::ostream & operator<<(std::ostream &, const Constraint &); //!< display
 
-            double      value; //!< constraint value
-
-            void add(const Species &species,
-                     const int      weight);
             
-            void fill(addressable<int> &P) const throw();
-
-            friend std::ostream & operator<<(std::ostream &os, const Constraint &cc);
-            
+            double   value;                            //!< constraint value
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Constraint);
@@ -61,25 +55,35 @@ namespace upsylon {
 
         };
 
-
+        //! booting from constraints
         class Boot : public Constraint::List
         {
         public:
-            explicit Boot() throw();
-            virtual ~Boot() throw();
+            explicit Boot() throw(); //!< setup
+            virtual ~Boot() throw(); //!< cleanup
 
+            //! create a new contraint
             Constraint & operator()( const double value );
 
+            //! add from library
             void electroneutrality(const Library &);
+
+            //! a=C0
             void conserve(const double, const Species &a);
+
+            //! a+b=C0
             void conserve(const double, const Species &a, const Species &b);
+
+            //! a+b+c=C0
             void conserve(const double, const Species &a, const Species &b, const Species &c);
 
-            const iMatrix P;
-            const iMatrix S;
-            void  fill( addressable<double> &Lambda ) const throw();
-            void  quit() throw();
-            bool  init(Library &);
+            const iMatrix P; //!< constraint matrix
+            const iMatrix S; //!< supplementary matrix
+
+            //! fill a vector of Nc constraints
+            void  fill(addressable<double> &) const throw();
+            void  quit() throw();  //!< reset
+            bool  init(Library &); //!< buildIndices for library and build matrices
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
