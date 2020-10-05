@@ -48,8 +48,8 @@ namespace upsylon
 {
     namespace memory
     {
-        Y_SINGLETON_TEMPLATE_WITH(7,memory::magazine<simple>,simple:repo);
-        Y_SINGLETON_TEMPLATE_WITH(0,memory::magazine<dummy>,dummy:repo);
+        Y_SINGLETON_TEMPLATE_WITH(7,simple::repo);
+        Y_SINGLETON_TEMPLATE_WITH(0,dummy::repo);
         
     }
 }
