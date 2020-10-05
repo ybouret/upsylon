@@ -67,7 +67,15 @@ Y_UTEST(magazine)
         simple *c = mgr.copycat(s);
         mgr.release(s);
         mgr.release(c);
+
+        {
+            simple::repo::auto_ptr keep( mgr.acquire() );
+            Y_CHECK(keep.is_valid());
+        }
+
         Y_CHECK(simple::count==0);
+
+
     }
 
     {

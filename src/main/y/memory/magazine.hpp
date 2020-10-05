@@ -137,6 +137,28 @@ namespace upsylon
                 }
             };
 
+            //__________________________________________________________________
+            //
+            //! specialized auto_ptr
+            //__________________________________________________________________
+            class auto_ptr : public ptr<T>
+            {
+            public:
+                inline explicit auto_ptr(type *obj) throw() : ptr<T>(obj) {}
+                inline virtual ~auto_ptr() throw() { clr(); }
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(auto_ptr);
+                inline void clr() throw()
+                {
+                    if(this->pointee)
+                    {
+                        static magazine &mgr = magazine::location();
+                        mgr.release(this->pointee);
+                        this->pointee=0;
+                    }
+                }
+
+            };
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(magazine);
