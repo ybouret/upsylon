@@ -73,6 +73,12 @@ Y_UTEST(magazine)
             Y_CHECK(keep.is_valid());
         }
 
+        {
+            simple::repo::auto_ptr keep( mgr.acquire() );
+            mgr.release( keep.yield() );
+            Y_CHECK(keep.is_empty());
+        }
+
         Y_CHECK(simple::count==0);
 
 
