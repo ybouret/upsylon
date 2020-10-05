@@ -77,6 +77,8 @@ Y_UTEST(magazine)
             simple::repo::auto_ptr keep( mgr.acquire() );
             mgr.release( keep.yield() );
             Y_CHECK(keep.is_empty());
+            keep = mgr.acquire();
+            keep = mgr.acquire();
         }
 
         Y_CHECK(simple::count==0);

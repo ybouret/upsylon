@@ -153,6 +153,17 @@ namespace upsylon
                     return addr;
                 }
 
+                inline auto_ptr & operator=(type *obj) throw()
+                {
+                    if(obj!=this->pointee)
+                    {
+                        clr();
+                        this->pointee = (mutable_type *)obj;
+                    }
+                    return *this;
+                }
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(auto_ptr);
                 inline void clr() throw()
