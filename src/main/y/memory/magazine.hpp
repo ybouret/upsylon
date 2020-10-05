@@ -125,9 +125,16 @@ namespace upsylon
                     }
                     catch(...) { clr(); throw; }
                 }
+
+                //! copy/swap
+                inline list_ & operator=( const list_ &other )
+                {
+                    list_ tmp(other);
+                    this->swap_with(tmp);
+                    return *this;
+                }
                 
             private:
-                Y_DISABLE_ASSIGN(list_);
                 inline void clr() throw() {
                     while(this->size)
                     {
