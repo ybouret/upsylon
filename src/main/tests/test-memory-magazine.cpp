@@ -17,14 +17,24 @@ namespace {
     private:
         Y_DISABLE_COPY_AND_ASSIGN(dummy);
     };
-
-
-
 }
+
+namespace upsylon
+{
+    namespace memory
+    {
+        Y_SINGLETON_TEMPLATE_WITH(0,memory::magazine<dummy>,dummy:repo);
+    }
+}
+
 
 Y_UTEST(magazine)
 {
-    //dummy::repo &mgr = dummy::repo::instance();
+    concurrent::singleton::verbose = true;
+
+    dummy::repo &mgr = dummy::repo::instance();
+
+    std::cerr << "using " << mgr.call_sign << std::endl;
 
 }
 Y_UTEST_DONE()

@@ -75,6 +75,16 @@ const char * const TYPE::call_sign = #TYPE
 Y_SINGLETON_IMPL(TYPE);\
 const at_exit::longevity TYPE::life_time = (LIFE_TIME)
 
+    //! implement templated
+#define Y_SINGLETON_TEMPLATE(TYPE,CALL) \
+template <> const char * const TYPE::call_sign = #CALL
+
+    //! implenebt templated with life time
+#define Y_SINGLETON_TEMPLATE_WITH(LIFE_TIME,TYPE,CALL) \
+Y_SINGLETON_TEMPLATE(TYPE,CALL); \
+template <> const at_exit::longevity TYPE::life_time = (LIFE_TIME)
+
+
     //! singleton of T
     /**
      - T must define a static at_exit::longevity life_time
