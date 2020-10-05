@@ -117,16 +117,16 @@ Q_i\left(\vec{C}_0 + \xi \vec{\nu}\right) = 0
 \end{equation}
 by simple bisection between the limiting extents.
 
-\section{Booting Linear with Linear constraints}
+\section{Booting  with Linear constraints}
 Since we have $N\leq M$ equilibria, the chemical system is fully determined by
 $P=M-N$ constraints.
 We assume that these constraints are linear, defined with $\bm{P}\in\mathcal{M}_{P,M}$ and $\vec{\Lambda}\in\mathbb{R}^P$:
 \begin{equation}
 	\bm{P} \vec{C} = \vec{\Lambda}
 \end{equation}
-Let $\bm{Q}\in\mathcal{M}_{N,M}$ orthogonal to $\bm{P}$, so that
+Let $\bm{S}\in\mathcal{M}_{N,M}$ orthogonal to $\bm{P}$, so that
 \begin{equation}
-	\vec{C} = \trn{\bm{P}} \vec{u} + \trn{\bm{Q}} \vec{v}
+	\vec{C} = \trn{\bm{P}} \vec{u} + \trn{\bm{S}} \vec{v}
 \end{equation}
 and
 \begin{equation}
@@ -134,6 +134,6 @@ and
 \end{equation}
 and
 \begin{equation}
-	\vec{C} = \trn{\bm{P}} \left(\bm{P} \trn{\bm{P}}\right)^{-1} \vec{\Lambda}+ \trn{\bm{Q}} \vec{v}
+	\vec{C} = \trn{\bm{P}} \left(\bm{P} \trn{\bm{P}}\right)^{-1} \vec{\Lambda}+ \trn{\bm{S}} \vec{v}
 \end{equation}
 \end{document}

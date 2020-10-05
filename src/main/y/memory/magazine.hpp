@@ -86,12 +86,20 @@ namespace upsylon
             // memory management
             //__________________________________________________________________
 
-            //! prefetch extra blocks
+            //! keep at most n items
+            inline void at_most(const size_t n)
+            {
+                Y_LOCK(this->access);
+                this->limit(n);
+            }
+
+            //! reserve extra n items
             inline void reserve(const size_t n)
             {
                 Y_LOCK(this->access);
                 this->fetch(n);
             }
+
 
             //__________________________________________________________________
             //
@@ -106,6 +114,10 @@ namespace upsylon
             class list_ : public list__, public releasable
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 //! setup empty
                 inline explicit     list_()   throw() : list__() {}
 
@@ -133,7 +145,19 @@ namespace upsylon
                     this->swap_with(tmp);
                     return *this;
                 }
-                
+
+                //______________________________________________________________
+                //
+                // helpers
+                //______________________________________________________________
+                inline list_ & operator<<(type *obj)
+                {
+                    this->push_back( (mutable_type*) obj );
+                    return *this;
+                }
+
+
+
             private:
                 inline void clr() throw() {
                     while(this->size)
@@ -151,8 +175,13 @@ namespace upsylon
             class auto_ptr : public ptr<T>
             {
             public:
+                //! setup
                 inline explicit auto_ptr(type *obj) throw() : ptr<T>(obj) {}
+
+                //! cleanup
                 inline virtual ~auto_ptr() throw() { clr(); }
+
+                //! yield content
                 inline type    *yield() throw()
                 {
                     type *addr    = this->pointee;
@@ -160,6 +189,7 @@ namespace upsylon
                     return addr;
                 }
 
+                //! assign another pointer
                 inline auto_ptr & operator=(type *obj) throw()
                 {
                     if(obj!=this->pointee)
