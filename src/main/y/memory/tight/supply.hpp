@@ -29,7 +29,6 @@ namespace upsylon
                 virtual ~supply()           throw(); //!< cleanup
 
             protected:
-
                 explicit supply(const size_t);        //!< setup from object::proto and block_size
                 void     prune() throw();             //!< return local blocks to system cache
                 void     fetch(size_t n);             //!< prefetch local blocks

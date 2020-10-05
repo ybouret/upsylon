@@ -9,7 +9,9 @@ namespace {
     class dummy
     {
     public:
-        inline   dummy() throw() {}
+        int a;
+        inline   dummy() throw() : a(0) {}
+        inline   dummy(int x)    : a(x) { if(0==x) throw exception("dummy(0)"); }
         inline  ~dummy() throw() {}
 
         typedef memory::magazine<dummy> repo;
@@ -33,8 +35,29 @@ Y_UTEST(magazine)
     concurrent::singleton::verbose = true;
 
     dummy::repo &mgr = dummy::repo::instance();
-
     std::cerr << "using " << mgr.call_sign << std::endl;
+
+    {
+        dummy *d = mgr.acquire();
+        std::cerr << "a=" << d->a << std::endl;
+        mgr.release(d);
+    }
+
+    {
+        dummy *d = mgr.acquire<int>(5);
+        std::cerr << "a=" << d->a << std::endl;
+        mgr.release(d);
+    }
+
+    try
+    {
+        dummy *d = mgr.acquire<int>(0);
+        mgr.release(d);
+    }
+    catch(const exception &e)
+    {
+        std::cerr << "OK: " << e.when() << std::endl;
+    }
 
 }
 Y_UTEST_DONE()
