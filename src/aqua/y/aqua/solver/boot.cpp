@@ -50,6 +50,12 @@ namespace upsylon
                     Cmove[j] = Cstar[j] /= boot.d;
                 }
                 std::cerr << "Cstar=" << Cstar << std::endl;
+
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
                 if(!balance(Cmove))
                 {
                     throw exception("%sinvalid Cstar",fn);
@@ -62,6 +68,7 @@ namespace upsylon
 
                 }
                 std::cerr << "Cmove=" << Cmove << std::endl;
+                
 
 
             }
