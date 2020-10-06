@@ -5,15 +5,14 @@
 #define Y_AQUA_EQUILIBRIA_INCLUDED 1
 
 #include "y/aqua/equilibrium.hpp"
+#include "y/aqua/types.hpp"
 #include "y/associative/suffix/tree.hpp"
-#include "y/container/matrix.hpp"
 
 namespace upsylon {
 
     namespace Aqua
     {
-        typedef matrix<int>    iMatrix; //!< alias
-        typedef matrix<double> Matrix;  //!< alias
+
 
         //______________________________________________________________________
         //

@@ -4,9 +4,9 @@
 #define Y_AQUA_EQUILIBRIUM_INCLUDED 1
 
 #include "y/aqua/species.hpp"
+#include "y/aqua/types.hpp"
 #include "y/core/list.hpp"
 #include "y/core/inode.hpp"
-#include "y/sequence/addressable.hpp"
 
 namespace upsylon {
 
@@ -86,7 +86,7 @@ namespace upsylon {
             void   validate() const;        //!< check validity
 
 
-            void   fillNu(addressable<int> &nu) const throw();  //!< fill topology row
+            void   fillNu(addressable<Int> &nu) const throw();  //!< fill topology row
 
             //! compute indicators only
             double computeQ(const double K0, const accessible<double> &C0) const throw();

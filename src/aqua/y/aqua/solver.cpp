@@ -156,7 +156,7 @@ namespace upsylon
                     quark::ld(act,false);
                     for(size_t i=N;i>0;--i)
                     {
-                        const accessible<int> &nu_i = Nu[i];
+                        const accessible<Int> &nu_i = Nu[i];
                         for(size_t j=M;j>0;--j)
                         {
                             if( nu_i[j] != 0) act[j] = true;

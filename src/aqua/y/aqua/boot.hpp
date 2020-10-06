@@ -4,6 +4,7 @@
 #define Y_AQUA_BOOT_INCLUDED 1
 
 #include "y/aqua/species.hpp"
+#include "y/aqua/types.hpp"
 #include "y/core/inode.hpp"
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
@@ -13,13 +14,21 @@ namespace upsylon {
 
     namespace Aqua
     {
-        class Library;              //!< forward declaration
-        typedef matrix<int> iMatrix;//!< forward declaration
-
+        class Library;                   //!< forward declaration
+        
+        //______________________________________________________________________
+        //
+        //
         //! a linear constraint
+        //
+        //______________________________________________________________________
         class Constraint : public inode<Constraint>
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef core::list_of_cpp<Constraint> List; //!< alias
 
             //! an actor
@@ -39,15 +48,28 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(Actor);
             };
 
-
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             explicit Constraint(const double) throw();    //!< setup value
             virtual ~Constraint() throw();                //!< cleanup
-            void add(const Species &, const int);         //!< add an actor
-            void fill(addressable<int> &P) const throw(); //!< fill a row of constraint matrix
-            friend std::ostream & operator<<(std::ostream &, const Constraint &); //!< display
 
-            
-            double   value;                            //!< constraint value
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void add(const Species &, const int);         //!< add an actor
+            void fill(addressable<Int> &P) const throw(); //!< fill a row of constraint matrix
+
+            //! display
+            friend std::ostream & operator<<(std::ostream &, const Constraint &);
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            double   value; //!< constraint value
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Constraint);
@@ -55,12 +77,26 @@ namespace upsylon {
 
         };
 
+        //______________________________________________________________________
+        //
+        //
         //! booting from constraints
+        //
+        //______________________________________________________________________
         class Boot : public Constraint::List
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             explicit Boot() throw(); //!< setup
             virtual ~Boot() throw(); //!< cleanup
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
 
             //! create a new contraint
             Constraint & operator()( const double value );
@@ -77,14 +113,18 @@ namespace upsylon {
             //! a+b+c=C0
             void conserve(const double, const Species &a, const Species &b, const Species &c);
 
-            const iMatrix P; //!< constraint matrix
-            const iMatrix S; //!< supplementary matrix
-
             //! fill a vector of Nc constraints
             void  fill(addressable<double> &) const throw();
             void  quit() throw();  //!< reset
             bool  init(Library &); //!< buildIndices for library and build matrices
-            
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const iMatrix P; //!< constraint matrix
+            const iMatrix S; //!< supplementary matrix
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
             core::temporary_acquire<2> keep;

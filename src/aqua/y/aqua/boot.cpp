@@ -1,6 +1,6 @@
 #include "y/aqua/boot.hpp"
-
-
+#include "y/mkl/kernel/svd.hpp"
+#include "y/counting/comb.hpp"
 
 namespace upsylon {
 
@@ -19,7 +19,7 @@ namespace upsylon {
 
         }
 
-        void Constraint:: fill(addressable<int> &P) const throw()
+        void Constraint:: fill(addressable<Int> &P) const throw()
         {
             for(const Actor *a=actors.head;a;a=a->next)
             {
@@ -198,22 +198,37 @@ namespace upsylon {
 
                 if(Nc<M)
                 {
-
                     const size_t N = M-Nc;
                     aliasing::_(S).make(N,M);
-                    iMatrix      R(P);
 
-                    if(!GramSchmidt::iOrtho(R))
+                    iMatrix                   F(M,M);
+                    combination               comb(M,N);
+                    const accessible<size_t> &indx = comb;
+                    std::cerr << "max comb=" << comb.count << std::endl;
+                    for(comb.boot();comb.good();comb.next())
                     {
-                        return false;
+                        assert(indx.size()==N);
+                        std::cerr << indx << std::endl;
+                        for(size_t i=Nc;i>0;--i)
+                        {
+                            quark::set(F[i],P[i]);
+                        }
+                        for(size_t i=1;i<=N;++i)
+                        {
+                            addressable<Int> &row = F[i+Nc];
+                            quark::ld(row,0);
+                            row[ indx[i] ] = 1;
+                        }
+                        if(GramSchmidt::iOrtho(F))
+                        {
+                            break;
+                        }
                     }
-                    std::cerr << "R=" << R << std::endl;
-
-                    iMatrix      I(N,N);
-                    for(size_t i=1;i<=Nc;++i)
+                    for(size_t i=N;i>0;--i)
                     {
-                        quark::set(I[i],P[i]);
+                        quark::set( aliasing::_(S[i]), F[i+Nc]);
                     }
+                    
                 }
 
                 return true;
