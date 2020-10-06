@@ -56,6 +56,7 @@ namespace upsylon
                             tree = rep.yield();
                         }
                     }
+                    // else leave untouched
                     return true;
                 }
                 else

@@ -47,14 +47,15 @@ namespace upsylon
                 typedef Axiom                   *Pointer;  //!< alias
                 typedef suffix_tree<Pointer>     Registry; //!< alias
                 
+                //! lighweight reference for compoinds
                 class Reference : public Object, public inode<Reference>
                 {
                 public:
-                    const Axiom &axiom;
-                    explicit Reference(const Axiom&) throw();
-                    virtual ~Reference() throw();
-                    typedef core::list_of_cpp<Reference> List;
-                    
+                    typedef core::list_of_cpp<Reference> List;    //!< alias
+                    explicit     Reference(const Axiom&) throw(); //!< setup
+                    virtual     ~Reference() throw();             //!< cleanup
+                    const Axiom &axiom;                           //!< internal reference
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Reference);
                 };
