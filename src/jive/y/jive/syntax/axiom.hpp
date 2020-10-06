@@ -45,6 +45,7 @@ namespace upsylon
                 static const char     Prefix[];        //!< "[JIVE] "
                 typedef core::list_of_cpp<Axiom> List; //!< alias
                 
+                
                 //______________________________________________________________
                 //
                 // methods

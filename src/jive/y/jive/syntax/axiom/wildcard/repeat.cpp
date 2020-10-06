@@ -22,30 +22,39 @@ namespace upsylon
                 Node::Pointer  rep( Node::Acquire(*this) ); // internal node
                 size_t         num = 0;                     // count
                 Node::List    &tgt = rep->leaves();         // internal leaves
+               
+                //--------------------------------------------------------------
+                // run local count
+                //--------------------------------------------------------------
                 {
-                    Node      *sub = 0; // termporary sub-tree
+                    Node      *sub = 0; // temporary sub-tree
                     while( axiom.accept(sub,lexer,source) )
                     {
                         ++num;
                         tgt.push_back(sub); assert(tgt.size==num);
-                        Y_JIVE_PRINTLN("\tgot " << num);
                         sub=0;
                     }
                 }
 
+                //--------------------------------------------------------------
+                // check result
+                //--------------------------------------------------------------
                 if(num>=atLeast)
                 {
                     Y_JIVE_PRINTLN("|_accept " << num << ">=" << atLeast);
-                    if(tree)
+                    if(num>0)
                     {
-                        // merge leaves
-                        assert(tree->kind==tree->IsInternal);
-                        tree->leaves().merge_back(tgt);
-                    }
-                    else
-                    {
-                        // bad grammar design
-                        tree = rep.yield();
+                        if(tree)
+                        {
+                            // merge leaves
+                            assert(tree->kind==tree->IsInternal);
+                            tree->leaves().merge_back(tgt);
+                        }
+                        else
+                        {
+                            // bad grammar design, but whatever..
+                            tree = rep.yield();
+                        }
                     }
                     return true;
                 }
