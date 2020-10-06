@@ -58,10 +58,11 @@ Y_UTEST(boot)
     {
         std::cerr << "cannot boot" << std::endl;
     }
-
-    std::cerr << "P=" << boot.P << std::endl;
-    std::cerr << "S=" << boot.S << std::endl;
-
+    else
+    {
+        std::cerr << "P=" << boot.P << std::endl;
+        std::cerr << "S=" << boot.S << std::endl;
+    }
 }
 Y_UTEST_DONE()
 
