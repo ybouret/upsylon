@@ -6,6 +6,7 @@
 
 #include "y/jive/syntax/axiom/terminal.hpp"
 #include "y/jive/syntax/axiom/wildcard/all.hpp"
+#include "y/jive/syntax/axiom/compound/all.hpp"
 
 
 

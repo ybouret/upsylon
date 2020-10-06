@@ -41,11 +41,23 @@ namespace upsylon
                 // types and definitions
                 //______________________________________________________________
                 static const uint32_t TermUUID = Y_FOURCC('T','E','R','M'); //!< forward value
-                static bool           Verbose;            //!< verbosity level
-                static const char     Prefix[];           //!< "[JIVE] "
-                typedef core::list_of_cpp<Axiom> List;    //!< alias
-                typedef Axiom                   *Pointer; //!< alias
+                static bool           Verbose;             //!< verbosity level
+                static const char     Prefix[];            //!< "[JIVE] "
+                typedef core::list_of_cpp<Axiom> List;     //!< alias
+                typedef Axiom                   *Pointer;  //!< alias
                 typedef suffix_tree<Pointer>     Registry; //!< alias
+                
+                class Reference : public Object, public inode<Reference>
+                {
+                public:
+                    const Axiom &axiom;
+                    explicit Reference(const Axiom&) throw();
+                    virtual ~Reference() throw();
+                    typedef core::list_of_cpp<Reference> List;
+                    
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Reference);
+                };
                 
                 //______________________________________________________________
                 //
