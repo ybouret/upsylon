@@ -14,21 +14,28 @@ namespace upsylon
             Y_JIVE_AXIOM_ACCEPT_IMPL(Terminal)
             {
                 Y_JIVE_PRINTLN("Terminal <"<<name<<">");
-                Lexeme *lexeme = lexer.get(source);
-                if(lexeme)
+                
+                //--------------------------------------------------------------
+                // get lexeme
+                //--------------------------------------------------------------
+                Lexeme::Pointer lexeme( lexer.get(source) );
+                if(lexeme.is_valid())
                 {
-                    Lexeme::Pointer lx(lexeme);
+                    //----------------------------------------------------------
+                    // check label
+                    //----------------------------------------------------------
                     if( *(lexeme->label) == *name )
                     {
+                        // matching !
                         Y_JIVE_PRINTLN("|_accept '"<<*lexeme<<"'");
-                        Node *leaf = Node::Acquire(*this,lx.yield());
-                        Grow(tree,leaf);
+                        Grow(tree,Node::Acquire(*this,lexeme.yield()));
                         return true;
                     }
                     else
                     {
+                        //! different!
                         Y_JIVE_PRINTLN("|_reject " << lexeme->label);
-                        lexer.unget(lx.yield());
+                        lexer.unget(lexeme.yield());
                         return false;
                     }
                 }

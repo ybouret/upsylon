@@ -80,9 +80,15 @@ Y_UTEST(grammar)
             Syntax::Axiom::Verbose = true;
             Source source( Module::OpenFile(argv[1]) );
             XNode::Pointer xnode( G.run(L,source) );
-            std::cerr << "[done level-1]: xnode valid=" << xnode.is_valid() << std::endl;
+            if(xnode.is_valid())
+            {
+                std::cerr << "accepted " << xnode->axiom.name << std::endl;
+            }
+            else
+            {
+                std::cerr << "accepted empty tree" << std::endl;
+            }
         }
-        std::cerr << "[done level-2]" << std::endl;
 
 
     }
