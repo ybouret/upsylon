@@ -32,19 +32,42 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             assert(Nc==boot.size);
+            assert(N==boot.S.rows);
+
             if(Nc>0)
             {
-                // let us compute Cstr
+                //--------------------------------------------------------------
+                //
+                // let us compute Cstar
+                //
+                //--------------------------------------------------------------
                 lightweight_array<double> Lambda( *Cswp, Nc);
                 boot.fill(Lambda);
                 std::cerr << "Lambda=" << Lambda << std::endl;
-                quark::mul(Cstr,boot.F,Lambda);
-                for(size_t j=M;j>0;--j) Cstr[j] /= boot.d;
-                std::cerr << "Cstar=" << Cstr << std::endl;
+                quark::mul(Cstar,boot.F,Lambda);
+                for(size_t j=M;j>0;--j)
+                {
+                    Cmove[j] = Cstar[j] /= boot.d;
+                }
+                std::cerr << "Cstar=" << Cstar << std::endl;
+                if(!balance(Cmove))
+                {
+                    throw exception("%sinvalid Cstar",fn);
+                }
+                std::cerr << "Cmove=" << Cmove << std::endl;
+                //forwardVerbose = true;
+                if(!forward(Cmove))
+                {
+                    throw exception("%sinvalid Cstar",fn);
+
+                }
+                std::cerr << "Cmove=" << Cmove << std::endl;
+
+
             }
             else
             {
-                
+
             }
 
         }

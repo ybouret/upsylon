@@ -78,7 +78,8 @@ namespace upsylon
             Array         &Cini;       //!< for forward   [M]
             Array         &Cend;       //!< forward trial [M]
             Array         &Cswp;       //!< to sweep
-            Array         &Cstr;       //!< to boot       [M]
+            Array         &Cstar;      //!< to boot       [M]
+            Array         &Cmove;      //!< to boot       [M]
             const Booleans active;     //!< active C      [M]
 
 

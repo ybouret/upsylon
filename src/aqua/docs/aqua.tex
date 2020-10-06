@@ -119,22 +119,22 @@ by simple bisection between the limiting extents.
 
 \section{Booting  with Linear constraints}
 Since we have $N\leq M$ equilibria, the chemical system is fully determined by
-$P=M-N$ constraints.
-We assume that these constraints are linear, defined with $\bm{P}\in\mathcal{M}_{P,M}$ and $\vec{\Lambda}\in\mathbb{R}^P$:
+$N_c=M-N$ constraints.
+We assume that these constraints are linear, defined with $\bm{R}\in\mathcal{M}_{N_c,M}$ and $\vec{\Lambda}\in\mathbb{R}^{N_c}$:
 \begin{equation}
-	\bm{P} \vec{C} = \vec{\Lambda}
+	\bm{R} \vec{C} = \vec{\Lambda}
 \end{equation}
-Let $\bm{S}\in\mathcal{M}_{N,M}$ orthogonal to $\bm{P}$, so that
+Let $\bm{S}\in\mathcal{M}_{N,M}$ orthogonal to $\bm{R}$, so that
 \begin{equation}
-	\vec{C} = \trn{\bm{P}} \vec{u} + \trn{\bm{S}} \vec{v}
-\end{equation}
-and
-\begin{equation}
-	\bm{P} \vec{C} = \left(\bm{P} \trn{\bm{P}}\right) \vec{u} = \vec{\Lambda}
+	\vec{C} = \trn{\bm{R}} \vec{u} + \trn{\bm{S}} \vec{v}
 \end{equation}
 and
 \begin{equation}
-	\vec{C} = \underbrace{\trn{\bm{P}} \left(\bm{P} \trn{\bm{P}}\right)^{-1} \vec{\Lambda}}_{\vec{C}^\star} + \trn{\bm{S}} \vec{v}
+	\bm{R} \vec{C} = \left(\bm{R} \trn{\bm{R}}\right) \vec{u} = \vec{\Lambda}
+\end{equation}
+and
+\begin{equation}
+	\vec{C} = \underbrace{\trn{\bm{R}} \left(\bm{R} \trn{\bm{R}}\right)^{-1} \vec{\Lambda}}_{\vec{C}^\star} + \trn{\bm{S}} \vec{v}
 \end{equation}
 So we must solve:
 \begin{equation}

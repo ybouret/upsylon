@@ -327,7 +327,12 @@ namespace upsylon
                             if(active[j])
                             {
                                 assert(Corg[j]>=0);
-                                C[j] = Corg[j];
+                                double Cj = Corg[j];
+                                if(fabs(Cj)<=numeric<double>::tiny)
+                                {
+                                    Cj = 0;
+                                }
+                                C[j] = Cj;
                             }
                         }
                         return true;

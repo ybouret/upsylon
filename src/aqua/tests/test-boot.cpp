@@ -66,6 +66,8 @@ Y_UTEST(boot)
     Solver cs;
     cs.init(lib,eqs);
 
+    cs.computeK(0);
+
     vector<double> C(cs.M+2,0);
 
     std::cerr << boot << std::endl;
