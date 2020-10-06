@@ -57,8 +57,11 @@ namespace upsylon
                 {
                     Y_JIVE_AXIOM(Dull);
                 }
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Dull);
+                Y_JIVE_AXIOM_ACCEPT_DECL();
 
             };
         }

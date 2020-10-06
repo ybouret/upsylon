@@ -15,7 +15,13 @@ namespace upsylon
             {
             }
             
-
+            Y_JIVE_AXIOM_ACCEPT_IMPL(Dull)
+            {
+                (void)tree;
+                (void)lexer;
+                (void)source;
+                return false;
+            }
         }
 
     }

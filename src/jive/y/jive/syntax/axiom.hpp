@@ -11,6 +11,21 @@ namespace upsylon
     {
         namespace Syntax
         {
+            //__________________________________________________________________
+            //
+            //
+            // helpers
+            //
+            //__________________________________________________________________
+
+            //! args for accept method
+#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source
+
+            //! accept declaration
+#define Y_JIVE_AXIOM_ACCEPT_DECL()      virtual bool  accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
+
+            //! accept implemenation
+#define Y_JIVE_AXIOM_ACCEPT_IMPL(CLASS)  bool CLASS:: accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
 
             //__________________________________________________________________
             //
@@ -26,6 +41,8 @@ namespace upsylon
                 // types and definitions
                 //______________________________________________________________
                 static const uint32_t TermUUID = Y_FOURCC('T','E','R','M'); //!< forward value
+                static bool           Verbose;         //!< verbosity level
+                static const char     Prefix[];        //!< "[JIVE] "
                 typedef core::list_of_cpp<Axiom> List; //!< alias
                 
                 //______________________________________________________________
@@ -35,6 +52,7 @@ namespace upsylon
                 virtual ~Axiom()            throw(); //!< cleanup
                 bool     isTerminal() const throw(); //!< uuid == TerminalUUID
                 bool     isInternal() const throw(); //!< uuid != TerminalUUID
+                bool     accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const;
 
                 //______________________________________________________________
                 //
@@ -44,6 +62,11 @@ namespace upsylon
                 const Tag         name; //!< axiom name
                 const void *const self; //!< derived class
 
+                //______________________________________________________________
+                //
+                // helpers
+                //______________________________________________________________
+                static void Grow( Node * &tree, Node *leaf ) throw();
 
             protected:
                 explicit Axiom(const uint32_t, const string *) throw(); //!< setup
@@ -51,10 +74,14 @@ namespace upsylon
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);
+                Y_JIVE_AXIOM_ACCEPT_DECL() = 0;
             };
 
             //! helper to link derived class to self
 #define Y_JIVE_AXIOM(CLASS) I_am( static_cast<const CLASS *>(this) )
+
+            //! helper
+#define Y_JIVE_PRINTLN(MSG) do { if(Syntax::Axiom::Verbose) { std::cerr << Syntax::Axiom::Prefix << MSG << std::endl; } } while(false)
         }
     }
 }

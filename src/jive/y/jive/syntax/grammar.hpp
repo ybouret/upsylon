@@ -44,7 +44,7 @@ namespace upsylon
                 
                 //______________________________________________________________
                 //
-                // methods
+                // setup methods
                 //______________________________________________________________
 
                 //! append axiom to list and registry
@@ -69,7 +69,13 @@ namespace upsylon
                 //! get the root axiom
                 const Axiom *getRoot() const throw();
                 
-                
+
+                //______________________________________________________________
+                //
+                //! build tree
+                //______________________________________________________________
+                Node *run( Lexer &lexer, Source &source ) const;
+
                 //______________________________________________________________
                 //
                 // members

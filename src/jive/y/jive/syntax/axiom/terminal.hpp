@@ -35,10 +35,11 @@ namespace upsylon
                     Y_JIVE_AXIOM(Terminal);
                 }
 
-                
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
+                Y_JIVE_AXIOM_ACCEPT_DECL();
             };
 
         }
