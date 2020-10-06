@@ -19,7 +19,8 @@ namespace upsylon
         typedef array<double>                      Array;      //!< alias
         typedef lightweight_array<bool>            Booleans;   //!< alias
         typedef vector<const Equilibrium::Pointer> EqVector;   //!< alias
-
+        class                                      Boot;       //!< forward
+        
         //! solver
         class Solver
         {
@@ -107,6 +108,8 @@ namespace upsylon
              */
             bool swept(addressable<double> &C) throw();
 
+            //! try to boot
+            bool boot(addressable<double> &C, Boot &boot);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);

@@ -116,18 +116,20 @@ namespace upsylon {
             //! fill a vector of Nc constraints
             void  fill(addressable<double> &) const throw();
             void  quit() throw();  //!< reset
-            bool  init(Library &); //!< buildIndices for library and build matrices
+            void  init(Library &); //!< buildIndices for library and build matrices
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const iMatrix P; //!< constraint matrix
+            const iMatrix F; //!< projection matrix
+            const Int     d; //!< determinant of P*P'
             const iMatrix S; //!< supplementary matrix
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
-            core::temporary_acquire<2> keep;
+            core::temporary_acquire<4> keep;
         };
 
     }

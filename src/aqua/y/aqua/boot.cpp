@@ -112,9 +112,16 @@ namespace upsylon {
 
     namespace Aqua
     {
-        Boot:: Boot() throw() : Constraint::List(), P(), S(), keep()
+        Boot:: Boot() throw() :
+        Constraint::List(),
+        P(),
+        F(),
+        d(0),
+        S(),
+        keep()
         {
             keep << aliasing::_(P);
+            keep << aliasing::_(F);
             keep << aliasing::_(S);
         }
 
@@ -125,6 +132,7 @@ namespace upsylon {
         void Boot:: quit() throw()
         {
             keep.release_all();
+            aliasing::_(d) = 0;
         }
 
         Constraint & Boot:: operator()( const double value )
@@ -161,6 +169,8 @@ namespace upsylon {
 #include "y/aqua/library.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
+#include "y/mkl/kernel/adjoint.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -169,22 +179,27 @@ namespace upsylon {
 
         using namespace mkl;
 
-        bool  Boot:: init(Library &lib)
+        void  Boot:: init(Library &lib)
         {
+            static const char fn[] = "Aqua::Boot::init: ";
             quit();
-            try {
+            try
+            {
+                //--------------------------------------------------------------
+                // parameters for P
+                //--------------------------------------------------------------
                 const size_t M  = lib.entries();
                 if(M<=0)
                 {
-                    return true;
+                    return;
                 }
-                lib.buildIndices();
                 const size_t Nc = size;
                 if(Nc<=0)
                 {
-                    return false;
+                    return;
                 }
                 aliasing::_(P).make(Nc,M);
+                lib.buildIndices();
                 {
                     size_t i=1;
                     for(const Constraint *cc=head;cc;cc=cc->next,++i)
@@ -193,7 +208,23 @@ namespace upsylon {
                     }
                 }
 
-                std::cerr << "P=" << P << std::endl;
+                //--------------------------------------------------------------
+                // check P whilst building F
+                //--------------------------------------------------------------
+                aliasing::_(F).make(M,Nc);
+                {
+                    iMatrix tP(P,matrix_transpose);
+                    iMatrix P2(Nc,Nc);
+                    quark::mmul(P2, P,tP);
+                    aliasing::_(d) = ideterminant(P2);
+                    if(!d)
+                    {
+                        throw exception("%ssingular set of constraints",fn);
+                    }
+                    iMatrix aP2(Nc,Nc);
+                    iadjoint(aP2,P2);
+                    quark::mmul( aliasing::_(F),tP,aP2);
+                }
 
 
                 if(Nc<M)
@@ -201,38 +232,37 @@ namespace upsylon {
                     const size_t N = M-Nc;
                     aliasing::_(S).make(N,M);
 
-                    iMatrix                   F(M,M);
+                    iMatrix                   I(M,M);
                     combination               comb(M,N);
                     const accessible<size_t> &indx = comb;
-                    std::cerr << "max comb=" << comb.count << std::endl;
                     for(comb.boot();comb.good();comb.next())
                     {
                         assert(indx.size()==N);
-                        //std::cerr << indx << std::endl;
                         for(size_t i=Nc;i>0;--i)
                         {
-                            quark::set(F[i],P[i]);
+                            quark::set(I[i],P[i]);
                         }
                         for(size_t i=1;i<=N;++i)
                         {
-                            addressable<Int> &row = F[i+Nc];
+                            addressable<Int> &row = I[i+Nc];
                             quark::ld(row,0);
                             row[ indx[i] ] = 1;
                         }
-                        if(GramSchmidt::iOrtho(F))
+                        if(GramSchmidt::iOrtho(I))
                         {
-                            break;
+                            goto FINALIZE;
                         }
                     }
+                    throw exception("%sunable to find orthogonal space!!!",fn);
+                FINALIZE:
                     for(size_t i=N;i>0;--i)
                     {
-                        quark::set( aliasing::_(S[i]), F[i+Nc]);
+                        quark::set( aliasing::_(S[i]), I[i+Nc]);
                     }
                     
                 }
 
-                return true;
-            }
+             }
             catch(...)
             {
                 quit();
@@ -240,7 +270,7 @@ namespace upsylon {
             }
         }
 
-
+        
     }
 
 }

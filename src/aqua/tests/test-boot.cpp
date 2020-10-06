@@ -54,15 +54,13 @@ Y_UTEST(boot)
     boot.electroneutrality(lib);
     boot.conserve(0,ah,am);
     boot.conserve(0,NH4,NH3);
-    if(!boot.init(lib))
-    {
-        std::cerr << "cannot boot" << std::endl;
-    }
-    else
-    {
-        std::cerr << "P=" << boot.P << std::endl;
-        std::cerr << "S=" << boot.S << std::endl;
-    }
+    boot.init(lib);
+    
+    std::cerr << "P=" << boot.P << std::endl;
+    std::cerr << "d=" << boot.d << std::endl;
+    std::cerr << "F=" << boot.F << std::endl;
+    std::cerr << "S=" << boot.S << std::endl;
+
 }
 Y_UTEST_DONE()
 
