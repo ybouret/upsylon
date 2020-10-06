@@ -30,7 +30,7 @@ Y_UTEST(eqs)
         acid(*AH,-1);
 
         std::cerr << acid  << std::endl;
-
+        
         acid.validate();
     }
 

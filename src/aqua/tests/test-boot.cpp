@@ -52,7 +52,8 @@ Y_UTEST(boot)
 
     Boot boot;
     boot.electroneutrality(lib);
-
+    boot.conserve(0,ah,am);
+    boot.conserve(0,NH4,NH3);
     if(!boot.init(lib))
     {
         std::cerr << "cannot boot" << std::endl;

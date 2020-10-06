@@ -10,7 +10,7 @@
 namespace upsylon {
     
     namespace mkl {
-     
+
         //! Gram-Schmidt Ortho(normalisation)
         struct GramSchmidt
         {
@@ -18,28 +18,34 @@ namespace upsylon {
             template <typename T> static inline
             bool Ortho( matrix<T> &a )
             {
-                const size_t    cols = a.cols;
                 const size_t    rows = a.rows;
-                for(size_t i=2;i<=rows;++i)
+                if(rows>0)
                 {
-                    addressable<T> &v = a[i];
-                    for(size_t k=1;k<i;++k)
+                    const size_t    cols = a.cols;
+
+                    for(size_t i=2;i<=rows;++i)
                     {
-                        const accessible<T> &u = a[k];
-                        const T num = quark::dot<T>:: of(v,u);
-                        const T den = quark::dot<T>:: of(u,u);
-                        if(fabs_of(den)<=0)
+                        addressable<T> &v = a[i];
+                        for(size_t k=1;k<i;++k)
                         {
-                            return false;
-                        }
-                        const T fac = num/den;
-                        for(size_t j=cols;j>0;--j)
-                        {
-                            v[j] -= fac * u[j];
+                            const accessible<T> &u = a[k];
+                            const T num = quark::dot<T>:: of(v,u);
+                            const T den = quark::dot<T>:: of(u,u);
+                            if(fabs_of(den)<=0)
+                            {
+                                return false;
+                            }
+                            const T fac = num/den;
+                            for(size_t j=cols;j>0;--j)
+                            {
+                                v[j] -= fac * u[j];
+                            }
                         }
                     }
+                    return quark::mod2<T>::of(a[rows])>0;
                 }
-                return true;
+                else
+                    return true;
             }
             
             //! build ortho and convert to integer
