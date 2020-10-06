@@ -24,8 +24,6 @@ namespace upsylon
                 //
                 // type and definitions
                 //______________________________________________________________
-                typedef Axiom                    *AxiomPointer;  //!< alias
-                typedef suffix_tree<AxiomPointer> AxiomRegistry; //!< aias
                 
                 //______________________________________________________________
                 //
@@ -62,7 +60,7 @@ namespace upsylon
                 template <typename ID> inline
                 const Axiom *query( const ID &id ) const throw()
                 {
-                    const AxiomPointer *_ = registry.search_by(id);
+                    const Axiom::Pointer *_ = registry.search_by(id);
                     return _ ? *_ : NULL;
                 }
                 
@@ -87,8 +85,8 @@ namespace upsylon
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
-                Axiom::List   axioms;
-                AxiomRegistry registry;
+                Axiom::List     axioms;
+                Axiom::Registry registry;
             };
             
         }
