@@ -1,6 +1,7 @@
 
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -31,6 +32,14 @@ namespace upsylon
             const Axiom * Grammar:: getRoot() const throw()
             {
                 return axioms.head;
+            }
+
+            void Grammar:: setRoot(const Axiom &axiom)
+            {
+                if( ! axioms.owns(&axiom) )
+                    throw exception("%s.setRoot(not owner of <%s>)",**name,**axiom.name);
+                axioms.move_to_front( &aliasing::_(axiom) );
+                assert( &axiom == axioms.head );
             }
 
         }

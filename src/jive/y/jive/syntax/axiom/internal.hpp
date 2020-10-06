@@ -25,7 +25,7 @@ namespace upsylon
             protected:
                 //! setup
                 template <typename ID> inline
-                explicit Internal(const uint32_t u, const ID &id) :
+                explicit Internal(const ID &id,const uint32_t u) :
                 Axiom(u,Tags::Make(id))
                 {
                     assert(isInternal());
@@ -53,7 +53,7 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit Dull(const ID &id) :
-                Internal(UUID,id)
+                Internal(id,UUID)
                 {
                     Y_JIVE_AXIOM(Dull);
                 }

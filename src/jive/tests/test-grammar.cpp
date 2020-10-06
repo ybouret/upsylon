@@ -1,6 +1,6 @@
 
-#include "y/jive/syntax/axiom/terminal.hpp"
-#include "y/jive/syntax/axiom/internal.hpp"
+#include "y/jive/syntax/axiom/all.hpp"
+
 #include "y/jive/syntax/grammar.hpp"
 #include "y/jive/common-regexp.hpp"
 #include "y/jive/lexical/plugin/comments.hpp"
@@ -30,6 +30,25 @@ namespace {
         Y_DISABLE_COPY_AND_ASSIGN(MyLexer);
     };
 
+    class MyGrammar : public Syntax::Grammar
+    {
+    public:
+        explicit MyGrammar() : Syntax::Grammar("MyGrammar")
+        {
+            const Syntax::Axiom &ID  = add( new Syntax::Terminal("ID") );
+            const Syntax::Axiom &REP = add( new Syntax::Repeat("REP",ID,0)   );
+
+            setRoot(REP);
+        }
+
+        virtual ~MyGrammar() throw()
+        {
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(MyGrammar);
+    };
+
 }
 
 Y_UTEST(grammar)
@@ -53,10 +72,9 @@ Y_UTEST(grammar)
     }
 
     {
-        Syntax::Grammar G("MyGrammar");
+        MyGrammar       G;
         MyLexer         L;
-        G.add( new Syntax::Terminal("ID") );
-
+        
         if(argc>1)
         {
             Syntax::Axiom::Verbose = true;

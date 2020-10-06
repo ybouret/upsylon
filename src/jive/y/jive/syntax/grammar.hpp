@@ -68,7 +68,9 @@ namespace upsylon
                 
                 //! get the root axiom
                 const Axiom *getRoot() const throw();
-                
+
+                //! set the root axiom
+                void setRoot(const Axiom &axiom);
 
                 //______________________________________________________________
                 //

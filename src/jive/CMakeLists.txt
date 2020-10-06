@@ -46,6 +46,12 @@ SET( syntax_axiom_srcs ${syntax_axiom_decl} ${syntax_axiom_impl})
 INSTALL( FILES ${syntax_axiom_decl} DESTINATION include/y/jive/syntax/axiom )
 SOURCE_GROUP( jive/syntax/axiom FILES ${syntax_axiom_srcs} )
 
+FILE( GLOB syntax_axiom_wildcard_decl y/jive/syntax/axiom/wildcard/*.hpp)
+FILE( GLOB syntax_axiom_wildcard_impl y/jive/syntax/axiom/wildcard/*.cpp)
+SET( syntax_axiom_wildcard_srcs ${syntax_axiom_wildcard_decl} ${syntax_axiom_wildcard_impl})
+INSTALL( FILES ${syntax_axiom_wildcard_decl} DESTINATION include/y/jive/syntax/axiom/wildcard )
+SOURCE_GROUP( jive/syntax/axiom/wildcard FILES ${syntax_axiom_wildcard_srcs} )
+
 FILE( GLOB syntax_xnode_decl y/jive/syntax/xnode/*.hpp)
 FILE( GLOB syntax_xnode_impl y/jive/syntax/xnode/*.cpp)
 SET( syntax_xnode_srcs ${syntax_xnode_decl} ${syntax_xnode_impl})
@@ -58,7 +64,8 @@ ADD_LIBRARY( y-jive STATIC
  ${srcs}
  ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs}
  ${lexical_editor_srcs}
- ${syntax_srcs} ${syntax_axiom_srcs}  ${syntax_xnode_srcs}
+ ${syntax_srcs} ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs}
+ ${syntax_xnode_srcs}
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 
