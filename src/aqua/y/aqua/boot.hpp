@@ -118,6 +118,7 @@ namespace upsylon {
             void  quit() throw();                            //!< reset
             void  init(Library &);                           //!< buildIndices for library and build matrices
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const Boot &);
 
             //__________________________________________________________________

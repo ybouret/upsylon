@@ -52,7 +52,7 @@ namespace upsylon
                 virtual ~Axiom()            throw(); //!< cleanup
                 bool     isTerminal() const throw(); //!< uuid == TerminalUUID
                 bool     isInternal() const throw(); //!< uuid != TerminalUUID
-                bool     accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const;
+                bool     accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const; //!< protected call to accept
 
                 //______________________________________________________________
                 //
@@ -66,6 +66,7 @@ namespace upsylon
                 //
                 // helpers
                 //______________________________________________________________
+                //! grow a tree
                 static void Grow( Node * &tree, Node *leaf ) throw();
 
             protected:

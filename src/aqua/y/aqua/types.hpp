@@ -9,9 +9,9 @@ namespace upsylon {
 
     namespace Aqua
     {
-        typedef ptrdiff_t      Int;
-        typedef matrix<Int>    iMatrix;
-        typedef matrix<double> Matrix;
+        typedef ptrdiff_t      Int;     //!< integer type
+        typedef matrix<Int>    iMatrix; //!< matrix of integer
+        typedef matrix<double> Matrix;  //!< default matrix
         
     }
 }

@@ -171,7 +171,7 @@ namespace upsylon
                 }
 
                 //! send each node to stream
-                template <typename STREAM>
+                template <typename STREAM> inline
                 STREAM & display(STREAM &os) const
                 {
                     for(const_type *node=this->head;node;node=node->next)
@@ -181,12 +181,14 @@ namespace upsylon
                     return os;
                 }
 
-                friend std::ostream & operator<<( std::ostream &os, const list_ &self)
+                //! wrapper
+                friend inline std::ostream & operator<<( std::ostream &os, const list_ &self)
                 {
                     return self.display(os);
                 }
 
-                friend ios::ostream & operator<<( ios::ostream &os, const list_ &self)
+                //! wreapper
+                friend inline ios::ostream & operator<<( ios::ostream &os, const list_ &self)
                 {
                     return self.display(os);
                 }

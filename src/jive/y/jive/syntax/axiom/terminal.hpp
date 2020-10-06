@@ -16,6 +16,9 @@ namespace upsylon
             //
             //
             //! a terminal Axiom
+            /**
+             accept lexeme with *label==*name
+             */
             //
             //__________________________________________________________________
             class Terminal : public Axiom
@@ -35,8 +38,7 @@ namespace upsylon
                     Y_JIVE_AXIOM(Terminal);
                 }
 
-
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
                 Y_JIVE_AXIOM_ACCEPT_DECL();
