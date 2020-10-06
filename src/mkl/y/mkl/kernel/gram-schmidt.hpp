@@ -11,18 +11,29 @@ namespace upsylon {
     
     namespace mkl {
 
+        //______________________________________________________________________
+        //
+        //
         //! Gram-Schmidt Ortho(normalisation)
+        //
+        //______________________________________________________________________
         struct GramSchmidt
         {
+            //__________________________________________________________________
+            //
             //! build orthonormal family, no normalisation
+            //__________________________________________________________________
             template <typename T> static inline
             bool Ortho( matrix<T> &a )
             {
-                const size_t    rows = a.rows;
+                const size_t     rows = a.rows;
                 if(rows>0)
                 {
-                    const size_t    cols = a.cols;
-
+                    //__________________________________________________________
+                    //
+                    // loop over rows
+                    //__________________________________________________________
+                    const size_t cols = a.cols;
                     for(size_t i=2;i<=rows;++i)
                     {
                         addressable<T> &v = a[i];
@@ -42,7 +53,13 @@ namespace upsylon {
                             }
                         }
                     }
-                    return quark::mod2<T>::of(a[rows])>0;
+                    
+                    //__________________________________________________________
+                    //
+                    // check last one
+                    //__________________________________________________________
+                    const accessible<T> &last = a[rows];
+                    return  quark::mod2<T>:: of(last)> 0;
                 }
                 else
                     return true;

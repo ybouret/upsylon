@@ -208,7 +208,7 @@ namespace upsylon {
                     for(comb.boot();comb.good();comb.next())
                     {
                         assert(indx.size()==N);
-                        std::cerr << indx << std::endl;
+                        //std::cerr << indx << std::endl;
                         for(size_t i=Nc;i>0;--i)
                         {
                             quark::set(F[i],P[i]);
