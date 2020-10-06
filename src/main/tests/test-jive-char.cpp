@@ -22,7 +22,7 @@ Y_UTEST(jive_char)
         Char::List l1;
         for(size_t i=alea.leq(32)+1;i>0;--i)
         {
-            l1.add(ctx1,alea.range<char>('a','z'));
+            l1. push_back( Char::Acquire(ctx1, alea.range<char>('a','z') ));
         }
         std::cerr << "l1='" << l1 << "'" << std::endl;
         {

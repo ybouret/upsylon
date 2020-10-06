@@ -4,7 +4,7 @@
 #define Y_JIVE_CHAR_INCLUDED 1
 
 #include "y/jive/context.hpp"
-#include "y/memory/tight/supply.hpp"
+#include "y/memory/magazine.hpp"
 
 namespace upsylon {
 
@@ -20,16 +20,23 @@ namespace upsylon {
         class Char : public inode<Char>, public Context
         {
         public:
-
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef memory::magazine<Char> Supply;  //!< alias
+            typedef Supply::auto_ptr       Pointer; //!< alias
+            typedef Supply::list_          List;    //!< alias
+            
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
             static Char *Acquire(const Context &, const uint8_t);           //!< create
             static void  Release(Char *) throw();                           //!< delete
-            static Char *Copycat(const Char &);                             //!< copy
-            static Char *Copyset(const Char &, const uint8_t);              //!< copy with another byte
-            static void  Reserve(const size_t);                             //!< get memory from system
+            static Char *Copycat(const Char *);                             //!< copy
+            static Char *Copyset(const Char *, const uint8_t);              //!< copy with another byte
+            static void  Reserve(const size_t);                             //!< reserve chars
             friend std::ostream & operator<<(std::ostream &, const Char &); //!< display
             friend ios::ostream & operator<<(ios::ostream &, const Char &); //!< append to ostream
 
@@ -44,77 +51,16 @@ namespace upsylon {
             explicit Char(const Context &, const uint8_t code) throw();
             explicit Char(const Char &) throw();
             virtual ~Char() throw();
-
-        public:
-            typedef memory::tight::supply_of<Char> SupplyType; //!< alias
-
-            //__________________________________________________________________
-            //
-            //! thread safe specialized Char::Supply
-            //__________________________________________________________________
-            class Supply : public singleton<Supply>, public SupplyType
-            {
-            public:
-                Y_SINGLETON_DECL(Supply);          //!< aliases
-
-                Char *acquire(const Context &, const uint8_t); //!< built from supply
-                void  release(Char *ch) throw();               //!< return memory
-                void  reserve(size_t);                         //!< query from system
-                Char *copycat(const Char&);                    //!< copy
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Supply);
-                explicit Supply();
-                virtual ~Supply() throw();
-            };
-
-            //__________________________________________________________________
-            //
-            //! base class for Char::List
-            //__________________________________________________________________
-            typedef core::list_of<Char> ListType;
-
-            //__________________________________________________________________
-            //
-            //! list of Chars
-            //__________________________________________________________________
-            class List : public ListType, public releasable
-            {
-            public:
-                //______________________________________________________________
-                //
-                // C++
-                //______________________________________________________________
-                explicit List() throw();        //!< setup empty
-                virtual ~List() throw();        //!< cleanup
-                List( const List &);            //!< copy
-                List & operator=(const List &); //!< copy/swap
-
-                //______________________________________________________________
-                //
-                // methods
-                //______________________________________________________________
-                List & operator<<(Char *) throw();         //!< helper
-                List & add(const Context &,const uint8_t); //!< helper
-                List & operator<<(const List &);           //!< helper
-                virtual void release() throw();            //!< erase!
-                const Char & head_char() const throw();    //!< *head for size>0
-                const Char & tail_char() const throw();    //!< *tail for size>0
-                
-                //! display
-                friend std::ostream & operator<<(std::ostream &, const List &);
-
-                //! append to ios
-                friend ios::ostream & operator<<(ios::ostream &, const List &);
-
-            };
-
-
-
+            friend class memory::magazine<Char>;
         };
 
 
+    }
+
+    namespace memory
+    {
+        //! make available to instance
+        template <> const char * const magazine<Jive::Char>::call_sign;
     }
 
 }

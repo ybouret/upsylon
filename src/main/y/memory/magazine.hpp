@@ -5,6 +5,10 @@
 #include "y/concurrent/singleton.hpp"
 #include "y/ptr/ptr.hpp"
 
+#include "y/ios/iosfwd.hpp"
+#include <iosfwd>
+
+
 namespace upsylon
 {
     
@@ -166,6 +170,26 @@ namespace upsylon
                     return *this;
                 }
 
+                //! send each node to stream
+                template <typename STREAM>
+                STREAM & display(STREAM &os) const
+                {
+                    for(const_type *node=this->head;node;node=node->next)
+                    {
+                        os << *node;
+                    }
+                    return os;
+                }
+
+                friend std::ostream & operator<<( std::ostream &os, const list_ &self)
+                {
+                    return self.display(os);
+                }
+
+                friend ios::ostream & operator<<( ios::ostream &os, const list_ &self)
+                {
+                    return self.display(os);
+                }
 
 
             private:

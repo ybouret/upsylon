@@ -34,7 +34,7 @@ namespace upsylon
             {
                 assert(t.size>0);
                 unit = NULL;
-                unit = Unit::Create(t.head_char(),label);
+                unit = Unit::Create( *(t.head),label);
             }
 
             void String_:: OnQuit(const Token &)
@@ -53,7 +53,7 @@ namespace upsylon
             {
                 assert(t.size==2);
                 assert(unit.is_valid());
-                Char *ch = Char::Copycat(t.tail_char());
+                Char *ch = Char::Copycat(t.tail);
                 *unit << ch;
             }
 
@@ -84,10 +84,10 @@ namespace upsylon
                 const int  lo = hexadecimal::to_decimal(t.tail->code);
                 const int  hi = hexadecimal::to_decimal(t.tail->prev->code);
                 const int  ch = (hi<<4) | lo;
-                *unit << Char::Copyset(t.head_char(), ch);
+                *unit << Char::Copyset(t.head,ch);
             }
 
-#define YLP_ESC(A,B) case A : *unit << Char::Copyset(*t.head,B); break
+#define YLP_ESC(A,B) case A : *unit << Char::Copyset(t.head,B); break
 
             void String_:: OnEsc(const Token &t)
             {
@@ -98,7 +98,7 @@ namespace upsylon
                     case '\\':
                     case '"':
                     case '\'':
-                        *unit << Char::Copyset(t.head_char(),C);
+                        *unit << Char::Copyset(t.head,C);
                         break;
 
                         YLP_ESC('n','\n');

@@ -22,7 +22,7 @@ namespace upsylon
             {
                 assert(t.size>0);
                 block = NULL;
-                block = Unit::Create(t.head_char(),label);
+                block = Unit::Create( *(t.head),label);
             }
             
             void BlockReader:: OnQuit(const Token &)
@@ -36,14 +36,14 @@ namespace upsylon
                 assert(block.is_valid());
                 assert(t.size>0);
                 origin->newLine();
-                *block << Char::Copyset(t.head_char(),'\n');
+                *block << Char::Copyset(t.head,'\n');
             }
 
             void BlockReader:: OnChar(const Token &t)
             {
                 assert(block.is_valid());
                 assert(1==t.size);
-                *block << Char::Copycat(t.head_char());
+                *block << Char::Copycat(t.head);
             }
             
             
