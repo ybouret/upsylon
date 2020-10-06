@@ -113,10 +113,12 @@ namespace upsylon {
             //! a+b+c=C0
             void conserve(const double, const Species &a, const Species &b, const Species &c);
 
-            //! fill a vector of Nc constraints
-            void  fill(addressable<double> &) const throw();
-            void  quit() throw();  //!< reset
-            void  init(Library &); //!< buildIndices for library and build matrices
+
+            void  fill(addressable<double> &) const throw(); //!< fill a vector of Nc constraints
+            void  quit() throw();                            //!< reset
+            void  init(Library &);                           //!< buildIndices for library and build matrices
+
+            friend std::ostream & operator<<(std::ostream &, const Boot &);
 
             //__________________________________________________________________
             //

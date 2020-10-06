@@ -1,7 +1,7 @@
 
 
+#include "y/aqua/solver.hpp"
 #include "y/aqua/boot.hpp"
-#include "y/aqua/equilibria.hpp"
 #include "y/aqua/library.hpp"
 #include "y/utest/run.hpp"
 
@@ -53,13 +53,25 @@ Y_UTEST(boot)
     Boot boot;
     boot.electroneutrality(lib);
     boot.conserve(0,ah,am);
-    boot.conserve(0,NH4,NH3);
+    boot.conserve(0.001,NH4,NH3);
+    boot.conserve(0,Na);
+    boot.conserve(0,Cl);
     boot.init(lib);
     
     std::cerr << "P=" << boot.P << std::endl;
     std::cerr << "d=" << boot.d << std::endl;
     std::cerr << "F=" << boot.F << std::endl;
     std::cerr << "S=" << boot.S << std::endl;
+
+    Solver cs;
+    cs.init(lib,eqs);
+
+    vector<double> C(cs.M+2,0);
+
+    std::cerr << boot << std::endl;
+
+    cs.boot(C,boot);
+
 
 }
 Y_UTEST_DONE()

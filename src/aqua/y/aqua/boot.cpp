@@ -161,6 +161,16 @@ namespace upsylon {
             cc.add(c,1);
         }
 
+        std::ostream & operator<<(std::ostream &os, const Boot &b)
+        {
+            os << "<boot #" << b.size << ">" << std::endl;
+            for(const Constraint *cc=b.head;cc;cc=cc->next)
+            {
+                os << ' ' << ' ' << *cc << std::endl;
+            }
+            os <<  "<boot/>";
+            return os;
+        }
 
     }
 
@@ -178,6 +188,16 @@ namespace upsylon {
     {
 
         using namespace mkl;
+
+        void Boot:: fill(addressable<double> &Lambda) const throw()
+        {
+            assert(Lambda.size() == size);
+            size_t i=1;
+            for(const Constraint *cc=head;cc;cc=cc->next,++i)
+            {
+                Lambda[i] = cc->value;
+            }
+        }
 
         void  Boot:: init(Library &lib)
         {

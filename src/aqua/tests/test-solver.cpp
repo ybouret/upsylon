@@ -169,11 +169,7 @@ Y_UTEST(solver)
         boot.conserve(0,ah,am);
         boot.conserve(0,NH4,NH3);
 
-        for(const Constraint *cc=boot.head;cc;cc=cc->next)
-        {
-            std::cerr << *cc << std::endl;
-        }
-
+        std::cerr << boot << std::endl;
         boot.init(lib);
 
 

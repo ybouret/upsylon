@@ -78,6 +78,7 @@ namespace upsylon
             Array         &Cini;       //!< for forward   [M]
             Array         &Cend;       //!< forward trial [M]
             Array         &Cswp;       //!< to sweep
+            Array         &Cstr;       //!< to boot       [M]
             const Booleans active;     //!< active C      [M]
 
 
@@ -109,7 +110,7 @@ namespace upsylon
             bool swept(addressable<double> &C) throw();
 
             //! try to boot
-            void boot(addressable<double> &C, Boot &boot);
+            void boot(addressable<double> &C, const Boot &boot);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
