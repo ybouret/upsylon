@@ -86,7 +86,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 Y_AQUA_PRINTLN("#\t<cycle " << lastForwardCycles << ">");
                 Y_AQUA_PRINTLN("Cini = "<<Cini);
-                computeS(Cini);
+                computeJ(Cini);
                 if(!computeW())
                 {
                     Y_AQUA_PRINTLN("<<singular system>>");

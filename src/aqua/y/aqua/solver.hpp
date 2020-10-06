@@ -59,7 +59,7 @@ namespace upsylon
             const iMatrix  tNu;        //!< transposed           [MxN]
             const iMatrix  Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
             const int      det;        //!< det(Nu2), check independant equilibria
-            Matrix         Phi;        //!< Jacobian      [NxM]
+            Matrix         J;          //!< Jacobian      [NxM]
             Matrix         W;          //!< Phi*tNu       [NxN]
         private:
             Arrays         aN;         //!< linear data   [N]...
@@ -95,10 +95,10 @@ namespace upsylon
             //! compute Q[1..N] from K and C
             void computeQ(const accessible<double> &C) throw();
 
-            //! compute Q[1..N] and Phi[NxM] from K and C
-            void computeS(const accessible<double> &C) throw();
+            //! compute Q[1..N] and J[NxM] from K and C
+            void computeJ(const accessible<double> &C) throw();
 
-            //! compute Phi*tNu, return LU result
+            //! compute J*tNu, return LU result
             bool computeW() throw();
 
             //! try to sweep equilibrium i in [1..N]

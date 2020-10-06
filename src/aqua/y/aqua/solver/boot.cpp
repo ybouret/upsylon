@@ -61,7 +61,6 @@ namespace upsylon
                     throw exception("%sinvalid Cstar",fn);
                 }
                 std::cerr << "Cmove=" << Cmove << std::endl;
-                //forwardVerbose = true;
                 if(!forward(Cmove))
                 {
                     throw exception("%sinvalid Cstar",fn);

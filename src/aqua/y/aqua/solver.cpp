@@ -27,7 +27,7 @@ namespace upsylon
         tNu(),
         Nu2(),
         det(0),
-        Phi(),
+        J(),
         W(),
         aN(4),
         K(   aN.next()  ),
@@ -56,7 +56,7 @@ namespace upsylon
             keeper << aliasing::_(Nu);
             keeper << aliasing::_(tNu);
             keeper << aliasing::_(Nu2);
-            keeper << Phi;
+            keeper << J;
             keeper << W;
             keeper << aN;
             keeper << aM;
@@ -111,7 +111,7 @@ namespace upsylon
                     aliasing::_(Nu).  make(N,M);
                     aliasing::_(tNu). make(M,N);
                     aliasing::_(Nu2).  make(N,N);
-                    Phi.   make(N,M);
+                    J.     make(N,M);
                     W.     make(N,N);
                     aN.    acquire(N);
 
@@ -189,17 +189,17 @@ namespace upsylon
             }
         }
 
-        void Solver:: computeS(const accessible<double> &C) throw()
+        void Solver:: computeJ(const accessible<double> &C) throw()
         {
             for(size_t i=N;i>0;--i)
             {
-                Q[i] = equilibria[i]->computeQ(Phi[i], K[i], C);
+                Q[i] = equilibria[i]->computeQ(J[i], K[i], C);
             }
         }
 
         bool Solver:: computeW() throw()
         {
-            quark::mmul_rtrn(W,Phi,Nu);
+            quark::mmul_rtrn(W,J,Nu);
             return LU::build(W);
         }
 
