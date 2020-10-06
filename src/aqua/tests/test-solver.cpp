@@ -56,7 +56,7 @@ Y_UTEST(solver)
     std::cerr << "dNu2    = " << cs.det     << std::endl;
     std::cerr << "active  = " << cs.active  << std::endl;
     std::cerr << "A       = " << cs.A       << " #/ " << cs.M << std::endl;
-    std::cerr << "P       = " << cs.P       << std::endl;
+    std::cerr << "Nc      = " << cs.Nc      << std::endl;
     
     vector<double> C(cs.M+2,0);
 

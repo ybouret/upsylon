@@ -21,7 +21,7 @@ namespace upsylon
         N(0),
         M(0),
         A(0),
-        P(0),
+        Nc(0),
         equilibria(),
         Nu(),
         tNu(),
@@ -65,7 +65,7 @@ namespace upsylon
             new ( &aliasing::_(active) ) Booleans();
             keeper.release_all();
             aliasing::_(det)  = 0;
-            aliasing::_(P)    = 0;
+            aliasing::_(Nc)   = 0;
             aliasing::_(A)    = 0;
             aliasing::_(M)    = 0;
             aliasing::_(N)    = 0;
@@ -85,7 +85,7 @@ namespace upsylon
                 aliasing::_(N) = eqs.entries();
                 aliasing::_(M) = lib.entries();
                 if(N>M) throw exception("%stoo many equilibria",fn);
-                aliasing::_(P) = M-N;
+                aliasing::_(Nc) = M-N;
 
                 //--------------------------------------------------------------
                 // load eqs

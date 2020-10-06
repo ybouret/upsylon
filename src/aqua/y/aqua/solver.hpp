@@ -53,7 +53,7 @@ namespace upsylon
             const size_t   N;          //!< equilibria
             const size_t   M;          //!< species
             const size_t   A;          //!< active species
-            const size_t   P;          //!< parameters = M-N
+            const size_t   Nc;         //!< parameters = M-N
             const EqVector equilibria; //!< validated equilibria [N]
             const iMatrix  Nu;         //!< topology             [NxM]
             const iMatrix  tNu;        //!< transposed           [MxN]
@@ -109,7 +109,7 @@ namespace upsylon
             bool swept(addressable<double> &C) throw();
 
             //! try to boot
-            bool boot(addressable<double> &C, Boot &boot);
+            void boot(addressable<double> &C, Boot &boot);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
