@@ -65,6 +65,8 @@ namespace upsylon
         double Solver:: B_drvs(Array &C) throw()
         {
             static const double Cmin = numeric<double>::tiny;
+            assert(Bspace);
+            assert(Btrans);
 
             for(size_t j=M;j>0;--j)
             {
@@ -85,8 +87,8 @@ namespace upsylon
                 }
             }
 
-            quark::mul(xi,Nu,Ctry);
-            quark::mul(Cstp,tNu,xi);
+            quark::mul(xi,*Bspace,Ctry);
+            quark::mul(Cstp,*Btrans,xi);
 
             for(size_t j=M;j>0;--j)
             {
@@ -120,7 +122,13 @@ namespace upsylon
         }
 
 
+
         bool Solver:: balance(addressable<double> &C) throw()
+        {
+            return balance(C,Nu,tNu);
+        }
+
+        bool Solver:: balance(addressable<double> &C, const iMatrix &Bs, const iMatrix &Bt) throw()
         {
             assert(C.size()>=M);
             lastBalanceCycles=0;
@@ -145,6 +153,8 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
+                Bspace = &Bs;
+                Btrans = &Bt;
                 for(size_t j=M;j>0;--j)
                 {
                     if(active[j])

@@ -110,6 +110,9 @@ namespace upsylon
              */
             bool swept(addressable<double> &C) throw();
 
+
+            bool balance(addressable<double> &C, const Boot &boot) throw();
+
             //! try to boot
             void boot(addressable<double> &C, const Boot &boot);
 
@@ -117,13 +120,17 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
             Array         &extra;  //!< for used    [M]
             Collector      keeper; //!< to keep all tidy
+            const iMatrix *Bspace; //!< Nu, S
+            const iMatrix *Btrans; //!< tNu, tS
 
-
+            bool   balance(addressable<double> &, const iMatrix &Bs, const iMatrix &Bt) throw();
             double B_only(Array &C)         throw(); //!< Balance: uses Caux
             double B_drvs(Array &C)         throw(); //!< Balance: uses Caux and Ctry for drvs, compute Cstp
             double B_call(const double x)   throw(); //!< Balance: B_only(Ctry=Corg+x*Cstp)
             double sumCaux()                throw(); //!< sorted sum of Caux
             bool   rescale(const double B0) throw(); //!< rescale balancing step
+
+
 
             struct B_proxy { Solver *self; double operator()(const double) throw(); };
 
@@ -131,13 +138,9 @@ namespace upsylon
             double Q_call(const double x) throw(); //!< Q_only(Ctry=Cini+x*Cstp)
             struct Q_proxy { Solver *self; double operator()(const double) throw(); };
 
-            double BootOnly(Array &C) throw();                   //!< Boot: uses Caux
-            double BootDrvs(Array &C, const Boot &boot) throw(); //!< Boot: uses Caux and Ctry, compute Cstp
-            double BootCall(const double x) throw();             //!< BootOnly(Corg+x*Cstp)
-            struct BootProxy { Solver *self; double operator()(const double) throw(); };
+            
 
 
-            bool   bootBalance(const Boot &) throw(); //!< balance Corg with booting info
 
         public:
             bool         balanceVerbose;     //!< display status while balancing
