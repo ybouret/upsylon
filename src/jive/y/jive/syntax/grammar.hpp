@@ -3,7 +3,7 @@
 #ifndef Y_JIVE_SYNTAX_GRAMMAR_INCLUDED
 #define Y_JIVE_SYNTAX_GRAMMAR_INCLUDED 1
 
-#include "y/jive/syntax/axiom.hpp"
+#include "y/jive/syntax/axiom/all.hpp"
 
 namespace upsylon
 {
@@ -24,7 +24,8 @@ namespace upsylon
                 //
                 // type and definitions
                 //______________________________________________________________
-                
+                static const char BuiltIn = '#';
+
                 //______________________________________________________________
                 //
                 // C++
@@ -36,19 +37,29 @@ namespace upsylon
                 template <typename ID> inline
                 explicit Grammar( const ID &id ) :
                 name( Tags::Make(id) ),
-                axioms(), registry()
+                axioms(),
+                registry(),
+                indxRepeat(1),
+                indxOption(1)
                 {
                 }
                 
                 //______________________________________________________________
                 //
-                // setup methods
+                //  methods
                 //______________________________________________________________
 
+                //--------------------------------------------------------------
                 //! append axiom to list and registry
+                /**
+                 axiom is fully handled
+                 */
+                //--------------------------------------------------------------
                 void declare(Axiom *axiom);
 
-                //! append axiom
+                //--------------------------------------------------------------
+                //! helper to append a derived axiom
+                //--------------------------------------------------------------
                 template <typename AXIOM> inline
                 AXIOM & add( AXIOM *axiom )
                 {
@@ -56,32 +67,98 @@ namespace upsylon
                     return *axiom;
                 }
 
+                //--------------------------------------------------------------
                 //! check existence
+                //--------------------------------------------------------------
                 template <typename ID> inline
                 const Axiom *query( const ID &id ) const throw()
                 {
                     const Axiom::Pointer *_ = registry.search_by(id);
                     return _ ? *_ : NULL;
                 }
-                
+
+                //--------------------------------------------------------------
                 //! get the root axiom
+                //--------------------------------------------------------------
                 const Axiom *getRoot() const throw();
 
+                //--------------------------------------------------------------
                 //! set the root axiom
+                //--------------------------------------------------------------
                 void setRoot(const Axiom &axiom);
 
+
+                //--------------------------------------------------------------
                 //! build tree
-                Node *run( Lexer &lexer, Source &source ) const;
+                /**
+                 try to accept root Axiom
+                 */
+                //--------------------------------------------------------------
+                Node *run(Lexer &lexer, Source &source) const;
 
-
-                //! render grammar axioms
+                //--------------------------------------------------------------
+                //! render grammar
+                //--------------------------------------------------------------
                 void  graphViz(const string &fileName) const;
 
-                //! helper
+                //--------------------------------------------------------------
+                //! helper to create node label
+                //--------------------------------------------------------------
                 ios::ostream & graphTag(ios::ostream &fp, const Axiom &axiom) const;
 
-                //! validate
+                //--------------------------------------------------------------
+                //! validate grammar
+                /**
+                 ensure all nodes are properly connected
+                 */
+                //--------------------------------------------------------------
                 void  validate() const;
+
+                //--------------------------------------------------------------
+                //
+                // helper to create grammar
+                //
+                //--------------------------------------------------------------
+
+                //--------------------------------------------------------------
+                //! create a terminal
+                //--------------------------------------------------------------
+                template <typename ID>
+                const Axiom & terminal(const ID &id)
+                {
+                    return add( new Terminal(id) );
+                }
+
+                //--------------------------------------------------------------
+                //! create a named repeat
+                //--------------------------------------------------------------
+                template <typename ID>
+                const Axiom & repeat(const ID &id, const Axiom &axiom, const size_t atLeast)
+                {
+                    return add( new Repeat(id,axiom,atLeast) );
+                }
+
+                //--------------------------------------------------------------
+                //! create an automatic repeat
+                //--------------------------------------------------------------
+                const Axiom & repeat(const Axiom &axiom, const size_t atLeast);
+
+
+                //--------------------------------------------------------------
+                //! create a named option
+                //--------------------------------------------------------------
+                template <typename ID>
+                const Axiom & option(const ID &id, const Axiom &axiom )
+                {
+                    return add( new Option(id,axiom) );
+                }
+
+                //--------------------------------------------------------------
+                //! create an automatic option
+                //--------------------------------------------------------------
+                const Axiom & option(const Axiom &axiom);
+
+
 
                 //______________________________________________________________
                 //
@@ -95,7 +172,8 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Axiom::List     axioms;
                 Axiom::Registry registry;
-
+                unsigned        indxRepeat;
+                unsigned        indxOption;
             };
             
         }

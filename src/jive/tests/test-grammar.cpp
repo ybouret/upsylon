@@ -35,8 +35,8 @@ namespace {
     public:
         explicit MyGrammar() : Syntax::Grammar("MyGrammar")
         {
-            const Syntax::Axiom &ID  = add( new Syntax::Terminal("ID") );
-            const Syntax::Axiom &REP = add( new Syntax::Repeat("REP",ID,0)   );
+            const Syntax::Axiom &ID  = terminal("ID");
+            const Syntax::Axiom &REP = repeat(ID,0);
 
             setRoot(REP);
 

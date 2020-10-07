@@ -21,7 +21,6 @@ namespace upsylon
                 Node *tree = NULL;
                 if(root->accept(tree,lexer,source))
                 {
-                    
                     return tree;
                 }
                 else

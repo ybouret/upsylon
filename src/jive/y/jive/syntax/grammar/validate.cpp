@@ -13,19 +13,33 @@ namespace upsylon
             {
                 std::cerr << "validating " << name << std::endl;
 
+                //--------------------------------------------------------------
+                //
                 // checking axiom
+                //
+                //--------------------------------------------------------------
                 const size_t    na = axioms.size;
                 if(na<=0)
                 {
                     throw exception("%s has no axiom!!!", **name);
                 }
 
+                //--------------------------------------------------------------
+                //
+                // visit axioms
+                //
+                //--------------------------------------------------------------
                 Axiom::Registry db;
                 for(const Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                 {
                     axiom->attach(db);
                 }
 
+                //--------------------------------------------------------------
+                //
+                // checking database
+                //
+                //--------------------------------------------------------------
                 const size_t nr = db.entries();
                 if(nr<na)
                 {
@@ -52,7 +66,8 @@ namespace upsylon
                     }
                 }
 
-
+                //--------------------------------------------------------------
+                
             }
 
         }

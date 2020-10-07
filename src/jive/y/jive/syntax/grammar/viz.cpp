@@ -1,9 +1,5 @@
 #include "y/jive/syntax/grammar.hpp"
-#include "y/jive/syntax/axiom/all.hpp"
-
-#include "y/exception.hpp"
-
-#include "y/string/convert.hpp"
+ #include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -43,7 +39,7 @@ namespace upsylon
 
 
                     default:
-                        throw exception("%s can't handle Axiom UUID=%s",**name,fourcc_(axiom.uuid));
+                        throw exception("%s can't graphTag Axiom UUID=%s",**name,fourcc_(axiom.uuid));
                 }
                 return fp;
             }
@@ -65,6 +61,23 @@ namespace upsylon
         {
 
 
+            static inline
+            void vizLink(ios::ostream &fp,
+                         const Axiom  *parent,
+                         const Axiom  *child,
+                         const size_t  value=1,
+                         const size_t  total=1)
+            {
+                fp.viz(parent);
+                fp << "->";
+                fp.viz(child);
+                if(total>1)
+                {
+                    fp("[label=\"%u\"]", unsigned(value));
+                }
+                fp << ";\n";
+            }
+
             void Grammar:: graphViz(const string &fileName) const
             {
                 {
@@ -81,7 +94,14 @@ namespace upsylon
                     // make all links
                     for(const Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                     {
+                        switch(axiom->uuid)
+                        {
+                            case Repeat::UUID: vizLink(fp,axiom,&(axiom->as<Repeat>().axiom)); break;
+                            case Option::UUID: vizLink(fp,axiom,&(axiom->as<Option>().axiom)); break;
 
+                            default:
+                                break;
+                        }
                     }
                     fp << "}\n";
 

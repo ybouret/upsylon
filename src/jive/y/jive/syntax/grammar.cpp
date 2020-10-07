@@ -42,6 +42,24 @@ namespace upsylon
                 assert( &axiom == axioms.head );
             }
 
+
+            const Axiom & Grammar:: repeat( const Axiom &axiom, const size_t atLeast)
+            {
+                const string id = vformat("rep%c%u",BuiltIn,indxRepeat);
+                const Axiom &ax = repeat(id,axiom,atLeast);
+                ++indxRepeat;
+                return ax;
+            }
+
+            const Axiom & Grammar:: option(const Axiom &axiom)
+            {
+                const string id = vformat("opt%c%u",BuiltIn,indxOption);
+                const Axiom &ax = option(id,axiom);
+                ++indxOption;
+                return ax;
+            }
+
+
         }
         
     }
