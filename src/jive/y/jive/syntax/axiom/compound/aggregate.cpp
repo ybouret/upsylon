@@ -30,9 +30,11 @@ namespace upsylon
                     {
                         assert(0==sTree);
                         Node::ReturnTo(lexer,node.yield());
+                        return false;
                     }
                 }
 
+                Y_JIVE_PRINTLN("accepting with #children=" << chld.size);
                 if(chld.size>0)
                 {
                     Grow(tree,node.yield());

@@ -33,10 +33,21 @@ namespace upsylon
 
                     case Option::UUID: {
                         const Option &opt = axiom.as<Option>();
-                        string        aid = opt.axiom.gvName() + "?";
+                        const string  aid = opt.axiom.gvName() + "?";
                         fp << "[label=\"" << aid << "\",shape=oval]";
                     } break;
 
+                    case Aggregate::UUID: {
+                        const Compound &cmp = axiom.as<Aggregate>();
+                        const string    aid = cmp.gvName();
+                        fp << "[label=\"" << aid << "\",shape=house]";
+                    } break;
+
+                    case Alternate::UUID: {
+                        const Compound &cmp = axiom.as<Alternate>();
+                        const string    aid = cmp.gvName();
+                        fp << "[label=\"" << aid << "\",shape=egg]";
+                    } break;
 
                     default:
                         throw exception("%s can't graphTag Axiom UUID=%s",**name,fourcc_(axiom.uuid));
@@ -78,6 +89,21 @@ namespace upsylon
                 fp << ";\n";
             }
 
+            static inline
+            void vizLinks(ios::ostream   &fp,
+                          const Compound &cmp)
+            {
+                const size_t  total  = cmp.size;
+                const Axiom  *parent = &cmp;
+                size_t        value  = 1;
+                for(const Axiom::Reference *ref=cmp.head;ref;ref=ref->next,++value)
+                {
+                    vizLink(fp,parent, & **ref, value, total);
+                }
+            }
+
+
+
             void Grammar:: graphViz(const string &fileName) const
             {
                 {
@@ -96,9 +122,10 @@ namespace upsylon
                     {
                         switch(axiom->uuid)
                         {
-                            case Repeat::UUID: vizLink(fp,axiom,&(axiom->as<Repeat>().axiom)); break;
-                            case Option::UUID: vizLink(fp,axiom,&(axiom->as<Option>().axiom)); break;
-
+                            case Repeat::UUID:    vizLink(fp,axiom,&(axiom->as<Repeat>().axiom)); break;
+                            case Option::UUID:    vizLink(fp,axiom,&(axiom->as<Option>().axiom)); break;
+                            case Aggregate::UUID: vizLinks(fp,axiom->as<Aggregate>());            break;
+                            case Alternate::UUID: vizLinks(fp,axiom->as<Alternate>());            break;
                             default:
                                 break;
                         }
