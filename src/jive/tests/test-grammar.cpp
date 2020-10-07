@@ -39,6 +39,8 @@ namespace {
             const Syntax::Axiom &REP = add( new Syntax::Repeat("REP",ID,0)   );
 
             setRoot(REP);
+
+            graphViz("grammar.dot");
         }
 
         virtual ~MyGrammar() throw()

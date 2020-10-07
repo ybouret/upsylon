@@ -40,6 +40,12 @@ SET( syntax_srcs ${syntax_decl} ${syntax_impl})
 INSTALL( FILES ${syntax_decl} DESTINATION include/y/jive/syntax )
 SOURCE_GROUP( jive/syntax FILES ${syntax_srcs} )
 
+FILE( GLOB syntax_grammar_decl y/jive/syntax/grammar/*.hpp)
+FILE( GLOB syntax_grammar_impl y/jive/syntax/grammar/*.cpp)
+SET( syntax_grammar_srcs ${syntax_grammar_decl} ${syntax_grammar_impl})
+INSTALL( FILES ${syntax_grammar_decl} DESTINATION include/y/jive/syntax/grammar )
+SOURCE_GROUP( jive/syntax/grammar FILES ${syntax_grammar_srcs} )
+
 FILE( GLOB syntax_axiom_decl y/jive/syntax/axiom/*.hpp)
 FILE( GLOB syntax_axiom_impl y/jive/syntax/axiom/*.cpp)
 SET( syntax_axiom_srcs ${syntax_axiom_decl} ${syntax_axiom_impl})
@@ -71,6 +77,7 @@ ADD_LIBRARY( y-jive STATIC
  ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs}
  ${lexical_editor_srcs}
  ${syntax_srcs} 
+ ${syntax_grammar_srcs}
  ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs} ${syntax_axiom_compound_srcs}
  ${syntax_xnode_srcs}
  )

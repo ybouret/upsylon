@@ -70,11 +70,18 @@ namespace upsylon
                 //! set the root axiom
                 void setRoot(const Axiom &axiom);
 
-                //______________________________________________________________
-                //
                 //! build tree
-                //______________________________________________________________
                 Node *run( Lexer &lexer, Source &source ) const;
+
+
+                //! render grammar axioms
+                void  graphViz(const string &fileName) const;
+
+                //! helper
+                ios::ostream & graphTag(ios::ostream &fp, const Axiom &axiom) const;
+
+                //! validate
+                void  validate() const;
 
                 //______________________________________________________________
                 //
@@ -82,11 +89,13 @@ namespace upsylon
                 //______________________________________________________________
                 const Tag name; //!< shared name
 
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Axiom::List     axioms;
                 Axiom::Registry registry;
+
             };
             
         }

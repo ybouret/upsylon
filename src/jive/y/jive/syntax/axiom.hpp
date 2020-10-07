@@ -30,6 +30,7 @@ namespace upsylon
             //! attach declaration
 #define Y_JIVE_AXIOM_ATTACH_DECL()       virtual void attach( Axiom::Registry &) const
 
+            
             //__________________________________________________________________
             //
             //
@@ -83,6 +84,7 @@ namespace upsylon
                 //______________________________________________________________
                 bool         accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const;  //!< protected call to accept_
                 bool         new_in(Axiom::Registry&)         const;  //!< check
+                string       gvName()                         const;  //!< GraphViz Name
                 Y_JIVE_AXIOM_ATTACH_DECL()                      = 0;  //!< recursive look up
 
                 //______________________________________________________________
@@ -99,6 +101,22 @@ namespace upsylon
                 //______________________________________________________________
                 //! grow a tree
                 static void Grow( Node * &tree, Node *leaf ) throw();
+
+                template <typename CLASS>
+                CLASS & as() throw()
+                {
+                    assert(NULL       !=self);
+                    assert(CLASS::UUID==uuid);
+                    return *static_cast<CLASS*>((void*)self);
+                }
+
+                template <typename CLASS>
+                const CLASS & as() const throw()
+                {
+                    assert(NULL       !=self);
+                    assert(CLASS::UUID==uuid);
+                    return *static_cast<const CLASS*>(self);
+                }
 
             protected:
                 explicit Axiom(const uint32_t, const string *) throw(); //!< setup

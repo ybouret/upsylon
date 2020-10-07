@@ -1,4 +1,3 @@
-
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/auto.hpp"
@@ -12,8 +11,7 @@ namespace upsylon
             
             Node * Node:: Load(Source &source, const Grammar &grammar)
             {
-                 
-                
+
                 //--------------------------------------------------------------
                 // load name
                 //--------------------------------------------------------------
@@ -32,6 +30,10 @@ namespace upsylon
                 {
                     throw exception("%s: no marker for <%s>",**grammar.name,*axiomName);
                 }
+
+                //--------------------------------------------------------------
+                // act accordingly
+                //--------------------------------------------------------------
                 switch(marker)
                 {
                     case TerminalMarker: {
@@ -44,7 +46,7 @@ namespace upsylon
                         {
                             throw exception("%s: cannot read #chars for <%s>",**grammar.name,*axiomName);
                         }
-                        Pointer          ptr( Node::Acquire(axiom,  Lexeme::Create(source.context(),axiom.name)));
+                        Pointer          ptr( Node::Acquire(axiom,Lexeme::Create(source.context(),axiom.name)));
                         Lexeme          &lex = aliasing::_(*(ptr->lexeme()));
                         while(num_chars-- > 0)
                         {
@@ -53,8 +55,7 @@ namespace upsylon
                             lex.push_back(ch);
                         }
                         return ptr.yield();
-                        
-                    } break;
+                    };
                         
                     case InternalMarker: {
                         //------------------------------------------------------
@@ -74,7 +75,7 @@ namespace upsylon
                             xnode->leaves().push_back( Load(source,grammar) );
                         }
                         return xnode.yield();
-                    } break;
+                    };
                         
                     default:
                         break;

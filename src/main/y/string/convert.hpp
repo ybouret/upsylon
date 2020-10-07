@@ -24,6 +24,7 @@ namespace upsylon
         static void   to_upper( string &s );         //!< each char toupper
         static string to_visible(const string &s);   //!< each char to visible
         static string to_printable(const string &s); //!< each char to printable
+        static string to_encoded(const string &s);   //!< each char to encoded
 
     };
 }

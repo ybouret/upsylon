@@ -107,3 +107,19 @@ namespace upsylon
     }
 
 }
+
+#include "y/string/convert.hpp"
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Syntax
+        {
+            string Axiom:: gvName() const
+            {
+                return string_convert:: to_printable(*name);
+            }
+        }
+    }
+}
+

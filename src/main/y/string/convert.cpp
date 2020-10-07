@@ -1,7 +1,6 @@
 #include "y/string/convert.hpp"
 #include "y/exceptions.hpp"
 #include "y/code/utils.hpp"
-//#include "y/type/utils.hpp"
 #include "y/core/ipower.hpp"
 
 namespace upsylon
@@ -39,6 +38,16 @@ namespace upsylon
         for(size_t i=0;i<s.size();++i)
         {
             ans << cchars::visible[ uint8_t(s[i]) ];
+        }
+        return ans;
+    }
+
+    string string_convert:: to_encoded(const string &s)
+    {
+        string ans;
+        for(size_t i=0;i<s.size();++i)
+        {
+            ans << cchars::encoded[ uint8_t(s[i]) ];
         }
         return ans;
     }

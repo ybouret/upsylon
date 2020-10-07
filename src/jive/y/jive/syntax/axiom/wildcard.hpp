@@ -27,6 +27,8 @@ namespace upsylon
                 //! attach
                 Y_JIVE_AXIOM_ATTACH_DECL();
 
+                const Axiom &axiom; //!< tested axiom
+
 
             protected:
                 //! setup
@@ -39,7 +41,6 @@ namespace upsylon
                 {
                 }
 
-                const Axiom &axiom; //!< tested axiom
 
                 
                 
