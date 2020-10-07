@@ -14,6 +14,11 @@ namespace upsylon
         using namespace mkl;
 
 
+        bool Solver:: forward(addressable<double> &C) throw()
+        {
+            return forward(C,Nu,tNu);
+        }
+
         double Solver:: Q_only(const Array &C) throw()
         {
             computeQ(C);
@@ -39,7 +44,9 @@ namespace upsylon
         static const char fn[] = "[forward] ";
 #define Y_AQUA_PRINTLN(MSG) do { if(forwardVerbose) { std::cerr << fn << MSG << std::endl; } } while(false)
 
-        bool Solver:: forward(addressable<double> &C) throw()
+        bool Solver:: forward(addressable<double> &C,
+                              const iMatrix       &Bspace,
+                              const iMatrix       &Btrans) throw()
         {
             assert(C.size()>=M);
 
@@ -87,7 +94,7 @@ namespace upsylon
                 Y_AQUA_PRINTLN("#\t<cycle " << lastForwardCycles << ">");
                 Y_AQUA_PRINTLN("Cini = "<<Cini);
                 computeJ(Cini);
-                if(!computeW())
+                if(!computeW(Bspace))
                 {
                     Y_AQUA_PRINTLN("<<singular system>>");
                     if(swept(Cini))
@@ -125,7 +132,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 for(size_t j=M;j>0;--j)
                 {
-                    Cend[j] = Cini[j] + quark::dot<double>::of(tNu[j],xi);
+                    Cend[j] = Cini[j] + quark::dot<double>::of(Btrans[j],xi);
                 }
                 Y_AQUA_PRINTLN("Ctmp = "<<Cend);
 
@@ -136,7 +143,7 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                 if(!balance(Cend))
+                 if(!balance(Cend,Bspace,Btrans))
                 {
                     Y_AQUA_PRINTLN("unable to balance");
                     return false;

@@ -59,6 +59,15 @@ namespace upsylon
                 return ax;
             }
 
+            Compound & Grammar:: agg()
+            {
+                const string    id = vformat("agg%c%u",BuiltIn,indxAggregate);
+                Compound       &ax = agg(id);
+                ++indxAggregate;
+                return ax;
+            }
+
+
 
         }
         

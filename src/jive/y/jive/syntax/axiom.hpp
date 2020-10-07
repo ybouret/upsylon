@@ -102,6 +102,7 @@ namespace upsylon
                 //! grow a tree
                 static void Grow( Node * &tree, Node *leaf ) throw();
 
+                //! recall derived class
                 template <typename CLASS>
                 CLASS & as() throw()
                 {
@@ -110,6 +111,7 @@ namespace upsylon
                     return *static_cast<CLASS*>((void*)self);
                 }
 
+                //! recall derived class
                 template <typename CLASS>
                 const CLASS & as() const throw()
                 {

@@ -24,7 +24,7 @@ namespace upsylon
                 //
                 // type and definitions
                 //______________________________________________________________
-                static const char BuiltIn = '#';
+                static const char BuiltIn = '#'; //!< for built-in namrs
 
                 //______________________________________________________________
                 //
@@ -40,7 +40,9 @@ namespace upsylon
                 axioms(),
                 registry(),
                 indxRepeat(1),
-                indxOption(1)
+                indxOption(1),
+                indxAggregate(1),
+                indxAlternate(1)
                 {
                 }
                 
@@ -158,7 +160,19 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const Axiom & option(const Axiom &axiom);
 
+                //--------------------------------------------------------------
+                //! create a named aggregate
+                //--------------------------------------------------------------
+                template <typename ID>
+                Compound & agg(const ID &id)
+                {
+                    return add( new Aggregate(id) );
+                }
 
+                //--------------------------------------------------------------
+                //! create an automatic aggregate
+                //--------------------------------------------------------------
+                Compound & agg();
 
                 //______________________________________________________________
                 //
@@ -174,6 +188,8 @@ namespace upsylon
                 Axiom::Registry registry;
                 unsigned        indxRepeat;
                 unsigned        indxOption;
+                unsigned        indxAggregate;
+                unsigned        indxAlternate;
             };
             
         }

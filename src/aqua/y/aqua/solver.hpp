@@ -98,8 +98,8 @@ namespace upsylon
             //! compute Q[1..N] and J[NxM] from K and C
             void computeJ(const accessible<double> &C) throw();
 
-            //! compute J*tNu, return LU result
-            bool computeW() throw();
+            //! compute J*transpose(B), return LU result
+            bool computeW(const iMatrix &Bsapce) throw();
 
             //! try to sweep equilibrium i in [1..N]
             bool sweep(addressable<double> &C, const size_t i) throw();
@@ -110,7 +110,7 @@ namespace upsylon
              */
             bool swept(addressable<double> &C) throw();
 
-
+            //! balance with boot matrices
             bool balance(addressable<double> &C, const Boot &boot) throw();
 
             //! try to boot
@@ -142,6 +142,9 @@ namespace upsylon
             struct Q_proxy { Solver *self; double operator()(const double) throw(); };
 
             
+            bool forward(addressable<double> &C,
+                         const iMatrix       &Bspace,
+                         const iMatrix       &Btrans) throw();
 
 
 

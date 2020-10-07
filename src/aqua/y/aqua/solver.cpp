@@ -200,9 +200,9 @@ namespace upsylon
             }
         }
 
-        bool Solver:: computeW() throw()
+        bool Solver:: computeW(const iMatrix &Bspace) throw()
         {
-            quark::mmul_rtrn(W,J,Nu);
+            quark::mmul_rtrn(W,J,Bspace);
             return LU::build(W);
         }
 
