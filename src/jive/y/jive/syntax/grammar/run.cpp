@@ -1,6 +1,7 @@
 
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
+#include "y/core/temporary-value.hpp"
 
 namespace upsylon
 {
@@ -11,15 +12,14 @@ namespace upsylon
 
             Node * Grammar:: run(Lexer &lexer, Source &source) const
             {
-
+                
                 const Axiom *root = axioms.head;
                 if(!root)
                 {
                     throw exception("%s has no root Axiom!",**name);
                 }
-                Y_JIVE_PRINTLN(name << " run with root=<" << root->name << ">");
                 Node *tree = NULL;
-                if(root->accept(tree,lexer,source))
+                if(root->accept(tree,lexer,source,0))
                 {
                     return tree;
                 }

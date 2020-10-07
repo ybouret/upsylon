@@ -59,7 +59,7 @@ namespace upsylon
             {
                 try
                 {
-                    return accept_(tree,lexer,source);
+                    return accept_(tree,lexer,source,depth);
                 }
                 catch(...)
                 {
@@ -76,6 +76,17 @@ namespace upsylon
             {
                 Axiom &impl = aliasing::_(*this);
                 return db.insert_by(*name,&impl);
+            }
+
+
+            std::ostream & Axiom:: indent(std::ostream &os, long depth) const
+            {
+                os << Prefix;
+                while(depth-- > 0 )
+                {
+                    os << '.';
+                }
+                return os;
             }
 
         }

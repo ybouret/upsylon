@@ -15,8 +15,9 @@ namespace upsylon
             Y_JIVE_AXIOM_ACCEPT_IMPL(Option)
             {
                 Y_JIVE_PRINTLN("Option <" << name << ">");
-                Node *subTree = 0;
-                if( axiom.accept(subTree,lexer,source) )
+                Node      *subTree  = 0;
+                ++depth;
+                if( axiom.accept(subTree,lexer,source,depth) )
                 {
                     if(subTree)
                     {

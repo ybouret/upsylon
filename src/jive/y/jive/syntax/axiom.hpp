@@ -19,7 +19,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! args for accept method
-#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source
+#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, long depth
 
             //! accept declaration
 #define Y_JIVE_AXIOM_ACCEPT_DECL()      virtual bool  accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
@@ -120,6 +120,8 @@ namespace upsylon
                     return *static_cast<const CLASS*>(self);
                 }
 
+                std::ostream & indent(std::ostream &os, long depth) const;
+
             protected:
                 explicit Axiom(const uint32_t, const string *) throw(); //!< setup
                 void     I_am(const void *)    throw();                 //!< set derived class
@@ -133,7 +135,7 @@ namespace upsylon
 #define Y_JIVE_AXIOM(CLASS) I_am( static_cast<const CLASS *>(this) )
 
             //! helper
-#define Y_JIVE_PRINTLN(MSG) do { if(Syntax::Axiom::Verbose) { std::cerr << Syntax::Axiom::Prefix << MSG << std::endl; } } while(false)
+#define Y_JIVE_PRINTLN(MSG) do { if(Verbose) { indent(std::cerr,depth) << MSG << std::endl; } } while(false)
         }
     }
 }

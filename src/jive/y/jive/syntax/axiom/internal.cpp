@@ -20,6 +20,7 @@ namespace upsylon
                 (void)tree;
                 (void)lexer;
                 (void)source;
+                (void)depth;
                 return false;
             }
 

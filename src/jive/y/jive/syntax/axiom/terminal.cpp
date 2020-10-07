@@ -13,6 +13,7 @@ namespace upsylon
 
             Y_JIVE_AXIOM_ACCEPT_IMPL(Terminal)
             {
+                
                 Y_JIVE_PRINTLN("Terminal <"<<name<<">");
                 
                 //--------------------------------------------------------------
