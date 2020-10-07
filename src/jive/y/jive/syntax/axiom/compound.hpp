@@ -25,7 +25,7 @@ namespace upsylon
                 //! cleanup
                 virtual ~Compound() throw();
                 
-                //! helper to grow axioms
+                //! helper to grow axioms list
                 Compound & operator<<(const Axiom &);
                 
                 

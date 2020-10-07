@@ -67,7 +67,17 @@ namespace upsylon
                 virtual ~Axiom()            throw(); //!< cleanup
                 bool     isTerminal() const throw(); //!< uuid == TerminalUUID
                 bool     isInternal() const throw(); //!< uuid != TerminalUUID
-                bool     accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const; //!< protected call to accept
+
+                //______________________________________________________________
+                //
+                //! accepting
+                /**
+                 - wrapper around accept_, to catch exceptions.
+                 - if false => tree is untouched
+                 - if true  => tree MAY change, may return empty sub-tree
+                 */
+                //______________________________________________________________
+                bool     accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const; //!< protected call to accept_
 
                 //______________________________________________________________
                 //
