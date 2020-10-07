@@ -134,14 +134,17 @@ namespace upsylon
             double BootOnly(Array &C) throw();                   //!< Boot: uses Caux
             double BootDrvs(Array &C, const Boot &boot) throw(); //!< Boot: uses Caux and Ctry, compute Cstp
             double BootCall(const double x) throw();             //!< BootOnly(Corg+x*Cstp)
-
             struct BootProxy { Solver *self; double operator()(const double) throw(); };
+
+
+            bool   bootBalance(const Boot &) throw(); //!< balance Corg with booting info
 
         public:
             bool         balanceVerbose;     //!< display status while balancing
             size_t       lastBalanceCycles;  //!< last cycles in balance
             bool         forwardVerbose;     //!< display status while forwarding
             size_t       lastForwardCycles;  //!< last cycles in forward, >=1
+            size_t       lastBootingCycles;  //!< last cycles in booting
         };
 
     }

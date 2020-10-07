@@ -299,8 +299,7 @@ namespace upsylon
                             {
                                 const double old = Corg[j];
                                 const double now = Ctry[j];
-                                const double err = fabs(old-now);
-                                if( Ccvg && (err>numeric<double>::ftol * max_of( fabs(old), fabs(now) )) )
+                                if( Ccvg && (fabs(old-now)>numeric<double>::ftol * max_of( fabs(old), fabs(now) )) )
                                 {
                                     Ccvg = false;
                                 }

@@ -50,7 +50,8 @@ namespace upsylon
         balanceVerbose(false),
         lastBalanceCycles(0),
         forwardVerbose(false),
-        lastForwardCycles(0)
+        lastForwardCycles(0),
+        lastBootingCycles(0)
         {
             keeper << aliasing::_(equilibria);
             keeper << aliasing::_(Nu);

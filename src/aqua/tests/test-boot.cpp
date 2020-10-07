@@ -52,10 +52,10 @@ Y_UTEST(boot)
 
     Boot boot;
     boot.electroneutrality(lib);
-    boot.conserve(0,ah,am);
-    boot.conserve(0.001,NH4,NH3);
+    boot.conserve(1e-8,ah,am);
+    boot.conserve(0.000,NH4,NH3);
     boot.conserve(0,Na);
-    boot.conserve(0,Cl);
+    boot.conserve(0.000,Cl);
     boot.init(lib);
     
     std::cerr << "P=" << boot.P << std::endl;
@@ -72,6 +72,7 @@ Y_UTEST(boot)
 
     std::cerr << boot << std::endl;
 
+    cs.balanceVerbose = true;
     cs.boot(C,boot);
 
 
