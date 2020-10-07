@@ -125,11 +125,12 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const iMatrix P; //!< constraint matrix
-            const iMatrix F; //!< projection matrix
-            const Int     d; //!< determinant of P*P'
-            const iMatrix S; //!< supplementary matrix
-
+            const iMatrix P;  //!< constraint matrix
+            const iMatrix F;  //!< projection matrix
+            const Int     d;  //!< determinant of P*P'
+            const iMatrix S;  //!< supplementary matrix
+            const iMatrix tS; //!< transpose(S)
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
             core::temporary_acquire<4> keep;

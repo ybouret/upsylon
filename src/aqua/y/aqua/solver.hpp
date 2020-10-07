@@ -119,9 +119,9 @@ namespace upsylon
             Collector      keeper; //!< to keep all tidy
 
 
-            double B_only(Array &C)         throw(); //!< uses Caux
-            double B_drvs(Array &C)         throw(); //!< uses Caux for drvs
-            double B_call(const double x)   throw(); //!< B_only(Ctry=Corg+x*Cstp)
+            double B_only(Array &C)         throw(); //!< Balance: uses Caux
+            double B_drvs(Array &C)         throw(); //!< Balance: uses Caux and Ctry for drvs, compute Cstp
+            double B_call(const double x)   throw(); //!< Balance: B_only(Ctry=Corg+x*Cstp)
             double sumCaux()                throw(); //!< sorted sum of Caux
             bool   rescale(const double B0) throw(); //!< rescale balancing step
 
@@ -131,6 +131,11 @@ namespace upsylon
             double Q_call(const double x) throw(); //!< Q_only(Ctry=Cini+x*Cstp)
             struct Q_proxy { Solver *self; double operator()(const double) throw(); };
 
+            double BootOnly(Array &C) throw();                   //!< Boot: uses Caux
+            double BootDrvs(Array &C, const Boot &boot) throw(); //!< Boot: uses Caux and Ctry, compute Cstp
+            double BootCall(const double x) throw();             //!< BootOnly(Corg+x*Cstp)
+
+            struct BootProxy { Solver *self; double operator()(const double) throw(); };
 
         public:
             bool         balanceVerbose;     //!< display status while balancing

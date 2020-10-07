@@ -118,11 +118,13 @@ namespace upsylon {
         F(),
         d(0),
         S(),
+        tS(),
         keep()
         {
             keep << aliasing::_(P);
             keep << aliasing::_(F);
             keep << aliasing::_(S);
+            keep << aliasing::_(tS);
         }
 
         Boot:: ~Boot() throw()
@@ -251,6 +253,7 @@ namespace upsylon {
                 {
                     const size_t N = M-Nc;
                     aliasing::_(S).make(N,M);
+                    aliasing::_(tS).make(M,N);
 
                     iMatrix                   I(M,M);
                     combination               comb(M,N);
@@ -279,6 +282,7 @@ namespace upsylon {
                     {
                         quark::set( aliasing::_(S[i]), I[i+Nc]);
                     }
+                    aliasing::_(tS).assign_transpose(S);
                     
                 }
 
