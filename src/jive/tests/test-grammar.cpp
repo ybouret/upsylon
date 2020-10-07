@@ -41,6 +41,8 @@ namespace {
             setRoot(REP);
 
             graphViz("grammar.dot");
+
+            validate();
         }
 
         virtual ~MyGrammar() throw()
