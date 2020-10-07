@@ -113,6 +113,9 @@ namespace upsylon
             //! balance with boot matrices
             bool balance(addressable<double> &C, const Boot &boot) throw();
 
+            //! forward with boot matrices
+            bool forward(addressable<double> &C, const Boot &boot) throw();
+
             //! try to boot
             void boot(addressable<double> &C, const Boot &boot);
 

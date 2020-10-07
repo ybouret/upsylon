@@ -58,7 +58,7 @@ Y_UTEST(boot)
     boot.conserve(0.000,Cl);
     boot.init(lib);
     
-    std::cerr << "P=" << boot.P << std::endl;
+    std::cerr << "R=" << boot.R << std::endl;
     std::cerr << "d=" << boot.d << std::endl;
     std::cerr << "F=" << boot.F << std::endl;
     std::cerr << "S=" << boot.S << std::endl;

@@ -22,6 +22,11 @@ namespace upsylon
             return balance(C,boot.S,boot.tS);
         }
 
+        bool Solver:: forward(addressable<double> &C, const Boot &boot) throw()
+        {
+            return forward(C,boot.S,boot.tS);
+        }
+
 
         void Solver:: boot(addressable<double> &C,
                            const Boot          &boot)
@@ -32,7 +37,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
 
-            assert(boot.P.rows==boot.size);
+            assert(boot.R.rows==boot.size);
             if(boot.size+N!=M)
             {
                 throw exception("%s#species=%u != #equilibrium=%u + #constraints=%u",fn, unsigned(M), unsigned(N), unsigned(boot.size) );
@@ -59,14 +64,26 @@ namespace upsylon
                 quark::mul(Cstar,boot.F,Lambda);
                 for(size_t j=M;j>0;--j)
                 {
-                    Corg[j] = (Cstar[j] /= boot.d);
+                    Cmove[j] = (Cstar[j] /= boot.d);
                 }
-                if(!balance(Corg,boot))
+                if(!balance(Cmove,boot))
                 {
                     throw exception("%sfailed to balance initial state",fn);
                 }
-                Y_AQUA_PRINTLN("Corg = "<<Corg);
-                
+                Y_AQUA_PRINTLN("Cmove = "<<Corg);
+
+                if(!forward(Cmove,boot))
+                {
+                    throw exception("%sfailed to forward",fn);
+                }
+                Y_AQUA_PRINTLN("Cmove = "<<Cmove);
+
+                std::cerr << "R=" << boot.R << std::endl;
+
+                for(size_t j=M;j>0;--j)
+                {
+
+                }
 
             }
             else

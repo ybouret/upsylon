@@ -63,7 +63,7 @@ Y_UTEST(grammar)
         Syntax::Terminal &term = G.add( new Syntax::Terminal("term") );
         Syntax::Internal &dull = G.add( new Syntax::Dull("dull") );
 
-        XNode::Pointer root( XNode::Acquire(dull) );
+        XNode::Pointer    root( XNode::Acquire(dull) );
         root->leaves().push_back( XNode::Acquire(term,NULL) );
         root->leaves().push_back( XNode::Acquire(dull) );
 

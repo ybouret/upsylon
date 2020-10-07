@@ -114,14 +114,14 @@ namespace upsylon {
     {
         Boot:: Boot() throw() :
         Constraint::List(),
-        P(),
+        R(),
         F(),
         d(0),
         S(),
         tS(),
         keep()
         {
-            keep << aliasing::_(P);
+            keep << aliasing::_(R);
             keep << aliasing::_(F);
             keep << aliasing::_(S);
             keep << aliasing::_(tS);
@@ -220,13 +220,13 @@ namespace upsylon {
                 {
                     return;
                 }
-                aliasing::_(P).make(Nc,M);
+                aliasing::_(R).make(Nc,M);
                 lib.buildIndices();
                 {
                     size_t i=1;
                     for(const Constraint *cc=head;cc;cc=cc->next,++i)
                     {
-                        cc->fill( aliasing::_(P[i]) );
+                        cc->fill( aliasing::_(R[i]) );
                     }
                 }
 
@@ -235,17 +235,17 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 aliasing::_(F).make(M,Nc);
                 {
-                    iMatrix tP(P,matrix_transpose);
-                    iMatrix P2(Nc,Nc);
-                    quark::mmul(P2, P,tP);
-                    aliasing::_(d) = ideterminant(P2);
+                    iMatrix tR(R,matrix_transpose);
+                    iMatrix R2(Nc,Nc);
+                    quark::mmul(R2,R,tR);
+                    aliasing::_(d) = ideterminant(R2);
                     if(!d)
                     {
                         throw exception("%ssingular set of constraints",fn);
                     }
-                    iMatrix aP2(Nc,Nc);
-                    iadjoint(aP2,P2);
-                    quark::mmul( aliasing::_(F),tP,aP2);
+                    iMatrix aR2(Nc,Nc);
+                    iadjoint(aR2,R2);
+                    quark::mmul( aliasing::_(F),tR,aR2);
                 }
 
 
@@ -263,7 +263,7 @@ namespace upsylon {
                         assert(indx.size()==N);
                         for(size_t i=Nc;i>0;--i)
                         {
-                            quark::set(I[i],P[i]);
+                            quark::set(I[i],R[i]);
                         }
                         for(size_t i=1;i<=N;++i)
                         {

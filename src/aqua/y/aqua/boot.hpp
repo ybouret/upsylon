@@ -125,9 +125,9 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const iMatrix P;  //!< constraint matrix
+            const iMatrix R;  //!< constraint matrix
             const iMatrix F;  //!< projection matrix
-            const Int     d;  //!< determinant of P*P'
+            const Int     d;  //!< determinant of R*R'
             const iMatrix S;  //!< supplementary matrix
             const iMatrix tS; //!< transpose(S)
             
