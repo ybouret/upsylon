@@ -27,6 +27,9 @@ namespace upsylon
             //! accept implemenation
 #define Y_JIVE_AXIOM_ACCEPT_IMPL(CLASS)  bool CLASS:: accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
 
+            //! attach declaration
+#define Y_JIVE_AXIOM_ATTACH_DECL()       virtual void attach( Axiom::Registry &) const
+
             //__________________________________________________________________
             //
             //
@@ -51,10 +54,11 @@ namespace upsylon
                 class Reference : public Object, public inode<Reference>
                 {
                 public:
-                    typedef core::list_of_cpp<Reference> List;    //!< alias
-                    explicit     Reference(const Axiom&) throw(); //!< setup
-                    virtual     ~Reference() throw();             //!< cleanup
-                    const Axiom &axiom;                           //!< internal reference
+                    typedef core::list_of_cpp<Reference> List;     //!< alias
+                    explicit      Reference(const Axiom&) throw(); //!< setup
+                    virtual      ~Reference()             throw(); //!< cleanup
+                    const Axiom & operator*()       const throw(); //!< get axiom
+                    const Axiom & axiom;                           //!< internal reference
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Reference);
@@ -67,7 +71,7 @@ namespace upsylon
                 virtual ~Axiom()            throw(); //!< cleanup
                 bool     isTerminal() const throw(); //!< uuid == TerminalUUID
                 bool     isInternal() const throw(); //!< uuid != TerminalUUID
-
+                
                 //______________________________________________________________
                 //
                 //! accepting
@@ -77,7 +81,9 @@ namespace upsylon
                  - if true  => tree MAY change, may return empty sub-tree
                  */
                 //______________________________________________________________
-                bool     accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const; //!< protected call to accept_
+                bool         accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const;  //!< protected call to accept_
+                bool         new_in(Axiom::Registry&)         const;  //!< check
+                Y_JIVE_AXIOM_ATTACH_DECL()                      = 0;  //!< recursive look up
 
                 //______________________________________________________________
                 //

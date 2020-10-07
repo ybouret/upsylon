@@ -22,6 +22,12 @@ namespace upsylon
                 (void)source;
                 return false;
             }
+
+            void Dull:: attach(Axiom::Registry &db) const
+            {
+                (void) new_in(db);
+            }
+            
         }
 
     }

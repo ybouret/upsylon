@@ -46,6 +46,12 @@ namespace upsylon
                 }
 
             }
+
+            void Terminal:: attach(Axiom::Registry &db) const
+            {
+                (void) new_in(db);
+            }
+
             
         }
 

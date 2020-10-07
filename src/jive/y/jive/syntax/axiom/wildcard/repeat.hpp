@@ -38,7 +38,9 @@ namespace upsylon
                     Y_JIVE_AXIOM(Repeat);
                 }
 
+                
                 const size_t atLeast; //!< validity threshold
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Repeat);

@@ -10,6 +10,14 @@ namespace upsylon
             Wildcard:: ~Wildcard() throw()
             {
             }
+
+            void Wildcard:: attach(Axiom::Registry &db) const
+            {
+                if( new_in(db) )
+                {
+                    axiom.attach(db);
+                }
+            }
             
         }
 

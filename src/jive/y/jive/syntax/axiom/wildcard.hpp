@@ -24,6 +24,9 @@ namespace upsylon
                 //! cleanup
                 virtual ~Wildcard() throw();
 
+                //! attach
+                Y_JIVE_AXIOM_ATTACH_DECL();
+
 
             protected:
                 //! setup
@@ -38,6 +41,8 @@ namespace upsylon
 
                 const Axiom &axiom; //!< tested axiom
 
+                
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Wildcard);
             };

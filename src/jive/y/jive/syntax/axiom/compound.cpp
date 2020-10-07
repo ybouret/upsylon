@@ -18,7 +18,16 @@ namespace upsylon
                 return *this;
             }
 
-            
+            void Compound:: attach(Axiom::Registry &db) const
+            {
+                if(new_in(db))
+                {
+                    for(const Axiom::Reference *ref=head;ref;ref=ref->next)
+                    {
+                        (**ref).attach(db);
+                    }
+                }
+            }
         }
         
     }

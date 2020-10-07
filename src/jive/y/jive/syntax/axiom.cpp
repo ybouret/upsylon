@@ -72,7 +72,38 @@ namespace upsylon
                 }
             }
 
+            bool Axiom:: new_in(Axiom::Registry &db) const
+            {
+                Axiom &impl = aliasing::_(*this);
+                return db.insert_by(*name,&impl);
+            }
+
         }
     }
 }
 
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Syntax
+        {
+
+            Axiom:: Reference:: ~Reference() throw() {}
+
+            Axiom:: Reference:: Reference(const Axiom &a) throw() :
+            Object(),
+            inode<Reference>(),
+            axiom(a) {}
+
+            const Axiom & Axiom:: Reference:: operator*() const throw()
+            {
+                return axiom;
+            }
+            
+
+        }
+
+    }
+
+}
