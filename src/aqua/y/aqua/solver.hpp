@@ -81,7 +81,7 @@ namespace upsylon
             Array         &Cstar;      //!< to boot       [M]
             Array         &Cmove;      //!< to boot       [M]
             const Booleans active;     //!< active C      [M]
-
+            const double   ctiny;      //!< tiny valu
 
             //! balance C[1..M]
             bool balance(addressable<double> &) throw();
@@ -120,15 +120,18 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Solver);
             Array         &extra;  //!< for used    [M]
             Collector      keeper; //!< to keep all tidy
-            const iMatrix *Bspace; //!< Nu, S
-            const iMatrix *Btrans; //!< tNu, tS
 
-            bool   balance(addressable<double> &, const iMatrix &Bs, const iMatrix &Bt) throw();
-            double B_only(Array &C)         throw(); //!< Balance: uses Caux
-            double B_drvs(Array &C)         throw(); //!< Balance: uses Caux and Ctry for drvs, compute Cstp
-            double B_call(const double x)   throw(); //!< Balance: B_only(Ctry=Corg+x*Cstp)
-            double sumCaux()                throw(); //!< sorted sum of Caux
-            bool   rescale(const double B0) throw(); //!< rescale balancing step
+            bool   balance(addressable<double>  &C,
+                           const iMatrix        &Bspace,
+                           const iMatrix        &Btrans) throw();
+
+            double B_only(Array &C)              throw(); //!< Balance: uses Caux
+            double B_drvs(Array         &C,               //
+                          const iMatrix &Bspace,          //
+                          const iMatrix &Btrans) throw(); //!< Balance: uses Caux and Ctry for drvs, compute Cstp
+            double B_call(const double x)        throw(); //!< Balance: B_only(Ctry=Corg+x*Cstp)
+            double sumCaux()                     throw(); //!< sorted sum of Caux
+            bool   rescale(const double B0)      throw(); //!< rescale balancing step
 
 
 
@@ -147,6 +150,7 @@ namespace upsylon
             size_t       lastBalanceCycles;  //!< last cycles in balance
             bool         forwardVerbose;     //!< display status while forwarding
             size_t       lastForwardCycles;  //!< last cycles in forward, >=1
+            bool         bootingVerbose;     //!< displauy status while booting
             size_t       lastBootingCycles;  //!< last cycles in booting
         };
 

@@ -15,7 +15,7 @@ namespace upsylon
         static const char fn[] = "Solver::boot: ";
         static const char pfx[] = "[booting] ";
 
-#define Y_AQUA_PRINTLN(MSG) do { if(balanceVerbose) { std::cerr << pfx << MSG << std::endl; } } while(false)
+#define Y_AQUA_PRINTLN(MSG) do { if(bootingVerbose) { std::cerr << pfx << MSG << std::endl; } } while(false)
 
         bool Solver:: balance(addressable<double> &C, const Boot &boot) throw()
         {
@@ -55,15 +55,18 @@ namespace upsylon
                 //--------------------------------------------------------------
                 lightweight_array<double> Lambda( *Cswp, Nc);
                 boot.fill(Lambda);
-                quark::mul(Cstar,boot.F,Lambda);
                 Y_AQUA_PRINTLN("Lam  = "<<Lambda);
+                quark::mul(Cstar,boot.F,Lambda);
                 for(size_t j=M;j>0;--j)
                 {
                     Corg[j] = (Cstar[j] /= boot.d);
                 }
-                balance(Corg,boot);
+                if(!balance(Corg,boot))
+                {
+                    throw exception("%sfailed to balance initial state",fn);
+                }
+                Y_AQUA_PRINTLN("Corg = "<<Corg);
                 
-
 
             }
             else

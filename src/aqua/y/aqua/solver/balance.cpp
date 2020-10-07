@@ -39,10 +39,11 @@ namespace upsylon
             return sum;
         }
 
+        
 
         double Solver:: B_only(Array &C) throw()
         {
-            static const double Cmin = numeric<double>::tiny;
+            static const double Cmin = ctiny;
             for(size_t j=M;j>0;--j)
             {
                 Caux[j] = 0;
@@ -62,12 +63,9 @@ namespace upsylon
             return sumCaux();
         }
 
-        double Solver:: B_drvs(Array &C) throw()
+        double Solver:: B_drvs(Array &C, const iMatrix &Bspace, const iMatrix &Btrans) throw()
         {
-            static const double Cmin = numeric<double>::tiny;
-            assert(Bspace);
-            assert(Btrans);
-
+            static const double Cmin = ctiny;
             for(size_t j=M;j>0;--j)
             {
                 Caux[j] = 0;
@@ -87,13 +85,9 @@ namespace upsylon
                 }
             }
 
-            quark::mul(xi,*Bspace,Ctry);
-            quark::mul(Cstp,*Btrans,xi);
+            quark::mul(xi,Bspace,Ctry);
+            quark::mul(Cstp,Btrans,xi);
 
-            for(size_t j=M;j>0;--j)
-            {
-                if(fabs(Cstp[j])<=Cmin) Cstp[j] = 0;
-            }
 
             return sumCaux();
         }
@@ -103,7 +97,9 @@ namespace upsylon
             //------------------------------------------------------------------
             // compute step scaling
             //------------------------------------------------------------------
+            static const double Cmin = ctiny;
             const double S2 = quark::mod2<double>::of(Cstp);
+
             Y_AQUA_PRINTLN("S2   = "<<S2);
 
             if(S2<=0)
@@ -118,6 +114,10 @@ namespace upsylon
             const double fac  = fabs(B0)/sqrt(S2);
             Y_AQUA_PRINTLN("fac  = "<<fac);
             quark::rescale(Cstp,fac);
+            for(size_t j=M;j>0;--j)
+            {
+                if(fabs(Cstp[j])<=Cmin) Cstp[j] = 0;
+            }
             return true;
         }
 
@@ -128,8 +128,11 @@ namespace upsylon
             return balance(C,Nu,tNu);
         }
 
-        bool Solver:: balance(addressable<double> &C, const iMatrix &Bs, const iMatrix &Bt) throw()
+        bool Solver:: balance(addressable<double> &C,
+                              const iMatrix       &Bspace,
+                              const iMatrix       &Btrans) throw()
         {
+            static const double Cmin = ctiny;
             assert(C.size()>=M);
             lastBalanceCycles=0;
             if(N<=0)
@@ -153,8 +156,6 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                Bspace = &Bs;
-                Btrans = &Bt;
                 for(size_t j=M;j>0;--j)
                 {
                     if(active[j])
@@ -174,7 +175,7 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                double B0 = B_drvs(Corg);
+                double B0 = B_drvs(Corg,Bspace,Btrans);
                 Y_AQUA_PRINTLN("Corg = "<<Corg);
                 Y_AQUA_PRINTLN("B0   = "<<B0);
                 Y_AQUA_PRINTLN("G0   = "<<Ctry);
@@ -233,7 +234,7 @@ namespace upsylon
                         {
                             //--------------------------------------------------
                             //
-                            Y_AQUA_PRINTLN("#shrink...");
+                            Y_AQUA_PRINTLN("#shrink");
                             //
                             //--------------------------------------------------
                             Triplet x = {0,x1,x1};
@@ -244,25 +245,28 @@ namespace upsylon
                         {
                             //--------------------------------------------------
                             //
-                            Y_AQUA_PRINTLN("#expand...");
+                            Y_AQUA_PRINTLN("#expand");
                             //
                             //--------------------------------------------------
-                            Triplet x = {0,x1,x1*numeric<double>::gold};
-                            Triplet B = {B0,B1,F(x.c)};
-                            if(B.c>=B.b)
+                            if(B1>0)
                             {
-                                //----------------------------------------------
-                                Y_AQUA_PRINTLN("#found optimum");
-                                //----------------------------------------------
-                                B1 = F( x1 = minimize::run(F,x,B,minimize::direct) );
-                            }
-                            else
-                            {
-                                //----------------------------------------------
-                                Y_AQUA_PRINTLN("#forward");
-                                //----------------------------------------------
-                                B1 = B.c; // and Ctry is computed
-                                x1 = x.c; // at this value
+                                Triplet x = {0,x1,x1*numeric<double>::gold};
+                                Triplet B = {B0,B1,F(x.c)};
+                                if(B.c>=B.b)
+                                {
+                                    //----------------------------------------------
+                                    Y_AQUA_PRINTLN("#found optimum");
+                                    //----------------------------------------------
+                                    B1 = F( x1 = minimize::run(F,x,B,minimize::direct) );
+                                }
+                                else
+                                {
+                                    //----------------------------------------------
+                                    Y_AQUA_PRINTLN("#forward");
+                                    //----------------------------------------------
+                                    B1 = B.c; // and Ctry is computed
+                                    x1 = x.c; // at this value
+                                }
                             }
                         }
                         Y_AQUA_PRINTLN("B1   = "<<B1 << " # @" << x1);
@@ -317,13 +321,13 @@ namespace upsylon
                             }
                             const double dB   = fabs(B1-B0);
                             const bool   Bcvg = (dB <= numeric<double>::ftol * max_of(B1,B0));
-                            Y_AQUA_PRINTLN("dB   = "<<dB);
+                            Y_AQUA_PRINTLN("deltaB      = "<<dB);
                             Y_AQUA_PRINTLN("#convergence: C:" << Ccvg << " B:" << Bcvg);
                             if(Bcvg||Ccvg)
                             {
                                 goto CONVERGED;
                             }
-                            B0 = B_drvs(Corg);
+                            B0 = B_drvs(Corg,Bspace,Btrans);
                             goto CYCLE;
                         }
                         return false;
@@ -337,7 +341,7 @@ namespace upsylon
                             {
                                 assert(Corg[j]>=0);
                                 double Cj = Corg[j];
-                                if(fabs(Cj)<=numeric<double>::tiny)
+                                if(fabs(Cj)<=Cmin)
                                 {
                                     Cj = 0;
                                 }
@@ -354,11 +358,10 @@ namespace upsylon
                         double ctol = 0;
                         for(size_t j=M;j>0;--j)
                         {
-                            ctol = max_of(ctol,fabs(C[j]));
+                            ctol = max_of(ctol,fabs(Corg[j]));
                         }
                         ctol *= numeric<double>::epsilon;
                         ctol *= A;
-                        //Y_AQUA_PRINTLN("ctol=" << ctol);
 
                         //------------------------------------------------------
                         // check that negative values are garbage
@@ -378,7 +381,6 @@ namespace upsylon
                         }
                         B0=0;
                         goto SUCCESS;
-
                     }
                 }
             }

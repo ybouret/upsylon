@@ -45,12 +45,14 @@ namespace upsylon
         Cstar( aM.next() ),
         Cmove( aM.next() ),
         active(),
+        ctiny( numeric<double>::tiny ),
         extra( aM.next() ),
         keeper(),
         balanceVerbose(false),
         lastBalanceCycles(0),
         forwardVerbose(false),
         lastForwardCycles(0),
+        bootingVerbose(false),
         lastBootingCycles(0)
         {
             keeper << aliasing::_(equilibria);

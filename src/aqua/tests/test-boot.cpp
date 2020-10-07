@@ -73,6 +73,7 @@ Y_UTEST(boot)
     std::cerr << boot << std::endl;
 
     cs.balanceVerbose = true;
+    cs.bootingVerbose = true;
     cs.boot(C,boot);
 
 
