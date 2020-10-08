@@ -59,13 +59,34 @@ namespace upsylon
             Array         &Cstp;       //!< step  C [M]
             Array         &Caux;       //!< aux   C [M]
         private:
-            Array         &Cprv;      //!< for active
+            Array         &Cact;      //!< for active [M]
+            Array         &Cill;      //!< for illegal [M]
         public:
             const Booleans active;
+            Booleans       illegal;
+            size_t         illness;
+            
+        private:
+            Arrays         aN;        //!< linear memory
+        public:
+            Array         &xi;        //!< extent [N]
+            Array         &nu2;       //!< nu2    [N]
+
+
+            bool   balance(addressable<double> &C) throw();
+
 
         private:
             Collector keep;
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
+            double BalanceInit(addressable<double> &C) throw(); //!< initialize step
+            double BalanceCall(const double x)         throw(); //!< constraint forward
+            
+            struct BalanceProxy { Engine *self; double operator()(const double) throw(); };
+
+        public:
+            bool   balanceVerbose;
+            size_t balanceCycles;
         };
     }
 }

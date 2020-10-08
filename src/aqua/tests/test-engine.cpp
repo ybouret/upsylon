@@ -53,9 +53,23 @@ Y_UTEST(engine)
     std::cerr << "Nu      = " << cs.Nu      << std::endl;
     std::cerr << "Nu2     = " << cs.Nu2     << std::endl;
     std::cerr << "dNu2    = " << cs.det     << std::endl;
+    std::cerr << "nu2     = " << cs.nu2     << std::endl;
     std::cerr << "active  = " << cs.active  << std::endl;
     std::cerr << "Ma      = " << cs.Ma      << " #/ " << cs.M << std::endl;
     std::cerr << "Nc      = " << cs.Nc      << std::endl;
+
+    vector<double> C(cs.M+2,0);
+    
+    //    for(size_t j=C.size();j>0;--j)
+    for(size_t j=4;j>0;--j)
+    {
+        C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+    }
+
+    lib.show(std::cerr << "ini=",C);
+
+    cs.balanceVerbose=true;
+    cs.balance(C);
 
 
 }

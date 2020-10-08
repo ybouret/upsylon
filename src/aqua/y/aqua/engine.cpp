@@ -31,15 +31,22 @@ namespace upsylon
         Ctry( aM.next() ),
         Cstp( aM.next() ),
         Caux( aM.next() ),
-        Cprv( aM.next() ),
+        Cact( aM.next() ),
+        Cill( aM.next() ),
         active(),
-        keep()
+        illegal(),
+        aN(8),
+        xi( aN.next() ),
+        nu2( aN.next() ),
+        keep(),
+        balanceVerbose(false)
         {
             keep << aliasing::_(equilibria);
             keep << aliasing::_(Nu);
             keep << aliasing::_(tNu);
             keep << aliasing::_(Nu2);
             keep << aliasing::_(aM);
+            keep << aliasing::_(aN);
         }
 
         void Engine::quit() throw()
@@ -51,8 +58,10 @@ namespace upsylon
             _bzset(M);
             _bzset(N);
             new ( & aliasing::_(active) ) Booleans();
+            new ( &illegal )              Booleans();
         }
 
+       
 
         void Engine:: init(Library &lib, const Equilibria &eqs)
         {
@@ -69,7 +78,8 @@ namespace upsylon
                 if(M>0)
                 {
                     aM.acquire(M);
-                    new ( & aliasing::_(active) ) Booleans( aliasing::as<bool>(*Cprv),M);
+                    new ( & aliasing::_(active) ) Booleans(aliasing::as<bool>(*Cact),M);
+                    new ( &illegal)               Booleans(aliasing::as<bool>(*Cill),M);
                 }
 
                 if(N>0)
@@ -78,6 +88,7 @@ namespace upsylon
                     aliasing::_(Nu).  make(N,M);
                     aliasing::_(tNu). make(M,N);
                     aliasing::_(Nu2). make(N,N);
+                    aliasing::_(aN).acquire(N);
                     {
                         size_t i=1;
                         for(Equilibria::const_iterator it=eqs.begin();it!=eqs.end();++it,++i)
@@ -86,10 +97,17 @@ namespace upsylon
                             aliasing::_(equilibria).push_back(eq);
                             addressable<Int> &nu_i = aliasing::_(Nu[i]);
                             eq->fillNu(nu_i);
+                            int sq = 0;
                             for(size_t j=M;j>0;--j)
                             {
-                                if( nu_i[j]!=0 ) aliasing::_(active[j]) = true;
+                                const Int nu_ij = nu_i[j];
+                                if( nu_ij !=0 )
+                                {
+                                    aliasing::_(active[j]) = true;
+                                    sq += nu_ij * nu_ij;
+                                }
                             }
+                            nu2[i] = sq;
                         }
                     }
                     for(size_t j=M;j>0;--j)
