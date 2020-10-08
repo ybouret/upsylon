@@ -26,16 +26,17 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // run local count
                 //--------------------------------------------------------------
-                const long subDepth = depth+1;
+                ++depth;
                 {
                     Node      *sub = 0; // temporary sub-tree
-                    while( axiom.accept(sub,lexer,source,subDepth) )
+                    while( axiom.accept(sub,lexer,source,depth) )
                     {
                         ++num;
                         tgt.push_back(sub); assert(tgt.size==num);
                         sub=0;
                     }
                 }
+                --depth;
 
                 //--------------------------------------------------------------
                 // check result

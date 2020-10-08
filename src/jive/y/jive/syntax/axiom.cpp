@@ -102,7 +102,7 @@ namespace upsylon
 
             Axiom:: Reference:: ~Reference() throw() {}
 
-            Axiom:: Reference:: Reference(const Axiom &a) throw() :
+            Axiom:: Reference::  Reference(const Axiom &a) throw() :
             Object(),
             inode<Reference>(),
             axiom(a) {}

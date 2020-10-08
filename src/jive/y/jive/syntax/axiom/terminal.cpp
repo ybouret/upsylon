@@ -14,8 +14,7 @@ namespace upsylon
             Y_JIVE_AXIOM_ACCEPT_IMPL(Terminal)
             {
                 
-                Y_JIVE_PRINTLN("Terminal <"<<name<<">");
-                
+
                 //--------------------------------------------------------------
                 // get lexeme
                 //--------------------------------------------------------------
@@ -28,21 +27,21 @@ namespace upsylon
                     if( *(lexeme->label) == *name )
                     {
                         // matching !
-                        Y_JIVE_PRINTLN("|_accept '"<<*lexeme<<"'");
+                        Y_JIVE_PRINTLN("Terminal <"<<name<<"> = '" << lexeme << "'");
                         Grow(tree,Node::Acquire(*this,lexeme.yield()));
                         return true;
                     }
                     else
                     {
                         //! different!
-                        Y_JIVE_PRINTLN("|_reject " << lexeme->label);
+                        Y_JIVE_PRINTLN("Terminal <"<<name<<"> != <" << lexeme->label << ">");
                         lexer.unget(lexeme.yield());
                         return false;
                     }
                 }
                 else
                 {
-                    Y_JIVE_PRINTLN("|_no lexeme");
+                    Y_JIVE_PRINTLN("Terminal <"<<name<<"> [EOS]");
                     return false;
                 }
 

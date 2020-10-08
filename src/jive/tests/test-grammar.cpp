@@ -23,7 +23,7 @@ namespace {
 
             call( plug<CppComments>("cppComments") );
             endl("endl","[:endl:]");
-
+            drop("blank","[:blank:]");
         }
 
     private:
