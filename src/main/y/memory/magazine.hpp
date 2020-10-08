@@ -225,6 +225,12 @@ namespace upsylon
                     return addr;
                 }
 
+                //! dismiss ownership
+                inline void dismiss() throw()
+                {
+                    this->pointee=0;
+                }
+
                 //! assign another pointer
                 inline auto_ptr & operator=(type *obj) throw()
                 {
@@ -235,6 +241,7 @@ namespace upsylon
                     }
                     return *this;
                 }
+
 
 
             private:

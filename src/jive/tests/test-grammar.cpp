@@ -79,9 +79,9 @@ Y_UTEST(grammar)
     }
 
     {
-        MyGrammar       G;
-        MyLexer         L;
-        
+        MyGrammar        G;
+        MyLexer          L;
+        Syntax::Dull     dull("empty");
         if(argc>1)
         {
             Syntax::Axiom::Verbose = true;
@@ -94,7 +94,9 @@ Y_UTEST(grammar)
             else
             {
                 std::cerr << "accepted empty tree" << std::endl;
+                xnode = XNode::Acquire(dull);
             }
+            xnode->graphViz("xnode.dot");
         }
 
 

@@ -103,8 +103,9 @@ namespace upsylon
             {
                 Lexeme::Pointer   guard(lx);
                 static Supply    &mgr  = Supply::instance();
-                return mgr.acquire<const Axiom&>(term);
-                //return mgr.acquire<const Axiom &,const Lexeme *>(term,lx);
+                Node * node = mgr.acquire<const Axiom&,Lexeme *>(term,lx);
+                guard.dismiss();
+                return node;
             }
             
             
@@ -141,11 +142,11 @@ namespace upsylon
                 switch (kind)
                 {
                     case IsTerminal:
-                        fp << "[label=\"" << *axiom.name << "\",shape=box];";
+                        fp << "[label=\"" << *axiom.name << "='" << lexeme()->toEncoded() << "'\",shape=box];";
                         break;
                         
                     case IsInternal:
-                        fp << "[label=\"" << *axiom.name << "\"];";
+                        fp << "[label=\"" << *axiom.name << "\",shape=oval];";
                         for(const Node *node=leaves().head;node;node=node->next) {
                             node->vizSave(fp);
                             endl(vizJoin(fp,node));
