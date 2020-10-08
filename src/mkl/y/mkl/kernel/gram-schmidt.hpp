@@ -100,64 +100,7 @@ namespace upsylon {
                 }
                 return true;
             }
-
-            //! complete a set of independent vectors
-            template <typename T>
-            static bool iOrthoRows( matrix<T> &q, const matrix<T> &a  )
-            {
-                static const yap::number::itype zero = 0;
-                static const yap::number::itype one  = 1;
-
-                const size_t rows = a.rows;
-                const size_t cols = a.cols; assert(rows<=cols);
-                const size_t perp = q.rows; assert(perp+rows==cols);
-                assert(perp>0);
-                assert(q.cols==a.cols);
-                matrix<apq> f(cols,cols);
-                combination comb(cols,perp);
-                for(comb.boot();comb.good(); comb.next())
-                {
-                    //----------------------------------------------------------
-                    // fill img rows
-                    //----------------------------------------------------------
-                    for(size_t i=rows;i>0;--i)
-                    {
-                        for(size_t j=cols;j>0;--j)
-                        {
-                            f[i][j] = static_cast<yap::number::itype>(a[i][j]);
-                        }
-                    }
-
-                    //----------------------------------------------------------
-                    // fill sup rows
-                    //----------------------------------------------------------
-                    for(size_t i=1;i<=perp;++i)
-                    {
-                        array<apq> &f_i = f[rows+perp];
-                        quark::ld(f_i,zero);
-                        f_i[ comb[i] ] = one;
-                    }
-
-                    if( OrthoSimple(f) )
-                    {
-                        for(size_t i=perp;i>0;--i)
-                        {
-                            array<T>         &q_i = q[i];
-                            const array<apq> &f_i = f[i+rows];
-                            for(size_t j=cols;j>0;--j)
-                            {
-                               q_i[j] = f_i[j].num.cast_to<T>();
-                            }
-                        }
-                        return true;
-                    }
-
-                }
-
-                return false;
-
-            }
-
+            
         };
     }
 }
