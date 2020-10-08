@@ -43,6 +43,8 @@ namespace upsylon
                 for(size_t i=N;i>0;--i)
                 {
                     xi[i] /= nu2[i];
+                    const Extents X(*equilibria[i],C,*Ctry);
+                    std::cerr << "for <" << (*equilibria[i]).name << "> : " << X << std::endl;
                 }
                 quark::mul(Cstp,tNu,xi);
                 Y_AQUA_PRINTLN("Grad = " << Ctry);

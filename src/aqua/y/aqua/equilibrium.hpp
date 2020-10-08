@@ -49,7 +49,46 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Component);
         };
 
-        
+        class Extent
+        {
+        public:
+            const bool   limited;
+            const double maximum;
+
+            //! setup from reactants/products (nu>0!) and auxialiary data
+            Extent(const accessible<double> &C,
+                   const Component::List    &L,
+                   double                   *A) throw();
+            ~Extent() throw();
+            Extent(const Extent &) throw();
+
+            friend std::ostream & operator<<(std::ostream &, const Extent &);
+
+
+        private:
+            Y_DISABLE_ASSIGN(Extent);
+        };
+
+        class Equilibrium;
+
+        class Extents
+        {
+        public:
+            const Extent forward;
+            const Extent reverse;
+
+            Extents(const Equilibrium        &eq,
+                    const accessible<double> &C,
+                    double                   *A) throw();
+            ~Extents() throw();
+
+            friend std::ostream & operator<<(std::ostream &, const Extents &x);
+
+
+        private:
+            Y_DISABLE_ASSIGN(Extents);
+        };
+
 
         //______________________________________________________________________
         //
@@ -108,15 +147,19 @@ namespace upsylon {
             //! compute  Ctry = C0 + x * nu, truncated
             void evolve(addressable<double> &Ctry, const accessible<double> &C0, const double x) const throw();
 
+
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const string name;    //!< unique name
-            const int    dn;      //!< sum nu
-            const int    dr;      //!< sum (-(nu<0))
-            const int    dp;      //!< sum (nu>0)
-            const double idn;     //!< 1.0/dn if exists
+            const string     name;        //!< unique name
+            const int        dn;          //!< sum nu
+            const int        dr;          //!< sum (-(nu<0))
+            const int        dp;          //!< sum (nu>0)
+            const double     idn;         //!< 1.0/dn if exists
+            const Components components;
+            const Components reactants;
+            const Components products;
 
         protected:
             //! setup
@@ -136,14 +179,15 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
-            Components components;
-            Components reactants;
-            Components products;
+
             size_t     maxCompSize;
             void display_list(std::ostream &os, const Components &l) const;
             virtual double getK(const double t) const = 0;
 
         };
+
+
+
 
 
         //______________________________________________________________________

@@ -39,22 +39,22 @@ namespace upsylon {
                 c=c->next;
             }
 
-            c = components.push_back( new Component(sp,nu) );
+            c = aliasing::_(components).push_back( new Component(sp,nu) );
             if(nu>0)
             {
                 try {
-                    products.push_back( new Component(sp,nu) );
+                    aliasing::_(products).push_back( new Component(sp,nu) );
                 }
-                catch(...) { delete components.pop_back(); throw; }
+                catch(...) { delete aliasing::_(components).pop_back(); throw; }
                 aliasing::_(dp) += nu;
             }
             else
             {
                 assert(nu<0);
                 try {
-                    reactants.push_back( new Component(sp,-nu) );
+                    aliasing::_(reactants).push_back( new Component(sp,-nu) );
                 }
-                catch(...) { delete components.pop_back(); throw; }
+                catch(...) { delete aliasing::_(components).pop_back(); throw; }
                 aliasing::_(dr) -= nu;
             }
             aliasing::_(dn) += nu;
