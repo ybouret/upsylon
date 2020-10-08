@@ -141,9 +141,12 @@ namespace upsylon
                 
                 switch (kind)
                 {
-                    case IsTerminal:
-                        fp << "[label=\"" << *axiom.name << "='" << lexeme()->toEncoded() << "'\",shape=box];";
-                        break;
+                    case IsTerminal: {
+                        const Lexeme *l = lexeme();
+                        string        s = "[NULL]";
+                        if(l) s = l->toEncoded();
+                        fp << "[label=\"" << *axiom.name << "='" << s << "'\",shape=box];";
+                    } break;
                         
                     case IsInternal:
                         fp << "[label=\"" << *axiom.name << "\",shape=oval];";
