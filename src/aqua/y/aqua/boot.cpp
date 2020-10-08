@@ -270,7 +270,7 @@ namespace upsylon {
                         std::cerr << "dd=" << dd << std::endl;
                         std::cerr << "V =" << V  << std::endl;
                     }
-                    
+
                 }
 
 
