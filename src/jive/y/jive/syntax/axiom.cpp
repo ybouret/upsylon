@@ -84,8 +84,9 @@ namespace upsylon
                 os << Prefix;
                 while(depth-- > 0 )
                 {
-                    os << '.';
+                    os << ' ' << ' ';
                 }
+                os << "|_<" << name <<"> ";
                 return os;
             }
 

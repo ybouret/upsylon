@@ -15,7 +15,7 @@ namespace upsylon
 
             Y_JIVE_AXIOM_ACCEPT_IMPL(Repeat)
             {
-                Y_JIVE_PRINTLN("Repeat <" << name << "> >= " << atLeast);
+                Y_JIVE_PRINTLN("repeat <" << axiom.name << "> >= " << atLeast);
                 //--------------------------------------------------------------
                 // prepare local count
                 //--------------------------------------------------------------
@@ -43,7 +43,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if(num>=atLeast)
                 {
-                    Y_JIVE_PRINTLN("|_accept " << num << ">=" << atLeast);
+                    Y_JIVE_PRINTLN("accept <" << axiom.name << ">" << num << ">=" << atLeast);
                     if(num>0)
                     {
                         if(tree)
@@ -63,7 +63,7 @@ namespace upsylon
                 }
                 else
                 {
-                    Y_JIVE_PRINTLN("|_reject " << num << "<" << atLeast);
+                    Y_JIVE_PRINTLN("reject <" << axiom.name << ">" << num << "<" << atLeast);
                     Node::ReturnTo(lexer,rep.yield());
                     return false;
                 }

@@ -27,21 +27,21 @@ namespace upsylon
                     if( *(lexeme->label) == *name )
                     {
                         // matching !
-                        Y_JIVE_PRINTLN("Terminal <"<<name<<"> = '" << lexeme << "'");
+                        Y_JIVE_PRINTLN("= '" << lexeme << "'");
                         Grow(tree,Node::Acquire(*this,lexeme.yield()));
                         return true;
                     }
                     else
                     {
                         //! different!
-                        Y_JIVE_PRINTLN("Terminal <"<<name<<"> != <" << lexeme->label << ">");
+                        Y_JIVE_PRINTLN("!= <" << lexeme->label << ">");
                         lexer.unget(lexeme.yield());
                         return false;
                     }
                 }
                 else
                 {
-                    Y_JIVE_PRINTLN("Terminal <"<<name<<"> [EOS]");
+                    Y_JIVE_PRINTLN("=> [EOS]");
                     return false;
                 }
 
