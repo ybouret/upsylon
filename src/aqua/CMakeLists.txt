@@ -15,9 +15,16 @@ SET(solver_srcs ${solver_decl} ${solver_code})
 SOURCE_GROUP( aqua/solver FILES ${solver_srcs} )
 INSTALL( FILES ${solver_decl} DESTINATION include/y/aqua/solver )
 
+FILE(GLOB engine_decl y/aqua/engine/*.hpp)
+FILE(GLOB engine_code y/aqua/engine/*.cpp)
+SET(engine_srcs ${engine_decl} ${engine_code})
+SOURCE_GROUP( aqua/engine FILES ${engine_srcs} )
+INSTALL( FILES ${engine_decl} DESTINATION include/y/aqua/engine )
+
 ADD_LIBRARY(y-aqua STATIC 
 ${main_srcs}
-${solver_srcs} )
+${solver_srcs} 
+${engine_srcs})
 INSTALL( TARGETS y-aqua ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)

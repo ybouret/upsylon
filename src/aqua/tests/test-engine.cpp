@@ -1,14 +1,13 @@
 
 
-#include "y/aqua/solver.hpp"
-#include "y/aqua/boot.hpp"
-#include "y/aqua/library.hpp"
+#include "y/aqua/engine.hpp"
 #include "y/utest/run.hpp"
+#include "y/mkl/kernel/quark.hpp"
 
 using namespace upsylon;
 using namespace Aqua;
 
-Y_UTEST(boot)
+Y_UTEST(engine)
 {
     Library lib;
 
@@ -48,37 +47,15 @@ Y_UTEST(boot)
 
 
     std::cerr << eqs << std::endl;
-    
 
-    Boot boot;
-    boot.electroneutrality(lib);
-    boot.conserve(1e-8,ah,am);
-    boot.conserve(0.000,NH4,NH3);
-    boot.conserve(0,Na);
-    boot.conserve(0.000,Cl);
-    boot.init(lib);
-    
-    std::cerr << "R=" << boot.R << std::endl;
-    std::cerr << "d=" << boot.d << std::endl;
-    std::cerr << "F=" << boot.F << std::endl;
-    std::cerr << "S=" << boot.S << std::endl;
-
-    
-
-    return 0;
-
-    Solver cs;
+    Engine cs;
     cs.init(lib,eqs);
-
-    cs.computeK(0);
-
-    vector<double> C(cs.M+2,0);
-
-    std::cerr << boot << std::endl;
-
-    cs.balanceVerbose = true;
-    cs.bootingVerbose = true;
-    cs.boot(C,boot);
+    std::cerr << "Nu      = " << cs.Nu      << std::endl;
+    std::cerr << "Nu2     = " << cs.Nu2     << std::endl;
+    std::cerr << "dNu2    = " << cs.det     << std::endl;
+    std::cerr << "active  = " << cs.active  << std::endl;
+    std::cerr << "Ma      = " << cs.Ma      << " #/ " << cs.M << std::endl;
+    std::cerr << "Nc      = " << cs.Nc      << std::endl;
 
 
 }

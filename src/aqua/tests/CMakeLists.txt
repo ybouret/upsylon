@@ -11,6 +11,7 @@ ADD_TEST(species test-aqua species)
 ADD_TEST(library test-aqua library)
 ADD_TEST(eqs     test-aqua eqs)
 ADD_TEST(solver  test-aqua solver)
+ADD_TEST(engine  test-aqua engine)
 ADD_TEST(boot    test-aqua boot)
 
 ADD_CUSTOM_TARGET(utest-aqua

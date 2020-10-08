@@ -3,6 +3,7 @@
 #include "y/mkl/kernel/gram-schmidt.hpp"
 #include "y/type/spec.hpp"
 #include "y/utest/run.hpp"
+#include "y/mkl/kernel/determinant.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -95,6 +96,57 @@ namespace {
         }
     }
 
+    template <typename T>
+    void doGSSupp(const size_t maxDim)
+    {
+        std::cerr << std::endl;
+        std::cerr << "-------- Integer GramSchmidt Supplementary<" << type_name_of<T>() << ">" << std::endl;
+        for(size_t dim=2;dim<=maxDim;++dim)
+        {
+            std::cerr << "dim=" << dim << std::endl;
+            for(size_t img=1;img<dim;++img)
+            {
+                const size_t ker=dim-img;
+                std::cerr << "\timg=" << img << ", ker=" << ker << std::endl;
+                matrix<T> a(img,dim);
+                matrix<T> q(ker,dim);
+                matrix<T> a2(img,img);
+                a.diag(1,0);
+                do
+                {
+                    for(size_t i=img;i>0;--i)
+                    {
+                        for(size_t j=dim;j>0;--j)
+                        {
+                            a[i][j] = alea.range<int>(-5,5);
+                        }
+                    }
+                    quark::mmul_rtrn(a2,a,a);
+                }
+                while( 0 == ideterminant(a2) );
+
+                std::cerr << "a=" << a << std::endl;
+                {
+                    matrix<T> b = a;
+                    if(!GramSchmidt::iOrtho(b))
+                    {
+                        throw exception("no ortho for free family!");
+                    }
+                    std::cerr << "b=" << b << std::endl;
+                }
+
+                if(GramSchmidt::iOrthoRows(q,a))
+                {
+                    std::cerr << "q=" << q << std::endl;
+                }
+                else
+                {
+                    std::cerr << "couldn't find supp" << std::endl;
+                }
+            }
+            std::cerr << std::endl;
+        }
+    }
         
     
 }
@@ -112,6 +164,8 @@ Y_UTEST(gram_schmidt)
     doGSI<int16_t>(6);
     doGSI<int32_t>(6);
     doGSI<int64_t>(6);
+
+    doGSSupp<int64_t>(6);
 
 }
 Y_UTEST_DONE()

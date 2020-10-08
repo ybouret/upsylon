@@ -182,6 +182,7 @@ namespace upsylon {
 #include "y/mkl/kernel/quark.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
 #include "y/mkl/kernel/adjoint.hpp"
+#include "y/mkl/kernel/eigen.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -234,6 +235,7 @@ namespace upsylon {
                 // check P whilst building F
                 //--------------------------------------------------------------
                 aliasing::_(F).make(M,Nc);
+                Matrix Ps(M,M);
                 {
                     iMatrix tR(R,matrix_transpose);
                     iMatrix R2(Nc,Nc);
@@ -246,7 +248,32 @@ namespace upsylon {
                     iMatrix aR2(Nc,Nc);
                     iadjoint(aR2,R2);
                     quark::mmul( aliasing::_(F),tR,aR2);
+                    quark::mmul(Ps,F,R);
+                    for(size_t i=M;i>0;--i)
+                    {
+                        for(size_t j=M;j>i;--j)
+                        {
+                            Ps[i][j] = -Ps[i][j];
+                        }
+                        Ps[i][i] = d-Ps[i][i];
+                        for(size_t j=i-1;j>0;--j)
+                        {
+                            Ps[i][j] = -Ps[i][j];
+                        }
+                    }
+                    std::cerr << "Ps=" << Ps << std::endl;
+                    vector<double> dd(M,0);
+                    Matrix         V(M,M);
+                    if( eigen::build(Ps,dd,V) )
+                    {
+                        eigen::eigsrtA(dd,V);
+                        std::cerr << "dd=" << dd << std::endl;
+                        std::cerr << "V =" << V  << std::endl;
+                    }
+                    
                 }
+
+
 
 
                 if(Nc<M)
