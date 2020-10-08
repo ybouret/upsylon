@@ -253,7 +253,7 @@ namespace upsylon {
 
             //! simplify an array of integer values, return the common divider
             static inline
-            T simplify( array<T> &arr ) throw()
+            T simplify( addressable<T> &arr ) throw()
             {
                 mutable_type dmax = 0;
                 const size_t n    = arr.size();

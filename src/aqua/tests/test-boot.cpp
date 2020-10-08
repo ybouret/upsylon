@@ -84,3 +84,64 @@ Y_UTEST(boot)
 }
 Y_UTEST_DONE()
 
+#include "y/mkl/kernel/lu.hpp"
+using namespace mkl;
+Y_UTEST(r2i)
+{
+    const double xx[] =
+    {
+        0.616815,
+        0.755733,
+        -0.0158463,
+        0.0158463,
+        0.154765,
+        -0.154765,
+        0.0,
+        0.0
+    };
+    const size_t n = sizeof(xx)/sizeof(xx[0]);
+
+    const lightweight_array<double> X((double*)xx,n);
+
+    std::cerr << "X=" << X << std::endl;
+
+    vector<int64_t> x(n,0);
+    for(size_t i=n;i>0;--i)
+    {
+        const double Xi = X[i];
+        x[i] = (Xi<0) ? -1 : ( (0<Xi) ? 1 : 0 );
+    }
+
+    matrix<double> J(n,n);
+    vector<double> F(n,0);
+    vector<double> dx(n,0);
+
+    std::cerr << "x=" << x << std::endl;
+
+    int64_t x2 = 0;
+    for(size_t i=n;i>0;--i) x2 += x[i] * x[i];
+    const double den = sqrt( double(x2) );
+
+    for(size_t i=n;i>0;--i)
+    {
+        F[i] = den * X[i] - x[i];
+        for(size_t j=n;j>0;--j)
+        {
+            J[i][j] = (X[i] * x[j])/den;
+        }
+        J[i][i] -= 1.0;
+        dx[i]    = -F[i];
+    }
+    std::cerr << "J=" << J << std::endl;
+    std::cerr << "F=" << F << std::endl;
+    if( !LU::build(J) )
+    {
+        throw exception("singular");
+    }
+
+    LU::solve(J,dx);
+    std::cerr << "dx" << dx << std::endl;
+
+}
+Y_UTEST_DONE()
+
