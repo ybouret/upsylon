@@ -17,7 +17,7 @@ namespace {
         explicit JSON_Parser() : Parser("JSON")
         {
 
-            Aggregate & value = agg("value");
+            Alternate & value = alt("value");
             value << terminal("null");
             value << terminal("true");
             value << terminal("false");

@@ -67,6 +67,14 @@ namespace upsylon
                 return ax;
             }
 
+            Alternate & Grammar:: alt()
+            {
+                const string    id = vformat("alt%c%u",BuiltIn,indxAlternate);
+                Alternate      &ax = alt(id);
+                ++indxAlternate;
+                return ax;
+            }
+            
 
 
         }
