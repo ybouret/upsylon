@@ -18,6 +18,10 @@ namespace upsylon
             //
             //
             //! aggregate axioms
+            /**
+             - must accept all members
+             - may accept empty tree!
+             */
             //
             //__________________________________________________________________
             class Aggregate : public Compound

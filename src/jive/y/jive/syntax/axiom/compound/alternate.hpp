@@ -19,6 +19,11 @@ namespace upsylon
             //
             //
             //! aggregate axioms
+            /**
+             - accept one of the member
+             - try again if the accepted member returns an empty tree
+             - so, may return empty
+             */
             //
             //__________________________________________________________________
             class Alternate : public Compound

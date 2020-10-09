@@ -21,7 +21,9 @@ namespace upsylon
                 Node *tree = NULL;
                 if(root->accept(tree,lexer,source,0))
                 {
-                    return tree;
+                    Node::Pointer keep( tree );
+                    
+                    return keep.yield();;
                 }
                 else
                 {

@@ -17,7 +17,8 @@ namespace upsylon
             //
             //! a terminal Axiom
             /**
-             accept lexeme with *label==*name
+             - accept lexeme with *label==*name
+             - reject if EOS of different label
              */
             //
             //__________________________________________________________________
