@@ -126,9 +126,10 @@ namespace upsylon
                 //! create a terminal
                 //--------------------------------------------------------------
                 template <typename ID>
-                const Axiom & term(const ID &id, const bool univocal )
+                const Terminal & term(const ID            &i,
+                                      const Terminal::Kind k )
                 {
-                    return add( new Terminal(id,univocal) );
+                    return add( new Terminal(i,k) );
                 }
 
                 //--------------------------------------------------------------
@@ -164,7 +165,7 @@ namespace upsylon
                 //! create a named aggregate
                 //--------------------------------------------------------------
                 template <typename ID>
-                Compound & agg(const ID &id)
+                Aggregate & agg(const ID &id)
                 {
                     return add( new Aggregate(id) );
                 }
@@ -172,7 +173,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 //! create an automatic aggregate
                 //--------------------------------------------------------------
-                Compound & agg();
+                Aggregate & agg();
 
                 //______________________________________________________________
                 //

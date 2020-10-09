@@ -11,7 +11,7 @@ Y_UTEST(axiom)
     Syntax::Node::Supply &mgr = Syntax::Node::Supply::instance();
     mgr.reserve(64);
     
-    Syntax::Terminal term("word",false);
+    Syntax::Terminal term("word",Syntax::Terminal::IsStandard);
     Syntax::Dull     dull("dull");
 
     Y_UTEST_SIZEOF(Syntax::Node);

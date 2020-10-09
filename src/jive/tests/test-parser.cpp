@@ -17,7 +17,11 @@ namespace {
         explicit JSON_Parser() : Parser("JSON")
         {
 
-            const Terminal & null = terminal("null","null");
+            Aggregate & value = agg("value");
+            value << terminal("null");
+            value << terminal("true");
+            value << terminal("false");
+
             drop("blank","[:blanks:]");
             endl("endl", "[:endl:]");
         }

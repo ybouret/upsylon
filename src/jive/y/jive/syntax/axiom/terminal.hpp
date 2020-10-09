@@ -25,6 +25,12 @@ namespace upsylon
             class Terminal : public Axiom
             {
             public:
+                enum Kind
+                {
+                    IsStandard,
+                    IsUnivocal,
+                    IsDivision
+                };
                 //! identifier
                 static const uint32_t UUID = TermUUID;
 
@@ -33,16 +39,18 @@ namespace upsylon
 
                 //! setup
                 template <typename ID> inline
-                explicit Terminal(const ID &id, const bool isUnivocal) :
-                Axiom(UUID,Tags::Make(id)),
-                univocal( isUnivocal )
+                explicit Terminal(const ID   &i,
+                                  const Kind &k) :
+                Axiom(UUID,Tags::Make(i)),
+                kind(k)
                 {
                     Y_JIVE_AXIOM(Terminal);
                 }
 
                 Y_JIVE_AXIOM_ATTACH_DECL();
 
-                const bool univocal;
+                const Kind kind;
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

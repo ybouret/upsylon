@@ -261,6 +261,15 @@ namespace upsylon
                 //! create the call to a plugin with its Initialize method
                 const Rule &call(Plugin &);
 
+                //! query rule by name
+                template <typename ID>
+                const Rule * queryRule(const ID &id)
+                {
+                    const Rule **ppR = hoard.search_by(id);
+                    return ppR ? *ppR : NULL;
+                }
+
+
                 //------------------------------------------------------------------
                 //
                 //! the flex-like probing function

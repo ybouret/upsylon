@@ -116,6 +116,7 @@ namespace upsylon {
                 return (Plugin&)(**ppPlugin);
             }
 
+          
             //__________________________________________________________________
             //
             // I/O methods
