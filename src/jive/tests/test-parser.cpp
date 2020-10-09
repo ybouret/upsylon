@@ -17,8 +17,9 @@ namespace {
         explicit JSON_Parser() : Parser("JSON")
         {
 
-
-
+            const Terminal & null = terminal("null","null");
+            drop("blank","[:blanks:]");
+            endl("endl", "[:endl:]");
         }
 
 

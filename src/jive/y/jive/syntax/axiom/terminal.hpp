@@ -33,13 +33,16 @@ namespace upsylon
 
                 //! setup
                 template <typename ID> inline
-                explicit Terminal(const ID &id) :
-                Axiom(UUID,Tags::Make(id))
+                explicit Terminal(const ID &id, const bool isUnivocal) :
+                Axiom(UUID,Tags::Make(id)),
+                univocal( isUnivocal )
                 {
                     Y_JIVE_AXIOM(Terminal);
                 }
 
                 Y_JIVE_AXIOM_ATTACH_DECL();
+
+                const bool univocal;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

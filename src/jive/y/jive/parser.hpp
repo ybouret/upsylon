@@ -15,7 +15,8 @@ namespace upsylon
         class Parser : public Syntax::Grammar, public Lexer
         {
         public:
-            typedef Syntax::Axiom Axiom;
+            typedef Syntax::Axiom    Axiom;
+            typedef Syntax::Terminal Terminal;
 
             virtual ~Parser() throw();
 
@@ -29,10 +30,11 @@ namespace upsylon
 
 
             template <typename ID,typename RX>
-            const Axiom & terminal( const ID &id, const RX &rx )
+            const Axiom & terminal(const ID &id,
+                                   const RX &rx)
             {
-                emit(id,rx);
-                return term(id);
+                const Lexical::Rule &rule = emit(id,rx);
+                return term(id,rule.motif->univocal());
             }
 
             void   start() throw();

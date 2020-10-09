@@ -35,8 +35,8 @@ namespace {
     public:
         explicit MyGrammar() : Syntax::Grammar("MyGrammar")
         {
-            const Syntax::Axiom &ID   = term("ID");
-            const Syntax::Axiom &INT  = term("INT");
+            const Syntax::Axiom &ID   = term("ID",false);
+            const Syntax::Axiom &INT  = term("INT",false);
             Syntax::Compound    &ITEM = agg("ITEM");
             ITEM << ID << option(INT);
             const Syntax::Axiom &REP = repeat(ITEM,0);
@@ -63,7 +63,7 @@ Y_UTEST(grammar)
     
     {
         Syntax::Grammar   G("G");
-        Syntax::Terminal &term = G.add( new Syntax::Terminal("term") );
+        Syntax::Terminal &term = G.add( new Syntax::Terminal("term",false) );
         Syntax::Internal &dull = G.add( new Syntax::Dull("dull") );
 
         XNode::Pointer    root( XNode::Acquire(dull) );
