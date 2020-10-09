@@ -40,8 +40,16 @@ namespace upsylon
                         }
                     }
                 }
-                Y_JIVE_PRINTLN(" accepted [empty]");
-                return result;
+                if(result)
+                {
+                    Y_JIVE_PRINTLN(" accepted [empty]");
+                    return true;
+                }
+                else
+                {
+                    Y_JIVE_PRINTLN(" rejected");
+                    return false;
+                }
             }
         }
     }
