@@ -26,22 +26,11 @@ namespace upsylon
                     } break;
 
                     case Repeat::UUID: {
-                        const Repeat &rep = axiom.as<Repeat>();
-                        string        aid = rep.axiom.gvName();
-                        switch(rep.atLeast)
-                        {
-                            case  0: aid += "*"; break;
-                            case  1: aid += "+"; break;
-                            default: aid += vformat(">=%u",unsigned(rep.atLeast));
-                                break;
-                        }
-                        fp << "[label=\"" << aid << "\",shape=oval]";
+                        fp << "[label=\"" << axiom.gvName() << "\",shape=oval]";
                     } break;
 
                     case Option::UUID: {
-                        const Option &opt = axiom.as<Option>();
-                        const string  aid = opt.axiom.gvName() + "?";
-                        fp << "[label=\"" << aid << "\",shape=triangle]";
+                        fp << "[label=\"" << axiom.gvName() << "\",shape=triangle]";
                     } break;
 
                     case Aggregate::UUID: {

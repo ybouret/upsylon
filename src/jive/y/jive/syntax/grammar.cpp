@@ -45,17 +45,22 @@ namespace upsylon
 
             const Axiom & Grammar:: repeat( const Axiom &axiom, const size_t atLeast)
             {
-                const string id = vformat("rep%c%u",BuiltIn,indxRepeat);
+                //const string id = vformat("rep%c%u",BuiltIn,indxRepeat);
+                string       id = *axiom.name;
+                switch(atLeast)
+                {
+                    case 0: id += '*'; break;
+                    case 1: id += '+'; break;
+                    default: id += vformat(">=%u",unsigned(atLeast)); break;
+                }
                 const Axiom &ax = repeat(id,axiom,atLeast);
-                ++indxRepeat;
                 return ax;
             }
 
             const Axiom & Grammar:: option(const Axiom &axiom)
             {
-                const string id = vformat("opt%c%u",BuiltIn,indxOption);
+                const string id = *axiom.name + '?';
                 const Axiom &ax = option(id,axiom);
-                ++indxOption;
                 return ax;
             }
 

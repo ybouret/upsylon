@@ -39,8 +39,6 @@ namespace upsylon
                 name( Tags::Make(id) ),
                 axioms(),
                 registry(),
-                indxRepeat(1),
-                indxOption(1),
                 indxAggregate(1),
                 indxAlternate(1)
                 {
@@ -223,8 +221,6 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 Axiom::List     axioms;
                 Axiom::Registry registry;
-                unsigned        indxRepeat;
-                unsigned        indxOption;
                 unsigned        indxAggregate;
                 unsigned        indxAlternate;
             };
