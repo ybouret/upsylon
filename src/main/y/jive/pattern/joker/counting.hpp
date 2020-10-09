@@ -37,6 +37,7 @@ namespace upsylon
             virtual bool       feeble()    const throw();           //!< true if minCount<=0 or motif is feeble
             virtual bool       accept(Y_PATTERN_ACCEPT_ARGS) const; //!< count is ok
             virtual void       express(ios::ostream &) const;       //!< motif+somethong
+            virtual bool       univocal()              const throw(); //!< motif->univocal() && minCount==maxCount
 
             //__________________________________________________________________
             //

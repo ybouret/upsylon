@@ -77,15 +77,12 @@ namespace upsylon {
             fp << '?';
         }
 
-
-
-#if 0
-        std::ostream & operator<<(std::ostream &os, const Any &)
+        bool Optional:: univocal() const throw()
         {
-            os << "<any>";
-            return os;
+            return false;
         }
-#endif
+
+
         
     }
 }

@@ -104,6 +104,10 @@ namespace upsylon {
             fp("{%lu,%lu}",(unsigned long)minCount, (unsigned long)maxCount);
         }
 
+        bool Counting:: univocal() const throw()
+        {
+            return motif->univocal() && (minCount==maxCount);
+        }
 
     }
 }

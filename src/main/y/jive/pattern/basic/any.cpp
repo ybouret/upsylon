@@ -26,6 +26,8 @@ namespace upsylon {
             return new Any(*this);
         }
 
+
+
         Any     * Any:: Create()
         {
             return new Any();
@@ -73,6 +75,8 @@ namespace upsylon {
         {
             fp << "[^]";
         }
+
+        bool    Any:: univocal() const throw() { return false; }
 
     }
 }

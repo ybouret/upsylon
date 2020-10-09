@@ -31,12 +31,13 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  Exclude  *Create(const uint8_t);             //!< create
-            virtual Pattern  *clone()            const;          //!< copy
-            virtual void      start(Leading &)   const;          //!< all but code
-            virtual void      update(Entropy &)  const throw();  //!< with code
-            virtual void      express(ios::ostream &) const;     //!< escaped
-
+            static  Exclude  *Create(const uint8_t);                 //!< create
+            virtual Pattern  *clone()            const;              //!< copy
+            virtual void      start(Leading &)   const;              //!< all but code
+            virtual void      update(Entropy &)  const throw();      //!< with code
+            virtual void      express(ios::ostream &) const;         //!< escaped
+            virtual bool      univocal()              const throw(); //!< false
+            
             //__________________________________________________________________
             //
             // serializable

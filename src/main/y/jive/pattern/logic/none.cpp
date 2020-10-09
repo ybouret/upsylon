@@ -114,6 +114,11 @@ namespace upsylon {
             fp << '~';
         }
 
+        bool None:: univocal() const throw()
+        {
+            return false;
+        }
+
     }
 }
 #include "y/jive/pattern/basic/rework.hpp"

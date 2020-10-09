@@ -112,6 +112,17 @@ namespace upsylon {
             }
         }
 
+        bool And:: univocal() const throw()
+        {
+            for(const Pattern *op=head;op;op=op->next)
+            {
+                if(!op->univocal())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         
     }
 }

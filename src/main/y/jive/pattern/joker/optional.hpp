@@ -32,11 +32,12 @@ namespace upsylon
             //
             // pattern API
             //__________________________________________________________________
-            static  Optional *Create(Pattern *p);                  //!< new
-            virtual Pattern  *clone()             const;           //!< copy
-            virtual bool      feeble()    const throw();           //!< true
-            virtual bool      accept(Y_PATTERN_ACCEPT_ARGS) const; //!< motif or empty, always true
-            virtual void      express(ios::ostream &) const;       //!< motif+?
+            static  Optional *Create(Pattern *p);                     //!< new
+            virtual Pattern  *clone()             const;              //!< copy
+            virtual bool      feeble()    const throw();              //!< true
+            virtual bool      accept(Y_PATTERN_ACCEPT_ARGS) const;    //!< motif or empty, always true
+            virtual void      express(ios::ostream &) const;          //!< motif+?
+            virtual bool      univocal()              const throw();  //!<false
 
             //__________________________________________________________________
             //

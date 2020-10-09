@@ -32,11 +32,12 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  Range   *Create(const uint8_t,const uint8_t); //!< create with boundaries
-            virtual Pattern *clone() const;                       //!< copy
-            virtual void     start(Leading &)   const;            //!< insert range
-            virtual void     update(Entropy &)  const throw();    //!< with boundaries
-            virtual void     express(ios::ostream &) const;       //!< escaped range
+            static  Range   *Create(const uint8_t,const uint8_t);   //!< create with boundaries
+            virtual Pattern *clone()                 const;         //!< copy
+            virtual void     start(Leading &)        const;         //!< insert range
+            virtual void     update(Entropy &)       const throw(); //!< with boundaries
+            virtual void     express(ios::ostream &) const;         //!< escaped range
+            virtual bool     univocal()              const throw(); //!< false
 
             //__________________________________________________________________
             //

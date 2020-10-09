@@ -35,8 +35,8 @@ namespace {
     public:
         explicit MyGrammar() : Syntax::Grammar("MyGrammar")
         {
-            const Syntax::Axiom &ID  = terminal("ID");
-            const Syntax::Axiom &INT = terminal("INT");
+            const Syntax::Axiom &ID   = term("ID");
+            const Syntax::Axiom &INT  = term("INT");
             Syntax::Compound    &ITEM = agg("ITEM");
             ITEM << ID << option(INT);
             const Syntax::Axiom &REP = repeat(ITEM,0);

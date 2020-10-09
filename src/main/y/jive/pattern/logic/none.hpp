@@ -31,13 +31,14 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  None    *Create();                            //!< new
-            virtual Pattern *clone() const;                       //!< copy
-            virtual void     start(Leading &) const;              //!< complete and remove ops
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const; //!< single after none of operands
-            virtual bool     feeble() const throw();              //!< false
-            virtual void     optimize() throw();                  //!< applyOptimize, rework
-            virtual void     express(ios::ostream &) const;       //!< with alternation/tilde
+            static  None    *Create();                              //!< new
+            virtual Pattern *clone() const;                         //!< copy
+            virtual void     start(Leading &) const;                //!< complete and remove ops
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const;   //!< single after none of operands
+            virtual bool     feeble() const throw();                //!< false
+            virtual void     optimize() throw();                    //!< applyOptimize, rework
+            virtual void     express(ios::ostream &) const;         //!< with alternation/tilde
+            virtual bool     univocal()              const throw(); //!< false
 
             //__________________________________________________________________
             //

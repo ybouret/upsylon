@@ -89,5 +89,9 @@ namespace upsylon {
             Code(Code(fp << '[',lower) << '-',upper) << ']';
         }
 
+        bool Range:: univocal() const throw()
+        {
+            return lower>=upper;
+        }
     }
 }

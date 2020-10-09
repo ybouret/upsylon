@@ -29,12 +29,13 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  Any     *Create();                          //!< new
-            virtual Pattern *clone()             const;         //!< copy
-            virtual void     start(Leading    &) const;         //!< complete!
-            virtual void     update(Entropy &)   const throw(); //!< do nothing
-            virtual void     express(ios::ostream &) const;     //!< full range
-            
+            static  Any     *Create();                              //!< new
+            virtual Pattern *clone()                 const;         //!< copy
+            virtual void     start(Leading    &)     const;         //!< complete!
+            virtual void     update(Entropy &)       const throw(); //!< do nothing
+            virtual void     express(ios::ostream &) const;         //!< full range
+            virtual bool     univocal()              const throw(); //!< false
+
             //__________________________________________________________________
             //
             // serializable

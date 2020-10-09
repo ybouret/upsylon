@@ -142,5 +142,11 @@ namespace upsylon {
             }
         }
 
+        bool Repeating:: univocal() const throw()
+        {
+            return false;
+        }
+
+
     }
 }

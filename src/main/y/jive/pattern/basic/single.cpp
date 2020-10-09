@@ -75,5 +75,10 @@ namespace upsylon {
             Code(fp,code);
         }
 
+        bool Single:: univocal() const throw()
+        {
+            return true;
+        }
+
     }
 }

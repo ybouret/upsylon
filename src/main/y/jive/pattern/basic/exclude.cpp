@@ -77,5 +77,10 @@ namespace upsylon {
         {
             Code(fp,code) << '~';
         }
+
+        bool Exclude:: univocal() const throw()
+        {
+            return false;
+        }
     }
 }

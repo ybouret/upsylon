@@ -30,12 +30,13 @@ namespace upsylon {
             //
             // pattern API
             //__________________________________________________________________
-            static  Or      *Create();                            //!< new
-            virtual Pattern *clone() const;                       //!< copy
-            virtual void     start(Leading &) const;              //!< merge until strong op
-            virtual bool     feeble() const throw();              //!< one is feeble
-            virtual void     optimize() throw();                  //!< applyOptimize, merge alike, rework
-            virtual void     express(ios::ostream &) const;       //!< with alternation
+            static  Or      *Create();                              //!< new
+            virtual Pattern *clone() const;                         //!< copy
+            virtual void     start(Leading &) const;                //!< merge until strong op
+            virtual bool     feeble() const throw();                //!< one is feeble
+            virtual void     optimize() throw();                    //!< applyOptimize, merge alike, rework
+            virtual void     express(ios::ostream &) const;         //!< with alternation
+            virtual bool     univocal()              const throw(); //!< only one, and univocal
 
             //! accept one of the operands
             /**

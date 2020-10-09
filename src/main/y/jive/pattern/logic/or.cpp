@@ -118,7 +118,10 @@ namespace upsylon {
             }
         }
 
-        
+        bool Or:: univocal() const throw()
+        {
+            return 1==size && (head->univocal());
+        }
     }
 
 }

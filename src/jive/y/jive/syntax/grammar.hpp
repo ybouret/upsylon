@@ -126,7 +126,7 @@ namespace upsylon
                 //! create a terminal
                 //--------------------------------------------------------------
                 template <typename ID>
-                const Axiom & terminal(const ID &id)
+                const Axiom & term(const ID &id)
                 {
                     return add( new Terminal(id) );
                 }

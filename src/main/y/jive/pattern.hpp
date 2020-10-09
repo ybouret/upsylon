@@ -61,14 +61,14 @@ namespace upsylon {
             //
             // virtual interface
             //__________________________________________________________________
-            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const = 0; //!< accept a token (empty on input)
-            virtual bool     feeble() const throw()              = 0; //!< may accept an empty token ?
-            virtual Pattern *clone() const                       = 0; //!< clone API
-            virtual void     start(Leading &)    const           = 0; //!< collect first chars
-            virtual void     update(Entropy &)   const throw()   = 0; //!< update entropy
-            virtual void     optimize()                 throw()  = 0; //!< sub-optimize
-            virtual void     express(ios::ostream &) const       = 0; //!< as regular-expression
-            
+            virtual bool     accept(Y_PATTERN_ACCEPT_ARGS) const         = 0; //!< accept a token (empty on input)
+            virtual bool     feeble()                      const throw() = 0; //!< may accept an empty token ?
+            virtual Pattern *clone()                       const         = 0; //!< clone API
+            virtual void     start(Leading &)              const         = 0; //!< collect first chars
+            virtual void     update(Entropy &)             const throw() = 0; //!< update entropy
+            virtual void     optimize()                          throw() = 0; //!< sub-optimize
+            virtual void     express(ios::ostream &)       const         = 0; //!< as regular-expression
+            virtual bool     univocal()                    const throw() = 0; //!< is univocal ?
             
             //__________________________________________________________________
             //
