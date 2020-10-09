@@ -14,9 +14,16 @@ namespace upsylon
 
                 switch(axiom.uuid)
                 {
-                    case Terminal::UUID:
-                        fp << "[label=\"" << axiom.gvName() << "\",shape=box]";
-                        break;
+                    case Terminal::UUID: {
+                        const char *style = "solid";
+                        switch(axiom.as<Terminal>().kind)
+                        {
+                            case Terminal::Standard: break;
+                            case Terminal::Univocal: style="solid,rounded"; break;
+                            case Terminal::Division: style="solid,dashed";  break;
+                        }
+                        fp << "[label=\"" << axiom.gvName() << "\",shape=box,style=\"" << style << "\"]";
+                    } break;
 
                     case Repeat::UUID: {
                         const Repeat &rep = axiom.as<Repeat>();
@@ -34,7 +41,7 @@ namespace upsylon
                     case Option::UUID: {
                         const Option &opt = axiom.as<Option>();
                         const string  aid = opt.axiom.gvName() + "?";
-                        fp << "[label=\"" << aid << "\",shape=oval]";
+                        fp << "[label=\"" << aid << "\",shape=triangle]";
                     } break;
 
                     case Aggregate::UUID: {

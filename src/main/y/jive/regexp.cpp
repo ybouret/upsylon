@@ -690,7 +690,11 @@ case 't': return Single::Create('\t')
             return RegExp(_,dict);
         }
         
-        
+        Pattern * RegExp(const char    C, const Dictionary *)
+        {
+            return Single::Create(C);
+        }
+
     }
     
 }

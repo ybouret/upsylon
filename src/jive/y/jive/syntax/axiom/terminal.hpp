@@ -27,9 +27,9 @@ namespace upsylon
             public:
                 enum Kind
                 {
-                    IsStandard,
-                    IsUnivocal,
-                    IsDivision
+                    Standard,
+                    Univocal,
+                    Division
                 };
                 //! identifier
                 static const uint32_t UUID = TermUUID;

@@ -30,11 +30,13 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 Axiom::Registry db;
+                axioms.head->attach(db);
+#if 0
                 for(const Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                 {
                     axiom->attach(db);
                 }
-
+#endif
                 //--------------------------------------------------------------
                 //
                 // checking database

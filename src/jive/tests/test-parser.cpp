@@ -17,13 +17,32 @@ namespace {
         explicit JSON_Parser() : Parser("JSON")
         {
 
-            Alternate & value = alt("value");
-            value << terminal("null");
-            value << terminal("true");
-            value << terminal("false");
-
-            drop("blank","[:blanks:]");
+            const Terminal &STRING = plugin<Lexical::jString>("string");
+            Alternate      &VALUE  = alt("value");
+            VALUE << terminal("null");
+            VALUE << terminal("true");
+            VALUE << terminal("false");
+            VALUE << STRING;
+            
+            const Terminal &COMA  = division(',');
+            Alternate      &ARRAY = alt("array");
+            {
+                const Axiom &LBRACK = division('[');
+                const Axiom &RBRACK = division(']');
+                ARRAY << ( agg("empty_array") << LBRACK << RBRACK);
+                ARRAY << (
+                          agg("heavy_array") << LBRACK << VALUE
+                          << repeat( cat(COMA,VALUE), 0)
+                          << RBRACK
+                          );
+            }
+            
+            drop("blank","[:blank:]");
             endl("endl", "[:endl:]");
+            
+            graphViz("json.dot");
+            setRoot(ARRAY);
+            validate();
         }
 
 
@@ -36,6 +55,12 @@ namespace {
 
 Y_UTEST(parser)
 {
-
+    JSON_Parser json;
+    if(argc>1)
+    {
+        Source         source( Module::OpenFile(argv[1]));
+        XNode::Pointer xnode( json.parse(source) );
+        
+    }
 }
 Y_UTEST_DONE()

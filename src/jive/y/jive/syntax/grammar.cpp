@@ -66,6 +66,26 @@ namespace upsylon
                 ++indxAggregate;
                 return ax;
             }
+            
+            const Axiom & Grammar:: cat(const Axiom &a, const Axiom &b)
+            {
+                const string id = '(' + *a.name + '+' + *b.name + ')';
+                Aggregate &ans = agg(id);
+                ans << a << b;
+                return ans;
+            }
+            
+            const Axiom & Grammar:: cat(const Axiom &a,
+                                        const Axiom &b,
+                                        const Axiom &c)
+            {
+                const string id  = '(' +*a.name + '+' + *b.name + '+' + *c.name + ')';
+                Aggregate   &ans = agg(id);
+                ans << a << b << c;
+                return ans;
+            }
+
+            
 
             Alternate & Grammar:: alt()
             {
@@ -75,7 +95,23 @@ namespace upsylon
                 return ax;
             }
             
-
+            const Axiom & Grammar:: choice(const Axiom &a, const Axiom &b)
+            {
+                const string id = '(' + *a.name + '|' + *b.name + ')';
+                Alternate    &ans = alt(id);
+                ans << a << b;
+                return ans;
+            }
+            
+            const Axiom & Grammar:: choice(const Axiom &a,
+                                           const Axiom &b,
+                                           const Axiom &c)
+            {
+                const string id  = '(' +*a.name + '|' + *b.name + '|' + *c.name + ')';
+                Alternate   &ans = alt(id);
+                ans << a << b << c;
+                return ans;
+            }
 
         }
         
