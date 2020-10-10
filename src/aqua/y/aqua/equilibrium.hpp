@@ -49,19 +49,21 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Component);
         };
 
+        //! extent info for an equilibrium
         class Extent
         {
         public:
-            const bool   limited;
-            const double maximum;
+            const bool   limited; //!< is limited ?
+            const double maximum; //!< value (>0) if limited
 
             //! setup from reactants/products (nu>0!) and auxialiary data
             Extent(const accessible<double> &C,
                    const Component::List    &L,
                    double                   *A) throw();
-            ~Extent() throw();
-            Extent(const Extent &) throw();
+            ~Extent() throw();              //!< cleanup
+            Extent(const Extent &) throw(); //!< copy
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const Extent &);
 
 
@@ -69,19 +71,27 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Extent);
         };
 
-        class Equilibrium;
+        class Equilibrium; //!< forward
 
+        //! forward and reverse extent
         class Extents
         {
         public:
-            const Extent forward;
-            const Extent reverse;
+            const Extent forward; //!< for reactants
+            const Extent reverse; //!< for products
 
+            //! setup
             Extents(const Equilibrium        &eq,
                     const accessible<double> &C,
                     double                   *A) throw();
+
+            //! copy
+            Extents(const Extents &other) throw();
+
+            //! cleanup
             ~Extents() throw();
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const Extents &x);
 
 
@@ -157,9 +167,9 @@ namespace upsylon {
             const int        dr;          //!< sum (-(nu<0))
             const int        dp;          //!< sum (nu>0)
             const double     idn;         //!< 1.0/dn if exists
-            const Components components;
-            const Components reactants;
-            const Components products;
+            const Components components;  //!< all components
+            const Components reactants;   //!< reactants (set with nu>0)
+            const Components products;    //!< products  (set with nu>0)
 
         protected:
             //! setup

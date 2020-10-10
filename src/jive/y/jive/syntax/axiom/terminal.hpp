@@ -25,11 +25,13 @@ namespace upsylon
             class Terminal : public Axiom
             {
             public:
+
+                //! kind of terminal
                 enum Kind
                 {
-                    Standard,
-                    Univocal,
-                    Division
+                    Standard, //!< regular expression
+                    Univocal, //!< univocal (regular) expression
+                    Division  //!< whatever, division only
                 };
                 //! identifier
                 static const uint32_t UUID = TermUUID;
@@ -49,8 +51,7 @@ namespace upsylon
 
                 Y_JIVE_AXIOM_ATTACH_DECL();
 
-                const Kind kind;
-
+                const Kind kind; //!< kind
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

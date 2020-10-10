@@ -72,6 +72,14 @@ namespace upsylon {
         reverse(C,eq.products, A)
         {
         }
+
+        Extents:: Extents(const Extents &other) throw() :
+        forward(other.forward),
+        reverse(other.reverse)
+        {
+
+        }
+
         
 
         std::ostream & operator<<(std::ostream &os, const Extents &x)

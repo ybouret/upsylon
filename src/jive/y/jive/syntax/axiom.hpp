@@ -120,6 +120,7 @@ namespace upsylon
                     return *static_cast<const CLASS*>(self);
                 }
 
+                //! prepare named indentation
                 std::ostream & indent(std::ostream &os, long depth) const;
 
             protected:

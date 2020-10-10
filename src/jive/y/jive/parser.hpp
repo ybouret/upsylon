@@ -12,25 +12,48 @@ namespace upsylon
     
     namespace Jive
     {
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! parser with Grammar ans Lexer
+        //
+        //______________________________________________________________________
         class Parser : public Syntax::Grammar, public Lexer
         {
         public:
-            typedef Syntax::Axiom     Axiom;
-            typedef Syntax::Terminal  Terminal;
-            typedef Syntax::Aggregate Aggregate;
-            typedef Syntax::Alternate Alternate;
-            
-            virtual ~Parser() throw();
-            
-            
+            //__________________________________________________________________
+            //
+            // types and declarations
+            //__________________________________________________________________
+            typedef Syntax::Axiom     Axiom;      //!< alias
+            typedef Syntax::Terminal  Terminal;   //!< alias
+            typedef Syntax::Aggregate Aggregate;  //!< alias
+            typedef Syntax::Alternate Alternate;  //!< alias
+
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~Parser() throw(); //!< cleanup
+
+            //! setup
             template <typename ID> inline
             explicit Parser(const ID &id) :
             Syntax::Grammar(id),
             Lexer(name)
             {
             }
-            
-            
+
+
+            //__________________________________________________________________
+            //
+            // terminals
+            //__________________________________________________________________
+
+            //! Standard/Univocal Terminal ID = RX
             template <typename ID,typename RX> inline
             const Terminal & terminal(const ID &id,
                                       const RX &rx)
@@ -38,14 +61,15 @@ namespace upsylon
                 const Lexical::Rule &rule = emit(id,rx);
                 return term(id,rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard );
             }
-            
-            
+
+            //! Standard/Univocal Terminal ID = ID
             template <typename ID> inline
             const Terminal & terminal(const ID &id)
             {
                 return terminal(id,id);
             }
-            
+
+            //! Division ID = RX
             template <typename ID,typename RX> inline
             const Terminal & division(const ID &id,
                                       const RX &rx)
@@ -53,30 +77,38 @@ namespace upsylon
                 (void) emit(id,rx);
                 return term(id,Terminal::Division);
             }
-            
+
+            //! Division ID = ID
             template <typename ID> inline
             const Terminal & division(const ID &id)
             {
                 return division(id,id);
             }
-            
+
+            //! use a plugin as terminal
             template <typename PLUGIN,typename ID>
             const Terminal & plugin(const ID &id)
             {
                 const Lexical::Rule &r = call( plug<PLUGIN>(id) );
                 return term(r.label,Terminal::Standard);
             }
-            
-            
-            
+
+            //__________________________________________________________________
+            //
+            // management
+            //__________________________________________________________________
+
+            //! reset lexer...
             void   start() throw();
+
+            //! parse using Grammar::run
             XNode *parse(Source &source,const size_t prefetch=0);
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
         };
     }
-    
+
 }
 
 #endif

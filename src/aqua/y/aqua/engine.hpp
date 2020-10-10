@@ -35,8 +35,15 @@ namespace upsylon
             explicit Engine();          //!< setup
             virtual ~Engine() throw();  //!< cleanup
 
-            void quit() throw();
-            void init(Library &lib, const Equilibria &eqs);
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void quit() throw();                            //!< release/clean all data
+            void init(Library &lib, const Equilibria &eqs); //!< setup
+
+            //! balance set of concentrations with Nu
+            bool balance(addressable<double> &C) throw();
 
             //__________________________________________________________________
             //
@@ -62,9 +69,9 @@ namespace upsylon
             Array         &Cact;      //!< for active [M]
             Array         &Cill;      //!< for illegal [M]
         public:
-            const Booleans active;
-            Booleans       illegal;
-            size_t         illness;
+            const Booleans active;    //!< active concentrations [M]
+            Booleans       illegal;   //!< illegal concentrations [M]
+            size_t         illness;   //!< number of illegal concentrations <= M
             
         private:
             Arrays         aN;        //!< linear memory
@@ -73,10 +80,7 @@ namespace upsylon
             Array         &nu2;       //!< nu2    [N]
 
 
-            bool   balance(addressable<double> &C) throw();
-
-
-        private:
+         private:
             Collector keep;
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
             double BalanceInit(addressable<double> &C) throw(); //!< initialize step
@@ -85,8 +89,8 @@ namespace upsylon
             struct BalanceProxy { Engine *self; double operator()(const double) throw(); };
 
         public:
-            bool   balanceVerbose;
-            size_t balanceCycles;
+            bool   balanceVerbose; //!< balance verbosity
+            size_t balanceCycles;  //!< last balance cycles
         };
     }
 }
