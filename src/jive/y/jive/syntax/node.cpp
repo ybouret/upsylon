@@ -10,7 +10,7 @@ namespace upsylon
     namespace memory
     {
         Y_SINGLETON_TEMPLATE_WITH(Jive::Lexical::Unit::Supply::life_time-1,Jive::XNode::Supply);
-
+        
     }
 }
 
@@ -143,9 +143,11 @@ namespace upsylon
                 {
                     case IsTerminal: {
                         const Lexeme *l = lexeme();
-                        string        s = "[NULL]";
+                        string        s = "";
                         if(l) s = l->toEncoded();
-                        fp << "[label=\"" << *axiom.name << "='" << s << "'\",shape=box];";
+                        fp << "[label=\"" << *axiom.name << "\"";
+                        fp << "='" << s << "'\"";
+                        fp << ",shape=box];";
                     } break;
                         
                     case IsInternal:
@@ -158,7 +160,7 @@ namespace upsylon
                 
             }
             
-           
+            
             
         }
         

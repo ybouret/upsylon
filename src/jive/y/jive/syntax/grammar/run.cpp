@@ -34,8 +34,14 @@ namespace upsylon
                     {
                         std::cerr << "Last accepted : <" << mind->label << "> = '" << (*mind) << "'" << std::endl;
                     }
-                    
-                    return keep.yield();
+                    if(tree)
+                    {
+                        return Node::AST( keep.yield() );
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
                 }
                 else
                 {

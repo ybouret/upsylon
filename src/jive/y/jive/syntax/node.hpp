@@ -96,7 +96,6 @@ namespace upsylon
                 List & _List() const throw(); //!< if internal
                 
                 uint64_t wksp[Y_U64_FOR_ITEM(List)]; //!< memory
-                
             };
             
         }
