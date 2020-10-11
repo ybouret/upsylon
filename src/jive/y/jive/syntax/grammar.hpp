@@ -208,7 +208,6 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const Axiom & choice(const Axiom &a, const Axiom &b, const Axiom &c);
                 
-                
                 //______________________________________________________________
                 //
                 // members
