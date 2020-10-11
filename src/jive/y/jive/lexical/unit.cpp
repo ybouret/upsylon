@@ -18,13 +18,17 @@ namespace upsylon
         namespace Lexical
         {
 
+            static size_t UnitStamp = 0;
+            
             Unit:: ~Unit() throw()
             {
             }
 
             Unit:: Unit(const Context &c,
-                        const Tag     &t) throw() :
-            Token(), Context(c), inode<Unit>(), label(t)
+                        const Tag     &t,
+                        const size_t   s) throw() :
+            Token(), Context(c), inode<Unit>(), label(t),
+            stamp(s)
             {
             }
 
@@ -32,7 +36,9 @@ namespace upsylon
                                 const Tag     &t )
             {
                 static Supply &mgr = Supply::instance();
-                return mgr.acquire<const Context &,const Tag &>(c,t);
+                Y_LOCK(mgr.access);
+                ++UnitStamp;
+                return mgr.acquire<const Context &,const Tag &,size_t>(c,t,UnitStamp);
             }
             
             void Unit:: Delete(Unit *unit) throw()

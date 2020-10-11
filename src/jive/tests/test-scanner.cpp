@@ -78,7 +78,7 @@ Y_UTEST(scanner)
         std::cerr << "= " << "'" << *lx << "'";
         for(size_t i=lx->size;i<=maxLen;++i) std::cerr << ' ';
 
-        std::cerr << "@" << lx->tag << ":" << lx->line << ":" << lx->column << std::endl;
+        std::cerr << "@" << lx->tag << ":" << lx->line << ":" << lx->column  << " | stamp=" << lx->stamp << std::endl;
     }
     std::cerr << "<Lexemes/>" << std::endl;
 

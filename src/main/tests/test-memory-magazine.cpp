@@ -61,8 +61,9 @@ Y_UTEST(magazine)
 
     {
         simple::repo &mgr = simple::repo::instance();
+        
         std::cerr << "using " << mgr.call_sign << std::endl;
-
+        
         simple *s = mgr.acquire();
         simple *c = mgr.copycat(s);
         mgr.release(s);

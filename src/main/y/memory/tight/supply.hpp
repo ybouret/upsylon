@@ -41,6 +41,7 @@ namespace upsylon
                 typedef core::pool_of<node_type> zcache;
                 xcache       xnodes;
                 zcache       znodes;
+                
             public:
                 const size_t block_size; //!< the unique block_size of this supply
             };

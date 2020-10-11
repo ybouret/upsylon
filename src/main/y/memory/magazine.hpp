@@ -66,6 +66,19 @@ namespace upsylon
                 try { return new(ptr) type(argU,argV); } catch(...) { this->zstore(ptr); throw; }
             }
 
+            //! three arguments acquire
+            template <typename U, typename V, typename W>
+            inline type *acquire(typename type_traits<U>::parameter_type argU,
+                                 typename type_traits<V>::parameter_type argV,
+                                 typename type_traits<W>::parameter_type argW)
+            {
+                Y_LOCK(this->access);
+                mutable_type *ptr = this->zquery();
+                try { return new(ptr) type(argU,argV,argW); } catch(...) { this->zstore(ptr); throw; }
+            }
+
+            
+            
             //! copy another object
             inline type *copycat(const_type *other)
             {

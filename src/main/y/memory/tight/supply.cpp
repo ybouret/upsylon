@@ -2,6 +2,7 @@
 #include "y/memory/tight/supply.hpp"
 #include "y/object.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/aliasing.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -52,17 +53,18 @@ namespace upsylon
                 return znodes.size;
             }
 
+            
             void * supply:: query_block()
             {
                 if(znodes.size>0)
                 {
                     void *blk = znodes.query();
                     memset(blk,0,block_size);
-                    return blk;
+                    return  (blk);
                 }
                 else
                 {
-                    return xnodes.acquire();
+                    return  (xnodes.acquire());
                 }
             }
 
@@ -70,7 +72,7 @@ namespace upsylon
             {
                 assert(args);
                 memset(args,0,sizeof(node_type));
-                znodes.store( static_cast<node_type *>(args) );
+                znodes.store( static_cast<node_type *>(  (args) ) );
             }
 
         }

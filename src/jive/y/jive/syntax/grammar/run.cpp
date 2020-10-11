@@ -18,16 +18,27 @@ namespace upsylon
                 {
                     throw exception("%s has no root Axiom!",**name);
                 }
+                
                 Node *tree = NULL;
                 if(root->accept(tree,lexer,source,0))
                 {
+                    //----------------------------------------------------------
+                    //
+                    // check result
+                    //
+                    //----------------------------------------------------------
                     Node::Pointer keep( tree );
                     
-                    return keep.yield();;
+                    return keep.yield();
                 }
                 else
                 {
                     assert(NULL==tree);
+                    //----------------------------------------------------------
+                    //
+                    // check for error
+                    //
+                    //----------------------------------------------------------
                     return NULL;
                 }
              }
