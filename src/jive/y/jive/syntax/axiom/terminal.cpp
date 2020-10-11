@@ -28,7 +28,9 @@ namespace upsylon
                     {
                         // matching !
                         Y_JIVE_PRINTLN("= '" << lexeme << "'");
-                        Grow(tree,Node::Acquire(*this,lexeme.yield()));
+                        Lexeme *lx = lexeme.yield();
+                        Grow(tree,Node::Acquire(*this,lx));
+                        Mind(mind,lx);
                         return true;
                     }
                     else

@@ -19,8 +19,9 @@ namespace upsylon
                     throw exception("%s has no root Axiom!",**name);
                 }
                 
-                Node *tree = NULL;
-                if(root->accept(tree,lexer,source,0))
+                Node   *tree = NULL;
+                Lexeme *mind = NULL;
+                if(root->accept(tree,lexer,source,mind,0))
                 {
                     //----------------------------------------------------------
                     //
@@ -28,6 +29,11 @@ namespace upsylon
                     //
                     //----------------------------------------------------------
                     Node::Pointer keep( tree );
+                    
+                    if(mind)
+                    {
+                        std::cerr << "Last accepted : <" << mind->label << "> = '" << (*mind) << "'" << std::endl;
+                    }
                     
                     return keep.yield();
                 }
@@ -39,6 +45,10 @@ namespace upsylon
                     // check for error
                     //
                     //----------------------------------------------------------
+                    if(mind)
+                    {
+                        std::cerr << "Last accepted : <" << mind->label << "> = '" << (*mind) << "'" << std::endl;
+                    }
                     return NULL;
                 }
              }

@@ -54,12 +54,26 @@ namespace upsylon
                     tree->leaves().push_back(leaf);
                 }
             }
+            
+            void Axiom:: Mind(Lexeme * &old, Lexeme *now) throw()
+            {
+                assert(now);
+                if(old)
+                {
+                    if(now->stamp>old->stamp) old = now;
+                }
+                else
+                {
+                    old = now;
+                }
+            }
+
 
             bool Axiom:: accept( Y_JIVE_AXIOM_ACCEPT_ARGS ) const
             {
                 try
                 {
-                    return accept_(tree,lexer,source,depth);
+                    return accept_(tree,lexer,source,mind,depth);
                 }
                 catch(...)
                 {

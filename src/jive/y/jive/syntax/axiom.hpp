@@ -19,7 +19,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! args for accept method
-#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, long depth
+#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, Lexeme * &mind, long depth
 
             //! accept declaration
 #define Y_JIVE_AXIOM_ACCEPT_DECL()      virtual bool  accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
@@ -101,7 +101,10 @@ namespace upsylon
                 //______________________________________________________________
                 //! grow a tree
                 static void Grow( Node * &tree, Node *leaf ) throw();
-
+                
+                //! update last lexeme
+                static void Mind(Lexeme * &old, Lexeme *now) throw();
+                
                 //! recall derived class
                 template <typename CLASS>
                 CLASS & as() throw()

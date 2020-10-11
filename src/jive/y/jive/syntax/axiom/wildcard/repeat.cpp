@@ -29,7 +29,7 @@ namespace upsylon
                 ++depth;
                 {
                     Node      *sub = 0; // temporary sub-tree
-                    while( axiom.accept(sub,lexer,source,depth) )
+                    while( axiom.accept(sub,lexer,source,mind,depth) )
                     {
                         ++num;
                         tgt.push_back(sub); assert(tgt.size==num);
