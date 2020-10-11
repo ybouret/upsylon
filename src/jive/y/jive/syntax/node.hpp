@@ -73,6 +73,7 @@ namespace upsylon
                 static void    Release(Node *)           throw();    //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();    //!< return node to lexer
                 static Node *  Load(Source &source,const Grammar &); //!< reload a node
+                static Node *  AST(Node *node) throw();
                 
                 //______________________________________________________________
                 //

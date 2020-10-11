@@ -20,7 +20,7 @@ namespace {
         {
             emit("ID",  RegExpFor::Identifier);
             emit("INT", RegExpFor::Integer);
-
+            emit("XML", "<[:alpha:]+>");
             call( plug<CppComments>("cppComments") );
             endl("endl","[:endl:]");
             drop("blank","[:blank:]");
@@ -37,12 +37,13 @@ namespace {
         {
             const Syntax::Axiom &ID   = term("ID", Syntax::Terminal::Standard);
             const Syntax::Axiom &INT  = term("INT",Syntax::Terminal::Standard);
+            const Syntax::Axiom &XML  = term("XML",Syntax::Terminal::Standard);
             Syntax::Compound    &ITEM = agg("ITEM");
             ITEM << ID << option(INT);
-            const Syntax::Axiom &REP = repeat(ITEM,0);
-
+            const Syntax::Axiom &REP = repeat( choice(ITEM,option(XML)),0);
+            
             setRoot(REP);
-
+            
             graphViz("grammar.dot");
 
             validate();

@@ -22,18 +22,20 @@ namespace upsylon
                     {
                         Y_JIVE_PRINTLN("accepted <" << subTree->axiom.name << ">");
                         Grow(tree,subTree);
+                        return true;
                     }
                     else
                     {
-                        Y_JIVE_PRINTLN("empty [accepted]");
+                        Y_JIVE_PRINTLN("acceptep [empty]");
+                        return true;
                     }
                 }
                 else
                 {
                     assert(NULL==subTree);
-                    Y_JIVE_PRINTLN("empty [rejected]");
+                    Y_JIVE_PRINTLN("rejected");
+                    return false;
                 }
-                return true;
             }
 
             

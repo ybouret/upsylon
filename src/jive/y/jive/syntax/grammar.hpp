@@ -125,7 +125,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 template <typename ID>
                 const Terminal & term(const ID            &i,
-                                      const Terminal::Kind k )
+                                      const Terminal::Type k )
                 {
                     return add( new Terminal(i,k) );
                 }

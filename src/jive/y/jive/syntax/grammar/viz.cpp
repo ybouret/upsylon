@@ -16,7 +16,7 @@ namespace upsylon
                 {
                     case Terminal::UUID: {
                         const char *style = "solid";
-                        switch(axiom.as<Terminal>().kind)
+                        switch(axiom.as<Terminal>().type)
                         {
                             case Terminal::Standard: break;
                             case Terminal::Univocal: style="solid,rounded"; break;

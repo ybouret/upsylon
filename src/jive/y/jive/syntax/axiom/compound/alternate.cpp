@@ -31,6 +31,7 @@ namespace upsylon
                         if(NULL==sub)
                         {
                             Y_JIVE_PRINTLN(refCount << "/" << size << " <- [empty]");
+                            continue;
                         }
                         else
                         {

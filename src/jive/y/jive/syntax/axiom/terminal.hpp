@@ -26,8 +26,8 @@ namespace upsylon
             {
             public:
 
-                //! kind of terminal
-                enum Kind
+                //! type of terminal
+                enum Type
                 {
                     Standard, //!< regular expression
                     Univocal, //!< univocal (regular) expression
@@ -42,16 +42,16 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit Terminal(const ID   &i,
-                                  const Kind &k) :
+                                  const Type &k) :
                 Axiom(UUID,Tags::Make(i)),
-                kind(k)
+                type(k)
                 {
                     Y_JIVE_AXIOM(Terminal);
                 }
 
                 Y_JIVE_AXIOM_ATTACH_DECL();
 
-                const Kind kind; //!< kind
+                const Type type; //!< kind
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
