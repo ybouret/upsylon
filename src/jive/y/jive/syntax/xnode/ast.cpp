@@ -33,10 +33,17 @@ namespace upsylon
                 {
                     Node::Pointer child( AST( src.pop_front() ) );
                     const Axiom  &axiom  = child->axiom;
+                    //--------------------------------------------------
+                    //
+                    // if nothing is done, the child is suppressed!
+                    //
+                    //--------------------------------------------------
                     switch(child->kind)
                     {
                             //--------------------------------------------------
+                            //
                             // a terminal in the leaves
+                            //
                             //--------------------------------------------------
                         case IsTerminal: {
                             if( axiom.isTerminal() && (axiom.as<Terminal>().type==Terminal::Division) )
@@ -50,7 +57,9 @@ namespace upsylon
                         } break;
 
                             //--------------------------------------------------
+                            //
                             // an internal in the leaves
+                            //
                             //--------------------------------------------------
                         case IsInternal:
                             switch(axiom.uuid)

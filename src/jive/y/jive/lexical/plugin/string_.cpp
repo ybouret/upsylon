@@ -23,6 +23,13 @@ namespace upsylon
                     const char rx[4] = { '\\', '\\', delimiter,0};
                     discard("dlm",rx,this, &String_::OnDelim);
                 }
+                switch(delimiter)
+                {
+                    case '"':  discard("quote", '\'',this, &String_::OnCore); break;
+                    case '\'': discard("dquote",'\"',this, &String_::OnCore); break;
+                    default:
+                        break;
+                }
                 discard("hexa",  "\\\\x[:xdigit:][:xdigit:]",   this, &String_::OnHexa);
                 discard("herr1", "\\\\x[^[:xdigit:]][^]?",      this, &String_::OnHerr);
                 discard("herr2", "\\\\x[:xdigit:][^[:xdigit:]]",this, &String_::OnHerr);

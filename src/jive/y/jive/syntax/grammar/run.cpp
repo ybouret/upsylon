@@ -53,9 +53,8 @@ namespace upsylon
                 dispLexeme(name,"next",next);
 
                 //--------------------------------------------------------------
-                // get status
+                // process status
                 //--------------------------------------------------------------
-
                 if(success)
                 {
                     if(tree)
