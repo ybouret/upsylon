@@ -28,6 +28,17 @@ namespace upsylon
                     }
                 }
             }
+
+            void Compound:: expect(TermCheckList &ex, Axiom::Registry &db) const
+            {
+                if(new_in(db))
+                {
+                    for(const Axiom::Reference *ref=head;ref;ref=ref->next)
+                    {
+                        (**ref).expect(ex,db);
+                    }
+                }
+            }
         }
         
     }

@@ -71,6 +71,7 @@ namespace {
 
 Y_UTEST(parser)
 {
+    Syntax::Axiom::Verbose = true;
     JSON_Parser json;
     if(argc>1)
     {

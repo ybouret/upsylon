@@ -61,7 +61,8 @@ namespace {
 
 Y_UTEST(grammar)
 {
-    
+
+    Syntax::Axiom::Verbose = true;
     {
         Syntax::Grammar   G("G");
         Syntax::Terminal &term = G.add( new Syntax::Terminal("term",Syntax::Terminal::Standard) );

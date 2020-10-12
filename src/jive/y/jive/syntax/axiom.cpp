@@ -20,7 +20,8 @@ namespace upsylon
             Axiom:: Axiom(const uint32_t u, const string *s) throw() :
             uuid(u),
             name(s),
-            self(0)
+            self(0),
+            then()
             {
             }
 
@@ -102,6 +103,12 @@ namespace upsylon
                 }
                 os << "|_<" << name <<"> ";
                 return os;
+            }
+
+            void Axiom:: compileWith(Axiom::Registry &temp)
+            {
+                temp.release_all();
+                expect(aliasing::_(then),temp);
             }
 
         }

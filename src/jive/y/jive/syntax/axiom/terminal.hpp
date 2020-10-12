@@ -56,6 +56,8 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);
                 Y_JIVE_AXIOM_ACCEPT_DECL();
+                Y_JIVE_AXIOM_EXPECT_DECL();
+
             };
 
         }

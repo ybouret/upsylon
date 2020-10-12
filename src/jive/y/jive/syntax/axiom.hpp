@@ -15,8 +15,8 @@ namespace upsylon
         {
             
             class Terminal; //!< forward declaration
-
-
+            typedef ref_node<const Terminal>         TermReference;
+            typedef core::list_of_cpp<TermReference> TermCheckList;
 
             //__________________________________________________________________
             //
@@ -35,7 +35,10 @@ namespace upsylon
 #define Y_JIVE_AXIOM_ACCEPT_IMPL(CLASS)  bool CLASS:: accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
 
             //! attach declaration
-#define Y_JIVE_AXIOM_ATTACH_DECL()       virtual void attach( Axiom::Registry &) const
+#define Y_JIVE_AXIOM_ATTACH_DECL()       virtual void attach(Axiom::Registry &) const
+
+            //! expect declaration
+#define Y_JIVE_AXIOM_EXPECT_DECL()       virtual void expect(TermCheckList &, Axiom::Registry &) const
 
             
             //__________________________________________________________________
@@ -58,7 +61,7 @@ namespace upsylon
                 typedef Axiom                       *Pointer;    //!< alias
                 typedef suffix_tree<Pointer>         Registry;   //!< alias
                 typedef ref_node<const Axiom>        Reference;  //!< alias
-                typedef core::list_of_cpp<Reference> References; //!< alias
+                typedef core::list_of_cpp<Reference> Manifest;   //!< alias
 
                 
                 //______________________________________________________________
@@ -78,18 +81,21 @@ namespace upsylon
                  - if true  => tree MAY change, may return empty sub-tree
                  */
                 //______________________________________________________________
-                bool         accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const;  //!< protected call to accept_
+                bool         accept(Y_JIVE_AXIOM_ACCEPT_ARGS) const;
                 bool         new_in(Axiom::Registry&)         const;  //!< check
                 string       gvName()                         const;  //!< GraphViz Name
-                Y_JIVE_AXIOM_ATTACH_DECL()                      = 0;  //!< recursive look up
+                Y_JIVE_AXIOM_ATTACH_DECL()                      = 0;  //!< recursive look up of all children
+                Y_JIVE_AXIOM_EXPECT_DECL()                      = 0;  //!< recursive look up of all terminals
+                void         compileWith(Axiom::Registry &temp);      //!< build 'then'
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                const uint32_t    uuid; //!< identifier
-                const Tag         name; //!< axiom name
-                const void *const self; //!< derived class
+                const uint32_t      uuid; //!< identifier
+                const Tag           name; //!< axiom name
+                const void *const   self; //!< derived class
+                const TermCheckList then; //!< following terms
 
                 //______________________________________________________________
                 //
@@ -100,7 +106,9 @@ namespace upsylon
                 
                 //! update last lexeme
                 static void Mind(Lexeme * &old, Lexeme *now) throw();
-                
+
+
+
                 //! recall derived class
                 template <typename CLASS>
                 CLASS & as() throw()

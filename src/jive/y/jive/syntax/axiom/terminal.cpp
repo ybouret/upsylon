@@ -54,6 +54,14 @@ namespace upsylon
                 (void) new_in(db);
             }
 
+            void Terminal:: expect(TermCheckList &ex, Axiom::Registry &db) const
+            {
+                if( new_in(db) )
+                {
+                    ex.push_back( new TermReference(*this) );
+                }
+            }
+
             
         }
 

@@ -13,7 +13,6 @@ namespace upsylon
         namespace Syntax
         {
             
-            typedef Axiom::References Manifest; //!< alias
 
             //__________________________________________________________________
             //
@@ -21,7 +20,7 @@ namespace upsylon
             //! Compound base class for a list of Axioms
             //
             //__________________________________________________________________
-            class Compound : public Internal, public Manifest
+            class Compound : public Internal, public Axiom::Manifest
             {
             public:
                 //! cleanup
@@ -30,7 +29,6 @@ namespace upsylon
                 //! helper to grow axioms list
                 Compound & operator<<(const Axiom &);
                 
-                Y_JIVE_AXIOM_ATTACH_DECL();
 
             protected:
                 //! setup
@@ -38,13 +36,16 @@ namespace upsylon
                 explicit Compound(const ID      &i,
                                   const uint32_t t) :
                 Internal(i,t),
-                Manifest()
+                Axiom::Manifest()
                 {
                 }
                 
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
+                Y_JIVE_AXIOM_ATTACH_DECL();
+                Y_JIVE_AXIOM_EXPECT_DECL();
+
             };
             
             

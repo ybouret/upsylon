@@ -8,10 +8,11 @@ namespace upsylon
     {
         namespace Syntax
         {
+#define Y_JIVE_GRAMLN(MSG) do { if(Axiom::Verbose) { std::cerr << "[[" << name << "]] " << MSG << std::endl; } } while(false)
 
             void  Grammar:: validate() const
             {
-                std::cerr << "validating " << name << std::endl;
+                Y_JIVE_GRAMLN("validating");
 
                 //--------------------------------------------------------------
                 //
@@ -31,12 +32,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 Axiom::Registry db;
                 axioms.head->attach(db);
-#if 0
-                for(const Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
-                {
-                    axiom->attach(db);
-                }
-#endif
+
                 //--------------------------------------------------------------
                 //
                 // checking database
@@ -60,7 +56,6 @@ namespace upsylon
                         // check peers
                         for(const Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                         {
-                            std::cerr << "<" << axiom->name << ">" << std::endl;
                             Axiom * const *ppA = db.search_by(*(axiom->name));
                             if(!ppA)        throw exception("%s unregistered <%s>!!!",**name, **(axiom->name) );
                             if(*ppA!=axiom) throw exception("%s mismatch  <%s>!!!",**name, **(axiom->name) );
@@ -69,7 +64,19 @@ namespace upsylon
                 }
 
                 //--------------------------------------------------------------
-                
+                // create 'then' lists
+                //--------------------------------------------------------------
+                for(Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
+                {
+                    axiom->compileWith(db);
+                    Y_JIVE_GRAMLN(" <" << axiom->name << ">" );
+                    for(const TermReference *t=axiom->then.head;t;t=t->next)
+                    {
+                        Y_JIVE_GRAMLN(" | -> <" << (**t).name << ">");
+                    }
+                }
+
+
             }
 
         }
