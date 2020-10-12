@@ -74,13 +74,17 @@ namespace upsylon
                 static void    Release(Node *)           throw();    //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();    //!< return node to lexer
                 static Node *  Load(Source &source,const Grammar &); //!< reload a node
+
+                //! reload a node from a file
                 template <typename FILENAME> static inline
                 Node * LoadFile(const FILENAME &fileName, const Grammar &G)
                 {
                     Source source( Module::OpenFile(fileName) );
                     return Load(source,G);
                 }
-                static Node *  AST(Node *node) throw();                       //!< cleanup
+
+                //! build the AST
+                static Node *  AST(Node *node) throw();
 
                 //______________________________________________________________
                 //

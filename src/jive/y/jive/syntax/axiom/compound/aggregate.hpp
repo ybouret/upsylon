@@ -28,6 +28,8 @@ namespace upsylon
             {
             public:
                 static const uint32_t UUID = Y_FOURCC('A','G','G',' '); //!< UUID
+
+                //! behaviors
                 enum Type
                 {
                     Standard,  //!< alway produce a named aggregate
@@ -47,7 +49,7 @@ namespace upsylon
                     Y_JIVE_AXIOM(Aggregate);
                 }
 
-                const Type type;
+                const Type type; //!< the behavior
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

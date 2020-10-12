@@ -59,13 +59,36 @@ namespace upsylon
                                     tgt.merge_back( child->leaves() );
                                     break;
 
+                                case Aggregate::UUID: {
+                                    assert(child->kind==IsInternal);
+                                    const Aggregate::Type &t = axiom.as<Aggregate>().type;
+                                    switch(t)
+                                    {
+                                        case Aggregate::Standard:
+                                            tgt.push_back(child.yield());
+                                            break;
+
+                                        case Aggregate::Grouping:
+                                            tgt.merge_back( child->leaves() );
+                                            break;
+
+                                        case Aggregate::Variadic:
+                                            switch(child->leaves().size)
+                                            {
+                                                case  0: break;
+                                                case  1: tgt.push_back( child->leaves().pop_front() ); break;
+                                                default: tgt.push_back(child.yield()); break;
+                                            }
+                                            break;
+                                    }
+
+                                } break;
+
                                 default:
                                     tgt.push_back(child.yield());
                             }
                             break;
                     }
-
-
                 }
                 tgt.swap_with(src);
                 return node;
