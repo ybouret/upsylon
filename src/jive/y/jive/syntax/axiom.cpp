@@ -108,31 +108,6 @@ namespace upsylon
     }
 }
 
-namespace upsylon
-{
-    namespace Jive
-    {
-        namespace Syntax
-        {
-
-            Axiom:: Reference:: ~Reference() throw() {}
-
-            Axiom:: Reference::  Reference(const Axiom &a) throw() :
-            Object(),
-            inode<Reference>(),
-            axiom(a) {}
-
-            const Axiom & Axiom:: Reference:: operator*() const throw()
-            {
-                return axiom;
-            }
-            
-
-        }
-
-    }
-
-}
 
 #include "y/string/convert.hpp"
 namespace upsylon

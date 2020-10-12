@@ -22,7 +22,7 @@ namespace upsylon
                 bool       result  = false;
                 for(const Axiom::Reference *ref=head;ref;ref=ref->next,++refCount)
                 {
-                    const Axiom &axiom = ref->axiom;
+                    const Axiom &axiom = **ref;
                     Y_JIVE_PRINTLN(refCount << "/" << size << " -> <" << axiom.name << ">");
                     Node *sub = 0;
                     if( axiom.accept(sub,lexer,source,mind,subDepth))

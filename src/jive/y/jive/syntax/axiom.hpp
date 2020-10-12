@@ -4,6 +4,7 @@
 
 #include "y/jive/syntax/node.hpp"
 #include "y/type/fourcc.hpp"
+#include "y/core/rnode.hpp"
 
 namespace upsylon
 {
@@ -51,25 +52,14 @@ namespace upsylon
                 // types and definitions
                 //______________________________________________________________
                 static const uint32_t TermUUID = Y_FOURCC('T','E','R','M'); //!< forward value
-                static bool           Verbose;             //!< verbosity level
-                static const char     Prefix[];            //!< "[JIVE] "
-                typedef core::list_of_cpp<Axiom> List;     //!< alias
-                typedef Axiom                   *Pointer;  //!< alias
-                typedef suffix_tree<Pointer>     Registry; //!< alias
-                
-                //! lighweight reference for compoinds
-                class Reference : public Object, public inode<Reference>
-                {
-                public:
-                    typedef core::list_of_cpp<Reference> List;     //!< alias
-                    explicit      Reference(const Axiom&) throw(); //!< setup
-                    virtual      ~Reference()             throw(); //!< cleanup
-                    const Axiom & operator*()       const throw(); //!< get axiom
-                    const Axiom & axiom;                           //!< internal reference
+                static bool           Verbose;                   //!< verbosity level
+                static const char     Prefix[];                  //!< "[JIVE] "
+                typedef core::list_of_cpp<Axiom>     List;       //!< alias
+                typedef Axiom                       *Pointer;    //!< alias
+                typedef suffix_tree<Pointer>         Registry;   //!< alias
+                typedef ref_node<const Axiom>        Reference;  //!< alias
+                typedef core::list_of_cpp<Reference> References; //!< alias
 
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Reference);
-                };
                 
                 //______________________________________________________________
                 //

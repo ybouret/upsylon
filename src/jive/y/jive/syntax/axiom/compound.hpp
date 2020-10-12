@@ -13,7 +13,7 @@ namespace upsylon
         namespace Syntax
         {
             
-            typedef Axiom::Reference::List Manifest; //!< alias
+            typedef Axiom::References Manifest; //!< alias
 
             //__________________________________________________________________
             //
