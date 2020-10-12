@@ -40,7 +40,6 @@ namespace upsylon
                         //------------------------------------------------------
                         // read #chars
                         //------------------------------------------------------
-                        std::cerr << "Loading Terminal" << std::endl;
                         size_t num_chars = 0;
                         if(!source.query_upack(num_chars,shift))
                         {

@@ -25,6 +25,7 @@ namespace upsylon
                 // type and definitions
                 //______________________________________________________________
                 static const char BuiltIn = '#'; //!< for built-in namrs
+                
 
                 //______________________________________________________________
                 //
@@ -165,14 +166,38 @@ namespace upsylon
                 template <typename ID>
                 Aggregate & agg(const ID &id)
                 {
-                    return add( new Aggregate(id) );
+                    return add( new Aggregate(id,Aggregate::Standard) );
+                }
+
+
+
+                //--------------------------------------------------------------
+                //! create a variadic aggregate
+                //--------------------------------------------------------------
+                template <typename ID>
+                Aggregate & var(const ID &id)
+                {
+                    return add( new Aggregate(id,Aggregate::Variadic) );
+                }
+
+
+                //--------------------------------------------------------------
+                //! create a transient aggregate
+                //--------------------------------------------------------------
+                template <typename ID>
+                Aggregate & grp(const ID &id)
+                {
+                    return add( new Aggregate(id,Aggregate::Grouping) );
                 }
 
                 //--------------------------------------------------------------
-                //! create an automatic aggregate
+                //! create an automatic transient aggregate
                 //--------------------------------------------------------------
-                Aggregate & agg();
-                
+                Aggregate & grp();
+ 
+
+
+
                 //--------------------------------------------------------------
                 //! create an automatic aggregate
                 //--------------------------------------------------------------

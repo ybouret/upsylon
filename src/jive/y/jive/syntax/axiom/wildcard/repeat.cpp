@@ -33,8 +33,11 @@ namespace upsylon
                     while( axiom.accept(sub,lexer,source,mind,depth) )
                     {
                         ++num;
-                        tgt.push_back(sub); assert(tgt.size==num);
-                        sub=0;
+                        if(sub)
+                        {
+                            tgt.push_back(sub);
+                            sub=0;
+                        }
                     }
                 }
                 --depth;

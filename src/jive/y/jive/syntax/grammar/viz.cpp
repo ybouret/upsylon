@@ -34,9 +34,16 @@ namespace upsylon
                     } break;
 
                     case Aggregate::UUID: {
-                        const Compound &cmp = axiom.as<Aggregate>();
-                        const string    aid = cmp.gvName();
-                        fp << "[label=\"" << aid << "\",shape=house]";
+                        const Aggregate &cmp = axiom.as<Aggregate>();
+                        const string     aid = cmp.gvName();
+                        fp << "[label=\"" << aid << "\",shape=house,style=\"";
+                        switch(cmp.type)
+                        {
+                            case Aggregate::Standard: fp << "solid";         break;
+                            case Aggregate::Variadic: fp << "solid,rounded"; break;
+                            case Aggregate::Grouping: fp << "solid,dashed";  break;
+                        }
+                        fp << "\"]";
                     } break;
 
                     case Alternate::UUID: {

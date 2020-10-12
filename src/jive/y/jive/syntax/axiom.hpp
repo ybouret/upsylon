@@ -9,8 +9,11 @@ namespace upsylon
 {
     namespace Jive
     {
+
         namespace Syntax
         {
+            class Terminal; //!< forward declaration
+            
             //__________________________________________________________________
             //
             //

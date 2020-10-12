@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/jive/common-regexp.hpp"
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -82,7 +83,18 @@ Y_UTEST(parser)
         }
         else
         {
+            hashing::sha1 H;
+
             xnode->graphViz("jtree.dot");
+            xnode->save_to("jtree.bin");
+            const digest md = xnode->md(H);
+            std::cerr << "md=" << md << std::endl;
+            {
+                XNode::Pointer rnode( XNode::LoadFile("jtree.bin",json) );
+                const digest rd = rnode->md(H);
+                std::cerr << "rd=" << rd << std::endl;
+                Y_CHECK(md==rd);
+            }
         }
     }
 }

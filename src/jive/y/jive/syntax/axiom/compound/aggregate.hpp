@@ -28,18 +28,26 @@ namespace upsylon
             {
             public:
                 static const uint32_t UUID = Y_FOURCC('A','G','G',' '); //!< UUID
-                
+                enum Type
+                {
+                    Standard,  //!< alway produce a named aggregate
+                    Variadic,  //!< merge if only one child, keep multiple
+                    Grouping   //!< transient grouping
+                };
+
                 //! cleanup
                 virtual ~Aggregate() throw();
                 
                 //! setup
                 template <typename ID> inline
-                explicit Aggregate(const ID &i) :
-                Compound(i,UUID)
+                explicit Aggregate(const ID &i, const Type t) :
+                Compound(i,UUID),
+                type(t)
                 {
                     Y_JIVE_AXIOM(Aggregate);
                 }
-                
+
+                const Type type;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

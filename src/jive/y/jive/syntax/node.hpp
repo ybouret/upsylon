@@ -8,6 +8,7 @@
 
 namespace upsylon
 {
+
     namespace Jive
     {
         
@@ -73,8 +74,14 @@ namespace upsylon
                 static void    Release(Node *)           throw();    //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();    //!< return node to lexer
                 static Node *  Load(Source &source,const Grammar &); //!< reload a node
-                static Node *  AST(Node *node) throw();              //!< cleanup
-                
+                template <typename FILENAME> static inline
+                Node * LoadFile(const FILENAME &fileName, const Grammar &G)
+                {
+                    Source source( Module::OpenFile(fileName) );
+                    return Load(source,G);
+                }
+                static Node *  AST(Node *node) throw();                       //!< cleanup
+
                 //______________________________________________________________
                 //
                 // members

@@ -34,7 +34,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // non virtual interface
+            // non virtual interface : helpers
             //__________________________________________________________________
             size_t serialize_length()             const; //!< serialize(/dev/null)
             size_t serialize_className(ostream &) const; //!< emit className
@@ -42,13 +42,20 @@ namespace upsylon
             size_t serialize_class(ostream &)     const; //!< emit className+data
             size_t serialize_class_length()       const; //!< serialize_class(/dev/null)
 
+            //__________________________________________________________________
+            //
+            // non virtual interface : hashing
+            //__________________________________________________________________
             size_t hash_className_with(hashing::function &) const; //!< serialize_class_name( ohstream(H) )
             size_t hash_with(hashing::function &)           const; //!< serialize( ohstream(H) )
             size_t hash_class_with(hashing::function &)     const; //!< serialize_class( ohstream(H) )
-
             digest md(hashing::function &) const; //!< H.set(); (void) hash_with(...); return H.md();
 
 
+            //__________________________________________________________________
+            //
+            // non virtual interface : conversion
+            //__________________________________________________________________
             string to_binary()    const; //!< serialize into a string
             string to_base64()    const; //!< serialize and convert into base64
             string to_visible()   const; //!< serialize to a visible string

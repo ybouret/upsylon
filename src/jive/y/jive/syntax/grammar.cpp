@@ -64,7 +64,7 @@ namespace upsylon
                 return ax;
             }
 
-            Aggregate & Grammar:: agg()
+            Aggregate & Grammar:: grp()
             {
                 const string    id = vformat("agg%c%u",BuiltIn,indxAggregate);
                 Aggregate      &ax = agg(id);
@@ -75,7 +75,7 @@ namespace upsylon
             const Axiom & Grammar:: cat(const Axiom &a, const Axiom &b)
             {
                 const string id = '(' + *a.name + '+' + *b.name + ')';
-                Aggregate &ans = agg(id);
+                Aggregate &ans = grp(id);
                 ans << a << b;
                 return ans;
             }
@@ -85,7 +85,7 @@ namespace upsylon
                                         const Axiom &c)
             {
                 const string id  = '(' +*a.name + '+' + *b.name + '+' + *c.name + ')';
-                Aggregate   &ans = agg(id);
+                Aggregate   &ans = grp(id);
                 ans << a << b << c;
                 return ans;
             }
