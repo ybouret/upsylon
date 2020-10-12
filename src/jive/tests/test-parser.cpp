@@ -37,13 +37,26 @@ namespace {
                           << repeat( cat(COMA,VALUE), 0)
                           << RBRACK
                           );
+                VALUE << ARRAY;
             }
-            
+
+            Alternate  &OBJECT = alt("object");
+            {
+                const Axiom &LBRACE = division('{');
+                const Axiom &RBRACE = division('}');
+                OBJECT << ( agg("empty_object") << LBRACE << RBRACE);
+                const Axiom &PAIR   = agg("pair") << STRING << division(':') << VALUE;
+                OBJECT << (
+                           agg("heavy_object") << LBRACE << PAIR << repeat( cat(COMA,PAIR), 0 ) << RBRACE
+                           );
+                VALUE << OBJECT;
+            }
+
             drop("blank","[:blank:]");
             endl("endl", "[:endl:]");
             
+            setRoot( alt("JSON") << ARRAY << OBJECT );
             graphViz("json.dot");
-            setRoot(ARRAY);
             validate();
         }
 
