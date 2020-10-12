@@ -73,7 +73,7 @@ namespace upsylon
                 static void    Release(Node *)           throw();    //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();    //!< return node to lexer
                 static Node *  Load(Source &source,const Grammar &); //!< reload a node
-                static Node *  AST(Node *node) throw();
+                static Node *  AST(Node *node) throw();              //!< cleanup
                 
                 //______________________________________________________________
                 //
@@ -96,6 +96,8 @@ namespace upsylon
                 List & _List() const throw(); //!< if internal
                 
                 uint64_t wksp[Y_U64_FOR_ITEM(List)]; //!< memory
+                static Node *AST_Internal(Node *) throw();
+                static Node *AST_Terminal(Node *) throw();
             };
             
         }

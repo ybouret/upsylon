@@ -8,33 +8,62 @@ namespace upsylon
     {
         namespace Syntax
         {
-            
+
 
             Node * Node:: AST(Node *node)  throw()
             {
                 assert(node);
-                const Axiom    &axiom = node->axiom;
-                const uint32_t  uuid  = axiom.uuid;
-                
                 switch(node->kind)
                 {
-                    case IsInternal: {
-                        Node::List &src = node->_List();
-                        Node::List  tgt;
-                        while(src.size)
-                        {
-                            Node *sub = AST( src.pop_front() );
+                    case IsInternal: node = AST_Internal(node); break;
+                    case IsTerminal: node = AST_Terminal(node); break;
+                }
+                return node;
+            }
+
+            Node * Node:: AST_Internal(Node *node) throw()
+            {
+                assert(node);
+                assert(node->kind==IsInternal);
+
+                Node::List &src = node->_List();
+                Node::List  tgt;
+                while(src.size)
+                {
+                    Node *sub = AST( src.pop_front() );
+
+                    switch(sub->kind)
+                    {
+                        case IsTerminal: {
+                            const Axiom &axiom = sub->axiom;
+                            if( axiom.isTerminal() && (axiom.as<Terminal>().type==Terminal::Division) )
+                            {
+                                Release(sub);
+                            }
+                            else
+                            {
+                                tgt.push_back(sub);
+                            }
+                        } break;
+
+                        case IsInternal:
                             tgt.push_back(sub);
-                        }
-                        tgt.swap_with(src);
-                    } break;
-                        
-                    case IsTerminal:
-                        if(Terminal::UUID==uuid&&axiom.as<Terminal>().type==Terminal::Univocal)
-                        {
-                            node->_Lptr()->release();
-                        }
-                        break;
+                            break;
+                    }
+
+
+                }
+                tgt.swap_with(src);
+                return node;
+            }
+
+            Node * Node:: AST_Terminal(Node *node)  throw()
+            {
+                assert(node);
+                const Axiom &axiom = node->axiom;
+                if( axiom.isTerminal() && (axiom.as<Terminal>().type == Terminal::Univocal) )
+                {
+                    node->_Lptr()->release();
                 }
                 return node;
             }

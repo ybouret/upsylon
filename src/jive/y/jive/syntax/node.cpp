@@ -145,13 +145,17 @@ namespace upsylon
                         const Lexeme *l = lexeme();
                         string        s = "";
                         if(l) s = l->toEncoded();
-                        fp << "[label=\"" << *axiom.name << "\"";
-                        fp << "='" << s << "'\"";
-                        fp << ",shape=box];";
+                        fp << "[label=\"" << axiom.gvName();
+                        if(s.size())
+                        {
+                            fp << "='" << s << "'";
+                        }
+                        fp << "\",shape=box]";
+                        endl(fp);
                     } break;
                         
                     case IsInternal:
-                        fp << "[label=\"" << *axiom.name << "\",shape=oval];";
+                        endl(fp << "[label=\"" << *axiom.name << "\",shape=oval]");
                         for(const Node *node=leaves().head;node;node=node->next) {
                             node->vizSave(fp);
                             endl(vizJoin(fp,node));
