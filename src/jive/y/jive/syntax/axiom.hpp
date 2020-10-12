@@ -12,8 +12,11 @@ namespace upsylon
 
         namespace Syntax
         {
-            class Terminal; //!< forward declaration
             
+            class Terminal; //!< forward declaration
+
+
+
             //__________________________________________________________________
             //
             //
