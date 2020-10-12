@@ -16,8 +16,9 @@ namespace upsylon {
     class ref_node : public object, public inode< ref_node<T> >
     {
     public:
-        Y_DECL_ARGS(T,type);
+        Y_DECL_ARGS(T,type); //!< aliases
 
+        //! setup withj persistent args
         inline explicit  ref_node(const_type &args) throw() :
         object(),
         inode< ref_node<T> >(),
@@ -25,12 +26,16 @@ namespace upsylon {
         {
         }
 
+        //! cleanup
         inline virtual ~ref_node() throw()
         {
 
         }
 
+        //! access
         inline type & operator*()             throw() { return data; }
+
+        //! access, const
         inline const_type & operator*() const throw() { return data; }
 
 

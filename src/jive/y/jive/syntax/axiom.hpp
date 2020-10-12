@@ -15,8 +15,8 @@ namespace upsylon
         {
             
             class Terminal; //!< forward declaration
-            typedef ref_node<const Terminal>         TermReference;
-            typedef core::list_of_cpp<TermReference> TermCheckList;
+            typedef ref_node<const Terminal>         TermReference; //!< alias
+            typedef core::list_of_cpp<TermReference> TermCheckList; //!< alias
 
             //__________________________________________________________________
             //

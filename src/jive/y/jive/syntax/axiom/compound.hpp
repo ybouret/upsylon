@@ -44,7 +44,6 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
                 Y_JIVE_AXIOM_ATTACH_DECL();
-                Y_JIVE_AXIOM_EXPECT_DECL();
 
             };
             

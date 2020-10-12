@@ -29,6 +29,7 @@ namespace upsylon
                 }
             }
 
+#if 0
             void Compound:: expect(TermCheckList &ex, Axiom::Registry &db) const
             {
                 if(new_in(db))
@@ -39,6 +40,7 @@ namespace upsylon
                     }
                 }
             }
+#endif
         }
         
     }

@@ -47,6 +47,11 @@ namespace upsylon
                 }
                 return true;
             }
+
+            void Aggregate:: expect(TermCheckList &ex, Axiom::Registry &db) const
+            {
+
+            }
         }
     }
 }

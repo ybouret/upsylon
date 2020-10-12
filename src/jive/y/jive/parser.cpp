@@ -1,5 +1,6 @@
 
 #include "y/jive/parser.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -24,6 +25,13 @@ namespace upsylon
             return xnode.yield();
         }
 
+        void Parser:: checkStrong(const Lexical::Rule &rule) const
+        {
+            if(!rule.motif->strong())
+            {
+                throw exception("%s has weak terminal <%s>",**name,**rule.label);
+            }
+        }
     }
 
 }

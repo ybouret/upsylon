@@ -59,6 +59,7 @@ namespace upsylon
                                       const RX &rx)
             {
                 const Lexical::Rule &rule = emit(id,rx);
+                checkStrong(rule);
                 return term(id,rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard );
             }
 
@@ -74,7 +75,7 @@ namespace upsylon
             const Terminal & division(const ID &id,
                                       const RX &rx)
             {
-                (void) emit(id,rx);
+                checkStrong( emit(id,rx) );
                 return term(id,Terminal::Division);
             }
 
@@ -106,6 +107,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
+
+           void checkStrong(const Lexical::Rule &) const;
         };
     }
 
