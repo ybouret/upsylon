@@ -202,6 +202,19 @@ namespace upsylon {
             throw exception("[%s] no plugin <%s>", **label, s);
         }
 
+        const Lexeme * Lexer:: next(Source &source)
+        {
+            Lexeme *lexeme = get(source);
+            if(lexeme)
+            {
+                return io.push_front(lexeme);
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
     }
 
 }

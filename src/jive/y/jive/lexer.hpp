@@ -123,11 +123,12 @@ namespace upsylon {
             //__________________________________________________________________
 
 
-            Lexeme *get(Source &);             //!< get new lexemes
-            void    unget(Lexeme  *) throw();  //!< unget lexeme
-            void    unget(Lexemes &) throw();  //!< unget lexemes
-            void    reset()          throw();  //!< cleanup
-            void    ready(Source &,size_t);    //!< try to grow IO cache
+            Lexeme       *get(Source &);             //!< get new lexemes
+            void          unget(Lexeme  *) throw();  //!< unget lexeme
+            void          unget(Lexemes &) throw();  //!< unget lexemes
+            void          reset()          throw();  //!< cleanup
+            void          ready(Source &,size_t);    //!< try to grow IO cache
+            const Lexeme *next(Source &);            //!< get/unget
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
