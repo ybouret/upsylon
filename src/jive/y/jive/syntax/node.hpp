@@ -98,6 +98,7 @@ namespace upsylon
                 uint64_t wksp[Y_U64_FOR_ITEM(List)]; //!< memory
                 static Node *AST_Internal(Node *) throw();
                 static Node *AST_Terminal(Node *) throw();
+                
             };
             
         }

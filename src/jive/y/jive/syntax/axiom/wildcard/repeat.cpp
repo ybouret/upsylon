@@ -15,7 +15,8 @@ namespace upsylon
 
             Y_JIVE_AXIOM_ACCEPT_IMPL(Repeat)
             {
-                Y_JIVE_PRINTLN("repeat <" << axiom.name << "> >= " << atLeast);
+                Y_JIVE_PRINTLN("repeat <" << axiom.name << "> >= " << atLeast << ", parent=" << (tree? **(tree->axiom.name) : "nil") );
+
                 //--------------------------------------------------------------
                 // prepare local count
                 //--------------------------------------------------------------
@@ -54,7 +55,7 @@ namespace upsylon
                         }
                         else
                         {
-                            // bad grammar design, but whatever..
+                            // set tree
                             tree = rep.yield();
                         }
                     }

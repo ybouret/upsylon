@@ -26,28 +26,42 @@ namespace upsylon
                 assert(node);
                 assert(node->kind==IsInternal);
 
-                Node::List &src = node->_List();
-                Node::List  tgt;
+                //const Axiom &top = node->axiom;
+                Node::List  &src = node->_List();
+                Node::List   tgt;
                 while(src.size)
                 {
-                    Node *sub = AST( src.pop_front() );
-
-                    switch(sub->kind)
+                    Node::Pointer child( AST( src.pop_front() ) );
+                    const Axiom  &axiom  = child->axiom;
+                    switch(child->kind)
                     {
+                            //--------------------------------------------------
+                            // a terminal in the leaves
+                            //--------------------------------------------------
                         case IsTerminal: {
-                            const Axiom &axiom = sub->axiom;
                             if( axiom.isTerminal() && (axiom.as<Terminal>().type==Terminal::Division) )
                             {
-                                Release(sub);
+                                // do nothing
                             }
                             else
                             {
-                                tgt.push_back(sub);
+                                tgt.push_back(child.yield());
                             }
                         } break;
 
+                            //--------------------------------------------------
+                            // an internal in the leaves
+                            //--------------------------------------------------
                         case IsInternal:
-                            tgt.push_back(sub);
+                            switch(axiom.uuid)
+                            {
+                                case Repeat::UUID:
+                                    tgt.merge_back( child->leaves() );
+                                    break;
+
+                                default:
+                                    tgt.push_back(child.yield());
+                            }
                             break;
                     }
 

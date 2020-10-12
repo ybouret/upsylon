@@ -26,7 +26,7 @@ namespace upsylon
                     }
                     else
                     {
-                        Y_JIVE_PRINTLN("acceptep [empty]");
+                        Y_JIVE_PRINTLN("accepted [empty]");
                         return true;
                     }
                 }

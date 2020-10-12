@@ -3,6 +3,7 @@
 #include "y/jive/lexical/plugin/strings.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/jive/common-regexp.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -22,6 +23,7 @@ namespace {
             VALUE << terminal("null");
             VALUE << terminal("true");
             VALUE << terminal("false");
+            VALUE << terminal("number",RegExpFor::Double);
             VALUE << STRING;
             
             const Terminal &COMA  = division(',');
