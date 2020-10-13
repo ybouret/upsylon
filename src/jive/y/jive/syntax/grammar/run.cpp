@@ -12,6 +12,56 @@ namespace upsylon
 
 #define Y_JIVE_GRAMLN(MSG) do { if(Axiom::Verbose) { std::cerr << "[[" << name << "]] " << MSG << std::endl; } } while(false)
 
+
+
+            static inline
+            void excpLexeme(exception           &excp,
+                            const Lexeme        &lexeme,
+                            const Terminal::Type type,
+                            const bool           full)
+            {
+                const char  *id   = **lexeme.label;
+                const char  *whom = **lexeme.tag;
+                const int    line =   lexeme.line;
+                const int    col  =   lexeme.column;
+                if(full)
+                {
+                    excp.cat("%s:%d%d: ",whom,line,col);
+                }
+                switch(type)
+                {
+                    case Terminal::Standard: {
+                        const string s = lexeme.toString();
+                        excp.cat("<%s> = '%s'",id,*s);
+                    } break;
+
+                    default:
+                        excp.cat("<%s>",id);
+                        break;
+                }
+                
+            }
+
+
+            Terminal::Type Grammar:: lexemeType(const Lexeme &lexeme) const
+            {
+                const string   &key = *lexeme.label;
+                Axiom * const * ppA = registry.search_by(key);
+                if(!ppA)
+                {
+                    exception excp;
+                    excpLexeme(excp,lexeme,Terminal::Standard,true);
+                    excp.cat(" unregistered in %s",**name);
+                    throw excp;
+                }
+                else
+                {
+                    assert(*ppA);
+                    const Axiom &axiom = **ppA;
+                    return axiom.as<Terminal>().type;
+                }
+            }
+
             static inline
             void dispLexeme(const Tag    &name,
                             const char   *title,
@@ -28,10 +78,14 @@ namespace upsylon
                 }
             }
 
+
+
             Node * Grammar:: run(Lexer &lexer, Source &source) const
             {
                 //--------------------------------------------------------------
+                //
                 // get root
+                //
                 //--------------------------------------------------------------
 
                 const Axiom *root = axioms.head;
@@ -39,7 +93,9 @@ namespace upsylon
                 Y_JIVE_GRAMLN("root=<"<<root->name<<">");
 
                 //--------------------------------------------------------------
+                //
                 // get status
+                //
                 //--------------------------------------------------------------
                 Node         *tree = NULL;
                 Lexeme       *mind = NULL;
@@ -51,23 +107,46 @@ namespace upsylon
                 Y_JIVE_GRAMLN("tree    = " << (tree!=NULL) );
                 dispLexeme(name,"last",mind);
                 dispLexeme(name,"next",next);
-                
+
+
+
+
                 //--------------------------------------------------------------
+                //
                 // process status
+                //
                 //--------------------------------------------------------------
                 if(success)
                 {
                     if(tree)
                     {
+                        if(next)
+                        {
+                            exception excp;
+                            excpLexeme(excp, *next, lexemeType(*next),true);
+                            excp.cat(" is extraneous");
+                            if(mind)
+                            {
+                                excp.cat(" after ");
+                                excpLexeme(excp,*mind,lexemeType(*mind),false);
+                            }
+                            throw excp;
+                        }
                         return Node::AST(xnode.yield());
                     }
                     else
                     {
+                        //------------------------------------------------------
+                        // invalid null tree
+                        //------------------------------------------------------
                         return NULL;
                     }
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    // syntax error
+                    //----------------------------------------------------------
                     return NULL;
                 }
 

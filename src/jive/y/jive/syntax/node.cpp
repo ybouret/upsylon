@@ -128,6 +128,7 @@ namespace upsylon
                 {
                     case IsTerminal: {
                         Lptr & lx = node->_Lptr(); assert(lx.is_valid());
+                        std::cerr << "--- returning <" << lx->label << "> = '" << *lx << "'" << std::endl;
                         lexer.unget(lx.yield());
                     } break;
                         

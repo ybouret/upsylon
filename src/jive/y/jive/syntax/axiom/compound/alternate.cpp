@@ -18,8 +18,8 @@ namespace upsylon
                 Y_JIVE_PRINTLN(" alternate #" << size);
 
                 const long subDepth = depth+1;
-                size_t     refCount=1;
-                bool       result  = false;
+                size_t     refCount = 1;
+                bool       result   = false;
                 for(const Axiom::Reference *ref=head;ref;ref=ref->next,++refCount)
                 {
                     const Axiom &axiom = **ref;

@@ -233,13 +233,18 @@ namespace upsylon
                 //! create an automatic alternate
                 //--------------------------------------------------------------
                 const Axiom & choice(const Axiom &a, const Axiom &b, const Axiom &c);
-                
+
+                //--------------------------------------------------------------
+                //! query lexeme type
+                //--------------------------------------------------------------
+                Terminal::Type lexemeType(const Lexeme &lexeme) const;
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                const Tag    name; //!< shared name
-                const size_t maxNameLength;
+                const Tag    name;          //!< shared name
+                const size_t maxNameLength; //!< axioms max name length
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
