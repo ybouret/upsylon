@@ -102,7 +102,8 @@ namespace upsylon
             Axiom:: Axiom(const uint32_t u, const string *s) throw() :
             uuid(u),
             name(s),
-            self(0)
+            self(0),
+            from()
             {
             }
 
