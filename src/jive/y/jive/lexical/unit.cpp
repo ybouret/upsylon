@@ -18,6 +18,13 @@ namespace upsylon
         namespace Lexical
         {
 
+
+            Unit::Supply & Unit:: Instance()
+            {
+                static Supply &_ = Supply::instance();
+                return _;
+            }
+
             static size_t UnitStamp = 0;
             
             Unit:: ~Unit() throw()

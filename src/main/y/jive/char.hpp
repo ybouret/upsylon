@@ -32,14 +32,15 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-            static Char *Acquire(const Context &, const uint8_t);           //!< create
-            static void  Release(Char *) throw();                           //!< delete
-            static Char *Copycat(const Char *);                             //!< copy
-            static Char *Copyset(const Char *, const uint8_t);              //!< copy with another byte
-            static void  Reserve(const size_t);                             //!< reserve chars
+            static Char *  Acquire(const Context &, const uint8_t);           //!< create
+            static void    Release(Char *) throw();                           //!< delete
+            static Char *  Copycat(const Char *);                             //!< copy
+            static Char *  Copyset(const Char *, const uint8_t);              //!< copy with another byte
+            static void    Reserve(const size_t);                             //!< reserve chars
+            static Supply &Instance();                                        //!< get instance
+
             friend std::ostream & operator<<(std::ostream &, const Char &); //!< display
             friend ios::ostream & operator<<(ios::ostream &, const Char &); //!< append to ostream
-
             //__________________________________________________________________
             //
             // members

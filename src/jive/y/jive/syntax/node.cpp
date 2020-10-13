@@ -22,7 +22,13 @@ namespace upsylon
         {
             
             
-            
+
+            Node::Supply & Node:: Instance()
+            {
+                static Supply &_ = Supply::instance();
+                return _;
+            }
+
             const Lexeme * Node::lexeme() const throw()
             {
                 return _Lptr().content();

@@ -35,10 +35,9 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                static Unit *Create(const Context &,
-                                    const Tag     &); //!< using supply
-                static void  Delete(Unit *) throw();               //!< using supply
-                
+                static Unit *  Create(const Context &, const Tag &); //!< using supply
+                static void    Delete(Unit *) throw();               //!< using supply
+                static Supply &Instance();                           //!< instance
 
                 //______________________________________________________________
                 //

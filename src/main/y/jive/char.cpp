@@ -43,6 +43,11 @@ namespace upsylon {
             _bzset(code);
         }
 
+        Char::Supply & Char:: Instance()
+        {
+            static Supply &_ = Supply::instance();
+            return _;
+        }
 
         Char * Char:: Acquire(const Context &context,
                               const uint8_t  code)

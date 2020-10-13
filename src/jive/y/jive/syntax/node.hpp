@@ -71,6 +71,7 @@ namespace upsylon
                 //______________________________________________________________
                 static Node *  Acquire(const Axiom &, Lexeme *);     //!< new terminal node
                 static Node *  Acquire(const Axiom &);               //!< new internal node
+                static Supply &Instance();                           //!< instance
                 static void    Release(Node *)           throw();    //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();    //!< return node to lexer
                 static Node *  Load(Source &source,const Grammar &); //!< reload a node
