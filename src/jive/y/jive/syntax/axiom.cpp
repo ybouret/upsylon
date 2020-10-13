@@ -143,7 +143,11 @@ namespace upsylon
                 assert(now);
                 if(guess.lexeme)
                 {
-                    if(now->stamp>guess.lexeme->stamp) guess.lexeme = now;
+                    if(now->stamp>guess.lexeme->stamp)
+                    {
+                        guess.lexeme = now;
+                        guess.parent = guess.current;
+                    }
                 }
                 else
                 {

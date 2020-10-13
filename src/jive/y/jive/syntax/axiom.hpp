@@ -19,12 +19,15 @@ namespace upsylon
             // helpers
             //
             //__________________________________________________________________
-            class Axiom;
+
+            class Aggregate;
 
             //! guess for error management
             struct  Guess
             {
-                const Lexeme *lexeme; //!< last accepted lexeme
+                const Lexeme    *lexeme;  //!< last accepted lexeme
+                const Aggregate *parent;  //!< address of aggregate
+                const Aggregate *current; //!< current
             };
 
             //! args for accept method

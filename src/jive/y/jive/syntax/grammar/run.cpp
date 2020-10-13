@@ -98,15 +98,23 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 Node         *tree    = NULL;
-                Guess         guess   = { NULL  };
+                Guess         guess   = { NULL, NULL, NULL };
                 const bool    success = root->accept(tree,lexer,source,guess,0);
                 Node::Pointer xnode(tree) ;
 
                 Y_JIVE_GRAMLN("success = " << success);
                 Y_JIVE_GRAMLN("tree    = " << (tree!=NULL) );
-                const Lexeme *last = guess.lexeme;
+                const Lexeme    *last = guess.lexeme;
+                const Aggregate *hold = guess.parent;
                 dispLexeme(name,"last",last);
-
+                if(hold)
+                {
+                    Y_JIVE_GRAMLN("from <" << hold->name << ">");
+                }
+                else
+                {
+                    Y_JIVE_GRAMLN("missing holding aggregate!");
+                }
 
 
 
