@@ -19,14 +19,7 @@ namespace upsylon
                 }
             }
 
-            void Wildcard:: expect(TermCheckList &ex, Axiom::Registry &db) const
-            {
-                if( new_in(db) )
-                {
-                    axiom.expect(ex,db);
-                }
-            }
-
+            
         }
 
     }

@@ -52,11 +52,7 @@ namespace upsylon
                     return false;
                 }
             }
-
-            void Alternate:: expect(TermCheckList &ex, Axiom::Registry &db) const
-            {
-                
-            }
+            
         }
     }
 }

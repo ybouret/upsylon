@@ -36,7 +36,7 @@ namespace upsylon
 
                 const Axiom *root = axioms.head;
                 if(!root) throw exception("%s has no root Axiom!",**name);
-                 Y_JIVE_GRAMLN("root=<"<<root->name<<">");
+                Y_JIVE_GRAMLN("root=<"<<root->name<<">");
 
                 //--------------------------------------------------------------
                 // get status
@@ -51,7 +51,7 @@ namespace upsylon
                 Y_JIVE_GRAMLN("tree    = " << (tree!=NULL) );
                 dispLexeme(name,"last",mind);
                 dispLexeme(name,"next",next);
-
+                
                 //--------------------------------------------------------------
                 // process status
                 //--------------------------------------------------------------
@@ -72,7 +72,7 @@ namespace upsylon
                 }
 
 
-             }
+            }
 
         }
 

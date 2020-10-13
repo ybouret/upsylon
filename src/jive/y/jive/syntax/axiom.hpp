@@ -13,11 +13,6 @@ namespace upsylon
 
         namespace Syntax
         {
-            
-            class Terminal; //!< forward declaration
-            typedef ref_node<const Terminal>         TermReference; //!< alias
-            typedef core::list_of_cpp<TermReference> TermCheckList; //!< alias
-
             //__________________________________________________________________
             //
             //
@@ -36,9 +31,6 @@ namespace upsylon
 
             //! attach declaration
 #define Y_JIVE_AXIOM_ATTACH_DECL()       virtual void attach(Axiom::Registry &) const
-
-            //! expect declaration
-#define Y_JIVE_AXIOM_EXPECT_DECL()       virtual void expect(TermCheckList &, Axiom::Registry &) const
 
             
             //__________________________________________________________________
@@ -85,8 +77,6 @@ namespace upsylon
                 bool         new_in(Axiom::Registry&)         const;  //!< check
                 string       gvName()                         const;  //!< GraphViz Name
                 Y_JIVE_AXIOM_ATTACH_DECL()                      = 0;  //!< recursive look up of all children
-                Y_JIVE_AXIOM_EXPECT_DECL()                      = 0;  //!< recursive look up of all terminals
-                void         compileWith(Axiom::Registry &temp);      //!< build 'then'
 
                 //______________________________________________________________
                 //
@@ -95,8 +85,7 @@ namespace upsylon
                 const uint32_t      uuid; //!< identifier
                 const Tag           name; //!< axiom name
                 const void *const   self; //!< derived class
-                const TermCheckList then; //!< following terms
-
+                
                 //______________________________________________________________
                 //
                 // helpers

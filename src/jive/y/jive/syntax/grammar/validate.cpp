@@ -12,7 +12,7 @@ namespace upsylon
 
             void  Grammar:: validate() const
             {
-                Y_JIVE_GRAMLN("validating");
+                Y_JIVE_GRAMLN("<validating>");
 
                 //--------------------------------------------------------------
                 //
@@ -68,14 +68,17 @@ namespace upsylon
                 //--------------------------------------------------------------
                 for(Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                 {
+                    Y_JIVE_GRAMLN("\t<" << axiom->name << ">" );
+#if 0
                     axiom->compileWith(db);
-                    Y_JIVE_GRAMLN(" <" << axiom->name << ">" );
                     for(const TermReference *t=axiom->then.head;t;t=t->next)
                     {
                         Y_JIVE_GRAMLN(" | -> <" << (**t).name << ">");
                     }
+#endif
                 }
 
+                Y_JIVE_GRAMLN("<validating/>");
 
             }
 

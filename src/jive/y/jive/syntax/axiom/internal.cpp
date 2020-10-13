@@ -30,11 +30,8 @@ namespace upsylon
                 (void) new_in(db);
             }
 
-
-            void Dull::expect(TermCheckList &, Axiom::Registry &) const
-            {
-
-            }
+            
+            
         }
 
     }

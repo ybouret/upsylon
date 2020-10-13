@@ -33,6 +33,12 @@ namespace upsylon {
         }
 
         //! access
+        inline type * operator->()             throw() { return &data; }
+
+        //! access
+        inline const_type * operator->() const throw() { return &data; }
+
+        //! access
         inline type & operator*()             throw() { return data; }
 
         //! access, const
