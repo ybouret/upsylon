@@ -4,6 +4,7 @@
 #define Y_JIVE_SYNTAX_TERMINAL_INCLUDED 1
 
 #include "y/jive/syntax/axiom.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -52,6 +53,9 @@ namespace upsylon
                 Y_JIVE_AXIOM_ATTACH_DECL();
 
                 const Type type; //!< kind
+
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

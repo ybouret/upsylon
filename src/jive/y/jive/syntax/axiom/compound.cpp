@@ -15,6 +15,15 @@ namespace upsylon
             Compound & Compound:: operator<<(const Axiom &axiom)
             {
                 push_back( new Axiom::Reference(axiom) );
+                try
+                {
+                    axiom.called_by(*this);
+                }
+                catch(...)
+                {
+                    delete pop_back();
+                    throw;
+                }
                 return *this;
             }
 
@@ -29,18 +38,7 @@ namespace upsylon
                 }
             }
 
-#if 0
-            void Compound:: expect(TermCheckList &ex, Axiom::Registry &db) const
-            {
-                if(new_in(db))
-                {
-                    for(const Axiom::Reference *ref=head;ref;ref=ref->next)
-                    {
-                        (**ref).expect(ex,db);
-                    }
-                }
-            }
-#endif
+#
         }
         
     }

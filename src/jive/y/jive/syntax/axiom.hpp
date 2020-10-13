@@ -47,13 +47,27 @@ namespace upsylon
                 // types and definitions
                 //______________________________________________________________
                 static const uint32_t TermUUID = Y_FOURCC('T','E','R','M'); //!< forward value
-                static bool           Verbose;                   //!< verbosity level
-                static const char     Prefix[];                  //!< "[JIVE] "
-                typedef core::list_of_cpp<Axiom>     List;       //!< alias
-                typedef Axiom                       *Pointer;    //!< alias
-                typedef suffix_tree<Pointer>         Registry;   //!< alias
-                typedef ref_node<const Axiom>        Reference;  //!< alias
-                typedef core::list_of_cpp<Reference> Manifest;   //!< alias
+                static bool           Verbose;                       //!< verbosity level
+                static const char     Prefix[];                      //!< "[JIVE] "
+                typedef core::list_of_cpp<Axiom>     List;           //!< alias
+                typedef Axiom                       *Pointer;        //!< alias
+                typedef suffix_tree<Pointer>         RegistryType;   //!< alias
+                typedef ref_node<const Axiom>        Reference;      //!< alias
+                typedef core::list_of_cpp<Reference> Manifest;       //!< alias
+
+                class Registry : public RegistryType
+                {
+                public:
+                    explicit Registry();
+                    virtual ~Registry() throw();
+                    explicit Registry(const Registry &);
+                    std::ostream &        display(std::ostream&) const;
+                    friend std::ostream & operator<<(std::ostream &, const Registry &);
+                    void     ensure(const string &who, Axiom &axiom);
+
+                private:
+                    Y_DISABLE_ASSIGN(Registry);
+                };
 
                 
                 //______________________________________________________________
@@ -77,7 +91,8 @@ namespace upsylon
                 bool         new_in(Axiom::Registry&)         const;  //!< check
                 string       gvName()                         const;  //!< GraphViz Name
                 Y_JIVE_AXIOM_ATTACH_DECL()                      = 0;  //!< recursive look up of all children
-
+                void         called_by(const Axiom &parent)   const;  //!< modify 'from'
+                
                 //______________________________________________________________
                 //
                 // members
@@ -85,7 +100,8 @@ namespace upsylon
                 const uint32_t      uuid; //!< identifier
                 const Tag           name; //!< axiom name
                 const void *const   self; //!< derived class
-                
+                const Registry      from; //!< called by
+
                 //______________________________________________________________
                 //
                 // helpers

@@ -1,6 +1,88 @@
 
 #include "y/jive/syntax/axiom.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/exception.hpp"
+
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Syntax
+        {
+
+            Axiom:: Registry:: Registry() : RegistryType()
+            {
+            }
+
+            Axiom:: Registry:: ~Registry() throw()
+            {
+            }
+
+            std::ostream & operator<<(std::ostream &os, const Axiom::Registry &r)
+            {
+                return r.display(os);
+            }
+            
+            namespace {
+
+                struct AxiomRegistryDisplay
+                {
+                    std::ostream *dest;
+                    size_t        indx;
+                    size_t        size;
+                    inline bool operator()(const suffix_path    &,
+                                           const Axiom::Pointer &ptr)
+                    {
+                        std::ostream &os = *dest;
+                        ++indx;
+                        os << '<' << ptr->name << '>';
+                        if(indx<size) os << ';';
+                        return true;
+                    }
+                };
+            }
+
+            std::ostream & Axiom:: Registry:: display(std::ostream &os) const
+            {
+                AxiomRegistryDisplay cb = { &os, 0, entries() };
+                for_each(cb);
+                return os;
+            }
+
+            void Axiom:: Registry:: ensure(const string &who, Axiom &axiom)
+            {
+                static const char fn[] = "Axiom::Registry: ";
+
+                const string  &key = *axiom.name;
+                Axiom * const *ppA = search_by( key );
+                if(!ppA)
+                {
+                    if(!insert_by(key,&axiom))
+                    {
+                        throw exception("%sunexpected failure to record <%s> for %s",fn,*key,*who);
+                    }
+                }
+                else
+                {
+                    const Axiom &owned = **ppA;
+                    if( &owned != &axiom )
+                    {
+                        throw exception("%sdifferent axioms <%s> for %s",fn,*key,*who);
+                    }
+                }
+            }
+
+            void Axiom:: called_by(const Axiom &parent) const
+            {
+                //if(Verbose) { std::cerr << "<" << name << "> <== <" << parent.name << ">" << std::endl; }
+                aliasing::_(from).ensure(*name,aliasing::_(parent));
+            }
+
+        }
+
+    }
+
+}
 
 namespace upsylon
 {

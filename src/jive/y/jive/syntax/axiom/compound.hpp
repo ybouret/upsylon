@@ -26,7 +26,10 @@ namespace upsylon
                 //! cleanup
                 virtual ~Compound() throw();
                 
-                //! helper to grow axioms list
+                //!   grow axioms list
+                /**
+                 use this function for proper graph construction
+                 */
                 Compound & operator<<(const Axiom &);
                 
 

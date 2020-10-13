@@ -62,20 +62,15 @@ namespace upsylon
                         }
                     }
                 }
+                Y_JIVE_GRAMLN(db);
 
                 //--------------------------------------------------------------
                 // create 'then' lists
                 //--------------------------------------------------------------
                 for(Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                 {
-                    Y_JIVE_GRAMLN("\t<" << axiom->name << ">" );
-#if 0
-                    axiom->compileWith(db);
-                    for(const TermReference *t=axiom->then.head;t;t=t->next)
-                    {
-                        Y_JIVE_GRAMLN(" | -> <" << (**t).name << ">");
-                    }
-#endif
+                    Y_JIVE_GRAMLN("\t<"  << axiom->name << "> <== " << axiom->from );
+
                 }
 
                 Y_JIVE_GRAMLN("<validating/>");

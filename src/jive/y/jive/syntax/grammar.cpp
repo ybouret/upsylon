@@ -27,6 +27,10 @@ namespace upsylon
                     delete axioms.pop_back();
                     throw;
                 }
+                if(axiom->name->size()>maxNameLength)
+                {
+                    aliasing::_(maxNameLength) = axiom->name->size();
+                }
             }
 
             const Axiom * Grammar:: getRoot() const throw()

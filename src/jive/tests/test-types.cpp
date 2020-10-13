@@ -23,6 +23,8 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(Syntax::Alternate);
     Y_UTEST_SIZEOF(Syntax::Option);
     Y_UTEST_SIZEOF(Syntax::Repeat);
+    Y_UTEST_SIZEOF(Syntax::Axiom::Registry);
+    Y_UTEST_SIZEOF(Syntax::Axiom::Manifest);
 
 
 

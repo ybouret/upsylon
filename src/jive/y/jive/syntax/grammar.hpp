@@ -38,6 +38,7 @@ namespace upsylon
                 template <typename ID> inline
                 explicit Grammar( const ID &id ) :
                 name( Tags::Make(id) ),
+                maxNameLength(0),
                 axioms(),
                 registry(),
                 indxAggregate(1),
@@ -237,9 +238,8 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Tag name; //!< shared name
-
-
+                const Tag    name; //!< shared name
+                const size_t maxNameLength;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);

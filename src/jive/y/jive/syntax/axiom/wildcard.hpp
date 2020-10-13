@@ -38,6 +38,7 @@ namespace upsylon
                 Internal(i,t),
                 axiom(a)
                 {
+                    a.called_by(*this);
                 }
 
                 
