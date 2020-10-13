@@ -98,15 +98,13 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 Node         *tree = NULL;
-                Lexeme       *mind = NULL;
-                const bool    success = root->accept(tree,lexer,source,mind,0);
+                Lexeme       *last = NULL;
+                const bool    success = root->accept(tree,lexer,source,last,0);
                 Node::Pointer xnode(tree) ;
-                const Lexeme *next    = lexer.next(source);
 
                 Y_JIVE_GRAMLN("success = " << success);
                 Y_JIVE_GRAMLN("tree    = " << (tree!=NULL) );
-                dispLexeme(name,"last",mind);
-                dispLexeme(name,"next",next);
+                dispLexeme(name,"last",last);
 
 
 
@@ -120,15 +118,16 @@ namespace upsylon
                 {
                     if(tree)
                     {
+                        const Lexeme *next = lexer.next(source);
                         if(next)
                         {
                             exception excp;
                             excpLexeme(excp, *next, lexemeType(*next),true);
                             excp.cat(" is extraneous");
-                            if(mind)
+                            if(last)
                             {
                                 excp.cat(" after ");
-                                excpLexeme(excp,*mind,lexemeType(*mind),false);
+                                excpLexeme(excp,*last,lexemeType(*last),false);
                             }
                             throw excp;
                         }
@@ -147,6 +146,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     // syntax error
                     //----------------------------------------------------------
+                    std::cerr << "SYNTAX ERROR" << std::endl;
                     return NULL;
                 }
 

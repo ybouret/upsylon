@@ -34,8 +34,8 @@ namespace upsylon
                     else
                     {
                         assert(0==sTree);
-                        Node::ReturnTo(lexer,node.yield());
                         Y_JIVE_PRINTLN(refCount << "/" << size << " => rejected");
+                        Node::ReturnTo(lexer,node.yield());
                         return false;
                     }
                 }

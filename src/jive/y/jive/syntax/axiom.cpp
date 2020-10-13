@@ -183,7 +183,7 @@ namespace upsylon
                 {
                     os << ' ' << ' ';
                 }
-                os << "|_<" << name <<"> ";
+                os << "|_[" << fourcc_(uuid) << "]<" << name <<"> ";
                 return os;
             }
 

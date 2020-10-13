@@ -19,6 +19,13 @@ namespace upsylon
             // helpers
             //
             //__________________________________________________________________
+            class Axiom;
+
+            struct  Guess
+            {
+                const Lexeme *lexeme;
+                const Axiom  *axiom;
+            };
 
             //! args for accept method
 #define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, Lexeme * &mind, long depth
