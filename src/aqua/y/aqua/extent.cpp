@@ -9,12 +9,18 @@ namespace upsylon {
     namespace Aqua
     {
 
-
         std::ostream & operator<<(std::ostream &os, const Extent &x)
         {
             if(x.limited)
             {
-                os << "limited@" << x.maximum;
+                if(x.maximum>0)
+                {
+                    os << "limited@" << x.maximum;
+                }
+                else
+                {
+                    os << "blocked";
+                }
             }
             else
             {
@@ -29,7 +35,8 @@ namespace upsylon {
 
         Extent:: Extent(const Extent &_) throw() :
         limited(_.limited),
-        maximum(_.maximum)
+        maximum(_.maximum),
+        blocked(_.blocked)
         {
         }
 
@@ -56,10 +63,33 @@ namespace upsylon {
                         const Component::List    &L,
                         double                   *A) throw() :
         limited(L.size>0),
-        maximum(limited ? findMaximumExtent(C,L,A) : 0)
+        maximum(limited ? findMaximumExtent(C,L,A) : 0),
+        blocked(limited&&(maximum<=0))
         {
             
         }
+
+        double Extent:: cut( const double value ) const throw()
+        {
+            assert(value>=0);
+            if(limited)
+            {
+                return min_of(maximum,value);
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+    }
+
+}
+
+namespace upsylon {
+
+    namespace Aqua
+    {
 
         Extents:: ~Extents() throw()
         {
@@ -69,24 +99,53 @@ namespace upsylon {
                           const accessible<double> &C,
                           double                   *A) throw() :
         forward(C,eq.reactants,A),
-        reverse(C,eq.products, A)
+        reverse(C,eq.products, A),
+        blocked(forward.blocked&&reverse.blocked)
         {
         }
 
         Extents:: Extents(const Extents &other) throw() :
         forward(other.forward),
-        reverse(other.reverse)
+        reverse(other.reverse),
+        blocked(other.blocked)
         {
 
         }
 
-        
 
         std::ostream & operator<<(std::ostream &os, const Extents &x)
         {
             os << "forward: " << x.forward << " | reverse: " << x.reverse;
             return os;
         }
+
+        double Extents:: cut(const double value) const throw()
+        {
+            if(blocked)
+            {
+                return 0;
+            }
+            else
+            {
+                if(value>0)
+                {
+                    return forward.cut(value);
+                }
+                else
+                {
+                    if(value<0)
+                    {
+                        return -reverse.cut(-value);
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
+            
+        }
+
 
     }
 

@@ -49,12 +49,16 @@ namespace upsylon {
             Y_DISABLE_ASSIGN(Component);
         };
 
+        //______________________________________________________________________
+        //
+        //
         //! extent info for an equilibrium
+        //
+        //______________________________________________________________________
         class Extent
         {
         public:
-            const bool   limited; //!< is limited ?
-            const double maximum; //!< value (>0) if limited
+
 
             //! setup from reactants/products (nu>0!) and auxialiary data
             Extent(const accessible<double> &C,
@@ -66,7 +70,13 @@ namespace upsylon {
             //! display
             friend std::ostream & operator<<(std::ostream &, const Extent &);
 
+            //! cut guess extent, value>=0
+            double cut( const double value ) const throw();
 
+            const bool   limited; //!< is limited ?
+            const double maximum; //!< value (>0) if limited
+            const bool   blocked; //!< limited at value=0
+            
         private:
             Y_DISABLE_ASSIGN(Extent);
         };
@@ -79,7 +89,8 @@ namespace upsylon {
         public:
             const Extent forward; //!< for reactants
             const Extent reverse; //!< for products
-
+            const bool   blocked; //!< both are blocked
+            
             //! setup
             Extents(const Equilibrium        &eq,
                     const accessible<double> &C,
@@ -94,6 +105,8 @@ namespace upsylon {
             //! display
             friend std::ostream & operator<<(std::ostream &, const Extents &x);
 
+            //! cut according to value
+            double cut(const double value) const throw();
 
         private:
             Y_DISABLE_ASSIGN(Extents);
@@ -115,8 +128,6 @@ namespace upsylon {
             //__________________________________________________________________
             typedef Component::List      Components; //!< alias
             typedef arc_ptr<Equilibrium> Pointer;    //!< alias
-
-
 
             //__________________________________________________________________
             //

@@ -26,10 +26,11 @@ namespace upsylon
         tNu(),
         Nu2(),
         det(),
+        iNu(),
         Prj(),
         aM( 16 ),
         Corg( aM.next() ),
-        Cbad( aM.next() ),
+        Cxs( aM.next() ),
         Ctry( aM.next() ),
         Cstp( aM.next() ),
         Caux( aM.next() ),
@@ -41,12 +42,15 @@ namespace upsylon
         xi( aN.next() ),
         nu2( aN.next() ),
         keep(),
-        balanceVerbose(false)
+        maxNameLength(0),
+        balanceVerbose(false),
+        balanceCycles(0)
         {
             keep << aliasing::_(equilibria);
             keep << aliasing::_(Nu);
             keep << aliasing::_(tNu);
             keep << aliasing::_(Nu2);
+            keep << aliasing::_(iNu);
             keep << aliasing::_(Prj);
             keep << aliasing::_(aM);
             keep << aliasing::_(aN);
@@ -60,6 +64,8 @@ namespace upsylon
             _bzset(Ma);
             _bzset(M);
             _bzset(N);
+            _bzset(maxNameLength);
+            _bzset(balanceCycles);
             new ( & aliasing::_(active) ) Booleans();
             new ( &illegal )              Booleans();
         }
@@ -97,6 +103,7 @@ namespace upsylon
                         for(Equilibria::const_iterator it=eqs.begin();it!=eqs.end();++it,++i)
                         {
                             const Equilibrium::Pointer &eq  = *it;
+                            maxNameLength = max_of(maxNameLength,eq->name.size());
                             aliasing::_(equilibria).push_back(eq);
                             addressable<Int> &nu_i = aliasing::_(Nu[i]);
                             eq->fillNu(nu_i);
@@ -121,13 +128,12 @@ namespace upsylon
                     quark::mmul_rtrn(aliasing::_(Nu2),Nu,Nu);
                     aliasing::_(det) = ideterminant(Nu2);
                     if(det<=0) throw exception("%ssingular set of equilibria",fn);
+                    aliasing::_(iNu).make(N,M);
                     aliasing::_(Prj).make(M,M);
                     {
-                        iMatrix aNu2(N,N);
-                        iadjoint(aNu2,Nu2);
-                        iMatrix aNu2Nu(N,M);
-                        quark::mmul(aNu2Nu,aNu2,Nu);
-                        quark::mmul( aliasing::_(Prj), tNu, aNu2Nu);
+                        iMatrix aNu2(N,N); iadjoint(aNu2,Nu2);
+                        quark::mmul( aliasing::_(iNu), aNu2,Nu);
+                        quark::mmul( aliasing::_(Prj), tNu, iNu);
                     }
                 }
 

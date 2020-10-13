@@ -45,8 +45,6 @@ namespace upsylon
             //! balance set of concentrations with Nu
             bool balance(addressable<double> &C) throw();
 
-            bool balance2(addressable<double> &C) throw();
-
             //__________________________________________________________________
             //
             // members
@@ -60,22 +58,22 @@ namespace upsylon
             const iMatrix  tNu;        //!< transposed           [MxN]
             const iMatrix  Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
             const Int      det;        //!< det(Nu2), check independant equilibria
+            const iMatrix  iNu;        //!< adj(Nu2)*Nu : C->xi  [NxM]
             const iMatrix  Prj;        //!< Nu'*adj(Nu2)*Nu      [MxM]
         private:
             Arrays         aM;         //!< linear memory
         public:
-            Array         &Corg;       //!< hold  C [M]
-            Array         &Cbad;       //!< bad   C [M]
-            Array         &Ctry;       //!< trial C [M]
-            Array         &Cstp;       //!< step  C [M]
-            Array         &Caux;       //!< aux   C [M]
+            Array         &Corg;       //!< hold   C [M]
+            Array         &Cxs;        //!< excess C [M]
+            Array         &Ctry;       //!< trial  C [M]
+            Array         &Cstp;       //!< step   C [M]
+            Array         &Caux;       //!< aux    C [M]
         private:
             Array         &Cact;      //!< for active  [M]
             Array         &Cill;      //!< for illegal [M]
         public:
             const Booleans active;    //!< active concentrations [M]
             Booleans       illegal;   //!< illegal concentrations [M]
-            size_t         illness;   //!< number of illegal concentrations <= M
             
         private:
             Arrays         aN;        //!< linear memory
@@ -85,16 +83,19 @@ namespace upsylon
 
 
          private:
-            Collector keep;
+            Collector keep;           //!< memory management
+            size_t    maxNameLength;  //!< max equilibria name lengths
+
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
-            double BalanceInit(addressable<double> &C) throw(); //!< initialize step
-            double BalanceCall(const double x)         throw(); //!< constraint forward
-            
+
             struct BalanceProxy { Engine *self; double operator()(const double) throw(); };
 
-            double BalanceValue() throw(); // @Corg
-            bool   BalanceDelta() throw(); // @Corg/Cbad => Cstp
+            double BalanceValue() throw(); //! at Corg
+            bool   BalanceDelta() throw(); //! at Corg/Cbad => Cstp, false if Cstp=0
+            double BalanceCheck(const double x) throw(); //!< Ctry=Corg+x*Ctry
 
+            double sumCaux(const size_t m) throw();
+            
         public:
             bool   balanceVerbose; //!< balance verbosity
             size_t balanceCycles;  //!< last balance cycles

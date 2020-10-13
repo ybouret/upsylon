@@ -56,6 +56,7 @@ Y_UTEST(engine)
     std::cerr << "Nu2     = " << cs.Nu2     << std::endl;
     std::cerr << "dNu2    = " << cs.det     << std::endl;
     std::cerr << "nu2     = " << cs.nu2     << std::endl;
+    std::cerr << "iNu     = " << cs.iNu     << std::endl;
     std::cerr << "Prj     = " << cs.Prj     << std::endl;
     std::cerr << "active  = " << cs.active  << std::endl;
     std::cerr << "Ma      = " << cs.Ma      << " #/ " << cs.M << std::endl;
@@ -63,16 +64,29 @@ Y_UTEST(engine)
 
     vector<double> C(cs.M+2,0);
     
-    //    for(size_t j=C.size();j>0;--j)
-    for(size_t j=4;j>0;--j)
+GENERATE:
+    for(size_t j=C.size();j>0;--j)
     {
-        C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+        if(alea.to<double>()>0.2)
+        {
+            C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+        }
+        else
+        {
+            C[j] = 0;
+        }
     }
 
     lib.show(std::cerr << "ini=",C);
 
-    cs.balanceVerbose=true;
-    cs.balance2(C);
+    //cs.balanceVerbose=true;
+    if( cs.balance(C) )
+    {
+        lib.show(std::cerr << "end=",C);
+
+    }
+    else
+        goto GENERATE;
 
 
 }
