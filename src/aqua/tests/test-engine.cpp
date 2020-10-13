@@ -15,11 +15,13 @@ Y_UTEST(engine)
     Species &w   = lib("HO-",-1);
     Species &ah  = lib("AH",0);
     Species &am  = lib("Am",-1);
-    Species &NH4 = lib("NH4+",1);
-    Species &NH3 = lib("NH3",0);
+
 
     Species &Na = lib("Na+",1);  (void)Na;
     Species &Cl = lib("Cl-",-1); (void)Cl;
+
+    Species &NH4 = lib("NH4+",1);
+    Species &NH3 = lib("NH3",0);
 
     std::cerr << lib << std::endl;
 
@@ -54,6 +56,7 @@ Y_UTEST(engine)
     std::cerr << "Nu2     = " << cs.Nu2     << std::endl;
     std::cerr << "dNu2    = " << cs.det     << std::endl;
     std::cerr << "nu2     = " << cs.nu2     << std::endl;
+    std::cerr << "Prj     = " << cs.Prj     << std::endl;
     std::cerr << "active  = " << cs.active  << std::endl;
     std::cerr << "Ma      = " << cs.Ma      << " #/ " << cs.M << std::endl;
     std::cerr << "Nc      = " << cs.Nc      << std::endl;

@@ -4,7 +4,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/exception.hpp"
 #include "y/mkl/kernel/quark.hpp"
-#include "y/mkl/kernel/determinant.hpp"
+#include "y/mkl/kernel/adjoint.hpp"
 
 namespace upsylon
 {
@@ -26,6 +26,7 @@ namespace upsylon
         tNu(),
         Nu2(),
         det(),
+        Prj(),
         aM( 16 ),
         Corg( aM.next() ),
         Ctry( aM.next() ),
@@ -45,6 +46,7 @@ namespace upsylon
             keep << aliasing::_(Nu);
             keep << aliasing::_(tNu);
             keep << aliasing::_(Nu2);
+            keep << aliasing::_(Prj);
             keep << aliasing::_(aM);
             keep << aliasing::_(aN);
         }
@@ -118,6 +120,14 @@ namespace upsylon
                     quark::mmul_rtrn(aliasing::_(Nu2),Nu,Nu);
                     aliasing::_(det) = ideterminant(Nu2);
                     if(det<=0) throw exception("%ssingular set of equilibria",fn);
+                    aliasing::_(Prj).make(M,M);
+                    {
+                        iMatrix aNu2(N,N);
+                        iadjoint(aNu2,Nu2);
+                        iMatrix aNu2Nu(N,M);
+                        quark::mmul(aNu2Nu,aNu2,Nu);
+                        quark::mmul( aliasing::_(Prj), tNu, aNu2Nu);
+                    }
                 }
 
 

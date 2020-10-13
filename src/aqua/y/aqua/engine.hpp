@@ -58,6 +58,7 @@ namespace upsylon
             const iMatrix  tNu;        //!< transposed           [MxN]
             const iMatrix  Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
             const Int      det;        //!< det(Nu2), check independant equilibria
+            const iMatrix  Prj;        //!< Nu'*adj(Nu2)*Nu      [MxM]
         private:
             Arrays         aM;         //!< linear memory
         public:
