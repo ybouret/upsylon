@@ -30,7 +30,7 @@ namespace upsylon
                         Y_JIVE_PRINTLN("= '" << lexeme << "'");
                         Lexeme *lx = lexeme.yield();
                         Grow(tree,Node::Acquire(*this,lx));
-                        Mind(mind,lx);
+                        Mind(guess,lx);
                         return true;
                     }
                     else

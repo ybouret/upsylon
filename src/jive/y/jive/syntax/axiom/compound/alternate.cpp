@@ -25,7 +25,7 @@ namespace upsylon
                     const Axiom &axiom = **ref;
                     Y_JIVE_PRINTLN(refCount << "/" << size << " -> <" << axiom.name << ">");
                     Node *sub = 0;
-                    if( axiom.accept(sub,lexer,source,mind,subDepth))
+                    if( axiom.accept(sub,lexer,source,guess,subDepth))
                     {
                         result = true;
                         if(NULL==sub)

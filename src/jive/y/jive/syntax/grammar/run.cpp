@@ -97,13 +97,14 @@ namespace upsylon
                 // get status
                 //
                 //--------------------------------------------------------------
-                Node         *tree = NULL;
-                Lexeme       *last = NULL;
-                const bool    success = root->accept(tree,lexer,source,last,0);
+                Node         *tree    = NULL;
+                Guess         guess   = { NULL  };
+                const bool    success = root->accept(tree,lexer,source,guess,0);
                 Node::Pointer xnode(tree) ;
 
                 Y_JIVE_GRAMLN("success = " << success);
                 Y_JIVE_GRAMLN("tree    = " << (tree!=NULL) );
+                const Lexeme *last = guess.lexeme;
                 dispLexeme(name,"last",last);
 
 

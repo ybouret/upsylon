@@ -21,14 +21,14 @@ namespace upsylon
             //__________________________________________________________________
             class Axiom;
 
+            //! guess for error management
             struct  Guess
             {
-                const Lexeme *lexeme;
-                const Axiom  *axiom;
+                const Lexeme *lexeme; //!< last accepted lexeme
             };
 
             //! args for accept method
-#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, Lexeme * &mind, long depth
+#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, Guess &guess, long depth
 
             //! accept declaration
 #define Y_JIVE_AXIOM_ACCEPT_DECL()      virtual bool  accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
@@ -62,15 +62,28 @@ namespace upsylon
                 typedef ref_node<const Axiom>        Reference;      //!< alias
                 typedef core::list_of_cpp<Reference> Manifest;       //!< alias
 
+                //______________________________________________________________
+                //
+                //! local Axiom registry
+                //______________________________________________________________
                 class Registry : public RegistryType
                 {
                 public:
-                    explicit Registry();
-                    virtual ~Registry() throw();
-                    explicit Registry(const Registry &);
-                    std::ostream &        display(std::ostream&) const;
-                    friend std::ostream & operator<<(std::ostream &, const Registry &);
-                    void     ensure(const string &who, Axiom &axiom);
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
+                    explicit Registry();                 //!< setup
+                    virtual ~Registry() throw();         //!< cleanup
+                    explicit Registry(const Registry &); //!< copy
+
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
+                    std::ostream &        display(std::ostream&) const;                  //!< display
+                    friend std::ostream & operator<<(std::ostream &, const Registry &);  //!< display
+                    void                  ensure(const string &, Axiom &);               //!< register
 
                 private:
                     Y_DISABLE_ASSIGN(Registry);
@@ -117,7 +130,7 @@ namespace upsylon
                 static void Grow( Node * &tree, Node *leaf ) throw();
                 
                 //! update last lexeme
-                static void Mind(Lexeme * &old, Lexeme *now) throw();
+                static void Mind(Guess &guess, Lexeme *now) throw();
 
 
 

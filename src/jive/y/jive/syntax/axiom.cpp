@@ -138,16 +138,16 @@ namespace upsylon
                 }
             }
             
-            void Axiom:: Mind(Lexeme * &old, Lexeme *now) throw()
+            void Axiom:: Mind(Guess &guess, Lexeme *now) throw()
             {
                 assert(now);
-                if(old)
+                if(guess.lexeme)
                 {
-                    if(now->stamp>old->stamp) old = now;
+                    if(now->stamp>guess.lexeme->stamp) guess.lexeme = now;
                 }
                 else
                 {
-                    old = now;
+                    guess.lexeme = now;
                 }
             }
 
@@ -156,7 +156,7 @@ namespace upsylon
             {
                 try
                 {
-                    return accept_(tree,lexer,source,mind,depth);
+                    return accept_(tree,lexer,source,guess,depth);
                 }
                 catch(...)
                 {

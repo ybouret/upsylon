@@ -26,7 +26,7 @@ namespace upsylon
                     Y_JIVE_PRINTLN(refCount << "/" << size);
                     const Axiom &axiom = **ref;
                     Node        *sTree = 0;
-                    if(axiom.accept(sTree,lexer,source,mind,subDepth))
+                    if(axiom.accept(sTree,lexer,source,guess,subDepth))
                     {
                         if(sTree) chld.push_back(sTree);
                         Y_JIVE_PRINTLN(refCount << "/" << size << " -> accepted");

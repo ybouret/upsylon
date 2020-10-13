@@ -38,7 +38,25 @@ so that a set of concentrations $\vec{C}\in\mathbb{R}^M$ is described by:
 
 \section{Balancing active concentrations}
 We define $\mathbb{A}_j=1$ for and active species, $\mathbb{A}_j=0$ otherwise.
-Let us balance a set of invalid concentrations starting from $\vec{C}_0$.
+Let us balance a set of invalid concentrations starting from $\vec{C}$.
+We define the excess vector:
+\begin{equation}
+	\vec{X} = 
+	\begin{pmatrix}
+		\vdots\\
+		\mathbb{A}_j \max(-C_j,0)\\
+		\vdots\\
+	\end{pmatrix}
+\end{equation}
+We define the diagonal matrix $\bm{\Omega}$ with $\Omega_j\in[0:1]$
+so that we look for a system
+\begin{equation}
+	\vec{C}_\omega = \vec{C} + \left( \trn{\bm{\nu}} \left( \bm{\nu} \trn{\bm{\nu}}\right)^{-1} \bm{\nu}\right) \bm{\Omega} \vec{X}
+\end{equation}
+
+
+\end{document}
+
 We define the global excess:
 \begin{equation}
 	B\left(\vec{C}\right) = \sum_j \mathbb{A}_j \max(0,-C_j)

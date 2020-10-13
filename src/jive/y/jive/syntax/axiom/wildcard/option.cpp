@@ -16,7 +16,7 @@ namespace upsylon
             {
                 Y_JIVE_PRINTLN("");
                 Node      *subTree  = 0;
-                if( axiom.accept(subTree,lexer,source,mind,depth+1) )
+                if( axiom.accept(subTree,lexer,source,guess,depth+1) )
                 {
                     if(subTree)
                     {
