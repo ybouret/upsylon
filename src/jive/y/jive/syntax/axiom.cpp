@@ -35,7 +35,7 @@ namespace upsylon
                     {
                         std::ostream &os = *dest;
                         ++indx;
-                        os << '<' << ptr->name << '>';
+                        os << ptr->name;
                         if(indx<size) os << ';';
                         return true;
                     }

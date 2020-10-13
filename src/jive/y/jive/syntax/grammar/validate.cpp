@@ -1,6 +1,7 @@
 
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
+#include "y/ios/align.hpp"
 
 namespace upsylon
 {
@@ -65,11 +66,11 @@ namespace upsylon
                 Y_JIVE_GRAMLN(db);
 
                 //--------------------------------------------------------------
-                // create 'then' lists
+                //
                 //--------------------------------------------------------------
                 for(Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                 {
-                    Y_JIVE_GRAMLN("\t<"  << axiom->name << "> <== " << axiom->from );
+                    Y_JIVE_GRAMLN("\t"<< ios::align(*(axiom->name),ios::align::left,maxNameLength) << " <== " << axiom->from );
 
                 }
 
