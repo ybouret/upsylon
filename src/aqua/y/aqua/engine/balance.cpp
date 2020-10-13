@@ -137,11 +137,9 @@ namespace upsylon
 
             }
             Y_AQUA_PRINTLN("Cstp = " << Cstp);
-            const double fwd = sumCaux(num)/M;
-            Y_AQUA_PRINTLN("fwd  = " << fwd << " #" << (fwd>0) );
-            return (fwd>0);
+            return (num>0);
         }
-
+        
 
         bool Engine::balance(addressable<double> &C) throw()
         {
@@ -280,7 +278,7 @@ namespace upsylon
                 else
                 {
                     //----------------------------------------------------------
-                    // test convergence
+                    // test convergence for C
                     //----------------------------------------------------------
                     {
                         const bool Ccvg = __find<double>::convergence(Corg,Ctry);
@@ -291,8 +289,10 @@ namespace upsylon
                         }
                     }
 
+                    //----------------------------------------------------------
+                    // test convergence for B
+                    //----------------------------------------------------------
                     {
-
                         const bool Bcvg = fabs(B0-B1) <= numeric<double>::ftol * fabs( max_of(B0,B1) );
                         if(Bcvg)
                         {
@@ -305,10 +305,6 @@ namespace upsylon
                     // update for next cycle
                     //----------------------------------------------------------
                     B0 = BalanceValue(); //@ Corg=Ctry
-                    if(balanceCycles>1000)
-                    {
-                        return false;
-                    }
                     goto CYCLE;
                 }
             }

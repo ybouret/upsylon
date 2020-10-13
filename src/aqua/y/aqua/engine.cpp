@@ -28,6 +28,8 @@ namespace upsylon
         det(),
         iNu(),
         Prj(),
+        J(),
+        W(),
         aM( 16 ),
         Corg( aM.next() ),
         Cxs( aM.next() ),
@@ -38,9 +40,13 @@ namespace upsylon
         Cill( aM.next() ),
         active(),
         illegal(),
+        Cini( aM.next() ),
+        Cend( aM.next() ),
+        step( aM.next() ),
         aN(8),
         xi( aN.next() ),
-        nu2( aN.next() ),
+        K( aN.next() ),
+        Q( aN.next() ),
         keep(),
         maxNameLength(0),
         balanceVerbose(false),
@@ -52,6 +58,8 @@ namespace upsylon
             keep << aliasing::_(Nu2);
             keep << aliasing::_(iNu);
             keep << aliasing::_(Prj);
+            keep << aliasing::_(J);
+            keep << aliasing::_(W);
             keep << aliasing::_(aM);
             keep << aliasing::_(aN);
         }
@@ -107,17 +115,6 @@ namespace upsylon
                             aliasing::_(equilibria).push_back(eq);
                             addressable<Int> &nu_i = aliasing::_(Nu[i]);
                             eq->fillNu(nu_i);
-                            int sq = 0;
-                            for(size_t j=M;j>0;--j)
-                            {
-                                const Int nu_ij = nu_i[j];
-                                if( nu_ij !=0 )
-                                {
-                                    aliasing::_(active[j]) = true;
-                                    sq += nu_ij * nu_ij;
-                                }
-                            }
-                            nu2[i] = sq;
                         }
                     }
                     for(size_t j=M;j>0;--j)
@@ -135,6 +132,9 @@ namespace upsylon
                         quark::mmul( aliasing::_(iNu), aNu2,Nu);
                         quark::mmul( aliasing::_(Prj), tNu, iNu);
                     }
+
+                    J.make(N,M);
+                    W.make(N,N);
                 }
 
 
