@@ -231,10 +231,94 @@ namespace upsylon
                 exit(1);
                 return true;
 
-
             }
 
+            
+
+
         }
+
+
+        double Engine:: BalanceValue() throw()
+        {
+            illness = 0;
+            for(size_t j=M;j>0;--j)
+            {
+                Cbad[j] = 0;
+                const double Cj = Corg[j];
+                if(Cj<0)
+                {
+                    illegal[j]      = true;
+                    Caux[++illness] = Cbad[j] = -Cj;
+                }
+                else
+                {
+                    illegal[j] = false;
+                }
+            }
+            switch(illness)
+            {
+                case 0: return 0;
+                case 1: return Caux[1];
+                default: break;
+            }
+            hsort(*Caux,illness,comparison::decreasing<double>);
+            double sum = 0;
+            for(size_t j=illness;j>0;--j)
+            {
+                sum += Caux[j];
+            }
+            return sum;
+
+        }
+
+        bool Engine:: BalanceDelta() throw()
+        {
+            quark::mul(Cstp,Prj,Cbad);
+            for(size_t j=M;j>0;--j) Cstp[j] /= det;
+            Y_AQUA_PRINTLN("Cstp = " << Cstp);
+            return true;
+        }
+
+
+        bool Engine::balance2(addressable<double> &C) throw()
+        {
+            assert(C.size()>=M);
+            balanceCycles = 0;
+
+            // load local values and initialize
+            for(size_t j=M;j>0;--j)
+            {
+                if(active[j])
+                {
+                    Corg[j] = C[j];
+                }
+                else
+                {
+                    Corg[j] = 0;
+                }
+            }
+            Y_AQUA_PRINTLN("Corg = " << Corg);
+
+            double B0 = BalanceValue();
+            Y_AQUA_PRINTLN("B0   = " << B0);
+            Y_AQUA_PRINTLN("Cbad = " << Cbad);
+            Y_AQUA_PRINTLN("Cill = " << illegal);
+            if(illness<=0)
+            {
+                Y_AQUA_PRINTLN("alredy balanced");
+                return true;
+            }
+
+            if( !BalanceDelta() )
+            {
+                return false;
+            }
+
+
+            return false;
+        }
+
 
     }
 

@@ -72,7 +72,7 @@ Y_UTEST(engine)
     lib.show(std::cerr << "ini=",C);
 
     cs.balanceVerbose=true;
-    cs.balance(C);
+    cs.balance2(C);
 
 
 }

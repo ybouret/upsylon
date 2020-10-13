@@ -45,6 +45,8 @@ namespace upsylon
             //! balance set of concentrations with Nu
             bool balance(addressable<double> &C) throw();
 
+            bool balance2(addressable<double> &C) throw();
+
             //__________________________________________________________________
             //
             // members
@@ -63,11 +65,12 @@ namespace upsylon
             Arrays         aM;         //!< linear memory
         public:
             Array         &Corg;       //!< hold  C [M]
+            Array         &Cbad;       //!< bad   C [M]
             Array         &Ctry;       //!< trial C [M]
             Array         &Cstp;       //!< step  C [M]
             Array         &Caux;       //!< aux   C [M]
         private:
-            Array         &Cact;      //!< for active [M]
+            Array         &Cact;      //!< for active  [M]
             Array         &Cill;      //!< for illegal [M]
         public:
             const Booleans active;    //!< active concentrations [M]
@@ -88,6 +91,9 @@ namespace upsylon
             double BalanceCall(const double x)         throw(); //!< constraint forward
             
             struct BalanceProxy { Engine *self; double operator()(const double) throw(); };
+
+            double BalanceValue() throw(); // @Corg
+            bool   BalanceDelta() throw(); // @Corg/Cbad => Cstp
 
         public:
             bool   balanceVerbose; //!< balance verbosity

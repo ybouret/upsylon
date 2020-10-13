@@ -29,6 +29,7 @@ namespace upsylon
         Prj(),
         aM( 16 ),
         Corg( aM.next() ),
+        Cbad( aM.next() ),
         Ctry( aM.next() ),
         Cstp( aM.next() ),
         Caux( aM.next() ),
