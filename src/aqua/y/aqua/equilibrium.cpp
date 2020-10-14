@@ -2,9 +2,9 @@
 #include "y/aqua/equilibrium.hpp"
 #include "y/exception.hpp"
 #include "y/type/utils.hpp"
-#include <iomanip>
 #include "y/ios/align.hpp"
 #include "y/core/ipower.hpp"
+#include <iomanip>
 
 namespace upsylon {
 
@@ -263,6 +263,29 @@ namespace upsylon {
 
             return lhs-rhs;
 
+        }
+
+
+    }
+
+}
+
+#include "y/mkl/kernel/quark.hpp"
+
+namespace upsylon
+{
+
+    namespace Aqua
+    {
+        void   Equilibrium:: evolve(addressable<double>      &Ctry,
+                                    const accessible<double> &C0, const double x) const throw()
+        {
+            mkl::quark::set(Ctry,C0);
+            for(const Component *c=components.head;c;c=c->next)
+            {
+                const size_t j = c->sp.indx;
+                Ctry[j] = max_of(0.0,Ctry[j]+c->nu*x);
+            }
         }
 
     }

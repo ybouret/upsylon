@@ -85,16 +85,7 @@ namespace upsylon
 
         }
 
-        void   Equilibrium:: evolve(addressable<double>      &Ctry,
-                                    const accessible<double> &C0, const double x) const throw()
-        {
-            quark::set(Ctry,C0);
-            for(const Component *c=components.head;c;c=c->next)
-            {
-                const size_t j = c->sp.indx;
-                Ctry[j] = max_of(0.0,Ctry[j]+c->nu*x);
-            }
-        }
+        
 
 
         static const char fn[] = "[ sweep ] ";

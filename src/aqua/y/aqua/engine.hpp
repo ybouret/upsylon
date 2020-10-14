@@ -110,6 +110,8 @@ namespace upsylon
         public:
             bool   balanceVerbose; //!< balance verbosity
             size_t balanceCycles;  //!< last balance cycles
+            bool   forwardVerbose; //!< forward verbosity
+            size_t forwardCycles;  //!< last forward cycles
         };
     }
 }

@@ -50,7 +50,9 @@ namespace upsylon
         keep(),
         maxNameLength(0),
         balanceVerbose(false),
-        balanceCycles(0)
+        balanceCycles(0),
+        forwardVerbose(false),
+        forwardCycles(0)
         {
             keep << aliasing::_(equilibria);
             keep << aliasing::_(Nu);

@@ -34,7 +34,7 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-            Equilibrium & operator()( Equilibrium * );                             //!< insert a new equilibrium
+            Equilibrium  & operator()( Equilibrium * );                             //!< insert a new equilibrium
             std::ostream & display( std::ostream &) const;                         //!< display
             friend std::ostream & operator<<(std::ostream &, const Equilibria & ); //!< display
             
