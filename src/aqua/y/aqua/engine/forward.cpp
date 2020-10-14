@@ -56,6 +56,35 @@ namespace upsylon
             }
         }
 
+
+        double Engine:: QValue() throw()
+        {
+            for(size_t i=N;i>0;--i)
+            {
+                Caux[i] = square_of(Q[i]);
+            }
+            return sumCaux(N);
+        }
+
+        double Engine:: QCheck(const double x) throw()
+        {
+            quark::muladd(Ctry,Cini, x, step);
+            for(size_t j=M;j>0;--j)
+            {
+                Ctry[j] = Cini[j]+x*step[j];
+            }
+            computeQ(Ctry);
+            return QValue();
+        }
+
+
+        double Engine::QProxy:: operator()(const double x) throw()
+        {
+            assert(self);
+            return self->QCheck(x);
+        }
+
+
         bool Engine:: forward(addressable<double> &C) throw()
         {
             //------------------------------------------------------------------
@@ -66,6 +95,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             forwardCycles = 0;
+            totalBalances = 0;
             for(size_t j=M;j>0;--j)
             {
                 if(active[j])
@@ -78,7 +108,9 @@ namespace upsylon
                 }
             }
             Y_AQUA_PRINTLN("Cini = "<<Cini);
-            bool alreadySwept = false;
+            bool   alreadySwept = false;
+            QProxy F            = { this };
+            balanceCycles       = 0;
 
             //------------------------------------------------------------------
             //
@@ -89,7 +121,7 @@ namespace upsylon
             //------------------------------------------------------------------
         CYCLE:
             ++forwardCycles;
-            Y_AQUA_PRINTLN(" << cycle " << forwardCycles << " >>");
+            Y_AQUA_PRINTLN("# << forward cycle " << forwardCycles << " | balances=" << totalBalances << " (+" << balanceCycles << ") >>");
 
             //------------------------------------------------------------------
             //
@@ -134,15 +166,59 @@ namespace upsylon
             //------------------------------------------------------------------
             quark::add(Cend,Cini,step);
             Y_AQUA_PRINTLN("Cend = "<<Cend);
-            if(!balance(Cend))
+            const bool balanced = balance(Cend);
+            totalBalances += balanceCycles;
+            if(!balanced)
             {
                 Y_AQUA_PRINTLN("singular system balance");
                 return false;
             }
 
+            if(balanceCycles>0)
+            {
+                Y_AQUA_PRINTLN("balanced = " << balanceCycles);
+                Y_AQUA_PRINTLN("Cend     = " << Cend);
+                if(!sweep(Cend))
+                {
+                    Y_AQUA_PRINTLN("singular balanced system");
+                    return false;
+                }
+                Y_AQUA_PRINTLN("Cend     = " << Cend);
+                quark::set(Cini,Cend);
+                goto CYCLE;
+            }
+
+            quark::sub(step,Cend,Cini);
+            Y_AQUA_PRINTLN("step = "<<step);
+
+
+
+
             //------------------------------------------------------------------
             //
-            // cehck convergence
+            // minimize Q to avoir oscillations
+            //
+            //------------------------------------------------------------------
+            const double    Q0 = QValue();
+            double          x1 = 1;
+            double          Q1 = F(x1);
+            Y_AQUA_PRINTLN("Q0=" <<Q0 << "; Q1="<<Q1);
+            if(Q1>=Q0)
+            {
+                triplet<double> x  = { 0,x1,x1 };
+                triplet<double> q  = { Q0,Q1,Q1};
+                if(Q1>=Q0)
+                {
+                    Q1 = F( x1 = minimize::run(F,x,q,minimize::inside) );
+                    Y_AQUA_PRINTLN("#backtrack @" << x1);
+                }
+                quark::set(Cend,Ctry);
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            // check convergence
             //
             //------------------------------------------------------------------
             const bool converged = __find<double>::convergence(Cini,Cend);

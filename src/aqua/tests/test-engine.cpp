@@ -64,53 +64,61 @@ Y_UTEST(engine)
     std::cerr << "Nc      = " << cs.Nc      << std::endl;
 
     vector<double> C(cs.M+2,0);
-    
-GENERATE:
-    for(size_t j=C.size();j>0;--j)
+
+    for(size_t iter=0;iter<10;++iter)
     {
-        if(alea.to<double>()>0.2)
+    GENERATE:
+        for(size_t j=C.size();j>0;--j)
         {
-            C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+            if(alea.to<double>()>0.2)
+            {
+                C[j] = alea.symm<double>() * pow(10.0,-8*alea.to<double>());
+            }
+            else
+            {
+                C[j] = 0;
+            }
+        }
+
+        lib.show(std::cerr << "ini=",C);
+
+        cs.balanceVerbose=false;
+        if( cs.balance(C) )
+        {
+            lib.show(std::cerr << "end=",C);
+        }
+        else
+            goto GENERATE;
+
+        cs.computeK(0);
+        cs.updateKs();
+        std::cerr << "K=" << cs.K << "; Ks=" << cs.Ks << std::endl;
+#if 0
+        for(size_t i=1;i<=cs.N;++i)
+        {
+            const Equilibrium &eq = *cs.equilibria[i];
+            const Extents      ex(eq,C,*cs.Caux);
+            std::cerr << ios::align(eq.name,ios::align::left,eqs.maxNameSize) << " => " << ex << std::endl;
+        }
+#endif
+        if(cs.sweep(C))
+        {
+            lib.show(std::cerr << "swp=",C);
         }
         else
         {
-            C[j] = 0;
+            std::cerr << "couldn't sweep!!!" << std::endl;
+            goto GENERATE;
         }
-    }
 
-    lib.show(std::cerr << "ini=",C);
+        //cs.forwardVerbose=true;
+        //cs.balanceVerbose=true;
+        if( cs.forward(C) )
+        {
+            lib.show(std::cerr << "res=",C);
+        }
 
-    cs.balanceVerbose=false;
-    if( cs.balance(C) )
-    {
-        lib.show(std::cerr << "end=",C);
     }
-    else
-        goto GENERATE;
-
-    cs.computeK(0);
-    std::cerr << "K=" << cs.K << std::endl;
-    cs.updateKs();
-    std::cerr << "Ks=" << cs.Ks << std::endl;
-    for(size_t i=1;i<=cs.N;++i)
-    {
-        const Equilibrium &eq = *cs.equilibria[i];
-        const Extents      ex(eq,C,*cs.Caux);
-        std::cerr << ios::align(eq.name,ios::align::left,eqs.maxNameSize) << " => " << ex << std::endl;
-    }
-    if(cs.sweep(C))
-    {
-        lib.show(std::cerr << "swp=",C);
-    }
-    else
-    {
-        std::cerr << "couldn't sweep!!!" << std::endl;
-        goto GENERATE;
-    }
-
-    cs.forwardVerbose=true;
-    //cs.balanceVerbose=true;
-    cs.forward(C);
 
 
 }

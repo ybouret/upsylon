@@ -194,7 +194,7 @@ namespace upsylon
 
         CYCLE:
             ++balanceCycles;
-            Y_AQUA_PRINTLN(" # << CYCLE=" << balanceCycles << ">>" );
+            Y_AQUA_PRINTLN(" # << balance cycle " << balanceCycles << ">>" );
             //------------------------------------------------------------------
             //
             // compute step

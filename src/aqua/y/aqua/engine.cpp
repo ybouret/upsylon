@@ -54,7 +54,8 @@ namespace upsylon
         balanceVerbose(false),
         balanceCycles(0),
         forwardVerbose(false),
-        forwardCycles(0)
+        forwardCycles(0),
+        totalBalances(0)
         {
             keep << aliasing::_(equilibria);
             keep << aliasing::_(Nu);

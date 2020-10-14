@@ -118,12 +118,17 @@ namespace upsylon
             bool   BalanceDelta() throw();               //! at Corg/Cbad => Cstp, false if Cstp=0
             double BalanceCheck(const double x) throw(); //!< Ctry=Corg+x*Ctry
             double sumCaux(const size_t m)      throw();
-            
+
+            double QValue() throw();               //!< current |Q|^2
+            double QCheck(const double x) throw(); //!< |Q|^2 at Ctry=Cini+x*step
+            struct QProxy { Engine *self; double operator()(const double) throw(); };
+
         public:
             bool   balanceVerbose; //!< balance verbosity
             size_t balanceCycles;  //!< last balance cycles
             bool   forwardVerbose; //!< forward verbosity
             size_t forwardCycles;  //!< last forward cycles
+            size_t totalBalances;  //!< during a forward
         };
     }
 }
