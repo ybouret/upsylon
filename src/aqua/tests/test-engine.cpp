@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/ios/align.hpp"
+#include "y/string/convert.hpp"
 
 using namespace upsylon;
 using namespace Aqua;
@@ -11,6 +12,12 @@ using namespace mkl;
 
 Y_UTEST(engine)
 {
+    size_t iterMax = 10;
+    if(argc>1)
+    {
+        iterMax = string_convert::to<size_t>(argv[1],"iterMax");
+    }
+
     Library lib;
 
     Species &h   = lib("H+",1);
@@ -65,7 +72,7 @@ Y_UTEST(engine)
 
     vector<double> C(cs.M+2,0);
 
-    for(size_t iter=0;iter<10;++iter)
+    for(size_t iter=0;iter<iterMax;++iter)
     {
     GENERATE:
         for(size_t j=C.size();j>0;--j)
