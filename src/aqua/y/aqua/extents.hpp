@@ -13,14 +13,28 @@ namespace upsylon {
     {
         class Equilibrium; //!< forward
 
+        //______________________________________________________________________
+        //
+        //
         //! forward and reverse extent
+        //
+        //______________________________________________________________________
         class Extents
         {
         public:
-            const Extent forward; //!< for reactants
-            const Extent reverse; //!< for products
-            const bool   blocked; //!< both are blocked
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const unsigned ForwardLimited = 0x01;
+            static const unsigned ForwardEndless = 0x02;
+            static const unsigned ReverseLimited = 0x04;
+            static const unsigned ReverseEndless = 0x08;
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             //! setup
             Extents(const Equilibrium        &eq,
                     const accessible<double> &C,
@@ -32,11 +46,25 @@ namespace upsylon {
             //! cleanup
             ~Extents() throw();
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
             //! display
             friend std::ostream & operator<<(std::ostream &, const Extents &x);
 
             //! cut according to value
             double cut(const double value) const throw();
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Extent   forward; //!< for reactants
+            const Extent   reverse; //!< for products
+            const bool     blocked; //!< both are blocked
+            const unsigned reaches; //!< full status
 
         private:
             Y_DISABLE_ASSIGN(Extents);

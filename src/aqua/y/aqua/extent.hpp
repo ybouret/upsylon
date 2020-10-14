@@ -20,7 +20,10 @@ namespace upsylon {
         class Extent
         {
         public:
-
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
 
             //! setup from reactants/products (nu>0!) and auxialiary data
             Extent(const accessible<double> &C,
@@ -29,12 +32,17 @@ namespace upsylon {
             ~Extent() throw();              //!< cleanup
             Extent(const Extent &) throw(); //!< copy
 
-            //! display
-            friend std::ostream & operator<<(std::ostream &, const Extent &);
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            friend std::ostream & operator<<(std::ostream &, const Extent &); //! display
+            double cut( const double value ) const throw();//!< cut guess extent, value>=0
 
-            //! cut guess extent, value>=0
-            double cut( const double value ) const throw();
-
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const bool   limited; //!< is limited ?
             const double maximum; //!< value (>0) if limited
             const bool   blocked; //!< limited at value=0

@@ -15,14 +15,16 @@ namespace upsylon {
                           double                   *A) throw() :
         forward(C,eq.reactants,A),
         reverse(C,eq.products, A),
-        blocked(forward.blocked&&reverse.blocked)
+        blocked(forward.blocked&&reverse.blocked),
+        reaches( (forward.limited ? ForwardLimited : ForwardEndless) | (reverse.limited ? ReverseLimited : ReverseEndless) )
         {
         }
 
         Extents:: Extents(const Extents &other) throw() :
         forward(other.forward),
         reverse(other.reverse),
-        blocked(other.blocked)
+        blocked(other.blocked),
+        reaches(other.reaches)
         {
 
         }
