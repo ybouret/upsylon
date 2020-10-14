@@ -87,19 +87,19 @@ Y_UTEST(engine)
             }
         }
 
-        lib.show(std::cerr << "ini=",C);
+        //lib.show(std::cerr << "ini=",C);
 
         cs.balanceVerbose=false;
         if( cs.balance(C) )
         {
-            lib.show(std::cerr << "end=",C);
+            //lib.show(std::cerr << "end=",C);
         }
         else
             goto GENERATE;
 
         cs.computeK(0);
         cs.updateKs();
-        std::cerr << "K=" << cs.K << "; Ks=" << cs.Ks << std::endl;
+        //std::cerr << "K=" << cs.K << "; Ks=" << cs.Ks << std::endl;
 #if 0
         for(size_t i=1;i<=cs.N;++i)
         {
@@ -110,7 +110,7 @@ Y_UTEST(engine)
 #endif
         if(cs.sweep(C))
         {
-            lib.show(std::cerr << "swp=",C);
+            //lib.show(std::cerr << "swp=",C);
         }
         else
         {
