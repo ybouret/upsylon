@@ -3,115 +3,12 @@
 #ifndef Y_AQUA_EQUILIBRIUM_INCLUDED
 #define Y_AQUA_EQUILIBRIUM_INCLUDED 1
 
-#include "y/aqua/species.hpp"
-#include "y/aqua/types.hpp"
-#include "y/core/list.hpp"
-#include "y/core/inode.hpp"
+#include "y/aqua/extents.hpp"
 
 namespace upsylon {
 
     namespace Aqua
     {
-
-        //______________________________________________________________________
-        //
-        //
-        //! a species with its coefficient
-        //
-        //______________________________________________________________________
-        class Component : public Object, public inode<Component>
-        {
-        public:
-            //__________________________________________________________________
-            //
-            // types and definitions
-            //__________________________________________________________________
-            typedef core::list_of_cpp<Component> List; //!< alias
-
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            explicit Component(const Species &, const int) throw(); //!< setup
-            virtual ~Component() throw();                           //!< cleanup
-            Component(const Component &) throw();                   //!< copy
-
-            //__________________________________________________________________
-            //
-            // members
-            //__________________________________________________________________
-            const Species &sp;  //!< species
-            const int      nu;  //!< coef
-            const size_t   p;   //!< |nu|
-            const size_t   pm1; //!< p-1
-
-        private:
-            Y_DISABLE_ASSIGN(Component);
-        };
-
-        //______________________________________________________________________
-        //
-        //
-        //! extent info for an equilibrium
-        //
-        //______________________________________________________________________
-        class Extent
-        {
-        public:
-
-
-            //! setup from reactants/products (nu>0!) and auxialiary data
-            Extent(const accessible<double> &C,
-                   const Component::List    &L,
-                   double                   *A) throw();
-            ~Extent() throw();              //!< cleanup
-            Extent(const Extent &) throw(); //!< copy
-
-            //! display
-            friend std::ostream & operator<<(std::ostream &, const Extent &);
-
-            //! cut guess extent, value>=0
-            double cut( const double value ) const throw();
-
-            const bool   limited; //!< is limited ?
-            const double maximum; //!< value (>0) if limited
-            const bool   blocked; //!< limited at value=0
-            
-        private:
-            Y_DISABLE_ASSIGN(Extent);
-        };
-
-        class Equilibrium; //!< forward
-
-        //! forward and reverse extent
-        class Extents
-        {
-        public:
-            const Extent forward; //!< for reactants
-            const Extent reverse; //!< for products
-            const bool   blocked; //!< both are blocked
-            
-            //! setup
-            Extents(const Equilibrium        &eq,
-                    const accessible<double> &C,
-                    double                   *A) throw();
-
-            //! copy
-            Extents(const Extents &other) throw();
-
-            //! cleanup
-            ~Extents() throw();
-
-            //! display
-            friend std::ostream & operator<<(std::ostream &, const Extents &x);
-
-            //! cut according to value
-            double cut(const double value) const throw();
-
-        private:
-            Y_DISABLE_ASSIGN(Extents);
-        };
-
 
         //______________________________________________________________________
         //
