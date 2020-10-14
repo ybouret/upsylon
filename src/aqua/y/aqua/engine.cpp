@@ -43,10 +43,12 @@ namespace upsylon
         Cini( aM.next() ),
         Cend( aM.next() ),
         step( aM.next() ),
+        Cswp( aM.next() ),
         aN(8),
         xi( aN.next() ),
-        K( aN.next() ),
-        Q( aN.next() ),
+        K(  aN.next() ),
+        Q(  aN.next() ),
+        Ks( aN.next() ),
         keep(),
         maxNameLength(0),
         balanceVerbose(false),
@@ -99,6 +101,7 @@ namespace upsylon
                     aM.acquire(M);
                     new ( & aliasing::_(active) ) Booleans(aliasing::as<bool>(*Cact),M);
                     new ( &illegal)               Booleans(aliasing::as<bool>(*Cill),M);
+                    quark::ld( aliasing::_(active), false);
                 }
 
                 if(N>0)
@@ -119,6 +122,16 @@ namespace upsylon
                             eq->fillNu(nu_i);
                         }
                     }
+
+                    for(size_t i=N;i>0;--i)
+                    {
+                        const array<Int> &Nu_i = Nu[i];
+                        for(size_t j=M;j>0;--j)
+                        {
+                            if(Nu_i[j]!=0) aliasing::_(active[j]) = true;
+                        }
+                    }
+
                     for(size_t j=M;j>0;--j)
                     {
                         if(active[j]) ++aliasing::_(Ma);

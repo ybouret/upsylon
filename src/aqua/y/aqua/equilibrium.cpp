@@ -108,15 +108,8 @@ namespace upsylon {
 
         double Equilibrium:: K(const double t) const
         {
-            //double      &C0 = (aliasing::_(Cbar) = 1);
             const double K0 = getK(t);
             if(K0<=0) throw exception("<%s> negative constante",*name);
-#if 0
-            if(d_nu_r>0)
-            {
-                C0 = pow(K0,1.0/d_nu_r);
-            }
-#endif
             return K0;
         }
 
@@ -149,7 +142,7 @@ namespace upsylon {
             return Keq;
         }
 
-      
+
 
         void Equilibrium:: fillNu(addressable<Int> &nu) const throw()
         {
@@ -271,21 +264,114 @@ namespace upsylon {
 }
 
 #include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/root/bisection.hpp"
 
 namespace upsylon
 {
 
     namespace Aqua
     {
+        using namespace mkl;
         void   Equilibrium:: evolve(addressable<double>      &Ctry,
                                     const accessible<double> &C0, const double x) const throw()
         {
-            mkl::quark::set(Ctry,C0);
+            quark::set(Ctry,C0);
             for(const Component *c=components.head;c;c=c->next)
             {
                 const size_t j = c->sp.indx;
                 Ctry[j] = max_of(0.0,Ctry[j]+c->nu*x);
             }
+        }
+
+        namespace {
+            
+            struct EQZ
+            {
+                const Equilibrium        *self;
+                const accessible<double> *pC0;
+                addressable<double>      *pC1;
+                double                    K0;
+
+                inline double operator()(const double x) throw()
+                {
+                    self->evolve(*pC1,*pC0,x);
+                    return self->computeQ(K0,*pC1);
+                }
+
+            };
+        }
+
+        static const char fn[] = "[ sweep ] ";
+
+#define Y_AQUA_PRINTLN(MSG) do { if(verbose) { std::cerr << fn << MSG << std::endl; } } while(false)
+
+
+        bool Equilibrium:: sweep(const double         K0,
+                                 addressable<double> &C0,
+                                 double               arr[],
+                                 const bool           verbose) const
+        {
+            Y_AQUA_PRINTLN("<" << name << ">");
+
+            const Extents ex(*this,C0,arr);
+            Y_AQUA_PRINTLN( "\t" << ex );
+
+
+
+            double xmin = 0;
+            double xmax = 0;
+            lightweight_array<double> C1(arr,C0.size());
+
+            EQZ     F    = { this, &C0, &C1, K0 };
+            double  Fmin = 0;
+            double  Fmax = 0;
+
+            switch(ex.reaches)
+            {
+                case Extents::ForwardLimited |  Extents::ReverseLimited:
+                    if(ex.forward.maximum<=0&&ex.reverse.maximum<=0)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        xmin = -ex.reverse.maximum; Fmin = F(xmin);
+                        xmax =  ex.forward.maximum; Fmax = F(xmax);
+                    }
+                    break;
+
+                case Extents::ForwardLimited |  Extents::ReverseEndless:
+                    xmax = ex.forward.maximum; Fmax = F(xmax);
+                    while( (Fmin=F(xmin))*Fmax > 0 ) xmin -= 1.0;
+                    break;
+
+                case Extents::ForwardEndless | Extents::ReverseLimited:
+                    xmin = -ex.reverse.maximum; Fmin = F(xmin);
+                    while( (Fmax=F(xmax))*Fmin > 0 ) xmax += 1.0;
+                    break;
+
+                default:
+                    Y_AQUA_PRINTLN("\t!!corrupted!!");
+                    return false;
+            }
+
+            Y_AQUA_PRINTLN("\tF(" << xmin << ")=" << Fmin << " | F(" << xmax << ")=" << Fmax);
+
+            triplet<double>   x = { xmin, 0, xmax };
+            triplet<double>   f = { Fmin, 0, Fmax };
+            bisection<double> zsolve;
+
+            if( !zsolve(F,x,f) )
+            {
+                Y_AQUA_PRINTLN("failure");
+                return false;
+            }
+
+            quark::set(C0,C1);
+            Y_AQUA_PRINTLN("<" << name << "> = " << f.b << " @ " << C0);
+
+
+            return true;
         }
 
     }

@@ -46,10 +46,15 @@ namespace upsylon
             bool balance(addressable<double> &C) throw();
 
             void computeK(const double t);
+            void updateKs() throw();
             void computeQ(const accessible<double> &C) throw();
             void computeJ(const accessible<double> &C) throw();
 
+            //! forward, need precomputed K
             bool forward(addressable<double> &C) throw();
+
+            //! sweep equilibria[i], need precomputed K
+            bool sweep(addressable<double> &C, const size_t i) throw();
 
             //__________________________________________________________________
             //
@@ -87,14 +92,16 @@ namespace upsylon
             Array         &Cini;      //!< initial concentration
             Array         &Cend;      //!< end concentration
             Array         &step;      //!< Newton's step
-            
+            Array         &Cswp;      //!< for sweeping
+
         private:
             Arrays         aN;        //!< linear memory
         public:
             Array         &xi;        //!< extent    [N]
             Array         &K;         //!< constants [N]
             Array         &Q;         //!< indicator [N]
-
+            Array         &Ks;        //!< scaling   [N]
+            
          private:
             Collector keep;           //!< memory management
             size_t    maxNameLength;  //!< max equilibria name lengths

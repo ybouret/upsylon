@@ -34,7 +34,7 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-            Equilibrium  & operator()( Equilibrium * );                             //!< insert a new equilibrium
+            Equilibrium  & operator()( Equilibrium * );                            //!< insert a new equilibrium
             std::ostream & display( std::ostream &) const;                         //!< display
             friend std::ostream & operator<<(std::ostream &, const Equilibria & ); //!< display
             
@@ -46,7 +46,7 @@ namespace upsylon {
                 return self( new ConstEquilibrium(id,K) );
             }
 
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             size_t maxNameSize;

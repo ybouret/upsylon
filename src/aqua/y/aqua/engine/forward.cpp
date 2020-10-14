@@ -25,6 +25,20 @@ namespace upsylon
             }
         }
 
+        void Engine:: updateKs() throw()
+        {
+            for(size_t i=N;i>0;--i)
+            {
+                const Equilibrium &eq = *equilibria[i];
+                double             C0 = 1;
+                if(eq.dn!=0)
+                {
+                    C0 = pow(K[i],eq.idn);
+                }
+                Ks[i] = C0;
+            }
+        }
+
         void Engine:: computeQ(const accessible<double> &C) throw()
         {
             for(size_t i=N;i>0;--i)
@@ -55,7 +69,8 @@ namespace upsylon
                     Cini[j] = 0;
                 }
             }
-
+            Y_AQUA_PRINTLN("Cini = "<<Cini);
+            
             computeJ(C);
             quark::mmul_rtrn(W,J,Nu);
             

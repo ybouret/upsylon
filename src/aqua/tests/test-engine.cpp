@@ -6,6 +6,7 @@
 
 using namespace upsylon;
 using namespace Aqua;
+using namespace mkl;
 
 Y_UTEST(engine)
 {
@@ -82,10 +83,20 @@ GENERATE:
     if( cs.balance(C) )
     {
         lib.show(std::cerr << "end=",C);
-
     }
     else
         goto GENERATE;
+
+    cs.computeK(0);
+    std::cerr << "K=" << cs.K << std::endl;
+    cs.updateKs();
+    std::cerr << "Ks=" << cs.Ks << std::endl;
+    for(size_t i=1;i<=cs.N;++i)
+    {
+        const Equilibrium &eq = *cs.equilibria[i];
+        const Extents      ex(eq,C,*cs.Caux);
+        std::cerr << eq.name << " => " << ex << std::endl;
+    }
 
 
 }

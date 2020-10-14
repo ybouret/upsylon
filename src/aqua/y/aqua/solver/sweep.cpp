@@ -4,6 +4,7 @@
 #include "y/sort/heap.hpp"
 #include "y/mkl/root/bisection.hpp"
 
+#if 0
 namespace upsylon
 {
 
@@ -174,6 +175,8 @@ namespace upsylon
     }
 
 }
+
+#endif
 
 #include "y/aqua/solver.hpp"
 
