@@ -61,6 +61,10 @@ Y_UTEST(engine)
 
     Engine cs;
     cs.init(lib,eqs);
+    cs.computeK(0);
+    cs.updateKs();
+
+
     std::cerr << "Nu      = " << cs.Nu      << std::endl;
     std::cerr << "Nu2     = " << cs.Nu2     << std::endl;
     std::cerr << "dNu2    = " << cs.det     << std::endl;
@@ -69,6 +73,8 @@ Y_UTEST(engine)
     std::cerr << "active  = " << cs.active  << std::endl;
     std::cerr << "Ma      = " << cs.Ma      << " #/ " << cs.M << std::endl;
     std::cerr << "Nc      = " << cs.Nc      << std::endl;
+    std::cerr << "K       ="  << cs.K << std::endl;
+    std::cerr << "Ks      ="  << cs.Ks << std::endl;
 
     vector<double> C(cs.M+2,0);
 
@@ -97,9 +103,7 @@ Y_UTEST(engine)
         else
             goto GENERATE;
 
-        cs.computeK(0);
-        cs.updateKs();
-        //std::cerr << "K=" << cs.K << "; Ks=" << cs.Ks << std::endl;
+
 #if 0
         for(size_t i=1;i<=cs.N;++i)
         {
@@ -126,6 +130,18 @@ Y_UTEST(engine)
         }
 
     }
+
+    cs.forwardVerbose=true;
+    quark::ld(C,0);
+    if(cs.forward(C))
+    {
+        lib.show(std::cerr << "nil=",C);
+    }
+    else
+    {
+        std::cerr << "Couldn't forward zero" << std::endl;
+    }
+
 
 
 }

@@ -225,6 +225,10 @@ namespace upsylon
             if(converged)
             {
                 Y_AQUA_PRINTLN("#converged");
+                for(size_t j=M;j>0;--j)
+                {
+                    C[j] = Cini[j];
+                }
                 return true;
             }
 
