@@ -58,6 +58,8 @@ namespace upsylon {
 
 }
 
+#include <iomanip>
+
 namespace upsylon {
 
     namespace Aqua
@@ -94,7 +96,7 @@ namespace upsylon {
 
         std::ostream & operator<<(std::ostream &os, const Constraint &cc)
         {
-            os << cc.value << '=';
+            os << std::setw(8) << cc.value << '=';
             //const size_t nc = cc.actors.size;
             size_t       i  = 0;
             for(const Constraint::Actor *a=cc.actors.head;a;a=a->next,++i)
@@ -115,16 +117,12 @@ namespace upsylon {
         Boot:: Boot() throw() :
         Constraint::List(),
         R(),
-        F(),
         d(0),
         S(),
-        tS(),
         keep()
         {
             keep << aliasing::_(R);
-            keep << aliasing::_(F);
             keep << aliasing::_(S);
-            keep << aliasing::_(tS);
         }
 
         Boot:: ~Boot() throw()
@@ -178,6 +176,7 @@ namespace upsylon {
 
 }
 
+#include "y/aqua/equilibria.hpp"
 #include "y/aqua/library.hpp"
 #include "y/mkl/kernel/quark.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
@@ -202,26 +201,25 @@ namespace upsylon {
             }
         }
 
-        void  Boot:: init(Library &lib)
+        void  Boot:: init(Library          &lib,
+                          const Equilibria &eqs)
         {
             static const char fn[] = "Aqua::Boot::init: ";
             quit();
             try
             {
                 //--------------------------------------------------------------
-                // parameters for P
+                // parameters for R
                 //--------------------------------------------------------------
                 const size_t M  = lib.entries();
-                if(M<=0)
-                {
-                    return;
-                }
+                const size_t N  = eqs.entries();
                 const size_t Nc = size;
-                if(Nc<=0)
+                if(N+Nc!=M)
                 {
-                    return;
+                    throw exception("%s: mismatch",fn);
                 }
                 aliasing::_(R).make(Nc,M);
+                aliasing::_(S).make(N,M);
                 lib.buildIndices();
                 {
                     size_t i=1;
@@ -230,90 +228,40 @@ namespace upsylon {
                         cc->fill( aliasing::_(R[i]) );
                     }
                 }
-
-                //--------------------------------------------------------------
-                // check P whilst building F
-                //--------------------------------------------------------------
-                aliasing::_(F).make(M,Nc);
-                Matrix Ps(M,M);
                 {
-                    iMatrix tR(R,matrix_transpose);
+                    //iMatrix tR(R,matrix_transpose);
                     iMatrix R2(Nc,Nc);
-                    quark::mmul(R2,R,tR);
+                    quark::mmul_rtrn(R2,R,R);
                     aliasing::_(d) = ideterminant(R2);
-                    if(!d)
+                    if(0==d)
                     {
-                        throw exception("%ssingular set of constraints",fn);
+                        throw exception("singular set of constraints");
                     }
-                    iMatrix aR2(Nc,Nc);
-                    iadjoint(aR2,R2);
-                    quark::mmul( aliasing::_(F),tR,aR2);
-                    quark::mmul(Ps,F,R);
-                    for(size_t i=M;i>0;--i)
-                    {
-                        for(size_t j=M;j>i;--j)
-                        {
-                            Ps[i][j] = -Ps[i][j];
-                        }
-                        Ps[i][i] = d-Ps[i][i];
-                        for(size_t j=i-1;j>0;--j)
-                        {
-                            Ps[i][j] = -Ps[i][j];
-                        }
-                    }
-                    std::cerr << "Ps=" << Ps << std::endl;
-                    vector<double> dd(M,0);
-                    Matrix         V(M,M);
-                    if( eigen::build(Ps,dd,V) )
-                    {
-                        eigen::eigsrtA(dd,V);
-                        std::cerr << "dd=" << dd << std::endl;
-                        std::cerr << "V =" << V  << std::endl;
-                    }
-
-                    
-
                 }
 
-
-
-
-                if(Nc<M)
                 {
-                    const size_t N = M-Nc;
-                    aliasing::_(S).make(N,M);
-                    aliasing::_(tS).make(M,N);
-
-                    iMatrix                   I(M,M);
-                    combination               comb(M,N);
-                    const accessible<size_t> &indx = comb;
-                    for(comb.boot();comb.good();comb.next())
+                    iMatrix F(M,M);
+                    for(size_t i=Nc;i>0;--i)
                     {
-                        assert(indx.size()==N);
-                        for(size_t i=Nc;i>0;--i)
+                        quark::set(F[i],R[i]);
+                    }
+                    {
+                        size_t i=1+Nc;
+                        for(Equilibria::const_iterator it=eqs.begin();it!=eqs.end();++it,++i)
                         {
-                            quark::set(I[i],R[i]);
-                        }
-                        for(size_t i=1;i<=N;++i)
-                        {
-                            addressable<Int> &row = I[i+Nc];
-                            quark::ld(row,0);
-                            row[ indx[i] ] = 1;
-                        }
-                        if(GramSchmidt::iOrtho(I))
-                        {
-                            goto FINALIZE;
+                            (**it).fillNu(F[i]);
                         }
                     }
-                    throw exception("%sunable to find orthogonal space!!!",fn);
-                FINALIZE:
+                    if(!GramSchmidt::iOrtho(F))
+                    {
+                        throw exception("invalid set of constraints");
+                    }
                     for(size_t i=N;i>0;--i)
                     {
-                        quark::set( aliasing::_(S[i]), I[i+Nc]);
+                        quark::set(aliasing::_(S)[i],F[i+Nc]);
                     }
-                    aliasing::_(tS).assign_transpose(S);
-                    
                 }
+
 
              }
             catch(...)

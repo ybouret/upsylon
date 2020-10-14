@@ -9,12 +9,6 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( aqua FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/aqua )
  
-FILE(GLOB solver_decl y/aqua/solver/*.hpp)
-FILE(GLOB solver_code y/aqua/solver/*.cpp)
-SET(solver_srcs ${solver_decl} ${solver_code})
-SOURCE_GROUP( aqua/solver FILES ${solver_srcs} )
-INSTALL( FILES ${solver_decl} DESTINATION include/y/aqua/solver )
-
 FILE(GLOB engine_decl y/aqua/engine/*.hpp)
 FILE(GLOB engine_code y/aqua/engine/*.cpp)
 SET(engine_srcs ${engine_decl} ${engine_code})
@@ -23,7 +17,6 @@ INSTALL( FILES ${engine_decl} DESTINATION include/y/aqua/engine )
 
 ADD_LIBRARY(y-aqua STATIC 
 ${main_srcs}
-${solver_srcs} 
 ${engine_srcs})
 INSTALL( TARGETS y-aqua ARCHIVE DESTINATION lib )
 

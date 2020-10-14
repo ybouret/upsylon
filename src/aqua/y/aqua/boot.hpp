@@ -14,8 +14,9 @@ namespace upsylon {
 
     namespace Aqua
     {
-        class Library;                   //!< forward declaration
-        
+        class Library;    //!< forward declaration
+        class Equilibria; //!< forward declaration
+
         //______________________________________________________________________
         //
         //
@@ -77,6 +78,7 @@ namespace upsylon {
 
         };
 
+
         //______________________________________________________________________
         //
         //
@@ -116,7 +118,7 @@ namespace upsylon {
 
             void  fill(addressable<double> &) const throw(); //!< fill a vector of Nc constraints
             void  quit() throw();                            //!< reset
-            void  init(Library &);                           //!< buildIndices for library and build matrices
+            void  init(Library &,const Equilibria &eqs);     //!< buildIndices for library and build matrices
 
             //! display
             friend std::ostream & operator<<(std::ostream &, const Boot &);
@@ -126,11 +128,9 @@ namespace upsylon {
             // members
             //__________________________________________________________________
             const iMatrix R;  //!< constraint matrix
-            const iMatrix F;  //!< projection matrix
             const Int     d;  //!< determinant of R*R'
             const iMatrix S;  //!< supplementary matrix
-            const iMatrix tS; //!< transpose(S)
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
             core::temporary_acquire<4> keep;

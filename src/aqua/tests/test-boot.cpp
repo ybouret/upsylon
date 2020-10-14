@@ -1,6 +1,6 @@
 
 
-#include "y/aqua/solver.hpp"
+#include "y/aqua/engine.hpp"
 #include "y/aqua/boot.hpp"
 #include "y/aqua/library.hpp"
 #include "y/utest/run.hpp"
@@ -56,29 +56,20 @@ Y_UTEST(boot)
     boot.conserve(0.000,NH4,NH3);
     boot.conserve(0,Na);
     boot.conserve(0.000,Cl);
-    boot.init(lib);
+
+    std::cerr << "boot=" << boot << std::endl;
+
+
+    boot.init(lib,eqs);
     
     std::cerr << "R=" << boot.R << std::endl;
     std::cerr << "d=" << boot.d << std::endl;
-    std::cerr << "F=" << boot.F << std::endl;
     std::cerr << "S=" << boot.S << std::endl;
 
     
 
     return 0;
 
-    Solver cs;
-    cs.init(lib,eqs);
-
-    cs.computeK(0);
-
-    vector<double> C(cs.M+2,0);
-
-    std::cerr << boot << std::endl;
-
-    cs.balanceVerbose = true;
-    cs.bootingVerbose = true;
-    cs.boot(C,boot);
 
 
 }
