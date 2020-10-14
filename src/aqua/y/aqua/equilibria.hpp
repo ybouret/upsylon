@@ -46,10 +46,14 @@ namespace upsylon {
                 return self( new ConstEquilibrium(id,K) );
             }
 
-            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const size_t maxNameSize;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
-            size_t maxNameSize;
         };
 
     }

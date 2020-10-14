@@ -56,6 +56,11 @@ namespace upsylon
             //! sweep equilibria[i], need precomputed K
             bool sweep(addressable<double> &C, const size_t i) throw();
 
+            //! sweep possible equilibria, neeed K
+            bool sweep(addressable<double> &C) throw();
+
+            
+
             //__________________________________________________________________
             //
             // members

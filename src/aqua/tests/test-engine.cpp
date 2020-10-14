@@ -3,6 +3,7 @@
 #include "y/aqua/engine.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/kernel/quark.hpp"
+#include "y/ios/align.hpp"
 
 using namespace upsylon;
 using namespace Aqua;
@@ -79,7 +80,7 @@ GENERATE:
 
     lib.show(std::cerr << "ini=",C);
 
-    //cs.balanceVerbose=true;
+    cs.balanceVerbose=false;
     if( cs.balance(C) )
     {
         lib.show(std::cerr << "end=",C);
@@ -95,8 +96,21 @@ GENERATE:
     {
         const Equilibrium &eq = *cs.equilibria[i];
         const Extents      ex(eq,C,*cs.Caux);
-        std::cerr << eq.name << " => " << ex << std::endl;
+        std::cerr << ios::align(eq.name,ios::align::left,eqs.maxNameSize) << " => " << ex << std::endl;
     }
+    if(cs.sweep(C))
+    {
+        lib.show(std::cerr << "swp=",C);
+    }
+    else
+    {
+        std::cerr << "couldn't sweep!!!" << std::endl;
+        goto GENERATE;
+    }
+
+    cs.forwardVerbose=true;
+    //cs.balanceVerbose=true;
+    cs.forward(C);
 
 
 }

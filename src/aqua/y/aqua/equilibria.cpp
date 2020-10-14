@@ -25,7 +25,7 @@ namespace upsylon {
             {
                 throw exception("multiple equilibrium <%s>",*(p->name));
             }
-            maxNameSize = max_of(maxNameSize,p->name.size());
+            aliasing::_(maxNameSize) = max_of(maxNameSize,p->name.size());
             return *eq;
         }
 
