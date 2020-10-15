@@ -363,6 +363,7 @@ Y_UTEST(move_perf)
 Y_UTEST_DONE()
 
 #include "y/type/spec.hpp"
+#include <iomanip>
 
 namespace {
 
@@ -371,10 +372,11 @@ namespace {
     {
         typedef cull<N>                        cull_type;
         typedef typename  cull_type::word_type word_type;
-        std::cerr << "cull<" << N << ">" << std::endl;
-        std::cerr << "\tword_type = " << type_name_of<word_type>() << std::endl;
-        std::cerr << "\tword_size = " << cull_type::word_size << std::endl;
-        std::cerr << "\tnum_words = " << cull_type::num_words << std::endl;
+        std::cerr << "CHECK  cull<" << N << ">";
+        std::cerr << " word_type = " << std::setw(8) << *type_name_of<word_type>();
+        std::cerr << " word_size = " << cull_type::word_size;
+        std::cerr << " num_words = " << cull_type::num_words;
+        std::cerr << std::endl;
         Y_CHECK(cull<N>::num_words*cull<N>::word_size==N);
     }
 }
