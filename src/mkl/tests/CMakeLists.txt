@@ -92,6 +92,11 @@ ADD_TEST(quark1:neg test-mkl quark1_neg)
 ADD_TEST(quark2    test-mkl quark2)
 ADD_TEST(quark3    test-mkl quark3)
 
+SOURCE_GROUP( tao FILES
+test-tao.cpp)
+ADD_TEST(tao test-mkl tao)
+
+
 ADD_CUSTOM_TARGET(utest-mkl
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-mkl)
