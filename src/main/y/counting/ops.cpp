@@ -31,8 +31,8 @@ namespace upsylon {
         {
             for(size_t i=n;i>0;)
             {
-                size_t q =p[i];
-                a[--i] = --q;
+                size_t q = p[i];
+                a[--i]   =  --q;
             }
         }
 

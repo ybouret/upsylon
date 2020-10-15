@@ -20,9 +20,9 @@ namespace {
     void test_permops()
     {
         std::cerr << "<permops " << N << ">" << std::endl;
-        size_t       wksp[N];
-        size_t       addr[N];
-        size_t      *P     = aliasing::as<size_t>(wksp)-1;
+        size_t *     wksp  = (size_t *)calloc(2*N,sizeof(size_t));
+        size_t *     addr  = wksp+N;
+        size_t      *P     = wksp-1;
         const apn    np    = apn::factorial(N);
         const size_t count = np.cast_to<size_t>("#perm");
         

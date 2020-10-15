@@ -29,8 +29,8 @@ namespace upsylon
     counting( compute(N,with_sz), N ),
     accessible<size_t>(),
     wlen( 2*space* sizeof(size_t) ),
-    perm( acquire_(wlen)       ),
-    addr(perm+space+1)
+    perm( acquire_(wlen)  ),
+    addr( &perm[1]+space  )
     {
         boot();
     }
@@ -40,8 +40,8 @@ namespace upsylon
     counting(other),
     accessible<size_t>(),
     wlen( 2*space* sizeof(size_t)),
-    perm( acquire_(wlen)     ),
-    addr(perm+space+1)
+    perm( acquire_(wlen) ),
+    addr( &perm[1]+space )
     {
         for(size_t i=space;i>0;)
         {

@@ -56,7 +56,6 @@ namespace upsylon
         size_t                boot(const size_t global_size,
                                    const size_t global_rank);
 
-
         //! finish loop...
         void unwind();
 
@@ -75,9 +74,9 @@ namespace upsylon
         //
         // static methods/helpers
         //______________________________________________________________________
-        static memory::allocator &  instance();                                //!< internal allocator instance
-        static memory::allocator &  location() throw();                        //!< internal allocator location
-        static size_t *             acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t)
+        static memory::allocator &  instance();                                    //!< internal allocator instance
+        static memory::allocator &  location() throw();                            //!< internal allocator location
+        static size_t *             acquire_(size_t &bytes);                       //!< acquire a count of bytes=workspace*sizeof(size_t) in [1..bytes/sizeof(size-t)]
         static void                 release_(size_t *&wksp,size_t &bytes) throw(); //!< release workspace
 
         //! generic display

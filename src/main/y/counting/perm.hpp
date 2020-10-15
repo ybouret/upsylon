@@ -42,7 +42,7 @@ namespace upsylon {
 
         //! size=space=n
         virtual size_t size() const throw();
-
+        
         //! and access, C-style
         const size_t & operator()(const size_t indx) const throw();
 
