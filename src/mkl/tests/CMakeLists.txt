@@ -75,23 +75,6 @@ ADD_TEST(fit:gauss test-mkl fit_gauss)
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-mkl euclidean)
 
-SOURCE_GROUP( quark FILES
-test-quark1-ld.cpp
-test-quark1-set.cpp
-test-quark1-add.cpp
-test-quark1-dot.cpp
-test-quark1-neg.cpp
-test-quark2.cpp
-test-quark3.cpp
-)
-ADD_TEST(quark1:ld  test-mkl quark1_ld)
-ADD_TEST(quark1:set test-mkl quark1_set)
-ADD_TEST(quark1:add test-mkl quark1_add)
-ADD_TEST(quark1:dot test-mkl quark1_dot)
-ADD_TEST(quark1:neg test-mkl quark1_neg)
-ADD_TEST(quark2    test-mkl quark2)
-ADD_TEST(quark3    test-mkl quark3)
-
 SOURCE_GROUP( tao FILES
 test-tao.cpp)
 ADD_TEST(tao test-mkl tao)

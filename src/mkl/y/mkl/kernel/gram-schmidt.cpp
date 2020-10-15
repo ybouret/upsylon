@@ -21,7 +21,7 @@ namespace upsylon {
                     if(tmp>big) big = tmp;
                 }
                 const apq fac = big;
-                quark::rescale(r,fac);
+                tao::mulset(r,fac);
                 size_t np = 0;
                 size_t nm = 0;
                 size_t nz = 0;
@@ -37,7 +37,7 @@ namespace upsylon {
                 assert(np+nm+nz==cols);
                 if(nm>np)
                 {
-                    quark::neg(r);
+                    tao::neg(r);
                 }
                 else
                 {
@@ -47,7 +47,7 @@ namespace upsylon {
                         if(yap::__zero==s) continue;
                         if(yap::__negative==s)
                         {
-                            quark::neg(r);
+                            tao::neg(r);
                             break;
                         }
                     }

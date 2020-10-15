@@ -3,7 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/type/spec.hpp"
 
 using namespace upsylon;
@@ -38,8 +38,8 @@ namespace
                 t.solve(u,r);
                 //std::cerr << "u=" << u << std::endl;
                 t.mul(v,u);
-                quark::sub(v,r);
-                const typename real_for<T>::type d2 = quark::mod2<T>::of(v);
+                tao::sub(v,r);
+                const typename real_for<T>::type d2 = tao::mod2<T>::of(v);
                 std::cerr << "d2=" << d2 << "/";
             }
         }

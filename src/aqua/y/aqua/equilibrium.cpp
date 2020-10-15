@@ -263,7 +263,7 @@ namespace upsylon {
 
 }
 
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/mkl/root/bisection.hpp"
 
 namespace upsylon
@@ -275,7 +275,7 @@ namespace upsylon
         void   Equilibrium:: evolve(addressable<double>      &Ctry,
                                     const accessible<double> &C0, const double x) const throw()
         {
-            quark::set(Ctry,C0);
+            tao::set(Ctry,C0);
             for(const Component *c=components.head;c;c=c->next)
             {
                 const size_t j = c->sp.indx;
@@ -367,7 +367,7 @@ namespace upsylon
                 return false;
             }
 
-            quark::set(C0,C1);
+            tao::set(C0,C1);
             Y_AQUA_PRINTLN("<" << name << "> = " << f.b << " @ " << C0);
 
 

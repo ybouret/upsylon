@@ -7,7 +7,7 @@
 #include "y/mkl/utils.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/eigen.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/preconditioning.hpp"
 
 #include "y/sequence/arrays.hpp"
@@ -177,8 +177,8 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 //
                 //--------------------------------------------------------------
                 tJ.assign_transpose(J);
-                quark::mul(grad,tJ,F);
-                quark::mmul(C0,tJ,J);
+                tao::mul(grad,tJ,F);
+                tao::mmul(C0,tJ,J);
 
                 Y_ZIRCON_PRINTLN("grad="<<grad);
                 Y_ZIRCON_PRINTLN("C0="<<C0);
@@ -290,12 +290,12 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 {
 
                     addressable<T> &tPgrad = Fsqr;
-                    quark::mul_trn(tPgrad,P,grad);
+                    tao::mul_trn(tPgrad,P,grad);
                     for(size_t i=nvar;i>0;--i)
                     {
                         tPgrad[i] /= -w[i];
                     }
-                    quark::mul(step,P,tPgrad);
+                    tao::mul(step,P,tPgrad);
                 }
                 Y_ZIRCON_PRINTLN("step="<<step);
 
@@ -422,7 +422,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
             //! wrapper to g(X+u*step)
             inline T _g(const T u)
             {
-                quark::muladd(Xtry,*X_,u,step);
+                tao::muladd(Xtry,*X_,u,step);
                 (*f_)(Ftry,Xtry);
                 return __g(Ftry);
             }

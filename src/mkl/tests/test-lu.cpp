@@ -1,6 +1,6 @@
 #include "support.hpp"
 #include "y/mkl/kernel/lu.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/utils.hpp"
@@ -47,8 +47,8 @@ namespace
             vector<T> u = r;
             LU::solve<T>(a,u);
             vector<T> d = r;
-            quark::mul_sub(d,a0,u);
-            std::cerr << "\t|d|^2=" << quark::mod2<T>::of(d) << std::endl;
+            tao::mul_sub(d,a0,u);
+            std::cerr << "\t|d|^2=" << tao::mod2<T>::of(d) << std::endl;
         }
     }
 
@@ -79,7 +79,7 @@ namespace
             matrix<T> b(n,n);
             LU::inverse(a,b);
             matrix<T> P(n,n);
-            quark::mmul(P,a0,b);
+            tao::mmul(P,a0,b);
             //__find<T>::truncate(P);
             std::cerr << "P=" << P << std::endl;
 

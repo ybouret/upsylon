@@ -1,5 +1,5 @@
 #include "y/mkl/kernel/eigen.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
@@ -42,8 +42,8 @@ namespace
             matrix<T> av(n,n);
             matrix<T> vT(v,matrix_transpose);
             matrix<T> D(n,n);
-            quark::mmul(av,a,v);
-            quark::mmul(D,vT,av);
+            tao::mmul(av,a,v);
+            tao::mmul(D,vT,av);
             std::cerr << "D=" << D << std::endl;
            
             std::cerr << std::endl;

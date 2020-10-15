@@ -7,7 +7,7 @@
 #include "y/sequence/arrays.hpp"
 #include "y/mkl/utils.hpp"
 #include "y/mkl/kernel/lu.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/core/temporary-link.hpp"
 #include "y/core/temporary-value.hpp"
 #include "y/comparison.hpp"
@@ -111,7 +111,7 @@ namespace upsylon
 
 
                 if( !LU::build(J) ) return false;
-                quark::neg(step,F);
+                tao::neg(step,F);
                 LU::solve(J,step);
                 Y_MKL_ZNEWT_PRINTLN("step="<<step);
 
@@ -213,7 +213,7 @@ namespace upsylon
             inline T g_(T lam)
             {
                 assert(X_);
-                quark::muladd(Xtry,*X_,lam,step);
+                tao::muladd(Xtry,*X_,lam,step);
                 (*f_)(Ftry,Xtry);
                 return __g(Ftry);
             }

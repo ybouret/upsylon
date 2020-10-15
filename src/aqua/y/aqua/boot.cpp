@@ -178,7 +178,7 @@ namespace upsylon {
 
 #include "y/aqua/equilibria.hpp"
 #include "y/aqua/library.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
 #include "y/mkl/kernel/adjoint.hpp"
 #include "y/mkl/kernel/eigen.hpp"
@@ -231,7 +231,7 @@ namespace upsylon {
                 {
                     //iMatrix tR(R,matrix_transpose);
                     iMatrix R2(Nc,Nc);
-                    quark::mmul_rtrn(R2,R,R);
+                    tao::mmul_trn(R2,R,R);
                     aliasing::_(d) = ideterminant(R2);
                     if(0==d)
                     {
@@ -243,7 +243,7 @@ namespace upsylon {
                     iMatrix F(M,M);
                     for(size_t i=Nc;i>0;--i)
                     {
-                        quark::set(F[i],R[i]);
+                        tao::set(F[i],R[i]);
                     }
                     {
                         size_t i=1+Nc;
@@ -258,7 +258,7 @@ namespace upsylon {
                     }
                     for(size_t i=N;i>0;--i)
                     {
-                        quark::set(aliasing::_(S)[i],F[i+Nc]);
+                        tao::set(aliasing::_(S)[i],F[i+Nc]);
                     }
                 }
 

@@ -1,6 +1,6 @@
 
 #include "y/aqua/engine.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/sort/heap.hpp"
 #include "y/ios/ocstream.hpp"
@@ -68,7 +68,7 @@ namespace upsylon
 
         double Engine:: QCheck(const double x) throw()
         {
-            quark::muladd(Ctry,Cini, x, step);
+            tao::muladd(Ctry,Cini,x,step);
             for(size_t j=M;j>0;--j)
             {
                 Ctry[j] = Cini[j]+x*step[j];
@@ -129,7 +129,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             computeJ(Cini);
-            quark::mmul_rtrn(W,J,Nu);
+            tao::mmul_trn(W,J,Nu);
             if( !LU::build(W) )
             {
                 Y_AQUA_PRINTLN("singular system level-1");
@@ -152,9 +152,9 @@ namespace upsylon
             // compute Newton's step
             //
             //------------------------------------------------------------------
-            quark::neg(xi,Q);
+            tao::neg(xi,Q);
             LU::solve(W,xi);
-            quark::mul(step,tNu,xi);
+            tao::mul(step,tNu,xi);
             Y_AQUA_PRINTLN("Q    = "<<Q);
             Y_AQUA_PRINTLN("xi   = "<<xi);
             Y_AQUA_PRINTLN("step = "<<step);
@@ -164,7 +164,7 @@ namespace upsylon
             // update to balanced position
             //
             //------------------------------------------------------------------
-            quark::add(Cend,Cini,step);
+            tao::add(Cend,Cini,step);
             Y_AQUA_PRINTLN("Cend = "<<Cend);
             const bool balanced = balance(Cend);
             totalBalances += balanceCycles;
@@ -184,11 +184,11 @@ namespace upsylon
                     return false;
                 }
                 Y_AQUA_PRINTLN("Cend     = " << Cend);
-                quark::set(Cini,Cend);
+                tao::set(Cini,Cend);
                 goto CYCLE;
             }
 
-            quark::sub(step,Cend,Cini);
+            tao::sub(step,Cend,Cini);
             Y_AQUA_PRINTLN("step = "<<step);
 
 
@@ -212,7 +212,7 @@ namespace upsylon
                     Q1 = F( x1 = minimize::run(F,x,q,minimize::inside) );
                     Y_AQUA_PRINTLN("#backtrack @" << x1);
                 }
-                quark::set(Cend,Ctry);
+                tao::set(Cend,Ctry);
             }
             
 

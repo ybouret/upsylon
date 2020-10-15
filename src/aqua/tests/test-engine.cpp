@@ -2,7 +2,7 @@
 
 #include "y/aqua/engine.hpp"
 #include "y/utest/run.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/ios/align.hpp"
 #include "y/string/convert.hpp"
 
@@ -132,7 +132,7 @@ Y_UTEST(engine)
     }
 
     cs.forwardVerbose=true;
-    quark::ld(C,0);
+    tao::ld(C,0);
     if(cs.forward(C))
     {
         lib.show(std::cerr << "nil=",C);

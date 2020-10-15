@@ -31,7 +31,7 @@ namespace {
             {
                 for(size_t k=1;k<i;++k)
                 {
-                    std::cerr << " " << quark::dot<T>::of(a[i],a[k]);
+                    std::cerr << " " << tao::dot<T>::of(a[i],a[k]);
                 }
                 std::cerr << std::endl;
             }
@@ -48,7 +48,7 @@ namespace {
             std::cerr << "dim=" << dim << std::endl;
             matrix<T> a(dim,dim);
             a.diag(1,0);
-            quark::ld(a[1], 1);
+            tao::ld(a[1], 1);
             std::cerr << "a=" << a << std::endl;
             if(!GramSchmidt::OrthoSimple(a))
             {
@@ -60,7 +60,7 @@ namespace {
             {
                 for(size_t k=1;k<i;++k)
                 {
-                    std::cerr << " " << quark::dot<T>::of(a[i],a[k]);
+                    std::cerr << " " << tao::dot<T>::of(a[i],a[k]);
                 }
                 std::cerr << std::endl;
             }
@@ -77,7 +77,7 @@ namespace {
             std::cerr << "dim=" << dim << std::endl;
             matrix<T> a(dim,dim);
             a.diag(1,0);
-            quark::ld(a[1], 1);
+            tao::ld(a[1], 1);
             std::cerr << "a=" << a << std::endl;
             if(!GramSchmidt::iOrtho(a))
             {
@@ -89,7 +89,7 @@ namespace {
             {
                 for(size_t k=1;k<i;++k)
                 {
-                    std::cerr << " " << quark::dot<T>::of(a[i],a[k]);
+                    std::cerr << " " << tao::dot<T>::of(a[i],a[k]);
                 }
                 std::cerr << std::endl;
             }

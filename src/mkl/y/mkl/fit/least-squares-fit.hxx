@@ -26,7 +26,7 @@ inline bool fit(SampleType<T>            &sample,
     //
     //__________________________________________________________________________
     sample.ready();                             // prepare the sample
-    quark::ld(aerr,-1);                         // invalidate errors
+    tao::ld(aerr,-1);                         // invalidate errors
     if(n<=0)                                    //
     {                                           //
         Y_LS_PRINTLN("[LS] <no parameters>");   //
@@ -96,7 +96,7 @@ CYCLE:
         return false;
     }
     
-    quark::add(atry,aorg,step);
+    tao::add(atry,aorg,step);
     Y_LS_PRINTLN( "     lambda = " << lambda );
     Y_LS_PRINTLN( "     step0  = " << step   );
     Y_LS_PRINTLN( "     atry0  = " << atry   );
@@ -115,7 +115,7 @@ STEP_CONTROL:
         case LeftUntouched: break;
         case EmergencyExit: Y_LS_PRINTLN( "[LS] <STEP #" << cycle << " CONTROL EXIT>" ); return false;
         case ModifiedValue: Y_LS_PRINTLN( "[LS] changed step #" << cycle );
-            quark::add(atry,aorg,step);
+            tao::add(atry,aorg,step);
             break;
     }
 
@@ -125,7 +125,7 @@ STEP_CONTROL:
         case LeftUntouched: break;
         case EmergencyExit: Y_LS_PRINTLN( "[LS] <ATRY #" << cycle << " CONTROL EXIT>" ); return false;
         case ModifiedValue: Y_LS_PRINTLN( "[LS] changed atry #" << cycle );
-            quark::sub(step,atry,aorg);
+            tao::sub(step,atry,aorg);
             Y_LS_PRINTLN( "     atry1  = " << atry   );
             goto STEP_CONTROL;
     }
@@ -229,7 +229,7 @@ STEP_CONTROL:
         //----------------------------------------------------------------------
         // compute the new position
         //----------------------------------------------------------------------
-        quark::muladd(atry,aorg,u.b,step);
+        tao::muladd(atry,aorg,u.b,step);
 
         //----------------------------------------------------------------------
         // check variable convergence
@@ -251,7 +251,7 @@ STEP_CONTROL:
         //----------------------------------------------------------------------
         // update aorg/D2org and update gradient/curvature
         //----------------------------------------------------------------------
-        quark::set(aorg,atry);
+        tao::set(aorg,atry);
         const T D2old = D2org;
         D2org = sample.computeD2(alpha, beta, F, aorg, used, *this,verbose);
 
@@ -330,7 +330,7 @@ CONVERGED:
     else if(0==dof)
     {
         Y_LS_PRINTLN( "[LS] <interpolation>" );
-        quark::ld(aerr,0);
+        tao::ld(aerr,0);
         return true;
     }
     else

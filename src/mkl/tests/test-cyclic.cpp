@@ -2,7 +2,7 @@
 #include "y/mkl/kernel/cyclic.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include <typeinfo>
 
 using namespace upsylon;
@@ -48,8 +48,8 @@ static inline void do_cyclic(const size_t nmax=10, const size_t niter=4)
                 }
                 C.solve(u,r);
                 C.mul(x,u);
-                quark::sub(x,r);
-                std::cerr << "/" << quark::mod2<T>::of(x);
+                tao::sub(x,r);
+                std::cerr << "/" << tao::mod2<T>::of(x);
             }
         }
         std::cerr << std::endl;

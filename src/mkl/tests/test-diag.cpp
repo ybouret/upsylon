@@ -42,7 +42,7 @@ namespace {
                     std::cerr << "\t" << wr[i] << " => " << ev[i] << std::endl;
                     const T              lam = wr[i];
                     const accessible<T> &v   = ev[i];
-                    quark::mul(y,a0,v);
+                    tao::mul(y,a0,v);
                     T rms = 0;
                     for(size_t i=n;i>0;--i)
                     {

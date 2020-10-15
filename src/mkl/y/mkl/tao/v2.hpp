@@ -8,7 +8,7 @@
 template <typename T>
 struct dot
 {
-    //! based on lhs.size
+    //! based on lhs.size()
     template <typename LHS, typename RHS> static inline
     T of(LHS &lhs, RHS &rhs)
     {
@@ -22,9 +22,78 @@ struct dot
     }
 };
 
+//! getting mod2
+template <typename T>
+struct mod2
+{
+    typedef typename real_for<T>::type real_type;
+
+    //! single vector
+    template <typename LHS> static inline
+    real_type of(LHS &lhs)
+    {
+        real_type result = 0;
+        for(size_t i=lhs.size();i>0;--i)
+        {
+            result += mod2_of( Y_TAO_TO(T,LHS,lhs[i]) );
+        }
+        return result;
+    }
+
+    //! based on lhs.size()
+    template <typename LHS, typename RHS> static inline
+    real_type of(LHS &lhs, RHS &rhs)
+    {
+        assert(lhs.size()<=rhs.size());
+        real_type result = 0;
+        for(size_t i=lhs.size();i>0;--i)
+        {
+            result += mod2_of( Y_TAO_TO(T,LHS,lhs[i]) - Y_TAO_TO(T,RHS,rhs[i]));
+        }
+        return result;
+    }
+};
+
+//! getting rms
+template <typename T>
+struct rms
+{
+    typedef typename real_for<T>::type real_type;
+
+    //! single vector
+    template <typename LHS>
+    real_type of(LHS &lhs)
+    {
+        real_type    res = 0;
+        const size_t dof = lhs.size();
+        for(size_t i=dof;i>0;--i)
+        {
+            res += mod2_of( Y_TAO_TO(T,LHS,lhs[i]) );
+        }
+        return sqrt_of(res/dof);
+    }
+
+    //! based on lhs.size()
+    template <typename LHS, typename RHS> static inline
+    T of(LHS &lhs, RHS &rhs)
+    {
+        assert(lhs.size()<=rhs.size());
+        real_type    res = 0;
+        const size_t dof = lhs.size();
+        for(size_t i=dof;i>0;--i)
+        {
+            res  += mod2_of( Y_TAO_TO(T,LHS,lhs[i]) - Y_TAO_TO(T,RHS,rhs[i]));
+        }
+        return sqrt_of(res/dof);
+    }
+};
+
+
+
+
 //! target = M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
 template <typename TARGET, typename T, typename LHS> static inline
-void mul(TARGET &target, const matrix<T> &M, const LHS &rhs)
+void mul(TARGET &target, const matrix<T> &M, LHS &rhs)
 {
     assert(target.size()<=M.rows);
     assert(M.cols <= rhs.size());
@@ -34,9 +103,35 @@ void mul(TARGET &target, const matrix<T> &M, const LHS &rhs)
     }
 }
 
+
+//! target -= M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
+template <typename TARGET, typename T, typename LHS> static inline
+void mul_sub(TARGET &target, const matrix<T> &M, LHS &rhs)
+{
+    assert(target.size()<=M.rows);
+    assert(M.cols <= rhs.size());
+    for(size_t j=target.size();j>0;--j)
+    {
+        target[j] -= dot<typename TARGET::mutable_type>::of(M[j],rhs);
+    }
+}
+
+//! target += M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
+template <typename TARGET, typename T, typename LHS> static inline
+void mul_add(TARGET &target, const matrix<T> &M, LHS &rhs)
+{
+    assert(target.size()<=M.rows);
+    assert(M.cols <= rhs.size());
+    for(size_t j=target.size();j>0;--j)
+    {
+        target[j] += dot<typename TARGET::mutable_type>::of(M[j],rhs);
+    }
+}
+
+
 //! target = M' * rhs, based on target.size() <= M.cols, M.rows <= rhs.size()
 template <typename TARGET, typename T, typename RHS> static inline
-void mul_trn(TARGET &target, const matrix<T> &M, const RHS &rhs)
+void mul_trn(TARGET &target, const matrix<T> &M, RHS &rhs)
 {
     assert(target.size()<= M.cols);
     assert(M.rows       <= rhs.size());

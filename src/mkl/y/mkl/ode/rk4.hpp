@@ -3,7 +3,7 @@
 #define Y_MKL_ODE_RK4_INCLUDED 1
 
 #include "y/mkl/ode/types.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/core/loop.hpp"
 
 namespace upsylon {
@@ -59,7 +59,7 @@ const T _k2 = k2[I]; const T _k3 = k3[I]; Y[I] += scal * (k1[I]+(_k2+_k2)+(_k3+_
                     //
                     // k2 = F(X0+h/2,Y+h/2*k1)
                     //__________________________________________________________
-                    quark::muladd(Yt, Y, half, k1);
+                    tao::muladd(Yt, Y, half, k1);
                     if(cb) (*cb)(Yt,Xmid);
                     F(k2,Xmid,Yt);
 
@@ -67,7 +67,7 @@ const T _k2 = k2[I]; const T _k3 = k3[I]; Y[I] += scal * (k1[I]+(_k2+_k2)+(_k3+_
                     //
                     // k3 = F(X0+h/2,Y+h/2*k2)
                     //__________________________________________________________
-                    quark::muladd(Yt,Y,half,k2);
+                    tao::muladd(Yt,Y,half,k2);
                     if(cb) (*cb)(Yt,Xmid);
                     F(k3,Xmid,Yt);
 
@@ -75,7 +75,7 @@ const T _k2 = k2[I]; const T _k3 = k3[I]; Y[I] += scal * (k1[I]+(_k2+_k2)+(_k3+_
                     //
                     // k4 = F(X0+h=X1,Y+h*k3)
                     //__________________________________________________________
-                    quark::muladd(Yt, Y, h, k3);
+                    tao::muladd(Yt, Y, h, k3);
                     if(cb) (*cb)(Yt,X1);
                     F(k4,X1,Yt);
 

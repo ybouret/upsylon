@@ -3,7 +3,7 @@
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/mkl/utils.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -60,8 +60,8 @@ namespace
                             b[i]  = support::get<T>();
                         }
                         svd::solve(u,w,v,b,x);
-                        quark::mul(y,a,x);
-                        const T RMS = quark::rms<T>::of(y,b);
+                        tao::mul(y,a,x);
+                        const T RMS = tao::rms<T>::of(y,b);
                         std::cerr << '<' << RMS << '>';
                     }
                     

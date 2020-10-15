@@ -4,7 +4,7 @@
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/mkl/utils.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 
 namespace upsylon
 {
@@ -51,7 +51,7 @@ namespace upsylon
                 inline double operator()( const double alpha )
                 {
                     assert(_cs); assert(_Cini); assert(_Ctry); assert(_dC);
-                    quark::muladd(* _Ctry, * _Cini, alpha, *_dC);
+                    tao::muladd(* _Ctry, * _Cini, alpha, *_dC);
                     return _cs->computeExcess(*_Ctry);
                 }
 
@@ -83,9 +83,9 @@ namespace upsylon
                 //______________________________________________________________
                 for(size_t i=N;i>0;--i)
                 {
-                    xi[i] = quark::dot<double>::of(beta,Nu[i])/nu2[i];
+                    xi[i] = tao::dot<double>::of(beta,Nu[i])/nu2[i];
                 }
-                quark::mul(dC,tNu,xi);
+                tao::mul(dC,tNu,xi);
                 triplet<double> aa   = {0,0,0};
                 triplet<double> EE   = {Eini,Eini,Eini};
                 const double    Eend = E(_end);
@@ -119,7 +119,7 @@ namespace upsylon
                 }
 
                 Eini = Etry;
-                quark::set(Cini,Ctry);
+                tao::set(Cini,Ctry);
             }
 
             //__________________________________________________________________

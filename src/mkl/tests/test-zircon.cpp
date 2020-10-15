@@ -147,14 +147,14 @@ Y_UTEST(zircon)
         f(F,X);
         const string fn = "chem.dat";
         ios::ocstream::overwrite(fn);
-        ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], quark::mod2<double>::of(F)/2);
+        ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], tao::mod2<double>::of(F)/2);
         
         int cycle = 0;
 
         while( zircon_running == zrc(F,X,f,fjac) )
         {
             ++cycle;
-            ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
+            ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, tao::mod2<double>::of(F)/2);
             if(cycle>32) break;
         }
 
@@ -188,14 +188,14 @@ Y_UTEST(zircon)
         f(F,X);
 
         ios::ocstream::overwrite(fn);
-        ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], quark::mod2<double>::of(F)/2);
+        ios::ocstream::echo(fn,"%g %g 0 %g\n",X[1],X[2], tao::mod2<double>::of(F)/2);
 
         int cycle = 0;
 
         while( std::cerr << std::endl, zircon_running == zrc(F,X,f,fjac) )
         {
             ++cycle;
-            ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, quark::mod2<double>::of(F)/2);
+            ios::ocstream::echo(fn,"%g %g %d %g\n",X[1],X[2], cycle, tao::mod2<double>::of(F)/2);
             if(cycle>32) break;
         }
 

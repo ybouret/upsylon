@@ -121,7 +121,7 @@ namespace {
 
             std::cerr << "second pass" << std::endl;
             LS.verbose = true;
-            quark::ld(used,false);
+            tao::ld(used,false);
             vars(used,"y0")   = true;
 
             vars.display(std::cerr,used,"\t (*) use ");
@@ -132,7 +132,7 @@ namespace {
                 std::cerr << std::endl;
 
                 std::cerr << "third pass" << std::endl;
-                quark::ld(used,true);
+                tao::ld(used,true);
 
                 vars.display(std::cerr,used,"\t (*) use ");
 

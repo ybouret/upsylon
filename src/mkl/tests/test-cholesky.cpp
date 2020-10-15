@@ -1,7 +1,7 @@
 #include "y/mkl/kernel/cholesky.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
@@ -32,7 +32,7 @@ namespace  {
                         P[i][j] = support::get<T>()-T(0.5);
                     }
                 }
-                quark::mmul_rtrn(A, P, P);
+                tao::mmul_trn(A, P, P);
                 A0 = A;
 
 
@@ -50,11 +50,11 @@ namespace  {
                 }
                 //A*x=b
                 cholesky::solve(x, A, b);
-                quark::mul(y, A0, x);
+                tao::mul(y, A0, x);
 
                 
                 //std::cerr << "b=" << b << ":y=" << y << std::endl;
-                const T RMS = quark::rms<T>::of(b,y);
+                const T RMS = tao::rms<T>::of(b,y);
                 std::cerr << '<' << RMS << '>';
             }
         }
@@ -79,7 +79,7 @@ Y_UTEST(cholesky)
             }
         }
         matrix<double> J2(n,n);
-        quark::mmul_rtrn(J2,J,J);
+        tao::mmul_trn(J2,J,J);
         std::cerr << "J="  << J  << std::endl;
         std::cerr << "J2=" << J2 << std::endl;
         if( !cholesky::build(J2) )

@@ -1,11 +1,11 @@
 #include "y/chem/equilibria.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 
 using namespace upsylon;
 using namespace Chemical;
-
+using namespace mkl;
 Y_UTEST(cs)
 {
 
@@ -96,7 +96,7 @@ Y_UTEST(cs)
         {
             const accessible<double> &grad  = cs.Phi[i];
             const accessible<int>    &nu    = cs.Nu[i];
-            const double              delta = mkl::quark::dot<double>::of(grad,nu);
+            const double              delta = tao::dot<double>::of(grad,nu);
             Y_ASSERT(delta<=0);
         }
         bool success = true;

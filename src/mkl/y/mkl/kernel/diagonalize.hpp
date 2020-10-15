@@ -5,7 +5,7 @@
 
 #include "y/mkl/utils.hpp"
 #include "y/mkl/kernel/svd.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/sort/heap.hpp"
 #include "y/sort/index.hpp"
 #include "y/comparison.hpp"
@@ -438,7 +438,7 @@ namespace upsylon {
                         //------------------------------------------------------
                         // improve tau
                         //------------------------------------------------------
-                        const T dtau = T(1) / quark::dot<T>::of(y,z);
+                        const T dtau = T(1) / tao::dot<T>::of(y,z);
                         wr[iv] += dtau;
                     }
                     

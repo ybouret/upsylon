@@ -5,7 +5,7 @@
 
 #include "y/container/matrix.hpp"
 #include "y/yap/rational.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/counting/comb.hpp"
 
 namespace upsylon {
@@ -41,8 +41,8 @@ namespace upsylon {
                         for(size_t k=1;k<i;++k)
                         {
                             const accessible<T> &u = a[k];
-                            const T num = quark::dot<T>:: of(v,u);
-                            const T den = quark::dot<T>:: of(u,u);
+                            const T num = tao::dot<T>:: of(v,u);
+                            const T den = tao::dot<T>:: of(u,u);
                             if(fabs_of(den)<=0)
                             {
                                 return false;
@@ -60,7 +60,7 @@ namespace upsylon {
                     // check last one
                     //__________________________________________________________
                     const accessible<T> &last = a[rows];
-                    return  quark::mod2<T>:: of(last)> 0;
+                    return  tao::mod2<T>:: of(last)> 0;
                 }
                 else
                     return true;

@@ -1,6 +1,6 @@
 #include "y/chem/kinetics.hpp"
 #include "y/chem/lua/io.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -25,10 +25,10 @@ namespace {
         inline void injection( array<double> &dCdt, double t, const array<double> & )
         {
 
-            quark::ld(dCdt,0);
+            tao::ld(dCdt,0);
             if(t>=0&&t<=120)
             {
-                quark::mulset(dCdt,0.01,C);
+                tao::mulset(dCdt,0.01,C);
             }
         }
 

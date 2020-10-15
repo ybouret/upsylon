@@ -3,7 +3,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/exception.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/adjoint.hpp"
 
 namespace upsylon
@@ -103,7 +103,7 @@ namespace upsylon
                     aM.acquire(M);
                     new ( & aliasing::_(active) ) Booleans(aliasing::as<bool>(*Cact),M);
                     new ( &illegal)               Booleans(aliasing::as<bool>(*Cill),M);
-                    quark::ld( aliasing::_(active), false);
+                    tao::ld( aliasing::_(active), false);
                 }
 
                 if(N>0)
@@ -139,15 +139,15 @@ namespace upsylon
                         if(active[j]) ++aliasing::_(Ma);
                     }
                     aliasing::_(tNu).assign_transpose(Nu);
-                    quark::mmul_rtrn(aliasing::_(Nu2),Nu,Nu);
+                    tao::mmul_trn(aliasing::_(Nu2),Nu,Nu);
                     aliasing::_(det) = ideterminant(Nu2);
                     if(det<=0) throw exception("%ssingular set of equilibria",fn);
                     aliasing::_(iNu).make(N,M);
                     aliasing::_(Prj).make(M,M);
                     {
                         iMatrix aNu2(N,N); iadjoint(aNu2,Nu2);
-                        quark::mmul( aliasing::_(iNu), aNu2,Nu);
-                        quark::mmul( aliasing::_(Prj), tNu, iNu);
+                        tao::mmul( aliasing::_(iNu), aNu2,Nu);
+                        tao::mmul( aliasing::_(Prj), tNu, iNu);
                     }
 
                     J.make(N,M);

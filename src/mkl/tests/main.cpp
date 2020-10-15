@@ -50,14 +50,6 @@ Y_UTEST_INIT(64)
     Y_UTEST(fit_poly);
     Y_UTEST(fit_gauss);
 
-    Y_UTEST(quark1_ld);
-    Y_UTEST(quark1_set);
-    Y_UTEST(quark1_add);
-    Y_UTEST(quark1_dot);
-    Y_UTEST(quark1_neg);
-    Y_UTEST(quark2);    
-    Y_UTEST(quark3);
-
     Y_UTEST(k_means);
     Y_UTEST(jacobian);
     Y_UTEST(znewt);

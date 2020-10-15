@@ -84,7 +84,7 @@ namespace upsylon {
                                  const Matrix         &curv,
                                  const accessible<T>  &beta ) throw()
                 {
-                    quark::set(step,beta);
+                    tao::set(step,beta);
                     LU::solve(curv,step);
                 }
                 
@@ -265,9 +265,9 @@ namespace upsylon {
                     atry.adjust(n,0);
                     used.adjust(n,false);
                     good.adjust(n,false);
-                    quark::ld(used,false);
+                    tao::ld(used,false);
                     sample.activate(used,flags);
-                    quark::set(good,used);
+                    tao::set(good,used);
                 }
 
                 //______________________________________________________________
@@ -334,7 +334,7 @@ namespace upsylon {
                 //! detect a nullspace coordinate
                 inline bool isNullSpace( const size_t i ) const throw()
                 {
-                    return (fabs_of( beta[i] ) <= 0) && ( quark::mmod2<T>::both_of(alpha,i,i) <=0 );
+                    return (fabs_of( beta[i] ) <= 0) && ( tao::mmod2<T>::both_of(alpha,i,i) <=0 );
                 }
                 
                 //______________________________________________________________
@@ -405,7 +405,7 @@ namespace upsylon {
                     //
                     // and take caution
                     //__________________________________________________________
-                    quark::rescale(step,damp);
+                    tao::mulset(step,damp);
                     return true;
                 }
 
@@ -426,7 +426,7 @@ namespace upsylon {
                         assert(aorg);
                         assert(step);
 
-                        quark::muladd(*atry, *aorg, u, *step);
+                        tao::muladd(*atry, *aorg, u, *step);
                         return sample->computeD2(*F, *atry);
                     }
 

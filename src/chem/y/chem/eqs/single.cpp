@@ -1,5 +1,5 @@
 #include "y/chem/equilibria.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/mkl/root/bisection.hpp"
 
 namespace upsylon
@@ -26,7 +26,7 @@ namespace upsylon
                     assert(pNu);
                     assert(pCtry);
                     addressable<double> &C = *pCtry;
-                    quark::muladd(C, *pCini, xi, *pNu );
+                    tao::muladd(C, *pCini, xi, *pNu );
                     return pEq->Gamma(K,C);
                 }
             };

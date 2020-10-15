@@ -5,7 +5,7 @@
 
 #include "y/mkl/fit/sequential.hpp"
 #include "y/mkl/fcn/derivative.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 
 namespace upsylon {
 
@@ -46,7 +46,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // initialize
                     //----------------------------------------------------------
-                    quark::ld(dFda,0);
+                    tao::ld(dFda,0);
 
 
                     //----------------------------------------------------------

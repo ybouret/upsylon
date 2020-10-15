@@ -16,30 +16,12 @@ SET(tao_srcs ${tao_decl} ${tao_code})
 SOURCE_GROUP( tao FILES ${tao_srcs} )
 INSTALL( FILES ${tao_decl} DESTINATION include/y/mkl/tao )
 
-FILE(GLOB kernel_decl y/mkl/kernel/*.h??)
+
+FILE(GLOB kernel_decl y/mkl/kernel/*.hpp)
 FILE(GLOB kernel_code y/mkl/kernel/*.cpp)
 SET(kernel_srcs ${kernel_decl} ${kernel_code})
 SOURCE_GROUP( kernel FILES ${kernel_srcs} )
 INSTALL( FILES ${kernel_decl} DESTINATION include/y/mkl/kernel )
-
-FILE(GLOB kernel_quark_v1_decl y/mkl/kernel/quark/v1/*.hpp)
-FILE(GLOB kernel_quark_v1_code y/mkl/kernel/quark/v1/*.cpp)
-SET(kernel_quark_v1_srcs ${kernel_quark_v1_decl} ${kernel_quark_v1_code})
-SOURCE_GROUP( kernel/quark/v1 FILES ${kernel_quark_v1_srcs} )
-INSTALL( FILES ${kernel_quark_v1_decl} DESTINATION include/y/mkl/kernel/quark/v1 )
-
-FILE(GLOB kernel_quark_v2_decl y/mkl/kernel/quark/v2/*.hpp)
-FILE(GLOB kernel_quark_v2_code y/mkl/kernel/quark/v2/*.cpp)
-SET(kernel_quark_v2_srcs ${kernel_quark_v2_decl} ${kernel_quark_v2_code})
-SOURCE_GROUP( kernel/quark/v2 FILES ${kernel_quark_v2_srcs} )
-INSTALL( FILES ${kernel_quark_v2_decl} DESTINATION include/y/mkl/kernel/quark/v2 )
-
-FILE(GLOB kernel_quark_v3_decl y/mkl/kernel/quark/v3/*.hpp)
-FILE(GLOB kernel_quark_v3_code y/mkl/kernel/quark/v3/*.cpp)
-SET(kernel_quark_v3_srcs ${kernel_quark_v3_decl} ${kernel_quark_v3_code})
-SOURCE_GROUP( kernel/quark/v3 FILES ${kernel_quark_v3_srcs} )
-INSTALL( FILES ${kernel_quark_v3_decl} DESTINATION include/y/mkl/kernel/quark/v3 )
-
 
 FILE(GLOB io_decl y/mkl/io/*.hpp)
 FILE(GLOB io_code y/mkl/io/*.cpp)
@@ -140,8 +122,7 @@ INSTALL( FILES ${fit_share_decl} DESTINATION include/y/mkl/fit/share )
 ADD_LIBRARY(y-mkl STATIC
 ${main_srcs}
 ${tao_srcs}
-${kernel_srcs} 
-${kernel_quark_v1_srcs} ${kernel_quark_v2_srcs} ${kernel_quark_v3_srcs}
+${kernel_srcs}
 ${io_srcs}
 ${fcn_srcs}
 ${root_srcs}

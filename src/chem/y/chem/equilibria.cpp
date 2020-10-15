@@ -1,6 +1,6 @@
 #include "y/chem/equilibria.hpp"
 #include "y/exception.hpp"
-#include "y/mkl/kernel/quark.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/determinant.hpp"
 #include "y/sort/heap.hpp"
 
@@ -192,7 +192,7 @@ namespace upsylon
                     // check linearly independant eqs
                     //__________________________________________________________
                     matrix<int> gram(N,N);
-                    quark::mmul_rtrn(gram, Nu, Nu);
+                    tao::mmul_trn(gram, Nu, Nu);
                     const int   g = ideterminant(gram);
                     if(0==g)
                     {
@@ -250,7 +250,7 @@ namespace upsylon
       
         bool Equilibria:: computeW()
         {
-            quark::mmul_rtrn(W,Phi,Nu);
+            tao::mmul_trn(W,Phi,Nu);
             return true;
         }
 
