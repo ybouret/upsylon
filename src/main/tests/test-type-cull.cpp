@@ -195,9 +195,11 @@ namespace {
     {
         std::cerr << " |_<" << typeid(T).name() << "> / size=" << sizeof(T) << std::endl;
         std::cerr << "  |_[";
-        T target;
-        T source;
-        T origin;
+        T *wksp = (T *) calloc(3,sizeof(T));
+        T &target = wksp[0];
+        T &source = wksp[1];
+        T &origin = wksp[2];
+
         for(size_t iter=64;iter>0;--iter)
         {
             alea.fillnz(&source,sizeof(T)); Y_ASSERT( !is_zeroed(source) );
@@ -216,6 +218,7 @@ namespace {
 
             }
         }
+        free(wksp);
         std::cerr << "]" << std::endl;
     }
 
