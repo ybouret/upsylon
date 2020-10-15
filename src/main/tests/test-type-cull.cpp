@@ -195,17 +195,15 @@ namespace {
     {
         std::cerr << " |_<" << typeid(T).name() << "> / size=" << sizeof(T) << std::endl;
         std::cerr << "  |_[";
+        T target;
+        T source;
+        T origin;
         for(size_t iter=64;iter>0;--iter)
         {
-            T target;
-            T source;
-            T origin;
             alea.fillnz(&source,sizeof(T)); Y_ASSERT( !is_zeroed(source) );
             bzset(target);        Y_ASSERT( is_zeroed(target)    );
             bmove(origin,source); Y_ASSERT( bsame(origin,source) );
             bswap(target,source); Y_ASSERT( bsame(target,origin) );
-            (void)source;
-            (void)target;
             Y_ASSERT( is_zeroed(source) );
             if(check)
             {
@@ -364,3 +362,35 @@ Y_UTEST(move_perf)
 }
 Y_UTEST_DONE()
 
+#include "y/type/spec.hpp"
+
+namespace {
+
+    template <size_t N>
+    void cull_info()
+    {
+        typedef cull<N>                        cull_type;
+        typedef typename  cull_type::word_type word_type;
+        std::cerr << "cull<" << N << ">" << std::endl;
+        std::cerr << "\tword_type = " << type_name_of<word_type>() << std::endl;
+        std::cerr << "\tword_size = " << cull_type::word_size << std::endl;
+        std::cerr << "\tnum_words = " << cull_type::num_words << std::endl;
+        Y_CHECK(cull<N>::num_words*cull<N>::word_size==N);
+    }
+}
+
+Y_UTEST(cull_info)
+{
+    cull_info<1>();
+    cull_info<2>();
+    cull_info<3>();
+    cull_info<4>();
+    cull_info<5>();
+    cull_info<6>();
+    cull_info<7>();
+    cull_info<8>();
+    cull_info<9>();
+    cull_info<10>();
+
+}
+Y_UTEST_DONE()

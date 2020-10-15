@@ -15,6 +15,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(rtl);
 
     Y_UTEST(cull);
+    Y_UTEST(cull_info);
     Y_UTEST(zset_perf);
     Y_UTEST(move_perf);
 
