@@ -19,6 +19,7 @@ namespace upsylon {
             assert(p!=NULL);
             assert(n>0);
             assert(a!=NULL);
+            assert(a!=p);
             for(size_t i=n;i>0;)
             {
                 p[i] = i;
