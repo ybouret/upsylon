@@ -44,7 +44,7 @@ namespace {
         
         Y_ASSERT(!core::permutation::next(P,N));
         
-        
+        free(wksp);
         std::cerr << "<permops/>" << std::endl << std::endl;
     }
 }
