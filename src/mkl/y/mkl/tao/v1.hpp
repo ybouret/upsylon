@@ -1,0 +1,64 @@
+
+//! \file
+
+#ifndef Y_MKL_TAO_V1_INCLUDED
+#define Y_MKL_TAO_V1_INCLUDED
+
+
+//==============================================================================
+//
+// LD
+//
+//==============================================================================
+
+//! load same value in all lhs
+template <typename LHS> static inline
+void ld(LHS &lhs, typename LHS::param_type value)
+{
+    for(size_t i=lhs.size();i>0;--i)
+    {
+        lhs[i] = value;
+    }
+}
+
+//! load at most n same value in lhs
+template <typename LHS> static inline
+void ld(LHS &lhs, typename LHS::param_type value, const size_t n)
+{
+    for(size_t i=min_of<size_t>(n,lhs.size());i>0;--i)
+    {
+        lhs[i] = value;
+    }
+}
+
+//==============================================================================
+//
+// SET
+//
+//==============================================================================
+
+//! set lhs from rhs, lhs.size() <= rhs.size()
+template <typename LHS, typename RHS> static inline
+void set(LHS &lhs, RHS &rhs)
+{
+    assert(lhs.size()<=rhs.size());
+    for(size_t i=lhs.size();i>0;--i)
+    {
+        lhs[i] = Y_TAO_CAST(LHS,RHS,rhs[i]);
+    }
+}
+
+//! set lhs from rhs, lhs.size() >= rhs.size()
+template <typename LHS, typename RHS> static inline
+void upload(LHS &lhs, RHS &rhs)
+{
+    assert(lhs.size()>=rhs.size());
+    for(size_t i=rhs.size();i>0;--i)
+    {
+        lhs[i] = Y_TAO_CAST(LHS,RHS,rhs[i]);
+    }
+}
+
+
+
+#endif

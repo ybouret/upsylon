@@ -20,12 +20,12 @@ namespace upsylon {
             static inline const_type from( const U &args ) throw() { return args; } //!< bypass
             };
 
-        //! conversion for not dervied type: static_cast
+        //! conversion for not deived type: static_cast
         template <typename T,typename U> struct auto_cast<T,U,false> {
             typedef T type;                                                                 //!< mutable return type
             typedef T const_type;                                                           //!< const   return type
-            static inline type       from( U       &args ) { return static_cast<T>(args); } //!< convert
-            static inline const_type from( const U &args ) { return static_cast<T>(args); } //!< convert
+            static inline type       from( U       &args ) { return T(args); } //!< convert
+            static inline const_type from( const U &args ) { return T(args); } //!< convert
         };
 
     }
