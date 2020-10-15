@@ -15,7 +15,7 @@ namespace upsylon {
         }
 
         archon:: archon() throw() :
-        singleton<archon>(),
+        upsylon::singleton<archon>(),
         memory::tight::quarry(),
         memory::tight::twain_allocator(access,
                                        *this,
