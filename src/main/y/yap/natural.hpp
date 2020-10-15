@@ -42,17 +42,17 @@ namespace upsylon {
             //------------------------------------------------------------------
             // core type, to perform internal computations
             //------------------------------------------------------------------
-            typedef typename unsigned_int<sizeof(void*)>::type core_type;                     //!< system native unsigned
-            static const size_t                                core_size = sizeof(core_type); //!< system native size
-            static const size_t                                core_bits = core_size << 3;    //!< system native  bits
+            typedef unsigned_int<sizeof(void*)>::type core_type;                     //!< system native unsigned
+            static  const size_t                      core_size = sizeof(core_type); //!< system native size
+            static  const size_t                      core_bits = core_size << 3;    //!< system native  bits
 
             //------------------------------------------------------------------
             // word type, to handle memory
             //------------------------------------------------------------------
 #if defined(Y_YAP_FORCE16)
-            typedef uint16_t                                    word_type; //!< memory of word_type
+            typedef uint16_t                                   word_type; //!< memory of word_type
 #else
-            typedef typename unsigned_int<(core_size>>1)>::type word_type; //!< memory of word_type
+            typedef unsigned_int<(core_size>>1)>::type         word_type; //!< memory of word_type
 #endif
             static const size_t                                word_size  = sizeof(word_type);            //!< word size
             static const size_t                                word_bits  = word_size << 3;               //!< word bits
