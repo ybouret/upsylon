@@ -58,8 +58,6 @@ Y_UTEST(perm)
         test_permops<2>();
         test_permops<3>();
         test_permops<4>();
-        return 0;
-        
         test_permops<5>();
         test_permops<6>();
         test_permops<7>();
