@@ -15,7 +15,7 @@ namespace upsylon {
         }
 
         Library:: Library() :
-        suffix_tree<Species::Pointer>(),
+        upsylon::suffix_tree<Species::Pointer>(),
         maxNameSize(0)
         {
         }
