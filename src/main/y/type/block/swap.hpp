@@ -24,7 +24,7 @@ const T tmp = t; t=s; s=tmp
             static inline void on(void *target, void *source) throw()
             {
                 Y_BLOCK_SWAP_EXEC();
-                block_swap<T,N-1>::on(&t+1,&s+1);
+                block_swap<T,N-1>::on( (&t)+1,(&s)+1);
             }
         };
 
