@@ -204,7 +204,7 @@ namespace {
             bzset(target);        Y_ASSERT( is_zeroed(target)    );
             bmove(origin,source); Y_ASSERT( bsame(origin,source) );
             bswap(target,source); Y_ASSERT( bsame(target,origin) );
-            std::cerr << "source=" << source << std::endl;
+            (void)source;
             Y_ASSERT( is_zeroed(source) );
             if(check)
             {
