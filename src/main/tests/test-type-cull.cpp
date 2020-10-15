@@ -47,9 +47,9 @@ CALL<double>(false);\
 CALL<float>(false);\
 CALL< complex<float>   >( false );\
 CALL< complex<double>  >( false );\
-CALL< point2d<char>    >();\
 CALL< point3d<int16_t> >();\
-CALL< point3d<int64_t> >()
+CALL< point3d<int64_t> >();\
+CALL< point2d<char>    >()
 
 
 namespace {
