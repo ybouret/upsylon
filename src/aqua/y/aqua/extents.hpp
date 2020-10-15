@@ -26,10 +26,10 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            static const unsigned ForwardLimited = 0x01;
-            static const unsigned ForwardEndless = 0x02;
-            static const unsigned ReverseLimited = 0x04;
-            static const unsigned ReverseEndless = 0x08;
+            static const unsigned ForwardLimited = 0x01; //!< alias
+            static const unsigned ForwardEndless = 0x02; //!< alias
+            static const unsigned ReverseLimited = 0x04; //!< alias
+            static const unsigned ReverseEndless = 0x08; //!< alias
 
             //__________________________________________________________________
             //

@@ -36,8 +36,8 @@ namespace upsylon {
             //
             // methods
             //__________________________________________________________________
-            friend std::ostream & operator<<(std::ostream &, const Extent &); //! display
-            double cut( const double value ) const throw();//!< cut guess extent, value>=0
+            friend std::ostream & operator<<(std::ostream &, const Extent &); //!< display
+            double cut( const double value ) const throw();                   //!< cut guess extent, value>=0
 
             //__________________________________________________________________
             //

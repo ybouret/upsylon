@@ -50,7 +50,7 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const size_t maxNameSize;
+            const size_t maxNameSize; //!< max size of equilibria's names
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

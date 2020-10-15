@@ -10,6 +10,12 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( mkl FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/mkl )
 
+FILE(GLOB tao_decl y/mkl/tao/*.hpp)
+FILE(GLOB tao_code y/mkl/tao/*.cpp)
+SET(tao_srcs ${tao_decl} ${tao_code})
+SOURCE_GROUP( tao FILES ${tao_srcs} )
+INSTALL( FILES ${tao_decl} DESTINATION include/y/mkl/tao )
+
 FILE(GLOB kernel_decl y/mkl/kernel/*.h??)
 FILE(GLOB kernel_code y/mkl/kernel/*.cpp)
 SET(kernel_srcs ${kernel_decl} ${kernel_code})
@@ -133,6 +139,7 @@ INSTALL( FILES ${fit_share_decl} DESTINATION include/y/mkl/fit/share )
 
 ADD_LIBRARY(y-mkl STATIC
 ${main_srcs}
+${tao_srcs}
 ${kernel_srcs} 
 ${kernel_quark_v1_srcs} ${kernel_quark_v2_srcs} ${kernel_quark_v3_srcs}
 ${io_srcs}

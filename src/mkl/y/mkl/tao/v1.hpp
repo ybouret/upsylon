@@ -64,6 +64,8 @@ void upload(LHS &lhs, RHS &rhs)
 // ADD
 //
 //==============================================================================
+
+//! target = lhs + rhs, based on target.size()
 template <typename TARGET, typename LHS, typename RHS> static inline
 void add(TARGET &target, LHS &lhs, RHS &rhs)
 {
@@ -75,6 +77,7 @@ void add(TARGET &target, LHS &lhs, RHS &rhs)
     }
 }
 
+//! target += rhs, based and target.size()
 template <typename TARGET, typename RHS> static inline
 void add(TARGET &target, RHS &rhs)
 {
@@ -90,6 +93,8 @@ void add(TARGET &target, RHS &rhs)
 // NEG
 //
 //==============================================================================
+
+//! target=-rhs, based on target.size()
 template <typename TARGET, typename RHS> static inline
 void neg(TARGET &target, RHS &rhs)
 {
@@ -100,6 +105,7 @@ void neg(TARGET &target, RHS &rhs)
     }
 }
 
+//! target = -target
 template <typename TARGET> static inline
 void neg(TARGET &target)
 {
@@ -115,6 +121,7 @@ void neg(TARGET &target)
 // SUB
 //
 //==============================================================================
+//! target = lhs-rhs, based on target.size()
 template <typename TARGET, typename LHS, typename RHS> static inline
 void sub(TARGET &target, LHS &lhs, RHS &rhs)
 {
@@ -126,6 +133,7 @@ void sub(TARGET &target, LHS &lhs, RHS &rhs)
     }
 }
 
+//! target -= rhs, based on target.size()
 template <typename TARGET, typename RHS> static inline
 void sub(TARGET &target, RHS &rhs)
 {
@@ -133,6 +141,17 @@ void sub(TARGET &target, RHS &rhs)
     for(size_t i=target.size();i>0;--i)
     {
         target[i] -= Y_TAO_CAST(TARGET,RHS,rhs[i]);
+    }
+}
+
+//! target = rhs - target, based on target.size()
+template <typename TARGET, typename RHS> static inline
+void subp(TARGET &target, RHS &rhs)
+{
+    assert(target.size()<=rhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = Y_TAO_CAST(TARGET,RHS,rhs[i])-target[i];
     }
 }
 

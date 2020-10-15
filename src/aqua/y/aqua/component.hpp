@@ -2,7 +2,7 @@
 //! \file
 
 #ifndef Y_AQUA_COMPONENT_INCLUDED
-#define Y_AQUA_COMPONENTINCLUDED 1
+#define Y_AQUA_COMPONENT_INCLUDED 1
 
 #include "y/aqua/species.hpp"
 #include "y/aqua/types.hpp"
