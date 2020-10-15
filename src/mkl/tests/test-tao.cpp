@@ -44,7 +44,8 @@ namespace
         {
             if( fabs_of(lhs[i]-Y_TAO_CAST(LHS,RHS,rhs[i])) > 0 )
             {
-                std::cerr << "Bad Check1D for <" << type_name_of<typename LHS::mutable_type>() << "," << type_name_of<typename RHS::mutable_type>()<< ">" << std::endl;
+                //std::cerr << "Bad Check1D for <" << type_name_of<typename LHS::mutable_type>() << "," << type_name_of<typename RHS::mutable_type>()<< ">" << std::endl;
+                std::cerr << lhs[i] << " / " << rhs[i] << std::endl;
                 return false;
             }
         }
@@ -178,12 +179,55 @@ namespace
         test_set_<apn,apn>();
     }
 
+
+    //==========================================================================
+    //
+    // ADD/SUB
+    //
+    //==========================================================================
+    template <typename T, typename U, typename W> static inline
+    void test_add_()
+    {
+        std::cerr << "add<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
+
+        for(size_t n=1;n<=128;n <<= 1)
+        {
+            vector<T> a;
+            vector<T> s;
+            list<U>   l;
+            vector<W> r;
+            fill(a,n);
+            fill(s,n);
+            fill(l,n);
+            fill(r,n);
+            tao::add(a,l,r);
+            tao::sub(s,l,r);
+            tao::sub(a,r);
+            tao::add(s,r);
+            Y_ASSERT(check1D(a,s));
+            tao::sub(a,l,r);
+            tao::sub(s,r,l);
+            tao::neg(s);
+            Y_ASSERT(check1D(a,s));
+        }
+    }
+
+    static inline
+    void test_add()
+    {
+        test_add_<apz,apz,apz>();
+        test_add_<apq,apq,apq>();
+    }
+
+
 }
 
 Y_UTEST(tao)
 {
     test_ld();   std::cerr << std::endl;
     test_set();  std::cerr << std::endl;
+    test_add();  std::cerr << std::endl;
+
 }
 Y_UTEST_DONE()
 

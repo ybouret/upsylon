@@ -65,13 +65,74 @@ void upload(LHS &lhs, RHS &rhs)
 //
 //==============================================================================
 template <typename TARGET, typename LHS, typename RHS> static inline
-void add( TARGET &target, LHS &lhs, RHS &rhs )
+void add(TARGET &target, LHS &lhs, RHS &rhs)
 {
     assert(target.size()<=lhs.size());
     assert(target.size()<=rhs.size());
     for(size_t i=target.size();i>0;--i)
     {
         target[i] = Y_TAO_CAST(TARGET,LHS,lhs[i]) + Y_TAO_CAST(TARGET,RHS,rhs[i]);
+    }
+}
+
+template <typename TARGET, typename RHS> static inline
+void add(TARGET &target, RHS &rhs)
+{
+    assert(target.size()<=rhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] += Y_TAO_CAST(TARGET,RHS,rhs[i]);
+    }
+}
+
+//==============================================================================
+//
+// NEG
+//
+//==============================================================================
+template <typename TARGET, typename RHS> static inline
+void neg(TARGET &target, RHS &rhs)
+{
+    assert(target.size()<=rhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = -Y_TAO_CAST(TARGET,RHS,rhs[i]);
+    }
+}
+
+template <typename TARGET> static inline
+void neg(TARGET &target)
+{
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = -target[i];
+    }
+}
+
+
+//==============================================================================
+//
+// SUB
+//
+//==============================================================================
+template <typename TARGET, typename LHS, typename RHS> static inline
+void sub(TARGET &target, LHS &lhs, RHS &rhs)
+{
+    assert(target.size()<=lhs.size());
+    assert(target.size()<=rhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = Y_TAO_CAST(TARGET,LHS,lhs[i]) - Y_TAO_CAST(TARGET,RHS,rhs[i]);
+    }
+}
+
+template <typename TARGET, typename RHS> static inline
+void sub(TARGET &target, RHS &rhs)
+{
+    assert(target.size()<=rhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] -= Y_TAO_CAST(TARGET,RHS,rhs[i]);
     }
 }
 
