@@ -3,7 +3,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/object-parameters.hpp"
-#include "y/type/block/zset.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -22,12 +22,12 @@ namespace upsylon
         pooled:: ~pooled() throw()
         {
             self_destruct( *aliasing::as<joint::ward>(impl) );
-            Y_BZSET_STATIC(impl);
+            memset(impl,0,sizeof(impl));
         }
 
         pooled:: pooled() throw()
         {
-            Y_BZSET_STATIC(impl);
+            memset(impl,0,sizeof(impl));
             new ( aliasing::anonymous(impl) ) joint::ward( Y_CHUNK_SIZE );
         }
 
