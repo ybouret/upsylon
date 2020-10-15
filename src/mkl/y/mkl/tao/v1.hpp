@@ -155,5 +155,78 @@ void subp(TARGET &target, RHS &rhs)
     }
 }
 
+//==============================================================================
+//
+// MUL
+//
+//==============================================================================
+
+//! target = value * lhs
+template <typename TARGET, typename LHS> static inline
+void mulset(TARGET &target, typename TARGET::param_type value, LHS &lhs )
+{
+    assert(target.size()<=lhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = value * Y_TAO_CAST(TARGET,LHS,lhs[i]);
+    }
+}
+
+//! target *= value
+template <typename TARGET> static inline
+void mulset(TARGET &target, typename TARGET::param_type value)
+{
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] *= value;
+    }
+}
+
+
+
+//! target = (1/value)* lhs
+template <typename TARGET, typename LHS> static inline
+void divset(TARGET &target, typename TARGET::param_type value, LHS &lhs )
+{
+    assert(target.size()<=lhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] =  Y_TAO_CAST(TARGET,LHS,lhs[i]) / value;
+    }
+}
+
+//! target /= value
+template <typename TARGET> static inline
+void divset(TARGET &target, typename TARGET::param_type value)
+{
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] /= value;
+    }
+}
+
+
+//! target = lhs + value * lhs, based on target.size()
+template <typename TARGET, typename LHS, typename RHS> static inline
+void muladd(TARGET &target, LHS &lhs, typename TARGET::param_type value, RHS &rhs )
+{
+    assert(target.size()<=lhs.size());
+    assert(target.size()<=rhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = Y_TAO_CAST(TARGET,LHS,lhs[i]) + value * Y_TAO_CAST(TARGET,RHS,rhs[i]);
+    }
+}
+
+//! target += value * lhs, based on target.size()
+template <typename TARGET, typename LHS> static inline
+void muladd(TARGET &target, typename TARGET::param_type value, LHS &lhs )
+{
+    assert(target.size()<=lhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] += value * Y_TAO_CAST(TARGET,LHS,lhs[i]);
+    }
+}
 
 #endif

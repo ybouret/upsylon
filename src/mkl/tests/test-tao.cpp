@@ -44,7 +44,6 @@ namespace
         {
             if( fabs_of(lhs[i]-Y_TAO_CAST(LHS,RHS,rhs[i])) > 0 )
             {
-                //std::cerr << "Bad Check1D for <" << type_name_of<typename LHS::mutable_type>() << "," << type_name_of<typename RHS::mutable_type>()<< ">" << std::endl;
                 std::cerr << lhs[i] << " / " << rhs[i] << std::endl;
                 return false;
             }
@@ -188,7 +187,7 @@ namespace
     template <typename T, typename U, typename W> static inline
     void test_add_()
     {
-        std::cerr << "add<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
+        std::cerr << "addops<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
 
         for(size_t n=1;n<=128;n <<= 1)
         {
@@ -209,6 +208,10 @@ namespace
             tao::sub(s,r,l);
             tao::neg(s);
             Y_ASSERT(check1D(a,s));
+            tao::set(a,l);
+            tao::subp(a,r);
+            tao::sub(s,r,l);
+            Y_ASSERT(check1D(a,s));
         }
     }
 
@@ -219,6 +222,143 @@ namespace
         test_add_<apq,apq,apq>();
     }
 
+    //==========================================================================
+    //
+    // MUL/DIV
+    //
+    //==========================================================================
+    template <typename T> static inline
+    void test_mul_(const bool check)
+    {
+        std::cerr << "mulops<" << type_name_of<T>() << ">" << std::endl;
+        for(size_t n=1;n<=128;n <<= 1)
+        {
+            vector<T> p;
+            list<T>   l;
+            vector<T> r;
+            vector<T> q;
+            fill(p,n);
+            fill(l,n);
+            fill(r,n);
+
+            {
+                const T value = support::get<T>();
+                tao::mulset(p, value, l);
+                tao::set(r,l);
+                tao::mulset(r,value);
+                if(check)
+                {
+                    Y_ASSERT(check1D(p,r));
+                }
+            }
+
+            fill(p,n);
+            fill(l,n);
+            fill(r,n);
+            fill(q,n);
+
+            {
+                const T value = support::get<T>();
+                tao::muladd(p, l, value, r);
+                tao::set(q,l);
+                tao::muladd(q,value,r);
+                if(check)
+                {
+                    Y_ASSERT(check1D(p,q));
+                }
+            }
+        }
+    }
+
+    static inline
+    void test_mul()
+    {
+        test_mul_<float>(false);
+        test_mul_<double>(false);
+        test_mul_< complex<float>  >(false);
+        test_mul_< complex<double> >(false);
+        test_mul_<apq>(true);
+    }
+
+
+    //==========================================================================
+    //
+    // dot/mod2
+    //
+    //==========================================================================
+    template <typename T> static inline
+    void test_dot_(const bool check)
+    {
+        std::cerr << "dot<" << type_name_of<T>() << ">" << std::endl;
+        vector<T> l(1024,as_capacity);
+        list<T>   r(1024,as_capacity);
+        for(size_t n=1;n<=64;n <<= 1)
+        {
+            fill(l,n);
+            fill(r,n);
+            const T lr = tao::dot<T>::of(l,r);
+            const T rl = tao::dot<T>::of(r,l);
+            if(check)
+            {
+                Y_ASSERT(lr==rl);
+            }
+        }
+    }
+
+    static inline
+    void test_dot()
+    {
+        test_dot_<float>(false);
+        test_dot_<double>(false);
+        test_dot_< complex<float>  >(false);
+        test_dot_< complex<double> >(false);
+        test_dot_<apq>(true);
+    }
+
+    //==========================================================================
+    //
+    // mulv2
+    //
+    //==========================================================================
+
+    template <typename T, typename U, typename W> static inline
+    void test_mul_v2_()
+    {
+        std::cerr << "mulv2<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
+        for(size_t r=1;r<=64;r <<= 1)
+        {
+            for(size_t c=1;c<=64;c <<= 1)
+            {
+                
+                {
+                    vector<T> vr;
+                    vector<W> vc;
+                    fill(vr,r);
+                    fill(vc,c);
+                    matrix<U> M(r,c);
+                    support::fill2D(M);
+                    tao::mul(vr,M,vc);
+                }
+
+                {
+                    vector<T> vc;
+                    vector<W> vr;
+                    fill(vr,r);
+                    fill(vc,c);
+                    matrix<U> M(c,r);
+                    support::fill2D(M);
+                    tao::mul(vc,M,vr);
+                }
+            }
+        }
+    }
+
+    static inline
+    void test_mv2()
+    {
+        test_mul_v2_<double,int16_t,double>();
+        test_mul_v2_<apz,int16_t,int32_t>();
+    }
 
 }
 
@@ -227,6 +367,9 @@ Y_UTEST(tao)
     test_ld();   std::cerr << std::endl;
     test_set();  std::cerr << std::endl;
     test_add();  std::cerr << std::endl;
+    test_mul();  std::cerr << std::endl;
+    test_dot();  std::cerr << std::endl;
+    test_mv2();  std::cerr << std::endl;
 
 }
 Y_UTEST_DONE()
