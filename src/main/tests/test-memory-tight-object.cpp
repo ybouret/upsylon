@@ -100,6 +100,7 @@ Y_UTEST(tight_object)
 
     std::cerr << mgr.Quarry << std::endl;
 
+#if 0
     {
         tight::dyadic_allocator D(mgr);
         blk_t        reg[32];
@@ -124,7 +125,8 @@ Y_UTEST(tight_object)
         }
 
     }
-
+#endif
+    
     std::cerr << mgr.Quarry << std::endl;
 
     std::cerr << std::endl;

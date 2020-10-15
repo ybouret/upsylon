@@ -21,6 +21,19 @@ namespace upsylon
         {
         }
 
+
+        void *dyadic:: acquire(size_t &n)
+        {
+            Y_LOCK(access);
+            return acquire_block(n);
+        }
+
+        void dyadic:: release(void * &p, size_t &n) throw()
+        {
+            Y_LOCK(access);
+            release_block(p,n);
+
+        }
     }
 
 }

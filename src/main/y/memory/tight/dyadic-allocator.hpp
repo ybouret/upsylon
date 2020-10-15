@@ -26,16 +26,16 @@ namespace upsylon {
                 //
                 // C++
                 //______________________________________________________________
-               
                 explicit dyadic_allocator(objects &) throw(); //!< setup using persistent objects
                 virtual ~dyadic_allocator() throw();          //!< cleanup
 
+            protected:
                 //______________________________________________________________
                 //
                 // allocator interface
                 //______________________________________________________________
-                virtual void *acquire(size_t &n);                     //!< acquire=>n=2^p
-                virtual void  release(void * &p, size_t &n ) throw(); //!< release a previously allocated
+                void *acquire_block(size_t &n);                     //!< acquire=>n=2^p
+                void  release_block(void * &p, size_t &n ) throw(); //!< release a previously allocated
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(dyadic_allocator);

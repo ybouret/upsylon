@@ -33,7 +33,7 @@ namespace upsylon {
                 return p;
             }
 
-            void *dyadic_allocator:: acquire(size_t &n)
+            void *dyadic_allocator:: acquire_block(size_t &n)
             {
                 if(n>0)
                 {
@@ -58,7 +58,7 @@ namespace upsylon {
                 }
             }
 
-            void dyadic_allocator:: release(void *&p, size_t &n) throw()
+            void dyadic_allocator:: release_block(void *&p, size_t &n) throw()
             {
                 if(p)
                 {

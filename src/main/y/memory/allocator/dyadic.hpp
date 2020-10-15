@@ -20,6 +20,9 @@ namespace upsylon {
         {
         public:
             Y_SINGLETON_DECL(dyadic); //!< setup
+
+            virtual void *acquire(size_t &n);
+            virtual void  release(void * &p, size_t &n) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(dyadic);
