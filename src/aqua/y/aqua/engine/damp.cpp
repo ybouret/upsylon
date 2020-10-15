@@ -11,7 +11,7 @@ namespace upsylon
 
         using namespace mkl;
 
-        bool Engine:: damp(addressable<double> &dC, const accessible<double> &C) throw()
+        bool Engine:: dampWith(const accessible<double> &C) throw()
         {
             computeJ(C);
             tao::mmul_trn(W,J,Nu);
@@ -21,13 +21,55 @@ namespace upsylon
             }
             else
             {
-                tao::set(Cdmp,dC);
                 tao::mul(xi,J,Cdmp);
                 tao::add(xi,Q);
                 LU::solve(W,xi);
                 tao::mul_sub(Cdmp,tNu,xi);
+                return true;
+            }
+        }
+
+        bool Engine:: damp(addressable<double> &dC, const accessible<double> &C) throw()
+        {
+            tao::set(Cdmp,dC);
+            if( dampWith(C) )
+            {
                 tao::upload(dC,Cdmp);
                 return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        bool Engine:: feed(addressable<double> &C, const accessible<double> &dC) throw()
+        {
+            tao::set(Cdmp,dC);
+            if( dampWith(C) )
+            {
+                // update local C
+                tao::add(Cdmp,C);
+                if(!balance(Cdmp))
+                {
+                    return false;
+                }
+                else
+                {
+                    if(!forward(Cdmp))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        tao::upload(C,Cdmp);
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return false;
             }
         }
 

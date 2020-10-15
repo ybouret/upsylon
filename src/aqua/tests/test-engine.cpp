@@ -139,9 +139,22 @@ Y_UTEST(engine)
     }
     else
     {
-        std::cerr << "Couldn't forward zero" << std::endl;
+        throw exception("Coudln't forward to zero");
     }
+    cs.forwardVerbose=false;
 
+    vector<double> dC(cs.M,0);
+    dC[ ah.indx ] = 0.001;
+    lib.show(std::cerr << "dC=",dC);
+
+    for(size_t j=1;j<=10;++j)
+    {
+        if(!cs.feed(C,dC))
+        {
+            throw exception("coudln't feed!");
+        }
+        lib.show(std::cerr << "C=",C);
+    }
 
 
 }

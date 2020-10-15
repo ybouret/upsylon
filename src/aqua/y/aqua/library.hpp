@@ -48,6 +48,7 @@ namespace upsylon {
             const size_t maxNameSize; //!< for names alignment
 
 
+
         private:
             Y_DISABLE_ASSIGN(Library);
             Species & create(const Species::Pointer &sp);

@@ -67,7 +67,13 @@ namespace upsylon
             bool sweep(addressable<double> &C) throw();
 
             //! damp dC for precomputed K and Q(C)=0
+            /**
+             dC -= Nu' * inv(J*Nu') ( Q + J*dC);
+             */
             bool damp(addressable<double> &dC, const accessible<double> &C) throw();
+
+            //! foward to C + damp(dC)
+            bool feed(addressable<double> &C, const accessible<double> &dC ) throw();
 
             //__________________________________________________________________
             //
@@ -131,6 +137,9 @@ namespace upsylon
             double QValue() throw();               //!< current |Q|^2
             double QCheck(const double x) throw(); //!< |Q|^2 at Ctry=Cini+x*step
             struct QProxy { Engine *self; double operator()(const double) throw(); };
+
+            bool   dampWith(const accessible<double> &C) throw();
+
 
         public:
             bool   balanceVerbose; //!< balance verbosity
