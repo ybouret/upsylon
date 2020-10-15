@@ -30,7 +30,7 @@ namespace upsylon {
 
         void counting:: to_C(size_t *a, const size_t *p, const size_t n) throw()
         {
-            for(size_t i=n;i>0;)
+            for(volatile size_t i=n;i>0;)
             {
                 size_t q = p[i];
                 a[--i]   =  --q;
