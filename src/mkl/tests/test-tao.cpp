@@ -36,6 +36,22 @@ namespace
     }
 
 
+    template <typename LHS, typename RHS> static inline
+    bool check1D(const LHS &lhs, const RHS &rhs)
+    {
+        assert(lhs.size()<=rhs.size());
+        for(size_t i=lhs.size();i>0;--i)
+        {
+            if( fabs_of(lhs[i]-Y_TAO_CAST(LHS,RHS,rhs[i])) > 0 )
+            {
+                std::cerr << "Bad Check1D for <" << type_name_of<typename LHS::mutable_type>() << "," << type_name_of<typename RHS::mutable_type>()<< ">" << std::endl;
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     //==========================================================================
     //
     // LD
@@ -111,8 +127,9 @@ namespace
     template <typename LHS, typename RHS> static inline
     void test_set__( LHS &lhs, RHS &rhs )
     {
-        tao::set(lhs,rhs);
-        tao::upload(rhs,lhs);
+        tao::set(lhs,rhs);    Y_ASSERT(check1D(lhs,rhs));
+        support::fill1D(rhs);
+        tao::upload(rhs,lhs); Y_ASSERT(check1D(lhs,rhs));
     }
 
     template <typename T, typename U> static inline

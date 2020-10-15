@@ -59,6 +59,21 @@ void upload(LHS &lhs, RHS &rhs)
     }
 }
 
+//==============================================================================
+//
+// ADD
+//
+//==============================================================================
+template <typename TARGET, typename LHS, typename RHS> static inline
+void add( TARGET &target, LHS &lhs, RHS &rhs )
+{
+    assert(target.size()<=lhs.size());
+    assert(target.size()<=rhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] = Y_TAO_CAST(TARGET,LHS,lhs[i]) + Y_TAO_CAST(TARGET,RHS,rhs[i]);
+    }
+}
 
 
 #endif
