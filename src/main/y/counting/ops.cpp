@@ -20,7 +20,7 @@ namespace upsylon {
             assert(n>0);
             assert(a!=NULL);
             assert(a!=p);
-            for(size_t i=n;i>0;)
+            for(volatile size_t i=n;i>0;)
             {
                 p[i] = i;
                 --i;
