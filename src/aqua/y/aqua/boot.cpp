@@ -235,7 +235,7 @@ namespace upsylon {
                     aliasing::_(d) = ideterminant(R2);
                     if(0==d)
                     {
-                        throw exception("singular set of constraints");
+                        throw exception("%ssingular set of constraints",fn);
                     }
                 }
 
@@ -254,7 +254,7 @@ namespace upsylon {
                     }
                     if(!GramSchmidt::iOrtho(F))
                     {
-                        throw exception("invalid set of constraints");
+                        throw exception("%sinvalid set of constraints",fn);
                     }
                     for(size_t i=N;i>0;--i)
                     {

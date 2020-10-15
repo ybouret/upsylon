@@ -44,6 +44,7 @@ namespace upsylon
         Cend( aM.next() ),
         step( aM.next() ),
         Cswp( aM.next() ),
+        Cdmp( aM.next() ),
         aN(8),
         xi( aN.next() ),
         K(  aN.next() ),

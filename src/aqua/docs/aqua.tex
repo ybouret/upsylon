@@ -118,4 +118,23 @@ So we must solve:
 	\vec{Q} \left( \vec{C}^\star + \trn{\bm{S}}\vec{v} \right) = \vec{0}
 \end{equation}
 
+\section{Damping}
+
+We assume that $\vec{Q}\left({\vec{C}}\right)=\vec{0}$, and we add $\delta\vec{C}$ to the system. Then an extent $\vec{\xi}$
+is produced to take the system back to equilibrium:
+\begin{equation}
+	\vec{Q}\left(\vec{C}+\delta\vec{C}+\trn{\bm{\nu}}\vec{\xi}\right)\simeq \vec{0}
+\end{equation}
+and:
+\begin{equation}
+	\bm{J}\delta\vec{C} + \left(\bm{J}\trn{\bm{\nu}}\right)\vec{\xi} \simeq -\vec{Q} \;\; (\simeq\vec{0})
+\end{equation}
+leading to:
+\begin{equation}
+	\vec{\xi} = -\left(\bm{J}\trn{\bm{\nu}}\right)^{-1} \left( \bm{J} \delta\vec{C} + \vec{Q} \right)
+\end{equation}
+and
+\begin{equation}
+	\delta'\vec{C} = \trn{\bm{\nu}} \left(\bm{J}\trn{\bm{\nu}}\right)^{-1} \bm{J} \delta\vec{C}
+\end{equation}
 \end{document}

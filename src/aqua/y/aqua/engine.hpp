@@ -37,18 +37,25 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // methods
+            // setup methods
             //__________________________________________________________________
             void quit() throw();                            //!< release/clean all data
             void init(Library &lib, const Equilibria &eqs); //!< setup
 
+            //__________________________________________________________________
+            //
             //! balance set of concentrations with Nu
+            //__________________________________________________________________
             bool balance(addressable<double> &C) throw();
 
-            void computeK(const double t);
-            void updateKs() throw();
-            void computeQ(const accessible<double> &C) throw();
-            void computeJ(const accessible<double> &C) throw();
+            //__________________________________________________________________
+            //
+            // methods to forward to equilibrium
+            //__________________________________________________________________
+            void computeK(const double t); //!< compute all constants at a given time
+            void updateKs() throw();       //!< compute scaling...
+            void computeQ(const accessible<double> &C) throw(); //!< compute Q only
+            void computeJ(const accessible<double> &C) throw(); //!< compute Q and J
 
             //! forward, need precomputed K
             bool forward(addressable<double> &C) throw();
@@ -56,10 +63,11 @@ namespace upsylon
             //! sweep equilibria[i], need precomputed K
             bool sweep(addressable<double> &C, const size_t i) throw();
 
-            //! sweep possible equilibria, neeed K
+            //! sweep possible equilibria, need K
             bool sweep(addressable<double> &C) throw();
 
-            
+            //! damp dC for precomputed K and Q(C)=0
+            bool damp(addressable<double> &dC, const accessible<double> &C) throw();
 
             //__________________________________________________________________
             //
@@ -98,7 +106,8 @@ namespace upsylon
             Array         &Cend;      //!< end concentration
             Array         &step;      //!< Newton's step
             Array         &Cswp;      //!< for sweeping
-
+            Array         &Cdmp;      //!< for damping/updating
+            
         private:
             Arrays         aN;        //!< linear memory
         public:
