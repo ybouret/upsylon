@@ -58,14 +58,16 @@ void mmul_trn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
 template <typename T>
 struct mmod2
 {
-    typedef typename real_for<T>::type real_type;
+    typedef typename real_for<T>::type real_type; //!< matching real type
 
+    //! for M[r,:]
     static inline
     real_type row_of(const matrix<T> &M, const size_t r)
     {
         return mod2<T>:: of( M[r] );
     }
 
+    //! for M[:,c]
     static inline
     real_type col_of(const matrix<T> &M, const size_t c)
     {
@@ -77,6 +79,7 @@ struct mmod2
         return res;
     }
 
+    //! row_of(M,r)+col_of(M.c)
     static inline
     real_type both_of(const matrix<T> &M, const size_t r, const size_t c)
     {

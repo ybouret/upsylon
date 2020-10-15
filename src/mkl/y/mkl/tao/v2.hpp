@@ -26,7 +26,7 @@ struct dot
 template <typename T>
 struct mod2
 {
-    typedef typename real_for<T>::type real_type;
+    typedef typename real_for<T>::type real_type; //!< matching real type
 
     //! single vector
     template <typename LHS> static inline
@@ -58,7 +58,7 @@ struct mod2
 template <typename T>
 struct rms
 {
-    typedef typename real_for<T>::type real_type;
+    typedef typename real_for<T>::type real_type; //!< matching real type
 
     //! single vector
     template <typename LHS>
@@ -100,6 +100,18 @@ void mul(TARGET &target, const matrix<T> &M, LHS &rhs)
     for(size_t j=target.size();j>0;--j)
     {
         target[j] = dot<typename TARGET::mutable_type>::of(M[j],rhs);
+    }
+}
+
+//! target = -M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
+template <typename TARGET, typename T, typename LHS> static inline
+void mul_neg(TARGET &target, const matrix<T> &M, LHS &rhs)
+{
+    assert(target.size()<=M.rows);
+    assert(M.cols <= rhs.size());
+    for(size_t j=target.size();j>0;--j)
+    {
+        target[j] = -dot<typename TARGET::mutable_type>::of(M[j],rhs);
     }
 }
 
