@@ -203,7 +203,9 @@ namespace {
             alea.fillnz(&source,sizeof(T)); Y_ASSERT( !is_zeroed(source) );
             bzset(target);        Y_ASSERT( is_zeroed(target)    );
             bmove(origin,source); Y_ASSERT( bsame(origin,source) );
-            bswap(target,source); Y_ASSERT( bsame(target,origin) ); Y_ASSERT( is_zeroed(source) );
+            bswap(target,source); Y_ASSERT( bsame(target,origin) );
+            std::cerr << "source=" << source << std::endl;
+            Y_ASSERT( is_zeroed(source) );
             if(check)
             {
                 Y_ASSERT( target == origin );
