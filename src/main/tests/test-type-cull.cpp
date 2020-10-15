@@ -205,6 +205,7 @@ namespace {
             bmove(origin,source); Y_ASSERT( bsame(origin,source) );
             bswap(target,source); Y_ASSERT( bsame(target,origin) );
             (void)source;
+            (void)target;
             Y_ASSERT( is_zeroed(source) );
             if(check)
             {
