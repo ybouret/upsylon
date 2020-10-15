@@ -52,8 +52,8 @@ namespace upsylon
     }
 
     //! declare singleton/call_sign
-#define Y_SINGLETON_DECL_(CLASS)    \
-friend class singleton<CLASS>;      \
+#define Y_SINGLETON_DECL_(CLASS)        \
+friend class upsylon::singleton<CLASS>; \
 static const char * const call_sign
 
     //! declare singleton/call_sign/life_time

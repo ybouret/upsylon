@@ -12,7 +12,7 @@ namespace upsylon
     namespace  memory
     {
         //! global calloc/free allocator
-        class global : public upsylon::singleton<global>, public allocator
+        class global : public singleton<global>, public allocator
         {
         public:
             int64_t allocated; //!< bookeeping
