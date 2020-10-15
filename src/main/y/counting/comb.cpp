@@ -29,7 +29,7 @@ namespace upsylon {
     base( comb+space )
     {
         ++base;
-        for(size_t i=space;i>0;)
+        for(volatile size_t i=space;i>0;)
         {
             comb[i] = other.comb[i];
             --i;
