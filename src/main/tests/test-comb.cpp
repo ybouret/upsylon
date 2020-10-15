@@ -11,7 +11,7 @@ Y_UTEST(comb)
 
     for(int iarg=1;iarg<argc;++iarg)
     {
-        const size_t n = string_convert::to<size_t>(argv[1],"n");
+        const size_t n = string_convert::to<size_t>(argv[iarg],"n");
 
         for(size_t k=1;k<=n;++k)
         {
