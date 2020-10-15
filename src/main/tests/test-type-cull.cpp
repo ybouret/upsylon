@@ -201,9 +201,9 @@ namespace {
             T source;
             T origin;
             alea.fillnz(&source,sizeof(T)); Y_ASSERT( !is_zeroed(source) );
-            bzset(target);        Y_ASSERT( is_zeroed(target) );
-            bmove(origin,source); Y_ASSERT( 0 == memcmp(&source, &origin, sizeof(T) ) );
-            bswap(target,source); Y_ASSERT( 0 == memcmp(&target, &origin, sizeof(T) ) ); Y_ASSERT( is_zeroed(source) );
+            bzset(target);        Y_ASSERT( is_zeroed(target)    );
+            bmove(origin,source); Y_ASSERT( bsame(origin,source) );
+            bswap(target,source); Y_ASSERT( bsame(target,origin) ); Y_ASSERT( is_zeroed(source) );
             if(check)
             {
                 Y_ASSERT( target == origin );

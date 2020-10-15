@@ -14,7 +14,7 @@ namespace upsylon {
 #define Y_BLOCK_SWAP_EXEC() \
 T &t = *static_cast<T *>(target);\
 T &s = *static_cast<T *>(source);\
-volatile T tmp = t; t=s; s=tmp
+const T tmp = t; t=s; s=tmp
 
         //! meta block_swap run
         template <typename T, const size_t N>
