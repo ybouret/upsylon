@@ -12,7 +12,7 @@ namespace upsylon {
     namespace Jive
     {
 
-        Tags:: Tags() : singleton<Tags>(), TagsTree(), maxLength(0)
+        Tags:: Tags() : upsylon::singleton<Tags>(), TagsTree(), maxLength(0)
         {
 
         }
@@ -23,6 +23,7 @@ namespace upsylon {
 
         const  string * Tags:: get(const char *buffer, const size_t buflen)
         {
+            Y_LOCK(access);
             assert(!(NULL==buffer&&buflen>0));
             const Tag *tag = look_for(buffer,buflen);
             if( tag )
@@ -86,7 +87,8 @@ namespace upsylon {
 
         void Tags:: Display()
         {
-            static const TagsTree &tree = Tags::instance();
+            static const Tags  &tree = Tags::instance();
+            Y_LOCK(tree.access);
             std::cerr << "<Jive::Tags count=\"" << tree.entries() << "\">" << std::endl;
             tree.for_each(DisplayCallback);
             std::cerr << "<Jive::Tags/>" << std::endl;
@@ -94,7 +96,8 @@ namespace upsylon {
 
         void Tags:: Release() throw()
         {
-            static TagsTree &tree = Tags::instance();
+            static Tags  &tree = Tags::instance();
+            Y_LOCK(tree.access);
             tree.release_all();
         }
 
