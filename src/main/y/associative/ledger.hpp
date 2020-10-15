@@ -17,8 +17,8 @@ namespace upsylon {
         //
         // types and definition
         //______________________________________________________________________
-        typedef BEaddress              addr_type; //!< any address
-        typedef suffix_tree<addr_type> base_type; //!< alias
+        typedef BEaddress                       addr_type; //!< any address
+        typedef upsylon::suffix_tree<addr_type> base_type; //!< alias
          
         //______________________________________________________________________
         //
