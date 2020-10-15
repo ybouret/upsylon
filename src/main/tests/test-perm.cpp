@@ -41,7 +41,6 @@ namespace {
             display_int::to(std::cerr << "@" << std::setw(6) << i << " $ ",wksp,N,":");
             display_int::to(std::cerr << " | @" << std::setw(6) << i << " $ ",addr,N,",") << std::endl;
         }
-        
         Y_ASSERT(!core::permutation::next(P,N));
         
         free(wksp);
@@ -57,6 +56,8 @@ Y_UTEST(perm)
         test_permops<2>();
         test_permops<3>();
         test_permops<4>();
+        return 0;
+        
         test_permops<5>();
         test_permops<6>();
         test_permops<7>();
@@ -67,8 +68,7 @@ Y_UTEST(perm)
     for(int iarg=1;iarg<argc;++iarg)
     {
         const size_t n =  string_convert::to<size_t>(argv[iarg]);
-        
-        permutation         perm(n);
+        permutation  perm(n);
         {
             vector<permutation> Perm( perm.count, as_capacity );
 
