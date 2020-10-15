@@ -22,6 +22,7 @@ namespace upsylon
         {
 #include "tao/v1.hpp"
 #include "tao/v2.hpp"
+#include "tao/v3.hpp"
 
         };
 

@@ -13,7 +13,7 @@ namespace upsylon {
         }
 
         Equilibria:: Equilibria() :
-        suffix_tree<Equilibrium::Pointer>(),
+        upsylon::suffix_tree<Equilibrium::Pointer>(),
         maxNameSize(0)
         {}
 

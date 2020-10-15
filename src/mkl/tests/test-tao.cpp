@@ -329,7 +329,7 @@ namespace
         {
             for(size_t c=1;c<=64;c <<= 1)
             {
-                
+
                 {
                     vector<T> vr;
                     vector<W> vc;
@@ -360,6 +360,41 @@ namespace
         test_mul_v2_<apz,int16_t,int32_t>();
     }
 
+
+    template <typename T, typename U, typename W> static inline
+    void test_mul_v3_()
+    {
+        std::cerr << "mulv3<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
+
+        for(size_t r=1;r<=64;r <<= 1)
+        {
+            for(size_t c=1; c <= 64; c <<= 1)
+            {
+                matrix<T> M(r,c);
+                for(size_t n=1; n <= 128; n <<= 1)
+                {
+                    matrix<U> A(r,n);
+                    {
+                        matrix<W> B(n,c);
+                        tao::mmul(M,A,B);
+                    }
+                    {
+                        matrix<W> B(c,n);
+                        tao::mmul_trn(M,A,B);
+                    }
+                }
+            }
+        }
+
+    }
+
+    static inline
+    void test_mv3()
+    {
+        test_mul_v3_<double,int16_t,float>();
+        test_mul_v3_<apz,int16_t,int32_t>();
+    }
+
 }
 
 Y_UTEST(tao)
@@ -370,6 +405,7 @@ Y_UTEST(tao)
     test_mul();  std::cerr << std::endl;
     test_dot();  std::cerr << std::endl;
     test_mv2();  std::cerr << std::endl;
+    test_mv3();  std::cerr << std::endl;
 
 }
 Y_UTEST_DONE()
