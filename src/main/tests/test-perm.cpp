@@ -28,12 +28,14 @@ namespace {
         
         std::cerr << "count=" << count << std::endl;
         core::counting::init(P,N);
+        std::cerr << "# init C++ only" << std::endl;
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
-        
+
+        std::cerr << "# init C/C++" << std::endl;
         core::counting::init(P,N,addr);
         display_int::to(std::cerr << "@init   $ ", wksp, N, ":") << std::endl;
         display_int::to(std::cerr << "@init   $ ", addr, N, ",") << std::endl;
-        
+        std::cerr << "# ..." << std::endl;
         for(size_t i=2;i<=count;++i)
         {
             Y_ASSERT(core::permutation::next(P,N));
