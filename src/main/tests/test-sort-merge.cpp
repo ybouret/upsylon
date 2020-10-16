@@ -1,6 +1,7 @@
 #include "y/sort/merge.hpp"
 #include "y/utest/run.hpp"
 #include "y/core/node.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 
@@ -101,6 +102,9 @@ Y_UTEST(sort_merge)
     }
     std::cerr << std::endl;
 
+    Y_UTEST_SIZEOF(int);
+    Y_UTEST_SIZEOF(ptrdiff_t);
+    
 
 }
 Y_UTEST_DONE()
