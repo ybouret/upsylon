@@ -11,10 +11,15 @@ namespace upsylon
 {
     namespace core
     {
-        //! heap sort
+        //______________________________________________________________________
+        //
+        //
+        //! heap sort for more than 2 items
+        //
+        //______________________________________________________________________
         template <typename T,typename FUNC>
         inline void heap_sort(addressable<T> &ra,
-                              FUNC           &compare ) throw()
+                              FUNC           &compare)
         {
             const size_t n = ra.size();
             assert(n>=2);
@@ -23,7 +28,6 @@ namespace upsylon
             // local memory
             //----------------------------------------------------------------------
             char wksp[ Y_MEMORY_ALIGN(sizeof(T)) ]; assert(sizeof(wksp)>=sizeof(T));
-            //T   &rra = * memory::io::__force<T>( &wksp[0] );
             T   &rra = *aliasing::as<T>( &wksp[0] );
 
             //----------------------------------------------------------------------
@@ -70,11 +74,16 @@ namespace upsylon
             }
         }
     }
-    
+
+    //__________________________________________________________________________
+    //
+    //
     //! heap sort
+    //
+    //__________________________________________________________________________
     template <typename T,typename FUNC>
     inline void hsort(addressable<T> &ra,
-                      FUNC           &compare ) throw()
+                      FUNC           &compare )
     {
         switch( ra.size() )
         {
@@ -86,12 +95,17 @@ namespace upsylon
                 core::heap_sort(ra,compare); return;
         }
     }
-    
-    //! heap sort local
+
+    //__________________________________________________________________________
+    //
+    //
+    //! heap sort local data ra[0..na-1]
+    //
+    //__________________________________________________________________________
     template <typename T,typename FUNC>
     inline void hsort(T              *ra,
                       const size_t    na,
-                      FUNC           &compare ) throw()
+                      FUNC           &compare )
     {
         switch( na )
         {
@@ -109,11 +123,17 @@ namespace upsylon
     
 
 
+    //__________________________________________________________________________
+    //
+    //
     //! heap co sort
+    //
+    //__________________________________________________________________________
     template <typename T, typename U, typename FUNC>
-    inline void hsort( addressable<T> &ra, addressable<U> &rb, FUNC &compare ) throw()
+    inline void hsort( addressable<T> &ra, addressable<U> &rb, FUNC &compare )
     {
-        const size_t n = ra.size(); assert( ra.size() == rb.size() );
+        assert( ra.size() == rb.size() );
+        const size_t n = ra.size();
         if (n<2) return;
 
         //----------------------------------------------------------------------

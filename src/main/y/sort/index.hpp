@@ -7,12 +7,17 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
     //! indexing functions
+    //
+    //__________________________________________________________________________
     struct indexing
     {
         //! make index, C++ style
         template <typename T,typename FUNC> static inline
-        void make( addressable<size_t> &idx, FUNC &compare,  const accessible<T> &ra  ) throw()
+        void make(addressable<size_t> &idx, FUNC &compare,  const accessible<T> &ra) throw()
         {
 
             // initialize indices
