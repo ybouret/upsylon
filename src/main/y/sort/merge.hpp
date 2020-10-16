@@ -88,12 +88,12 @@ namespace upsylon
         
         static inline int compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
-            return int( aliasing::delta(rhs,lhs) );
+            return int( static_cast<ptrdiff_t>(lhs-rhs) );
         }
 
         static inline int compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
-            return int(  aliasing::delta(lhs,rhs) );
+            return int( static_cast<ptrdiff_t>(rhs-lhs) );
         }
     };
 }
