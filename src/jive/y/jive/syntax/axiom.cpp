@@ -137,23 +137,28 @@ namespace upsylon
                     tree->leaves().push_back(leaf);
                 }
             }
-            
-            void Axiom:: Mind(Guess &guess, Lexeme *now) throw()
+
+            void  Observer::mind(const Lexeme *now) throw()
             {
                 assert(now);
-                if(guess.lexeme)
+                if(lexeme)
                 {
-                    if(now->stamp>guess.lexeme->stamp)
+                    if(now->stamp>lexeme->stamp)
                     {
-                        guess.lexeme = now;
-                        guess.parent = guess.current;
+                        lexeme=now;
+                        parent=current;
                     }
                 }
                 else
                 {
-                    guess.lexeme = now;
+                    lexeme=now;
+                    parent=current;
                 }
+
             }
+
+
+            
 
 
             bool Axiom:: accept( Y_JIVE_AXIOM_ACCEPT_ARGS ) const

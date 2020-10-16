@@ -22,16 +22,18 @@ namespace upsylon
 
             class Aggregate;
 
-            //! guess for error management
-            struct  Guess
+            //! observer for error management
+            struct  Observer
             {
                 const Lexeme    *lexeme;  //!< last accepted lexeme
                 const Aggregate *parent;  //!< address of aggregate
                 const Aggregate *current; //!< current
+                //! update status
+                void  mind(const Lexeme *now) throw();
             };
 
             //! args for accept method
-#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, Guess &guess, long depth
+#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, Observer &guess, long depth
 
             //! accept declaration
 #define Y_JIVE_AXIOM_ACCEPT_DECL()      virtual bool  accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
@@ -131,12 +133,8 @@ namespace upsylon
                 //______________________________________________________________
                 //! grow a tree
                 static void Grow( Node * &tree, Node *leaf ) throw();
+
                 
-                //! update last lexeme
-                static void Mind(Guess &guess, Lexeme *now) throw();
-
-
-
                 //! recall derived class
                 template <typename CLASS>
                 CLASS & as() throw()

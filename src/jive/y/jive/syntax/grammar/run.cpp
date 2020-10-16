@@ -98,7 +98,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 Node         *tree    = NULL;
-                Guess         guess   = { NULL, NULL, NULL };
+                Observer      guess   = { NULL, NULL, NULL };
                 const bool    success = root->accept(tree,lexer,source,guess,0);
                 Node::Pointer xnode(tree) ;
 
