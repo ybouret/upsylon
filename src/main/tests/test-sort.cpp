@@ -71,7 +71,7 @@ namespace
             }
             std::cerr << std::endl;
 
-            std::cerr << "by increasing address" << std::endl;
+            std::cerr << "-- by increasing address" << std::endl;
             merging<Node>::sort_by_increasing_address(L);
             {
                 Node *node=L.head;
@@ -82,7 +82,7 @@ namespace
                 }
             }
 
-            std::cerr << "by decreasing address" << std::endl;
+            std::cerr << "-- by decreasing address" << std::endl;
             merging<Node>::sort_by_decreasing_address(L);
             {
                 Node *node=L.head;
