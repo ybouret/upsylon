@@ -4,7 +4,11 @@
 #ifndef Y_MKL_TAO_V2_INCLUDED
 #define Y_MKL_TAO_V2_INCLUDED
 
+//==============================================================================
+//
 //! getting dot products
+//
+//==============================================================================
 template <typename T>
 struct dot
 {
@@ -22,7 +26,11 @@ struct dot
     }
 };
 
+//==============================================================================
+//
 //! getting mod2
+//
+//==============================================================================
 template <typename T>
 struct mod2
 {
@@ -54,7 +62,11 @@ struct mod2
     }
 };
 
+//==============================================================================
+//
 //! getting rms
+//
+//==============================================================================
 template <typename T>
 struct rms
 {
@@ -88,7 +100,11 @@ struct rms
     }
 };
 
-
+//==============================================================================
+//
+// MUL matrix*vector
+//
+//==============================================================================
 
 
 //! target = M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
@@ -141,7 +157,7 @@ void mul_add(TARGET &target, const matrix<T> &M, LHS &rhs)
 }
 
 
-//! target = M' * rhs, based on target.size() <= M.cols, M.rows <= rhs.size()
+//! [SLOW] target = M' * rhs, based on target.size() <= M.cols, M.rows <= rhs.size()
 template <typename TARGET, typename T, typename RHS> static inline
 void mul_trn(TARGET &target, const matrix<T> &M, RHS &rhs)
 {

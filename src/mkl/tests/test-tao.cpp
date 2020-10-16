@@ -1,6 +1,6 @@
-#include "y/mkl/tao.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
+#include "y/mkl/tao.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
 #include "y/type/spec.hpp"
@@ -384,8 +384,9 @@ namespace
                 }
             }
         }
-
     }
+
+
 
     static inline
     void test_mv3()
@@ -394,17 +395,47 @@ namespace
         test_mul_v3_<apz,int16_t,int32_t>();
     }
 
+    template <typename T, typename U>
+    void test_gram_(const bool  check)
+    {
+        std::cerr << "gram<" << type_name_of<T>() << "," << type_name_of<U>() << ">" << std::endl;
+        for(size_t r=1;r<=64;r <<= 1)
+        {
+            matrix<T> M(r,r);
+            matrix<T> MM(r,r);
+            for(size_t c=1;c<=128;c <<= 1)
+            {
+                matrix<U> A(r,c);
+                support::fill2D(A);
+                tao::gram(M,A);
+                if(check)
+                {
+                    tao::mmul_trn(MM,A,A);
+                    Y_ASSERT( tao::mmod2<T>::of(M,MM) <= 0);
+                }
+            }
+        }
+    }
+
+    static inline
+    void test_gram()
+    {
+        test_gram_<double,float>(false);
+        test_gram_<apz,int16_t>(true);
+    }
+
 }
 
 Y_UTEST(tao)
 {
-    test_ld();   std::cerr << std::endl;
-    test_set();  std::cerr << std::endl;
-    test_add();  std::cerr << std::endl;
-    test_mul();  std::cerr << std::endl;
-    test_dot();  std::cerr << std::endl;
-    test_mv2();  std::cerr << std::endl;
-    test_mv3();  std::cerr << std::endl;
+    test_ld();    std::cerr << std::endl;
+    test_set();   std::cerr << std::endl;
+    test_add();   std::cerr << std::endl;
+    test_mul();   std::cerr << std::endl;
+    test_dot();   std::cerr << std::endl;
+    test_mv2();   std::cerr << std::endl;
+    test_mv3();   std::cerr << std::endl;
+    test_gram();  std::cerr << std::endl;
 
 }
 Y_UTEST_DONE()
