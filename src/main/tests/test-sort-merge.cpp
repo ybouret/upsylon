@@ -52,11 +52,19 @@ Y_UTEST(sort_merge)
         {
             L.push_back( new iNode( int(i) ) );
         }
+        Y_ASSERT(n==L.size);
+        Y_ASSERT(check_org(L));
 
 
         for(size_t iter=0;iter<8;++iter)
         {
             // shuffle
+            alea.shuffle(L);
+            Y_ASSERT(n==L.size);
+            Y_ASSERT(check_sum(L));
+
+            // sort to original
+            merging<iNode>::sort(L,compare_data,NULL);
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_org(L));
 
@@ -65,9 +73,12 @@ Y_UTEST(sort_merge)
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_sum(L));
 
-            // sort to original
+
+            // sort to original for another cycle
             merging<iNode>::sort(L,compare_data,NULL);
+            Y_ASSERT(n==L.size);
             Y_ASSERT(check_org(L));
+
         }
 
 
