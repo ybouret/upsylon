@@ -3,7 +3,6 @@
 #define Y_SORT_MERGE_INCLUDED 1
 
 #include "y/core/list.hpp"
-#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {

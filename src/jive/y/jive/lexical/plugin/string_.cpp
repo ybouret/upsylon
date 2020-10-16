@@ -1,6 +1,7 @@
 
 #include "y/jive/lexical/plugin/string_.hpp"
 #include "y/exception.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {

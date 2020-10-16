@@ -1,6 +1,7 @@
 
 #include "y/jive/lexical/editor/program.hpp"
 #include "y/core/temporary-link.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {

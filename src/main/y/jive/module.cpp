@@ -1,5 +1,6 @@
 
 #include "y/jive/module.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 

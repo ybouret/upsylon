@@ -1,5 +1,6 @@
 
 #include "y/jive/pattern/joker/joker.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {

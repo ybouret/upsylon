@@ -7,6 +7,7 @@
 #include "y/code/base2.hpp"
 #include "y/memory/marker.hpp"
 #include "y/exceptions.hpp"
+#include "y/type/aliasing.hpp"
 
 #include <cerrno>
 #include <iostream>

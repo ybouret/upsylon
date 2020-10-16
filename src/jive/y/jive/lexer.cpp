@@ -2,6 +2,7 @@
 #include "y/jive/lexer.hpp"
 #include "y/exception.hpp"
 #include "y/core/temporary-link.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 

@@ -4,6 +4,7 @@
 #include "y/exception.hpp"
 #include "y/code/utils.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
