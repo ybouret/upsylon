@@ -29,6 +29,7 @@ namespace
             if( fabs_of(lhs[i]-value) > 0 )
             {
                 std::cerr << "Bad Check Value for <" << type_name_of<typename LHS::mutable_type>() << ">" << std::endl;
+                std::cerr << lhs[i] << " instead of " << value << std::endl;
                 return false;
             }
         }
