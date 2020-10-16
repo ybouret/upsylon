@@ -1,4 +1,5 @@
 #include "y/string/display.hpp"
+#include <iostream>
 
 
 namespace upsylon

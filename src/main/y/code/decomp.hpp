@@ -47,7 +47,7 @@ namespace upsylon {
             const_type d;    //!< |x-y|
 
             //! increasing indicator
-            static inline int compare(const pnode *lhs, const pnode *rhs, void *)
+            static inline ptrdiff_t compare(const pnode *lhs, const pnode *rhs, void *)
             {
                 return comparison::increasing(lhs->d,rhs->d);
             }

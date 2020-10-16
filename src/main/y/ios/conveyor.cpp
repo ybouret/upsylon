@@ -3,6 +3,7 @@
 #include "y/exception.hpp"
 #include "y/string.hpp"
 #include "y/type/spec.hpp"
+#include <iostream>
 
 namespace upsylon {
     

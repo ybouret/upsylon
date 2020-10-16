@@ -75,9 +75,9 @@ namespace upsylon {
             }
         }
         
-        static inline int compare_by_freq(const suffix_tree::node_type *lhs,
-                                          const suffix_tree::node_type *rhs,
-                                          void *) throw()
+        static inline ptrdiff_t compare_by_freq(const suffix_tree::node_type *lhs,
+                                                const suffix_tree::node_type *rhs,
+                                                void *) throw()
         {
             return comparison::decreasing(lhs->freq,rhs->freq);
         }

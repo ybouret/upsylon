@@ -223,6 +223,7 @@ namespace upsylon {
 }
 
 #include "y/type/spec.hpp"
+#include <iostream>
 
 namespace upsylon {
 

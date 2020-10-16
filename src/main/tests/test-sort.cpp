@@ -36,7 +36,7 @@ namespace
     }
 
     template <typename NODE>
-    int compare_node( const NODE *lhs, const NODE *rhs, void *)
+    ptrdiff_t compare_node( const NODE *lhs, const NODE *rhs, void *)
     {
         return comparison::increasing(lhs->data,rhs->data);
     }
@@ -81,6 +81,7 @@ namespace
                     {
                         std::cerr << "node=" << node->data << "@" << node << std::endl;
                         std::cerr << "next=" << node->next->data << "@" << node->next << std::endl;
+                        std::cerr << "delta=" << static_cast<ptrdiff_t>(node-node->next) << std::endl;
                     }
                     Y_ASSERT( static_cast<ptrdiff_t>(node-node->next) < 0 );
                     node=node->next;

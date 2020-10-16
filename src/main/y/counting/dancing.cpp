@@ -140,9 +140,9 @@ namespace upsylon
     }
 
     static inline
-    int compare_cfg(const dancing::frame *lhs,
-                    const dancing::frame *rhs,
-                    void *) throw()
+    ptrdiff_t compare_cfg(const dancing::frame *lhs,
+                          const dancing::frame *rhs,
+                          void *) throw()
     {
         return comparison::decreasing(lhs->workgroups,rhs->workgroups);
     }

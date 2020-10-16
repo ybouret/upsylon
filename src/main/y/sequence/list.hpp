@@ -312,7 +312,7 @@ namespace upsylon {
         }
 
         template <typename FUNC> static inline
-        int compare_data( const node_type *lhs, const node_type *rhs, void *args )
+        ptrdiff_t compare_data( const node_type *lhs, const node_type *rhs, void *args )
         {
             assert(args);
             FUNC &func = *(FUNC *)args;

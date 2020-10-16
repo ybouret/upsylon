@@ -55,9 +55,9 @@ namespace upsylon
             }
         }
         
-        static inline int __compare_mph_nodes(const mperf::node_type *lhs,
-                                              const mperf::node_type *rhs,
-                                              void *) throw()
+        static inline ptrdiff_t __compare_mph_nodes(const mperf::node_type *lhs,
+                                                    const mperf::node_type *rhs,
+                                                    void *) throw()
         {
             const int ans = comparison::decreasing(lhs->freq,rhs->freq);
             if(ans!=0)

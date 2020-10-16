@@ -532,7 +532,7 @@ namespace upsylon {
         
     private:
         template <typename FUNC>
-        static inline int call_compare( const data_node *lhs, const data_node *rhs, void *args )
+        static inline ptrdiff_t call_compare( const data_node *lhs, const data_node *rhs, void *args )
         {
             FUNC &func = *(FUNC *)args;
             return func(lhs->data.data,rhs->data.data);

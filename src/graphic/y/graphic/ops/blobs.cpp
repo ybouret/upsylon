@@ -29,7 +29,7 @@ namespace upsylon {
             
         }
 
-        static inline int compareBlobs( const Blob *lhs, const Blob *rhs, void *) throw()
+        static inline ptrdiff_t compareBlobs( const Blob *lhs, const Blob *rhs, void *) throw()
         {
             return comparison::decreasing(lhs->size,rhs->size );
         }

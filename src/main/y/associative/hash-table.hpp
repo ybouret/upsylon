@@ -288,7 +288,7 @@ namespace upsylon
             }
 
             template <typename COMPARE_DATA> static inline
-            int __compare_node_data( const meta_node *lhs, const meta_node *rhs, void *args )
+            ptrdiff_t __compare_node_data( const meta_node *lhs, const meta_node *rhs, void *args )
             {
                 assert(args); assert(lhs); assert(rhs);
                 COMPARE_DATA &compare_data = *(COMPARE_DATA *)args;
@@ -296,7 +296,7 @@ namespace upsylon
             }
 
             template <typename COMPARE_KEYS> static inline
-            int __compare_node_keys( const meta_node *lhs, const meta_node *rhs, void *args )
+            ptrdiff_t __compare_node_keys( const meta_node *lhs, const meta_node *rhs, void *args )
             {
                 assert(args); assert(lhs); assert(rhs);
                 COMPARE_KEYS &compare_keys = *(COMPARE_KEYS *)args;

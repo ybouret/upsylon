@@ -129,13 +129,13 @@ namespace upsylon {
     namespace Jive
     {
 
-        static int byIncreasingEntropy(const Pattern *lhs, const Pattern * rhs, void *) throw()
+        static ptrdiff_t byIncreasingEntropy(const Pattern *lhs, const Pattern * rhs, void *) throw()
         {
             const double L = lhs->entropy();
             const double R = rhs->entropy();
             return comparison::increasing(L,R);
         }
-
+        
         void None:: rework() throw()
         {
             Operands strongList;

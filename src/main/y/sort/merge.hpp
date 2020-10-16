@@ -3,6 +3,7 @@
 #define Y_SORT_MERGE_INCLUDED 1
 
 #include "y/core/list.hpp"
+#include "y/comparison.hpp"
 
 namespace upsylon
 {
@@ -17,7 +18,7 @@ namespace upsylon
     {
     public:
         typedef core::list_of<NODE> sub_list; //!< internal sub list to hold nodes
-        typedef int (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args); //!< node comparison function
+        typedef ptrdiff_t (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args); //!< node comparison function
 
         //! sort a given list with same members than sub_list
         template <typename LIST> static inline
@@ -85,14 +86,14 @@ namespace upsylon
             while( R.size > 0 ) target.push_back( R.pop_front() );
         }
         
-        static inline int compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
+        static inline ptrdiff_t compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
-            return int( static_cast<ptrdiff_t>(lhs-rhs) );
+            return  comparison::increasing_addresses(lhs,rhs);
         }
 
-        static inline int compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
+        static inline ptrdiff_t compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
-            return int( static_cast<ptrdiff_t>(rhs-lhs) );
+            return  comparison::decreasing_addresses(lhs,rhs);
         }
     };
 }

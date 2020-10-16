@@ -11,7 +11,7 @@ namespace upsylon
     typedef core::list_of_cpp<iNode> iList;
 
 
-    static inline int compare_data( const iNode *lhs, const iNode *rhs, void *) throw()
+    static inline ptrdiff_t compare_data( const iNode *lhs, const iNode *rhs, void *) throw()
     {
         return lhs->data-rhs->data;
     }
@@ -42,7 +42,7 @@ Y_UTEST(sort_merge)
 {
 
     iList L;
-    for(size_t n=0;n<=512;++n)
+    for(size_t n=0;n<=2048;n+=16)
     {
         (std::cerr << '.').flush();
         // clear

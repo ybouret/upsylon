@@ -35,7 +35,7 @@ namespace upsylon
                 virtual ~Component() throw();
 
                 //! compare by index
-                static  int Compare( const Component *lhs, const Component *rhs,void*);
+                static ptrdiff_t Compare( const Component *lhs, const Component *rhs,void*);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Component);

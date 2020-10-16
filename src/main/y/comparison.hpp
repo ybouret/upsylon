@@ -3,7 +3,7 @@
 #define Y_COMPARISON_INCLUDED 1
 
 #include "y/os/platform.hpp"
-#include <iostream>
+
 namespace upsylon
 {
 
@@ -171,7 +171,21 @@ namespace upsylon
             const T ar = (rhs<0?-rhs:rhs);
             return decreasing<T>(al,ar);
         }
-
+       
+        //______________________________________________________________________
+        //
+        //! comparison of increasing addresses
+        //______________________________________________________________________
+        static int increasing_addresses(const void *lhs, const void *rhs) throw();
+        
+        //______________________________________________________________________
+        //
+        //! comparison of decreasing addresses
+        //______________________________________________________________________
+        static int decreasing_addresses(const void *lhs, const void *rhs) throw();
+        
+        
+        
     private:
         template <typename T> static inline
         int __lexicographic(const T     *small_data,
