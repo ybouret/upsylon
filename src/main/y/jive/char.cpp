@@ -26,10 +26,7 @@ namespace upsylon {
         code(other.code)
         {
         }
-
         
-
-
         Char:: ~Char() throw()
         {
             _bzset(code);
