@@ -214,9 +214,11 @@ ADD_TEST(mk:complex     test-main complex)
 ADD_TEST(mk:sobol       test-main sobol)
 ADD_TEST(mk:timings     test-main timings)
 
-SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp)
+SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp
+test-sort-merge.cpp)
 ADD_TEST(sort:network     test-main network_sort)
 ADD_TEST(sort:sort        test-main sort perf)
+ADD_TEST(sort:merge       test-main sort_merge)
 ADD_TEST(sort:unique      test-main unique)
 ADD_TEST(sort:maintain    test-main maintain)
 ADD_TEST(sort:locate      test-main locate)

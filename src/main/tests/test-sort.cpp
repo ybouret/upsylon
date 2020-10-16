@@ -220,7 +220,6 @@ namespace
 
 Y_UTEST(sort)
 {
-    for(size_t iter=0;iter<8;++iter)
     {
         perform<int>();
         perform<float>();
