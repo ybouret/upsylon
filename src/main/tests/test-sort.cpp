@@ -36,7 +36,7 @@ namespace
     }
 
     template <typename NODE>
-    ptrdiff_t compare_node( const NODE *lhs, const NODE *rhs, void *)
+    int compare_node( const NODE *lhs, const NODE *rhs, void *)
     {
         return comparison::increasing(lhs->data,rhs->data);
     }

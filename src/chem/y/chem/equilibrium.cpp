@@ -19,7 +19,7 @@ namespace upsylon
 
         }
 
-        ptrdiff_t Equilibrium::Component::Compare(const Component *lhs, const Component *rhs,void*)
+        int Equilibrium::Component::Compare(const Component *lhs, const Component *rhs,void*)
         {
             return comparison::increasing(lhs->sp->indx,rhs->sp->indx);
         }

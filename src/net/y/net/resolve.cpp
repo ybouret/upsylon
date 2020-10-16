@@ -50,6 +50,7 @@ extern "C"
 #endif // Y_WIN
 
 #include "y/exceptions.hpp"
+#include <iostream>
 
 namespace
 {

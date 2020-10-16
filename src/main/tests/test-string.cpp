@@ -25,7 +25,7 @@ namespace
         Y_DISABLE_COPY_AND_ASSIGN(s_node);
     };
 
-    static inline ptrdiff_t compare_strings_by_length( const s_node *lhs, const s_node *rhs, void *)
+    static inline int compare_strings_by_length( const s_node *lhs, const s_node *rhs, void *)
     {
         return comparison::increasing(lhs->s.size(),rhs->s.size());
     }

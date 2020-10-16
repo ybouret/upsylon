@@ -18,7 +18,7 @@ namespace upsylon
     {
     public:
         typedef core::list_of<NODE> sub_list; //!< internal sub list to hold nodes
-        typedef ptrdiff_t (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args); //!< node comparison function
+        typedef int (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args); //!< node comparison function
 
         //! sort a given list with same members than sub_list
         template <typename LIST> static inline
@@ -86,12 +86,12 @@ namespace upsylon
             while( R.size > 0 ) target.push_back( R.pop_front() );
         }
         
-        static inline ptrdiff_t compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
+        static inline int compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
             return  comparison::increasing_addresses(lhs,rhs);
         }
 
-        static inline ptrdiff_t compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
+        static inline int compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
         {
             return  comparison::decreasing_addresses(lhs,rhs);
         }

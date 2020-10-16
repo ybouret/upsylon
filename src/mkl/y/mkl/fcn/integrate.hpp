@@ -145,7 +145,7 @@ namespace upsylon {
                 inline virtual ~range() throw() {}
 
                 //! compare as nodes
-                static inline ptrdiff_t compare( const range *lhs, const range *rhs, void *) throw()
+                static inline int compare( const range *lhs, const range *rhs, void *) throw()
                 {
                     return compare_by_increasing_abs<T>( & lhs->sum, &rhs->sum );
                 }

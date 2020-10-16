@@ -196,6 +196,11 @@ namespace upsylon
     namespace net
     {
 
+        std::ostream & operator<<(std::ostream &os, const socket_address &i )
+        {
+            return (os << i.text() << socket_address::port_separator << bswp(i.port) );
+        }
+        
         socket_address:: ~socket_address() throw()
         {
         }

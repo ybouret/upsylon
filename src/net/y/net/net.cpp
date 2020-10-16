@@ -8,6 +8,7 @@
 #endif
 
 #include "y/type/block/zset.hpp"
+#include <iostream>
 
 namespace upsylon
 {

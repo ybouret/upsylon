@@ -1,4 +1,5 @@
 #include "y/net/net.hpp"
+#include <iostream>
 
 #if defined(Y_BSD)
 #include <cerrno>

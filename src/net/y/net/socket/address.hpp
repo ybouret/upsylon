@@ -68,10 +68,7 @@ namespace upsylon
             // non virtual interface
             //__________________________________________________________________
             //! display
-            friend inline std::ostream & operator<<(std::ostream &os, const socket_address &i )
-            {
-                return (os << i.text() << port_separator << bswp(i.port) );
-            }
+            friend std::ostream & operator<<(std::ostream &, const socket_address &);
 
             void resolve( const string &xname );      //!< using network::resolve
             void resolve( const char   *xname );      //!< using network::resolve

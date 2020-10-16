@@ -11,7 +11,7 @@ namespace upsylon
     typedef core::list_of_cpp<iNode> iList;
 
 
-    static inline ptrdiff_t compare_data( const iNode *lhs, const iNode *rhs, void *) throw()
+    static inline int compare_data( const iNode *lhs, const iNode *rhs, void *) throw()
     {
         return lhs->data-rhs->data;
     }

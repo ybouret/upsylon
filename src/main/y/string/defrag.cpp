@@ -25,7 +25,7 @@ namespace upsylon
 
 
     static inline
-    ptrdiff_t __s_node_compare( const core::addr_node<string> *lhs, const core::addr_node<string> *rhs, void *)
+    int __s_node_compare( const core::addr_node<string> *lhs, const core::addr_node<string> *rhs, void *)
     {
         assert(lhs);
         assert(rhs);

@@ -129,7 +129,8 @@ namespace upsylon {
     namespace Jive
     {
 
-        static ptrdiff_t byIncreasingEntropy(const Pattern *lhs, const Pattern * rhs, void *) throw()
+        static inline
+        int byIncreasingEntropy(const Pattern *lhs, const Pattern * rhs, void *) throw()
         {
             const double L = lhs->entropy();
             const double R = rhs->entropy();

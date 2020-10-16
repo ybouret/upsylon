@@ -8,11 +8,11 @@ namespace upsylon
 {
     namespace hashing
     {
-
+        
         mperf::node_type:: ~node_type() throw()
         {
         }
-
+        
         mperf::node_type:: node_type(const uint8_t c) throw() :
         next(0),
         prev(0),
@@ -22,7 +22,7 @@ namespace upsylon
         freq(1)
         {
         }
-
+        
         void mperf::node_type:: viz( ios::ostream &fp ) const
         {
             fp.viz(this);
@@ -55,9 +55,9 @@ namespace upsylon
             }
         }
         
-        static inline ptrdiff_t __compare_mph_nodes(const mperf::node_type *lhs,
-                                                    const mperf::node_type *rhs,
-                                                    void *) throw()
+        static inline int __compare_mph_nodes(const mperf::node_type *lhs,
+                                              const mperf::node_type *rhs,
+                                              void *) throw()
         {
             const int ans = comparison::decreasing(lhs->freq,rhs->freq);
             if(ans!=0)
@@ -69,19 +69,19 @@ namespace upsylon
                 return comparison::increasing(lhs->code,rhs->code);
             }
         }
-
+        
         void mperf::node_type:: optimize() throw()
         {
-
+            
             for(node_type *node = chld.head;node;node=node->next)
             {
                 node->optimize();
             }
-
+            
             merging<node_type>::sort(chld, __compare_mph_nodes, 0);
         }
-
-
+        
+        
     }
 }
 
@@ -100,14 +100,14 @@ namespace upsylon
             root=0;
             _bzset(entries);
         }
-
+        
         mperf:: mperf() :
         entries(0),
         root( new node_type(0) ),
         nodes(1)
         {
         }
-
+        
         mperf:: mperf( const char **words, const size_t count) :
         entries(0),
         root( new node_type(0) ),
@@ -121,7 +121,7 @@ namespace upsylon
             }
             optimize();
         }
-
+        
         mperf:: mperf(const void *data,const size_t size) :
         entries(0),
         root( new node_type(0) ),
@@ -144,28 +144,28 @@ namespace upsylon
             }
             optimize();
         }
-
-
+        
+        
         void mperf:: insert(const void *data, const size_t size, const int h)
         {
             assert( ! ( (NULL==data) && (size>0) ) );
             assert(h>=0);
             if(h<0)   throw exception("mperf: invalid user's hash code=%d",h);
             if(!size) return;
-
+            
             //__________________________________________________________________
             //
             // initialize look up: start from root
             //__________________________________________________________________
-
+            
             const uint8_t *addr = static_cast<const uint8_t *>(data);
             node_type     *curr = root;
-
+            
             for(size_t i=size;i>0;--i)
             {
                 const uint8_t  code  = *(addr++);
                 bool           found = false;
-
+                
                 //______________________________________________________________
                 //
                 // find which child to follow
@@ -181,7 +181,7 @@ namespace upsylon
                         break;
                     }
                 }
-
+                
                 if(!found)
                 {
                     curr->chld.push_back(new node_type(code));
@@ -189,12 +189,12 @@ namespace upsylon
                     ++ aliasing::_(nodes);
                 }
             }
-
+            
             //__________________________________________________________________
             //
             // current is the last visited node
             //__________________________________________________________________
-
+            
             assert(curr);
             assert(curr!=root);
             if(curr->hash>=0)
@@ -202,8 +202,8 @@ namespace upsylon
             (int &)(curr->hash) = h;
             ++aliasing::_(entries);
         }
-
-
+        
+        
         void mperf:: release() throw()
         {
             assert(root);
@@ -212,7 +212,7 @@ namespace upsylon
             aliasing::_(nodes)   = 1;
             aliasing::_(entries) = 0;
         }
-
+        
     }
 }
 
@@ -221,7 +221,7 @@ namespace upsylon
 {
     namespace hashing
     {
-
+        
         int mperf:: find(const void *data, const size_t size) const throw()
         {
             assert( ! ( (NULL==data) && (size>0) ) );
@@ -240,7 +240,7 @@ namespace upsylon
                         break;
                     }
                 }
-
+                
                 if(!found)
                 {
                     return -1;
@@ -248,16 +248,16 @@ namespace upsylon
             }
             return curr->hash;
         }
-
+        
         int mperf:: hash(const void *data, const size_t size) const
         {
             const int h = find(data,size);
             if(h<0) throw exception("mperf::hash(unregistered data)");
             return h;
         }
-
-
-
+        
+        
+        
         int mperf:: find(const void *data) const throw()
         {
             if(data)
@@ -277,7 +277,7 @@ namespace upsylon
                             break;
                         }
                     }
-
+                    
                     if(!found)
                     {
                         return -1;
@@ -290,7 +290,7 @@ namespace upsylon
                 return -1;
             }
         }
-
+        
     }
 }
 
@@ -301,7 +301,7 @@ namespace upsylon
 {
     namespace hashing
     {
-
+        
         void mperf:: graphViz( const string &filename ) const
         {
             {
@@ -310,18 +310,18 @@ namespace upsylon
                 root->viz(fp);
                 fp << "}\n";
             }
-
+            
             {
                 ios::GraphViz::Render(filename);
             }
-
+            
         }
-
+        
         void mperf:: graphViz(const char *filename) const
         {
             const string _(filename); graphViz(_);
         }
-
+        
         static inline
         string def2cpp( const string &def )
         {
@@ -331,8 +331,8 @@ namespace upsylon
             {
                 uint8_t C = uint8_t(def[i]);
                 if( ( C>='0'&&C<='9') ||
-                    ( C>='A'&&C<='Z') ||
-                    ( C>='a'&&C<='z') )
+                   ( C>='A'&&C<='Z') ||
+                   ( C>='a'&&C<='z') )
                 {
                     ans += char(C);
                 }
@@ -343,7 +343,7 @@ namespace upsylon
             }
             return ans;
         }
-
+        
         void mperf::emit_defines(ios::ostream        &fp,
                                  const array<string> &keywords,
                                  const string        &prefix,
@@ -357,7 +357,7 @@ namespace upsylon
                 const size_t tmp = keywords[i].length();
                 if(tmp>max_len) max_len = tmp;
             }
-
+            
             for(size_t i=1;i<=count;++i)
             {
                 const string &kw = keywords[i];
@@ -369,11 +369,11 @@ namespace upsylon
                 for(size_t i=kw.size();i<=max_len;++i) fp << ' ';
                 fp(" 0x%08x\n", unsigned(j));
             }
-
+            
         }
-
+        
     }
-
+    
 }
 
 #if 0

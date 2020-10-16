@@ -8,7 +8,7 @@ namespace upsylon {
 
 
         static inline
-        ptrdiff_t compareEdges( const Edge *lhs, const Edge *rhs, void * ) throw()
+        int compareEdges( const Edge *lhs, const Edge *rhs, void * ) throw()
         {
             return comparison::decreasing(lhs->size,rhs->size);
         }
