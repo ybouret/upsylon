@@ -71,22 +71,22 @@ namespace
             }
             std::cerr << std::endl;
 
-            std::cerr << "-- by increasing address" << std::endl;
+            std::cerr << "-- by increasing address #" << L.size << std::endl;
             merging<Node>::sort_by_increasing_address(L);
             {
                 Node *node=L.head;
-                while(node&&node->next)
+                while(NULL!=node && NULL!=node->next)
                 {
                     Y_ASSERT(node<node->next);
                     node=node->next;
                 }
             }
 
-            std::cerr << "-- by decreasing address" << std::endl;
+            std::cerr << "-- by decreasing address #" << L.size << std::endl;
             merging<Node>::sort_by_decreasing_address(L);
             {
                 Node *node=L.head;
-                while(node&&node->next)
+                while(NULL!=node && NULL!=node->next)
                 {
                     Y_ASSERT(node>node->next);
                     node=node->next;
@@ -207,11 +207,11 @@ namespace
                 std::cerr.flush();
                 fprintf( stderr, "speed@%6u | heap: %7.3f | quick: %7.3f | y: %7.3f\n",  unsigned(n), hspd.back(), qspd.back(), yspd.back() );
                 /*
-                std::cerr
-                << n
-                << " | heap : " << hspd.back()
-                << " | quick: " << qspd.back()
-                << " | y    : " << yspd.back() << std::endl;
+                 std::cerr
+                 << n
+                 << " | heap : " << hspd.back()
+                 << " | quick: " << qspd.back()
+                 << " | y    : " << yspd.back() << std::endl;
                  */
             }
         }
@@ -220,15 +220,20 @@ namespace
 
 Y_UTEST(sort)
 {
-    perform<int>();
-    perform<float>();
-    perform<double>();
-    perform<string>();
+    for(size_t iter=0;iter<8;++iter)
+    {
+        perform<int>();
+        perform<float>();
+        perform<double>();
+        perform<string>();
+    }
 
-    vector<unsigned> count;
-    vector<double>   hspd;
-    vector<double>   qspd;
-    vector<double>   yspd;
+    if(argc>1&&0==strcmp("perf",argv[1]))
+    {
+        vector<unsigned> count;
+        vector<double>   hspd;
+        vector<double>   qspd;
+        vector<double>   yspd;
 #define DO_PERF(CLASS) do {\
 std::cerr << "Speeds for " << #CLASS << std::endl;\
 do_perf<CLASS>(count,hspd,qspd,yspd);\
@@ -238,10 +243,11 @@ fp("%u %g %g %g\n", count[i], hspd[i], qspd[i], yspd[i]);\
 }\
 } while(false)
 
-    DO_PERF(int);
-    DO_PERF(double);
-    DO_PERF(string);
-    std::cerr << "sizeof(string)=" << sizeof(string) << std::endl;
+        DO_PERF(int);
+        DO_PERF(double);
+        DO_PERF(string);
+        std::cerr << "sizeof(string)=" << sizeof(string) << std::endl;
+    }
 }
 Y_UTEST_DONE()
 
