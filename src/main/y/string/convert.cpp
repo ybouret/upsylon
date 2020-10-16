@@ -3,6 +3,8 @@
 #include "y/code/utils.hpp"
 #include "y/core/ipower.hpp"
 
+#include <cctype>
+
 namespace upsylon
 {
 
