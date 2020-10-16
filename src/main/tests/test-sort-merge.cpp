@@ -73,11 +73,16 @@ Y_UTEST(sort_merge)
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_sum(L));
 
+            // sort by increasing address
+            merging<iNode>::sort_by_increasing_address(L);
+            Y_ASSERT(n==L.size);
+            Y_ASSERT(check_sum(L));
 
             // sort to original for another cycle
             merging<iNode>::sort(L,compare_data,NULL);
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_org(L));
+
 
         }
 
