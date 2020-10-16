@@ -2,17 +2,9 @@
 #include "y/type/block/zset.hpp"
 
 
-namespace upsylon
-{
-    namespace memory {
-
-        Y_SINGLETON_TEMPLATE_WITH(object::life_time-1,Jive::Char::Supply);
-
-    }
-
-}
-
 namespace upsylon {
+
+    Y_MAGAZINE_IMPL(Jive::Char::Supply,object::life_time-1)
 
     namespace Jive
     {

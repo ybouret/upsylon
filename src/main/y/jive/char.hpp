@@ -58,11 +58,8 @@ namespace upsylon {
 
     }
 
-    namespace memory
-    {
-        //! make available to instance
-        //template <> extern const char * const magazine<Jive::Char>::call_sign;
-    }
+    Y_MAGAZINE_DECL(Jive::Char)
+    
 
 }
 #endif

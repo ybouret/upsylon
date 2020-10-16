@@ -15,6 +15,19 @@ namespace upsylon
     namespace memory
     {
 
+#if defined(_MSC_VER)
+#    define Y_MAGAZINE_DECL(CLASS)
+#else
+#    define Y_MAGAZINE_DECL(CLASS) namespace memory {     \
+template <> const char * const magazine<CLASS>::call_sign;\
+}
+#endif
+
+#define Y_MAGAZINE_IMPL(SUPPLY,LIFE_TIME) namespace memory { \
+Y_SINGLETON_TEMPLATE_WITH(LIFE_TIME,SUPPLY);                 \
+}
+
+        
         //______________________________________________________________________
         //
         //
