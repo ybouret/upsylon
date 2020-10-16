@@ -118,11 +118,8 @@ namespace upsylon
         typedef Syntax::Node  XNode; //!< alias
     }
 
-    namespace memory
-    {
-        //! make instance available
-        template <> const char * const magazine<Jive::XNode>::call_sign;
-    }
+	Y_MAGAZINE_DECL(Jive::Syntax::Node)
+
 }
     
 

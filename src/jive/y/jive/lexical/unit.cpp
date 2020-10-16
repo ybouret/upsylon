@@ -2,17 +2,8 @@
 
 namespace upsylon
 {
-    namespace memory {
+	Y_MAGAZINE_IMPL(Jive::Lexical::Unit::Supply,Jive::Char::Supply::life_time-1)
 
-        Y_SINGLETON_TEMPLATE_WITH(Jive::Char::Supply::life_time-1,Jive::Lexical::Unit::Supply);
-
-    }
-
-}
-
-
-namespace upsylon
-{
     namespace Jive
     {
         namespace Lexical

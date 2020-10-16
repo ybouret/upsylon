@@ -5,17 +5,11 @@
 #include "y/jive/syntax/axiom/internal.hpp"
 #include "y/type/aliasing.hpp"
 
-namespace upsylon
-{
-    namespace memory
-    {
-        Y_SINGLETON_TEMPLATE_WITH(Jive::Lexical::Unit::Supply::life_time-1,Jive::XNode::Supply);
-        
-    }
-}
 
 namespace upsylon
 {
+	Y_MAGAZINE_IMPL(Jive::XNode::Supply, Jive::Lexical::Unit::Supply::life_time - 1)
+
     namespace Jive
     {
         namespace Syntax
