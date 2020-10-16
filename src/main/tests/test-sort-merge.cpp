@@ -14,13 +14,23 @@ namespace upsylon
     {
         return lhs->data-rhs->data;
     }
+
+    static inline bool check_sum( const iList &L ) throw()
+    {
+        size_t sum = 0;
+        for(const iNode *node=L.head;node;node=node->next)
+        {
+            sum += node->data;
+        }
+        return ((L.size) * (L.size+1))>>1 == sum;
+    }
 }
 
 Y_UTEST(sort_merge)
 {
 
     iList L;
-    for(size_t n=0;n<=256;++n)
+    for(size_t n=0;n<=512;++n)
     {
         (std::cerr << '.').flush();
         // clear
@@ -38,17 +48,9 @@ Y_UTEST(sort_merge)
             Y_ASSERT(n==L.size); alea.shuffle(L); Y_ASSERT(n==L.size);
 
             // check sum :)
-            {
-                size_t sum = 0;
-                for(const iNode *node=L.head;node;node=node->next)
-                {
-                    sum += node->data;
-                }
-                Y_ASSERT( (n*(n+1))/2==sum);
-            }
+            Y_ASSERT(check_sum(L));
 
             merging<iNode>::sort(L,compare_data,NULL);
-
             {
                 int j=1;
                 for(const iNode *node=L.head;node;node=node->next,++j)
