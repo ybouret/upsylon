@@ -51,7 +51,7 @@ namespace
             const size_t n = 1+alea.leq(100);
             std::cerr << "\tMerge" << std::endl;
             typedef core::cpp_node_of<T> Node;
-            core::list_of_cpp<Node>  L;
+            core::list_of_cpp<Node>      L;
             for(size_t i=1;i<=n;++i)
             {
                 const T args = support::get<T>();
@@ -77,7 +77,7 @@ namespace
                 Node *node=L.head;
                 while(NULL!=node && NULL!=node->next)
                 {
-                    Y_ASSERT(node<node->next);
+                    Y_ASSERT( static_cast<ptrdiff_t>(node-node->next) < 0 );
                     node=node->next;
                 }
             }
