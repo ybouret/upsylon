@@ -28,8 +28,6 @@ namespace
         {
             if( fabs_of(lhs[i]-value) > 0 )
             {
-                std::cerr << "Bad Check Value for <" << type_name_of<typename LHS::mutable_type>() << ">" << std::endl;
-                std::cerr << lhs[i] << " instead of " << value << std::endl;
                 return false;
             }
         }
@@ -59,13 +57,13 @@ namespace
     //
     //==========================================================================
     template <typename LHS> static inline
-    void test_ld__(LHS &lhs)
+    void test_ld__(LHS &lhs, const bool check)
     {
         typedef typename LHS::mutable_type type;
         {
             const type value = support::get<type>();
             tao::ld(lhs,value);
-            Y_ASSERT( checkValue(lhs,value) );
+            if(check) Y_ASSERT( checkValue(lhs,value) );
         }
         {
             const type value = support::get<type>();
@@ -74,7 +72,7 @@ namespace
     }
 
     template <typename T> static inline
-    void test_ld_()
+    void test_ld_(const bool check)
     {
         std::cerr << "ld<" << type_name_of<T>() << ">" << std::endl;
         {
@@ -83,12 +81,12 @@ namespace
             const T z = support::get<T>();
             {
                 point2d<T> p(x,y);
-                test_ld__(p);
+                test_ld__(p,check);
             }
 
             {
                 point3d<T> p(x,y,z);
-                test_ld__(p);
+                test_ld__(p,check);
             }
         }
 
@@ -97,13 +95,13 @@ namespace
             {
                 vector<T> vg(n,as_capacity);
                 fill(vg,n);
-                test_ld__(vg);
+                test_ld__(vg,check);
             }
 
             {
                 list<T>   lg(n,as_capacity);
                 fill(lg,n);
-                test_ld__(lg);
+                test_ld__(lg,check);
             }
         }
     }
@@ -111,12 +109,12 @@ namespace
     static inline
     void test_ld()
     {
-        test_ld_<ptrdiff_t>();
-        test_ld_<float>();
-        test_ld_<double>();
-        test_ld_<apn>();
-        test_ld_<apz>();
-        test_ld_<apq>();
+        test_ld_<ptrdiff_t>(true);
+        test_ld_<float>(false);
+        test_ld_<double>(false);
+        test_ld_<apn>(true);
+        test_ld_<apz>(true);
+        test_ld_<apq>(true);
     }
 
     //==========================================================================
