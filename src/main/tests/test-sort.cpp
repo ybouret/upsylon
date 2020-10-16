@@ -77,6 +77,11 @@ namespace
                 Node *node=L.head;
                 while(NULL!=node && NULL!=node->next)
                 {
+                    if(node>=node->next)
+                    {
+                        std::cerr << "node=" << node->data << "@" << node << std::endl;
+                        std::cerr << "next=" << node->next->data << "@" << node->next << std::endl;
+                    }
                     Y_ASSERT( static_cast<ptrdiff_t>(node-node->next) < 0 );
                     node=node->next;
                 }
