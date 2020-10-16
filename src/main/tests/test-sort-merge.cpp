@@ -78,6 +78,17 @@ Y_UTEST(sort_merge)
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_sum(L));
 
+            {
+                const iNode *node = L.head;
+                while(node&&node->next)
+                {
+                    Y_ASSERT( static_cast<ptrdiff_t>(node-node->next) < 0 );
+                    node=node->next;
+                }
+            }
+
+
+
             // sort to original for another cycle
             merging<iNode>::sort(L,compare_data,NULL);
             Y_ASSERT(n==L.size);
