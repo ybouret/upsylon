@@ -141,26 +141,14 @@ namespace upsylon
             void  Observer::mind(const Lexeme *now) throw()
             {
                 assert(now);
-                if(lexeme)
-                {
-                    if(now->stamp>lexeme->stamp)
-                    {
-                        lexeme=now;
-                        parent=current;
-                    }
-                }
-                else
+                if( (NULL==lexeme) || (now->stamp>lexeme->stamp) )
                 {
                     lexeme=now;
                     parent=current;
                 }
-
             }
 
-
             
-
-
             bool Axiom:: accept( Y_JIVE_AXIOM_ACCEPT_ARGS ) const
             {
                 try
