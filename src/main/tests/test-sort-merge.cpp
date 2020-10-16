@@ -24,6 +24,17 @@ namespace upsylon
         }
         return ((L.size) * (L.size+1))>>1 == sum;
     }
+
+    static inline bool check_org( const iList &L ) throw()
+    {
+        int j=1;
+        for(const iNode *node=L.head;node;node=node->next,++j)
+        {
+            if(node->data!=j) return false;
+        }
+        return true;
+    }
+
 }
 
 Y_UTEST(sort_merge)
@@ -42,22 +53,21 @@ Y_UTEST(sort_merge)
             L.push_back( new iNode( int(i) ) );
         }
 
+
         for(size_t iter=0;iter<8;++iter)
         {
             // shuffle
-            Y_ASSERT(n==L.size); alea.shuffle(L); Y_ASSERT(n==L.size);
+            Y_ASSERT(n==L.size);
+            Y_ASSERT(check_org(L));
 
-            // check sum :)
+            // shuffle
+            alea.shuffle(L);
+            Y_ASSERT(n==L.size);
             Y_ASSERT(check_sum(L));
 
+            // sort to original
             merging<iNode>::sort(L,compare_data,NULL);
-            {
-                int j=1;
-                for(const iNode *node=L.head;node;node=node->next,++j)
-                {
-                    Y_ASSERT(node->data==j);
-                }
-            }
+            Y_ASSERT(check_org(L));
         }
 
 
