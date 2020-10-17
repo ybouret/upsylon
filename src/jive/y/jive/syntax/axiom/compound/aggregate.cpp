@@ -16,9 +16,9 @@ namespace upsylon
             {
                 Y_JIVE_PRINTLN("aggregate#" << size << ">");
 
-                Node::Pointer node( Node::Acquire(*this) );
-                Node::List   &chld = node->leaves();
-
+                Node::Pointer   node( Node::Acquire(*this) );
+                Node::List   &  chld = node->leaves();
+                
                 const long subDepth = depth+2;
                 size_t     refCount = 1;
                 ++depth;
