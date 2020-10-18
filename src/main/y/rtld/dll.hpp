@@ -7,7 +7,6 @@
 
 namespace upsylon
 {
-
     //! a dynamically linked library
     class dll
     {

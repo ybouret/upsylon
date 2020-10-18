@@ -1,4 +1,5 @@
 #include "y/rtld/dll.hpp"
+#include "y/rtld/rtld.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -7,6 +8,8 @@ typedef double (Y_DLL_API *func)(double);
 
 Y_UTEST(dll)
 {
+    rtld &libs = rtld::instance();
+    
     if(argc>1)
     {
         const string soname = argv[1];
@@ -41,6 +44,8 @@ Y_UTEST(dll)
         }
 
     }
+    
+    std::cerr << "linked=" << libs.linked() << std::endl;
 }
 Y_UTEST_DONE()
 

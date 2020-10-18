@@ -79,7 +79,7 @@ const at_exit::longevity TYPE::life_time = (LIFE_TIME)
 #define Y_SINGLETON_TEMPLATE(TYPE)                      \
 template <> const char * const TYPE::call_sign = #TYPE
 
-    //! implenebt templated with life time
+    //! implement templated with life time
 #define Y_SINGLETON_TEMPLATE_WITH(LIFE_TIME,TYPE)                  \
 Y_SINGLETON_TEMPLATE(TYPE);                                        \
 template <> const at_exit::longevity TYPE::life_time = (LIFE_TIME)
