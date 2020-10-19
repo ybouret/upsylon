@@ -11,6 +11,10 @@
 
 namespace upsylon
 {
+    namespace hashing
+    {
+        class function;
+    }
 
     namespace core
     {
@@ -41,7 +45,7 @@ namespace upsylon
                 void         graphViz(ios::ostream &fp) const;
                 void         leaves_to(tree_list &pool) throw();
                 void         return_to(tree_list &pool) throw();
-
+                void         run(hashing::function &) const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(tree_node);
@@ -83,6 +87,7 @@ namespace upsylon
                 {
                     // assign address
                     node->addr = addr;
+                    update_path_to(node);
                     return true;
                 }
             }
@@ -104,12 +109,13 @@ namespace upsylon
 
             void     graphViz(const upsylon::string &fileName) const;
             void     graphViz(const char            *fileName) const;
+            void     hash_with(hashing::function &H) const throw(); //!< H.set(); root->run(H)
 
         private:
             tree_node *root;
             tree_list  tree_pool;
             tree_node *new_tree_node(tree_node *, const uint8_t);
-
+            void       update_path_to(tree_node *node) throw();
             Y_DISABLE_COPY_AND_ASSIGN(affix);
         };
 

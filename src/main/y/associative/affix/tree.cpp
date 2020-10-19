@@ -30,17 +30,35 @@ namespace upsylon
         }
 
 
-        static inline int by_decreasing_freq(const affix::tree_node *lhs,
-                                             const affix::tree_node *rhs,
-                                             void                   *) throw()
+        static inline int compare_nodes(const affix::tree_node *lhs,
+                                        const affix::tree_node *rhs,
+                                        void                   *) throw()
         {
-            return (lhs->freq<rhs->freq) ? 1 : (rhs->freq<lhs->freq ? -1 : 0);
+            const size_t lfreq = lhs->freq;
+            const size_t rfreq = rhs->freq;
+            if(lfreq<rfreq)
+            {
+                return 1;
+            }
+            else
+            {
+                if(rfreq<lfreq)
+                {
+                    return -1;
+                }
+                else
+                {
+                    assert(lfreq==rfreq);
+                    assert(lhs->code!=rhs->code);
+                    return int(lhs->code)-int(rhs->code);
+                }
+            }
         }
 
 
         void affix:: tree_node:: optimize() throw()
         {
-            merging<tree_node>::sort(leaves,by_decreasing_freq,NULL);
+            merging<tree_node>::sort(leaves,compare_nodes,NULL);
         }
 
         void affix:: tree_node:: leaves_to(tree_list &pool) throw()
@@ -109,6 +127,28 @@ namespace upsylon
             root->freq = 0;
             root->code = 0;
         }
+
+        void affix:: update_path_to(tree_node *node) throw()
+        {
+            assert(node);
+            for(;;)
+            {
+                ++(node->freq);
+                tree_node *parent = node->parent;
+                if(parent)
+                {
+                    assert(parent->leaves.owns(node));
+                    parent->optimize();
+                    node=node->parent;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+        }
+
 
     }
 
@@ -213,3 +253,28 @@ namespace upsylon
     }
 
 }
+#include "y/hashing/function.hpp"
+
+namespace upsylon
+{
+
+    namespace core
+    {
+        void affix:: tree_node:: run(hashing::function &H) const throw()
+        {
+            H.run_type(code);
+            for(const tree_node *node=leaves.head;node;node=node->next)
+            {
+                node->run(H);
+            }
+        }
+
+        void affix:: hash_with(hashing::function &H) const throw()
+        {
+            H.set();
+            root->run(H);
+        }
+    }
+
+}
+
