@@ -117,6 +117,14 @@ namespace upsylon
         return tree_pool.size;
     }
     
+    void affix:: reserve(size_t n)
+    {
+        while(n-- > 0)
+        {
+            tree_pool.push_back( new tree_node(0,0) );
+        }
+    }
+    
     void affix:: gc(size_t nmax) throw()
     {
         if(nmax<=0 || nmax >= tree_pool.size )

@@ -67,13 +67,13 @@ namespace upsylon
                        const size_t size,
                        param_type   args)
         {
-            data_node *dnode = create_data_node(args);
+            data_node *dnode = make_data_node(args);
             try
             {
                 tree_node *tnode = db.insert_at_path(iter,size,dnode);
                 if(!tnode)
                 {
-                    delete_data_node(dnode);
+                    kill_data_node(dnode);
                     return false;
                 }
                 else
@@ -85,7 +85,7 @@ namespace upsylon
             }
             catch(...)
             {
-                delete_data_node(dnode);
+                kill_data_node(dnode);
                 throw;
             }
         }
@@ -136,7 +136,7 @@ namespace upsylon
         }
         
         //! return a constructed data_node
-        inline data_node  *create_data_node(const_type &args)
+        inline data_node  *make_data_node(const_type &args)
         {
             data_node *node = (dp.size>0) ? dp.query() : object::acquire1<data_node>();
             try {
@@ -147,7 +147,7 @@ namespace upsylon
             }
         }
         
-        inline void delete_data_node(data_node *node) throw()
+        inline void kill_data_node(data_node *node) throw()
         {
             assert(node);
             self_destruct(*node);

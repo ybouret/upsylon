@@ -103,8 +103,8 @@ namespace upsylon
                 //----------------------------------------------------------
                 // look for code
                 //----------------------------------------------------------
-                const uint8_t code = *(curr++);
-                for(tree_node *chld=node->leaves.head;chld;chld=chld->next)
+                const uint8_t  code = *(curr++);
+                for(tree_node *chld = node->leaves.head;chld;chld=chld->next)
                 {
                     if(code==chld->code)
                     {
@@ -225,6 +225,7 @@ namespace upsylon
         size_t   entries()   const throw(); //!< root->freq
         size_t   in_pool()   const throw(); //!< tree_pool.size
         void     gc(size_t nmax=0) throw(); //!< sort and keep no more than nmax in pool
+        void     reserve(size_t);           //!< reserve extra tree nodes
         
     private:
         tree_node *root;
