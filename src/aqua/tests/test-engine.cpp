@@ -67,9 +67,9 @@ Y_UTEST(engine)
 
     std::cerr << "Nu      = " << cs.Nu      << std::endl;
     std::cerr << "Nu2     = " << cs.Nu2     << std::endl;
-    std::cerr << "dNu2    = " << cs.det     << std::endl;
+    std::cerr << "dNu     = " << cs.dNu     << std::endl;
     std::cerr << "iNu     = " << cs.iNu     << std::endl;
-    std::cerr << "Prj     = " << cs.Prj     << std::endl;
+    std::cerr << "pNu     = " << cs.pNu     << std::endl;
     std::cerr << "active  = " << cs.active  << std::endl;
     std::cerr << "Ma      = " << cs.Ma      << " #/ " << cs.M << std::endl;
     std::cerr << "Nc      = " << cs.Nc      << std::endl;

@@ -104,9 +104,13 @@ namespace upsylon
         }
 
 
-        bool Engine:: BalanceDelta() throw()
+        bool Engine:: BalanceDelta(const iMatrix &proj,
+                                   const Int      scal) throw()
         {
             static const double zcut = numeric<double>::tiny;
+            assert(proj.rows==M);
+            assert(proj.cols==M);
+            assert(scal!=0);
 
             size_t num = 0;
             for(size_t j=M;j>0;--j)
@@ -114,10 +118,10 @@ namespace upsylon
                 Cstp[j] = 0;
                 if(active[j])
                 {
-                    const  array<Int> &cof = Prj[j];
+                    const  array<Int> &cof = proj[j];
                     for(size_t k=M;k>0;--k)
                     {
-                        Ctry[k] = cof[k] * Cxs[k];
+                        Ctry[k] = (cof[k] * Cxs[k]);
                     }
                     hsort(Ctry,comparison::decreasing_abs<double>);
                     double sum = 0;
@@ -125,7 +129,7 @@ namespace upsylon
                     {
                         sum += Ctry[k];
                     }
-                    const double delta  = sum/det;
+                    const double delta  = sum/scal;
                     const double delta2 = square_of(delta);
                     if(delta2<=zcut)
                     {
@@ -200,7 +204,7 @@ namespace upsylon
             // compute step
             //
             //------------------------------------------------------------------
-            if(!BalanceDelta())
+            if(!BalanceDelta(pNu,dNu))
             {
                 //--------------------------------------------------------------
                 // numeric convergence on step

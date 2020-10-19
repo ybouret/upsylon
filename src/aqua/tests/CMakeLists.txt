@@ -12,6 +12,7 @@ ADD_TEST(library test-aqua library)
 ADD_TEST(eqs     test-aqua eqs)
 ADD_TEST(engine  test-aqua engine)
 ADD_TEST(boot    test-aqua boot)
+ADD_TEST(citric  test-aqua citric)
 
 ADD_CUSTOM_TARGET(utest-aqua
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

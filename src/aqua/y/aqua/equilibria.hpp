@@ -48,6 +48,32 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
+            // helpers
+            //__________________________________________________________________
+
+            //! acid -> base+proton
+            template <typename ID>
+            Equilibrium &weakAcid(const ID &id, const Species &acid, const Species &base, const Species &proton, const double K)
+            {
+                Equilibrium &eq = constant(id,K);
+                eq(acid,-1);
+                eq(base,1);
+                eq(proton,1);
+                return eq;
+            }
+
+            //! solvant -> acid+base
+            template <typename ID>
+            Equilibrium &solvant(const ID &id, const Species &acid, const Species &base, const double K)
+            {
+                Equilibrium &eq = constant(id,K);
+                eq(acid,1);
+                eq(base,1);
+                return eq;
+            }
+
+            //__________________________________________________________________
+            //
             // members
             //__________________________________________________________________
             const size_t maxNameSize; //!< max size of equilibria's names

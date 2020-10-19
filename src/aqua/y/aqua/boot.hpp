@@ -115,6 +115,9 @@ namespace upsylon {
             //! a+b+c=C0
             void conserve(const double, const Species &a, const Species &b, const Species &c);
 
+            //! a+b+c+d=C0
+            void conserve(const double, const Species &a, const Species &b, const Species &c, const Species &d);
+
 
             void  fill(addressable<double> &) const throw(); //!< fill a vector of Nc constraints
             void  quit() throw();                            //!< reset

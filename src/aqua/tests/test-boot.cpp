@@ -75,29 +75,4 @@ Y_UTEST(boot)
 }
 Y_UTEST_DONE()
 
-#include "y/mkl/kernel/lu.hpp"
-#include "y/mkl/utils.hpp"
-
-using namespace mkl;
-Y_UTEST(r2i)
-{
-    const double xx[] =
-    {
-        0.616815,
-        0.755733,
-        -0.0158463,
-        0.0158463,
-        0.154765,
-        -0.154765,
-        0.0,
-        0.0
-    };
-    const size_t n = sizeof(xx)/sizeof(xx[0]);
-
-    const lightweight_array<double> X((double*)xx,n);
-
-
-
-}
-Y_UTEST_DONE()
 

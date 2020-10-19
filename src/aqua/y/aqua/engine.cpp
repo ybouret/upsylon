@@ -25,9 +25,9 @@ namespace upsylon
         Nu(),
         tNu(),
         Nu2(),
-        det(),
+        dNu(0),
         iNu(),
-        Prj(),
+        pNu(),
         J(),
         W(),
         aM( 16 ),
@@ -63,7 +63,7 @@ namespace upsylon
             keep << aliasing::_(tNu);
             keep << aliasing::_(Nu2);
             keep << aliasing::_(iNu);
-            keep << aliasing::_(Prj);
+            keep << aliasing::_(pNu);
             keep << aliasing::_(J);
             keep << aliasing::_(W);
             keep << aliasing::_(aM);
@@ -73,7 +73,7 @@ namespace upsylon
         void Engine::quit() throw()
         {
             keep.release_all();
-            _bzset(det);
+            _bzset(dNu);
             _bzset(Nc);
             _bzset(Ma);
             _bzset(M);
@@ -140,14 +140,14 @@ namespace upsylon
                     }
                     aliasing::_(tNu).assign_transpose(Nu);
                     tao::mmul_trn(aliasing::_(Nu2),Nu,Nu);
-                    aliasing::_(det) = ideterminant(Nu2);
-                    if(det<=0) throw exception("%ssingular set of equilibria",fn);
+                    aliasing::_(dNu) = ideterminant(Nu2);
+                    if(dNu==0) throw exception("%ssingular set of equilibria",fn);
                     aliasing::_(iNu).make(N,M);
-                    aliasing::_(Prj).make(M,M);
+                    aliasing::_(pNu).make(M,M);
                     {
                         iMatrix aNu2(N,N); iadjoint(aNu2,Nu2);
                         tao::mmul( aliasing::_(iNu), aNu2,Nu);
-                        tao::mmul( aliasing::_(Prj), tNu, iNu);
+                        tao::mmul( aliasing::_(pNu), tNu, iNu);
                     }
 
                     J.make(N,M);

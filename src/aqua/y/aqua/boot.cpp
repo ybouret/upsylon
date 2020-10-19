@@ -161,6 +161,17 @@ namespace upsylon {
             cc.add(c,1);
         }
 
+
+        void Boot:: conserve(const double C0, const Species &a, const Species &b, const Species &c, const Species &d)
+        {
+            Constraint &cc = (*this)(C0);
+            cc.add(a,1);
+            cc.add(b,1);
+            cc.add(c,1);
+            cc.add(d,1);
+        }
+
+
         std::ostream & operator<<(std::ostream &os, const Boot &b)
         {
             os << "<boot #" << b.size << ">" << std::endl;
@@ -216,7 +227,7 @@ namespace upsylon {
                 const size_t Nc = size;
                 if(N+Nc!=M)
                 {
-                    throw exception("%s: mismatch",fn);
+                    throw exception("%s: #constraint=%lu + #equilibrium=%lu != #species=%lu",fn, (unsigned long)Nc, (unsigned long)N, (unsigned long)M);
                 }
                 aliasing::_(R).make(Nc,M);
                 aliasing::_(S).make(N,M);
@@ -228,15 +239,22 @@ namespace upsylon {
                         cc->fill( aliasing::_(R[i]) );
                     }
                 }
+                std::cerr << "R=" << R << std::endl;
                 {
-                    //iMatrix tR(R,matrix_transpose);
                     iMatrix R2(Nc,Nc);
-                    tao::mmul_trn(R2,R,R);
+                    tao::gram(R2,R);
                     aliasing::_(d) = ideterminant(R2);
+                    std::cerr << "d=" << d << std::endl;
                     if(0==d)
                     {
                         throw exception("%ssingular set of constraints",fn);
                     }
+                    iMatrix aR2(Nc,Nc);
+                    iadjoint(aR2,R2);
+                    iMatrix tR(R,matrix_transpose);
+                    iMatrix L2C(M,Nc);
+                    tao::mmul(L2C,tR,aR2);
+                    std::cerr << "L2C=" << L2C << std::endl;
                 }
 
                 {
@@ -260,6 +278,7 @@ namespace upsylon {
                     {
                         tao::set(aliasing::_(S)[i],F[i+Nc]);
                     }
+                    std::cerr << "S=" << S << std::endl;
                 }
 
 

@@ -8,7 +8,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(eqs);
     Y_UTEST(engine);
     Y_UTEST(boot);
-    Y_UTEST(r2i);
+    Y_UTEST(citric);
 }
 Y_UTEST_EXEC()
 

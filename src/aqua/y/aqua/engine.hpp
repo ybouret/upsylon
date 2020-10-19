@@ -48,6 +48,8 @@ namespace upsylon
             //__________________________________________________________________
             bool balance(addressable<double> &C) throw();
 
+
+
             //__________________________________________________________________
             //
             // methods to forward to equilibrium
@@ -87,9 +89,9 @@ namespace upsylon
             const iMatrix  Nu;         //!< topology             [NxM]
             const iMatrix  tNu;        //!< transposed           [MxN]
             const iMatrix  Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
-            const Int      det;        //!< det(Nu2), check independant equilibria
+            const Int      dNu;        //!< det(Nu2), check independant equilibria
             const iMatrix  iNu;        //!< adj(Nu2)*Nu : C->xi  [NxM]
-            const iMatrix  Prj;        //!< Nu'*adj(Nu2)*Nu      [MxM]
+            const iMatrix  pNu;        //!< Nu'*adj(Nu2)*Nu      [MxM]
             Matrix         J;          //!< Jacobian             [NxM]
             Matrix         W;          //!< system matrix        [NxN]
             
@@ -128,9 +130,15 @@ namespace upsylon
 
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
 
+            bool balance(addressable<double> &C,
+                         const iMatrix       &proj,
+                         const Int            scal) throw();
+
+
             struct BalanceProxy { Engine *self; double operator()(const double) throw(); };
             double BalanceValue() throw();               //! at Corg
-            bool   BalanceDelta() throw();               //! at Corg/Cbad => Cstp, false if Cstp=0
+            bool   BalanceDelta(const iMatrix &proj,
+                                const Int      scal) throw();               //! at Corg/Cbad => Cstp, false if Cstp=0
             double BalanceCheck(const double x) throw(); //!< Ctry=Corg+x*Ctry
             double sumCaux(const size_t m)      throw();
 
