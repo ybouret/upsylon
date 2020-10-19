@@ -283,6 +283,7 @@ ADD_TEST(associative:store   test-main store ${HERE}/words.db)
 ADD_TEST(associative:lexicon test-main lexicon)
 ADD_TEST(associative:catalog test-main catalog)
 ADD_TEST(associative:ledger  test-main ledger)
+ADD_TEST(associative:affix   test-main affix)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)
