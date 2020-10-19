@@ -1,5 +1,6 @@
 #include "y/associative/affix/tree.hpp"
 #include "y/sort/merge.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -31,7 +32,7 @@ namespace upsylon
             addr=0;
             freq=0;
             deep=0;
-            code=0;
+            aliasing::_(code)=0;
         }
 
         size_t  affix:: tree_node:: children() const throw()
@@ -145,11 +146,11 @@ namespace upsylon
             if(tree_pool.size)
             {
                 tree_node *node = tree_pool.pop_front();
-                node->parent = parent;
-                node->code   = code;
-                node->freq   = 0;
-                node->deep   = parent->deep+1;
-                node->addr   = 0;
+                node->parent            = parent;
+                aliasing::_(node->code) = code;
+                node->freq              = 0;
+                node->deep              = parent->deep+1;
+                node->addr              = 0;
                 return node;
             }
             else
@@ -163,8 +164,7 @@ namespace upsylon
             root->leaves_to(tree_pool);
             root->addr = 0;
             root->freq = 0;
-            root->code = 0;
-            root->deep = 0; // should be...
+            root->deep = 0;
         }
 
         void affix:: increase_path_to(tree_node *node) throw()

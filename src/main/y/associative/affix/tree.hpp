@@ -65,14 +65,14 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                void        *addr;   //!< any data
-                tree_node   *next;   //!< for list
-                tree_node   *prev;   //!< for list
-                tree_node   *parent; //!< parent node
-                tree_list    leaves; //!< leaves nodes
-                size_t       freq;   //!< frequency
-                size_t       deep;   //!< from root
-                uint8_t      code;   //!< code
+                void         *addr;   //!< any data
+                tree_node    *next;   //!< for list
+                tree_node    *prev;   //!< for list
+                tree_node    *parent; //!< parent node
+                tree_list     leaves; //!< leaves nodes
+                size_t        freq;   //!< frequency
+                size_t        deep;   //!< from root
+                const uint8_t code;   //!< code
 
 
 
