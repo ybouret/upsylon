@@ -12,6 +12,8 @@ using namespace  upsylon;
 static inline void build( core::affix &atree, const accessible<string> &strings)
 {
     atree.clear();
+    std::cerr << "in_pool: " << std::setw(6) << atree.in_pool() << " ";
+    atree.gc(1024);
     size_t inserted = 0;
     for(size_t i=1;i<=strings.size();++i)
     {

@@ -42,12 +42,27 @@ namespace upsylon
             class tree_node : public object
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit tree_node(tree_node *, const uint8_t) throw(); //!< setup with parent and code
+                virtual ~tree_node() throw();                           //!< cleanup
 
-                explicit tree_node(tree_node *, const uint8_t) throw();
-                virtual ~tree_node() throw();
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                void optimize()                     throw(); //!< locally optimize
+                void graphViz(ios::ostream &fp)       const; //!< for GraphViz
+                void leaves_to(tree_list &pool)     throw(); //!< return leaves to pool
+                void return_to(tree_list &pool)     throw(); //!< leaves and this to pool
+                void run(hashing::function &) const throw(); //!< in-order hashing of codes
 
-                void     optimize()  throw(); //!< locally optimize
-
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 void        *addr;   //!< any data
                 tree_node   *next;   //!< for list
                 tree_node   *prev;   //!< for list
@@ -55,11 +70,6 @@ namespace upsylon
                 tree_list    leaves; //!< leaves nodes
                 size_t       freq;   //!< frequency
                 uint8_t      code;   //!< code
-
-                void         graphViz(ios::ostream &fp) const;
-                void         leaves_to(tree_list &pool) throw();
-                void         return_to(tree_list &pool) throw();
-                void         run(hashing::function &) const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(tree_node);
@@ -154,21 +164,35 @@ namespace upsylon
                 return node;
             }
 
+            //__________________________________________________________________
+            //
+            //! remove a used node
+            //__________________________________________________________________
             void remove_node(tree_node *) throw();
 
 
-            //! helper
+            //__________________________________________________________________
+            //
+            // helpers to insert
+            //__________________________________________________________________
+
+            //! insert using text[0..size-1] as path
             bool insert_with(const char  *text,
                              const size_t size,
                              void *       addr);
 
-            //! helper
+            //! insert using text as path
             bool insert_with(const char  *text,
                              void *       addr);
 
-            //! helper
+            //! insert using buffer as path
             bool insert_with(const memory::ro_buffer &buff,
                              void *                   addr);
+
+            //__________________________________________________________________
+            //
+            // helpers to find
+            //__________________________________________________________________
 
             //! helper
             const tree_node *node_with(const char  *text,
@@ -185,11 +209,13 @@ namespace upsylon
             virtual ~affix() throw(); //!< cleanup
             void     clear() throw(); //!< return all nodes (but root) to pool
 
-            void     graphViz(const upsylon::string &fileName) const;
-            void     graphViz(const char            *fileName) const;
-            void     hash_with(hashing::function &H) const throw(); //!< H.set(); root->run(H)
+            void     graphViz(const upsylon::string &fileName) const; //!< render
+            void     graphViz(const char            *fileName) const; //!< render
+            void     hash_with(hashing::function &H)   const throw(); //!< H.set(); root->run(H)
 
-            size_t   entries() const throw(); //!< root->freq
+            size_t   entries()   const throw(); //!< root->freq
+            size_t   in_pool()   const throw(); //!< tree_pool.size
+            void     gc(size_t nmax=0) throw(); //!< sort and keep no more than nmax in pool
 
         private:
             tree_node *root;

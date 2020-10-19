@@ -14,11 +14,13 @@ Y_UTEST(dll)
     {
         const string soname = argv[1];
         dll so( soname );
+#if 0
         std::cerr << "system handle@" << so.get_system_handle() << std::endl;
         {
             dll so2( soname );
             std::cerr << "system handle@" << so2.get_system_handle() << std::endl;
         }
+#endif
         func Sin = so.hook<func>("Sin");
         if(Sin)
         {

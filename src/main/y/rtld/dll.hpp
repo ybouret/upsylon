@@ -54,10 +54,6 @@ namespace upsylon
             const string _(symbol); return ptr<T>(_);
         }
         
-        inline const void *get_system_handle() const throw()
-        {
-            return handle;
-        }
 
 
     private:

@@ -107,6 +107,28 @@ namespace upsylon
             return root->freq;
         }
 
+        size_t   affix:: in_pool() const throw()
+        {
+            return tree_pool.size;
+        }
+
+        void affix:: gc(size_t nmax) throw()
+        {
+            if(nmax<=0 || nmax >= tree_pool.size )
+            {
+                tree_pool.release();
+            }
+            else
+            {
+                merging<tree_node>::sort_by_increasing_address(tree_pool);
+                while(nmax-- > 0)
+                {
+                    assert(tree_pool.size>0);
+                    delete tree_pool.pop_back();
+                }
+            }
+        }
+
 
         affix::tree_node * affix::new_tree_node(tree_node *parent, const uint8_t code)
         {
