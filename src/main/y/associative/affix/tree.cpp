@@ -49,6 +49,8 @@ namespace upsylon
 
 }
 
+#include <cstring>
+
 namespace upsylon
 {
 
@@ -87,8 +89,29 @@ namespace upsylon
             }
         }
 
+        bool affix:: insert_with(const char  *text,
+                                 const size_t size,
+                                 void *       addr)
+        {
+            assert(!(NULL==text&&size>0));
+            return insert_path(text,size,addr);
+        }
+
+
+        bool affix:: insert_with(const char  *text,
+                                 void *       addr)
+        {
+            return insert_path(text,text?strlen(text):0,addr);
+        }
+
+        bool affix:: insert_with(const memory::ro_buffer &buff, void *addr)
+        {
+            return insert_path( static_cast<const char *>( buff.ro() ), buff.length(), addr);
+        }
 
     }
+
+    
 
 }
 
@@ -106,7 +129,16 @@ namespace upsylon
             fp.viz(this) << "[label=\"";
             fp << cchars::printable[code] << "#";
             fp("%lu", (unsigned long)freq );
-            fp << "\",shape=box];\n";
+            fp << "\",shape=box,style=";
+            if(addr)
+            {
+                fp << "filled";
+            }
+            else
+            {
+                fp << "solid";
+            }
+            fp << "];\n";
             for(const tree_node *node=leaves.head;node;node=node->next)
             {
                 node->graphViz(fp);

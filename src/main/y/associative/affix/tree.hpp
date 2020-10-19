@@ -7,6 +7,7 @@
 #include "y/object.hpp"
 #include "y/ios/iosfwd.hpp"
 #include "y/strfwd.hpp"
+#include "y/memory/buffer.hpp"
 
 namespace upsylon
 {
@@ -56,9 +57,9 @@ namespace upsylon
             typedef core::list_of_cpp<data_node> data_list;
 
             template <typename ITERATOR>
-            tree_node *insert_with(ITERATOR     curr,
-                                   size_t       size,
-                                   void        *addr)
+            bool insert_path(ITERATOR     curr,
+                             size_t       size,
+                             void        *addr)
             {
                 assert(addr!=NULL);
                 assert(root!=NULL);
@@ -84,15 +85,26 @@ namespace upsylon
                 if(node->addr)
                 {
                     // busy
-                    return NULL;
+                    return false;
                 }
                 else
                 {
                     // update frequencies...
                     node->addr = addr;
-                    return node;
+                    return true;
                 }
             }
+
+            bool insert_with(const char  *text,
+                             const size_t size,
+                             void *       addr);
+
+            bool insert_with(const char  *text,
+                             void *       addr);
+
+            bool insert_with(const memory::ro_buffer &buff,
+                             void *                   addr);
+
 
             explicit affix();
             virtual ~affix() throw();
