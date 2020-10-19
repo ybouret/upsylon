@@ -34,6 +34,10 @@ namespace upsylon
             code=0;
         }
 
+        size_t  affix:: tree_node:: children() const throw()
+        {
+            return leaves.size;
+        }
 
         static inline int compare_nodes(const affix::tree_node *lhs,
                                         const affix::tree_node *rhs,
@@ -174,10 +178,11 @@ namespace upsylon
                 {
                     assert(parent->leaves.owns(node));
                     parent->optimize();
-                    node=node->parent;
+                    node=parent;
                 }
                 else
                 {
+                    assert(node==root);
                     return;
                 }
             }
@@ -187,7 +192,30 @@ namespace upsylon
         {
             assert(node);
             assert(node->addr);
-            
+
+            node->addr = 0;
+            for(;;)
+            {
+                assert(node->freq>0);
+                const size_t  frequency = --(node->freq);
+                tree_node    *parent    = node->parent;
+                if(parent)
+                {
+                    assert(parent->leaves.owns(node));
+                    if(frequency<=0)
+                    {
+                        parent->leaves.unlink(node)->return_to(tree_pool);
+                    }
+                    parent->optimize();
+                    node=parent;
+                }
+                else
+                {
+                    assert(node==root);
+                    return;
+                }
+            }
+
 
         }
 

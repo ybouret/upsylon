@@ -53,12 +53,13 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                void optimize()                     throw(); //!< locally optimize
-                void graphViz(ios::ostream &fp)       const; //!< for GraphViz
-                void leaves_to(tree_list &pool)     throw(); //!< return leaves to pool
-                void return_to(tree_list &pool)     throw(); //!< leaves and this to pool
-                void run(hashing::function &) const throw(); //!< in-order hashing of codes
-                
+                void   optimize()                     throw(); //!< locally optimize
+                void   graphViz(ios::ostream &fp)       const; //!< for GraphViz
+                void   leaves_to(tree_list &pool)     throw(); //!< return leaves to pool
+                void   return_to(tree_list &pool)     throw(); //!< leaves and this to pool
+                void   run(hashing::function &) const throw(); //!< in-order hashing of codes
+                size_t children()               const throw(); //!< leaves.size
+
                 //______________________________________________________________
                 //
                 // members
