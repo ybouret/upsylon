@@ -274,7 +274,8 @@ test-suffix-tree.cpp
 test-suffix-store.cpp
 test-lexicon.cpp
 test-catalog.cpp
-test-ledger.cpp)
+test-ledger.cpp
+test-affix.cpp)
 ADD_TEST(associative:types   test-main associative)
 ADD_TEST(associative:set     test-main set)
 ADD_TEST(associative:map     test-main map)
