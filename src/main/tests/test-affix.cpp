@@ -10,7 +10,7 @@
 
 using namespace  upsylon;
 
-static inline void build( core::affix &atree, const accessible<string> &strings)
+static inline void build(affix &atree, const accessible<string> &strings)
 {
     atree.clear();
     std::cerr << "in_pool: " << std::setw(6) << atree.in_pool() << " ";
@@ -26,8 +26,8 @@ static inline void build( core::affix &atree, const accessible<string> &strings)
     Y_ASSERT(atree.entries()==inserted);
     for(size_t i=strings.size();i>0;--i)
     {
-        const string                 &data = strings[i];
-        const core::affix::tree_node *node = atree.node_with(data);
+        const string           &data = strings[i];
+        const affix::tree_node *node = atree.node_with(data);
         Y_ASSERT(node);
         Y_ASSERT(&data==node->addr);
     }
@@ -36,7 +36,7 @@ static inline void build( core::affix &atree, const accessible<string> &strings)
 
 static inline void low_level( vector<string> &strings )
 {
-    core::affix    atree;
+    affix          atree;
     hashing::sha1  H;
 
 
@@ -73,23 +73,23 @@ static inline void low_level( vector<string> &strings )
         const size_t half = indx.size()/2;
         for(size_t i=half;i>0;--i)
         {
-            const string &data = strings[indx[i]];
-            const core::affix::tree_node *node = atree.node_with(data);
+            const string           &data = strings[indx[i]];
+            const affix::tree_node *node = atree.node_with(data);
             Y_ASSERT(node);
             Y_ASSERT(node->addr);
             Y_ASSERT(node->addr == &data );
-            atree.remove_node( (core::affix::tree_node *)node );
+            atree.remove_node( (affix::tree_node *)node );
         }
 
 
         for(size_t i=indx.size();i>half;--i)
         {
-            const string &data = strings[indx[i]];
-            const core::affix::tree_node *node = atree.node_with(data);
+            const string           &data = strings[indx[i]];
+            const affix::tree_node *node = atree.node_with(data);
             Y_ASSERT(node);
             Y_ASSERT(node->addr);
             Y_ASSERT(node->addr == &data );
-            atree.remove_node( (core::affix::tree_node *)node );
+            atree.remove_node( (affix::tree_node *)node );
         }
 
         std::cerr << std::endl;
@@ -122,7 +122,7 @@ static inline void high_level( vector<string> &strings )
 
 Y_UTEST(affix)
 {
-    Y_UTEST_SIZEOF(core::affix::tree_node);
+    Y_UTEST_SIZEOF(affix::tree_node);
 
 
     if(argc>1)
