@@ -8,7 +8,12 @@ using namespace  upsylon;
 Y_UTEST(affix)
 {
     Y_UTEST_SIZEOF(core::affix::tree_node);
-    
+
+    core::affix atree;
+
+    atree.graphViz("atree.dot");
+
+
 }
 Y_UTEST_DONE()
 
