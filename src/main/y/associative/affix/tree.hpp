@@ -154,6 +154,9 @@ namespace upsylon
                 return node;
             }
 
+            void remove_node(tree_node *) throw();
+
+
             //! helper
             bool insert_with(const char  *text,
                              const size_t size,

@@ -152,6 +152,13 @@ namespace upsylon
                     return;
                 }
             }
+        }
+
+        void affix:: remove_node(tree_node *node) throw()
+        {
+            assert(node);
+            assert(node->addr);
+            
 
         }
 
