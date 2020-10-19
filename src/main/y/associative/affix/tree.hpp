@@ -29,7 +29,7 @@ namespace upsylon
         class affix
         {
         public:
-            //______________________________________________________________________
+            //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
@@ -239,18 +239,27 @@ namespace upsylon
 
     }
 
-
+    //! affix tree
     template <typename T>
     class affix_tree
     {
     public:
-        Y_DECL_ARGS(T,type);
-        typedef core::affix            core_type;
-        typedef core::affix::tree_node tree_node;
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        Y_DECL_ARGS(T,type);                       //!< aliases
+        typedef core::affix            core_type;  //!< alias
+        typedef core::affix::tree_node tree_node;  //!< alias
 
+        //______________________________________________________________________
+        //
+        //! base class
+        //______________________________________________________________________
         class data_node
         {
         public:
+            //! setup
             inline data_node(param_type args) :
             next(0),
             prev(0),
@@ -259,31 +268,33 @@ namespace upsylon
             {
             }
 
+            //! cleanup
             inline ~data_node() throw() {}
 
 
-            data_node *next;
-            data_node *prev;
-            tree_node *hook;
-            type       data;
+            data_node *next; //!< for list
+            data_node *prev; //!< for list
+            tree_node *hook; //!< for linking
+            type       data; //!< effective data
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_node);
         };
 
-        typedef core::list_of<data_node> data_list;
-        typedef core::pool_of<data_node> data_pool;
+        typedef core::list_of<data_node> data_list; //!< alias
+        typedef core::pool_of<data_node> data_pool; //!< alias
 
-
+        //! setup
         inline explicit affix_tree() : dl(), dp(), db()
-        {
-        }
+        {}
 
+        //! cleanup
         inline virtual ~affix_tree() throw()
         {
             release_();
         }
 
+        //! inserting at a given path
         template <typename ITERATOR>
         bool insert_at(ITERATOR     iter,
                        const size_t size,
@@ -312,8 +323,10 @@ namespace upsylon
             }
         }
 
+        //! remove excess data node
         inline void trim() throw()
         {
+            db.gc(0);
             while(dp.size)
             {
                 data_node *node = dp.query();
@@ -321,6 +334,7 @@ namespace upsylon
             }
         }
 
+        //! remove registered data, keep all memory
         inline void free() throw()
         {
             db.clear();
@@ -328,6 +342,12 @@ namespace upsylon
             {
                 delete_data_node(dl.pop_back());
             }
+        }
+
+        //! release all possible memory
+        inline void release() throw()
+        {
+            release_();
         }
 
     private:
