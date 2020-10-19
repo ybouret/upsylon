@@ -43,13 +43,28 @@ namespace upsylon
             merging<tree_node>::sort(leaves,by_decreasing_freq,NULL);
         }
 
+        void affix:: tree_node:: leaves_to(tree_list &pool) throw()
+        {
+            while(leaves.size)
+            {
+                tree_node *node = leaves.pop_back();
+                node->return_to(pool);
+            }
+        }
+
+        void affix:: tree_node:: return_to(tree_list &pool) throw()
+        {
+            leaves_to(pool);
+            pool.push_back(this);
+        }
+
+
 
     }
 
 
 }
 
-#include <cstring>
 
 namespace upsylon
 {
@@ -58,9 +73,7 @@ namespace upsylon
     {
         affix:: affix() :
         root( new tree_node(0,0) ),
-        data(),
-        tree_pool(),
-        data_pool()
+        tree_pool()
         {
         }
 
@@ -88,6 +101,26 @@ namespace upsylon
                 return new tree_node(parent,code);
             }
         }
+
+        void affix:: clear() throw()
+        {
+            root->leaves_to(tree_pool);
+            root->addr = 0;
+            root->freq = 0;
+            root->code = 0;
+        }
+
+    }
+
+}
+
+#include <cstring>
+
+namespace upsylon
+{
+
+    namespace core
+    {
 
         bool affix:: insert_with(const char  *text,
                                  const size_t size,

@@ -25,9 +25,11 @@ Y_UTEST(affix)
         Y_CHECK(!atree.insert_with(s[i],&a[i]));
     }
 
+
     atree.graphViz("atree.dot");
 
 
+    atree.clear();
 
 
 

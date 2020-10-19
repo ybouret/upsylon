@@ -39,22 +39,14 @@ namespace upsylon
                 uint8_t      code;   //!< code
 
                 void         graphViz(ios::ostream &fp) const;
+                void         leaves_to(tree_list &pool) throw();
+                void         return_to(tree_list &pool) throw();
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(tree_node);
             };
 
-            class data_node : public object
-            {
-            public:
-                explicit data_node(tree_node *node) throw();
-                data_node *next;
-                data_node *prev;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(data_node);
-            };
-            typedef core::list_of_cpp<data_node> data_list;
 
             template <typename ITERATOR>
             bool insert_path(ITERATOR     curr,
@@ -89,7 +81,7 @@ namespace upsylon
                 }
                 else
                 {
-                    // update frequencies...
+                    // assign address
                     node->addr = addr;
                     return true;
                 }
@@ -108,15 +100,14 @@ namespace upsylon
 
             explicit affix();
             virtual ~affix() throw();
+            void     clear() throw();
 
             void     graphViz(const upsylon::string &fileName) const;
             void     graphViz(const char            *fileName) const;
 
         private:
             tree_node *root;
-            data_list  data;
             tree_list  tree_pool;
-            data_list  data_pool;
             tree_node *new_tree_node(tree_node *, const uint8_t);
 
             Y_DISABLE_COPY_AND_ASSIGN(affix);
