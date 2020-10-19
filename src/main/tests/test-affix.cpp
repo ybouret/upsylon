@@ -11,11 +11,14 @@ Y_UTEST(affix)
 
     core::affix atree;
 
-    int a[4] = { 1, 2, 3, 4};
+    int         a[4] = { 1, 2, 3, 4};
+    const char *s[4] = { "hello", "hella", "hell", "happy" };
 
-    Y_CHECK( atree.insert_with("hello",&a[0]) );
-    Y_CHECK( atree.insert_with("hella",&a[1]) );
-    Y_CHECK( atree.insert_with("hell",&a[3]) );
+
+    for(size_t i=0;i<4;++i)
+    {
+        Y_CHECK(atree.insert_with(s[i],&a[i]));
+    }
 
     atree.graphViz("atree.dot");
 
