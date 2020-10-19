@@ -14,18 +14,23 @@ namespace upsylon
         parent(p),
         leaves(),
         freq(0),
+        deep(0),
         code(d)
         {
-
+            if(parent) deep = parent->deep+1;
         }
+
+
 
 
         affix:: tree_node:: ~tree_node() throw()
         {
             assert(next==0);
             assert(prev==0);
+            parent = 0;
             addr=0;
             freq=0;
+            deep=0;
             code=0;
         }
 
@@ -139,6 +144,7 @@ namespace upsylon
                 node->parent = parent;
                 node->code   = code;
                 node->freq   = 0;
+                node->deep   = parent->deep+1;
                 node->addr   = 0;
                 return node;
             }
@@ -154,6 +160,7 @@ namespace upsylon
             root->addr = 0;
             root->freq = 0;
             root->code = 0;
+            root->deep = 0; // should be...
         }
 
         void affix:: increase_path_to(tree_node *node) throw()
@@ -255,7 +262,7 @@ namespace upsylon
         {
             fp.viz(this) << "[label=\"";
             fp << cchars::printable[code] << "#";
-            fp("%lu", (unsigned long)freq );
+            fp("%lu[%lu]", (unsigned long)freq, (unsigned long)deep );
             fp << "\",shape=box,style=";
             if(addr)
             {

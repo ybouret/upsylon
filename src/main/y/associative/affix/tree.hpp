@@ -58,7 +58,7 @@ namespace upsylon
                 void leaves_to(tree_list &pool)     throw(); //!< return leaves to pool
                 void return_to(tree_list &pool)     throw(); //!< leaves and this to pool
                 void run(hashing::function &) const throw(); //!< in-order hashing of codes
-
+                
                 //______________________________________________________________
                 //
                 // members
@@ -69,7 +69,10 @@ namespace upsylon
                 tree_node   *parent; //!< parent node
                 tree_list    leaves; //!< leaves nodes
                 size_t       freq;   //!< frequency
+                size_t       deep;   //!< from root
                 uint8_t      code;   //!< code
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(tree_node);
@@ -89,6 +92,8 @@ namespace upsylon
             {
                 assert(addr!=NULL);
                 assert(root!=NULL);
+                assert(root->code==0);
+                assert(root->deep==0);
                 //--------------------------------------------------------------
                 // start from root
                 //--------------------------------------------------------------
