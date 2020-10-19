@@ -7,7 +7,7 @@ using namespace  upsylon;
 
 Y_UTEST(affix)
 {
-    Y_UTEST_SIZEOF(core::affix::node);
+    Y_UTEST_SIZEOF(core::affix::tree_node);
     
 }
 Y_UTEST_DONE()
