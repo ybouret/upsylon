@@ -8,6 +8,7 @@
 #include "y/ios/iosfwd.hpp"
 #include "y/strfwd.hpp"
 #include "y/memory/buffer.hpp"
+#include "y/type/args.hpp"
 
 namespace upsylon
 {
@@ -87,9 +88,9 @@ namespace upsylon
              */
             //__________________________________________________________________
             template <typename ITERATOR>
-            bool insert_at_path(ITERATOR     curr,
-                                size_t       size,
-                                void        *addr)
+            tree_node *insert_at_path(ITERATOR     curr,
+                                      size_t       size,
+                                      void        *addr)
             {
                 assert(addr!=NULL);
                 assert(root!=NULL);
@@ -128,7 +129,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     // busy
                     //----------------------------------------------------------
-                    return false;
+                    return NULL;
                 }
                 else
                 {
@@ -137,7 +138,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     node->addr = addr;
                     increase_path_to(node);
-                    return true;
+                    return node;
                 }
             }
 
@@ -173,6 +174,9 @@ namespace upsylon
             //__________________________________________________________________
             //
             //! remove a used node
+            /**
+             with pruning!
+             */
             //__________________________________________________________________
             void remove_node(tree_node *) throw();
 
@@ -183,17 +187,17 @@ namespace upsylon
             //__________________________________________________________________
 
             //! insert using text[0..size-1] as path
-            bool insert_with(const char  *text,
-                             const size_t size,
-                             void *       addr);
+            tree_node* insert_with(const char  *text,
+                                   const size_t size,
+                                   void *       addr);
 
             //! insert using text as path
-            bool insert_with(const char  *text,
-                             void *       addr);
+            tree_node* insert_with(const char  *text,
+                                   void *       addr);
 
             //! insert using buffer as path
-            bool insert_with(const memory::ro_buffer &buff,
-                             void *                   addr);
+            tree_node* insert_with(const memory::ro_buffer &buff,
+                                   void *                   addr);
 
             //__________________________________________________________________
             //
@@ -231,7 +235,141 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(affix);
         };
 
+
+
     }
+
+
+    template <typename T>
+    class affix_tree
+    {
+    public:
+        Y_DECL_ARGS(T,type);
+        typedef core::affix            core_type;
+        typedef core::affix::tree_node tree_node;
+
+        class data_node
+        {
+        public:
+            inline data_node(param_type args) :
+            next(0),
+            prev(0),
+            hook(0),
+            data(args)
+            {
+            }
+
+            inline ~data_node() throw() {}
+
+
+            data_node *next;
+            data_node *prev;
+            tree_node *hook;
+            type       data;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(data_node);
+        };
+
+        typedef core::list_of<data_node> data_list;
+        typedef core::pool_of<data_node> data_pool;
+
+
+        inline explicit affix_tree() : dl(), dp(), db()
+        {
+        }
+
+        inline virtual ~affix_tree() throw()
+        {
+            release_();
+        }
+
+        template <typename ITERATOR>
+        bool insert_at(ITERATOR     iter,
+                       const size_t size,
+                       param_type   args)
+        {
+            data_node *dnode = create_data_node(args);
+            try
+            {
+                tree_node *tnode = db.insert_at_path(iter,size,dnode);
+                if(!tnode)
+                {
+                    delete_data_node(dnode);
+                    return false;
+                }
+                else
+                {
+                    dl.push_back(dnode);
+                    dnode->hook = tnode;
+                    return true;
+                }
+            }
+            catch(...)
+            {
+                delete_data_node(dnode);
+                throw;
+            }
+        }
+
+        inline void trim() throw()
+        {
+            while(dp.size)
+            {
+                data_node *node = dp.query();
+                object::release1(node);
+            }
+        }
+
+        inline void free() throw()
+        {
+            db.clear();
+            while(dl.size)
+            {
+                delete_data_node(dl.pop_back());
+            }
+        }
+
+    private:
+        data_list   dl; //!< data list
+        data_pool   dp; //!< data pool
+        core::affix db; //!< data base
+
+        inline void release_() throw()
+        {
+            db.clear();
+            db.gc(0);
+            trim();
+            while(dl.size)
+            {
+                data_node *node = dl.pop_back();
+                self_destruct(*node);
+                object::release1(node);
+            }
+        }
+
+        //! return a constructed data_node
+        inline data_node  *create_data_node(const_type &args)
+        {
+            data_node *node = (dp.size>0) ? dp.query() : object::acquire1<data_node>();
+            try {
+                return new (node) data_node(args);
+            } catch(...) {
+                dp.store(node);
+                throw;
+            }
+        }
+
+        inline void delete_data_node(data_node *node) throw()
+        {
+            assert(node);
+            self_destruct(*node);
+            node->hook = NULL;
+            dp.store(node);
+        }
+
+        Y_DISABLE_COPY_AND_ASSIGN(affix_tree);
+    };
     
 }
 

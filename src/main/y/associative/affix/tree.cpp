@@ -232,22 +232,22 @@ namespace upsylon
     namespace core
     {
 
-        bool affix:: insert_with(const char  *text,
-                                 const size_t size,
-                                 void *       addr)
+        affix::tree_node* affix:: insert_with(const char  *text,
+                                              const size_t size,
+                                              void *       addr)
         {
             assert(!(NULL==text&&size>0));
             return insert_at_path(text,size,addr);
         }
 
 
-        bool affix:: insert_with(const char  *text,
-                                 void *       addr)
+        affix::tree_node* affix:: insert_with(const char  *text,
+                                              void *       addr)
         {
             return insert_at_path(text,text?strlen(text):0,addr);
         }
 
-        bool affix:: insert_with(const memory::ro_buffer &buff, void *addr)
+        affix::tree_node* affix:: insert_with(const memory::ro_buffer &buff, void *addr)
         {
             return insert_at_path( static_cast<const char *>( buff.ro() ), buff.length(), addr);
         }
@@ -340,7 +340,7 @@ namespace upsylon
         }
 
     }
-
+    
 }
 #include "y/hashing/function.hpp"
 
