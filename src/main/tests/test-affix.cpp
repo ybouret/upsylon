@@ -13,11 +13,16 @@ Y_UTEST(affix)
 
     int         a[4] = { 1, 2, 3, 4};
     const char *s[4] = { "hello", "hella", "hell", "happy" };
+    const size_t n   = sizeof(a)/sizeof(a[0]);
 
-
-    for(size_t i=0;i<4;++i)
+    for(size_t i=0;i<n;++i)
     {
         Y_CHECK(atree.insert_with(s[i],&a[i]));
+    }
+
+    for(size_t i=0;i<n;++i)
+    {
+        Y_CHECK(!atree.insert_with(s[i],&a[i]));
     }
 
     atree.graphViz("atree.dot");
