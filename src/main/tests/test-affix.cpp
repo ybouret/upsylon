@@ -19,7 +19,16 @@ static inline void build( core::affix &atree, const accessible<string> &strings)
         const bool    res  = atree.insert_with(data, (void*)&data);
         if(res) ++inserted;
     }
-    std::cerr << "inserted=" << inserted << std::endl;
+    std::cerr << "inserted=" << inserted;
+    Y_ASSERT(atree.entries()==inserted);
+    for(size_t i=strings.size();i>0;--i)
+    {
+        const string                 &data = strings[i];
+        const core::affix::tree_node *node = atree.node_with(data);
+        Y_ASSERT(node);
+        Y_ASSERT(&data==node->addr);
+    }
+
 }
 
 Y_UTEST(affix)
@@ -45,17 +54,23 @@ Y_UTEST(affix)
         build(atree,strings);
         atree.hash_with(H);
         const digest md1 = H.md();
-        std::cerr << "md1=" << md1 << std::endl;
+        std::cerr << " md1=" << md1 << std::endl;
 
-        alea.shuffle(*strings, strings.size() );
-        build(atree,strings);
-        atree.hash_with(H);
-        const digest md2 = H.md();
-        std::cerr << "md2=" << md2 << std::endl;
+        for(size_t iter=0;iter<8;++iter)
+        {
+            alea.shuffle(*strings, strings.size() );
+            build(atree,strings);
+            atree.hash_with(H);
+            const digest md2 = H.md();
+            std::cerr << " md2=" << md2 << std::endl;
+            Y_ASSERT(md1==md2);
+        }
     }
 
-    atree.graphViz("atree.dot");
-
+    if(atree.entries()<=20)
+    {
+        atree.graphViz("atree.dot");
+    }
 
 }
 Y_UTEST_DONE()

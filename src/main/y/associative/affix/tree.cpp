@@ -73,7 +73,7 @@ namespace upsylon
         void affix:: tree_node:: return_to(tree_list &pool) throw()
         {
             leaves_to(pool);
-            pool.push_back(this);
+            pool.push_front(this);
         }
 
 
@@ -102,12 +102,18 @@ namespace upsylon
             root = 0;
         }
 
+        size_t affix:: entries() const throw()
+        {
+            return root->freq;
+        }
+
+
         affix::tree_node * affix::new_tree_node(tree_node *parent, const uint8_t code)
         {
             assert(parent);
             if(tree_pool.size)
             {
-                tree_node *node = tree_pool.pop_back();
+                tree_node *node = tree_pool.pop_front();
                 node->parent = parent;
                 node->code   = code;
                 node->freq   = 0;
@@ -128,7 +134,7 @@ namespace upsylon
             root->code = 0;
         }
 
-        void affix:: update_path_to(tree_node *node) throw()
+        void affix:: increase_path_to(tree_node *node) throw()
         {
             assert(node);
             for(;;)
@@ -167,20 +173,39 @@ namespace upsylon
                                  void *       addr)
         {
             assert(!(NULL==text&&size>0));
-            return insert_path(text,size,addr);
+            return insert_at_path(text,size,addr);
         }
 
 
         bool affix:: insert_with(const char  *text,
                                  void *       addr)
         {
-            return insert_path(text,text?strlen(text):0,addr);
+            return insert_at_path(text,text?strlen(text):0,addr);
         }
 
         bool affix:: insert_with(const memory::ro_buffer &buff, void *addr)
         {
-            return insert_path( static_cast<const char *>( buff.ro() ), buff.length(), addr);
+            return insert_at_path( static_cast<const char *>( buff.ro() ), buff.length(), addr);
         }
+
+        const affix::tree_node * affix:: node_with(const char  *text,
+                                                   const size_t size) const throw()
+        {
+            assert(!(NULL==text&&size>0));
+            return node_at_path(text,size);
+        }
+
+        const affix::tree_node * affix:: node_with(const char  *text) const throw()
+        {
+            return node_at_path(text,text?strlen(text):0);
+        }
+
+        const affix::tree_node * affix:: node_with(const memory::ro_buffer &buff) const throw()
+        {
+            return node_at_path(static_cast<const char *>( buff.ro() ), buff.length());
+        }
+
+
 
     }
 
