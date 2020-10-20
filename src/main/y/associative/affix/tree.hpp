@@ -5,6 +5,8 @@
 
 #include "y/associative/affix/affix.hpp"
 #include "y/iterate/linked.hpp"
+#include "y/memory/buffer.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -50,7 +52,11 @@ namespace upsylon
         
         typedef core::list_of<data_node> data_list; //!< alias
         typedef core::pool_of<data_node> data_pool; //!< alias
-        
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
         //! setup
         inline explicit affix_tree() : affix(), dl(), dp()
         {}
@@ -60,7 +66,12 @@ namespace upsylon
         {
             ditch();
         }
-        
+
+        //______________________________________________________________________
+        //
+        // insert
+        //______________________________________________________________________
+
         //! inserting at a given path
         template <typename ITERATOR>
         bool insert_at(ITERATOR     iter,
@@ -89,12 +100,87 @@ namespace upsylon
                 throw;
             }
         }
-        
-        //! remove excess memory
+
+        //! insert using a block of memory
+        inline bool insert_by(const void  *data,
+                              const size_t size,
+                              param_type   args)
+        {
+            assert(!(NULL==data&&size>0));
+            return insert_at( static_cast<const char *>(data), size, args );
+        }
+
+
+        //! insert using text
+        inline bool insert_by(const char  *text,
+                              param_type   args)
+        {
+            return insert_at(text,text?strlen(text):0, args );
+        }
+
+        //! insert using text
+        inline bool insert_by(const memory::ro_buffer &buff,
+                              param_type               args)
+        {
+            return insert_at(static_cast<const char *>(buff.ro()),buff.length(),args );
+        }
+
+        //______________________________________________________________________
+        //
+        // remove
+        //______________________________________________________________________
+        //! inserting at a given path
+        template <typename ITERATOR>
+        bool remove_at(ITERATOR     iter,
+                       const size_t size) throw()
+        {
+            tree_node *node = (tree_node *)find(iter,size);
+            if(node->addr)
+            {
+                kill_data_node( dl.unlink( static_cast<data_node *>(node->addr)) );
+                cut(node);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //! remove using a block of memory as path
+        inline bool remove_by(const void  *data,
+                              const size_t size) throw()
+        {
+            assert(!(NULL==data&&size>0));
+            return remove_at( static_cast<const char *>(data), size);
+        }
+
+
+
+        //! remove using a text as path
+        inline bool remove_by(const char *data) throw()
+        {
+            return remove_at(data,data?strlen(data):0);
+        }
+
+
+        //! remove using a buffer as path
+        inline bool remove_by(const memory::ro_buffer &buff) throw()
+        {
+            return remove_at(static_cast<const char *>( buff.ro() ), buff.length() );
+        }
+
+
+        //______________________________________________________________________
+        //
+        // memory management
+        //______________________________________________________________________
+
+        //! release excess memory
         inline void crop() throw()
         {
-            prune();
-            while(dp.size)
+            prune();         // remove tree cache
+            while(dp.size)   // remove data cache
             {
                 data_node *node = dp.query();
                 object::release1(node);
@@ -107,7 +193,7 @@ namespace upsylon
             reset();
             while(dl.size)
             {
-                delete_data_node(dl.pop_back());
+                kill_data_node(dl.pop_back());
             }
         }
         
@@ -123,7 +209,8 @@ namespace upsylon
                 object::release1(node);
             }
         }
-        
+
+
     private:
         data_list   dl; //!< data list
         data_pool   dp; //!< data pool
@@ -140,7 +227,8 @@ namespace upsylon
                 throw;
             }
         }
-        
+
+        //! destruct and store data_node
         inline void kill_data_node(data_node *node) throw()
         {
             assert(node);

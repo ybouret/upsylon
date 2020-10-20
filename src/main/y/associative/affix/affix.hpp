@@ -7,7 +7,6 @@
 #include "y/object.hpp"
 #include "y/ios/iosfwd.hpp"
 #include "y/strfwd.hpp"
-#include "y/memory/buffer.hpp"
 #include "y/type/args.hpp"
 
 namespace upsylon

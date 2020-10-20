@@ -152,13 +152,42 @@ namespace {
     static inline void high_level( vector<string> &strings )
     {
         affix_tree<string> tree;
+        for(size_t iter=0;iter<8;++iter)
+        {
+            alea.shuffle(*strings, strings.size());
+            size_t inserted = 0;
+            tree.erase();
+            for(size_t i=strings.size();i>0;--i)
+            {
+                const string &data = strings[i];
+                if(tree.insert_by(data,data)) ++inserted;
+            }
+            std::cerr << "#entries=" << tree.entries() << std::endl;
+            Y_ASSERT(inserted==tree.entries());
+        }
+        for(size_t i=strings.size();i>0;--i)
+        {
+            const string &data = strings[i];
+            Y_ASSERT(tree.has(*data,data.size()));
+        }
+
+        if(tree.entries()<=30)
+        {
+            tree.graphViz("affix_tree.dot");
+        }
+
 
         for(size_t i=strings.size();i>0;--i)
         {
             const string &data = strings[i];
-            tree.insert_at(*data, data.length(), data);
-            break;
+            if( tree.has( *data, data.size() ))
+            {
+                Y_ASSERT( tree.remove_by(data) );
+            }
         }
+        Y_ASSERT(0==tree.entries());
+
+
 
     }
 
