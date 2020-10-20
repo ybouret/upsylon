@@ -344,6 +344,7 @@ namespace upsylon {
             vector<double> Cold(M,0);
             vector<double> Cnew(M,0);
             vector<double> Lambda(Nc,0);
+            vector<double> RC(Nc,0);
             vector<double> Cprj(M,0);
 
             fill(Lambda);
@@ -361,14 +362,26 @@ namespace upsylon {
 
             // initial equilibrium
             std::cerr << "C= " << Cold << std::endl;
-            if(!engine.forward(Cold))
+            tao::set(Cnew,Cold);
+            if(!engine.forward(Cnew))
             {
                 throw exception("no possible initial forward");
             }
 
-            std::cerr << "C= " << Cold << std::endl;
-            
+            std::cerr << "C= " << Cnew << std::endl;
 
+            tao::mul(RC, R, C);
+            tao::subp(RC,Lambda);
+            tao::mul(Cprj,L,RC);
+            tao::divset(Cprj,d);
+            tao::add(Cnew,Cprj);
+            std::cerr << "dC=" << Cprj << std::endl;
+            std::cerr << "C= " << Cnew << std::endl;
+            if( !engine.balance_(Cnew, pS, dS) )
+            {
+                throw exception("no possible   balance");
+            }
+            std::cerr << "C= " << Cnew << std::endl;
         }
 
     }
