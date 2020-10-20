@@ -117,7 +117,7 @@ namespace upsylon
         return tree_pool.size;
     }
     
-    void affix:: reserve(size_t n)
+    void affix:: ld(size_t n)
     {
         while(n-- > 0)
         {
@@ -125,7 +125,7 @@ namespace upsylon
         }
     }
     
-    void affix:: gc(size_t nmax) throw()
+    void affix:: limit(size_t nmax) throw()
     {
         if(nmax<=0 || nmax >= tree_pool.size )
         {
@@ -141,7 +141,9 @@ namespace upsylon
             }
         }
     }
-    
+
+    void affix:: prune() throw() { limit(0); }
+
     
     affix::tree_node * affix::new_tree_node(tree_node *parent, const uint8_t code)
     {
@@ -162,7 +164,7 @@ namespace upsylon
         }
     }
     
-    void affix:: clear() throw()
+    void affix:: reset() throw()
     {
         root->leaves_to(tree_pool);
         root->addr = 0;
@@ -191,7 +193,7 @@ namespace upsylon
         }
     }
     
-    void affix:: remove_node(tree_node *node) throw()
+    void affix:: cut(tree_node *node) throw()
     {
         assert(node);
         assert(node->addr);
@@ -226,55 +228,7 @@ namespace upsylon
     
 }
 
-#include <cstring>
 
-namespace upsylon
-{
-    
-    
-    affix::tree_node* affix:: insert_with(const char  *text,
-                                          const size_t size,
-                                          void *       addr)
-    {
-        assert(!(NULL==text&&size>0));
-        return insert_at_path(text,size,addr);
-    }
-    
-    
-    affix::tree_node* affix:: insert_with(const char  *text,
-                                          void *       addr)
-    {
-        return insert_at_path(text,text?strlen(text):0,addr);
-    }
-    
-    affix::tree_node* affix:: insert_with(const memory::ro_buffer &buff, void *addr)
-    {
-        return insert_at_path( static_cast<const char *>( buff.ro() ), buff.length(), addr);
-    }
-    
-    const affix::tree_node * affix:: node_with(const char  *text,
-                                               const size_t size) const throw()
-    {
-        assert(!(NULL==text&&size>0));
-        return node_at_path(text,size);
-    }
-    
-    const affix::tree_node * affix:: node_with(const char  *text) const throw()
-    {
-        return node_at_path(text,text?strlen(text):0);
-    }
-    
-    const affix::tree_node * affix:: node_with(const memory::ro_buffer &buff) const throw()
-    {
-        return node_at_path(static_cast<const char *>( buff.ro() ), buff.length());
-    }
-    
-    
-    
-    
-    
-    
-}
 
 #include "y/ios/ocstream.hpp"
 #include "y/code/utils.hpp"

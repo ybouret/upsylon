@@ -4,13 +4,14 @@
 #define Y_AFFIX_TREE_INCLUDED 1
 
 #include "y/associative/affix/affix.hpp"
+#include "y/iterate/linked.hpp"
 
 namespace upsylon
 {
     
     //! affix tree
     template <typename T>
-    class affix_tree
+    class affix_tree : public affix
     {
     public:
         //______________________________________________________________________
@@ -18,8 +19,7 @@ namespace upsylon
         // types and definitions
         //______________________________________________________________________
         Y_DECL_ARGS(T,type);                 //!< aliases
-        typedef affix::tree_node tree_node;  //!< alias
-        
+
         //______________________________________________________________________
         //
         //! base class
@@ -52,13 +52,13 @@ namespace upsylon
         typedef core::pool_of<data_node> data_pool; //!< alias
         
         //! setup
-        inline explicit affix_tree() : dl(), dp(), db()
+        inline explicit affix_tree() : affix(), dl(), dp()
         {}
         
         //! cleanup
         inline virtual ~affix_tree() throw()
         {
-            release_();
+            ditch();
         }
         
         //! inserting at a given path
@@ -70,7 +70,7 @@ namespace upsylon
             data_node *dnode = make_data_node(args);
             try
             {
-                tree_node *tnode = db.insert_at_path(iter,size,dnode);
+                tree_node *tnode = grow(iter,size,dnode);
                 if(!tnode)
                 {
                     kill_data_node(dnode);
@@ -90,10 +90,10 @@ namespace upsylon
             }
         }
         
-        //! remove excess data node
-        inline void trim() throw()
+        //! remove excess memory
+        inline void crop() throw()
         {
-            db.gc(0);
+            prune();
             while(dp.size)
             {
                 data_node *node = dp.query();
@@ -102,9 +102,9 @@ namespace upsylon
         }
         
         //! remove registered data, keep all memory
-        inline void free() throw()
+        inline void erase() throw()
         {
-            db.clear();
+            reset();
             while(dl.size)
             {
                 delete_data_node(dl.pop_back());
@@ -112,21 +112,10 @@ namespace upsylon
         }
         
         //! release all possible memory
-        inline void release() throw()
+        inline void ditch() throw()
         {
-            release_();
-        }
-        
-    private:
-        data_list   dl; //!< data list
-        data_pool   dp; //!< data pool
-        affix       db; //!< data base
-        
-        inline void release_() throw()
-        {
-            db.clear();
-            db.gc(0);
-            trim();
+            reset();
+            crop();
             while(dl.size)
             {
                 data_node *node = dl.pop_back();
@@ -134,6 +123,11 @@ namespace upsylon
                 object::release1(node);
             }
         }
+        
+    private:
+        data_list   dl; //!< data list
+        data_pool   dp; //!< data pool
+
         
         //! return a constructed data_node
         inline data_node  *make_data_node(const_type &args)
@@ -156,6 +150,16 @@ namespace upsylon
         }
         
         Y_DISABLE_COPY_AND_ASSIGN(affix_tree);
+
+    public:
+        typedef iterate::linked<type,data_node,iterate::forward >            iterator;        //!< forward iterator
+        typedef iterate::linked<const_type,const data_node,iterate::forward> const_iterator;  //!< forward iterator
+
+        inline iterator       begin() throw() { return iterator(dl.head); } //!< begin
+        inline iterator       end()   throw() { return iterator(NULL);       } //!< end
+
+        inline const_iterator begin() const throw() { return const_iterator(dl.head); } //!< begin, const
+        inline const_iterator end()   const throw() { return const_iterator(NULL);       } //!< end, const
     };
     
 }

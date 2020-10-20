@@ -52,7 +52,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void   optimize()                     throw(); //!< locally optimize
+            void   optimize()                     throw(); //!< locally optimize with univocal sorting
             void   graphViz(ios::ostream &fp)       const; //!< for GraphViz
             void   leaves_to(tree_list &pool)     throw(); //!< return leaves to pool
             void   return_to(tree_list &pool)     throw(); //!< leaves and this to pool
@@ -71,12 +71,47 @@ namespace upsylon
             size_t        freq;   //!< frequency
             size_t        deep;   //!< from root
             const uint8_t code;   //!< code
-            
-            
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tree_node);
         };
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        virtual ~affix() throw(); //!< cleanup
+        
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+        //! check if path exists and is occupied
+        template <typename ITERATOR> inline
+        bool has(ITERATOR curr, const size_t size) const throw()
+        {
+            const tree_node *node = find(curr,size);
+            if(node)
+            {
+                return NULL!=node->addr;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        void     graphViz(const upsylon::string &)        const; //!< render
+        void     graphViz(const char            *)        const; //!< render
+        void     hash_with(hashing::function &)   const throw(); //!< H.set(); root->run(H)
+        size_t   entries()   const throw();                      //!< root->freq
+        size_t   in_pool()   const throw();                      //!< tree_pool.size
+        void     limit(size_t)     throw();                      //!< sort and keep no more than nmax in pool
+        void     prune()           throw();                      //!< limit(0)
+        void     ld(size_t);                                     //!< reserve extra tree nodes
+
+    protected:
+        explicit affix();         //!< setup with root
         
         //______________________________________________________________________
         //
@@ -85,10 +120,10 @@ namespace upsylon
          on the fly nodes creation
          */
         //______________________________________________________________________
-        template <typename ITERATOR>
-        tree_node *insert_at_path(ITERATOR     curr,
-                                  size_t       size,
-                                  void        *addr)
+        template <typename ITERATOR> inline
+        tree_node *grow(ITERATOR     curr,
+                        size_t       size,
+                        void        *addr)
         {
             assert(addr!=NULL);
             assert(root!=NULL);
@@ -139,14 +174,14 @@ namespace upsylon
                 return node;
             }
         }
-        
+
         //______________________________________________________________________
         //
         //! search a node by path
         //______________________________________________________________________
-        template <typename ITERATOR>
-        const tree_node *node_at_path(ITERATOR     curr,
-                                      size_t       size) const throw()
+        template <typename ITERATOR> inline
+        const tree_node *find(ITERATOR     curr,
+                              size_t       size) const throw()
         {
             const tree_node *node = root;
             while(size-- > 0)
@@ -164,69 +199,16 @@ namespace upsylon
             FOUND:;
                 assert(node);
             }
-            
+
             assert(node);
             return node;
         }
-        
-        //______________________________________________________________________
-        //
-        //! remove a used node
-        /**
-         with pruning!
-         */
-        //______________________________________________________________________
-        void remove_node(tree_node *) throw();
-        
-        
-        //______________________________________________________________________
-        //
-        // helpers to insert
-        //______________________________________________________________________
-        
-        
-        //! insert using text[0..size-1] as path
-        tree_node* insert_with(const char  *text,
-                               const size_t size,
-                               void *       addr);
-        
-        //! insert using text as path
-        tree_node* insert_with(const char  *text,
-                               void *       addr);
-        
-        //! insert using buffer as path
-        tree_node* insert_with(const memory::ro_buffer &buff,
-                               void *                   addr);
-        
-        //______________________________________________________________________
-        //
-        // helpers to find
-        //______________________________________________________________________
 
-        //! helper
-        const tree_node *node_with(const char  *text,
-                                   const size_t size) const throw();
-        
-        //! helper
-        const tree_node *node_with(const char  *text) const throw();
-        
-        //! helper
-        const tree_node *node_with(const memory::ro_buffer &buff) const throw();
-        
-        
-        explicit affix();         //!< setup with root
-        virtual ~affix() throw(); //!< cleanup
-        void     clear() throw(); //!< return all nodes (but root) to pool
-        
-        void     graphViz(const upsylon::string &fileName) const; //!< render
-        void     graphViz(const char            *fileName) const; //!< render
-        void     hash_with(hashing::function &H)   const throw(); //!< H.set(); root->run(H)
-        
-        size_t   entries()   const throw(); //!< root->freq
-        size_t   in_pool()   const throw(); //!< tree_pool.size
-        void     gc(size_t nmax=0) throw(); //!< sort and keep no more than nmax in pool
-        void     reserve(size_t);           //!< reserve extra tree nodes
-        
+
+        void cut(tree_node *) throw(); //!< cut a used node
+        void reset()          throw(); //!< return all nodes (but root) to pool
+
+
     private:
         tree_node *root;
         tree_list  tree_pool;
