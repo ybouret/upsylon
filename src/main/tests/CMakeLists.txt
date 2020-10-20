@@ -113,6 +113,7 @@ test-memory-tight-twain.cpp
 test-memory-zblock.cpp
 test-memory-tight-supply.cpp
 test-memory-magazine.cpp
+test-memory-buffers.cpp
 )
 ADD_TEST(mem:alloc         test-main alloc)
 ADD_TEST(mem:object0       test-main object0)

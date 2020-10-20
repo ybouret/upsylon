@@ -5,10 +5,8 @@
 
 #include "y/associative/affix/affix.hpp"
 #include "y/iterate/linked.hpp"
-#include "y/memory/buffer.hpp"
-#include "y/code/base2.hpp"
+#include "y/memory/buffers.hpp"
 #include <cstring>
-#include <iostream>
 
 namespace upsylon
 {
@@ -72,12 +70,7 @@ namespace upsylon
         //! copy
         inline affix_tree(const affix_tree &other) : affix(), dl(), dp()
         {
-
-            const size_t plen = next_power_of_two( other.max_depth() );
-            const size_t pln2 = integer_log2(plen);
-            void        *pptr = object::dyadic_acquire(pln2);
-            uint8_t     *path = static_cast<uint8_t *>( pptr );
-            uint8_t     *temp = path-1;
+            memory::cppblock<uint8_t> blk( other.max_depth() );
             try
             {
                 for(const data_node *node=other.dl.head;node;node=node->next)
@@ -87,23 +80,19 @@ namespace upsylon
                     const size_t     clen=curr->deep;
                     while(curr->parent)
                     {
-                        temp[curr->deep] = curr->code;
+                        blk[curr->deep] = curr->code;
                         curr=curr->parent;
                     }
-                    std::cerr << "'";
-                    for(size_t i=0;i<clen;++i) std::cerr << path[i];
-                    std::cerr << "'" << std::endl;
-                    if( !insert_at(path,clen,node->data) )
+
+                    if( !insert_at(*blk,clen,node->data) )
                     {
                         throw_multiple(node->hook);
                     }
                 }
 
-                object::dyadic_release(pptr,pln2);
             }
             catch(...)
             {
-                object::dyadic_release(pptr,pln2);
                 ditch();
                 throw;
             }
@@ -113,6 +102,8 @@ namespace upsylon
         //
         // methods
         //______________________________________________________________________
+
+        //! maximum tree depth
         size_t max_depth() const throw()
         {
             size_t deep = 0;
@@ -188,6 +179,8 @@ namespace upsylon
         //
         // search
         //______________________________________________________________________
+
+        //! searching data along a path
         template <typename ITERATOR> inline
         type * search_at(ITERATOR     iter,
                          const size_t size) throw()
@@ -229,7 +222,7 @@ namespace upsylon
         }
 
 
-
+        //! searching along a const path
         template <typename ITERATOR> inline
         const_type * search_at(ITERATOR     iter,
                                const size_t size) const throw()
