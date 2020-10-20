@@ -6,6 +6,7 @@
 #include "y/associative/affix/affix.hpp"
 #include "y/iterate/linked.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/sort/merge.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -347,6 +348,12 @@ namespace upsylon
             }
         }
 
+        //! sort content
+        template <typename FUNC>
+        void sort_data_with(FUNC &func)
+        {
+            merging<data_node>::sort(dl,call_compare<FUNC>,(void*)&func);
+        }
 
     private:
         data_list   dl; //!< data list
@@ -373,7 +380,15 @@ namespace upsylon
             node->hook = NULL;
             dp.store(node);
         }
-        
+
+        template <typename FUNC> static inline
+        int call_compare(const data_node *lhs, const data_node *rhs, void *args )
+        {
+            assert(lhs); assert(rhs); assert(args);
+            FUNC &func  = *(FUNC *)args;
+            return func(lhs->data,rhs->data);
+        }
+
         Y_DISABLE_ASSIGN(affix_tree);
 
     public:

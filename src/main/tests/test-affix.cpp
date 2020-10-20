@@ -172,8 +172,24 @@ namespace {
         }
 
         {
+            hashing::sha1 H;
+            tree.hash_with(H);
+            const digest md_tree = H.md();
             affix_tree<string> temp(tree);
+            temp.hash_with(H);
+            const digest md_temp = H.md();
+            std::cerr << "md_tree: " << md_tree << std::endl;
+            std::cerr << "md_temp: " << md_temp << std::endl;
+            Y_CHECK(md_tree==md_temp);
         }
+
+        tree.sort_data_with( string::compare );
+
+        for(affix_tree<string>::iterator it=tree.begin();it!=tree.end();++it)
+        {
+            std::cerr << *it << "/";
+        }
+        std::cerr << std::endl;
 
         if(tree.entries()<=30)
         {
