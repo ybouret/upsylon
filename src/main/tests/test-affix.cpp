@@ -219,8 +219,7 @@ namespace {
 Y_UTEST(affix)
 {
     Y_UTEST_SIZEOF(affix::tree_node);
-
-
+    
     if(argc>1)
     {
         vector<string> strings;
@@ -234,13 +233,7 @@ Y_UTEST(affix)
         }
         low_level(strings);
         high_level(strings);
-
     }
-
-
-
-
-
 
 
 }
