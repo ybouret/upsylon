@@ -94,11 +94,12 @@ namespace upsylon
             const iMatrix  tNu;        //!< transposed           [MxN]
             const iMatrix  Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
             const Int      dNu;        //!< det(Nu2), check independant equilibria
-            const iMatrix  iNu;        //!< adj(Nu2)*Nu : C->xi  [NxM]
             const iMatrix  pNu;        //!< Nu'*adj(Nu2)*Nu      [MxM]
             Matrix         J;          //!< Jacobian             [NxM]
             Matrix         W;          //!< system matrix        [NxN]
-            
+
+            static Int Project(iMatrix &Proj, const iMatrix &Span, const char *when);
+
         private:
             Arrays         aM;         //!< linear memory
         public:

@@ -197,8 +197,9 @@ namespace upsylon {
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
 #include "y/mkl/kernel/adjoint.hpp"
-#include "y/mkl/kernel/eigen.hpp"
+#include "y/mkl/simplify.hpp"
 #include "y/exception.hpp"
+#include "y/aqua/engine.hpp"
 
 namespace upsylon {
 
@@ -247,6 +248,7 @@ namespace upsylon {
                         cc->fill( aliasing::_(R[i]) );
                     }
                 }
+
                 {
                     iMatrix R2(Nc,Nc);
                     tao::gram(R2,R);
@@ -259,6 +261,7 @@ namespace upsylon {
                     iadjoint(aR2,R2);
                     iMatrix tR(R,matrix_transpose);
                     tao::mmul(aliasing::_(L),tR,aR2);
+                    (void) simplify<Int>::on( aliasing::_(L), aliasing::_(d) );
                 }
 
                 {
@@ -284,21 +287,15 @@ namespace upsylon {
                     }
                 }
 
-                {
-                    iMatrix S2(N,N);
-                    tao::gram(S2,S);
-                    aliasing::_(dS) = ideterminant(S2);
-                    if(dS==0)
-                    {
-                        throw exception("%sunexpected singular supplementary space",fn);
-                    }
-                    iMatrix aS2(N,N);
-                    iadjoint(aS2,S2);
-                    iMatrix aS3(N,M);
-                    tao::mmul(aS3,aS2,S);
-                    iMatrix tS(S,matrix_transpose);
-                    tao::mmul(aliasing::_(pS), tS, aS3);
-                }
+                std::cerr << "R=" << R << std::endl;
+                std::cerr << "L=" << L << std::endl;
+                std::cerr << "d=" << d << std::endl;
+                std::cerr << "S=" << S << std::endl;
+
+
+                aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,"supplementary boot space");
+                
+
 
 
             }
@@ -332,7 +329,6 @@ namespace upsylon {
 
 }
 
-#include "y/aqua/engine.hpp"
 namespace upsylon {
 
     namespace Aqua

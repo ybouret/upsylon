@@ -26,7 +26,6 @@ namespace upsylon
         tNu(),
         Nu2(),
         dNu(0),
-        iNu(),
         pNu(),
         J(),
         W(),
@@ -62,7 +61,6 @@ namespace upsylon
             keep << aliasing::_(Nu);
             keep << aliasing::_(tNu);
             keep << aliasing::_(Nu2);
-            keep << aliasing::_(iNu);
             keep << aliasing::_(pNu);
             keep << aliasing::_(J);
             keep << aliasing::_(W);
@@ -138,6 +136,9 @@ namespace upsylon
                     {
                         if(active[j]) ++aliasing::_(Ma);
                     }
+                    aliasing::_(pNu).make(M,M);
+                    aliasing::_(dNu) = Project( aliasing::_(pNu), Nu, "chemical topology");
+#if 0
                     aliasing::_(tNu).assign_transpose(Nu);
                     tao::mmul_trn(aliasing::_(Nu2),Nu,Nu);
                     aliasing::_(dNu) = ideterminant(Nu2);
@@ -149,7 +150,7 @@ namespace upsylon
                         tao::mmul( aliasing::_(iNu), aNu2,Nu);
                         tao::mmul( aliasing::_(pNu), tNu, iNu);
                     }
-
+#endif
                     J.make(N,M);
                     W.make(N,N);
                 }
@@ -164,6 +165,8 @@ namespace upsylon
             }
         }
 
+
+     
 
     }
 
