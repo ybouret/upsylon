@@ -115,22 +115,108 @@ namespace upsylon
         inline bool insert_by(const char  *text,
                               param_type   args)
         {
-            return insert_at(text,text?strlen(text):0, args );
+            return insert_by(text,text?strlen(text):0, args );
         }
 
         //! insert using text
         inline bool insert_by(const memory::ro_buffer &buff,
                               param_type               args)
         {
-            return insert_at(static_cast<const char *>(buff.ro()),buff.length(),args );
+            return insert_by(buff.ro(),buff.length(),args);
         }
+
+
+        //______________________________________________________________________
+        //
+        // search
+        //______________________________________________________________________
+        template <typename ITERATOR> inline
+        type * search_at(ITERATOR     iter,
+                         const size_t size) throw()
+        {
+            tree_node *node = (tree_node *)find(iter,size);
+            if(node->addr)
+            {
+                return &( static_cast<data_node *>(node->addr)->data );
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+
+
+        //! search using a block of memory as path
+        inline type * search_by(const void  *data,
+                               const size_t size) throw()
+        {
+            assert(!(NULL==data&&size>0));
+            return search_at( static_cast<const char *>(data), size);
+        }
+
+
+
+        //! search using a text as path
+        inline type * search_by(const char *data) throw()
+        {
+            return search_by(data,data?strlen(data):0);
+        }
+
+
+        //! search using a buffer as path
+        inline type * search_by(const memory::ro_buffer &buff) throw()
+        {
+            return search_by(buff.ro(), buff.length() );
+        }
+
+
+
+        template <typename ITERATOR> inline
+        const_type * search_at(ITERATOR     iter,
+                               const size_t size) const throw()
+        {
+            tree_node *node = (tree_node *)find(iter,size);
+            if(node->addr)
+            {
+                return &( static_cast<data_node *>(node->addr)->data );
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+        //! search using a block of memory as path
+        inline const_type * search_by(const void  *data,
+                                const size_t size) const throw()
+        {
+            assert(!(NULL==data&&size>0));
+            return search_at( static_cast<const char *>(data), size);
+        }
+
+
+
+        //! search using a text as path
+        inline const_type * search_by(const char *data) const throw()
+        {
+            return search_by(data,data?strlen(data):0);
+        }
+
+
+        //! search using a buffer as path
+        inline const_type * search_by(const memory::ro_buffer &buff) const throw()
+        {
+            return search_by(buff.ro(), buff.length() );
+        }
+
 
         //______________________________________________________________________
         //
         // remove
         //______________________________________________________________________
         //! inserting at a given path
-        template <typename ITERATOR>
+        template <typename ITERATOR> inline
         bool remove_at(ITERATOR     iter,
                        const size_t size) throw()
         {
@@ -160,14 +246,14 @@ namespace upsylon
         //! remove using a text as path
         inline bool remove_by(const char *data) throw()
         {
-            return remove_at(data,data?strlen(data):0);
+            return remove_by(data,data?strlen(data):0);
         }
 
 
         //! remove using a buffer as path
         inline bool remove_by(const memory::ro_buffer &buff) throw()
         {
-            return remove_at(static_cast<const char *>( buff.ro() ), buff.length() );
+            return remove_by(buff.ro(), buff.length() );
         }
 
 

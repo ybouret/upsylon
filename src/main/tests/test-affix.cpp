@@ -186,9 +186,6 @@ namespace {
             }
         }
         Y_ASSERT(0==tree.entries());
-
-
-
     }
 
 }
