@@ -70,7 +70,7 @@ namespace upsylon
             size_t        freq;   //!< frequency
             size_t        deep;   //!< from root
             const uint8_t code;   //!< code
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tree_node);
         };
@@ -100,14 +100,15 @@ namespace upsylon
             }
         }
 
-        void     graphViz(const upsylon::string &)        const; //!< render
-        void     graphViz(const char            *)        const; //!< render
-        void     hash_with(hashing::function &)   const throw(); //!< H.set(); root->run(H)
-        size_t   entries()   const throw();                      //!< root->freq
-        size_t   in_pool()   const throw();                      //!< tree_pool.size
-        void     limit(size_t)     throw();                      //!< sort and keep no more than nmax in pool
-        void     prune()           throw();                      //!< limit(0)
-        void     extra(size_t);                                  //!< reserve extra tree nodes
+        void        graphViz(const upsylon::string &)        const; //!< render
+        void        graphViz(const char            *)        const; //!< render
+        void        hash_with(hashing::function &)   const throw(); //!< H.set(); root->run(H)
+        size_t      entries()   const throw();                      //!< root->freq
+        size_t      in_pool()   const throw();                      //!< tree_pool.size
+        void        limit(size_t)     throw();                      //!< sort and keep no more than nmax in pool
+        void        prune()           throw();                      //!< limit(0)
+        void        extra(size_t);                                  //!< reserve extra tree nodes
+        static void throw_multiple(const tree_node *node);          //!< raise exception
 
     protected:
         explicit affix();         //!< setup with root

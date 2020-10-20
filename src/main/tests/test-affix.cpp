@@ -171,6 +171,10 @@ namespace {
             Y_ASSERT(tree.has(*data,data.size()));
         }
 
+        {
+            affix_tree<string> temp(tree);
+        }
+
         if(tree.entries()<=30)
         {
             tree.graphViz("affix_tree.dot");

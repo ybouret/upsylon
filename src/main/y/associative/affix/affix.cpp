@@ -315,3 +315,22 @@ namespace upsylon
     
 }
 
+#include "y/exception.hpp"
+
+namespace upsylon
+{
+
+    void affix:: throw_multiple(const tree_node *node)
+    {
+        assert(node);
+        exception excp("'");
+        while(node->parent)
+        {
+            excp.hdr( "%s", cchars::visible[node->code] );
+            node=node->parent;
+        }
+        excp.hdr("affix::multiple '");
+        throw excp;
+    }
+
+}

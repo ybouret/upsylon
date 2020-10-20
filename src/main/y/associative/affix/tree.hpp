@@ -6,7 +6,9 @@
 #include "y/associative/affix/affix.hpp"
 #include "y/iterate/linked.hpp"
 #include "y/memory/buffer.hpp"
+#include "y/code/base2.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace upsylon
 {
@@ -66,6 +68,62 @@ namespace upsylon
         {
             ditch();
         }
+
+        //! copy
+        inline affix_tree(const affix_tree &other) : affix(), dl(), dp()
+        {
+
+            const size_t plen = next_power_of_two( other.max_depth() );
+            const size_t pln2 = integer_log2(plen);
+            void        *pptr = object::dyadic_acquire(pln2);
+            uint8_t     *path = static_cast<uint8_t *>( pptr );
+            uint8_t     *temp = path-1;
+            try
+            {
+                for(const data_node *node=other.dl.head;node;node=node->next)
+                {
+
+                    const tree_node *curr=node->hook;
+                    const size_t     clen=curr->deep;
+                    while(curr->parent)
+                    {
+                        temp[curr->deep] = curr->code;
+                        curr=curr->parent;
+                    }
+                    std::cerr << "'";
+                    for(size_t i=0;i<clen;++i) std::cerr << path[i];
+                    std::cerr << "'" << std::endl;
+                    if( !insert_at(path,clen,node->data) )
+                    {
+                        throw_multiple(node->hook);
+                    }
+                }
+
+                object::dyadic_release(pptr,pln2);
+            }
+            catch(...)
+            {
+                object::dyadic_release(pptr,pln2);
+                ditch();
+                throw;
+            }
+        }
+
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+        size_t max_depth() const throw()
+        {
+            size_t deep = 0;
+            for(const data_node *node=dl.head;node;node=node->next)
+            {
+                const size_t  temp = node->hook->deep;
+                if(temp>deep) deep = temp;
+            }
+            return deep;
+        }
+
 
         //______________________________________________________________________
         //
@@ -149,7 +207,7 @@ namespace upsylon
 
         //! search using a block of memory as path
         inline type * search_by(const void  *data,
-                               const size_t size) throw()
+                                const size_t size) throw()
         {
             assert(!(NULL==data&&size>0));
             return search_at( static_cast<const char *>(data), size);
@@ -189,7 +247,7 @@ namespace upsylon
 
         //! search using a block of memory as path
         inline const_type * search_by(const void  *data,
-                                const size_t size) const throw()
+                                      const size_t size) const throw()
         {
             assert(!(NULL==data&&size>0));
             return search_at( static_cast<const char *>(data), size);
@@ -300,7 +358,7 @@ namespace upsylon
     private:
         data_list   dl; //!< data list
         data_pool   dp; //!< data pool
-
+        
         
         //! return a constructed data_node
         inline data_node  *make_data_node(const_type &args)
@@ -323,7 +381,7 @@ namespace upsylon
             dp.store(node);
         }
         
-        Y_DISABLE_COPY_AND_ASSIGN(affix_tree);
+        Y_DISABLE_ASSIGN(affix_tree);
 
     public:
         typedef iterate::linked<type,data_node,iterate::forward >            iterator;        //!< forward iterator
