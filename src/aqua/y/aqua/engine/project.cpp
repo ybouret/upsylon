@@ -13,6 +13,7 @@ namespace upsylon
 
         Int Engine:: Project(iMatrix       &Proj,
                              const iMatrix &Span,
+                             const iMatrix &Strn,
                              const char    *when)
         {
             assert(when);
@@ -40,11 +41,8 @@ namespace upsylon
                 tao::mmul(AdjSpan,Adj,Span);
                 (void) simplify<Int>::on(AdjSpan,Det);
 
-                {
-                    iMatrix tSpan(Span,matrix_transpose);
-                    tao::mmul(Proj,tSpan,AdjSpan);
-                    (void) simplify<Int>::on(Proj,Det);
-                }
+                tao::mmul(Proj,Strn,AdjSpan);
+                (void) simplify<Int>::on(Proj,Det);
             }
             
             return Det;

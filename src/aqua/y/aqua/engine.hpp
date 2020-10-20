@@ -98,7 +98,10 @@ namespace upsylon
             Matrix         J;          //!< Jacobian             [NxM]
             Matrix         W;          //!< system matrix        [NxN]
 
-            static Int Project(iMatrix &Proj, const iMatrix &Span, const char *when);
+            static Int Project(iMatrix       &Proj,
+                               const iMatrix &Span,
+                               const iMatrix &Strn,
+                               const char *when);
 
         private:
             Arrays         aM;         //!< linear memory

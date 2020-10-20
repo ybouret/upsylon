@@ -292,8 +292,8 @@ namespace upsylon {
                 std::cerr << "d=" << d << std::endl;
                 std::cerr << "S=" << S << std::endl;
 
-
-                aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,"supplementary boot space");
+                iMatrix tS(S,matrix_transpose);
+                aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,tS,"supplementary boot space");
                 
 
 
@@ -333,23 +333,42 @@ namespace upsylon {
 
     namespace Aqua
     {
-        bool  Boot:: find(addressable<double> &C, Engine &engine) throw()
+        void  Boot:: find(addressable<double> &C,
+                          Engine              &engine)  
         {
             assert(C.size()>=engine.M);
-
+            std::cerr << "K=" << engine.K << std::endl;
             // build Cstar
             const size_t   M  = engine.M;
             const size_t   Nc = size;
-            vector<double> Cstar(M,0);
+            vector<double> Cold(M,0);
+            vector<double> Cnew(M,0);
             vector<double> Lambda(Nc,0);
+            vector<double> Cprj(M,0);
 
             fill(Lambda);
-            tao::mul(Cstar,L,Lambda);
-            tao::divset(Cstar,d);
+            tao::mul(Cold,L,Lambda);
+            tao::divset(Cold,d);
             std::cerr << "Lambda=" << Lambda << std::endl;
-            std::cerr << "Cstar =" << Cstar  << std::endl;
+            std::cerr << "Cstar =" << Cold  << std::endl;
+            std::cerr << "R     =" << R << std::endl;
 
-            return false;
+            // initial balance
+            if( !engine.balance_(Cold, pS, dS) )
+            {
+                throw exception("no possible initial balance");
+            }
+
+            // initial equilibrium
+            std::cerr << "C= " << Cold << std::endl;
+            if(!engine.forward(Cold))
+            {
+                throw exception("no possible initial forward");
+            }
+
+            std::cerr << "C= " << Cold << std::endl;
+            
+
         }
 
     }

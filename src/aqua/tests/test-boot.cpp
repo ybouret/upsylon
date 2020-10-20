@@ -10,6 +10,9 @@ using namespace Aqua;
 
 Y_UTEST(boot)
 {
+    double C0 = 1e-4;
+    
+
     Library lib;
 
     Species &h   = lib("H+",1);
@@ -52,7 +55,7 @@ Y_UTEST(boot)
 
     Boot boot;
     boot.electroneutrality(lib);
-    boot.conserve(1e-8,ah,am);
+    boot.conserve(C0,ah,am);
     boot.conserve(0.000,NH4,NH3);
     boot.conserve(0,Na);
     boot.conserve(0.000,Cl);
@@ -74,9 +77,10 @@ Y_UTEST(boot)
 
     Engine engine;
     engine.init(lib,eqs);
+    engine.computeK(0);
 
     boot.find(C,engine);
-
+    
 
 
 }

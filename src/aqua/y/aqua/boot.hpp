@@ -123,7 +123,7 @@ namespace upsylon {
             void  fill(addressable<double> &) const throw(); //!< fill a vector of Nc constraints
             void  quit() throw();                            //!< reset
             void  init(Library &,const Equilibria &eqs);     //!< buildIndices for library and build matrices
-            bool  find(addressable<double> &C, Engine &engine) throw();
+            void  find(addressable<double> &C, Engine &engine); //!< solve
 
 
             //! display

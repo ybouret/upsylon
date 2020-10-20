@@ -136,21 +136,10 @@ namespace upsylon
                     {
                         if(active[j]) ++aliasing::_(Ma);
                     }
-                    aliasing::_(pNu).make(M,M);
-                    aliasing::_(dNu) = Project( aliasing::_(pNu), Nu, "chemical topology");
-#if 0
                     aliasing::_(tNu).assign_transpose(Nu);
-                    tao::mmul_trn(aliasing::_(Nu2),Nu,Nu);
-                    aliasing::_(dNu) = ideterminant(Nu2);
-                    if(dNu==0) throw exception("%ssingular set of equilibria",fn);
-                    aliasing::_(iNu).make(N,M);
                     aliasing::_(pNu).make(M,M);
-                    {
-                        iMatrix aNu2(N,N); iadjoint(aNu2,Nu2);
-                        tao::mmul( aliasing::_(iNu), aNu2,Nu);
-                        tao::mmul( aliasing::_(pNu), tNu, iNu);
-                    }
-#endif
+                    aliasing::_(dNu) = Project( aliasing::_(pNu), Nu, tNu, "chemical topology");
+                    
                     J.make(N,M);
                     W.make(N,N);
                 }
