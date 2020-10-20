@@ -77,9 +77,16 @@ namespace upsylon
             //! foward to C + damp(dC)
             bool feed(addressable<double> &C, const accessible<double> &dC ) throw();
 
+            //! balance using topology or boot space
             bool balance_(addressable<double> &C,
                           const iMatrix       &proj,
                           const Int            scal) throw();
+
+            //! construct the integer projection matrix
+            static Int Project(iMatrix       &Proj,
+                               const iMatrix &Span,
+                               const iMatrix &Strn,
+                               const char    *when);
 
             //__________________________________________________________________
             //
@@ -98,10 +105,7 @@ namespace upsylon
             Matrix         J;          //!< Jacobian             [NxM]
             Matrix         W;          //!< system matrix        [NxN]
 
-            static Int Project(iMatrix       &Proj,
-                               const iMatrix &Span,
-                               const iMatrix &Strn,
-                               const char *when);
+
 
         private:
             Arrays         aM;         //!< linear memory

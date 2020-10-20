@@ -14,10 +14,12 @@ namespace upsylon {
         template <typename T>
         struct simplify
         {
-            Y_DECL_ARGS(T,type);
 
+            Y_DECL_ARGS(T,type); //!< aliasing
+
+            //! simplify and return factor
             static inline
-            type on( addressable<type> &data )
+            type on(addressable<type> &data)
             {
                 type         r  = 1;
                 const size_t n  = data.size();
@@ -83,6 +85,7 @@ namespace upsylon {
                 return r;
             }
 
+            //! simplify each row
             static inline
             void on( addressable<type> &r, matrix<type> &M )
             {
@@ -93,6 +96,7 @@ namespace upsylon {
                 }
             }
 
+            //! simplify all matrix
             static inline
             type on( matrix<type> &M )
             {
@@ -100,6 +104,7 @@ namespace upsylon {
                 return on(data);
             }
 
+            //! simplify with a reference level
             static inline
             type on( addressable<T> &data, T &level )
             {
@@ -166,6 +171,7 @@ namespace upsylon {
                 return r;
             }
 
+            //! simplify all matrix with a reference level
             static inline
             type on( matrix<T> &M, T &level )
             {
