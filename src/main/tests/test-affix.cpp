@@ -185,9 +185,15 @@ namespace {
 
         tree.sort_data_with( string::compare );
 
+        size_t count=0;
         for(affix_tree<string>::iterator it=tree.begin();it!=tree.end();++it)
         {
             std::cerr << *it << "/";
+            if(++count>=100)
+            {
+                std::cerr << "...";
+                break;
+            }
         }
         std::cerr << std::endl;
 
