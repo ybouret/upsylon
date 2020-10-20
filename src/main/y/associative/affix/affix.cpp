@@ -117,7 +117,7 @@ namespace upsylon
         return tree_pool.size;
     }
     
-    void affix:: ld(size_t n)
+    void affix:: extra(size_t n)
     {
         while(n-- > 0)
         {
