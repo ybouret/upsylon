@@ -78,7 +78,8 @@ namespace upsylon {
 
         };
 
-
+        class Engine; //!< forward declaration
+        
         //______________________________________________________________________
         //
         //
@@ -122,6 +123,8 @@ namespace upsylon {
             void  fill(addressable<double> &) const throw(); //!< fill a vector of Nc constraints
             void  quit() throw();                            //!< reset
             void  init(Library &,const Equilibria &eqs);     //!< buildIndices for library and build matrices
+            bool  find(addressable<double> &C, Engine &engine) throw();
+
 
             //! display
             friend std::ostream & operator<<(std::ostream &, const Boot &);
@@ -130,10 +133,13 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const iMatrix R;  //!< constraint matrix
+            const iMatrix R;  //!< constraint matrix     [NcxM]
+            const iMatrix L;  //!< constraints to C      [MxNc]
             const Int     d;  //!< determinant of R*R'
-            const iMatrix S;  //!< supplementary matrix
-
+            const iMatrix S;  //!< supplementary matrix  [N*M]
+            const Int     dS; //!< determinant of S*S'
+            const iMatrix pS; //!< projection on S times s: s* S'*inv(S*S')*S  [M*M]
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
             core::temporary_acquire<4> keep;

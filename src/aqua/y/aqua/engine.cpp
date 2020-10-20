@@ -80,8 +80,8 @@ namespace upsylon
             _bzset(N);
             _bzset(maxNameLength);
             _bzset(balanceCycles);
-            new ( & aliasing::_(active) ) Booleans();
-            new ( &illegal )              Booleans();
+            new ( & aliasing::_(active)  ) Booleans();
+            new ( & aliasing::_(illegal) ) Booleans();
         }
 
        
@@ -101,8 +101,8 @@ namespace upsylon
                 if(M>0)
                 {
                     aM.acquire(M);
-                    new ( & aliasing::_(active) ) Booleans(aliasing::as<bool>(*Cact),M);
-                    new ( &illegal)               Booleans(aliasing::as<bool>(*Cill),M);
+                    new ( & aliasing::_(active) )  Booleans(aliasing::as<bool>(*Cact),M);
+                    new ( & aliasing::_(illegal) ) Booleans(aliasing::as<bool>(*Cill),M);
                     tao::ld( aliasing::_(active), false);
                 }
 

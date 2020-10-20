@@ -117,12 +117,17 @@ namespace upsylon {
         Boot:: Boot() throw() :
         Constraint::List(),
         R(),
+        L(),
         d(0),
         S(),
+        dS(0),
+        pS(),
         keep()
         {
             keep << aliasing::_(R);
+            keep << aliasing::_(L);
             keep << aliasing::_(S);
+            keep << aliasing::_(pS);
         }
 
         Boot:: ~Boot() throw()
@@ -230,7 +235,10 @@ namespace upsylon {
                     throw exception("%s: #constraint=%lu + #equilibrium=%lu != #species=%lu",fn, (unsigned long)Nc, (unsigned long)N, (unsigned long)M);
                 }
                 aliasing::_(R).make(Nc,M);
+                aliasing::_(L).make(M,Nc);
                 aliasing::_(S).make(N,M);
+                aliasing::_(pS).make(M,M);
+
                 lib.buildIndices();
                 {
                     size_t i=1;
@@ -239,12 +247,10 @@ namespace upsylon {
                         cc->fill( aliasing::_(R[i]) );
                     }
                 }
-                std::cerr << "R=" << R << std::endl;
                 {
                     iMatrix R2(Nc,Nc);
                     tao::gram(R2,R);
                     aliasing::_(d) = ideterminant(R2);
-                    std::cerr << "d=" << d << std::endl;
                     if(0==d)
                     {
                         throw exception("%ssingular set of constraints",fn);
@@ -252,9 +258,7 @@ namespace upsylon {
                     iMatrix aR2(Nc,Nc);
                     iadjoint(aR2,R2);
                     iMatrix tR(R,matrix_transpose);
-                    iMatrix L2C(M,Nc);
-                    tao::mmul(L2C,tR,aR2);
-                    std::cerr << "L2C=" << L2C << std::endl;
+                    tao::mmul(aliasing::_(L),tR,aR2);
                 }
 
                 {
@@ -278,11 +282,26 @@ namespace upsylon {
                     {
                         tao::set(aliasing::_(S)[i],F[i+Nc]);
                     }
-                    std::cerr << "S=" << S << std::endl;
+                }
+
+                {
+                    iMatrix S2(N,N);
+                    tao::gram(S2,S);
+                    aliasing::_(dS) = ideterminant(S2);
+                    if(dS==0)
+                    {
+                        throw exception("%sunexpected singular supplementary space",fn);
+                    }
+                    iMatrix aS2(N,N);
+                    iadjoint(aS2,S2);
+                    iMatrix aS3(N,M);
+                    tao::mmul(aS3,aS2,S);
+                    iMatrix tS(S,matrix_transpose);
+                    tao::mmul(aliasing::_(pS), tS, aS3);
                 }
 
 
-             }
+            }
             catch(...)
             {
                 quit();
@@ -290,7 +309,7 @@ namespace upsylon {
             }
         }
 
-        
+
     }
 
 }
@@ -311,5 +330,32 @@ namespace upsylon {
         }
     }
 
+}
+
+#include "y/aqua/engine.hpp"
+namespace upsylon {
+
+    namespace Aqua
+    {
+        bool  Boot:: find(addressable<double> &C, Engine &engine) throw()
+        {
+            assert(C.size()>=engine.M);
+
+            // build Cstar
+            const size_t   M  = engine.M;
+            const size_t   Nc = size;
+            vector<double> Cstar(M,0);
+            vector<double> Lambda(Nc,0);
+
+            fill(Lambda);
+            tao::mul(Cstar,L,Lambda);
+            tao::divset(Cstar,d);
+            std::cerr << "Lambda=" << Lambda << std::endl;
+            std::cerr << "Cstar =" << Cstar  << std::endl;
+
+            return false;
+        }
+
+    }
 }
 

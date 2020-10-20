@@ -76,8 +76,10 @@ SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-mkl euclidean)
 
 SOURCE_GROUP( tao FILES
-test-tao.cpp)
+test-tao.cpp
+test-simplify.cpp)
 ADD_TEST(tao test-mkl tao)
+ADD_TEST(simplify test-mkl simplify)
 
 
 ADD_CUSTOM_TARGET(utest-mkl

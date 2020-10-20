@@ -56,6 +56,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(zircon);
 
     Y_UTEST(tao);
+    Y_UTEST(simplify);
     
 }
 Y_UTEST_EXEC()

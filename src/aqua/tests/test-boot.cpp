@@ -62,13 +62,20 @@ Y_UTEST(boot)
 
     boot.init(lib,eqs);
     
-    std::cerr << "R=" << boot.R << std::endl;
-    std::cerr << "d=" << boot.d << std::endl;
-    std::cerr << "S=" << boot.S << std::endl;
+    std::cerr << "R="  << boot.R << std::endl;
+    std::cerr << "L="  << boot.L << std::endl;
+    std::cerr << "d="  << boot.d << std::endl;
+    std::cerr << "S="  << boot.S << std::endl;
+    std::cerr << "pS=" << boot.pS << std::endl;
+    std::cerr << "dS=" << boot.dS << std::endl;
 
-    
+    vector<double> C(lib.entries()+2,0);
+    lib.show(std::cerr,C);
 
-    return 0;
+    Engine engine;
+    engine.init(lib,eqs);
+
+    boot.find(C,engine);
 
 
 

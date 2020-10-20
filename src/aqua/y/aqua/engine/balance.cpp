@@ -49,8 +49,8 @@ namespace upsylon
             size_t num = 0;
             for(size_t j=M;j>0;--j)
             {
-                Cxs[j]     = 0;
-                illegal[j] = false;
+                Cxs[j]                  = 0;
+                aliasing::_(illegal[j]) = false;
                 const double Cj = Corg[j];
                 if(Cj<0)
                 {
@@ -61,9 +61,9 @@ namespace upsylon
                     }
                     else
                     {
-                        illegal[j]      = true;
-                        Cxs[j]          = -Cj;
-                        Caux[++num] =  C2;
+                        aliasing::_(illegal[j]) = true;
+                        Cxs[j]                  = -Cj;
+                        Caux[++num]             =  C2;
                     }
                 }
             }
@@ -143,9 +143,15 @@ namespace upsylon
             Y_AQUA_PRINTLN("Cstp = " << Cstp);
             return (num>0);
         }
-        
 
-        bool Engine::balance(addressable<double> &C) throw()
+        bool Engine:: balance(addressable<double> &C) throw()
+        {
+            return balance_(C,pNu,dNu);
+        }
+
+        bool Engine::balance_(addressable<double> &C,
+                              const iMatrix       &proj,
+                              const Int            scal) throw()
         {
             assert(C.size()>=M);
             balanceCycles = 0;
@@ -204,7 +210,7 @@ namespace upsylon
             // compute step
             //
             //------------------------------------------------------------------
-            if(!BalanceDelta(pNu,dNu))
+            if(!BalanceDelta(proj,scal))
             {
                 //--------------------------------------------------------------
                 // numeric convergence on step

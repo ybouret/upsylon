@@ -77,6 +77,10 @@ namespace upsylon
             //! foward to C + damp(dC)
             bool feed(addressable<double> &C, const accessible<double> &dC ) throw();
 
+            bool balance_(addressable<double> &C,
+                          const iMatrix       &proj,
+                          const Int            scal) throw();
+
             //__________________________________________________________________
             //
             // members
@@ -108,7 +112,7 @@ namespace upsylon
             Array         &Cill;      //!< for illegal [M]
         public:
             const Booleans active;    //!< active concentrations [M]
-            Booleans       illegal;   //!< illegal concentrations [M]
+            const Booleans illegal;   //!< illegal concentrations [M]
 
             Array         &Cini;      //!< initial concentration
             Array         &Cend;      //!< end concentration
@@ -130,9 +134,6 @@ namespace upsylon
 
             Y_DISABLE_COPY_AND_ASSIGN(Engine);
 
-            bool balance(addressable<double> &C,
-                         const iMatrix       &proj,
-                         const Int            scal) throw();
 
 
             struct BalanceProxy { Engine *self; double operator()(const double) throw(); };
@@ -146,8 +147,9 @@ namespace upsylon
             double QCheck(const double x) throw(); //!< |Q|^2 at Ctry=Cini+x*step
             struct QProxy { Engine *self; double operator()(const double) throw(); };
 
-            bool   dampWith(const accessible<double> &C) throw();
+            
 
+            bool   dampWith(const accessible<double> &C) throw();
 
         public:
             bool   balanceVerbose; //!< balance verbosity
