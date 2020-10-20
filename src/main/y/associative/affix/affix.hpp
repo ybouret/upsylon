@@ -108,7 +108,7 @@ namespace upsylon
         size_t   in_pool()   const throw();                      //!< tree_pool.size
         void     limit(size_t)     throw();                      //!< sort and keep no more than nmax in pool
         void     prune()           throw();                      //!< limit(0)
-        void     ld(size_t);                                     //!< reserve extra tree nodes
+        void     extra(size_t);                                   //!< reserve extra tree nodes
 
     protected:
         explicit affix();         //!< setup with root
