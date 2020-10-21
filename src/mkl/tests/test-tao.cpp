@@ -20,7 +20,7 @@ namespace
             seq.push_back(tmp);
         }
     }
-
+    
     template <typename LHS> static inline
     bool checkValue(const LHS &lhs, typename LHS::param_type value)
     {
@@ -33,8 +33,8 @@ namespace
         }
         return true;
     }
-
-
+    
+    
     template <typename LHS, typename RHS> static inline
     bool check1D(const LHS &lhs, const RHS &rhs)
     {
@@ -49,8 +49,8 @@ namespace
         }
         return true;
     }
-
-
+    
+    
     //==========================================================================
     //
     // LD
@@ -70,7 +70,7 @@ namespace
             tao::ld(lhs,value,alea.leq(lhs.size()));
         }
     }
-
+    
     template <typename T> static inline
     void test_ld_(const bool check)
     {
@@ -83,13 +83,13 @@ namespace
                 point2d<T> p(x,y);
                 test_ld__(p,check);
             }
-
+            
             {
                 point3d<T> p(x,y,z);
                 test_ld__(p,check);
             }
         }
-
+        
         for(size_t n=1;n<=128;n <<= 1)
         {
             {
@@ -97,7 +97,7 @@ namespace
                 fill(vg,n);
                 test_ld__(vg,check);
             }
-
+            
             {
                 list<T>   lg(n,as_capacity);
                 fill(lg,n);
@@ -105,7 +105,7 @@ namespace
             }
         }
     }
-
+    
     static inline
     void test_ld()
     {
@@ -116,13 +116,13 @@ namespace
         test_ld_<apz>(true);
         test_ld_<apq>(true);
     }
-
+    
     //==========================================================================
     //
     // SET
     //
     //==========================================================================
-
+    
     template <typename LHS, typename RHS> static inline
     void test_set__( LHS &lhs, RHS &rhs )
     {
@@ -130,33 +130,33 @@ namespace
         support::fill1D(rhs);
         tao::upload(rhs,lhs); Y_ASSERT(check1D(lhs,rhs));
     }
-
+    
     template <typename T, typename U> static inline
     void test_set_()
     {
         std::cerr << "set<" << type_name_of<T>() << "," << type_name_of<U>() << ">" << std::endl;
-
+        
         {
             const T xt = support::get<T>();
             const T yt = support::get<T>();
             const T zt = support::get<T>();
-
+            
             const U xu = support::get<U>();
             const U yu = support::get<U>();
             const U zu = support::get<U>();
-
+            
             point2d<T> p2t(xt,yt);
             point3d<T> q3t(xt,yt,zt);
             test_set__(p2t,q3t);
-
-
+            
+            
             point2d<U> p2u(xu,yu);
             point3d<U> q3u(xu,yu,zu);
             test_set__(p2u,q3u);
-
+            
             test_set__(p2t,q3u);
         }
-
+        
         for(size_t n=1;n<=128;n <<= 1)
         {
             vector<T> v(n,as_capacity);
@@ -164,11 +164,11 @@ namespace
             fill(v,n);
             fill(l,n+alea.leq(16));
             test_set__(v,l);
-
+            
         }
-
+        
     }
-
+    
     static inline
     void test_set()
     {
@@ -176,8 +176,8 @@ namespace
         test_set_<double,ptrdiff_t>();
         test_set_<apn,apn>();
     }
-
-
+    
+    
     //==========================================================================
     //
     // ADD/SUB
@@ -187,7 +187,7 @@ namespace
     void test_add_()
     {
         std::cerr << "addops<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
-
+        
         for(size_t n=1;n<=128;n <<= 1)
         {
             vector<T> a;
@@ -213,14 +213,14 @@ namespace
             Y_ASSERT(check1D(a,s));
         }
     }
-
+    
     static inline
     void test_add()
     {
         test_add_<apz,apz,apz>();
         test_add_<apq,apq,apq>();
     }
-
+    
     //==========================================================================
     //
     // MUL/DIV
@@ -239,7 +239,7 @@ namespace
             fill(p,n);
             fill(l,n);
             fill(r,n);
-
+            
             {
                 const T value = support::get<T>();
                 tao::mulset(p, value, l);
@@ -250,12 +250,12 @@ namespace
                     Y_ASSERT(check1D(p,r));
                 }
             }
-
+            
             fill(p,n);
             fill(l,n);
             fill(r,n);
             fill(q,n);
-
+            
             {
                 const T value = support::get<T>();
                 tao::muladd(p, l, value, r);
@@ -268,7 +268,7 @@ namespace
             }
         }
     }
-
+    
     static inline
     void test_mul()
     {
@@ -278,8 +278,8 @@ namespace
         test_mul_< complex<double> >(false);
         test_mul_<apq>(true);
     }
-
-
+    
+    
     //==========================================================================
     //
     // dot/mod2
@@ -303,7 +303,7 @@ namespace
             }
         }
     }
-
+    
     static inline
     void test_dot()
     {
@@ -313,13 +313,13 @@ namespace
         test_dot_< complex<double> >(false);
         test_dot_<apq>(true);
     }
-
+    
     //==========================================================================
     //
     // mulv2
     //
     //==========================================================================
-
+    
     template <typename T, typename U, typename W> static inline
     void test_mul_v2_()
     {
@@ -328,7 +328,7 @@ namespace
         {
             for(size_t c=1;c<=64;c <<= 1)
             {
-
+                
                 {
                     vector<T> vr;
                     vector<W> vc;
@@ -338,7 +338,7 @@ namespace
                     support::fill2D(M);
                     tao::mul(vr,M,vc);
                 }
-
+                
                 {
                     vector<T> vc;
                     vector<W> vr;
@@ -351,20 +351,20 @@ namespace
             }
         }
     }
-
+    
     static inline
     void test_mv2()
     {
         test_mul_v2_<double,int16_t,double>();
         test_mul_v2_<apz,int16_t,int32_t>();
     }
-
-
+    
+    
     template <typename T, typename U, typename W> static inline
     void test_mul_v3_()
     {
         std::cerr << "mulv3<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
-
+        
         for(size_t r=1;r<=64;r <<= 1)
         {
             for(size_t c=1; c <= 64; c <<= 1)
@@ -372,29 +372,40 @@ namespace
                 matrix<T> M(r,c);
                 for(size_t n=1; n <= 128; n <<= 1)
                 {
-                    matrix<U> A(r,n);
+                    // normal lhs
                     {
-                        matrix<W> B(n,c);
-                        tao::mmul(M,A,B);
+                        matrix<U> A(r,n); support::fill2D(A);
+                        {
+                            matrix<W> B(n,c); support::fill2D(B);
+                            tao::mmul(M,A,B);
+                        }
+                        
+                        {
+                            matrix<W> B(c,n); support::fill2D(B);
+                            tao::mmul_rtrn(M,A,B);
+                        }
                     }
+                    
+                    // transpose rhs
                     {
-                        matrix<W> B(c,n);
-                        tao::mmul_rtrn(M,A,B);
+                        matrix<U> A(n,r);support::fill2D(A);
+                        matrix<W> B(n,c);support::fill2D(B);
+                        tao::mmul_ltrn(M,A,B);
                     }
                 }
             }
         }
     }
-
-
-
+    
+    
+    
     static inline
     void test_mv3()
     {
         test_mul_v3_<double,int16_t,float>();
         test_mul_v3_<apz,int16_t,int32_t>();
     }
-
+    
     template <typename T, typename U>
     void test_gram_(const bool  check)
     {
@@ -416,14 +427,14 @@ namespace
             }
         }
     }
-
+    
     static inline
     void test_gram()
     {
         test_gram_<double,float>(false);
         test_gram_<apz,int16_t>(true);
     }
-
+    
 }
 
 Y_UTEST(tao)
@@ -436,7 +447,7 @@ Y_UTEST(tao)
     test_mv2();   std::cerr << std::endl;
     test_mv3();   std::cerr << std::endl;
     test_gram();  std::cerr << std::endl;
-
+    
 }
 Y_UTEST_DONE()
 

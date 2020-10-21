@@ -88,6 +88,34 @@ void gram( matrix<T> &M, const matrix<U> &A )
 
 }
 
+//! M = A'*B
+template <typename T,typename U,typename V> static inline
+void mmul_ltrn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
+{
+    assert(M.rows==A.cols);
+    assert(M.cols==B.cols);
+    assert(A.rows==B.rows);
+    
+    const size_t nc = M.cols;
+    const size_t n  = A.rows;
+    for(size_t i=M.rows;i>0;--i)
+    {
+        array<T> &M_i = M[i];
+        for(size_t j=nc;j>0;--j)
+        {
+            T result = 0;
+            for(size_t k=n;k>0;--k)
+            {
+                result += A[k][i] * B[k][j];
+            }
+            M_i[j] = result;
+        }
+    }
+    
+    
+    
+}
+
 //==============================================================================
 //
 //! getting mod2 for matrices
