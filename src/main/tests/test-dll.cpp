@@ -8,46 +8,37 @@ typedef double (Y_DLL_API *func)(double);
 
 Y_UTEST(dll)
 {
-    //rtld &libs = rtld::instance();
-    
+    std::cerr << "<dll>" << std::endl;
     if(argc>1)
     {
         const string soname = argv[1];
-        dll so( soname );
-#if 0
-        std::cerr << "system handle@" << so.get_system_handle() << std::endl;
-        {
-            dll so2( soname );
-            std::cerr << "system handle@" << so2.get_system_handle() << std::endl;
-        }
-#endif
-        func Sin = so.hook<func>("Sin");
+        dll  so( soname );
+        func Sin = dll::hook<func>::load(so,"Sin");
         if(Sin)
         {
-            std::cerr << "Found Sin" << std::endl;
+            std::cerr << "\tFound Sin" << std::endl;
             for(double x=0;x<3;x+=0.2)
             {
-                std::cerr << "Sin(" <<  x << ")=" << x << std::endl;
+                std::cerr << "\t\tSin(" <<  x << ")=" << Sin(x) << std::endl;
             }
         }
         else
         {
-            std::cerr << "Missing Sin" << std::endl;
+            std::cerr << "\tMissing Sin" << std::endl;
         }
-
-        int32_t *Data = so.ptr<int32_t>("Data");
+        int32_t *Data = dll::data<int32_t>::load(so,"Data");
         if(Data)
         {
-            std::cerr << "Found Data=" << *Data << std::endl;
+            std::cerr << "\tFound Data=" << *Data << std::endl;
         }
         else
         {
-            std::cerr << "Data not found" << std::endl;
+            std::cerr << "\tData not found" << std::endl;
         }
-
+        
     }
-    
-    //std::cerr << "linked=" << libs.linked() << std::endl;
+    std::cerr << "<dll/>" << std::endl;
+
 }
 Y_UTEST_DONE()
 

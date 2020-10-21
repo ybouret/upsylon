@@ -53,13 +53,13 @@ namespace upsylon
             tao::mul(Cprj,pL,RC);
             tao::divset(Cprj,dL);
             tao::add(Cnew,Cprj);
-            std::cerr << "dC=" << Cprj << std::endl;
+            std::cerr << "dC  = " << Cprj << std::endl;
             std::cerr << "Cnew= " << Cnew << std::endl;
             if( !engine.balance_(Cnew, pS, dS) )
             {
                 throw exception("no possible   balance");
             }
-            std::cerr << "C= " << Cnew << std::endl;
+            std::cerr << "C   = " << Cnew << std::endl;
         }
 
     }

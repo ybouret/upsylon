@@ -4,7 +4,6 @@
 #define Y_RTLD_INCLUDED 1
 
 #include "y/string.hpp"
-//#include "y/concurrent/singleton.hpp"
 
 namespace upsylon
 {
