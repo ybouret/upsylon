@@ -387,7 +387,7 @@ namespace upsylon
                     {
                         if(j!=J)
                         {
-                            self[ir][jr] = T(M[i][j]);
+                            self[ir][jr] = static_cast<const_type>(M[i][j]);
                             ++jr;
                         }
                     }

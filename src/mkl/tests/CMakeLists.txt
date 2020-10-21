@@ -11,6 +11,7 @@ test-diag-symm.cpp test-diag.cpp test-lu.cpp test-svd.cpp
 test-tridiag.cpp test-cyclic.cpp test-sparse.cpp
 test-gram-schmidt.cpp
 test-precond.cpp
+test-det.cpp
 )
 ADD_TEST(mkl:types    test-mkl types)
 ADD_TEST(mkl:adjoint  test-mkl adjoint)

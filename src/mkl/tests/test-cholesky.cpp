@@ -32,7 +32,7 @@ namespace  {
                         P[i][j] = support::get<T>()-T(0.5);
                     }
                 }
-                tao::mmul_trn(A, P, P);
+                tao::mmul_rtrn(A, P, P);
                 A0 = A;
 
 
@@ -79,7 +79,7 @@ Y_UTEST(cholesky)
             }
         }
         matrix<double> J2(n,n);
-        tao::mmul_trn(J2,J,J);
+        tao::mmul_rtrn(J2,J,J);
         std::cerr << "J="  << J  << std::endl;
         std::cerr << "J2=" << J2 << std::endl;
         if( !cholesky::build(J2) )

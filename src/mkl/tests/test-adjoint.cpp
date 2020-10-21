@@ -41,6 +41,7 @@ Y_UTEST(adjoint)
     do_test<double>();
     do_test<apq>();
 
+#if 0
     {
         const size_t  n = 4;
         matrix<short> U(n,n);
@@ -53,6 +54,7 @@ Y_UTEST(adjoint)
         tao::mmul(P,A,U);
         std::cerr << "P=" << P << std::endl;
     }
+#endif
 
 }
 Y_UTEST_DONE()

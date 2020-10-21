@@ -379,7 +379,7 @@ namespace
                     }
                     {
                         matrix<W> B(c,n);
-                        tao::mmul_trn(M,A,B);
+                        tao::mmul_rtrn(M,A,B);
                     }
                 }
             }
@@ -410,7 +410,7 @@ namespace
                 tao::gram(M,A);
                 if(check)
                 {
-                    tao::mmul_trn(MM,A,A);
+                    tao::mmul_rtrn(MM,A,A);
                     Y_ASSERT( tao::mmod2<T>::of(M,MM) <= 0);
                 }
             }
