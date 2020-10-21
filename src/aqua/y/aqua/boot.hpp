@@ -93,9 +93,24 @@ namespace upsylon {
             //
             // C++
             //__________________________________________________________________
-            explicit Boot() throw(); //!< setup
             virtual ~Boot() throw(); //!< cleanup
 
+            template <typename ID>
+            Boot(const ID &id)  :
+            Constraint::List(),
+            name(id),
+            R(),
+            tR(),
+            pL(),
+            dL(0),
+            S(),
+            tS(),
+            dS(0),
+            pS(),
+            keep()
+            {
+
+            }
             //__________________________________________________________________
             //
             // methods
@@ -133,16 +148,20 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const iMatrix R;   //!< constraint matrix     [NcxM]
-            const iMatrix pL;  //!< constraints to C      [MxNc]
-            const Int     dL;  //!< scaling
-            const iMatrix S;   //!< supplementary matrix  [N*M]
-            const Int     dS;  //!< determinant of S*S'
-            const iMatrix pS;  //!< projection on S times s: s* S'*inv(S*S')*S  [M*M]
+            const string  name; //!< identifier
+            const iMatrix R;    //!< constraint matrix     [NcxM]
+            const iMatrix tR;   //!< transposed R          [MxNc]
+            const iMatrix pL;   //!< constraints to C      [MxNc]
+            const Int     dL;   //!< scaling of pL
+            const iMatrix S;    //!< supplementary matrix  [N*M]
+            const iMatrix tS;   //!< transposed S          [M*N]
+            const Int     dS;   //!< scaling of pS
+            const iMatrix pS;   //!< projection on S times s: s* S'*inv(S*S')*S  [M*M]
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
             core::temporary_acquire<4> keep;
+            void setup() throw();
         };
 
     }

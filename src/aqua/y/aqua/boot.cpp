@@ -114,19 +114,14 @@ namespace upsylon {
 
     namespace Aqua
     {
-        Boot:: Boot() throw() :
-        Constraint::List(),
-        R(),
-        pL(),
-        dL(0),
-        S(),
-        dS(0),
-        pS(),
-        keep()
+
+        void Boot:: setup() throw()
         {
             keep << aliasing::_(R);
+            keep << aliasing::_(tR);
             keep << aliasing::_(pL);
             keep << aliasing::_(S);
+            keep << aliasing::_(tS);
             keep << aliasing::_(pS);
         }
 
@@ -138,6 +133,7 @@ namespace upsylon {
         {
             keep.release_all();
             aliasing::_(dL) = 0;
+            aliasing::_(dS) = 0;
         }
 
         Constraint & Boot:: operator()( const double value )
@@ -235,11 +231,20 @@ namespace upsylon {
                 {
                     throw exception("%s: #constraint=%lu + #equilibrium=%lu != #species=%lu",fn, (unsigned long)Nc, (unsigned long)N, (unsigned long)M);
                 }
+
+                //--------------------------------------------------------------
+                // allocated
+                //--------------------------------------------------------------
                 aliasing::_(R).  make(Nc,M);
+                aliasing::_(tR). make(M,Nc);
                 aliasing::_(pL). make(M,Nc);
                 aliasing::_(S).  make(N,M);
+                aliasing::_(tS). make(M,N);
                 aliasing::_(pS). make(M,M);
 
+                //--------------------------------------------------------------
+                // fill R
+                //--------------------------------------------------------------
                 lib.buildIndices();
                 {
                     size_t i=1;
@@ -248,7 +253,11 @@ namespace upsylon {
                         cc->fill( aliasing::_(R[i]) );
                     }
                 }
+                aliasing::_(tR).assign_transpose(R);
 
+                //--------------------------------------------------------------
+                // compute Lambda => C matrix, with scaling
+                //--------------------------------------------------------------
                 {
                     iMatrix R2(Nc,Nc);
                     tao::gram(R2,R);
@@ -259,11 +268,13 @@ namespace upsylon {
                     }
                     iMatrix aR2(Nc,Nc);
                     iadjoint(aR2,R2);
-                    iMatrix tR(R,matrix_transpose);
                     tao::mmul(aliasing::_(pL),tR,aR2);
                     (void) simplify<Int>::on( aliasing::_(pL), aliasing::_(dL) );
                 }
 
+                //--------------------------------------------------------------
+                // find supplementary space
+                //--------------------------------------------------------------
                 {
                     iMatrix F(M,M);
                     for(size_t i=Nc;i>0;--i)
@@ -287,15 +298,18 @@ namespace upsylon {
                     }
                 }
 
-                std::cerr << "R="  << R  << std::endl;
-                std::cerr << "pL=" << pL << std::endl;
-                std::cerr << "dL=" << dL << std::endl;
-                std::cerr << "S="  << S  << std::endl;
-
-                iMatrix tS(S,matrix_transpose);
+                //--------------------------------------------------------------
+                // compute projection matrix for balancing
+                //--------------------------------------------------------------
+                aliasing::_(tS).assign_transpose(S);
                 aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,tS,"supplementary boot space");
                 
-
+                std::cerr << "R  = "  << R  << std::endl;
+                std::cerr << "pL = "  << pL << std::endl;
+                std::cerr << "dL = "  << dL << std::endl;
+                std::cerr << "S  = "  << S  << std::endl;
+                std::cerr << "pS = "  << S  << std::endl;
+                std::cerr << "dS = "  << dS << std::endl;
 
 
             }

@@ -43,7 +43,7 @@ Y_UTEST(citric)
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
 
-    Boot boot;
+    Boot boot("main");
     boot.electroneutrality(lib);
     boot.conserve(C0, ahhh, ahhm, ahmm, ammm);
     boot.conserve(0,Na);
@@ -55,7 +55,9 @@ Y_UTEST(citric)
 
     boot.init(lib,eqs);
 
-
+    Engine engine;
+    engine.init(lib,eqs);
+    
 
 }
 Y_UTEST_DONE()

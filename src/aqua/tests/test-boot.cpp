@@ -53,7 +53,7 @@ Y_UTEST(boot)
     std::cerr << eqs << std::endl;
     
 
-    Boot boot;
+    Boot boot("main");
     boot.electroneutrality(lib);
     boot.conserve(C0,ah,am);
     boot.conserve(0.000,NH4,NH3);
