@@ -15,9 +15,17 @@ SET(engine_srcs ${engine_decl} ${engine_code})
 SOURCE_GROUP( aqua/engine FILES ${engine_srcs} )
 INSTALL( FILES ${engine_decl} DESTINATION include/y/aqua/engine )
 
+FILE(GLOB boot_decl y/aqua/boot/*.hpp)
+FILE(GLOB boot_code y/aqua/boot/*.cpp)
+SET(boot_srcs ${boot_decl} ${boot_code})
+SOURCE_GROUP( aqua/boot FILES ${boot_srcs} )
+INSTALL( FILES ${boot_decl} DESTINATION include/y/aqua/boot )
+
 ADD_LIBRARY(y-aqua STATIC 
 ${main_srcs}
-${engine_srcs})
+${engine_srcs}
+${boot_srcs}
+)
 INSTALL( TARGETS y-aqua ARCHIVE DESTINATION lib )
 
 ADD_SUBDIRECTORY(tests)

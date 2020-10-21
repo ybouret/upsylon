@@ -3,7 +3,7 @@
 #ifndef Y_AQUA_BOOT_INCLUDED
 #define Y_AQUA_BOOT_INCLUDED 1
 
-#include "y/aqua/constraint.hpp"
+#include "y/aqua/boot/constraint.hpp"
 #include "y/container/matrix.hpp"
 #include "y/core/temporary-acquire.hpp"
 
