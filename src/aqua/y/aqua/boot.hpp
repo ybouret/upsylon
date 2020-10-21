@@ -3,11 +3,8 @@
 #ifndef Y_AQUA_BOOT_INCLUDED
 #define Y_AQUA_BOOT_INCLUDED 1
 
-#include "y/aqua/species.hpp"
-#include "y/aqua/types.hpp"
-#include "y/core/inode.hpp"
+#include "y/aqua/constraint.hpp"
 #include "y/container/matrix.hpp"
-#include "y/sequence/vector.hpp"
 #include "y/core/temporary-acquire.hpp"
 
 namespace upsylon {
@@ -16,68 +13,6 @@ namespace upsylon {
     {
         class Library;    //!< forward declaration
         class Equilibria; //!< forward declaration
-
-        //______________________________________________________________________
-        //
-        //
-        //! a linear constraint
-        //
-        //______________________________________________________________________
-        class Constraint : public inode<Constraint>
-        {
-        public:
-            //__________________________________________________________________
-            //
-            // types and definitions
-            //__________________________________________________________________
-            typedef core::list_of_cpp<Constraint> List; //!< alias
-
-            //! an actor
-            class Actor : public inode<Actor>
-            {
-            public:
-                typedef core::list_of_cpp<Actor> List; //!< alias
-
-                explicit Actor(const Species &, const int) throw();//!< setup
-                virtual ~Actor() throw();                          //!< cleanup
-                friend std::ostream & operator<<(std::ostream &, const Actor &); //!< display
-
-                const Species &species; //!< persistent species
-                const int      weight;  //!< integer weight
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Actor);
-            };
-
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            explicit Constraint(const double) throw();    //!< setup value
-            virtual ~Constraint() throw();                //!< cleanup
-
-            //__________________________________________________________________
-            //
-            // methods
-            //__________________________________________________________________
-            void add(const Species &, const int);         //!< add an actor
-            void fill(addressable<Int> &P) const throw(); //!< fill a row of constraint matrix
-
-            //! display
-            friend std::ostream & operator<<(std::ostream &, const Constraint &);
-
-            //__________________________________________________________________
-            //
-            // members
-            //__________________________________________________________________
-            double   value; //!< constraint value
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Constraint);
-            Actor::List actors;
-
-        };
-
         class Engine; //!< forward declaration
         
         //______________________________________________________________________
@@ -95,8 +30,8 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~Boot() throw(); //!< cleanup
 
-            template <typename ID>
-            Boot(const ID &id)  :
+            template <typename ID> inline
+            explicit Boot(const ID &id)  :
             Constraint::List(),
             name(id),
             R(),
@@ -111,6 +46,7 @@ namespace upsylon {
             {
 
             }
+
             //__________________________________________________________________
             //
             // methods
@@ -138,7 +74,7 @@ namespace upsylon {
             void  fill(addressable<double> &) const throw(); //!< fill a vector of Nc constraints
             void  quit() throw();                            //!< reset
             void  init(Library &,const Equilibria &eqs);     //!< buildIndices for library and build matrices
-            void  find(addressable<double> &C, Engine &engine); //!< solve
+            void  find(addressable<double> &, Engine & );    //!< solve
 
 
             //! display
