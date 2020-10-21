@@ -129,7 +129,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             computeJ(Cini);
-            tao::mmul_trn(W,J,Nu);
+            tao::mmul_rtrn(W,J,Nu);
             if( !LU::build(W) )
             {
                 Y_AQUA_PRINTLN("singular system level-1");

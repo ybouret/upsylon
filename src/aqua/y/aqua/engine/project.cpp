@@ -24,6 +24,7 @@ namespace upsylon
 
             Int     Det = 0;
             iMatrix Adj(n,n);
+#if 0
             {
                 iMatrix Gram(n,n);
                 tao::gram(Gram,Span);
@@ -44,7 +45,7 @@ namespace upsylon
                 tao::mmul(Proj,Strn,AdjSpan);
                 (void) simplify<Int>::on(Proj,Det);
             }
-            
+#endif
             return Det;
         }
     }

@@ -14,7 +14,7 @@ namespace upsylon
         bool Engine:: dampWith(const accessible<double> &C) throw()
         {
             computeJ(C);
-            tao::mmul_trn(W,J,Nu);
+            tao::mmul_rtrn(W,J,Nu);
             if(!LU::build(W))
             {
                 return false;
