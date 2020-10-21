@@ -607,14 +607,8 @@ namespace upsylon
         integer div_proto(const sign_type ls, const LHS &la,
                           const sign_type rs, const RHS &ra)
         {
-            const sign_type ps = number::product(ls,rs);
-            switch(ps)
-            {
-                case __zero: return integer();
-                default: break;
-            }
             const natural n = la/ra;
-            return (n>0) ? integer(ps,n) : integer();
+            return (n>0) ? integer(number::product(ls,rs),n) : integer();
         }
 
         integer integer:: divide(const integer &lhs, const integer &rhs)
@@ -633,6 +627,42 @@ namespace upsylon
             const utype la = iabs_of(lhs);
             return div_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
+        
+        //======================================================================
+        //
+        // modulo
+        //
+        //======================================================================
+        template <typename LHS, typename RHS> static inline
+        integer mod_proto(const LHS &lhs, const RHS &rhs)
+        {
+            const integer q = lhs/rhs;
+            const integer qr = q*rhs;
+            return lhs-qr;
+        }
+        
+        integer integer:: modulo(const integer &lhs, const integer &rhs)
+        {
+            return mod_proto(lhs,rhs);
+            //return mod_proto(lhs.s,lhs.n,rhs.s,rhs.n);
+        }
+        
+        integer integer::modulo(const integer &lhs, const itype rhs)
+        {
+            return mod_proto(lhs,rhs);
+            //const utype ra = iabs_of(rhs);
+            //return mod_proto(lhs.s,lhs.n, sign_of(rhs),ra);
+        }
+        
+        integer integer::modulo(const itype    lhs, const integer &rhs)
+        {
+            return mod_proto(lhs,rhs);
+            //const utype la = iabs_of(lhs);
+            //return mod_proto(sign_of(lhs),la,rhs.s,rhs.n);
+        }
+        
+        
+        
     }
 }
 

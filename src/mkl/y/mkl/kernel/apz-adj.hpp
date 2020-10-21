@@ -11,6 +11,7 @@ namespace upsylon
     namespace mkl
     {
         
+        
         //! compute adjoint for integer types
         template <typename U>
         inline void apz_adj( matrix<apz> &target, const matrix<U> &source )
@@ -39,6 +40,9 @@ namespace upsylon
                 }
             }
         }
+        
+        //! simplify::on(a,d)
+        apz apz_rescale( matrix<apz> &a, apz &d );
         
     }
     
