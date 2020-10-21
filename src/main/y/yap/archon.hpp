@@ -26,7 +26,7 @@ namespace upsylon {
         {
         public:
             static const size_t a_lower_size = 2 * sizeof(uint64_t); //!< minimal bytes per number
-            static const size_t a_limit_bits = 1024;                 //!< uses arena for "small" number uner that bits count
+            static const size_t a_limit_bits = 1024;                 //!< uses arena for "small" number lower that bits count
             static const size_t a_limit_size = a_limit_bits/8;       //!< corresponding bytes
             Y_SINGLETON_DECL_WITH(at_exit::uttermost-2,archon);      //!< setup
 

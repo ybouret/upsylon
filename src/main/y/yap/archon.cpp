@@ -5,15 +5,15 @@
 
 
 namespace upsylon {
-
+    
     Y_SINGLETON_IMPL(yap::archon);
-
+    
     namespace yap {
-
+        
         archon:: ~archon() throw()
         {
         }
-
+        
         archon:: archon() throw() :
         upsylon::singleton<archon>(),
         memory::tight::quarry(),
@@ -25,29 +25,29 @@ namespace upsylon {
         {
             
         }
-
+        
     }
-
+    
 }
 
 #include "y/yap/natural.hpp"
 
 
 namespace upsylon {
-
+    
     namespace yap {
-
+        
         memory_allocator & natural::instance()
         {
             return archon::instance();
         }
-
+        
         memory_allocator & natural::location() throw()
         {
             return archon::location();
         }
-
-
+        
+        
     }
-
+    
 }
