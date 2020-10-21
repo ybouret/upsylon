@@ -39,29 +39,7 @@ namespace upsylon {
             return __determinant(tmp);
         }
 
-        //! assuming integer type
-        /**
-         internal double computation
-         */
-        template <typename T>
-        T ideterminant( const matrix<T> &a )
-        {
-            assert(a.rows>0);
-            assert(a.is_square);
-            const size_t   n=a.rows;
-            matrix<double> b(n,n);
-            for(size_t i=n;i>0;--i)
-            {
-                addressable<double>  &bi = b[i];
-                const accessible<T>  &ai = a[i];
-                for(size_t j=n;j>0;--j)
-                {
-                    bi[j] = double(ai[j]);
-                }
-            }
-            return T( floor( __determinant(b) + 0.5 ) );
-        }
-
+      
 
     }
 }

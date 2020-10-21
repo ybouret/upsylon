@@ -25,6 +25,7 @@ ADD_TEST(mkl:sparse   test-mkl sparse)
 ADD_TEST(mkl:gram-schmidt test-mkl gram_schmidt)
 ADD_TEST(mkl:jacobian  test-mkl jacobian)
 ADD_TEST(mkl:precond   test-mkl precond)
+ADD_TEST(mkl:det       test-mkl det)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
 test-ode-expl.cpp test-ode-impl.cpp)

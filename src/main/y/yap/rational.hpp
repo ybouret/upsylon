@@ -72,8 +72,9 @@ namespace upsylon {
             // output
             //__________________________________________________________________
             friend std::ostream & operator<<(std::ostream &, const rational &); //!< output
-            double to_double() const;                                           //!< signed ration
-
+            double to_double()  const;                                          //!< signed ration
+            apz    to_integer() const;                                          //!< numerator if denominator==1
+            
             //__________________________________________________________________
             //
             // macro to overload

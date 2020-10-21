@@ -3,6 +3,7 @@
 #include "y/yap/library.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/os/error.hpp"
+#include "y/exception.hpp"
 #include <iostream>
 
 namespace upsylon {
@@ -34,6 +35,15 @@ namespace upsylon {
             return 0.0;
         }
 
+        apz rational:: to_integer() const
+        {
+            if(!den.is(1))
+            {
+                throw exception("rational is not an integer");
+            }
+            return num;
+        }
+        
 
         const number::itype rational::i_one;
         const number::utype rational::u_one;
