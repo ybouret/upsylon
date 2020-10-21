@@ -10,22 +10,35 @@ namespace upsylon {
 
     namespace mkl {
 
+        //______________________________________________________________________
+        //
+        //
         //! simplification for sets of integer types
+        //
+        //______________________________________________________________________
         template <typename T>
         struct simplify
         {
 
             Y_DECL_ARGS(T,type); //!< aliasing
 
+            //__________________________________________________________________
+            //
             //! simplify and return factor
+            /**
+             find and return divider among non zero values
+             */
+            //__________________________________________________________________
             static inline
             type on(addressable<type> &data)
             {
-                type         r  = 1;
-                const size_t n  = data.size();
-                type         lo = 0; // lowest not nul absolute value
-                type         hi = 0; // highest not nul absolute value
+                type         r  = 1;           // return
+                const size_t n  = data.size(); // number of data
+                type         lo = 0;           // lowest not nul absolute value
+                type         hi = 0;           // highest not nul absolute value
+
                 {
+                    // find first not zero
                     size_t i=n;
                     for(;i>0;--i)
                     {
@@ -36,6 +49,7 @@ namespace upsylon {
                             break;
                         }
                     }
+                    // then find lower and higher boudaries
                     hi = lo;
                     for(--i;i>0;--i)
                     {
@@ -57,6 +71,7 @@ namespace upsylon {
                         }
                     }
                 }
+
                 if(hi>0)
                 {
                     for(type d=lo;d>1;--d)
@@ -85,7 +100,13 @@ namespace upsylon {
                 return r;
             }
 
+            //__________________________________________________________________
+            //
             //! simplify each row
+            /**
+             apply algorithm for each row
+             */
+            //__________________________________________________________________
             static inline
             void on( addressable<type> &r, matrix<type> &M )
             {
@@ -96,7 +117,13 @@ namespace upsylon {
                 }
             }
 
+            //__________________________________________________________________
+            //
             //! simplify all matrix
+            /**
+             applu algorithm to all coefficient of a matrix
+             */
+            //__________________________________________________________________
             static inline
             type on( matrix<type> &M )
             {
@@ -104,7 +131,13 @@ namespace upsylon {
                 return on(data);
             }
 
+            //__________________________________________________________________
+            //
             //! simplify with a reference level
+            /**
+             simplify with constant data/level value
+             */
+            //__________________________________________________________________
             static inline
             type on( addressable<T> &data, T &level )
             {
@@ -171,7 +204,14 @@ namespace upsylon {
                 return r;
             }
 
+            //__________________________________________________________________
+            //
             //! simplify all matrix with a reference level
+            /**
+             simplify while keeping M/level constant
+             */
+            //__________________________________________________________________
+
             static inline
             type on( matrix<T> &M, T &level )
             {
