@@ -1,4 +1,4 @@
-#include "y/mkl/kernel/ideterminant.hpp"
+#include "y/mkl/kernel/ap-det.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 
@@ -33,6 +33,8 @@ namespace {
 Y_UTEST(det)
 {
     test_idet<int16_t>();
+    test_idet<int>();
+
 }
 Y_UTEST_DONE()
 
