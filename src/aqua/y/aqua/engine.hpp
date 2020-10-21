@@ -83,6 +83,10 @@ namespace upsylon
                           const Int            scal) throw();
 
             //! construct the integer projection matrix
+            /**
+             compute Strn * adjoint(Span*Strn) * Span / Det,
+             simplified
+             */
             static Int Project(iMatrix       &Proj,
                                const iMatrix &Span,
                                const iMatrix &Strn,

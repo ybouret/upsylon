@@ -117,15 +117,15 @@ namespace upsylon {
         Boot:: Boot() throw() :
         Constraint::List(),
         R(),
-        L(),
-        d(0),
+        pL(),
+        dL(0),
         S(),
         dS(0),
         pS(),
         keep()
         {
             keep << aliasing::_(R);
-            keep << aliasing::_(L);
+            keep << aliasing::_(pL);
             keep << aliasing::_(S);
             keep << aliasing::_(pS);
         }
@@ -137,7 +137,7 @@ namespace upsylon {
         void Boot:: quit() throw()
         {
             keep.release_all();
-            aliasing::_(d) = 0;
+            aliasing::_(dL) = 0;
         }
 
         Constraint & Boot:: operator()( const double value )
@@ -235,10 +235,10 @@ namespace upsylon {
                 {
                     throw exception("%s: #constraint=%lu + #equilibrium=%lu != #species=%lu",fn, (unsigned long)Nc, (unsigned long)N, (unsigned long)M);
                 }
-                aliasing::_(R).make(Nc,M);
-                aliasing::_(L).make(M,Nc);
-                aliasing::_(S).make(N,M);
-                aliasing::_(pS).make(M,M);
+                aliasing::_(R).  make(Nc,M);
+                aliasing::_(pL). make(M,Nc);
+                aliasing::_(S).  make(N,M);
+                aliasing::_(pS). make(M,M);
 
                 lib.buildIndices();
                 {
@@ -252,16 +252,16 @@ namespace upsylon {
                 {
                     iMatrix R2(Nc,Nc);
                     tao::gram(R2,R);
-                    aliasing::_(d) = ideterminant(R2);
-                    if(0==d)
+                    aliasing::_(dL) = ideterminant(R2);
+                    if(0==dL)
                     {
                         throw exception("%ssingular set of constraints",fn);
                     }
                     iMatrix aR2(Nc,Nc);
                     iadjoint(aR2,R2);
                     iMatrix tR(R,matrix_transpose);
-                    tao::mmul(aliasing::_(L),tR,aR2);
-                    (void) simplify<Int>::on( aliasing::_(L), aliasing::_(d) );
+                    tao::mmul(aliasing::_(pL),tR,aR2);
+                    (void) simplify<Int>::on( aliasing::_(pL), aliasing::_(dL) );
                 }
 
                 {
@@ -287,10 +287,10 @@ namespace upsylon {
                     }
                 }
 
-                std::cerr << "R=" << R << std::endl;
-                std::cerr << "L=" << L << std::endl;
-                std::cerr << "d=" << d << std::endl;
-                std::cerr << "S=" << S << std::endl;
+                std::cerr << "R="  << R  << std::endl;
+                std::cerr << "pL=" << pL << std::endl;
+                std::cerr << "dL=" << dL << std::endl;
+                std::cerr << "S="  << S  << std::endl;
 
                 iMatrix tS(S,matrix_transpose);
                 aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,tS,"supplementary boot space");
@@ -337,19 +337,18 @@ namespace upsylon {
                           Engine              &engine)  
         {
             assert(C.size()>=engine.M);
-            std::cerr << "K=" << engine.K << std::endl;
             // build Cstar
             const size_t   M  = engine.M;
             const size_t   Nc = size;
             vector<double> Cold(M,0);
             vector<double> Cnew(M,0);
+            vector<double> Cprj(M,0);
             vector<double> Lambda(Nc,0);
             vector<double> RC(Nc,0);
-            vector<double> Cprj(M,0);
 
             fill(Lambda);
-            tao::mul(Cold,L,Lambda);
-            tao::divset(Cold,d);
+            tao::mul(Cold,pL,Lambda);
+            tao::divset(Cold,dL);
             std::cerr << "Lambda=" << Lambda << std::endl;
             std::cerr << "Cstar =" << Cold  << std::endl;
             std::cerr << "R     =" << R << std::endl;
@@ -361,22 +360,22 @@ namespace upsylon {
             }
 
             // initial equilibrium
-            std::cerr << "C= " << Cold << std::endl;
+            std::cerr << "Cbal= " << Cold << std::endl;
             tao::set(Cnew,Cold);
             if(!engine.forward(Cnew))
             {
                 throw exception("no possible initial forward");
             }
 
-            std::cerr << "C= " << Cnew << std::endl;
+            std::cerr << "Cfwd= " << Cnew << std::endl;
 
-            tao::mul(RC, R, C);
+            tao::mul(RC, R, Cnew);
             tao::subp(RC,Lambda);
-            tao::mul(Cprj,L,RC);
-            tao::divset(Cprj,d);
+            tao::mul(Cprj,pL,RC);
+            tao::divset(Cprj,dL);
             tao::add(Cnew,Cprj);
             std::cerr << "dC=" << Cprj << std::endl;
-            std::cerr << "C= " << Cnew << std::endl;
+            std::cerr << "Cnew= " << Cnew << std::endl;
             if( !engine.balance_(Cnew, pS, dS) )
             {
                 throw exception("no possible   balance");

@@ -133,12 +133,12 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const iMatrix R;  //!< constraint matrix     [NcxM]
-            const iMatrix L;  //!< constraints to C      [MxNc]
-            const Int     d;  //!< determinant of R*R'
-            const iMatrix S;  //!< supplementary matrix  [N*M]
-            const Int     dS; //!< determinant of S*S'
-            const iMatrix pS; //!< projection on S times s: s* S'*inv(S*S')*S  [M*M]
+            const iMatrix R;   //!< constraint matrix     [NcxM]
+            const iMatrix pL;  //!< constraints to C      [MxNc]
+            const Int     dL;  //!< scaling
+            const iMatrix S;   //!< supplementary matrix  [N*M]
+            const Int     dS;  //!< determinant of S*S'
+            const iMatrix pS;  //!< projection on S times s: s* S'*inv(S*S')*S  [M*M]
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);

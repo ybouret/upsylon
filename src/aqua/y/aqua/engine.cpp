@@ -110,7 +110,12 @@ namespace upsylon
                     aliasing::_(Nu).  make(N,M);
                     aliasing::_(tNu). make(M,N);
                     aliasing::_(Nu2). make(N,N);
-                    aliasing::_(aN).acquire(N);
+                    aliasing::_(pNu). make(M,M);
+                    aliasing::_(aN).  acquire(N);
+                    J.make(N,M);
+                    W.make(N,N);
+
+                    // load from equilibria
                     {
                         size_t i=1;
                         for(Equilibria::const_iterator it=eqs.begin();it!=eqs.end();++it,++i)
@@ -123,6 +128,7 @@ namespace upsylon
                         }
                     }
 
+                    // check all active species
                     for(size_t i=N;i>0;--i)
                     {
                         const array<Int> &Nu_i = Nu[i];
@@ -136,12 +142,12 @@ namespace upsylon
                     {
                         if(active[j]) ++aliasing::_(Ma);
                     }
+
+                    //! compute tNu and pNu
                     aliasing::_(tNu).assign_transpose(Nu);
-                    aliasing::_(pNu).make(M,M);
                     aliasing::_(dNu) = Project( aliasing::_(pNu), Nu, tNu, "chemical topology");
                     
-                    J.make(N,M);
-                    W.make(N,N);
+
                 }
 
 
