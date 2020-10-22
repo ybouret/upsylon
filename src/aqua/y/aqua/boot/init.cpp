@@ -118,7 +118,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // compute projection matrix for balancing
                 //--------------------------------------------------------------
-                aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,"supplementary boot space");
+                //aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,"supplementary boot space");
 
 
                 std::cerr << "R  = "  << R  << std::endl;

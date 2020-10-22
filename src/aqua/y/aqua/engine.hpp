@@ -15,7 +15,9 @@ namespace upsylon
         typedef array<double>                      Array;      //!< alias
         typedef lightweight_array<bool>            Booleans;   //!< alias
         typedef vector<const Equilibrium::Pointer> EqVector;   //!< alias
-        class                                      Boot;       //!< forward
+        class                                      Boot;         //!< forward
+        typedef addressable<Int>                   iAddressable; //!< alias
+        typedef accessible<Int>                    iAccessible;
 
         //! solver
         class Engine
@@ -78,35 +80,37 @@ namespace upsylon
             bool feed(addressable<double> &C, const accessible<double> &dC ) throw();
 
             //! balance using topology or boot space
-            bool balance_(addressable<double> &C,
-                          const iMatrix       &proj,
-                          const Int            scal) throw();
+            bool balance_(addressable<double>   &C,
+                          const iMatrix         &proj,
+                          const accessible<Int> &scal) throw();
 
             //! construct the integer projection matrix
             /**
-             compute Span' * adjoint(Span*Span') * Span / Det,
+             compute Span' * adjoint(Span*Span') * Span,
              simplified
+             and scaling in Proc.c_aux1()
              */
-            static Int Project(iMatrix       &Proj,
-                               const iMatrix &Span,
-                               const char    *when);
+            static void Project(iMatrix          &proj,
+                                iAddressable     &scal,
+                                const iMatrix    &span,
+                                const char       *when);
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const size_t   N;          //!< equilibria
-            const size_t   M;          //!< species
-            const size_t   Ma;         //!< active species
-            const size_t   Nc;         //!< parameters = M-N
-            const EqVector equilibria; //!< validated equilibria [N]
-            const iMatrix  Nu;         //!< topology             [NxM]
-            const iMatrix  tNu;        //!< transposed           [MxN]
-            const iMatrix  Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
-            const Int      dNu;        //!< det(Nu2), check independant equilibria
-            const iMatrix  pNu;        //!< Nu'*adj(Nu2)*Nu      [MxM]
-            Matrix         J;          //!< Jacobian             [NxM]
-            Matrix         W;          //!< system matrix        [NxN]
+            const size_t      N;          //!< equilibria
+            const size_t      M;          //!< species
+            const size_t      Ma;         //!< active species
+            const size_t      Nc;         //!< parameters = M-N
+            const EqVector    equilibria; //!< validated equilibria [N]
+            const iMatrix     Nu;         //!< topology             [NxM]
+            const iMatrix     tNu;        //!< transposed           [MxN]
+            const iMatrix     Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
+            const iMatrix     pNu;        //!< Nu'*adj(Nu2)*Nu      [MxM]
+            iAddressable     &dNu;        //!< pNu c_aux1           [M]
+            Matrix            J;          //!< Jacobian             [NxM]
+            Matrix            W;          //!< system matrix        [NxN]
 
 
 
@@ -149,8 +153,8 @@ namespace upsylon
 
             struct BalanceProxy { Engine *self; double operator()(const double) throw(); };
             double BalanceValue() throw();               //! at Corg
-            bool   BalanceDelta(const iMatrix &proj,
-                                const Int      scal) throw();               //! at Corg/Cbad => Cstp, false if Cstp=0
+            bool   BalanceDelta(const iMatrix     &proj,
+                                const iAccessible &scal) throw();               //! at Corg/Cbad => Cstp, false if Cstp=0
             double BalanceCheck(const double x) throw(); //!< Ctry=Corg+x*Ctry
             double sumCaux(const size_t m)      throw();
 

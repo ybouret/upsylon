@@ -9,52 +9,63 @@ namespace upsylon
     {
         using namespace mkl;
 
-        Int Engine:: Project(iMatrix       &Proj,
-                             const iMatrix &Span,
-                             const char    *when)
+        void Engine:: Project(iMatrix          &proj,
+                              iAddressable     &scal,
+                              const iMatrix    &span,
+                              const char       *when)
         {
             assert(when);
-            assert(Proj.rows==Proj.cols);
-            assert(Span.cols==Proj.cols);
-            const size_t m = Proj.rows;
-            const size_t n = Span.rows;
+            assert(proj.rows==proj.cols);
+            assert(span.cols==proj.cols);
+            const size_t m = proj.rows;
+            const size_t n = span.rows;
 
             apz         Det = 0;
             {
-                matrix<apz> P(m,m);
+                matrix<apz> Proj(m,m);
                 {
-                    // build the simplify adjoint of Gram's matrix
+                    //----------------------------------------------------------
+                    // build the simplified adjoint of Gram's matrix
+                    //----------------------------------------------------------
                     matrix<apz> Adj(n,n);
-                    Det = apk::adjoint_gram(Adj,Span);
+                    Det = apk::adjoint_gram(Adj,span);
 
-                    std::cerr << "Span = " << Span << std::endl;
-                    std::cerr << "Adj  = " << Adj  << std::endl;
-                    std::cerr << "Det  = " << Det  << std::endl;
+                    std::cerr << "span = " << span << std::endl;
+                    std::cerr << "iAdj  = " << Adj  << std::endl;
+                    std::cerr << "iDet  = " << Det  << std::endl;
 
                     if(0==Det)
                     {
-                        throw exception("Aqua::Engine: invalid %s",when);
+                        throw exception("Aqua::Engine:Project(invalid %s)",when);
                     }
 
+                    //----------------------------------------------------------
+                    // build the projection matrix
+                    //----------------------------------------------------------
                     {
                         matrix<apz> AdjSpan(n,m);
-                        tao::mmul(AdjSpan,Adj,Span);
-                        tao::mmul_ltrn(P,Span,AdjSpan);
+                        tao::mmul(AdjSpan,Adj,span);       // AdjSpan = Adj * Span
+                        tao::mmul_ltrn(Proj,span,AdjSpan); // Proj    = Span' * AdjSpan
                     }
                 }
-                std::cerr << "P   = " << P   << std::endl;
-                std::cerr << "D   = " << Det << std::endl;
-                apk::simplify(P,Det,NULL);
-                std::cerr << "P1  = " << P   << std::endl;
-                std::cerr << "D1  = " << Det << std::endl;
-                apk::convert(Proj,P, "Aqua::Engine::Project(matrix)");
-                addressable<apz> &d = P.c_aux1;
-                apk::simplify(d,P,Det);
-                std::cerr << "d=" << d << std::endl;
-                std::cerr << "P=" << P << std::endl;
-                exit(1);
+
+                //--------------------------------------------------------------
+                // first simplification
+                //--------------------------------------------------------------
+                apk::simplify(Proj,Det,NULL);
+                std::cerr << "Proj  = " << Proj << std::endl;
+                std::cerr << "iDet  = " << Det  << std::endl;
+
+                //--------------------------------------------------------------
+                // build individual scalings
+                //--------------------------------------------------------------
+                addressable<apz> &Scal = Proj.c_aux1;
+                apk::simplify(Scal,Proj,Det);
+                std::cerr << "Scal=" << Scal << std::endl;
+                std::cerr << "Proj=" << Proj << std::endl;
+                apk::convert(proj,Proj, "Aqua::Engine::Project(<proj>)");
+                apk::convert(scal,Scal, "Aqua::Engine::Project(<scal>)");
             }
-            return Det.cast_to<Int>( "Aqua::Engine::Project(determinant)" );
         }
     }
 

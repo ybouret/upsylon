@@ -25,8 +25,8 @@ namespace upsylon
         Nu(),
         tNu(),
         Nu2(),
-        dNu(0),
         pNu(),
+        dNu( pNu.c_aux1 ),
         J(),
         W(),
         aM( 16 ),
@@ -106,6 +106,9 @@ namespace upsylon
 
                 if(N>0)
                 {
+                    //----------------------------------------------------------
+                    // acquire memory
+                    //----------------------------------------------------------
                     aliasing::_(equilibria).ensure(N);
                     aliasing::_(Nu).  make(N,M);
                     aliasing::_(tNu). make(M,N);
@@ -115,7 +118,9 @@ namespace upsylon
                     J.make(N,M);
                     W.make(N,N);
 
+                    //----------------------------------------------------------
                     // load from equilibria
+                    //----------------------------------------------------------
                     {
                         size_t i=1;
                         for(Equilibria::const_iterator it=eqs.begin();it!=eqs.end();++it,++i)
@@ -128,7 +133,9 @@ namespace upsylon
                         }
                     }
 
+                    //----------------------------------------------------------
                     // check all active species
+                    //----------------------------------------------------------
                     for(size_t i=N;i>0;--i)
                     {
                         const array<Int> &Nu_i = Nu[i];
@@ -143,9 +150,15 @@ namespace upsylon
                         if(active[j]) ++aliasing::_(Ma);
                     }
 
-                    //! compute tNu and pNu
+                    //----------------------------------------------------------
+                    // compute tNu
+                    //----------------------------------------------------------
                     aliasing::_(tNu).assign_transpose(Nu);
-                    aliasing::_(dNu) = Project( aliasing::_(pNu), Nu, "chemical topology");
+
+                    //----------------------------------------------------------
+                    // compute projection matrix
+                    //----------------------------------------------------------
+                    Project( aliasing::_(pNu),  aliasing::_(dNu) , Nu, "chemical topology");
                     
                 }
 

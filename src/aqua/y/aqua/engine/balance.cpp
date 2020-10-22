@@ -104,17 +104,17 @@ namespace upsylon
         }
 
 
-        bool Engine:: BalanceDelta(const iMatrix &proj,
-                                   const Int      scal) throw()
+        bool Engine:: BalanceDelta(const iMatrix     &proj,
+                                   const iAccessible &scal) throw()
         {
             static const double zcut = numeric<double>::tiny;
             assert(proj.rows==M);
             assert(proj.cols==M);
-            assert(scal!=0);
 
             size_t num = 0;
             for(size_t j=M;j>0;--j)
             {
+                assert(scal[j]>0);
                 Cstp[j] = 0;
                 if(active[j])
                 {
@@ -129,7 +129,7 @@ namespace upsylon
                     {
                         sum += Ctry[k];
                     }
-                    const double delta  = sum/scal;
+                    const double delta  = sum/scal[j];
                     const double delta2 = square_of(delta);
                     if(delta2<=zcut)
                     {
@@ -149,9 +149,9 @@ namespace upsylon
             return balance_(C,pNu,dNu);
         }
 
-        bool Engine::balance_(addressable<double> &C,
-                              const iMatrix       &proj,
-                              const Int            scal) throw()
+        bool Engine::balance_(addressable<double>   &C,
+                              const iMatrix         &proj,
+                              const accessible<Int> &scal) throw()
         {
             assert(C.size()>=M);
             balanceCycles = 0;
